@@ -226,7 +226,7 @@ class TFCoil:
                 sctfcoil_module.t_cable_radial,
                 tfcoil_variables.dhecoil,
                 tfcoil_variables.fcutfsu,
-                tfcoil_variables.thwcndut,
+                tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
                 sctfcoil_module.t_wp_toroidal_av,
                 sctfcoil_module.a_tf_ins,
@@ -1217,8 +1217,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Steel conduit thickness (m)",
-                "(thwcndut)",
-                tfcoil_variables.thwcndut,
+                "(dx_tf_turn_steel)",
+                tfcoil_variables.dx_tf_turn_steel,
             )
             po.ovarre(
                 self.outfile,
@@ -3164,7 +3164,7 @@ class TFCoil:
         t_cable_radial,
         dhecoil,
         fcutfsu,
-        thwcndut,
+        dx_tf_turn_steel,
         t_lat_case_av,
         t_wp_toroidal_av,
         a_tf_ins,
@@ -3527,7 +3527,7 @@ class TFCoil:
             # Steel conduit
             eyoung_member_array[2] = eyoung_steel
             poisson_member_array[2] = poisson_steel
-            l_member_array[2] = 2 * thwcndut
+            l_member_array[2] = 2 * dx_tf_turn_steel
             # Insulation
             eyoung_member_array[3] = eyoung_ins
             poisson_member_array[3] = poisson_ins
@@ -5411,7 +5411,7 @@ def init_tfcoil_variables():
     tfv.layer_ins = 0.0
     tfv.dr_tf_nose_case = 0.3
     tfv.dr_tf_wp = 0.0
-    tfv.thwcndut = 8e-3
+    tfv.dx_tf_turn_steel = 8e-3
     tfv.tinstf = 0.018
     tfv.tmargmin_tf = 0.0
     tfv.tmargmin_cs = 0.0

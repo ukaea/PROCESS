@@ -173,7 +173,7 @@ tftmp     = 4.2         *Peak helium coolant temperature in TF coils and PF coil
 temp_tf_cryo    = 4.2         *Coil temperature for cryogenic plant power calculation (K)
 t_turn_tf = 0.056       *Dimension conductor area including steel and insulation.
 dx_tf_turn_insulation  = 0.002       *Conduit insulation thickness (m)
-thwcndut  = 0.0012      *TF coil conduit case thickness (m)
+dx_tf_turn_steel  = 0.0012      *TF coil conduit case thickness (m)
 vftf      = 0.3         *Coolant fraction of TF coil leg (i_tf_sup=0)
 dr_tf_nose_case    = 0.06        * Case thickness
 *-----------------Pfcoil Variables-----------------*

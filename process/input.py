@@ -1292,7 +1292,9 @@ INPUT_VARIABLES = {
     ),
     "dr_tf_nose_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "dz_shld_thermal": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
-    "thwcndut": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_turn_steel": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "ti": InputVariable(fortran.physics_variables, float, range=(5.0, 50.0)),
     "tinstf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
     "tlife": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),

@@ -951,7 +951,9 @@ def check_process(inputs):  # noqa: ARG001
             if (fortran.numerics.ixc[: fortran.numerics.nvar] == 58).any():
                 dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.numerics.boundl[57]
             else:
-                dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.thwcndut
+                dr_tf_wp_min = (
+                    dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.dx_tf_turn_steel
+                )
 
         # Minimal conductor layer thickness
         elif (

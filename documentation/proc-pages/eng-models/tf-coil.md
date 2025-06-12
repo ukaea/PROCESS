@@ -232,7 +232,7 @@ turns. The number of turns can be parametrized in three different ways :
     of the inter-turn insulation.
   </p>
 - <p style='text-align: justify;'>
-    **Steel jacket/conduit thickness `thwcndut` (iteration variable 58):** user
+    **Steel jacket/conduit thickness `dx_tf_turn_steel` (iteration variable 58):** user
     input thickness of the turn steel structures. As it is a crucial variable
     for the TF coil structural properties it is also an iteration variable.
   </p>
@@ -1299,7 +1299,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `t_turn_tf_max`      | Maximum turn squared size for constraint (icc = 86)                                                                         | -                  | 0.05          | m    |
 | `c_tf_turn`              | Current per turn <br> Overwitten if `t_turn_tf` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
 | `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
-| `thwcndut`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
+| `dx_tf_turn_steel`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dhecoil`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
 | `vftf`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
 | `fcutfsu`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
