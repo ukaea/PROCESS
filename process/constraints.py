@@ -1022,19 +1022,19 @@ def constraint_equation_33():
     args : output structure : residual error; constraint value;
 
     fiooic: f-value for TF coil operating current / critical
-    jwdgcrt: critical current density for winding pack (A/m2)
+    j_tf_wp_critical: critical current density for winding pack (A/m2)
     j_tf_wp: winding pack current density (A/m2)
     """
     if fortran.constraint_variables.fiooic > 0.7:
         fortran.error_handling.report_error(285)
 
     cc = (
-        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.jwdgcrt
+        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.j_tf_wp_critical
         - 1.0 * fortran.constraint_variables.fiooic
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.jwdgcrt * (1.0 - cc),
+        fortran.tfcoil_variables.j_tf_wp_critical * (1.0 - cc),
         fortran.tfcoil_variables.j_tf_wp * cc,
     )
 

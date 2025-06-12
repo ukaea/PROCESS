@@ -5333,7 +5333,7 @@ def init_tfcoil_variables():
         1158752995.2559297,
         865652122.9071957,
     ]
-    tfv.jwdgcrt = 0.0
+    tfv.j_tf_wp_critical = 0.0
     tfv.jwdgpro = 0.0
     tfv.j_tf_wp = 0.0
     tfv.oacdcp = 0.0

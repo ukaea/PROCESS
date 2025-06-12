@@ -166,7 +166,7 @@ class SuperconParam(NamedTuple):
 
     expected_jwdgpro: Any = None
 
-    expected_jwdgcrt: Any = None
+    expected_j_tf_wp_critical: Any = None
 
     expected_vd: Any = None
 
@@ -212,7 +212,7 @@ class SuperconParam(NamedTuple):
             tcritsc=16,
             expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
-            expected_jwdgcrt=41107234.360397324,
+            expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=9988.2637896807955,
             expected_tmarg=2.34312129,
         ),
@@ -252,7 +252,7 @@ class SuperconParam(NamedTuple):
             tcritsc=16,
             expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
-            expected_jwdgcrt=41107234.360397324,
+            expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
         ),
@@ -292,7 +292,7 @@ class SuperconParam(NamedTuple):
             tcritsc=16,
             expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
-            expected_jwdgcrt=41107234.360397324,
+            expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
         ),
@@ -350,7 +350,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
-    jwdgcrt, vd, tmarg = sctfcoil.supercon(
+    j_tf_wp_critical, vd, tmarg = sctfcoil.supercon(
         isumat=superconparam.isumat,
         acs=superconparam.acs,
         aturn=superconparam.aturn,
@@ -375,7 +375,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
 
-    assert jwdgcrt == pytest.approx(superconparam.expected_jwdgcrt)
+    assert j_tf_wp_critical == pytest.approx(superconparam.expected_j_tf_wp_critical)
 
     assert vd == pytest.approx(superconparam.expected_vd)
 
