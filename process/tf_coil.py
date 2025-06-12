@@ -505,10 +505,10 @@ class TFCoil:
             else:
                 # Single null
                 tfcoil_variables.z_tf_arc[0] = FSTRAIGHT * (
-                    build_variables.hpfu - build_variables.dr_tf_inboard
+                    build_variables.z_tf_top - build_variables.dr_tf_inboard
                 )
                 tfcoil_variables.z_tf_arc[1] = (
-                    build_variables.hpfu - build_variables.dr_tf_inboard
+                    build_variables.z_tf_top - build_variables.dr_tf_inboard
                 )
                 tfcoil_variables.z_tf_arc[2] = 0
                 tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
@@ -552,10 +552,10 @@ class TFCoil:
 
             # Double null, eq(23) and text before it
             tfcoil_variables.z_tf_arc[0] = (
-                build_variables.hpfu - build_variables.dr_tf_inboard
+                build_variables.z_tf_top - build_variables.dr_tf_inboard
             )
             tfcoil_variables.z_tf_arc[1] = (
-                build_variables.hpfu - build_variables.dr_tf_inboard
+                build_variables.z_tf_top - build_variables.dr_tf_inboard
             )
             tfcoil_variables.z_tf_arc[2] = 0
             tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
@@ -598,10 +598,10 @@ class TFCoil:
 
             # Y position of the arcs
             tfcoil_variables.z_tf_arc[0] = (
-                build_variables.hpfu - build_variables.dr_tf_inboard
+                build_variables.z_tf_top - build_variables.dr_tf_inboard
             )
             tfcoil_variables.z_tf_arc[1] = (
-                build_variables.hpfu - build_variables.dr_tf_inboard
+                build_variables.z_tf_top - build_variables.dr_tf_inboard
             )
             tfcoil_variables.z_tf_arc[2] = 0
             tfcoil_variables.z_tf_arc[3] = -build_variables.z_tf_inside_half
@@ -619,7 +619,7 @@ class TFCoil:
             elif physics_variables.itart == 1:
                 tfcoil_variables.len_tf_coil = (
                     build_variables.z_tf_inside_half
-                    + build_variables.hpfu
+                    + build_variables.z_tf_top
                     + 2.0e0
                     * (build_variables.r_tf_outboard_mid - build_variables.r_cp_top)
                 )  # eq(26)
