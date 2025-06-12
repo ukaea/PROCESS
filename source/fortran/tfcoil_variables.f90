@@ -32,7 +32,7 @@ module tfcoil_variables
   !! Cable space area (per turn)  [m2]
   !! Includes the area of voids and central helium channel
 
-  real(dp) :: insulation_area
+  real(dp) :: a_tf_turn_insulation
   !! single turn insulation area (m2)
 
   real(dp) :: a_tf_coil_wp_turn_insulation
