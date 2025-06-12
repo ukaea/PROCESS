@@ -3047,7 +3047,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
             mfile_data.data["dr_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
         )
         cable_space_width_toroidal = round(
-            mfile_data.data["t_cable_toroidal"].get_scan(scan) * 1e3, 5
+            mfile_data.data["dx_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
         )
     elif integer_turns == 0:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
