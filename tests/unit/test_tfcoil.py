@@ -799,7 +799,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_tf_turn_steel: Any = None
 
-    n_tf_turn: Any = None
+    n_tf_coil_turns: Any = None
 
     n_tf_coils: Any = None
 
@@ -914,7 +914,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             len_tf_coil=50.483843027201402,
             dcase=8000,
             a_tf_turn_steel=0.0014685061538103825,
-            n_tf_turn=200,
+            n_tf_coil_turns=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
@@ -986,7 +986,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             len_tf_coil=50.514015976170839,
             dcase=8000,
             a_tf_turn_steel=0.0014685061538103825,
-            n_tf_turn=200,
+            n_tf_coil_turns=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
@@ -1121,7 +1121,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_turn", tfcoilareaandmassesparam.n_tf_turn
+        tfcoil_variables, "n_tf_coil_turns", tfcoilareaandmassesparam.n_tf_coil_turns
     )
 
     monkeypatch.setattr(
@@ -1288,7 +1288,7 @@ class StressclParam(NamedTuple):
 
     casestr: Any = None
 
-    n_tf_turn: Any = None
+    n_tf_coil_turns: Any = None
 
     dr_tf_wp: Any = None
 
@@ -1464,7 +1464,7 @@ class StressclParam(NamedTuple):
             z_tf_inside_half=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0,
-            n_tf_turn=200,
+            n_tf_coil_turns=200,
             dr_tf_wp=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space=0.001293323051622732,
@@ -1587,7 +1587,7 @@ class StressclParam(NamedTuple):
             z_tf_inside_half=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0.00094360452596334093,
-            n_tf_turn=200,
+            n_tf_coil_turns=200,
             dr_tf_wp=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space=0.001293323051622732,
@@ -1793,7 +1793,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.a_case_nose,
         stressclparam.tfinsgap,
         stressclparam.tinstf,
-        stressclparam.n_tf_turn,
+        stressclparam.n_tf_coil_turns,
         stressclparam.i_tf_turns_integer,
         stressclparam.t_cable,
         stressclparam.dr_tf_turn_cable_space,
