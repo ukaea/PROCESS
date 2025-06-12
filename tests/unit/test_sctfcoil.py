@@ -947,7 +947,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     t_cable_toroidal: Any = None
 
-    t_turn_radial: Any = None
+    dr_tf_turn: Any = None
 
     t_turn_toroidal: Any = None
 
@@ -1005,7 +1005,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_conductor_toroidal=0,
             t_cable_radial=0,
             t_cable_toroidal=0,
-            t_turn_radial=0,
+            dr_tf_turn=0,
             t_turn_toroidal=0,
             t_cable=0,
             n_layer=10,
@@ -1039,7 +1039,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_conductor_toroidal=0.059189130247124938,
             t_cable_radial=0.030661087836601014,
             t_cable_toroidal=0.043189130247124938,
-            t_turn_radial=0.050661087836601018,
+            dr_tf_turn=0.050661087836601018,
             t_turn_toroidal=0.063189130247124942,
             t_cable=0.036389912284773368,
             n_layer=10,
@@ -1113,7 +1113,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_radial", tfintegerturngeomparam.t_turn_radial
+        sctfcoil_module, "dr_tf_turn", tfintegerturngeomparam.dr_tf_turn
     )
 
     monkeypatch.setattr(
@@ -1159,7 +1159,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         tfintegerturngeomparam.expected_t_cable_toroidal
     )
 
-    assert sctfcoil_module.t_turn_radial == pytest.approx(
+    assert sctfcoil_module.dr_tf_turn == pytest.approx(
         tfintegerturngeomparam.expected_t_turn_radial
     )
 
@@ -1203,7 +1203,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     awptf: Any = None
 
-    t_turn_radial: Any = None
+    dr_tf_turn: Any = None
 
     t_turn_toroidal: Any = None
 
@@ -1248,7 +1248,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
-            t_turn_radial=0,
+            dr_tf_turn=0,
             t_turn_toroidal=0,
             t_cable=0,
             i_tf_sc_mat=5,
@@ -1274,7 +1274,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
-            t_turn_radial=0.049532469413859428,
+            dr_tf_turn=0.049532469413859428,
             t_turn_toroidal=0.049532469413859428,
             t_cable=0.031932469413859424,
             i_tf_sc_mat=5,
@@ -1300,7 +1300,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
-            t_turn_radial=0.05872,
+            dr_tf_turn=0.05872,
             t_turn_toroidal=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
@@ -1326,7 +1326,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0.042,
             t_cable_tf_is_input=True,
             awptf=0.60510952642236249,
-            t_turn_radial=0.05872,
+            dr_tf_turn=0.05872,
             t_turn_toroidal=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
@@ -1393,7 +1393,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "awptf", tfaveragedturngeomparam.awptf)
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_radial", tfaveragedturngeomparam.t_turn_radial
+        sctfcoil_module, "dr_tf_turn", tfaveragedturngeomparam.dr_tf_turn
     )
 
     monkeypatch.setattr(
@@ -1419,7 +1419,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.expected_t_turn_tf
     )
 
-    assert sctfcoil_module.t_turn_radial == pytest.approx(
+    assert sctfcoil_module.dr_tf_turn == pytest.approx(
         tfaveragedturngeomparam.expected_t_turn_radial
     )
 
