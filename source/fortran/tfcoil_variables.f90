@@ -316,7 +316,7 @@ module tfcoil_variables
   !! j_crit_str_pf_0 : superconductor strand critical current density at 6 T and 4.2 K (A/m2)
   !! Necessary for the cost calculation in $/kAm
 
-  real(dp) :: jwdgcrt
+  real(dp) :: j_tf_wp_critical
   !! critical current density for winding pack (A/m2)
 
   real(dp) :: jwdgpro

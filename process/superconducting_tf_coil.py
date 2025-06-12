@@ -355,7 +355,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
-            (tfcoil_variables.jwdgcrt, tfcoil_variables.tmargtf) = self.supercon_croco(
+            (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.tmargtf) = self.supercon_croco(
                 aturn,
                 tfcoil_variables.bmaxtfrp,
                 tfcoil_variables.c_tf_turn,
@@ -369,7 +369,7 @@ class SuperconductingTFCoil(TFCoil):
 
         else:
             (
-                tfcoil_variables.jwdgcrt,
+                tfcoil_variables.j_tf_wp_critical,
                 vdump,
                 tfcoil_variables.tmargtf,
             ) = self.supercon(
@@ -432,7 +432,7 @@ class SuperconductingTFCoil(TFCoil):
         thelium : input real : He temperature at peak field point (K)
         iprint : input integer : Switch for printing (1 = yes, 0 = no)
         outfile : input integer : Fortran output unit identifier
-        jwdgcrt : output real : Critical winding pack current density (A/m2)
+        j_tf_wp_critical : output real : Critical winding pack current density (A/m2)
         tmarg : output real : Temperature margin (K)
         """
 
@@ -494,7 +494,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Critical current density in winding pack
         # aturn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
-        jwdgcrt = icrit / aturn
+        j_tf_wp_critical = icrit / aturn
         #  Ratio of operating / critical current
         iooic = iop / icrit
         #  Operating current density
@@ -817,8 +817,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Critical current density in winding pack (A/m2)",
-                "(jwdgcrt)",
-                jwdgcrt,
+                "(j_tf_wp_critical)",
+                j_tf_wp_critical,
                 "OP ",
             )
             po.ovarre(
@@ -866,7 +866,7 @@ class SuperconductingTFCoil(TFCoil):
                 "OP ",
             )
 
-        return jwdgcrt, tmarg
+        return j_tf_wp_critical, tmarg
 
     def supercon(
         self,
@@ -921,7 +921,7 @@ class SuperconductingTFCoil(TFCoil):
         outfile : input integer : Fortran output unit identifier
         jwdgpro : output real : Winding pack current density from temperature
         rise protection (A/m2)
-        jwdgcrt : output real : Critical winding pack current density (A/m2)
+        j_tf_wp_critical : output real : Critical winding pack current density (A/m2)
         vd : output real : Discharge voltage imposed on a TF coil (V)
         tmarg : output real : Temperature margin (K)
         This routine calculates the superconductor properties for the TF coils.
@@ -1140,7 +1140,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Critical current density in winding pack
         # aturn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
-        jwdgcrt = icrit / aturn
+        j_tf_wp_critical = icrit / aturn
         #  Ratio of operating / critical current
         iooic = iop / icrit
         #  Operating current density
@@ -1410,8 +1410,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Critical current density in winding pack (A/m2)",
-                "(jwdgcrt)",
-                jwdgcrt,
+                "(j_tf_wp_critical)",
+                j_tf_wp_critical,
                 "OP ",
             )
             po.ovarre(
@@ -1451,7 +1451,7 @@ class SuperconductingTFCoil(TFCoil):
                 "OP ",
             )
 
-        return jwdgcrt, vd, tmarg
+        return j_tf_wp_critical, vd, tmarg
 
     def protect(self, aio, tfes, acs, aturn, tdump, fcond, fcu, tba, tmax):
         """Finds the current density limited by the protection limit
