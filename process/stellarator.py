@@ -2548,7 +2548,7 @@ class Stellarator:
             0.9e0 * t_cable**2
         )  # 0.9 to include some rounded corners. (tfcoil_variables.a_tf_turn_cable_space = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
         # [m^2] Cross-sectional area of conduit case per turn
-        tfcoil_variables.acndttf = (
+        tfcoil_variables.a_tf_turn_steel = (
             t_cable + 2.0e0 * tfcoil_variables.dx_tf_turn_steel
         ) ** 2 - tfcoil_variables.a_tf_turn_cable_space
         #######################################################################################
@@ -2686,11 +2686,13 @@ class Stellarator:
         # [m^2] Insulation area (not including ground-wall)
         tfcoil_variables.a_tf_coil_wp_turn_insulation = tfcoil_variables.n_tf_turn * (
             tfcoil_variables.t_turn_tf**2
-            - tfcoil_variables.acndttf
+            - tfcoil_variables.a_tf_turn_steel
             - tfcoil_variables.a_tf_turn_cable_space
         )
         # [m^2] Structure area for cable
-        tfcoil_variables.aswp = tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
+        tfcoil_variables.aswp = (
+            tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
+        )
         # End of winding pack calculations
         #######################################################################################
 
@@ -2939,7 +2941,7 @@ class Stellarator:
         tfcoil_variables.m_tf_turn_steel_conduit = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acndttf
+            * tfcoil_variables.a_tf_turn_steel
             * fwbs_variables.denstl
         )
         # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
