@@ -761,7 +761,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0593E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4389E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1839E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.6519E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6519E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6445E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5000E+00 OP 
@@ -1924,7 +1924,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0049E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7927E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1785E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.6069E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6069E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6304E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5076E+00 OP 
@@ -3087,7 +3087,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9466E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1596E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1707E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5620E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5620E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6163E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5137E+00 OP 
@@ -4250,7 +4250,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9433E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1612E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1685E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5548E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5548E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6111E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5139E+00 OP 
@@ -5413,7 +5413,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0026E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7936E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1771E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5952E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5952E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6210E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5089E+00 OP 
@@ -6576,7 +6576,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0499E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4433E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1804E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.6229E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6229E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6209E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5044E+00 OP 
@@ -7739,7 +7739,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0461E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4453E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1776E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.6141E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6141E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6147E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5046E+00 OP 
@@ -8902,7 +8902,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9928E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7986E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1697E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5776E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5776E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6070E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5114E+00 OP 
@@ -10065,7 +10065,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9393E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1629E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1617E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5428E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5428E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5987E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5196E+00 OP 
@@ -11228,7 +11228,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9374E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1638E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1604E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5387E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5387E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5958E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5197E+00 OP 
@@ -12391,7 +12391,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9903E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7998E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1692E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5747E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5747E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6019E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5161E+00 OP 
@@ -13554,7 +13554,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0460E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4451E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1761E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.6136E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6136E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6095E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5114E+00 OP 
@@ -14717,7 +14717,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0435E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4464E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1745E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.6085E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6085E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6060E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5116E+00 OP 
@@ -15880,7 +15880,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9912E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7993E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1675E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5774E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5774E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6012E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5201E+00 OP 
@@ -17043,7 +17043,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9399E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1624E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1608E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5472E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5472E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5964E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5282E+00 OP 
