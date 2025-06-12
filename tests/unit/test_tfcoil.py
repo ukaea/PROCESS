@@ -1420,7 +1420,7 @@ class StressclParam(NamedTuple):
 
     tan_theta_coil: Any = None
 
-    t_cable_radial: Any = None
+    dr_tf_turn_cable_space: Any = None
 
     t_cable: Any = None
 
@@ -1558,7 +1558,7 @@ class StressclParam(NamedTuple):
             a_case_nose=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
-            t_cable_radial=0.030661087836601014,
+            dr_tf_turn_cable_space=0.030661087836601014,
             t_cable=0.036389912284773368,
             vforce_inboard_tot=4008729778.208292,
             iprint=0,
@@ -1681,7 +1681,7 @@ class StressclParam(NamedTuple):
             a_case_nose=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
-            t_cable_radial=0.030661087836601014,
+            dr_tf_turn_cable_space=0.030661087836601014,
             t_cable=0.036389912284773368,
             vforce_inboard_tot=4008729778.208292,
             iprint=0,
@@ -1790,7 +1790,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.n_tf_turn,
         stressclparam.i_tf_turns_integer,
         stressclparam.t_cable,
-        stressclparam.t_cable_radial,
+        stressclparam.dr_tf_turn_cable_space,
         stressclparam.dhecoil,
         stressclparam.fcutfsu,
         stressclparam.dx_tf_turn_steel,

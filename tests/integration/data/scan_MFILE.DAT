@@ -560,7 +560,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0767E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5597E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5597E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2646E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2585E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -1555,7 +1555,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0767E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5597E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5597E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2647E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2585E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -2550,7 +2550,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0766E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2648E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2584E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -3545,7 +3545,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0765E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2649E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2584E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -4540,7 +4540,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0765E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2649E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -5535,7 +5535,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0764E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7816E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2650E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -6530,7 +6530,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1817E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0763E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7817E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2651E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2583E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -7525,7 +7525,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1817E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0763E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7817E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2652E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2582E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    
@@ -8520,7 +8520,7 @@
  Toroidal_width_of_turn_(m)______________________________________________ (t_turn_toroidal)_____________      6.1817E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0762E-02 OP 
  Toroidal_width_of_conductor_(m)_________________________________________ (t_conductor_toroidal)________      5.7817E-02 OP 
- Radial_width_of_cable_space_____________________________________________ (t_cable_radial)______________      5.5598E-02    
+ Radial_width_of_cable_space_____________________________________________ (dr_tf_turn_cable_space)______________      5.5598E-02    
  Toroidal_width_of_cable_space___________________________________________ (t_cable_toroidal)____________      3.2652E-02    
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      1.2582E-02 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      2.0000E-03    

@@ -244,7 +244,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.n_tf_turn,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
-                sctfcoil_module.t_cable_radial,
+                sctfcoil_module.dr_tf_turn_cable_space,
                 tfcoil_variables.dhecoil,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
@@ -1158,8 +1158,8 @@ class SuperconductingTFCoil(TFCoil):
             iooic: {iooic}
             j_crit_sc: {j_crit_sc}
             Check conductor dimensions. Cable space area acs likely gone negative. acs: {acs}
-            This is likely because t_cable_radial or t_cable_toroidal has gone negative:
-            t_cable_radial: {sctfcoil_module.t_cable_radial}
+            This is likely because dr_tf_turn_cable_space or t_cable_toroidal has gone negative:
+            dr_tf_turn_cable_space: {sctfcoil_module.dr_tf_turn_cable_space}
             t_cable_toroidal: {sctfcoil_module.t_cable_toroidal}
             """
             )
@@ -2120,38 +2120,39 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Dimension of square cable space inside conduit [m]
-        sctfcoil_module.t_cable_radial = (
+        sctfcoil_module.dr_tf_turn_cable_space = (
             sctfcoil_module.t_conductor_radial - 2.0e0 * dx_tf_turn_steel
         )
         sctfcoil_module.t_cable_toroidal = (
             sctfcoil_module.t_conductor_toroidal - 2.0e0 * dx_tf_turn_steel
         )
         sctfcoil_module.t_cable = np.sqrt(
-            sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
+            sctfcoil_module.dr_tf_turn_cable_space * sctfcoil_module.t_cable_toroidal
         )
 
         # Cross-sectional area of cable space per turn
         # taking account of rounded inside corners [m2]
         a_tf_turn_cable_space = (
-            sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
+            sctfcoil_module.dr_tf_turn_cable_space * sctfcoil_module.t_cable_toroidal
         ) - (4.0e0 - np.pi) * sctfcoil_module.rbcndut**2
 
         if a_tf_turn_cable_space <= 0.0e0:
-            if (sctfcoil_module.t_cable_radial < 0.0e0) or (
+            if (sctfcoil_module.dr_tf_turn_cable_space < 0.0e0) or (
                 sctfcoil_module.t_cable_toroidal < 0.0e0
             ):
                 error_handling.fdiags[0] = a_tf_turn_cable_space
-                error_handling.fdiags[1] = sctfcoil_module.t_cable_radial
+                error_handling.fdiags[1] = sctfcoil_module.dr_tf_turn_cable_space
                 error_handling.fdiags[2] = sctfcoil_module.t_cable_toroidal
                 error_handling.report_error(101)
             else:
                 error_handling.fdiags[0] = a_tf_turn_cable_space
-                error_handling.fdiags[1] = sctfcoil_module.t_cable_radial
+                error_handling.fdiags[1] = sctfcoil_module.dr_tf_turn_cable_space
                 error_handling.fdiags[1] = sctfcoil_module.t_cable_toroidal
                 error_handling.report_error(102)
                 sctfcoil_module.rbcndut = 0.0e0
                 a_tf_turn_cable_space = (
-                    sctfcoil_module.t_cable_radial * sctfcoil_module.t_cable_toroidal
+                    sctfcoil_module.dr_tf_turn_cable_space
+                    * sctfcoil_module.t_cable_toroidal
                 )
 
         # Cross-sectional area of conduit jacket per turn [m2]
@@ -2578,7 +2579,7 @@ def init_sctfcoil_module():
     sctfcoil_module.tan_theta_coil = 0.0
     sctfcoil_module.t_conductor_radial = 0.0
     sctfcoil_module.t_conductor_toroidal = 0.0
-    sctfcoil_module.t_cable_radial = 0.0
+    sctfcoil_module.dr_tf_turn_cable_space = 0.0
     sctfcoil_module.t_cable_toroidal = 0.0
     sctfcoil_module.dr_tf_turn = 0.0
     sctfcoil_module.t_turn_toroidal = 0.0
