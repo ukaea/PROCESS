@@ -5264,7 +5264,7 @@ def init_tfcoil_variables():
     tfv.acndttf = 0.0
     tfv.acond = 0.0
     tfv.a_tf_turn_cable_space = 0.0
-    tfv.insulation_area = 0.0
+    tfv.a_tf_turn_insulation = 0.0
     tfv.a_tf_coil_wp_turn_insulation = 0.0
     tfv.sig_tf_case_max = 6.0e8
     tfv.sig_tf_wp_max = 6.0e8
