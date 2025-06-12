@@ -811,7 +811,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     fcutfsu: Any = None
 
-    awphec: Any = None
+    a_tf_wp_coolant_channels: Any = None
 
     a_tf_turn_cable_space: Any = None
 
@@ -920,7 +920,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
-            awphec=0.015707963267948974,
+            a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space=0.001293323051622732,
             whttflgs=0,
             whtcp=0,
@@ -992,7 +992,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
-            awphec=0.015707963267948974,
+            a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space=0.001293323051622732,
             whttflgs=0,
             whtcp=0,
@@ -1140,7 +1140,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
 
-    monkeypatch.setattr(tfcoil_variables, "awphec", tfcoilareaandmassesparam.awphec)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_wp_coolant_channels",
+        tfcoilareaandmassesparam.a_tf_wp_coolant_channels,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -1366,7 +1370,7 @@ class StressclParam(NamedTuple):
 
     avwp: Any = None
 
-    awphec: Any = None
+    a_tf_wp_coolant_channels: Any = None
 
     poisson_ins: Any = None
 
@@ -1501,7 +1505,7 @@ class StressclParam(NamedTuple):
             dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
-            awphec=0.015707963267948974,
+            a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
             eyoung_cond_trans=0,
             poisson_cond_axial=0.30000001192092896,
@@ -1624,7 +1628,7 @@ class StressclParam(NamedTuple):
             dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
-            awphec=0.015707963267948974,
+            a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
             eyoung_cond_trans=0,
             poisson_cond_axial=0.30000001192092896,
