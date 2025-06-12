@@ -485,9 +485,8 @@ class SuperconductingTFCoil(TFCoil):
         # Temperature margin
         current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
         tmarg = current_sharing_t - thelium
-        tfcoil_variables.temp_margin = (
-            tmarg  # Only used in the availabilty routine - see comment to Issue #526
-        )
+        # Only used in the availabilty routine - see comment to Issue #526
+        tfcoil_variables.temp_margin = tmarg
 
         if output:  # Output ----------------------------------
             total = (
@@ -1145,37 +1144,32 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
 
-        if (
-            (isumat == 1)
-            or (isumat == 3)
-            or (isumat == 4)
-            or (isumat == 5)
-            or (isumat == 7)
-            or (isumat == 8)
-            or (isumat == 9)
-        ):  # Find temperature at which current density margin = 0
+        if isumat in [1, 3, 4, 5, 7, 8, 9]:
+            # Find temperature at which current density margin = 0
             if isumat == 3:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
             else:
                 arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
 
-            another_estimate = 2 * thelium
-            t_zero_margin, root_result = optimize.newton(
-                superconductors.current_density_margin,
-                thelium,
-                fprime=None,
-                args=arguments,
-                # args=(isumat, jsc, bmax, strain, bc20m, tc0m,),
-                tol=1.0e-06,
-                maxiter=50,
-                fprime2=None,
-                x1=another_estimate,
-                rtol=1.0e-6,
-                full_output=True,
-                disp=True,
-            )
-            # print(root_result)  # Diagnostic for newton method
-            tmarg = t_zero_margin - thelium
+            if superconductors.current_density_margin(thelium, *arguments) < 0:
+                # Kludge tmarg to be a negative value. The tmargtf constraint (icc=36)
+                # should be violated in this case and the unplanned tf availability
+                # should be 100% (making cfactr 0 and violating the availability icc=61)
+                tmarg = -abs(thelium)  # -|t| to ensure its not a double negative
+            else:
+                t_zero_margin = optimize.newton(
+                    superconductors.current_density_margin,
+                    thelium,
+                    args=arguments,
+                    tol=1.0e-06,
+                    maxiter=50,
+                    x1=2 * thelium,
+                    rtol=1.0e-6,
+                    disp=True,
+                )
+
+                tmarg = t_zero_margin - thelium
+
             tfcoil_variables.temp_margin = tmarg
 
         #  Find the current density limited by the protection limit
