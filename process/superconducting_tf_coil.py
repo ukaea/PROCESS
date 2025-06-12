@@ -245,7 +245,7 @@ class SuperconductingTFCoil(TFCoil):
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
                 sctfcoil_module.dr_tf_turn_cable_space,
-                tfcoil_variables.dhecoil,
+                tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
@@ -947,8 +947,8 @@ class SuperconductingTFCoil(TFCoil):
         fhetot = (
             fhe
             + (np.pi / 4.0e0)
-            * tfcoil_variables.dhecoil
-            * tfcoil_variables.dhecoil
+            * tfcoil_variables.dia_tf_turn_coolant_channel
+            * tfcoil_variables.dia_tf_turn_coolant_channel
             / acs
         )
 
@@ -1759,7 +1759,10 @@ class SuperconductingTFCoil(TFCoil):
         # -------------------
         # Central helium channel down the conductor core [m2]
         tfcoil_variables.awphec = (
-            0.25e0 * tfcoil_variables.n_tf_turn * np.pi * tfcoil_variables.dhecoil**2
+            0.25e0
+            * tfcoil_variables.n_tf_turn
+            * np.pi
+            * tfcoil_variables.dia_tf_turn_coolant_channel**2
         )
 
         # Total conductor cross-sectional area, taking account of void area
