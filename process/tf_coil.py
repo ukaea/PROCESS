@@ -244,7 +244,7 @@ class TFCoil:
                 tfcoil_variables.i_tf_tresca,
                 tfcoil_variables.acasetf,
                 tfcoil_variables.vforce,
-                tfcoil_variables.acndttf,
+                tfcoil_variables.a_tf_turn_steel,
             )
 
             tfcoil_variables.sig_tf_case = (
@@ -1262,13 +1262,13 @@ class TFCoil:
                 )
                 # TODO
                 # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.acond/ap)',acond/ap, 'OP ')
-                # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_turn*tfcoil_variables.acndttf/ap)',n_tf_turn*tfcoil_variables.acndttf/ap, 'OP ')
+                # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_turn*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_turn*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
                 # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
                 # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.avwp/ap)',avwp/ap, 'OP ')
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.awphec/ap)',awphec/ap, 'OP ')
                 ap = (
                     tfcoil_variables.acond
-                    + tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
+                    + tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.avwp
                     + tfcoil_variables.awphec
@@ -1279,7 +1279,7 @@ class TFCoil:
                     "",
                     (
                         tfcoil_variables.acond
-                        + tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
+                        + tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
                         + tfcoil_variables.a_tf_coil_wp_turn_insulation
                         + tfcoil_variables.avwp
                         + tfcoil_variables.awphec
@@ -2920,7 +2920,7 @@ class TFCoil:
             tfcoil_variables.m_tf_turn_steel_conduit = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
-                * tfcoil_variables.acndttf
+                * tfcoil_variables.a_tf_turn_steel
                 * fwbs_variables.denstl
             )
 
@@ -3182,7 +3182,7 @@ class TFCoil:
         i_tf_tresca,
         acasetf,
         vforce,
-        acndttf,
+        a_tf_turn_steel,
     ):
         """TF coil stress routine
 
@@ -3732,7 +3732,7 @@ class TFCoil:
 
             # Vertical stress [Pa]
             sig_tf_z[:] = vforce / (
-                acasetf + acndttf * n_tf_turn
+                acasetf + a_tf_turn_steel * n_tf_turn
             )  # Array equation [EDIT: Are you sure? It doesn't look like one to me]
 
             # Strain in vertical direction on WP
@@ -5261,7 +5261,7 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
 def init_tfcoil_variables():
     tfv.acasetf = 0.0
     tfv.acasetfo = 0.0
-    tfv.acndttf = 0.0
+    tfv.a_tf_turn_steel = 0.0
     tfv.acond = 0.0
     tfv.a_tf_turn_cable_space = 0.0
     tfv.a_tf_turn_insulation = 0.0

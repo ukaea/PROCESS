@@ -265,7 +265,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.i_tf_tresca,
                 tfcoil_variables.acasetf,
                 tfcoil_variables.vforce,
-                tfcoil_variables.acndttf,
+                tfcoil_variables.a_tf_turn_steel,
             )
 
             tfcoil_variables.sig_tf_case = (
@@ -459,7 +459,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.conductor_jacket_area = (
             sctfcoil_module.conductor_area - sctfcoil_module.conductor_acs
         )
-        tfcoil_variables.acndttf = sctfcoil_module.conductor_jacket_area
+        tfcoil_variables.a_tf_turn_steel = sctfcoil_module.conductor_jacket_area
 
         sctfcoil_module.conductor_jacket_fraction = (
             sctfcoil_module.conductor_jacket_area / sctfcoil_module.conductor_area
@@ -1730,7 +1730,7 @@ class SuperconductingTFCoil(TFCoil):
             # Non-ingeger number of turns
             (
                 tfcoil_variables.a_tf_turn_cable_space,
-                tfcoil_variables.acndttf,
+                tfcoil_variables.a_tf_turn_steel,
                 tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.n_tf_turn,
             ) = self.tf_averaged_turn_geom(
@@ -1744,7 +1744,7 @@ class SuperconductingTFCoil(TFCoil):
             # Integer number of turns
             (
                 tfcoil_variables.a_tf_turn_cable_space,
-                tfcoil_variables.acndttf,
+                tfcoil_variables.a_tf_turn_steel,
                 tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_turn,
@@ -1787,7 +1787,9 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Area of steel structure in winding pack [m2]
-        tfcoil_variables.aswp = tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
+        tfcoil_variables.aswp = (
+            tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
+        )
 
         # Inboard coil steel area [m2]
         sctfcoil_module.a_tf_steel = tfcoil_variables.acasetf + tfcoil_variables.aswp
@@ -2161,7 +2163,7 @@ class SuperconductingTFCoil(TFCoil):
                 )
 
         # Cross-sectional area of conduit jacket per turn [m2]
-        acndttf = (
+        a_tf_turn_steel = (
             sctfcoil_module.t_conductor_radial * sctfcoil_module.t_conductor_toroidal
             - a_tf_turn_cable_space
         )
@@ -2169,12 +2171,12 @@ class SuperconductingTFCoil(TFCoil):
         # Area of inter-turn insulation: single turn [m2]
         a_tf_turn_insulation = (
             sctfcoil_module.dr_tf_turn * sctfcoil_module.dx_tf_turn
-            - acndttf
+            - a_tf_turn_steel
             - a_tf_turn_cable_space
         )
         return (
             a_tf_turn_cable_space,
-            acndttf,
+            a_tf_turn_steel,
             a_tf_turn_insulation,
             c_tf_turn,
             n_tf_turn,
@@ -2290,7 +2292,7 @@ class SuperconductingTFCoil(TFCoil):
                     a_tf_turn_cable_space = sctfcoil_module.t_cable**2
 
             # Cross-sectional area of conduit jacket per turn [m2]
-            acndttf = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
+            a_tf_turn_steel = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
 
         # REBCO turn structure
         elif i_tf_sc_mat == 6:
@@ -2300,9 +2302,9 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Cross-sectional area of conduit jacket per turn [m2]
-            acndttf = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
+            a_tf_turn_steel = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
 
-        return a_tf_turn_cable_space, acndttf, a_tf_turn_insulation, n_tf_turn
+        return a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_turn
 
 
 @staticmethod
