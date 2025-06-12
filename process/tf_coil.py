@@ -206,7 +206,7 @@ class TFCoil:
                 tfcoil_variables.poisson_cond_trans,
                 tfcoil_variables.eyoung_ins,
                 tfcoil_variables.poisson_ins,
-                tfcoil_variables.thicndut,
+                tfcoil_variables.dx_tf_turn_insulation,
                 tfcoil_variables.eyoung_copper,
                 tfcoil_variables.poisson_copper,
                 tfcoil_variables.i_tf_sup,
@@ -1223,8 +1223,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inter-turn insulation thickness (m)",
-                "(thicndut)",
-                tfcoil_variables.thicndut,
+                "(dx_tf_turn_insulation)",
+                tfcoil_variables.dx_tf_turn_insulation,
             )
 
             if tfcoil_variables.i_tf_sc_mat in (1, 2, 3, 4, 5, 7, 8, 9):
@@ -1394,8 +1394,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Turn insulation thickness",
-                "(thicndut)",
-                tfcoil_variables.thicndut,
+                "(dx_tf_turn_insulation)",
+                tfcoil_variables.dx_tf_turn_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -3144,7 +3144,7 @@ class TFCoil:
         poisson_cond_trans,
         eyoung_ins,
         poisson_ins,
-        thicndut,
+        dx_tf_turn_insulation,
         eyoung_copper,
         poisson_copper,
         i_tf_sup,
@@ -3407,7 +3407,7 @@ class TFCoil:
                 # Insulation
                 eyoung_member_array[2] = eyoung_ins
                 poisson_member_array[2] = poisson_ins
-                l_member_array[2] = 2 * thicndut
+                l_member_array[2] = 2 * dx_tf_turn_insulation
                 # [EDIT: Add central cooling channel? Would be new member #1]
 
                 # Compute the composited (smeared) properties
@@ -3491,9 +3491,9 @@ class TFCoil:
             a_wp_steel_eff = a_tf_steel - a_case_front - a_case_nose
 
             # WP effective insulation thickness (SC only) [m]
-            # include groundwall insulation + insertion gap in tfcoil_variables.thicndut
+            # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
             # inertion gap is tfcoil_variables.tfinsgap on 4 sides
-            t_ins_eff = thicndut + (tfinsgap + tinstf) / n_tf_turn
+            t_ins_eff = dx_tf_turn_insulation + (tfinsgap + tinstf) / n_tf_turn
 
             # Effective WP young modulus in the toroidal direction [Pa]
             # The toroidal property drives the stress calculation (J. Last report no 4)
@@ -5407,7 +5407,7 @@ def init_tfcoil_variables():
     tfv.tfsao = 0.0
     tfv.tftmp = 4.5
     tfv.dx_tf_inboard_out_toroidal = 1.0
-    tfv.thicndut = 8e-4
+    tfv.dx_tf_turn_insulation = 8e-4
     tfv.layer_ins = 0.0
     tfv.dr_tf_nose_case = 0.3
     tfv.dr_tf_wp = 0.0

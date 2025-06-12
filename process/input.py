@@ -1287,7 +1287,9 @@ INPUT_VARIABLES = {
     ),
     "theta1_coil": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 60.0)),
     "theta1_vv": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 60.0)),
-    "thicndut": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_turn_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "dr_tf_nose_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "dz_shld_thermal": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "thwcndut": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),

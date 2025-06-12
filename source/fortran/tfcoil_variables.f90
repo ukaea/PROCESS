@@ -604,7 +604,7 @@ module tfcoil_variables
   real(dp) :: dx_tf_inboard_out_toroidal
   !! TF coil toroidal thickness (m)
 
-  real(dp) :: thicndut
+  real(dp) :: dx_tf_turn_insulation
   !! conduit insulation thickness (m)
 
   real(dp) :: layer_ins
