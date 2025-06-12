@@ -6,10 +6,6 @@ import process.process_output as process_output
 from process.fortran import constants
 
 
-class ProcessUserWarning(UserWarning):
-    pass
-
-
 @dataclass
 class ProcessWarning:
     msg: str
