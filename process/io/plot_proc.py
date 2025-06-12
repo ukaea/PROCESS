@@ -2680,7 +2680,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
     wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
     tinstf = mfile_data.data["tinstf"].get_scan(scan)
-    turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
+    turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
     nose_thickness = mfile_data.data["dr_tf_nose_case"].get_scan(scan)

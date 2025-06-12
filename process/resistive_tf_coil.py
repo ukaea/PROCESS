@@ -210,7 +210,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.tfinsgap,
                 tfcoil_variables.tinstf,
-                tfcoil_variables.n_tf_turn,
+                tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
                 sctfcoil_module.dr_tf_turn_cable_space,
@@ -327,12 +327,12 @@ class ResistiveTFCoil(TFCoil):
             )
 
         # Number of turns
-        # Set by user (no turn structure by default, i.e. tfcoil_variables.n_tf_turn = 1 )
+        # Set by user (no turn structure by default, i.e. tfcoil_variables.n_tf_coil_turns = 1 )
         if (
-            abs(tfcoil_variables.n_tf_turn)
-            < np.finfo(float(tfcoil_variables.n_tf_turn)).eps
+            abs(tfcoil_variables.n_tf_coil_turns)
+            < np.finfo(float(tfcoil_variables.n_tf_coil_turns)).eps
         ):
-            tfcoil_variables.n_tf_turn = 1.0e0
+            tfcoil_variables.n_tf_coil_turns = 1.0e0
 
         # Total mid-plane cross-sectional area of winding pack, [m2]
         # including the surrounding ground-wall insulation layer
@@ -382,7 +382,7 @@ class ResistiveTFCoil(TFCoil):
             - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.dx_tf_turn_insulation)
         ) * 2.0e0 * (
             tfcoil_variables.tinstf
-            + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_turn
+            + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_coil_turns
         )
         a_tf_cond = a_tf_cond * (1.0e0 - tfcoil_variables.fcoolcp)
 
@@ -412,7 +412,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Current per turn
         tfcoil_variables.c_tf_turn = tfcoil_variables.c_tf_total / (
-            tfcoil_variables.n_tf_turn * tfcoil_variables.n_tf_coils
+            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.n_tf_coils
         )
 
         # Exact current density on TF oubard legs
@@ -422,7 +422,8 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.dx_tf_inboard_out_toroidal
                 - 2.0e0
                 * (
-                    tfcoil_variables.n_tf_turn * tfcoil_variables.dx_tf_turn_insulation
+                    tfcoil_variables.n_tf_coil_turns
+                    * tfcoil_variables.dx_tf_turn_insulation
                     + tfcoil_variables.tinstf
                 )
             )
@@ -533,7 +534,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.dr_tf_plasma_case,
                 tfcoil_variables.tinstf,
                 tfcoil_variables.dx_tf_turn_insulation,
-                tfcoil_variables.n_tf_turn,
+                tfcoil_variables.n_tf_coil_turns,
                 tfcoil_variables.c_tf_total,
                 tfcoil_variables.rho_cp,
                 tfcoil_variables.fcoolcp,
@@ -559,7 +560,7 @@ class ResistiveTFCoil(TFCoil):
             )
             + 2.0e0
             * tfcoil_variables.dx_tf_turn_insulation
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * (
                 build_variables.dr_tf_outboard
                 - 2.0e0
@@ -598,7 +599,7 @@ class ResistiveTFCoil(TFCoil):
                 # Number of contact area per joint (all legs)
                 n_contact_tot = (
                     tfcoil_variables.n_tf_joints_contact
-                    * np.round(tfcoil_variables.n_tf_turn)
+                    * np.round(tfcoil_variables.n_tf_coil_turns)
                     * np.round(tfcoil_variables.n_tf_coils)
                 )
 
@@ -651,7 +652,7 @@ class ResistiveTFCoil(TFCoil):
         cas_out_th,
         gr_ins_th,
         ins_th,
-        n_tf_turn,
+        n_tf_coil_turns,
         curr,
         rho,
         fcool,
@@ -726,7 +727,7 @@ class ResistiveTFCoil(TFCoil):
         # Mid-plane area calculations
         # ---------------------------
         # Total number of CP turns
-        n_turns_tot = n_tf_coils * n_tf_turn
+        n_turns_tot = n_tf_coils * n_tf_coil_turns
 
         # Area of the innner TF central hole [m2]
         a_tfin_hole = np.pi * r_tfin_inleg**2

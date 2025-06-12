@@ -730,7 +730,7 @@ class Costs2015:
         cost_2015_variables.s_k[15] = (
             tfcoil_variables.n_tf_coils
             * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
         )
         cost_2015_variables.s_kref[15] = 82249.0e0
         cost_2015_variables.s_cost[15] = (
@@ -790,7 +790,7 @@ class Costs2015:
         cost_2015_variables.s_k[19] = (
             tfcoil_variables.n_tf_coils
             * tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
         )
         cost_2015_variables.s_kref[19] = 82249.0e0
         cost_2015_variables.s_cost[19] = (

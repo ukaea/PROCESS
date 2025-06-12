@@ -220,7 +220,7 @@ class TFCoil:
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.tfinsgap,
                 tfcoil_variables.tinstf,
-                tfcoil_variables.n_tf_turn,
+                tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
                 sctfcoil_module.dr_tf_turn_cable_space,
@@ -1132,8 +1132,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Number of turns per TF coil",
-                "(n_tf_turn)",
-                tfcoil_variables.n_tf_turn,
+                "(n_tf_coil_turns)",
+                tfcoil_variables.n_tf_coil_turns,
                 "OP ",
             )
             if tfcoil_variables.i_tf_turns_integer == 1:
@@ -1262,13 +1262,14 @@ class TFCoil:
                 )
                 # TODO
                 # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.acond/ap)',acond/ap, 'OP ')
-                # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_turn*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_turn*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
+                # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
                 # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
                 # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.avwp/ap)',avwp/ap, 'OP ')
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
                     tfcoil_variables.acond
-                    + tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
+                    + tfcoil_variables.n_tf_coil_turns
+                    * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.avwp
                     + tfcoil_variables.a_tf_wp_coolant_channels
@@ -1279,7 +1280,8 @@ class TFCoil:
                     "",
                     (
                         tfcoil_variables.acond
-                        + tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
+                        + tfcoil_variables.n_tf_coil_turns
+                        * tfcoil_variables.a_tf_turn_steel
                         + tfcoil_variables.a_tf_coil_wp_turn_insulation
                         + tfcoil_variables.avwp
                         + tfcoil_variables.a_tf_wp_coolant_channels
@@ -1388,8 +1390,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Number of turns per TF leg",
-                "(n_tf_turn)",
-                tfcoil_variables.n_tf_turn,
+                "(n_tf_coil_turns)",
+                tfcoil_variables.n_tf_coil_turns,
             )
             po.ovarre(
                 self.outfile,
@@ -2897,7 +2899,7 @@ class TFCoil:
             # Includes space allowance for central helium channel, area tfcoil_variables.a_tf_wp_coolant_channels
             tfcoil_variables.whtconsc = (
                 tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_turn
+                * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
@@ -2908,7 +2910,7 @@ class TFCoil:
             # Copper mass [kg]
             tfcoil_variables.whtconcu = (
                 tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_turn
+                * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * tfcoil_variables.fcutfsu
@@ -2921,13 +2923,13 @@ class TFCoil:
             # Steel conduit (sheath) mass [kg]
             tfcoil_variables.m_tf_turn_steel_conduit = (
                 tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_turn
+                * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_steel
                 * fwbs_variables.denstl
             )
 
             # Conduit insulation mass [kg]
-            # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_turn)
+            # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
             tfcoil_variables.whtconin = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_coil_wp_turn_insulation
@@ -3160,7 +3162,7 @@ class TFCoil:
         a_case_nose,
         tfinsgap,
         tinstf,
-        n_tf_turn,
+        n_tf_coil_turns,
         i_tf_turns_integer,
         t_cable,
         dr_tf_turn_cable_space,
@@ -3495,7 +3497,7 @@ class TFCoil:
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
             # inertion gap is tfcoil_variables.tfinsgap on 4 sides
-            t_ins_eff = dx_tf_turn_insulation + (tfinsgap + tinstf) / n_tf_turn
+            t_ins_eff = dx_tf_turn_insulation + (tfinsgap + tinstf) / n_tf_coil_turns
 
             # Effective WP young modulus in the toroidal direction [Pa]
             # The toroidal property drives the stress calculation (J. Last report no 4)
@@ -3734,7 +3736,7 @@ class TFCoil:
 
             # Vertical stress [Pa]
             sig_tf_z[:] = vforce / (
-                acasetf + a_tf_turn_steel * n_tf_turn
+                acasetf + a_tf_turn_steel * n_tf_coil_turns
             )  # Array equation [EDIT: Are you sure? It doesn't look like one to me]
 
             # Strain in vertical direction on WP
@@ -5426,7 +5428,7 @@ def init_tfcoil_variables():
     tfv.tmax_croco = 200.0
     tfv.croco_quench_temperature = 0.0
     tfv.temp_tf_cryo = 4.5
-    tfv.n_tf_turn = 0.0
+    tfv.n_tf_coil_turns = 0.0
     tfv.vdalw = 20.0
     tfv.vforce = 0.0
     tfv.f_vforce_inboard = 0.5
