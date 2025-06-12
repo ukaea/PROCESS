@@ -8,6 +8,7 @@ from pathlib import Path
 import os
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
+# prefix = "/squid"
 prefix = "/updated"
 # prefix = "/rebuild"
 

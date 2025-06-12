@@ -379,7 +379,7 @@ ipedestal = 0
 i_rad_loss = 1 
 
 *Switch for energy confinement time scaling law (38: ISS04, 49: ISS04-Gyro-Bohm)
-i _confinement_time = 38    
+i_confinement_time = 38    
 
 * Plasma separatrix elongation
 kappa = 1.001  
