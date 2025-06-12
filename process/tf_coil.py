@@ -1265,13 +1265,13 @@ class TFCoil:
                 # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_turn*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_turn*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
                 # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
                 # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.avwp/ap)',avwp/ap, 'OP ')
-                # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.awphec/ap)',awphec/ap, 'OP ')
+                # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
                     tfcoil_variables.acond
                     + tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
                     + tfcoil_variables.avwp
-                    + tfcoil_variables.awphec
+                    + tfcoil_variables.a_tf_wp_coolant_channels
                 )
                 po.ovarrf(
                     self.outfile,
@@ -1282,7 +1282,7 @@ class TFCoil:
                         + tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
                         + tfcoil_variables.a_tf_coil_wp_turn_insulation
                         + tfcoil_variables.avwp
-                        + tfcoil_variables.awphec
+                        + tfcoil_variables.a_tf_wp_coolant_channels
                     )
                     / ap,
                 )
@@ -2894,14 +2894,15 @@ class TFCoil:
             # Masses of conductor constituents
             # ---------------------------------
             # Superconductor mass [kg]
-            # Includes space allowance for central helium channel, area tfcoil_variables.awphec
+            # Includes space allowance for central helium channel, area tfcoil_variables.a_tf_wp_coolant_channels
             tfcoil_variables.whtconsc = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_turn
                 * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
-                - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
+                - tfcoil_variables.len_tf_coil
+                * tfcoil_variables.a_tf_wp_coolant_channels
             ) * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
 
             # Copper mass [kg]
@@ -2911,7 +2912,8 @@ class TFCoil:
                 * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * tfcoil_variables.fcutfsu
-                - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
+                - tfcoil_variables.len_tf_coil
+                * tfcoil_variables.a_tf_wp_coolant_channels
             ) * constants.dcopper
             if tfcoil_variables.whtconcu <= 0.0e0:
                 tfcoil_variables.whtconcu = 0.0e0
@@ -5271,7 +5273,7 @@ def init_tfcoil_variables():
     tfv.a_tf_leg_outboard = 0.0
     tfv.aswp = 0.0
     tfv.avwp = 0.0
-    tfv.awphec = 0.0
+    tfv.a_tf_wp_coolant_channels = 0.0
     tfv.bcritsc = 24.0
     tfv.b_tf_inboard_peak = 0.0
     tfv.bmaxtfrp = 0.0

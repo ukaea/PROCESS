@@ -1758,7 +1758,7 @@ class SuperconductingTFCoil(TFCoil):
         # Areas and fractions
         # -------------------
         # Central helium channel down the conductor core [m2]
-        tfcoil_variables.awphec = (
+        tfcoil_variables.a_tf_wp_coolant_channels = (
             0.25e0
             * tfcoil_variables.n_tf_turn
             * np.pi
@@ -1771,7 +1771,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.a_tf_turn_cable_space
             * tfcoil_variables.n_tf_turn
             * (1.0e0 - tfcoil_variables.vftf)
-            - tfcoil_variables.awphec
+            - tfcoil_variables.a_tf_wp_coolant_channels
         )
 
         # Void area in conductor for He, not including central channel [m2]
