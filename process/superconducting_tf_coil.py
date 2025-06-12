@@ -227,7 +227,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.poisson_cond_trans,
                 tfcoil_variables.eyoung_ins,
                 tfcoil_variables.poisson_ins,
-                tfcoil_variables.thicndut,
+                tfcoil_variables.dx_tf_turn_insulation,
                 tfcoil_variables.eyoung_copper,
                 tfcoil_variables.poisson_copper,
                 tfcoil_variables.i_tf_sup,
@@ -1736,7 +1736,7 @@ class SuperconductingTFCoil(TFCoil):
             ) = self.tf_averaged_turn_geom(
                 tfcoil_variables.j_tf_wp,
                 tfcoil_variables.thwcndut,
-                tfcoil_variables.thicndut,
+                tfcoil_variables.dx_tf_turn_insulation,
                 tfcoil_variables.i_tf_sc_mat,
             )
 
@@ -1752,7 +1752,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.n_layer,
                 tfcoil_variables.n_pancake,
                 tfcoil_variables.thwcndut,
-                tfcoil_variables.thicndut,
+                tfcoil_variables.dx_tf_turn_insulation,
             )
 
         # Areas and fractions
@@ -2055,7 +2055,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # --------------
 
-    def tf_integer_turn_geom(self, n_layer, n_pancake, thwcndut, thicndut):
+    def tf_integer_turn_geom(self, n_layer, n_pancake, thwcndut, dx_tf_turn_insulation):
         """
         Authors: J Morris & S Khan
         Setting the TF WP turn geometry for SC magnets from the number
@@ -2074,9 +2074,11 @@ class SuperconductingTFCoil(TFCoil):
             - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
         ) / n_layer
 
-        if sctfcoil_module.t_turn_radial <= (2.0e0 * thicndut + 2.0e0 * thwcndut):
+        if sctfcoil_module.t_turn_radial <= (
+            2.0e0 * dx_tf_turn_insulation + 2.0e0 * thwcndut
+        ):
             error_handling.fdiags[0] = sctfcoil_module.t_turn_radial
-            error_handling.fdiags[1] = thicndut
+            error_handling.fdiags[1] = dx_tf_turn_insulation
             error_handling.fdiags[2] = thwcndut
             error_handling.report_error(100)
 
@@ -2086,9 +2088,11 @@ class SuperconductingTFCoil(TFCoil):
             - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
         ) / n_pancake
 
-        if sctfcoil_module.t_turn_toroidal <= (2.0e0 * thicndut + 2.0e0 * thwcndut):
+        if sctfcoil_module.t_turn_toroidal <= (
+            2.0e0 * dx_tf_turn_insulation + 2.0e0 * thwcndut
+        ):
             error_handling.fdiags[0] = sctfcoil_module.t_turn_toroidal
-            error_handling.fdiags[1] = thicndut
+            error_handling.fdiags[1] = dx_tf_turn_insulation
             error_handling.fdiags[2] = thwcndut
             error_handling.report_error(100)
 
@@ -2104,10 +2108,10 @@ class SuperconductingTFCoil(TFCoil):
 
         # Radial and toroidal dimension of conductor [m]
         sctfcoil_module.t_conductor_radial = (
-            sctfcoil_module.t_turn_radial - 2.0e0 * thicndut
+            sctfcoil_module.t_turn_radial - 2.0e0 * dx_tf_turn_insulation
         )
         sctfcoil_module.t_conductor_toroidal = (
-            sctfcoil_module.t_turn_toroidal - 2.0e0 * thicndut
+            sctfcoil_module.t_turn_toroidal - 2.0e0 * dx_tf_turn_insulation
         )
         tfcoil_variables.t_conductor = np.sqrt(
             sctfcoil_module.t_conductor_radial * sctfcoil_module.t_conductor_toroidal
@@ -2175,7 +2179,9 @@ class SuperconductingTFCoil(TFCoil):
             / (tfcoil_variables.n_tf_coils * sctfcoil_module.awptf),
         )
 
-    def tf_averaged_turn_geom(self, j_tf_wp, thwcndut, thicndut, i_tf_sc_mat):
+    def tf_averaged_turn_geom(
+        self, j_tf_wp, thwcndut, dx_tf_turn_insulation, i_tf_sc_mat
+    ):
         """
         subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
         Authors : J. Morris, CCFE
@@ -2199,7 +2205,7 @@ class SuperconductingTFCoil(TFCoil):
         elif tfcoil_variables.t_cable_tf_is_input:
             # Turn squared dimension [m]
             tfcoil_variables.t_turn_tf = tfcoil_variables.t_cable_tf + 2.0e0 * (
-                thicndut + thwcndut
+                dx_tf_turn_insulation + thwcndut
             )
 
             # Turn area [m2]
@@ -2227,7 +2233,7 @@ class SuperconductingTFCoil(TFCoil):
         tfcoil_variables.t_conductor = (
             -tfcoil_variables.layer_ins
             + np.sqrt(tfcoil_variables.layer_ins**2 + 4.0e00 * a_turn)
-        ) / 2 - 2.0e0 * thicndut
+        ) / 2 - 2.0e0 * dx_tf_turn_insulation
 
         # Total number of turns per TF coil (not required to be an integer)
         n_tf_turn = sctfcoil_module.awptf / a_turn

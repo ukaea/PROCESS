@@ -1164,7 +1164,7 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*thicndut =  
+*dx_tf_turn_insulation =  
 * DESCRIPTION:   Conduit turn insulation thickness (m)
 * JUSTIFICATION: 
 *                This depends at least on the maximum dump voltage and prpbably

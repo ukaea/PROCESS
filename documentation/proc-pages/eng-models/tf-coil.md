@@ -228,7 +228,7 @@ turns. The number of turns can be parametrized in three different ways :
   thickness. The turn geometry is set with with the following thicknesses:
 </p>
 - <p style='text-align: justify;'>
-    **Turn insulation thickness `thicndut`:** user input setting the thickness
+    **Turn insulation thickness `dx_tf_turn_insulation`:** user input setting the thickness
     of the inter-turn insulation.
   </p>
 - <p style='text-align: justify;'>
@@ -291,7 +291,7 @@ A much simpler inboard mid-plane geometry is used for resistive TF coils, as sho
     </center>
 </figure>
 
-The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_turn` user input. The entire coil is wrapped with ground insulation of thickness `tinstf`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `thicndut`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
+The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_turn` user input. The entire coil is wrapped with ground insulation of thickness `tinstf`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
 
 <figure>
     <center>
@@ -1298,7 +1298,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `f_t_turn_tf`        | f-value for TF turn squared size constraint (icc = 86)                                                                      | 175                | 1.            | m    |
 | `t_turn_tf_max`      | Maximum turn squared size for constraint (icc = 86)                                                                         | -                  | 0.05          | m    |
 | `c_tf_turn`              | Current per turn <br> Overwitten if `t_turn_tf` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
-| `thicndut`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
+| `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
 | `thwcndut`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dhecoil`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
 | `vftf`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
