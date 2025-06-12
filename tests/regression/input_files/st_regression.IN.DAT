@@ -1097,7 +1097,7 @@ boundu(140) = 0.8
 
 * Specifying number of turns with n_layer *
 
-*n_tf_turn = 
+*n_tf_coil_turns = 
 * DESCRIPTION:   Number of turns per TF coil 
 * JUSTIFICATION: Allowing to be calculated
 

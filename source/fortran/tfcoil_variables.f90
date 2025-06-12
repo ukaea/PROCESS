@@ -653,7 +653,7 @@ module tfcoil_variables
   real(dp) :: temp_tf_cryo
   !! coil temperature for cryogenic plant power calculation (K)
 
-  real(dp) :: n_tf_turn
+  real(dp) :: n_tf_coil_turns
   !! number of turns per TF coil
 
   real(dp) :: vdalw

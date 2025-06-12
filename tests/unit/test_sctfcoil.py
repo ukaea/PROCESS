@@ -991,7 +991,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     expected_cpttf: Any = None
 
-    expected_n_tf_turn: Any = None
+    expected_n_tf_coil_turns: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1029,7 +1029,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_a_tf_turn_steel=0.0014685061538103825,
             expected_a_tf_turn_insulation=0.00043940087233490435,
             expected_cpttf=74026.751437500003,
-            expected_n_tf_turn=200,
+            expected_n_tf_coil_turns=200,
         ),
         TfIntegerTurnGeomParam(
             dr_tf_wp=0.54261087836601019,
@@ -1063,7 +1063,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_a_tf_turn_steel=0.0014685061538103825,
             expected_a_tf_turn_insulation=0.00043940087233490435,
             expected_cpttf=74026.751437500003,
-            expected_n_tf_turn=200,
+            expected_n_tf_coil_turns=200,
         ),
     ),
 )
@@ -1135,7 +1135,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         a_tf_turn_steel,
         a_tf_turn_insulation,
         c_tf_turn,
-        n_tf_turn,
+        n_tf_coil_turns,
     ) = sctfcoil.tf_integer_turn_geom(
         n_layer=tfintegerturngeomparam.n_layer,
         n_pancake=tfintegerturngeomparam.n_pancake,
@@ -1193,7 +1193,9 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
 
     assert c_tf_turn == pytest.approx(tfintegerturngeomparam.expected_cpttf)
 
-    assert n_tf_turn == pytest.approx(tfintegerturngeomparam.expected_n_tf_turn)
+    assert n_tf_coil_turns == pytest.approx(
+        tfintegerturngeomparam.expected_n_tf_coil_turns
+    )
 
 
 class TfAveragedTurnGeomParam(NamedTuple):
@@ -1243,7 +1245,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     expected_a_tf_turn_insulation: Any = None
 
-    expected_n_tf_turn: Any = None
+    expected_n_tf_coil_turns: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1273,7 +1275,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_a_tf_turn_cable_space=0.00098877993839630008,
             expected_a_tf_turn_steel=0.0013087416857142699,
             expected_a_tf_turn_insulation=0.00015594390212434958,
-            expected_n_tf_turn=246.63461538461544,
+            expected_n_tf_coil_turns=246.63461538461544,
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
@@ -1299,7 +1301,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_a_tf_turn_cable_space=0.00098877993839630008,
             expected_a_tf_turn_steel=0.0013087416857142699,
             expected_a_tf_turn_insulation=0.00015594390212434958,
-            expected_n_tf_turn=246.63461538461544,
+            expected_n_tf_coil_turns=246.63461538461544,
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
@@ -1325,7 +1327,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_a_tf_turn_cable_space=0.001657369442,
             expected_a_tf_turn_steel=0.001605324958,
             expected_a_tf_turn_insulation=0.000185344,
-            expected_n_tf_turn=175.49384787,
+            expected_n_tf_coil_turns=175.49384787,
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
@@ -1351,7 +1353,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             expected_a_tf_turn_cable_space=0.001731943361,
             expected_a_tf_turn_steel=0.001666480255,
             expected_a_tf_turn_insulation=0.00018910719999999962,
-            expected_n_tf_turn=168.6701961481806,
+            expected_n_tf_coil_turns=168.6701961481806,
         ),
     ),
 )
@@ -1412,7 +1414,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfaveragedturngeomparam.t_cable)
 
-    a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_turn = (
+    a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_coil_turns = (
         sctfcoil.tf_averaged_turn_geom(
             i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
             j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
@@ -1453,7 +1455,9 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.expected_a_tf_turn_insulation
     )
 
-    assert n_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_n_tf_turn)
+    assert n_tf_coil_turns == pytest.approx(
+        tfaveragedturngeomparam.expected_n_tf_coil_turns
+    )
 
 
 class TfWpCurrentsParam(NamedTuple):
@@ -1535,7 +1539,7 @@ def test_vv_stress_on_quench():
                 theta1_vv=1,
                 # TF properties
                 n_tf_coils=18,
-                n_tf_turn=192,
+                n_tf_coil_turns=192,
                 s_rp=0.55,
                 s_cc=0.94,
                 taud=30,
@@ -1601,7 +1605,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         tfcoil_variables, "tfa", [3.41, 7.77, 7.77, 3.41]
     )  # chosen to achieve Rm_coil in Table 2
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
-    monkeypatch.setattr(tfcoil_variables, "n_tf_turn", 192)  # Section 3
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coil_turns", 192)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
     monkeypatch.setattr(sctfcoil_module, "c_tf_coil", 83200 * 192)  # Section 3
 

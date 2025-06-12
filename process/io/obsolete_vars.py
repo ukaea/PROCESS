@@ -39,7 +39,7 @@ OBS_VARS = {
     "eyins": "eyoung_ins",
     "eystl": "eyoung_steel",
     "isumattf": "i_tf_sc_mat",
-    "turnstf": "n_tf_turn",
+    "turnstf": "n_tf_coil_turns",
     "awptf": "a_tf_wp",
     "dr_tf_case_in": "dr_tf_nose_case",
     "f_tf_case_out": "f_dr_tf_plasma_case",
