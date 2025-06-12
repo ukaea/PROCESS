@@ -439,7 +439,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     tinstf: Any = None
 
-    thicndut: Any = None
+    dx_tf_turn_insulation: Any = None
 
     dr_tf_wp: Any = None
 
@@ -491,7 +491,7 @@ class TfFieldAndForceParam(NamedTuple):
             f_vforce_inboard=0.5,
             vforce_outboard=0,
             tinstf=0,
-            thicndut=0.00080000000000000004,
+            dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.15483000000000002,
             tfinsgap=0.01,
             i_cp_joints=1,
@@ -526,7 +526,7 @@ class TfFieldAndForceParam(NamedTuple):
             f_vforce_inboard=0.59539634897566385,
             vforce_outboard=8413494.7991220243,
             tinstf=0,
-            thicndut=0.00080000000000000004,
+            dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.14708850000000001,
             tfinsgap=0.01,
             i_cp_joints=1,
@@ -602,7 +602,11 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "tinstf", tffieldandforceparam.tinstf)
 
-    monkeypatch.setattr(tfcoil_variables, "thicndut", tffieldandforceparam.thicndut)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_turn_insulation",
+        tffieldandforceparam.dx_tf_turn_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tffieldandforceparam.dr_tf_wp)
 
@@ -1304,7 +1308,7 @@ class StressclParam(NamedTuple):
 
     tinstf: Any = None
 
-    thicndut: Any = None
+    dx_tf_turn_insulation: Any = None
 
     acndttf: Any = None
 
@@ -1467,7 +1471,7 @@ class StressclParam(NamedTuple):
             thwcndut=0.0080000000000000002,
             insstrain=0,
             tinstf=0.0080000000000000019,
-            thicndut=0.002,
+            dx_tf_turn_insulation=0.002,
             acndttf=0.0014685061538103825,
             tfinsgap=0.01,
             acasetf=1.0015169239205168,
@@ -1590,7 +1594,7 @@ class StressclParam(NamedTuple):
             thwcndut=0.0080000000000000002,
             insstrain=0,
             tinstf=0.0080000000000000019,
-            thicndut=0.002,
+            dx_tf_turn_insulation=0.002,
             acndttf=0.0014685061538103825,
             tfinsgap=0.01,
             acasetf=1.0015169239205168,
@@ -1769,7 +1773,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.poisson_cond_trans,
         stressclparam.eyoung_ins,
         stressclparam.poisson_ins,
-        stressclparam.thicndut,
+        stressclparam.dx_tf_turn_insulation,
         stressclparam.eyoung_copper,
         stressclparam.poisson_copper,
         stressclparam.i_tf_sup,

@@ -943,7 +943,7 @@ def check_process(inputs):  # noqa: ARG001
             dr_tf_wp_min = 2.0 * (
                 fortran.tfcoil_variables.tinstf
                 + fortran.tfcoil_variables.tfinsgap
-                + fortran.tfcoil_variables.thicndut
+                + fortran.tfcoil_variables.dx_tf_turn_insulation
                 + fortran.tfcoil_variables.dhecoil
             )
 
@@ -960,7 +960,10 @@ def check_process(inputs):  # noqa: ARG001
         ):
             dr_tf_wp_min = (
                 2.0
-                * (fortran.tfcoil_variables.thicndut + fortran.tfcoil_variables.tinstf)
+                * (
+                    fortran.tfcoil_variables.dx_tf_turn_insulation
+                    + fortran.tfcoil_variables.tinstf
+                )
                 + 4.0 * fortran.tfcoil_variables.rcool
             )
 

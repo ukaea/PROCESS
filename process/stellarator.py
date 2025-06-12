@@ -2537,11 +2537,11 @@ class Stellarator:
         # [m] Dimension of square cable space inside insulation
         #     and case of the conduit of each turn
         t_cable = tfcoil_variables.t_turn_tf - 2.0e0 * (
-            tfcoil_variables.thwcndut + tfcoil_variables.thicndut
+            tfcoil_variables.thwcndut + tfcoil_variables.dx_tf_turn_insulation
         )  # t_cable = t_w
         if t_cable < 0:
             print(
-                "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and thicndut."
+                "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and dx_tf_turn_insulation."
             )
         # [m^2] Cross-sectional area of cable space per turn
         tfcoil_variables.a_tf_turn_cable_space = (
@@ -3859,8 +3859,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Cable insulation thickness (m)",
-            "(thicndut)",
-            tfcoil_variables.thicndut,
+            "(dx_tf_turn_insulation)",
+            tfcoil_variables.dx_tf_turn_insulation,
         )
 
         ap = awptf
