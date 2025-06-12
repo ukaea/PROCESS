@@ -3041,7 +3041,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
     # If integer turns switch is on then the turns can have non square dimensions
     if integer_turns == 1:
-        turn_width = round(mfile_data.data["t_turn_radial"].get_scan(scan) * 1e3, 5)
+        turn_width = round(mfile_data.data["dr_tf_turn"].get_scan(scan) * 1e3, 5)
         turn_height = round(mfile_data.data["t_turn_toroidal"].get_scan(scan) * 1e3, 5)
         cable_space_width_radial = round(
             mfile_data.data["t_cable_radial"].get_scan(scan) * 1e3, 5
