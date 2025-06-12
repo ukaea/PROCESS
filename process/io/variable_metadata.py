@@ -126,7 +126,7 @@ var_dicts = {
         description="maximum (half-)height of TF coil (inside edge)",
         units="m",
     ),
-    "thicndut": VariableMetadata(
+    "dx_tf_turn_insulation": VariableMetadata(
         latex=r"\Delta l_\mathrm{steel\ jacket}^\mathrm{turn}",
         description="Thickness of steel jacket turn",
         units="",
