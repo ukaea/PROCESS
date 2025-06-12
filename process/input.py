@@ -943,7 +943,9 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(0.0, 100000000.0)
     ),
     "n_tf_coils": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
-    "n_tf_turn": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
+    "n_tf_coil_turns": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+    ),
     "nbi_sys_l": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),

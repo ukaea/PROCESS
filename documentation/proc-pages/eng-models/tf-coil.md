@@ -179,7 +179,7 @@ Several Winding pack geometries can chosen with the `i_tf_wp_geom` integer switc
     </center>
 </figure>
 
-The winding pack is assumed to be made of \(N_\mathrm{turn} \) (`n_tf_turn`) 
+The winding pack is assumed to be made of \(N_\mathrm{turn} \) (`n_tf_coil_turns`) 
 turns. The number of turns can be parametrized in three different ways :
 
 - <p style='text-align: justify;'>
@@ -291,7 +291,7 @@ A much simpler inboard mid-plane geometry is used for resistive TF coils, as sho
     </center>
 </figure>
 
-The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_turn` user input. The entire coil is wrapped with ground insulation of thickness `tinstf`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
+The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_coil_turns` user input. The entire coil is wrapped with ground insulation of thickness `tinstf`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
 
 <figure>
     <center>

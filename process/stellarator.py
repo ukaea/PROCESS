@@ -2665,33 +2665,36 @@ class Stellarator:
         tfcoil_variables.j_tf_wp = (
             coilcurrent * 1.0e6 / awptf
         )  # [A/m^2] winding pack current density
-        tfcoil_variables.n_tf_turn = (
+        tfcoil_variables.n_tf_coil_turns = (
             awptf / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
         tfcoil_variables.c_tf_turn = (
-            coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
+            coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
         tfcoil_variables.acond = (
             tfcoil_variables.a_tf_turn_cable_space
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * (1.0e0 - tfcoil_variables.vftf)
         )
         # [m^2] Void area in cable, for He
         tfcoil_variables.avwp = (
             tfcoil_variables.a_tf_turn_cable_space
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.vftf
         )
         # [m^2] Insulation area (not including ground-wall)
-        tfcoil_variables.a_tf_coil_wp_turn_insulation = tfcoil_variables.n_tf_turn * (
-            tfcoil_variables.t_turn_tf**2
-            - tfcoil_variables.a_tf_turn_steel
-            - tfcoil_variables.a_tf_turn_cable_space
+        tfcoil_variables.a_tf_coil_wp_turn_insulation = (
+            tfcoil_variables.n_tf_coil_turns
+            * (
+                tfcoil_variables.t_turn_tf**2
+                - tfcoil_variables.a_tf_turn_steel
+                - tfcoil_variables.a_tf_turn_cable_space
+            )
         )
         # [m^2] Structure area for cable
         tfcoil_variables.aswp = (
-            tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
+            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
         )
         # End of winding pack calculations
         #######################################################################################
@@ -2921,7 +2924,7 @@ class Stellarator:
         tfcoil_variables.whtconsc = (
             (
                 tfcoil_variables.len_tf_coil
-                * tfcoil_variables.n_tf_turn
+                * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space
                 * (1.0e0 - tfcoil_variables.vftf)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
@@ -2933,7 +2936,7 @@ class Stellarator:
         # [kg] mass of Copper in conductor
         tfcoil_variables.whtconcu = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space
             * (1.0e0 - tfcoil_variables.vftf)
             * tfcoil_variables.fcutfsu
@@ -2942,13 +2945,13 @@ class Stellarator:
         # [kg] mass of Steel conduit (sheath)
         tfcoil_variables.m_tf_turn_steel_conduit = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_steel
             * fwbs_variables.denstl
         )
         # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
-        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_turn)
+        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
         tfcoil_variables.whtconin = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_wp_turn_insulation
@@ -3921,8 +3924,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Number of turns per coil",
-            "(n_tf_turn)",
-            tfcoil_variables.n_tf_turn,
+            "(n_tf_coil_turns)",
+            tfcoil_variables.n_tf_coil_turns,
         )
         po.ovarre(
             self.outfile,

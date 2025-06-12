@@ -708,7 +708,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8925E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2910E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4728E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4728E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7774E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6174E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0174E-02 OP 
@@ -1871,7 +1871,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8742E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2643E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4446E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4446E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7926E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6326E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0137E-02 OP 
@@ -3034,7 +3034,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8744E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2475E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4275E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4275E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7852E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6252E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      3.9985E-02 OP 
@@ -4197,7 +4197,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8713E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2458E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4281E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4281E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7899E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6299E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0014E-02 OP 
@@ -5360,7 +5360,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8578E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2526E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4390E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4390E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8141E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6541E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0240E-02 OP 
@@ -6523,7 +6523,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8321E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2599E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4469E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4469E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8549E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6949E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0589E-02 OP 
@@ -7686,7 +7686,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8296E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2584E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4484E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4484E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8590E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6990E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0616E-02 OP 
@@ -8849,7 +8849,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8345E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2527E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4315E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4315E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8451E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6851E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0465E-02 OP 
@@ -10012,7 +10012,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8421E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2495E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4163E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4163E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8278E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6678E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0301E-02 OP 
@@ -11175,7 +11175,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8397E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2487E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4162E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4162E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8312E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6712E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0324E-02 OP 
@@ -12338,7 +12338,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8292E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2496E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4306E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4306E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8526E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6926E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0506E-02 OP 
@@ -13501,7 +13501,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8196E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2608E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4446E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4446E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8724E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7124E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0722E-02 OP 
@@ -14664,7 +14664,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8170E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2598E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4447E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4447E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8762E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7162E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0746E-02 OP 
@@ -15827,7 +15827,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8245E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2576E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4281E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4281E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8585E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6985E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0584E-02 OP 
@@ -16990,7 +16990,7 @@
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.8326E-02    
  Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.2561E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4117E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4117E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8398E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6798E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0416E-02 OP 

@@ -241,7 +241,7 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.tfinsgap,
                 tfcoil_variables.tinstf,
-                tfcoil_variables.n_tf_turn,
+                tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
                 sctfcoil_module.dr_tf_turn_cable_space,
@@ -351,7 +351,7 @@ class SuperconductingTFCoil(TFCoil):
         aturn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.j_tf_wp
             * tfcoil_variables.n_tf_coils
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
@@ -1605,7 +1605,7 @@ class SuperconductingTFCoil(TFCoil):
             theta1_vv=tfcoil_variables.theta1_vv,
             # TF properties
             n_tf_coils=tfcoil_variables.n_tf_coils,
-            n_tf_turn=tfcoil_variables.n_tf_turn,
+            n_tf_coil_turns=tfcoil_variables.n_tf_coil_turns,
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
             s_rp=np.clip(sctfcoil_module.a_tf_steel, 0, None),
@@ -1614,7 +1614,7 @@ class SuperconductingTFCoil(TFCoil):
             + 2.0 * sctfcoil_module.t_lat_case_av,
             taud=tfcoil_variables.tdmptf,
             # TODO: is this the correct current?
-            i_op=sctfcoil_module.c_tf_coil / tfcoil_variables.n_tf_turn,
+            i_op=sctfcoil_module.c_tf_coil / tfcoil_variables.n_tf_coil_turns,
             # VV properties
             d_vv=build_variables.dr_vv_shells,
         )
@@ -1732,7 +1732,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.a_tf_turn_cable_space,
                 tfcoil_variables.a_tf_turn_steel,
                 tfcoil_variables.a_tf_turn_insulation,
-                tfcoil_variables.n_tf_turn,
+                tfcoil_variables.n_tf_coil_turns,
             ) = self.tf_averaged_turn_geom(
                 tfcoil_variables.j_tf_wp,
                 tfcoil_variables.dx_tf_turn_steel,
@@ -1747,7 +1747,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.a_tf_turn_steel,
                 tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.c_tf_turn,
-                tfcoil_variables.n_tf_turn,
+                tfcoil_variables.n_tf_coil_turns,
             ) = self.tf_integer_turn_geom(
                 tfcoil_variables.n_layer,
                 tfcoil_variables.n_pancake,
@@ -1760,7 +1760,7 @@ class SuperconductingTFCoil(TFCoil):
         # Central helium channel down the conductor core [m2]
         tfcoil_variables.a_tf_wp_coolant_channels = (
             0.25e0
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * np.pi
             * tfcoil_variables.dia_tf_turn_coolant_channel**2
         )
@@ -1769,7 +1769,7 @@ class SuperconductingTFCoil(TFCoil):
         # and central helium channel [m2]
         tfcoil_variables.acond = (
             tfcoil_variables.a_tf_turn_cable_space
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * (1.0e0 - tfcoil_variables.vftf)
             - tfcoil_variables.a_tf_wp_coolant_channels
         )
@@ -1777,18 +1777,18 @@ class SuperconductingTFCoil(TFCoil):
         # Void area in conductor for He, not including central channel [m2]
         tfcoil_variables.avwp = (
             tfcoil_variables.a_tf_turn_cable_space
-            * tfcoil_variables.n_tf_turn
+            * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.vftf
         )
 
         # Area of inter-turn insulation: total [m2]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
-            tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_insulation
+            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_insulation
         )
 
         # Area of steel structure in winding pack [m2]
         tfcoil_variables.aswp = (
-            tfcoil_variables.n_tf_turn * tfcoil_variables.a_tf_turn_steel
+            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
         )
 
         # Inboard coil steel area [m2]
@@ -2108,10 +2108,10 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Number of TF turns
-        n_tf_turn = np.double(n_layer * n_pancake)
+        n_tf_coil_turns = np.double(n_layer * n_pancake)
 
         # Current per turn [A/turn]
-        c_tf_turn = sctfcoil_module.c_tf_coil / n_tf_turn
+        c_tf_turn = sctfcoil_module.c_tf_coil / n_tf_coil_turns
 
         # Radial and toroidal dimension of conductor [m]
         sctfcoil_module.t_conductor_radial = (
@@ -2179,7 +2179,7 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_turn_steel,
             a_tf_turn_insulation,
             c_tf_turn,
-            n_tf_turn,
+            n_tf_coil_turns,
         )
 
         # -------------
@@ -2252,7 +2252,7 @@ class SuperconductingTFCoil(TFCoil):
         ) / 2 - 2.0e0 * dx_tf_turn_insulation
 
         # Total number of turns per TF coil (not required to be an integer)
-        n_tf_turn = sctfcoil_module.awptf / a_turn
+        n_tf_coil_turns = sctfcoil_module.awptf / a_turn
 
         # Area of inter-turn insulation: single turn [m2]
         a_tf_turn_insulation = a_turn - tfcoil_variables.t_conductor**2
@@ -2304,7 +2304,12 @@ class SuperconductingTFCoil(TFCoil):
             # Cross-sectional area of conduit jacket per turn [m2]
             a_tf_turn_steel = tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space
 
-        return a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_turn
+        return (
+            a_tf_turn_cable_space,
+            a_tf_turn_steel,
+            a_tf_turn_insulation,
+            n_tf_coil_turns,
+        )
 
 
 @staticmethod
@@ -2405,7 +2410,7 @@ def vv_stress_on_quench(
     theta1_vv: float,
     # TF properties
     n_tf_coils: float,
-    n_tf_turn: float,
+    n_tf_coil_turns: float,
     s_rp: float,
     s_cc: float,
     taud: float,
@@ -2446,7 +2451,7 @@ def vv_stress_on_quench(
     using an arbitrary origin of coordinates (Rc2, Zc2).
 
     :param n_tf_coils: the number of TF coils
-    :param n_tf_turn: the number of turns per TF coil
+    :param n_tf_coil_turns: the number of turns per TF coil
     :param s_rp: the cross-sectional area of the radial plates of the TF coil
     :param s_cc: the cross-sectional area of the TF coil case
     :param taud: the discharge time of the TF coil when quench occurs
@@ -2502,7 +2507,7 @@ def vv_stress_on_quench(
     i1 = (
         lambda0
         * n_tf_coils
-        * n_tf_turn
+        * n_tf_coil_turns
         * i_op
         * (
             (np.exp(-lambda1 * tmaxforce) - np.exp(-lambda0 * tmaxforce))
@@ -2512,7 +2517,7 @@ def vv_stress_on_quench(
     i2 = (lambda1 / lambda2) * i1
 
     a_vv = (ro_vv + ri_vv) / (ro_vv - ri_vv)
-    b_vvi = (constants.rmu0 * (n_tf_coils * n_tf_turn * i0 + i1 + (i2 / 2))) / (
+    b_vvi = (constants.rmu0 * (n_tf_coils * n_tf_coil_turns * i0 + i1 + (i2 / 2))) / (
         2 * np.pi * ri_vv
     )
     j_vvi = i2 / (2 * np.pi * d_vv * ri_vv)
