@@ -4,6 +4,7 @@ from typing import ClassVar, Literal
 
 import numpy as np
 
+import process.data_structure as data_structure
 import process.fortran as fortran
 from process.exceptions import ProcessError, ProcessValueError
 
@@ -1528,14 +1529,14 @@ def constraint_equation_61():
     """
     cc = (
         1.0
-        - fortran.cost_variables.favail
-        * fortran.cost_variables.cfactr
-        / fortran.cost_variables.avail_min
+        - data_structure.cost_variables.favail
+        * data_structure.cost_variables.cfactr
+        / data_structure.cost_variables.avail_min
     )
     return ConstraintResult(
         cc,
-        fortran.cost_variables.avail_min * (1.0 - cc),
-        fortran.cost_variables.cfactr * cc,
+        data_structure.cost_variables.avail_min * (1.0 - cc),
+        data_structure.cost_variables.cfactr * cc,
     )
 
 
@@ -2106,23 +2107,38 @@ def constraint_equation_85():
         the CP lifetime must equate
     """
     # The CP lifetime is equal to the the divertor one
-    if fortran.cost_variables.i_cp_lifetime == 0:
-        cc = 1.0 - fortran.cost_variables.cplife / fortran.cost_variables.cplife_input
+    if data_structure.cost_variables.i_cp_lifetime == 0:
+        cc = (
+            1.0
+            - data_structure.cost_variables.cplife
+            / data_structure.cost_variables.cplife_input
+        )
 
-    elif fortran.cost_variables.i_cp_lifetime == 1:
-        cc = 1.0 - fortran.cost_variables.cplife / fortran.cost_variables.divlife
+    elif data_structure.cost_variables.i_cp_lifetime == 1:
+        cc = (
+            1.0
+            - data_structure.cost_variables.cplife
+            / data_structure.cost_variables.divlife
+        )
 
     # The CP lifetime is equal to the tritium breeding blankets / FW one
-    elif fortran.cost_variables.i_cp_lifetime == 2:
-        cc = 1.0 - fortran.cost_variables.cplife / fortran.fwbs_variables.life_blkt_fpy
+    elif data_structure.cost_variables.i_cp_lifetime == 2:
+        cc = (
+            1.0
+            - data_structure.cost_variables.cplife
+            / fortran.fwbs_variables.life_blkt_fpy
+        )
 
-    elif fortran.cost_variables.i_cp_lifetime == 3:
-        cc = 1.0 - fortran.cost_variables.cplife / fortran.cost_variables.tlife
+    elif data_structure.cost_variables.i_cp_lifetime == 3:
+        cc = (
+            1.0
+            - data_structure.cost_variables.cplife / data_structure.cost_variables.tlife
+        )
 
     return ConstraintResult(
         cc,
-        fortran.cost_variables.divlife * (1.0 - cc),
-        fortran.cost_variables.divlife * cc,
+        data_structure.cost_variables.divlife * (1.0 - cc),
+        data_structure.cost_variables.divlife * cc,
     )
 
 
@@ -2215,10 +2231,12 @@ def constraint_equation_90():
     n_cycle_min: Minimum required cycles for CS
     """
     if (
-        fortran.cost_variables.ibkt_life == 1
+        data_structure.cost_variables.ibkt_life == 1
         and fortran.cs_fatigue_variables.bkt_life_csf == 1
     ):
-        fortran.cs_fatigue_variables.n_cycle_min = fortran.cost_variables.bktcycles
+        fortran.cs_fatigue_variables.n_cycle_min = (
+            data_structure.cost_variables.bktcycles
+        )
 
     cc = (
         1.0

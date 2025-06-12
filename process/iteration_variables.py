@@ -5,6 +5,7 @@ from warnings import warn
 
 import numpy as np
 
+import process.data_structure as data_structure
 import process.fortran as fortran
 from process.exceptions import ProcessValueError
 from process.utilities.f2py_string_patch import (
@@ -162,7 +163,7 @@ ITERATION_VARIABLES = {
     104: IterationVariable("fcwr", fortran.constraint_variables, 0.001, 1.0),
     105: IterationVariable("fnbshinef", fortran.constraint_variables, 0.001, 1.0),
     106: IterationVariable("ftmargoh", fortran.constraint_variables, 0.001, 1.0),
-    107: IterationVariable("favail", fortran.cost_variables, 0.001, 1.0),
+    107: IterationVariable("favail", data_structure.cost_variables, 0.001, 1.0),
     108: IterationVariable("breeder_f", fortran.fwbs_variables, 0.060, 1.0),
     109: IterationVariable(
         "f_nd_alpha_electron", fortran.physics_variables, 0.05, 0.15

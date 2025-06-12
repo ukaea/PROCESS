@@ -8,11 +8,10 @@ from pytest import approx
 
 from process import fortran
 from process.costs import Costs
-from process.data_structure import cost_python_variables
+from process.data_structure import cost_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
@@ -109,7 +108,7 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(fv, "p_shld_nuclear_heat_mw", 1.478)
     monkeypatch.setattr(htv, "p_plant_primary_heat_mw", 2647.0)
     monkeypatch.setattr(htv, "n_primary_heat_exchangers", 3)
-    monkeypatch.setattr(cost_python_variables, "c2261", 0)
+    monkeypatch.setattr(cost_variables, "c2261", 0)
 
     # Parameterised mocks
     monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
@@ -127,7 +126,7 @@ def test_acc2261(acc2261_fix, costs):
     # Run acc2261() with the current fixture,
     # then assert the result (c2261) is the expected one
     costs.acc2261()
-    assert cost_python_variables.c2261 == acc2261_fix
+    assert cost_variables.c2261 == acc2261_fix
 
 
 def test_acc2262(monkeypatch, costs):
@@ -140,10 +139,10 @@ def test_acc2262(monkeypatch, costs):
     monkeypatch.setattr(htv, "vachtmw", 0.5)
     monkeypatch.setattr(htv, "p_tritium_plant_electric_mw", 15.0)
     monkeypatch.setattr(htv, "fachtmw", 64.835)
-    monkeypatch.setattr(cost_python_variables, "c2262", 0)
+    monkeypatch.setattr(cost_variables, "c2262", 0)
 
     costs.acc2262()
-    assert cost_python_variables.c2262 == approx(29.408, abs=0.01)
+    assert cost_variables.c2262 == approx(29.408, abs=0.01)
 
 
 def test_acc2263(monkeypatch, costs):
@@ -157,10 +156,10 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "uccry", 9.3e4)
     monkeypatch.setattr(fortran.tfcoil_variables, "tftmp", 4.5)
     monkeypatch.setattr(htv, "helpow", 80.980e3)
-    monkeypatch.setattr(cost_python_variables, "c2263", 0)
+    monkeypatch.setattr(cost_variables, "c2263", 0)
 
     costs.acc2263()
-    assert cost_python_variables.c2263 == approx(180.76, abs=0.01)
+    assert cost_variables.c2263 == approx(180.76, abs=0.01)
 
 
 def test_acc2271(monkeypatch, costs):
@@ -171,10 +170,10 @@ def test_acc2271(monkeypatch, costs):
     """
     monkeypatch.setattr(cost_variables, "ucf1", 2.23e7)
     monkeypatch.setattr(cost_variables, "fkind", 1)
-    monkeypatch.setattr(cost_python_variables, "c2271", 0)
+    monkeypatch.setattr(cost_variables, "c2271", 0)
 
     costs.acc2271()
-    assert cost_python_variables.c2271 == approx(22.3, abs=0.01)
+    assert cost_variables.c2271 == approx(22.3, abs=0.01)
 
 
 def test_acc2272(monkeypatch, costs):
@@ -186,10 +185,10 @@ def test_acc2272(monkeypatch, costs):
     monkeypatch.setattr(fortran.physics_variables, "rndfuel", 7.158e20)
     monkeypatch.setattr(fortran.physics_variables, "m_fuel_amu", 2.5)
     monkeypatch.setattr(cost_variables, "fkind", 1)
-    monkeypatch.setattr(cost_python_variables, "c2271", 0)
+    monkeypatch.setattr(cost_variables, "c2271", 0)
 
     costs.acc2272()
-    assert cost_python_variables.c2272 == approx(114.707, abs=0.01)
+    assert cost_variables.c2272 == approx(114.707, abs=0.01)
 
 
 def acc2273_param(**kwargs):
@@ -251,7 +250,7 @@ def acc2273_fix(request, monkeypatch, costs):
 
     # Mock result var as negative, as an expected result is 0
     # Otherwise could get false positive result
-    monkeypatch.setattr(cost_python_variables, "c2273", -1)
+    monkeypatch.setattr(cost_variables, "c2273", -1)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -266,7 +265,7 @@ def test_acc2273(acc2273_fix, costs):
     # Run acc2273() with the current fixture,
     # then assert the result is the expected one
     costs.acc2273()
-    assert cost_python_variables.c2273 == acc2273_fix
+    assert cost_variables.c2273 == acc2273_fix
 
 
 def test_acc2274(monkeypatch, costs):
@@ -278,10 +277,10 @@ def test_acc2274(monkeypatch, costs):
     monkeypatch.setattr(fortran.buildings_variables, "wsvol", 132304.1)
     monkeypatch.setattr(fortran.buildings_variables, "volrci", 1299783.4)
     monkeypatch.setattr(cost_variables, "fkind", 1)
-    monkeypatch.setattr(cost_python_variables, "c2274", 0)
+    monkeypatch.setattr(cost_variables, "c2274", 0)
 
     costs.acc2274()
-    assert cost_python_variables.c2274 == approx(84.10, abs=0.01)
+    assert cost_variables.c2274 == approx(84.10, abs=0.01)
 
 
 def acc228_param(**kwargs):
@@ -325,7 +324,7 @@ def acc228_fix(request, monkeypatch, costs):
     # Mock variables used by acc228()
     # Some may be parameterised
     monkeypatch.setattr(cost_variables, "fkind", param["fkind"])
-    monkeypatch.setattr(cost_python_variables, "c228", 0)
+    monkeypatch.setattr(cost_variables, "c228", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -340,7 +339,7 @@ def test_acc228(acc228_fix, costs):
     # Run acc228() with the current fixture,
     # then assert the result is the expected one
     costs.acc228()
-    assert cost_python_variables.c228 == acc228_fix
+    assert cost_variables.c228 == acc228_fix
 
 
 def acc229_param(**kwargs):
@@ -384,7 +383,7 @@ def acc229_fix(request, monkeypatch, costs):
     # Mock variables used by acc229()
     # Some may be parameterised
     monkeypatch.setattr(cost_variables, "fkind", param["fkind"])
-    monkeypatch.setattr(cost_python_variables, "c229", 0)
+    monkeypatch.setattr(cost_variables, "c229", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -399,7 +398,7 @@ def test_acc229(acc229_fix, costs):
     # Run acc229() with the current fixture,
     # then assert the result is the expected one
     costs.acc229()
-    assert cost_python_variables.c229 == acc229_fix
+    assert cost_variables.c229 == acc229_fix
 
 
 def acc23_param(**kwargs):
@@ -447,7 +446,7 @@ def acc23_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
     monkeypatch.setattr(htv, "p_plant_electric_gross_mw", 1200.0)
-    monkeypatch.setattr(cost_python_variables, "c23", 0)
+    monkeypatch.setattr(cost_variables, "c23", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -462,7 +461,7 @@ def test_acc23(acc23_fix, costs):
     # Run acc23() with the current fixture,
     # then assert the result is the expected one
     costs.acc23()
-    assert cost_python_variables.c23 == acc23_fix
+    assert cost_variables.c23 == acc23_fix
 
 
 def test_acc241(monkeypatch, costs):
@@ -472,10 +471,10 @@ def test_acc241(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(cost_python_variables, "c241", 0)
+    monkeypatch.setattr(cost_variables, "c241", 0)
 
     costs.acc241()
-    assert cost_python_variables.c241 == approx(18.4, abs=0.01)
+    assert cost_variables.c241 == approx(18.4, abs=0.01)
 
 
 def test_acc242(monkeypatch, costs):
@@ -487,10 +486,10 @@ def test_acc242(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(htv, "pacpmw", 630.0)
     monkeypatch.setattr(htv, "p_plant_electric_base_total_mw", 65.0)
-    monkeypatch.setattr(cost_python_variables, "c242", 0)
+    monkeypatch.setattr(cost_variables, "c242", 0)
 
     costs.acc242()
-    assert cost_python_variables.c242 == approx(9.06, abs=0.01)
+    assert cost_variables.c242 == approx(9.06, abs=0.01)
 
 
 def test_acc243(monkeypatch, costs):
@@ -501,10 +500,10 @@ def test_acc243(monkeypatch, costs):
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(htv, "tlvpmw", 403.8)
-    monkeypatch.setattr(cost_python_variables, "c243", 0)
+    monkeypatch.setattr(cost_variables, "c243", 0)
 
     costs.acc243()
-    assert cost_python_variables.c243 == approx(8.08, abs=0.01)
+    assert cost_variables.c243 == approx(8.08, abs=0.01)
 
 
 def test_acc244(monkeypatch, costs):
@@ -514,10 +513,10 @@ def test_acc244(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(cost_python_variables, "c244", 0)
+    monkeypatch.setattr(cost_variables, "c244", 0)
 
     costs.acc244()
-    assert cost_python_variables.c244 == approx(6.80, abs=0.01)
+    assert cost_variables.c244 == approx(6.80, abs=0.01)
 
 
 def test_acc245(monkeypatch, costs):
@@ -527,10 +526,10 @@ def test_acc245(monkeypatch, costs):
     :type monkeypatch: object
     """
     monkeypatch.setattr(cost_variables, "lsa", 4)
-    monkeypatch.setattr(cost_python_variables, "c245", 0)
+    monkeypatch.setattr(cost_variables, "c245", 0)
 
     costs.acc245()
-    assert cost_python_variables.c245 == approx(1.5, abs=0.01)
+    assert cost_variables.c245 == approx(1.5, abs=0.01)
 
 
 def acc25_param(**kwargs):
@@ -575,7 +574,7 @@ def acc25_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(cost_variables, "ucmisc", 2.5e7)
     monkeypatch.setattr(cost_variables, "lsa", param["lsa"])
-    monkeypatch.setattr(cost_python_variables, "c25", 0)
+    monkeypatch.setattr(cost_variables, "c25", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -590,7 +589,7 @@ def test_acc25(acc25_fix, costs):
     # Run acc25() with the current fixture,
     # then assert the result is the expected one
     costs.acc25()
-    assert cost_python_variables.c25 == acc25_fix
+    assert cost_variables.c25 == acc25_fix
 
 
 def acc26_param(**kwargs):
@@ -666,7 +665,7 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(
         htv, "p_plant_electric_gross_mw", param["p_plant_electric_gross_mw"]
     )
-    monkeypatch.setattr(cost_python_variables, "c26", 0)
+    monkeypatch.setattr(cost_variables, "c26", 0)
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -681,7 +680,7 @@ def test_acc26(acc26_fix, costs):
     # Run acc26() with the current fixture,
     # then assert the result is the expected one
     costs.acc26()
-    assert cost_python_variables.c26 == acc26_fix
+    assert cost_variables.c26 == acc26_fix
 
 
 def test_acc9(monkeypatch, costs):
@@ -694,11 +693,11 @@ def test_acc9(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "cdirt", 30e3)
     monkeypatch.setattr(cost_variables, "cowner", 0.15)
     monkeypatch.setattr(cost_variables, "fcontng", 0.195)
-    monkeypatch.setattr(cost_python_variables, "cindrt", 0)
+    monkeypatch.setattr(cost_variables, "cindrt", 0)
 
     costs.acc9()
-    assert cost_python_variables.cindrt == approx(10005.0, abs=0.1)
-    assert cost_python_variables.ccont == approx(7800.98, abs=0.1)
+    assert cost_variables.cindrt == approx(10005.0, abs=0.1)
+    assert cost_variables.ccont == approx(7800.98, abs=0.1)
 
 
 class Acc21Param(NamedTuple):
@@ -927,63 +926,63 @@ def test_acc21(acc21param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "cland", acc21param.cland)
 
-    monkeypatch.setattr(cost_python_variables, "c21", acc21param.c21)
+    monkeypatch.setattr(cost_variables, "c21", acc21param.c21)
 
-    monkeypatch.setattr(cost_python_variables, "c211", acc21param.c211)
+    monkeypatch.setattr(cost_variables, "c211", acc21param.c211)
 
-    monkeypatch.setattr(cost_python_variables, "c212", acc21param.c212)
+    monkeypatch.setattr(cost_variables, "c212", acc21param.c212)
 
-    monkeypatch.setattr(cost_python_variables, "c213", acc21param.c213)
+    monkeypatch.setattr(cost_variables, "c213", acc21param.c213)
 
-    monkeypatch.setattr(cost_python_variables, "c214", acc21param.c214)
+    monkeypatch.setattr(cost_variables, "c214", acc21param.c214)
 
-    monkeypatch.setattr(cost_python_variables, "c2141", acc21param.c2141)
+    monkeypatch.setattr(cost_variables, "c2141", acc21param.c2141)
 
-    monkeypatch.setattr(cost_python_variables, "c2142", acc21param.c2142)
+    monkeypatch.setattr(cost_variables, "c2142", acc21param.c2142)
 
-    monkeypatch.setattr(cost_python_variables, "c215", acc21param.c215)
+    monkeypatch.setattr(cost_variables, "c215", acc21param.c215)
 
-    monkeypatch.setattr(cost_python_variables, "c216", acc21param.c216)
+    monkeypatch.setattr(cost_variables, "c216", acc21param.c216)
 
-    monkeypatch.setattr(cost_python_variables, "c217", acc21param.c217)
+    monkeypatch.setattr(cost_variables, "c217", acc21param.c217)
 
-    monkeypatch.setattr(cost_python_variables, "c2171", acc21param.c2171)
+    monkeypatch.setattr(cost_variables, "c2171", acc21param.c2171)
 
-    monkeypatch.setattr(cost_python_variables, "c2172", acc21param.c2172)
+    monkeypatch.setattr(cost_variables, "c2172", acc21param.c2172)
 
-    monkeypatch.setattr(cost_python_variables, "c2173", acc21param.c2173)
+    monkeypatch.setattr(cost_variables, "c2173", acc21param.c2173)
 
-    monkeypatch.setattr(cost_python_variables, "c2174", acc21param.c2174)
+    monkeypatch.setattr(cost_variables, "c2174", acc21param.c2174)
 
     costs.acc21()
 
-    assert cost_python_variables.c21 == pytest.approx(acc21param.expected_c21)
+    assert cost_variables.c21 == pytest.approx(acc21param.expected_c21)
 
-    assert cost_python_variables.c211 == pytest.approx(acc21param.expected_c211)
+    assert cost_variables.c211 == pytest.approx(acc21param.expected_c211)
 
-    assert cost_python_variables.c212 == pytest.approx(acc21param.expected_c212)
+    assert cost_variables.c212 == pytest.approx(acc21param.expected_c212)
 
-    assert cost_python_variables.c213 == pytest.approx(acc21param.expected_c213)
+    assert cost_variables.c213 == pytest.approx(acc21param.expected_c213)
 
-    assert cost_python_variables.c214 == pytest.approx(acc21param.expected_c214)
+    assert cost_variables.c214 == pytest.approx(acc21param.expected_c214)
 
-    assert cost_python_variables.c2141 == pytest.approx(acc21param.expected_c2141)
+    assert cost_variables.c2141 == pytest.approx(acc21param.expected_c2141)
 
-    assert cost_python_variables.c2142 == pytest.approx(acc21param.expected_c2142)
+    assert cost_variables.c2142 == pytest.approx(acc21param.expected_c2142)
 
-    assert cost_python_variables.c215 == pytest.approx(acc21param.expected_c215)
+    assert cost_variables.c215 == pytest.approx(acc21param.expected_c215)
 
-    assert cost_python_variables.c216 == pytest.approx(acc21param.expected_c216)
+    assert cost_variables.c216 == pytest.approx(acc21param.expected_c216)
 
-    assert cost_python_variables.c217 == pytest.approx(acc21param.expected_c217)
+    assert cost_variables.c217 == pytest.approx(acc21param.expected_c217)
 
-    assert cost_python_variables.c2171 == pytest.approx(acc21param.expected_c2171)
+    assert cost_variables.c2171 == pytest.approx(acc21param.expected_c2171)
 
-    assert cost_python_variables.c2172 == pytest.approx(acc21param.expected_c2172)
+    assert cost_variables.c2172 == pytest.approx(acc21param.expected_c2172)
 
-    assert cost_python_variables.c2173 == pytest.approx(acc21param.expected_c2173)
+    assert cost_variables.c2173 == pytest.approx(acc21param.expected_c2173)
 
-    assert cost_python_variables.c2174 == pytest.approx(acc21param.expected_c2174)
+    assert cost_variables.c2174 == pytest.approx(acc21param.expected_c2174)
 
 
 class Acc2211Param(NamedTuple):
@@ -1114,9 +1113,9 @@ def test_acc2211(acc2211param, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "ucconc", acc2211param.ucconc)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2211param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2211param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2211", acc2211param.c2211)
+    monkeypatch.setattr(cost_variables, "c2211", acc2211param.c2211)
 
     costs.acc2211()
 
@@ -1383,35 +1382,35 @@ def test_acc2212(acc2212param, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "uccarb", acc2212param.uccarb)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2212param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2212param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2212", acc2212param.c2212)
+    monkeypatch.setattr(cost_variables, "c2212", acc2212param.c2212)
 
-    monkeypatch.setattr(cost_python_variables, "c22121", acc2212param.c22121)
+    monkeypatch.setattr(cost_variables, "c22121", acc2212param.c22121)
 
-    monkeypatch.setattr(cost_python_variables, "c22122", acc2212param.c22122)
+    monkeypatch.setattr(cost_variables, "c22122", acc2212param.c22122)
 
-    monkeypatch.setattr(cost_python_variables, "c22123", acc2212param.c22123)
+    monkeypatch.setattr(cost_variables, "c22123", acc2212param.c22123)
 
-    monkeypatch.setattr(cost_python_variables, "c22124", acc2212param.c22124)
+    monkeypatch.setattr(cost_variables, "c22124", acc2212param.c22124)
 
-    monkeypatch.setattr(cost_python_variables, "c22125", acc2212param.c22125)
+    monkeypatch.setattr(cost_variables, "c22125", acc2212param.c22125)
 
-    monkeypatch.setattr(cost_python_variables, "c22126", acc2212param.c22126)
+    monkeypatch.setattr(cost_variables, "c22126", acc2212param.c22126)
 
-    monkeypatch.setattr(cost_python_variables, "c22127", acc2212param.c22127)
+    monkeypatch.setattr(cost_variables, "c22127", acc2212param.c22127)
 
-    monkeypatch.setattr(cost_python_variables, "c22128", acc2212param.c22128)
+    monkeypatch.setattr(cost_variables, "c22128", acc2212param.c22128)
 
     costs.acc2212()
 
     assert cost_variables.blkcst == pytest.approx(acc2212param.expected_blkcst)
 
-    assert cost_python_variables.c22121 == pytest.approx(acc2212param.expected_c22121)
+    assert cost_variables.c22121 == pytest.approx(acc2212param.expected_c22121)
 
-    assert cost_python_variables.c22122 == pytest.approx(acc2212param.expected_c22122)
+    assert cost_variables.c22122 == pytest.approx(acc2212param.expected_c22122)
 
-    assert cost_python_variables.c22123 == pytest.approx(acc2212param.expected_c22123)
+    assert cost_variables.c22123 == pytest.approx(acc2212param.expected_c22123)
 
 
 class Acc2213Param(NamedTuple):
@@ -1558,21 +1557,21 @@ def test_acc2213(acc2213param, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "ucconc", acc2213param.ucconc)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2213param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2213param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2213", acc2213param.c2213)
+    monkeypatch.setattr(cost_variables, "c2213", acc2213param.c2213)
 
-    monkeypatch.setattr(cost_python_variables, "c22131", acc2213param.c22131)
+    monkeypatch.setattr(cost_variables, "c22131", acc2213param.c22131)
 
-    monkeypatch.setattr(cost_python_variables, "c22132", acc2213param.c22132)
+    monkeypatch.setattr(cost_variables, "c22132", acc2213param.c22132)
 
     costs.acc2213()
 
-    assert cost_python_variables.c2213 == pytest.approx(acc2213param.expected_c2213)
+    assert cost_variables.c2213 == pytest.approx(acc2213param.expected_c2213)
 
-    assert cost_python_variables.c22131 == pytest.approx(acc2213param.expected_c22131)
+    assert cost_variables.c22131 == pytest.approx(acc2213param.expected_c22131)
 
-    assert cost_python_variables.c22132 == pytest.approx(acc2213param.expected_c22132)
+    assert cost_variables.c22132 == pytest.approx(acc2213param.expected_c22132)
 
 
 class Acc2214Param(NamedTuple):
@@ -1629,13 +1628,13 @@ def test_acc2214(acc2214param, monkeypatch, costs):
 
     monkeypatch.setattr(structure_variables, "gsmass", acc2214param.gsmass)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2214param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2214param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2214", acc2214param.c2214)
+    monkeypatch.setattr(cost_variables, "c2214", acc2214param.c2214)
 
     costs.acc2214()
 
-    assert cost_python_variables.c2214 == pytest.approx(acc2214param.expected_c2214)
+    assert cost_variables.c2214 == pytest.approx(acc2214param.expected_c2214)
 
 
 class Acc2215Param(NamedTuple):
@@ -1712,9 +1711,9 @@ def test_acc2215(acc2215param, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "ife", acc2215param.ife)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2215param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2215param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2215", acc2215param.c2215)
+    monkeypatch.setattr(cost_variables, "c2215", acc2215param.c2215)
 
     costs.acc2215()
 
@@ -1994,25 +1993,25 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sc_mat", acc2221param.i_tf_sc_mat)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2221param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2221param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2221", acc2221param.c2221)
+    monkeypatch.setattr(cost_variables, "c2221", acc2221param.c2221)
 
-    monkeypatch.setattr(cost_python_variables, "c22211", acc2221param.c22211)
+    monkeypatch.setattr(cost_variables, "c22211", acc2221param.c22211)
 
-    monkeypatch.setattr(cost_python_variables, "c22212", acc2221param.c22212)
+    monkeypatch.setattr(cost_variables, "c22212", acc2221param.c22212)
 
-    monkeypatch.setattr(cost_python_variables, "c22213", acc2221param.c22213)
+    monkeypatch.setattr(cost_variables, "c22213", acc2221param.c22213)
 
-    monkeypatch.setattr(cost_python_variables, "c22214", acc2221param.c22214)
+    monkeypatch.setattr(cost_variables, "c22214", acc2221param.c22214)
 
-    monkeypatch.setattr(cost_python_variables, "c22215", acc2221param.c22215)
+    monkeypatch.setattr(cost_variables, "c22215", acc2221param.c22215)
 
     costs.acc2221()
 
-    assert cost_python_variables.c22211 == pytest.approx(acc2221param.expected_c22211)
+    assert cost_variables.c22211 == pytest.approx(acc2221param.expected_c22211)
 
-    assert cost_python_variables.c22212 == pytest.approx(acc2221param.expected_c22212)
+    assert cost_variables.c22212 == pytest.approx(acc2221param.expected_c22212)
 
 
 class Acc2222Param(NamedTuple):
@@ -2781,29 +2780,29 @@ def test_acc2222(acc2222param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "dcond", acc2222param.dcond)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2222param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2222param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2222", acc2222param.c2222)
+    monkeypatch.setattr(cost_variables, "c2222", acc2222param.c2222)
 
-    monkeypatch.setattr(cost_python_variables, "c22221", acc2222param.c22221)
+    monkeypatch.setattr(cost_variables, "c22221", acc2222param.c22221)
 
-    monkeypatch.setattr(cost_python_variables, "c22222", acc2222param.c22222)
+    monkeypatch.setattr(cost_variables, "c22222", acc2222param.c22222)
 
-    monkeypatch.setattr(cost_python_variables, "c22223", acc2222param.c22223)
+    monkeypatch.setattr(cost_variables, "c22223", acc2222param.c22223)
 
-    monkeypatch.setattr(cost_python_variables, "c22224", acc2222param.c22224)
+    monkeypatch.setattr(cost_variables, "c22224", acc2222param.c22224)
 
     costs.acc2222()
 
-    assert cost_python_variables.c2222 == pytest.approx(acc2222param.expected_c2222)
+    assert cost_variables.c2222 == pytest.approx(acc2222param.expected_c2222)
 
-    assert cost_python_variables.c22221 == pytest.approx(acc2222param.expected_c22221)
+    assert cost_variables.c22221 == pytest.approx(acc2222param.expected_c22221)
 
-    assert cost_python_variables.c22222 == pytest.approx(acc2222param.expected_c22222)
+    assert cost_variables.c22222 == pytest.approx(acc2222param.expected_c22222)
 
-    assert cost_python_variables.c22223 == pytest.approx(acc2222param.expected_c22223)
+    assert cost_variables.c22223 == pytest.approx(acc2222param.expected_c22223)
 
-    assert cost_python_variables.c22224 == pytest.approx(acc2222param.expected_c22224)
+    assert cost_variables.c22224 == pytest.approx(acc2222param.expected_c22224)
 
 
 class Acc2223Param(NamedTuple):
@@ -2866,13 +2865,13 @@ def test_acc2223(acc2223param, monkeypatch, costs):
 
     monkeypatch.setattr(fwbs_variables, "m_vv", acc2223param.m_vv)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2223param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2223param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c2223", acc2223param.c2223)
+    monkeypatch.setattr(cost_variables, "c2223", acc2223param.c2223)
 
     costs.acc2223()
 
-    assert cost_python_variables.c2223 == pytest.approx(acc2223param.expected_c2223)
+    assert cost_variables.c2223 == pytest.approx(acc2223param.expected_c2223)
 
 
 class Acc223Param(NamedTuple):
@@ -3091,25 +3090,25 @@ def test_acc223(acc223param, monkeypatch, costs):
 
     monkeypatch.setattr(ife_variables, "cdriv0", acc223param.cdriv0)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc223param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc223param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c223", acc223param.c223)
+    monkeypatch.setattr(cost_variables, "c223", acc223param.c223)
 
-    monkeypatch.setattr(cost_python_variables, "c2231", acc223param.c2231)
+    monkeypatch.setattr(cost_variables, "c2231", acc223param.c2231)
 
-    monkeypatch.setattr(cost_python_variables, "c2232", acc223param.c2232)
+    monkeypatch.setattr(cost_variables, "c2232", acc223param.c2232)
 
-    monkeypatch.setattr(cost_python_variables, "c2233", acc223param.c2233)
+    monkeypatch.setattr(cost_variables, "c2233", acc223param.c2233)
 
-    monkeypatch.setattr(cost_python_variables, "c2234", acc223param.c2234)
+    monkeypatch.setattr(cost_variables, "c2234", acc223param.c2234)
 
     costs.acc223()
 
     assert cost_variables.cdcost == pytest.approx(acc223param.expected_cdcost)
 
-    assert cost_python_variables.c223 == pytest.approx(acc223param.expected_c223)
+    assert cost_variables.c223 == pytest.approx(acc223param.expected_c223)
 
-    assert cost_python_variables.c2231 == pytest.approx(acc223param.expected_c2231)
+    assert cost_variables.c2231 == pytest.approx(acc223param.expected_c2231)
 
 
 class Acc224Param(NamedTuple):
@@ -3234,35 +3233,35 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(vacuum_variables, "nvduct", acc224param.nvduct)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc224param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc224param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c224", acc224param.c224)
+    monkeypatch.setattr(cost_variables, "c224", acc224param.c224)
 
-    monkeypatch.setattr(cost_python_variables, "c2241", acc224param.c2241)
+    monkeypatch.setattr(cost_variables, "c2241", acc224param.c2241)
 
-    monkeypatch.setattr(cost_python_variables, "c2242", acc224param.c2242)
+    monkeypatch.setattr(cost_variables, "c2242", acc224param.c2242)
 
-    monkeypatch.setattr(cost_python_variables, "c2243", acc224param.c2243)
+    monkeypatch.setattr(cost_variables, "c2243", acc224param.c2243)
 
-    monkeypatch.setattr(cost_python_variables, "c2244", acc224param.c2244)
+    monkeypatch.setattr(cost_variables, "c2244", acc224param.c2244)
 
-    monkeypatch.setattr(cost_python_variables, "c2245", acc224param.c2245)
+    monkeypatch.setattr(cost_variables, "c2245", acc224param.c2245)
 
-    monkeypatch.setattr(cost_python_variables, "c2246", acc224param.c2246)
+    monkeypatch.setattr(cost_variables, "c2246", acc224param.c2246)
 
     costs.acc224()
 
-    assert cost_python_variables.c224 == pytest.approx(acc224param.expected_c224)
+    assert cost_variables.c224 == pytest.approx(acc224param.expected_c224)
 
-    assert cost_python_variables.c2241 == pytest.approx(acc224param.expected_c2241)
+    assert cost_variables.c2241 == pytest.approx(acc224param.expected_c2241)
 
-    assert cost_python_variables.c2242 == pytest.approx(acc224param.expected_c2242)
+    assert cost_variables.c2242 == pytest.approx(acc224param.expected_c2242)
 
-    assert cost_python_variables.c2243 == pytest.approx(acc224param.expected_c2243)
+    assert cost_variables.c2243 == pytest.approx(acc224param.expected_c2243)
 
-    assert cost_python_variables.c2244 == pytest.approx(acc224param.expected_c2244)
+    assert cost_variables.c2244 == pytest.approx(acc224param.expected_c2244)
 
-    assert cost_python_variables.c2246 == pytest.approx(acc224param.expected_c2246)
+    assert cost_variables.c2246 == pytest.approx(acc224param.expected_c2246)
 
 
 class Acc2251Param(NamedTuple):
@@ -3435,35 +3434,35 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_turn", acc2251param.c_tf_turn)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2251param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2251param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c225", acc2251param.c225)
+    monkeypatch.setattr(cost_variables, "c225", acc2251param.c225)
 
-    monkeypatch.setattr(cost_python_variables, "c2251", acc2251param.c2251)
+    monkeypatch.setattr(cost_variables, "c2251", acc2251param.c2251)
 
-    monkeypatch.setattr(cost_python_variables, "c22511", acc2251param.c22511)
+    monkeypatch.setattr(cost_variables, "c22511", acc2251param.c22511)
 
-    monkeypatch.setattr(cost_python_variables, "c22512", acc2251param.c22512)
+    monkeypatch.setattr(cost_variables, "c22512", acc2251param.c22512)
 
-    monkeypatch.setattr(cost_python_variables, "c22513", acc2251param.c22513)
+    monkeypatch.setattr(cost_variables, "c22513", acc2251param.c22513)
 
-    monkeypatch.setattr(cost_python_variables, "c22514", acc2251param.c22514)
+    monkeypatch.setattr(cost_variables, "c22514", acc2251param.c22514)
 
-    monkeypatch.setattr(cost_python_variables, "c22515", acc2251param.c22515)
+    monkeypatch.setattr(cost_variables, "c22515", acc2251param.c22515)
 
     costs.acc2251()
 
-    assert cost_python_variables.c2251 == pytest.approx(acc2251param.expected_c2251)
+    assert cost_variables.c2251 == pytest.approx(acc2251param.expected_c2251)
 
-    assert cost_python_variables.c22511 == pytest.approx(acc2251param.expected_c22511)
+    assert cost_variables.c22511 == pytest.approx(acc2251param.expected_c22511)
 
-    assert cost_python_variables.c22512 == pytest.approx(acc2251param.expected_c22512)
+    assert cost_variables.c22512 == pytest.approx(acc2251param.expected_c22512)
 
-    assert cost_python_variables.c22513 == pytest.approx(acc2251param.expected_c22513)
+    assert cost_variables.c22513 == pytest.approx(acc2251param.expected_c22513)
 
-    assert cost_python_variables.c22514 == pytest.approx(acc2251param.expected_c22514)
+    assert cost_variables.c22514 == pytest.approx(acc2251param.expected_c22514)
 
-    assert cost_python_variables.c22515 == pytest.approx(acc2251param.expected_c22515)
+    assert cost_variables.c22515 == pytest.approx(acc2251param.expected_c22515)
 
 
 class Acc2252Param(NamedTuple):
@@ -3636,35 +3635,35 @@ def test_acc2252(acc2252param, monkeypatch, costs):
 
     monkeypatch.setattr(pf_power_variables, "acptmax", acc2252param.acptmax)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2252param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2252param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c225", acc2252param.c225)
+    monkeypatch.setattr(cost_variables, "c225", acc2252param.c225)
 
-    monkeypatch.setattr(cost_python_variables, "c2252", acc2252param.c2252)
+    monkeypatch.setattr(cost_variables, "c2252", acc2252param.c2252)
 
-    monkeypatch.setattr(cost_python_variables, "c22521", acc2252param.c22521)
+    monkeypatch.setattr(cost_variables, "c22521", acc2252param.c22521)
 
-    monkeypatch.setattr(cost_python_variables, "c22522", acc2252param.c22522)
+    monkeypatch.setattr(cost_variables, "c22522", acc2252param.c22522)
 
-    monkeypatch.setattr(cost_python_variables, "c22523", acc2252param.c22523)
+    monkeypatch.setattr(cost_variables, "c22523", acc2252param.c22523)
 
-    monkeypatch.setattr(cost_python_variables, "c22524", acc2252param.c22524)
+    monkeypatch.setattr(cost_variables, "c22524", acc2252param.c22524)
 
-    monkeypatch.setattr(cost_python_variables, "c22525", acc2252param.c22525)
+    monkeypatch.setattr(cost_variables, "c22525", acc2252param.c22525)
 
-    monkeypatch.setattr(cost_python_variables, "c22526", acc2252param.c22526)
+    monkeypatch.setattr(cost_variables, "c22526", acc2252param.c22526)
 
-    monkeypatch.setattr(cost_python_variables, "c22527", acc2252param.c22527)
+    monkeypatch.setattr(cost_variables, "c22527", acc2252param.c22527)
 
     costs.acc2252()
 
-    assert cost_python_variables.c22521 == pytest.approx(acc2252param.expected_c22521)
+    assert cost_variables.c22521 == pytest.approx(acc2252param.expected_c22521)
 
-    assert cost_python_variables.c22522 == pytest.approx(acc2252param.expected_c22522)
+    assert cost_variables.c22522 == pytest.approx(acc2252param.expected_c22522)
 
-    assert cost_python_variables.c22523 == pytest.approx(acc2252param.expected_c22523)
+    assert cost_variables.c22523 == pytest.approx(acc2252param.expected_c22523)
 
-    assert cost_python_variables.c22524 == pytest.approx(acc2252param.expected_c22524)
+    assert cost_variables.c22524 == pytest.approx(acc2252param.expected_c22524)
 
 
 class Acc2253Param(NamedTuple):
@@ -3763,15 +3762,15 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2253param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c225", acc2253param.c225)
+    monkeypatch.setattr(cost_variables, "c225", acc2253param.c225)
 
-    monkeypatch.setattr(cost_python_variables, "c2253", acc2253param.c2253)
+    monkeypatch.setattr(cost_variables, "c2253", acc2253param.c2253)
 
     costs.acc2253()
 
-    assert cost_python_variables.c2253 == pytest.approx(acc2253param.expected_c2253)
+    assert cost_variables.c2253 == pytest.approx(acc2253param.expected_c2253)
 
 
 class Acc226Param(NamedTuple):
@@ -3822,19 +3821,19 @@ def test_acc226(acc226param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(cost_python_variables, "c226", acc226param.c226)
+    monkeypatch.setattr(cost_variables, "c226", acc226param.c226)
 
-    monkeypatch.setattr(cost_python_variables, "c2261", acc226param.c2261)
+    monkeypatch.setattr(cost_variables, "c2261", acc226param.c2261)
 
-    monkeypatch.setattr(cost_python_variables, "c2262", acc226param.c2262)
+    monkeypatch.setattr(cost_variables, "c2262", acc226param.c2262)
 
-    monkeypatch.setattr(cost_python_variables, "c2263", acc226param.c2263)
+    monkeypatch.setattr(cost_variables, "c2263", acc226param.c2263)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc226param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc226param.c22)
 
     costs.acc226()
 
-    assert cost_python_variables.c226 == pytest.approx(acc226param.expected_c226)
+    assert cost_variables.c226 == pytest.approx(acc226param.expected_c226)
 
 
 class Acc2261Param(NamedTuple):
@@ -3973,23 +3972,23 @@ def test_acc2261_rut(acc2261param, monkeypatch, costs):
         acc2261param.n_primary_heat_exchangers,
     )
 
-    monkeypatch.setattr(cost_python_variables, "c226", acc2261param.c226)
+    monkeypatch.setattr(cost_variables, "c226", acc2261param.c226)
 
-    monkeypatch.setattr(cost_python_variables, "c2261", acc2261param.c2261)
+    monkeypatch.setattr(cost_variables, "c2261", acc2261param.c2261)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2261param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2261param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "chx", acc2261param.chx)
+    monkeypatch.setattr(cost_variables, "chx", acc2261param.chx)
 
-    monkeypatch.setattr(cost_python_variables, "cpp", acc2261param.cpp)
+    monkeypatch.setattr(cost_variables, "cpp", acc2261param.cpp)
 
     costs.acc2261()
 
-    assert cost_python_variables.c2261 == pytest.approx(acc2261param.expected_c2261)
+    assert cost_variables.c2261 == pytest.approx(acc2261param.expected_c2261)
 
-    assert cost_python_variables.chx == pytest.approx(acc2261param.expected_chx)
+    assert cost_variables.chx == pytest.approx(acc2261param.expected_chx)
 
-    assert cost_python_variables.cpp == pytest.approx(acc2261param.expected_cpp)
+    assert cost_variables.cpp == pytest.approx(acc2261param.expected_cpp)
 
 
 class Acc2262Param(NamedTuple):
@@ -4116,21 +4115,21 @@ def test_acc2262_rut(acc2262param, monkeypatch, costs):
         acc2262param.p_cryo_plant_electric_mw,
     )
 
-    monkeypatch.setattr(cost_python_variables, "c226", acc2262param.c226)
+    monkeypatch.setattr(cost_variables, "c226", acc2262param.c226)
 
-    monkeypatch.setattr(cost_python_variables, "c2262", acc2262param.c2262)
+    monkeypatch.setattr(cost_variables, "c2262", acc2262param.c2262)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2262param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2262param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "cpp", acc2262param.cpp)
+    monkeypatch.setattr(cost_variables, "cpp", acc2262param.cpp)
 
-    monkeypatch.setattr(cost_python_variables, "cppa", acc2262param.cppa)
+    monkeypatch.setattr(cost_variables, "cppa", acc2262param.cppa)
 
     costs.acc2262()
 
-    assert cost_python_variables.c2262 == pytest.approx(acc2262param.expected_c2262)
+    assert cost_variables.c2262 == pytest.approx(acc2262param.expected_c2262)
 
-    assert cost_python_variables.cppa == pytest.approx(acc2262param.expected_cppa)
+    assert cost_variables.cppa == pytest.approx(acc2262param.expected_cppa)
 
 
 class Acc2263Param(NamedTuple):
@@ -4203,15 +4202,15 @@ def test_acc2263_rut(acc2263param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "temp_tf_cryo", acc2263param.temp_tf_cryo)
 
-    monkeypatch.setattr(cost_python_variables, "c226", acc2263param.c226)
+    monkeypatch.setattr(cost_variables, "c226", acc2263param.c226)
 
-    monkeypatch.setattr(cost_python_variables, "c2263", acc2263param.c2263)
+    monkeypatch.setattr(cost_variables, "c2263", acc2263param.c2263)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2263param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2263param.c22)
 
     costs.acc2263()
 
-    assert cost_python_variables.c2263 == pytest.approx(acc2263param.expected_c2263)
+    assert cost_variables.c2263 == pytest.approx(acc2263param.expected_c2263)
 
 
 class Acc227Param(NamedTuple):
@@ -4266,21 +4265,21 @@ def test_acc227(acc227param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(cost_python_variables, "c227", acc227param.c227)
+    monkeypatch.setattr(cost_variables, "c227", acc227param.c227)
 
-    monkeypatch.setattr(cost_python_variables, "c2271", acc227param.c2271)
+    monkeypatch.setattr(cost_variables, "c2271", acc227param.c2271)
 
-    monkeypatch.setattr(cost_python_variables, "c2272", acc227param.c2272)
+    monkeypatch.setattr(cost_variables, "c2272", acc227param.c2272)
 
-    monkeypatch.setattr(cost_python_variables, "c2273", acc227param.c2273)
+    monkeypatch.setattr(cost_variables, "c2273", acc227param.c2273)
 
-    monkeypatch.setattr(cost_python_variables, "c2274", acc227param.c2274)
+    monkeypatch.setattr(cost_variables, "c2274", acc227param.c2274)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc227param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc227param.c22)
 
     costs.acc227()
 
-    assert cost_python_variables.c227 == pytest.approx(acc227param.expected_c227)
+    assert cost_variables.c227 == pytest.approx(acc227param.expected_c227)
 
 
 class Acc2271Param(NamedTuple):
@@ -4335,15 +4334,15 @@ def test_acc2271_rut(acc2271param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2271param.fkind)
 
-    monkeypatch.setattr(cost_python_variables, "c227", acc2271param.c227)
+    monkeypatch.setattr(cost_variables, "c227", acc2271param.c227)
 
-    monkeypatch.setattr(cost_python_variables, "c2271", acc2271param.c2271)
+    monkeypatch.setattr(cost_variables, "c2271", acc2271param.c2271)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2271param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2271param.c22)
 
     costs.acc2271()
 
-    assert cost_python_variables.c2271 == pytest.approx(acc2271param.expected_c2271)
+    assert cost_variables.c2271 == pytest.approx(acc2271param.expected_c2271)
 
 
 class Acc2272Param(NamedTuple):
@@ -4444,17 +4443,17 @@ def test_acc2272_rut(acc2272param, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "m_fuel_amu", acc2272param.m_fuel_amu)
 
-    monkeypatch.setattr(cost_python_variables, "c227", acc2272param.c227)
+    monkeypatch.setattr(cost_variables, "c227", acc2272param.c227)
 
-    monkeypatch.setattr(cost_python_variables, "c2272", acc2272param.c2272)
+    monkeypatch.setattr(cost_variables, "c2272", acc2272param.c2272)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2272param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2272param.c22)
 
     costs.acc2272()
 
     assert physics_variables.wtgpd == pytest.approx(acc2272param.expected_wtgpd)
 
-    assert cost_python_variables.c2272 == pytest.approx(acc2272param.expected_c2272)
+    assert cost_variables.c2272 == pytest.approx(acc2272param.expected_c2272)
 
 
 class Acc2273Param(NamedTuple):
@@ -4521,15 +4520,15 @@ def test_acc2273_rut(acc2273param, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "f_tritium", acc2273param.f_tritium)
 
-    monkeypatch.setattr(cost_python_variables, "c227", acc2273param.c227)
+    monkeypatch.setattr(cost_variables, "c227", acc2273param.c227)
 
-    monkeypatch.setattr(cost_python_variables, "c2273", acc2273param.c2273)
+    monkeypatch.setattr(cost_variables, "c2273", acc2273param.c2273)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2273param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2273param.c22)
 
     costs.acc2273()
 
-    assert cost_python_variables.c2273 == pytest.approx(acc2273param.expected_c2273)
+    assert cost_variables.c2273 == pytest.approx(acc2273param.expected_c2273)
 
 
 class Acc2274Param(NamedTuple):
@@ -4590,15 +4589,15 @@ def test_acc2274_rut(acc2274param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc2274param.fkind)
 
-    monkeypatch.setattr(cost_python_variables, "c227", acc2274param.c227)
+    monkeypatch.setattr(cost_variables, "c227", acc2274param.c227)
 
-    monkeypatch.setattr(cost_python_variables, "c2274", acc2274param.c2274)
+    monkeypatch.setattr(cost_variables, "c2274", acc2274param.c2274)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2274param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2274param.c22)
 
     costs.acc2274()
 
-    assert cost_python_variables.c2274 == pytest.approx(acc2274param.expected_c2274)
+    assert cost_variables.c2274 == pytest.approx(acc2274param.expected_c2274)
 
 
 class Acc228Param(NamedTuple):
@@ -4649,13 +4648,13 @@ def test_acc228_rut(acc228param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc228param.fkind)
 
-    monkeypatch.setattr(cost_python_variables, "c228", acc228param.c228)
+    monkeypatch.setattr(cost_variables, "c228", acc228param.c228)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc228param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc228param.c22)
 
     costs.acc228()
 
-    assert cost_python_variables.c228 == pytest.approx(acc228param.expected_c228)
+    assert cost_variables.c228 == pytest.approx(acc228param.expected_c228)
 
 
 class Acc229Param(NamedTuple):
@@ -4706,13 +4705,13 @@ def test_acc229_rut(acc229param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "fkind", acc229param.fkind)
 
-    monkeypatch.setattr(cost_python_variables, "c229", acc229param.c229)
+    monkeypatch.setattr(cost_variables, "c229", acc229param.c229)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc229param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc229param.c22)
 
     costs.acc229()
 
-    assert cost_python_variables.c229 == pytest.approx(acc229param.expected_c229)
+    assert cost_variables.c229 == pytest.approx(acc229param.expected_c229)
 
 
 class Acc23Param(NamedTuple):
@@ -4781,11 +4780,11 @@ def test_acc23_rut(acc23param, monkeypatch, costs):
         acc23param.p_plant_electric_gross_mw,
     )
 
-    monkeypatch.setattr(cost_python_variables, "c23", acc23param.c23)
+    monkeypatch.setattr(cost_variables, "c23", acc23param.c23)
 
     costs.acc23()
 
-    assert cost_python_variables.c23 == pytest.approx(acc23param.expected_c23)
+    assert cost_variables.c23 == pytest.approx(acc23param.expected_c23)
 
 
 class Acc24Param(NamedTuple):
@@ -4840,21 +4839,21 @@ def test_acc24(acc24param, monkeypatch, costs):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(cost_python_variables, "c24", acc24param.c24)
+    monkeypatch.setattr(cost_variables, "c24", acc24param.c24)
 
-    monkeypatch.setattr(cost_python_variables, "c241", acc24param.c241)
+    monkeypatch.setattr(cost_variables, "c241", acc24param.c241)
 
-    monkeypatch.setattr(cost_python_variables, "c242", acc24param.c242)
+    monkeypatch.setattr(cost_variables, "c242", acc24param.c242)
 
-    monkeypatch.setattr(cost_python_variables, "c243", acc24param.c243)
+    monkeypatch.setattr(cost_variables, "c243", acc24param.c243)
 
-    monkeypatch.setattr(cost_python_variables, "c244", acc24param.c244)
+    monkeypatch.setattr(cost_variables, "c244", acc24param.c244)
 
-    monkeypatch.setattr(cost_python_variables, "c245", acc24param.c245)
+    monkeypatch.setattr(cost_variables, "c245", acc24param.c245)
 
     costs.acc24()
 
-    assert cost_python_variables.c24 == pytest.approx(acc24param.expected_c24)
+    assert cost_variables.c24 == pytest.approx(acc24param.expected_c24)
 
 
 class Acc241Param(NamedTuple):
@@ -4899,13 +4898,13 @@ def test_acc241_rut(acc241param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc241param.lsa)
 
-    monkeypatch.setattr(cost_python_variables, "c24", acc241param.c24)
+    monkeypatch.setattr(cost_variables, "c24", acc241param.c24)
 
-    monkeypatch.setattr(cost_python_variables, "c241", acc241param.c241)
+    monkeypatch.setattr(cost_variables, "c241", acc241param.c241)
 
     costs.acc241()
 
-    assert cost_python_variables.c241 == pytest.approx(acc241param.expected_c241)
+    assert cost_variables.c241 == pytest.approx(acc241param.expected_c241)
 
 
 class Acc242Param(NamedTuple):
@@ -4970,15 +4969,15 @@ def test_acc242_rut(acc242param, monkeypatch, costs):
         acc242param.p_plant_electric_base_total_mw,
     )
 
-    monkeypatch.setattr(cost_python_variables, "c24", acc242param.c24)
+    monkeypatch.setattr(cost_variables, "c24", acc242param.c24)
 
-    monkeypatch.setattr(cost_python_variables, "c242", acc242param.c242)
+    monkeypatch.setattr(cost_variables, "c242", acc242param.c242)
 
-    monkeypatch.setattr(cost_python_variables, "cpp", acc242param.cpp)
+    monkeypatch.setattr(cost_variables, "cpp", acc242param.cpp)
 
     costs.acc242()
 
-    assert cost_python_variables.c242 == pytest.approx(acc242param.expected_c242)
+    assert cost_variables.c242 == pytest.approx(acc242param.expected_c242)
 
 
 class Acc243Param(NamedTuple):
@@ -5029,13 +5028,13 @@ def test_acc243_rut(acc243param, monkeypatch, costs):
 
     monkeypatch.setattr(heat_transport_variables, "tlvpmw", acc243param.tlvpmw)
 
-    monkeypatch.setattr(cost_python_variables, "c24", acc243param.c24)
+    monkeypatch.setattr(cost_variables, "c24", acc243param.c24)
 
-    monkeypatch.setattr(cost_python_variables, "c243", acc243param.c243)
+    monkeypatch.setattr(cost_variables, "c243", acc243param.c243)
 
     costs.acc243()
 
-    assert cost_python_variables.c243 == pytest.approx(acc243param.expected_c243)
+    assert cost_variables.c243 == pytest.approx(acc243param.expected_c243)
 
 
 class Acc244Param(NamedTuple):
@@ -5080,13 +5079,13 @@ def test_acc244_rut(acc244param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc244param.lsa)
 
-    monkeypatch.setattr(cost_python_variables, "c24", acc244param.c24)
+    monkeypatch.setattr(cost_variables, "c24", acc244param.c24)
 
-    monkeypatch.setattr(cost_python_variables, "c244", acc244param.c244)
+    monkeypatch.setattr(cost_variables, "c244", acc244param.c244)
 
     costs.acc244()
 
-    assert cost_python_variables.c244 == pytest.approx(acc244param.expected_c244)
+    assert cost_variables.c244 == pytest.approx(acc244param.expected_c244)
 
 
 class Acc245Param(NamedTuple):
@@ -5131,13 +5130,13 @@ def test_acc245_rut(acc245param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc245param.lsa)
 
-    monkeypatch.setattr(cost_python_variables, "c24", acc245param.c24)
+    monkeypatch.setattr(cost_variables, "c24", acc245param.c24)
 
-    monkeypatch.setattr(cost_python_variables, "c245", acc245param.c245)
+    monkeypatch.setattr(cost_variables, "c245", acc245param.c245)
 
     costs.acc245()
 
-    assert cost_python_variables.c245 == pytest.approx(acc245param.expected_c245)
+    assert cost_variables.c245 == pytest.approx(acc245param.expected_c245)
 
 
 class Acc25Param(NamedTuple):
@@ -5184,11 +5183,11 @@ def test_acc25_rut(acc25param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "lsa", acc25param.lsa)
 
-    monkeypatch.setattr(cost_python_variables, "c25", acc25param.c25)
+    monkeypatch.setattr(cost_variables, "c25", acc25param.c25)
 
     costs.acc25()
 
-    assert cost_python_variables.c25 == pytest.approx(acc25param.expected_c25)
+    assert cost_variables.c25 == pytest.approx(acc25param.expected_c25)
 
 
 class Acc26Param(NamedTuple):
@@ -5285,11 +5284,11 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc26param.tfcmw)
 
-    monkeypatch.setattr(cost_python_variables, "c26", acc26param.c26)
+    monkeypatch.setattr(cost_variables, "c26", acc26param.c26)
 
     costs.acc26()
 
-    assert cost_python_variables.c26 == pytest.approx(acc26param.expected_c26)
+    assert cost_variables.c26 == pytest.approx(acc26param.expected_c26)
 
 
 class Acc9Param(NamedTuple):
@@ -5384,15 +5383,15 @@ def test_acc9_rut(acc9param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "cfind", acc9param.cfind)
 
-    monkeypatch.setattr(cost_python_variables, "cindrt", acc9param.cindrt)
+    monkeypatch.setattr(cost_variables, "cindrt", acc9param.cindrt)
 
-    monkeypatch.setattr(cost_python_variables, "ccont", acc9param.ccont)
+    monkeypatch.setattr(cost_variables, "ccont", acc9param.ccont)
 
     costs.acc9()
 
-    assert cost_python_variables.cindrt == pytest.approx(acc9param.expected_cindrt)
+    assert cost_variables.cindrt == pytest.approx(acc9param.expected_cindrt)
 
-    assert cost_python_variables.ccont == pytest.approx(acc9param.expected_ccont)
+    assert cost_variables.ccont == pytest.approx(acc9param.expected_ccont)
 
 
 class Acc2253Param(NamedTuple):
@@ -5491,15 +5490,15 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
 
     monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
 
-    monkeypatch.setattr(cost_python_variables, "c22", acc2253param.c22)
+    monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
-    monkeypatch.setattr(cost_python_variables, "c225", acc2253param.c225)
+    monkeypatch.setattr(cost_variables, "c225", acc2253param.c225)
 
-    monkeypatch.setattr(cost_python_variables, "c2253", acc2253param.c2253)
+    monkeypatch.setattr(cost_variables, "c2253", acc2253param.c2253)
 
     costs.acc2253()
 
-    assert cost_python_variables.c2253 == pytest.approx(acc2253param.expected_c2253)
+    assert cost_variables.c2253 == pytest.approx(acc2253param.expected_c2253)
 
 
 class CoelcParam(NamedTuple):

@@ -3,12 +3,11 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import power_variables
+from process.data_structure import cost_variables, power_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
     constraint_variables,
-    cost_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,

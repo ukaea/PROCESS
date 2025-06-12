@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Any
 from warnings import warn
 
-from process import fortran
+import process.data_structure as data_structure
+import process.fortran as fortran
 from process.constraints import ConstraintManager
 from process.exceptions import ProcessValidationError, ProcessValueError
 from process.utilities.f2py_string_patch import (
@@ -153,15 +154,17 @@ INPUT_VARIABLES = {
     "fimp": InputVariable(fortran.impurity_radiation_module, float, array=True),
     "fkzohm": InputVariable(fortran.physics_variables, float, range=(0.5, 2.0)),
     "fnesep": InputVariable(fortran.constraint_variables, float, range=(0.1, 20.0)),
-    "abktflnc": InputVariable(fortran.cost_variables, float, range=(0.1, 100.0)),
-    "adivflnc": InputVariable(fortran.cost_variables, float, range=(0.1, 100.0)),
+    "abktflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
+    "adivflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "admv": InputVariable(fortran.buildings_variables, float, range=(1.0e4, 1.0e6)),
     "airtemp": InputVariable(fortran.water_usage_variables, float, range=(-15.0, 40.0)),
     "alfapf": InputVariable(fortran.pfcoil_variables, float, range=(1e-12, 1.0)),
     "alstroh": InputVariable(
         fortran.pfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
-    "amortization": InputVariable(fortran.cost_variables, float, range=(1.0, 50.0)),
+    "amortization": InputVariable(
+        data_structure.cost_variables, float, range=(1.0, 50.0)
+    ),
     "anginc": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.5707)),
     "aplasmin": InputVariable(fortran.build_variables, float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable(
@@ -183,7 +186,7 @@ INPUT_VARIABLES = {
     "p_hcd_injected_min_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.01, 100.0)
     ),
-    "avail_min": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "avail_min": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "b_crit_upper_nbti": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 30.0)
     ),
@@ -258,13 +261,17 @@ INPUT_VARIABLES = {
     "dx_tf_side_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "casths_fraction": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "cboot": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
-    "cconfix": InputVariable(fortran.cost_variables, float, range=(50.0, 200.0)),
-    "cconshpf": InputVariable(fortran.cost_variables, float, range=(50.0, 200.0)),
-    "cconshtf": InputVariable(fortran.cost_variables, float, range=(50.0, 200.0)),
+    "cconfix": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),
+    "cconshpf": InputVariable(
+        data_structure.cost_variables, float, range=(50.0, 200.0)
+    ),
+    "cconshtf": InputVariable(
+        data_structure.cost_variables, float, range=(50.0, 200.0)
+    ),
     "cdriv0": InputVariable(fortran.ife_variables, float, range=(50.0, 500.0)),
     "cdriv1": InputVariable(fortran.ife_variables, float, range=(50.0, 500.0)),
     "cdriv2": InputVariable(fortran.ife_variables, float, range=(50.0, 500.0)),
-    "cfactr": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "cfactr": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "chdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "chdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "chemlab_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
@@ -275,12 +282,12 @@ INPUT_VARIABLES = {
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "chrad": InputVariable(fortran.ife_variables, float, range=(0.1, 20.0)),
-    "cland": InputVariable(fortran.cost_variables, float, range=(10.0, 100.0)),
+    "cland": InputVariable(data_structure.cost_variables, float, range=(10.0, 100.0)),
     "clh2": InputVariable(fortran.buildings_variables, float, range=(0.0, 30.0)),
     "j_cs_flat_top_end": InputVariable(
         fortran.pfcoil_variables, float, range=(10000.0, 500000000.0)
     ),
-    "conf_mag": InputVariable(fortran.cost_variables, float, range=(0.9, 1.0)),
+    "conf_mag": InputVariable(data_structure.cost_variables, float, range=(0.9, 1.0)),
     "control_buildings_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -304,23 +311,39 @@ INPUT_VARIABLES = {
     "copperaoh_m2_max": InputVariable(
         fortran.rebco_variables, float, range=(10000.0, 10000000000.0)
     ),
-    "cost_factor_bop": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
+    "cost_factor_bop": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 10.0)
+    ),
     "cost_factor_buildings": InputVariable(
-        fortran.cost_variables, float, range=(0.1, 10.0)
+        data_structure.cost_variables, float, range=(0.1, 10.0)
     ),
-    "cost_factor_fwbs": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
-    "cost_factor_land": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
-    "cost_factor_misc": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
-    "cost_factor_rh": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
+    "cost_factor_fwbs": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 10.0)
+    ),
+    "cost_factor_land": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 10.0)
+    ),
+    "cost_factor_misc": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 10.0)
+    ),
+    "cost_factor_rh": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 10.0)
+    ),
     "cost_factor_tf_coils": InputVariable(
-        fortran.cost_variables, float, range=(0.1, 10.0)
+        data_structure.cost_variables, float, range=(0.1, 10.0)
     ),
-    "cost_factor_vv": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
-    "costexp": InputVariable(fortran.cost_variables, float, range=(0.01, 5.0)),
-    "costexp_pebbles": InputVariable(fortran.cost_variables, float, range=(0.01, 5.0)),
-    "cowner": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
-    "cplife_input": InputVariable(fortran.cost_variables, float, range=(0.001, 50.0)),
-    "cpstflnc": InputVariable(fortran.cost_variables, float, range=(0.01, 30.0)),
+    "cost_factor_vv": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 10.0)
+    ),
+    "costexp": InputVariable(data_structure.cost_variables, float, range=(0.01, 5.0)),
+    "costexp_pebbles": InputVariable(
+        data_structure.cost_variables, float, range=(0.01, 5.0)
+    ),
+    "cowner": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
+    "cplife_input": InputVariable(
+        data_structure.cost_variables, float, range=(0.001, 50.0)
+    ),
+    "cpstflnc": InputVariable(data_structure.cost_variables, float, range=(0.01, 30.0)),
     "c_tf_turn": InputVariable(
         fortran.tfcoil_variables, float, range=(0.001, 1000000.0)
     ),
@@ -359,8 +382,10 @@ INPUT_VARIABLES = {
     "p_cryo_plant_electric_max_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.01, 200.0)
     ),
-    "csi": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
-    "cturbb": InputVariable(fortran.cost_variables, float, range=(100.0, 1000.0)),
+    "csi": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
+    "cturbb": InputVariable(
+        data_structure.cost_variables, float, range=(100.0, 1000.0)
+    ),
     "dz_vv_lower": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dz_vv_upper": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dalu": InputVariable(fortran.constants, float, range=(2500.0, 30000.0)),
@@ -373,19 +398,18 @@ INPUT_VARIABLES = {
     "declblkt": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declfw": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declshld": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
-    "decomf": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "decomf": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "denstl": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
     "dia_tf_turn_coolant_channel": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "dintrt": InputVariable(fortran.cost_variables, float, range=(0.0, 0.1)),
-    "discount_rate": InputVariable(fortran.cost_variables, float, range=(0.0, 0.5)),
-    "div_nref": InputVariable(
-        fortran.cost_variables, float, range=(1000.0, 100000000.0)
+    "dintrt": InputVariable(data_structure.cost_variables, float, range=(0.0, 0.1)),
+    "discount_rate": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 0.5)
     ),
-    "div_nu": InputVariable(fortran.cost_variables, float, range=(1000.0, 100000000.0)),
-    "div_prob_fail": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
-    "div_umain_time": InputVariable(fortran.cost_variables, float, range=(0.1, 2.0)),
+    "div_nref": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 100000000.0)
+    ),
     "f_vol_div_coolant": InputVariable(
         fortran.divertor_variables, float, range=(0.0, 1.0)
     ),
@@ -451,7 +475,7 @@ INPUT_VARIABLES = {
     "dr_vv_outboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "drtop": InputVariable(fortran.tfcoil_variables, float, range=(-1.5, 1.5)),
     "drveff": InputVariable(fortran.ife_variables, float, range=(0.01, 1.0)),
-    "dtlife": InputVariable(fortran.cost_variables, float, range=(0.0, 15.0)),
+    "dtlife": InputVariable(data_structure.cost_variables, float, range=(0.0, 15.0)),
     "dtstor": InputVariable(fortran.pulse_variables, float, range=(50.0, 500.0)),
     "dx_fw_module": InputVariable(fortran.fwbs_variables, float, range=(0.0005, 0.1)),
     "dz_tf_cryostat": InputVariable(
@@ -574,7 +598,7 @@ INPUT_VARIABLES = {
     ),
     "fauxbop": InputVariable(fortran.ife_variables, float, range=(0.0, 1.0)),
     "fauxmn": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "favail": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "favail": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fbeta_max": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
@@ -609,16 +633,16 @@ INPUT_VARIABLES = {
     "fc_building_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "fcap0": InputVariable(fortran.cost_variables, float, range=(1.0, 1.5)),
-    "fcap0cp": InputVariable(fortran.cost_variables, float, range=(1.0, 1.5)),
-    "fcdfuel": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "fcap0": InputVariable(data_structure.cost_variables, float, range=(1.0, 1.5)),
+    "fcap0cp": InputVariable(data_structure.cost_variables, float, range=(1.0, 1.5)),
+    "fcdfuel": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "f_j_cs_start_pulse_end_flat_top": InputVariable(
         fortran.pfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "fcontng": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "fcontng": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "fcqt": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "fcr0": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "fcr0": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcspc": InputVariable(fortran.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
@@ -650,7 +674,7 @@ INPUT_VARIABLES = {
     "fjohc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fjohc0": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fjprot": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fkind": InputVariable(fortran.cost_variables, float, range=(0.5, 1.0)),
+    "fkind": InputVariable(data_structure.cost_variables, float, range=(0.5, 1.0)),
     "fl_h_threshold": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1000000.0)
     ),
@@ -782,13 +806,17 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fwbs_nref": InputVariable(
-        fortran.cost_variables, float, range=(1000.0, 100000000.0)
+        data_structure.cost_variables, float, range=(1000.0, 100000000.0)
     ),
     "fwbs_nu": InputVariable(
-        fortran.cost_variables, float, range=(1000.0, 100000000.0)
+        data_structure.cost_variables, float, range=(1000.0, 100000000.0)
     ),
-    "fwbs_prob_fail": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
-    "fwbs_umain_time": InputVariable(fortran.cost_variables, float, range=(0.1, 2.0)),
+    "fwbs_prob_fail": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 1.0)
+    ),
+    "fwbs_umain_time": InputVariable(
+        data_structure.cost_variables, float, range=(0.1, 2.0)
+    ),
     "fwclfr": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fwdr": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fwdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
@@ -920,7 +948,9 @@ INPUT_VARIABLES = {
     "f_blkt_li6_enrichment": InputVariable(
         fortran.fwbs_variables, float, range=(7.4, 100.0)
     ),
-    "life_dpa": InputVariable(fortran.cost_variables, float, range=(10.0, 100.0)),
+    "life_dpa": InputVariable(
+        data_structure.cost_variables, float, range=(10.0, 100.0)
+    ),
     "llw_storage_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -958,8 +988,12 @@ INPUT_VARIABLES = {
     "maint_cont_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "maintenance_fwbs": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
-    "maintenance_gen": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "maintenance_fwbs": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 1.0)
+    ),
+    "maintenance_gen": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 1.0)
+    ),
     "max_gyrotron_frequency": InputVariable(
         fortran.stellarator_variables, float, range=(1000000000.0, 100000000000000.0)
     ),
@@ -1153,7 +1187,9 @@ INPUT_VARIABLES = {
             stacklevel=1,
         ),
     ),
-    "redun_vacp": InputVariable(fortran.cost_variables, float, range=(0.0, 100.0)),
+    "redun_vacp": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 100.0)
+    ),
     "residual_sig_hoop": InputVariable(
         fortran.cs_fatigue_variables, float, range=(0.0, 1000000000.0)
     ),
@@ -1229,7 +1265,9 @@ INPUT_VARIABLES = {
     "staff_buildings_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
     ),
-    "startupratio": InputVariable(fortran.cost_variables, float, range=(0.0, 10.0)),
+    "startupratio": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 10.0)
+    ),
     "stcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "str_cs_con_res": InputVariable(
         fortran.tfcoil_variables, float, range=(-0.02, 0.02)
@@ -1287,16 +1325,16 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(0.0, 10.0)
     ),
     "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
-    "tbktrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
+    "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),
-    "tcomrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
+    "tcomrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tcoolin": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 373.15)),
     "tcritsc": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 300.0)),
     "t_cycle_min": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(fortran.divertor_variables, float, range=(0.1, 100.0)),
-    "tdivrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
+    "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tdmptf": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
     "te": InputVariable(fortran.physics_variables, float, range=(1.0, 200.0)),
     "te0_ecrh_achievable": InputVariable(
@@ -1340,8 +1378,8 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insulation": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "tlife": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
-    "tmain": InputVariable(fortran.cost_variables, float, range=(0.0, 100.0)),
+    "tlife": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
+    "tmain": InputVariable(data_structure.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_cs": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
@@ -1381,69 +1419,103 @@ INPUT_VARIABLES = {
     "tw_storage_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "u_unplanned_cp": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
-    "ucblbe": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "ucblbreed": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "ucblli": InputVariable(fortran.cost_variables, float, range=(10.0, 10000.0)),
-    "ucblli2o": InputVariable(fortran.cost_variables, float, range=(100.0, 10000.0)),
-    "ucbllipb": InputVariable(fortran.cost_variables, float, range=(100.0, 10000.0)),
-    "ucblss": InputVariable(fortran.cost_variables, float, range=(10.0, 1000.0)),
-    "ucblvd": InputVariable(fortran.cost_variables, float, range=(100.0, 1000.0)),
-    "ucbus": InputVariable(fortran.cost_variables, float, range=(0.01, 10.0)),
+    "u_unplanned_cp": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 1.0)
+    ),
+    "ucblbe": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "ucblbreed": InputVariable(
+        data_structure.cost_variables, float, range=(1.0, 1000.0)
+    ),
+    "ucblli": InputVariable(
+        data_structure.cost_variables, float, range=(10.0, 10000.0)
+    ),
+    "ucblli2o": InputVariable(
+        data_structure.cost_variables, float, range=(100.0, 10000.0)
+    ),
+    "ucbllipb": InputVariable(
+        data_structure.cost_variables, float, range=(100.0, 10000.0)
+    ),
+    "ucblss": InputVariable(data_structure.cost_variables, float, range=(10.0, 1000.0)),
+    "ucblvd": InputVariable(
+        data_structure.cost_variables, float, range=(100.0, 1000.0)
+    ),
+    "ucbus": InputVariable(data_structure.cost_variables, float, range=(0.01, 10.0)),
     "uccarb": InputVariable(fortran.ife_variables, float, range=(10.0, 1000.0)),
-    "uccase": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
+    "uccase": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
     "ucconc": InputVariable(fortran.ife_variables, float, range=(0.1, 1000.0)),
-    "uccpcl1": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "uccpclb": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "uccry": InputVariable(fortran.cost_variables, float, range=(10000.0, 1000000.0)),
-    "uccryo": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "uccu": InputVariable(fortran.cost_variables, float, range=(10.0, 100.0)),
-    "ucdiv": InputVariable(fortran.cost_variables, float, range=(1000.0, 10000000.0)),
-    "ucech": InputVariable(fortran.cost_variables, float, range=(1.0, 10.0)),
-    "ucf1": InputVariable(fortran.cost_variables, float, range=(1000000.0, 50000000.0)),
+    "uccpcl1": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "uccpclb": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "uccry": InputVariable(
+        data_structure.cost_variables, float, range=(10000.0, 1000000.0)
+    ),
+    "uccryo": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "uccu": InputVariable(data_structure.cost_variables, float, range=(10.0, 100.0)),
+    "ucdiv": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 10000000.0)
+    ),
+    "ucech": InputVariable(data_structure.cost_variables, float, range=(1.0, 10.0)),
+    "ucf1": InputVariable(
+        data_structure.cost_variables, float, range=(1000000.0, 50000000.0)
+    ),
     "ucflib": InputVariable(fortran.ife_variables, float, range=(10.0, 1000.0)),
-    "ucfnc": InputVariable(fortran.cost_variables, float, range=(10.0, 100.0)),
-    "ucfuel": InputVariable(fortran.cost_variables, float, range=(1.0, 10.0)),
-    "uche3": InputVariable(fortran.cost_variables, float, range=(100000.0, 10000000.0)),
+    "ucfnc": InputVariable(data_structure.cost_variables, float, range=(10.0, 100.0)),
+    "ucfuel": InputVariable(data_structure.cost_variables, float, range=(1.0, 10.0)),
+    "uche3": InputVariable(
+        data_structure.cost_variables, float, range=(100000.0, 10000000.0)
+    ),
     "uchrs": InputVariable(
-        fortran.cost_variables, float, range=(10000000.0, 500000000.0)
+        data_structure.cost_variables, float, range=(10000000.0, 500000000.0)
     ),
     "uciac": InputVariable(
-        fortran.cost_variables, float, range=(10000000.0, 1000000000.0)
+        data_structure.cost_variables, float, range=(10000000.0, 1000000000.0)
     ),
-    "ucich": InputVariable(fortran.cost_variables, float, range=(1.0, 10.0)),
-    "uclh": InputVariable(fortran.cost_variables, float, range=(1.0, 10.0)),
+    "ucich": InputVariable(data_structure.cost_variables, float, range=(1.0, 10.0)),
+    "uclh": InputVariable(data_structure.cost_variables, float, range=(1.0, 10.0)),
     "ucme": InputVariable(
-        fortran.cost_variables, float, range=(10000000.0, 1000000000.0)
+        data_structure.cost_variables, float, range=(10000000.0, 1000000000.0)
     ),
     "ucmisc": InputVariable(
-        fortran.cost_variables, float, range=(10000000.0, 50000000.0)
+        data_structure.cost_variables, float, range=(10000000.0, 50000000.0)
     ),
-    "ucnbi": InputVariable(fortran.cost_variables, float, range=(1.0, 10.0)),
-    "ucpens": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
-    "ucpfb": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "ucpfbk": InputVariable(fortran.cost_variables, float, range=(1000.0, 100000.0)),
-    "ucpfbs": InputVariable(fortran.cost_variables, float, range=(1000.0, 10000.0)),
-    "ucpfcb": InputVariable(fortran.cost_variables, float, range=(1000.0, 100000.0)),
-    "ucpfdr1": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "ucpfic": InputVariable(fortran.cost_variables, float, range=(1000.0, 100000.0)),
-    "ucpfps": InputVariable(fortran.cost_variables, float, range=(1000.0, 100000.0)),
-    "ucrb": InputVariable(fortran.cost_variables, float, range=(100.0, 1000.0)),
-    "ucshld": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
+    "ucnbi": InputVariable(data_structure.cost_variables, float, range=(1.0, 10.0)),
+    "ucpens": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
+    "ucpfb": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "ucpfbk": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 100000.0)
+    ),
+    "ucpfbs": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 10000.0)
+    ),
+    "ucpfcb": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 100000.0)
+    ),
+    "ucpfdr1": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "ucpfic": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 100000.0)
+    ),
+    "ucpfps": InputVariable(
+        data_structure.cost_variables, float, range=(1000.0, 100000.0)
+    ),
+    "ucrb": InputVariable(data_structure.cost_variables, float, range=(100.0, 1000.0)),
+    "ucshld": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
     "uctarg": InputVariable(fortran.ife_variables, float, range=(0.1, 1000.0)),
-    "uctfbr": InputVariable(fortran.cost_variables, float, range=(1.0, 10.0)),
-    "uctfbus": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "uctfps": InputVariable(fortran.cost_variables, float, range=(1.0, 1000.0)),
-    "uctfsw": InputVariable(fortran.cost_variables, float, range=(0.1, 10.0)),
-    "ucwindpf": InputVariable(fortran.cost_variables, float, range=(100.0, 1000.0)),
-    "ucwindtf": InputVariable(fortran.cost_variables, float, range=(100.0, 1000.0)),
-    "uubop": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
-    "uucd": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
-    "uudiv": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
-    "uufuel": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
-    "uufw": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
-    "uumag": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
-    "uuves": InputVariable(fortran.cost_variables, float, range=(0.005, 0.1)),
+    "uctfbr": InputVariable(data_structure.cost_variables, float, range=(1.0, 10.0)),
+    "uctfbus": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "uctfps": InputVariable(data_structure.cost_variables, float, range=(1.0, 1000.0)),
+    "uctfsw": InputVariable(data_structure.cost_variables, float, range=(0.1, 10.0)),
+    "ucwindpf": InputVariable(
+        data_structure.cost_variables, float, range=(100.0, 1000.0)
+    ),
+    "ucwindtf": InputVariable(
+        data_structure.cost_variables, float, range=(100.0, 1000.0)
+    ),
+    "uubop": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
+    "uucd": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
+    "uudiv": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
+    "uufuel": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
+    "uufw": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
+    "uumag": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
+    "uuves": InputVariable(data_structure.cost_variables, float, range=(0.005, 0.1)),
     "v1dr": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "v1dzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "v1dzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
@@ -1523,12 +1595,12 @@ INPUT_VARIABLES = {
     "breedmat": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
     "ccl0_ma": InputVariable(fortran.pfcoil_variables, float, array=True),
     "ccls_ma": InputVariable(fortran.pfcoil_variables, float, array=True),
-    "cfind": InputVariable(fortran.cost_variables, float, array=True),
+    "cfind": InputVariable(data_structure.cost_variables, float, array=True),
     "i_blkt_coolant_type": InputVariable(fortran.fwbs_variables, int, choices=[1, 2]),
     "coppera_m2_max": InputVariable(
         fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
-    "cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
+    "cost_model": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "dwell_pump": InputVariable(fortran.vacuum_variables, int, choices=[0, 1, 2]),
     "i_fw_blkt_vv_shape": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
     "hcdportsize": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
@@ -1543,7 +1615,7 @@ INPUT_VARIABLES = {
     "i_blkt_inboard": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "i_bootstrap_current": InputVariable(fortran.physics_variables, int, range=(0, 13)),
     "i_cp_joints": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
-    "i_cp_lifetime": InputVariable(fortran.cost_variables, int, range=(0, 3)),
+    "i_cp_lifetime": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
     "i_cs_precomp": InputVariable(fortran.build_variables, int, choices=[0, 1]),
     "i_cs_stress": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1]),
     "i_density_limit": InputVariable(fortran.physics_variables, int, range=(1, 8)),
@@ -1587,8 +1659,8 @@ INPUT_VARIABLES = {
     "i_tf_tresca": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
     "i_tf_turns_integer": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
     "i_tf_wp_geom": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1, 2]),
-    "iavail": InputVariable(fortran.cost_variables, int, range=(0, 3)),
-    "ibkt_life": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
+    "iavail": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
+    "ibkt_life": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_blkt_dual_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
@@ -1602,14 +1674,14 @@ INPUT_VARIABLES = {
     "ife": InputVariable(fortran.ife_variables, int, choices=[0, 1]),
     "ifedrv": InputVariable(fortran.ife_variables, int, range=(-1, 3)),
     "ifetyp": InputVariable(fortran.ife_variables, int, range=(0, 4)),
-    "ifueltyp": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
+    "ifueltyp": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_plasma_ignited": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "ims": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "inuclear": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "iohcl": InputVariable(fortran.build_variables, int, choices=[0, 1]),
     "ipedestal": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "i_pf_conductor": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1]),
-    "ipnet": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
+    "ipnet": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
     "i_shld_primary_heat": InputVariable(
         fortran.heat_transport_variables, int, choices=[0, 1]
@@ -1622,7 +1694,7 @@ INPUT_VARIABLES = {
     "i_fw_blkt_shared_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
-    "ireactor": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
+    "ireactor": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "irefprop": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "i_hcd_calculations": InputVariable(
         fortran.current_drive_variables, int, choices=[0, 1]
@@ -1639,7 +1711,7 @@ INPUT_VARIABLES = {
     "itartpf": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "itcycl": InputVariable(fortran.pulse_variables, int, range=(1, 3)),
     "iwalld": InputVariable(fortran.physics_variables, int, range=(1, 2)),
-    "lsa": InputVariable(fortran.cost_variables, int, range=(1, 4)),
+    "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
     "m_res": InputVariable(fortran.stellarator_variables, int, range=(1, 10)),
     "n_layer": InputVariable(fortran.tfcoil_variables, int, range=(1, 100)),
     "n_liq_recirc": InputVariable(fortran.fwbs_variables, int, range=(1, 50)),
@@ -1665,8 +1737,8 @@ INPUT_VARIABLES = {
     "nphcdin": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "nphcdout": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "ntype": InputVariable(fortran.vacuum_variables, int, choices=[0, 1]),
-    "num_rh_systems": InputVariable(fortran.cost_variables, int, range=(1, 10)),
-    "output_costs": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
+    "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
+    "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "i_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
     "reinke_mode": InputVariable(fortran.reinke_variables, int, choices=[0, 1]),
     "scan_dim": InputVariable(fortran.scan_module, int, range=(1, 2)),
@@ -1674,7 +1746,9 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, int, range=(0, 4)
     ),
     "secondary_cycle_liq": InputVariable(fortran.fwbs_variables, int, range=(2, 4)),
-    "supercond_cost_model": InputVariable(fortran.cost_variables, int, choices=[0, 1]),
+    "supercond_cost_model": InputVariable(
+        data_structure.cost_variables, int, choices=[0, 1]
+    ),
     "i_tf_inside_cs": InputVariable(fortran.build_variables, int, choices=[0, 1]),
     "i_ecrh_wave_mode": InputVariable(
         fortran.current_drive_variables, int, choices=[0, 1]
@@ -1708,11 +1782,11 @@ INPUT_VARIABLES = {
     "rref": InputVariable(fortran.pfcoil_variables, float, array=True),
     "f_a_pf_coil_void": InputVariable(fortran.pfcoil_variables, float, array=True),
     "zref": InputVariable(fortran.pfcoil_variables, float, array=True),
-    "uchts": InputVariable(fortran.cost_variables, float, array=True),
-    "ucoam": InputVariable(fortran.cost_variables, float, array=True),
-    "ucsc": InputVariable(fortran.cost_variables, float, array=True),
-    "ucturb": InputVariable(fortran.cost_variables, float, array=True),
-    "ucwst": InputVariable(fortran.cost_variables, float, array=True),
+    "uchts": InputVariable(data_structure.cost_variables, float, array=True),
+    "ucoam": InputVariable(data_structure.cost_variables, float, array=True),
+    "ucsc": InputVariable(data_structure.cost_variables, float, array=True),
+    "ucturb": InputVariable(data_structure.cost_variables, float, array=True),
+    "ucwst": InputVariable(data_structure.cost_variables, float, array=True),
     "blmatf": InputVariable(fortran.ife_variables, float, array=True),
     "chmatf": InputVariable(fortran.ife_variables, float, array=True),
     "etave": InputVariable(fortran.ife_variables, float, array=True),

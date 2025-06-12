@@ -1,8 +1,8 @@
 import numpy as np
 
+from process.data_structure import cost_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    cost_variables,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
