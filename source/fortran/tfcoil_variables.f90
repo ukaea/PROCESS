@@ -57,7 +57,7 @@ module tfcoil_variables
   real(dp) :: avwp
   !! winding pack void (He coolant) area (m2)
 
-  real(dp) :: awphec
+  real(dp) :: a_tf_wp_coolant_channels
   !! winding pack He coil area (m2)
 
   real(dp) :: bcritsc

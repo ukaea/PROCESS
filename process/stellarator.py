@@ -2919,15 +2919,17 @@ class Stellarator:
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
-            tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.a_tf_turn_cable_space
-            * (1.0e0 - tfcoil_variables.vftf)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
-            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
-        ) * tfcoil_variables.dcond[
-            tfcoil_variables.i_tf_sc_mat - 1
-        ]  # awphec is 0 for a stellarator. but keep this term for now.
+            (
+                tfcoil_variables.len_tf_coil
+                * tfcoil_variables.n_tf_turn
+                * tfcoil_variables.a_tf_turn_cable_space
+                * (1.0e0 - tfcoil_variables.vftf)
+                * (1.0e0 - tfcoil_variables.fcutfsu)
+                - tfcoil_variables.len_tf_coil
+                * tfcoil_variables.a_tf_wp_coolant_channels
+            )
+            * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
+        )  # a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
         tfcoil_variables.whtconcu = (
             tfcoil_variables.len_tf_coil
@@ -2935,7 +2937,7 @@ class Stellarator:
             * tfcoil_variables.a_tf_turn_cable_space
             * (1.0e0 - tfcoil_variables.vftf)
             * tfcoil_variables.fcutfsu
-            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.dcopper
         # [kg] mass of Steel conduit (sheath)
         tfcoil_variables.m_tf_turn_steel_conduit = (
