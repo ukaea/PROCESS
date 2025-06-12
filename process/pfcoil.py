@@ -215,11 +215,11 @@ class PFCoil:
                     else:
                         # pf.zcls(j,k) = (bv.z_tf_inside_half + bv.dr_tf_inboard + 0.86e0) * signn(k)
                         if top_bottom == 1:  # this coil is above midplane
-                            pf.zcls[j, k] = bv.hpfu + 0.86e0
+                            pf.zcls[j, k] = bv.z_tf_top + 0.86e0
                             top_bottom = -1
                         else:  # this coil is below midplane
                             pf.zcls[j, k] = -1.0e0 * (
-                                bv.hpfu - 2.0e0 * bv.hpfdif + 0.86e0
+                                bv.z_tf_top - 2.0e0 * bv.hpfdif + 0.86e0
                             )
                             top_bottom = 1
 
@@ -1027,9 +1027,10 @@ class PFCoil:
                         ):
                             pf_tf_collision += 1
                         if (  # Vertical TF coil collision
-                            abs(pf.zcls[ii, ij]) <= bv.hpfu + pfv.r_pf_coil_middle[i]
+                            abs(pf.zcls[ii, ij])
+                            <= bv.z_tf_top + pfv.r_pf_coil_middle[i]
                             and abs(pf.zcls[ii, ij])
-                            >= bv.hpfu
+                            >= bv.z_tf_top
                             - (0.5 * bv.dr_tf_outboard)
                             - pfv.r_pf_coil_middle[i]
                         ):
