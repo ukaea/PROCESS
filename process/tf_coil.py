@@ -223,7 +223,7 @@ class TFCoil:
                 tfcoil_variables.n_tf_turn,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
-                sctfcoil_module.t_cable_radial,
+                sctfcoil_module.dr_tf_turn_cable_space,
                 tfcoil_variables.dhecoil,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
@@ -1182,8 +1182,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Radial width of cable space",
-                    "(t_cable_radial)",
-                    sctfcoil_module.t_cable_radial,
+                    "(dr_tf_turn_cable_space)",
+                    sctfcoil_module.dr_tf_turn_cable_space,
                 )
                 po.ovarre(
                     self.outfile,
@@ -3161,7 +3161,7 @@ class TFCoil:
         n_tf_turn,
         i_tf_turns_integer,
         t_cable,
-        t_cable_radial,
+        dr_tf_turn_cable_space,
         dhecoil,
         fcutfsu,
         dx_tf_turn_steel,
@@ -3501,7 +3501,9 @@ class TFCoil:
             # Rem : This assumption might be re-defined for bucked and wedged design
 
             # Non-integer or interger number of turns
-            t_cable_eyng = t_cable if i_tf_turns_integer == 0 else t_cable_radial
+            t_cable_eyng = (
+                t_cable if i_tf_turns_integer == 0 else dr_tf_turn_cable_space
+            )
 
             # Average WP Young's modulus in the transverse
             # (radial and toroidal) direction
