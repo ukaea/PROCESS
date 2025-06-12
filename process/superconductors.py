@@ -857,7 +857,7 @@ def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
     Updated 13/11/18 using data from Lewandowska et al 2018.
     """
     d = croco_od
-    # d = conductor_width / 3.0d0 - thwcndut * ( 2.0d0 / 3.0d0 )
+    # d = conductor_width / 3.0d0 - dx_tf_turn_steel * ( 2.0d0 / 3.0d0 )
 
     croco_id = d - 2.0 * croco_thick  # scaling * 5.4d-3
     if croco_id <= 0.0:

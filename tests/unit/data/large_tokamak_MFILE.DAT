@@ -714,7 +714,7 @@
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8716E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7116E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.1107E-02 OP 
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      8.0042E-03 ITV
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0042E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6589E-03    
@@ -1442,7 +1442,7 @@ dr_tf_nose_case = 0.5
 * TF coil conduit thickness [m]
 ixc = 58
 boundl(58) = 0.008
-thwcndut = 0.008
+dx_tf_turn_steel = 0.008
 
 * copper fraction of cable conductor (TF coils)
 ixc = 59 
