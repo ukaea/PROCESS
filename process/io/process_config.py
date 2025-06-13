@@ -120,10 +120,7 @@ class ProcessConfig:
         if os.path.isfile("MFILE.DAT"):
             m_file = MFile(filename=directory + "/MFILE.DAT")
 
-            error_status = (
-                f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
-                f"Error ID: {m_file.data['error_id'].get_scan(-1)}\n"
-            )
+            error_status = f"Error status: {m_file.data['error_status'].get_scan(-1)}  "
 
             if self.comment != "":
                 with open(directory + "/README.txt", "a") as readme:
