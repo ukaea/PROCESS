@@ -137,9 +137,9 @@
  thkcas__________________________________________________________________ (itvar038)____________________      2.8216E-01    
  thkcas_(final_value/initial_value)______________________________________ (xcm038)______________________      5.6431E-01    
  thkcas_(range_normalised)_______________________________________________ (nitvar038)___________________      2.4437E-01    
- thwcndut________________________________________________________________ (itvar039)____________________      8.0099E-03    
- thwcndut_(final_value/initial_value)____________________________________ (xcm039)______________________      1.0012E+00    
- thwcndut_(range_normalised)_____________________________________________ (nitvar039)___________________      1.0716E-04    
+ dx_tf_turn_steel________________________________________________________________ (itvar039)____________________      8.0099E-03    
+ dx_tf_turn_steel_(final_value/initial_value)____________________________________ (xcm039)______________________      1.0012E+00    
+ dx_tf_turn_steel_(range_normalised)_____________________________________________ (nitvar039)___________________      1.0716E-04    
  fcutfsu_________________________________________________________________ (itvar040)____________________      8.4212E-01    
  fcutfsu_(final_value/initial_value)_____________________________________ (xcm040)______________________      1.0026E+00    
  fcutfsu_(range_normalised)______________________________________________ (nitvar040)___________________      7.7755E-01    
@@ -672,19 +672,19 @@
  Total_inboard_leg_radial_thickness_(m)__________________________________ (dr_tf_inboard)_______________________      9.1597E-01 ITV
  Total_outboard_leg_radial_thickness_(m)_________________________________ (dr_tf_outboard)______________________      9.1597E-01    
  Outboard_leg_toroidal_thickness_(m)_____________________________________ (dx_tf_inboard_out_toroidal)______________________      1.4145E+00 OP 
- Maximum_inboard_edge_height_(m)_________________________________________ (hmax)________________________      8.8182E+00 OP 
+ Maximum_inboard_edge_height_(m)_________________________________________ (z_tf_inside_half)________________________      8.8182E+00 OP 
  Mean_coil_circumference_(including_inboard_leg_length)_(m)______________ (len_tf_coil)______________________      4.7937E+01 OP 
  Vertical_TF_shape_______________________________________________________ (i_tf_shape)__________________              1    
- TF_coil_arc_point_0_R_(m)_______________________________________________ (xarc(1))_____________________      3.6253E+00    
- TF_coil_arc_point_0_Z_(m)_______________________________________________ (yarc(1))_____________________      4.5506E+00    
- TF_coil_arc_point_1_R_(m)_______________________________________________ (xarc(2))_____________________      7.4667E+00    
- TF_coil_arc_point_1_Z_(m)_______________________________________________ (yarc(2))_____________________      7.5843E+00    
- TF_coil_arc_point_2_R_(m)_______________________________________________ (xarc(3))_____________________      1.4527E+01    
- TF_coil_arc_point_2_Z_(m)_______________________________________________ (yarc(3))_____________________      0.0000E+00    
- TF_coil_arc_point_3_R_(m)_______________________________________________ (xarc(4))_____________________      7.4667E+00    
- TF_coil_arc_point_3_Z_(m)_______________________________________________ (yarc(4))_____________________     -8.8182E+00    
- TF_coil_arc_point_4_R_(m)_______________________________________________ (xarc(5))_____________________      3.6253E+00    
- TF_coil_arc_point_4_Z_(m)_______________________________________________ (yarc(5))_____________________     -5.2909E+00    
+ TF_coil_arc_point_0_R_(m)_______________________________________________ (r_tf_arc(1))_____________________      3.6253E+00    
+ TF_coil_arc_point_0_Z_(m)_______________________________________________ (z_tf_arc(1))_____________________      4.5506E+00    
+ TF_coil_arc_point_1_R_(m)_______________________________________________ (r_tf_arc(2))_____________________      7.4667E+00    
+ TF_coil_arc_point_1_Z_(m)_______________________________________________ (z_tf_arc(2))_____________________      7.5843E+00    
+ TF_coil_arc_point_2_R_(m)_______________________________________________ (r_tf_arc(3))_____________________      1.4527E+01    
+ TF_coil_arc_point_2_Z_(m)_______________________________________________ (z_tf_arc(3))_____________________      0.0000E+00    
+ TF_coil_arc_point_3_R_(m)_______________________________________________ (r_tf_arc(4))_____________________      7.4667E+00    
+ TF_coil_arc_point_3_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -8.8182E+00    
+ TF_coil_arc_point_4_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      3.6253E+00    
+ TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.2909E+00    
  TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      1.8229E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_steel*n_tf_coils)_____________      1.2853E+01    
  Total_steel_TF_fraction_________________________________________________ (f_tf_steel)__________________      7.0508E-01    
@@ -696,25 +696,25 @@
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case)______________________      5.0000E-02    
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.5456E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.7486E-01    
- WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      5.1696E-01    
+ WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      5.1696E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      5.0416E-01 ITV
- Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1904E+00 OP 
+ Winding_pack_toroidal_width_1_(m)_______________________________________ (dx_tf_wp_outer)________________________      1.1904E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0901E+00 OP 
- Ground_wall_insulation_thickness_(m)____________________________________ (tinstf)______________________      8.0000E-03    
+ Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
- Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      3.8217E+00    
- Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      4.1550E-01    
+ Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      3.8217E+00    
+ Steel_WP_fraction_______________________________________________________ (a_tf_wp_steel/awpc)___________________      4.1550E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      4.7934E-02    
- Cable_WP_fraction_______________________________________________________ ((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)_______      5.3656E-01    
+ Cable_WP_fraction_______________________________________________________ ((awpc-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/awpc)_______      5.3656E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
- Number_of_turns_per_TF_coil_____________________________________________ (n_tf_turn)___________________      1.4739E+02 OP 
+ Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4739E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.9223E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7623E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.1604E-02 OP 
- Steel_conduit_thickness_(m)_____________________________________________ (thwcndut)____________________      8.0099E-03 ITV
- Inter-turn_insulation_thickness_(m)_____________________________________ (thicndut)____________________      8.0000E-04    
- Diameter_of_central_helium_channel_in_cable_____________________________ (dhecoil)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (acstf)_______________________      1.6999E-03    
+ Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0099E-03 ITV
+ Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
+ Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6999E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4212E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5788E-01    
@@ -760,7 +760,7 @@
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0730E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.1337E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1263E+08 OP 
- Critical_current_density_in_winding_pack_(A/m2)_________________________ (jwdgcrt)_____________________      3.5688E+07 OP 
+ Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5688E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5602E+07 OP 
  Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5049E+00 OP 
@@ -1441,7 +1441,7 @@ dr_tf_nose_case = 0.5
 * TF coil conduit thickness [m]
 ixc = 58
 boundl(58) = 0.008
-thwcndut = 0.008
+dx_tf_turn_steel = 0.008
 
 * copper fraction of cable conductor (TF coils)
 ixc = 59 
@@ -1779,10 +1779,10 @@ ripmax = 0.6
 n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
-tinstf = 0.008
+dx_tf_wp_insulation = 0.008
 
 * Diameter if He channel in winding [m]
-dhecoil = 0.01
+dia_tf_turn_coolant_channel = 0.01
 
 * Helium coolant temperature [K]
 tftmp = 4.75

@@ -4674,7 +4674,7 @@ class CalcTfCoilCostsParam(NamedTuple):
 
     len_tf_coil: Any = None
 
-    n_tf_turn: Any = None
+    n_tf_coil_turns: Any = None
 
     whtconcu: Any = None
 
@@ -4711,7 +4711,7 @@ class CalcTfCoilCostsParam(NamedTuple):
         CalcTfCoilCostsParam(
             n_tf_coils=18,
             len_tf_coil=46.64605032553105,
-            n_tf_turn=200.13346153846152,
+            n_tf_coil_turns=200.13346153846152,
             whtconcu=31746.02769109578,
             whtconsc=10284.64237165747,
             cost_factor_tf_coils=1,
@@ -5800,7 +5800,7 @@ class CalcTfCoilCostsParam(NamedTuple):
         CalcTfCoilCostsParam(
             n_tf_coils=18,
             len_tf_coil=46.6270502920285,
-            n_tf_turn=200.13346153846155,
+            n_tf_coil_turns=200.13346153846155,
             whtconcu=24895.07929687943,
             whtconsc=7945.1211509981658,
             cost_factor_tf_coils=1,
@@ -6907,7 +6907,9 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
         tfcoil_variables, "len_tf_coil", calctfcoilcostsparam.len_tf_coil
     )
 
-    monkeypatch.setattr(tfcoil_variables, "n_tf_turn", calctfcoilcostsparam.n_tf_turn)
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coil_turns", calctfcoilcostsparam.n_tf_coil_turns
+    )
 
     monkeypatch.setattr(tfcoil_variables, "whtconcu", calctfcoilcostsparam.whtconcu)
 

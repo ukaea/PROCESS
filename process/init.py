@@ -941,17 +941,19 @@ def check_process(inputs):  # noqa: ARG001
         # Minimal WP thickness
         if fortran.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (
-                fortran.tfcoil_variables.tinstf
+                fortran.tfcoil_variables.dx_tf_wp_insulation
                 + fortran.tfcoil_variables.tfinsgap
-                + fortran.tfcoil_variables.thicndut
-                + fortran.tfcoil_variables.dhecoil
+                + fortran.tfcoil_variables.dx_tf_turn_insulation
+                + fortran.tfcoil_variables.dia_tf_turn_coolant_channel
             )
 
             # Steel conduit thickness (can be an iteration variable)
             if (fortran.numerics.ixc[: fortran.numerics.nvar] == 58).any():
                 dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.numerics.boundl[57]
             else:
-                dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.thwcndut
+                dr_tf_wp_min = (
+                    dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.dx_tf_turn_steel
+                )
 
         # Minimal conductor layer thickness
         elif (
@@ -960,7 +962,10 @@ def check_process(inputs):  # noqa: ARG001
         ):
             dr_tf_wp_min = (
                 2.0
-                * (fortran.tfcoil_variables.thicndut + fortran.tfcoil_variables.tinstf)
+                * (
+                    fortran.tfcoil_variables.dx_tf_turn_insulation
+                    + fortran.tfcoil_variables.dx_tf_wp_insulation
+                )
                 + 4.0 * fortran.tfcoil_variables.rcool
             )
 

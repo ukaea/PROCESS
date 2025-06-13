@@ -226,7 +226,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfv, "i_tf_sup", cntrpst_asset.i_tf_sup)
     monkeypatch.setattr(tfv, "tcoolin", cntrpst_asset.tcoolin)
     monkeypatch.setattr(fwbsv, "pnuc_cp_tf", 1)
-    monkeypatch.setattr(bv, "hmax", 1)
+    monkeypatch.setattr(bv, "z_tf_inside_half", 1)
     monkeypatch.setattr(bv, "dr_tf_outboard", 0.5)
 
     tfcoil.cntrpst()
@@ -437,9 +437,9 @@ class TfFieldAndForceParam(NamedTuple):
 
     vforce_outboard: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
-    thicndut: Any = None
+    dx_tf_turn_insulation: Any = None
 
     dr_tf_wp: Any = None
 
@@ -490,8 +490,8 @@ class TfFieldAndForceParam(NamedTuple):
             i_tf_sup=0,
             f_vforce_inboard=0.5,
             vforce_outboard=0,
-            tinstf=0,
-            thicndut=0.00080000000000000004,
+            dx_tf_wp_insulation=0,
+            dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.15483000000000002,
             tfinsgap=0.01,
             i_cp_joints=1,
@@ -525,8 +525,8 @@ class TfFieldAndForceParam(NamedTuple):
             i_tf_sup=0,
             f_vforce_inboard=0.59539634897566385,
             vforce_outboard=8413494.7991220243,
-            tinstf=0,
-            thicndut=0.00080000000000000004,
+            dx_tf_wp_insulation=0,
+            dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.14708850000000001,
             tfinsgap=0.01,
             i_cp_joints=1,
@@ -600,9 +600,17 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
         tfcoil_variables, "vforce_outboard", tffieldandforceparam.vforce_outboard
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", tffieldandforceparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        tffieldandforceparam.dx_tf_wp_insulation,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "thicndut", tffieldandforceparam.thicndut)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_turn_insulation",
+        tffieldandforceparam.dx_tf_turn_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tffieldandforceparam.dr_tf_wp)
 
@@ -652,9 +660,9 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
 
 
 class TfcindParam(NamedTuple):
-    yarc: Any = None
+    z_tf_arc: Any = None
 
-    xarc: Any = None
+    r_tf_arc: Any = None
 
     ind_tf_coil: Any = None
 
@@ -669,7 +677,7 @@ class TfcindParam(NamedTuple):
     "tfcindparam",
     (
         TfcindParam(
-            yarc=np.array(
+            z_tf_arc=np.array(
                 (
                     4.5228880258064512,
                     7.5381467096774184,
@@ -679,7 +687,7 @@ class TfcindParam(NamedTuple):
                 ),
                 order="F",
             ),
-            xarc=np.array(
+            r_tf_arc=np.array(
                 (
                     4.20194118510911,
                     8.316545161290323,
@@ -694,7 +702,7 @@ class TfcindParam(NamedTuple):
             expected_ind_tf_coil=5.4453892599192845e-06,
         ),
         TfcindParam(
-            yarc=np.array(
+            z_tf_arc=np.array(
                 (
                     4.5336880258064509,
                     7.5561467096774191,
@@ -704,7 +712,7 @@ class TfcindParam(NamedTuple):
                 ),
                 order="F",
             ),
-            xarc=np.array(
+            r_tf_arc=np.array(
                 (
                     4.20194118510911,
                     8.316545161290323,
@@ -736,7 +744,9 @@ def test_tfcind(tfcindparam, monkeypatch, tfcoil):
     monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
     ind_tf_coil = tfcoil.tfcind(
-        tfthk=tfcindparam.tfthk, xarc=tfcindparam.xarc, yarc=tfcindparam.yarc
+        tfthk=tfcindparam.tfthk,
+        r_tf_arc=tfcindparam.r_tf_arc,
+        z_tf_arc=tfcindparam.z_tf_arc,
     )
 
     assert ind_tf_coil == pytest.approx(tfcindparam.expected_ind_tf_coil)
@@ -755,7 +765,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     denstl: Any = None
 
@@ -791,9 +801,9 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     dcase: Any = None
 
-    acndttf: Any = None
+    a_tf_turn_steel: Any = None
 
-    n_tf_turn: Any = None
+    n_tf_coil_turns: Any = None
 
     n_tf_coils: Any = None
 
@@ -805,9 +815,9 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     fcutfsu: Any = None
 
-    awphec: Any = None
+    a_tf_wp_coolant_channels: Any = None
 
-    acstf: Any = None
+    a_tf_turn_cable_space: Any = None
 
     whttflgs: Any = None
 
@@ -833,7 +843,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     awpc: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     vol_ins_cp: Any = None
 
@@ -884,7 +894,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             denstl=7800,
             m_tf_turn_steel_conduit=0,
             m_tf_coils_total=0,
@@ -907,15 +917,15 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             dcondins=1800,
             len_tf_coil=50.483843027201402,
             dcase=8000,
-            acndttf=0.0014685061538103825,
-            n_tf_turn=200,
+            a_tf_turn_steel=0.0014685061538103825,
+            n_tf_coil_turns=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
-            awphec=0.015707963267948974,
-            acstf=0.001293323051622732,
+            a_tf_wp_coolant_channels=0.015707963267948974,
+            a_tf_turn_cable_space=0.001293323051622732,
             whttflgs=0,
             whtcp=0,
             whtconal=0,
@@ -928,7 +938,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             cplen=0,
             itart=0,
             awpc=0.70527618095271016,
-            awptf=0.64024601555360383,
+            a_tf_wp_no_insulation=0.64024601555360383,
             vol_ins_cp=0,
             vol_gr_ins_cp=0,
             vol_case_cp=0,
@@ -956,7 +966,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             denstl=7800,
             m_tf_turn_steel_conduit=115651.90127937049,
             m_tf_coils_total=19649856.627845347,
@@ -979,15 +989,15 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             dcondins=1800,
             len_tf_coil=50.514015976170839,
             dcase=8000,
-            acndttf=0.0014685061538103825,
-            n_tf_turn=200,
+            a_tf_turn_steel=0.0014685061538103825,
+            n_tf_coil_turns=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
             acasetf=1.0015169239205168,
             fcutfsu=0.80884,
-            awphec=0.015707963267948974,
-            acstf=0.001293323051622732,
+            a_tf_wp_coolant_channels=0.015707963267948974,
+            a_tf_turn_cable_space=0.001293323051622732,
             whttflgs=0,
             whtcp=0,
             whtconal=0,
@@ -1000,7 +1010,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             cplen=20.562180043124066,
             itart=0,
             awpc=0.70527618095271016,
-            awptf=0.64024601555360383,
+            a_tf_wp_no_insulation=0.64024601555360383,
             vol_ins_cp=0,
             vol_gr_ins_cp=0,
             vol_case_cp=0,
@@ -1058,7 +1068,9 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(build_variables, "hmax", tfcoilareaandmassesparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half
+    )
 
     monkeypatch.setattr(fwbs_variables, "denstl", tfcoilareaandmassesparam.denstl)
 
@@ -1108,10 +1120,12 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "dcase", tfcoilareaandmassesparam.dcase)
 
-    monkeypatch.setattr(tfcoil_variables, "acndttf", tfcoilareaandmassesparam.acndttf)
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel
+    )
 
     monkeypatch.setattr(
-        tfcoil_variables, "n_tf_turn", tfcoilareaandmassesparam.n_tf_turn
+        tfcoil_variables, "n_tf_coil_turns", tfcoilareaandmassesparam.n_tf_coil_turns
     )
 
     monkeypatch.setattr(
@@ -1130,9 +1144,17 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
 
-    monkeypatch.setattr(tfcoil_variables, "awphec", tfcoilareaandmassesparam.awphec)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_wp_coolant_channels",
+        tfcoilareaandmassesparam.a_tf_wp_coolant_channels,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "acstf", tfcoilareaandmassesparam.acstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_turn_cable_space",
+        tfcoilareaandmassesparam.a_tf_turn_cable_space,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "whttflgs", tfcoilareaandmassesparam.whttflgs)
 
@@ -1168,7 +1190,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "awpc", tfcoilareaandmassesparam.awpc)
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfcoilareaandmassesparam.awptf)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_no_insulation",
+        tfcoilareaandmassesparam.a_tf_wp_no_insulation,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
@@ -1264,19 +1290,19 @@ class StressclParam(NamedTuple):
 
     dr_cs_tf_gap: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     r_tf_inboard_in: Any = None
 
     casestr: Any = None
 
-    n_tf_turn: Any = None
+    n_tf_coil_turns: Any = None
 
     dr_tf_wp: Any = None
 
     i_tf_tresca: Any = None
 
-    acstf: Any = None
+    a_tf_turn_cable_space: Any = None
 
     vforce: Any = None
 
@@ -1290,15 +1316,15 @@ class StressclParam(NamedTuple):
 
     sig_tf_wp: Any = None
 
-    thwcndut: Any = None
+    dx_tf_turn_steel: Any = None
 
     insstrain: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
-    thicndut: Any = None
+    dx_tf_turn_insulation: Any = None
 
-    acndttf: Any = None
+    a_tf_turn_steel: Any = None
 
     tfinsgap: Any = None
 
@@ -1334,7 +1360,7 @@ class StressclParam(NamedTuple):
 
     a_tf_coil_wp_turn_insulation: Any = None
 
-    aswp: Any = None
+    a_tf_wp_steel: Any = None
 
     c_tf_turn: Any = None
 
@@ -1352,7 +1378,7 @@ class StressclParam(NamedTuple):
 
     avwp: Any = None
 
-    awphec: Any = None
+    a_tf_wp_coolant_channels: Any = None
 
     poisson_ins: Any = None
 
@@ -1362,7 +1388,7 @@ class StressclParam(NamedTuple):
 
     poisson_cond_trans: Any = None
 
-    dhecoil: Any = None
+    dia_tf_turn_coolant_channel: Any = None
 
     fcutfsu: Any = None
 
@@ -1408,7 +1434,7 @@ class StressclParam(NamedTuple):
 
     tan_theta_coil: Any = None
 
-    t_cable_radial: Any = None
+    dr_tf_turn_cable_space: Any = None
 
     t_cable: Any = None
 
@@ -1443,24 +1469,24 @@ class StressclParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0,
-            n_tf_turn=200,
+            n_tf_coil_turns=200,
             dr_tf_wp=0.54261087836601019,
             i_tf_tresca=0,
-            acstf=0.001293323051622732,
+            a_tf_turn_cable_space=0.001293323051622732,
             vforce=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
             sig_tf_case=0,
             sig_tf_wp=0,
-            thwcndut=0.0080000000000000002,
+            dx_tf_turn_steel=0.0080000000000000002,
             insstrain=0,
-            tinstf=0.0080000000000000019,
-            thicndut=0.002,
-            acndttf=0.0014685061538103825,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_turn_insulation=0.002,
+            a_tf_turn_steel=0.0014685061538103825,
             tfinsgap=0.01,
             acasetf=1.0015169239205168,
             sig_tf_case_max=580000000,
@@ -1478,7 +1504,7 @@ class StressclParam(NamedTuple):
             eyoung_al=np.array(69000000000.0),
             eyoung_copper=np.array(117000000000.0),
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            aswp=0.29370123076207649,
+            a_tf_wp_steel=0.29370123076207649,
             c_tf_turn=74026.751437500003,
             n_tf_coils=16,
             i_tf_stress_model=1,
@@ -1487,12 +1513,12 @@ class StressclParam(NamedTuple):
             dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
-            awphec=0.015707963267948974,
+            a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
             eyoung_cond_trans=0,
             poisson_cond_axial=0.30000001192092896,
             poisson_cond_trans=0.30000001192092896,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             fcutfsu=0.80884,
             str_wp=0,
             n_tf_wp_layers=5,
@@ -1546,7 +1572,7 @@ class StressclParam(NamedTuple):
             a_case_nose=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
-            t_cable_radial=0.030661087836601014,
+            dr_tf_turn_cable_space=0.030661087836601014,
             t_cable=0.036389912284773368,
             vforce_inboard_tot=4008729778.208292,
             iprint=0,
@@ -1566,24 +1592,24 @@ class StressclParam(NamedTuple):
             r_tf_inboard_mid=3.5979411851091103,
             dr_bore=2.3322000000000003,
             dr_cs=0.55242000000000002,
-            hmax=9.0730900215620327,
+            z_tf_inside_half=9.0730900215620327,
             r_tf_inboard_in=2.9939411851091102,
             casestr=0.00094360452596334093,
-            n_tf_turn=200,
+            n_tf_coil_turns=200,
             dr_tf_wp=0.54261087836601019,
             i_tf_tresca=0,
-            acstf=0.001293323051622732,
+            a_tf_turn_cable_space=0.001293323051622732,
             vforce=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
             sig_tf_case=543381805.25001633,
             sig_tf_wp=397005702.35272157,
-            thwcndut=0.0080000000000000002,
+            dx_tf_turn_steel=0.0080000000000000002,
             insstrain=0,
-            tinstf=0.0080000000000000019,
-            thicndut=0.002,
-            acndttf=0.0014685061538103825,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_turn_insulation=0.002,
+            a_tf_turn_steel=0.0014685061538103825,
             tfinsgap=0.01,
             acasetf=1.0015169239205168,
             sig_tf_case_max=580000000,
@@ -1601,7 +1627,7 @@ class StressclParam(NamedTuple):
             eyoung_al=np.array(69000000000.0),
             eyoung_copper=np.array(117000000000.0),
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            aswp=0.29370123076207649,
+            a_tf_wp_steel=0.29370123076207649,
             c_tf_turn=74026.751437500003,
             n_tf_coils=16,
             i_tf_stress_model=1,
@@ -1610,12 +1636,12 @@ class StressclParam(NamedTuple):
             dr_tf_plasma_case=0.060000000000000012,
             acond=0.1653572639592335,
             avwp=0.07759938309736393,
-            awphec=0.015707963267948974,
+            a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
             eyoung_cond_trans=0,
             poisson_cond_axial=0.30000001192092896,
             poisson_cond_trans=0.30000001192092896,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             fcutfsu=0.80884,
             str_wp=0.0015619754370069119,
             n_tf_wp_layers=5,
@@ -1669,7 +1695,7 @@ class StressclParam(NamedTuple):
             a_case_nose=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
-            t_cable_radial=0.030661087836601014,
+            dr_tf_turn_cable_space=0.030661087836601014,
             t_cable=0.036389912284773368,
             vforce_inboard_tot=4008729778.208292,
             iprint=0,
@@ -1739,7 +1765,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.i_tf_bucking,
         stressclparam.r_tf_inboard_in,
         stressclparam.dr_bore,
-        stressclparam.hmax,
+        stressclparam.z_tf_inside_half,
         stressclparam.f_z_cs_tf_internal,
         stressclparam.dr_cs,
         stressclparam.i_tf_inside_cs,
@@ -1761,7 +1787,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.poisson_cond_trans,
         stressclparam.eyoung_ins,
         stressclparam.poisson_ins,
-        stressclparam.thicndut,
+        stressclparam.dx_tf_turn_insulation,
         stressclparam.eyoung_copper,
         stressclparam.poisson_copper,
         stressclparam.i_tf_sup,
@@ -1774,18 +1800,18 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.a_case_front,
         stressclparam.a_case_nose,
         stressclparam.tfinsgap,
-        stressclparam.tinstf,
-        stressclparam.n_tf_turn,
+        stressclparam.dx_tf_wp_insulation,
+        stressclparam.n_tf_coil_turns,
         stressclparam.i_tf_turns_integer,
         stressclparam.t_cable,
-        stressclparam.t_cable_radial,
-        stressclparam.dhecoil,
+        stressclparam.dr_tf_turn_cable_space,
+        stressclparam.dia_tf_turn_coolant_channel,
         stressclparam.fcutfsu,
-        stressclparam.thwcndut,
+        stressclparam.dx_tf_turn_steel,
         stressclparam.t_lat_case_av,
         stressclparam.t_wp_toroidal_av,
         stressclparam.a_tf_ins,
-        stressclparam.aswp,
+        stressclparam.a_tf_wp_steel,
         stressclparam.acond,
         stressclparam.awpc,
         stressclparam.eyoung_al,
@@ -1799,7 +1825,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.i_tf_tresca,
         stressclparam.acasetf,
         stressclparam.vforce,
-        stressclparam.acndttf,
+        stressclparam.a_tf_turn_steel,
     )
 
     assert casestr == pytest.approx(stressclparam.expected_casestr, rel=0.01)

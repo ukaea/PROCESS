@@ -749,7 +749,7 @@ class Build:
 
         # Height to inside edge of TF coil. TF coils are assumed to be symmetrical.
         # Therefore this applies to single and double null cases.
-        build_variables.hmax = (
+        build_variables.z_tf_inside_half = (
             build_variables.z_plasma_xpoint_upper
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
@@ -762,10 +762,12 @@ class Build:
 
         #  Vertical locations of divertor coils
         if physics_variables.i_single_null == 0:
-            build_variables.hpfu = build_variables.hmax + build_variables.dr_tf_inboard
+            build_variables.z_tf_top = (
+                build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            )
             build_variables.hpfdif = 0.0e0
         else:
-            build_variables.hpfu = (
+            build_variables.z_tf_top = (
                 build_variables.dr_tf_inboard
                 + build_variables.dr_tf_shld_gap
                 + build_variables.dz_shld_thermal
@@ -780,8 +782,8 @@ class Build:
                 + build_variables.z_plasma_xpoint_upper
             )
             build_variables.hpfdif = (
-                build_variables.hpfu
-                - (build_variables.hmax + build_variables.dr_tf_inboard)
+                build_variables.z_tf_top
+                - (build_variables.z_tf_inside_half + build_variables.dr_tf_inboard)
             ) / 2.0e0
 
     def divgeom(self, output: bool):
@@ -1504,14 +1506,14 @@ class Build:
                 t_wp_max = 2.0e0 * (
                     (r_wp_max - tfcoil_variables.casths_fraction * r_wp_min)
                     * np.tan(np.pi / n)
-                    - tfcoil_variables.tinstf
+                    - tfcoil_variables.dx_tf_wp_insulation
                     - tfcoil_variables.tfinsgap
                 )
             else:
                 t_wp_max = 2.0e0 * (
                     r_wp_max * np.tan(np.pi / n)
                     - tfcoil_variables.dx_tf_side_case
-                    - tfcoil_variables.tinstf
+                    - tfcoil_variables.dx_tf_wp_insulation
                     - tfcoil_variables.tfinsgap
                 )
 
@@ -2068,7 +2070,7 @@ class Build:
 
                 if build_python_variables.ripflag == 1:
                     error_handling.fdiags[0] = (
-                        tfcoil_variables.wwp1
+                        tfcoil_variables.dx_tf_wp_outer
                         * tfcoil_variables.n_tf_coils
                         / physics_variables.rmajor
                     )
@@ -2471,9 +2473,9 @@ def init_build_variables():
     build_variables.dr_cs_tf_gap = 0.08
     build_variables.gapomin = 0.234
     build_variables.dr_shld_vv_gap_outboard = 0.0
-    build_variables.hmax = 0.0
+    build_variables.z_tf_inside_half = 0.0
     build_variables.hpfdif = 0.0
-    build_variables.hpfu = 0.0
+    build_variables.z_tf_top = 0.0
     build_variables.hr1 = 0.0
     build_variables.iohcl = 1
     build_variables.i_cs_precomp = 1
