@@ -3,6 +3,7 @@ import logging
 import numba
 import numpy as np
 
+from process import process_output as po
 from process.fortran import (
     build_variables,
     constants,
@@ -678,7 +679,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
 
     def output_tf_resistive_info(self):
-        return
+        po.oheadr(self.outfile, "Resisitve TF coil parameters")
 
     @staticmethod
     @numba.njit(cache=True)
