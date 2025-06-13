@@ -15,7 +15,7 @@ module constraint_variables
 
   public
 
-  real(dp) :: p_hcd_injected_min
+  real(dp) :: p_hcd_injected_min_mw
   !! minimum auxiliary power (MW) (`constraint equation 40`)
 
   real(dp) :: beta_poloidal_max

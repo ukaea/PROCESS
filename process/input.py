@@ -178,7 +178,7 @@ INPUT_VARIABLES = {
     "auxcool_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "p_hcd_injected_min": InputVariable(
+    "p_hcd_injected_min_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.01, 100.0)
     ),
     "avail_min": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
