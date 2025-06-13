@@ -3,6 +3,7 @@ from . import (
     cost_2015_variables,
     cost_variables,
     power_variables,
+    water_usage_variables,
 )
 
 __all__ = [
@@ -10,4 +11,5 @@ __all__ = [
     "cost_2015_variables",
     "cost_variables",
     "power_variables",
+    "water_usage_variables",
 ]
