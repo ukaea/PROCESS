@@ -4,7 +4,7 @@ import math
 import numpy as np
 
 from process.caller import Caller
-from process.fortran import cost_variables as cv
+from process.data_structure import cost_variables as cv
 from process.fortran import global_variables as gv
 from process.fortran import numerics
 from process.fortran import physics_variables as pv
