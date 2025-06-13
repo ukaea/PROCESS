@@ -170,6 +170,7 @@ class Stellarator:
         self.power.component_thermal_powers()
         self.buildings.run(output=False)
         self.vacuum.run(output=False)
+        self.power.calculate_cryo_loads()
         self.power.acpow(output=False)
         self.power.plant_electric_production(output=False)
         # TODO: should availability.run be called
