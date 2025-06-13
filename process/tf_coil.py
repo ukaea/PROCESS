@@ -230,7 +230,7 @@ class TFCoil:
                 sctfcoil_module.t_lat_case_av,
                 sctfcoil_module.t_wp_toroidal_av,
                 sctfcoil_module.a_tf_ins,
-                tfcoil_variables.aswp,
+                tfcoil_variables.a_tf_wp_steel,
                 tfcoil_variables.acond,
                 sctfcoil_module.awpc,
                 tfcoil_variables.eyoung_al,
@@ -1037,7 +1037,7 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "WP cross section area (per coil) (m2)",
-                "(aswp)",
+                "(a_tf_wp_steel)",
                 sctfcoil_module.a_tf_wp_no_insulation,
             )
             po.ovarre(
@@ -1089,14 +1089,14 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Steel WP cross-section (total) (m2)",
-                "(aswp*n_tf_coils)",
-                tfcoil_variables.aswp * tfcoil_variables.n_tf_coils,
+                "(a_tf_wp_steel*n_tf_coils)",
+                tfcoil_variables.a_tf_wp_steel * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
                 "Steel WP fraction",
-                "(aswp/awpc)",
-                tfcoil_variables.aswp / sctfcoil_module.awpc,
+                "(a_tf_wp_steel/awpc)",
+                tfcoil_variables.a_tf_wp_steel / sctfcoil_module.awpc,
             )
             po.ovarre(
                 self.outfile,
@@ -1107,10 +1107,10 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Cable WP fraction",
-                "((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)",
+                "((awpc-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/awpc)",
                 (
                     sctfcoil_module.awpc
-                    - tfcoil_variables.aswp
+                    - tfcoil_variables.a_tf_wp_steel
                     - tfcoil_variables.a_tf_coil_wp_turn_insulation
                 )
                 / sctfcoil_module.awpc,
@@ -3184,7 +3184,7 @@ class TFCoil:
         t_lat_case_av,
         t_wp_toroidal_av,
         a_tf_ins,
-        aswp,
+        a_tf_wp_steel,
         acond,
         awpc,
         eyoung_al,
@@ -3583,7 +3583,7 @@ class TFCoil:
             # Steel conduit
             eyoung_member_array[0] = eyoung_steel
             poisson_member_array[0] = poisson_steel
-            l_member_array[0] = aswp
+            l_member_array[0] = a_tf_wp_steel
             # Insulation
             eyoung_member_array[1] = eyoung_ins
             poisson_member_array[1] = poisson_ins
@@ -3599,7 +3599,7 @@ class TFCoil:
             # Helium and void
             eyoung_member_array[4] = 0e0
             poisson_member_array[4] = poisson_steel
-            l_member_array[4] = awpc - acond - a_tf_ins - aswp
+            l_member_array[4] = awpc - acond - a_tf_ins - a_tf_wp_steel
             # Compute the composite / smeared properties:
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel_array(
                 5,
@@ -3612,7 +3612,7 @@ class TFCoil:
             # Parallel-composite the steel and insulation, now including the lateral case (sidewalls)
             (eyoung_wp_axial_eff, a_working, poisson_wp_axial_eff) = eyoung_parallel(
                 eyoung_steel,
-                a_wp_steel_eff - aswp,
+                a_wp_steel_eff - a_tf_wp_steel,
                 poisson_steel,
                 eyoung_wp_axial,
                 a_working,
@@ -5286,7 +5286,7 @@ def init_tfcoil_variables():
     tfv.sig_tf_case_max = 6.0e8
     tfv.sig_tf_wp_max = 6.0e8
     tfv.a_tf_leg_outboard = 0.0
-    tfv.aswp = 0.0
+    tfv.a_tf_wp_steel = 0.0
     tfv.avwp = 0.0
     tfv.a_tf_wp_coolant_channels = 0.0
     tfv.bcritsc = 24.0
