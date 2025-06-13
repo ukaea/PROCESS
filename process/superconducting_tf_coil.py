@@ -346,6 +346,11 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.r_wp_centre,
             tfcoil_variables.b_tf_inboard_peak,
         )
+        if tfcoil_variables.i_tf_shape == 1:
+            if peaktfflag == 1:
+                error_handling.report_error(144)
+            elif peaktfflag == 2:
+                error_handling.report_error(145)
 
         tfes = sctfcoil_module.e_tf_magnetic_stored_total / tfcoil_variables.n_tf_coils
         # Cross-sectional area per turn
@@ -397,7 +402,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.vtfskv = vdump / 1.0e3  # TFC Quench voltage in kV
 
             if output:
-                self.outtf(peaktfflag)
+                self.output_tf_generic_info(peaktfflag)
 
     def croco_voltage(self) -> float:
         if f2py_compatible_to_string(tfcoil_variables.quench_model) == "linear":
@@ -2324,6 +2329,9 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_turn_insulation,
             n_tf_coil_turns,
         )
+
+    def output_tf_superconducting_info(self):
+        return
 
 
 @staticmethod
