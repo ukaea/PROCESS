@@ -61,13 +61,16 @@ def write(models, _outfile):
     # Cryostat build
     models.cryostat.cryostat_output()
 
+    # Standard TF info
+    models.tfcoil.output_tf_generic_info()
+
     # Toroidal field coil resistive model
     if ft.tfcoil_variables.i_tf_sup != 1:
-        models.resistive_tf_coil.run(output=True)
+        models.resistive_tf_coil.output_tf_resistive_info()
 
     # Toroidal field coil superconductor model
     if ft.tfcoil_variables.i_tf_sup == 1:
-        models.sctfcoil.run(output=True)
+        models.sctfcoil.output_tf_superconducting_info()
 
     # Tight aspect ratio machine model
     if ft.physics_variables.itart == 1 and ft.tfcoil_variables.i_tf_sup != 1:

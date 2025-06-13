@@ -44,7 +44,7 @@ class TFCoil:
         self.a_tf_coil_inboard = tfcoil_variables.a_tf_coil_inboard
 
     def run(self, output):
-        """Run main tfcoil subroutine without outputting."""
+        """Run main tfcoil"""
         self.iprint = 0
 
         (
@@ -647,11 +647,10 @@ class TFCoil:
 
         return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
-    def outtf(self, peaktfflag):
+    def output_tf_generic_info(self):
         """Writes superconducting TF coil output to file
         author: P J Knight, CCFE, Culham Science Centre
         outfile : input integer : output file unit
-        peaktfflag : input integer : warning flag from peak TF calculation
         This routine writes the superconducting TF coil results
         to the output file.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
@@ -1691,11 +1690,6 @@ class TFCoil:
         # Ripple calculations
         po.osubhd(self.outfile, "Ripple information:")
         if tfcoil_variables.i_tf_shape == 1:
-            if peaktfflag == 1:
-                error_handling.report_error(144)
-            elif peaktfflag == 2:
-                error_handling.report_error(145)
-
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",

@@ -298,7 +298,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
         if output:
-            self.outtf(0)
+            self.output_tf_generic_info(0)
 
     def res_tf_internal_geom(self):
         """
@@ -676,6 +676,9 @@ class ResistiveTFCoil(TFCoil):
 
             # No joints if physics_variables.itart = 0
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
+
+    def output_tf_resistive_info(self):
+        return
 
     @staticmethod
     @numba.njit(cache=True)
