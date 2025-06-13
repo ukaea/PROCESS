@@ -2662,12 +2662,14 @@ class Stellarator:
             tfcoil_variables.dx_tf_wp_outer + 2.0e0 * tfcoil_variables.tinstf
         )
 
-        awptf = awp_tor * awp_rad  # [m^2] winding-pack cross sectional area
+        a_tf_wp_no_insulation = (
+            awp_tor * awp_rad
+        )  # [m^2] winding-pack cross sectional area
         tfcoil_variables.j_tf_wp = (
-            coilcurrent * 1.0e6 / awptf
+            coilcurrent * 1.0e6 / a_tf_wp_no_insulation
         )  # [A/m^2] winding pack current density
         tfcoil_variables.n_tf_coil_turns = (
-            awptf / (tfcoil_variables.t_turn_tf**2)
+            a_tf_wp_no_insulation / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
         tfcoil_variables.c_tf_turn = (
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
@@ -2919,7 +2921,9 @@ class Stellarator:
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
         tfcoil_variables.whtgw = (
-            tfcoil_variables.len_tf_coil * (awpc - awptf) * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil
+            * (awpc - a_tf_wp_no_insulation)
+            * tfcoil_variables.dcondins
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
@@ -2950,7 +2954,7 @@ class Stellarator:
             * tfcoil_variables.a_tf_turn_steel
             * fwbs_variables.denstl
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
         # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
         tfcoil_variables.whtconin = (
@@ -3068,7 +3072,7 @@ class Stellarator:
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
-            / awptf
+            / a_tf_wp_no_insulation
         )
 
         # Approximate, very simple maxiumum stress: (needed for limitation of icc 32)
@@ -3092,7 +3096,7 @@ class Stellarator:
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
-            / awptf
+            / a_tf_wp_no_insulation
         )
         max_radial_force_density = (
             stellarator_configuration.stella_config_max_radial_force_density
@@ -3101,7 +3105,7 @@ class Stellarator:
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
-            / awptf
+            / a_tf_wp_no_insulation
         )
         #
         # F = f*V = B*j*V \propto B/B0 * I/I0 * A0/A * A/A0 * len/len0
@@ -3140,7 +3144,7 @@ class Stellarator:
 
         if output:
             self.stcoil_output(
-                awptf,
+                a_tf_wp_no_insulation,
                 centering_force_avg_mn,
                 centering_force_max_mn,
                 centering_force_min_mn,
@@ -3631,7 +3635,7 @@ class Stellarator:
 
     def stcoil_output(
         self,
-        awptf,
+        a_tf_wp_no_insulation,
         centering_force_avg_mn,
         centering_force_max_mn,
         centering_force_min_mn,
@@ -3871,7 +3875,7 @@ class Stellarator:
             tfcoil_variables.dx_tf_turn_insulation,
         )
 
-        ap = awptf
+        ap = a_tf_wp_no_insulation
         po.osubhd(self.outfile, "Winding Pack Information :")
         po.ovarre(self.outfile, "Winding pack area", "(ap)", ap)
         po.ovarre(
