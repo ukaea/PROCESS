@@ -953,7 +953,7 @@ i_tf_sc_mat = 9
 icc = 33 
 * DESCRIPTION:   TF superconductor operating current / critical current density
 * JUSTIFICATION: A quench must be avoided
-* VARIABLES:     j_tf_wp & jwdgcrt (critical current) calculated in-situ
+* VARIABLES:     j_tf_wp & j_tf_wp_critical (critical current) calculated in-situ
 
 ixc = 50
 fiooic = 1.0
@@ -1097,7 +1097,7 @@ boundu(140) = 0.8
 
 * Specifying number of turns with n_layer *
 
-*n_tf_turn = 
+*n_tf_coil_turns = 
 * DESCRIPTION:   Number of turns per TF coil 
 * JUSTIFICATION: Allowing to be calculated
 
@@ -1164,7 +1164,7 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*thicndut =  
+*dx_tf_turn_insulation =  
 * DESCRIPTION:   Conduit turn insulation thickness (m)
 * JUSTIFICATION: 
 *                This depends at least on the maximum dump voltage and prpbably
@@ -1176,13 +1176,13 @@ i_tf_turns_integer = 0
 * JUSTIFICATION: Not set, assuming default
 
 *ixc = 58
-*thwcndut = 
+*dx_tf_turn_steel = 
 *boundl(58) = 
 *boundu(58) = 
 * DESCRIPTION:   WP Turn steel conduit/jacket structure minimal thickness
 * JUSTIFICATION: 
 
-*dhecoil = 
+*dia_tf_turn_coolant_channel = 
 * DESCRIPTION:   Diameter of central helium channel in TF winding (m)
 * JUSTIFICATION: 
 *                

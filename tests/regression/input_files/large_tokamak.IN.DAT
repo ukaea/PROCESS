@@ -246,7 +246,7 @@ dr_tf_nose_case = 0.5
 * TF coil conduit thickness [m]
 ixc = 58
 boundl(58) = 0.008
-thwcndut = 0.008
+dx_tf_turn_steel = 0.008
 
 * copper fraction of cable conductor (TF coils)
 ixc = 59 
@@ -599,7 +599,7 @@ n_tf_coils = 16
 tinstf = 0.008
 
 * Diameter if He channel in winding [m]
-dhecoil = 0.01
+dia_tf_turn_coolant_channel = 0.01
 
 * Helium coolant temperature [K]
 tftmp = 4.75

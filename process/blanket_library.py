@@ -107,7 +107,7 @@ class BlanketLibrary:
         # Vacuum vessel
         elif icomponent == 2:
             hbot = (
-                build_variables.hmax
+                build_variables.z_tf_inside_half
                 - build_variables.dz_shld_vv_gap
                 - build_variables.dz_vv_lower
             )

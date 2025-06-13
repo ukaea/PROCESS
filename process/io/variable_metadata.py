@@ -121,12 +121,12 @@ var_dicts = {
         description="Poloidal field power",
         units="MW",
     ),
-    "hmax": VariableMetadata(
+    "z_tf_inside_half": VariableMetadata(
         latex=r"$z_\mathrm{TF}^\mathrm{pl\ side}$ [$m$]",
         description="maximum (half-)height of TF coil (inside edge)",
         units="m",
     ),
-    "thicndut": VariableMetadata(
+    "dx_tf_turn_insulation": VariableMetadata(
         latex=r"\Delta l_\mathrm{steel\ jacket}^\mathrm{turn}",
         description="Thickness of steel jacket turn",
         units="",

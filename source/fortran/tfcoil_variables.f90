@@ -21,18 +21,18 @@ module tfcoil_variables
   real(dp) :: acasetfo
   !! external case area per coil (outboard leg) (m2)
 
-  real(dp) :: acndttf
+  real(dp) :: a_tf_turn_steel
   !! area of the cable conduit (m2)
 
   real(dp) :: acond
   !! Winding pack conductor area [m2]
   !! Does not include the area of voids and central helium channel
 
-  real(dp) :: acstf
+  real(dp) :: a_tf_turn_cable_space
   !! Cable space area (per turn)  [m2]
   !! Includes the area of voids and central helium channel
 
-  real(dp) :: insulation_area
+  real(dp) :: a_tf_turn_insulation
   !! single turn insulation area (m2)
 
   real(dp) :: a_tf_coil_wp_turn_insulation
@@ -57,7 +57,7 @@ module tfcoil_variables
   real(dp) :: avwp
   !! winding pack void (He coolant) area (m2)
 
-  real(dp) :: awphec
+  real(dp) :: a_tf_wp_coolant_channels
   !! winding pack He coil area (m2)
 
   real(dp) :: bcritsc
@@ -156,7 +156,7 @@ module tfcoil_variables
   real(dp) :: dcondins
   !! density of conduit + ground-wall insulation (kg/m3)
 
-  real(dp) :: dhecoil
+  real(dp) :: dia_tf_turn_coolant_channel
   !! diameter of central helium channel in TF winding (m)
 
   real(dp) :: estotftgj
@@ -316,7 +316,7 @@ module tfcoil_variables
   !! j_crit_str_pf_0 : superconductor strand critical current density at 6 T and 4.2 K (A/m2)
   !! Necessary for the cost calculation in $/kAm
 
-  real(dp) :: jwdgcrt
+  real(dp) :: j_tf_wp_critical
   !! critical current density for winding pack (A/m2)
 
   real(dp) :: jwdgpro
@@ -604,7 +604,7 @@ module tfcoil_variables
   real(dp) :: dx_tf_inboard_out_toroidal
   !! TF coil toroidal thickness (m)
 
-  real(dp) :: thicndut
+  real(dp) :: dx_tf_turn_insulation
   !! conduit insulation thickness (m)
 
   real(dp) :: layer_ins
@@ -617,7 +617,7 @@ module tfcoil_variables
   real(dp) :: dr_tf_wp
   !! radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 
-  real(dp) :: thwcndut
+  real(dp) :: dx_tf_turn_steel
   !! TF coil conduit case thickness (m) (`iteration variable 58`)
 
   real(dp) :: tinstf
@@ -653,7 +653,7 @@ module tfcoil_variables
   real(dp) :: temp_tf_cryo
   !! coil temperature for cryogenic plant power calculation (K)
 
-  real(dp) :: n_tf_turn
+  real(dp) :: n_tf_coil_turns
   !! number of turns per TF coil
 
   real(dp) :: vdalw
@@ -727,13 +727,13 @@ module tfcoil_variables
   real(dp), dimension(4) :: radctf
   !! radius of arc i (m)
 
-  real(dp), dimension(5) :: xarc
+  real(dp), dimension(5) :: r_tf_arc
   !! x location of arc point i on surface (m)
 
   real(dp), dimension(4) :: xctfc
   !! x location of arc centre i (m)
 
-  real(dp), dimension(5) :: yarc
+  real(dp), dimension(5) :: z_tf_arc
   !! y location of arc point i on surface (m)
 
   real(dp), dimension(4) :: yctfc

@@ -438,7 +438,7 @@ class Stellarator:
         #  Roughly equal to average of (inboard build from TF coil to plasma
         #  centre) and (outboard build from plasma centre to TF coil)
 
-        build_variables.hmax = 0.5e0 * (
+        build_variables.z_tf_inside_half = 0.5e0 * (
             (
                 build_variables.dr_shld_vv_gap_inboard
                 + build_variables.dr_vv_inboard
@@ -2536,20 +2536,20 @@ class Stellarator:
         # [m] Dimension of square cable space inside insulation
         #     and case of the conduit of each turn
         t_cable = tfcoil_variables.t_turn_tf - 2.0e0 * (
-            tfcoil_variables.thwcndut + tfcoil_variables.thicndut
+            tfcoil_variables.dx_tf_turn_steel + tfcoil_variables.dx_tf_turn_insulation
         )  # t_cable = t_w
         if t_cable < 0:
             print(
-                "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and thicndut."
+                "t_cable is negative. Check t_turn, tfcoil_variables.dx_tf_turn_steel and dx_tf_turn_insulation."
             )
         # [m^2] Cross-sectional area of cable space per turn
-        tfcoil_variables.acstf = (
+        tfcoil_variables.a_tf_turn_cable_space = (
             0.9e0 * t_cable**2
-        )  # 0.9 to include some rounded corners. (tfcoil_variables.acstf = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
+        )  # 0.9 to include some rounded corners. (tfcoil_variables.a_tf_turn_cable_space = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
         # [m^2] Cross-sectional area of conduit case per turn
-        tfcoil_variables.acndttf = (
-            t_cable + 2.0e0 * tfcoil_variables.thwcndut
-        ) ** 2 - tfcoil_variables.acstf
+        tfcoil_variables.a_tf_turn_steel = (
+            t_cable + 2.0e0 * tfcoil_variables.dx_tf_turn_steel
+        ) ** 2 - tfcoil_variables.a_tf_turn_cable_space
         #######################################################################################
 
         #######################################################################################
@@ -2608,7 +2608,7 @@ class Stellarator:
 
         # Conduct fraction of conduit * Superconductor fraction in conductor
         f_scu = (
-            (tfcoil_variables.acstf * (1.0e0 - tfcoil_variables.vftf))
+            (tfcoil_variables.a_tf_turn_cable_space * (1.0e0 - tfcoil_variables.vftf))
             / (tfcoil_variables.t_turn_tf**2)
             * (1.0e0 - tfcoil_variables.fcutfsu)
         )  # fraction that is SC of wp.
@@ -2664,30 +2664,37 @@ class Stellarator:
         tfcoil_variables.j_tf_wp = (
             coilcurrent * 1.0e6 / awptf
         )  # [A/m^2] winding pack current density
-        tfcoil_variables.n_tf_turn = (
+        tfcoil_variables.n_tf_coil_turns = (
             awptf / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
         tfcoil_variables.c_tf_turn = (
-            coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
+            coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
         tfcoil_variables.acond = (
-            tfcoil_variables.acstf
-            * tfcoil_variables.n_tf_turn
+            tfcoil_variables.a_tf_turn_cable_space
+            * tfcoil_variables.n_tf_coil_turns
             * (1.0e0 - tfcoil_variables.vftf)
         )
         # [m^2] Void area in cable, for He
         tfcoil_variables.avwp = (
-            tfcoil_variables.acstf * tfcoil_variables.n_tf_turn * tfcoil_variables.vftf
+            tfcoil_variables.a_tf_turn_cable_space
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.vftf
         )
         # [m^2] Insulation area (not including ground-wall)
-        tfcoil_variables.a_tf_coil_wp_turn_insulation = tfcoil_variables.n_tf_turn * (
-            tfcoil_variables.t_turn_tf**2
-            - tfcoil_variables.acndttf
-            - tfcoil_variables.acstf
+        tfcoil_variables.a_tf_coil_wp_turn_insulation = (
+            tfcoil_variables.n_tf_coil_turns
+            * (
+                tfcoil_variables.t_turn_tf**2
+                - tfcoil_variables.a_tf_turn_steel
+                - tfcoil_variables.a_tf_turn_cable_space
+            )
         )
         # [m^2] Structure area for cable
-        tfcoil_variables.aswp = tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
+        tfcoil_variables.aswp = (
+            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
+        )
         # End of winding pack calculations
         #######################################################################################
 
@@ -2854,7 +2861,7 @@ class Stellarator:
         )  # [GJ] Total magnetic energy
 
         #  Coil dimensions
-        build_variables.hmax = (
+        build_variables.z_tf_inside_half = (
             0.5e0
             * stellarator_configuration.stella_config_maximal_coil_height
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
@@ -2868,7 +2875,9 @@ class Stellarator:
         )
         # the average minor coil radius
 
-        tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil dr_bore
+        tfborev = (
+            2.0e0 * build_variables.z_tf_inside_half
+        )  # [m] estimated vertical coil dr_bore
 
         tfcoil_variables.len_tf_coil = (
             stellarator_configuration.stella_config_coillength
@@ -2912,34 +2921,36 @@ class Stellarator:
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
-            tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acstf
-            * (1.0e0 - tfcoil_variables.vftf)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
-            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
-        ) * tfcoil_variables.dcond[
-            tfcoil_variables.i_tf_sc_mat - 1
-        ]  # awphec is 0 for a stellarator. but keep this term for now.
+            (
+                tfcoil_variables.len_tf_coil
+                * tfcoil_variables.n_tf_coil_turns
+                * tfcoil_variables.a_tf_turn_cable_space
+                * (1.0e0 - tfcoil_variables.vftf)
+                * (1.0e0 - tfcoil_variables.fcutfsu)
+                - tfcoil_variables.len_tf_coil
+                * tfcoil_variables.a_tf_wp_coolant_channels
+            )
+            * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
+        )  # a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
         tfcoil_variables.whtconcu = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acstf
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_cable_space
             * (1.0e0 - tfcoil_variables.vftf)
             * tfcoil_variables.fcutfsu
-            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.dcopper
         # [kg] mass of Steel conduit (sheath)
         tfcoil_variables.m_tf_turn_steel_conduit = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acndttf
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_steel
             * fwbs_variables.denstl
         )
         # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
-        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_turn)
+        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
         tfcoil_variables.whtconin = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_wp_turn_insulation
@@ -3017,7 +3028,7 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
@@ -3033,12 +3044,12 @@ class Stellarator:
             tfcoil_variables.fcutfsu,
             1 - tfcoil_variables.vftf,
             tfcoil_variables.tftmp,
-            tfcoil_variables.acstf,
+            tfcoil_variables.a_tf_turn_cable_space,
             tfcoil_variables.t_turn_tf**2,
         )
 
         # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
-        # print *, "acstf: ", tfcoil_variables.acstf
+        # print *, "a_tf_turn_cable_space: ", tfcoil_variables.a_tf_turn_cable_space
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
             coilcurrent * 1.0e6 / (tfcoil_variables.acond * tfcoil_variables.fcutfsu)
@@ -3797,8 +3808,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Maximum inboard edge height (m)",
-            "(hmax)",
-            build_variables.hmax,
+            "(z_tf_inside_half)",
+            build_variables.z_tf_inside_half,
         )
         po.ovarre(
             self.outfile,
@@ -3836,8 +3847,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Cable conductor + void area (m2)",
-            "(acstf)",
-            tfcoil_variables.acstf,
+            "(a_tf_turn_cable_space)",
+            tfcoil_variables.a_tf_turn_cable_space,
         )
         po.ovarre(
             self.outfile,
@@ -3848,14 +3859,14 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Conduit case thickness (m)",
-            "(thwcndut)",
-            tfcoil_variables.thwcndut,
+            "(dx_tf_turn_steel)",
+            tfcoil_variables.dx_tf_turn_steel,
         )
         po.ovarre(
             self.outfile,
             "Cable insulation thickness (m)",
-            "(thicndut)",
-            tfcoil_variables.thicndut,
+            "(dx_tf_turn_insulation)",
+            tfcoil_variables.dx_tf_turn_insulation,
         )
 
         ap = awptf
@@ -3912,8 +3923,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Number of turns per coil",
-            "(n_tf_turn)",
-            tfcoil_variables.n_tf_turn,
+            "(n_tf_coil_turns)",
+            tfcoil_variables.n_tf_coil_turns,
         )
         po.ovarre(
             self.outfile,
