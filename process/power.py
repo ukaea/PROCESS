@@ -844,7 +844,7 @@ class Power:
             self.outfile,
             "Total heat deposited in FW and coolant [MW]",
             "(p_fw_heat_deposited_mw)",
-            self.p_fw_heat_deposited_mw,
+            power_variables.p_fw_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
 
@@ -869,7 +869,7 @@ class Power:
             self.outfile,
             "Total heat deposited in Blanket(s) and coolant [MW]",
             "(p_blkt_heat_deposited_mw)",
-            self.p_blkt_heat_deposited_mw,
+            power_variables.p_blkt_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -886,7 +886,7 @@ class Power:
             self.outfile,
             "Total heat deposited in Blanket(s) and FW coolant [MW]",
             "(p_fw_blkt_heat_deposited_mw)",
-            self.p_fw_blkt_heat_deposited_mw,
+            power_variables.p_fw_blkt_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -919,7 +919,7 @@ class Power:
             self.outfile,
             "Total heat deposited in VV and shield coolant(s) [MW]",
             "(p_shld_heat_deposited_mw)",
-            self.p_shld_heat_deposited_mw,
+            power_variables.p_shld_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -958,7 +958,7 @@ class Power:
             self.outfile,
             "Total heat deposited in divertor and coolants [MW]",
             "(p_div_heat_deposited_mw)",
-            self.p_div_heat_deposited_mw,
+            power_variables.p_div_heat_deposited_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -971,7 +971,7 @@ class Power:
             self.outfile,
             "Electric power for core plant systems [MW]",
             "(p_plant_core_systems_elec_mw)",
-            self.p_plant_core_systems_elec_mw,
+            power_variables.p_plant_core_systems_elec_mw,
         )
         po.ovarre(
             self.outfile,
@@ -1040,19 +1040,19 @@ class Power:
             self.outfile,
             "Total heat deposited in FW and coolant [MW]",
             "(p_fw_heat_deposited_mw)",
-            self.p_fw_heat_deposited_mw,
+            power_variables.p_fw_heat_deposited_mw,
         )
         po.ovarre(
             self.outfile,
             "Total heat deposited in Blanket(s) and coolant [MW]",
             "(p_blkt_heat_deposited_mw)",
-            self.p_blkt_heat_deposited_mw,
+            power_variables.p_blkt_heat_deposited_mw,
         )
         po.ovarre(
             self.outfile,
             "Total heat deposited in Blanket(s) and FW coolant [MW]",
             "(p_fw_blkt_heat_deposited_mw)",
-            self.p_fw_blkt_heat_deposited_mw,
+            power_variables.p_fw_blkt_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
 
@@ -1060,13 +1060,13 @@ class Power:
             self.outfile,
             "Total heat deposited in VV and shield coolant(s) [MW]",
             "(p_shld_heat_deposited_mw)",
-            self.p_shld_heat_deposited_mw,
+            power_variables.p_shld_heat_deposited_mw,
         )
         po.ovarre(
             self.outfile,
             "Total heat deposited in divertor and coolants [MW]",
             "(p_div_heat_deposited_mw)",
-            self.p_div_heat_deposited_mw,
+            power_variables.p_div_heat_deposited_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1091,7 +1091,7 @@ class Power:
                 1.0e-6 * tfcoil_variables.p_cp_coolant_pump_elec
             )
         else:
-            self.p_cp_coolant_pump_elec_mw = 0.0e0
+            power_variables.p_cp_coolant_pump_elec_mw = 0.0e0
 
         #  Total baseline power to facility loads, MW
         heat_transport_variables.p_plant_electric_base_total_mw = (
