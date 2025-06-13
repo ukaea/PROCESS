@@ -395,7 +395,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    wwp1: Any = None
+    dx_tf_wp_outer: Any = None
 
     dr_tf_wp: Any = None
 
@@ -422,7 +422,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_z=0,
             tf_fit_y=0,
             n_tf_coils=16,
-            wwp1=1.299782604942499,
+            dx_tf_wp_outer=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
             b_tf_inboard_peak=11.717722779177526,
@@ -437,7 +437,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_z=0.3149613642807837,
             tf_fit_y=1.0658869305062604,
             n_tf_coils=16,
-            wwp1=1.299782604942499,
+            dx_tf_wp_outer=1.299782604942499,
             dr_tf_wp=0.50661087836601015,
             tfin=3.789896624292115,
             b_tf_inboard_peak=11.717722779177526,
@@ -470,7 +470,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
 
     bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
-        wwp1=peaktfwithrippleparam.wwp1,
+        dx_tf_wp_outer=peaktfwithrippleparam.dx_tf_wp_outer,
         dr_tf_wp=peaktfwithrippleparam.dr_tf_wp,
         tfin=peaktfwithrippleparam.tfin,
         b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
@@ -508,7 +508,7 @@ class TfWpGeomParam(NamedTuple):
 
     dx_tf_side_case: Any = None
 
-    wwp1: Any = None
+    dx_tf_wp_outer: Any = None
 
     wwp2: Any = None
 
@@ -538,7 +538,7 @@ class TfWpGeomParam(NamedTuple):
 
     i_tf_wp_geom: Any = None
 
-    expected_wwp1: Any = None
+    expected_dx_tf_wp_outer: Any = None
 
     expected_awpc: Any = None
 
@@ -568,7 +568,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
-            wwp1=0,
+            dx_tf_wp_outer=0,
             wwp2=0,
             tinstf=0.0080000000000000019,
             tfinsgap=0.01,
@@ -583,7 +583,7 @@ class TfWpGeomParam(NamedTuple):
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
-            expected_wwp1=1.299782604942499,
+            expected_dx_tf_wp_outer=1.299782604942499,
             expected_awpc=0.70527618095271016,
             expected_awptf=0.64024601555360383,
             expected_r_wp_inner=3.5185911851091101,
@@ -601,7 +601,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
-            wwp1=1.299782604942499,
+            dx_tf_wp_outer=1.299782604942499,
             wwp2=0,
             tinstf=0.0080000000000000019,
             tfinsgap=0.01,
@@ -616,7 +616,7 @@ class TfWpGeomParam(NamedTuple):
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
-            expected_wwp1=1.299782604942499,
+            expected_dx_tf_wp_outer=1.299782604942499,
             expected_awpc=0.70527618095271016,
             expected_awptf=0.64024601555360383,
             expected_r_wp_inner=3.5185911851091101,
@@ -665,7 +665,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "dx_tf_side_case", tfwpgeomparam.dx_tf_side_case
     )
 
-    monkeypatch.setattr(tfcoil_variables, "wwp1", tfwpgeomparam.wwp1)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_wp_outer", tfwpgeomparam.dx_tf_wp_outer
+    )
 
     monkeypatch.setattr(tfcoil_variables, "wwp2", tfwpgeomparam.wwp2)
 
@@ -699,7 +701,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     sctfcoil.tf_wp_geom(i_tf_wp_geom=tfwpgeomparam.i_tf_wp_geom)
 
-    assert tfcoil_variables.wwp1 == pytest.approx(tfwpgeomparam.expected_wwp1)
+    assert tfcoil_variables.dx_tf_wp_outer == pytest.approx(
+        tfwpgeomparam.expected_dx_tf_wp_outer
+    )
 
     assert sctfcoil_module.awpc == pytest.approx(tfwpgeomparam.expected_awpc)
 

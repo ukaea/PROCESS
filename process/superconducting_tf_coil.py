@@ -339,7 +339,7 @@ class SuperconductingTFCoil(TFCoil):
         # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
         tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
             tfcoil_variables.n_tf_coils,
-            tfcoil_variables.wwp1,
+            tfcoil_variables.dx_tf_wp_outer,
             tfcoil_variables.dr_tf_wp
             - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap),
             sctfcoil_module.r_wp_centre,
@@ -1619,7 +1619,9 @@ class SuperconductingTFCoil(TFCoil):
             d_vv=build_variables.dr_vv_shells,
         )
 
-    def peak_tf_with_ripple(self, n_tf_coils, wwp1, dr_tf_wp, tfin, b_tf_inboard_peak):
+    def peak_tf_with_ripple(
+        self, n_tf_coils, dx_tf_wp_outer, dr_tf_wp, tfin, b_tf_inboard_peak
+    ):
         """Peak toroidal field on the conductor
         author: P J Knight, CCFE, Culham Science Centre
         This subroutine calculates the peak toroidal field at the
@@ -1635,8 +1637,8 @@ class SuperconductingTFCoil(TFCoil):
 
         :param n_tf_coils: number of TF coils
         :type n_tf_coils: float
-        :param wwp1: width of plasma-facing face of winding pack (m)
-        :type wwp1: float
+        :param dx_tf_wp_outer: width of plasma-facing face of winding pack (m)
+        :type dx_tf_wp_outer: float
         :param dr_tf_wp: radial thickness of winding pack (m)
         :type dr_tf_wp: float
         :param tfin: major radius of centre of winding pack (m)
@@ -1685,7 +1687,7 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Dimensionless winding pack width
 
-        sctfcoil_module.tf_fit_t = wwp1 / wmax
+        sctfcoil_module.tf_fit_t = dx_tf_wp_outer / wmax
         if (sctfcoil_module.tf_fit_t < 0.3e0) or (sctfcoil_module.tf_fit_t > 1.1e0):
             # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; t = ',t
             flag = 1
@@ -1865,7 +1867,7 @@ class SuperconductingTFCoil(TFCoil):
         # --------------
         if i_tf_wp_geom == 0:
             # Outer WP layer toroidal thickness [m]
-            tfcoil_variables.wwp1 = sctfcoil_module.t_wp_toroidal
+            tfcoil_variables.dx_tf_wp_outer = sctfcoil_module.t_wp_toroidal
 
             # Averaged toroidal thickness of of winding pack [m]
             sctfcoil_module.t_wp_toroidal_av = sctfcoil_module.t_wp_toroidal
@@ -1895,7 +1897,7 @@ class SuperconductingTFCoil(TFCoil):
         # ---------------------
         elif i_tf_wp_geom == 1:
             # Thickness of winding pack section at R > sctfcoil_module.r_wp_centre [m]
-            tfcoil_variables.wwp1 = 2.0e0 * (
+            tfcoil_variables.dx_tf_wp_outer = 2.0e0 * (
                 sctfcoil_module.r_wp_centre * sctfcoil_module.tan_theta_coil
                 - tfcoil_variables.dx_tf_side_case
             )
@@ -1908,7 +1910,7 @@ class SuperconductingTFCoil(TFCoil):
 
             # Averaged toroidal thickness of of winding pack [m]
             sctfcoil_module.t_wp_toroidal_av = 0.5e0 * (
-                tfcoil_variables.wwp1 + tfcoil_variables.wwp2
+                tfcoil_variables.dx_tf_wp_outer + tfcoil_variables.wwp2
             )
 
             # Total cross-sectional area of winding pack [m2]
@@ -1925,7 +1927,7 @@ class SuperconductingTFCoil(TFCoil):
                     - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
                 )
                 * (
-                    tfcoil_variables.wwp1
+                    tfcoil_variables.dx_tf_wp_outer
                     + tfcoil_variables.wwp2
                     - 4.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
                 )
@@ -1936,7 +1938,7 @@ class SuperconductingTFCoil(TFCoil):
                 0.5e0
                 * (tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tfinsgap)
                 * (
-                    tfcoil_variables.wwp1
+                    tfcoil_variables.dx_tf_wp_outer
                     + tfcoil_variables.wwp2
                     - 4.0e0 * tfcoil_variables.tfinsgap
                 )
@@ -1947,7 +1949,7 @@ class SuperconductingTFCoil(TFCoil):
         # --------------
         else:
             # Thickness of winding pack section at sctfcoil_module.r_wp_outer [m]
-            tfcoil_variables.wwp1 = 2.0e0 * (
+            tfcoil_variables.dx_tf_wp_outer = 2.0e0 * (
                 sctfcoil_module.r_wp_outer * sctfcoil_module.tan_theta_coil
                 - tfcoil_variables.dx_tf_side_case
             )
@@ -1960,14 +1962,14 @@ class SuperconductingTFCoil(TFCoil):
 
             # Averaged toroidal thickness of of winding pack [m]
             sctfcoil_module.t_wp_toroidal_av = 0.5e0 * (
-                tfcoil_variables.wwp1 + tfcoil_variables.wwp2
+                tfcoil_variables.dx_tf_wp_outer + tfcoil_variables.wwp2
             )
 
             # Total cross-sectional area of winding pack [m2]
             # Including ground insulation and insertion gap
             sctfcoil_module.awpc = tfcoil_variables.dr_tf_wp * (
                 tfcoil_variables.wwp2
-                + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
+                + 0.5e0 * (tfcoil_variables.dx_tf_wp_outer - tfcoil_variables.wwp2)
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
@@ -1977,7 +1979,7 @@ class SuperconductingTFCoil(TFCoil):
             ) * (
                 tfcoil_variables.wwp2
                 - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
-                + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
+                + 0.5e0 * (tfcoil_variables.dx_tf_wp_outer - tfcoil_variables.wwp2)
             )
 
             # Cross-section area of the WP ground insulation [m2]
@@ -1986,7 +1988,7 @@ class SuperconductingTFCoil(TFCoil):
             ) * (
                 tfcoil_variables.wwp2
                 - 2.0e0 * tfcoil_variables.tfinsgap
-                + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
+                + 0.5e0 * (tfcoil_variables.dx_tf_wp_outer - tfcoil_variables.wwp2)
             ) - sctfcoil_module.awptf
 
         # --------------

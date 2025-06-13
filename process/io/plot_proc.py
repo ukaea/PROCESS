@@ -2674,7 +2674,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     # Import the TF variables
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
-    wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
+    wp_toridal_dxbig = mfile_data.data["dx_tf_wp_outer"].get_scan(scan)
     wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
     dr_tf_wp = mfile_data.data["dr_tf_wp"].get_scan(scan)
     side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
@@ -2842,7 +2842,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 short_turns = round(turn_pancakes)
             else:
                 wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
-                    wwp1 - (2 * tinstf)
+                    dx_tf_wp_outer - (2 * tinstf)
                 )  # row to height
                 side_unit = turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
@@ -4566,7 +4566,7 @@ def main(args=None):
 
     # Magnets related
     global n_tf_coils
-    global wwp1
+    global dx_tf_wp_outer
     global wwp2
     global dr_tf_wp
     global tinstf
@@ -4575,7 +4575,7 @@ def main(args=None):
 
     n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
-        wwp1 = m_file.data["wwp1"].get_scan(scan)
+        dx_tf_wp_outer = m_file.data["dx_tf_wp_outer"].get_scan(scan)
         if i_tf_wp_geom == 1:
             wwp2 = m_file.data["wwp2"].get_scan(scan)
         dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
