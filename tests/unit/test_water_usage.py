@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.fortran import water_usage_variables
+from process.data_structure import water_usage_variables
 from process.water_use import WaterUse
 
 

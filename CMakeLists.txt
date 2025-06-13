@@ -77,7 +77,6 @@ LIST(APPEND PROCESS_SRCS
     hcpb.f90
     pfcoil.f90
     sctfcoil.f90
-    cost_variables.f90
     divertor_variables.f90
     fwbs_variables.f90
     physics.f90
@@ -87,7 +86,6 @@ LIST(APPEND PROCESS_SRCS
     ife_variables.f90
     heat_transport_variables.f90
     buildings_variables.f90
-    water_usage_variables.f90
     constants.f90
     build_variables.f90
     current_drive_variables.f90
