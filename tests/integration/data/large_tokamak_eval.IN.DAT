@@ -179,7 +179,7 @@ i_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical
 i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
 vfshld   = 0.60 * coolant void fraction in shield
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
-etahtp   = 0.87 * electrical efficiency of primary coolant pumps
+eta_coolant_pump_electric   = 0.87 * electrical efficiency of primary coolant pumps
 
 *-----------------Global Variables-----------------*
 

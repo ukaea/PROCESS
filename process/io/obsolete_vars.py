@@ -346,6 +346,10 @@ OBS_VARS = {
     "iprimshld": "i_shld_primary_heat",
     "cpttf": "c_tf_turn",
     "emult": "f_p_blkt_multiplication",
+    "auxmin": "p_hcd_injected_min_mw",
+    "etahtp": "eta_coolant_pump_electric",
+    "pwpm2": "pflux_plant_floor_electric",
+    "iscenr": "i_pf_energy_storage_source",
 }
 
 OBS_VARS_HELP = {
