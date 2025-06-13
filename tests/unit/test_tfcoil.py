@@ -437,7 +437,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     vforce_outboard: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
     dx_tf_turn_insulation: Any = None
 
@@ -490,7 +490,7 @@ class TfFieldAndForceParam(NamedTuple):
             i_tf_sup=0,
             f_vforce_inboard=0.5,
             vforce_outboard=0,
-            tinstf=0,
+            dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.15483000000000002,
             tfinsgap=0.01,
@@ -525,7 +525,7 @@ class TfFieldAndForceParam(NamedTuple):
             i_tf_sup=0,
             f_vforce_inboard=0.59539634897566385,
             vforce_outboard=8413494.7991220243,
-            tinstf=0,
+            dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.14708850000000001,
             tfinsgap=0.01,
@@ -600,7 +600,11 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
         tfcoil_variables, "vforce_outboard", tffieldandforceparam.vforce_outboard
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", tffieldandforceparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        tffieldandforceparam.dx_tf_wp_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -1316,7 +1320,7 @@ class StressclParam(NamedTuple):
 
     insstrain: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
     dx_tf_turn_insulation: Any = None
 
@@ -1480,7 +1484,7 @@ class StressclParam(NamedTuple):
             sig_tf_wp=0,
             dx_tf_turn_steel=0.0080000000000000002,
             insstrain=0,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
             a_tf_turn_steel=0.0014685061538103825,
             tfinsgap=0.01,
@@ -1603,7 +1607,7 @@ class StressclParam(NamedTuple):
             sig_tf_wp=397005702.35272157,
             dx_tf_turn_steel=0.0080000000000000002,
             insstrain=0,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
             a_tf_turn_steel=0.0014685061538103825,
             tfinsgap=0.01,
@@ -1796,7 +1800,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.a_case_front,
         stressclparam.a_case_nose,
         stressclparam.tfinsgap,
-        stressclparam.tinstf,
+        stressclparam.dx_tf_wp_insulation,
         stressclparam.n_tf_coil_turns,
         stressclparam.i_tf_turns_integer,
         stressclparam.t_cable,

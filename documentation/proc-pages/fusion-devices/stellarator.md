@@ -233,7 +233,7 @@ dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroi
 t_turn_tf = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
 dx_tf_turn_insulation = 0.0015 * Conduit insulation thickness (one side) (m)
 dx_tf_turn_steel = 0.006 * thickness of steel around each conductor (one side) (m)
-tinstf = 0.1 * insulation on top of winding pack (one side) (m)
+dx_tf_wp_insulation = 0.1 * insulation on top of winding pack (one side) (m)
 ```
 
 ### Machine build

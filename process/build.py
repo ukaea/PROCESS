@@ -1506,14 +1506,14 @@ class Build:
                 t_wp_max = 2.0e0 * (
                     (r_wp_max - tfcoil_variables.casths_fraction * r_wp_min)
                     * np.tan(np.pi / n)
-                    - tfcoil_variables.tinstf
+                    - tfcoil_variables.dx_tf_wp_insulation
                     - tfcoil_variables.tfinsgap
                 )
             else:
                 t_wp_max = 2.0e0 * (
                     r_wp_max * np.tan(np.pi / n)
                     - tfcoil_variables.dx_tf_side_case
-                    - tfcoil_variables.tinstf
+                    - tfcoil_variables.dx_tf_wp_insulation
                     - tfcoil_variables.tfinsgap
                 )
 
