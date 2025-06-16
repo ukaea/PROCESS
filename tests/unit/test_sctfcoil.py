@@ -42,6 +42,14 @@ class ProtectParam(NamedTuple):
 
     tmax: Any = None
 
+    peak_field: Any = None
+
+    cu_rrr: Any = None
+
+    detection_time: Any = None
+
+    fluence: Any = None
+
     expected_ajwpro: Any = None
 
     expected_vd: Any = None
@@ -60,7 +68,30 @@ class ProtectParam(NamedTuple):
             fcu=0.80884,
             tba=4.75,
             tmax=150,
-            expected_ajwpro=17475706.393616617,
+            # These are picked to more or less correspond to the previous model
+            peak_field=0.0,
+            cu_rrr=33.0,
+            fluence=0.0,
+            detection_time=0.0,
+            expected_ajwpro=17785745.149250004,
+            expected_vd=10001.287165953383,
+        ),
+        # Test new model features
+        ProtectParam(
+            aio=74026.751437500003,
+            tfes=9561415368.8360519,
+            acs=0.001293323051622732,
+            aturn=0.0032012300777680192,
+            tdump=25.829000000000001,
+            fcond=0.63927285511442711,
+            fcu=0.80884,
+            tba=4.75,
+            tmax=150,
+            peak_field=11.0,
+            cu_rrr=200.0,
+            fluence=3.2e21,
+            detection_time=3.0,
+            expected_ajwpro=15248071.694109693,
             expected_vd=10001.287165953383,
         ),
     ),
@@ -88,6 +119,10 @@ def test_protect(protectparam, sctfcoil):
         fcu=protectparam.fcu,
         tba=protectparam.tba,
         tmax=protectparam.tmax,
+        peak_field=protectparam.peak_field,
+        cu_rrr=protectparam.cu_rrr,
+        detection_time=protectparam.detection_time,
+        fluence=protectparam.fluence,
     )
 
     assert ajwpro == pytest.approx(protectparam.expected_ajwpro)
