@@ -17,7 +17,7 @@ To add a `PROCESS` input, please follow below:
 
 1. Choose the most relevant module `XX` and add the variable in the `XX_variables` defined in `XX_variables.f90`.
  
-2. Add a description of the input variable below the declaration, using the FORD      formating decribed in the standards section specifying the units.
+2. Add a description of the input variable below the declaration, using the FORD      formatting described in the standards section specifying the units.
   
 3. Specify a sensible default value in the `init_XX_variables()` function within the corresponding model `.py` main file
   
