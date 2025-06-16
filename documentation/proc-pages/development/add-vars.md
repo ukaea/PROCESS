@@ -66,7 +66,7 @@ initialised (in the relevant module, or in the input file if required).
 Otherwise, the numerical procedure cannot adjust the value as it requires, and
 the program will fail.
 
-Here is a code snipet showing how `rmajor` is defined in `iteration_variables.py`
+Here is a code snippet showing how `rmajor` is defined in `iteration_variables.py`
 
 ```python
 ITERATION_VARIABLES = {
