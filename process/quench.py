@@ -421,6 +421,93 @@ def calculate_quench_protection_current_density(
 
 if __name__ == "__main__":
     # TODO: Remove once PR is reviewed
+
+    def legacy_protect(aio, tfes, acs, aturn, tdump, fcond, fcu, tba, tmax):
+        """Finds the current density limited by the protection limit
+        author: P J Knight, CCFE, Culham Science Centre
+        author: J Miller, ORNL
+        aio : input real : Operating current (A)
+        tfes : input real : Energy stored in one TF coil (J)
+        acs : input real : Cable space - inside area (m2)
+        aturn : input real : Area per turn (i.e.  entire cable) (m2)
+        tdump : input real : Dump time (sec)
+        fcond : input real : Fraction of cable space containing conductor
+        fcu : input real : Fraction of conductor that is copper
+        tba : input real : He temperature at peak field point (K)
+        tmax : input real : Max conductor temperature during quench (K)
+        ajwpro : output real :  Winding pack current density from temperature
+        rise protection (A/m2)
+        vd : output real :  Discharge voltage imposed on a TF coil (V)
+        This routine calculates maximum conductor current density which
+        limits the peak temperature in the winding to a given limit (tmax).
+        It also finds the dump voltage.
+        <P>These calculations are based on Miller's formulations.
+        """
+        # Integration coefficients p1,p2,p3
+        p1 = (
+            0.0e0,
+            0.8e0,
+            1.75e0,
+            2.4e0,
+            2.7e0,
+            2.95e0,
+            3.1e0,
+            3.2e0,
+            3.3e0,
+            3.4e0,
+            3.5e0,
+        )
+        p2 = (
+            0.0e0,
+            0.05e0,
+            0.5e0,
+            1.4e0,
+            2.6e0,
+            3.7e0,
+            4.6e0,
+            5.3e0,
+            5.95e0,
+            6.55e0,
+            7.1e0,
+        )
+        p3 = (
+            0.0e0,
+            0.05e0,
+            0.5e0,
+            1.4e0,
+            2.6e0,
+            3.7e0,
+            4.6e0,
+            5.4e0,
+            6.05e0,
+            6.8e0,
+            7.2e0,
+        )
+
+        #  Dump voltage
+
+        vd = 2.0e0 * tfes / (tdump * aio)
+
+        #  Current density limited by temperature rise during quench
+
+        tav = 1.0e0 + (tmax - tba) / 20.0e0
+        n_o = int(tav)
+        n_p = n_o + 1
+        n_p = min(n_p, 11)
+
+        ai1 = 1.0e16 * (p1[n_o - 1] + (p1[n_p - 1] - p1[n_o - 1]) * (tav - n_o))
+        ai2 = 1.0e16 * (p2[n_o - 1] + (p2[n_p - 1] - p2[n_o - 1]) * (tav - n_o))
+        ai3 = 1.0e16 * (p3[n_o - 1] + (p3[n_p - 1] - p3[n_o - 1]) * (tav - n_o))
+
+        aa = vd * aio / tfes
+        bb = (1.0e0 - fcond) * fcond * fcu * ai1
+        cc = (fcu * fcond) ** 2 * ai2
+        dd = (1.0e0 - fcu) * fcu * fcond**2 * ai3
+        ajcp = np.sqrt(aa * (bb + cc + dd))
+        ajwpro = ajcp * (acs / aturn)
+
+        return ajwpro, vd
+
     import matplotlib as mpl
     import matplotlib.pyplot as plt
 
@@ -744,4 +831,97 @@ if __name__ == "__main__":
     ax.set_xlabel("T [K]")
     ax.set_ylabel("nu [Ohm.m]")
     ax.set_title("B = 0 T, RRR = 100")
+    plt.show()
+
+    # Benchmark with previous model
+
+    # To enable 1:1 comparison
+    aio = 1.0
+    tfes = 1.0
+
+    # Extracted from baseline_2017 in PROCESS/tests/regression
+    conductor_current = 65e3
+    stored_energy = 1.699e11 / 16.0
+    dump_voltage = 10.89e3
+    tau_discharge = 30.0
+    # tau_discharge: f64 = 2.0* stored_energy / (conductor_current * 10.89e3);
+    peak_field = 11.84
+    f_he = 0.3444  # f_he_tot
+    f_cu = 0.69
+    t_he_peak = 4.75
+    t_max = 150.0
+
+    # Additional inputs
+    cu_rrr = 100.0
+    detection_time = 0.0
+    fluence = 3.2e21
+
+    aturn = 2.502e08 / (23.349e6 * 16.0 * 240.6)
+    acs = 1.723e-3
+
+    j_legacy, _ = legacy_protect(
+        aio, tfes, acs, aturn, tau_discharge, 1 - f_he, f_cu, t_he_peak, t_max
+    )
+    j_new = (
+        acs
+        / aturn
+        * calculate_quench_protection_current_density(
+            tau_discharge,
+            peak_field,
+            f_cu,
+            f_he,
+            t_he_peak,
+            t_max,
+            cu_rrr,
+            detection_time,
+            fluence,
+        )
+    )
+
+    # NOTE: I can't quite replicate the inputs going into the function from the OUT.DAT... hence the discrepancy between
+    # the reference value and the calculated one here.
+    print("PROCESS 2017 baseline: 23.489 MA/m^2")
+    print(f"PROCESS 2017 baseline (legacy): {j_legacy / 1e6:.3f} MA/m^2")
+    print(
+        f"PROCESS 2017 baseline (new, with RRR=100, field and fluence): {j_new / 1e6:.3f} MA/m^2"
+    )
+
+    # Benchmark with no field and fluence
+    fluence = 0.0
+    peak_field = 0.0
+    t_max = np.linspace(20, 220, 100)
+
+    f, ax = plt.subplots()
+
+    j_legacy = np.zeros_like(t_max)
+    j_new = np.zeros_like(t_max)
+    for i, tm in enumerate(t_max):
+        j_legacy[i], _ = legacy_protect(
+            aio, tfes, acs, aturn, tau_discharge, 1 - f_he, f_cu, t_he_peak, tm
+        )
+
+    ax.plot(t_max, j_legacy / 1e6, label="PROCESS legacy")
+    for rrr in np.linspace(10.0, 100, 5):
+        for i, tm in enumerate(t_max):
+            j_new[i] = (
+                acs
+                / aturn
+                * calculate_quench_protection_current_density(
+                    tau_discharge,
+                    peak_field,
+                    f_cu,
+                    f_he,
+                    t_he_peak,
+                    tm,
+                    rrr,
+                    detection_time,
+                    fluence,
+                )
+            )
+
+        ax.plot(t_max, j_new / 1e6, label=f"PROCESS new RRR = {rrr}")
+    ax.set_xlabel("T_max [K]")
+    ax.set_ylabel("J_quench [MA/m^2]")
+    ax.set_title("Comparison of legacy model with new model (no field or fluence)")
+    ax.legend()
     plt.show()
