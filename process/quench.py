@@ -1,4 +1,5 @@
 from typing import Final
+from warnings import warn
 
 import numpy as np
 
@@ -17,6 +18,7 @@ def _copper_density(temperature: float) -> float:  # noqa: ARG001
     return 8960.0  # No plans to include T-dependence
 
 
+# TODO: Remove once PR is reviewed
 def _copper_specific_heat_capacity_dresner(temperature: float) -> float:
     """
     Calculates the specific heat capacity of cryogenic copper at a given temperature [J/(kg·K)].
@@ -396,13 +398,10 @@ def calculate_quench_protection_current_density(
         vs. total WP cross-section (including jacket and insulation).
         - Presently only applicable to LTS TF coil winding packs (Nb3Sn assumed)
     """
-    # Input warnings
-    # TODO: Apply PROCESS kludging / warning conventions
-    cu_rrr = np.clip(cu_rrr, 1.0, None)
-    t_he_peak = np.clip(t_he_peak, 4.0, 300.0)
-    t_max = np.clip(t_max, 4.0, 300.0)
-    fluence = np.clip(fluence, 0.0, 15e22)
-    tau_discharge = np.clip(tau_discharge, 1e-3, None)
+    # Default fluence is too high for this model
+    if (fluence < 0.0) | (fluence > 1.5e23):
+        warn("Fluence values out of range [0.0, 1.5e23]; kludging.", stacklevel=2)
+        fluence = np.clip(fluence, 0.0, 1.5e23)
 
     i_he, i_cu, i_sc = _quench_integrals(
         t_he_peak, t_max, peak_field, cu_rrr, fluence, n_quad
@@ -421,7 +420,7 @@ def calculate_quench_protection_current_density(
 
 
 if __name__ == "__main__":
-    # TODO: This will be removed
+    # TODO: Remove once PR is reviewed
     import matplotlib as mpl
     import matplotlib.pyplot as plt
 
