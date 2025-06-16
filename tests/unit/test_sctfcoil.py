@@ -9,6 +9,7 @@ from process.fortran import (
     global_variables,
     sctfcoil_module,
     tfcoil_variables,
+    constraint_variables,
 )
 from process.superconducting_tf_coil import SuperconductingTFCoil
 
@@ -137,8 +138,6 @@ class SuperconParam(NamedTuple):
 
     temp_margin: Any = None
 
-    jwdgpro: Any = None
-
     dia_tf_turn_coolant_channel: Any = None
 
     c_tf_turn: Any = None
@@ -191,6 +190,12 @@ class SuperconParam(NamedTuple):
 
     temp_tf_conductor_peak_quench: Any = None
 
+    cu_rrr: Any = None
+
+    detection_time: Any = None
+
+    fluence: Any = None
+
     bcritsc: Any = None
 
     tcritsc: Any = None
@@ -213,7 +218,6 @@ class SuperconParam(NamedTuple):
             tmargmin_tf=1.5,
             n_tf_coils=16,
             temp_margin=0,
-            jwdgpro=0,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
@@ -240,10 +244,15 @@ class SuperconParam(NamedTuple):
             e_tf_coil_magnetic_stored=9548964780.4287167,
             temp_tf_coolant_peak_field=4.75,
             temp_tf_conductor_peak_quench=150,
+            # These are picked to more or less correspond to the previous model
+            # (but now we are bringing in magnetoresistivity)
+            cu_rrr=33.0,
+            fluence=0.0,
+            detection_time=0.0,
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.34312129,
-            expected_jwdgpro=17475706.393616617,
+            expected_jwdgpro=15838280.972356763,
             expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=9988.2637896807955,
             expected_tmarg=2.34312129,
@@ -252,7 +261,6 @@ class SuperconParam(NamedTuple):
             tmargmin_tf=1.5,
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
-            jwdgpro=17475706.393616617,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
@@ -279,10 +287,13 @@ class SuperconParam(NamedTuple):
             e_tf_coil_magnetic_stored=9561415368.8360519,
             temp_tf_coolant_peak_field=4.75,
             temp_tf_conductor_peak_quench=150,
+            cu_rrr=33.0,
+            fluence=0.0,
+            detection_time=0.0,
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.34312129,
-            expected_jwdgpro=17475706.393616617,
+            expected_jwdgpro=15838280.972356763,
             expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
@@ -291,7 +302,6 @@ class SuperconParam(NamedTuple):
             tmargmin_tf=1.5,
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
-            jwdgpro=17475706.393616617,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
@@ -318,10 +328,13 @@ class SuperconParam(NamedTuple):
             e_tf_coil_magnetic_stored=9561415368.8360519,
             temp_tf_coolant_peak_field=4.75,
             temp_tf_conductor_peak_quench=150,
+            cu_rrr=33.0,
+            fluence=0.0,
+            detection_time=0.0,
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.34312129,
-            expected_jwdgpro=17475706.393616617,
+            expected_jwdgpro=15838280.972356763,
             expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
@@ -350,7 +363,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "temp_margin", superconparam.temp_margin)
 
-    monkeypatch.setattr(tfcoil_variables, "jwdgpro", superconparam.jwdgpro)
+    monkeypatch.setattr(tfcoil_variables, "rrr_tf_cu", superconparam.cu_rrr)
+
+    monkeypatch.setattr(tfcoil_variables, "t_tf_quench_detection", superconparam.detection_time)
+
+    monkeypatch.setattr(constraint_variables, "nflutfmax", superconparam.fluence)
 
     monkeypatch.setattr(
         tfcoil_variables,
