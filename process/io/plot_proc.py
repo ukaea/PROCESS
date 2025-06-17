@@ -4344,6 +4344,64 @@ def plot_density_limit_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_cs_coil_structure(axis, mfile_data, scan, colour_scheme=1):
+    """Function to plot the coil structure of the CS.
+
+    Arguments:
+        axis --> axis object to plot to
+        mfile_data --> MFILE.DAT object
+        scan --> scan number to use
+        demo_ranges --> whether to use demo ranges for the plot
+        colour_scheme --> colour scheme to use for the plot
+    """
+    # Get CS coil parameters
+    dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
+    dz_cs = mfile_data.data["ohdz"].get_scan(scan)
+    dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
+
+    # Plot the right side of the CS
+    right_cs = patches.Rectangle(
+        (dr_bore, -dz_cs / 2),
+        dr_cs,
+        dz_cs,
+        edgecolor="black",
+        facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+        lw=1.5,
+        label="CS Coil",
+    )
+    axis.add_patch(right_cs)
+
+    # Plot the bore of the machine
+    bore_rect = patches.Rectangle(
+        (-dr_bore, -dz_cs / 2),
+        dr_bore * 2,
+        dz_cs,
+        edgecolor="black",
+        facecolor="lightgrey",
+        lw=1.0,
+        label="Bore",
+    )
+    axis.add_patch(bore_rect)
+
+    left_cs = patches.Rectangle(
+        (-dr_bore - dr_cs, -dz_cs / 2),
+        dr_cs,
+        dz_cs,
+        edgecolor="black",
+        facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+        lw=1.5,
+        label="CS Coil",
+    )
+    axis.add_patch(left_cs)
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Central Solenoid Cross-Section")
+    axis.grid(True, linestyle="--", alpha=0.3)
+    axis.set_xlim(-(dr_bore + dr_cs + 0.1), (dr_bore + dr_cs + 0.1))
+    axis.set_ylim(-dz_cs / 2 - 0.1, dz_cs / 2 + 0.1)
+
+
 def main_plot(
     fig1,
     fig2,
@@ -4354,6 +4412,7 @@ def main_plot(
     fig7,
     fig8,
     fig9,
+    fig10,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -4486,6 +4545,9 @@ def main_plot(
 
     plot_23 = fig9.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_23, m_file_data, scan)
+
+    plot_24 = fig10.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_24, m_file_data, scan)
 
 
 def main(args=None):
@@ -4758,6 +4820,7 @@ def main(args=None):
     page7 = plt.figure(figsize=(12, 9), dpi=80)
     page8 = plt.figure(figsize=(12, 9), dpi=80)
     page9 = plt.figure(figsize=(12, 9), dpi=80)
+    page10 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -4770,6 +4833,7 @@ def main(args=None):
         page7,
         page8,
         page9,
+        page10,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -4787,6 +4851,7 @@ def main(args=None):
         pdf.savefig(page7)
         pdf.savefig(page8)
         pdf.savefig(page9)
+        pdf.savefig(page10)
 
     # show fig if option used
     if args.show:
@@ -4801,6 +4866,7 @@ def main(args=None):
     plt.close(page7)
     plt.close(page8)
     plt.close(page9)
+    plt.close(page10)
 
 
 if __name__ == "__main__":
