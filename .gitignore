@@ -57,6 +57,8 @@ env_process/
 !tests/regression/input_files/*.IN.DAT
 !scenario_examples/*/*.pdf
 !stellerator_test/*.DAT
+stellarator_test/autostart/*
+!stellarator_test/autostart/*.py
 */.ipynb_checkpoints/
 REBCO_JC.DAT
 *.whl

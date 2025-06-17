@@ -58,6 +58,10 @@ icc = 83 * icc_placeforblanket
 boundl(1) = 3.09
 boundu(1) = 48.2
 
+ixc = 10 * itv_hfact
+boundu(10) = 1.3
+boundl(10) = 0.1
+
 ixc = 2 * itv_bt
 boundl(2) = 1.8
 boundu(2) = 18.9
@@ -74,13 +78,9 @@ ixc = 6 * itv_dene
 boundl(6) = 1.35e19
 boundu(6) = 8.35e21
 
-ixc = 10 * itv_hfact
-boundu(10) = 1.3
-boundl(10) = 0.1
-
-ixc = 25 * itv_fpnetel
-boundl(25) = 0.2
-boundu(25) = 1.
+*ixc = 25 * itv_fpnetel
+*boundl(25) = 0.2
+*boundu(25) = 1.
 
 ixc = 50 * itv_fiooic
 boundu(50) = 0.9 *0.8
@@ -92,11 +92,11 @@ boundl(59) = 0.086
 
 ixc = 56 * itv_tdmptf
 boundl(56) = 0.001
-boundu(56) = 200.
+boundu(56) = 50.   * 200.
 
-ixc = 169 * itv_te0ecrh
-boundl(169) = 4.
-boundu(169) = 35.
+*ixc = 169 * itv_te0ecrh
+*boundl(169) = 4.
+*boundu(169) = 35.
 
 ixc = 109 * itv_ralpne
 falpha_energy_confinement = 1.
@@ -113,7 +113,7 @@ ftoroidalgap = 1. * f value for toroidal gap between coils
 fbeta_max = 1.    * f value for beta limit
 ffuspow = 1.0
 f_alpha_plasma = 0.95    * fast particle fraction
-f_nd_alpha_electron = 0.05    * thermal alpha density / electron density
+f_nd_alpha_electron = 0.04    * thermal alpha density / electron density
 fradpwr = 1      * needed to control radiation power
 epsfcn = 0.0001  * convergence important to start with 10^-4, 10^-3 is NOT sufficient to match the constraint resonably well!!
 f_alpha_energy_confinement_min = 6     * tau_He/tau_E
@@ -138,15 +138,15 @@ bigqmin = 1 * Minimal BigQ
 powfmax = 1500. *Maximal Fusion Power
 fpnetel = 1. *f-value for net electric power
 
-dene = 1.6e20 *Electron density (/m3)
-hfact = 1.2 *H-factor on energy confinement times
+dene = 1.8e20 *Electron density (/m3)
+hfact = 0.7 *H-factor on energy confinement times
 
 alphan = 0.35 *Density profile index
 alphat = 1.2 *Temperature profile index
 
-bt = 6.00 *Toroidal field on axis (T)
-rmajor = 23.0 *Plasma major radius (m)
-aspect = 10.1 *Aspect ratio
+bt = 5.60 *Toroidal field on axis (T)
+rmajor = 16.5 *Plasma major radius (m)
+aspect = 10.3 *Aspect ratio
 
 * ifispact = 0   *Switch for neutronics calculations (0: Off)
 ignite = 1     *Switch for ignition assumption (1: Ignited)
@@ -156,7 +156,7 @@ i_rad_loss = 1   *Switch for radiation loss term usage in power balance (1: Tota
 i_confinement_time = 38       *Switch for energy confinement time scaling law (38: ISS04, 49: ISS04-Gyro-Bohm)
 kappa = 1.001  *Plasma separatrix elongation
 f_sync_reflect = 0.6    *Synchrotron wall reflectivity factor
-te = 8.685715225897034 *Volume averaged electron temperature (keV)
+te = 7.4 *Volume averaged electron temperature (keV)
 tratio = 0.95 *Ion temperature / electron temperature
 *zfear = 0 *High-Z impurity switch (0: Iron)
 
@@ -260,9 +260,10 @@ fimp(14) = 0.
 *---------------------Numerics---------------------*
 
 ioptimz = 1 *Code operation switch (1: Optimisation, VMCON only)
-maxcal = 1000 *Maximum number of VMCON iterations
-minmax = 7 *Switch for figure-of-merit (7: Min Capital Cost)
-runtitle = HELIAS_DEMO_6
+maxcal = 600 *Maximum number of VMCON iterations
+* minmax = 7 *Switch for figure-of-merit (7: Min Capital Cost)
+minmax = 1 *Switch for figure-of-merit (1: Major radius)
+runtitle = SQuID
 
 *-----------------Tfcoil Variables-----------------*
 
@@ -285,7 +286,7 @@ t_turn_tf = 0.037 * Dimension conductor area including steel and insulation. Fro
 thicndut = 0.001 * Conduit insulation thickness (m)
 thwcndut = 0.006 * thickness of steel around each conductor
 tinstf = 0.01 * insulation on top of winding pack
-tdmptf = 10 * Dump time
+tdmptf = 12 * Dump time
 
 *-----------------Pfcoil Variables-----------------*
 

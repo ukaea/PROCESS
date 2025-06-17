@@ -1,4 +1,4 @@
-from process.main import SingleRun
+from process.main import SingleRun, VaryRun
 
 import subprocess
 from pdf2image import convert_from_path
@@ -8,12 +8,13 @@ from pathlib import Path
 import os
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
-# prefix = "/squid"
-prefix = "/updated"
+prefix = "/squid"
+# prefix = "/transition"
+# prefix = "/updated"
 # prefix = "/rebuild"
 # prefix = "/stellarator_helias_once_through"
 # prefix = "/helias_5b"
-prefix = "/helias5"
+# prefix = "/helias5"
 
 
 def postprocess(single_run):
@@ -37,6 +38,9 @@ if __name__ == "__main__":
     # Run process on an input file
     single_run = SingleRun(script_dir+prefix+".IN.DAT")
     single_run.run()
+
+    # vary_run = VaryRun(script_dir+prefix+".IN.DAT")
+    # vary_run.run()
 
     # Generate pdf with results
     # postprocess(single_run)
