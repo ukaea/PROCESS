@@ -4428,20 +4428,20 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
 
 def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     a_cs_turn = mfile_data.data["a_cs_turn"].get_scan(scan)
-    d_cond_cst = mfile_data.data["d_cond_cst"].get_scan(scan)
+    dz_cs_turn = mfile_data.data["dz_cs_turn"].get_scan(scan)
     l_cond_cst = mfile_data.data["l_cond_cst"].get_scan(scan)
 
     ld_ratio_cst = mfile_data.data["ld_ratio_cst"].get_scan(scan)
 
     # Plot the CS turn as a rectangle representing the conductor cross-section
-    # Assume d_cond_cst is the diameter and l_cond_cst is the length of the conductor cross-section
+    # Assume dz_cs_turn is the diameter and l_cond_cst is the length of the conductor cross-section
 
     # Draw the conductor cross-section as a rectangle
     axis.add_patch(
         patches.Rectangle(
             (0, 0),
             l_cond_cst,
-            d_cond_cst,
+            dz_cs_turn,
             edgecolor="black",
             facecolor="grey",
             lw=1.5,
@@ -4452,13 +4452,13 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     # Draw the aspect ratio line (L/D)
     axis.annotate(
         "",
-        xy=(l_cond_cst, d_cond_cst + d_cond_cst * 0.1),
-        xytext=(0, d_cond_cst + d_cond_cst * 0.1),
+        xy=(l_cond_cst, dz_cs_turn + dz_cs_turn * 0.1),
+        xytext=(0, dz_cs_turn + dz_cs_turn * 0.1),
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
     axis.text(
         l_cond_cst / 2,
-        d_cond_cst + d_cond_cst * 0.15,
+        dz_cs_turn + dz_cs_turn * 0.15,
         f"L = {l_cond_cst:.3f} m",
         ha="center",
         va="bottom",
@@ -4467,14 +4467,14 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
 
     axis.annotate(
         "",
-        xy=(l_cond_cst + l_cond_cst * 0.05, d_cond_cst),
+        xy=(l_cond_cst + l_cond_cst * 0.05, dz_cs_turn),
         xytext=(l_cond_cst + l_cond_cst * 0.05, 0),
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
     axis.text(
         l_cond_cst + l_cond_cst * 0.08,
-        d_cond_cst / 2,
-        f"D = {d_cond_cst:.3f} m",
+        dz_cs_turn / 2,
+        f"D = {dz_cs_turn:.3f} m",
         ha="left",
         va="center",
         fontsize=10,
@@ -4484,7 +4484,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     # Show L/D ratio
     axis.text(
         l_cond_cst / 2,
-        -d_cond_cst * 0.2,
+        -dz_cs_turn * 0.2,
         f"L/D = {ld_ratio_cst:.2f}",
         ha="center",
         va="top",
@@ -4514,7 +4514,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     )
 
     axis.set_xlim(-l_cond_cst * 0.2, l_cond_cst * 1.2)
-    axis.set_ylim(-d_cond_cst * 0.3, d_cond_cst * 1.3)
+    axis.set_ylim(-dz_cs_turn * 0.3, dz_cs_turn * 1.3)
     axis.set_aspect("equal")
     axis.set_xlabel("Length [m]")
     axis.set_ylabel("Height [m]")
