@@ -4408,7 +4408,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
                 [-dz_cs / 2, dz_cs / 2],
                 color="black",
                 linestyle="--",
-                linewidth=0.5,
+                linewidth=0.2,
             )
             x_left = -dr_bore - dr_cs + i * dr_cs_turn
             axis.plot(
@@ -4416,7 +4416,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
                 [-dz_cs / 2, dz_cs / 2],
                 color="black",
                 linestyle="--",
-                linewidth=0.5,
+                linewidth=0.2,
             )
     # Plot horizontal lines (along Z) for each turn
     if dz_cs_turn > 0:
@@ -4429,7 +4429,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
                 [y, y],
                 color="black",
                 linestyle="--",
-                linewidth=0.5,
+                linewidth=0.2,
             )
             # Left CS
             axis.plot(
@@ -4437,7 +4437,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
                 [y, y],
                 color="black",
                 linestyle="--",
-                linewidth=0.5,
+                linewidth=0.2,
             )
 
     textstr_cs = (
@@ -4713,17 +4713,17 @@ def main_plot(
     plot_21 = fig8.add_subplot(111)
     plot_current_profiles_over_time(plot_21, m_file_data, scan)
 
-    plot_22 = fig9.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_22, m_file_data, scan)
+    plot_22 = fig9.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_22, fig9, m_file_data, scan)
 
-    plot_23 = fig9.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_23, m_file_data, scan)
+    plot_23 = fig9.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_23, fig9, m_file_data, scan)
 
-    plot_24 = fig10.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_24, fig10, m_file_data, scan)
+    plot_24 = fig10.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_24, m_file_data, scan)
 
-    plot_25 = fig10.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_25, fig10, m_file_data, scan)
+    plot_25 = fig10.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_25, m_file_data, scan)
 
 
 def main(args=None):
