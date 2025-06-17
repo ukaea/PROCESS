@@ -1159,12 +1159,11 @@ class PFCoil:
         )
 
         # Thickness of steel conduit in cs turn
-        csfv.t_structural_radial = (pfv.dz_cs_turn / 2) - pfv.radius_cs_turn_cable_space
+        csfv.t_structural_vertical = (
+            pfv.dz_cs_turn / 2
+        ) - pfv.radius_cs_turn_cable_space
         # In this model the vertical and radial have the same thickness
-        csfv.t_structural_vertical = csfv.t_structural_radial
-        # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
+        csfv.t_structural_radial = csfv.t_structural_vertical
 
         # Non-steel area void fraction for coolant
         pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
@@ -2091,6 +2090,34 @@ class PFCoil:
             "Length to diameter ratio of a CS turn",
             "(ld_ratio_cst)",
             pfv.ld_ratio_cst,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radius of CS turn cable space [m]",
+            "(radius_cs_turn_cable_space)",
+            pfv.radius_cs_turn_cable_space,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial thickness of steel conduit to cable space [m]",
+            "(t_structural_radial)",
+            csfv.t_structural_radial,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Vertical thickness of steel conduit to cable space [m]",
+            "(t_structural_vertical)",
+            csfv.t_structural_vertical,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Corner radius of CS turn [m]",
+            "(r_out_cst)",
+            pfv.r_out_cst,
             "OP ",
         )
 
