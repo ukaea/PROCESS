@@ -62,7 +62,12 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 
 <figure markdown>
 ![plot_proc_9](../images/plot_proc_9.PNG){ width="100%"}
-<figcaption>Figure 9: plot_proc first wall comparison page  </figcaption>
+<figcaption>Figure 9: plot_proc central solenoid and turn cross-section page  </figcaption>
+</figure>
+
+<figure markdown>
+![plot_proc_10](../images/plot_proc_10.PNG){ width="100%"}
+<figcaption>Figure 10: plot_proc first wall comparison page  </figcaption>
 </figure>
 
 ----------------
