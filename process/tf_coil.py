@@ -3308,22 +3308,22 @@ class TFCoil:
 
                 # CS coil turn geometry calculation - stadium shape
                 # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-                d_cond_cst = (
+                dz_cs_turn = (
                     a_cs_turn / ld_ratio_cst
                 ) ** 0.5  # width of cs turn conduit
-                l_cond_cst = ld_ratio_cst * d_cond_cst  # length of cs turn conduit
+                l_cond_cst = ld_ratio_cst * dz_cs_turn  # length of cs turn conduit
                 # Radius of turn space = r_in_cst
                 # Radius of curved outer corrner r_out_cst = 3mm from literature
                 # ld_ratio_cst = 70 / 22 from literature
-                p1 = ((l_cond_cst - d_cond_cst) / np.pi) ** 2
+                p1 = ((l_cond_cst - dz_cs_turn) / np.pi) ** 2
                 p2 = (
-                    (l_cond_cst * d_cond_cst)
+                    (l_cond_cst * dz_cs_turn)
                     - (4 - np.pi) * (r_out_cst**2)
                     - (a_cs_turn * f_a_cs_steel)
                 ) / np.pi
-                r_in_cst = -((l_cond_cst - d_cond_cst) / np.pi) + np.sqrt(p1 + p2)
+                r_in_cst = -((l_cond_cst - dz_cs_turn) / np.pi) + np.sqrt(p1 + p2)
                 t_cond_oh = (
-                    d_cond_cst / 2
+                    dz_cs_turn / 2
                 ) - r_in_cst  # thickness of steel conduit in cs turn
 
                 # OH/CS conduit thickness calculated assuming square conduit [m]
