@@ -405,6 +405,6 @@ module pfcoil_variables
   real(dp) :: r_out_cst
   !! Length of CS of CS coil turn conduit length
 
-  real(dp) :: r_in_cst
+  real(dp) :: radius_cs_turn_cable_space
   !! Length of CS of CS coil turn conduit length
 end module pfcoil_variables

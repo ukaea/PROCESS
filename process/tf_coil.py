@@ -3312,7 +3312,7 @@ class TFCoil:
                     a_cs_turn / ld_ratio_cst
                 ) ** 0.5  # width of cs turn conduit
                 dr_cs_turn = ld_ratio_cst * dz_cs_turn  # length of cs turn conduit
-                # Radius of turn space = r_in_cst
+                # Radius of turn space = radius_cs_turn_cable_space
                 # Radius of curved outer corrner r_out_cst = 3mm from literature
                 # ld_ratio_cst = 70 / 22 from literature
                 p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
@@ -3321,16 +3321,18 @@ class TFCoil:
                     - (4 - np.pi) * (r_out_cst**2)
                     - (a_cs_turn * f_a_cs_steel)
                 ) / np.pi
-                r_in_cst = -((dr_cs_turn - dz_cs_turn) / np.pi) + np.sqrt(p1 + p2)
+                radius_cs_turn_cable_space = -(
+                    (dr_cs_turn - dz_cs_turn) / np.pi
+                ) + np.sqrt(p1 + p2)
                 t_cond_oh = (
                     dz_cs_turn / 2
-                ) - r_in_cst  # thickness of steel conduit in cs turn
+                ) - radius_cs_turn_cable_space  # thickness of steel conduit in cs turn
 
                 # OH/CS conduit thickness calculated assuming square conduit [m]
                 # The CS insulation layer is assumed to the same as the TF one
 
                 # CS turn cable space thickness
-                t_cable_oh = r_in_cst * 2
+                t_cable_oh = radius_cs_turn_cable_space * 2
                 # -#
 
                 # Smeared elastic properties of the CS
