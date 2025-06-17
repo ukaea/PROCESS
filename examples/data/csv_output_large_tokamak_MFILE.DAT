@@ -811,7 +811,7 @@
  Initial_radial_crack_size_(m)___________________________________________ (t_crack_radial)______________      2.6700E-03    
  CS_turn_area_(m)________________________________________________________ (a_cs_turn)___________________      1.9935E-03    
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.7333E-02    
- CS_turn_internal_cable_space_radius_(m)_________________________________ (r_in_cst)____________________      7.3195E-03    
+ CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.3195E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5778E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      5.5693E-03    
  CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      5.5693E-03    
