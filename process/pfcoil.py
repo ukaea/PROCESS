@@ -1133,25 +1133,25 @@ class PFCoil:
         pfv.a_cs_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
 
         # Depth/width of cs turn conduit
-        pfv.d_cond_cst = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
+        pfv.dz_cs_turn = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
         # length of cs turn conduit
-        pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.d_cond_cst
+        pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.dz_cs_turn
         # Radius of turn space = pfv.r_in_cst
         # Radius of curved outer corrner pfv.r_out_cst = 3mm from literature
         # pfv.ld_ratio_cst = 70 / 22 from literature
-        p1_cst = ((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) ** 2
+        p1_cst = ((pfv.l_cond_cst - pfv.dz_cs_turn) / constants.pi) ** 2
         p2_cst = (
-            (pfv.l_cond_cst * pfv.d_cond_cst)
+            (pfv.l_cond_cst * pfv.dz_cs_turn)
             - (4 - constants.pi) * (pfv.r_out_cst**2)
             - (pfv.a_cs_turn * pfv.f_a_cs_steel)
         ) / constants.pi
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfv.r_in_cst = -((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) + math.sqrt(
+        pfv.r_in_cst = -((pfv.l_cond_cst - pfv.dz_cs_turn) / constants.pi) + math.sqrt(
             p1_cst + p2_cst
         )
         # Thickness of steel conduit in cs turn
-        csfv.t_structural_radial = (pfv.d_cond_cst / 2) - pfv.r_in_cst
+        csfv.t_structural_radial = (pfv.dz_cs_turn / 2) - pfv.r_in_cst
         # In this model the vertical and radial have the same thickness
         csfv.t_structural_vertical = csfv.t_structural_radial
         # add a check for negative conduit thickness
@@ -2067,8 +2067,8 @@ class PFCoil:
         op.ovarre(
             self.outfile,
             "Radial width a CS turn [m^2]",
-            "(d_cond_cst)",
-            pfv.d_cond_cst,
+            "(dz_cs_turn)",
+            pfv.dz_cs_turn,
             "OP ",
         )
         op.ovarre(
@@ -2412,8 +2412,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS turn width (m)",
-                        "(d_cond_cst)",
-                        pfv.d_cond_cst,
+                        "(dz_cs_turn)",
+                        pfv.dz_cs_turn,
                     )
                     op.ovarre(
                         self.outfile,
@@ -3657,6 +3657,6 @@ def init_pfcoil_variables():
     pfv.fb_cs_limit_max = 1.0
     pfv.ld_ratio_cst = 70.0 / 22.0
     pfv.l_cond_cst = 0.0
-    pfv.d_cond_cst = 0.0
+    pfv.dz_cs_turn = 0.0
     pfv.r_in_cst = 0.0
     pfv.r_out_cst = 3.0e-3
