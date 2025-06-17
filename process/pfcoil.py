@@ -1135,19 +1135,19 @@ class PFCoil:
         # Depth/width of cs turn conduit
         pfv.dz_cs_turn = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
         # length of cs turn conduit
-        pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.dz_cs_turn
+        pfv.dr_cs_turn = pfv.ld_ratio_cst * pfv.dz_cs_turn
         # Radius of turn space = pfv.r_in_cst
         # Radius of curved outer corrner pfv.r_out_cst = 3mm from literature
         # pfv.ld_ratio_cst = 70 / 22 from literature
-        p1_cst = ((pfv.l_cond_cst - pfv.dz_cs_turn) / constants.pi) ** 2
+        p1_cst = ((pfv.dr_cs_turn - pfv.dz_cs_turn) / constants.pi) ** 2
         p2_cst = (
-            (pfv.l_cond_cst * pfv.dz_cs_turn)
+            (pfv.dr_cs_turn * pfv.dz_cs_turn)
             - (4 - constants.pi) * (pfv.r_out_cst**2)
             - (pfv.a_cs_turn * pfv.f_a_cs_steel)
         ) / constants.pi
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfv.r_in_cst = -((pfv.l_cond_cst - pfv.dz_cs_turn) / constants.pi) + math.sqrt(
+        pfv.r_in_cst = -((pfv.dr_cs_turn - pfv.dz_cs_turn) / constants.pi) + math.sqrt(
             p1_cst + p2_cst
         )
         # Thickness of steel conduit in cs turn
@@ -2074,8 +2074,8 @@ class PFCoil:
         op.ovarre(
             self.outfile,
             "Length of a CS turn [m]",
-            "(l_cond_cst)",
-            pfv.l_cond_cst,
+            "(dr_cs_turn)",
+            pfv.dr_cs_turn,
             "OP ",
         )
         op.ovarre(
@@ -2400,8 +2400,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS turn length (m)",
-                        "(l_cond_cst)",
-                        pfv.l_cond_cst,
+                        "(dr_cs_turn)",
+                        pfv.dr_cs_turn,
                     )
                     op.ovarre(
                         self.outfile,
@@ -3656,7 +3656,7 @@ def init_pfcoil_variables():
     pfv.b_cs_limit_max = 13.0
     pfv.fb_cs_limit_max = 1.0
     pfv.ld_ratio_cst = 70.0 / 22.0
-    pfv.l_cond_cst = 0.0
+    pfv.dr_cs_turn = 0.0
     pfv.dz_cs_turn = 0.0
     pfv.r_in_cst = 0.0
     pfv.r_out_cst = 3.0e-3

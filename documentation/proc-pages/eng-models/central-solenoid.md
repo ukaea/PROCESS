@@ -97,7 +97,7 @@ An example output follows.  Note that in this example the cycle life is *not* su
  Initial vertical crack size (m)                                          (t_crack_vertical)        8.900E-04     
  Initial radial crack size (m)                                            (t_crack_radial)          2.670E-03     
  CS turn area (m)                                                         (a_cs_turn)               1.904E-03     
- CS turn length (m)                                                       (l_cond_cst)              7.557E-02     
+ CS turn length (m)                                                       (dr_cs_turn)              7.557E-02     
  CS turn internal cable space radius (m)                                  (r_in_cst)                6.732E-03     
  CS turn width (m)                                                        (dz_cs_turn)              2.519E-02     
  CS structural vertical thickness (m)                                     (t_structural_vertical)   5.863E-03     

@@ -396,7 +396,7 @@ module pfcoil_variables
   real(dp) :: ld_ratio_cst
   !! Ratio of CS coil turn conduit length to depth
 
-  real(dp) :: l_cond_cst
+  real(dp) :: dr_cs_turn
   !! Length of CS of CS coil turn conduit
 
   real(dp) :: dz_cs_turn
