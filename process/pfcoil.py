@@ -52,6 +52,7 @@ class PFCoil:
 
     def output(self):
         """Output results to output file."""
+        self.output_cs_structure()
         self.outpf()
         self.outvolt()
 
@@ -2050,6 +2051,41 @@ class PFCoil:
                 f"Plasma\t{pfv.ind_pf_cs_plasma_mutual[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 1]}",
             )
 
+    def output_cs_structure(self):
+        op.oheadr(self.outfile, "Central Solenoid Structure")
+
+        op.ocmmnt(self.outfile, "CS turn structure")
+        op.oblnkl(self.outfile)
+
+        op.ovarre(
+            self.outfile,
+            "Poloidal area of a CS turn [m^2]",
+            "(a_cs_turn)",
+            pfv.a_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial width a CS turn [m^2]",
+            "(d_cond_cst)",
+            pfv.d_cond_cst,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Length of a CS turn [m]",
+            "(l_cond_cst)",
+            pfv.l_cond_cst,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Length to diameter ratio of a CS turn",
+            "(ld_ratio_cst)",
+            pfv.ld_ratio_cst,
+            "OP ",
+        )
+
     def outpf(self):
         """Routine to write output from PF coil module to file.
 
@@ -2692,10 +2728,11 @@ class PFCoil:
                     f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
-                op.write(
-                    self.outfile,
-                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
-                )
+                # op.write(
+                #     self.outfile,
+                #     f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
+                # )
+                pass
 
         # Miscellaneous totals
         op.write(

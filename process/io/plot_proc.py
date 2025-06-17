@@ -4344,7 +4344,7 @@ def plot_density_limit_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_cs_coil_structure(axis, mfile_data, scan, colour_scheme=1):
+def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
     """Function to plot the coil structure of the CS.
 
     Arguments:
@@ -4394,12 +4394,133 @@ def plot_cs_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     )
     axis.add_patch(left_cs)
 
+    textstr_cs = (
+        f"$\\mathbf{{Shaping:}}$\n \n"
+        f"$A:$ {mfile_data.data['a_cs_poloidal'].get_scan(scan):.2f}$ \\ m$\n"
+        f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
+        f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.2f}$ \\ MA$\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.2f}$ \\ T$\n"
+    )
+
+    axis.text(
+        0.6,
+        0.825,
+        textstr_cs,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
     axis.set_title("Central Solenoid Cross-Section")
     axis.grid(True, linestyle="--", alpha=0.3)
     axis.set_xlim(-(dr_bore + dr_cs + 0.1), (dr_bore + dr_cs + 0.1))
     axis.set_ylim(-dz_cs / 2 - 0.1, dz_cs / 2 + 0.1)
+
+
+def plot_cs_turn_structure(axis, fig, mfile_data, scan):
+    a_cs_turn = mfile_data.data["a_cs_turn"].get_scan(scan)
+    d_cond_cst = mfile_data.data["d_cond_cst"].get_scan(scan)
+    l_cond_cst = mfile_data.data["l_cond_cst"].get_scan(scan)
+
+    ld_ratio_cst = mfile_data.data["ld_ratio_cst"].get_scan(scan)
+
+    # Plot the CS turn as a rectangle representing the conductor cross-section
+    # Assume d_cond_cst is the diameter and l_cond_cst is the length of the conductor cross-section
+
+    # Draw the conductor cross-section as a rectangle
+    axis.add_patch(
+        patches.Rectangle(
+            (0, 0),
+            l_cond_cst,
+            d_cond_cst,
+            edgecolor="black",
+            facecolor="grey",
+            lw=1.5,
+            label="CS Turn Steel conduit",
+        )
+    )
+
+    # Draw the aspect ratio line (L/D)
+    axis.annotate(
+        "",
+        xy=(l_cond_cst, d_cond_cst + d_cond_cst * 0.1),
+        xytext=(0, d_cond_cst + d_cond_cst * 0.1),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.text(
+        l_cond_cst / 2,
+        d_cond_cst + d_cond_cst * 0.15,
+        f"L = {l_cond_cst:.3f} m",
+        ha="center",
+        va="bottom",
+        fontsize=10,
+    )
+
+    axis.annotate(
+        "",
+        xy=(l_cond_cst + l_cond_cst * 0.05, d_cond_cst),
+        xytext=(l_cond_cst + l_cond_cst * 0.05, 0),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.text(
+        l_cond_cst + l_cond_cst * 0.08,
+        d_cond_cst / 2,
+        f"D = {d_cond_cst:.3f} m",
+        ha="left",
+        va="center",
+        fontsize=10,
+        rotation=90,
+    )
+
+    # Show L/D ratio
+    axis.text(
+        l_cond_cst / 2,
+        -d_cond_cst * 0.2,
+        f"L/D = {ld_ratio_cst:.2f}",
+        ha="center",
+        va="top",
+        fontsize=12,
+        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
+    )
+
+    # Add plasma volume, areas and shaping information
+    textstr_turn = (
+        f"$\\mathbf{{Turn \\ structure:}}$\n$A:$ {a_cs_turn:.4e}$ \\ \\text{{m}}^2$\n"
+    )
+
+    axis.text(
+        0.6,
+        0.5,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.set_xlim(-l_cond_cst * 0.2, l_cond_cst * 1.2)
+    axis.set_ylim(-d_cond_cst * 0.3, d_cond_cst * 1.3)
+    axis.set_aspect("equal")
+    axis.set_xlabel("Length [m]")
+    axis.set_ylabel("Height [m]")
+    axis.set_title("CS Turn Conductor Cross-Section")
+    axis.legend()
+    axis.grid(True, linestyle="--", alpha=0.3)
 
 
 def main_plot(
@@ -4547,7 +4668,12 @@ def main_plot(
     plot_first_wall_poloidal_cross_section(plot_23, m_file_data, scan)
 
     plot_24 = fig10.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_24, m_file_data, scan)
+    plot_cs_coil_structure(plot_24, fig10, m_file_data, scan)
+
+    plot_25 = fig10.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(
+        plot_25, fig10, m_file_data, scan, colour_scheme=colour_scheme
+    )
 
 
 def main(args=None):
