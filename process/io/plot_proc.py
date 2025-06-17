@@ -4394,12 +4394,58 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
     )
     axis.add_patch(left_cs)
 
+    # Draw vertical lines to represent CS turns
+    # Get the turn width (radial thickness of each turn)
+    dr_cs_turn = mfile_data.data["dr_cs_turn"].get_scan(scan)
+    dz_cs_turn = mfile_data.data["dz_cs_turn"].get_scan(scan)
+    # Number of vertical lines (number of turns)
+    if dr_cs_turn > 0:
+        n_lines = int(dr_cs / dr_cs_turn)
+        for i in range(1, n_lines):
+            x = dr_bore + i * dr_cs_turn
+            axis.plot(
+                [x, x],
+                [-dz_cs / 2, dz_cs / 2],
+                color="black",
+                linestyle="--",
+                linewidth=0.5,
+            )
+            x_left = -dr_bore - dr_cs + i * dr_cs_turn
+            axis.plot(
+                [x_left, x_left],
+                [-dz_cs / 2, dz_cs / 2],
+                color="black",
+                linestyle="--",
+                linewidth=0.5,
+            )
+    # Plot horizontal lines (along Z) for each turn
+    if dz_cs_turn > 0:
+        n_hlines = int(dz_cs / dz_cs_turn)
+        for j in range(1, n_hlines):
+            y = -dz_cs / 2 + j * dz_cs_turn
+            # Right CS
+            axis.plot(
+                [dr_bore, dr_bore + dr_cs],
+                [y, y],
+                color="black",
+                linestyle="--",
+                linewidth=0.5,
+            )
+            # Left CS
+            axis.plot(
+                [-dr_bore - dr_cs, -dr_bore],
+                [y, y],
+                color="black",
+                linestyle="--",
+                linewidth=0.5,
+            )
+
     textstr_cs = (
-        f"$\\mathbf{{Shaping:}}$\n \n"
-        f"$A:$ {mfile_data.data['a_cs_poloidal'].get_scan(scan):.2f}$ \\ m$\n"
+        f"$\\mathbf{{Coil \\ parameters:}}$\n \n"
+        f"CS height vs TF internal height: {mfile_data.data['f_z_cs_tf_internal'].get_scan(scan):.2f}\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
-        f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.2f}$ \\ MA$\n"
-        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.2f}$ \\ T$\n"
+        f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n"
     )
 
     axis.text(
@@ -4432,16 +4478,23 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     dr_cs_turn = mfile_data.data["dr_cs_turn"].get_scan(scan)
 
     ld_ratio_cst = mfile_data.data["ld_ratio_cst"].get_scan(scan)
+    radius_cs_turn_cable_space = mfile_data.data["radius_cs_turn_cable_space"].get_scan(
+        scan
+    )
+    t_structural_vertical = mfile_data.data["t_structural_vertical"].get_scan(scan)
+    t_structural_radial = mfile_data.data["t_structural_radial"].get_scan(scan)
+    r_out_cst = mfile_data.data["r_out_cst"].get_scan(scan)
 
     # Plot the CS turn as a rectangle representing the conductor cross-section
     # Assume dz_cs_turn is the diameter and dr_cs_turn is the length of the conductor cross-section
 
     # Draw the conductor cross-section as a rectangle
     axis.add_patch(
-        patches.Rectangle(
+        patches.FancyBboxPatch(
             (0, 0),
             dr_cs_turn,
             dz_cs_turn,
+            boxstyle=patches.BoxStyle("Round", pad=0, rounding_size=r_out_cst),
             edgecolor="black",
             facecolor="grey",
             lw=1.5,
@@ -4449,52 +4502,51 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
         )
     )
 
-    # Draw the aspect ratio line (L/D)
-    axis.annotate(
-        "",
-        xy=(dr_cs_turn, dz_cs_turn + dz_cs_turn * 0.1),
-        xytext=(0, dz_cs_turn + dz_cs_turn * 0.1),
-        arrowprops={"arrowstyle": "<->", "color": "black"},
+    # Draw the conductor cross-section as a rectangle
+    axis.add_patch(
+        patches.Rectangle(
+            (t_structural_radial + radius_cs_turn_cable_space, t_structural_vertical),
+            dr_cs_turn - ((2 * t_structural_radial) + (2 * radius_cs_turn_cable_space)),
+            2 * radius_cs_turn_cable_space,
+            facecolor="white",
+            lw=1.5,
+            label="CS Turn Cable Space",
+            zorder=2,
+        )
     )
-    axis.text(
-        dr_cs_turn / 2,
-        dz_cs_turn + dz_cs_turn * 0.15,
-        f"L = {dr_cs_turn:.3f} m",
-        ha="center",
-        va="bottom",
-        fontsize=10,
+    # Plot the right hand circle for the CS turn cable space
+    axis.add_patch(
+        patches.Circle(
+            (
+                (dr_cs_turn - t_structural_radial - radius_cs_turn_cable_space),
+                dz_cs_turn / 2,
+            ),
+            radius_cs_turn_cable_space,
+            facecolor="white",
+            lw=1.5,
+            zorder=3,
+        )
     )
-
-    axis.annotate(
-        "",
-        xy=(dr_cs_turn + dr_cs_turn * 0.05, dz_cs_turn),
-        xytext=(dr_cs_turn + dr_cs_turn * 0.05, 0),
-        arrowprops={"arrowstyle": "<->", "color": "black"},
-    )
-    axis.text(
-        dr_cs_turn + dr_cs_turn * 0.08,
-        dz_cs_turn / 2,
-        f"D = {dz_cs_turn:.3f} m",
-        ha="left",
-        va="center",
-        fontsize=10,
-        rotation=90,
-    )
-
-    # Show L/D ratio
-    axis.text(
-        dr_cs_turn / 2,
-        -dz_cs_turn * 0.2,
-        f"L/D = {ld_ratio_cst:.2f}",
-        ha="center",
-        va="top",
-        fontsize=12,
-        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
+    # Plot the left hand circle for the CS turn cable space
+    axis.add_patch(
+        patches.Circle(
+            ((t_structural_radial + radius_cs_turn_cable_space), dz_cs_turn / 2),
+            radius_cs_turn_cable_space,
+            facecolor="white",
+            lw=1.5,
+            zorder=3,
+        )
     )
 
     # Add plasma volume, areas and shaping information
     textstr_turn = (
-        f"$\\mathbf{{Turn \\ structure:}}$\n$A:$ {a_cs_turn:.4e}$ \\ \\text{{m}}^2$\n"
+        f"$\\mathbf{{Turn \\ structure:}}$\n\n$A:$ {a_cs_turn:.4e}$ \\ \\text{{m}}^2$\n"
+        f"Turn width: {dr_cs_turn:.4e}$ \\ \\text{{m}}$\n"
+        f"Turn height: {dz_cs_turn:.4e}$ \\ \\text{{m}}$\n"
+        f"Turn width to height ratio: {ld_ratio_cst:.3f}\n"
+        f"Steel conduit width: {t_structural_radial:.4e}$ \\ \\text{{m}}$\n"
+        f"Radius of turn cable space: {radius_cs_turn_cable_space:.4e}$ \\ \\text{{m}}$\n"
+        f"Radius of turn corner: {r_out_cst:.4e}$ \\ \\text{{m}}$\n"
     )
 
     axis.text(
@@ -4671,9 +4723,7 @@ def main_plot(
     plot_cs_coil_structure(plot_24, fig10, m_file_data, scan)
 
     plot_25 = fig10.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(
-        plot_25, fig10, m_file_data, scan, colour_scheme=colour_scheme
-    )
+    plot_cs_turn_structure(plot_25, fig10, m_file_data, scan)
 
 
 def main(args=None):
