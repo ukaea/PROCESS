@@ -5937,24 +5937,13 @@ class Physics:
                 physics_variables.vs_plasma_total_required,
                 "OP ",
             )
+            po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
                 "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
                 "(vs_plasma_ind_ramp)",
                 physics_variables.vs_plasma_ind_ramp,
                 "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Ejima coefficient",
-                "(ejima_coeff)",
-                physics_variables.ejima_coeff,
-            )
-            po.ovarre(
-                self.outfile,
-                "Internal plasma V-s",
-                "(vs_plasma_internal)",
-                physics_variables.vs_plasma_internal,
             )
             po.ovarre(
                 self.outfile,
@@ -5963,6 +5952,27 @@ class Physics:
                 physics_variables.vs_plasma_res_ramp,
                 "OP ",
             )
+            po.ovarre(
+                self.outfile,
+                "Total flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_ramp_required)",
+                physics_variables.vs_plasma_ramp_required,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Ejima coefficient",
+                "(ejima_coeff)",
+                physics_variables.ejima_coeff,
+            )
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Internal plasma V-s",
+                "(vs_plasma_internal)",
+                physics_variables.vs_plasma_internal,
+            )
+
             po.ovarre(
                 self.outfile,
                 "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
@@ -5978,6 +5988,13 @@ class Physics:
                 physics_variables.v_plasma_loop_burn,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "Coefficient for sawtooth effects on burn V-s requirement",
+                "(csawth)",
+                physics_variables.csawth,
+            )
+            po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
                 "Plasma resistance (ohm)",
@@ -6006,12 +6023,6 @@ class Physics:
                 "(ind_plasma_internal_norm)",
                 physics_variables.ind_plasma_internal_norm,
                 "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
             )
 
             po.oblnkl(self.outfile)
