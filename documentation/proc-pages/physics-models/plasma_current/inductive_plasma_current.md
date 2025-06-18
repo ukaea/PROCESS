@@ -118,7 +118,7 @@ $$
 So the total resisitive and inductive flux consumption at current ramp up which is the total flux requires is given by:
 
 $$
-\overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_ramp_required}} =  \overbrace{\Phi_{\text{res,ramp}}}^{\texttt{vs_res_ramp}} + \overbrace{\Phi_{\text{ind,ramp}}}^{\texttt{vs_self_ind_ramp}}
+\overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_plasma_ramp_required}} =  \overbrace{\Phi_{\text{res,ramp}}}^{\texttt{vs_res_ramp}} + \overbrace{\Phi_{\text{ind,ramp}}}^{\texttt{vs_self_ind_ramp}}
 $$
 
 ------------------
@@ -151,7 +151,7 @@ $$
 Finally we can now find the minimum flux required for the full duration of the pulse:
 
 $$
-\overbrace{\Phi_{\text{tot}}}^{\texttt{vs_total_required}} = \overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_ramp_required}} + \overbrace{\Phi_{\text{res,burn}}}^{\texttt{vs_burn_required}}
+\overbrace{\Phi_{\text{tot}}}^{\texttt{vs_total_required}} = \overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_plasma_ramp_required}} + \overbrace{\Phi_{\text{res,burn}}}^{\texttt{vs_burn_required}}
 $$
 
 
