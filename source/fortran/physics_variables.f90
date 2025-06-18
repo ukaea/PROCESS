@@ -912,6 +912,9 @@ module physics_variables
   real(dp) :: vs_plasma_burn_required
   !! V-s needed during flat-top (heat + burn times) (Wb)
 
+  real(dp) :: vs_plasma_ramp_required
+  !! V-s needed during ramp-up (Wb)
+
   real(dp) :: v_plasma_loop_burn
   !! Plasma loop voltage during flat-top (V)
 
