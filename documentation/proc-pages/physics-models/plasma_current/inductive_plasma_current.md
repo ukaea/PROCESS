@@ -1,4 +1,6 @@
-Currently in `PROCESS` the inductive current fraction from the CS is not calculated directly but is just equal to ($1 - \mathtt{f_c_plasma_non_inductive}$). Where $\mathtt{f_c_plasma_non_inductive}$ is the sum of the fractions of current driven by non inductive means.
+# Inductive Current
+
+Currently in `PROCESS` the inductive current fraction from the CS is not calculated directly but is just equal to ($1 - \texttt{f_c_plasma_non_inductive}$). Where $\texttt{f_c_plasma_non_inductive}$ is the sum of the fractions of current driven by non inductive means.
 
 This calculated fraction (`f_c_plasma_inductive`) is then used in the `calculate_volt_second_requirements()` and `burn()` functions to calculate the volt-second requirements and the burn time for a pulsed machine.
 
@@ -40,14 +42,14 @@ In the ramp up phase we need to take the plasma current from 0 Amps to the plasm
 Thankfully a formulation of the resistive flux consumption during ramp phase is given by Ejima et.al [^1].
 
 $$
-\mathtt{vs\_res\_ramp} = \Phi_{\text{res,ramp}} = C_{\text{eji}}\mu_0I_{\text{p}}R
+\overbrace{\Phi_{\text{res,ramp}}}^{\texttt{vs_res_ramp}} = C_{\text{eji}}\mu_0I_{\text{p}}R
 $$
 
 where $C_{\text{ejima}}$ is the empirical Ejima coefficient defined by the user or at its default of 0.4.
 
 This relation is is done by analyzing a wide range of cross-sections,
 ranging from circular to doublet produced in the Doublet III machine. The plasma cross-section is
-slightly elongated, with $\kappa=1.2$. The toroidal field is 2.4 $\text{T}$. The current swing of the Ohmic-heating transformer is nominally from $-25 \text{kA}$ to $+80 \text{kA}$, corresponding to a flux swing of $\approx 2.6 \ \text{Vs}$.
+slightly elongated, with $\kappa=1.2$. The toroidal field is $2.4 \ \text{T}$. The current swing of the Ohmic-heating transformer is nominally from $-25 \  \text{kA}$ to $+80 \ \text{kA}$, corresponding to a flux swing of $\approx 2.6 \ \text{Vs}$.
 
 The initial one-turn loop voltage is around $50 \ \text{V}$, causing the plasma current to rise to $300 \ \text{kA}$ in about $80 \  \text{ms}$. The plasma current is then increased to higher flat-top currents at a steady rate of $2 \text{MA} \text{s}^{-1}$.
 
@@ -64,7 +66,7 @@ The internal inductance is defined as the part of the inductance obtained by int
 The internal component of the plasma self inductance flux consumption during the ramp up phase is given by:
 
 $$
-\mathtt{vs\_plasma\_internal} = \Phi_{\text{ind,internal,ramp}} =  I_{\text{p}} \times \underbrace{\left[\frac{\mu_0 R l_i}{2}\right]}_{\mathtt{ind\_plasma\_internal}}
+\overbrace{\Phi_{\text{ind,internal,ramp}}}^{\texttt{vs_plasma_internal}} =  I_{\text{p}} \times \underbrace{\left[\frac{\mu_0 R l_i}{2}\right]}_{\texttt{ind_plasma_internal}}
 $$
 
 Here $l_i$ is known as the normalized internal inductance defined for circular cross section plasmas with minor radius $a$:
@@ -86,7 +88,7 @@ The external inductance needs to be accounted for also as even though we assume 
 Hirshman et.al[^3] gives a formula for the external plasma inductance in the form:
 
 $$
-\mathtt{ind\_plasma\_external} = L_{\text{ext}} = \mu_0 R\frac{a(\epsilon)(1-\epsilon)}{1-\epsilon + b(\epsilon)\kappa}
+\overbrace{L_{\text{ext}}}^{\texttt{ind_plasma_external}} = \mu_0 R\frac{a(\epsilon)(1-\epsilon)}{1-\epsilon + b(\epsilon)\kappa}
 $$
 
 $$
@@ -104,20 +106,19 @@ where $\epsilon$ is the plasma inverse aspect ratio and $\kappa$ is the separatr
 The total plasma inductance is then calculated as:
 
 $$
-\mathtt{ind\_plasma\_total} = \mathtt{ind\_plasma\_external} + \mathtt{ind\_plasma\_internal}
+\texttt{ind_plasma_total} = \texttt{ind_plasma_external} + \texttt{ind_plasma_internal}
 $$
 
 Therefore the total inductive flux consumption during ramp up is given by:
 
 $$
-\mathtt{vs\_self\_ind\_ramp} = \Phi_{\text{ind,ramp}} =  \mathtt{ind\_plasma\_total} \times I_{\text{p}}
+\overbrace{\Phi_{\text{ind,ramp}}}^{\texttt{vs_self_ind_ramp}} =  \texttt{ind_plasma_total} \times I_{\text{p}}
 $$
 
 So the total resisitive and inductive flux consumption at current ramp up which is the total flux requires is given by:
 
 $$
-\mathtt{vs\_ramp\_required} = \mathtt{vs\_res\_ramp} + \mathtt{vs\_self\_ind\_ramp} \\
-\Phi_{\text{tot,ramp}} =  \Phi_{\text{res,ramp}} + \Phi_{\text{ind,ramp}}
+\overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_ramp_required}} =  \overbrace{\Phi_{\text{res,ramp}}}^{\texttt{vs_res_ramp}} + \overbrace{\Phi_{\text{ind,ramp}}}^{\texttt{vs_self_ind_ramp}}
 $$
 
 ------------------
@@ -134,7 +135,7 @@ At plasma current flat-top there is no self inductance contribution as the plasm
 For the flat top resistive component we can just take the loop voltage value based on the plasmas resistivity and the known fraction of current driven inductively:
 
 $$
-\mathtt{v\_burn\_resistive} = V_{\text{loop}} = I_{\text{p}}  \rho_\text{p} f_{\text{ind}}
+\overbrace{V_{\text{loop}}}^{\texttt{v_burn_resistive}} = I_{\text{p}}  \rho_\text{p} f_{\text{ind}}
 $$
 
 where $\rho_\text{p}$ is the calculated [plasma resistivity](./plasma_resistive_heating.md) and $f_{\text{ind}}$ is the inductive current fraction.
@@ -142,8 +143,7 @@ where $\rho_\text{p}$ is the calculated [plasma resistivity](./plasma_resistive_
 The total flux required is then simply found by multiplying the loop voltage above by the required duration of the burn phase:
 
 $$
-\mathtt{vs\_burn\_required} = \Phi_{\text{res,burn}} = I_{\text{p}}  \rho_\text{p} f_{\text{ind}} \times T_{\text{burn}} \\
-= \mathtt{v\_burn\_resistive} \times \mathtt{t\_burn}
+\overbrace{\Phi_{\text{res,burn}}}^{\texttt{vs_burn_required}} = \overbrace{I_{\text{p}}  \rho_\text{p} f_{\text{ind}}}^{\texttt{v_burn_resistive}} \times \overbrace{T_{\text{burn}}}^{\texttt{t_burn}}
 $$
 
 ----------------
@@ -151,8 +151,7 @@ $$
 Finally we can now find the minimum flux required for the full duration of the pulse:
 
 $$
-\mathtt{vs\_total\_required} = \Phi_{\text{tot}} = \Phi_{\text{tot,ramp}} + \Phi_{\text{res,burn}} \\
-= \mathtt{vs\_ramp\_required} + \mathtt{vs\_burn\_required}
+\overbrace{\Phi_{\text{tot}}}^{\texttt{vs_total_required}} = \overbrace{\Phi_{\text{tot,ramp}}}^{\texttt{vs_ramp_required}} + \overbrace{\Phi_{\text{res,burn}}}^{\texttt{vs_burn_required}}
 $$
 
 
