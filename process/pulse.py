@@ -32,8 +32,10 @@ class Pulse:
         #  Burn time calculation
 
         times_variables.t_burn = self.calculate_burn_time(
+            i_pulsed_plant=pulse_variables.i_pulsed_plant,
             vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
             v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
+            t_fusion_ramp=times_variables.t_fusion_ramp,
         )
 
     def tohswg(self, output: bool) -> None:
@@ -147,7 +149,11 @@ class Pulse:
             )
 
     def calculate_burn_time(
-        self, vs_cs_pf_total_burn: float, v_plasma_loop_burn: float
+        self,
+        i_pulsed_plant: int,
+        vs_cs_pf_total_burn: float,
+        v_plasma_loop_burn: float,
+        t_fusion_ramp: float,
     ) -> float:
         """
         Calculate the burn time for a pulsed reactor.
@@ -157,31 +163,31 @@ class Pulse:
         plasma loop voltage during burn. It also checks for negative burn time
         and reports an error if encountered.
 
+        :param i_pulsed_plant: Indicator for pulsed plant (1 for pulsed, 0 otherwise)
+        :type i_pulsed_plant: int
         :param vs_cs_pf_total_burn: Total volt-seconds in CS and PF coils available for burn (V·s)
         :type vs_cs_pf_total_burn: float
         :param v_plasma_loop_burn: Plasma loop voltage during burn (V)
         :type v_plasma_loop_burn: float
+        :param t_fusion_ramp: Time for fusion ramp (s)
+        :type t_fusion_ramp: float
         :return: Calculated burn time (s)
         :rtype: float
 
         :raises: Reports error 93 if calculated burn time is negative.
 
         """
-        if pulse_variables.i_pulsed_plant != 1:
+        if i_pulsed_plant != 1:
             return None
 
-        t_burn = (
-            abs(vs_cs_pf_total_burn) / v_plasma_loop_burn
-        ) - times_variables.t_fusion_ramp
+        t_burn = (abs(vs_cs_pf_total_burn) / v_plasma_loop_burn) - t_fusion_ramp
 
         if t_burn < 0.0e0:
             error_handling.fdiags[0] = t_burn
             error_handling.fdiags[1] = vs_cs_pf_total_burn
             error_handling.fdiags[2] = v_plasma_loop_burn
-            error_handling.fdiags[3] = times_variables.t_fusion_ramp
+            error_handling.fdiags[3] = t_fusion_ramp
             error_handling.report_error(93)
-
-        times_variables.t_burn = max(0.0e0, t_burn)
 
         return t_burn
 

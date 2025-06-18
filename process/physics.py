@@ -158,7 +158,7 @@ def calculate_volt_second_requirements(
     # Inductive V-s component
 
     vs_self_ind_ramp = ind_plasma_total * plasma_current
-    vs_ramp_required = vs_res_ramp + vs_self_ind_ramp
+    vs_plasma_ramp_required = vs_res_ramp + vs_self_ind_ramp
 
     # Plasma loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
@@ -173,13 +173,13 @@ def calculate_volt_second_requirements(
     # will be correct on subsequent calls.
 
     vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
-    vs_plasma_total_required = vs_ramp_required + vs_plasma_burn_required
+    vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
 
     return (
         vs_plasma_internal,
         ind_plasma_total,
         vs_plasma_burn_required,
-        vs_ramp_required,
+        vs_plasma_ramp_required,
         vs_self_ind_ramp,
         vs_res_ramp,
         vs_plasma_total_required,
