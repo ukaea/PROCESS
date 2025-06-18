@@ -1911,6 +1911,8 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_vs_plasma_burn_required: Any = None
 
+    expected_vs_plasma_ramp_required: Any = None
+
     expected_vs_plasma_ind_ramp: Any = None
 
     expected_vs_plasma_res_ramp: Any = None
@@ -1938,6 +1940,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_internal=111.57651734747576,
             expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_plasma_burn_required=42.109179697761263,
+            expected_vs_plasma_ramp_required=314.4596753393147,
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_plasma_total_required=356.56885503707593,
@@ -1958,6 +1961,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_internal=111.57651734747576,
             expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_plasma_burn_required=0.41692257126496302,
+            expected_vs_plasma_ramp_required=314.4596753393147,
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_plasma_total_required=314.87659791057968,
@@ -1979,6 +1983,7 @@ def test_vscalc(voltsecondreqparam):
         vs_plasma_internal,
         ind_plasma,
         vs_plasma_burn_required,
+        vs_plasma_ramp_required,
         vs_plasma_ind_ramp,
         vs_plasma_res_ramp,
         vs_plasma_total_required,
@@ -2005,6 +2010,10 @@ def test_vscalc(voltsecondreqparam):
 
     assert vs_plasma_burn_required == pytest.approx(
         voltsecondreqparam.expected_vs_plasma_burn_required
+    )
+
+    assert vs_plasma_ramp_required == pytest.approx(
+        voltsecondreqparam.expected_vs_plasma_ramp_required
     )
 
     assert vs_plasma_ind_ramp == pytest.approx(
