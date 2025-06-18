@@ -13,15 +13,11 @@ import numpy as np
 import pytest
 
 from process.evaluators import Evaluators
-from process.fortran import error_handling
 from process.init import init_all_module_vars
 from process.solver import get_solver
 
 # Debug-level terminal output logging
 logger = logging.getLogger(__name__)
-
-# Provide helpful errors in the event of a failed Vmcon test
-error_handling.initialise_error_list()
 
 
 @pytest.fixture(autouse=True)

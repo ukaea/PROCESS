@@ -8,27 +8,9 @@ it often requires a great deal of painstaking adjustment of the input file to ov
 ## Error handling
 
 In general, errors detected during a run are handled in a consistent manner, with the code 
-producing useful diagnostic messages to help the user understand what has happened.
-
-There are three levels of errors and warnings that may occur:
-
-* **Level 1** -- An *informational* message is produced under certain conditions, for example if 
-  the code modified the user's input choice for some reason.
-* **Level 2** -- A *warning* message is produced if a non-fatal situation has occurred that may 
-  result in an output case that is inaccurate or unreliable in some way.
-* **Level 3** -- An *error* message will occur is a severe of fatal error has occurred and the program cannot continue.
-
-These messages are printed on the screen during the course of a run, and those still active at the 
-final (feasible or unfeasible) solution point are also written to the end of the output file 
-(messages encountered during the iteration process are not copied to the output file, as the 
-convergence to a valid solution might resolve some of the warnings produced earlier in the 
-solution process).
-
-The `error_status` variable returns the highest security level that has been encountered (or zero 
-if no abnormal conditions have been found); of a severe error (level 3) is flagged at any point the 
-program is terminated immediately. The final message number encountered during a run is returned via 
-output variable `error_id` . In addition, with certain messages, a number of diagnostic values may 
-also be given; these can be used to provide extra diagnostic information if the source code is available
+producing useful diagnostic messages to help the user understand what has happened. In the case of an
+unrecoverable error, PROCESS will fail with a Python exception. If the error is recoverable, a warning
+will be logged that is written to the terminal and output file at the end of the run.
 
 ### General problems
 
