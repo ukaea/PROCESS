@@ -8725,6 +8725,7 @@ def init_physics_variables():
     physics_variables.triang95 = 0.24
     physics_variables.vol_plasma = 0.0
     physics_variables.vs_plasma_burn_required = 0.0
+    physics_variables.vs_plasma_ramp_required = 0.0
     physics_variables.v_plasma_loop_burn = 0.0
     physics_variables.vshift = 0.0
     physics_variables.vs_plasma_ind_ramp = 0.0
