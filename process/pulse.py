@@ -31,7 +31,10 @@ class Pulse:
 
         #  Burn time calculation
 
-        self.burn(output=output)
+        times_variables.t_burn = self.calculate_burn_time(
+            vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
+            v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
+        )
 
     def tohswg(self, output: bool) -> None:
         """Routine to calculate the plasma current ramp-up time
@@ -143,85 +146,44 @@ class Pulse:
                 constraint_variables.t_current_ramp_up_min,
             )
 
-    def burn(self, output: bool):
-        """Routine to calculate the burn time for a pulsed reactor
-        author: C A Gardner, AEA Fusion, Culham Laboratory
-        author: P J Knight, CCFE, Culham Science Centre
-        author: R Kemp, CCFE, Culham Science Centre
+    def calculate_burn_time(
+        self, vs_cs_pf_total_burn: float, v_plasma_loop_burn: float
+    ) -> float:
+        """
+        Calculate the burn time for a pulsed reactor.
 
-        This routine calculates the burn time for a pulsed reactor.
-        Work File Note F/MPE/MOD/CAG/PROCESS/PULSE/0012
+        This routine computes the burn time for a pulsed reactor scenario,
+        based on the total Vs available in the CS and PF coils and the
+        plasma loop voltage during burn. It also checks for negative burn time
+        and reports an error if encountered.
 
-        :param output: indicate whether output should be written to the output file, or not
-        :type output: boolean
+        :param vs_cs_pf_total_burn: Total volt-seconds in CS and PF coils available for burn (V·s)
+        :type vs_cs_pf_total_burn: float
+        :param v_plasma_loop_burn: Plasma loop voltage during burn (V)
+        :type v_plasma_loop_burn: float
+        :return: Calculated burn time (s)
+        :rtype: float
+
+        :raises: Reports error 93 if calculated burn time is negative.
+
         """
         if pulse_variables.i_pulsed_plant != 1:
-            return
+            return None
 
-        #  Volt-seconds required to produce plasma current during start-up
-        #  (i.e. up to start of flat top)
+        t_burn = (
+            abs(vs_cs_pf_total_burn) / v_plasma_loop_burn
+        ) - times_variables.t_fusion_ramp
 
-        vssoft = (
-            physics_variables.vs_plasma_res_ramp + physics_variables.vs_plasma_ind_ramp
-        )
-
-        #  Total volt-seconds available during flat-top (heat + burn)
-        #  (Previously calculated as (abs(pfcoil_variables.vs_cs_pf_total_pulse) - vssoft) )
-
-        vsmax = (
-            -pfcoil_variables.vs_cs_pf_total_burn
-        )  # pfcoil_variables.vs_cs_pf_total_burn is (or should be...) negative
-
-        #  Loop voltage during flat-top (including MHD sawtooth enhancement)
-
-        v_plasma_loop_burn = (
-            physics_variables.plasma_current
-            * physics_variables.res_plasma
-            * physics_variables.f_c_plasma_inductive
-            * physics_variables.csawth
-        )
-
-        #  Burn time (s)
-
-        tb = vsmax / v_plasma_loop_burn - times_variables.t_fusion_ramp
-        if tb < 0.0e0:
-            error_handling.fdiags[0] = tb
-            error_handling.fdiags[1] = vsmax
+        if t_burn < 0.0e0:
+            error_handling.fdiags[0] = t_burn
+            error_handling.fdiags[1] = vs_cs_pf_total_burn
             error_handling.fdiags[2] = v_plasma_loop_burn
             error_handling.fdiags[3] = times_variables.t_fusion_ramp
             error_handling.report_error(93)
 
-        times_variables.t_burn = max(0.0e0, tb)
+        times_variables.t_burn = max(0.0e0, t_burn)
 
-        #  Output section
-
-        if output:
-            po.osubhd(self.outfile, "Volt-second considerations:")
-
-            po.ovarre(
-                self.outfile,
-                "Total V-s capability of Central Solenoid/PF coils (Wb)",
-                "(abs(vs_cs_pf_total_pulse))",
-                abs(pfcoil_variables.vs_cs_pf_total_pulse),
-            )
-            po.ovarre(
-                self.outfile,
-                "Required volt-seconds during start-up (Wb)",
-                "(vssoft)",
-                vssoft,
-            )
-            po.ovarre(
-                self.outfile,
-                "Available volt-seconds during burn (Wb)",
-                "(vsmax)",
-                vsmax,
-            )
-
-            if tb <= 0.0e0:
-                po.ocmmnt(
-                    self.outfile,
-                    "   Error... burn time is zero; insufficient volt-seconds#",
-                )
+        return t_burn
 
 
 def init_pulse_variables():
