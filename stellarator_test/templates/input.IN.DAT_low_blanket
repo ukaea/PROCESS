@@ -171,8 +171,8 @@ shear = 0.5 *Magnetic shear, derivative of iotabar
 
 *-----------------Build Variables------------------*
 
-dr_blkt_inboard = 0.6 *Inboard blanket thickness (m)
-dr_blkt_outboard = 0.6 *Outboard blanket thickness (m)
+dr_blkt_inboard = 0.5 *Inboard blanket thickness (m)
+dr_blkt_outboard = 0.5 *Outboard blanket thickness (m)
 dr_cryostat = 0.15 *Cryostat thickness (m)
 dr_vv_inboard = 0.5 *Vacuum vessel thickness (TF coil / shield) (m)
 dr_vv_outboard = 0.5
@@ -260,7 +260,7 @@ fimp(14) = 0.
 *---------------------Numerics---------------------*
 
 ioptimz = 1 *Code operation switch (1: Optimisation, VMCON only)
-maxcal = 600 *Maximum number of VMCON iterations
+maxcal = 300 *Maximum number of VMCON iterations
 * minmax = 7 *Switch for figure-of-merit (7: Min Capital Cost)
 minmax = 1 *Switch for figure-of-merit (1: Major radius)
 runtitle = SQuID

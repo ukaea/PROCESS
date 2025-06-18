@@ -1,15 +1,30 @@
+'''
+Generate directory structure and input files for selected case. 
+06.2025 Walkowiak
+'''
+
 from pathlib import Path
 import os, shutil
 import numpy as np
 
 from process.io.in_dat import InDat
 
-def main(main_name='cases', prefix = 'squid', create_scan=False):
-
+def main(main_name='cases', prefix = 'squid', create_scan=False, clean_start=True):
+    """
+    Generate input files in the directory defined by main_name
+    prefix is used to fine stella_conf file and input template 
+    (if no input match the prefix, the default input.IN.DAT is used)
+    TODO for now it works only for bt scan, a general version can be useful
+    """
     default_dir = 'stellarator_test/autostart'
     templates_dir = 'stellarator_test/templates'
+
+    if os.path.isfile(templates_dir+'/'+prefix+'.IN.DAT'):
+        input_file_path = templates_dir+'/'+prefix+'.IN.DAT'
+    else:
+        input_file_path = templates_dir+'/input.IN.DAT'
     
-    create_directory(Path(default_dir+'/'+main_name))
+    create_directory(Path(default_dir+'/'+main_name), clean_start)
 
     B_min = 5
     B_max = 6
@@ -17,7 +32,7 @@ def main(main_name='cases', prefix = 'squid', create_scan=False):
     print('B list: ', B_list)
 
     if create_scan:
-        i = InDat(templates_dir+'/input.IN.DAT')
+        i = InDat(input_file_path)
 
         i.remove_iteration_variable(2)  # remove bt from iteration variables
         i.add_parameter('nsweep', 28)   # variable selection: 28 -> bt
@@ -32,9 +47,12 @@ def main(main_name='cases', prefix = 'squid', create_scan=False):
         shutil.copyfile(templates_dir+'/run_me.py', case_path+'/run_me.py')
         shutil.copyfile('stellarator_test/config_files/'+prefix+'.stella_conf.json', case_path+'/'+prefix+'.stella_conf.json',)
 
-    i = InDat(templates_dir+'/input.IN.DAT')
+    i = InDat(input_file_path)
     i.remove_iteration_variable(2)  # remove bt from iteration variables
 
+    i.add_parameter("beta_max", 0.05)
+    i.add_bound(10, "upper", 1.6)
+    
     cases = B_list
     for case in cases:
         i.add_parameter("bt", case)
@@ -46,8 +64,8 @@ def main(main_name='cases', prefix = 'squid', create_scan=False):
         shutil.copyfile('stellarator_test/config_files/'+prefix+'.stella_conf.json', case_path+'/'+prefix+'.stella_conf.json',)
 
 
-def create_directory(dirpath):
-    if dirpath.exists() and dirpath.is_dir():
+def create_directory(dirpath, clean_start=True):
+    if dirpath.exists() and dirpath.is_dir() and clean_start:
         try:
             shutil.rmtree(dirpath)
         except Exception as e: print(e)
