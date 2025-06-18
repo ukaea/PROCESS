@@ -102,6 +102,7 @@ def calculate_volt_second_requirements(
                 - vs_plasma_internal: Internal plasma volt-seconds (Wb)
                 - ind_plasma_internal: Plasma inductance (H)
                 - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+                - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
                 - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
                 - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
                 - vs_plasma_total_required: Total volt-seconds needed (Wb)
@@ -178,6 +179,7 @@ def calculate_volt_second_requirements(
         vs_plasma_internal,
         ind_plasma_total,
         vs_plasma_burn_required,
+        vs_ramp_required,
         vs_self_ind_ramp,
         vs_res_ramp,
         vs_plasma_total_required,
@@ -2462,6 +2464,7 @@ class Physics:
             physics_variables.vs_plasma_internal,
             physics_variables.ind_plasma,
             physics_variables.vs_plasma_burn_required,
+            physics_variables.vs_plasma_ramp_required,
             physics_variables.vs_plasma_ind_ramp,
             physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_plasma_total_required,
