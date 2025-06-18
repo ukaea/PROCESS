@@ -1164,6 +1164,9 @@ class PFCoil:
         ) - pfv.radius_cs_turn_cable_space
         # In this model the vertical and radial have the same thickness
         csfv.t_structural_radial = csfv.t_structural_vertical
+        # add a check for negative conduit thickness
+        if csfv.t_structural_radial < 1.0e-3:
+            csfv.t_structural_radial = 1.0e-3
 
         # Non-steel area void fraction for coolant
         pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
@@ -2763,11 +2766,10 @@ class PFCoil:
                     f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)):.2e}\t{max(abs(pfv.j_cs_pulse_start), abs(pfv.j_cs_flat_top_end)) / pfv.j_pf_wp_critical[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
                 )
             else:
-                # op.write(
-                #     self.outfile,
-                #     f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
-                # )
-                pass
+                op.write(
+                    self.outfile,
+                    f"CS\t\t{pfv.c_pf_cs_coils_peak_ma[pfv.n_cs_pf_coils - 1]:.2e}\t-1.0e0\t{max(abs(pfv.j_cs_pulse_start)):.2e}\t{abs(pfv.j_cs_flat_top_end):.2e}\t1.0e0\t{pfv.m_pf_coil_conductor[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.m_pf_coil_structure[pfv.n_cs_pf_coils - 1]:.2e}\t{pfv.b_pf_coil_peak[pfv.n_cs_pf_coils - 1]:.2e}",
+                )
 
         # Miscellaneous totals
         op.write(
