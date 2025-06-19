@@ -1,4 +1,4 @@
-# Guide for adding Variabales & Constraints 
+# Guide for adding Variables & Constraints 
 
 Specific instructions must be followed to add an input, iteration variable,
 optimisation figure of merit and constraints to the `PROCESS` code.
