@@ -2647,7 +2647,7 @@ i_hcd_calculations = 1
 * JUSTIFICATION: Turned off, do not care about auxiliary power lower limit 
 * VARIABLES:     p_hcd_injected_total_mw (MW) calculated in-situ
 
-*auxmin =  
+*p_hcd_injected_min_mw =  
 * DESCRIPTION:   Minimum required auxiliary power (MW)
 * JUSTIFICATION: Turned off, not using icc = 40
 
@@ -2965,7 +2965,7 @@ eta_turbine = 0.40
 * JUSTIFICATION: Not yet set
 
 *fmgdmw = 
-* DESCRIPTION:   Power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)
+* DESCRIPTION:   Power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_energy_storage_source=2`)
 * JUSTIFICATION: Not yet set
 
 ipowerflow = 0 
@@ -3002,11 +3002,11 @@ i_shld_primary_heat = 1
 * DESCRIPTION:   Base plant electric load (W) (default = 5E6)
 * JUSTIFICATION: 
 
-etahtp = 0.87
+eta_coolant_pump_electric = 0.87
 * DESCRIPTION:   Electrical efficiency of primary coolant pumps (default = 0.95)
 * JUSTIFICATION: Not yet set
 
-*pwpm2 = 
+*pflux_plant_floor_electric = 
 * DESCRIPTION:   Base AC power requirement (W/m2)
 * JUSTIFICATION: 
 
@@ -3368,7 +3368,7 @@ iavail = 0
 *------------------------------ Energy Storage --------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-*iscenr = 
+*i_pf_energy_storage_source = 
 * DESCRIPTION:    Switch for PF coil energy storage option (default = 2):
 * =1 all power from MGF (motor-generator flywheel) units
 * =2 all pulsed power from line

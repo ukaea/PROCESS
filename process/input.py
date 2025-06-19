@@ -178,7 +178,9 @@ INPUT_VARIABLES = {
     "auxcool_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "auxmin": InputVariable(fortran.constraint_variables, float, range=(0.01, 100.0)),
+    "p_hcd_injected_min_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.01, 100.0)
+    ),
     "avail_min": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "b_crit_upper_nbti": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 30.0)
@@ -481,7 +483,9 @@ INPUT_VARIABLES = {
     "eta_ecrh_injector_wall_plug": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
-    "etahtp": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
+    "eta_coolant_pump_electric": InputVariable(
+        fortran.fwbs_variables, float, range=(0.1, 1.0)
+    ),
     "etaiso": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "eta_lowhyb_injector_wall_plug": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
@@ -1055,7 +1059,7 @@ INPUT_VARIABLES = {
         fortran.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
     "pumptp": InputVariable(fortran.vacuum_variables, float, range=(0.0, 1e30)),
-    "pwpm2": InputVariable(
+    "pflux_plant_floor_electric": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "q0": InputVariable(fortran.physics_variables, float, range=(0.01, 20.0)),
@@ -1572,7 +1576,9 @@ INPUT_VARIABLES = {
     "i_hcd_calculations": InputVariable(
         fortran.current_drive_variables, int, choices=[0, 1]
     ),
-    "iscenr": InputVariable(fortran.pf_power_variables, int, range=(1, 3)),
+    "i_pf_energy_storage_source": InputVariable(
+        fortran.pf_power_variables, int, range=(1, 3)
+    ),
     "istell": InputVariable(fortran.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(fortran.stellarator_variables, int, range=(1, 3)),
     "istore": InputVariable(fortran.pulse_variables, int, range=(1, 3)),

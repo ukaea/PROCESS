@@ -491,7 +491,7 @@ ipowerflow = 0
 i_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
-etahtp = 0.87
+eta_coolant_pump_electric = 0.87
 
 * Isentropic efficiency of FW and blanket coolant pumps
 etaiso = 0.9

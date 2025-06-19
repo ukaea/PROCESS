@@ -321,6 +321,9 @@ class Caller:
         # Plant heat transport part 1
         self.models.power.component_thermal_powers()
 
+        # Cryoplant loads
+        self.models.power.calculate_cryo_loads()
+
         # Vacuum model
         self.models.vacuum.run(output=False)
 
@@ -331,7 +334,7 @@ class Caller:
         self.models.power.acpow(output=False)
 
         # Plant heat transport pt 2 & 3
-        self.models.power.power2(output=False)
+        self.models.power.plant_electric_production(output=False)
 
         self.models.power.power3(output=False)
 
