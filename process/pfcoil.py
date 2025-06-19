@@ -52,6 +52,7 @@ class PFCoil:
 
     def output(self):
         """Output results to output file."""
+        self.output_cs_structure()
         self.outpf()
         self.outvolt()
 
@@ -1132,30 +1133,37 @@ class PFCoil:
         pfv.a_cs_turn = pfv.a_cs_poloidal / pfv.n_pf_coil_turns[pfv.n_cs_pf_coils - 1]
 
         # Depth/width of cs turn conduit
-        pfv.d_cond_cst = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
+        pfv.dz_cs_turn = (pfv.a_cs_turn / pfv.ld_ratio_cst) ** 0.5
+
         # length of cs turn conduit
-        pfv.l_cond_cst = pfv.ld_ratio_cst * pfv.d_cond_cst
-        # Radius of turn space = pfv.r_in_cst
+        pfv.dr_cs_turn = pfv.ld_ratio_cst * pfv.dz_cs_turn
+
+        # Radius of turn space = pfv.radius_cs_turn_cable_space
         # Radius of curved outer corrner pfv.r_out_cst = 3mm from literature
         # pfv.ld_ratio_cst = 70 / 22 from literature
-        p1_cst = ((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) ** 2
-        p2_cst = (
-            (pfv.l_cond_cst * pfv.d_cond_cst)
-            - (4 - constants.pi) * (pfv.r_out_cst**2)
-            - (pfv.a_cs_turn * pfv.f_a_cs_steel)
-        ) / constants.pi
+
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfv.r_in_cst = -((pfv.l_cond_cst - pfv.d_cond_cst) / constants.pi) + math.sqrt(
-            p1_cst + p2_cst
+        pfv.radius_cs_turn_cable_space = -(
+            (pfv.dr_cs_turn - pfv.dz_cs_turn) / constants.pi
+        ) + math.sqrt(
+            (((pfv.dr_cs_turn - pfv.dz_cs_turn) / constants.pi) ** 2)
+            + (
+                (
+                    (pfv.dr_cs_turn * pfv.dz_cs_turn)
+                    - (4 - constants.pi) * (pfv.r_out_cst**2)
+                    - (pfv.a_cs_turn * pfv.f_a_cs_steel)
+                )
+                / constants.pi
+            )
         )
+
         # Thickness of steel conduit in cs turn
-        csfv.t_structural_radial = (pfv.d_cond_cst / 2) - pfv.r_in_cst
+        csfv.t_structural_vertical = (
+            pfv.dz_cs_turn / 2
+        ) - pfv.radius_cs_turn_cable_space
         # In this model the vertical and radial have the same thickness
-        csfv.t_structural_vertical = csfv.t_structural_radial
-        # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
+        csfv.t_structural_radial = csfv.t_structural_vertical
 
         # Non-steel area void fraction for coolant
         pfv.f_a_pf_coil_void[pfv.n_cs_pf_coils - 1] = pfv.f_a_cs_void
@@ -2050,6 +2058,69 @@ class PFCoil:
                 f"Plasma\t{pfv.ind_pf_cs_plasma_mutual[: pfv.n_pf_cs_plasma_circuits, pfv.n_pf_cs_plasma_circuits - 1]}",
             )
 
+    def output_cs_structure(self):
+        op.oheadr(self.outfile, "Central Solenoid Structure")
+
+        op.ocmmnt(self.outfile, "CS turn structure")
+        op.oblnkl(self.outfile)
+
+        op.ovarre(
+            self.outfile,
+            "Poloidal area of a CS turn [m^2]",
+            "(a_cs_turn)",
+            pfv.a_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial width a CS turn [m^2]",
+            "(dz_cs_turn)",
+            pfv.dz_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Length of a CS turn [m]",
+            "(dr_cs_turn)",
+            pfv.dr_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Length to diameter ratio of a CS turn",
+            "(ld_ratio_cst)",
+            pfv.ld_ratio_cst,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radius of CS turn cable space [m]",
+            "(radius_cs_turn_cable_space)",
+            pfv.radius_cs_turn_cable_space,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial thickness of steel conduit to cable space [m]",
+            "(t_structural_radial)",
+            csfv.t_structural_radial,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Vertical thickness of steel conduit to cable space [m]",
+            "(t_structural_vertical)",
+            csfv.t_structural_vertical,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Corner radius of CS turn [m]",
+            "(r_out_cst)",
+            pfv.r_out_cst,
+            "OP ",
+        )
+
     def outpf(self):
         """Routine to write output from PF coil module to file.
 
@@ -2364,20 +2435,20 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS turn length (m)",
-                        "(l_cond_cst)",
-                        pfv.l_cond_cst,
+                        "(dr_cs_turn)",
+                        pfv.dr_cs_turn,
                     )
                     op.ovarre(
                         self.outfile,
                         "CS turn internal cable space radius (m)",
-                        "(r_in_cst)",
-                        pfv.r_in_cst,
+                        "(radius_cs_turn_cable_space)",
+                        pfv.radius_cs_turn_cable_space,
                     )
                     op.ovarre(
                         self.outfile,
                         "CS turn width (m)",
-                        "(d_cond_cst)",
-                        pfv.d_cond_cst,
+                        "(dz_cs_turn)",
+                        pfv.dz_cs_turn,
                     )
                     op.ovarre(
                         self.outfile,
@@ -3619,7 +3690,7 @@ def init_pfcoil_variables():
     pfv.b_cs_limit_max = 13.0
     pfv.fb_cs_limit_max = 1.0
     pfv.ld_ratio_cst = 70.0 / 22.0
-    pfv.l_cond_cst = 0.0
-    pfv.d_cond_cst = 0.0
-    pfv.r_in_cst = 0.0
+    pfv.dr_cs_turn = 0.0
+    pfv.dz_cs_turn = 0.0
+    pfv.radius_cs_turn_cable_space = 0.0
     pfv.r_out_cst = 3.0e-3

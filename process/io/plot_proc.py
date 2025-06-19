@@ -4344,6 +4344,237 @@ def plot_density_limit_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
+    """Function to plot the coil structure of the CS.
+
+    Arguments:
+        axis --> axis object to plot to
+        mfile_data --> MFILE.DAT object
+        scan --> scan number to use
+        demo_ranges --> whether to use demo ranges for the plot
+        colour_scheme --> colour scheme to use for the plot
+    """
+    # Get CS coil parameters
+    dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
+    dz_cs = mfile_data.data["ohdz"].get_scan(scan)
+    dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
+
+    # Plot the right side of the CS
+    right_cs = patches.Rectangle(
+        (dr_bore, -dz_cs / 2),
+        dr_cs,
+        dz_cs,
+        edgecolor="black",
+        facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+        lw=1.5,
+        label="CS Coil",
+    )
+    axis.add_patch(right_cs)
+
+    # Plot the bore of the machine
+    bore_rect = patches.Rectangle(
+        (-dr_bore, -dz_cs / 2),
+        dr_bore * 2,
+        dz_cs,
+        edgecolor="black",
+        facecolor="lightgrey",
+        lw=1.0,
+        label="Bore",
+    )
+    axis.add_patch(bore_rect)
+
+    left_cs = patches.Rectangle(
+        (-dr_bore - dr_cs, -dz_cs / 2),
+        dr_cs,
+        dz_cs,
+        edgecolor="black",
+        facecolor=SOLENOID_COLOUR[colour_scheme - 1],
+        lw=1.5,
+        label="CS Coil",
+    )
+    axis.add_patch(left_cs)
+
+    # Draw vertical lines to represent CS turns
+    # Get the turn width (radial thickness of each turn)
+    dr_cs_turn = mfile_data.data["dr_cs_turn"].get_scan(scan)
+    dz_cs_turn = mfile_data.data["dz_cs_turn"].get_scan(scan)
+    # Number of vertical lines (number of turns)
+    if dr_cs_turn > 0:
+        n_lines = int(dr_cs / dr_cs_turn)
+        for i in range(1, n_lines):
+            x = dr_bore + i * dr_cs_turn
+            axis.plot(
+                [x, x],
+                [-dz_cs / 2, dz_cs / 2],
+                color="black",
+                linestyle="--",
+                linewidth=0.2,
+            )
+            x_left = -dr_bore - dr_cs + i * dr_cs_turn
+            axis.plot(
+                [x_left, x_left],
+                [-dz_cs / 2, dz_cs / 2],
+                color="black",
+                linestyle="--",
+                linewidth=0.2,
+            )
+    # Plot horizontal lines (along Z) for each turn
+    if dz_cs_turn > 0:
+        n_hlines = int(dz_cs / dz_cs_turn)
+        for j in range(1, n_hlines):
+            y = -dz_cs / 2 + j * dz_cs_turn
+            # Right CS
+            axis.plot(
+                [dr_bore, dr_bore + dr_cs],
+                [y, y],
+                color="black",
+                linestyle="--",
+                linewidth=0.2,
+            )
+            # Left CS
+            axis.plot(
+                [-dr_bore - dr_cs, -dr_bore],
+                [y, y],
+                color="black",
+                linestyle="--",
+                linewidth=0.2,
+            )
+
+    textstr_cs = (
+        f"$\\mathbf{{Coil \\ parameters:}}$\n \n"
+        f"CS height vs TF internal height: {mfile_data.data['f_z_cs_tf_internal'].get_scan(scan):.2f}\n"
+        f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
+        f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n"
+    )
+
+    axis.text(
+        0.6,
+        0.825,
+        textstr_cs,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Central Solenoid Cross-Section")
+    axis.grid(True, linestyle="--", alpha=0.3)
+    axis.set_xlim(-(dr_bore + dr_cs + 0.1), (dr_bore + dr_cs + 0.1))
+    axis.set_ylim(-dz_cs / 2 - 0.1, dz_cs / 2 + 0.1)
+
+
+def plot_cs_turn_structure(axis, fig, mfile_data, scan):
+    a_cs_turn = mfile_data.data["a_cs_turn"].get_scan(scan)
+    dz_cs_turn = mfile_data.data["dz_cs_turn"].get_scan(scan)
+    dr_cs_turn = mfile_data.data["dr_cs_turn"].get_scan(scan)
+
+    ld_ratio_cst = mfile_data.data["ld_ratio_cst"].get_scan(scan)
+    radius_cs_turn_cable_space = mfile_data.data["radius_cs_turn_cable_space"].get_scan(
+        scan
+    )
+    t_structural_vertical = mfile_data.data["t_structural_vertical"].get_scan(scan)
+    t_structural_radial = mfile_data.data["t_structural_radial"].get_scan(scan)
+    r_out_cst = mfile_data.data["r_out_cst"].get_scan(scan)
+
+    # Plot the CS turn as a rectangle representing the conductor cross-section
+    # Assume dz_cs_turn is the diameter and dr_cs_turn is the length of the conductor cross-section
+
+    # Draw the conductor cross-section as a rectangle
+    axis.add_patch(
+        patches.FancyBboxPatch(
+            (0, 0),
+            dr_cs_turn,
+            dz_cs_turn,
+            boxstyle=patches.BoxStyle("Round", pad=0, rounding_size=r_out_cst),
+            edgecolor="black",
+            facecolor="grey",
+            lw=1.5,
+            label="CS Turn Steel conduit",
+        )
+    )
+
+    # Draw the conductor cross-section as a rectangle
+    axis.add_patch(
+        patches.Rectangle(
+            (t_structural_radial + radius_cs_turn_cable_space, t_structural_vertical),
+            dr_cs_turn - ((2 * t_structural_radial) + (2 * radius_cs_turn_cable_space)),
+            2 * radius_cs_turn_cable_space,
+            facecolor="white",
+            lw=1.5,
+            label="CS Turn Cable Space",
+            zorder=2,
+        )
+    )
+    # Plot the right hand circle for the CS turn cable space
+    axis.add_patch(
+        patches.Circle(
+            (
+                (dr_cs_turn - t_structural_radial - radius_cs_turn_cable_space),
+                dz_cs_turn / 2,
+            ),
+            radius_cs_turn_cable_space,
+            facecolor="white",
+            lw=1.5,
+            zorder=3,
+        )
+    )
+    # Plot the left hand circle for the CS turn cable space
+    axis.add_patch(
+        patches.Circle(
+            ((t_structural_radial + radius_cs_turn_cable_space), dz_cs_turn / 2),
+            radius_cs_turn_cable_space,
+            facecolor="white",
+            lw=1.5,
+            zorder=3,
+        )
+    )
+
+    # Add plasma volume, areas and shaping information
+    textstr_turn = (
+        f"$\\mathbf{{Turn \\ structure:}}$\n\n$A:$ {a_cs_turn:.4e}$ \\ \\text{{m}}^2$\n"
+        f"Turn width: {dr_cs_turn:.4e}$ \\ \\text{{m}}$\n"
+        f"Turn height: {dz_cs_turn:.4e}$ \\ \\text{{m}}$\n"
+        f"Turn width to height ratio: {ld_ratio_cst:.3f}\n"
+        f"Steel conduit width: {t_structural_radial:.4e}$ \\ \\text{{m}}$\n"
+        f"Radius of turn cable space: {radius_cs_turn_cable_space:.4e}$ \\ \\text{{m}}$\n"
+        f"Radius of turn corner: {r_out_cst:.4e}$ \\ \\text{{m}}$\n"
+    )
+
+    axis.text(
+        0.6,
+        0.5,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.set_xlim(-dr_cs_turn * 0.2, dr_cs_turn * 1.2)
+    axis.set_ylim(-dz_cs_turn * 0.3, dz_cs_turn * 1.3)
+    axis.set_aspect("equal")
+    axis.set_xlabel("Length [m]")
+    axis.set_ylabel("Height [m]")
+    axis.set_title("CS Turn Conductor Cross-Section")
+    axis.legend()
+    axis.grid(True, linestyle="--", alpha=0.3)
+
+
 def main_plot(
     fig1,
     fig2,
@@ -4354,6 +4585,7 @@ def main_plot(
     fig7,
     fig8,
     fig9,
+    fig10,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -4481,11 +4713,17 @@ def main_plot(
     plot_21 = fig8.add_subplot(111)
     plot_current_profiles_over_time(plot_21, m_file_data, scan)
 
-    plot_22 = fig9.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_22, m_file_data, scan)
+    plot_22 = fig9.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_22, fig9, m_file_data, scan)
 
-    plot_23 = fig9.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_23, m_file_data, scan)
+    plot_23 = fig9.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_23, fig9, m_file_data, scan)
+
+    plot_24 = fig10.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_24, m_file_data, scan)
+
+    plot_25 = fig10.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_25, m_file_data, scan)
 
 
 def main(args=None):
@@ -4758,6 +4996,7 @@ def main(args=None):
     page7 = plt.figure(figsize=(12, 9), dpi=80)
     page8 = plt.figure(figsize=(12, 9), dpi=80)
     page9 = plt.figure(figsize=(12, 9), dpi=80)
+    page10 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -4770,6 +5009,7 @@ def main(args=None):
         page7,
         page8,
         page9,
+        page10,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -4787,6 +5027,7 @@ def main(args=None):
         pdf.savefig(page7)
         pdf.savefig(page8)
         pdf.savefig(page9)
+        pdf.savefig(page10)
 
     # show fig if option used
     if args.show:
@@ -4801,6 +5042,7 @@ def main(args=None):
     plt.close(page7)
     plt.close(page8)
     plt.close(page9)
+    plt.close(page10)
 
 
 if __name__ == "__main__":
