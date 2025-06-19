@@ -10,7 +10,6 @@ from process.fortran import (
     pfcoil_variables,
     physics_variables,
     pulse_variables,
-    times_variables,
 )
 from process.pulse import Pulse
 
@@ -61,36 +60,6 @@ class TohswgParam(NamedTuple):
     iprint: Any = None
 
     expected_tohsmn: Any = None
-
-
-class BurnParam(NamedTuple):
-    res_plasma: Any = None
-
-    vs_plasma_res_ramp: Any = None
-
-    vs_plasma_ind_ramp: Any = None
-
-    vs_cs_pf_total_burn: Any = None
-
-    vs_cs_pf_total_pulse: Any = None
-
-    plasma_current: Any = None
-
-    f_c_plasma_inductive: Any = None
-
-    csawth: Any = None
-
-    i_pulsed_plant: Any = None
-
-    t_burn: Any = None
-
-    t_fusion_ramp: Any = None
-
-    outfile: Any = None
-
-    iprint: Any = None
-
-    expected_tburn: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1281,89 +1250,25 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
 
 @pytest.mark.parametrize(
-    "burnparam",
-    (
-        BurnParam(
-            res_plasma=3.2347283861249307e-09,
-            vs_plasma_res_ramp=59.392760827339345,
-            vs_plasma_ind_ramp=284.23601098215397,
-            vs_cs_pf_total_burn=0,
-            vs_cs_pf_total_pulse=-718.91787876294552,
-            plasma_current=17721306.969367817,
-            f_c_plasma_inductive=0.60433999999999999,
-            csawth=1,
-            i_pulsed_plant=1,
-            t_burn=0,
-            t_fusion_ramp=10,
-            outfile=11,
-            iprint=0,
-            expected_tburn=0,
-        ),
-        BurnParam(
-            res_plasma=3.2347283861249307e-09,
-            vs_plasma_res_ramp=59.392760827339345,
-            vs_plasma_ind_ramp=284.23601098215397,
-            vs_cs_pf_total_pulse=-718.9849676846776,
-            vs_cs_pf_total_burn=-354.76231817639609,
-            plasma_current=17721306.969367817,
-            f_c_plasma_inductive=0.60433999999999999,
-            csawth=1,
-            i_pulsed_plant=1,
-            t_burn=10234.092022756307,
-            t_fusion_ramp=10,
-            outfile=11,
-            iprint=0,
-            expected_tburn=10230.533336387545,
-        ),
-    ),
+    "i_pulsed_plant, vs_cs_pf_total_burn, v_plasma_loop_burn, t_fusion_ramp, expected",
+    [
+        (1, 100.0, 10.0, 2.0, 8.0),
+        (1, -100.0, 10.0, 2.0, 8.0),  # abs() should be used
+        (1, 50.0, 5.0, 0.0, 10.0),
+    ],
 )
-def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
-    """
-    Automatically generated Regression Unit Test for burn.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param burnparam: the data used to mock and assert in this test.
-    :type burnparam: burnparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-
-    monkeypatch.setattr(physics_variables, "res_plasma", burnparam.res_plasma)
-
-    monkeypatch.setattr(
-        physics_variables, "vs_plasma_res_ramp", burnparam.vs_plasma_res_ramp
+def test_calculate_burn_time_valid(
+    i_pulsed_plant,
+    vs_cs_pf_total_burn,
+    v_plasma_loop_burn,
+    t_fusion_ramp,
+    expected,
+):
+    pulse = Pulse()
+    result = pulse.calculate_burn_time(
+        i_pulsed_plant=i_pulsed_plant,
+        vs_cs_pf_total_burn=vs_cs_pf_total_burn,
+        v_plasma_loop_burn=v_plasma_loop_burn,
+        t_fusion_ramp=t_fusion_ramp,
     )
-
-    monkeypatch.setattr(
-        physics_variables, "vs_plasma_ind_ramp", burnparam.vs_plasma_ind_ramp
-    )
-
-    monkeypatch.setattr(
-        pfcoil_variables, "vs_cs_pf_total_pulse", burnparam.vs_cs_pf_total_pulse
-    )
-
-    monkeypatch.setattr(
-        pfcoil_variables, "vs_cs_pf_total_burn", burnparam.vs_cs_pf_total_burn
-    )
-
-    monkeypatch.setattr(physics_variables, "plasma_current", burnparam.plasma_current)
-
-    monkeypatch.setattr(
-        physics_variables,
-        "f_c_plasma_inductive",
-        burnparam.f_c_plasma_inductive,
-    )
-
-    monkeypatch.setattr(physics_variables, "csawth", burnparam.csawth)
-
-    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", burnparam.i_pulsed_plant)
-
-    monkeypatch.setattr(times_variables, "t_burn", burnparam.t_burn)
-
-    monkeypatch.setattr(times_variables, "t_fusion_ramp", burnparam.t_fusion_ramp)
-
-    pulse.burn(output=True)
-
-    assert times_variables.t_burn == pytest.approx(burnparam.expected_tburn)
+    assert result == expected

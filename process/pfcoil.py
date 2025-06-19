@@ -2750,7 +2750,14 @@ class PFCoil:
             self.outfile,
             "Total volt-second consumption by coils (Wb)",
             "(vs_cs_pf_total_pulse)",
-            f"{pfv.vs_cs_pf_total_pulse:.2}",
+            pfv.vs_cs_pf_total_pulse,
+            "OP",
+        )
+        op.ovarre(
+            self.outfile,
+            "Total volt-second available for burn phase (Wb)",
+            "(vs_cs_pf_total_burn)",
+            pfv.vs_cs_pf_total_burn,
             "OP",
         )
 

@@ -102,6 +102,7 @@ def calculate_volt_second_requirements(
                 - vs_plasma_internal: Internal plasma volt-seconds (Wb)
                 - ind_plasma_internal: Plasma inductance (H)
                 - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+                - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
                 - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
                 - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
                 - vs_plasma_total_required: Total volt-seconds needed (Wb)
@@ -157,7 +158,7 @@ def calculate_volt_second_requirements(
     # Inductive V-s component
 
     vs_self_ind_ramp = ind_plasma_total * plasma_current
-    vs_ramp_required = vs_res_ramp + vs_self_ind_ramp
+    vs_plasma_ramp_required = vs_res_ramp + vs_self_ind_ramp
 
     # Plasma loop voltage during flat-top
     # Include enhancement factor in flattop V-s requirement
@@ -172,12 +173,13 @@ def calculate_volt_second_requirements(
     # will be correct on subsequent calls.
 
     vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
-    vs_plasma_total_required = vs_ramp_required + vs_plasma_burn_required
+    vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
 
     return (
         vs_plasma_internal,
         ind_plasma_total,
         vs_plasma_burn_required,
+        vs_plasma_ramp_required,
         vs_self_ind_ramp,
         vs_res_ramp,
         vs_plasma_total_required,
@@ -2462,6 +2464,7 @@ class Physics:
             physics_variables.vs_plasma_internal,
             physics_variables.ind_plasma,
             physics_variables.vs_plasma_burn_required,
+            physics_variables.vs_plasma_ramp_required,
             physics_variables.vs_plasma_ind_ramp,
             physics_variables.vs_plasma_res_ramp,
             physics_variables.vs_plasma_total_required,
@@ -5934,24 +5937,13 @@ class Physics:
                 physics_variables.vs_plasma_total_required,
                 "OP ",
             )
+            po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
                 "Total plasma inductive flux consumption for plasma current ramp-up (Wb)",
                 "(vs_plasma_ind_ramp)",
                 physics_variables.vs_plasma_ind_ramp,
                 "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Ejima coefficient",
-                "(ejima_coeff)",
-                physics_variables.ejima_coeff,
-            )
-            po.ovarre(
-                self.outfile,
-                "Internal plasma V-s",
-                "(vs_plasma_internal)",
-                physics_variables.vs_plasma_internal,
             )
             po.ovarre(
                 self.outfile,
@@ -5960,6 +5952,27 @@ class Physics:
                 physics_variables.vs_plasma_res_ramp,
                 "OP ",
             )
+            po.ovarre(
+                self.outfile,
+                "Total flux consumption for plasma current ramp-up (Wb)",
+                "(vs_plasma_ramp_required)",
+                physics_variables.vs_plasma_ramp_required,
+                "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Ejima coefficient",
+                "(ejima_coeff)",
+                physics_variables.ejima_coeff,
+            )
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Internal plasma V-s",
+                "(vs_plasma_internal)",
+                physics_variables.vs_plasma_internal,
+            )
+
             po.ovarre(
                 self.outfile,
                 "Plasma volt-seconds needed for flat-top (heat + burn times) (Wb)",
@@ -5975,6 +5988,13 @@ class Physics:
                 physics_variables.v_plasma_loop_burn,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "Coefficient for sawtooth effects on burn V-s requirement",
+                "(csawth)",
+                physics_variables.csawth,
+            )
+            po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
                 "Plasma resistance (ohm)",
@@ -6003,12 +6023,6 @@ class Physics:
                 "(ind_plasma_internal_norm)",
                 physics_variables.ind_plasma_internal_norm,
                 "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Coefficient for sawtooth effects on burn V-s requirement",
-                "(csawth)",
-                physics_variables.csawth,
             )
 
             po.oblnkl(self.outfile)
@@ -8725,6 +8739,7 @@ def init_physics_variables():
     physics_variables.triang95 = 0.24
     physics_variables.vol_plasma = 0.0
     physics_variables.vs_plasma_burn_required = 0.0
+    physics_variables.vs_plasma_ramp_required = 0.0
     physics_variables.v_plasma_loop_burn = 0.0
     physics_variables.vshift = 0.0
     physics_variables.vs_plasma_ind_ramp = 0.0
