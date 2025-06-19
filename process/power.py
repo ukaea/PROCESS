@@ -1096,8 +1096,9 @@ class Power:
         #  Total baseline power to facility loads, MW
         heat_transport_variables.p_plant_electric_base_total_mw = (
             heat_transport_variables.p_plant_electric_base * 1.0e-6
-        ) + buildings_variables.a_plant_floor_effective * (
-            heat_transport_variables.pflux_plant_floor_electric * 1.0e-6
+            + buildings_variables.a_plant_floor_effective
+            * (heat_transport_variables.pflux_plant_floor_electric * 1.0e-3)
+            / 1000.0e0
         )
 
         #  Facility heat removal (heat_transport_variables.p_plant_electric_base_total_mw calculated in ACPOW)
