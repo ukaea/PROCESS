@@ -104,7 +104,7 @@ class SuperconParam(NamedTuple):
 
     jwdgpro: Any = None
 
-    dhecoil: Any = None
+    dia_tf_turn_coolant_channel: Any = None
 
     c_tf_turn: Any = None
 
@@ -166,7 +166,7 @@ class SuperconParam(NamedTuple):
 
     expected_jwdgpro: Any = None
 
-    expected_jwdgcrt: Any = None
+    expected_j_tf_wp_critical: Any = None
 
     expected_vd: Any = None
 
@@ -181,7 +181,7 @@ class SuperconParam(NamedTuple):
             n_tf_coils=16,
             temp_margin=0,
             jwdgpro=0,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
@@ -212,7 +212,7 @@ class SuperconParam(NamedTuple):
             tcritsc=16,
             expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
-            expected_jwdgcrt=41107234.360397324,
+            expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=9988.2637896807955,
             expected_tmarg=2.34312129,
         ),
@@ -221,7 +221,7 @@ class SuperconParam(NamedTuple):
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
@@ -252,7 +252,7 @@ class SuperconParam(NamedTuple):
             tcritsc=16,
             expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
-            expected_jwdgcrt=41107234.360397324,
+            expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
         ),
@@ -261,7 +261,7 @@ class SuperconParam(NamedTuple):
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
             jwdgpro=17475706.393616617,
-            dhecoil=0.010000000000000002,
+            dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
             bmaxtfrp=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
@@ -292,7 +292,7 @@ class SuperconParam(NamedTuple):
             tcritsc=16,
             expected_temp_margin=2.34312129,
             expected_jwdgpro=17475706.393616617,
-            expected_jwdgcrt=41107234.360397324,
+            expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
         ),
@@ -322,7 +322,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "jwdgpro", superconparam.jwdgpro)
 
-    monkeypatch.setattr(tfcoil_variables, "dhecoil", superconparam.dhecoil)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dia_tf_turn_coolant_channel",
+        superconparam.dia_tf_turn_coolant_channel,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_turn", superconparam.c_tf_turn)
 
@@ -350,7 +354,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
-    jwdgcrt, vd, tmarg = sctfcoil.supercon(
+    j_tf_wp_critical, vd, tmarg = sctfcoil.supercon(
         isumat=superconparam.isumat,
         acs=superconparam.acs,
         aturn=superconparam.aturn,
@@ -375,7 +379,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
 
-    assert jwdgcrt == pytest.approx(superconparam.expected_jwdgcrt)
+    assert j_tf_wp_critical == pytest.approx(superconparam.expected_j_tf_wp_critical)
 
     assert vd == pytest.approx(superconparam.expected_vd)
 
@@ -943,13 +947,13 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     t_conductor_toroidal: Any = None
 
-    t_cable_radial: Any = None
+    dr_tf_turn_cable_space: Any = None
 
-    t_cable_toroidal: Any = None
+    dx_tf_turn_cable_space: Any = None
 
-    t_turn_radial: Any = None
+    dr_tf_turn: Any = None
 
-    t_turn_toroidal: Any = None
+    dx_tf_turn: Any = None
 
     t_cable: Any = None
 
@@ -957,9 +961,9 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     n_pancake: Any = None
 
-    thwcndut: Any = None
+    dx_tf_turn_steel: Any = None
 
-    thicndut: Any = None
+    dx_tf_turn_insulation: Any = None
 
     expected_t_conductor: Any = None
 
@@ -969,25 +973,25 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     expected_t_conductor_toroidal: Any = None
 
-    expected_t_cable_radial: Any = None
+    expected_dr_tf_turn_cable_space: Any = None
 
-    expected_t_cable_toroidal: Any = None
+    expected_dx_tf_turn_cable_space: Any = None
 
     expected_t_turn_radial: Any = None
 
-    expected_t_turn_toroidal: Any = None
+    expected_dx_tf_turn: Any = None
 
     expected_t_cable: Any = None
 
-    expected_acstf: Any = None
+    expected_a_tf_turn_cable_space: Any = None
 
-    expected_acndttf: Any = None
+    expected_a_tf_turn_steel: Any = None
 
-    expected_insulation_area: Any = None
+    expected_a_tf_turn_insulation: Any = None
 
     expected_cpttf: Any = None
 
-    expected_n_tf_turn: Any = None
+    expected_n_tf_coil_turns: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1003,29 +1007,29 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_wp_toroidal=1.299782604942499,
             t_conductor_radial=0,
             t_conductor_toroidal=0,
-            t_cable_radial=0,
-            t_cable_toroidal=0,
-            t_turn_radial=0,
-            t_turn_toroidal=0,
+            dr_tf_turn_cable_space=0,
+            dx_tf_turn_cable_space=0,
+            dr_tf_turn=0,
+            dx_tf_turn=0,
             t_cable=0,
             n_layer=10,
             n_pancake=20,
-            thwcndut=0.0080000000000000002,
-            thicndut=0.002,
+            dx_tf_turn_steel=0.0080000000000000002,
+            dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
             expected_t_turn_tf=0.056579413904423038,
             expected_t_conductor_radial=0.046661087836601015,
             expected_t_conductor_toroidal=0.059189130247124938,
-            expected_t_cable_radial=0.030661087836601014,
-            expected_t_cable_toroidal=0.043189130247124938,
+            expected_dr_tf_turn_cable_space=0.030661087836601014,
+            expected_dx_tf_turn_cable_space=0.043189130247124938,
             expected_t_turn_radial=0.050661087836601018,
-            expected_t_turn_toroidal=0.063189130247124942,
+            expected_dx_tf_turn=0.063189130247124942,
             expected_t_cable=0.036389912284773368,
-            expected_acstf=0.001293323051622732,
-            expected_acndttf=0.0014685061538103825,
-            expected_insulation_area=0.00043940087233490435,
+            expected_a_tf_turn_cable_space=0.001293323051622732,
+            expected_a_tf_turn_steel=0.0014685061538103825,
+            expected_a_tf_turn_insulation=0.00043940087233490435,
             expected_cpttf=74026.751437500003,
-            expected_n_tf_turn=200,
+            expected_n_tf_coil_turns=200,
         ),
         TfIntegerTurnGeomParam(
             dr_tf_wp=0.54261087836601019,
@@ -1037,29 +1041,29 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_wp_toroidal=1.299782604942499,
             t_conductor_radial=0.046661087836601015,
             t_conductor_toroidal=0.059189130247124938,
-            t_cable_radial=0.030661087836601014,
-            t_cable_toroidal=0.043189130247124938,
-            t_turn_radial=0.050661087836601018,
-            t_turn_toroidal=0.063189130247124942,
+            dr_tf_turn_cable_space=0.030661087836601014,
+            dx_tf_turn_cable_space=0.043189130247124938,
+            dr_tf_turn=0.050661087836601018,
+            dx_tf_turn=0.063189130247124942,
             t_cable=0.036389912284773368,
             n_layer=10,
             n_pancake=20,
-            thwcndut=0.0080000000000000002,
-            thicndut=0.002,
+            dx_tf_turn_steel=0.0080000000000000002,
+            dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
             expected_t_turn_tf=0.056579413904423038,
             expected_t_conductor_radial=0.046661087836601015,
             expected_t_conductor_toroidal=0.059189130247124938,
-            expected_t_cable_radial=0.030661087836601014,
-            expected_t_cable_toroidal=0.043189130247124938,
+            expected_dr_tf_turn_cable_space=0.030661087836601014,
+            expected_dx_tf_turn_cable_space=0.043189130247124938,
             expected_t_turn_radial=0.050661087836601018,
-            expected_t_turn_toroidal=0.063189130247124942,
+            expected_dx_tf_turn=0.063189130247124942,
             expected_t_cable=0.036389912284773368,
-            expected_acstf=0.001293323051622732,
-            expected_acndttf=0.0014685061538103825,
-            expected_insulation_area=0.00043940087233490435,
+            expected_a_tf_turn_cable_space=0.001293323051622732,
+            expected_a_tf_turn_steel=0.0014685061538103825,
+            expected_a_tf_turn_insulation=0.00043940087233490435,
             expected_cpttf=74026.751437500003,
-            expected_n_tf_turn=200,
+            expected_n_tf_coil_turns=200,
         ),
     ),
 )
@@ -1105,34 +1109,38 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_cable_radial", tfintegerturngeomparam.t_cable_radial
+        sctfcoil_module,
+        "dr_tf_turn_cable_space",
+        tfintegerturngeomparam.dr_tf_turn_cable_space,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_cable_toroidal", tfintegerturngeomparam.t_cable_toroidal
+        sctfcoil_module,
+        "dx_tf_turn_cable_space",
+        tfintegerturngeomparam.dx_tf_turn_cable_space,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_radial", tfintegerturngeomparam.t_turn_radial
+        sctfcoil_module, "dr_tf_turn", tfintegerturngeomparam.dr_tf_turn
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_toroidal", tfintegerturngeomparam.t_turn_toroidal
+        sctfcoil_module, "dx_tf_turn", tfintegerturngeomparam.dx_tf_turn
     )
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfintegerturngeomparam.t_cable)
 
     (
-        acstf,
-        acndttf,
-        insulation_area,
+        a_tf_turn_cable_space,
+        a_tf_turn_steel,
+        a_tf_turn_insulation,
         c_tf_turn,
-        n_tf_turn,
+        n_tf_coil_turns,
     ) = sctfcoil.tf_integer_turn_geom(
         n_layer=tfintegerturngeomparam.n_layer,
         n_pancake=tfintegerturngeomparam.n_pancake,
-        thwcndut=tfintegerturngeomparam.thwcndut,
-        thicndut=tfintegerturngeomparam.thicndut,
+        dx_tf_turn_steel=tfintegerturngeomparam.dx_tf_turn_steel,
+        dx_tf_turn_insulation=tfintegerturngeomparam.dx_tf_turn_insulation,
     )
 
     assert tfcoil_variables.t_conductor == pytest.approx(
@@ -1151,37 +1159,43 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         tfintegerturngeomparam.expected_t_conductor_toroidal
     )
 
-    assert sctfcoil_module.t_cable_radial == pytest.approx(
-        tfintegerturngeomparam.expected_t_cable_radial
+    assert sctfcoil_module.dr_tf_turn_cable_space == pytest.approx(
+        tfintegerturngeomparam.expected_dr_tf_turn_cable_space
     )
 
-    assert sctfcoil_module.t_cable_toroidal == pytest.approx(
-        tfintegerturngeomparam.expected_t_cable_toroidal
+    assert sctfcoil_module.dx_tf_turn_cable_space == pytest.approx(
+        tfintegerturngeomparam.expected_dx_tf_turn_cable_space
     )
 
-    assert sctfcoil_module.t_turn_radial == pytest.approx(
+    assert sctfcoil_module.dr_tf_turn == pytest.approx(
         tfintegerturngeomparam.expected_t_turn_radial
     )
 
-    assert sctfcoil_module.t_turn_toroidal == pytest.approx(
-        tfintegerturngeomparam.expected_t_turn_toroidal
+    assert sctfcoil_module.dx_tf_turn == pytest.approx(
+        tfintegerturngeomparam.expected_dx_tf_turn
     )
 
     assert sctfcoil_module.t_cable == pytest.approx(
         tfintegerturngeomparam.expected_t_cable
     )
 
-    assert acstf == pytest.approx(tfintegerturngeomparam.expected_acstf)
+    assert a_tf_turn_cable_space == pytest.approx(
+        tfintegerturngeomparam.expected_a_tf_turn_cable_space
+    )
 
-    assert acndttf == pytest.approx(tfintegerturngeomparam.expected_acndttf)
+    assert a_tf_turn_steel == pytest.approx(
+        tfintegerturngeomparam.expected_a_tf_turn_steel
+    )
 
-    assert insulation_area == pytest.approx(
-        tfintegerturngeomparam.expected_insulation_area
+    assert a_tf_turn_insulation == pytest.approx(
+        tfintegerturngeomparam.expected_a_tf_turn_insulation
     )
 
     assert c_tf_turn == pytest.approx(tfintegerturngeomparam.expected_cpttf)
 
-    assert n_tf_turn == pytest.approx(tfintegerturngeomparam.expected_n_tf_turn)
+    assert n_tf_coil_turns == pytest.approx(
+        tfintegerturngeomparam.expected_n_tf_coil_turns
+    )
 
 
 class TfAveragedTurnGeomParam(NamedTuple):
@@ -1201,9 +1215,9 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     awptf: Any = None
 
-    t_turn_radial: Any = None
+    dr_tf_turn: Any = None
 
-    t_turn_toroidal: Any = None
+    dx_tf_turn: Any = None
 
     t_cable: Any = None
 
@@ -1211,9 +1225,9 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     j_tf_wp: Any = None
 
-    thwcndut: Any = None
+    dx_tf_turn_steel: Any = None
 
-    thicndut: Any = None
+    dx_tf_turn_insulation: Any = None
 
     expected_t_conductor: Any = None
 
@@ -1221,17 +1235,17 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     expected_t_turn_radial: Any = None
 
-    expected_t_turn_toroidal: Any = None
+    expected_dx_tf_turn: Any = None
 
     expected_t_cable: Any = None
 
-    expected_acstf: Any = None
+    expected_a_tf_turn_cable_space: Any = None
 
-    expected_acndttf: Any = None
+    expected_a_tf_turn_steel: Any = None
 
-    expected_insulation_area: Any = None
+    expected_a_tf_turn_insulation: Any = None
 
-    expected_n_tf_turn: Any = None
+    expected_n_tf_coil_turns: Any = None
 
 
 @pytest.mark.parametrize(
@@ -1246,22 +1260,22 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
-            t_turn_radial=0,
-            t_turn_toroidal=0,
+            dr_tf_turn=0,
+            dx_tf_turn=0,
             t_cable=0,
             i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
-            thwcndut=0.0080000000000000019,
-            thicndut=0.00080000000000000004,
+            dx_tf_turn_steel=0.0080000000000000019,
+            dx_tf_turn_insulation=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
             expected_t_turn_tf=0.049532469413859428,
             expected_t_turn_radial=0.049532469413859428,
-            expected_t_turn_toroidal=0.049532469413859428,
+            expected_dx_tf_turn=0.049532469413859428,
             expected_t_cable=0.031932469413859424,
-            expected_acstf=0.00098877993839630008,
-            expected_acndttf=0.0013087416857142699,
-            expected_insulation_area=0.00015594390212434958,
-            expected_n_tf_turn=246.63461538461544,
+            expected_a_tf_turn_cable_space=0.00098877993839630008,
+            expected_a_tf_turn_steel=0.0013087416857142699,
+            expected_a_tf_turn_insulation=0.00015594390212434958,
+            expected_n_tf_coil_turns=246.63461538461544,
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
@@ -1272,22 +1286,22 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
-            t_turn_radial=0.049532469413859428,
-            t_turn_toroidal=0.049532469413859428,
+            dr_tf_turn=0.049532469413859428,
+            dx_tf_turn=0.049532469413859428,
             t_cable=0.031932469413859424,
             i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
-            thwcndut=0.0080000000000000019,
-            thicndut=0.00080000000000000004,
+            dx_tf_turn_steel=0.0080000000000000019,
+            dx_tf_turn_insulation=0.00080000000000000004,
             expected_t_conductor=0.047932469413859431,
             expected_t_turn_tf=0.049532469413859428,
             expected_t_turn_radial=0.049532469413859428,
-            expected_t_turn_toroidal=0.049532469413859428,
+            expected_dx_tf_turn=0.049532469413859428,
             expected_t_cable=0.031932469413859424,
-            expected_acstf=0.00098877993839630008,
-            expected_acndttf=0.0013087416857142699,
-            expected_insulation_area=0.00015594390212434958,
-            expected_n_tf_turn=246.63461538461544,
+            expected_a_tf_turn_cable_space=0.00098877993839630008,
+            expected_a_tf_turn_steel=0.0013087416857142699,
+            expected_a_tf_turn_insulation=0.00015594390212434958,
+            expected_n_tf_coil_turns=246.63461538461544,
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
@@ -1298,22 +1312,22 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0,
             t_cable_tf_is_input=False,
             awptf=0.60510952642236249,
-            t_turn_radial=0.05872,
-            t_turn_toroidal=0.05872,
+            dr_tf_turn=0.05872,
+            dx_tf_turn=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
             j_tf_wp=2.301e07,
-            thwcndut=8.015e-03,
-            thicndut=8.0e-4,
+            dx_tf_turn_steel=8.015e-03,
+            dx_tf_turn_insulation=8.0e-4,
             expected_t_conductor=5.712e-02,
             expected_t_turn_tf=0.05872,
             expected_t_turn_radial=0.05872,
-            expected_t_turn_toroidal=0.05872,
+            expected_dx_tf_turn=0.05872,
             expected_t_cable=0.04109,
-            expected_acstf=0.001657369442,
-            expected_acndttf=0.001605324958,
-            expected_insulation_area=0.000185344,
-            expected_n_tf_turn=175.49384787,
+            expected_a_tf_turn_cable_space=0.001657369442,
+            expected_a_tf_turn_steel=0.001605324958,
+            expected_a_tf_turn_insulation=0.000185344,
+            expected_n_tf_coil_turns=175.49384787,
         ),
         TfAveragedTurnGeomParam(
             layer_ins=0,
@@ -1324,22 +1338,22 @@ class TfAveragedTurnGeomParam(NamedTuple):
             t_cable_tf=0.042,
             t_cable_tf_is_input=True,
             awptf=0.60510952642236249,
-            t_turn_radial=0.05872,
-            t_turn_toroidal=0.05872,
+            dr_tf_turn=0.05872,
+            dx_tf_turn=0.05872,
             t_cable=0.04109,
             i_tf_sc_mat=1,
             j_tf_wp=2.673e07,
-            thwcndut=8.148e-03,
-            thicndut=8.0e-4,
+            dx_tf_turn_steel=8.148e-03,
+            dx_tf_turn_insulation=8.0e-4,
             expected_t_conductor=0.058296,
             expected_t_turn_tf=0.059896,
             expected_t_turn_radial=0.059896,
-            expected_t_turn_toroidal=0.059896,
+            expected_dx_tf_turn=0.059896,
             expected_t_cable=0.042,
-            expected_acstf=0.001731943361,
-            expected_acndttf=0.001666480255,
-            expected_insulation_area=0.00018910719999999962,
-            expected_n_tf_turn=168.6701961481806,
+            expected_a_tf_turn_cable_space=0.001731943361,
+            expected_a_tf_turn_steel=0.001666480255,
+            expected_a_tf_turn_insulation=0.00018910719999999962,
+            expected_n_tf_coil_turns=168.6701961481806,
         ),
     ),
 )
@@ -1391,20 +1405,22 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "awptf", tfaveragedturngeomparam.awptf)
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_radial", tfaveragedturngeomparam.t_turn_radial
+        sctfcoil_module, "dr_tf_turn", tfaveragedturngeomparam.dr_tf_turn
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_turn_toroidal", tfaveragedturngeomparam.t_turn_toroidal
+        sctfcoil_module, "dx_tf_turn", tfaveragedturngeomparam.dx_tf_turn
     )
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfaveragedturngeomparam.t_cable)
 
-    acstf, acndttf, insulation_area, n_tf_turn = sctfcoil.tf_averaged_turn_geom(
-        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
-        j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
-        thwcndut=tfaveragedturngeomparam.thwcndut,
-        thicndut=tfaveragedturngeomparam.thicndut,
+    a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_coil_turns = (
+        sctfcoil.tf_averaged_turn_geom(
+            i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
+            j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
+            dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
+            dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
+        )
     )
 
     assert tfcoil_variables.t_conductor == pytest.approx(
@@ -1415,27 +1431,33 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.expected_t_turn_tf
     )
 
-    assert sctfcoil_module.t_turn_radial == pytest.approx(
+    assert sctfcoil_module.dr_tf_turn == pytest.approx(
         tfaveragedturngeomparam.expected_t_turn_radial
     )
 
-    assert sctfcoil_module.t_turn_toroidal == pytest.approx(
-        tfaveragedturngeomparam.expected_t_turn_toroidal
+    assert sctfcoil_module.dx_tf_turn == pytest.approx(
+        tfaveragedturngeomparam.expected_dx_tf_turn
     )
 
     assert sctfcoil_module.t_cable == pytest.approx(
         tfaveragedturngeomparam.expected_t_cable
     )
 
-    assert acstf == pytest.approx(tfaveragedturngeomparam.expected_acstf)
-
-    assert acndttf == pytest.approx(tfaveragedturngeomparam.expected_acndttf)
-
-    assert insulation_area == pytest.approx(
-        tfaveragedturngeomparam.expected_insulation_area
+    assert a_tf_turn_cable_space == pytest.approx(
+        tfaveragedturngeomparam.expected_a_tf_turn_cable_space
     )
 
-    assert n_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_n_tf_turn)
+    assert a_tf_turn_steel == pytest.approx(
+        tfaveragedturngeomparam.expected_a_tf_turn_steel
+    )
+
+    assert a_tf_turn_insulation == pytest.approx(
+        tfaveragedturngeomparam.expected_a_tf_turn_insulation
+    )
+
+    assert n_tf_coil_turns == pytest.approx(
+        tfaveragedturngeomparam.expected_n_tf_coil_turns
+    )
 
 
 class TfWpCurrentsParam(NamedTuple):
@@ -1517,7 +1539,7 @@ def test_vv_stress_on_quench():
                 theta1_vv=1,
                 # TF properties
                 n_tf_coils=18,
-                n_tf_turn=192,
+                n_tf_coil_turns=192,
                 s_rp=0.55,
                 s_cc=0.94,
                 taud=30,
@@ -1536,7 +1558,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     and approximations in the models integration with PROCESS.
     """
     monkeypatch.setattr(build_variables, "dr_tf_inboard", 1.4)  # Baseline 2018 value
-    monkeypatch.setattr(build_variables, "hmax", 8.8)  # Table 2
+    monkeypatch.setattr(build_variables, "z_tf_inside_half", 8.8)  # Table 2
     monkeypatch.setattr(build_variables, "r_tf_inboard_mid", 3.55)  # Table 2
     monkeypatch.setattr(build_variables, "r_tf_outboard_mid", 15.62)  # Table 2
     monkeypatch.setattr(tfcoil_variables, "theta1_coil", 48)  # Table 2
@@ -1583,7 +1605,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         tfcoil_variables, "tfa", [3.41, 7.77, 7.77, 3.41]
     )  # chosen to achieve Rm_coil in Table 2
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
-    monkeypatch.setattr(tfcoil_variables, "n_tf_turn", 192)  # Section 3
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coil_turns", 192)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
     monkeypatch.setattr(sctfcoil_module, "c_tf_coil", 83200 * 192)  # Section 3
 

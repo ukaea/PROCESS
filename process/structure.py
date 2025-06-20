@@ -56,7 +56,7 @@ class Structure:
             tfv.i_tf_sup,
             pfv.i_pf_conductor,
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
-            bv.hmax,
+            bv.z_tf_inside_half,
             fwbsv.whtshld,
             divv.m_div_plate,
             total_weight_pf,

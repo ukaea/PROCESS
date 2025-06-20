@@ -2567,23 +2567,23 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
 
     # Arc points
     # MDK Only 4 points now required for elliptical arcs
-    x1 = mfile_data.data["xarc(1)"].get_scan(scan)
-    y1 = mfile_data.data["yarc(1)"].get_scan(scan)
-    x2 = mfile_data.data["xarc(2)"].get_scan(scan)
-    y2 = mfile_data.data["yarc(2)"].get_scan(scan)
-    x3 = mfile_data.data["xarc(3)"].get_scan(scan)
-    y3 = mfile_data.data["yarc(3)"].get_scan(scan)
-    x4 = mfile_data.data["xarc(4)"].get_scan(scan)
-    y4 = mfile_data.data["yarc(4)"].get_scan(scan)
-    x5 = mfile_data.data["xarc(5)"].get_scan(scan)
-    y5 = mfile_data.data["yarc(5)"].get_scan(scan)
+    x1 = mfile_data.data["r_tf_arc(1)"].get_scan(scan)
+    y1 = mfile_data.data["z_tf_arc(1)"].get_scan(scan)
+    x2 = mfile_data.data["r_tf_arc(2)"].get_scan(scan)
+    y2 = mfile_data.data["z_tf_arc(2)"].get_scan(scan)
+    x3 = mfile_data.data["r_tf_arc(3)"].get_scan(scan)
+    y3 = mfile_data.data["z_tf_arc(3)"].get_scan(scan)
+    x4 = mfile_data.data["r_tf_arc(4)"].get_scan(scan)
+    y4 = mfile_data.data["z_tf_arc(4)"].get_scan(scan)
+    x5 = mfile_data.data["r_tf_arc(5)"].get_scan(scan)
+    y5 = mfile_data.data["z_tf_arc(5)"].get_scan(scan)
     dr_shld_thermal_inboard = mfile_data.data["dr_shld_thermal_inboard"].get_scan(scan)
     dr_shld_thermal_outboard = mfile_data.data["dr_shld_thermal_outboard"].get_scan(
         scan
     )
     dr_tf_shld_gap = mfile_data.data["dr_tf_shld_gap"].get_scan(scan)
     if y3 != 0:
-        print("TF coil geometry: The value of yarc(3) is not zero, but should be.")
+        print("TF coil geometry: The value of z_tf_arc(3) is not zero, but should be.")
 
     if dr_shld_thermal_inboard != dr_shld_thermal_outboard:
         print(
@@ -2680,7 +2680,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
     wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
     tinstf = mfile_data.data["tinstf"].get_scan(scan)
-    turns = round(mfile_data.data["n_tf_turn"].get_scan(scan))
+    turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
     nose_thickness = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
@@ -3041,22 +3041,28 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
     # If integer turns switch is on then the turns can have non square dimensions
     if integer_turns == 1:
-        turn_width = round(mfile_data.data["t_turn_radial"].get_scan(scan) * 1e3, 5)
-        turn_height = round(mfile_data.data["t_turn_toroidal"].get_scan(scan) * 1e3, 5)
+        turn_width = round(mfile_data.data["dr_tf_turn"].get_scan(scan) * 1e3, 5)
+        turn_height = round(mfile_data.data["dx_tf_turn"].get_scan(scan) * 1e3, 5)
         cable_space_width_radial = round(
-            mfile_data.data["t_cable_radial"].get_scan(scan) * 1e3, 5
+            mfile_data.data["dr_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
         )
         cable_space_width_toroidal = round(
-            mfile_data.data["t_cable_toroidal"].get_scan(scan) * 1e3, 5
+            mfile_data.data["dx_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
         )
     elif integer_turns == 0:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
         cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
 
-    he_pipe_diameter = round(mfile_data.data["dhecoil"].get_scan(scan) * 1e3, 5)
-    steel_thickness = round(mfile_data.data["thwcndut"].get_scan(scan) * 1e3, 5)
-    insulation_thickness = round(mfile_data.data["thicndut"].get_scan(scan) * 1e3, 5)
-    internal_cable_space = round(mfile_data.data["acstf"].get_scan(scan) * 1e6, 5)
+    he_pipe_diameter = round(
+        mfile_data.data["dia_tf_turn_coolant_channel"].get_scan(scan) * 1e3, 5
+    )
+    steel_thickness = round(mfile_data.data["dx_tf_turn_steel"].get_scan(scan) * 1e3, 5)
+    insulation_thickness = round(
+        mfile_data.data["dx_tf_turn_insulation"].get_scan(scan) * 1e3, 5
+    )
+    internal_cable_space = round(
+        mfile_data.data["a_tf_turn_cable_space"].get_scan(scan) * 1e6, 5
+    )
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
 
     # Plot the total turn shape
