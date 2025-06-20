@@ -576,14 +576,14 @@ class TFCoil:
             r_tf_arc[4] = r_tf_arc[0]
 
             if i_single_null == 0:
-                z_tf_arc[0] = FSTRAIGHT * (z_tf_top - dr_tf_inboard)
-                z_tf_arc[1] = z_tf_top - dr_tf_inboard
+                z_tf_arc[0] = FSTRAIGHT * z_tf_inside_half
+                z_tf_arc[1] = z_tf_inside_half
                 z_tf_arc[2] = 0
                 z_tf_arc[3] = -z_tf_inside_half
                 z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
             else:
-                z_tf_arc[0] = FSTRAIGHT * z_tf_inside_half
-                z_tf_arc[1] = z_tf_inside_half
+                z_tf_arc[0] = FSTRAIGHT * (z_tf_top - dr_tf_inboard)
+                z_tf_arc[1] = z_tf_top - dr_tf_inboard
                 z_tf_arc[2] = 0
                 z_tf_arc[3] = -z_tf_inside_half
                 z_tf_arc[4] = -FSTRAIGHT * z_tf_inside_half
