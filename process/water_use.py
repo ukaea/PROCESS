@@ -1,7 +1,8 @@
 import numpy as np
 
 from process import process_output as po
-from process.fortran import constants, heat_transport_variables, water_usage_variables
+from process.data_structure import water_usage_variables
+from process.fortran import constants, heat_transport_variables
 
 SECDAY = 86400e0
 
@@ -284,20 +285,3 @@ class WaterUse:
                 water_usage_variables.wateruseonethru,
                 "OP ",
             )
-
-
-def init_watuse_variables():
-    """Initialise water variables"""
-    water_usage_variables.airtemp = 15.0
-    water_usage_variables.watertemp = 5.0
-    water_usage_variables.windspeed = 4.0
-    water_usage_variables.waterdens = 998.02
-    water_usage_variables.latentheat = 2257000.0
-    water_usage_variables.volheat = 0.0
-    water_usage_variables.evapratio = 0.0
-    water_usage_variables.evapvol = 0.0
-    water_usage_variables.energypervol = 0.0
-    water_usage_variables.volperenergy = 0.0
-    water_usage_variables.waterusetower = 0.0
-    water_usage_variables.wateruserecirc = 0.0
-    water_usage_variables.wateruseonethru = 0.0
