@@ -27,7 +27,9 @@ import numpy as np
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 
+import process.confinement_time as confine
 import process.io.mfile as mf
+from process.fortran import physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -4265,6 +4267,610 @@ def plot_h_threshold_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_confinement_time_comparison(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, u_seed=None
+) -> None:
+    """
+    Function to plot a scatter box plot of confinement time comparisons.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    dene20 = mfile_data.data["dene"].get_scan(scan) / 1e20
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    qstar = mfile_data.data["qstar"].get_scan(scan)
+    c_plasma_ma = mfile_data.data["plasma_current_ma"].get_scan(scan)
+    kappa95 = mfile_data.data["kappa95"].get_scan(scan)
+    dnla20 = mfile_data.data["dnla"].get_scan(scan) / 1e20
+    afuel = mfile_data.data["m_fuel_amu"].get_scan(scan)
+    ten = mfile_data.data["ten"].get_scan(scan)
+    bt = mfile_data.data["bt"].get_scan(scan)
+    p_plasma_separatrix_mw = mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
+    kappa = mfile_data.data["kappa"].get_scan(scan)
+    zeff = mfile_data.data["zeff"].get_scan(scan)
+    q95 = mfile_data.data["q95"].get_scan(scan)
+    aspect = mfile_data.data["aspect"].get_scan(scan)
+    dnla19 = mfile_data.data["dnla"].get_scan(scan) / 1e19
+    kappa_ipb = mfile_data.data["kappa_ipb"].get_scan(scan)
+    iotabar = mfile_data.data["iotabar"].get_scan(scan)
+    dnla = mfile_data.data["dnla"].get_scan(scan)
+    triang = mfile_data.data["triang"].get_scan(scan)
+    m_ions_total_amu = mfile_data.data["m_ions_total_amu"].get_scan(scan)
+
+    # Calculate confinement times using the scan data
+    # neo_alcator = confine.neo_alcator_confinement_time(
+    #     dene20=dene20, rminor=rminor, rmajor=rmajor, qstar=qstar
+    # )
+    mirnov = confine.mirnov_confinement_time(
+        rminor=rminor, kappa95=kappa95, pcur=c_plasma_ma
+    )
+    merezhkin_muhkovatov = confine.merezhkin_muhkovatov_confinement_time(
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        qstar=qstar,
+        dnla20=dnla20,
+        afuel=afuel,
+        ten=ten,
+    )
+    shimomura = confine.shimomura_confinement_time(
+        rmajor=rmajor, rminor=rminor, bt=bt, kappa95=kappa95, afuel=afuel
+    )
+    kaye_goldston = confine.kaye_goldston_confinement_time(
+        kappa95=kappa95,
+        pcur=c_plasma_ma,
+        n20=dnla20,
+        rmajor=rmajor,
+        afuel=afuel,
+        bt=bt,
+        rminor=rminor,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_89p = confine.iter_89p_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_89_0 = confine.iter_89_0_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    rebut_lallia = confine.rebut_lallia_confinement_time(
+        rminor=rminor,
+        rmajor=rmajor,
+        kappa=kappa,
+        afuel=afuel,
+        pcur=c_plasma_ma,
+        zeff=zeff,
+        dnla20=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    goldston = confine.goldston_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    t10 = confine.t10_confinement_time(
+        dnla20=dnla20,
+        rmajor=rmajor,
+        qstar=qstar,
+        bt=bt,
+        rminor=rminor,
+        kappa95=kappa95,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        zeff=zeff,
+        pcur=c_plasma_ma,
+    )
+    jaeri = confine.jaeri_confinement_time(
+        kappa95=kappa95,
+        rminor=rminor,
+        afuel=afuel,
+        n20=dnla20,
+        pcur=c_plasma_ma,
+        bt=bt,
+        rmajor=rmajor,
+        qstar=qstar,
+        zeff=zeff,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    kaye_big = confine.kaye_big_confinement_time(
+        rmajor=rmajor,
+        rminor=rminor,
+        bt=bt,
+        kappa95=kappa95,
+        pcur=c_plasma_ma,
+        n20=dnla20,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_h90_p = confine.iter_h90_p_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    riedel_l = confine.riedel_l_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        dnla20=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    christiansen = confine.christiansen_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        dnla20=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        afuel=afuel,
+    )
+    lackner_gottardi = confine.lackner_gottardi_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        dnla20=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    neo_kaye = confine.neo_kaye_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        dnla20=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    riedel_h = confine.riedel_h_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa95=kappa95,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_h90_p_amended = confine.iter_h90_p_amended_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        afuel=afuel,
+        rmajor=rmajor,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        kappa=kappa,
+    )
+    sudo_et_al = confine.sudo_et_al_confinement_time(
+        rmajor=rmajor,
+        rminor=rminor,
+        dnla20=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    gyro_reduced_bohm = confine.gyro_reduced_bohm_confinement_time(
+        bt=bt,
+        dnla20=dnla20,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rminor=rminor,
+        rmajor=rmajor,
+    )
+    lackner_gottardi_stellarator = (
+        confine.lackner_gottardi_stellarator_confinement_time(
+            rmajor=rmajor,
+            rminor=rminor,
+            dnla20=dnla20,
+            bt=bt,
+            p_plasma_loss_mw=p_plasma_separatrix_mw,
+            q=q95,
+        )
+    )
+    iter_93h = confine.iter_93h_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        afuel=afuel,
+        rmajor=rmajor,
+        dnla20=dnla20,
+        aspect=aspect,
+        kappa=kappa,
+    )
+    iter_h97p = confine.iter_h97p_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        dnla19=dnla19,
+        rmajor=rmajor,
+        aspect=aspect,
+        kappa=kappa,
+        afuel=afuel,
+    )
+    iter_h97p_elmy = confine.iter_h97p_elmy_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        dnla19=dnla19,
+        rmajor=rmajor,
+        aspect=aspect,
+        kappa=kappa,
+        afuel=afuel,
+    )
+    iter_96p = confine.iter_96p_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        kappa95=kappa95,
+        rmajor=rmajor,
+        aspect=aspect,
+        dnla19=dnla19,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    valovic_elmy = confine.valovic_elmy_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        afuel=afuel,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    kaye = confine.kaye_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        kappa=kappa,
+        rmajor=rmajor,
+        aspect=aspect,
+        dnla19=dnla19,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_pb98py = confine.iter_pb98py_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa=kappa,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y = confine.iter_ipb98y_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa=kappa,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y1 = confine.iter_ipb98y1_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y2 = confine.iter_ipb98y2_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y3 = confine.iter_ipb98y3_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y4 = confine.iter_ipb98y4_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iss95_stellarator = confine.iss95_stellarator_confinement_time(
+        rminor=rminor,
+        rmajor=rmajor,
+        dnla19=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        iotabar=iotabar,
+    )
+    iss04_stellarator = confine.iss04_stellarator_confinement_time(
+        rminor=rminor,
+        rmajor=rmajor,
+        dnla19=dnla20,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        iotabar=iotabar,
+    )
+    ds03 = confine.ds03_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa95=kappa95,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    murari = confine.murari_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        dnla19=dnla19,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    petty08 = confine.petty08_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+    )
+    lang_high_density = confine.lang_high_density_confinement_time(
+        plasma_current=c_plasma_ma,
+        bt=bt,
+        dnla=dnla,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        rminor=rminor,
+        q=q95,
+        qstar=qstar,
+        aspect=aspect,
+        afuel=afuel,
+        kappa_ipb=kappa_ipb,
+    )
+    hubbard_nominal = confine.hubbard_nominal_confinement_time(
+        pcur=c_plasma_ma, bt=bt, dnla20=dnla20, p_plasma_loss_mw=p_plasma_separatrix_mw
+    )
+    hubbard_lower = confine.hubbard_lower_confinement_time(
+        pcur=c_plasma_ma, bt=bt, dnla20=dnla20, p_plasma_loss_mw=p_plasma_separatrix_mw
+    )
+    hubbard_upper = confine.hubbard_upper_confinement_time(
+        pcur=c_plasma_ma, bt=bt, dnla20=dnla20, p_plasma_loss_mw=p_plasma_separatrix_mw
+    )
+    menard_nstx = confine.menard_nstx_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    menard_nstx_petty08 = confine.menard_nstx_petty08_hybrid_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    # nstx_gyro_bohm = confine.nstx_gyro_bohm_confinement_time(
+    #     pcur=c_plasma_ma,
+    #     bt=bt,
+    #     p_plasma_loss_mw=p_plasma_separatrix_mw,
+    #     rmajor=rmajor,
+    #     dnla20=dnla20,
+    # )
+    itpa20 = confine.itpa20_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        triang=triang,
+        kappa_ipb=kappa_ipb,
+        eps=(1 / aspect),
+        aion=m_ions_total_amu,
+    )
+    itpa20_ilc = confine.itpa20_il_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        dnla19=dnla19,
+        aion=m_ions_total_amu,
+        rmajor=rmajor,
+        triang=triang,
+        kappa_ipb=kappa_ipb,
+    )
+
+    # Data for the box plot
+    data = {
+        rf"{physics_variables.labels_confinement_scalings[2]}": mirnov,
+        rf"{physics_variables.labels_confinement_scalings[3]}": merezhkin_muhkovatov,
+        rf"{physics_variables.labels_confinement_scalings[4]}": shimomura,
+        rf"{physics_variables.labels_confinement_scalings[5]}": kaye_goldston,
+        rf"{physics_variables.labels_confinement_scalings[6]}": iter_89p,
+        rf"{physics_variables.labels_confinement_scalings[7]}": iter_89_0,
+        rf"{physics_variables.labels_confinement_scalings[8]}": rebut_lallia,
+        rf"{physics_variables.labels_confinement_scalings[9]}": goldston,
+        rf"{physics_variables.labels_confinement_scalings[10]}": t10,
+        rf"{physics_variables.labels_confinement_scalings[11]}": jaeri,
+        rf"{physics_variables.labels_confinement_scalings[12]}": kaye_big,
+        rf"{physics_variables.labels_confinement_scalings[13]}": iter_h90_p,
+        rf"{physics_variables.labels_confinement_scalings[14]}": riedel_l,
+        rf"{physics_variables.labels_confinement_scalings[15]}": christiansen,
+        rf"{physics_variables.labels_confinement_scalings[16]}": lackner_gottardi,
+        rf"{physics_variables.labels_confinement_scalings[17]}": neo_kaye,
+        rf"{physics_variables.labels_confinement_scalings[18]}": riedel_h,
+        rf"{physics_variables.labels_confinement_scalings[19]}": iter_h90_p_amended,
+        rf"{physics_variables.labels_confinement_scalings[20]}": sudo_et_al,
+        rf"{physics_variables.labels_confinement_scalings[21]}": gyro_reduced_bohm,
+        rf"{physics_variables.labels_confinement_scalings[22]}": lackner_gottardi_stellarator,
+        rf"{physics_variables.labels_confinement_scalings[23]}": iter_93h,
+        rf"{physics_variables.labels_confinement_scalings[24]}": iter_h97p,
+        rf"{physics_variables.labels_confinement_scalings[25]}": iter_h97p_elmy,
+        rf"{physics_variables.labels_confinement_scalings[26]}": iter_96p,
+        rf"{physics_variables.labels_confinement_scalings[27]}": valovic_elmy,
+        rf"{physics_variables.labels_confinement_scalings[28]}": kaye,
+        rf"{physics_variables.labels_confinement_scalings[29]}": iter_pb98py,
+        rf"{physics_variables.labels_confinement_scalings[30]}": iter_ipb98y,
+        rf"{physics_variables.labels_confinement_scalings[31]}": iter_ipb98y1,
+        rf"{physics_variables.labels_confinement_scalings[32]}": iter_ipb98y2,
+        rf"{physics_variables.labels_confinement_scalings[33]}": iter_ipb98y3,
+        rf"{physics_variables.labels_confinement_scalings[34]}": iter_ipb98y4,
+        rf"{physics_variables.labels_confinement_scalings[35]}": iss95_stellarator,
+        rf"{physics_variables.labels_confinement_scalings[36]}": iss04_stellarator,
+        rf"{physics_variables.labels_confinement_scalings[37]}": ds03,
+        rf"{physics_variables.labels_confinement_scalings[38]}": murari,
+        rf"{physics_variables.labels_confinement_scalings[39]}": petty08,
+        rf"{physics_variables.labels_confinement_scalings[40]}": lang_high_density,
+        rf"{physics_variables.labels_confinement_scalings[41]}": hubbard_nominal,
+        rf"{physics_variables.labels_confinement_scalings[42]}": hubbard_lower,
+        rf"{physics_variables.labels_confinement_scalings[43]}": hubbard_upper,
+        rf"{physics_variables.labels_confinement_scalings[44]}": menard_nstx,
+        rf"{physics_variables.labels_confinement_scalings[45]}": menard_nstx_petty08,
+        # f"{physics_variables.labels_confinement_scalings[45]}": nstx_gyro_bohm,  # Uncomment if needed
+        rf"{physics_variables.labels_confinement_scalings[49]}": itpa20,
+        rf"{physics_variables.labels_confinement_scalings[50]}": itpa20_ilc,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    # Use a set of distinct colors for better differentiation
+    distinct_colors = [
+        "#1f77b4",  # blue
+        "#ff7f0e",  # orange
+        "#2ca02c",  # green
+        "#d62728",  # red
+        "#9467bd",  # purple
+        "#8c564b",  # brown
+        "#e377c2",  # pink
+        "#7f7f7f",  # gray
+        "#bcbd22",  # olive
+        "#17becf",  # cyan
+        "#aec7e8",  # light blue
+        "#ffbb78",  # light orange
+        "#98df8a",  # light green
+        "#ff9896",  # light red
+        "#c5b0d5",  # light purple
+        "#c49c94",  # light brown
+        "#f7b6d2",  # light pink
+        "#c7c7c7",  # light gray
+        "#dbdb8d",  # light olive
+        "#9edae5",  # light cyan
+    ]
+    generator = np.random.default_rng(seed=u_seed)
+    x_values = generator.normal(loc=1, scale=0.025, size=len(data.values()))
+    for index, (key, value) in enumerate(data.items()):
+        if "Hubbard" in key and "2017" not in key:
+            color = "#800080"  # strong purple
+        else:
+            color = distinct_colors[index % len(distinct_colors)]
+        axis.scatter(
+            x_values[index],
+            value,
+            color=color,
+            label=key,
+            alpha=1.0,
+            edgecolor="black",
+            linewidth=0.7,
+        )
+    axis.legend(loc="upper left", bbox_to_anchor=(-1.5, 1.1), ncol=2)
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_threshold = np.mean(data_values)
+    std_threshold = np.std(data_values)
+    median_threshold = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        0.7,
+        1.25,
+        f"Average: {avg_threshold:.4f} s",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.7,
+        1.2,
+        f"Standard Dev: {std_threshold:.4f} s",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.7,
+        1.15,
+        f"Median: {median_threshold:.4f} s",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.75,
+        -0.05,
+        r"$H \ factor = 1.0$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Confinement time ($\\tau_{\\text{E}}$) Comparison")
+    axis.set_ylabel("Confinement time, $\\tau_{\\text{E}}$ [s]")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+
+    # Add background color
+    axis.set_facecolor("#f0f0f0")
+
+
 def plot_density_limit_comparison(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int
 ) -> None:
@@ -5097,6 +5703,9 @@ def main_plot(
 
     plot_21 = fig8.add_subplot(221)
     plot_density_limit_comparison(plot_21, m_file_data, scan)
+
+    plot_205 = fig7.add_subplot(224)
+    plot_confinement_time_comparison(plot_205, m_file_data, scan)
 
     plot_22 = fig9.add_subplot(111)
     plot_current_profiles_over_time(plot_22, m_file_data, scan)
