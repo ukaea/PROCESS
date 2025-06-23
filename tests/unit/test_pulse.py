@@ -1250,15 +1250,14 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
 
 @pytest.mark.parametrize(
-    "i_pulsed_plant, vs_cs_pf_total_burn, v_plasma_loop_burn, t_fusion_ramp, expected",
+    "vs_cs_pf_total_burn, v_plasma_loop_burn, t_fusion_ramp, expected",
     [
-        (1, 100.0, 10.0, 2.0, 8.0),
-        (1, -100.0, 10.0, 2.0, 8.0),  # abs() should be used
-        (1, 50.0, 5.0, 0.0, 10.0),
+        (100.0, 10.0, 2.0, 8.0),
+        (-100.0, 10.0, 2.0, 8.0),  # abs() should be used
+        (50.0, 5.0, 0.0, 10.0),
     ],
 )
 def test_calculate_burn_time_valid(
-    i_pulsed_plant,
     vs_cs_pf_total_burn,
     v_plasma_loop_burn,
     t_fusion_ramp,
@@ -1266,7 +1265,6 @@ def test_calculate_burn_time_valid(
 ):
     pulse = Pulse()
     result = pulse.calculate_burn_time(
-        i_pulsed_plant=i_pulsed_plant,
         vs_cs_pf_total_burn=vs_cs_pf_total_burn,
         v_plasma_loop_burn=v_plasma_loop_burn,
         t_fusion_ramp=t_fusion_ramp,
