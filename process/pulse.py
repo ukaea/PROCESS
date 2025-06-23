@@ -27,16 +27,16 @@ class Pulse:
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
         """
-        self.tohswg(output=output)
+        if pulse_variables.i_pulsed_plant == 1:
+            self.tohswg(output=output)
 
-        #  Burn time calculation
+            #  Burn time calculation
 
-        times_variables.t_burn = self.calculate_burn_time(
-            i_pulsed_plant=pulse_variables.i_pulsed_plant,
-            vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
-            v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
-            t_fusion_ramp=times_variables.t_fusion_ramp,
-        )
+            times_variables.t_burn = self.calculate_burn_time(
+                vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
+                v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
+                t_fusion_ramp=times_variables.t_fusion_ramp,
+            )
 
     def tohswg(self, output: bool) -> None:
         """Routine to calculate the plasma current ramp-up time
@@ -150,7 +150,6 @@ class Pulse:
 
     def calculate_burn_time(
         self,
-        i_pulsed_plant: int,
         vs_cs_pf_total_burn: float,
         v_plasma_loop_burn: float,
         t_fusion_ramp: float,
@@ -163,8 +162,6 @@ class Pulse:
         plasma loop voltage during burn. It also checks for negative burn time
         and reports an error if encountered.
 
-        :param i_pulsed_plant: Indicator for pulsed plant (1 for pulsed, 0 otherwise)
-        :type i_pulsed_plant: int
         :param vs_cs_pf_total_burn: Total volt-seconds in CS and PF coils available for burn (V·s)
         :type vs_cs_pf_total_burn: float
         :param v_plasma_loop_burn: Plasma loop voltage during burn (V)
@@ -177,8 +174,6 @@ class Pulse:
         :raises: Reports error 93 if calculated burn time is negative.
 
         """
-        if i_pulsed_plant != 1:
-            return None
 
         t_burn = (abs(vs_cs_pf_total_burn) / v_plasma_loop_burn) - t_fusion_ramp
 
