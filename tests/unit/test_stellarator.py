@@ -258,7 +258,7 @@ class StbildParam(NamedTuple):
 
     dr_shld_vv_gap_outboard: Any = None
 
-    hmax: Any = None
+    z_tf_inside_half: Any = None
 
     dr_cs: Any = None
 
@@ -380,7 +380,7 @@ class StbildParam(NamedTuple):
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
             dr_shld_vv_gap_outboard=0,
-            hmax=6.2927927927927927,
+            z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
             r_tf_outboard_mid=0,
             rbld=0,
@@ -450,7 +450,7 @@ class StbildParam(NamedTuple):
             dr_cs_tf_gap=0,
             gapomin=0.025000000000000005,
             dr_shld_vv_gap_outboard=0.025000000000000005,
-            hmax=6.2927927927927927,
+            z_tf_inside_half=6.2927927927927927,
             dr_cs=0,
             r_tf_outboard_mid=26.367558258201448,
             rbld=22,
@@ -559,7 +559,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         build_variables, "dr_shld_vv_gap_outboard", stbildparam.dr_shld_vv_gap_outboard
     )
 
-    monkeypatch.setattr(build_variables, "hmax", stbildparam.hmax)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", stbildparam.z_tf_inside_half
+    )
 
     monkeypatch.setattr(build_variables, "dr_cs", stbildparam.dr_cs)
 
@@ -680,7 +682,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stbildparam.expected_dr_shld_vv_gap_outboard
     )
 
-    assert build_variables.hmax == pytest.approx(stbildparam.expected_hmax)
+    assert build_variables.z_tf_inside_half == pytest.approx(stbildparam.expected_hmax)
 
     assert build_variables.r_tf_outboard_mid == pytest.approx(
         stbildparam.expected_r_tf_outboard_mid
@@ -2877,7 +2879,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     tfsai: Any = None
     tfsao: Any = None
     dr_tf_wp: Any = None
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
     expected_coilhtmx: Any = None
     expected_dpacop: Any = None
     expected_htheci: Any = None
@@ -2908,7 +2910,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             tfsai=0,
             tfsao=0,
             dr_tf_wp=0.73180646211514355,
-            tinstf=0.01,
+            dx_tf_wp_insulation=0.01,
             expected_coilhtmx=2.2389491150157432e-05,
             expected_dpacop=0.00010755386610285162,
             expected_htheci=4.9451030969257898e-05,
@@ -2995,7 +2997,9 @@ def test_sctfcoil_nuclear_heating_iter90(
         tfcoil_variables, "dr_tf_wp", sctfcoilnuclearheatingiter90param.dr_tf_wp
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tinstf", sctfcoilnuclearheatingiter90param.tinstf
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        sctfcoilnuclearheatingiter90param.dx_tf_wp_insulation,
     )
 
     (

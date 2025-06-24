@@ -39,8 +39,8 @@ OBS_VARS = {
     "eyins": "eyoung_ins",
     "eystl": "eyoung_steel",
     "isumattf": "i_tf_sc_mat",
-    "turnstf": "n_tf_turn",
-    "awptf": "a_tf_wp",
+    "turnstf": "n_tf_coil_turns",
+    "a_tf_wp_no_insulation": "a_tf_wp",
     "dr_tf_case_in": "dr_tf_nose_case",
     "f_tf_case_out": "f_dr_tf_plasma_case",
     "dr_tf_case_out": "dr_tf_plasma_case",
@@ -346,6 +346,10 @@ OBS_VARS = {
     "iprimshld": "i_shld_primary_heat",
     "cpttf": "c_tf_turn",
     "emult": "f_p_blkt_multiplication",
+    "dhecoil": "dia_tf_turn_coolant_channel",
+    "n_tf_turn": "n_tf_coil_turns",
+    "thicndut": "dx_tf_turn_insulation",
+    "thwcndut": "dx_tf_turn_steel",
 }
 
 OBS_VARS_HELP = {

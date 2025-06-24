@@ -191,6 +191,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+##### Diameters
+
+- Diameters should start with the `dia_` prefix
+
+---------------------
+
 ##### Velocities
 
 - Velocities should start with the `vel_` prefix

@@ -365,7 +365,9 @@ INPUT_VARIABLES = {
     "declshld": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "decomf": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
     "denstl": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
-    "dhecoil": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dia_tf_turn_coolant_channel": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "dintrt": InputVariable(fortran.cost_variables, float, range=(0.0, 0.1)),
     "discount_rate": InputVariable(fortran.cost_variables, float, range=(0.0, 0.5)),
     "div_nref": InputVariable(
@@ -937,7 +939,9 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(0.0, 100000000.0)
     ),
     "n_tf_coils": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
-    "n_tf_turn": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
+    "n_tf_coil_turns": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+    ),
     "nbi_sys_l": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
@@ -1283,12 +1287,18 @@ INPUT_VARIABLES = {
     ),
     "theta1_coil": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 60.0)),
     "theta1_vv": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 60.0)),
-    "thicndut": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_turn_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "dr_tf_nose_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "dz_shld_thermal": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
-    "thwcndut": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_turn_steel": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "ti": InputVariable(fortran.physics_variables, float, range=(5.0, 50.0)),
-    "tinstf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_wp_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "tlife": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
     "tmain": InputVariable(fortran.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),

@@ -139,7 +139,7 @@ SCAN_VARIABLES = {
         "eta_ecrh_injector_wall_plug", "ECH wall plug to injector efficiency"
     ),
     80: ScanVariable("fcoolcp", "Coolant fraction of TF"),
-    81: ScanVariable("n_tf_turn", "Number of turns in TF"),
+    81: ScanVariable("n_tf_coil_turns", "Number of turns in TF"),
 }
 
 
@@ -1075,7 +1075,7 @@ class Scan:
             case 80:
                 tfcoil_variables.fcoolcp = swp[iscn - 1]
             case 81:
-                tfcoil_variables.n_tf_turn = swp[iscn - 1]
+                tfcoil_variables.n_tf_coil_turns = swp[iscn - 1]
             case _:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 
