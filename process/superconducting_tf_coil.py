@@ -984,6 +984,9 @@ class SuperconductingTFCoil(TFCoil):
 
         # Find critical current density in the superconducter (j_crit_sc)
         # and the superconducting cable (j_crit_cable)
+
+        # =================================================================
+
         if i_tf_superconductor == 1:  # ITER Nb3Sn critical surface parameterization
             bc20m = 32.97e0
             tc0m = 16.06e0
@@ -1013,6 +1016,8 @@ class SuperconductingTFCoil(TFCoil):
                 1.0e0 - f_a_tf_turn_cable_copper
             )
 
+        # =================================================================
+
         elif (
             i_tf_superconductor == 2
         ):  # Bi-2212 high temperature superconductor parameterization
@@ -1040,6 +1045,7 @@ class SuperconductingTFCoil(TFCoil):
             # Strand critical current calulation for costing in $ / kAm
             # Copper in the strand is already accounted for
             tfcoil_variables.j_crit_str_tf = j_crit_sc
+        # =================================================================
 
         elif i_tf_superconductor == 3:  # NbTi data
             bc20m = 15.0e0
@@ -1062,6 +1068,8 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.j_crit_str_tf = j_crit_sc * (
                 1.0e0 - f_a_tf_turn_cable_copper
             )
+
+        # =================================================================
 
         elif (
             i_tf_superconductor == 4
@@ -1092,6 +1100,8 @@ class SuperconductingTFCoil(TFCoil):
                 1.0e0 - f_a_tf_turn_cable_copper
             )
 
+        # =================================================================
+
         elif i_tf_superconductor == 5:  # WST Nb3Sn parameterisation
             bc20m = 32.97e0
             tc0m = 16.06e0
@@ -1121,6 +1131,8 @@ class SuperconductingTFCoil(TFCoil):
                 1.0e0 - f_a_tf_turn_cable_copper
             )
 
+        # =================================================================
+
         elif (
             i_tf_superconductor == 6
         ):  # "REBCO" 2nd generation HTS superconductor in CrCo strand
@@ -1149,6 +1161,8 @@ class SuperconductingTFCoil(TFCoil):
                 1.0e0 - f_a_tf_turn_cable_copper
             )
 
+        # =================================================================
+
         elif (
             i_tf_superconductor == 8
         ):  # Durham Ginzburg-Landau critical surface model for REBCO
@@ -1176,6 +1190,8 @@ class SuperconductingTFCoil(TFCoil):
             # Strand critical current calulation for costing in $ / kAm
             # Already includes buffer and support layers so no need to include f_a_tf_turn_cable_copper here
             tfcoil_variables.j_crit_str_tf = j_crit_sc
+
+        # =================================================================
 
         elif (
             i_tf_superconductor == 9
@@ -1226,7 +1242,7 @@ class SuperconductingTFCoil(TFCoil):
         #  Ratio of operating / critical current
         iooic = c_tf_turn / icrit
         #  Operating current density
-        jwdgop = c_tf_turn / a_tf_turn
+        j_tf_coil_turn = c_tf_turn / a_tf_turn
         #  Actual current density in superconductor, which should be equal to jcrit(temp_tf_coolant_peak_field+tmarg)
         #  when we have found the desired value of tmarg
         jsc = iooic * j_crit_sc
@@ -1250,14 +1266,14 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Temperature margin (already calculated in superconductors.bi2212 for i_tf_superconductor=2)
 
-        if (
-            (i_tf_superconductor == 1)
-            or (i_tf_superconductor == 3)
-            or (i_tf_superconductor == 4)
-            or (i_tf_superconductor == 5)
-            or (i_tf_superconductor == 7)
-            or (i_tf_superconductor == 8)
-            or (i_tf_superconductor == 9)
+        if i_tf_superconductor in (
+            1,
+            3,
+            4,
+            5,
+            7,
+            8,
+            9,
         ):  # Find temperature at which current density margin = 0
             if i_tf_superconductor == 3:
                 arguments = (
@@ -1532,8 +1548,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Actual current density in winding pack (A/m2)",
-                "(jwdgop)",
-                jwdgop,
+                "(j_tf_coil_turn)",
+                j_tf_coil_turn,
                 "OP ",
             )
 

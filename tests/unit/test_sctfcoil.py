@@ -146,8 +146,6 @@ class SuperconParam(NamedTuple):
 
     f_strain_scale: Any = None
 
-    c_tf_turn: Any = None
-
     j_tf_wp: Any = None
 
     t_tf_quench_dump: Any = None
