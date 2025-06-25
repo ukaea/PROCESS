@@ -128,35 +128,35 @@ class SuperconParam(NamedTuple):
 
     run_tests: Any = None
 
-    isumat: Any = None
+    i_tf_superconductor: Any = None
 
     iprint: Any = None
 
     outfile: Any = None
 
-    acs: Any = None
+    a_tf_turn_cable_space: Any = None
 
-    aturn: Any = None
+    a_tf_turn: Any = None
 
-    bmax: Any = None
+    b_tf_inboard_peak: Any = None
 
-    fcu: Any = None
+    f_a_tf_turn_cable_copper: Any = None
 
-    fhe: Any = None
+    f_a_tf_turn_cooling_extra: Any = None
 
-    fhts: Any = None
+    f_strain_scale: Any = None
 
-    iop: Any = None
+    c_tf_turn: Any = None
 
-    jwp: Any = None
+    j_tf_wp: Any = None
 
-    tdmptf: Any = None
+    t_tf_quench_dump: Any = None
 
-    tfes: Any = None
+    e_tf_coil_magnetic_stored: Any = None
 
-    thelium: Any = None
+    temp_tf_coolant_peak_field: Any = None
 
-    tmax: Any = None
+    temp_tf_conductor_peak_quench: Any = None
 
     bcritsc: Any = None
 
@@ -193,21 +193,20 @@ class SuperconParam(NamedTuple):
             tf_fit_z=0.3149613642807837,
             tf_fit_y=1.0658869305062604,
             run_tests=0,
-            isumat=5,
+            i_tf_superconductor=5,
             iprint=0,
             outfile=11,
-            acs=0.001293323051622732,
-            aturn=0.0032012300777680192,
-            bmax=12.48976756562082,
-            fcu=0.80884,
-            fhe=0.30000000000000004,
-            fhts=0.5,
-            iop=74026.751437500003,
-            jwp=23124470.793774806,
-            tdmptf=25.829000000000001,
-            tfes=9548964780.4287167,
-            thelium=4.75,
-            tmax=150,
+            a_tf_turn_cable_space=0.001293323051622732,
+            a_tf_turn=0.0032012300777680192,
+            b_tf_inboard_peak=12.48976756562082,
+            f_a_tf_turn_cable_copper=0.80884,
+            f_a_tf_turn_cooling_extra=0.30000000000000004,
+            f_strain_scale=0.5,
+            j_tf_wp=23124470.793774806,
+            t_tf_quench_dump=25.829000000000001,
+            e_tf_coil_magnetic_stored=9548964780.4287167,
+            temp_tf_coolant_peak_field=4.75,
+            temp_tf_conductor_peak_quench=150,
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.34312129,
@@ -233,21 +232,20 @@ class SuperconParam(NamedTuple):
             tf_fit_z=0.3149613642807837,
             tf_fit_y=1.0658869305062604,
             run_tests=0,
-            isumat=5,
+            i_tf_superconductor=5,
             iprint=0,
             outfile=11,
-            acs=0.001293323051622732,
-            aturn=0.0032012300777680192,
-            bmax=12.48976756562082,
-            fcu=0.80884,
-            fhe=0.30000000000000004,
-            fhts=0.5,
-            iop=74026.751437500003,
-            jwp=23124470.793774806,
-            tdmptf=25.829000000000001,
-            tfes=9561415368.8360519,
-            thelium=4.75,
-            tmax=150,
+            a_tf_turn_cable_space=0.001293323051622732,
+            a_tf_turn=0.0032012300777680192,
+            b_tf_inboard_peak=12.48976756562082,
+            f_a_tf_turn_cable_copper=0.80884,
+            f_a_tf_turn_cooling_extra=0.30000000000000004,
+            f_strain_scale=0.5,
+            j_tf_wp=23124470.793774806,
+            t_tf_quench_dump=25.829000000000001,
+            e_tf_coil_magnetic_stored=9561415368.8360519,
+            temp_tf_coolant_peak_field=4.75,
+            temp_tf_conductor_peak_quench=150,
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.34312129,
@@ -273,21 +271,20 @@ class SuperconParam(NamedTuple):
             tf_fit_z=0.3149613642807837,
             tf_fit_y=1.0658869305062604,
             run_tests=0,
-            isumat=5,
+            i_tf_superconductor=5,
             iprint=0,
             outfile=11,
-            acs=0.001293323051622732,
-            aturn=0.0032012300777680192,
-            bmax=12.48976756562082,
-            fcu=0.80884,
-            fhe=0.30000000000000004,
-            fhts=0.5,
-            iop=74026.751437500003,
-            jwp=23124470.793774806,
-            tdmptf=25.829000000000001,
-            tfes=9561415368.8360519,
-            thelium=4.75,
-            tmax=150,
+            a_tf_turn_cable_space=0.001293323051622732,
+            a_tf_turn=0.0032012300777680192,
+            b_tf_inboard_peak=12.48976756562082,
+            f_a_tf_turn_cable_copper=0.80884,
+            f_a_tf_turn_cooling_extra=0.30000000000000004,
+            f_strain_scale=0.5,
+            j_tf_wp=23124470.793774806,
+            t_tf_quench_dump=25.829000000000001,
+            e_tf_coil_magnetic_stored=9561415368.8360519,
+            temp_tf_coolant_peak_field=4.75,
+            temp_tf_conductor_peak_quench=150,
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.34312129,
@@ -355,19 +352,19 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
     j_tf_wp_critical, vd, tmarg = sctfcoil.supercon(
-        isumat=superconparam.isumat,
-        acs=superconparam.acs,
-        aturn=superconparam.aturn,
-        bmax=superconparam.bmax,
-        fcu=superconparam.fcu,
-        fhe=superconparam.fhe,
-        fhts=superconparam.fhts,
-        iop=superconparam.iop,
-        jwp=superconparam.jwp,
-        tdmptf=superconparam.tdmptf,
-        tfes=superconparam.tfes,
-        thelium=superconparam.thelium,
-        tmax=superconparam.tmax,
+        i_tf_superconductor=superconparam.i_tf_superconductor,
+        a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
+        a_tf_turn=superconparam.a_tf_turn,
+        b_tf_inboard_peak=superconparam.b_tf_inboard_peak,
+        f_a_tf_turn_cable_copper=superconparam.f_a_tf_turn_cable_copper,
+        f_a_tf_turn_cooling_extra=superconparam.f_a_tf_turn_cooling_extra,
+        f_strain_scale=superconparam.f_strain_scale,
+        c_tf_turn=superconparam.c_tf_turn,
+        j_tf_wp=superconparam.j_tf_wp,
+        t_tf_quench_dump=superconparam.t_tf_quench_dump,
+        e_tf_coil_magnetic_stored=superconparam.e_tf_coil_magnetic_stored,
+        temp_tf_coolant_peak_field=superconparam.temp_tf_coolant_peak_field,
+        temp_tf_conductor_peak_quench=superconparam.temp_tf_conductor_peak_quench,
         bcritsc=superconparam.bcritsc,
         tcritsc=superconparam.tcritsc,
         output=False,
