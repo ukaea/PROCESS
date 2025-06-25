@@ -878,13 +878,13 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_turn,
         b_tf_inboard_peak,
         f_a_tf_turn_cooling_extra,
-        fcu,
-        iop,
-        jwp,
-        isumat,
-        fhts,
-        tdmptf,
-        tfes,
+        f_a_tf_turn_cable_copper,
+        c_tf_turn,
+        j_tf_wp,
+        i_tf_superconductor,
+        f_strain_scale,
+        t_tf_quench_dump,
+        e_tf_coil_magnetic_stored,
         thelium,
         tmax,
         bcritsc,
@@ -901,10 +901,10 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_turn : input real : Area per turn (i.e. entire jacketed conductor) (m2)
         b_tf_inboard_peak : input real : Peak field at conductor (T)
         f_a_tf_turn_cooling_extra : input real : Additional fraction of turn cabe space that is reserved for cooling
-        fcu : input real : Fraction of conductor that is copper
-        iop : input real : Operating current per turn (A)
-        jwp : input real : Actual winding pack current density (A/m2)
-        isumat : input integer : Switch for conductor type:
+        f_a_tf_turn_cable_copper : input real : Fraction of conductor that is copper
+        c_tf_turn : input real : Operating current per turn (A)
+        j_tf_wp : input real : Actual winding pack current density (A/m2)
+        i_tf_superconductor : input integer : Switch for conductor type:
         1 = ITER Nb3Sn, standard parameters,
         2 = Bi-2212 High Temperature Superconductor,
         3 = NbTi,
@@ -913,14 +913,14 @@ class SuperconductingTFCoil(TFCoil):
         7 = Durham Ginzburg-Landau Nb-Ti parameterisation
         8 = Durham Ginzburg-Landau critical surface model for REBCO
         9 = Hazelton experimental data + Zhai conceptual model for REBCO
-        fhts    : input real : Adjustment factor (<= 1) to account for strain,
+        f_strain_scale    : input real : Adjustment factor (<= 1) to account for strain,
         radiation damage, fatigue or AC losses
-        tdmptf : input real : Dump time (sec)
-        tfes : input real : Energy stored in one TF coil (J)
+        t_tf_quench_dump : input real : Dump time (sec)
+        e_tf_coil_magnetic_stored : input real : Energy stored in one TF coil (J)
         thelium : input real : He temperature at peak field point (K)
         tmax : input real : Max conductor temperature during quench (K)
-        bcritsc : input real : Critical field at zero temperature and strain (T) (isumat=4 only)
-        tcritsc : input real : Critical temperature at zero field and strain (K) (isumat=4 only)
+        bcritsc : input real : Critical field at zero temperature and strain (T) (i_tf_superconductor=4 only)
+        tcritsc : input real : Critical temperature at zero field and strain (K) (i_tf_superconductor=4 only)
         iprint : input integer : Switch for printing (1 = yes, 0 = no)
         outfile : input integer : Fortran output unit identifier
         jwdgpro : output real : Winding pack current density from temperature
@@ -943,7 +943,7 @@ class SuperconductingTFCoil(TFCoil):
         superconducting strands AND any addtional copper, such as REBCO
         tape support.
         """
-        tdump = tdmptf
+        tdump = t_tf_quench_dump
 
         # Helium channel
         f_a_tf_turn_cable_space_cooling = (
@@ -975,7 +975,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Find critical current density in the superconducter (j_crit_sc)
         # and the superconducting cable (j_crit_cable)
-        if isumat == 1:  # ITER Nb3Sn critical surface parameterization
+        if i_tf_superconductor == 1:  # ITER Nb3Sn critical surface parameterization
             bc20m = 32.97e0
             tc0m = 16.06e0
             # If strain limit achieved, throw a warning and use the lower strain
@@ -990,15 +990,23 @@ class SuperconductingTFCoil(TFCoil):
                 thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calculation for costing in $/kAm
             # = Superconducting filaments jc * (1 - strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+                1.0e0 - f_a_tf_turn_cable_copper
+            )
 
-        elif isumat == 2:  # Bi-2212 high temperature superconductor parameterization
+        elif (
+            i_tf_superconductor == 2
+        ):  # Bi-2212 high temperature superconductor parameterization
             #  Current density in a strand of Bi-2212 conductor
             #  N.B. jcrit returned by superconductors.bi2212 is the critical current density
             #  in the strand, not just the superconducting portion.
@@ -1006,15 +1014,15 @@ class SuperconductingTFCoil(TFCoil):
             #  composition that does not require a user-defined copper fraction,
             #  so this is irrelevant in this model
             jstrand = (
-                jwp
+                j_tf_wp
                 * a_tf_turn
                 / (a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor)
             )
 
             j_crit_cable, tmarg = superconductors.bi2212(
-                b_tf_inboard_peak, jstrand, thelium, fhts
+                b_tf_inboard_peak, jstrand, thelium, f_strain_scale
             )
-            j_crit_sc = j_crit_cable / (1.0e0 - fcu)
+            j_crit_sc = j_crit_cable / (1.0e0 - f_a_tf_turn_cable_copper)
             #  Critical current in cable
             icrit = (
                 j_crit_cable * a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor
@@ -1024,7 +1032,7 @@ class SuperconductingTFCoil(TFCoil):
             # Copper in the strand is already accounted for
             tfcoil_variables.j_crit_str_tf = j_crit_sc
 
-        elif isumat == 3:  # NbTi data
+        elif i_tf_superconductor == 3:  # NbTi data
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
@@ -1032,15 +1040,23 @@ class SuperconductingTFCoil(TFCoil):
                 thelium, b_tf_inboard_peak, c0, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calulation for costing in $ / kAm
             # = superconducting filaments jc * (1 -strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+                1.0e0 - f_a_tf_turn_cable_copper
+            )
 
-        elif isumat == 4:  # ITER Nb3Sn parameterization, but user-defined parameters
+        elif (
+            i_tf_superconductor == 4
+        ):  # ITER Nb3Sn parameterization, but user-defined parameters
             bc20m = bcritsc
             tc0m = tcritsc
             # If strain limit achieved, throw a warning and use the lower strain
@@ -1053,15 +1069,21 @@ class SuperconductingTFCoil(TFCoil):
                 thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calulation for costing in $ / kAm
             # = superconducting filaments jc * (1 -strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+                1.0e0 - f_a_tf_turn_cable_copper
+            )
 
-        elif isumat == 5:  # WST Nb3Sn parameterisation
+        elif i_tf_superconductor == 5:  # WST Nb3Sn parameterisation
             bc20m = 32.97e0
             tc0m = 16.06e0
             # If strain limit achieved, throw a warning and use the lower strain
@@ -1076,35 +1098,51 @@ class SuperconductingTFCoil(TFCoil):
                 thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calulation for costing in $ / kAm
             # = superconducting filaments jc * (1 -strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+                1.0e0 - f_a_tf_turn_cable_copper
+            )
 
-        elif isumat == 6:  # "REBCO" 2nd generation HTS superconductor in CrCo strand
+        elif (
+            i_tf_superconductor == 6
+        ):  # "REBCO" 2nd generation HTS superconductor in CrCo strand
             raise ProcessValueError(
                 "sctfcoil.supercon has been called but tfcoil_variables.i_tf_sc_mat=6"
             )
 
-        elif isumat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
+        elif i_tf_superconductor == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
             j_crit_sc, _, _ = superconductors.gl_nbti(
                 thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calulation for costing in $ / kAm
             # = superconducting filaments jc * (1 -strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+                1.0e0 - f_a_tf_turn_cable_copper
+            )
 
-        elif isumat == 8:  # Durham Ginzburg-Landau critical surface model for REBCO
+        elif (
+            i_tf_superconductor == 8
+        ):  # Durham Ginzburg-Landau critical surface model for REBCO
             bc20m = 430
             tc0m = 185
             # If strain limit achieved, throw a warning and use the lower strain
@@ -1118,16 +1156,20 @@ class SuperconductingTFCoil(TFCoil):
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable (copper added at this stage in HTS cables)
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calulation for costing in $ / kAm
-            # Already includes buffer and support layers so no need to include fcu here
+            # Already includes buffer and support layers so no need to include f_a_tf_turn_cable_copper here
             tfcoil_variables.j_crit_str_tf = j_crit_sc
 
         elif (
-            isumat == 9
+            i_tf_superconductor == 9
         ):  # Hazelton experimental data + Zhai conceptual model for REBCO
             bc20m = 138
             tc0m = 92
@@ -1150,24 +1192,32 @@ class SuperconductingTFCoil(TFCoil):
                 rebco_variables.tape_thickness,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
+            j_crit_cable = (
+                j_crit_sc
+                * (1.0e0 - f_a_tf_turn_cable_copper)
+                * f_a_tf_turn_cable_space_conductor
+            )
             #  Critical current in cable (copper added at this stage in HTS cables)
             icrit = j_crit_cable * a_tf_turn_cable_space
 
             # Strand critical current calulation for costing in $ / kAm
             # = superconducting filaments jc * (1 -strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (1.0e0 - fcu)
+            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+                1.0e0 - f_a_tf_turn_cable_copper
+            )
 
         else:
-            raise ProcessValueError("Illegal value for i_tf_sc_mat", isumat=isumat)
+            raise ProcessValueError(
+                "Illegal value for i_tf_sc_mat", i_tf_superconductor=i_tf_superconductor
+            )
 
         # Critical current density in winding pack
         # a_tf_turn : Area per turn (i.e. entire jacketed conductor with insulation) (m2)
         j_tf_wp_critical = icrit / a_tf_turn
         #  Ratio of operating / critical current
-        iooic = iop / icrit
+        iooic = c_tf_turn / icrit
         #  Operating current density
-        jwdgop = iop / a_tf_turn
+        jwdgop = c_tf_turn / a_tf_turn
         #  Actual current density in superconductor, which should be equal to jcrit(thelium+tmarg)
         #  when we have found the desired value of tmarg
         jsc = iooic * j_crit_sc
@@ -1186,24 +1236,39 @@ class SuperconductingTFCoil(TFCoil):
             )
 
         # REBCO measurements from 2 T to 14 T, extrapolating outside this
-        if (isumat == 8) and (tfcoil_variables.bmaxtfrp >= 14):
+        if (i_tf_superconductor == 8) and (tfcoil_variables.bmaxtfrp >= 14):
             error_handling.report_error(266)
 
-        #  Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
+        #  Temperature margin (already calculated in superconductors.bi2212 for i_tf_superconductor=2)
 
         if (
-            (isumat == 1)
-            or (isumat == 3)
-            or (isumat == 4)
-            or (isumat == 5)
-            or (isumat == 7)
-            or (isumat == 8)
-            or (isumat == 9)
+            (i_tf_superconductor == 1)
+            or (i_tf_superconductor == 3)
+            or (i_tf_superconductor == 4)
+            or (i_tf_superconductor == 5)
+            or (i_tf_superconductor == 7)
+            or (i_tf_superconductor == 8)
+            or (i_tf_superconductor == 9)
         ):  # Find temperature at which current density margin = 0
-            if isumat == 3:
-                arguments = (isumat, jsc, b_tf_inboard_peak, strain, bc20m, tc0m, c0)
+            if i_tf_superconductor == 3:
+                arguments = (
+                    i_tf_superconductor,
+                    jsc,
+                    b_tf_inboard_peak,
+                    strain,
+                    bc20m,
+                    tc0m,
+                    c0,
+                )
             else:
-                arguments = (isumat, jsc, b_tf_inboard_peak, strain, bc20m, tc0m)
+                arguments = (
+                    i_tf_superconductor,
+                    jsc,
+                    b_tf_inboard_peak,
+                    strain,
+                    bc20m,
+                    tc0m,
+                )
 
             another_estimate = 2 * thelium
             t_zero_margin, root_result = optimize.newton(
@@ -1211,7 +1276,7 @@ class SuperconductingTFCoil(TFCoil):
                 thelium,
                 fprime=None,
                 args=arguments,
-                # args=(isumat, jsc, b_tf_inboard_peak, strain, bc20m, tc0m,),
+                # args=(i_tf_superconductor, jsc, b_tf_inboard_peak, strain, bc20m, tc0m,),
                 tol=1.0e-06,
                 maxiter=50,
                 fprime2=None,
@@ -1225,17 +1290,17 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.temp_margin = tmarg
 
         #  Find the current density limited by the protection limit
-        #  (N.B. Unclear of this routine's relevance for Bi-2212 (isumat=2), due
-        #  to presence of fcu argument, which is not used for this model above)
+        #  (N.B. Unclear of this routine's relevance for Bi-2212 (i_tf_superconductor=2), due
+        #  to presence of f_a_tf_turn_cable_copper argument, which is not used for this model above)
 
         tfcoil_variables.jwdgpro, vd = self.protect(
-            iop,
-            tfes,
+            c_tf_turn,
+            e_tf_coil_magnetic_stored,
             a_tf_turn_cable_space,
             a_tf_turn,
             tdump,
             f_a_tf_turn_cable_space_conductor,
-            fcu,
+            f_a_tf_turn_cable_copper,
             thelium,
             tmax,
         )
@@ -1252,9 +1317,14 @@ class SuperconductingTFCoil(TFCoil):
                 )
 
             po.oheadr(self.outfile, "Superconducting TF Coils")
-            po.ovarin(self.outfile, "Superconductor switch", "(isumat)", isumat)
+            po.ovarin(
+                self.outfile,
+                "Superconductor switch",
+                "(i_tf_superconductor)",
+                i_tf_superconductor,
+            )
 
-            if isumat == 1:
+            if i_tf_superconductor == 1:
                 po.ocmmnt(self.outfile, "Superconductor used: Nb3Sn")
                 po.ocmmnt(self.outfile, "  (ITER Jcrit model, standard parameters)")
                 po.ovarre(
@@ -1269,9 +1339,9 @@ class SuperconductingTFCoil(TFCoil):
                     "(tc0m)",
                     tc0m,
                 )
-            if isumat == 2:
+            if i_tf_superconductor == 2:
                 po.ocmmnt(self.outfile, "Superconductor used: Bi-2212 HTS")
-            if isumat == 3:
+            if i_tf_superconductor == 3:
                 po.ocmmnt(self.outfile, "Superconductor used: NbTi")
                 po.ovarre(
                     self.outfile,
@@ -1285,7 +1355,7 @@ class SuperconductingTFCoil(TFCoil):
                     "(tc0m)",
                     tc0m,
                 )
-            if isumat == 4:
+            if i_tf_superconductor == 4:
                 po.ocmmnt(self.outfile, "Superconductor used: Nb3Sn")
                 po.ocmmnt(self.outfile, "  (ITER Jcrit model, user-defined parameters)")
                 po.ovarre(
@@ -1300,7 +1370,7 @@ class SuperconductingTFCoil(TFCoil):
                     "(tc0m)",
                     tc0m,
                 )
-            if isumat == 5:
+            if i_tf_superconductor == 5:
                 po.ocmmnt(self.outfile, "Superconductor used: Nb3Sn")
                 po.ocmmnt(self.outfile, " (WST Nb3Sn critical surface model)")
                 po.ovarre(
@@ -1315,7 +1385,7 @@ class SuperconductingTFCoil(TFCoil):
                     "(tc0m)",
                     tc0m,
                 )
-            if isumat == 7:
+            if i_tf_superconductor == 7:
                 po.ocmmnt(self.outfile, "Superconductor used: Nb-Ti")
                 po.ocmmnt(
                     self.outfile, " (Durham Ginzburg-Landau critical surface model)"
@@ -1332,7 +1402,7 @@ class SuperconductingTFCoil(TFCoil):
                     "(tc0m)",
                     tc0m,
                 )
-            if isumat == 8:
+            if i_tf_superconductor == 8:
                 po.ocmmnt(self.outfile, "Superconductor used: REBCO")
                 po.ocmmnt(
                     self.outfile, " (Durham Ginzburg-Landau critical surface model)"
@@ -1349,7 +1419,7 @@ class SuperconductingTFCoil(TFCoil):
                     "(tc0m)",
                     tc0m,
                 )
-            if isumat == 9:
+            if i_tf_superconductor == 9:
                 po.ocmmnt(self.outfile, "Superconductor used: REBCO")
                 po.ocmmnt(
                     self.outfile,
@@ -1411,7 +1481,12 @@ class SuperconductingTFCoil(TFCoil):
                 f_a_tf_turn_cable_space_cooling,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Copper fraction of conductor", "(fcutfsu)", fcu)
+            po.ovarre(
+                self.outfile,
+                "Copper fraction of conductor",
+                "(fcutfsu)",
+                f_a_tf_turn_cable_copper,
+            )
             po.ovarre(
                 self.outfile,
                 "Residual manufacturing strain on superconductor",
