@@ -874,74 +874,83 @@ class SuperconductingTFCoil(TFCoil):
 
     def supercon(
         self,
-        a_tf_turn_cable_space,
-        a_tf_turn,
-        b_tf_inboard_peak,
-        f_a_tf_turn_cooling_extra,
-        f_a_tf_turn_cable_copper,
-        c_tf_turn,
-        j_tf_wp,
-        i_tf_superconductor,
-        f_strain_scale,
-        t_tf_quench_dump,
-        e_tf_coil_magnetic_stored,
-        thelium,
-        tmax,
-        bcritsc,
-        tcritsc,
+        a_tf_turn_cable_space: float,
+        a_tf_turn: float,
+        b_tf_inboard_peak: float,
+        f_a_tf_turn_cooling_extra: float,
+        f_a_tf_turn_cable_copper: float,
+        c_tf_turn: float,
+        j_tf_wp: float,
+        i_tf_superconductor: int,
+        f_strain_scale: float,
+        t_tf_quench_dump: float,
+        e_tf_coil_magnetic_stored: float,
+        temp_tf_coolant_peak_field: float,
+        temp_tf_conductor_peak_quench: float,
+        bcritsc: float,
+        tcritsc: float,
         output: bool,
-    ):
-        """Routine to calculate the TF superconducting conductor  properties
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Galambos, ORNL
-        author: R Kemp, CCFE, Culham Science Centre
-        author: M Kovari, CCFE, Culham Science Centre
-        author: J Miller, ORNL
-        a_tf_turn_cable_space : input real : Cable space - inside area (m2)
-        a_tf_turn : input real : Area per turn (i.e. entire jacketed conductor) (m2)
-        b_tf_inboard_peak : input real : Peak field at conductor (T)
-        f_a_tf_turn_cooling_extra : input real : Additional fraction of turn cabe space that is reserved for cooling
-        f_a_tf_turn_cable_copper : input real : Fraction of conductor that is copper
-        c_tf_turn : input real : Operating current per turn (A)
-        j_tf_wp : input real : Actual winding pack current density (A/m2)
-        i_tf_superconductor : input integer : Switch for conductor type:
-        1 = ITER Nb3Sn, standard parameters,
-        2 = Bi-2212 High Temperature Superconductor,
-        3 = NbTi,
-        4 = ITER Nb3Sn, user-defined parameters
-        5 = WST Nb3Sn parameterisation
-        7 = Durham Ginzburg-Landau Nb-Ti parameterisation
-        8 = Durham Ginzburg-Landau critical surface model for REBCO
-        9 = Hazelton experimental data + Zhai conceptual model for REBCO
-        f_strain_scale    : input real : Adjustment factor (<= 1) to account for strain,
-        radiation damage, fatigue or AC losses
-        t_tf_quench_dump : input real : Dump time (sec)
-        e_tf_coil_magnetic_stored : input real : Energy stored in one TF coil (J)
-        thelium : input real : He temperature at peak field point (K)
-        tmax : input real : Max conductor temperature during quench (K)
-        bcritsc : input real : Critical field at zero temperature and strain (T) (i_tf_superconductor=4 only)
-        tcritsc : input real : Critical temperature at zero field and strain (K) (i_tf_superconductor=4 only)
-        iprint : input integer : Switch for printing (1 = yes, 0 = no)
-        outfile : input integer : Fortran output unit identifier
-        jwdgpro : output real : Winding pack current density from temperature
-        rise protection (A/m2)
-        j_tf_wp_critical : output real : Critical winding pack current density (A/m2)
-        vd : output real : Discharge voltage imposed on a TF coil (V)
-        tmarg : output real : Temperature margin (K)
-        This routine calculates the superconductor properties for the TF coils.
-        It was originally programmed by J. Galambos 1991, from algorithms provided
-        by J. Miller.
-        <P>The routine calculates the critical current density (winding pack)
-        and also the protection information (for a quench).
-        NOT used for the Croco conductor
+    ) -> tuple[float, float, float]:
+        """
+        Calculates the properties of the TF superconducting conductor.
 
-        N.B. critical current density for a super conductor (j_crit_sc)
-        is for the superconducting strands/tape, not including copper.
-        Critical current density for a cable (j_crit_cable) acounts for
-        both the fraction of the cable taken up by helium coolant channels,
-        and the cable conductor copper fraction - i.e., the copper in the
-        superconducting strands AND any addtional copper, such as REBCO
-        tape support.
+        :param float a_tf_turn_cable_space:
+            Cable space - inside area (m²).
+        :param float a_tf_turn:
+            Area per turn (i.e. entire jacketed conductor) (m²).
+        :param float b_tf_inboard_peak:
+            Peak field at conductor (T).
+        :param float f_a_tf_turn_cooling_extra:
+            Additional fraction of turn cable space reserved for cooling.
+        :param float f_a_tf_turn_cable_copper:
+            Fraction of conductor that is copper.
+        :param float c_tf_turn:
+            Operating current per turn (A).
+        :param float j_tf_wp:
+            Actual winding pack current density (A/m²).
+        :param int i_tf_superconductor:
+            Switch for conductor type:
+            - 1: ITER Nb3Sn, standard parameters
+            - 2: Bi-2212 High Temperature Superconductor
+            - 3: NbTi
+            - 4: ITER Nb3Sn, user-defined parameters
+            - 5: WST Nb3Sn parameterisation
+            - 7: Durham Ginzburg-Landau Nb-Ti parameterisation
+            - 8: Durham Ginzburg-Landau critical surface model for REBCO
+            - 9: Hazelton experimental data + Zhai conceptual model for REBCO
+        :param float f_strain_scale:
+            Adjustment factor (<= 1) to account for strain, radiation damage, fatigue or AC losses.
+        :param float t_tf_quench_dump:
+            Dump time (s).
+        :param float e_tf_coil_magnetic_stored:
+            Energy stored in one TF coil (J).
+        :param float temp_tf_coolant_peak_field:
+            He temperature at peak field point (K).
+        :param float temp_tf_conductor_peak_quench:
+            Max conductor temperature during quench (K).
+        :param float bcritsc:
+            Critical field at zero temperature and strain (T) (used only if i_tf_superconductor=4).
+        :param float tcritsc:
+            Critical temperature at zero field and strain (K) (used only if i_tf_superconductor=4).
+        :param bool output:
+            Switch for printing output.
+
+        :returns: tuple (j_tf_wp_critical, vd, tmarg)
+            - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
+            - vd (float): Discharge voltage imposed on a TF coil (V).
+            - tmarg (float): Temperature margin (K).
+
+        :notes:
+            This routine calculates the superconductor properties for the TF coils.
+            It was originally programmed by J. Galambos (1991), from algorithms provided by J. Miller.
+            The routine calculates the critical current density (winding pack) and also the protection
+            information (for a quench). Not used for the CroCo conductor.
+
+            The critical current density for a superconductor (``j_crit_sc``) is for the superconducting
+            strands/tape, not including copper. The critical current density for a cable (``j_crit_cable``)
+            accounts for both the fraction of the cable taken up by helium coolant channels, and the cable
+            conductor copper fraction (i.e., the copper in the superconducting strands and any additional
+            copper, such as REBCO tape support).
         """
         tdump = t_tf_quench_dump
 
@@ -987,7 +996,7 @@ class SuperconductingTFCoil(TFCoil):
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
             j_crit_sc, _, _ = superconductors.itersc(
-                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = (
@@ -1020,7 +1029,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             j_crit_cable, tmarg = superconductors.bi2212(
-                b_tf_inboard_peak, jstrand, thelium, f_strain_scale
+                b_tf_inboard_peak, jstrand, temp_tf_coolant_peak_field, f_strain_scale
             )
             j_crit_sc = j_crit_cable / (1.0e0 - f_a_tf_turn_cable_copper)
             #  Critical current in cable
@@ -1037,7 +1046,7 @@ class SuperconductingTFCoil(TFCoil):
             tc0m = 9.3e0
             c0 = 1.0e10
             j_crit_sc, _ = superconductors.jcrit_nbti(
-                thelium, b_tf_inboard_peak, c0, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, c0, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = (
@@ -1066,7 +1075,7 @@ class SuperconductingTFCoil(TFCoil):
                 strain = np.sign(strain) * 0.5e-2
 
             j_crit_sc, _, _ = superconductors.itersc(
-                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = (
@@ -1095,7 +1104,7 @@ class SuperconductingTFCoil(TFCoil):
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
             j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
-                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = (
@@ -1123,7 +1132,7 @@ class SuperconductingTFCoil(TFCoil):
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
             j_crit_sc, _, _ = superconductors.gl_nbti(
-                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = (
@@ -1152,7 +1161,7 @@ class SuperconductingTFCoil(TFCoil):
                 strain = np.sign(strain) * 0.7e-2
 
             j_crit_sc, _, _ = superconductors.gl_rebco(
-                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
@@ -1183,7 +1192,7 @@ class SuperconductingTFCoil(TFCoil):
             #  and based on Hazelton experimental data and Zhai conceptual model;
             #  see subroutine for full references
             j_crit_sc, _, _ = superconductors.hijc_rebco(
-                thelium,
+                temp_tf_coolant_peak_field,
                 b_tf_inboard_peak,
                 bc20m,
                 tc0m,
@@ -1218,7 +1227,7 @@ class SuperconductingTFCoil(TFCoil):
         iooic = c_tf_turn / icrit
         #  Operating current density
         jwdgop = c_tf_turn / a_tf_turn
-        #  Actual current density in superconductor, which should be equal to jcrit(thelium+tmarg)
+        #  Actual current density in superconductor, which should be equal to jcrit(temp_tf_coolant_peak_field+tmarg)
         #  when we have found the desired value of tmarg
         jsc = iooic * j_crit_sc
 
@@ -1270,10 +1279,10 @@ class SuperconductingTFCoil(TFCoil):
                     tc0m,
                 )
 
-            another_estimate = 2 * thelium
+            another_estimate = 2 * temp_tf_coolant_peak_field
             t_zero_margin, root_result = optimize.newton(
                 superconductors.current_density_margin,
-                thelium,
+                temp_tf_coolant_peak_field,
                 fprime=None,
                 args=arguments,
                 # args=(i_tf_superconductor, jsc, b_tf_inboard_peak, strain, bc20m, tc0m,),
@@ -1286,7 +1295,7 @@ class SuperconductingTFCoil(TFCoil):
                 disp=True,
             )
             # print(root_result)  # Diagnostic for newton method
-            tmarg = t_zero_margin - thelium
+            tmarg = t_zero_margin - temp_tf_coolant_peak_field
             tfcoil_variables.temp_margin = tmarg
 
         #  Find the current density limited by the protection limit
@@ -1301,8 +1310,8 @@ class SuperconductingTFCoil(TFCoil):
             tdump,
             f_a_tf_turn_cable_space_conductor,
             f_a_tf_turn_cable_copper,
-            thelium,
-            tmax,
+            temp_tf_coolant_peak_field,
+            temp_tf_conductor_peak_quench,
         )
 
         if output:  # Output --------------------------
@@ -1471,8 +1480,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Helium temperature at peak field (= superconductor temperature) (K)",
-                "(thelium)",
-                thelium,
+                "(temp_tf_coolant_peak_field)",
+                temp_tf_coolant_peak_field,
             )
             po.ovarre(
                 self.outfile,
