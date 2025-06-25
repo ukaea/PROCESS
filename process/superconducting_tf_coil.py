@@ -426,10 +426,10 @@ class SuperconductingTFCoil(TFCoil):
 
         return croco_voltage
 
-    def supercon_croco(self, a_tf_turn, bmax, iop, thelium, output: bool):
+    def supercon_croco(self, a_tf_turn, b_tf_inboard_peak, iop, thelium, output: bool):
         """TF superconducting CroCo conductor using REBCO tape
         author: M Kovari, CCFE, Culham Science Centre
-        bmax : input real : Peak field at conductor (T)
+        b_tf_inboard_peak : input real : Peak field at conductor (T)
         iop : input real : Operating current per turn (A)
         thelium : input real : He temperature at peak field point (K)
         iprint : input integer : Switch for printing (1 = yes, 0 = no)
@@ -440,7 +440,7 @@ class SuperconductingTFCoil(TFCoil):
 
         j_crit_sc: float = 0.0
         #  Find critical current density in superconducting cable, j_crit_cable
-        j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
+        j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak)
         # tfcoil_variables.a_tf_turn_cable_space_no_void : Cable space - inside area (m2)
         # Set new rebco_variables.croco_od
         # allowing for scaling of rebco_variables.croco_od
@@ -508,7 +508,9 @@ class SuperconductingTFCoil(TFCoil):
         jsc = iooic * j_crit_sc
 
         # Temperature margin
-        current_sharing_t = superconductors.current_sharing_rebco(bmax, jsc)
+        current_sharing_t = superconductors.current_sharing_rebco(
+            b_tf_inboard_peak, jsc
+        )
         tmarg = current_sharing_t - thelium
         tfcoil_variables.temp_margin = (
             tmarg  # Only used in the availabilty routine - see comment to Issue #526
@@ -528,7 +530,7 @@ class SuperconductingTFCoil(TFCoil):
                 logger.warning(
                     f"""Negative TFC temperature margin
                 temp_margin: {tfcoil_variables.temp_margin}
-                bmax: {bmax}"""
+                b_tf_inboard_peak: {b_tf_inboard_peak}"""
                 )
 
             po.oheadr(self.outfile, "Superconducting TF Coils")
@@ -874,8 +876,8 @@ class SuperconductingTFCoil(TFCoil):
         self,
         a_tf_turn_cable_space,
         a_tf_turn,
-        bmax,
-        fhe,
+        b_tf_inboard_peak,
+        f_a_tf_turn_cooling_extra,
         fcu,
         iop,
         jwp,
@@ -897,8 +899,8 @@ class SuperconductingTFCoil(TFCoil):
         author: J Miller, ORNL
         a_tf_turn_cable_space : input real : Cable space - inside area (m2)
         a_tf_turn : input real : Area per turn (i.e. entire jacketed conductor) (m2)
-        bmax : input real : Peak field at conductor (T)
-        fhe : input real : Fraction of cable space that is for He cooling
+        b_tf_inboard_peak : input real : Peak field at conductor (T)
+        f_a_tf_turn_cooling_extra : input real : Additional fraction of turn cabe space that is reserved for cooling
         fcu : input real : Fraction of conductor that is copper
         iop : input real : Operating current per turn (A)
         jwp : input real : Actual winding pack current density (A/m2)
@@ -944,22 +946,27 @@ class SuperconductingTFCoil(TFCoil):
         tdump = tdmptf
 
         # Helium channel
-        fhetot = (
-            fhe
-            + (np.pi / 4.0e0)
-            * tfcoil_variables.dia_tf_turn_coolant_channel
-            * tfcoil_variables.dia_tf_turn_coolant_channel
-            / a_tf_turn_cable_space
+        f_a_tf_turn_cable_space_cooling = (
+            f_a_tf_turn_cooling_extra
+            # Area of inner cooling channel
+            + (
+                (
+                    (np.pi / 4.0e0)
+                    * tfcoil_variables.dia_tf_turn_coolant_channel
+                    * tfcoil_variables.dia_tf_turn_coolant_channel
+                )
+                / a_tf_turn_cable_space
+            )
         )
 
-        # Guard against negative conductor fraction fcond
+        # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
         # from this point
-        if fhetot > 0.99:
-            fhetot = 0.99
+        if f_a_tf_turn_cable_space_cooling > 0.99:
+            f_a_tf_turn_cable_space_cooling = 0.99
 
         #  Conductor fraction (including central helium channel)
-        fcond = 1.0e0 - fhetot
+        f_a_tf_turn_cable_space_conductor = 1.0e0 - f_a_tf_turn_cable_space_cooling
 
         if tfcoil_variables.i_str_wp == 0:
             strain = tfcoil_variables.str_tf_con_res
@@ -979,9 +986,11 @@ class SuperconductingTFCoil(TFCoil):
 
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
-            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.itersc(
+                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+            )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -996,12 +1005,20 @@ class SuperconductingTFCoil(TFCoil):
             #  The parameterization for j_crit_cable assumes a particular strand
             #  composition that does not require a user-defined copper fraction,
             #  so this is irrelevant in this model
-            jstrand = jwp * a_tf_turn / (a_tf_turn_cable_space * fcond)
+            jstrand = (
+                jwp
+                * a_tf_turn
+                / (a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor)
+            )
 
-            j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
+            j_crit_cable, tmarg = superconductors.bi2212(
+                b_tf_inboard_peak, jstrand, thelium, fhts
+            )
             j_crit_sc = j_crit_cable / (1.0e0 - fcu)
             #  Critical current in cable
-            icrit = j_crit_cable * a_tf_turn_cable_space * fcond
+            icrit = (
+                j_crit_cable * a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor
+            )
 
             # Strand critical current calulation for costing in $ / kAm
             # Copper in the strand is already accounted for
@@ -1011,9 +1028,11 @@ class SuperconductingTFCoil(TFCoil):
             bc20m = 15.0e0
             tc0m = 9.3e0
             c0 = 1.0e10
-            j_crit_sc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+            j_crit_sc, _ = superconductors.jcrit_nbti(
+                thelium, b_tf_inboard_peak, c0, bc20m, tc0m
+            )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -1030,9 +1049,11 @@ class SuperconductingTFCoil(TFCoil):
                 error_handling.report_error(261)
                 strain = np.sign(strain) * 0.5e-2
 
-            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+            j_crit_sc, _, _ = superconductors.itersc(
+                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
+            )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -1052,10 +1073,10 @@ class SuperconductingTFCoil(TFCoil):
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
             j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -1072,10 +1093,10 @@ class SuperconductingTFCoil(TFCoil):
             bc20m = tfcoil_variables.b_crit_upper_nbti
             tc0m = tfcoil_variables.t_crit_nbti
             j_crit_sc, _, _ = superconductors.gl_nbti(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -1093,11 +1114,11 @@ class SuperconductingTFCoil(TFCoil):
                 strain = np.sign(strain) * 0.7e-2
 
             j_crit_sc, _, _ = superconductors.gl_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+                thelium, b_tf_inboard_peak, strain, bc20m, tc0m
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable (copper added at this stage in HTS cables)
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -1121,7 +1142,7 @@ class SuperconductingTFCoil(TFCoil):
             #  see subroutine for full references
             j_crit_sc, _, _ = superconductors.hijc_rebco(
                 thelium,
-                bmax,
+                b_tf_inboard_peak,
                 bc20m,
                 tc0m,
                 rebco_variables.tape_width,
@@ -1129,7 +1150,7 @@ class SuperconductingTFCoil(TFCoil):
                 rebco_variables.tape_thickness,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * fcond
+            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * f_a_tf_turn_cable_space_conductor
             #  Critical current in cable (copper added at this stage in HTS cables)
             icrit = j_crit_cable * a_tf_turn_cable_space
 
@@ -1180,9 +1201,9 @@ class SuperconductingTFCoil(TFCoil):
             or (isumat == 9)
         ):  # Find temperature at which current density margin = 0
             if isumat == 3:
-                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
+                arguments = (isumat, jsc, b_tf_inboard_peak, strain, bc20m, tc0m, c0)
             else:
-                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
+                arguments = (isumat, jsc, b_tf_inboard_peak, strain, bc20m, tc0m)
 
             another_estimate = 2 * thelium
             t_zero_margin, root_result = optimize.newton(
@@ -1190,7 +1211,7 @@ class SuperconductingTFCoil(TFCoil):
                 thelium,
                 fprime=None,
                 args=arguments,
-                # args=(isumat, jsc, bmax, strain, bc20m, tc0m,),
+                # args=(isumat, jsc, b_tf_inboard_peak, strain, bc20m, tc0m,),
                 tol=1.0e-06,
                 maxiter=50,
                 fprime2=None,
@@ -1208,7 +1229,15 @@ class SuperconductingTFCoil(TFCoil):
         #  to presence of fcu argument, which is not used for this model above)
 
         tfcoil_variables.jwdgpro, vd = self.protect(
-            iop, tfes, a_tf_turn_cable_space, a_tf_turn, tdump, fcond, fcu, thelium, tmax
+            iop,
+            tfes,
+            a_tf_turn_cable_space,
+            a_tf_turn,
+            tdump,
+            f_a_tf_turn_cable_space_conductor,
+            fcu,
+            thelium,
+            tmax,
         )
 
         if output:  # Output --------------------------
@@ -1216,7 +1245,7 @@ class SuperconductingTFCoil(TFCoil):
                 logger.warning(
                     """Negative TFC temperature margin
                 tmarg: {tmarg}
-                bmax: {bmax}
+                b_tf_inboard_peak: {b_tf_inboard_peak}
                 jcrit0: {jcrit0}
                 jsc: {jsc}
                 """
@@ -1378,8 +1407,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Total helium fraction inside cable space",
-                "(fhetot)",
-                fhetot,
+                "(f_a_tf_turn_cable_space_cooling)",
+                f_a_tf_turn_cable_space_cooling,
                 "OP ",
             )
             po.ovarre(self.outfile, "Copper fraction of conductor", "(fcutfsu)", fcu)
