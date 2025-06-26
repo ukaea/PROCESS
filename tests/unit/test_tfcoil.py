@@ -739,7 +739,7 @@ def test_tfcind(tfcindparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
-    ind_tf_coil = tfcoil.tfcind(
+    ind_tf_coil = tfcoil.tf_coil_self_inductance(
         tfthk=tfcindparam.tfthk,
         r_tf_arc=tfcindparam.r_tf_arc,
         z_tf_arc=tfcindparam.z_tf_arc,

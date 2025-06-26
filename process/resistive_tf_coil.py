@@ -99,7 +99,7 @@ class ResistiveTFCoil(TFCoil):
         self.tf_res_heating()
 
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.ind_tf_coil = self.tfcind(
+            tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
                 build_variables.dr_tf_inboard,
                 tfcoil_variables.r_tf_arc,
                 tfcoil_variables.z_tf_arc,

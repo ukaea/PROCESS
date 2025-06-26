@@ -109,7 +109,7 @@ class TFCoil:
         )
 
         if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.ind_tf_coil = self.tfcind(
+            tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
                 build_variables.dr_tf_inboard,
                 tfcoil_variables.r_tf_arc,
                 tfcoil_variables.z_tf_arc,
@@ -2735,19 +2735,33 @@ class TFCoil:
 
     @staticmethod
     @numba.njit(cache=True)
-    def tfcind(tfthk, r_tf_arc, z_tf_arc):
-        """Calculates the self inductance of a TF coil
-        This routine calculates the self inductance of a TF coil
-        approximated by a straight inboard section and two elliptical arcs.
-        The inductance of the TFC (considered as a single axisymmetric turn)
-        is calculated by numerical integration over the cross-sectional area.
-        The contribution from the cross-sectional area of the
-        coil itself is calculated by taking the field as B(r)/2.
-        The field in the dr_bore is calculated for unit current.
-        Top/bottom symmetry is assumed.
+    def tf_coil_self_inductance(
+        dr_tf_inboard: float, 
+        r_tf_arc: np.ndarray, 
+        z_tf_arc: np.ndarray
+    ) -> float:
+        """
+        Calculates the self-inductance of a TF coil.
 
-        :param tfthk: TF coil thickness (m)
-        :type tfthk: float
+        Approximates the TF coil by a straight inboard section and two elliptical arcs.
+        The self-inductance is computed by numerical integration over the cross-sectional area,
+        treating the coil as a single axisymmetric turn. The contribution from the coil's own
+        cross-sectional area is included by taking the field as B(r)/2. The field in the bore
+        region is calculated for unit current. Top/bottom symmetry is assumed.
+
+        :param dr_tf_inboard: 
+            Radial thickness of the inboard leg of the TF coil [m].
+        :type dr_tf_inboard: float
+        :param r_tf_arc: 
+            Array of R coordinates of arc points.
+        :type r_tf_arc: numpy.ndarray
+        :param z_tf_arc: 
+            Array of Z coordinates of arc points.
+        :type z_tf_arc: numpy.ndarray
+
+        :returns: 
+            Self-inductance of the TF coil [H].
+        :rtype: float
         """
         NINTERVALS = 100
 
@@ -2761,8 +2775,8 @@ class TFCoil:
         # single null case
         ai = r_tf_arc[1] - r_tf_arc[0]
         bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0 - z_tf_arc[0]
-        ao = ai + tfthk
-        bo = bi + tfthk
+        ao = ai + dr_tf_inboard
+        bo = bi + dr_tf_inboard
         # Interval used for integration
         dr = ao / NINTERVALS
         # Start both integrals from the centre-point where the arcs join.
@@ -2791,8 +2805,8 @@ class TFCoil:
         # Outboard arc
         ai = r_tf_arc[2] - r_tf_arc[1]
         bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0
-        ao = ai + tfthk
-        bo = bi + tfthk
+        ao = ai + dr_tf_inboard
+        bo = bi + dr_tf_inboard
         dr = ao / NINTERVALS
         # Initialise major radius
         r = x0 + dr / 2.0e0
