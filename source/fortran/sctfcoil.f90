@@ -33,7 +33,7 @@ module sctfcoil_module
    real(dp) :: c_tf_coil
 !! Current in each TF coil
 
-   real(dp) :: awpc
+   real(dp) :: a_tf_wp_with_insulation
 !! Total cross-sectional area of winding pack including
 !! GW insulation and insertion gap [m2]
 

@@ -232,7 +232,7 @@ class TFCoil:
                 sctfcoil_module.a_tf_ins,
                 tfcoil_variables.aswp,
                 tfcoil_variables.a_tf_wp_conductor,
-                sctfcoil_module.awpc,
+                sctfcoil_module.a_tf_wp_with_insulation,
                 tfcoil_variables.eyoung_al,
                 tfcoil_variables.poisson_al,
                 tfcoil_variables.fcoolcp,
@@ -1031,8 +1031,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "WP cross section area with insulation and insertion (per coil) (m2)",
-                "(awpc)",
-                sctfcoil_module.awpc,
+                "(a_tf_wp_with_insulation)",
+                sctfcoil_module.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -1095,25 +1095,26 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Steel WP fraction",
-                "(aswp/awpc)",
-                tfcoil_variables.aswp / sctfcoil_module.awpc,
+                "(aswp/a_tf_wp_with_insulation)",
+                tfcoil_variables.aswp / sctfcoil_module.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "Insulation WP fraction",
-                "(a_tf_coil_wp_turn_insulation/awpc)",
-                tfcoil_variables.a_tf_coil_wp_turn_insulation / sctfcoil_module.awpc,
+                "(a_tf_coil_wp_turn_insulation/a_tf_wp_with_insulation)",
+                tfcoil_variables.a_tf_coil_wp_turn_insulation
+                / sctfcoil_module.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "Cable WP fraction",
-                "((awpc-aswp-a_tf_coil_wp_turn_insulation)/awpc)",
+                "((a_tf_wp_with_insulation-aswp-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)",
                 (
-                    sctfcoil_module.awpc
+                    sctfcoil_module.a_tf_wp_with_insulation
                     - tfcoil_variables.aswp
                     - tfcoil_variables.a_tf_coil_wp_turn_insulation
                 )
-                / sctfcoil_module.awpc,
+                / sctfcoil_module.a_tf_wp_with_insulation,
             )
 
             # Number of turns
@@ -1356,8 +1357,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inboard TFC conductor sector area with gr insulation (per leg) (m2)",
-                "(awpc)",
-                sctfcoil_module.awpc,
+                "(a_tf_wp_with_insulation)",
+                sctfcoil_module.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -2876,7 +2877,10 @@ class TFCoil:
             # (assumed to be same density/material as turn insulation)
             tfcoil_variables.whtgw = (
                 tfcoil_variables.len_tf_coil
-                * (sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation)
+                * (
+                    sctfcoil_module.a_tf_wp_with_insulation
+                    - sctfcoil_module.a_tf_wp_no_insulation
+                )
                 * tfcoil_variables.dcondins
             )
 
@@ -3192,7 +3196,7 @@ class TFCoil:
         a_tf_ins,
         aswp,
         a_tf_wp_conductor,
-        awpc,
+        a_tf_wp_with_insulation,
         eyoung_al,
         poisson_al,
         fcoolcp,
@@ -3611,7 +3615,9 @@ class TFCoil:
             # Helium and void
             eyoung_member_array[4] = 0e0
             poisson_member_array[4] = poisson_steel
-            l_member_array[4] = awpc - a_tf_wp_conductor - a_tf_ins - aswp
+            l_member_array[4] = (
+                a_tf_wp_with_insulation - a_tf_wp_conductor - a_tf_ins - aswp
+            )
             # Compute the composite / smeared properties:
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel_array(
                 5,

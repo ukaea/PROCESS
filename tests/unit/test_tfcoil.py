@@ -853,7 +853,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     itart: Any = None
 
-    awpc: Any = None
+    a_tf_wp_with_insulation: Any = None
 
     a_tf_wp_no_insulation: Any = None
 
@@ -949,7 +949,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             voltfleg=0,
             cplen=0,
             itart=0,
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             a_tf_wp_no_insulation=0.64024601555360383,
             vol_ins_cp=0,
             vol_gr_ins_cp=0,
@@ -1021,7 +1021,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             voltfleg=0,
             cplen=20.562180043124066,
             itart=0,
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             a_tf_wp_no_insulation=0.64024601555360383,
             vol_ins_cp=0,
             vol_gr_ins_cp=0,
@@ -1200,7 +1200,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
 
-    monkeypatch.setattr(sctfcoil_module, "awpc", tfcoilareaandmassesparam.awpc)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_with_insulation",
+        tfcoilareaandmassesparam.a_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module,
@@ -1422,7 +1426,7 @@ class StressclParam(NamedTuple):
 
     c_pf_coil_turn_peak_input: Any = None
 
-    awpc: Any = None
+    a_tf_wp_with_insulation: Any = None
 
     a_tf_steel: Any = None
 
@@ -1572,7 +1576,7 @@ class StressclParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             a_tf_steel=1.2952181546825934,
             a_tf_ins=0.11646247019991701,
             r_tf_wp_inner=3.5185911851091101,
@@ -1695,7 +1699,7 @@ class StressclParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             a_tf_steel=1.2952181546825934,
             a_tf_ins=0.11646247019991701,
             r_tf_wp_inner=3.5185911851091101,
@@ -1825,7 +1829,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.a_tf_ins,
         stressclparam.aswp,
         stressclparam.a_tf_wp_conductor,
-        stressclparam.awpc,
+        stressclparam.a_tf_wp_with_insulation,
         stressclparam.eyoung_al,
         stressclparam.poisson_al,
         stressclparam.fcoolcp,

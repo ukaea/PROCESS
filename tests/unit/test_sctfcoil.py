@@ -516,7 +516,7 @@ class TfWpGeomParam(NamedTuple):
 
     dx_tf_wp_insertion_gap: Any = None
 
-    awpc: Any = None
+    a_tf_wp_with_insulation: Any = None
 
     a_tf_wp_no_insulation: Any = None
 
@@ -540,7 +540,7 @@ class TfWpGeomParam(NamedTuple):
 
     expected_wwp1: Any = None
 
-    expected_awpc: Any = None
+    expected_a_tf_wp_with_insulation: Any = None
 
     expected_a_tf_wp_no_insulation: Any = None
 
@@ -572,7 +572,7 @@ class TfWpGeomParam(NamedTuple):
             wwp2=0,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
-            awpc=0,
+            a_tf_wp_with_insulation=0,
             a_tf_wp_no_insulation=0,
             r_tf_wp_inner=0,
             r_tf_wp_outer=0,
@@ -584,7 +584,7 @@ class TfWpGeomParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
-            expected_awpc=0.70527618095271016,
+            expected_a_tf_wp_with_insulation=0.70527618095271016,
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inner=3.5185911851091101,
             expected_r_tf_wp_outer=4.06120206347512,
@@ -605,7 +605,7 @@ class TfWpGeomParam(NamedTuple):
             wwp2=0,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             a_tf_wp_no_insulation=0.64024601555360383,
             r_tf_wp_inner=3.5185911851091101,
             r_tf_wp_outer=4.06120206347512,
@@ -617,7 +617,7 @@ class TfWpGeomParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
-            expected_awpc=0.70527618095271016,
+            expected_a_tf_wp_with_insulation=0.70527618095271016,
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inner=3.5185911851091101,
             expected_r_tf_wp_outer=4.06120206347512,
@@ -681,7 +681,11 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "dx_tf_wp_insertion_gap", tfwpgeomparam.dx_tf_wp_insertion_gap
     )
 
-    monkeypatch.setattr(sctfcoil_module, "awpc", tfwpgeomparam.awpc)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_with_insulation",
+        tfwpgeomparam.a_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "a_tf_wp_no_insulation", tfwpgeomparam.a_tf_wp_no_insulation
@@ -699,7 +703,11 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "t_wp_toroidal_av", tfwpgeomparam.t_wp_toroidal_av
     )
 
-    monkeypatch.setattr(sctfcoil_module, "a_tf_wp_ground_insulation", tfwpgeomparam.a_tf_wp_ground_insulation)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_ground_insulation",
+        tfwpgeomparam.a_tf_wp_ground_insulation,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "rad_tf_coil_toroidal", tfwpgeomparam.rad_tf_coil_toroidal
@@ -711,7 +719,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     assert tfcoil_variables.wwp1 == pytest.approx(tfwpgeomparam.expected_wwp1)
 
-    assert sctfcoil_module.awpc == pytest.approx(tfwpgeomparam.expected_awpc)
+    assert sctfcoil_module.a_tf_wp_with_insulation == pytest.approx(
+        tfwpgeomparam.expected_a_tf_wp_with_insulation
+    )
 
     assert sctfcoil_module.a_tf_wp_no_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_no_insulation
@@ -763,7 +773,7 @@ class TfCaseGeomParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    awpc: Any = None
+    a_tf_wp_with_insulation: Any = None
 
     r_tf_wp_inner: Any = None
 
@@ -808,7 +818,7 @@ class TfCaseGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             r_tf_wp_inner=3.5185911851091101,
             r_tf_wp_outer=4.06120206347512,
             t_lat_case_av=0,
@@ -835,7 +845,7 @@ class TfCaseGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            awpc=0.70527618095271016,
+            a_tf_wp_with_insulation=0.70527618095271016,
             r_tf_wp_inner=3.5185911851091101,
             r_tf_wp_outer=4.06120206347512,
             t_lat_case_av=0.10396600719086938,
@@ -902,7 +912,11 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         build_variables, "r_tf_inboard_out", tfcasegeomparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(sctfcoil_module, "awpc", tfcasegeomparam.awpc)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_with_insulation",
+        tfcasegeomparam.a_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(sctfcoil_module, "r_tf_wp_inner", tfcasegeomparam.r_tf_wp_inner)
 

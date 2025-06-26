@@ -22,7 +22,7 @@ OBS_VARS = {
     "tfareain": "a_tf_coil_inboard",
     "r_tf_inleg_in": "r_tf_inleg_in",
     "r_tf_inleg_out": "r_tf_inleg_out",
-    "a_tf_wp": "awpc",
+    "a_tf_wp": "a_tf_wp_with_insulation",
     "sigttf": "sig_tf_t",
     "sigtcon": "sig_tf_t",
     "sigrtf": "sig_tf_r",
