@@ -96,7 +96,7 @@ module sctfcoil_module
    real(dp) :: a_case_front
 !! Front casing area [m2]
 
-   real(dp) :: a_case_nose
+   real(dp) :: a_tf_coil_nose_case
 !! Nose casing area [m2]
 
    real(dp) :: a_tf_wp_ground_insulation

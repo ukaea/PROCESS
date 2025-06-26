@@ -783,7 +783,7 @@ class TfCaseGeomParam(NamedTuple):
 
     a_case_front: Any = None
 
-    a_case_nose: Any = None
+    a_tf_coil_nose_case: Any = None
 
     rad_tf_coil_toroidal: Any = None
 
@@ -801,7 +801,7 @@ class TfCaseGeomParam(NamedTuple):
 
     expected_a_case_front: Any = None
 
-    expected_a_case_nose: Any = None
+    expected_a_tf_coil_nose_case: Any = None
 
 
 @pytest.mark.parametrize(
@@ -823,7 +823,7 @@ class TfCaseGeomParam(NamedTuple):
             r_tf_wp_outer=4.06120206347512,
             t_lat_case_av=0,
             a_case_front=0,
-            a_case_nose=0,
+            a_tf_coil_nose_case=0,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
@@ -832,7 +832,7 @@ class TfCaseGeomParam(NamedTuple):
             expected_acasetfo=1.2752592893394648,
             expected_t_lat_case_av=0.10396600719086938,
             expected_a_case_front=0.18607458590131154,
-            expected_a_case_nose=0.70261616505511615,
+            expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
         TfCaseGeomParam(
             a_tf_coil_inboard_case=1.0015169239205168,
@@ -850,7 +850,7 @@ class TfCaseGeomParam(NamedTuple):
             r_tf_wp_outer=4.06120206347512,
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
-            a_case_nose=0.70261616505511615,
+            a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
@@ -859,7 +859,7 @@ class TfCaseGeomParam(NamedTuple):
             expected_acasetfo=1.2752592893394648,
             expected_t_lat_case_av=0.10396600719086938,
             expected_a_case_front=0.18607458590131154,
-            expected_a_case_nose=0.70261616505511615,
+            expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
     ),
 )
@@ -930,7 +930,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "a_case_front", tfcasegeomparam.a_case_front)
 
-    monkeypatch.setattr(sctfcoil_module, "a_case_nose", tfcasegeomparam.a_case_nose)
+    monkeypatch.setattr(
+        sctfcoil_module, "a_tf_coil_nose_case", tfcasegeomparam.a_tf_coil_nose_case
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "rad_tf_coil_toroidal", tfcasegeomparam.rad_tf_coil_toroidal
@@ -959,8 +961,8 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcasegeomparam.expected_a_case_front
     )
 
-    assert sctfcoil_module.a_case_nose == pytest.approx(
-        tfcasegeomparam.expected_a_case_nose
+    assert sctfcoil_module.a_tf_coil_nose_case == pytest.approx(
+        tfcasegeomparam.expected_a_tf_coil_nose_case
     )
 
 
@@ -1637,7 +1639,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     # Sum from Section 3
     monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.42)
-    monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.42)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_coil_nose_case", 0.42)
     monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", 0.05)
 
     monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
