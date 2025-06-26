@@ -225,7 +225,7 @@ class TFCoil:
                 tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
                 sctfcoil_module.t_wp_toroidal_av,
-                sctfcoil_module.a_tf_ins,
+                sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
                 tfcoil_variables.a_tf_wp_conductor,
                 sctfcoil_module.a_tf_wp_with_insulation,
@@ -992,8 +992,9 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Total Insulation cross-section (total) (m2)",
-                "(a_tf_ins*n_tf_coils)",
-                sctfcoil_module.a_tf_ins * tfcoil_variables.n_tf_coils,
+                "(a_tf_coil_inboard_insulation*n_tf_coils)",
+                sctfcoil_module.a_tf_coil_inboard_insulation
+                * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
@@ -3247,7 +3248,7 @@ class TFCoil:
         dx_tf_turn_steel,
         t_lat_case_av,
         t_wp_toroidal_av,
-        a_tf_ins,
+        a_tf_coil_inboard_insulation,
         a_tf_wp_steel,
         a_tf_wp_conductor,
         a_tf_wp_with_insulation,
@@ -3657,7 +3658,7 @@ class TFCoil:
             # Insulation
             eyoung_member_array[1] = eyoung_ins
             poisson_member_array[1] = poisson_ins
-            l_member_array[1] = a_tf_ins
+            l_member_array[1] = a_tf_coil_inboard_insulation
             # Copper
             eyoung_member_array[2] = eyoung_copper
             poisson_member_array[2] = poisson_copper
@@ -3670,7 +3671,10 @@ class TFCoil:
             eyoung_member_array[4] = 0e0
             poisson_member_array[4] = poisson_steel
             l_member_array[4] = (
-                a_tf_wp_with_insulation - a_tf_wp_conductor - a_tf_ins - a_tf_wp_steel
+                a_tf_wp_with_insulation
+                - a_tf_wp_conductor
+                - a_tf_coil_inboard_insulation
+                - a_tf_wp_steel
             )
             # Compute the composite / smeared properties:
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel_array(
@@ -3716,16 +3720,16 @@ class TFCoil:
             # Parallel-composite conductor and insulator
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel(
                 eyoung_cond,
-                (a_wp_eff - a_tf_ins) * (1.0e0 - fcoolcp),
+                (a_wp_eff - a_tf_coil_inboard_insulation) * (1.0e0 - fcoolcp),
                 poisson_cond,
                 eyoung_ins,
-                a_tf_ins,
+                a_tf_coil_inboard_insulation,
                 poisson_ins,
             )
             # Parallel-composite cooling pipes into that
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel(
                 0e0,
-                (a_wp_eff - a_tf_ins) * fcoolcp,
+                (a_wp_eff - a_tf_coil_inboard_insulation) * fcoolcp,
                 poisson_cond,
                 eyoung_wp_axial,
                 a_working,

@@ -215,7 +215,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
                 sctfcoil_module.t_wp_toroidal_av,
-                sctfcoil_module.a_tf_ins,
+                sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
                 tfcoil_variables.a_tf_wp_conductor,
                 sctfcoil_module.a_tf_wp_with_insulation,
@@ -407,7 +407,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Total insulation cross-section per coil [m2]
-        sctfcoil_module.a_tf_ins = (
+        sctfcoil_module.a_tf_coil_inboard_insulation = (
             tfcoil_variables.a_tf_coil_wp_turn_insulation
             + sctfcoil_module.a_tf_wp_ground_insulation
         )
@@ -415,7 +415,7 @@ class ResistiveTFCoil(TFCoil):
         # Insulation fraction [-]
         sctfcoil_module.f_tf_ins = (
             tfcoil_variables.n_tf_coils
-            * sctfcoil_module.a_tf_ins
+            * sctfcoil_module.a_tf_coil_inboard_insulation
             / tfcoil_variables.a_tf_coil_inboard
         )
 
