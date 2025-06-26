@@ -2665,7 +2665,7 @@ class Stellarator:
         )
 
         #  [m^2] winding-pack cross sectional area including insulation (not global)
-        awpc = (
+        a_tf_wp_with_insulation = (
             tfcoil_variables.dr_tf_wp_with_insulation
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         ) * (tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
@@ -2800,7 +2800,7 @@ class Stellarator:
         #       outboard leg are the same)
         tfcoil_variables.acasetf = (
             build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
-        ) - awpc  # [m^2] Cross-sectional area of surrounding case
+        ) - a_tf_wp_with_insulation  # [m^2] Cross-sectional area of surrounding case
 
         tfcoil_variables.tfocrn = (
             0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
@@ -2930,7 +2930,7 @@ class Stellarator:
         # (assumed to be same density/material as conduit insulation)
         tfcoil_variables.whtgw = (
             tfcoil_variables.len_tf_coil
-            * (awpc - a_tf_wp_no_insulation)
+            * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
             * tfcoil_variables.dcondins
         )
         # [kg] mass of Superconductor

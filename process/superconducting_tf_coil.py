@@ -249,7 +249,7 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.a_tf_ins,
                 tfcoil_variables.aswp,
                 tfcoil_variables.a_tf_wp_conductor,
-                sctfcoil_module.awpc,
+                sctfcoil_module.a_tf_wp_with_insulation,
                 tfcoil_variables.eyoung_al,
                 tfcoil_variables.poisson_al,
                 tfcoil_variables.fcoolcp,
@@ -1805,7 +1805,8 @@ class SuperconductingTFCoil(TFCoil):
 
         # Inboard coil insulation cross-section [m2]
         sctfcoil_module.a_tf_ins = (
-            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_tf_wp_ground_insulation
+            tfcoil_variables.a_tf_coil_wp_turn_insulation
+            + sctfcoil_module.a_tf_wp_ground_insulation
         )
 
         #  Inboard coil insulation fraction [-]
@@ -1875,7 +1876,7 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.t_wp_toroidal_av = sctfcoil_module.t_wp_toroidal
 
             # Total cross-sectional area of winding pack [m2]
-            sctfcoil_module.awpc = (
+            sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 * sctfcoil_module.t_wp_toroidal
             )
@@ -1928,7 +1929,7 @@ class SuperconductingTFCoil(TFCoil):
 
             # Total cross-sectional area of winding pack [m2]
             # Including ground insulation and insertion gap
-            sctfcoil_module.awpc = (
+            sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 * sctfcoil_module.t_wp_toroidal_av
             )
@@ -1992,9 +1993,12 @@ class SuperconductingTFCoil(TFCoil):
 
             # Total cross-sectional area of winding pack [m2]
             # Including ground insulation and insertion gap
-            sctfcoil_module.awpc = tfcoil_variables.dr_tf_wp_with_insulation * (
-                tfcoil_variables.wwp2
-                + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
+            sctfcoil_module.a_tf_wp_with_insulation = (
+                tfcoil_variables.dr_tf_wp_with_insulation
+                * (
+                    tfcoil_variables.wwp2
+                    + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
+                )
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
@@ -2030,10 +2034,10 @@ class SuperconductingTFCoil(TFCoil):
         # Negative WP area error reporting
         if (
             sctfcoil_module.a_tf_wp_no_insulation <= 0.0e0
-            or sctfcoil_module.awpc <= 0.0e0
+            or sctfcoil_module.a_tf_wp_with_insulation <= 0.0e0
         ):
             error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_no_insulation
-            error_handling.fdiags[1] = sctfcoil_module.awpc
+            error_handling.fdiags[1] = sctfcoil_module.a_tf_wp_with_insulation
             error_handling.report_error(99)
 
     def tf_case_geom(self, i_tf_wp_geom, i_tf_case_geom):
@@ -2043,11 +2047,11 @@ class SuperconductingTFCoil(TFCoil):
         """
         tfcoil_variables.acasetf = (
             tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
-        ) - sctfcoil_module.awpc
+        ) - sctfcoil_module.a_tf_wp_with_insulation
 
         # Outboard leg cross-sectional area of surrounding case [m2]
         tfcoil_variables.acasetfo = (
-            tfcoil_variables.a_tf_leg_outboard - sctfcoil_module.awpc
+            tfcoil_variables.a_tf_leg_outboard - sctfcoil_module.a_tf_wp_with_insulation
         )
 
         # Front casing area [m2]
@@ -2626,7 +2630,7 @@ def init_sctfcoil_module():
     sctfcoil_module.tf_fit_z = 0.0
     sctfcoil_module.tf_fit_y = 0.0
     sctfcoil_module.c_tf_coil = 0.0
-    sctfcoil_module.awpc = 0.0
+    sctfcoil_module.a_tf_wp_with_insulation = 0.0
     sctfcoil_module.a_tf_wp_no_insulation = 0.0
     sctfcoil_module.a_tf_steel = 0.0
     sctfcoil_module.a_tf_ins = 0.0

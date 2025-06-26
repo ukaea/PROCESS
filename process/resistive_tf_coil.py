@@ -218,7 +218,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.a_tf_ins,
                 tfcoil_variables.aswp,
                 tfcoil_variables.a_tf_wp_conductor,
-                sctfcoil_module.awpc,
+                sctfcoil_module.a_tf_wp_with_insulation,
                 tfcoil_variables.eyoung_al,
                 tfcoil_variables.poisson_al,
                 tfcoil_variables.fcoolcp,
@@ -332,7 +332,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Total mid-plane cross-sectional area of winding pack, [m2]
         # including the surrounding ground-wall insulation layer
-        sctfcoil_module.awpc = (
+        sctfcoil_module.a_tf_wp_with_insulation = (
             np.pi
             * (sctfcoil_module.r_tf_wp_outer**2 - sctfcoil_module.r_tf_wp_inner**2)
             / tfcoil_variables.n_tf_coils
@@ -369,7 +369,8 @@ class ResistiveTFCoil(TFCoil):
 
         # Ground insulation cross-section area per coil [m2]
         sctfcoil_module.a_tf_wp_ground_insulation = (
-            sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation
+            sctfcoil_module.a_tf_wp_with_insulation
+            - sctfcoil_module.a_tf_wp_no_insulation
         )
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
@@ -407,7 +408,8 @@ class ResistiveTFCoil(TFCoil):
 
         # Total insulation cross-section per coil [m2]
         sctfcoil_module.a_tf_ins = (
-            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_tf_wp_ground_insulation
+            tfcoil_variables.a_tf_coil_wp_turn_insulation
+            + sctfcoil_module.a_tf_wp_ground_insulation
         )
 
         # Insulation fraction [-]
@@ -422,7 +424,7 @@ class ResistiveTFCoil(TFCoil):
         # physics_variables.itart = 1 : Only valid at mid-plane
         tfcoil_variables.acasetf = (
             tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
-        ) - sctfcoil_module.awpc
+        ) - sctfcoil_module.a_tf_wp_with_insulation
 
         # Current per turn
         tfcoil_variables.c_tf_turn = tfcoil_variables.c_tf_total / (
@@ -452,8 +454,8 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Reporting negative WP areas issues
-        if sctfcoil_module.awpc < 0.0e0:
-            error_handling.fdiags[0] = sctfcoil_module.awpc
+        if sctfcoil_module.a_tf_wp_with_insulation < 0.0e0:
+            error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_with_insulation
             error_handling.fdiags[0] = tfcoil_variables.dr_tf_wp_with_insulation
             error_handling.report_error(99)
 
