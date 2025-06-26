@@ -201,7 +201,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.poisson_copper,
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.eyoung_res_tf_buck,
-                sctfcoil_module.r_wp_inner,
+                sctfcoil_module.r_tf_wp_inner,
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_wp_outer,
@@ -310,7 +310,7 @@ class ResistiveTFCoil(TFCoil):
         Resisitve TF turn geometry, equivalent to winding_pack subroutines
 
         """
-        sctfcoil_module.r_wp_inner = (
+        sctfcoil_module.r_tf_wp_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
         sctfcoil_module.r_wp_outer = (
@@ -338,7 +338,7 @@ class ResistiveTFCoil(TFCoil):
         # including the surrounding ground-wall insulation layer
         sctfcoil_module.awpc = (
             np.pi
-            * (sctfcoil_module.r_wp_outer**2 - sctfcoil_module.r_wp_inner**2)
+            * (sctfcoil_module.r_wp_outer**2 - sctfcoil_module.r_tf_wp_inner**2)
             / tfcoil_variables.n_tf_coils
         )
 
@@ -355,7 +355,7 @@ class ResistiveTFCoil(TFCoil):
         # WP mid-plane cross-section excluding ground insulation per coil [m2]
         sctfcoil_module.awptf = np.pi * (
             (sctfcoil_module.r_wp_outer - tfcoil_variables.tinstf) ** 2
-            - (sctfcoil_module.r_wp_inner + tfcoil_variables.tinstf) ** 2
+            - (sctfcoil_module.r_tf_wp_inner + tfcoil_variables.tinstf) ** 2
         ) / tfcoil_variables.n_tf_coils - 2.0e0 * tfcoil_variables.tinstf * (
             tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tinstf
         )
@@ -372,7 +372,7 @@ class ResistiveTFCoil(TFCoil):
             )
             ** 2
             - (
-                sctfcoil_module.r_wp_inner
+                sctfcoil_module.r_tf_wp_inner
                 + tfcoil_variables.tinstf
                 + tfcoil_variables.dx_tf_turn_insulation
             )

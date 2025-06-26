@@ -62,7 +62,7 @@ module sctfcoil_module
    real(dp) :: r_tf_outboard_out
 !! Radial position of outer edge of TF coil inboard leg [m]
 
-   real(dp) :: r_wp_inner
+   real(dp) :: r_tf_wp_inner
 !! Radial position of inner edge and centre of winding pack [m]
 
    real(dp) :: r_wp_outer

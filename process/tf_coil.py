@@ -211,7 +211,7 @@ class TFCoil:
                 tfcoil_variables.poisson_copper,
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.eyoung_res_tf_buck,
-                sctfcoil_module.r_wp_inner,
+                sctfcoil_module.r_tf_wp_inner,
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_wp_outer,
@@ -813,8 +813,8 @@ class TFCoil:
         po.ovarre(
             constants.mfile,
             "Radial position of inner edge and centre of winding pack (m)",
-            "(r_wp_inner)",
-            sctfcoil_module.r_wp_inner,
+            "(r_tf_wp_inner)",
+            sctfcoil_module.r_tf_wp_inner,
             "OP ",
         )
 
@@ -2413,13 +2413,13 @@ class TFCoil:
                 - tfcoil_variables.tfinsgap
             )
             r_in_wp = (
-                sctfcoil_module.r_wp_inner
+                sctfcoil_module.r_tf_wp_inner
                 + tfcoil_variables.tinstf
                 + tfcoil_variables.tfinsgap
             )
         else:
             r_out_wp = sctfcoil_module.r_wp_outer - tfcoil_variables.tinstf
-            r_in_wp = sctfcoil_module.r_wp_inner + tfcoil_variables.tinstf
+            r_in_wp = sctfcoil_module.r_tf_wp_inner + tfcoil_variables.tinstf
 
         # Associated WP thickness
         dr_wp = r_out_wp - r_in_wp
@@ -3153,7 +3153,7 @@ class TFCoil:
         poisson_copper,
         i_tf_sup,
         eyoung_res_tf_buck,
-        r_wp_inner,
+        r_tf_wp_inner,
         tan_theta_coil,
         rad_tf_coil_toroidal,
         r_wp_outer,
@@ -3485,7 +3485,7 @@ class TFCoil:
         if i_tf_sup == 1:
             # Inner/outer radii of the layer representing the WP in stress calculations [m]
             # These radii are chosen to preserve the true WP area; see Issue #1048
-            r_wp_inner_eff = r_wp_inner * np.sqrt(tan_theta_coil / rad_tf_coil_toroidal)
+            r_wp_inner_eff = r_tf_wp_inner * np.sqrt(tan_theta_coil / rad_tf_coil_toroidal)
             r_wp_outer_eff = r_wp_outer * np.sqrt(tan_theta_coil / rad_tf_coil_toroidal)
 
             # Area of the cylinder representing the WP in stress calculations [m2]
@@ -3625,7 +3625,7 @@ class TFCoil:
             poisson_wp_trans = np.double(poisson_cond)
 
             # WP area using the stress model circular geometry (per coil) [m2]
-            a_wp_eff = (r_wp_outer**2 - r_wp_inner**2) * rad_tf_coil_toroidal
+            a_wp_eff = (r_wp_outer**2 - r_tf_wp_inner**2) * rad_tf_coil_toroidal
 
             # Effective conductor region young modulus in the vertical direction [Pa]
             # Parallel-composite conductor and insulator
@@ -3652,7 +3652,7 @@ class TFCoil:
             poisson_wp_axial_eff = poisson_wp_axial
 
             # Effect conductor layer inner/outer radius
-            r_wp_inner_eff = np.double(r_wp_inner)
+            r_wp_inner_eff = np.double(r_tf_wp_inner)
             r_wp_outer_eff = np.double(r_wp_outer)
 
         # Thickness of the layer representing the WP in stress calcualtions [m]
