@@ -381,13 +381,13 @@ tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quenc
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 dr_tf_nose_case   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
-dr_tf_wp = 0.5153787768966674 * radial thickness of winding pack (m) (issue #514)
+dr_tf_wp_with_insulation = 0.5153787768966674 * radial thickness of winding pack (m) (issue #514)
 dx_tf_turn_steel = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)
-tinstf   = 0.008 * Thickness of the ground insulation layer surrounding (m)
+dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surrounding (m)
 tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 vdalw    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
-vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
+f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 
 *-----------------Times Variables------------------*
 

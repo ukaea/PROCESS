@@ -268,7 +268,9 @@ ITERATION_VARIABLES = {
         "rebco_thickness", fortran.physics_variables, 0.01e-6, 100.0e-6
     ),
     139: IterationVariable("copper_thick", fortran.rebco_variables, 1.0e-6, 1.0e-3),
-    140: IterationVariable("dr_tf_wp", fortran.tfcoil_variables, 0.001, 2.0),
+    140: IterationVariable(
+        "dr_tf_wp_with_insulation", fortran.tfcoil_variables, 0.001, 2.0
+    ),
     141: IterationVariable("fcqt", fortran.constraint_variables, 0.001, 1.0),
     142: IterationVariable("nesep", fortran.physics_variables, 1.0e17, 1.0e20),
     143: IterationVariable("f_coppera_m2", fortran.rebco_variables, 0.001, 1.0),

@@ -33,18 +33,18 @@ module sctfcoil_module
    real(dp) :: c_tf_coil
 !! Current in each TF coil
 
-   real(dp) :: awpc
+   real(dp) :: a_tf_wp_with_insulation
 !! Total cross-sectional area of winding pack including
 !! GW insulation and insertion gap [m2]
 
-   real(dp) :: awptf
+   real(dp) :: a_tf_wp_no_insulation
 !! Total cross-sectional area of winding pack without
 !! ground insulation and insertion gap [m2]
 
-   real(dp) :: a_tf_steel
+   real(dp) :: a_tf_coil_inboard_steel
 !! Inboard coil steel coil cross-sectional area [m2]
 
-   real(dp) :: a_tf_ins
+   real(dp) :: a_tf_coil_inboard_insulation
 !! Inboard coil insulation cross-section per coil [m2]
 
    real(dp) :: f_tf_steel
@@ -62,10 +62,10 @@ module sctfcoil_module
    real(dp) :: r_tf_outboard_out
 !! Radial position of outer edge of TF coil inboard leg [m]
 
-   real(dp) :: r_wp_inner
+   real(dp) :: r_tf_wp_inner
 !! Radial position of inner edge and centre of winding pack [m]
 
-   real(dp) :: r_wp_outer
+   real(dp) :: r_tf_wp_outer
 !! Radial position of outer edge and centre of winding pack [m]
 
    real(dp) :: r_wp_centre
@@ -96,10 +96,10 @@ module sctfcoil_module
    real(dp) :: a_case_front
 !! Front casing area [m2]
 
-   real(dp) :: a_case_nose
+   real(dp) :: a_tf_coil_nose_case
 !! Nose casing area [m2]
 
-   real(dp) :: a_ground_ins
+   real(dp) :: a_tf_wp_ground_insulation
 !! Inboard mid-plane cross-section area of the WP ground insulation [m2]
 
    real(dp) :: a_leg_ins
