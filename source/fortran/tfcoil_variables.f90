@@ -54,7 +54,7 @@ module tfcoil_variables
   real(dp) :: a_tf_wp_steel
   !! winding pack structure area (m2)
 
-  real(dp) :: avwp
+  real(dp) :: a_tf_wp_extra_void
   !! winding pack void (He coolant) area (m2)
 
   real(dp) :: a_tf_wp_coolant_channels

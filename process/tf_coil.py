@@ -1277,14 +1277,14 @@ class TFCoil:
                 # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.a_tf_wp_conductor/ap)',a_tf_wp_conductor/ap, 'OP ')
                 # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
                 # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
-                # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.avwp/ap)',avwp/ap, 'OP ')
+                # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.a_tf_wp_extra_void/ap)',a_tf_wp_extra_void/ap, 'OP ')
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
                     tfcoil_variables.a_tf_wp_conductor
                     + tfcoil_variables.n_tf_coil_turns
                     * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
-                    + tfcoil_variables.avwp
+                    + tfcoil_variables.a_tf_wp_extra_void
                     + tfcoil_variables.a_tf_wp_coolant_channels
                 )
                 po.ovarrf(
@@ -1296,7 +1296,7 @@ class TFCoil:
                         + tfcoil_variables.n_tf_coil_turns
                         * tfcoil_variables.a_tf_turn_steel
                         + tfcoil_variables.a_tf_coil_wp_turn_insulation
-                        + tfcoil_variables.avwp
+                        + tfcoil_variables.a_tf_wp_extra_void
                         + tfcoil_variables.a_tf_wp_coolant_channels
                     )
                     / ap,
@@ -5363,7 +5363,7 @@ def init_tfcoil_variables():
     tfv.sig_tf_wp_max = 6.0e8
     tfv.a_tf_leg_outboard = 0.0
     tfv.a_tf_wp_steel = 0.0
-    tfv.avwp = 0.0
+    tfv.a_tf_wp_extra_void = 0.0
     tfv.a_tf_wp_coolant_channels = 0.0
     tfv.bcritsc = 24.0
     tfv.b_tf_inboard_peak = 0.0

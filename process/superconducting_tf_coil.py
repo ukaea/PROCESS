@@ -1777,7 +1777,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Void area in conductor for He, not including central channel [m2]
-        tfcoil_variables.avwp = (
+        tfcoil_variables.a_tf_wp_extra_void = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.vftf
@@ -1821,7 +1821,7 @@ class SuperconductingTFCoil(TFCoil):
         # Negative areas or fractions error reporting
         if (
             tfcoil_variables.a_tf_wp_conductor <= 0.0e0
-            or tfcoil_variables.avwp <= 0.0e0
+            or tfcoil_variables.a_tf_wp_extra_void <= 0.0e0
             or tfcoil_variables.a_tf_coil_wp_turn_insulation <= 0.0e0
             or tfcoil_variables.a_tf_wp_steel <= 0.0e0
             or sctfcoil_module.a_tf_coil_inboard_steel <= 0.0e0
@@ -1830,7 +1830,7 @@ class SuperconductingTFCoil(TFCoil):
             or sctfcoil_module.f_tf_ins <= 0.0e0
         ):
             error_handling.fdiags[0] = tfcoil_variables.a_tf_wp_conductor
-            error_handling.fdiags[1] = tfcoil_variables.avwp
+            error_handling.fdiags[1] = tfcoil_variables.a_tf_wp_extra_void
             error_handling.fdiags[2] = tfcoil_variables.a_tf_coil_wp_turn_insulation
             error_handling.fdiags[3] = tfcoil_variables.a_tf_wp_steel
             error_handling.fdiags[4] = sctfcoil_module.a_tf_coil_inboard_steel

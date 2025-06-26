@@ -1428,7 +1428,7 @@ class StressclParam(NamedTuple):
 
     a_tf_wp_conductor: Any = None
 
-    avwp: Any = None
+    a_tf_wp_extra_void: Any = None
 
     a_tf_wp_coolant_channels: Any = None
 
@@ -1564,7 +1564,7 @@ class StressclParam(NamedTuple):
             i_tf_turns_integer=1,
             dr_tf_plasma_case=0.060000000000000012,
             a_tf_wp_conductor=0.1653572639592335,
-            avwp=0.07759938309736393,
+            a_tf_wp_extra_void=0.07759938309736393,
             a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
             eyoung_cond_trans=0,
@@ -1687,7 +1687,7 @@ class StressclParam(NamedTuple):
             i_tf_turns_integer=1,
             dr_tf_plasma_case=0.060000000000000012,
             a_tf_wp_conductor=0.1653572639592335,
-            avwp=0.07759938309736393,
+            a_tf_wp_extra_void=0.07759938309736393,
             a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
             eyoung_cond_trans=0,
