@@ -518,7 +518,7 @@ class TfWpGeomParam(NamedTuple):
 
     awpc: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     r_tf_wp_inner: Any = None
 
@@ -542,7 +542,7 @@ class TfWpGeomParam(NamedTuple):
 
     expected_awpc: Any = None
 
-    expected_awptf: Any = None
+    expected_a_tf_wp_no_insulation: Any = None
 
     expected_r_tf_wp_inner: Any = None
 
@@ -573,7 +573,7 @@ class TfWpGeomParam(NamedTuple):
             tinstf=0.0080000000000000019,
             tfinsgap=0.01,
             awpc=0,
-            awptf=0,
+            a_tf_wp_no_insulation=0,
             r_tf_wp_inner=0,
             r_tf_wp_outer=0,
             r_wp_centre=0,
@@ -585,7 +585,7 @@ class TfWpGeomParam(NamedTuple):
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
             expected_awpc=0.70527618095271016,
-            expected_awptf=0.64024601555360383,
+            expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inner=3.5185911851091101,
             expected_r_tf_wp_outer=4.06120206347512,
             expected_r_wp_centre=3.789896624292115,
@@ -606,7 +606,7 @@ class TfWpGeomParam(NamedTuple):
             tinstf=0.0080000000000000019,
             tfinsgap=0.01,
             awpc=0.70527618095271016,
-            awptf=0.64024601555360383,
+            a_tf_wp_no_insulation=0.64024601555360383,
             r_tf_wp_inner=3.5185911851091101,
             r_tf_wp_outer=4.06120206347512,
             r_wp_centre=3.789896624292115,
@@ -618,7 +618,7 @@ class TfWpGeomParam(NamedTuple):
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
             expected_awpc=0.70527618095271016,
-            expected_awptf=0.64024601555360383,
+            expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inner=3.5185911851091101,
             expected_r_tf_wp_outer=4.06120206347512,
             expected_r_wp_centre=3.789896624292115,
@@ -675,7 +675,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "awpc", tfwpgeomparam.awpc)
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfwpgeomparam.awptf)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_wp_no_insulation", tfwpgeomparam.a_tf_wp_no_insulation)
 
     monkeypatch.setattr(sctfcoil_module, "r_tf_wp_inner", tfwpgeomparam.r_tf_wp_inner)
 
@@ -703,7 +703,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     assert sctfcoil_module.awpc == pytest.approx(tfwpgeomparam.expected_awpc)
 
-    assert sctfcoil_module.awptf == pytest.approx(tfwpgeomparam.expected_awptf)
+    assert sctfcoil_module.a_tf_wp_no_insulation == pytest.approx(tfwpgeomparam.expected_a_tf_wp_no_insulation)
 
     assert sctfcoil_module.r_tf_wp_inner == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inner
@@ -1213,7 +1213,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     t_cable_tf_is_input: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     dr_tf_turn: Any = None
 
@@ -1259,7 +1259,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0,
             dx_tf_turn=0,
             t_cable=0,
@@ -1285,7 +1285,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.049532469413859428,
             dx_tf_turn=0.049532469413859428,
             t_cable=0.031932469413859424,
@@ -1311,7 +1311,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=0,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
             t_cable=0.04109,
@@ -1337,7 +1337,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=0,
             t_cable_tf=0.042,
             t_cable_tf_is_input=True,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
             t_cable=0.04109,
@@ -1402,7 +1402,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.t_cable_tf_is_input,
     )
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfaveragedturngeomparam.awptf)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_wp_no_insulation", tfaveragedturngeomparam.a_tf_wp_no_insulation)
 
     monkeypatch.setattr(
         sctfcoil_module, "dr_tf_turn", tfaveragedturngeomparam.dr_tf_turn
@@ -1467,7 +1467,7 @@ class TfWpCurrentsParam(NamedTuple):
 
     j_tf_wp: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     expected_j_tf_wp: Any = None
 
@@ -1479,14 +1479,14 @@ class TfWpCurrentsParam(NamedTuple):
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
             j_tf_wp=0,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
             j_tf_wp=26493137.688284047,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
     ),
@@ -1510,7 +1510,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfwpcurrentsparam.awptf)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_wp_no_insulation", tfwpcurrentsparam.a_tf_wp_no_insulation)
 
     sctfcoil.tf_wp_currents()
 
