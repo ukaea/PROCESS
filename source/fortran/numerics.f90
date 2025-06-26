@@ -345,7 +345,7 @@ module numerics
   !! <LI> (137) fplhsep (f-value for equation 73)
   !! <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)
   !! <LI> (139) copper_thick : thickness of copper layer in tape (m)
-  !! <LI> (140) dr_tf_wp : radial thickness of TFC winding pack (m)
+  !! <LI> (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
   !! <LI> (141) fcqt : TF coil quench temperature < tmax_croco (f-value for equation 74)
   !! <LI> (142) nesep : electron density at separatrix [m-3]
   !! <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value

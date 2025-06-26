@@ -397,7 +397,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     wwp1: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     tfin: Any = None
 
@@ -423,7 +423,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_y=0,
             n_tf_coils=16,
             wwp1=1.299782604942499,
-            dr_tf_wp=0.50661087836601015,
+            dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
             b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
@@ -438,7 +438,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_y=1.0658869305062604,
             n_tf_coils=16,
             wwp1=1.299782604942499,
-            dr_tf_wp=0.50661087836601015,
+            dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
             b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
@@ -471,7 +471,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         wwp1=peaktfwithrippleparam.wwp1,
-        dr_tf_wp=peaktfwithrippleparam.dr_tf_wp,
+        dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
         tfin=peaktfwithrippleparam.tfin,
         b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
     )
@@ -500,7 +500,7 @@ class TfWpGeomParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     dr_tf_plasma_case: Any = None
 
@@ -564,7 +564,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
@@ -597,7 +597,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
@@ -651,7 +651,11 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         build_variables, "r_tf_inboard_out", tfwpgeomparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfwpgeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tfwpgeomparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "dr_tf_plasma_case", tfwpgeomparam.dr_tf_plasma_case
@@ -753,7 +757,7 @@ class TfCaseGeomParam(NamedTuple):
 
     dr_tf_plasma_case: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     r_tf_inboard_in: Any = None
 
@@ -801,7 +805,7 @@ class TfCaseGeomParam(NamedTuple):
             n_tf_coils=16,
             dx_tf_side_case=0.05000000000000001,
             dr_tf_plasma_case=0.060000000000000012,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             awpc=0.70527618095271016,
@@ -828,7 +832,7 @@ class TfCaseGeomParam(NamedTuple):
             n_tf_coils=16,
             dx_tf_side_case=0.05000000000000001,
             dr_tf_plasma_case=0.060000000000000012,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             awpc=0.70527618095271016,
@@ -884,7 +888,11 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "dr_tf_plasma_case", tfcasegeomparam.dr_tf_plasma_case
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfcasegeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tfcasegeomparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_in", tfcasegeomparam.r_tf_inboard_in
@@ -937,7 +945,7 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
 
 
 class TfIntegerTurnGeomParam(NamedTuple):
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     dx_tf_wp_insulation: Any = None
 
@@ -1006,7 +1014,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
     "tfintegerturngeomparam",
     (
         TfIntegerTurnGeomParam(
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
             t_conductor=0,
@@ -1040,7 +1048,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_n_tf_coil_turns=200,
         ),
         TfIntegerTurnGeomParam(
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
             t_conductor=0.052553108427885735,
@@ -1088,7 +1096,11 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfintegerturngeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tfintegerturngeomparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

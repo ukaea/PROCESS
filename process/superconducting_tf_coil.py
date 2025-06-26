@@ -336,7 +336,7 @@ class SuperconductingTFCoil(TFCoil):
         tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
             tfcoil_variables.n_tf_coils,
             tfcoil_variables.wwp1,
-            tfcoil_variables.dr_tf_wp
+            tfcoil_variables.dr_tf_wp_with_insulation
             - 2.0e0
             * (
                 tfcoil_variables.dx_tf_wp_insulation
@@ -1619,7 +1619,9 @@ class SuperconductingTFCoil(TFCoil):
             d_vv=build_variables.dr_vv_shells,
         )
 
-    def peak_tf_with_ripple(self, n_tf_coils, wwp1, dr_tf_wp, tfin, b_tf_inboard_peak):
+    def peak_tf_with_ripple(
+        self, n_tf_coils, wwp1, dr_tf_wp_with_insulation, tfin, b_tf_inboard_peak
+    ):
         """Peak toroidal field on the conductor
         author: P J Knight, CCFE, Culham Science Centre
         This subroutine calculates the peak toroidal field at the
@@ -1637,8 +1639,8 @@ class SuperconductingTFCoil(TFCoil):
         :type n_tf_coils: float
         :param wwp1: width of plasma-facing face of winding pack (m)
         :type wwp1: float
-        :param dr_tf_wp: radial thickness of winding pack (m)
-        :type dr_tf_wp: float
+        :param dr_tf_wp_with_insulation: radial thickness of winding pack (m)
+        :type dr_tf_wp_with_insulation: float
         :param tfin: major radius of centre of winding pack (m)
         :type tfin: float
         :param b_tf_inboard_peak: nominal (axisymmetric) peak toroidal field (T)
@@ -1681,7 +1683,7 @@ class SuperconductingTFCoil(TFCoil):
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
 
-        wmax = (2.0e0 * tfin + dr_tf_wp) * np.tan(np.pi / n_tf_coils)
+        wmax = (2.0e0 * tfin + dr_tf_wp_with_insulation) * np.tan(np.pi / n_tf_coils)
 
         #  Dimensionless winding pack width
 
@@ -1692,7 +1694,7 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Dimensionless winding pack radial thickness
 
-        sctfcoil_module.tf_fit_z = dr_tf_wp / wmax
+        sctfcoil_module.tf_fit_z = dr_tf_wp_with_insulation / wmax
         if (sctfcoil_module.tf_fit_z < 0.26e0) or (sctfcoil_module.tf_fit_z > 0.7e0):
             # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; z = ',z
             flag = 2
@@ -1845,7 +1847,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Radial position of outer edge of winding pack [m]
         sctfcoil_module.r_tf_wp_outer = (
-            sctfcoil_module.r_tf_wp_inner + tfcoil_variables.dr_tf_wp
+            sctfcoil_module.r_tf_wp_inner + tfcoil_variables.dr_tf_wp_with_insulation
         )
 
         # Radius of geometrical centre of winding pack [m]
@@ -1874,12 +1876,13 @@ class SuperconductingTFCoil(TFCoil):
 
             # Total cross-sectional area of winding pack [m2]
             sctfcoil_module.awpc = (
-                tfcoil_variables.dr_tf_wp * sctfcoil_module.t_wp_toroidal
+                tfcoil_variables.dr_tf_wp_with_insulation
+                * sctfcoil_module.t_wp_toroidal
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
             sctfcoil_module.a_tf_wp_no_insulation = (
-                tfcoil_variables.dr_tf_wp
+                tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_wp_insulation
@@ -1896,7 +1899,7 @@ class SuperconductingTFCoil(TFCoil):
 
             # Cross-section area of the WP ground insulation [m2]
             sctfcoil_module.a_ground_ins = (
-                tfcoil_variables.dr_tf_wp
+                tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
                 sctfcoil_module.t_wp_toroidal
@@ -1926,14 +1929,15 @@ class SuperconductingTFCoil(TFCoil):
             # Total cross-sectional area of winding pack [m2]
             # Including ground insulation and insertion gap
             sctfcoil_module.awpc = (
-                tfcoil_variables.dr_tf_wp * sctfcoil_module.t_wp_toroidal_av
+                tfcoil_variables.dr_tf_wp_with_insulation
+                * sctfcoil_module.t_wp_toroidal_av
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
             sctfcoil_module.a_tf_wp_no_insulation = (
                 0.5e0
                 * (
-                    tfcoil_variables.dr_tf_wp
+                    tfcoil_variables.dr_tf_wp_with_insulation
                     - 2.0e0
                     * (
                         tfcoil_variables.dx_tf_wp_insulation
@@ -1955,7 +1959,7 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.a_ground_ins = (
                 0.5e0
                 * (
-                    tfcoil_variables.dr_tf_wp
+                    tfcoil_variables.dr_tf_wp_with_insulation
                     - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
                 )
                 * (
@@ -1988,14 +1992,14 @@ class SuperconductingTFCoil(TFCoil):
 
             # Total cross-sectional area of winding pack [m2]
             # Including ground insulation and insertion gap
-            sctfcoil_module.awpc = tfcoil_variables.dr_tf_wp * (
+            sctfcoil_module.awpc = tfcoil_variables.dr_tf_wp_with_insulation * (
                 tfcoil_variables.wwp2
                 + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
             sctfcoil_module.a_tf_wp_no_insulation = (
-                tfcoil_variables.dr_tf_wp
+                tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_wp_insulation
@@ -2013,7 +2017,7 @@ class SuperconductingTFCoil(TFCoil):
 
             # Cross-section area of the WP ground insulation [m2]
             sctfcoil_module.a_ground_ins = (
-                tfcoil_variables.dr_tf_wp
+                tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
                 tfcoil_variables.wwp2
@@ -2080,14 +2084,18 @@ class SuperconductingTFCoil(TFCoil):
         if i_tf_wp_geom == 0:
             sctfcoil_module.t_lat_case_av = (
                 tfcoil_variables.dx_tf_side_case
-                + 0.5e0 * sctfcoil_module.tan_theta_coil * tfcoil_variables.dr_tf_wp
+                + 0.5e0
+                * sctfcoil_module.tan_theta_coil
+                * tfcoil_variables.dr_tf_wp_with_insulation
             )
 
         # Double rectangular WP
         elif i_tf_wp_geom == 1:
             sctfcoil_module.t_lat_case_av = (
                 tfcoil_variables.dx_tf_side_case
-                + 0.25e0 * sctfcoil_module.tan_theta_coil * tfcoil_variables.dr_tf_wp
+                + 0.25e0
+                * sctfcoil_module.tan_theta_coil
+                * tfcoil_variables.dr_tf_wp_with_insulation
             )
 
         # Trapezoidal WP
@@ -2113,7 +2121,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Radial turn dimension [m]
         sctfcoil_module.dr_tf_turn = (
-            tfcoil_variables.dr_tf_wp
+            tfcoil_variables.dr_tf_wp_with_insulation
             - 2.0e0
             * (
                 tfcoil_variables.dx_tf_wp_insulation

@@ -28,7 +28,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     dr_tf_nose_case: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     dx_tf_inboard_out_toroidal: Any = None
 
@@ -80,7 +80,7 @@ class ResTfInternalGeomParam(NamedTuple):
             n_tf_coil_turns=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_nose_case=0,
-            dr_tf_wp=0.15483000000000002,
+            dr_tf_wp_with_insulation=0.15483000000000002,
             dx_tf_inboard_out_toroidal=0.45367650933034859,
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
@@ -107,7 +107,7 @@ class ResTfInternalGeomParam(NamedTuple):
             n_tf_coil_turns=1,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_nose_case=0,
-            dr_tf_wp=0.14708850000000001,
+            dr_tf_wp_with_insulation=0.14708850000000001,
             dx_tf_inboard_out_toroidal=0.44435902370665786,
             a_tf_coil_inboard=0.0753112923616783,
             c_tf_total=25500000,
@@ -162,7 +162,11 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         tfcoil_variables, "dr_tf_nose_case", restfinternalgeomparam.dr_tf_nose_case
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", restfinternalgeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        restfinternalgeomparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

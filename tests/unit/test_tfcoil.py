@@ -441,7 +441,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     dx_tf_turn_insulation: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     dx_tf_wp_insertion_gap: Any = None
 
@@ -492,7 +492,7 @@ class TfFieldAndForceParam(NamedTuple):
             vforce_outboard=0,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
-            dr_tf_wp=0.15483000000000002,
+            dr_tf_wp_with_insulation=0.15483000000000002,
             dx_tf_wp_insertion_gap=0.01,
             i_cp_joints=1,
             dr_tf_plasma_case=0.0077415000000000019,
@@ -527,7 +527,7 @@ class TfFieldAndForceParam(NamedTuple):
             vforce_outboard=8413494.7991220243,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
-            dr_tf_wp=0.14708850000000001,
+            dr_tf_wp_with_insulation=0.14708850000000001,
             dx_tf_wp_insertion_gap=0.01,
             i_cp_joints=1,
             dr_tf_plasma_case=0.0077415000000000019,
@@ -612,7 +612,11 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
         tffieldandforceparam.dx_tf_turn_insulation,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tffieldandforceparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tffieldandforceparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -1338,7 +1342,7 @@ class StressclParam(NamedTuple):
 
     n_tf_coil_turns: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     i_tf_tresca: Any = None
 
@@ -1513,7 +1517,7 @@ class StressclParam(NamedTuple):
             r_tf_inboard_in=2.9939411851091102,
             casestr=0,
             n_tf_coil_turns=200,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             vforce=250545611.13801825,
@@ -1636,7 +1640,7 @@ class StressclParam(NamedTuple):
             r_tf_inboard_in=2.9939411851091102,
             casestr=0.00094360452596334093,
             n_tf_coil_turns=200,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             vforce=250545611.13801825,

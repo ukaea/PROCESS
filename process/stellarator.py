@@ -2399,7 +2399,8 @@ class Stellarator:
             # Winding pack radial thickness, including groundwall insulation
 
             wpthk = (
-                tfcoil_variables.dr_tf_wp + 2.0 * tfcoil_variables.dx_tf_wp_insulation
+                tfcoil_variables.dr_tf_wp_with_insulation
+                + 2.0 * tfcoil_variables.dx_tf_wp_insulation
             )
 
             # Nuclear heating rate in inboard TF coil (MW/m**3)
@@ -2659,11 +2660,14 @@ class Stellarator:
         tfcoil_variables.wwp2 = (
             awp_tor  # [m] toroidal thickness of winding pack (region in front)
         )
-        tfcoil_variables.dr_tf_wp = awp_rad  # [m] radial thickness of winding pack
+        tfcoil_variables.dr_tf_wp_with_insulation = (
+            awp_rad  # [m] radial thickness of winding pack
+        )
 
         #  [m^2] winding-pack cross sectional area including insulation (not global)
         awpc = (
-            tfcoil_variables.dr_tf_wp + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+            tfcoil_variables.dr_tf_wp_with_insulation
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         ) * (tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
 
         a_tf_wp_no_insulation = (
@@ -2780,13 +2784,13 @@ class Stellarator:
 
         build_variables.dr_tf_inboard = (
             tfcoil_variables.dr_tf_nose_case
-            + tfcoil_variables.dr_tf_wp
+            + tfcoil_variables.dr_tf_wp_with_insulation
             + tfcoil_variables.dr_tf_plasma_case
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in radial direction
         build_variables.dr_tf_outboard = (
             tfcoil_variables.dr_tf_nose_case
-            + tfcoil_variables.dr_tf_wp
+            + tfcoil_variables.dr_tf_wp_with_insulation
             + tfcoil_variables.dr_tf_plasma_case
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
@@ -2905,7 +2909,7 @@ class Stellarator:
             stellarator_configuration.stella_config_min_bend_radius
             * st.f_r
             * 1.0
-            / (1.0 - tfcoil_variables.dr_tf_wp / (2.0 * r_coil_minor))
+            / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
         )
 
         # End of general coil geometry values
@@ -3083,7 +3087,9 @@ class Stellarator:
 
         # Approximate, very simple maxiumum stress: (needed for limitation of icc 32)
         tfcoil_variables.sig_tf_wp = (
-            tfcoil_variables.max_force_density * tfcoil_variables.dr_tf_wp * 1.0e6
+            tfcoil_variables.max_force_density
+            * tfcoil_variables.dr_tf_wp_with_insulation
+            * 1.0e6
         )  # in Pa
 
         # Units: MN/m
@@ -3917,8 +3923,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Winding radial thickness (m)",
-            "(dr_tf_wp)",
-            tfcoil_variables.dr_tf_wp,
+            "(dr_tf_wp_with_insulation)",
+            tfcoil_variables.dr_tf_wp_with_insulation,
         )
         po.ovarre(
             self.outfile,

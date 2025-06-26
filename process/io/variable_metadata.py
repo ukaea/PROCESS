@@ -89,7 +89,7 @@ var_dicts = {
         description="Total TF coil current",
         units="A",
     ),
-    "dr_tf_wp": VariableMetadata(
+    "dr_tf_wp_with_insulation": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{WP}$ [$m$]",
         description="TF coil winding pack width",
         units="m",

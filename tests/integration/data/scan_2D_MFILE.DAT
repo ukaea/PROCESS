@@ -698,7 +698,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.3122E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.4883E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9159E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.7806E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7806E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1956E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1005E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -1861,7 +1861,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1884E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.4179E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.8472E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.7107E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7107E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1970E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1033E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -3024,7 +3024,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.0995E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.3467E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.7778E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.6404E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6404E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1984E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1061E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -4187,7 +4187,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1061E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.3564E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.7873E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.6500E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6500E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1982E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1057E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -5350,7 +5350,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1735E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.4356E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.8645E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.7283E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7283E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1966E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1026E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -6513,7 +6513,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2805E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.5336E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9601E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.8258E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8258E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1947E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0987E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -7676,7 +7676,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2885E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.5458E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9720E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.8380E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8380E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1944E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0982E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -8839,7 +8839,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1963E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.4625E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.8907E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.7550E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7550E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1961E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1015E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -10002,7 +10002,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1119E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.3798E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.8101E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.6731E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6731E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1977E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1048E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -11165,7 +11165,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1159E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.3854E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.8155E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.6786E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6786E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1976E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1045E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -12328,7 +12328,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1979E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.4722E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9002E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.7647E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7647E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1959E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1011E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -13491,7 +13491,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2865E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.5559E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9817E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.8480E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8480E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1942E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0978E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -14654,7 +14654,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2915E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.5629E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9886E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.8550E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8550E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1941E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0975E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -15817,7 +15817,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2028E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.4737E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.9017E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.7662E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7662E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1959E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1011E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -16980,7 +16980,7 @@
  External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1143E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (awpc)________________________      5.3842E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (aswp)________________________      4.8144E-01    
- Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      4.6775E-01 ITV
+ Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6775E-01 ITV
  Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1976E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.1046E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
@@ -17756,7 +17756,7 @@ fimp(13) = 0.00038
 * TF winding pack thickness [m]
 ixc = 140
 boundl(140) = 0.4
-dr_tf_wp = 0.5
+dr_tf_wp_with_insulation = 0.5
 
 * Inputs *
 **********

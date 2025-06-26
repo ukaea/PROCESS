@@ -257,7 +257,7 @@ fimp(13) = 0.00038
 * TF winding pack thickness [m]
 ixc = 140
 boundl(140) = 0.4
-dr_tf_wp = 0.5
+dr_tf_wp_with_insulation = 0.5
 
 * Inputs *
 **********
