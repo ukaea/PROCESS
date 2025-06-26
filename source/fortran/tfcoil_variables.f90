@@ -614,7 +614,7 @@ module tfcoil_variables
   !! inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
   !! (calculated for stellarators)
 
-  real(dp) :: dr_tf_wp
+  real(dp) :: dr_tf_wp_with_insulation
   !! radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 
   real(dp) :: dx_tf_turn_steel

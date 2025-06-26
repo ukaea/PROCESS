@@ -1016,7 +1016,7 @@ boundu(50) = 1.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 * Below is specifically set up for superconducting coils *
-* dr_tf_inboard is set up in the radial build section and should generally never be iterated with dr_tf_wp *
+* dr_tf_inboard is set up in the radial build section and should generally never be iterated with dr_tf_wp_with_insulation *
 
 *-------------------*
 * Casing dimensions * 
@@ -1077,7 +1077,7 @@ i_tf_wp_geom = 2
 * JUSTIFICATION: Changed to try and replicate new WP shape
 
 ixc = 140
-dr_tf_wp = 0.6
+dr_tf_wp_with_insulation = 0.6
 boundl(140) = 0.4
 boundu(140) = 0.8 
 * DESCRIPTION:   Inboard TF winding pack thickness including turn insulation (m)

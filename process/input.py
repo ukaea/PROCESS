@@ -436,7 +436,9 @@ INPUT_VARIABLES = {
     ),
     "dr_tf_inboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dr_tf_shld_gap": InputVariable(fortran.build_variables, float, range=(0.0, 5.0)),
-    "dr_tf_wp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 10.0)),
+    "dr_tf_wp_with_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 10.0)
+    ),
     "dr_vv_inboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dr_vv_outboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "drtop": InputVariable(fortran.tfcoil_variables, float, range=(-1.5, 1.5)),

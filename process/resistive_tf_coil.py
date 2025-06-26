@@ -365,7 +365,10 @@ class ResistiveTFCoil(TFCoil):
             / tfcoil_variables.n_tf_coils
             - 2.0e0
             * tfcoil_variables.dx_tf_wp_insulation
-            * (tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
+            * (
+                tfcoil_variables.dr_tf_wp_with_insulation
+                - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+            )
         )
 
         # Ground insulation cross-section area per coil [m2]
@@ -388,7 +391,7 @@ class ResistiveTFCoil(TFCoil):
             )
             ** 2
         ) / tfcoil_variables.n_tf_coils - (
-            tfcoil_variables.dr_tf_wp
+            tfcoil_variables.dr_tf_wp_with_insulation
             - 2.0e0
             * (
                 tfcoil_variables.dx_tf_wp_insulation
@@ -455,7 +458,7 @@ class ResistiveTFCoil(TFCoil):
         # Reporting negative WP areas issues
         if sctfcoil_module.awpc < 0.0e0:
             error_handling.fdiags[0] = sctfcoil_module.awpc
-            error_handling.fdiags[0] = tfcoil_variables.dr_tf_wp
+            error_handling.fdiags[0] = tfcoil_variables.dr_tf_wp_with_insulation
             error_handling.report_error(99)
 
         elif sctfcoil_module.a_tf_wp_no_insulation < 0.0e0:
