@@ -928,7 +928,7 @@ class Power:
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma separatrix power deposited in divertor) [MW]",
+            "Plasma separatrix power deposited in divertor [MW]",
             "(p_plasma_separatrix_mw)",
             physics_variables.p_plasma_separatrix_mw,
         )
@@ -1155,7 +1155,7 @@ class Power:
         po.ovarre(
             self.outfile,
             "Electric power demand for vacuum pumps [MWe]",
-            "(vachtmww)",
+            "(vachtmw)",
             heat_transport_variables.vachtmw,
         )
         po.ovarre(
@@ -1339,6 +1339,12 @@ class Power:
                     heat_transport_variables.p_plant_primary_heat_mw
                     * heat_transport_variables.eta_turbine
                 )
+
+            # Total lost thermal power in the turbine
+            power_variables.p_turbine_loss_mw = (
+                heat_transport_variables.p_plant_primary_heat_mw
+                * (1 - heat_transport_variables.eta_turbine)
+            )
 
             #  Total recirculating power
             heat_transport_variables.p_plant_electric_recirc_mw = (
