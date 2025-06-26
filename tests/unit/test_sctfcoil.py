@@ -530,7 +530,7 @@ class TfWpGeomParam(NamedTuple):
 
     t_wp_toroidal_av: Any = None
 
-    a_ground_ins: Any = None
+    a_tf_wp_ground_insulation: Any = None
 
     rad_tf_coil_toroidal: Any = None
 
@@ -554,7 +554,7 @@ class TfWpGeomParam(NamedTuple):
 
     expected_t_wp_toroidal_av: Any = None
 
-    expected_a_ground_ins: Any = None
+    expected_a_tf_wp_ground_insulation: Any = None
 
 
 @pytest.mark.parametrize(
@@ -579,7 +579,7 @@ class TfWpGeomParam(NamedTuple):
             r_wp_centre=0,
             t_wp_toroidal=0,
             t_wp_toroidal_av=0,
-            a_ground_ins=0,
+            a_tf_wp_ground_insulation=0,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
@@ -591,7 +591,7 @@ class TfWpGeomParam(NamedTuple):
             expected_r_wp_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
             expected_t_wp_toroidal_av=1.299782604942499,
-            expected_a_ground_ins=0.028582295732936136,
+            expected_a_tf_wp_ground_insulation=0.028582295732936136,
         ),
         TfWpGeomParam(
             dr_tf_inboard=1.208,
@@ -612,7 +612,7 @@ class TfWpGeomParam(NamedTuple):
             r_wp_centre=3.789896624292115,
             t_wp_toroidal=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
-            a_ground_ins=0.028582295732936136,
+            a_tf_wp_ground_insulation=0.028582295732936136,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
@@ -624,7 +624,7 @@ class TfWpGeomParam(NamedTuple):
             expected_r_wp_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
             expected_t_wp_toroidal_av=1.299782604942499,
-            expected_a_ground_ins=0.028582295732936136,
+            expected_a_tf_wp_ground_insulation=0.028582295732936136,
         ),
     ),
 )
@@ -699,7 +699,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "t_wp_toroidal_av", tfwpgeomparam.t_wp_toroidal_av
     )
 
-    monkeypatch.setattr(sctfcoil_module, "a_ground_ins", tfwpgeomparam.a_ground_ins)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_wp_ground_insulation", tfwpgeomparam.a_tf_wp_ground_insulation)
 
     monkeypatch.setattr(
         sctfcoil_module, "rad_tf_coil_toroidal", tfwpgeomparam.rad_tf_coil_toroidal
@@ -737,8 +737,8 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfwpgeomparam.expected_t_wp_toroidal_av
     )
 
-    assert sctfcoil_module.a_ground_ins == pytest.approx(
-        tfwpgeomparam.expected_a_ground_ins
+    assert sctfcoil_module.a_tf_wp_ground_insulation == pytest.approx(
+        tfwpgeomparam.expected_a_tf_wp_ground_insulation
     )
 
 

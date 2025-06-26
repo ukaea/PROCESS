@@ -99,7 +99,7 @@ module sctfcoil_module
    real(dp) :: a_case_nose
 !! Nose casing area [m2]
 
-   real(dp) :: a_ground_ins
+   real(dp) :: a_tf_wp_ground_insulation
 !! Inboard mid-plane cross-section area of the WP ground insulation [m2]
 
    real(dp) :: a_leg_ins
