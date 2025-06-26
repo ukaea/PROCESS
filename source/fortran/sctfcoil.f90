@@ -44,7 +44,7 @@ module sctfcoil_module
    real(dp) :: a_tf_coil_inboard_steel
 !! Inboard coil steel coil cross-sectional area [m2]
 
-   real(dp) :: a_tf_ins
+   real(dp) :: a_tf_coil_inboard_insulation
 !! Inboard coil insulation cross-section per coil [m2]
 
    real(dp) :: f_tf_steel
