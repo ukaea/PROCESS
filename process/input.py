@@ -1300,7 +1300,9 @@ INPUT_VARIABLES = {
         fortran.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "ti": InputVariable(fortran.physics_variables, float, range=(5.0, 50.0)),
-    "tinstf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_wp_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "tlife": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
     "tmain": InputVariable(fortran.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),

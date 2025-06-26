@@ -620,7 +620,7 @@ module tfcoil_variables
   real(dp) :: dx_tf_turn_steel
   !! TF coil conduit case thickness (m) (`iteration variable 58`)
 
-  real(dp) :: tinstf
+  real(dp) :: dx_tf_wp_insulation
   !! Thickness of the ground insulation layer surrounding (m)
   !!   - Superconductor TF (`i_tf_sup == 1`) : The TF coil Winding packs
   !!   - Resistive magnets (`i_tf_sup /= 1`) : The TF coil wedges

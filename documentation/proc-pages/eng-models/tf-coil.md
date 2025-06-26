@@ -291,7 +291,7 @@ A much simpler inboard mid-plane geometry is used for resistive TF coils, as sho
     </center>
 </figure>
 
-The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_coil_turns` user input. The entire coil is wrapped with ground insulation of thickness `tinstf`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
+The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_coil_turns` user input. The entire coil is wrapped with ground insulation of thickness `dx_tf_wp_insulation`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
 
 <figure>
     <center>
@@ -1266,7 +1266,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `casthi_fraction`     | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value                         | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
-| `tinstf`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
+| `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
 | `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 | Parameter             | description                                                                                                                                          | Iteration variable | Default                              | Unit |
 | -                     | -                                                                                                                                                    | -                  | -                                    | -    |
@@ -1281,7 +1281,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value              | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
-| `tinstf`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
+| `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
 | `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 
 <br>

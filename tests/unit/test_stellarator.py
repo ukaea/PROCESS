@@ -2879,7 +2879,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     tfsai: Any = None
     tfsao: Any = None
     dr_tf_wp: Any = None
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
     expected_coilhtmx: Any = None
     expected_dpacop: Any = None
     expected_htheci: Any = None
@@ -2910,7 +2910,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             tfsai=0,
             tfsao=0,
             dr_tf_wp=0.73180646211514355,
-            tinstf=0.01,
+            dx_tf_wp_insulation=0.01,
             expected_coilhtmx=2.2389491150157432e-05,
             expected_dpacop=0.00010755386610285162,
             expected_htheci=4.9451030969257898e-05,
@@ -2997,7 +2997,9 @@ def test_sctfcoil_nuclear_heating_iter90(
         tfcoil_variables, "dr_tf_wp", sctfcoilnuclearheatingiter90param.dr_tf_wp
     )
     monkeypatch.setattr(
-        tfcoil_variables, "tinstf", sctfcoilnuclearheatingiter90param.tinstf
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        sctfcoilnuclearheatingiter90param.dx_tf_wp_insulation,
     )
 
     (

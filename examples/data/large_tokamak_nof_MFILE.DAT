@@ -736,7 +736,7 @@
  Winding_pack_radial_thickness_(m)________________________________________ (dr_tf_wp)_____________________ 4.79330851851772599e-01 OP
  Winding_pack_toroidal_width_1_(m)________________________________________ (wwp1)_________________________ 1.19532057624610455e+00 OP
  Winding_pack_toroidal_width_2_(m)________________________________________ (wwp2)_________________________ 1.09997574174616042e+00 OP
- Ground_wall_insulation_thickness_(m)_____________________________________ (tinstf)_______________________ 8.00000000000000017e-03
+ Ground_wall_insulation_thickness_(m)_____________________________________ (dx_tf_wp_insulation)_______________________ 8.00000000000000017e-03
  Winding_pack_insertion_gap_(m)___________________________________________ (tfinsgap)_____________________ 1.00000000000000002e-02
  Steel_WP_cross-section_(total)_(m2)______________________________________ (aswp*n_tf_coils)______________ 3.88670822005323435e+00
  Steel_WP_fraction________________________________________________________ (aswp/awpc)____________________ 4.41588554917136333e-01
@@ -1789,7 +1789,7 @@ ripmax = 0.6
 n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
-tinstf = 0.008
+dx_tf_wp_insulation = 0.008
 
 * Diameter if He channel in winding [m]
 dia_tf_turn_coolant_channel = 0.01

@@ -215,7 +215,7 @@ class TFCoil:
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.tfinsgap,
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
@@ -1084,8 +1084,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Ground wall insulation thickness (m)",
-                "(tinstf)",
-                tfcoil_variables.tinstf,
+                "(dx_tf_wp_insulation)",
+                tfcoil_variables.dx_tf_wp_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -1392,8 +1392,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Ground wall insulation thickness (m)",
-                "(tinstf)",
-                tfcoil_variables.tinstf,
+                "(dx_tf_wp_insulation)",
+                tfcoil_variables.dx_tf_wp_insulation,
             )
             # Turn info
             po.osubhd(self.outfile, "Coil turn information:")
@@ -1807,54 +1807,54 @@ class TFCoil:
                 "(tfinsgap)",
             )
 
-            radius = radius + tfcoil_variables.tinstf
+            radius = radius + tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Winding pack ground insulation",
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tinstf)",
+                "(dx_tf_wp_insulation)",
             )
 
             radius = (
                 radius
                 + 0.5e0 * tfcoil_variables.dr_tf_wp
-                - tfcoil_variables.tinstf
+                - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.tfinsgap
             )
             po.obuild(
                 self.outfile,
                 "Winding - first half",
                 tfcoil_variables.dr_tf_wp / 2e0
-                - tfcoil_variables.tinstf
+                - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.tfinsgap,
                 radius,
-                "(dr_tf_wp/2-tinstf-tfinsgap)",
+                "(dr_tf_wp/2-dx_tf_wp_insulation-tfinsgap)",
             )
 
             radius = (
                 radius
                 + 0.5e0 * tfcoil_variables.dr_tf_wp
-                - tfcoil_variables.tinstf
+                - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.tfinsgap
             )
             po.obuild(
                 self.outfile,
                 "Winding - second half",
                 tfcoil_variables.dr_tf_wp / 2e0
-                - tfcoil_variables.tinstf
+                - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.tfinsgap,
                 radius,
-                "(dr_tf_wp/2-tinstf-tfinsgap)",
+                "(dr_tf_wp/2-dx_tf_wp_insulation-tfinsgap)",
             )
 
-            radius = radius + tfcoil_variables.tinstf
+            radius = radius + tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Winding pack insulation",
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tinstf)",
+                "(dx_tf_wp_insulation)",
             )
 
             radius = radius + tfcoil_variables.tfinsgap
@@ -1895,44 +1895,48 @@ class TFCoil:
                 "(dr_tf_nose_case)",
             )
 
-            radius = radius + tfcoil_variables.tinstf
+            radius = radius + tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tinstf)",
+                "(dx_tf_wp_insulation)",
             )
 
             radius = (
-                radius + 0.5e0 * tfcoil_variables.dr_tf_wp - tfcoil_variables.tinstf
+                radius
+                + 0.5e0 * tfcoil_variables.dr_tf_wp
+                - tfcoil_variables.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - first half",
-                tfcoil_variables.dr_tf_wp / 2e0 - tfcoil_variables.tinstf,
+                tfcoil_variables.dr_tf_wp / 2e0 - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tfcoil_variables.dr_tf_wp/2-tfcoil_variables.tinstf)",
+                "(tfcoil_variables.dr_tf_wp/2-tfcoil_variables.dx_tf_wp_insulation)",
             )
 
             radius = (
-                radius + 0.5e0 * tfcoil_variables.dr_tf_wp - tfcoil_variables.tinstf
+                radius
+                + 0.5e0 * tfcoil_variables.dr_tf_wp
+                - tfcoil_variables.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - second half",
-                tfcoil_variables.dr_tf_wp / 2e0 - tfcoil_variables.tinstf,
+                tfcoil_variables.dr_tf_wp / 2e0 - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tfcoil_variables.dr_tf_wp/2-tfcoil_variables.tinstf)",
+                "(tfcoil_variables.dr_tf_wp/2-tfcoil_variables.dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.tinstf
+            radius = radius + tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tinstf)",
+                "(dx_tf_wp_insulation)",
             )
 
             radius = radius + tfcoil_variables.dr_tf_plasma_case
@@ -2002,44 +2006,50 @@ class TFCoil:
                 "(dr_tf_nose_case)",
             )
 
-            radius = radius + tfcoil_variables.tinstf
+            radius = radius + tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tinstf)",
+                "(dx_tf_wp_insulation)",
             )
 
             radius = (
-                radius + 0.5e0 * sctfcoil_module.dr_tf_wp_top - tfcoil_variables.tinstf
+                radius
+                + 0.5e0 * sctfcoil_module.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - first half",
-                0.5e0 * sctfcoil_module.dr_tf_wp_top - tfcoil_variables.tinstf,
+                0.5e0 * sctfcoil_module.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(dr_tf_wp_top/2-tinstf)",
+                "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
             )
 
             radius = (
-                radius + 0.5e0 * sctfcoil_module.dr_tf_wp_top - tfcoil_variables.tinstf
+                radius
+                + 0.5e0 * sctfcoil_module.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - second half",
-                0.5e0 * sctfcoil_module.dr_tf_wp_top - tfcoil_variables.tinstf,
+                0.5e0 * sctfcoil_module.dr_tf_wp_top
+                - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(dr_tf_wp_top/2-tinstf)",
+                "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.tinstf
+            radius = radius + tfcoil_variables.dx_tf_wp_insulation
             po.obuild(
                 self.outfile,
                 "Conductor ground insulation",
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 radius,
-                "(tinstf)",
+                "(dx_tf_wp_insulation)",
             )
 
             radius = radius + tfcoil_variables.dr_tf_plasma_case
@@ -2419,17 +2429,21 @@ class TFCoil:
         if tfcoil_variables.i_tf_sup == 1:
             r_out_wp = (
                 sctfcoil_module.r_tf_wp_outer
-                - tfcoil_variables.tinstf
+                - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.tfinsgap
             )
             r_in_wp = (
                 sctfcoil_module.r_tf_wp_inner
-                + tfcoil_variables.tinstf
+                + tfcoil_variables.dx_tf_wp_insulation
                 + tfcoil_variables.tfinsgap
             )
         else:
-            r_out_wp = sctfcoil_module.r_tf_wp_outer - tfcoil_variables.tinstf
-            r_in_wp = sctfcoil_module.r_tf_wp_inner + tfcoil_variables.tinstf
+            r_out_wp = (
+                sctfcoil_module.r_tf_wp_outer - tfcoil_variables.dx_tf_wp_insulation
+            )
+            r_in_wp = (
+                sctfcoil_module.r_tf_wp_inner + tfcoil_variables.dx_tf_wp_insulation
+            )
 
         # Associated WP thickness
         dr_wp = r_out_wp - r_in_wp
@@ -2454,11 +2468,13 @@ class TFCoil:
             r_in_outwp = (
                 sctfcoil_module.r_tf_outboard_in
                 + tfcoil_variables.dr_tf_plasma_case
-                + tfcoil_variables.tinstf
+                + tfcoil_variables.dx_tf_wp_insulation
                 + tfcoil_variables.tfinsgap
             )
         else:
-            r_in_outwp = sctfcoil_module.r_tf_outboard_in + tfcoil_variables.tinstf
+            r_in_outwp = (
+                sctfcoil_module.r_tf_outboard_in + tfcoil_variables.dx_tf_wp_insulation
+            )
 
         # If the TF coil has no dr_bore it would induce division by 0.
         # In this situation, the dr_bore radius is set to a very small value : 1.0e-9 m
@@ -3214,7 +3230,7 @@ class TFCoil:
         a_case_front,
         a_case_nose,
         tfinsgap,
-        tinstf,
+        dx_tf_wp_insulation,
         n_tf_coil_turns,
         i_tf_turns_integer,
         t_cable,
@@ -3554,7 +3570,10 @@ class TFCoil:
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
             # inertion gap is tfcoil_variables.tfinsgap on 4 sides
-            t_ins_eff = dx_tf_turn_insulation + (tfinsgap + tinstf) / n_tf_coil_turns
+            t_ins_eff = (
+                dx_tf_turn_insulation
+                + (tfinsgap + dx_tf_wp_insulation) / n_tf_coil_turns
+            )
 
             # Effective WP young modulus in the toroidal direction [Pa]
             # The toroidal property drives the stress calculation (J. Last report no 4)
@@ -5475,7 +5494,7 @@ def init_tfcoil_variables():
     tfv.dr_tf_nose_case = 0.3
     tfv.dr_tf_wp = 0.0
     tfv.dx_tf_turn_steel = 8e-3
-    tfv.tinstf = 0.018
+    tfv.dx_tf_wp_insulation = 0.018
     tfv.tmargmin_tf = 0.0
     tfv.tmargmin_cs = 0.0
     tfv.tmargmin = 0.0

@@ -1083,7 +1083,7 @@ boundu(140) = 0.8
 * DESCRIPTION:   Inboard TF winding pack thickness including turn insulation (m)
 * JUSTIFICATION: 
 
-*tinstf = 
+*dx_tf_wp_insulation = 
 * DESCRIPTION:   Ground Insulation Thickness Surrounding Winding Pack (m)
 * JUSTIFICATION: 
 

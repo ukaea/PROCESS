@@ -48,7 +48,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     acasetf: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
     n_tf_coils: Any = None
 
@@ -90,7 +90,7 @@ class ResTfInternalGeomParam(NamedTuple):
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0,
             acasetf=0,
-            tinstf=0,
+            dx_tf_wp_insulation=0,
             n_tf_coils=12,
             dr_tf_outboard=0.15483000000000002,
             r_tf_inboard_in=0,
@@ -117,7 +117,7 @@ class ResTfInternalGeomParam(NamedTuple):
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0.00030678028680367151,
             acasetf=0.00061190425043863676,
-            tinstf=0,
+            dx_tf_wp_insulation=0,
             n_tf_coils=12,
             dr_tf_outboard=0.15483000000000002,
             r_tf_inboard_in=0,
@@ -196,7 +196,11 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
 
     monkeypatch.setattr(tfcoil_variables, "acasetf", restfinternalgeomparam.acasetf)
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", restfinternalgeomparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        restfinternalgeomparam.dx_tf_wp_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "n_tf_coils", restfinternalgeomparam.n_tf_coils
@@ -291,7 +295,7 @@ class TfResHeatingParam(NamedTuple):
     a_cp_cool: Any = None
     f_a_tf_cool_outboard: Any = None
     i_cp_joints: Any = None
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
     dr_tf_outboard: Any = None
     dr_tf_inboard: Any = None
     r_cp_top: Any = None
@@ -345,7 +349,7 @@ class TfResHeatingParam(NamedTuple):
             a_cp_cool=0,
             f_a_tf_cool_outboard=0.20000000000000001,
             i_cp_joints=1,
-            tinstf=0,
+            dx_tf_wp_insulation=0,
             dr_tf_outboard=0.15483000000000002,
             dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.87643571428571443,
@@ -395,7 +399,7 @@ class TfResHeatingParam(NamedTuple):
             a_cp_cool=0.00068328705812121333,
             f_a_tf_cool_outboard=0.20000000000000001,
             i_cp_joints=1,
-            tinstf=0,
+            dx_tf_wp_insulation=0,
             dr_tf_outboard=0.15483000000000002,
             dr_tf_inboard=0.15483000000000002,
             r_cp_top=0.85843571428571441,
@@ -526,7 +530,9 @@ def test_tf_res_heating(tfresheatingparam, monkeypatch, resistive_tf_coil):
 
     monkeypatch.setattr(tfcoil_variables, "i_cp_joints", tfresheatingparam.i_cp_joints)
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", tfresheatingparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_wp_insulation", tfresheatingparam.dx_tf_wp_insulation
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_tf_outboard", tfresheatingparam.dr_tf_outboard

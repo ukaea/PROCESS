@@ -83,7 +83,7 @@ class SuperconductingTFCoil(TFCoil):
             build_variables.r_tf_inboard_out
             * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
             - tfcoil_variables.dr_tf_plasma_case
-            - tfcoil_variables.tinstf
+            - tfcoil_variables.dx_tf_wp_insulation
             - tfcoil_variables.tfinsgap
         )
 
@@ -236,7 +236,7 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.tfinsgap,
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
@@ -337,7 +337,8 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.n_tf_coils,
             tfcoil_variables.wwp1,
             tfcoil_variables.dr_tf_wp
-            - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap),
+            - 2.0e0
+            * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap),
             sctfcoil_module.r_wp_centre,
             tfcoil_variables.b_tf_inboard_peak,
         )
@@ -1876,10 +1877,12 @@ class SuperconductingTFCoil(TFCoil):
             # WP cross-section without insertion gap and ground insulation [m2]
             sctfcoil_module.a_tf_wp_no_insulation = (
                 tfcoil_variables.dr_tf_wp
-                - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+                - 2.0e0
+                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
             ) * (
                 sctfcoil_module.t_wp_toroidal
-                - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+                - 2.0e0
+                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
             )
 
             # Cross-section area of the WP ground insulation [m2]
@@ -1920,12 +1923,14 @@ class SuperconductingTFCoil(TFCoil):
                 0.5e0
                 * (
                     tfcoil_variables.dr_tf_wp
-                    - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+                    - 2.0e0
+                    * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
                 )
                 * (
                     tfcoil_variables.wwp1
                     + tfcoil_variables.wwp2
-                    - 4.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+                    - 4.0e0
+                    * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
                 )
             )
 
@@ -1971,10 +1976,12 @@ class SuperconductingTFCoil(TFCoil):
             # WP cross-section without insertion gap and ground insulation [m2]
             sctfcoil_module.a_tf_wp_no_insulation = (
                 tfcoil_variables.dr_tf_wp
-                - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+                - 2.0e0
+                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
             ) * (
                 tfcoil_variables.wwp2
-                - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+                - 2.0e0
+                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
                 + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
             )
 
@@ -1990,7 +1997,10 @@ class SuperconductingTFCoil(TFCoil):
         # --------------
 
         # Negative WP area error reporting
-        if sctfcoil_module.a_tf_wp_no_insulation <= 0.0e0 or sctfcoil_module.awpc <= 0.0e0:
+        if (
+            sctfcoil_module.a_tf_wp_no_insulation <= 0.0e0
+            or sctfcoil_module.awpc <= 0.0e0
+        ):
             error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_no_insulation
             error_handling.fdiags[1] = sctfcoil_module.awpc
             error_handling.report_error(99)
@@ -2077,7 +2087,7 @@ class SuperconductingTFCoil(TFCoil):
         # Radial turn dimension [m]
         sctfcoil_module.dr_tf_turn = (
             tfcoil_variables.dr_tf_wp
-            - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+            - 2.0e0 * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
         ) / n_layer
 
         if sctfcoil_module.dr_tf_turn <= (
@@ -2091,7 +2101,7 @@ class SuperconductingTFCoil(TFCoil):
         # Toroidal turn dimension [m]
         sctfcoil_module.dx_tf_turn = (
             sctfcoil_module.t_wp_toroidal
-            - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.tfinsgap)
+            - 2.0e0 * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
         ) / n_pancake
 
         if sctfcoil_module.dx_tf_turn <= (
