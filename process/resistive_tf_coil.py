@@ -368,7 +368,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Ground insulation cross-section area per coil [m2]
-        sctfcoil_module.a_ground_ins = (
+        sctfcoil_module.a_tf_wp_ground_insulation = (
             sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation
         )
 
@@ -407,7 +407,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Total insulation cross-section per coil [m2]
         sctfcoil_module.a_tf_ins = (
-            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_ground_ins
+            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_tf_wp_ground_insulation
         )
 
         # Insulation fraction [-]

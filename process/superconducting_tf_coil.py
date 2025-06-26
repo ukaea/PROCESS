@@ -1805,7 +1805,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Inboard coil insulation cross-section [m2]
         sctfcoil_module.a_tf_ins = (
-            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_ground_ins
+            tfcoil_variables.a_tf_coil_wp_turn_insulation + sctfcoil_module.a_tf_wp_ground_insulation
         )
 
         #  Inboard coil insulation fraction [-]
@@ -1898,7 +1898,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Cross-section area of the WP ground insulation [m2]
-            sctfcoil_module.a_ground_ins = (
+            sctfcoil_module.a_tf_wp_ground_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
@@ -1956,7 +1956,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Cross-section area of the WP ground insulation [m2]
-            sctfcoil_module.a_ground_ins = (
+            sctfcoil_module.a_tf_wp_ground_insulation = (
                 0.5e0
                 * (
                     tfcoil_variables.dr_tf_wp_with_insulation
@@ -2016,7 +2016,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Cross-section area of the WP ground insulation [m2]
-            sctfcoil_module.a_ground_ins = (
+            sctfcoil_module.a_tf_wp_ground_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
@@ -2647,7 +2647,7 @@ def init_sctfcoil_module():
     sctfcoil_module.t_lat_case_av = 0.0
     sctfcoil_module.a_case_front = 0.0
     sctfcoil_module.a_case_nose = 0.0
-    sctfcoil_module.a_ground_ins = 0.0
+    sctfcoil_module.a_tf_wp_ground_insulation = 0.0
     sctfcoil_module.a_leg_ins = 0.0
     sctfcoil_module.a_leg_gr_ins = 0.0
     sctfcoil_module.a_leg_cond = 0.0
