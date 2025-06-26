@@ -1414,7 +1414,7 @@ class StressclParam(NamedTuple):
 
     dr_tf_plasma_case: Any = None
 
-    acond: Any = None
+    a_tf_wp_conductor: Any = None
 
     avwp: Any = None
 
@@ -1551,7 +1551,7 @@ class StressclParam(NamedTuple):
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
             dr_tf_plasma_case=0.060000000000000012,
-            acond=0.1653572639592335,
+            a_tf_wp_conductor=0.1653572639592335,
             avwp=0.07759938309736393,
             a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
@@ -1674,7 +1674,7 @@ class StressclParam(NamedTuple):
             sig_tf_wp_max=580000000,
             i_tf_turns_integer=1,
             dr_tf_plasma_case=0.060000000000000012,
-            acond=0.1653572639592335,
+            a_tf_wp_conductor=0.1653572639592335,
             avwp=0.07759938309736393,
             a_tf_wp_coolant_channels=0.015707963267948974,
             poisson_ins=0.34000000000000002,
@@ -1852,7 +1852,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.t_wp_toroidal_av,
         stressclparam.a_tf_ins,
         stressclparam.aswp,
-        stressclparam.acond,
+        stressclparam.a_tf_wp_conductor,
         stressclparam.awpc,
         stressclparam.eyoung_al,
         stressclparam.poisson_al,

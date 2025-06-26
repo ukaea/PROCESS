@@ -24,7 +24,7 @@ module tfcoil_variables
   real(dp) :: a_tf_turn_steel
   !! area of the cable conduit (m2)
 
-  real(dp) :: acond
+  real(dp) :: a_tf_wp_conductor
   !! Winding pack conductor area [m2]
   !! Does not include the area of voids and central helium channel
 

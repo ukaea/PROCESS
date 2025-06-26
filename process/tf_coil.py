@@ -227,7 +227,7 @@ class TFCoil:
                 sctfcoil_module.t_wp_toroidal_av,
                 sctfcoil_module.a_tf_ins,
                 tfcoil_variables.aswp,
-                tfcoil_variables.acond,
+                tfcoil_variables.a_tf_wp_conductor,
                 sctfcoil_module.awpc,
                 tfcoil_variables.eyoung_al,
                 tfcoil_variables.poisson_al,
@@ -1271,13 +1271,13 @@ class TFCoil:
                     1 - tfcoil_variables.fcutfsu,
                 )
                 # TODO
-                # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.acond/ap)',acond/ap, 'OP ')
+                # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.a_tf_wp_conductor/ap)',a_tf_wp_conductor/ap, 'OP ')
                 # po.ovarre(self.outfile,'Conduit fraction of winding pack','(tfcoil_variables.n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap)',n_tf_coil_turns*tfcoil_variables.a_tf_turn_steel/ap, 'OP ')
                 # po.ovarre(self.outfile,'Insulator fraction of winding pack','(tfcoil_variables.a_tf_coil_wp_turn_insulation/ap)',a_tf_coil_wp_turn_insulation/ap, 'OP ')
                 # po.ovarre(self.outfile,'Helium area fraction of winding pack excluding central channel','(tfcoil_variables.avwp/ap)',avwp/ap, 'OP ')
                 # po.ovarre(self.outfile,'Central helium channel area as fraction of winding pack','(tfcoil_variables.a_tf_wp_coolant_channels/ap)',a_tf_wp_coolant_channels/ap, 'OP ')
                 ap = (
-                    tfcoil_variables.acond
+                    tfcoil_variables.a_tf_wp_conductor
                     + tfcoil_variables.n_tf_coil_turns
                     * tfcoil_variables.a_tf_turn_steel
                     + tfcoil_variables.a_tf_coil_wp_turn_insulation
@@ -1289,7 +1289,7 @@ class TFCoil:
                     "Check total area fractions in winding pack = 1",
                     "",
                     (
-                        tfcoil_variables.acond
+                        tfcoil_variables.a_tf_wp_conductor
                         + tfcoil_variables.n_tf_coil_turns
                         * tfcoil_variables.a_tf_turn_steel
                         + tfcoil_variables.a_tf_coil_wp_turn_insulation
@@ -3242,7 +3242,7 @@ class TFCoil:
         t_wp_toroidal_av,
         a_tf_ins,
         aswp,
-        acond,
+        a_tf_wp_conductor,
         awpc,
         eyoung_al,
         poisson_al,
@@ -3654,15 +3654,15 @@ class TFCoil:
             # Copper
             eyoung_member_array[2] = eyoung_copper
             poisson_member_array[2] = poisson_copper
-            l_member_array[2] = acond * fcutfsu
+            l_member_array[2] = a_tf_wp_conductor * fcutfsu
             # Conductor
             eyoung_member_array[3] = eyoung_cond_axial
             poisson_member_array[3] = poisson_cond_axial
-            l_member_array[3] = acond * (1.0e0 - fcutfsu)
+            l_member_array[3] = a_tf_wp_conductor * (1.0e0 - fcutfsu)
             # Helium and void
             eyoung_member_array[4] = 0e0
             poisson_member_array[4] = poisson_steel
-            l_member_array[4] = awpc - acond - a_tf_ins - aswp
+            l_member_array[4] = awpc - a_tf_wp_conductor - a_tf_ins - aswp
             # Compute the composite / smeared properties:
             (eyoung_wp_axial, a_working, poisson_wp_axial) = eyoung_parallel_array(
                 5,
@@ -5342,7 +5342,7 @@ def init_tfcoil_variables():
     tfv.acasetf = 0.0
     tfv.acasetfo = 0.0
     tfv.a_tf_turn_steel = 0.0
-    tfv.acond = 0.0
+    tfv.a_tf_wp_conductor = 0.0
     tfv.a_tf_turn_cable_space = 0.0
     tfv.a_tf_turn_insulation = 0.0
     tfv.a_tf_coil_wp_turn_insulation = 0.0

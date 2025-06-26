@@ -2676,7 +2676,7 @@ class Stellarator:
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
-        tfcoil_variables.acond = (
+        tfcoil_variables.a_tf_wp_conductor = (
             tfcoil_variables.a_tf_turn_cable_space
             * tfcoil_variables.n_tf_coil_turns
             * (1.0e0 - tfcoil_variables.vftf)
@@ -3059,7 +3059,7 @@ class Stellarator:
         # print *, "a_tf_turn_cable_space: ", tfcoil_variables.a_tf_turn_cable_space
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
-            coilcurrent * 1.0e6 / (tfcoil_variables.acond * tfcoil_variables.fcutfsu)
+            coilcurrent * 1.0e6 / (tfcoil_variables.a_tf_wp_conductor * tfcoil_variables.fcutfsu)
         )
         tfcoil_variables.vtfskv = vd / 1.0e3  # Dump voltage
         #
@@ -3882,8 +3882,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Conductor fraction of winding pack",
-            "(acond/ap)",
-            tfcoil_variables.acond / ap,
+            "(a_tf_wp_conductor/ap)",
+            tfcoil_variables.a_tf_wp_conductor / ap,
         )
         po.ovarre(
             self.outfile,
@@ -3949,16 +3949,16 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Current density in conductor area (A/m2)",
-            "(c_tf_total/acond)",
+            "(c_tf_total/a_tf_wp_conductor)",
             1.0e-6
             * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
-            / tfcoil_variables.acond,
+            / tfcoil_variables.a_tf_wp_conductor,
         )
         po.ovarre(
             self.outfile,
             "Current density in SC area (A/m2)",
-            "(c_tf_total/acond/f_scu)",
+            "(c_tf_total/a_tf_wp_conductor/f_scu)",
             1.0e-6
             * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
