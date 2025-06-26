@@ -3067,7 +3067,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
         mfile_data.data["dx_tf_turn_insulation"].get_scan(scan) * 1e3, 5
     )
     internal_cable_space = round(
-        mfile_data.data["a_tf_turn_cable_space"].get_scan(scan) * 1e6, 5
+        mfile_data.data["a_tf_turn_cable_space_no_void"].get_scan(scan) * 1e6, 5
     )
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
 

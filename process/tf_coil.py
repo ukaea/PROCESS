@@ -1249,8 +1249,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "internal area of the cable space",
-                    "(a_tf_turn_cable_space)",
-                    tfcoil_variables.a_tf_turn_cable_space,
+                    "(a_tf_turn_cable_space_no_void)",
+                    tfcoil_variables.a_tf_turn_cable_space_no_void,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2969,7 +2969,7 @@ class TFCoil:
             tfcoil_variables.whtconsc = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
-                * tfcoil_variables.a_tf_turn_cable_space
+                * tfcoil_variables.a_tf_turn_cable_space_no_void
                 * (1.0e0 - tfcoil_variables.vftf)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
                 - tfcoil_variables.len_tf_coil
@@ -2980,7 +2980,7 @@ class TFCoil:
             tfcoil_variables.whtconcu = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
-                * tfcoil_variables.a_tf_turn_cable_space
+                * tfcoil_variables.a_tf_turn_cable_space_no_void
                 * (1.0e0 - tfcoil_variables.vftf)
                 * tfcoil_variables.fcutfsu
                 - tfcoil_variables.len_tf_coil
@@ -3363,8 +3363,8 @@ class TFCoil:
             raise ProcessValueError("r_tf_inboard_in is ~= 0", 245)
 
         # TODO: following is no longer used/needed?
-        # if tfcoil_variables.a_tf_turn_cable_space >= 0.0e0:
-        #     tcbs = numpy.sqrt(tfcoil_variables.a_tf_turn_cable_space)
+        # if tfcoil_variables.a_tf_turn_cable_space_no_void >= 0.0e0:
+        #     tcbs = numpy.sqrt(tfcoil_variables.a_tf_turn_cable_space_no_void)
         # else:
         #     tcbs = 0.0e0
 
@@ -5343,7 +5343,7 @@ def init_tfcoil_variables():
     tfv.acasetfo = 0.0
     tfv.a_tf_turn_steel = 0.0
     tfv.a_tf_wp_conductor = 0.0
-    tfv.a_tf_turn_cable_space = 0.0
+    tfv.a_tf_turn_cable_space_no_void = 0.0
     tfv.a_tf_turn_insulation = 0.0
     tfv.a_tf_coil_wp_turn_insulation = 0.0
     tfv.sig_tf_case_max = 6.0e8

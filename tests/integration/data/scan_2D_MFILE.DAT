@@ -715,7 +715,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0000E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5830E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5830E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4085E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5915E-01    
@@ -1878,7 +1878,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0947E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5793E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5793E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4877E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5123E-01    
@@ -3041,7 +3041,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1335E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5669E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5669E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5652E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4348E-01    
@@ -4204,7 +4204,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1427E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5691E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5691E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5682E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4318E-01    
@@ -5367,7 +5367,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1506E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5872E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5872E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4897E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5103E-01    
@@ -6530,7 +6530,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1797E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6152E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6152E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4141E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5859E-01    
@@ -7693,7 +7693,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1874E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6173E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6173E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4183E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5817E-01    
@@ -8856,7 +8856,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1933E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6050E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6050E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5001E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4999E-01    
@@ -10019,7 +10019,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1885E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5918E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5918E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5768E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4232E-01    
@@ -11182,7 +11182,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1944E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.5936E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5936E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5786E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4214E-01    
@@ -12345,7 +12345,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2099E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6082E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6082E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5009E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4991E-01    
@@ -13508,7 +13508,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2008E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6258E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6258E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4203E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5797E-01    
@@ -14671,7 +14671,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2077E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6277E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6277E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4227E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5773E-01    
@@ -15834,7 +15834,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2007E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6146E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6146E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5030E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4970E-01    
@@ -16997,7 +16997,7 @@
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1912E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
- internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space)_______________________      1.6010E-03    
+ internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6010E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (vftf)________________________      3.0000E-01    
  Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5779E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4221E-01    
