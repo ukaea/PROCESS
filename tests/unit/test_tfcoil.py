@@ -451,7 +451,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     r_tf_outboard_in: Any = None
 
-    r_wp_inner: Any = None
+    r_tf_wp_inner: Any = None
 
     r_wp_outer: Any = None
 
@@ -497,7 +497,7 @@ class TfFieldAndForceParam(NamedTuple):
             i_cp_joints=1,
             dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.0914285714285716,
-            r_wp_inner=0,
+            r_tf_wp_inner=0,
             r_wp_outer=0.14708850000000001,
             vforce_inboard_tot=0,
             expected_vforce=12380916.66459452,
@@ -532,7 +532,7 @@ class TfFieldAndForceParam(NamedTuple):
             i_cp_joints=1,
             dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.1094285714285714,
-            r_wp_inner=0,
+            r_tf_wp_inner=0,
             r_wp_outer=0.14708850000000001,
             vforce_inboard_tot=148570999.97513425,
             expected_vforce=12268469.138442248,
@@ -624,7 +624,7 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
         sctfcoil_module, "r_tf_outboard_in", tffieldandforceparam.r_tf_outboard_in
     )
 
-    monkeypatch.setattr(sctfcoil_module, "r_wp_inner", tffieldandforceparam.r_wp_inner)
+    monkeypatch.setattr(sctfcoil_module, "r_tf_wp_inner", tffieldandforceparam.r_tf_wp_inner)
 
     monkeypatch.setattr(sctfcoil_module, "r_wp_outer", tffieldandforceparam.r_wp_outer)
 
@@ -1440,7 +1440,7 @@ class StressclParam(NamedTuple):
 
     a_tf_ins: Any = None
 
-    r_wp_inner: Any = None
+    r_tf_wp_inner: Any = None
 
     r_wp_outer: Any = None
 
@@ -1587,7 +1587,7 @@ class StressclParam(NamedTuple):
             awpc=0.70527618095271016,
             a_tf_steel=1.2952181546825934,
             a_tf_ins=0.11646247019991701,
-            r_wp_inner=3.5185911851091101,
+            r_tf_wp_inner=3.5185911851091101,
             r_wp_outer=4.06120206347512,
             t_wp_toroidal=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
@@ -1710,7 +1710,7 @@ class StressclParam(NamedTuple):
             awpc=0.70527618095271016,
             a_tf_steel=1.2952181546825934,
             a_tf_ins=0.11646247019991701,
-            r_wp_inner=3.5185911851091101,
+            r_tf_wp_inner=3.5185911851091101,
             r_wp_outer=4.06120206347512,
             t_wp_toroidal=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
@@ -1816,7 +1816,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.poisson_copper,
         stressclparam.i_tf_sup,
         stressclparam.eyoung_res_tf_buck,
-        stressclparam.r_wp_inner,
+        stressclparam.r_tf_wp_inner,
         stressclparam.tan_theta_coil,
         stressclparam.rad_tf_coil_toroidal,
         stressclparam.r_wp_outer,

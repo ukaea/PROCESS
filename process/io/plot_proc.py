@@ -2678,7 +2678,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
     dr_tf_wp = mfile_data.data["dr_tf_wp"].get_scan(scan)
     side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
-    wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
+    wp_inner = mfile_data.data["r_tf_wp_inner"].get_scan(scan)
     tinstf = mfile_data.data["tinstf"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
