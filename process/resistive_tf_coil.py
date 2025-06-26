@@ -350,7 +350,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # WP mid-plane cross-section excluding ground insulation per coil [m2]
-        sctfcoil_module.awptf = np.pi * (
+        sctfcoil_module.a_tf_wp_no_insulation = np.pi * (
             (sctfcoil_module.r_tf_wp_outer - tfcoil_variables.tinstf) ** 2
             - (sctfcoil_module.r_tf_wp_inner + tfcoil_variables.tinstf) ** 2
         ) / tfcoil_variables.n_tf_coils - 2.0e0 * tfcoil_variables.tinstf * (
@@ -358,7 +358,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Ground insulation cross-section area per coil [m2]
-        sctfcoil_module.a_ground_ins = sctfcoil_module.awpc - sctfcoil_module.awptf
+        sctfcoil_module.a_ground_ins = sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
         a_tf_cond = np.pi * (
@@ -385,7 +385,7 @@ class ResistiveTFCoil(TFCoil):
 
         # Inter turn insulation area per coil [m2]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
-            sctfcoil_module.awptf - a_tf_cond / (1.0e0 - tfcoil_variables.fcoolcp)
+            sctfcoil_module.a_tf_wp_no_insulation - a_tf_cond / (1.0e0 - tfcoil_variables.fcoolcp)
         )
 
         # Total insulation cross-section per coil [m2]
@@ -437,8 +437,8 @@ class ResistiveTFCoil(TFCoil):
             error_handling.fdiags[0] = tfcoil_variables.dr_tf_wp
             error_handling.report_error(99)
 
-        elif sctfcoil_module.awptf < 0.0e0:
-            error_handling.fdiags[0] = sctfcoil_module.awptf
+        elif sctfcoil_module.a_tf_wp_no_insulation < 0.0e0:
+            error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_no_insulation
             error_handling.report_error(101)
 
     def tf_res_heating(self) -> None:

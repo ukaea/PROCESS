@@ -1048,7 +1048,7 @@ class TFCoil:
                 self.outfile,
                 "WP cross section area (per coil) (m2)",
                 "(aswp)",
-                sctfcoil_module.awptf,
+                sctfcoil_module.a_tf_wp_no_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -1372,8 +1372,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inboard TFC conductor sector area, NO ground & gap (per leg) (m2)",
-                "(awptf)",
-                sctfcoil_module.awptf,
+                "(a_tf_wp_no_insulation)",
+                sctfcoil_module.a_tf_wp_no_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -2911,7 +2911,7 @@ class TFCoil:
             # (assumed to be same density/material as turn insulation)
             tfcoil_variables.whtgw = (
                 tfcoil_variables.len_tf_coil
-                * (sctfcoil_module.awpc - sctfcoil_module.awptf)
+                * (sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation)
                 * tfcoil_variables.dcondins
             )
 

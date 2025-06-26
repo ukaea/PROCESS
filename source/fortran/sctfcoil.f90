@@ -37,7 +37,7 @@ module sctfcoil_module
 !! Total cross-sectional area of winding pack including
 !! GW insulation and insertion gap [m2]
 
-   real(dp) :: awptf
+   real(dp) :: a_tf_wp_no_insulation
 !! Total cross-sectional area of winding pack without
 !! ground insulation and insertion gap [m2]
 

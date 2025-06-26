@@ -875,7 +875,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     awpc: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     vol_ins_cp: Any = None
 
@@ -970,7 +970,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             cplen=0,
             itart=0,
             awpc=0.70527618095271016,
-            awptf=0.64024601555360383,
+            a_tf_wp_no_insulation=0.64024601555360383,
             vol_ins_cp=0,
             vol_gr_ins_cp=0,
             vol_case_cp=0,
@@ -1042,7 +1042,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             cplen=20.562180043124066,
             itart=0,
             awpc=0.70527618095271016,
-            awptf=0.64024601555360383,
+            a_tf_wp_no_insulation=0.64024601555360383,
             vol_ins_cp=0,
             vol_gr_ins_cp=0,
             vol_case_cp=0,
@@ -1222,7 +1222,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "awpc", tfcoilareaandmassesparam.awpc)
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfcoilareaandmassesparam.awptf)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_wp_no_insulation", tfcoilareaandmassesparam.a_tf_wp_no_insulation)
 
     monkeypatch.setattr(
         sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
