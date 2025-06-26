@@ -1099,7 +1099,7 @@ class Power:
             self.outfile,
             "Total thermal power lost in power conversion [MWth]",
             "(p_turbine_loss_mw)",
-            self.p_turbine_loss_mw,
+            power_variables.p_turbine_loss_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
@@ -1175,14 +1175,14 @@ class Power:
             self.outfile,
             "Electric power demand for CP coolant pumps [MWe]",
             "(p_cp_coolant_pump_elec_mw)",
-            self.p_cp_coolant_pump_elec_mw,
+            power_variables.p_cp_coolant_pump_elec_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Electric power demand of core plant systems needed at all times [MWe]",
             "(p_plant_core_systems_elec_mw)",
-            self.p_plant_core_systems_elec_mw,
+            power_variables.p_plant_core_systems_elec_mw,
         )
 
         po.oblnkl(self.outfile)
@@ -1196,25 +1196,25 @@ class Power:
             self.outfile,
             "Electric power demand of FW and Blanket coolant pumps [MWe]",
             "(p_fw_blkt_coolant_pump_elec_mw)",
-            self.p_fw_blkt_coolant_pump_elec_mw,
+            power_variables.p_fw_blkt_coolant_pump_elec_mw,
         )
         po.ovarre(
             self.outfile,
             "Electric power demand of Blanket secondary breeder coolant pumps [MWe]",
             "(p_blkt_breeder_pump_elec_mw)",
-            self.p_blkt_breeder_pump_elec_mw,
+            power_variables.p_blkt_breeder_pump_elec_mw,
         )
         po.ovarre(
             self.outfile,
             "Electric power demand of VV and Shield coolant pumps [MWe]",
             "(p_shld_coolant_pump_elec_mw)",
-            self.p_shld_coolant_pump_elec_mw,
+            power_variables.p_shld_coolant_pump_elec_mw,
         )
         po.ovarre(
             self.outfile,
             "Electric power demand of Divertor colant pumps [MWe]",
             "(p_div_coolant_pump_elec_mw)",
-            self.p_div_coolant_pump_elec_mw,
+            power_variables.p_div_coolant_pump_elec_mw,
         )
         po.oblnkl(self.outfile)
         po.ovarre(

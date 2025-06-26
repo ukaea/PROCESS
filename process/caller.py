@@ -332,8 +332,6 @@ class Caller:
         # Plant heat transport pt 2 & 3
         self.models.power.plant_electric_production(output=False)
 
-        self.models.power.power3(output=False)
-
         # Availability model
         self.models.availability.run(output=False)
 
