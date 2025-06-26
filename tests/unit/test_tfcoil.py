@@ -1464,7 +1464,7 @@ class StressclParam(NamedTuple):
 
     a_tf_wp_with_insulation: Any = None
 
-    a_tf_steel: Any = None
+    a_tf_coil_inboard_steel: Any = None
 
     a_tf_ins: Any = None
 
@@ -1613,7 +1613,7 @@ class StressclParam(NamedTuple):
                 order="F",
             ).transpose(),
             a_tf_wp_with_insulation=0.70527618095271016,
-            a_tf_steel=1.2952181546825934,
+            a_tf_coil_inboard_steel=1.2952181546825934,
             a_tf_ins=0.11646247019991701,
             r_tf_wp_inner=3.5185911851091101,
             r_tf_wp_outer=4.06120206347512,
@@ -1736,7 +1736,7 @@ class StressclParam(NamedTuple):
                 order="F",
             ).transpose(),
             a_tf_wp_with_insulation=0.70527618095271016,
-            a_tf_steel=1.2952181546825934,
+            a_tf_coil_inboard_steel=1.2952181546825934,
             a_tf_ins=0.11646247019991701,
             r_tf_wp_inner=3.5185911851091101,
             r_tf_wp_outer=4.06120206347512,
@@ -1848,7 +1848,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.tan_theta_coil,
         stressclparam.rad_tf_coil_toroidal,
         stressclparam.r_tf_wp_outer,
-        stressclparam.a_tf_steel,
+        stressclparam.a_tf_coil_inboard_steel,
         stressclparam.a_case_front,
         stressclparam.a_case_nose,
         stressclparam.dx_tf_wp_insertion_gap,

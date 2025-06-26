@@ -211,7 +211,7 @@ class TFCoil:
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_tf_wp_outer,
-                sctfcoil_module.a_tf_steel,
+                sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.dx_tf_wp_insertion_gap,
@@ -980,8 +980,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Total steel cross-section (m2)",
-                "(a_tf_steel*n_tf_coils)",
-                sctfcoil_module.a_tf_steel * tfcoil_variables.n_tf_coils,
+                "(a_tf_coil_inboard_steel*n_tf_coils)",
+                sctfcoil_module.a_tf_coil_inboard_steel * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
@@ -3233,7 +3233,7 @@ class TFCoil:
         tan_theta_coil,
         rad_tf_coil_toroidal,
         r_tf_wp_outer,
-        a_tf_steel,
+        a_tf_coil_inboard_steel,
         a_case_front,
         a_case_nose,
         dx_tf_wp_insertion_gap,
@@ -3572,7 +3572,7 @@ class TFCoil:
             a_wp_eff = (r_wp_outer_eff**2 - r_wp_inner_eff**2) * rad_tf_coil_toroidal
 
             # Steel cross-section under the area representing the WP in stress calculations [m2]
-            a_wp_steel_eff = a_tf_steel - a_case_front - a_case_nose
+            a_wp_steel_eff = a_tf_coil_inboard_steel - a_case_front - a_case_nose
 
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
