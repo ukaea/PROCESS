@@ -63,7 +63,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     rmajor: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
     n_tf_coils: Any = None
 
@@ -196,7 +196,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         RippleAmplitudeParam(
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             n_tf_coils=16,
             dx_tf_inboard_out_toroidal=1,
             dx_tf_side_case=0.05000000000000001,
@@ -217,7 +217,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         RippleAmplitudeParam(
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             n_tf_coils=16,
             dx_tf_inboard_out_toroidal=1,
             dx_tf_side_case=0.05000000000000001,
@@ -257,7 +257,11 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rmajor", rippleamplitudeparam.rmajor)
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", rippleamplitudeparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        rippleamplitudeparam.dx_tf_wp_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", rippleamplitudeparam.n_tf_coils)
 

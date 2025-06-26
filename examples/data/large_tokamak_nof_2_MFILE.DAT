@@ -662,7 +662,7 @@
  Winding_pack_radial_thickness_(m)________________________________________ (dr_tf_wp)_____________________ 5.15378776896667334e-01 OP
  Winding_pack_toroidal_width_1_(m)________________________________________ (wwp1)_________________________ 1.18815019848063330e+00 OP
  Winding_pack_toroidal_width_2_(m)________________________________________ (wwp2)_________________________ 1.08563498587088469e+00 OP
- Ground_wall_insulation_thickness_(m)_____________________________________ (tinstf)_______________________ 8.00000000000000017e-03
+ Ground_wall_insulation_thickness_(m)_____________________________________ (dx_tf_wp_insulation)_______________________ 8.00000000000000017e-03
  Winding_pack_insertion_gap_(m)___________________________________________ (tfinsgap)_____________________ 1.00000000000000002e-02
  Steel_WP_cross-section_(total)_(m2)______________________________________ (aswp*n_tf_coils)______________ 3.95665905365153892e+00
  Steel_WP_fraction________________________________________________________ (aswp/awpc)____________________ 4.22048808715953738e-01
@@ -1563,7 +1563,7 @@ tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 thkcas   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp = 0.5153787768966674 * radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 dx_tf_turn_steel = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)
-tinstf   = 0.008 * Thickness of the ground insulation layer surrounding (m)
+dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surrounding (m)
 tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 vdalw    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)

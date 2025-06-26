@@ -58,7 +58,7 @@ class ResistiveTFCoil(TFCoil):
             build_variables.r_tf_inboard_out
             - tfcoil_variables.dr_tf_plasma_case
             - tfcoil_variables.dx_tf_turn_insulation
-            - tfcoil_variables.tinstf
+            - tfcoil_variables.dx_tf_wp_insulation
         )
 
         (
@@ -209,7 +209,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_case_nose,
                 tfcoil_variables.tfinsgap,
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
                 sctfcoil_module.t_cable,
@@ -354,42 +354,56 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # WP mid-plane cross-section excluding ground insulation per coil [m2]
-        sctfcoil_module.a_tf_wp_no_insulation = np.pi * (
-            (sctfcoil_module.r_tf_wp_outer - tfcoil_variables.tinstf) ** 2
-            - (sctfcoil_module.r_tf_wp_inner + tfcoil_variables.tinstf) ** 2
-        ) / tfcoil_variables.n_tf_coils - 2.0e0 * tfcoil_variables.tinstf * (
-            tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tinstf
+        sctfcoil_module.a_tf_wp_no_insulation = (
+            np.pi
+            * (
+                (sctfcoil_module.r_tf_wp_outer - tfcoil_variables.dx_tf_wp_insulation)
+                ** 2
+                - (sctfcoil_module.r_tf_wp_inner + tfcoil_variables.dx_tf_wp_insulation)
+                ** 2
+            )
+            / tfcoil_variables.n_tf_coils
+            - 2.0e0
+            * tfcoil_variables.dx_tf_wp_insulation
+            * (tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
         )
 
         # Ground insulation cross-section area per coil [m2]
-        sctfcoil_module.a_ground_ins = sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation
+        sctfcoil_module.a_ground_ins = (
+            sctfcoil_module.awpc - sctfcoil_module.a_tf_wp_no_insulation
+        )
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
         a_tf_cond = np.pi * (
             (
                 sctfcoil_module.r_tf_wp_outer
-                - tfcoil_variables.tinstf
+                - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.dx_tf_turn_insulation
             )
             ** 2
             - (
                 sctfcoil_module.r_tf_wp_inner
-                + tfcoil_variables.tinstf
+                + tfcoil_variables.dx_tf_wp_insulation
                 + tfcoil_variables.dx_tf_turn_insulation
             )
             ** 2
         ) / tfcoil_variables.n_tf_coils - (
             tfcoil_variables.dr_tf_wp
-            - 2.0e0 * (tfcoil_variables.tinstf + tfcoil_variables.dx_tf_turn_insulation)
+            - 2.0e0
+            * (
+                tfcoil_variables.dx_tf_wp_insulation
+                + tfcoil_variables.dx_tf_turn_insulation
+            )
         ) * 2.0e0 * (
-            tfcoil_variables.tinstf
+            tfcoil_variables.dx_tf_wp_insulation
             + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_coil_turns
         )
         a_tf_cond = a_tf_cond * (1.0e0 - tfcoil_variables.fcoolcp)
 
         # Inter turn insulation area per coil [m2]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
-            sctfcoil_module.a_tf_wp_no_insulation - a_tf_cond / (1.0e0 - tfcoil_variables.fcoolcp)
+            sctfcoil_module.a_tf_wp_no_insulation
+            - a_tf_cond / (1.0e0 - tfcoil_variables.fcoolcp)
         )
 
         # Total insulation cross-section per coil [m2]
@@ -425,13 +439,16 @@ class ResistiveTFCoil(TFCoil):
                 * (
                     tfcoil_variables.n_tf_coil_turns
                     * tfcoil_variables.dx_tf_turn_insulation
-                    + tfcoil_variables.tinstf
+                    + tfcoil_variables.dx_tf_wp_insulation
                 )
             )
             * (
                 build_variables.dr_tf_outboard
                 - 2.0e0
-                * (tfcoil_variables.dx_tf_turn_insulation + tfcoil_variables.tinstf)
+                * (
+                    tfcoil_variables.dx_tf_turn_insulation
+                    + tfcoil_variables.dx_tf_wp_insulation
+                )
             )
         )
 
@@ -533,7 +550,7 @@ class ResistiveTFCoil(TFCoil):
                 build_variables.z_tf_inside_half + build_variables.dr_tf_outboard,
                 tfcoil_variables.dr_tf_nose_case,
                 tfcoil_variables.dr_tf_plasma_case,
-                tfcoil_variables.tinstf,
+                tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.dx_tf_turn_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 tfcoil_variables.c_tf_total,
@@ -548,8 +565,11 @@ class ResistiveTFCoil(TFCoil):
         # Leg ground insulation area per coil [m2]
         sctfcoil_module.a_leg_gr_ins = tfcoil_variables.a_tf_leg_outboard - (
             tfcoil_variables.dx_tf_inboard_out_toroidal
-            - 2.0e0 * tfcoil_variables.tinstf
-        ) * (build_variables.dr_tf_outboard - 2.0e0 * tfcoil_variables.tinstf)
+            - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+        ) * (
+            build_variables.dr_tf_outboard
+            - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+        )
 
         # Outboard leg turns insulation area per coil [m2]
         sctfcoil_module.a_leg_ins = (
@@ -557,7 +577,7 @@ class ResistiveTFCoil(TFCoil):
             * tfcoil_variables.dx_tf_turn_insulation
             * (
                 tfcoil_variables.dx_tf_inboard_out_toroidal
-                - 2.0e0 * tfcoil_variables.tinstf
+                - 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
             )
             + 2.0e0
             * tfcoil_variables.dx_tf_turn_insulation
@@ -565,7 +585,10 @@ class ResistiveTFCoil(TFCoil):
             * (
                 build_variables.dr_tf_outboard
                 - 2.0e0
-                * (tfcoil_variables.dx_tf_turn_insulation + tfcoil_variables.tinstf)
+                * (
+                    tfcoil_variables.dx_tf_turn_insulation
+                    + tfcoil_variables.dx_tf_wp_insulation
+                )
             )
         )  # toroidal direction + radial direction
 

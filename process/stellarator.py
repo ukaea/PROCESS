@@ -2398,7 +2398,9 @@ class Stellarator:
 
             # Winding pack radial thickness, including groundwall insulation
 
-            wpthk = tfcoil_variables.dr_tf_wp + 2.0 * tfcoil_variables.tinstf
+            wpthk = (
+                tfcoil_variables.dr_tf_wp + 2.0 * tfcoil_variables.dx_tf_wp_insulation
+            )
 
             # Nuclear heating rate in inboard TF coil (MW/m**3)
 
@@ -2657,11 +2659,13 @@ class Stellarator:
         tfcoil_variables.dr_tf_wp = awp_rad  # [m] radial thickness of winding pack
 
         #  [m^2] winding-pack cross sectional area including insulation (not global)
-        awpc = (tfcoil_variables.dr_tf_wp + 2.0e0 * tfcoil_variables.tinstf) * (
-            tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.tinstf
-        )
+        awpc = (
+            tfcoil_variables.dr_tf_wp + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+        ) * (tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
 
-        a_tf_wp_no_insulation = awp_tor * awp_rad  # [m^2] winding-pack cross sectional area
+        a_tf_wp_no_insulation = (
+            awp_tor * awp_rad
+        )  # [m^2] winding-pack cross sectional area
         tfcoil_variables.j_tf_wp = (
             coilcurrent * 1.0e6 / a_tf_wp_no_insulation
         )  # [A/m^2] winding pack current density
@@ -2768,20 +2772,20 @@ class Stellarator:
         tfcoil_variables.dx_tf_inboard_out_toroidal = (
             tfcoil_variables.wwp1
             + 2.0e0 * tfcoil_variables.dx_tf_side_case
-            + 2.0e0 * tfcoil_variables.tinstf
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in toroidal direction
 
         build_variables.dr_tf_inboard = (
             tfcoil_variables.dr_tf_nose_case
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.dr_tf_plasma_case
-            + 2.0e0 * tfcoil_variables.tinstf
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in radial direction
         build_variables.dr_tf_outboard = (
             tfcoil_variables.dr_tf_nose_case
             + tfcoil_variables.dr_tf_wp
             + tfcoil_variables.dr_tf_plasma_case
-            + 2.0e0 * tfcoil_variables.tinstf
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
         tfcoil_variables.a_tf_leg_outboard = (
             build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
@@ -2918,7 +2922,9 @@ class Stellarator:
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
         tfcoil_variables.whtgw = (
-            tfcoil_variables.len_tf_coil * (awpc - a_tf_wp_no_insulation) * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil
+            * (awpc - a_tf_wp_no_insulation)
+            * tfcoil_variables.dcondins
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
@@ -3918,8 +3924,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Ground wall insulation thickness (m)",
-            "(tinstf)",
-            tfcoil_variables.tinstf,
+            "(dx_tf_wp_insulation)",
+            tfcoil_variables.dx_tf_wp_insulation,
         )
         po.ovarre(
             self.outfile,
