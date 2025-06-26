@@ -242,7 +242,7 @@ class TFCoil:
                 tfcoil_variables.i_tf_stress_model,
                 sctfcoil_module.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
-                tfcoil_variables.acasetf,
+                tfcoil_variables.a_tf_coil_inboard_case,
                 tfcoil_variables.vforce,
                 tfcoil_variables.a_tf_turn_steel,
             )
@@ -997,8 +997,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Casing cross section area (per leg) (m2)",
-                "(acasetf)",
-                tfcoil_variables.acasetf,
+                "(a_tf_coil_inboard_case)",
+                tfcoil_variables.a_tf_coil_inboard_case,
             )
             po.ovarre(
                 self.outfile,
@@ -1337,8 +1337,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Casing cross section area (per leg) (m2)",
-                "(acasetf)",
-                tfcoil_variables.acasetf,
+                "(a_tf_coil_inboard_case)",
+                tfcoil_variables.a_tf_coil_inboard_case,
             )
             po.ovarre(
                 self.outfile,
@@ -2899,7 +2899,7 @@ class TFCoil:
                     2.2e0
                     * tfcoil_variables.dcase
                     * (
-                        tfcoil_variables.cplen * tfcoil_variables.acasetf
+                        tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + tfcoil_variables.len_tf_coil * tfcoil_variables.acasetfo
                     )
                 )
@@ -2908,7 +2908,7 @@ class TFCoil:
                     2.2e0
                     * tfcoil_variables.dcase
                     * (
-                        tfcoil_variables.cplen * tfcoil_variables.acasetf
+                        tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + (tfcoil_variables.len_tf_coil - tfcoil_variables.cplen)
                         * tfcoil_variables.acasetfo
                     )
@@ -3060,7 +3060,7 @@ class TFCoil:
                 # Total case volume [m3]
                 vol_case = (
                     tfcoil_variables.len_tf_coil
-                    * tfcoil_variables.acasetf
+                    * tfcoil_variables.a_tf_coil_inboard_case
                     * tfcoil_variables.n_tf_coils
                 )
 
@@ -3207,7 +3207,7 @@ class TFCoil:
         i_tf_stress_model,
         vforce_inboard_tot,
         i_tf_tresca,
-        acasetf,
+        a_tf_coil_inboard_case,
         vforce,
         a_tf_turn_steel,
     ):
@@ -3768,7 +3768,7 @@ class TFCoil:
 
             # Vertical stress [Pa]
             sig_tf_z[:] = vforce / (
-                acasetf + a_tf_turn_steel * n_tf_coil_turns
+                a_tf_coil_inboard_case + a_tf_turn_steel * n_tf_coil_turns
             )  # Array equation [EDIT: Are you sure? It doesn't look like one to me]
 
             # Strain in vertical direction on WP
@@ -5295,7 +5295,7 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
 
 
 def init_tfcoil_variables():
-    tfv.acasetf = 0.0
+    tfv.a_tf_coil_inboard_case = 0.0
     tfv.acasetfo = 0.0
     tfv.a_tf_turn_steel = 0.0
     tfv.a_tf_wp_conductor = 0.0

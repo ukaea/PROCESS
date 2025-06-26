@@ -2798,7 +2798,7 @@ class Stellarator:
             build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m^2] overall coil cross-sectional area (assuming inboard and
         #       outboard leg are the same)
-        tfcoil_variables.acasetf = (
+        tfcoil_variables.a_tf_coil_inboard_case = (
             build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
         ) - a_tf_wp_with_insulation  # [m^2] Cross-sectional area of surrounding case
 
@@ -2920,10 +2920,10 @@ class Stellarator:
         #
         # [kg] Mass of case
         #  (no need for correction factors as is the case for tokamaks)
-        # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.acasetf)).
+        # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.a_tf_coil_inboard_case)).
         tfcoil_variables.whtcas = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.acasetf
+            * tfcoil_variables.a_tf_coil_inboard_case
             * tfcoil_variables.dcase
         )
         # Mass of ground-wall insulation [kg]
@@ -4086,8 +4086,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Case area per coil (m2)",
-            "(acasetf)",
-            tfcoil_variables.acasetf,
+            "(a_tf_coil_inboard_case)",
+            tfcoil_variables.a_tf_coil_inboard_case,
         )
         po.ovarre(
             self.outfile,

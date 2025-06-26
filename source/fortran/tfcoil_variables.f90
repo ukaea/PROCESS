@@ -15,7 +15,7 @@ module tfcoil_variables
 
   public
 
-  real(dp) :: acasetf
+  real(dp) :: a_tf_coil_inboard_case
   !! external case area per coil (inboard leg) (m2)
 
   real(dp) :: acasetfo
