@@ -259,7 +259,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.i_tf_stress_model,
                 sctfcoil_module.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
-                tfcoil_variables.acasetf,
+                tfcoil_variables.a_tf_coil_inboard_case,
                 tfcoil_variables.vforce,
                 tfcoil_variables.a_tf_turn_steel,
             )
@@ -1795,7 +1795,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Inboard coil steel area [m2]
         sctfcoil_module.a_tf_steel = (
-            tfcoil_variables.acasetf + tfcoil_variables.a_tf_wp_steel
+            tfcoil_variables.a_tf_coil_inboard_case + tfcoil_variables.a_tf_wp_steel
         )
 
         # Inboard coil steel fraction [-]
@@ -2047,7 +2047,7 @@ class SuperconductingTFCoil(TFCoil):
         Author : S. Kahn, CCFE
         Setting the case geometry and area for SC magnets
         """
-        tfcoil_variables.acasetf = (
+        tfcoil_variables.a_tf_coil_inboard_case = (
             tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.a_tf_wp_with_insulation
 
@@ -2079,8 +2079,11 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Report error if the casing area is negative
-        if tfcoil_variables.acasetf <= 0.0e0 or tfcoil_variables.acasetfo <= 0.0e0:
-            error_handling.fdiags[0] = tfcoil_variables.acasetf
+        if (
+            tfcoil_variables.a_tf_coil_inboard_case <= 0.0e0
+            or tfcoil_variables.acasetfo <= 0.0e0
+        ):
+            error_handling.fdiags[0] = tfcoil_variables.a_tf_coil_inboard_case
             error_handling.fdiags[1] = tfcoil_variables.acasetfo
             error_handling.report_error(99)
 

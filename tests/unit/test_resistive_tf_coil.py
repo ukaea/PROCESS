@@ -46,7 +46,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     a_tf_coil_wp_turn_insulation: Any = None
 
-    acasetf: Any = None
+    a_tf_coil_inboard_case: Any = None
 
     dx_tf_wp_insulation: Any = None
 
@@ -70,7 +70,7 @@ class ResTfInternalGeomParam(NamedTuple):
 
     expected_a_tf_coil_wp_turn_insulation: Any = None
 
-    expected_acasetf: Any = None
+    expected_a_tf_coil_inboard_case: Any = None
 
 
 @pytest.mark.parametrize(
@@ -89,7 +89,7 @@ class ResTfInternalGeomParam(NamedTuple):
             cdtfleg=0,
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0,
-            acasetf=0,
+            a_tf_coil_inboard_case=0,
             dx_tf_wp_insulation=0,
             n_tf_coils=12,
             dr_tf_outboard=0.15483000000000002,
@@ -101,7 +101,7 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_cpttf=2125000,
             expected_cdtfleg=421788350.27812088,
             expected_a_tf_coil_wp_turn_insulation=0.00030678028680367151,
-            expected_acasetf=0.00061190425043863676,
+            expected_a_tf_coil_inboard_case=0.00061190425043863676,
         ),
         ResTfInternalGeomParam(
             n_tf_coil_turns=1,
@@ -116,7 +116,7 @@ class ResTfInternalGeomParam(NamedTuple):
             cdtfleg=421788350.27812088,
             dr_tf_plasma_case=0.0077415000000000019,
             a_tf_coil_wp_turn_insulation=0.00030678028680367151,
-            acasetf=0.00061190425043863676,
+            a_tf_coil_inboard_case=0.00061190425043863676,
             dx_tf_wp_insulation=0,
             n_tf_coils=12,
             dr_tf_outboard=0.15483000000000002,
@@ -128,7 +128,7 @@ class ResTfInternalGeomParam(NamedTuple):
             expected_cpttf=2125000,
             expected_cdtfleg=430664525.98439038,
             expected_a_tf_coil_wp_turn_insulation=0.00029439388680367086,
-            expected_acasetf=0.00061190425043863676,
+            expected_a_tf_coil_inboard_case=0.00061190425043863676,
         ),
     ),
 )
@@ -198,7 +198,11 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.a_tf_coil_wp_turn_insulation,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "acasetf", restfinternalgeomparam.acasetf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_inboard_case",
+        restfinternalgeomparam.a_tf_coil_inboard_case,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -244,8 +248,8 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
     )
 
-    assert tfcoil_variables.acasetf == pytest.approx(
-        restfinternalgeomparam.expected_acasetf
+    assert tfcoil_variables.a_tf_coil_inboard_case == pytest.approx(
+        restfinternalgeomparam.expected_a_tf_coil_inboard_case
     )
 
     assert tfcoil_variables.n_tf_coil_turns == pytest.approx(
@@ -264,8 +268,8 @@ def test_res_tf_internal_geom(restfinternalgeomparam, monkeypatch, resistive_tf_
         restfinternalgeomparam.expected_a_tf_coil_wp_turn_insulation
     )
 
-    assert tfcoil_variables.acasetf == pytest.approx(
-        restfinternalgeomparam.expected_acasetf
+    assert tfcoil_variables.a_tf_coil_inboard_case == pytest.approx(
+        restfinternalgeomparam.expected_a_tf_coil_inboard_case
     )
 
 

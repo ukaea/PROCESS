@@ -855,7 +855,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     acasetfo: Any = None
 
-    acasetf: Any = None
+    a_tf_coil_inboard_case: Any = None
 
     fcutfsu: Any = None
 
@@ -966,7 +966,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
-            acasetf=1.0015169239205168,
+            a_tf_coil_inboard_case=1.0015169239205168,
             fcutfsu=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
@@ -1038,7 +1038,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             acasetfo=1.2752592893394648,
-            acasetf=1.0015169239205168,
+            a_tf_coil_inboard_case=1.0015169239205168,
             fcutfsu=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
@@ -1184,7 +1184,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "acasetfo", tfcoilareaandmassesparam.acasetfo)
 
-    monkeypatch.setattr(tfcoil_variables, "acasetf", tfcoilareaandmassesparam.acasetf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_inboard_case",
+        tfcoilareaandmassesparam.a_tf_coil_inboard_case,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
 
@@ -1376,7 +1380,7 @@ class StressclParam(NamedTuple):
 
     dx_tf_wp_insertion_gap: Any = None
 
-    acasetf: Any = None
+    a_tf_coil_inboard_case: Any = None
 
     sig_tf_case_max: Any = None
 
@@ -1536,7 +1540,7 @@ class StressclParam(NamedTuple):
             dx_tf_turn_insulation=0.002,
             a_tf_turn_steel=0.0014685061538103825,
             dx_tf_wp_insertion_gap=0.01,
-            acasetf=1.0015169239205168,
+            a_tf_coil_inboard_case=1.0015169239205168,
             sig_tf_case_max=580000000,
             poisson_steel=0.29999999999999999,
             poisson_copper=0.34999999999999998,
@@ -1659,7 +1663,7 @@ class StressclParam(NamedTuple):
             dx_tf_turn_insulation=0.002,
             a_tf_turn_steel=0.0014685061538103825,
             dx_tf_wp_insertion_gap=0.01,
-            acasetf=1.0015169239205168,
+            a_tf_coil_inboard_case=1.0015169239205168,
             sig_tf_case_max=580000000,
             poisson_steel=0.29999999999999999,
             poisson_copper=0.34999999999999998,
@@ -1871,7 +1875,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.i_tf_stress_model,
         stressclparam.vforce_inboard_tot,
         stressclparam.i_tf_tresca,
-        stressclparam.acasetf,
+        stressclparam.a_tf_coil_inboard_case,
         stressclparam.vforce,
         stressclparam.a_tf_turn_steel,
     )
