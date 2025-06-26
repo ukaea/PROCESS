@@ -1087,7 +1087,7 @@ boundu(140) = 0.8
 * DESCRIPTION:   Ground Insulation Thickness Surrounding Winding Pack (m)
 * JUSTIFICATION: 
 
-*tfinsgap = 
+*dx_tf_wp_insertion_gap = 
 * DESCRIPTION:   WP insertion gap
 * JUSTIFICATION: 
 

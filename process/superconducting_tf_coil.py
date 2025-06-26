@@ -84,7 +84,7 @@ class SuperconductingTFCoil(TFCoil):
             * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
             - tfcoil_variables.dr_tf_plasma_case
             - tfcoil_variables.dx_tf_wp_insulation
-            - tfcoil_variables.tfinsgap
+            - tfcoil_variables.dx_tf_wp_insertion_gap
         )
 
         (
@@ -235,7 +235,7 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.a_tf_steel,
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_case_nose,
-                tfcoil_variables.tfinsgap,
+                tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
@@ -338,7 +338,10 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.wwp1,
             tfcoil_variables.dr_tf_wp
             - 2.0e0
-            * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap),
+            * (
+                tfcoil_variables.dx_tf_wp_insulation
+                + tfcoil_variables.dx_tf_wp_insertion_gap
+            ),
             sctfcoil_module.r_wp_centre,
             tfcoil_variables.b_tf_inboard_peak,
         )
@@ -1878,18 +1881,26 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.a_tf_wp_no_insulation = (
                 tfcoil_variables.dr_tf_wp
                 - 2.0e0
-                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+                * (
+                    tfcoil_variables.dx_tf_wp_insulation
+                    + tfcoil_variables.dx_tf_wp_insertion_gap
+                )
             ) * (
                 sctfcoil_module.t_wp_toroidal
                 - 2.0e0
-                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+                * (
+                    tfcoil_variables.dx_tf_wp_insulation
+                    + tfcoil_variables.dx_tf_wp_insertion_gap
+                )
             )
 
             # Cross-section area of the WP ground insulation [m2]
             sctfcoil_module.a_ground_ins = (
-                tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tfinsgap
+                tfcoil_variables.dr_tf_wp
+                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
-                sctfcoil_module.t_wp_toroidal - 2.0e0 * tfcoil_variables.tfinsgap
+                sctfcoil_module.t_wp_toroidal
+                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) - sctfcoil_module.a_tf_wp_no_insulation
 
         # Double rectangular WP
@@ -1924,24 +1935,33 @@ class SuperconductingTFCoil(TFCoil):
                 * (
                     tfcoil_variables.dr_tf_wp
                     - 2.0e0
-                    * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+                    * (
+                        tfcoil_variables.dx_tf_wp_insulation
+                        + tfcoil_variables.dx_tf_wp_insertion_gap
+                    )
                 )
                 * (
                     tfcoil_variables.wwp1
                     + tfcoil_variables.wwp2
                     - 4.0e0
-                    * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+                    * (
+                        tfcoil_variables.dx_tf_wp_insulation
+                        + tfcoil_variables.dx_tf_wp_insertion_gap
+                    )
                 )
             )
 
             # Cross-section area of the WP ground insulation [m2]
             sctfcoil_module.a_ground_ins = (
                 0.5e0
-                * (tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tfinsgap)
+                * (
+                    tfcoil_variables.dr_tf_wp
+                    - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
+                )
                 * (
                     tfcoil_variables.wwp1
                     + tfcoil_variables.wwp2
-                    - 4.0e0 * tfcoil_variables.tfinsgap
+                    - 4.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
                 )
                 - sctfcoil_module.a_tf_wp_no_insulation
             )
@@ -1977,20 +1997,27 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.a_tf_wp_no_insulation = (
                 tfcoil_variables.dr_tf_wp
                 - 2.0e0
-                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+                * (
+                    tfcoil_variables.dx_tf_wp_insulation
+                    + tfcoil_variables.dx_tf_wp_insertion_gap
+                )
             ) * (
                 tfcoil_variables.wwp2
                 - 2.0e0
-                * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+                * (
+                    tfcoil_variables.dx_tf_wp_insulation
+                    + tfcoil_variables.dx_tf_wp_insertion_gap
+                )
                 + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
             )
 
             # Cross-section area of the WP ground insulation [m2]
             sctfcoil_module.a_ground_ins = (
-                tfcoil_variables.dr_tf_wp - 2.0e0 * tfcoil_variables.tfinsgap
+                tfcoil_variables.dr_tf_wp
+                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
                 tfcoil_variables.wwp2
-                - 2.0e0 * tfcoil_variables.tfinsgap
+                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
                 + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
             ) - sctfcoil_module.a_tf_wp_no_insulation
 
@@ -2087,7 +2114,11 @@ class SuperconductingTFCoil(TFCoil):
         # Radial turn dimension [m]
         sctfcoil_module.dr_tf_turn = (
             tfcoil_variables.dr_tf_wp
-            - 2.0e0 * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+            - 2.0e0
+            * (
+                tfcoil_variables.dx_tf_wp_insulation
+                + tfcoil_variables.dx_tf_wp_insertion_gap
+            )
         ) / n_layer
 
         if sctfcoil_module.dr_tf_turn <= (
@@ -2101,7 +2132,11 @@ class SuperconductingTFCoil(TFCoil):
         # Toroidal turn dimension [m]
         sctfcoil_module.dx_tf_turn = (
             sctfcoil_module.t_wp_toroidal
-            - 2.0e0 * (tfcoil_variables.dx_tf_wp_insulation + tfcoil_variables.tfinsgap)
+            - 2.0e0
+            * (
+                tfcoil_variables.dx_tf_wp_insulation
+                + tfcoil_variables.dx_tf_wp_insertion_gap
+            )
         ) / n_pancake
 
         if sctfcoil_module.dx_tf_turn <= (

@@ -214,7 +214,7 @@ class TFCoil:
                 sctfcoil_module.a_tf_steel,
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_case_nose,
-                tfcoil_variables.tfinsgap,
+                tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
@@ -1090,8 +1090,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Winding pack insertion gap (m)",
-                "(tfinsgap)",
-                tfcoil_variables.tfinsgap,
+                "(dx_tf_wp_insertion_gap)",
+                tfcoil_variables.dx_tf_wp_insertion_gap,
             )
 
             # WP material fraction
@@ -1798,13 +1798,13 @@ class TFCoil:
                 "(dr_tf_nose_case)",
             )
 
-            radius = radius + tfcoil_variables.tfinsgap
+            radius = radius + tfcoil_variables.dx_tf_wp_insertion_gap
             po.obuild(
                 self.outfile,
                 "Insertion gap for winding pack",
-                tfcoil_variables.tfinsgap,
+                tfcoil_variables.dx_tf_wp_insertion_gap,
                 radius,
-                "(tfinsgap)",
+                "(dx_tf_wp_insertion_gap)",
             )
 
             radius = radius + tfcoil_variables.dx_tf_wp_insulation
@@ -1820,32 +1820,32 @@ class TFCoil:
                 radius
                 + 0.5e0 * tfcoil_variables.dr_tf_wp
                 - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.tfinsgap
+                - tfcoil_variables.dx_tf_wp_insertion_gap
             )
             po.obuild(
                 self.outfile,
                 "Winding - first half",
                 tfcoil_variables.dr_tf_wp / 2e0
                 - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.tfinsgap,
+                - tfcoil_variables.dx_tf_wp_insertion_gap,
                 radius,
-                "(dr_tf_wp/2-dx_tf_wp_insulation-tfinsgap)",
+                "(dr_tf_wp/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
             )
 
             radius = (
                 radius
                 + 0.5e0 * tfcoil_variables.dr_tf_wp
                 - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.tfinsgap
+                - tfcoil_variables.dx_tf_wp_insertion_gap
             )
             po.obuild(
                 self.outfile,
                 "Winding - second half",
                 tfcoil_variables.dr_tf_wp / 2e0
                 - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.tfinsgap,
+                - tfcoil_variables.dx_tf_wp_insertion_gap,
                 radius,
-                "(dr_tf_wp/2-dx_tf_wp_insulation-tfinsgap)",
+                "(dr_tf_wp/2-dx_tf_wp_insulation-dx_tf_wp_insertion_gap)",
             )
 
             radius = radius + tfcoil_variables.dx_tf_wp_insulation
@@ -1857,13 +1857,13 @@ class TFCoil:
                 "(dx_tf_wp_insulation)",
             )
 
-            radius = radius + tfcoil_variables.tfinsgap
+            radius = radius + tfcoil_variables.dx_tf_wp_insertion_gap
             po.obuild(
                 self.outfile,
                 "Insertion gap for winding pack",
-                tfcoil_variables.tfinsgap,
+                tfcoil_variables.dx_tf_wp_insertion_gap,
                 radius,
-                "(tfinsgap)",
+                "(dx_tf_wp_insertion_gap)",
             )
 
             radius = radius + tfcoil_variables.dr_tf_plasma_case
@@ -2430,12 +2430,12 @@ class TFCoil:
             r_out_wp = (
                 sctfcoil_module.r_tf_wp_outer
                 - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.tfinsgap
+                - tfcoil_variables.dx_tf_wp_insertion_gap
             )
             r_in_wp = (
                 sctfcoil_module.r_tf_wp_inner
                 + tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.tfinsgap
+                + tfcoil_variables.dx_tf_wp_insertion_gap
             )
         else:
             r_out_wp = (
@@ -2469,7 +2469,7 @@ class TFCoil:
                 sctfcoil_module.r_tf_outboard_in
                 + tfcoil_variables.dr_tf_plasma_case
                 + tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.tfinsgap
+                + tfcoil_variables.dx_tf_wp_insertion_gap
             )
         else:
             r_in_outwp = (
@@ -3229,7 +3229,7 @@ class TFCoil:
         a_tf_steel,
         a_case_front,
         a_case_nose,
-        tfinsgap,
+        dx_tf_wp_insertion_gap,
         dx_tf_wp_insulation,
         n_tf_coil_turns,
         i_tf_turns_integer,
@@ -3569,10 +3569,10 @@ class TFCoil:
 
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
-            # inertion gap is tfcoil_variables.tfinsgap on 4 sides
+            # inertion gap is tfcoil_variables.dx_tf_wp_insertion_gap on 4 sides
             t_ins_eff = (
                 dx_tf_turn_insulation
-                + (tfinsgap + dx_tf_wp_insulation) / n_tf_coil_turns
+                + (dx_tf_wp_insertion_gap + dx_tf_wp_insulation) / n_tf_coil_turns
             )
 
             # Effective WP young modulus in the toroidal direction [Pa]
@@ -5469,7 +5469,7 @@ def init_tfcoil_variables():
     tfv.tfcryoarea = 0.0
     tfv.tficrn = 0.0
     tfv.ind_tf_coil = 0.0
-    tfv.tfinsgap = 0.01
+    tfv.dx_tf_wp_insertion_gap = 0.01
     tfv.p_tf_leg_resistive_mw = 0.0
     tfv.rho_cp = 0.0
     tfv.rho_tf_leg = 0.0

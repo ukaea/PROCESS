@@ -443,7 +443,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     dr_tf_wp: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     i_cp_joints: Any = None
 
@@ -493,7 +493,7 @@ class TfFieldAndForceParam(NamedTuple):
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.15483000000000002,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             i_cp_joints=1,
             dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.0914285714285716,
@@ -528,7 +528,7 @@ class TfFieldAndForceParam(NamedTuple):
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp=0.14708850000000001,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             i_cp_joints=1,
             dr_tf_plasma_case=0.0077415000000000019,
             r_tf_outboard_in=4.1094285714285714,
@@ -614,7 +614,11 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tffieldandforceparam.dr_tf_wp)
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tffieldandforceparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insertion_gap",
+        tffieldandforceparam.dx_tf_wp_insertion_gap,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "i_cp_joints", tffieldandforceparam.i_cp_joints
@@ -1362,7 +1366,7 @@ class StressclParam(NamedTuple):
 
     a_tf_turn_steel: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     acasetf: Any = None
 
@@ -1523,7 +1527,7 @@ class StressclParam(NamedTuple):
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
             a_tf_turn_steel=0.0014685061538103825,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             acasetf=1.0015169239205168,
             sig_tf_case_max=580000000,
             poisson_steel=0.29999999999999999,
@@ -1646,7 +1650,7 @@ class StressclParam(NamedTuple):
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_turn_insulation=0.002,
             a_tf_turn_steel=0.0014685061538103825,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             acasetf=1.0015169239205168,
             sig_tf_case_max=580000000,
             poisson_steel=0.29999999999999999,
@@ -1835,7 +1839,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.a_tf_steel,
         stressclparam.a_case_front,
         stressclparam.a_case_nose,
-        stressclparam.tfinsgap,
+        stressclparam.dx_tf_wp_insertion_gap,
         stressclparam.dx_tf_wp_insulation,
         stressclparam.n_tf_coil_turns,
         stressclparam.i_tf_turns_integer,

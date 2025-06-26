@@ -547,7 +547,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8367E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3795E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2140E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0145E-01    
@@ -1542,7 +1542,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8367E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3792E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2139E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0145E-01    
@@ -2537,7 +2537,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8366E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3789E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2137E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0145E-01    
@@ -3532,7 +3532,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8365E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3786E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2136E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0146E-01    
@@ -4527,7 +4527,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8365E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3783E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2135E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0146E-01    
@@ -5522,7 +5522,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8364E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3781E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2134E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0146E-01    
@@ -6517,7 +6517,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8363E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3779E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2133E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0146E-01    
@@ -7512,7 +7512,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8363E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3776E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2132E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0146E-01    
@@ -8507,7 +8507,7 @@
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp)____________________      8.8362E-01 OP 
  Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
- Winding_pack_insertion_gap_(m)__________________________________________ (tfinsgap)____________________      1.0000E-02    
+ Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (aswp*n_tf_coils)___________________      9.3774E+00    
  Steel_WP_fraction_______________________________________________________ (aswp/awpc)___________________      5.2131E-01    
  Insulation_WP_fraction__________________________________________________ (a_tf_coil_wp_turn_insulation/awpc)___________________      1.0146E-01    

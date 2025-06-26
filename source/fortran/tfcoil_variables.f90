@@ -529,7 +529,7 @@ module tfcoil_variables
   real(dp) :: ind_tf_coil
   !! TF coil inductance (H)
 
-  real(dp) :: tfinsgap
+  real(dp) :: dx_tf_wp_insertion_gap
   !! TF coil WP insertion gap (m)
 
   real(dp) :: p_tf_leg_resistive_mw
