@@ -2885,7 +2885,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(power_variables, "qmisc", power2param.qmisc)
 
-    power.plant_electric_production(output=False)
+    power.plant_electric_production()
 
     assert heat_transport_variables.p_plant_electric_net_mw == pytest.approx(
         power2param.expected_p_plant_electric_net_mw
