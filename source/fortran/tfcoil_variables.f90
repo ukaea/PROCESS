@@ -51,7 +51,7 @@ module tfcoil_variables
   real(dp) :: a_tf_leg_outboard
   !! outboard TF leg area (m2)
 
-  real(dp) :: aswp
+  real(dp) :: a_tf_wp_steel
   !! winding pack structure area (m2)
 
   real(dp) :: avwp

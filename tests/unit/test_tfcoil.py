@@ -1408,7 +1408,7 @@ class StressclParam(NamedTuple):
 
     a_tf_coil_wp_turn_insulation: Any = None
 
-    aswp: Any = None
+    a_tf_wp_steel: Any = None
 
     c_tf_turn: Any = None
 
@@ -1552,7 +1552,7 @@ class StressclParam(NamedTuple):
             eyoung_al=np.array(69000000000.0),
             eyoung_copper=np.array(117000000000.0),
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            aswp=0.29370123076207649,
+            a_tf_wp_steel=0.29370123076207649,
             c_tf_turn=74026.751437500003,
             n_tf_coils=16,
             i_tf_stress_model=1,
@@ -1675,7 +1675,7 @@ class StressclParam(NamedTuple):
             eyoung_al=np.array(69000000000.0),
             eyoung_copper=np.array(117000000000.0),
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            aswp=0.29370123076207649,
+            a_tf_wp_steel=0.29370123076207649,
             c_tf_turn=74026.751437500003,
             n_tf_coils=16,
             i_tf_stress_model=1,
@@ -1859,7 +1859,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.t_lat_case_av,
         stressclparam.t_wp_toroidal_av,
         stressclparam.a_tf_ins,
-        stressclparam.aswp,
+        stressclparam.a_tf_wp_steel,
         stressclparam.a_tf_wp_conductor,
         stressclparam.a_tf_wp_with_insulation,
         stressclparam.eyoung_al,

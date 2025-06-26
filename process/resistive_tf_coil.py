@@ -216,7 +216,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.t_lat_case_av,
                 sctfcoil_module.t_wp_toroidal_av,
                 sctfcoil_module.a_tf_ins,
-                tfcoil_variables.aswp,
+                tfcoil_variables.a_tf_wp_steel,
                 tfcoil_variables.a_tf_wp_conductor,
                 sctfcoil_module.a_tf_wp_with_insulation,
                 tfcoil_variables.eyoung_al,

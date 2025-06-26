@@ -2704,7 +2704,7 @@ class Stellarator:
             )
         )
         # [m^2] Structure area for cable
-        tfcoil_variables.aswp = (
+        tfcoil_variables.a_tf_wp_steel = (
             tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
         )
         # End of winding pack calculations
@@ -3905,8 +3905,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Structure fraction of winding pack",
-            "(aswp/ap)",
-            tfcoil_variables.aswp / ap,
+            "(a_tf_wp_steel/ap)",
+            tfcoil_variables.a_tf_wp_steel / ap,
         )
         po.ovarre(
             self.outfile,
