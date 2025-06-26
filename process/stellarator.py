@@ -2689,7 +2689,7 @@ class Stellarator:
             * (1.0e0 - tfcoil_variables.vftf)
         )
         # [m^2] Void area in cable, for He
-        tfcoil_variables.avwp = (
+        tfcoil_variables.a_tf_wp_extra_void = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.vftf
@@ -3917,8 +3917,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Helium fraction of winding pack",
-            "(avwp/ap)",
-            tfcoil_variables.avwp / ap,
+            "(a_tf_wp_extra_void/ap)",
+            tfcoil_variables.a_tf_wp_extra_void / ap,
         )
         po.ovarre(
             self.outfile,
