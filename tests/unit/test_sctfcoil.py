@@ -1147,7 +1147,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfintegerturngeomparam.t_cable)
 
     (
-        a_tf_turn_cable_space,
+        a_tf_turn_cable_space_no_void,
         a_tf_turn_steel,
         a_tf_turn_insulation,
         c_tf_turn,
@@ -1195,7 +1195,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         tfintegerturngeomparam.expected_t_cable
     )
 
-    assert a_tf_turn_cable_space == pytest.approx(
+    assert a_tf_turn_cable_space_no_void == pytest.approx(
         tfintegerturngeomparam.expected_a_tf_turn_cable_space
     )
 
@@ -1434,13 +1434,16 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "t_cable", tfaveragedturngeomparam.t_cable)
 
-    a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_coil_turns = (
-        sctfcoil.tf_averaged_turn_geom(
-            i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
-            j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
-            dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
-            dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
-        )
+    (
+        a_tf_turn_cable_space_no_void,
+        a_tf_turn_steel,
+        a_tf_turn_insulation,
+        n_tf_coil_turns,
+    ) = sctfcoil.tf_averaged_turn_geom(
+        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
+        j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
+        dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
+        dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
     )
 
     assert tfcoil_variables.t_conductor == pytest.approx(
@@ -1463,7 +1466,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.expected_t_cable
     )
 
-    assert a_tf_turn_cable_space == pytest.approx(
+    assert a_tf_turn_cable_space_no_void == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_cable_space
     )
 
