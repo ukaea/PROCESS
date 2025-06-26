@@ -677,7 +677,7 @@
  Inter-turn_insulation_thickness_(m)______________________________________ (dx_tf_turn_insulation)_____________________ 8.00000000000000038e-04
  Diameter_of_central_helium_channel_in_cable______________________________ (dia_tf_turn_coolant_channel)______________________ 1.00000000000000002e-02
  internal_area_of_the_cable_space_________________________________________ (a_tf_turn_cable_space_no_void)________________________ 1.61887869455795111e-03
- Coolant_fraction_in_conductor_excluding_central_channel__________________ (vftf)_________________________ 3.00000000000000044e-01
+ Coolant_fraction_in_conductor_excluding_central_channel__________________ (f_a_tf_turn_cable_space_extra_void)_________________________ 3.00000000000000044e-01
  Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.23199976882647566e-01
  Superconductor_fraction_of_conductor_____________________________________ (1-fcutfsu)____________________ 1.76800023117352434e-01
  Check_total_area_fractions_in_winding_pack_=_1___________________________ _______________________________ 1.00000000000000000e+00
@@ -1567,7 +1567,7 @@ dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surroun
 tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 vdalw    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
-vftf     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
+f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 
 *-----------------Times Variables------------------*
 

@@ -1193,10 +1193,10 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*vftf = 
+*f_a_tf_turn_cable_space_extra_void = 
 * DESCRIPTION:   Void fraction of TF coil cable excluding the cooling pipe
 * JUSTIFICATION: There is no coolant space in the MIT VIPER cable design other
-*                than the central cooling pipe. So vftf should then be 0.
+*                than the central cooling pipe. So f_a_tf_turn_cable_space_extra_void should then be 0.
 *                However about 5% of the space is used by HTS tape soldering
 * REFERENCE:     Zachary S Hartwig et al 2020 Supercond. Sci. Technol. 
 *                in press https://doi.org/10.1088/1361-6668/abb8c0

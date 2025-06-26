@@ -2603,7 +2603,7 @@ class Stellarator:
                 tfcoil_variables.fhts,
                 tfcoil_variables.t_crit_nbti,
                 tfcoil_variables.tcritsc,
-                tfcoil_variables.vftf,
+                tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 tfcoil_variables.j_tf_wp,
             )  # Get here a temperature margin of 1.5K.
 
@@ -2614,7 +2614,7 @@ class Stellarator:
         f_scu = (
             (
                 tfcoil_variables.a_tf_turn_cable_space_no_void
-                * (1.0e0 - tfcoil_variables.vftf)
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             )
             / (tfcoil_variables.t_turn_tf**2)
             * (1.0e0 - tfcoil_variables.fcutfsu)
@@ -2686,13 +2686,13 @@ class Stellarator:
         tfcoil_variables.a_tf_wp_conductor = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
-            * (1.0e0 - tfcoil_variables.vftf)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
         )
         # [m^2] Void area in cable, for He
         tfcoil_variables.a_tf_wp_extra_void = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
-            * tfcoil_variables.vftf
+            * tfcoil_variables.f_a_tf_turn_cable_space_extra_void
         )
         # [m^2] Insulation area (not including ground-wall)
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
@@ -2939,7 +2939,7 @@ class Stellarator:
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space_no_void
-                * (1.0e0 - tfcoil_variables.vftf)
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
                 - tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_wp_coolant_channels
@@ -2951,7 +2951,7 @@ class Stellarator:
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
-            * (1.0e0 - tfcoil_variables.vftf)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             * tfcoil_variables.fcutfsu
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.dcopper
@@ -3042,7 +3042,7 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
@@ -3056,7 +3056,7 @@ class Stellarator:
             tfcoil_variables.tdmptf,
             0.0e0,
             tfcoil_variables.fcutfsu,
-            1 - tfcoil_variables.vftf,
+            1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             tfcoil_variables.tftmp,
             tfcoil_variables.a_tf_turn_cable_space_no_void,
             tfcoil_variables.t_turn_tf**2,
@@ -3246,11 +3246,11 @@ class Stellarator:
         fhts,
         t_crit_nbti,
         tcritsc,
-        vftf,
+        f_a_tf_turn_cable_space_extra_void,
         jwp,
     ):
         strain = -0.005  # for now a small value
-        fhe = vftf  # this is helium fraction in the superconductor (set it to the fixed global variable here)
+        fhe = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
         fcu = fcutfsu  # fcutfsu is a global variable. Is the copper fraction
         # of a cable conductor.
@@ -3871,8 +3871,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Cable space coolant fraction",
-            "(vftf)",
-            tfcoil_variables.vftf,
+            "(f_a_tf_turn_cable_space_extra_void)",
+            tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
         )
         po.ovarre(
             self.outfile,

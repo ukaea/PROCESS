@@ -251,7 +251,7 @@ turns. The number of turns can be parametrized in three different ways :
   material fractions:
 </p>
 - <p style='text-align: justify;'>
-    **Cable void fraction (`vftf`):** user input setting the void fraction
+    **Cable void fraction (`f_a_tf_turn_cable_space_extra_void`):** user input setting the void fraction
     between the strands. This fraction does not include the helium cooling
     pipe at the cable center.
   </p>
@@ -1301,7 +1301,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
 | `dx_tf_turn_steel`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dia_tf_turn_coolant_channel`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
-| `vftf`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
+| `f_a_tf_turn_cable_space_extra_void`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
 | `fcutfsu`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
 
 <br>
