@@ -203,7 +203,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.r_tf_wp_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_case_front,
-                sctfcoil_module.a_case_nose,
+                sctfcoil_module.a_tf_coil_nose_case,
                 tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,

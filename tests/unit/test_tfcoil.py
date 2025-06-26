@@ -1484,7 +1484,7 @@ class StressclParam(NamedTuple):
 
     a_case_front: Any = None
 
-    a_case_nose: Any = None
+    a_tf_coil_nose_case: Any = None
 
     rad_tf_coil_toroidal: Any = None
 
@@ -1625,7 +1625,7 @@ class StressclParam(NamedTuple):
             t_wp_toroidal_av=1.299782604942499,
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
-            a_case_nose=0.70261616505511615,
+            a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             dr_tf_turn_cable_space=0.030661087836601014,
@@ -1748,7 +1748,7 @@ class StressclParam(NamedTuple):
             t_wp_toroidal_av=1.299782604942499,
             t_lat_case_av=0.10396600719086938,
             a_case_front=0.18607458590131154,
-            a_case_nose=0.70261616505511615,
+            a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             dr_tf_turn_cable_space=0.030661087836601014,
@@ -1854,7 +1854,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.r_tf_wp_outer,
         stressclparam.a_tf_coil_inboard_steel,
         stressclparam.a_case_front,
-        stressclparam.a_case_nose,
+        stressclparam.a_tf_coil_nose_case,
         stressclparam.dx_tf_wp_insertion_gap,
         stressclparam.dx_tf_wp_insulation,
         stressclparam.n_tf_coil_turns,

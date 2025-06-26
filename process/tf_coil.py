@@ -213,7 +213,7 @@ class TFCoil:
                 sctfcoil_module.r_tf_wp_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_case_front,
-                sctfcoil_module.a_case_nose,
+                sctfcoil_module.a_tf_coil_nose_case,
                 tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
@@ -3236,7 +3236,7 @@ class TFCoil:
         r_tf_wp_outer,
         a_tf_coil_inboard_steel,
         a_case_front,
-        a_case_nose,
+        a_tf_coil_nose_case,
         dx_tf_wp_insertion_gap,
         dx_tf_wp_insulation,
         n_tf_coil_turns,
@@ -3573,7 +3573,9 @@ class TFCoil:
             a_wp_eff = (r_wp_outer_eff**2 - r_wp_inner_eff**2) * rad_tf_coil_toroidal
 
             # Steel cross-section under the area representing the WP in stress calculations [m2]
-            a_wp_steel_eff = a_tf_coil_inboard_steel - a_case_front - a_case_nose
+            a_wp_steel_eff = (
+                a_tf_coil_inboard_steel - a_case_front - a_tf_coil_nose_case
+            )
 
             # WP effective insulation thickness (SC only) [m]
             # include groundwall insulation + insertion gap in tfcoil_variables.dx_tf_turn_insulation
