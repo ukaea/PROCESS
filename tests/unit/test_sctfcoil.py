@@ -514,7 +514,7 @@ class TfWpGeomParam(NamedTuple):
 
     dx_tf_wp_insulation: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     awpc: Any = None
 
@@ -571,7 +571,7 @@ class TfWpGeomParam(NamedTuple):
             wwp1=0,
             wwp2=0,
             dx_tf_wp_insulation=0.0080000000000000019,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             awpc=0,
             a_tf_wp_no_insulation=0,
             r_tf_wp_inner=0,
@@ -604,7 +604,7 @@ class TfWpGeomParam(NamedTuple):
             wwp1=1.299782604942499,
             wwp2=0,
             dx_tf_wp_insulation=0.0080000000000000019,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             awpc=0.70527618095271016,
             a_tf_wp_no_insulation=0.64024601555360383,
             r_tf_wp_inner=3.5185911851091101,
@@ -673,7 +673,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "dx_tf_wp_insulation", tfwpgeomparam.dx_tf_wp_insulation
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfwpgeomparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_wp_insertion_gap", tfwpgeomparam.dx_tf_wp_insertion_gap
+    )
 
     monkeypatch.setattr(sctfcoil_module, "awpc", tfwpgeomparam.awpc)
 
@@ -939,7 +941,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_wp_insulation: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     t_conductor: Any = None
 
@@ -1006,7 +1008,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
         TfIntegerTurnGeomParam(
             dr_tf_wp=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             t_conductor=0,
             t_turn_tf=0,
             c_tf_coil=14805350.287500001,
@@ -1040,7 +1042,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
         TfIntegerTurnGeomParam(
             dr_tf_wp=0.54261087836601019,
             dx_tf_wp_insulation=0.0080000000000000019,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             t_conductor=0.052553108427885735,
             t_turn_tf=0.056579413904423038,
             c_tf_coil=14805350.287500001,
@@ -1094,7 +1096,11 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         tfintegerturngeomparam.dx_tf_wp_insulation,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfintegerturngeomparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insertion_gap",
+        tfintegerturngeomparam.dx_tf_wp_insertion_gap,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "t_conductor", tfintegerturngeomparam.t_conductor

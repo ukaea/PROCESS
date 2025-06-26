@@ -942,7 +942,7 @@ def check_process(inputs):  # noqa: ARG001
         if fortran.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (
                 fortran.tfcoil_variables.dx_tf_wp_insulation
-                + fortran.tfcoil_variables.tfinsgap
+                + fortran.tfcoil_variables.dx_tf_wp_insertion_gap
                 + fortran.tfcoil_variables.dx_tf_turn_insulation
                 + fortran.tfcoil_variables.dia_tf_turn_coolant_channel
             )

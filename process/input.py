@@ -1282,7 +1282,9 @@ INPUT_VARIABLES = {
     "tfcbv": InputVariable(
         fortran.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
-    "tfinsgap": InputVariable(fortran.tfcoil_variables, float, range=(1e-10, 0.1)),
+    "dx_tf_wp_insertion_gap": InputVariable(
+        fortran.tfcoil_variables, float, range=(1e-10, 0.1)
+    ),
     "tfootfi": InputVariable(fortran.build_variables, float, range=(0.2, 5.0)),
     "tftmp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
     "tgain": InputVariable(fortran.ife_variables, float, range=(1.0, 500.0)),

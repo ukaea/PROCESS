@@ -81,7 +81,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     i_tf_wp_geom: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     tfc_sidewall_is_fraction: Any = None
 
@@ -205,7 +205,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
             ripmax=0.60000000000000009,
@@ -226,7 +226,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
             ripmax=0.60000000000000009,
@@ -291,7 +291,11 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
         tfcoil_variables, "i_tf_wp_geom", rippleamplitudeparam.i_tf_wp_geom
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", rippleamplitudeparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insertion_gap",
+        rippleamplitudeparam.dx_tf_wp_insertion_gap,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

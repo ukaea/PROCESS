@@ -1267,7 +1267,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
 | `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
-| `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
+| `dx_tf_wp_insertion_gap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 | Parameter             | description                                                                                                                                          | Iteration variable | Default                              | Unit |
 | -                     | -                                                                                                                                                    | -                  | -                                    | -    |
 | `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
@@ -1282,7 +1282,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
 | `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
-| `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
+| `dx_tf_wp_insertion_gap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 
 <br>
 
