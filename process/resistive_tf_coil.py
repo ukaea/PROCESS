@@ -98,21 +98,17 @@ class ResistiveTFCoil(TFCoil):
         self.res_tf_internal_geom()
         self.tf_res_heating()
 
-        if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
-                build_variables.dr_tf_inboard,
-                tfcoil_variables.r_tf_arc,
-                tfcoil_variables.z_tf_arc,
-            )
-        else:
-            tfcoil_variables.ind_tf_coil = (
-                (build_variables.z_tf_inside_half + build_variables.dr_tf_outboard)
-                * RMU0
-                / constants.pi
-                * np.log(
-                    build_variables.r_tf_outboard_mid / build_variables.r_tf_inboard_mid
-                )
-            )
+        tfcoil_variables.ind_tf_coil = super().tf_coil_self_inductance(
+            dr_tf_inboard=build_variables.dr_tf_inboard,
+            r_tf_arc=tfcoil_variables.r_tf_arc,
+            z_tf_arc=tfcoil_variables.z_tf_arc,
+            itart=physics_variables.itart,
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            z_tf_inside_half=build_variables.z_tf_inside_half,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+        )
 
         # Total TF coil stored magnetic energy [J]
         sctfcoil_module.e_tf_magnetic_stored_total = (
