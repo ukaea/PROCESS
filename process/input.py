@@ -1430,7 +1430,9 @@ INPUT_VARIABLES = {
     "f_a_cs_void": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "vfpblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "vfshld": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
-    "vftf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "f_a_tf_turn_cable_space_extra_void": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "dz_shld_vv_gap": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dz_xpoint_divertor": InputVariable(
         fortran.build_variables, float, range=(0.0, 10.0)

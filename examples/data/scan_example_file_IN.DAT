@@ -594,7 +594,7 @@ dia_tf_turn_coolant_channel = 0.01
 tftmp = 4.75
 
 * Coolant fraction of TF cable [-]
-vftf = 0.3
+f_a_tf_turn_cable_space_extra_void = 0.3
 
 * Conductor type switch (ITER Nb3Sn)
 i_tf_sc_mat = 1

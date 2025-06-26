@@ -1258,8 +1258,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Coolant fraction in conductor excluding central channel",
-                    "(vftf)",
-                    tfcoil_variables.vftf,
+                    "(f_a_tf_turn_cable_space_extra_void)",
+                    tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2978,7 +2978,7 @@ class TFCoil:
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space_no_void
-                * (1.0e0 - tfcoil_variables.vftf)
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
                 * (1.0e0 - tfcoil_variables.fcutfsu)
                 - tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_wp_coolant_channels
@@ -2989,7 +2989,7 @@ class TFCoil:
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space_no_void
-                * (1.0e0 - tfcoil_variables.vftf)
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
                 * tfcoil_variables.fcutfsu
                 - tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_wp_coolant_channels
@@ -5522,7 +5522,7 @@ def init_tfcoil_variables():
     tfv.vforce = 0.0
     tfv.f_vforce_inboard = 0.5
     tfv.vforce_outboard = 0.0
-    tfv.vftf = 0.4
+    tfv.f_a_tf_turn_cable_space_extra_void = 0.4
     tfv.voltfleg = 0.0
     tfv.vtfkv = 0.0
     tfv.vtfskv = 0.0

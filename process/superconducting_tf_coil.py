@@ -378,7 +378,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.a_tf_turn_cable_space_no_void,
                 aturn,
                 tfcoil_variables.bmaxtfrp,
-                tfcoil_variables.vftf,
+                tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.j_tf_wp,
@@ -1772,7 +1772,7 @@ class SuperconductingTFCoil(TFCoil):
         tfcoil_variables.a_tf_wp_conductor = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
-            * (1.0e0 - tfcoil_variables.vftf)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             - tfcoil_variables.a_tf_wp_coolant_channels
         )
 
@@ -1780,7 +1780,7 @@ class SuperconductingTFCoil(TFCoil):
         tfcoil_variables.a_tf_wp_extra_void = (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * tfcoil_variables.n_tf_coil_turns
-            * tfcoil_variables.vftf
+            * tfcoil_variables.f_a_tf_turn_cable_space_extra_void
         )
 
         # Area of inter-turn insulation: total [m2]

@@ -835,7 +835,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     whtconin: Any = None
 
-    vftf: Any = None
+    f_a_tf_turn_cable_space_extra_void: Any = None
 
     dcond: Any = None
 
@@ -951,7 +951,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtconcu=0,
             whtcon=0,
             whtconin=0,
-            vftf=0.30000000000000004,
+            f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
             dcond=np.array(
                 np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
@@ -1023,7 +1023,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtconcu=58744.465423173802,
             whtcon=0,
             whtconin=0,
-            vftf=0.30000000000000004,
+            f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
             dcond=np.array(
                 np.array(
                     (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
@@ -1152,7 +1152,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
     )
 
-    monkeypatch.setattr(tfcoil_variables, "vftf", tfcoilareaandmassesparam.vftf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "f_a_tf_turn_cable_space_extra_void",
+        tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "dcond", tfcoilareaandmassesparam.dcond)
 

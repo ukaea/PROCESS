@@ -669,7 +669,7 @@ module tfcoil_variables
   real(dp) :: vforce_outboard
   !! Vertical tension on outboard leg/coil (N)
 
-  real(dp) :: vftf
+  real(dp) :: f_a_tf_turn_cable_space_extra_void
   !! coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_ssup=0`)
 
   real(dp) :: voltfleg
