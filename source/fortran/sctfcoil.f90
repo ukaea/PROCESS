@@ -41,7 +41,7 @@ module sctfcoil_module
 !! Total cross-sectional area of winding pack without
 !! ground insulation and insertion gap [m2]
 
-   real(dp) :: a_tf_steel
+   real(dp) :: a_tf_coil_inboard_steel
 !! Inboard coil steel coil cross-sectional area [m2]
 
    real(dp) :: a_tf_ins

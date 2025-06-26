@@ -1633,7 +1633,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         build_variables, "z_plasma_xpoint_upper", 5.47008
     )  # Baseline 2018
 
-    monkeypatch.setattr(sctfcoil_module, "a_tf_steel", 0.55)  # Section 3
+    monkeypatch.setattr(sctfcoil_module, "a_tf_coil_inboard_steel", 0.55)  # Section 3
 
     # Sum from Section 3
     monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.42)
