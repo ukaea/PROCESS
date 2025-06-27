@@ -4610,7 +4610,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     ys = [y1, y2, y3, y4, y5]
     labels = []
     for i, (x, y) in enumerate(zip(xs, ys, strict=False), 1):
-        axis.plot(x, y, "ko")
+        axis.plot(x, y, "ko", markersize=8)
         axis.text(
             x,
             y,
@@ -4622,66 +4622,174 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
             fontweight="bold",
         )
         labels.append(f"TF Arc Point {i}: ({x:.2f}, {y:.2f})")
-    # Connect the points with lines
 
-    # Arrow for top of TF coil
+    # =========================================================
+
+    # If D-shaped coil, plot the full internal height arrow
+    if mfile_data.data["i_tf_shape"].get_scan(scan) == 1:
+        # Arrow for internal coil width
+        axis.annotate(
+            "",
+            xy=(x2, y2),
+            xytext=(x4, y4),
+            arrowprops={"arrowstyle": "<->", "color": "black"},
+        )
+
+        # Add a label for the internal coil width
+        axis.text(
+            x2,
+            0.0,
+            f"{y2 - y4:.3f} m",
+            fontsize=7,
+            color="black",
+            rotation=270,
+            verticalalignment="center",
+            horizontalalignment="center",
+            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+            zorder=100,  # Ensure label is on top of all plots
+        )
+
+    # ==========================================================
+
+    # Arrow for the full TF coil height
+    if mfile_data.data["i_tf_shape"].get_scan(scan) == 1:
+        x = x2 * 0.9
+    elif mfile_data.data["i_tf_shape"].get_scan(scan) == 2:
+        x = (x2 - x1) / 2
+
     axis.annotate(
         "",
-        xy=(-3.0, 0),
-        xytext=(-3.0, z_tf_top),
+        xy=(x, y2 + dr_tf_inboard),
+        xytext=(x, y4 - dr_tf_inboard),
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
-    axis.axhline(y=z_tf_top, color="black", linestyle="--", linewidth=1)
+
+    # Add a label for the full TF coil height
+    axis.text(
+        x,
+        0.0,
+        f"{((y2 + 2 * dr_tf_inboard) - y4):.3f} m",
+        fontsize=7,
+        color="black",
+        rotation=270,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
+    )
+
+    # ==========================================================
+
+    # Arrow for top half height of TF coil
+    axis.annotate(
+        "",
+        xy=(-2.0, 0),
+        xytext=(-2.0, y2 + dr_tf_inboard),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.axhline(y=y2 + dr_tf_inboard, color="black", linestyle="--", linewidth=1)
 
     # Add a label for top of TF coil
     axis.text(
-        -4.0,
-        z_tf_top / 2,
-        f"{z_tf_top:.3f} m",
+        -2.0,
+        (y2 + dr_tf_inboard) / 2,
+        f"{y2 + dr_tf_inboard:.3f} m",
         fontsize=7,
         color="black",
-        rotation=90,
+        rotation=270,
         verticalalignment="center",
+        horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
     )
+
+    # ==========================================================
+
+    # Arrow for bottom half height of TF coil
+    axis.annotate(
+        "",
+        xy=(-2.0, 0),
+        xytext=(-2.0, y4 - dr_tf_inboard),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.axhline(y=y4 - dr_tf_inboard, color="black", linestyle="--", linewidth=1)
+
+    # Add a label for top of TF coil
+    axis.text(
+        -2.0,
+        -z_tf_top / 2,
+        f"{y4 - dr_tf_inboard:.3f} m",
+        fontsize=7,
+        color="black",
+        rotation=270,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    # Arrow for top inside internal height
+    axis.annotate(
+        "",
+        xy=(-1.0, 0),
+        xytext=(-1.0, y2),
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.axhline(y=y2, color="black", linestyle="--", linewidth=1)
+
+    # Add a label for height of top internal height
+    axis.text(
+        -1.0,
+        y2 / 2,
+        f"{y2:.3f} m",
+        fontsize=7,
+        color="black",
+        rotation=270,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    # =========================================================
 
     # Arrow for coil internal height
     axis.annotate(
         "",
         xy=(-1.0, 0),  # Inner plasma edge
-        xytext=(-1.0, z_tf_inside_half),  # Center
+        xytext=(-1.0, -z_tf_inside_half),  # Center
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
-    axis.axhline(y=z_tf_inside_half, color="black", linestyle="--", linewidth=1)
+    axis.axhline(y=-z_tf_inside_half, color="black", linestyle="--", linewidth=1)
 
     # Add a label for coil internal height
     axis.text(
-        -2.0,
-        z_tf_inside_half / 2,
+        -1.0,
+        -z_tf_inside_half / 2,
         f"{z_tf_inside_half:.3f} m",
         fontsize=7,
         color="black",
-        rotation=90,
+        rotation=270,
         verticalalignment="center",
+        horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
     )
+    # =========================================================
 
     # Arrow for internal coil width
     axis.annotate(
         "",
-        xy=(r_tf_inboard_out, -1.0),
-        xytext=(r_tf_outboard_in, -1.0),
+        xy=(r_tf_inboard_out, -z_tf_inside_half / 12),
+        xytext=(r_tf_outboard_in, -z_tf_inside_half / 12),
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
 
     # Add a label for the internal coil width
     axis.text(
-        (r_tf_inboard_out + r_tf_outboard_in) / 2.5,
-        -z_tf_inside_half / 4,
+        (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
+        -z_tf_inside_half / 12,
         f"{r_tf_outboard_in - r_tf_inboard_in:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
+        horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
     )
 
@@ -4691,18 +4799,19 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     axis.annotate(
         "",
         xy=(r_tf_inboard_in, 0.0),
-        xytext=(r_tf_outboard_in + dr_tf_outboard, -0.0),
-        arrowprops={"arrowstyle": "<->", "color": "black"},
+        xytext=(r_tf_outboard_in + dr_tf_outboard, 0.0),
+        arrowprops={"arrowstyle": "<|-|>", "color": "black"},
     )
 
     # Add a label for the full coil width
     axis.text(
-        (r_tf_inboard_out + r_tf_outboard_in) / 2.5,
-        z_tf_inside_half / 8,
+        (r_tf_inboard_out + r_tf_outboard_in) / 1.5,
+        0.0,
         f"{(r_tf_outboard_in + dr_tf_outboard) - r_tf_inboard_in:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
+        horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
     )
 
@@ -4745,8 +4854,8 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     # Add a label for the inboard thickness
     axis.text(
-        r_tf_inboard_in - 3 * dr_tf_inboard,
-        -z_tf_top,
+        r_tf_inboard_in,
+        (y4 - dr_tf_inboard) * 1.1,
         rf"$\Delta r = ${dr_tf_inboard:.3f} m",
         fontsize=7,
         color="black",
@@ -4756,8 +4865,8 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     # Add a label for the outboard thickness
     axis.text(
-        r_tf_outboard_in + 2 * dr_tf_outboard,
-        -z_tf_top,
+        r_tf_outboard_in,
+        (y4 - dr_tf_inboard) * 1.1,
         rf"$\Delta r = ${dr_tf_outboard:.3f} m",
         fontsize=7,
         color="black",
@@ -4767,10 +4876,10 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     # ==============================================================
 
-    # Add a label for the outboard thickness
+    # Add a label for the inboard thickness
     axis.text(
-        (r_tf_inboard_out + r_tf_outboard_in) / 3.0,
-        -z_tf_top / 1.5,
+        (r_tf_outboard_in + 2 * dr_tf_outboard),
+        0.0,
         rf"Length of coil = {len_tf_coil:.3f} m",
         fontsize=7,
         color="black",
@@ -4778,10 +4887,69 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
     )
 
+    # ==============================================================
+
+    # Add arow for inboard coil radius
+    axis.annotate(
+        "",
+        xy=(r_tf_inboard_in, 0),
+        xytext=(0, 0),
+        arrowprops={"arrowstyle": "->", "color": "black"},
+    )
+
+    # Add label for inboard coil radius
+    axis.text(
+        r_tf_inboard_in / 2,
+        0.0,
+        f"{r_tf_inboard_in:.3f} m",
+        fontsize=7,
+        color="black",
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    # =============================================================
+
+    # ==============================================================
+
+    if mfile_data.data["i_tf_shape"].get_scan(scan) == 1:
+        # Add arow for inboard coil radius
+        axis.annotate(
+            "",
+            xy=(r_tf_outboard_in + dr_tf_outboard, y2 + dr_tf_inboard),
+            xytext=(0, y2 + dr_tf_inboard),
+            arrowprops={"arrowstyle": "->", "color": "black"},
+        )
+
+        # Add label for inboard coil radius
+        axis.text(
+            r_tf_inboard_in / 2,
+            y2 + dr_tf_inboard,
+            f"{r_tf_outboard_in + dr_tf_outboard:.3f} m",
+            fontsize=7,
+            color="black",
+            verticalalignment="center",
+            horizontalalignment="center",
+            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        )
+
+        axis.plot(
+            0, y2 + dr_tf_inboard, marker="o", color="black", markersize=7, zorder=100
+        )
+
+    # ==============================================================
+
+    # Plot a red dot at (0,0)
+    axis.plot(0, 0, marker="o", color="red", markersize=7)
+
+    # Plot a red dashed vertical line at R=0
+    axis.axvline(0, color="red", linestyle="--", linewidth=1)
+
     # Add centre line at
-    axis.axhline(y=0, color="black", linestyle="--", linewidth=1)
-    axis.set_xlim(-5.0, (r_tf_outboard_in + dr_tf_outboard) * 1.4)
-    axis.set_ylim(-z_tf_top * 1.2, z_tf_top * 1.2)
+    axis.axhline(y=0, color="red", linestyle="--", linewidth=1)
+    axis.set_xlim(-3.0, (r_tf_outboard_in + dr_tf_outboard) * 1.4)
+    axis.set_ylim((y4 - dr_tf_inboard) * 1.2, (y2 + dr_tf_inboard) * 1.2)
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
     axis.set_title("TF Coil Poloidal Cross-Section")
