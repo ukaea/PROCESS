@@ -817,6 +817,13 @@ class TFCoil:
             sctfcoil_module.r_wp_inner,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Outboard leg inner radius (m)",
+            "(r_tf_outboard_in)",
+            sctfcoil_module.r_tf_outboard_in,
+            "OP ",
+        )
 
         po.ovarre(
             self.outfile,
@@ -855,6 +862,13 @@ class TFCoil:
             "Maximum inboard edge height (m)",
             "(z_tf_inside_half)",
             build_variables.z_tf_inside_half,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Height to top of TF coil (m)",
+            "(z_tf_top)",
+            build_variables.z_tf_top,
             "OP ",
         )
         if physics_variables.itart == 1:
