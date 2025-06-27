@@ -4598,6 +4598,9 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     z_tf_inside_half = mfile_data.data["z_tf_inside_half"].get_scan(scan)
     z_tf_top = mfile_data.data["z_tf_top"].get_scan(scan)
+    dr_tf_inboard = mfile_data.data["dr_tf_inboard"].get_scan(scan)
+    r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
+    r_tf_outboard_in = mfile_data.data["r_tf_outboard_in"].get_scan(scan)
 
     # Plot the points as black dots, number them, and connect them with lines
     xs = [x1, x2, x3, x4, x5]
@@ -4624,15 +4627,15 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     # Draw a double-ended arrow from coil centre to the top
     axis.annotate(
         "",
-        xy=(1.0, 0),  # Inner plasma edge
-        xytext=(1.0, z_tf_top),  # Center
+        xy=(-3.0, 0),  # Inner plasma edge
+        xytext=(-3.0, z_tf_top),  # Center
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
     axis.axhline(y=z_tf_top, color="black", linestyle="--", linewidth=1)
 
     # Add a label for z_tf_top (use data coordinates, not transAxes)
     axis.text(
-        0.0,
+        -4.0,
         z_tf_top / 2,
         f"{z_tf_top:.2f} m",
         fontsize=9,
@@ -4645,15 +4648,15 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     # Draw a double-ended arrow from coil centre to the top
     axis.annotate(
         "",
-        xy=(1.5, 0),  # Inner plasma edge
-        xytext=(1.5, z_tf_inside_half),  # Center
+        xy=(-1.0, 0),  # Inner plasma edge
+        xytext=(-1.0, z_tf_inside_half),  # Center
         arrowprops={"arrowstyle": "<->", "color": "black"},
     )
     axis.axhline(y=z_tf_inside_half, color="black", linestyle="--", linewidth=1)
 
     # Add a label for z_tf_top (use data coordinates, not transAxes)
     axis.text(
-        1.0,
+        -2.0,
         z_tf_inside_half / 2,
         f"{z_tf_inside_half:.2f} m",
         fontsize=9,
@@ -4663,13 +4666,34 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
     )
 
+    axis.annotate(
+        "",
+        xy=(r_tf_inboard_out, 0),  # Inner plasma edge
+        xytext=(r_tf_outboard_in, 0),  # Center
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.axhline(y=z_tf_inside_half, color="black", linestyle="--", linewidth=1)
+
+    # Add a label for z_tf_top (use data coordinates, not transAxes)
+    axis.text(
+        (r_tf_inboard_out + r_tf_outboard_in) / 2.5,
+        z_tf_inside_half / 8,
+        f"{z_tf_inside_half:.2f} m",
+        fontsize=9,
+        color="black",
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
     axis.axhline(y=0, color="black", linestyle="--", linewidth=1)
-    axis.set_xlim(0, 17.0)
+    axis.set_xlim(-5.0, 17.0)
     axis.set_ylim(-z_tf_top * 1.2, z_tf_top * 1.2)
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
+    axis.minorticks_on()
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # Move the legend to above the plot
-    axis.legend(labels, loc="upper center", bbox_to_anchor=(0.5, 1.3), ncol=1)
+    axis.legend(labels, loc="upper center", bbox_to_anchor=(1.25, 0.85), ncol=1)
 
 
 def main_plot(
