@@ -4603,6 +4603,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     r_tf_outboard_in = mfile_data.data["r_tf_outboard_in"].get_scan(scan)
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     dr_tf_outboard = mfile_data.data["dr_tf_outboard"].get_scan(scan)
+    len_tf_coil = mfile_data.data["len_tf_coil"].get_scan(scan)
 
     # Plot the points as black dots, number them, and connect them with lines
     xs = [x1, x2, x3, x4, x5]
@@ -4622,7 +4623,6 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
         )
         labels.append(f"TF Arc Point {i}: ({x:.2f}, {y:.2f})")
     # Connect the points with lines
-    axis.plot(xs, ys, "k-", alpha=0.5)
 
     # Arrow for top of TF coil
     axis.annotate(
@@ -4767,11 +4767,20 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     # ==============================================================
 
-    # Show legend with coordinates
-    axis.legend(labels, loc="best")
+    # Add a label for the outboard thickness
+    axis.text(
+        (r_tf_inboard_out + r_tf_outboard_in) / 3.0,
+        -z_tf_top / 1.5,
+        rf"Length of coil = {len_tf_coil:.3f} m",
+        fontsize=7,
+        color="black",
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
     # Add centre line at
     axis.axhline(y=0, color="black", linestyle="--", linewidth=1)
-    axis.set_xlim(-5.0, (r_tf_outboard_in + dr_tf_outboard) * 1.3)
+    axis.set_xlim(-5.0, (r_tf_outboard_in + dr_tf_outboard) * 1.4)
     axis.set_ylim(-z_tf_top * 1.2, z_tf_top * 1.2)
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
@@ -4779,7 +4788,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     axis.minorticks_on()
     axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
     # Move the legend to above the plot
-    axis.legend(labels, loc="upper center", bbox_to_anchor=(1.25, 0.85), ncol=1)
+    axis.legend(labels, loc="upper center", bbox_to_anchor=(1.01, 0.85), ncol=1)
 
 
 def main_plot(
