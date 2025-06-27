@@ -813,6 +813,13 @@ class TFCoil:
             sctfcoil_module.r_wp_inner,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Outboard leg inner radius (m)",
+            "(r_tf_outboard_in)",
+            sctfcoil_module.r_tf_outboard_in,
+            "OP ",
+        )
 
         po.ovarre(
             self.outfile,
