@@ -65,11 +65,11 @@ A `.csv` file will be saved to the directory of the input file.
 
 
 
-## PROCESS 10-Page PDF Summary
+## PROCESS 11-Page PDF Summary
 
 > `process/io/plot_proc.py`
 
-A utility to produce a eight-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles, TF coil layout and turn structure, density, bootstrap and L-H scaling comparisons, plasma and PF coil current over the pulse duration plot and first wall geometry and pumping plot.
+A utility to produce a eleven-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles, TF coil layout and turn structure, density, bootstrap and L-H scaling comparisons, plasma and PF coil current over the pulse duration plot and first wall geometry and pumping plot.
 
 ### Usage
 
