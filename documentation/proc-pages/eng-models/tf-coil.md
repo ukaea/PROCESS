@@ -1232,7 +1232,7 @@ the following order:
 5. `coilhap`: Define the vertical TF coil shape
 6. `tf_res_heating`: Estimate the TF coil resistive heating (not used for SC magnets)
 7. `tf_field_and_force`: Estimate the inboard/outboard vertical tensions
-8. `tfcind`: Estimate the TF coil inductance
+8. `tf_coil_self_inductance()`: Estimate the TF coil inductance
 9. `tf_coil_area_and_masses`: Estimate the mass of the different coil materials
 10. `peak_tf_with_ripple`: Estimate the ripple peak field correction.
 11. `stresscl`: Estimate the inboard mid-plane stress distributions.

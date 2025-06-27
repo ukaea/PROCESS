@@ -108,21 +108,17 @@ class TFCoil:
             r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
         )
 
-        if physics_variables.itart == 0 and tfcoil_variables.i_tf_shape == 1:
-            tfcoil_variables.ind_tf_coil = self.tfcind(
-                build_variables.dr_tf_inboard,
-                tfcoil_variables.r_tf_arc,
-                tfcoil_variables.z_tf_arc,
-            )
-        else:
-            tfcoil_variables.ind_tf_coil = (
-                (build_variables.z_tf_inside_half + build_variables.dr_tf_outboard)
-                * RMU0
-                / constants.pi
-                * np.log(
-                    build_variables.r_tf_outboard_mid / build_variables.r_tf_inboard_mid
-                )
-            )
+        tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
+            dr_tf_inboard=build_variables.dr_tf_inboard,
+            r_tf_arc=tfcoil_variables.r_tf_arc,
+            z_tf_arc=tfcoil_variables.z_tf_arc,
+            itart=physics_variables.itart,
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            z_tf_inside_half=build_variables.z_tf_inside_half,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+        )
 
         # Total TF coil stored magnetic energy [J]
         sctfcoil_module.e_tf_magnetic_stored_total = (
@@ -2734,84 +2730,127 @@ class TFCoil:
         return th_cond
 
     @staticmethod
-    @numba.njit(cache=True)
-    def tfcind(tfthk, r_tf_arc, z_tf_arc):
-        """Calculates the self inductance of a TF coil
-        This routine calculates the self inductance of a TF coil
-        approximated by a straight inboard section and two elliptical arcs.
-        The inductance of the TFC (considered as a single axisymmetric turn)
-        is calculated by numerical integration over the cross-sectional area.
-        The contribution from the cross-sectional area of the
-        coil itself is calculated by taking the field as B(r)/2.
-        The field in the dr_bore is calculated for unit current.
-        Top/bottom symmetry is assumed.
+    def tf_coil_self_inductance(
+        dr_tf_inboard: float,
+        r_tf_arc: np.ndarray,
+        z_tf_arc: np.ndarray,
+        itart: int,
+        i_tf_shape: int,
+        z_tf_inside_half: float,
+        dr_tf_outboard: float,
+        r_tf_outboard_mid: float,
+        r_tf_inboard_mid: float,
+    ) -> float:
+        """
+        Calculates the self-inductance of a TF coil.
 
-        :param tfthk: TF coil thickness (m)
-        :type tfthk: float
+        This function numerically integrates the magnetic field energy to estimate
+        the self-inductance of a toroidal field (TF) coil, using the geometry
+        defined by the arc points and the inboard thickness.
+
+        :param dr_tf_inboard: Radial thickness of the inboard leg of the TF coil [m].
+        :type dr_tf_inboard: float
+        :param r_tf_arc: Array of R coordinates of arc points (length 5).
+        :type r_tf_arc: numpy.ndarray
+        :param z_tf_arc: Array of Z coordinates of arc points (length 5).
+        :type z_tf_arc: numpy.ndarray
+        :param itart: TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART).
+        :type itart: int
+        :param i_tf_shape: TF coil shape selection switch (1 = D-shape, 2 = picture frame).
+        :type i_tf_shape: int
+        :param z_tf_inside_half: Maximum inboard edge height [m].
+        :type z_tf_inside_half: float
+        :param dr_tf_outboard: Radial thickness of the outboard leg of the TF coil [m].
+        :type dr_tf_outboard: float
+        :param r_tf_outboard_mid: Mid-plane radius of the outboard leg of the TF coil [m].
+        :type r_tf_outboard_mid: float
+        :param r_tf_inboard_mid: Mid-plane radius of the inboard leg of the TF coil [m].
+        :type r_tf_inboard_mid: float
+
+        :returns: Self-inductance of the TF coil [H].
+        :rtype: float
+
+        :notes:
+        For the D-shaped coil (i_tf_shape == 1) in a standard (non-TART) configuration
+        (itart == 0), the integration is performed over the coil cross-section, including both
+        the inboard and outboard arcs. The field is computed for unit current,
+        and the contribution from the coil's own cross-sectional area is included
+        by taking the field as B(r)/2. Top/bottom symmetry is assumed.
+
+        :references:
         """
         NINTERVALS = 100
 
-        # Integrate over the whole TF area, including the coil thickness.
-        x0 = r_tf_arc[1]
-        y0 = z_tf_arc[1]
+        if itart == 0 and i_tf_shape == 1:
+            # Integrate over the whole TF area, including the coil thickness.
+            x0 = r_tf_arc[1]
+            y0 = z_tf_arc[1]
 
-        # Minor and major radii of the inside and outside perimeters of the the
-        # Inboard leg and arc.
-        # Average the upper and lower halves, which are different in the
-        # single null case
-        ai = r_tf_arc[1] - r_tf_arc[0]
-        bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0 - z_tf_arc[0]
-        ao = ai + tfthk
-        bo = bi + tfthk
-        # Interval used for integration
-        dr = ao / NINTERVALS
-        # Start both integrals from the centre-point where the arcs join.
-        # Initialise major radius
-        r = x0 - dr / 2.0e0
+            # Minor and major radii of the inside and outside perimeters of the the
+            # Inboard leg and arc.
+            # Average the upper and lower halves, which are different in the
+            # single null case
+            ai = r_tf_arc[1] - r_tf_arc[0]
+            bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0 - z_tf_arc[0]
+            ao = ai + dr_tf_inboard
+            bo = bi + dr_tf_inboard
+            # Interval used for integration
+            dr = ao / NINTERVALS
+            # Start both integrals from the centre-point where the arcs join.
+            # Initialise major radius
+            r = x0 - dr / 2.0e0
 
-        ind_tf_coil = 0
+            ind_tf_coil = 0
 
-        for _ in range(NINTERVALS):
-            # Field in the dr_bore for unit current
-            b = RMU0 / (2.0e0 * np.pi * r)
-            # Find out if there is a dr_bore
-            if x0 - r < ai:
-                h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
-            else:
-                h_bore = 0.0e0
-                # Include the contribution from the straight section
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + z_tf_arc[0]
+            for _ in range(NINTERVALS):
+                # Field in the dr_bore for unit current
+                b = RMU0 / (2.0e0 * np.pi * r)
+                # Find out if there is a dr_bore
+                if x0 - r < ai:
+                    h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
+                    h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
+                else:
+                    h_bore = 0.0e0
+                    # Include the contribution from the straight section
+                    h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) + z_tf_arc[0]
 
-            # Assume B in TF coil = 1/2  B in dr_bore
-            # Multiply by 2 for upper and lower halves of coil
-            ind_tf_coil += b * dr * (2.0e0 * h_bore + h_thick)
-            r = r - dr
+                # Assume B in TF coil = 1/2  B in dr_bore
+                # Multiply by 2 for upper and lower halves of coil
+                ind_tf_coil += b * dr * (2.0e0 * h_bore + h_thick)
+                r = r - dr
 
-        # Outboard arc
-        ai = r_tf_arc[2] - r_tf_arc[1]
-        bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0
-        ao = ai + tfthk
-        bo = bi + tfthk
-        dr = ao / NINTERVALS
-        # Initialise major radius
-        r = x0 + dr / 2.0e0
+            # Outboard arc
+            ai = r_tf_arc[2] - r_tf_arc[1]
+            bi = (z_tf_arc[1] - z_tf_arc[3]) / 2.0e0
+            ao = ai + dr_tf_inboard
+            bo = bi + dr_tf_inboard
+            dr = ao / NINTERVALS
+            # Initialise major radius
+            r = x0 + dr / 2.0e0
 
-        for _ in range(NINTERVALS):
-            # Field in the dr_bore for unit current
-            b = RMU0 / (2.0e0 * np.pi * r)
-            # Find out if there is a dr_bore
-            if r - x0 < ai:
-                h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
-            else:
-                h_bore = 0.0e0
-                h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2)
+            for _ in range(NINTERVALS):
+                # Field in the dr_bore for unit current
+                b = RMU0 / (2.0e0 * np.pi * r)
+                # Find out if there is a dr_bore
+                if r - x0 < ai:
+                    h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
+                    h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2) - h_bore
+                else:
+                    h_bore = 0.0e0
+                    h_thick = bo * np.sqrt(1 - ((r - x0) / ao) ** 2)
 
-            # Assume B in TF coil = 1/2  B in dr_bore
-            # Multiply by 2 for upper and lower halves of coil
-            ind_tf_coil += b * dr * (2.0e0 * h_bore + h_thick)
-            r = r + dr
+                # Assume B in TF coil = 1/2  B in dr_bore
+                # Multiply by 2 for upper and lower halves of coil
+                ind_tf_coil += b * dr * (2.0e0 * h_bore + h_thick)
+                r = r + dr
+        else:
+            # Picture frame TF coil
+            ind_tf_coil = (
+                (z_tf_inside_half + dr_tf_outboard)
+                * RMU0
+                / constants.pi
+                * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
+            )
 
         return ind_tf_coil
 
