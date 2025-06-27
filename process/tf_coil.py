@@ -853,6 +853,13 @@ class TFCoil:
             build_variables.z_tf_inside_half,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Height to top of TF coil (m)",
+            "(z_tf_top)",
+            build_variables.z_tf_top,
+            "OP ",
+        )
         if physics_variables.itart == 1:
             po.ovarre(
                 self.outfile,

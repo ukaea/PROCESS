@@ -4581,6 +4581,97 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     axis.grid(True, linestyle="--", alpha=0.3)
 
 
+def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
+    # Plot the TF coil poloidal cross-section
+    plot_tf_coils(axis, mfile_data, scan, colour_scheme)
+
+    x1 = mfile_data.data["r_tf_arc(1)"].get_scan(scan)
+    y1 = mfile_data.data["z_tf_arc(1)"].get_scan(scan)
+    x2 = mfile_data.data["r_tf_arc(2)"].get_scan(scan)
+    y2 = mfile_data.data["z_tf_arc(2)"].get_scan(scan)
+    x3 = mfile_data.data["r_tf_arc(3)"].get_scan(scan)
+    y3 = mfile_data.data["z_tf_arc(3)"].get_scan(scan)
+    x4 = mfile_data.data["r_tf_arc(4)"].get_scan(scan)
+    y4 = mfile_data.data["z_tf_arc(4)"].get_scan(scan)
+    x5 = mfile_data.data["r_tf_arc(5)"].get_scan(scan)
+    y5 = mfile_data.data["z_tf_arc(5)"].get_scan(scan)
+
+    z_tf_inside_half = mfile_data.data["z_tf_inside_half"].get_scan(scan)
+    z_tf_top = mfile_data.data["z_tf_top"].get_scan(scan)
+
+    # Plot the points as black dots, number them, and connect them with lines
+    xs = [x1, x2, x3, x4, x5]
+    ys = [y1, y2, y3, y4, y5]
+    labels = []
+    for i, (x, y) in enumerate(zip(xs, ys, strict=False), 1):
+        axis.plot(x, y, "ko")
+        axis.text(
+            x,
+            y,
+            str(i),
+            color="red",
+            fontsize=5,
+            ha="center",
+            va="center",
+            fontweight="bold",
+        )
+        labels.append(f"TF Arc Point {i}: ({x:.2f}, {y:.2f})")
+    # Connect the points with lines
+    axis.plot(xs, ys, "k-", alpha=0.5)
+    # Show legend with coordinates
+    axis.legend(labels, loc="best")
+
+    # Draw a double-ended arrow from coil centre to the top
+    axis.annotate(
+        "",
+        xy=(1.0, 0),  # Inner plasma edge
+        xytext=(1.0, z_tf_top),  # Center
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.axhline(y=z_tf_top, color="black", linestyle="--", linewidth=1)
+
+    # Add a label for z_tf_top (use data coordinates, not transAxes)
+    axis.text(
+        0.0,
+        z_tf_top / 2,
+        f"{z_tf_top:.2f} m",
+        fontsize=9,
+        color="black",
+        rotation=90,
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    # Draw a double-ended arrow from coil centre to the top
+    axis.annotate(
+        "",
+        xy=(1.5, 0),  # Inner plasma edge
+        xytext=(1.5, z_tf_inside_half),  # Center
+        arrowprops={"arrowstyle": "<->", "color": "black"},
+    )
+    axis.axhline(y=z_tf_inside_half, color="black", linestyle="--", linewidth=1)
+
+    # Add a label for z_tf_top (use data coordinates, not transAxes)
+    axis.text(
+        1.0,
+        z_tf_inside_half / 2,
+        f"{z_tf_inside_half:.2f} m",
+        fontsize=9,
+        color="black",
+        rotation=90,
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    axis.axhline(y=0, color="black", linestyle="--", linewidth=1)
+    axis.set_xlim(0, 17.0)
+    axis.set_ylim(-z_tf_top * 1.2, z_tf_top * 1.2)
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    # Move the legend to above the plot
+    axis.legend(labels, loc="upper center", bbox_to_anchor=(0.5, 1.3), ncol=1)
+
+
 def main_plot(
     fig1,
     fig2,
@@ -4592,6 +4683,7 @@ def main_plot(
     fig8,
     fig9,
     fig10,
+    fig11,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -4707,29 +4799,32 @@ def main_plot(
         plot_17.set_position([0.1, 0.1, 0.3, 0.3])
         plot_tf_turn(plot_17, m_file_data, scan)
 
-    plot_18 = fig6.add_subplot(221)
-    plot_bootstrap_comparison(plot_18, m_file_data, scan)
+    plot_18 = fig6.add_subplot(121, aspect="equal")
+    plot_tf_coil_structure(plot_18, m_file_data, scan, colour_scheme)
 
-    plot_19 = fig6.add_subplot(224)
-    plot_h_threshold_comparison(plot_19, m_file_data, scan)
+    plot_19 = fig7.add_subplot(221)
+    plot_bootstrap_comparison(plot_19, m_file_data, scan)
 
-    plot_20 = fig7.add_subplot(221)
-    plot_density_limit_comparison(plot_20, m_file_data, scan)
+    plot_20 = fig7.add_subplot(224)
+    plot_h_threshold_comparison(plot_20, m_file_data, scan)
 
-    plot_21 = fig8.add_subplot(111)
-    plot_current_profiles_over_time(plot_21, m_file_data, scan)
+    plot_21 = fig8.add_subplot(221)
+    plot_density_limit_comparison(plot_21, m_file_data, scan)
 
-    plot_22 = fig9.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_22, fig9, m_file_data, scan)
+    plot_22 = fig9.add_subplot(111)
+    plot_current_profiles_over_time(plot_22, m_file_data, scan)
 
-    plot_23 = fig9.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_23, fig9, m_file_data, scan)
+    plot_23 = fig10.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_23, fig10, m_file_data, scan)
 
-    plot_24 = fig10.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_24, m_file_data, scan)
+    plot_24 = fig10.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_24, fig10, m_file_data, scan)
 
-    plot_25 = fig10.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_25, m_file_data, scan)
+    plot_25 = fig11.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_25, m_file_data, scan)
+
+    plot_26 = fig11.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_26, m_file_data, scan)
 
 
 def main(args=None):
@@ -5003,6 +5098,7 @@ def main(args=None):
     page8 = plt.figure(figsize=(12, 9), dpi=80)
     page9 = plt.figure(figsize=(12, 9), dpi=80)
     page10 = plt.figure(figsize=(12, 9), dpi=80)
+    page11 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -5016,6 +5112,7 @@ def main(args=None):
         page8,
         page9,
         page10,
+        page11,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -5034,6 +5131,7 @@ def main(args=None):
         pdf.savefig(page8)
         pdf.savefig(page9)
         pdf.savefig(page10)
+        pdf.savefig(page11)
 
     # show fig if option used
     if args.show:
@@ -5049,6 +5147,7 @@ def main(args=None):
     plt.close(page8)
     plt.close(page9)
     plt.close(page10)
+    plt.close(page11)
 
 
 if __name__ == "__main__":
