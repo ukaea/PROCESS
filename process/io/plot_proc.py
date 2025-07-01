@@ -2680,7 +2680,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         scan
     )
     side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
-    wp_inner = mfile_data.data["r_tf_wp_inner"].get_scan(scan)
+    wp_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
     dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))

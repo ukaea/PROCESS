@@ -197,7 +197,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.poisson_copper,
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.eyoung_res_tf_buck,
-                sctfcoil_module.r_tf_wp_inner,
+                sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_tf_wp_outer,
@@ -306,7 +306,7 @@ class ResistiveTFCoil(TFCoil):
         Resisitve TF turn geometry, equivalent to winding_pack subroutines
 
         """
-        sctfcoil_module.r_tf_wp_inner = (
+        sctfcoil_module.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
         sctfcoil_module.r_tf_wp_outer = (
@@ -334,7 +334,10 @@ class ResistiveTFCoil(TFCoil):
         # including the surrounding ground-wall insulation layer
         sctfcoil_module.a_tf_wp_with_insulation = (
             np.pi
-            * (sctfcoil_module.r_tf_wp_outer**2 - sctfcoil_module.r_tf_wp_inner**2)
+            * (
+                sctfcoil_module.r_tf_wp_outer**2
+                - sctfcoil_module.r_tf_wp_inboard_inner**2
+            )
             / tfcoil_variables.n_tf_coils
         )
 
@@ -355,7 +358,10 @@ class ResistiveTFCoil(TFCoil):
             * (
                 (sctfcoil_module.r_tf_wp_outer - tfcoil_variables.dx_tf_wp_insulation)
                 ** 2
-                - (sctfcoil_module.r_tf_wp_inner + tfcoil_variables.dx_tf_wp_insulation)
+                - (
+                    sctfcoil_module.r_tf_wp_inboard_inner
+                    + tfcoil_variables.dx_tf_wp_insulation
+                )
                 ** 2
             )
             / tfcoil_variables.n_tf_coils
@@ -382,7 +388,7 @@ class ResistiveTFCoil(TFCoil):
             )
             ** 2
             - (
-                sctfcoil_module.r_tf_wp_inner
+                sctfcoil_module.r_tf_wp_inboard_inner
                 + tfcoil_variables.dx_tf_wp_insulation
                 + tfcoil_variables.dx_tf_turn_insulation
             )

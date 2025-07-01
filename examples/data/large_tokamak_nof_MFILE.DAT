@@ -702,7 +702,7 @@
  Inboard_leg_inner_radius_(m)_____________________________________________ (r_tf_inboard_in)______________ 2.81747249377307885e+00 OP
  Inboard_leg_outer_radius_(m)_____________________________________________ (r_tf_inboard_out)_____________ 3.62533333333333507e+00 OP
  WP_shape_selection_switch_______________________________________________ (i_tf_wp_geom)________________              1    
- Radial_position_of_inner_edge_and_centre_of_winding_pack_(m)_____________ (r_tf_wp_inner)___________________ 3.01634271803674014e+00 OP
+ Radial_position_of_inner_edge_and_centre_of_winding_pack_(m)_____________ (r_tf_wp_inboard_inner)___________________ 3.01634271803674014e+00 OP
  Outboard_leg_centre_radius_(m)___________________________________________ (r_tf_outboard_mid)____________ 1.49841402769559213e+01 OP
  Outboard_leg_nose_case_type_____________________________________________ (i_tf_case_geom)______________              0    
  Total_inboard_leg_radial_thickness_(m)___________________________________ (dr_tf_inboard)________________ 8.07860839560256228e-01

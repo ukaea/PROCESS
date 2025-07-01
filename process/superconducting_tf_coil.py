@@ -228,7 +228,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.poisson_copper,
                 tfcoil_variables.i_tf_sup,
                 tfcoil_variables.eyoung_res_tf_buck,
-                sctfcoil_module.r_tf_wp_inner,
+                sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_tf_wp_outer,
@@ -1844,23 +1844,26 @@ class SuperconductingTFCoil(TFCoil):
          Author : S. Kahn, CCFE
         Seting the WP geometry and area for SC magnets
         """
-        sctfcoil_module.r_tf_wp_inner = (
+        sctfcoil_module.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
 
         # Radial position of outer edge of winding pack [m]
         sctfcoil_module.r_tf_wp_outer = (
-            sctfcoil_module.r_tf_wp_inner + tfcoil_variables.dr_tf_wp_with_insulation
+            sctfcoil_module.r_tf_wp_inboard_inner
+            + tfcoil_variables.dr_tf_wp_with_insulation
         )
 
         # Radius of geometrical centre of winding pack [m]
         sctfcoil_module.r_wp_centre = 0.5e0 * (
-            sctfcoil_module.r_tf_wp_inner + sctfcoil_module.r_tf_wp_outer
+            sctfcoil_module.r_tf_wp_inboard_inner + sctfcoil_module.r_tf_wp_outer
         )
 
         # TF toroidal thickness at the WP inner radius [m]
         dr_tf_at_wp = (
-            2.0e0 * sctfcoil_module.r_tf_wp_inner * sctfcoil_module.tan_theta_coil
+            2.0e0
+            * sctfcoil_module.r_tf_wp_inboard_inner
+            * sctfcoil_module.tan_theta_coil
         )
 
         # Minimal toroidal thickness of winding pack [m]
@@ -1920,7 +1923,7 @@ class SuperconductingTFCoil(TFCoil):
 
             # Thickness of winding pack section at R < sctfcoil_module.r_wp_centre [m]
             tfcoil_variables.wwp2 = 2.0e0 * (
-                sctfcoil_module.r_tf_wp_inner * sctfcoil_module.tan_theta_coil
+                sctfcoil_module.r_tf_wp_inboard_inner * sctfcoil_module.tan_theta_coil
                 - tfcoil_variables.dx_tf_side_case
             )
 
@@ -1982,9 +1985,9 @@ class SuperconductingTFCoil(TFCoil):
                 - tfcoil_variables.dx_tf_side_case
             )
 
-            # Thickness of winding pack section at sctfcoil_module.r_tf_wp_inner [m]
+            # Thickness of winding pack section at sctfcoil_module.r_tf_wp_inboard_inner [m]
             tfcoil_variables.wwp2 = 2.0e0 * (
-                sctfcoil_module.r_tf_wp_inner * sctfcoil_module.tan_theta_coil
+                sctfcoil_module.r_tf_wp_inboard_inner * sctfcoil_module.tan_theta_coil
                 - tfcoil_variables.dx_tf_side_case
             )
 
@@ -2074,7 +2077,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Nose casing area [m2]
         sctfcoil_module.a_tf_coil_nose_case = (
-            sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inner**2
+            sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inboard_inner**2
             - sctfcoil_module.rad_tf_coil_toroidal * build_variables.r_tf_inboard_in**2
         )
 
@@ -2644,7 +2647,7 @@ def init_sctfcoil_module():
     sctfcoil_module.z_cp_top = 0.0
     sctfcoil_module.r_tf_outboard_in = 0.0
     sctfcoil_module.r_tf_outboard_out = 0.0
-    sctfcoil_module.r_tf_wp_inner = 0.0
+    sctfcoil_module.r_tf_wp_inboard_inner = 0.0
     sctfcoil_module.r_tf_wp_outer = 0.0
     sctfcoil_module.r_wp_centre = 0.0
     sctfcoil_module.dr_tf_wp_top = 0.0
