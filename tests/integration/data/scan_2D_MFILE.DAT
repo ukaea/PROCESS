@@ -711,7 +711,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4728E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7774E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6174E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0174E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0174E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0000E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -1874,7 +1874,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4446E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7926E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6326E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0137E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0137E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0947E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -3037,7 +3037,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4275E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7852E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6252E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      3.9985E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      3.9985E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1335E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -4200,7 +4200,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4281E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.7899E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6299E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0014E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0014E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1427E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -5363,7 +5363,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4390E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8141E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6541E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0240E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0240E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1506E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -6526,7 +6526,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4469E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8549E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6949E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0589E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0589E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1797E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -7689,7 +7689,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4484E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8590E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6990E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0616E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0616E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1874E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -8852,7 +8852,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4315E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8451E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6851E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0465E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0465E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1933E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -10015,7 +10015,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4163E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8278E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6678E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0301E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0301E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1885E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -11178,7 +11178,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4162E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8312E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6712E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0324E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0324E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1944E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -12341,7 +12341,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4306E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8526E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6926E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0506E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0506E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2099E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -13504,7 +13504,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4446E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8724E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7124E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0722E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0722E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2008E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -14667,7 +14667,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4447E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8762E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7162E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0746E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0746E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2077E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -15830,7 +15830,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4281E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8585E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6985E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0584E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0584E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.2007E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
@@ -16993,7 +16993,7 @@
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4117E+02 OP 
  Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8398E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.6798E-02 OP 
- Width_of_space_inside_conductor_(m)_____________________________________ (t_cable)_____________________      4.0416E-02 OP 
+ Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.0416E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.1912E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    

@@ -46,7 +46,7 @@ OBS_VARS = {
     "dr_tf_case_out": "dr_tf_plasma_case",
     "eyoung_reinforced_al": "eyoung_nibron",
     "thkwp": "dr_tf_wp_with_insulation",
-    "leni": "t_cable",
+    "leni": "dx_tf_turn_cable_space_average",
     "leno": "t_turn",
     "conductor_width": "t_conductor",
     "deltf": "dr_tf_shld_gap",

@@ -1500,7 +1500,7 @@ class StressclParam(NamedTuple):
 
     dr_tf_turn_cable_space: Any = None
 
-    t_cable: Any = None
+    dx_tf_turn_cable_space_average: Any = None
 
     vforce_inboard_tot: Any = None
 
@@ -1637,7 +1637,7 @@ class StressclParam(NamedTuple):
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             dr_tf_turn_cable_space=0.030661087836601014,
-            t_cable=0.036389912284773368,
+            dx_tf_turn_cable_space_average=0.036389912284773368,
             vforce_inboard_tot=4008729778.208292,
             iprint=0,
             outfile=11,
@@ -1760,7 +1760,7 @@ class StressclParam(NamedTuple):
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             dr_tf_turn_cable_space=0.030661087836601014,
-            t_cable=0.036389912284773368,
+            dx_tf_turn_cable_space_average=0.036389912284773368,
             vforce_inboard_tot=4008729778.208292,
             iprint=0,
             outfile=11,
@@ -1867,7 +1867,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.dx_tf_wp_insulation,
         stressclparam.n_tf_coil_turns,
         stressclparam.i_tf_turns_integer,
-        stressclparam.t_cable,
+        stressclparam.dx_tf_turn_cable_space_average,
         stressclparam.dr_tf_turn_cable_space,
         stressclparam.dia_tf_turn_coolant_channel,
         stressclparam.fcutfsu,

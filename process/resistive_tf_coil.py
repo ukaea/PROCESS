@@ -208,7 +208,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
-                sctfcoil_module.t_cable,
+                sctfcoil_module.dx_tf_turn_cable_space_average,
                 sctfcoil_module.dr_tf_turn_cable_space,
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,

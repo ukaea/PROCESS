@@ -218,7 +218,7 @@ class TFCoil:
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
-                sctfcoil_module.t_cable,
+                sctfcoil_module.dx_tf_turn_cable_space_average,
                 sctfcoil_module.dr_tf_turn_cable_space,
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
@@ -1222,8 +1222,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Width of space inside conductor (m)",
-                    "(t_cable)",
-                    sctfcoil_module.t_cable,
+                    "(dx_tf_turn_cable_space_average)",
+                    sctfcoil_module.dx_tf_turn_cable_space_average,
                     "OP ",
                 )
 
@@ -3244,7 +3244,7 @@ class TFCoil:
         dx_tf_wp_insulation,
         n_tf_coil_turns,
         i_tf_turns_integer,
-        t_cable,
+        dx_tf_turn_cable_space_average,
         dr_tf_turn_cable_space,
         dia_tf_turn_coolant_channel,
         fcutfsu,
@@ -3595,7 +3595,9 @@ class TFCoil:
 
             # Non-integer or interger number of turns
             t_cable_eyng = (
-                t_cable if i_tf_turns_integer == 0 else dr_tf_turn_cable_space
+                dx_tf_turn_cable_space_average
+                if i_tf_turns_integer == 0
+                else dr_tf_turn_cable_space
             )
 
             # Average WP Young's modulus in the transverse

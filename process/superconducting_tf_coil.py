@@ -239,7 +239,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.dx_tf_wp_insulation,
                 tfcoil_variables.n_tf_coil_turns,
                 int(tfcoil_variables.i_tf_turns_integer),
-                sctfcoil_module.t_cable,
+                sctfcoil_module.dx_tf_turn_cable_space_average,
                 sctfcoil_module.dr_tf_turn_cable_space,
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
@@ -2200,7 +2200,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.dx_tf_turn_cable_space = (
             sctfcoil_module.t_conductor_toroidal - 2.0e0 * dx_tf_turn_steel
         )
-        sctfcoil_module.t_cable = np.sqrt(
+        sctfcoil_module.dx_tf_turn_cable_space_average = np.sqrt(
             sctfcoil_module.dr_tf_turn_cable_space
             * sctfcoil_module.dx_tf_turn_cable_space
         )
@@ -2340,27 +2340,34 @@ class SuperconductingTFCoil(TFCoil):
             rbcndut = dx_tf_turn_steel * 0.75e0
 
             # Dimension of square cable space inside conduit [m]
-            sctfcoil_module.t_cable = (
+            sctfcoil_module.dx_tf_turn_cable_space_average = (
                 tfcoil_variables.t_conductor - 2.0e0 * dx_tf_turn_steel
             )
 
             # Cross-sectional area of cable space per turn
             # taking account of rounded inside corners [m2]
             a_tf_turn_cable_space_no_void = (
-                sctfcoil_module.t_cable**2 - (4.0e0 - np.pi) * rbcndut**2
+                sctfcoil_module.dx_tf_turn_cable_space_average**2
+                - (4.0e0 - np.pi) * rbcndut**2
             )
 
             if a_tf_turn_cable_space_no_void <= 0.0e0:
                 if tfcoil_variables.t_conductor < 0.0e0:
                     error_handling.fdiags[0] = a_tf_turn_cable_space_no_void
-                    error_handling.fdiags[1] = sctfcoil_module.t_cable
+                    error_handling.fdiags[1] = (
+                        sctfcoil_module.dx_tf_turn_cable_space_average
+                    )
                     error_handling.report_error(101)
                 else:
                     error_handling.fdiags[0] = a_tf_turn_cable_space_no_void
-                    error_handling.fdiags[1] = sctfcoil_module.t_cable
+                    error_handling.fdiags[1] = (
+                        sctfcoil_module.dx_tf_turn_cable_space_average
+                    )
                     error_handling.report_error(102)
                     rbcndut = 0.0e0
-                    a_tf_turn_cable_space_no_void = sctfcoil_module.t_cable**2
+                    a_tf_turn_cable_space_no_void = (
+                        sctfcoil_module.dx_tf_turn_cable_space_average**2
+                    )
 
             # Cross-sectional area of conduit jacket per turn [m2]
             a_tf_turn_steel = (
@@ -2370,7 +2377,7 @@ class SuperconductingTFCoil(TFCoil):
         # REBCO turn structure
         elif i_tf_sc_mat == 6:
             # Diameter of circular cable space inside conduit [m]
-            sctfcoil_module.t_cable = (
+            sctfcoil_module.dx_tf_turn_cable_space_average = (
                 tfcoil_variables.t_conductor - 2.0e0 * dx_tf_turn_steel
             )
 
@@ -2676,7 +2683,7 @@ def init_sctfcoil_module():
     sctfcoil_module.dx_tf_turn_cable_space = 0.0
     sctfcoil_module.dr_tf_turn = 0.0
     sctfcoil_module.dx_tf_turn = 0.0
-    sctfcoil_module.t_cable = 0.0
+    sctfcoil_module.dx_tf_turn_cable_space_average = 0.0
     sctfcoil_module.vforce_inboard_tot = 0.0
     sctfcoil_module.t1 = 0.0
     sctfcoil_module.time2 = 0.0

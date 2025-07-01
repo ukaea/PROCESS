@@ -2539,20 +2539,20 @@ class Stellarator:
         #
         # [m] Dimension of square cable space inside insulation
         #     and case of the conduit of each turn
-        t_cable = tfcoil_variables.t_turn_tf - 2.0e0 * (
+        dx_tf_turn_cable_space_average = tfcoil_variables.t_turn_tf - 2.0e0 * (
             tfcoil_variables.dx_tf_turn_steel + tfcoil_variables.dx_tf_turn_insulation
-        )  # t_cable = t_w
-        if t_cable < 0:
+        )  # dx_tf_turn_cable_space_average = t_w
+        if dx_tf_turn_cable_space_average < 0:
             print(
-                "t_cable is negative. Check t_turn, tfcoil_variables.dx_tf_turn_steel and dx_tf_turn_insulation."
+                "dx_tf_turn_cable_space_average is negative. Check t_turn, tfcoil_variables.dx_tf_turn_steel and dx_tf_turn_insulation."
             )
         # [m^2] Cross-sectional area of cable space per turn
         tfcoil_variables.a_tf_turn_cable_space_no_void = (
-            0.9e0 * t_cable**2
-        )  # 0.9 to include some rounded corners. (tfcoil_variables.a_tf_turn_cable_space_no_void = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
+            0.9e0 * dx_tf_turn_cable_space_average**2
+        )  # 0.9 to include some rounded corners. (tfcoil_variables.a_tf_turn_cable_space_no_void = pi (dx_tf_turn_cable_space_average/2)**2 = pi/4 *dx_tf_turn_cable_space_average**2 for perfect round conductor). This factor depends on how round the corners are.
         # [m^2] Cross-sectional area of conduit case per turn
         tfcoil_variables.a_tf_turn_steel = (
-            t_cable + 2.0e0 * tfcoil_variables.dx_tf_turn_steel
+            dx_tf_turn_cable_space_average + 2.0e0 * tfcoil_variables.dx_tf_turn_steel
         ) ** 2 - tfcoil_variables.a_tf_turn_cable_space_no_void
         #######################################################################################
 
