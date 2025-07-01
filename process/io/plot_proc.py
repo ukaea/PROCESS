@@ -56,6 +56,7 @@ from process.geometry.vacuum_vessel_geometry import (
 from process.impurity_radiation import read_impurity_file
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 if os.name == "posix" and "DISPLAY" not in os.environ:
     mpl.use("Agg")
@@ -4485,25 +4486,25 @@ def plot_confinement_time_comparison(
 
     # Data for the box plot
     data = {
-        rf"{physics_variables.labels_confinement_scalings[6]}": iter_89p,
-        rf"{physics_variables.labels_confinement_scalings[7]}": iter_89_0,
-        rf"{physics_variables.labels_confinement_scalings[13]}": iter_h90_p,
-        rf"{physics_variables.labels_confinement_scalings[20]}": iter_h90_p_amended,
-        rf"{physics_variables.labels_confinement_scalings[24]}": iter_93h,
-        rf"{physics_variables.labels_confinement_scalings[26]}": iter_h97p,
-        rf"{physics_variables.labels_confinement_scalings[27]}": iter_h97p_elmy,
-        rf"{physics_variables.labels_confinement_scalings[28]}": iter_96p,
-        rf"{physics_variables.labels_confinement_scalings[31]}": iter_pb98py,
-        rf"{physics_variables.labels_confinement_scalings[32]}": iter_ipb98y,
-        rf"{physics_variables.labels_confinement_scalings[33]}": iter_ipb98y1,
-        rf"{physics_variables.labels_confinement_scalings[34]}": iter_ipb98y2,
-        rf"{physics_variables.labels_confinement_scalings[35]}": iter_ipb98y3,
-        rf"{physics_variables.labels_confinement_scalings[36]}": iter_ipb98y4,
-        rf"{physics_variables.labels_confinement_scalings[41]}": petty08,
-        rf"{physics_variables.labels_confinement_scalings[46]}": menard_nstx,
-        rf"{physics_variables.labels_confinement_scalings[47]}": menard_nstx_petty08,
-        rf"{physics_variables.labels_confinement_scalings[49]}": itpa20,
-        rf"{physics_variables.labels_confinement_scalings[50]}": itpa20_ilc,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[6])}": iter_89p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[7])}": iter_89_0,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[13])}": iter_h90_p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[20])}": iter_h90_p_amended,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[24])}": iter_93h,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[26])}": iter_h97p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[27])}": iter_h97p_elmy,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[28])}": iter_96p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[31])}": iter_pb98py,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[32])}": iter_ipb98y,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[33])}": iter_ipb98y1,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[34])}": iter_ipb98y2,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[35])}": iter_ipb98y3,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[36])}": iter_ipb98y4,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[41])}": petty08,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[46])}": menard_nstx,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[47])}": menard_nstx_petty08,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[49])}": itpa20,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[50])}": itpa20_ilc,
     }
 
     # Create the violin plot
