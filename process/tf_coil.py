@@ -210,7 +210,7 @@ class TFCoil:
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
-                sctfcoil_module.r_tf_wp_outer,
+                sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_tf_coil_nose_case,
@@ -2433,7 +2433,7 @@ class TFCoil:
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
         if tfcoil_variables.i_tf_sup == 1:
             r_out_wp = (
-                sctfcoil_module.r_tf_wp_outer
+                sctfcoil_module.r_tf_wp_inboard_outer
                 - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.dx_tf_wp_insertion_gap
             )
@@ -2444,7 +2444,7 @@ class TFCoil:
             )
         else:
             r_out_wp = (
-                sctfcoil_module.r_tf_wp_outer - tfcoil_variables.dx_tf_wp_insulation
+                sctfcoil_module.r_tf_wp_inboard_outer - tfcoil_variables.dx_tf_wp_insulation
             )
             r_in_wp = (
                 sctfcoil_module.r_tf_wp_inboard_inner
@@ -3234,7 +3234,7 @@ class TFCoil:
         r_tf_wp_inboard_inner,
         tan_theta_coil,
         rad_tf_coil_toroidal,
-        r_tf_wp_outer,
+        r_tf_wp_inboard_outer,
         a_tf_coil_inboard_steel,
         a_case_front,
         a_tf_coil_nose_case,
@@ -3566,7 +3566,7 @@ class TFCoil:
             r_wp_inner_eff = r_tf_wp_inboard_inner * np.sqrt(
                 tan_theta_coil / rad_tf_coil_toroidal
             )
-            r_wp_outer_eff = r_tf_wp_outer * np.sqrt(
+            r_wp_outer_eff = r_tf_wp_inboard_outer * np.sqrt(
                 tan_theta_coil / rad_tf_coil_toroidal
             )
 
@@ -3718,7 +3718,7 @@ class TFCoil:
 
             # WP area using the stress model circular geometry (per coil) [m2]
             a_wp_eff = (
-                r_tf_wp_outer**2 - r_tf_wp_inboard_inner**2
+                r_tf_wp_inboard_outer**2 - r_tf_wp_inboard_inner**2
             ) * rad_tf_coil_toroidal
 
             # Effective conductor region young modulus in the vertical direction [Pa]
@@ -3747,7 +3747,7 @@ class TFCoil:
 
             # Effect conductor layer inner/outer radius
             r_wp_inner_eff = np.double(r_tf_wp_inboard_inner)
-            r_wp_outer_eff = np.double(r_tf_wp_outer)
+            r_wp_outer_eff = np.double(r_tf_wp_inboard_outer)
 
         # Thickness of the layer representing the WP in stress calcualtions [m]
         dr_tf_wp_eff = r_wp_outer_eff - r_wp_outer_eff

@@ -200,7 +200,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
                 sctfcoil_module.rad_tf_coil_toroidal,
-                sctfcoil_module.r_tf_wp_outer,
+                sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_case_front,
                 sctfcoil_module.a_tf_coil_nose_case,
@@ -309,7 +309,7 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
-        sctfcoil_module.r_tf_wp_outer = (
+        sctfcoil_module.r_tf_wp_inboard_outer = (
             build_variables.r_tf_inboard_out - tfcoil_variables.dr_tf_plasma_case
         )
 
@@ -335,7 +335,7 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.a_tf_wp_with_insulation = (
             np.pi
             * (
-                sctfcoil_module.r_tf_wp_outer**2
+                sctfcoil_module.r_tf_wp_inboard_outer**2
                 - sctfcoil_module.r_tf_wp_inboard_inner**2
             )
             / tfcoil_variables.n_tf_coils
@@ -345,9 +345,9 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.a_case_front = (
             np.pi
             * (
-                (sctfcoil_module.r_tf_wp_outer + tfcoil_variables.dr_tf_plasma_case)
+                (sctfcoil_module.r_tf_wp_inboard_outer + tfcoil_variables.dr_tf_plasma_case)
                 ** 2
-                - sctfcoil_module.r_tf_wp_outer**2
+                - sctfcoil_module.r_tf_wp_inboard_outer**2
             )
             / tfcoil_variables.n_tf_coils
         )
@@ -356,7 +356,7 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.a_tf_wp_no_insulation = (
             np.pi
             * (
-                (sctfcoil_module.r_tf_wp_outer - tfcoil_variables.dx_tf_wp_insulation)
+                (sctfcoil_module.r_tf_wp_inboard_outer - tfcoil_variables.dx_tf_wp_insulation)
                 ** 2
                 - (
                     sctfcoil_module.r_tf_wp_inboard_inner
@@ -382,7 +382,7 @@ class ResistiveTFCoil(TFCoil):
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
         a_tf_cond = np.pi * (
             (
-                sctfcoil_module.r_tf_wp_outer
+                sctfcoil_module.r_tf_wp_inboard_outer
                 - tfcoil_variables.dx_tf_wp_insulation
                 - tfcoil_variables.dx_tf_turn_insulation
             )
