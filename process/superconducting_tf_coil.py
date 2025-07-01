@@ -342,7 +342,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.dx_tf_wp_insulation
                 + tfcoil_variables.dx_tf_wp_insertion_gap
             ),
-            sctfcoil_module.r_wp_centre,
+            sctfcoil_module.r_tf_wp_inboard_centre,
             tfcoil_variables.b_tf_inboard_peak,
         )
 
@@ -1855,8 +1855,9 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Radius of geometrical centre of winding pack [m]
-        sctfcoil_module.r_wp_centre = 0.5e0 * (
-            sctfcoil_module.r_tf_wp_inboard_inner + sctfcoil_module.r_tf_wp_inboard_outer
+        sctfcoil_module.r_tf_wp_inboard_centre = 0.5e0 * (
+            sctfcoil_module.r_tf_wp_inboard_inner
+            + sctfcoil_module.r_tf_wp_inboard_outer
         )
 
         # TF toroidal thickness at the WP inner radius [m]
@@ -1915,13 +1916,13 @@ class SuperconductingTFCoil(TFCoil):
         # Double rectangular WP
         # ---------------------
         elif i_tf_wp_geom == 1:
-            # Thickness of winding pack section at R > sctfcoil_module.r_wp_centre [m]
+            # Thickness of winding pack section at R > sctfcoil_module.r_tf_wp_inboard_centre [m]
             tfcoil_variables.wwp1 = 2.0e0 * (
-                sctfcoil_module.r_wp_centre * sctfcoil_module.tan_theta_coil
+                sctfcoil_module.r_tf_wp_inboard_centre * sctfcoil_module.tan_theta_coil
                 - tfcoil_variables.dx_tf_side_case
             )
 
-            # Thickness of winding pack section at R < sctfcoil_module.r_wp_centre [m]
+            # Thickness of winding pack section at R < sctfcoil_module.r_tf_wp_inboard_centre [m]
             tfcoil_variables.wwp2 = 2.0e0 * (
                 sctfcoil_module.r_tf_wp_inboard_inner * sctfcoil_module.tan_theta_coil
                 - tfcoil_variables.dx_tf_side_case
@@ -2065,12 +2066,16 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.a_case_front = (
                 sctfcoil_module.rad_tf_coil_toroidal
                 * build_variables.r_tf_inboard_out**2
-                - sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inboard_outer**2
+                - sctfcoil_module.tan_theta_coil
+                * sctfcoil_module.r_tf_wp_inboard_outer**2
             )
         else:
             # Straight front case
             sctfcoil_module.a_case_front = (
-                (sctfcoil_module.r_tf_wp_inboard_outer + tfcoil_variables.dr_tf_plasma_case)
+                (
+                    sctfcoil_module.r_tf_wp_inboard_outer
+                    + tfcoil_variables.dr_tf_plasma_case
+                )
                 ** 2
                 - sctfcoil_module.r_tf_wp_inboard_outer**2
             ) * sctfcoil_module.tan_theta_coil
@@ -2649,7 +2654,7 @@ def init_sctfcoil_module():
     sctfcoil_module.r_tf_outboard_out = 0.0
     sctfcoil_module.r_tf_wp_inboard_inner = 0.0
     sctfcoil_module.r_tf_wp_inboard_outer = 0.0
-    sctfcoil_module.r_wp_centre = 0.0
+    sctfcoil_module.r_tf_wp_inboard_centre = 0.0
     sctfcoil_module.dr_tf_wp_top = 0.0
     sctfcoil_module.vol_ins_cp = 0.0
     sctfcoil_module.vol_gr_ins_cp = 0.0

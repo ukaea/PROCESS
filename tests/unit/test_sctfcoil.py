@@ -524,7 +524,7 @@ class TfWpGeomParam(NamedTuple):
 
     r_tf_wp_inboard_outer: Any = None
 
-    r_wp_centre: Any = None
+    r_tf_wp_inboard_centre: Any = None
 
     t_wp_toroidal: Any = None
 
@@ -548,7 +548,7 @@ class TfWpGeomParam(NamedTuple):
 
     expected_r_tf_wp_inboard_outer: Any = None
 
-    expected_r_wp_centre: Any = None
+    expected_r_tf_wp_inboard_centre: Any = None
 
     expected_t_wp_toroidal: Any = None
 
@@ -576,7 +576,7 @@ class TfWpGeomParam(NamedTuple):
             a_tf_wp_no_insulation=0,
             r_tf_wp_inboard_inner=0,
             r_tf_wp_inboard_outer=0,
-            r_wp_centre=0,
+            r_tf_wp_inboard_centre=0,
             t_wp_toroidal=0,
             t_wp_toroidal_av=0,
             a_tf_wp_ground_insulation=0,
@@ -588,7 +588,7 @@ class TfWpGeomParam(NamedTuple):
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
             expected_r_tf_wp_inboard_outer=4.06120206347512,
-            expected_r_wp_centre=3.789896624292115,
+            expected_r_tf_wp_inboard_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
             expected_t_wp_toroidal_av=1.299782604942499,
             expected_a_tf_wp_ground_insulation=0.028582295732936136,
@@ -609,7 +609,7 @@ class TfWpGeomParam(NamedTuple):
             a_tf_wp_no_insulation=0.64024601555360383,
             r_tf_wp_inboard_inner=3.5185911851091101,
             r_tf_wp_inboard_outer=4.06120206347512,
-            r_wp_centre=3.789896624292115,
+            r_tf_wp_inboard_centre=3.789896624292115,
             t_wp_toroidal=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
             a_tf_wp_ground_insulation=0.028582295732936136,
@@ -621,7 +621,7 @@ class TfWpGeomParam(NamedTuple):
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
             expected_r_tf_wp_inboard_outer=4.06120206347512,
-            expected_r_wp_centre=3.789896624292115,
+            expected_r_tf_wp_inboard_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
             expected_t_wp_toroidal_av=1.299782604942499,
             expected_a_tf_wp_ground_insulation=0.028582295732936136,
@@ -695,9 +695,13 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "r_tf_wp_inboard_inner", tfwpgeomparam.r_tf_wp_inboard_inner
     )
 
-    monkeypatch.setattr(sctfcoil_module, "r_tf_wp_inboard_outer", tfwpgeomparam.r_tf_wp_inboard_outer)
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_outer", tfwpgeomparam.r_tf_wp_inboard_outer
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "r_wp_centre", tfwpgeomparam.r_wp_centre)
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_centre", tfwpgeomparam.r_tf_wp_inboard_centre
+    )
 
     monkeypatch.setattr(sctfcoil_module, "t_wp_toroidal", tfwpgeomparam.t_wp_toroidal)
 
@@ -737,8 +741,8 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfwpgeomparam.expected_r_tf_wp_inboard_outer
     )
 
-    assert sctfcoil_module.r_wp_centre == pytest.approx(
-        tfwpgeomparam.expected_r_wp_centre
+    assert sctfcoil_module.r_tf_wp_inboard_centre == pytest.approx(
+        tfwpgeomparam.expected_r_tf_wp_inboard_centre
     )
 
     assert sctfcoil_module.t_wp_toroidal == pytest.approx(
@@ -928,7 +932,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "r_tf_wp_inboard_inner", tfcasegeomparam.r_tf_wp_inboard_inner
     )
 
-    monkeypatch.setattr(sctfcoil_module, "r_tf_wp_inboard_outer", tfcasegeomparam.r_tf_wp_inboard_outer)
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_outer", tfcasegeomparam.r_tf_wp_inboard_outer
+    )
 
     monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", tfcasegeomparam.t_lat_case_av)
 

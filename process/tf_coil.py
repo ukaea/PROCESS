@@ -2444,7 +2444,8 @@ class TFCoil:
             )
         else:
             r_out_wp = (
-                sctfcoil_module.r_tf_wp_inboard_outer - tfcoil_variables.dx_tf_wp_insulation
+                sctfcoil_module.r_tf_wp_inboard_outer
+                - tfcoil_variables.dx_tf_wp_insulation
             )
             r_in_wp = (
                 sctfcoil_module.r_tf_wp_inboard_inner

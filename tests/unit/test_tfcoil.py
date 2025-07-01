@@ -643,7 +643,9 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "r_tf_wp_inboard_outer", tffieldandforceparam.r_tf_wp_inboard_outer
+        sctfcoil_module,
+        "r_tf_wp_inboard_outer",
+        tffieldandforceparam.r_tf_wp_inboard_outer,
     )
 
     monkeypatch.setattr(

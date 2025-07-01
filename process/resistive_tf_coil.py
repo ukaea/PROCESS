@@ -345,7 +345,10 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.a_case_front = (
             np.pi
             * (
-                (sctfcoil_module.r_tf_wp_inboard_outer + tfcoil_variables.dr_tf_plasma_case)
+                (
+                    sctfcoil_module.r_tf_wp_inboard_outer
+                    + tfcoil_variables.dr_tf_plasma_case
+                )
                 ** 2
                 - sctfcoil_module.r_tf_wp_inboard_outer**2
             )
@@ -356,7 +359,10 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.a_tf_wp_no_insulation = (
             np.pi
             * (
-                (sctfcoil_module.r_tf_wp_inboard_outer - tfcoil_variables.dx_tf_wp_insulation)
+                (
+                    sctfcoil_module.r_tf_wp_inboard_outer
+                    - tfcoil_variables.dx_tf_wp_insulation
+                )
                 ** 2
                 - (
                     sctfcoil_module.r_tf_wp_inboard_inner

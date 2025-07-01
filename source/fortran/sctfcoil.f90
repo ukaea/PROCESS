@@ -68,7 +68,7 @@ module sctfcoil_module
    real(dp) :: r_tf_wp_inboard_outer
 !! Radial position of outer edge and centre of winding pack [m]
 
-   real(dp) :: r_wp_centre
+   real(dp) :: r_tf_wp_inboard_centre
 !! Radial position of centre and centre of winding pack [m]
 
    real(dp) :: dr_tf_wp_top
