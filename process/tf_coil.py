@@ -2956,7 +2956,8 @@ class TFCoil:
                     * tfcoil_variables.dcase
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
-                        + tfcoil_variables.len_tf_coil * tfcoil_variables.acasetfo
+                        + tfcoil_variables.len_tf_coil
+                        * tfcoil_variables.a_tf_coil_outboard_case
                     )
                 )
             else:
@@ -2966,7 +2967,7 @@ class TFCoil:
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + (tfcoil_variables.len_tf_coil - tfcoil_variables.cplen)
-                        * tfcoil_variables.acasetfo
+                        * tfcoil_variables.a_tf_coil_outboard_case
                     )
                 )
 
@@ -5359,7 +5360,7 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
 
 def init_tfcoil_variables():
     tfv.a_tf_coil_inboard_case = 0.0
-    tfv.acasetfo = 0.0
+    tfv.a_tf_coil_outboard_case = 0.0
     tfv.a_tf_turn_steel = 0.0
     tfv.a_tf_wp_conductor = 0.0
     tfv.a_tf_turn_cable_space_no_void = 0.0

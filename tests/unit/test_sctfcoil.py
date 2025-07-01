@@ -761,7 +761,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 class TfCaseGeomParam(NamedTuple):
     a_tf_coil_inboard_case: Any = None
 
-    acasetfo: Any = None
+    a_tf_coil_outboard_case: Any = None
 
     a_tf_leg_outboard: Any = None
 
@@ -801,7 +801,7 @@ class TfCaseGeomParam(NamedTuple):
 
     expected_a_tf_coil_inboard_case: Any = None
 
-    expected_acasetfo: Any = None
+    expected_a_tf_coil_outboard_case: Any = None
 
     expected_t_lat_case_av: Any = None
 
@@ -815,7 +815,7 @@ class TfCaseGeomParam(NamedTuple):
     (
         TfCaseGeomParam(
             a_tf_coil_inboard_case=0,
-            acasetfo=0,
+            a_tf_coil_outboard_case=0,
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
@@ -835,14 +835,14 @@ class TfCaseGeomParam(NamedTuple):
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
             expected_a_tf_coil_inboard_case=1.0015169239205168,
-            expected_acasetfo=1.2752592893394648,
+            expected_a_tf_coil_outboard_case=1.2752592893394648,
             expected_t_lat_case_av=0.10396600719086938,
             expected_a_case_front=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
         TfCaseGeomParam(
             a_tf_coil_inboard_case=1.0015169239205168,
-            acasetfo=1.2752592893394648,
+            a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
@@ -862,7 +862,7 @@ class TfCaseGeomParam(NamedTuple):
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
             expected_a_tf_coil_inboard_case=1.0015169239205168,
-            expected_acasetfo=1.2752592893394648,
+            expected_a_tf_coil_outboard_case=1.2752592893394648,
             expected_t_lat_case_av=0.10396600719086938,
             expected_a_case_front=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
@@ -888,7 +888,11 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcasegeomparam.a_tf_coil_inboard_case,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "acasetfo", tfcasegeomparam.acasetfo)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_outboard_case",
+        tfcasegeomparam.a_tf_coil_outboard_case,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "a_tf_leg_outboard", tfcasegeomparam.a_tf_leg_outboard
@@ -961,7 +965,9 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcasegeomparam.expected_a_tf_coil_inboard_case
     )
 
-    assert tfcoil_variables.acasetfo == pytest.approx(tfcasegeomparam.expected_acasetfo)
+    assert tfcoil_variables.a_tf_coil_outboard_case == pytest.approx(
+        tfcasegeomparam.expected_a_tf_coil_outboard_case
+    )
 
     assert sctfcoil_module.t_lat_case_av == pytest.approx(
         tfcasegeomparam.expected_t_lat_case_av

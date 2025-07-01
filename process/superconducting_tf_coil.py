@@ -2056,7 +2056,7 @@ class SuperconductingTFCoil(TFCoil):
         ) - sctfcoil_module.a_tf_wp_with_insulation
 
         # Outboard leg cross-sectional area of surrounding case [m2]
-        tfcoil_variables.acasetfo = (
+        tfcoil_variables.a_tf_coil_outboard_case = (
             tfcoil_variables.a_tf_leg_outboard - sctfcoil_module.a_tf_wp_with_insulation
         )
 
@@ -2089,10 +2089,10 @@ class SuperconductingTFCoil(TFCoil):
         # Report error if the casing area is negative
         if (
             tfcoil_variables.a_tf_coil_inboard_case <= 0.0e0
-            or tfcoil_variables.acasetfo <= 0.0e0
+            or tfcoil_variables.a_tf_coil_outboard_case <= 0.0e0
         ):
             error_handling.fdiags[0] = tfcoil_variables.a_tf_coil_inboard_case
-            error_handling.fdiags[1] = tfcoil_variables.acasetfo
+            error_handling.fdiags[1] = tfcoil_variables.a_tf_coil_outboard_case
             error_handling.report_error(99)
 
         # Average lateral casing thickness

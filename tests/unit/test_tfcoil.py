@@ -857,7 +857,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_tf_coil_wp_turn_insulation: Any = None
 
-    acasetfo: Any = None
+    a_tf_coil_outboard_case: Any = None
 
     a_tf_coil_inboard_case: Any = None
 
@@ -969,7 +969,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             n_tf_coil_turns=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            acasetfo=1.2752592893394648,
+            a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_coil_inboard_case=1.0015169239205168,
             fcutfsu=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
@@ -1041,7 +1041,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             n_tf_coil_turns=200,
             n_tf_coils=16,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            acasetfo=1.2752592893394648,
+            a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_coil_inboard_case=1.0015169239205168,
             fcutfsu=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
@@ -1190,7 +1190,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.a_tf_coil_wp_turn_insulation,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "acasetfo", tfcoilareaandmassesparam.acasetfo)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_outboard_case",
+        tfcoilareaandmassesparam.a_tf_coil_outboard_case,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

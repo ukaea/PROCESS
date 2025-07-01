@@ -18,7 +18,7 @@ module tfcoil_variables
   real(dp) :: a_tf_coil_inboard_case
   !! external case area per coil (inboard leg) (m2)
 
-  real(dp) :: acasetfo
+  real(dp) :: a_tf_coil_outboard_case
   !! external case area per coil (outboard leg) (m2)
 
   real(dp) :: a_tf_turn_steel
