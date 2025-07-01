@@ -87,7 +87,7 @@ module sctfcoil_module
    real(dp) :: dx_tf_wp_toroidal_min
 !! Minimal toroidal thickness of of winding pack [m]
 
-   real(dp) :: t_wp_toroidal_av
+   real(dp) :: dx_tf_wp_toroidal_average
 !! Averaged toroidal thickness of of winding pack [m]
 
    real(dp) :: t_lat_case_av

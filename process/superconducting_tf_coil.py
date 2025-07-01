@@ -245,7 +245,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
-                sctfcoil_module.t_wp_toroidal_av,
+                sctfcoil_module.dx_tf_wp_toroidal_average,
                 sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
                 tfcoil_variables.a_tf_wp_conductor,
@@ -1879,7 +1879,9 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.wwp1 = sctfcoil_module.dx_tf_wp_toroidal_min
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.t_wp_toroidal_av = sctfcoil_module.dx_tf_wp_toroidal_min
+            sctfcoil_module.dx_tf_wp_toroidal_average = (
+                sctfcoil_module.dx_tf_wp_toroidal_min
+            )
 
             # Total cross-sectional area of winding pack [m2]
             sctfcoil_module.a_tf_wp_with_insulation = (
@@ -1929,7 +1931,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.t_wp_toroidal_av = 0.5e0 * (
+            sctfcoil_module.dx_tf_wp_toroidal_average = 0.5e0 * (
                 tfcoil_variables.wwp1 + tfcoil_variables.wwp2
             )
 
@@ -1937,7 +1939,7 @@ class SuperconductingTFCoil(TFCoil):
             # Including ground insulation and insertion gap
             sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
-                * sctfcoil_module.t_wp_toroidal_av
+                * sctfcoil_module.dx_tf_wp_toroidal_average
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
@@ -1993,7 +1995,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.t_wp_toroidal_av = 0.5e0 * (
+            sctfcoil_module.dx_tf_wp_toroidal_average = 0.5e0 * (
                 tfcoil_variables.wwp1 + tfcoil_variables.wwp2
             )
 
@@ -2667,7 +2669,7 @@ def init_sctfcoil_module():
     sctfcoil_module.vol_gr_ins_cp = 0.0
     sctfcoil_module.vol_case_cp = 0.0
     sctfcoil_module.dx_tf_wp_toroidal_min = 0.0
-    sctfcoil_module.t_wp_toroidal_av = 0.0
+    sctfcoil_module.dx_tf_wp_toroidal_average = 0.0
     sctfcoil_module.t_lat_case_av = 0.0
     sctfcoil_module.a_tf_plasma_case = 0.0
     sctfcoil_module.a_tf_coil_nose_case = 0.0

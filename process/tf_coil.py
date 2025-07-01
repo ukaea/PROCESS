@@ -224,7 +224,7 @@ class TFCoil:
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
                 sctfcoil_module.t_lat_case_av,
-                sctfcoil_module.t_wp_toroidal_av,
+                sctfcoil_module.dx_tf_wp_toroidal_average,
                 sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
                 tfcoil_variables.a_tf_wp_conductor,
@@ -3250,7 +3250,7 @@ class TFCoil:
         fcutfsu,
         dx_tf_turn_steel,
         t_lat_case_av,
-        t_wp_toroidal_av,
+        dx_tf_wp_toroidal_average,
         a_tf_coil_inboard_insulation,
         a_tf_wp_steel,
         a_tf_wp_conductor,
@@ -3646,7 +3646,7 @@ class TFCoil:
             # Lateral casing correction (series-composition)
             (eyoung_wp_trans_eff, a_working, poisson_wp_trans_eff) = eyoung_series(
                 eyoung_wp_trans,
-                np.double(t_wp_toroidal_av),
+                np.double(dx_tf_wp_toroidal_average),
                 poisson_wp_trans,
                 np.double(eyoung_steel),
                 2.0e0 * t_lat_case_av,
