@@ -413,7 +413,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Insulation fraction [-]
-        sctfcoil_module.f_tf_ins = (
+        sctfcoil_module.f_a_tf_coil_inboard_insulation = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_coil_inboard_insulation
             / tfcoil_variables.a_tf_coil_inboard

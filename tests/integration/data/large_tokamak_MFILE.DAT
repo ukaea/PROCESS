@@ -692,7 +692,7 @@
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      1.3045E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.0671E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      8.5858E-01    
- Total_Insulation_fraction_______________________________________________ (f_tf_ins)____________________      4.6514E-02    
+ Total_Insulation_fraction_______________________________________________ (f_a_tf_coil_inboard_insulation)____________________      4.6514E-02    
  Casing_cross_section_area_(per_leg)_(m2)________________________________ (a_tf_coil_inboard_case)_____________________      5.7164E-01    
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.8843E-01 ITV

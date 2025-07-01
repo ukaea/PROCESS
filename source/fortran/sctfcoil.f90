@@ -50,7 +50,7 @@ module sctfcoil_module
    real(dp) :: f_a_tf_coil_inboard_steel
 !! Inboard coil steel fraction [-]
 
-   real(dp) :: f_tf_ins
+   real(dp) :: f_a_tf_coil_inboard_insulation
 !! Inboard coil insulation fraction [-]
 
    real(dp) :: z_cp_top

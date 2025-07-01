@@ -999,8 +999,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Total Insulation fraction",
-                "(f_tf_ins)",
-                sctfcoil_module.f_tf_ins,
+                "(f_a_tf_coil_inboard_insulation)",
+                sctfcoil_module.f_a_tf_coil_inboard_insulation,
             )
 
             # External casing
