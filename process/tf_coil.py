@@ -212,7 +212,7 @@ class TFCoil:
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
-                sctfcoil_module.a_case_front,
+                sctfcoil_module.a_tf_plasma_case,
                 sctfcoil_module.a_tf_coil_nose_case,
                 tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
@@ -3238,7 +3238,7 @@ class TFCoil:
         rad_tf_coil_toroidal,
         r_tf_wp_inboard_outer,
         a_tf_coil_inboard_steel,
-        a_case_front,
+        a_tf_plasma_case,
         a_tf_coil_nose_case,
         dx_tf_wp_insertion_gap,
         dx_tf_wp_insulation,
@@ -3577,7 +3577,7 @@ class TFCoil:
 
             # Steel cross-section under the area representing the WP in stress calculations [m2]
             a_wp_steel_eff = (
-                a_tf_coil_inboard_steel - a_case_front - a_tf_coil_nose_case
+                a_tf_coil_inboard_steel - a_tf_plasma_case - a_tf_coil_nose_case
             )
 
             # WP effective insulation thickness (SC only) [m]
@@ -3789,7 +3789,7 @@ class TFCoil:
         # The ratio between the true cross sectional area of the
         # front case, and that considered by the plane strain solver
         f_tf_stress_front_case = (
-            a_case_front
+            a_tf_plasma_case
             / rad_tf_coil_toroidal
             / (radtf[n_tf_layer] ** 2 - radtf[n_tf_layer - 1] ** 2)
         )

@@ -93,7 +93,7 @@ module sctfcoil_module
    real(dp) :: t_lat_case_av
 !! Average lateral casing thickness [m]
 
-   real(dp) :: a_case_front
+   real(dp) :: a_tf_plasma_case
 !! Front casing area [m2]
 
    real(dp) :: a_tf_coil_nose_case

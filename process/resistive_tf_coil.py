@@ -202,7 +202,7 @@ class ResistiveTFCoil(TFCoil):
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
-                sctfcoil_module.a_case_front,
+                sctfcoil_module.a_tf_plasma_case,
                 sctfcoil_module.a_tf_coil_nose_case,
                 tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
@@ -342,7 +342,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Area of the front case, the plasma-facing case of the inner TF coil [m2]
-        sctfcoil_module.a_case_front = (
+        sctfcoil_module.a_tf_plasma_case = (
             np.pi
             * (
                 (

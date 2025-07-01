@@ -233,7 +233,7 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.rad_tf_coil_toroidal,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
-                sctfcoil_module.a_case_front,
+                sctfcoil_module.a_tf_plasma_case,
                 sctfcoil_module.a_tf_coil_nose_case,
                 tfcoil_variables.dx_tf_wp_insertion_gap,
                 tfcoil_variables.dx_tf_wp_insulation,
@@ -1609,7 +1609,7 @@ class SuperconductingTFCoil(TFCoil):
             # Area of the radial plate taken to be the area of steel in the WP
             # TODO: value clipped due to #1883
             s_rp=np.clip(sctfcoil_module.a_tf_coil_inboard_steel, 0, None),
-            s_cc=sctfcoil_module.a_case_front
+            s_cc=sctfcoil_module.a_tf_plasma_case
             + sctfcoil_module.a_tf_coil_nose_case
             + 2.0 * sctfcoil_module.t_lat_case_av,
             taud=tfcoil_variables.tdmptf,
@@ -2063,7 +2063,7 @@ class SuperconductingTFCoil(TFCoil):
         # Front casing area [m2]
         if i_tf_case_geom == 0:
             # Circular front case
-            sctfcoil_module.a_case_front = (
+            sctfcoil_module.a_tf_plasma_case = (
                 sctfcoil_module.rad_tf_coil_toroidal
                 * build_variables.r_tf_inboard_out**2
                 - sctfcoil_module.tan_theta_coil
@@ -2071,7 +2071,7 @@ class SuperconductingTFCoil(TFCoil):
             )
         else:
             # Straight front case
-            sctfcoil_module.a_case_front = (
+            sctfcoil_module.a_tf_plasma_case = (
                 (
                     sctfcoil_module.r_tf_wp_inboard_outer
                     + tfcoil_variables.dr_tf_plasma_case
@@ -2662,7 +2662,7 @@ def init_sctfcoil_module():
     sctfcoil_module.t_wp_toroidal = 0.0
     sctfcoil_module.t_wp_toroidal_av = 0.0
     sctfcoil_module.t_lat_case_av = 0.0
-    sctfcoil_module.a_case_front = 0.0
+    sctfcoil_module.a_tf_plasma_case = 0.0
     sctfcoil_module.a_tf_coil_nose_case = 0.0
     sctfcoil_module.a_tf_wp_ground_insulation = 0.0
     sctfcoil_module.a_leg_ins = 0.0
