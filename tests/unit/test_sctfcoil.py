@@ -526,7 +526,7 @@ class TfWpGeomParam(NamedTuple):
 
     r_tf_wp_inboard_centre: Any = None
 
-    t_wp_toroidal: Any = None
+    dx_tf_wp_toroidal_min: Any = None
 
     t_wp_toroidal_av: Any = None
 
@@ -577,7 +577,7 @@ class TfWpGeomParam(NamedTuple):
             r_tf_wp_inboard_inner=0,
             r_tf_wp_inboard_outer=0,
             r_tf_wp_inboard_centre=0,
-            t_wp_toroidal=0,
+            dx_tf_wp_toroidal_min=0,
             t_wp_toroidal_av=0,
             a_tf_wp_ground_insulation=0,
             rad_tf_coil_toroidal=0.19634954084936207,
@@ -610,7 +610,7 @@ class TfWpGeomParam(NamedTuple):
             r_tf_wp_inboard_inner=3.5185911851091101,
             r_tf_wp_inboard_outer=4.06120206347512,
             r_tf_wp_inboard_centre=3.789896624292115,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
             a_tf_wp_ground_insulation=0.028582295732936136,
             rad_tf_coil_toroidal=0.19634954084936207,
@@ -703,7 +703,9 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "r_tf_wp_inboard_centre", tfwpgeomparam.r_tf_wp_inboard_centre
     )
 
-    monkeypatch.setattr(sctfcoil_module, "t_wp_toroidal", tfwpgeomparam.t_wp_toroidal)
+    monkeypatch.setattr(
+        sctfcoil_module, "dx_tf_wp_toroidal_min", tfwpgeomparam.dx_tf_wp_toroidal_min
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "t_wp_toroidal_av", tfwpgeomparam.t_wp_toroidal_av
@@ -745,7 +747,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfwpgeomparam.expected_r_tf_wp_inboard_centre
     )
 
-    assert sctfcoil_module.t_wp_toroidal == pytest.approx(
+    assert sctfcoil_module.dx_tf_wp_toroidal_min == pytest.approx(
         tfwpgeomparam.expected_t_wp_toroidal
     )
 
@@ -997,7 +999,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     c_tf_coil: Any = None
 
-    t_wp_toroidal: Any = None
+    dx_tf_wp_toroidal_min: Any = None
 
     t_conductor_radial: Any = None
 
@@ -1060,7 +1062,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_conductor=0,
             t_turn_tf=0,
             c_tf_coil=14805350.287500001,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_conductor_radial=0,
             t_conductor_toroidal=0,
             dr_tf_turn_cable_space=0,
@@ -1094,7 +1096,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             t_conductor=0.052553108427885735,
             t_turn_tf=0.056579413904423038,
             c_tf_coil=14805350.287500001,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_conductor_radial=0.046661087836601015,
             t_conductor_toroidal=0.059189130247124938,
             dr_tf_turn_cable_space=0.030661087836601014,
@@ -1163,7 +1165,9 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfintegerturngeomparam.c_tf_coil)
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_wp_toroidal", tfintegerturngeomparam.t_wp_toroidal
+        sctfcoil_module,
+        "dx_tf_wp_toroidal_min",
+        tfintegerturngeomparam.dx_tf_wp_toroidal_min,
     )
 
     monkeypatch.setattr(

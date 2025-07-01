@@ -1484,7 +1484,7 @@ class StressclParam(NamedTuple):
 
     r_tf_wp_inboard_outer: Any = None
 
-    t_wp_toroidal: Any = None
+    dx_tf_wp_toroidal_min: Any = None
 
     t_wp_toroidal_av: Any = None
 
@@ -1629,7 +1629,7 @@ class StressclParam(NamedTuple):
             a_tf_coil_inboard_insulation=0.11646247019991701,
             r_tf_wp_inboard_inner=3.5185911851091101,
             r_tf_wp_inboard_outer=4.06120206347512,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
             t_lat_case_av=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
@@ -1752,7 +1752,7 @@ class StressclParam(NamedTuple):
             a_tf_coil_inboard_insulation=0.11646247019991701,
             r_tf_wp_inboard_inner=3.5185911851091101,
             r_tf_wp_inboard_outer=4.06120206347512,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_wp_toroidal_av=1.299782604942499,
             t_lat_case_av=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,

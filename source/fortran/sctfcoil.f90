@@ -84,7 +84,7 @@ module sctfcoil_module
    real(dp) :: vol_case_cp
 !! Volume of the CP outer casing cylinder
 
-   real(dp) :: t_wp_toroidal
+   real(dp) :: dx_tf_wp_toroidal_min
 !! Minimal toroidal thickness of of winding pack [m]
 
    real(dp) :: t_wp_toroidal_av

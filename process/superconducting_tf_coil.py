@@ -1868,7 +1868,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Minimal toroidal thickness of winding pack [m]
-        sctfcoil_module.t_wp_toroidal = (
+        sctfcoil_module.dx_tf_wp_toroidal_min = (
             dr_tf_at_wp - 2.0e0 * tfcoil_variables.dx_tf_side_case
         )
 
@@ -1876,15 +1876,15 @@ class SuperconductingTFCoil(TFCoil):
         # --------------
         if i_tf_wp_geom == 0:
             # Outer WP layer toroidal thickness [m]
-            tfcoil_variables.wwp1 = sctfcoil_module.t_wp_toroidal
+            tfcoil_variables.wwp1 = sctfcoil_module.dx_tf_wp_toroidal_min
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.t_wp_toroidal_av = sctfcoil_module.t_wp_toroidal
+            sctfcoil_module.t_wp_toroidal_av = sctfcoil_module.dx_tf_wp_toroidal_min
 
             # Total cross-sectional area of winding pack [m2]
             sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
-                * sctfcoil_module.t_wp_toroidal
+                * sctfcoil_module.dx_tf_wp_toroidal_min
             )
 
             # WP cross-section without insertion gap and ground insulation [m2]
@@ -1896,7 +1896,7 @@ class SuperconductingTFCoil(TFCoil):
                     + tfcoil_variables.dx_tf_wp_insertion_gap
                 )
             ) * (
-                sctfcoil_module.t_wp_toroidal
+                sctfcoil_module.dx_tf_wp_toroidal_min
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_wp_insulation
@@ -1909,7 +1909,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
-                sctfcoil_module.t_wp_toroidal
+                sctfcoil_module.dx_tf_wp_toroidal_min
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) - sctfcoil_module.a_tf_wp_no_insulation
 
@@ -2156,7 +2156,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Toroidal turn dimension [m]
         sctfcoil_module.dx_tf_turn = (
-            sctfcoil_module.t_wp_toroidal
+            sctfcoil_module.dx_tf_wp_toroidal_min
             - 2.0e0
             * (
                 tfcoil_variables.dx_tf_wp_insulation
@@ -2666,7 +2666,7 @@ def init_sctfcoil_module():
     sctfcoil_module.vol_ins_cp = 0.0
     sctfcoil_module.vol_gr_ins_cp = 0.0
     sctfcoil_module.vol_case_cp = 0.0
-    sctfcoil_module.t_wp_toroidal = 0.0
+    sctfcoil_module.dx_tf_wp_toroidal_min = 0.0
     sctfcoil_module.t_wp_toroidal_av = 0.0
     sctfcoil_module.t_lat_case_av = 0.0
     sctfcoil_module.a_tf_plasma_case = 0.0
