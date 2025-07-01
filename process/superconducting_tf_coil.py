@@ -1799,7 +1799,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Inboard coil steel fraction [-]
-        sctfcoil_module.f_tf_steel = (
+        sctfcoil_module.f_a_tf_coil_inboard_steel = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_coil_inboard_steel
             / tfcoil_variables.a_tf_coil_inboard
@@ -1825,7 +1825,7 @@ class SuperconductingTFCoil(TFCoil):
             or tfcoil_variables.a_tf_coil_wp_turn_insulation <= 0.0e0
             or tfcoil_variables.a_tf_wp_steel <= 0.0e0
             or sctfcoil_module.a_tf_coil_inboard_steel <= 0.0e0
-            or sctfcoil_module.f_tf_steel <= 0.0e0
+            or sctfcoil_module.f_a_tf_coil_inboard_steel <= 0.0e0
             or sctfcoil_module.a_tf_coil_inboard_insulation <= 0.0e0
             or sctfcoil_module.f_tf_ins <= 0.0e0
         ):
@@ -1834,7 +1834,7 @@ class SuperconductingTFCoil(TFCoil):
             error_handling.fdiags[2] = tfcoil_variables.a_tf_coil_wp_turn_insulation
             error_handling.fdiags[3] = tfcoil_variables.a_tf_wp_steel
             error_handling.fdiags[4] = sctfcoil_module.a_tf_coil_inboard_steel
-            error_handling.fdiags[5] = sctfcoil_module.f_tf_steel
+            error_handling.fdiags[5] = sctfcoil_module.f_a_tf_coil_inboard_steel
             error_handling.fdiags[6] = sctfcoil_module.a_tf_coil_inboard_insulation
             error_handling.fdiags[7] = sctfcoil_module.f_tf_ins
             error_handling.report_error(276)
@@ -2639,7 +2639,7 @@ def init_sctfcoil_module():
     sctfcoil_module.a_tf_wp_no_insulation = 0.0
     sctfcoil_module.a_tf_coil_inboard_steel = 0.0
     sctfcoil_module.a_tf_coil_inboard_insulation = 0.0
-    sctfcoil_module.f_tf_steel = 0.0
+    sctfcoil_module.f_a_tf_coil_inboard_steel = 0.0
     sctfcoil_module.f_tf_ins = 0.0
     sctfcoil_module.z_cp_top = 0.0
     sctfcoil_module.r_tf_outboard_in = 0.0

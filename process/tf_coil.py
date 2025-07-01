@@ -986,8 +986,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Total steel TF fraction",
-                "(f_tf_steel)",
-                sctfcoil_module.f_tf_steel,
+                "(f_a_tf_coil_inboard_steel)",
+                sctfcoil_module.f_a_tf_coil_inboard_steel,
             )
             po.ovarre(
                 self.outfile,
