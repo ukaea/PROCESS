@@ -9,6 +9,8 @@ The topology is set as follows:
 - `i_tf_inside_cs = 0` (default) ITER-like topology: the central solenoid and the TF coils are not linked.   
 - `i_tf_inside_cs = 1` The inboard legs of the TF coils pass through the middle of the central solenoid.  Note that this model does not provide a physically self-consistent result for superconducting coils.  
 
+--------------------
+
 ## Coil type
 Two major types of toroidal field (TF) coils can be considered in PROCESS: Resistive magnets or Superconducting magnets.  The choice of conductor type is made using the following integer switch:
 
@@ -18,18 +20,48 @@ Two major types of toroidal field (TF) coils can be considered in PROCESS: Resis
 
 This section presents the <em>PROCESS</em> TF coil models and how to use them. The associated  module computes first the coil current from the plasma major radius and toroidal magnetic field. The inboard leg mid-plane cross-section geometry is then set up to the conductor level. The vertical geometry is defined and the TF components masses are deduced. The inboard mid-plane stress distributions, the coil inductance and the toroidal field ripple are then estimated. Finally, the resistive heating (if resistive coil) and the ratio between the critical current density and the conductor current density (superconducting coil) is estimated. 
 
-## TF coil currents
-The total current flowing in the TF coil set \( I_\mathrm{TF}^\mathrm{tot} \) (`c_tf_total`) is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre \( B_\mathrm{T} \) (`bt`) and the plasma geometric major radius $ R_0 $ (`rmajor`):
-</p>
+--------------------
+
+## Base TF coil class | `TFCoil`
+
+This class contains all the methods that are used by all types of TF coils (resistive or superconducting).
+
+---------------------
+
+### TF Global Geometry | `tf_global_geometry()`
+
+------------------
+
+### TF coil currents | `tf_current()`
+
+This function calculates the required currents in the TF coils given a required $B_\mathrm{T}$ (`bt`) on the plasma.
+
+1. The peak field on the inboard TF coil is calculated:
+
+$$
+B_{\text{TF}}^{\text{peak}} = \frac{B_{\text{T}}R_0}{R_{\text{TF}}^{\text{peak}}}
+$$
+
+The total current flowing in the TF coil set $I_\mathrm{TF}^\mathrm{tot}$ (`c_tf_total`) is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`bt`) and the plasma geometric major radius $R_0$ (`rmajor`):
+
 
 $$
 I_\mathrm{TF}^\mathrm{tot} = \frac{2\pi}{\mu_0} B_\mathrm{T} R_0
 $$
 
-This approximation is sufficiently accurate at the plasma centre.
 
-!!! tip "Recommended maximum critical current ratio"
-    For engineering feasibility, the TF coil operating current / critical current ratio shouldn't be set above 0.7, i.e. `fiooic` shouldn't be above 0.7.
+-------------------
+
+### TF Poloidal shape | `tf_coil_shape_inner()`
+
+
+-------------------
+
+### TF Self-inductance | `tf_coil_self_inductance()`
+
+
+--------------------
+
 
 ## TF coil inboard mid-plane geometry
 This section describes TF coil inboard leg geometry of the cross-section defined by z=0 (mid-plane).  Resistive and superconducting coils are described separately.
