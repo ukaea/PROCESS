@@ -2679,10 +2679,12 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
     wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
     wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
-    dr_tf_wp = mfile_data.data["dr_tf_wp"].get_scan(scan)
+    dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
+        scan
+    )
     side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
-    wp_inner = mfile_data.data["r_wp_inner"].get_scan(scan)
-    tinstf = mfile_data.data["tinstf"].get_scan(scan)
+    wp_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
+    dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
@@ -2844,9 +2846,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 long_turns = round(turn_layers)
                 short_turns = round(turn_pancakes)
             else:
-                wp_side_ratio = (dr_tf_wp - (2 * tinstf)) / (
-                    wwp1 - (2 * tinstf)
-                )  # row to height
+                wp_side_ratio = (
+                    dr_tf_wp_with_insulation - (2 * dx_tf_wp_insulation)
+                ) / (wwp1 - (2 * dx_tf_wp_insulation))  # row to height
                 side_unit = turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
                 long_turns = round(root_turns * wp_side_ratio)
@@ -2856,22 +2858,25 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (wp_inner, -(0.5 * wp_toridal_dxbig)),
-                    dr_tf_wp,
+                    dr_tf_wp_with_insulation,
                     wp_toridal_dxbig,
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
+                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
                 ),
             )
             # Plots the WP inside the insulation
             axis.add_patch(
                 Rectangle(
-                    (wp_inner + tinstf, -(0.5 * wp_toridal_dxbig) + tinstf),
-                    (dr_tf_wp - (2 * tinstf)),
-                    (wp_toridal_dxbig - (2 * tinstf)),
+                    (
+                        wp_inner + dx_tf_wp_insulation,
+                        -(0.5 * wp_toridal_dxbig) + dx_tf_wp_insulation,
+                    ),
+                    (dr_tf_wp_with_insulation - (2 * dx_tf_wp_insulation)),
+                    (wp_toridal_dxbig - (2 * dx_tf_wp_insulation)),
                     color="blue",
                     label=(
                         f"Winding pack:  \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
-                        f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
+                        f"\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
                     ),
                 )
             )
@@ -2879,12 +2884,14 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             for i in range(1, long_turns):
                 axis.plot(
                     [
-                        (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
-                        (wp_inner + tinstf) + i * (dr_tf_wp / long_turns),
+                        (wp_inner + dx_tf_wp_insulation)
+                        + i * (dr_tf_wp_with_insulation / long_turns),
+                        (wp_inner + dx_tf_wp_insulation)
+                        + i * (dr_tf_wp_with_insulation / long_turns),
                     ],
                     [
-                        -0.5 * (wp_toridal_dxbig - 2 * tinstf),
-                        0.5 * (wp_toridal_dxbig - 2 * tinstf),
+                        -0.5 * (wp_toridal_dxbig - 2 * dx_tf_wp_insulation),
+                        0.5 * (wp_toridal_dxbig - 2 * dx_tf_wp_insulation),
                     ],
                     color="white",
                     linewidth="0.25",
@@ -2893,7 +2900,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
             for i in range(1, short_turns):
                 axis.plot(
-                    [(wp_inner + tinstf), (wp_inner - tinstf + dr_tf_wp)],
+                    [
+                        (wp_inner + dx_tf_wp_insulation),
+                        (wp_inner - dx_tf_wp_insulation + dr_tf_wp_with_insulation),
+                    ],
                     [
                         (-0.5 * wp_toridal_dxbig)
                         + (i * wp_toridal_dxbig / short_turns),
@@ -2911,13 +2921,13 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner - tinstf,
-                        -(0.5 * wp_toridal_dxsmall) - 2 * tinstf,
+                        wp_inner - dx_tf_wp_insulation,
+                        -(0.5 * wp_toridal_dxsmall) - 2 * dx_tf_wp_insulation,
                     ),
-                    (dr_tf_wp / 2) + (tinstf),
-                    wp_toridal_dxsmall + (tinstf),
+                    (dr_tf_wp_with_insulation / 2) + (dx_tf_wp_insulation),
+                    wp_toridal_dxsmall + (dx_tf_wp_insulation),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
+                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
                 ),
             )
 
@@ -2925,11 +2935,13 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner + (0.5 * dr_tf_wp) - tinstf,
-                        -(0.5 * wp_toridal_dxbig) - tinstf,
+                        wp_inner
+                        + (0.5 * dr_tf_wp_with_insulation)
+                        - dx_tf_wp_insulation,
+                        -(0.5 * wp_toridal_dxbig) - dx_tf_wp_insulation,
                     ),
-                    (dr_tf_wp / 2) + (tinstf),
-                    wp_toridal_dxbig + (tinstf),
+                    (dr_tf_wp_with_insulation / 2) + (dx_tf_wp_insulation),
+                    wp_toridal_dxbig + (dx_tf_wp_insulation),
                     color="darkgreen",
                 ),
             )
@@ -2937,13 +2949,16 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             # Outer WP
             axis.add_patch(
                 Rectangle(
-                    (wp_inner + (0.5 * dr_tf_wp), -(0.5 * wp_toridal_dxbig)),
-                    (dr_tf_wp / 2) - (2 * tinstf),
-                    wp_toridal_dxbig - (2 * tinstf),
+                    (
+                        wp_inner + (0.5 * dr_tf_wp_with_insulation),
+                        -(0.5 * wp_toridal_dxbig),
+                    ),
+                    (dr_tf_wp_with_insulation / 2) - (2 * dx_tf_wp_insulation),
+                    wp_toridal_dxbig - (2 * dx_tf_wp_insulation),
                     color="blue",
                     label=(
                         f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
-                        f"\\Delta$R= {dr_tf_wp:.4f} m \n  "
+                        f"\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
                     ),
                 ),
             )
@@ -2951,11 +2966,11 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner + tinstf,
-                        -(0.5 * wp_toridal_dxsmall) - tinstf,
+                        wp_inner + dx_tf_wp_insulation,
+                        -(0.5 * wp_toridal_dxsmall) - dx_tf_wp_insulation,
                     ),
-                    (dr_tf_wp / 2) - (2 * tinstf),
-                    wp_toridal_dxsmall - (2 * tinstf),
+                    (dr_tf_wp_with_insulation / 2) - (2 * dx_tf_wp_insulation),
+                    wp_toridal_dxsmall - (2 * dx_tf_wp_insulation),
                     color="blue",
                 ),
             )
@@ -2963,7 +2978,12 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         # Trapezium WP
         if wp_shape == 2:
             # WP insulation
-            x = [wp_inner, wp_inner, (wp_inner + dr_tf_wp), (wp_inner + dr_tf_wp)]
+            x = [
+                wp_inner,
+                wp_inner,
+                (wp_inner + dr_tf_wp_with_insulation),
+                (wp_inner + dr_tf_wp_with_insulation),
+            ]
             y = [
                 (-0.5 * wp_toridal_dxsmall),
                 (0.5 * wp_toridal_dxsmall),
@@ -2974,22 +2994,22 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y, strict=False)),
                     color="darkgreen",
-                    label=f"Insulation: \n{tinstf * 1000} mm thickness \n",
+                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
                 )
             )
 
             # WP
             x = [
-                wp_inner + tinstf,
-                wp_inner + tinstf,
-                (wp_inner + dr_tf_wp - tinstf),
-                (wp_inner + dr_tf_wp - tinstf),
+                wp_inner + dx_tf_wp_insulation,
+                wp_inner + dx_tf_wp_insulation,
+                (wp_inner + dr_tf_wp_with_insulation - dx_tf_wp_insulation),
+                (wp_inner + dr_tf_wp_with_insulation - dx_tf_wp_insulation),
             ]
             y = [
-                (-0.5 * wp_toridal_dxsmall + tinstf),
-                (0.5 * wp_toridal_dxsmall - tinstf),
-                (0.5 * wp_toridal_dxbig - tinstf),
-                (-0.5 * wp_toridal_dxbig + tinstf),
+                (-0.5 * wp_toridal_dxsmall + dx_tf_wp_insulation),
+                (0.5 * wp_toridal_dxsmall - dx_tf_wp_insulation),
+                (0.5 * wp_toridal_dxbig - dx_tf_wp_insulation),
+                (-0.5 * wp_toridal_dxbig + dx_tf_wp_insulation),
             ]
             axis.add_patch(
                 patches.Polygon(
@@ -2997,7 +3017,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     color="blue",
                     label=(
                         f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n"
-                        f"$\\Delta$R= {dr_tf_wp:.4f} m \n  "
+                        f"$\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
                     ),
                 )
             )
@@ -3054,7 +3074,9 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
         )
     elif integer_turns == 0:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
-        cable_space_width = round(mfile_data.data["t_cable"].get_scan(scan) * 1e3, 5)
+        cable_space_width = round(
+            mfile_data.data["dx_tf_turn_cable_space_average"].get_scan(scan) * 1e3, 5
+        )
 
     he_pipe_diameter = round(
         mfile_data.data["dia_tf_turn_coolant_channel"].get_scan(scan) * 1e3, 5
@@ -3064,7 +3086,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
         mfile_data.data["dx_tf_turn_insulation"].get_scan(scan) * 1e3, 5
     )
     internal_cable_space = round(
-        mfile_data.data["a_tf_turn_cable_space"].get_scan(scan) * 1e6, 5
+        mfile_data.data["a_tf_turn_cable_space_no_void"].get_scan(scan) * 1e6, 5
     )
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
 
@@ -5529,8 +5551,8 @@ def main(args=None):
     global n_tf_coils
     global wwp1
     global wwp2
-    global dr_tf_wp
-    global tinstf
+    global dr_tf_wp_with_insulation
+    global dx_tf_wp_insulation
     global dr_tf_nose_case
     global dr_tf_plasma_case
 
@@ -5539,8 +5561,10 @@ def main(args=None):
         wwp1 = m_file.data["wwp1"].get_scan(scan)
         if i_tf_wp_geom == 1:
             wwp2 = m_file.data["wwp2"].get_scan(scan)
-        dr_tf_wp = m_file.data["dr_tf_wp"].get_scan(scan)
-        tinstf = m_file.data["tinstf"].get_scan(scan)
+        dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(
+            scan
+        )
+        dx_tf_wp_insulation = m_file.data["dx_tf_wp_insulation"].get_scan(scan)
         dr_tf_nose_case = m_file.data["dr_tf_nose_case"].get_scan(scan)
 
         # To be re-inergrated to resistives when in-plane stresses is integrated

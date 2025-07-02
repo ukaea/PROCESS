@@ -33,24 +33,24 @@ module sctfcoil_module
    real(dp) :: c_tf_coil
 !! Current in each TF coil
 
-   real(dp) :: awpc
+   real(dp) :: a_tf_wp_with_insulation
 !! Total cross-sectional area of winding pack including
 !! GW insulation and insertion gap [m2]
 
-   real(dp) :: awptf
+   real(dp) :: a_tf_wp_no_insulation
 !! Total cross-sectional area of winding pack without
 !! ground insulation and insertion gap [m2]
 
-   real(dp) :: a_tf_steel
+   real(dp) :: a_tf_coil_inboard_steel
 !! Inboard coil steel coil cross-sectional area [m2]
 
-   real(dp) :: a_tf_ins
+   real(dp) :: a_tf_coil_inboard_insulation
 !! Inboard coil insulation cross-section per coil [m2]
 
-   real(dp) :: f_tf_steel
+   real(dp) :: f_a_tf_coil_inboard_steel
 !! Inboard coil steel fraction [-]
 
-   real(dp) :: f_tf_ins
+   real(dp) :: f_a_tf_coil_inboard_insulation
 !! Inboard coil insulation fraction [-]
 
    real(dp) :: z_cp_top
@@ -62,13 +62,13 @@ module sctfcoil_module
    real(dp) :: r_tf_outboard_out
 !! Radial position of outer edge of TF coil inboard leg [m]
 
-   real(dp) :: r_wp_inner
+   real(dp) :: r_tf_wp_inboard_inner
 !! Radial position of inner edge and centre of winding pack [m]
 
-   real(dp) :: r_wp_outer
+   real(dp) :: r_tf_wp_inboard_outer
 !! Radial position of outer edge and centre of winding pack [m]
 
-   real(dp) :: r_wp_centre
+   real(dp) :: r_tf_wp_inboard_centre
 !! Radial position of centre and centre of winding pack [m]
 
    real(dp) :: dr_tf_wp_top
@@ -84,22 +84,22 @@ module sctfcoil_module
    real(dp) :: vol_case_cp
 !! Volume of the CP outer casing cylinder
 
-   real(dp) :: t_wp_toroidal
+   real(dp) :: dx_tf_wp_toroidal_min
 !! Minimal toroidal thickness of of winding pack [m]
 
-   real(dp) :: t_wp_toroidal_av
+   real(dp) :: dx_tf_wp_toroidal_average
 !! Averaged toroidal thickness of of winding pack [m]
 
    real(dp) :: t_lat_case_av
 !! Average lateral casing thickness [m]
 
-   real(dp) :: a_case_front
+   real(dp) :: a_tf_plasma_case
 !! Front casing area [m2]
 
-   real(dp) :: a_case_nose
+   real(dp) :: a_tf_coil_nose_case
 !! Nose casing area [m2]
 
-   real(dp) :: a_ground_ins
+   real(dp) :: a_tf_wp_ground_insulation
 !! Inboard mid-plane cross-section area of the WP ground insulation [m2]
 
    real(dp) :: a_leg_ins
@@ -126,7 +126,7 @@ module sctfcoil_module
    real(dp) :: dr_tf_turn, dx_tf_turn
 !! Turn radial and toroidal dimension (integer turn only) [m]
 
-   real(dp) :: t_cable
+   real(dp) :: dx_tf_turn_cable_space_average
 !! Cable area averaged dimension (square shape) [m]
 
    real(dp) :: vforce_inboard_tot

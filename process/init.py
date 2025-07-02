@@ -320,7 +320,7 @@ def check_process(inputs):  # noqa: ARG001
             nvar=fortran.numerics.nvar,
         )
 
-    # Check that dr_tf_wp (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
+    # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
     if (fortran.numerics.ixc[: fortran.numerics.nvar] == 13).any() and (
         fortran.numerics.ixc[: fortran.numerics.nvar] == 140
     ).any():
@@ -934,15 +934,15 @@ def check_process(inputs):  # noqa: ARG001
                 fortran.tfcoil_variables.eyoung_cond_axial
             )
 
-    # Check if the WP/conductor radial thickness (dr_tf_wp) is large enough
+    # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
     if (fortran.numerics.ixc[: fortran.numerics.nvar] == 140).any():
         # Minimal WP thickness
         if fortran.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (
-                fortran.tfcoil_variables.tinstf
-                + fortran.tfcoil_variables.tfinsgap
+                fortran.tfcoil_variables.dx_tf_wp_insulation
+                + fortran.tfcoil_variables.dx_tf_wp_insertion_gap
                 + fortran.tfcoil_variables.dx_tf_turn_insulation
                 + fortran.tfcoil_variables.dia_tf_turn_coolant_channel
             )
@@ -964,14 +964,14 @@ def check_process(inputs):  # noqa: ARG001
                 2.0
                 * (
                     fortran.tfcoil_variables.dx_tf_turn_insulation
-                    + fortran.tfcoil_variables.tinstf
+                    + fortran.tfcoil_variables.dx_tf_wp_insulation
                 )
                 + 4.0 * fortran.tfcoil_variables.rcool
             )
 
         if fortran.numerics.boundl[139] < dr_tf_wp_min:
             raise ProcessValidationError(
-                "The TF coil WP thickness (dr_tf_wp) must be at least",
+                "The TF coil WP thickness (dr_tf_wp_with_insulation) must be at least",
                 dr_tf_wp_min=dr_tf_wp_min,
             )
 
