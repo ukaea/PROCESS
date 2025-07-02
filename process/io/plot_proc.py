@@ -27,7 +27,9 @@ import numpy as np
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 
+import process.confinement_time as confine
 import process.io.mfile as mf
+from process.fortran import physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -54,6 +56,7 @@ from process.geometry.vacuum_vessel_geometry import (
 from process.impurity_radiation import read_impurity_file
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 if os.name == "posix" and "DISPLAY" not in os.environ:
     mpl.use("Agg")
@@ -4265,6 +4268,341 @@ def plot_h_threshold_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_confinement_time_comparison(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int, u_seed=None
+) -> None:
+    """
+    Function to plot a scatter box plot of confinement time comparisons.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    c_plasma_ma = mfile_data.data["plasma_current_ma"].get_scan(scan)
+    kappa95 = mfile_data.data["kappa95"].get_scan(scan)
+    dnla20 = mfile_data.data["dnla"].get_scan(scan) / 1e20
+    afuel = mfile_data.data["m_fuel_amu"].get_scan(scan)
+    bt = mfile_data.data["bt"].get_scan(scan)
+    p_plasma_separatrix_mw = mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
+    kappa = mfile_data.data["kappa"].get_scan(scan)
+    aspect = mfile_data.data["aspect"].get_scan(scan)
+    dnla19 = mfile_data.data["dnla"].get_scan(scan) / 1e19
+    kappa_ipb = mfile_data.data["kappa_ipb"].get_scan(scan)
+    triang = mfile_data.data["triang"].get_scan(scan)
+    m_ions_total_amu = mfile_data.data["m_ions_total_amu"].get_scan(scan)
+
+    # Calculate confinement times using the scan data
+    iter_89p = confine.iter_89p_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_89_0 = confine.iter_89_0_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_h90_p = confine.iter_h90_p_confinement_time(
+        pcur=c_plasma_ma,
+        rmajor=rmajor,
+        rminor=rminor,
+        kappa=kappa,
+        dnla20=dnla20,
+        bt=bt,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_h90_p_amended = confine.iter_h90_p_amended_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        afuel=afuel,
+        rmajor=rmajor,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        kappa=kappa,
+    )
+    iter_93h = confine.iter_93h_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        afuel=afuel,
+        rmajor=rmajor,
+        dnla20=dnla20,
+        aspect=aspect,
+        kappa=kappa,
+    )
+    iter_h97p = confine.iter_h97p_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        dnla19=dnla19,
+        rmajor=rmajor,
+        aspect=aspect,
+        kappa=kappa,
+        afuel=afuel,
+    )
+    iter_h97p_elmy = confine.iter_h97p_elmy_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        dnla19=dnla19,
+        rmajor=rmajor,
+        aspect=aspect,
+        kappa=kappa,
+        afuel=afuel,
+    )
+    iter_96p = confine.iter_96p_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        kappa95=kappa95,
+        rmajor=rmajor,
+        aspect=aspect,
+        dnla19=dnla19,
+        afuel=afuel,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+    )
+    iter_pb98py = confine.iter_pb98py_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa=kappa,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y = confine.iter_ipb98y_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa=kappa,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y1 = confine.iter_ipb98y1_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y2 = confine.iter_ipb98y2_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y3 = confine.iter_ipb98y3_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    iter_ipb98y4 = confine.iter_ipb98y4_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    petty08 = confine.petty08_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+    )
+    menard_nstx = confine.menard_nstx_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    menard_nstx_petty08 = confine.menard_nstx_petty08_hybrid_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        kappa_ipb=kappa_ipb,
+        aspect=aspect,
+        afuel=afuel,
+    )
+    itpa20 = confine.itpa20_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        dnla19=dnla19,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        rmajor=rmajor,
+        triang=triang,
+        kappa_ipb=kappa_ipb,
+        eps=(1 / aspect),
+        aion=m_ions_total_amu,
+    )
+    itpa20_ilc = confine.itpa20_il_confinement_time(
+        pcur=c_plasma_ma,
+        bt=bt,
+        p_plasma_loss_mw=p_plasma_separatrix_mw,
+        dnla19=dnla19,
+        aion=m_ions_total_amu,
+        rmajor=rmajor,
+        triang=triang,
+        kappa_ipb=kappa_ipb,
+    )
+
+    # Data for the box plot
+    data = {
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[6])}": iter_89p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[7])}": iter_89_0,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[13])}": iter_h90_p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[20])}": iter_h90_p_amended,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[24])}": iter_93h,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[26])}": iter_h97p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[27])}": iter_h97p_elmy,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[28])}": iter_96p,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[31])}": iter_pb98py,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[32])}": iter_ipb98y,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[33])}": iter_ipb98y1,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[34])}": iter_ipb98y2,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[35])}": iter_ipb98y3,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[36])}": iter_ipb98y4,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[41])}": petty08,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[46])}": menard_nstx,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[47])}": menard_nstx_petty08,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[49])}": itpa20,
+        rf"{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[50])}": itpa20_ilc,
+    }
+
+    # Create the violin plot
+    axis.violinplot(data.values(), showextrema=False)
+
+    # Create the box plot
+    axis.boxplot(
+        data.values(), showfliers=True, showmeans=True, meanline=True, widths=0.3
+    )
+
+    # Scatter plot for each data point
+    # Use a set of distinct colors for better differentiation
+    distinct_colors = [
+        "#1f77b4",  # blue
+        "#ff7f0e",  # orange
+        "#2ca02c",  # green
+        "#d62728",  # red
+        "#9467bd",  # purple
+        "#8c564b",  # brown
+        "#e377c2",  # pink
+        "#7f7f7f",  # gray
+        "#bcbd22",  # olive
+        "#17becf",  # cyan
+        "#aec7e8",  # light blue
+        "#ffbb78",  # light orange
+        "#98df8a",  # light green
+        "#ff9896",  # light red
+        "#c5b0d5",  # light purple
+        "#c49c94",  # light brown
+        "#f7b6d2",  # light pink
+        "#c7c7c7",  # light gray
+        "#dbdb8d",  # light olive
+        "#9edae5",  # light cyan
+    ]
+    generator = np.random.default_rng(seed=u_seed)
+    x_values = generator.normal(loc=1, scale=0.035, size=len(data.values()))
+    for index, (key, value) in enumerate(data.items()):
+        if "Hubbard" in key and "2017" not in key:
+            color = "#800080"  # strong purple
+        else:
+            color = distinct_colors[index % len(distinct_colors)]
+        axis.scatter(
+            x_values[index],
+            value,
+            color=color,
+            label=key,
+            alpha=1.0,
+            edgecolor="black",
+            linewidth=0.7,
+        )
+    axis.legend(loc="upper left", bbox_to_anchor=(-1.3, 0.75), ncol=2)
+
+    # Calculate average, standard deviation, and median
+    data_values = list(data.values())
+    avg_threshold = np.mean(data_values)
+    std_threshold = np.std(data_values)
+    median_threshold = np.median(data_values)
+
+    # Plot average, standard deviation, and median as text
+    axis.text(
+        0.7,
+        1.25,
+        f"Average: {avg_threshold:.4f} s",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.7,
+        1.2,
+        f"Standard Dev: {std_threshold:.4f} s",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.7,
+        1.15,
+        f"Median: {median_threshold:.4f} s",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+    axis.text(
+        0.75,
+        -0.05,
+        r"$H \ factor = 1.0$",
+        transform=axis.transAxes,
+        fontsize=9,
+    )
+
+    axis.set_title("Confinement time ($\\tau_{\\text{E}}$) Comparison")
+    axis.set_ylabel("Confinement time, $\\tau_{\\text{E}}$ [s]")
+    axis.set_xlim([0.5, 1.5])
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+
+    # Add background color
+    axis.set_facecolor("#f0f0f0")
+
+
 def plot_density_limit_comparison(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int
 ) -> None:
@@ -5097,6 +5435,9 @@ def main_plot(
 
     plot_21 = fig8.add_subplot(221)
     plot_density_limit_comparison(plot_21, m_file_data, scan)
+
+    plot_215 = fig8.add_subplot(224)
+    plot_confinement_time_comparison(plot_215, m_file_data, scan)
 
     plot_22 = fig9.add_subplot(111)
     plot_current_profiles_over_time(plot_22, m_file_data, scan)
