@@ -57,7 +57,7 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 
 <figure markdown>
 ![plot_proc_8](../images/plot_proc_8.PNG){ width="100%"}
-<figcaption>Figure 8: plot_proc density limit comparison page  </figcaption>
+<figcaption>Figure 8: plot_proc density limit and confinement time comparison page  </figcaption>
 </figure>
 
 <figure markdown>

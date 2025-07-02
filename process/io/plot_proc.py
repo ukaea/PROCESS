@@ -4555,7 +4555,7 @@ def plot_confinement_time_comparison(
             edgecolor="black",
             linewidth=0.7,
         )
-    axis.legend(loc="upper left", bbox_to_anchor=(-1.5, 1.1), ncol=2)
+    axis.legend(loc="upper left", bbox_to_anchor=(-1.3, 0.75), ncol=2)
 
     # Calculate average, standard deviation, and median
     data_values = list(data.values())
@@ -5436,8 +5436,8 @@ def main_plot(
     plot_21 = fig8.add_subplot(221)
     plot_density_limit_comparison(plot_21, m_file_data, scan)
 
-    plot_205 = fig7.add_subplot(224)
-    plot_confinement_time_comparison(plot_205, m_file_data, scan)
+    plot_215 = fig8.add_subplot(224)
+    plot_confinement_time_comparison(plot_215, m_file_data, scan)
 
     plot_22 = fig9.add_subplot(111)
     plot_current_profiles_over_time(plot_22, m_file_data, scan)
