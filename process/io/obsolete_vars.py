@@ -354,6 +354,10 @@ OBS_VARS = {
     "n_tf_turn": "n_tf_coil_turns",
     "thicndut": "dx_tf_turn_insulation",
     "thwcndut": "dx_tf_turn_steel",
+    "dr_tf_wp": "dr_tf_wp_with_insulation",
+    "tfinsgap": "dx_tf_wp_insertion_gap",
+    "tinstf": "dx_tf_wp_insulation",
+    "vftf": "f_a_tf_turn_cable_space_extra_void",
 }
 
 OBS_VARS_HELP = {
