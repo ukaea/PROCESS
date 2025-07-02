@@ -436,7 +436,9 @@ INPUT_VARIABLES = {
     ),
     "dr_tf_inboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dr_tf_shld_gap": InputVariable(fortran.build_variables, float, range=(0.0, 5.0)),
-    "dr_tf_wp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 10.0)),
+    "dr_tf_wp_with_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 10.0)
+    ),
     "dr_vv_inboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dr_vv_outboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "drtop": InputVariable(fortran.tfcoil_variables, float, range=(-1.5, 1.5)),
@@ -1282,7 +1284,9 @@ INPUT_VARIABLES = {
     "tfcbv": InputVariable(
         fortran.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
-    "tfinsgap": InputVariable(fortran.tfcoil_variables, float, range=(1e-10, 0.1)),
+    "dx_tf_wp_insertion_gap": InputVariable(
+        fortran.tfcoil_variables, float, range=(1e-10, 0.1)
+    ),
     "tfootfi": InputVariable(fortran.build_variables, float, range=(0.2, 5.0)),
     "tftmp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
     "tgain": InputVariable(fortran.ife_variables, float, range=(1.0, 500.0)),
@@ -1300,7 +1304,9 @@ INPUT_VARIABLES = {
         fortran.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "ti": InputVariable(fortran.physics_variables, float, range=(5.0, 50.0)),
-    "tinstf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "dx_tf_wp_insulation": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "tlife": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
     "tmain": InputVariable(fortran.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
@@ -1424,7 +1430,9 @@ INPUT_VARIABLES = {
     "f_a_cs_void": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
     "vfpblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "vfshld": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
-    "vftf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "f_a_tf_turn_cable_space_extra_void": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "dz_shld_vv_gap": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dz_xpoint_divertor": InputVariable(
         fortran.build_variables, float, range=(0.0, 10.0)

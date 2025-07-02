@@ -15,20 +15,20 @@ module tfcoil_variables
 
   public
 
-  real(dp) :: acasetf
+  real(dp) :: a_tf_coil_inboard_case
   !! external case area per coil (inboard leg) (m2)
 
-  real(dp) :: acasetfo
+  real(dp) :: a_tf_coil_outboard_case
   !! external case area per coil (outboard leg) (m2)
 
   real(dp) :: a_tf_turn_steel
   !! area of the cable conduit (m2)
 
-  real(dp) :: acond
+  real(dp) :: a_tf_wp_conductor
   !! Winding pack conductor area [m2]
   !! Does not include the area of voids and central helium channel
 
-  real(dp) :: a_tf_turn_cable_space
+  real(dp) :: a_tf_turn_cable_space_no_void
   !! Cable space area (per turn)  [m2]
   !! Includes the area of voids and central helium channel
 
@@ -51,10 +51,10 @@ module tfcoil_variables
   real(dp) :: a_tf_leg_outboard
   !! outboard TF leg area (m2)
 
-  real(dp) :: aswp
+  real(dp) :: a_tf_wp_steel
   !! winding pack structure area (m2)
 
-  real(dp) :: avwp
+  real(dp) :: a_tf_wp_extra_void
   !! winding pack void (He coolant) area (m2)
 
   real(dp) :: a_tf_wp_coolant_channels
@@ -529,7 +529,7 @@ module tfcoil_variables
   real(dp) :: ind_tf_coil
   !! TF coil inductance (H)
 
-  real(dp) :: tfinsgap
+  real(dp) :: dx_tf_wp_insertion_gap
   !! TF coil WP insertion gap (m)
 
   real(dp) :: p_tf_leg_resistive_mw
@@ -614,13 +614,13 @@ module tfcoil_variables
   !! inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
   !! (calculated for stellarators)
 
-  real(dp) :: dr_tf_wp
+  real(dp) :: dr_tf_wp_with_insulation
   !! radial thickness of winding pack (m) (`iteration variable 140`) (issue #514)
 
   real(dp) :: dx_tf_turn_steel
   !! TF coil conduit case thickness (m) (`iteration variable 58`)
 
-  real(dp) :: tinstf
+  real(dp) :: dx_tf_wp_insulation
   !! Thickness of the ground insulation layer surrounding (m)
   !!   - Superconductor TF (`i_tf_sup == 1`) : The TF coil Winding packs
   !!   - Resistive magnets (`i_tf_sup /= 1`) : The TF coil wedges
@@ -669,7 +669,7 @@ module tfcoil_variables
   real(dp) :: vforce_outboard
   !! Vertical tension on outboard leg/coil (N)
 
-  real(dp) :: vftf
+  real(dp) :: f_a_tf_turn_cable_space_extra_void
   !! coolant fraction of TFC 'cable' (`i_tf_sup=1`), or of TFC leg (`i_tf_ssup=0`)
 
   real(dp) :: voltfleg

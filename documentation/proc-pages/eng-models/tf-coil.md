@@ -58,7 +58,7 @@ The TF coils are assumed to be supporting each other against the net centering f
 #### TF coil inboard radial size
 
 <p style='text-align: justify;'> 
-  Following the geometry and its parametrization presented in <em>Figure 1</em>, the TF total thickness <em>dr_tf_inboard</em> \( \left( \Delta R_\mathrm{TF} \right) \) is related with the inner and outer case radial thicknesses (<em>dr_tf_nose_case</em>, \(  \Delta R_\mathrm{case}^\mathrm{in} \) and <em>dr_tf_plasma_case</em>, \( \Delta R_\mathrm{case}^\mathrm{out} \) respectively) and the WP radial thickness <em>dr_tf_wp</em> \(\Delta R_\mathrm{WP}\) by the following equation :
+  Following the geometry and its parametrization presented in <em>Figure 1</em>, the TF total thickness <em>dr_tf_inboard</em> \( \left( \Delta R_\mathrm{TF} \right) \) is related with the inner and outer case radial thicknesses (<em>dr_tf_nose_case</em>, \(  \Delta R_\mathrm{case}^\mathrm{in} \) and <em>dr_tf_plasma_case</em>, \( \Delta R_\mathrm{case}^\mathrm{out} \) respectively) and the WP radial thickness <em>dr_tf_wp_with_insulation</em> \(\Delta R_\mathrm{WP}\) by the following equation :
 </p>
 
 $$ 
@@ -77,10 +77,10 @@ $$
   The TF coil radial thickness (<em>dr_tf_inboard</em>) can parametrized in two ways in <em>PROCESS</em>:
 </p>
 - <p style='text-align: justify;'> 
-    **Direct parametrization**: the TF radial inboard thickness width is set as an input variable : `dr_tf_inboard` (iteration variable 13). The WP radial thickness (`dr_tf_wp`) is calculated from `dr_tf_inboard` and the two case radial thicknesses. This parametrization is used by default.
+    **Direct parametrization**: the TF radial inboard thickness width is set as an input variable : `dr_tf_inboard` (iteration variable 13). The WP radial thickness (`dr_tf_wp_with_insulation`) is calculated from `dr_tf_inboard` and the two case radial thicknesses. This parametrization is used by default.
   </p>
 - <p style='text-align: justify;'> 
-    **WP thickness parametrization**: the TF inboard radial thickness is calculated from the the case and the WP radial thickness. This option is selected by using the WP thickness (`dr_tf_wp`, iteration variable 140) as an iteration variable. Doing so, any `dr_tf_inboard` values will be overwritten and for this reason `dr_tf_wp` and `dr_tf_inboard` cannot be used as iteration variables simultaneously. Although not set by default for backward compatibility, this parametrization provides a more stable optimization procedure (negative WP area layer cannot be obtained by construction) and is hence encouraged.
+    **WP thickness parametrization**: the TF inboard radial thickness is calculated from the the case and the WP radial thickness. This option is selected by using the WP thickness (`dr_tf_wp_with_insulation`, iteration variable 140) as an iteration variable. Doing so, any `dr_tf_inboard` values will be overwritten and for this reason `dr_tf_wp_with_insulation` and `dr_tf_inboard` cannot be used as iteration variables simultaneously. Although not set by default for backward compatibility, this parametrization provides a more stable optimization procedure (negative WP area layer cannot be obtained by construction) and is hence encouraged.
   </p>
 
 #### Case geometry
@@ -92,7 +92,7 @@ $$
     **The nose casing:** this section corresponds to the case separating the WP with the machine center. Due to the presence of net electromechanical centering forces, this case has a major structural purpose and is often much larger than the other sides. The nose case dimension is set by its radial thickness that the user can specify using the `dr_tf_nose_case`  input variable (iteration variable 57).
   </p>
 - <p style='text-align: justify;'> 
-    **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `dx_tf_side_case`. The user can either directly specify `dx_tf_side_case` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_wp_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `dx_tf_side_case` value will be overwritten.
+    **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `dx_tf_side_case`. The user can either directly specify `dx_tf_side_case` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_tf_wp_inboard_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `dx_tf_side_case` value will be overwritten.
   </p>
 - <p style='text-align: justify;'> 
     **Plasma side casing:** this section corresponds to the case section separating the WP with the plasma. As the geometry of this section is rounded, its thickness is set by its minimal value `dr_tf_plasma_case` (user input). This parameter can also be defined as a fraction of the total TF coil thickness `dr_tf_inboard` using `f_dr_tf_plasma_case`. If the `f_dr_tf_plasma_case` parametrization is used, the `dr_tf_plasma_case` value will be overwritten.
@@ -251,7 +251,7 @@ turns. The number of turns can be parametrized in three different ways :
   material fractions:
 </p>
 - <p style='text-align: justify;'>
-    **Cable void fraction (`vftf`):** user input setting the void fraction
+    **Cable void fraction (`f_a_tf_turn_cable_space_extra_void`):** user input setting the void fraction
     between the strands. This fraction does not include the helium cooling
     pipe at the cable center.
   </p>
@@ -269,7 +269,7 @@ A much simpler inboard mid-plane geometry is used for resistive TF coils, as sho
 </p>
 
 - **The bucking cylinder:** radial thickness `dr_tf_nose_case` (iteration variable 57), is present to support the centering forces.  Its presence is however not mandatory and can be can be removed setting TODO.
-- **The conductor area:** radial thickness `dr_tf_wp` (iteration variable 140). Ground insulation, corresponding to the dark grey area in *Figure 6* is included in this section by convention.
+- **The conductor area:** radial thickness `dr_tf_wp_with_insulation` (iteration variable 140). Ground insulation, corresponding to the dark grey area in *Figure 6* is included in this section by convention.
 - **The outer cylinder:** radial thickness `dr_tf_plasma_case`. This cylinder plays no role in the structural models in PROCESS.
   
 <figure>
@@ -291,7 +291,7 @@ A much simpler inboard mid-plane geometry is used for resistive TF coils, as sho
     </center>
 </figure>
 
-The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_coil_turns` user input. The entire coil is wrapped with ground insulation of thickness `tinstf`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
+The conductor layer is made of \(N_\mathrm{turn}\) turns per coil, set by the `n_tf_coil_turns` user input. The entire coil is wrapped with ground insulation of thickness `dx_tf_wp_insulation`. Inside the ground insulation, each conductor ("turn") is wrapped in a turn insulation,  thickness `dx_tf_turn_insulation`. The coolant occupies using a fraction of the mid-plane cross-section given by `fcoolcp` (iteration variable 23).
 
 <figure>
     <center>
@@ -1256,9 +1256,9 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | Parameter             | description                                                                                                                                          | Iteration variable | Default                              | Unit |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------ | ---- |
 | `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
-| `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
+| `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp_with_insulation` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
 | `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
-| `dr_tf_wp`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
+| `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
 | `dx_tf_side_case`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
 | `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value                       | -                  | 0.03                                 | -    |
@@ -1266,14 +1266,14 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `casthi_fraction`     | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value                         | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
-| `tinstf`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
-| `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
+| `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
+| `dx_tf_wp_insertion_gap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 | Parameter             | description                                                                                                                                          | Iteration variable | Default                              | Unit |
 | -                     | -                                                                                                                                                    | -                  | -                                    | -    |
 | `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
-| `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
+| `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp_with_insulation` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
 | `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
-| `dr_tf_wp`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
+| `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
 | `dx_tf_side_case`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
 | `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value                       | -                  | 0.03                                 | -    |
@@ -1281,8 +1281,8 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value              | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
 | `i_tf_wp_geom`        | Winding pack geometry option:<br> - 0 : rectangular <br> - 1 : double rectangle <br> - 2 : trapezoidal                                               | -                  | Integer turn : 0  <br> otherwise : 1 | -    |
-| `tinstf`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
-| `tfinsgap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
+| `dx_tf_wp_insulation`              | WP ground insulation thickness                                                                                                                       | -                  | 0.018                                | m    |
+| `dx_tf_wp_insertion_gap`            | WP insertion gap thickness                                                                                                                           | -                  | 0.01                                 | m    |
 
 <br>
 
@@ -1301,7 +1301,7 @@ Another subroutine, `tfspcall` is called outside `stfcoil` to estimate to check 
 | `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |
 | `dx_tf_turn_steel`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dia_tf_turn_coolant_channel`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
-| `vftf`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
+| `f_a_tf_turn_cable_space_extra_void`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
 | `fcutfsu`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
 
 <br>

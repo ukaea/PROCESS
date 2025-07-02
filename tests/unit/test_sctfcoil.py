@@ -397,7 +397,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     wwp1: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     tfin: Any = None
 
@@ -423,7 +423,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_y=0,
             n_tf_coils=16,
             wwp1=1.299782604942499,
-            dr_tf_wp=0.50661087836601015,
+            dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
             b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
@@ -438,7 +438,7 @@ class PeakTfWithRippleParam(NamedTuple):
             tf_fit_y=1.0658869305062604,
             n_tf_coils=16,
             wwp1=1.299782604942499,
-            dr_tf_wp=0.50661087836601015,
+            dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
             b_tf_inboard_peak=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
@@ -471,7 +471,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         wwp1=peaktfwithrippleparam.wwp1,
-        dr_tf_wp=peaktfwithrippleparam.dr_tf_wp,
+        dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
         tfin=peaktfwithrippleparam.tfin,
         b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
     )
@@ -500,7 +500,7 @@ class TfWpGeomParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     dr_tf_plasma_case: Any = None
 
@@ -512,25 +512,25 @@ class TfWpGeomParam(NamedTuple):
 
     wwp2: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
-    awpc: Any = None
+    a_tf_wp_with_insulation: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
-    r_wp_inner: Any = None
+    r_tf_wp_inboard_inner: Any = None
 
-    r_wp_outer: Any = None
+    r_tf_wp_inboard_outer: Any = None
 
-    r_wp_centre: Any = None
+    r_tf_wp_inboard_centre: Any = None
 
-    t_wp_toroidal: Any = None
+    dx_tf_wp_toroidal_min: Any = None
 
-    t_wp_toroidal_av: Any = None
+    dx_tf_wp_toroidal_average: Any = None
 
-    a_ground_ins: Any = None
+    a_tf_wp_ground_insulation: Any = None
 
     rad_tf_coil_toroidal: Any = None
 
@@ -540,21 +540,21 @@ class TfWpGeomParam(NamedTuple):
 
     expected_wwp1: Any = None
 
-    expected_awpc: Any = None
+    expected_a_tf_wp_with_insulation: Any = None
 
-    expected_awptf: Any = None
+    expected_a_tf_wp_no_insulation: Any = None
 
-    expected_r_wp_inner: Any = None
+    expected_r_tf_wp_inboard_inner: Any = None
 
-    expected_r_wp_outer: Any = None
+    expected_r_tf_wp_inboard_outer: Any = None
 
-    expected_r_wp_centre: Any = None
+    expected_r_tf_wp_inboard_centre: Any = None
 
     expected_t_wp_toroidal: Any = None
 
-    expected_t_wp_toroidal_av: Any = None
+    expected_dx_tf_wp_toroidal_average: Any = None
 
-    expected_a_ground_ins: Any = None
+    expected_a_tf_wp_ground_insulation: Any = None
 
 
 @pytest.mark.parametrize(
@@ -564,67 +564,67 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
             wwp1=0,
             wwp2=0,
-            tinstf=0.0080000000000000019,
-            tfinsgap=0.01,
-            awpc=0,
-            awptf=0,
-            r_wp_inner=0,
-            r_wp_outer=0,
-            r_wp_centre=0,
-            t_wp_toroidal=0,
-            t_wp_toroidal_av=0,
-            a_ground_ins=0,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_wp_insertion_gap=0.01,
+            a_tf_wp_with_insulation=0,
+            a_tf_wp_no_insulation=0,
+            r_tf_wp_inboard_inner=0,
+            r_tf_wp_inboard_outer=0,
+            r_tf_wp_inboard_centre=0,
+            dx_tf_wp_toroidal_min=0,
+            dx_tf_wp_toroidal_average=0,
+            a_tf_wp_ground_insulation=0,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
-            expected_awpc=0.70527618095271016,
-            expected_awptf=0.64024601555360383,
-            expected_r_wp_inner=3.5185911851091101,
-            expected_r_wp_outer=4.06120206347512,
-            expected_r_wp_centre=3.789896624292115,
+            expected_a_tf_wp_with_insulation=0.70527618095271016,
+            expected_a_tf_wp_no_insulation=0.64024601555360383,
+            expected_r_tf_wp_inboard_inner=3.5185911851091101,
+            expected_r_tf_wp_inboard_outer=4.06120206347512,
+            expected_r_tf_wp_inboard_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
-            expected_t_wp_toroidal_av=1.299782604942499,
-            expected_a_ground_ins=0.028582295732936136,
+            expected_dx_tf_wp_toroidal_average=1.299782604942499,
+            expected_a_tf_wp_ground_insulation=0.028582295732936136,
         ),
         TfWpGeomParam(
             dr_tf_inboard=1.208,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
             wwp1=1.299782604942499,
             wwp2=0,
-            tinstf=0.0080000000000000019,
-            tfinsgap=0.01,
-            awpc=0.70527618095271016,
-            awptf=0.64024601555360383,
-            r_wp_inner=3.5185911851091101,
-            r_wp_outer=4.06120206347512,
-            r_wp_centre=3.789896624292115,
-            t_wp_toroidal=1.299782604942499,
-            t_wp_toroidal_av=1.299782604942499,
-            a_ground_ins=0.028582295732936136,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_wp_insertion_gap=0.01,
+            a_tf_wp_with_insulation=0.70527618095271016,
+            a_tf_wp_no_insulation=0.64024601555360383,
+            r_tf_wp_inboard_inner=3.5185911851091101,
+            r_tf_wp_inboard_outer=4.06120206347512,
+            r_tf_wp_inboard_centre=3.789896624292115,
+            dx_tf_wp_toroidal_min=1.299782604942499,
+            dx_tf_wp_toroidal_average=1.299782604942499,
+            a_tf_wp_ground_insulation=0.028582295732936136,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_wwp1=1.299782604942499,
-            expected_awpc=0.70527618095271016,
-            expected_awptf=0.64024601555360383,
-            expected_r_wp_inner=3.5185911851091101,
-            expected_r_wp_outer=4.06120206347512,
-            expected_r_wp_centre=3.789896624292115,
+            expected_a_tf_wp_with_insulation=0.70527618095271016,
+            expected_a_tf_wp_no_insulation=0.64024601555360383,
+            expected_r_tf_wp_inboard_inner=3.5185911851091101,
+            expected_r_tf_wp_inboard_outer=4.06120206347512,
+            expected_r_tf_wp_inboard_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
-            expected_t_wp_toroidal_av=1.299782604942499,
-            expected_a_ground_ins=0.028582295732936136,
+            expected_dx_tf_wp_toroidal_average=1.299782604942499,
+            expected_a_tf_wp_ground_insulation=0.028582295732936136,
         ),
     ),
 )
@@ -651,7 +651,11 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         build_variables, "r_tf_inboard_out", tfwpgeomparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfwpgeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tfwpgeomparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "dr_tf_plasma_case", tfwpgeomparam.dr_tf_plasma_case
@@ -669,27 +673,51 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "wwp2", tfwpgeomparam.wwp2)
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", tfwpgeomparam.tinstf)
-
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfwpgeomparam.tfinsgap)
-
-    monkeypatch.setattr(sctfcoil_module, "awpc", tfwpgeomparam.awpc)
-
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfwpgeomparam.awptf)
-
-    monkeypatch.setattr(sctfcoil_module, "r_wp_inner", tfwpgeomparam.r_wp_inner)
-
-    monkeypatch.setattr(sctfcoil_module, "r_wp_outer", tfwpgeomparam.r_wp_outer)
-
-    monkeypatch.setattr(sctfcoil_module, "r_wp_centre", tfwpgeomparam.r_wp_centre)
-
-    monkeypatch.setattr(sctfcoil_module, "t_wp_toroidal", tfwpgeomparam.t_wp_toroidal)
-
     monkeypatch.setattr(
-        sctfcoil_module, "t_wp_toroidal_av", tfwpgeomparam.t_wp_toroidal_av
+        tfcoil_variables, "dx_tf_wp_insulation", tfwpgeomparam.dx_tf_wp_insulation
     )
 
-    monkeypatch.setattr(sctfcoil_module, "a_ground_ins", tfwpgeomparam.a_ground_ins)
+    monkeypatch.setattr(
+        tfcoil_variables, "dx_tf_wp_insertion_gap", tfwpgeomparam.dx_tf_wp_insertion_gap
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_with_insulation",
+        tfwpgeomparam.a_tf_wp_with_insulation,
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "a_tf_wp_no_insulation", tfwpgeomparam.a_tf_wp_no_insulation
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_inner", tfwpgeomparam.r_tf_wp_inboard_inner
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_outer", tfwpgeomparam.r_tf_wp_inboard_outer
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_centre", tfwpgeomparam.r_tf_wp_inboard_centre
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "dx_tf_wp_toroidal_min", tfwpgeomparam.dx_tf_wp_toroidal_min
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "dx_tf_wp_toroidal_average",
+        tfwpgeomparam.dx_tf_wp_toroidal_average,
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_ground_insulation",
+        tfwpgeomparam.a_tf_wp_ground_insulation,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "rad_tf_coil_toroidal", tfwpgeomparam.rad_tf_coil_toroidal
@@ -701,39 +729,43 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     assert tfcoil_variables.wwp1 == pytest.approx(tfwpgeomparam.expected_wwp1)
 
-    assert sctfcoil_module.awpc == pytest.approx(tfwpgeomparam.expected_awpc)
-
-    assert sctfcoil_module.awptf == pytest.approx(tfwpgeomparam.expected_awptf)
-
-    assert sctfcoil_module.r_wp_inner == pytest.approx(
-        tfwpgeomparam.expected_r_wp_inner
+    assert sctfcoil_module.a_tf_wp_with_insulation == pytest.approx(
+        tfwpgeomparam.expected_a_tf_wp_with_insulation
     )
 
-    assert sctfcoil_module.r_wp_outer == pytest.approx(
-        tfwpgeomparam.expected_r_wp_outer
+    assert sctfcoil_module.a_tf_wp_no_insulation == pytest.approx(
+        tfwpgeomparam.expected_a_tf_wp_no_insulation
     )
 
-    assert sctfcoil_module.r_wp_centre == pytest.approx(
-        tfwpgeomparam.expected_r_wp_centre
+    assert sctfcoil_module.r_tf_wp_inboard_inner == pytest.approx(
+        tfwpgeomparam.expected_r_tf_wp_inboard_inner
     )
 
-    assert sctfcoil_module.t_wp_toroidal == pytest.approx(
+    assert sctfcoil_module.r_tf_wp_inboard_outer == pytest.approx(
+        tfwpgeomparam.expected_r_tf_wp_inboard_outer
+    )
+
+    assert sctfcoil_module.r_tf_wp_inboard_centre == pytest.approx(
+        tfwpgeomparam.expected_r_tf_wp_inboard_centre
+    )
+
+    assert sctfcoil_module.dx_tf_wp_toroidal_min == pytest.approx(
         tfwpgeomparam.expected_t_wp_toroidal
     )
 
-    assert sctfcoil_module.t_wp_toroidal_av == pytest.approx(
-        tfwpgeomparam.expected_t_wp_toroidal_av
+    assert sctfcoil_module.dx_tf_wp_toroidal_average == pytest.approx(
+        tfwpgeomparam.expected_dx_tf_wp_toroidal_average
     )
 
-    assert sctfcoil_module.a_ground_ins == pytest.approx(
-        tfwpgeomparam.expected_a_ground_ins
+    assert sctfcoil_module.a_tf_wp_ground_insulation == pytest.approx(
+        tfwpgeomparam.expected_a_tf_wp_ground_insulation
     )
 
 
 class TfCaseGeomParam(NamedTuple):
-    acasetf: Any = None
+    a_tf_coil_inboard_case: Any = None
 
-    acasetfo: Any = None
+    a_tf_coil_outboard_case: Any = None
 
     a_tf_leg_outboard: Any = None
 
@@ -745,23 +777,23 @@ class TfCaseGeomParam(NamedTuple):
 
     dr_tf_plasma_case: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     r_tf_inboard_in: Any = None
 
     r_tf_inboard_out: Any = None
 
-    awpc: Any = None
+    a_tf_wp_with_insulation: Any = None
 
-    r_wp_inner: Any = None
+    r_tf_wp_inboard_inner: Any = None
 
-    r_wp_outer: Any = None
+    r_tf_wp_inboard_outer: Any = None
 
     t_lat_case_av: Any = None
 
-    a_case_front: Any = None
+    a_tf_plasma_case: Any = None
 
-    a_case_nose: Any = None
+    a_tf_coil_nose_case: Any = None
 
     rad_tf_coil_toroidal: Any = None
 
@@ -771,73 +803,73 @@ class TfCaseGeomParam(NamedTuple):
 
     i_tf_case_geom: Any = None
 
-    expected_acasetf: Any = None
+    expected_a_tf_coil_inboard_case: Any = None
 
-    expected_acasetfo: Any = None
+    expected_a_tf_coil_outboard_case: Any = None
 
     expected_t_lat_case_av: Any = None
 
-    expected_a_case_front: Any = None
+    expected_a_tf_plasma_case: Any = None
 
-    expected_a_case_nose: Any = None
+    expected_a_tf_coil_nose_case: Any = None
 
 
 @pytest.mark.parametrize(
     "tfcasegeomparam",
     (
         TfCaseGeomParam(
-            acasetf=0,
-            acasetfo=0,
+            a_tf_coil_inboard_case=0,
+            a_tf_coil_outboard_case=0,
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
             dx_tf_side_case=0.05000000000000001,
             dr_tf_plasma_case=0.060000000000000012,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            awpc=0.70527618095271016,
-            r_wp_inner=3.5185911851091101,
-            r_wp_outer=4.06120206347512,
+            a_tf_wp_with_insulation=0.70527618095271016,
+            r_tf_wp_inboard_inner=3.5185911851091101,
+            r_tf_wp_inboard_outer=4.06120206347512,
             t_lat_case_av=0,
-            a_case_front=0,
-            a_case_nose=0,
+            a_tf_plasma_case=0,
+            a_tf_coil_nose_case=0,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
-            expected_acasetf=1.0015169239205168,
-            expected_acasetfo=1.2752592893394648,
+            expected_a_tf_coil_inboard_case=1.0015169239205168,
+            expected_a_tf_coil_outboard_case=1.2752592893394648,
             expected_t_lat_case_av=0.10396600719086938,
-            expected_a_case_front=0.18607458590131154,
-            expected_a_case_nose=0.70261616505511615,
+            expected_a_tf_plasma_case=0.18607458590131154,
+            expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
         TfCaseGeomParam(
-            acasetf=1.0015169239205168,
-            acasetfo=1.2752592893394648,
+            a_tf_coil_inboard_case=1.0015169239205168,
+            a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_coil_inboard=27.308689677971632,
             n_tf_coils=16,
             dx_tf_side_case=0.05000000000000001,
             dr_tf_plasma_case=0.060000000000000012,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            awpc=0.70527618095271016,
-            r_wp_inner=3.5185911851091101,
-            r_wp_outer=4.06120206347512,
+            a_tf_wp_with_insulation=0.70527618095271016,
+            r_tf_wp_inboard_inner=3.5185911851091101,
+            r_tf_wp_inboard_outer=4.06120206347512,
             t_lat_case_av=0.10396600719086938,
-            a_case_front=0.18607458590131154,
-            a_case_nose=0.70261616505511615,
+            a_tf_plasma_case=0.18607458590131154,
+            a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_toroidal=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             i_tf_case_geom=0,
-            expected_acasetf=1.0015169239205168,
-            expected_acasetfo=1.2752592893394648,
+            expected_a_tf_coil_inboard_case=1.0015169239205168,
+            expected_a_tf_coil_outboard_case=1.2752592893394648,
             expected_t_lat_case_av=0.10396600719086938,
-            expected_a_case_front=0.18607458590131154,
-            expected_a_case_nose=0.70261616505511615,
+            expected_a_tf_plasma_case=0.18607458590131154,
+            expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
     ),
 )
@@ -854,9 +886,17 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "acasetf", tfcasegeomparam.acasetf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_inboard_case",
+        tfcasegeomparam.a_tf_coil_inboard_case,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "acasetfo", tfcasegeomparam.acasetfo)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_outboard_case",
+        tfcasegeomparam.a_tf_coil_outboard_case,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "a_tf_leg_outboard", tfcasegeomparam.a_tf_leg_outboard
@@ -876,7 +916,11 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcoil_variables, "dr_tf_plasma_case", tfcasegeomparam.dr_tf_plasma_case
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfcasegeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tfcasegeomparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         build_variables, "r_tf_inboard_in", tfcasegeomparam.r_tf_inboard_in
@@ -886,17 +930,29 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         build_variables, "r_tf_inboard_out", tfcasegeomparam.r_tf_inboard_out
     )
 
-    monkeypatch.setattr(sctfcoil_module, "awpc", tfcasegeomparam.awpc)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_with_insulation",
+        tfcasegeomparam.a_tf_wp_with_insulation,
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "r_wp_inner", tfcasegeomparam.r_wp_inner)
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_inner", tfcasegeomparam.r_tf_wp_inboard_inner
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "r_wp_outer", tfcasegeomparam.r_wp_outer)
+    monkeypatch.setattr(
+        sctfcoil_module, "r_tf_wp_inboard_outer", tfcasegeomparam.r_tf_wp_inboard_outer
+    )
 
     monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", tfcasegeomparam.t_lat_case_av)
 
-    monkeypatch.setattr(sctfcoil_module, "a_case_front", tfcasegeomparam.a_case_front)
+    monkeypatch.setattr(
+        sctfcoil_module, "a_tf_plasma_case", tfcasegeomparam.a_tf_plasma_case
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "a_case_nose", tfcasegeomparam.a_case_nose)
+    monkeypatch.setattr(
+        sctfcoil_module, "a_tf_coil_nose_case", tfcasegeomparam.a_tf_coil_nose_case
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "rad_tf_coil_toroidal", tfcasegeomparam.rad_tf_coil_toroidal
@@ -911,29 +967,33 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         i_tf_case_geom=tfcasegeomparam.i_tf_case_geom,
     )
 
-    assert tfcoil_variables.acasetf == pytest.approx(tfcasegeomparam.expected_acasetf)
+    assert tfcoil_variables.a_tf_coil_inboard_case == pytest.approx(
+        tfcasegeomparam.expected_a_tf_coil_inboard_case
+    )
 
-    assert tfcoil_variables.acasetfo == pytest.approx(tfcasegeomparam.expected_acasetfo)
+    assert tfcoil_variables.a_tf_coil_outboard_case == pytest.approx(
+        tfcasegeomparam.expected_a_tf_coil_outboard_case
+    )
 
     assert sctfcoil_module.t_lat_case_av == pytest.approx(
         tfcasegeomparam.expected_t_lat_case_av
     )
 
-    assert sctfcoil_module.a_case_front == pytest.approx(
-        tfcasegeomparam.expected_a_case_front
+    assert sctfcoil_module.a_tf_plasma_case == pytest.approx(
+        tfcasegeomparam.expected_a_tf_plasma_case
     )
 
-    assert sctfcoil_module.a_case_nose == pytest.approx(
-        tfcasegeomparam.expected_a_case_nose
+    assert sctfcoil_module.a_tf_coil_nose_case == pytest.approx(
+        tfcasegeomparam.expected_a_tf_coil_nose_case
     )
 
 
 class TfIntegerTurnGeomParam(NamedTuple):
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     t_conductor: Any = None
 
@@ -941,7 +1001,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     c_tf_coil: Any = None
 
-    t_wp_toroidal: Any = None
+    dx_tf_wp_toroidal_min: Any = None
 
     t_conductor_radial: Any = None
 
@@ -955,7 +1015,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_turn: Any = None
 
-    t_cable: Any = None
+    dx_tf_turn_cable_space_average: Any = None
 
     n_layer: Any = None
 
@@ -998,20 +1058,20 @@ class TfIntegerTurnGeomParam(NamedTuple):
     "tfintegerturngeomparam",
     (
         TfIntegerTurnGeomParam(
-            dr_tf_wp=0.54261087836601019,
-            tinstf=0.0080000000000000019,
-            tfinsgap=0.01,
+            dr_tf_wp_with_insulation=0.54261087836601019,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_wp_insertion_gap=0.01,
             t_conductor=0,
             t_turn_tf=0,
             c_tf_coil=14805350.287500001,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_conductor_radial=0,
             t_conductor_toroidal=0,
             dr_tf_turn_cable_space=0,
             dx_tf_turn_cable_space=0,
             dr_tf_turn=0,
             dx_tf_turn=0,
-            t_cable=0,
+            dx_tf_turn_cable_space_average=0,
             n_layer=10,
             n_pancake=20,
             dx_tf_turn_steel=0.0080000000000000002,
@@ -1032,20 +1092,20 @@ class TfIntegerTurnGeomParam(NamedTuple):
             expected_n_tf_coil_turns=200,
         ),
         TfIntegerTurnGeomParam(
-            dr_tf_wp=0.54261087836601019,
-            tinstf=0.0080000000000000019,
-            tfinsgap=0.01,
+            dr_tf_wp_with_insulation=0.54261087836601019,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_wp_insertion_gap=0.01,
             t_conductor=0.052553108427885735,
             t_turn_tf=0.056579413904423038,
             c_tf_coil=14805350.287500001,
-            t_wp_toroidal=1.299782604942499,
+            dx_tf_wp_toroidal_min=1.299782604942499,
             t_conductor_radial=0.046661087836601015,
             t_conductor_toroidal=0.059189130247124938,
             dr_tf_turn_cable_space=0.030661087836601014,
             dx_tf_turn_cable_space=0.043189130247124938,
             dr_tf_turn=0.050661087836601018,
             dx_tf_turn=0.063189130247124942,
-            t_cable=0.036389912284773368,
+            dx_tf_turn_cable_space_average=0.036389912284773368,
             n_layer=10,
             n_pancake=20,
             dx_tf_turn_steel=0.0080000000000000002,
@@ -1080,11 +1140,23 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", tfintegerturngeomparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        tfintegerturngeomparam.dr_tf_wp_with_insulation,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", tfintegerturngeomparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        tfintegerturngeomparam.dx_tf_wp_insulation,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", tfintegerturngeomparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insertion_gap",
+        tfintegerturngeomparam.dx_tf_wp_insertion_gap,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "t_conductor", tfintegerturngeomparam.t_conductor
@@ -1095,7 +1167,9 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfintegerturngeomparam.c_tf_coil)
 
     monkeypatch.setattr(
-        sctfcoil_module, "t_wp_toroidal", tfintegerturngeomparam.t_wp_toroidal
+        sctfcoil_module,
+        "dx_tf_wp_toroidal_min",
+        tfintegerturngeomparam.dx_tf_wp_toroidal_min,
     )
 
     monkeypatch.setattr(
@@ -1128,10 +1202,14 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "dx_tf_turn", tfintegerturngeomparam.dx_tf_turn
     )
 
-    monkeypatch.setattr(sctfcoil_module, "t_cable", tfintegerturngeomparam.t_cable)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "dx_tf_turn_cable_space_average",
+        tfintegerturngeomparam.dx_tf_turn_cable_space_average,
+    )
 
     (
-        a_tf_turn_cable_space,
+        a_tf_turn_cable_space_no_void,
         a_tf_turn_steel,
         a_tf_turn_insulation,
         c_tf_turn,
@@ -1175,11 +1253,11 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         tfintegerturngeomparam.expected_dx_tf_turn
     )
 
-    assert sctfcoil_module.t_cable == pytest.approx(
+    assert sctfcoil_module.dx_tf_turn_cable_space_average == pytest.approx(
         tfintegerturngeomparam.expected_t_cable
     )
 
-    assert a_tf_turn_cable_space == pytest.approx(
+    assert a_tf_turn_cable_space_no_void == pytest.approx(
         tfintegerturngeomparam.expected_a_tf_turn_cable_space
     )
 
@@ -1213,13 +1291,13 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     t_cable_tf_is_input: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     dr_tf_turn: Any = None
 
     dx_tf_turn: Any = None
 
-    t_cable: Any = None
+    dx_tf_turn_cable_space_average: Any = None
 
     i_tf_sc_mat: Any = None
 
@@ -1259,10 +1337,10 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0,
             dx_tf_turn=0,
-            t_cable=0,
+            dx_tf_turn_cable_space_average=0,
             i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
             dx_tf_turn_steel=0.0080000000000000019,
@@ -1285,10 +1363,10 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.049532469413859428,
             dx_tf_turn=0.049532469413859428,
-            t_cable=0.031932469413859424,
+            dx_tf_turn_cable_space_average=0.031932469413859424,
             i_tf_sc_mat=5,
             j_tf_wp=26493137.688284047,
             dx_tf_turn_steel=0.0080000000000000019,
@@ -1311,10 +1389,10 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=0,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
-            t_cable=0.04109,
+            dx_tf_turn_cable_space_average=0.04109,
             i_tf_sc_mat=1,
             j_tf_wp=2.301e07,
             dx_tf_turn_steel=8.015e-03,
@@ -1337,10 +1415,10 @@ class TfAveragedTurnGeomParam(NamedTuple):
             c_tf_turn=0,
             t_cable_tf=0.042,
             t_cable_tf_is_input=True,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.05872,
             dx_tf_turn=0.05872,
-            t_cable=0.04109,
+            dx_tf_turn_cable_space_average=0.04109,
             i_tf_sc_mat=1,
             j_tf_wp=2.673e07,
             dx_tf_turn_steel=8.148e-03,
@@ -1402,7 +1480,11 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.t_cable_tf_is_input,
     )
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfaveragedturngeomparam.awptf)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_no_insulation",
+        tfaveragedturngeomparam.a_tf_wp_no_insulation,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "dr_tf_turn", tfaveragedturngeomparam.dr_tf_turn
@@ -1412,15 +1494,22 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "dx_tf_turn", tfaveragedturngeomparam.dx_tf_turn
     )
 
-    monkeypatch.setattr(sctfcoil_module, "t_cable", tfaveragedturngeomparam.t_cable)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "dx_tf_turn_cable_space_average",
+        tfaveragedturngeomparam.dx_tf_turn_cable_space_average,
+    )
 
-    a_tf_turn_cable_space, a_tf_turn_steel, a_tf_turn_insulation, n_tf_coil_turns = (
-        sctfcoil.tf_averaged_turn_geom(
-            i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
-            j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
-            dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
-            dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
-        )
+    (
+        a_tf_turn_cable_space_no_void,
+        a_tf_turn_steel,
+        a_tf_turn_insulation,
+        n_tf_coil_turns,
+    ) = sctfcoil.tf_averaged_turn_geom(
+        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
+        j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
+        dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
+        dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
     )
 
     assert tfcoil_variables.t_conductor == pytest.approx(
@@ -1439,11 +1528,11 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.expected_dx_tf_turn
     )
 
-    assert sctfcoil_module.t_cable == pytest.approx(
+    assert sctfcoil_module.dx_tf_turn_cable_space_average == pytest.approx(
         tfaveragedturngeomparam.expected_t_cable
     )
 
-    assert a_tf_turn_cable_space == pytest.approx(
+    assert a_tf_turn_cable_space_no_void == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_cable_space
     )
 
@@ -1467,7 +1556,7 @@ class TfWpCurrentsParam(NamedTuple):
 
     j_tf_wp: Any = None
 
-    awptf: Any = None
+    a_tf_wp_no_insulation: Any = None
 
     expected_j_tf_wp: Any = None
 
@@ -1479,14 +1568,14 @@ class TfWpCurrentsParam(NamedTuple):
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
             j_tf_wp=0,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
             j_tf_wp=26493137.688284047,
-            awptf=0.60510952642236249,
+            a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
     ),
@@ -1510,7 +1599,11 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
 
-    monkeypatch.setattr(sctfcoil_module, "awptf", tfwpcurrentsparam.awptf)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_no_insulation",
+        tfwpcurrentsparam.a_tf_wp_no_insulation,
+    )
 
     sctfcoil.tf_wp_currents()
 
@@ -1574,11 +1667,11 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         build_variables, "z_plasma_xpoint_upper", 5.47008
     )  # Baseline 2018
 
-    monkeypatch.setattr(sctfcoil_module, "a_tf_steel", 0.55)  # Section 3
+    monkeypatch.setattr(sctfcoil_module, "a_tf_coil_inboard_steel", 0.55)  # Section 3
 
     # Sum from Section 3
-    monkeypatch.setattr(sctfcoil_module, "a_case_front", 0.42)
-    monkeypatch.setattr(sctfcoil_module, "a_case_nose", 0.42)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_plasma_case", 0.42)
+    monkeypatch.setattr(sctfcoil_module, "a_tf_coil_nose_case", 0.42)
     monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", 0.05)
 
     monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018

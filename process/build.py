@@ -1495,26 +1495,26 @@ class Build:
 
             # Double rectangle WP
             elif tfcoil_variables.i_tf_wp_geom == 1:
-                r_wp_max = r_wp_min + 0.5e0 * tfcoil_variables.dr_tf_wp
+                r_wp_max = r_wp_min + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
 
             # Trapezoidal WP
             elif tfcoil_variables.i_tf_wp_geom == 2:
-                r_wp_max = r_wp_min + tfcoil_variables.dr_tf_wp
+                r_wp_max = r_wp_min + tfcoil_variables.dr_tf_wp_with_insulation
 
             # Calculated maximum toroidal WP toroidal thickness [m]
             if tfcoil_variables.tfc_sidewall_is_fraction:
                 t_wp_max = 2.0e0 * (
                     (r_wp_max - tfcoil_variables.casths_fraction * r_wp_min)
                     * np.tan(np.pi / n)
-                    - tfcoil_variables.tinstf
-                    - tfcoil_variables.tfinsgap
+                    - tfcoil_variables.dx_tf_wp_insulation
+                    - tfcoil_variables.dx_tf_wp_insertion_gap
                 )
             else:
                 t_wp_max = 2.0e0 * (
                     r_wp_max * np.tan(np.pi / n)
                     - tfcoil_variables.dx_tf_side_case
-                    - tfcoil_variables.tinstf
-                    - tfcoil_variables.tfinsgap
+                    - tfcoil_variables.dx_tf_wp_insulation
+                    - tfcoil_variables.dx_tf_wp_insertion_gap
                 )
 
         # Resistive magnet case
@@ -1523,7 +1523,7 @@ class Build:
             r_wp_max = (
                 build_variables.r_tf_inboard_in
                 + tfcoil_variables.dr_tf_nose_case
-                + tfcoil_variables.dr_tf_wp
+                + tfcoil_variables.dr_tf_wp_with_insulation
             )
 
             # Calculated maximum toroidal WP toroidal thickness [m]
@@ -1686,13 +1686,13 @@ class Build:
             )
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp is an iteration variable (140)
+        # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
         if any(numerics.ixc[0 : numerics.nvar] == 140):
             # SC TF coil thickness defined using its maximum (diagonal)
             if tfcoil_variables.i_tf_sup == 1:
                 build_variables.dr_tf_inboard = (
                     build_variables.r_tf_inboard_in
-                    + tfcoil_variables.dr_tf_wp
+                    + tfcoil_variables.dr_tf_wp_with_insulation
                     + tfcoil_variables.dr_tf_plasma_case
                     + tfcoil_variables.dr_tf_nose_case
                 ) / np.cos(
@@ -1702,7 +1702,7 @@ class Build:
             # Rounded resistive TF geometry
             else:
                 build_variables.dr_tf_inboard = (
-                    tfcoil_variables.dr_tf_wp
+                    tfcoil_variables.dr_tf_wp_with_insulation
                     + tfcoil_variables.dr_tf_plasma_case
                     + tfcoil_variables.dr_tf_nose_case
                 )
@@ -1722,7 +1722,7 @@ class Build:
         if not any(numerics.ixc[0 : numerics.nvar] == 140):
             # SC magnets
             if tfcoil_variables.i_tf_sup == 1:
-                tfcoil_variables.dr_tf_wp = (
+                tfcoil_variables.dr_tf_wp_with_insulation = (
                     np.cos(np.pi / tfcoil_variables.n_tf_coils)
                     * build_variables.r_tf_inboard_out
                     - build_variables.r_tf_inboard_in
@@ -1732,7 +1732,7 @@ class Build:
 
             # Resistive magnets
             else:
-                tfcoil_variables.dr_tf_wp = (
+                tfcoil_variables.dr_tf_wp_with_insulation = (
                     build_variables.dr_tf_inboard
                     - tfcoil_variables.dr_tf_plasma_case
                     - tfcoil_variables.dr_tf_nose_case

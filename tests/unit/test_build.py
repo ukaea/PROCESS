@@ -63,7 +63,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     rmajor: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
     n_tf_coils: Any = None
 
@@ -71,7 +71,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     dx_tf_side_case: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
     dr_tf_nose_case: Any = None
 
@@ -81,7 +81,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     i_tf_wp_geom: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     tfc_sidewall_is_fraction: Any = None
 
@@ -196,16 +196,16 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         RippleAmplitudeParam(
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             n_tf_coils=16,
             dx_tf_inboard_out_toroidal=1,
             dx_tf_side_case=0.05000000000000001,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_nose_case=0.52465000000000006,
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
             ripmax=0.60000000000000009,
@@ -217,16 +217,16 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         RippleAmplitudeParam(
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             n_tf_coils=16,
             dx_tf_inboard_out_toroidal=1,
             dx_tf_side_case=0.05000000000000001,
-            dr_tf_wp=0.54261087836601019,
+            dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_nose_case=0.52465000000000006,
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
             ripmax=0.60000000000000009,
@@ -257,7 +257,11 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rmajor", rippleamplitudeparam.rmajor)
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", rippleamplitudeparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        rippleamplitudeparam.dx_tf_wp_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", rippleamplitudeparam.n_tf_coils)
 
@@ -271,7 +275,11 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
         tfcoil_variables, "dx_tf_side_case", rippleamplitudeparam.dx_tf_side_case
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", rippleamplitudeparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        rippleamplitudeparam.dr_tf_wp_with_insulation,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "dr_tf_nose_case", rippleamplitudeparam.dr_tf_nose_case
@@ -287,7 +295,11 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
         tfcoil_variables, "i_tf_wp_geom", rippleamplitudeparam.i_tf_wp_geom
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", rippleamplitudeparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insertion_gap",
+        rippleamplitudeparam.dx_tf_wp_insertion_gap,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

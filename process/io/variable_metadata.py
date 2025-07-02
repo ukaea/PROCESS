@@ -89,7 +89,7 @@ var_dicts = {
         description="Total TF coil current",
         units="A",
     ),
-    "dr_tf_wp": VariableMetadata(
+    "dr_tf_wp_with_insulation": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{WP}$ [$m$]",
         description="TF coil winding pack width",
         units="m",
@@ -158,7 +158,7 @@ var_dicts = {
     "triang": VariableMetadata(
         latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units=""
     ),
-    "f_tf_steel": VariableMetadata(
+    "f_a_tf_coil_inboard_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
     "plasma_current_MA": VariableMetadata(

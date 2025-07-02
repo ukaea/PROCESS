@@ -225,7 +225,7 @@ sig_tf_wp_max = 4.e8 * Maximal allowable Stress level on Ground insulation for a
 fcutfsu = 0.7 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
 temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
-vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
+f_a_tf_turn_cable_space_extra_void = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 vdalw = 12.64 * Max voltage across tf coil during quench (kV)
 tdmptf = 20 * Dump time (should be iteration variable)
@@ -233,7 +233,7 @@ dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroi
 t_turn_tf = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
 dx_tf_turn_insulation = 0.0015 * Conduit insulation thickness (one side) (m)
 dx_tf_turn_steel = 0.006 * thickness of steel around each conductor (one side) (m)
-tinstf = 0.1 * insulation on top of winding pack (one side) (m)
+dx_tf_wp_insulation = 0.1 * insulation on top of winding pack (one side) (m)
 ```
 
 ### Machine build

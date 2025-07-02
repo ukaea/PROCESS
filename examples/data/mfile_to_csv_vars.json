@@ -14,7 +14,7 @@
         "dr_tf_inboard",
         "dr_cs",
         "c_tf_turn",
-        "dr_tf_wp",
+        "dr_tf_wp_with_insulation",
         "dr_cryostat",
         "dr_shld_outboard",
         "dz_divertor",

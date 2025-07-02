@@ -1016,7 +1016,7 @@ boundu(50) = 1.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 * Below is specifically set up for superconducting coils *
-* dr_tf_inboard is set up in the radial build section and should generally never be iterated with dr_tf_wp *
+* dr_tf_inboard is set up in the radial build section and should generally never be iterated with dr_tf_wp_with_insulation *
 
 *-------------------*
 * Casing dimensions * 
@@ -1077,17 +1077,17 @@ i_tf_wp_geom = 2
 * JUSTIFICATION: Changed to try and replicate new WP shape
 
 ixc = 140
-dr_tf_wp = 0.6
+dr_tf_wp_with_insulation = 0.6
 boundl(140) = 0.4
 boundu(140) = 0.8 
 * DESCRIPTION:   Inboard TF winding pack thickness including turn insulation (m)
 * JUSTIFICATION: 
 
-*tinstf = 
+*dx_tf_wp_insulation = 
 * DESCRIPTION:   Ground Insulation Thickness Surrounding Winding Pack (m)
 * JUSTIFICATION: 
 
-*tfinsgap = 
+*dx_tf_wp_insertion_gap = 
 * DESCRIPTION:   WP insertion gap
 * JUSTIFICATION: 
 
@@ -1193,10 +1193,10 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*vftf = 
+*f_a_tf_turn_cable_space_extra_void = 
 * DESCRIPTION:   Void fraction of TF coil cable excluding the cooling pipe
 * JUSTIFICATION: There is no coolant space in the MIT VIPER cable design other
-*                than the central cooling pipe. So vftf should then be 0.
+*                than the central cooling pipe. So f_a_tf_turn_cable_space_extra_void should then be 0.
 *                However about 5% of the space is used by HTS tape soldering
 * REFERENCE:     Zachary S Hartwig et al 2020 Supercond. Sci. Technol. 
 *                in press https://doi.org/10.1088/1361-6668/abb8c0
