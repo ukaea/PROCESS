@@ -105,5 +105,19 @@ different ways:
   flaring into account, parametrized with an arc. The cross-sectional area of the coolant channels is uniform throughout the centre-post, making the coolant fraction smaller at the top where less resistive heating is expected due to the larger conductor section. 
 </p>
 
+--------------
+
+## Inboard peak field radius
+
+The radius of the peak field on the inboard leg is given as such:
+
+$$
+R_{\text{B,peak}} = R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
+$$
+
+This is done as the coil symmetry is cylindrical. 
+
+----------------
+
 
 ## Resistive TF coil class | `ResistiveTFCoil(TFCoil)`

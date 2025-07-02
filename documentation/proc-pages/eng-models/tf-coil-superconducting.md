@@ -249,5 +249,20 @@ $$
   the temperature of the superconductor. The temperature margin $\Delta T$ is the difference between the current sharing temperature (at which $J_{\mbox{crit}}$ would be equal to $J_{\mbox{op}}$) and the operating temperature. The minimum allowed $\Delta T$
 can be set using `tmargmin` together with constraint equation 36 and iteration variable 54 (`ftmargtf`). Note that if the temperature margin is positive, $J_{\mbox{op}}$ is guaranteed to be lower than \jcrit, and so constraints 33 and 36 need not both be turned on. It is recommended that only one of these two constraints is activated.  
 
+-----------------------
+
+## Inboard peak field radius
+
+The radius of the peak field on the inboard leg is given as such:
+
+$$
+R_{\text{B,peak}} = \cos{(\phi_{\text{TF}})} \\
+\times R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
+$$
+
+This is done as a conservative assumption as the radius is calculated with the WP radial distances defined at the TF middle.
+
+-----------------
+
 ## Supercoducting TF coil class | `SuperconductingTFCoil(TFCoil)`
 

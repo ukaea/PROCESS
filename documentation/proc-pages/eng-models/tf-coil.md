@@ -167,20 +167,38 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
 
 ### TF coil currents | `tf_current()`
 
-This function calculates the required currents in the TF coils given a required $B_\mathrm{T}$ (`bt`) on the plasma.
+This function calculates the required currents in the TF coils given a required $B_\mathrm{T}$ (`bt`) on the plasma. The below is simply deduced using [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law).
 
 1. The peak field on the inboard TF coil is calculated:
 
-$$
-B_{\text{TF}}^{\text{peak}} = \frac{B_{\text{T}}R_0}{R_{\text{TF}}^{\text{peak}}}
-$$
+    $$
+    \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
+    $$
 
-The total current flowing in the TF coil set $I_\mathrm{TF}^\mathrm{tot}$ (`c_tf_total`) is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`bt`) and the plasma geometric major radius $R_0$ (`rmajor`):
+    The value of $R_{\text{TF,peak}}$ depends on wether the coil is [resistive](./tf-coil-resistive.md#inboard-peak-field-radius) or [superconducting](./tf-coil-superconducting.md#inboard-peak-field-radius). 
 
+2. The total current flowing in the TF coil set is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`bt`) and the plasma geometric major radius $R_0$ (`rmajor`):
 
-$$
-I_\mathrm{TF}^\mathrm{tot} = \frac{2\pi}{\mu_0} B_\mathrm{T} R_0
-$$
+    [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) for a infinite current-carrying wire with a circular Amperian loop of radius, $R$ is:
+
+    $$
+    B = \frac{\mu_0 I}{2\pi R}
+    $$
+
+    Substituting in the required machine / plasma parameters we get:
+
+    $$
+    \overbrace{I_\mathrm{TF, total}}^{\texttt{c_tf_total}} = \frac{2\pi}{\mu_0} B_{\text{T}} R_0
+    $$
+
+3. The current required in each TF coil is then simply:
+
+    $$
+    \overbrace{I_\mathrm{TF, coil}}^{\texttt{c_tf_coil}} = \frac{I_\mathrm{TF, total}}{N_{\text{TF,coils}}}
+    $$
+
+4. The global inboard leg current density for the total coil area is:
+
 
 
 -------------------
