@@ -124,7 +124,7 @@ icc = 16
 * JUSTIFICATION: Required to generate 100MW
 * VARIABLES:     p_plant_electric_net_mw (net electric power) calculated in-situ
 
-pnetelin = 100.0
+p_plant_electric_net_required_mw = 100.0
 * DESCRIPTION:   Required net electric power lower limit (MW) (icc=16)
 * JUSTIFICATION: Not used in this run
 

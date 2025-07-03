@@ -19,7 +19,7 @@ edrive = 5.0D6         *IFE driver energy (J)
 runtitle = IFE_001
 
 *---------------Constraint Variables---------------*
-pnetelin  = 1000.0     *Required net electric power (MW)
+p_plant_electric_net_required_mw  = 1000.0     *Required net electric power (MW)
 
 *---------------Numerics Variables-----------------*
 IOPTIMZ   = 1         *Code operation switch (1: for optimisation VMCON only)
