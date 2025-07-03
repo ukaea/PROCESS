@@ -140,7 +140,9 @@ INPUT_VARIABLES = {
     "beta_poloidal_eps_max": InputVariable(
         fortran.physics_variables, float, range=(0.01, 10.0)
     ),
-    "f_alpha_plasma": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "f_p_alpha_plasma_deposited": InputVariable(
+        fortran.physics_variables, float, range=(0.0, 1.0)
+    ),
     "f_p_div_lower": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_deuterium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "ffwal": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
