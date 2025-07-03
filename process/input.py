@@ -324,7 +324,9 @@ INPUT_VARIABLES = {
     "c_tf_turn": InputVariable(
         fortran.tfcoil_variables, float, range=(0.001, 1000000.0)
     ),
-    "cpttf_max": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 1000000.0)),
+    "c_tf_turn_max": InputVariable(
+        fortran.tfcoil_variables, float, range=(1.0, 1000000.0)
+    ),
     "crane_arm_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -745,7 +747,9 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "ftbr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ft_cycle_min": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ft_cycle_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ftmargoh": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftmargtf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftoroidalgap": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 10.0)),

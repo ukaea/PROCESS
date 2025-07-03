@@ -1904,15 +1904,17 @@ def constraint_equation_77():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fcpttf: f-value for TF coil current per turn
-    cpttf_max : allowable TF coil current per turn [A/turn]
+    c_tf_turn_max : allowable TF coil current per turn [A/turn]
     c_tf_turn : TF coil current per turn [A/turn]
     """
     cc = (
-        fortran.tfcoil_variables.c_tf_turn / fortran.tfcoil_variables.cpttf_max
+        fortran.tfcoil_variables.c_tf_turn / fortran.tfcoil_variables.c_tf_turn_max
         - 1.0 * fortran.constraint_variables.fcpttf
     )
     return ConstraintResult(
-        cc, fortran.tfcoil_variables.cpttf_max, fortran.tfcoil_variables.cpttf_max * cc
+        cc,
+        fortran.tfcoil_variables.c_tf_turn_max,
+        fortran.tfcoil_variables.c_tf_turn_max * cc,
     )
 
 

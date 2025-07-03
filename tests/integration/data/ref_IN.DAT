@@ -80,7 +80,7 @@ boundu(60) = 9.0e4
 
 *icc = 77  * Max c_tf_turn
 *ixc = 145 * fcpttf
-*cpttf_max = 9.0e4
+*c_tf_turn_max = 9.0e4
 
 ixc = 59 * copper fraction of cable conductor (TF coils)
 boundl(59) = 0.50
