@@ -124,7 +124,7 @@ module constraint_variables
   real(dp) :: fb_tf_inboard_max
   !! f-value for maximum toroidal field (`constraint equation 25`, `iteration variable 35`)
 
-  real(dp) :: fpinj
+  real(dp) :: fp_hcd_injected_max
   !! f-value for injection power (`constraint equation 30`, `iteration variable 46`)
 
   real(dp) :: fp_plant_electric_net_required_mw

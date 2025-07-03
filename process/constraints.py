@@ -972,17 +972,17 @@ def constraint_equation_30():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    fpinj: f-value for injection power
+    fp_hcd_injected_max: f-value for injection power
     p_hcd_injected_max: Maximum allowable value for injected power (MW)
     """
     return ConstraintResult(
         fortran.current_drive_variables.p_hcd_injected_total_mw
         / fortran.current_drive_variables.p_hcd_injected_max
-        - 1.0 * fortran.constraint_variables.fpinj,
+        - 1.0 * fortran.constraint_variables.fp_hcd_injected_max,
         fortran.current_drive_variables.p_hcd_injected_max,
         fortran.current_drive_variables.p_hcd_injected_max
         - fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.constraint_variables.fpinj,
+        / fortran.constraint_variables.fp_hcd_injected_max,
     )
 
 
@@ -2372,7 +2372,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fnesep = 1.0
     fortran.constraint_variables.foh_stress = 1.0
     fortran.constraint_variables.fb_tf_inboard_max = 1.0
-    fortran.constraint_variables.fpinj = 1.0
+    fortran.constraint_variables.fp_hcd_injected_max = 1.0
     fortran.constraint_variables.fp_plant_electric_net_required_mw = 1.0
     fortran.constraint_variables.fradius_beam_tangency = 1.0
     fortran.constraint_variables.fpsepbqar = 1.0
