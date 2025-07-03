@@ -2695,7 +2695,7 @@ icc = 30
 * VARIABLES:     p_hcd_injected_total_mw (total auxiliary injected power (MW)) summed from all injected power sources
 
 ixc = 46
-fpinj = 1.0
+fp_hcd_injected_max = 1.0
 boundl(46) = 0.6
 boundu(46) = 1.5
 * DESCRIPTION:   f-value for injected power variation range

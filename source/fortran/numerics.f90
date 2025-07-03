@@ -251,7 +251,7 @@ module numerics
   !! <LI> (43) NOT USED
   !! <LI> (44) f_c_plasma_non_inductive
   !! <LI> (45) fqval (f-value for equation 28)
-  !! <LI> (46) fpinj (f-value for equation 30)
+  !! <LI> (46) fp_hcd_injected_max (f-value for equation 30)
   !! <LI> (47) feffcd
   !! <LI> (48) fstrcase (f-value for equation 31)
   !! <LI> (49) fstrcond (f-value for equation 32)

@@ -99,7 +99,9 @@ ITERATION_VARIABLES = {
         "f_c_plasma_non_inductive", fortran.physics_variables, 0.001, 1.0
     ),
     45: IterationVariable("fqval", fortran.constraint_variables, 0.001, 1.0),
-    46: IterationVariable("fpinj", fortran.constraint_variables, 0.001, 1.0),
+    46: IterationVariable(
+        "fp_hcd_injected_max", fortran.constraint_variables, 0.001, 1.0
+    ),
     47: IterationVariable("feffcd", fortran.current_drive_variables, 0.001, 1.0),
     48: IterationVariable("fstrcase", fortran.constraint_variables, 0.001, 1.0),
     49: IterationVariable("fstrcond", fortran.constraint_variables, 0.001, 1.0),
