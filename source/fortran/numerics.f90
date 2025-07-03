@@ -220,7 +220,7 @@ module numerics
   !! <LI> (12) oacdcp
   !! <LI> (13) dr_tf_inboard (NOT RECOMMENDED)
   !! <LI> (14) fpflux_fw_neutron_max_mw (f-value for equation 8)
-  !! <LI> (15) fvs (f-value for equation 12)
+  !! <LI> (15) fvs_plasma_total_required (f-value for equation 12)
   !! <LI> (16) dr_cs
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
