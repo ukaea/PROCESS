@@ -42,7 +42,7 @@ module scan_module
   !!         <LI> 3  pnetelin
   !!         <LI> 4  hfact
   !!         <LI> 5  oacdcp
-  !!         <LI> 6  walalw
+  !!         <LI> 6  pflux_fw_neutron_max_mw
   !!         <LI> 7  beamfus0
   !!         <LI> 8  fqval
   !!         <LI> 9  te

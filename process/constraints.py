@@ -441,17 +441,19 @@ def constraint_equation_8():
     """Equation for neutron wall load upper limit
 
     fwalld: f-value for maximum wall load
-    walalw: allowable wall-load (MW/m2)
+    pflux_fw_neutron_max_mw: allowable wall-load (MW/m2)
     pflux_fw_neutron_mw: average neutron wall load (MW/m2)
     """
     return ConstraintResult(
         (
             fortran.physics_variables.pflux_fw_neutron_mw
-            / fortran.constraint_variables.walalw
+            / fortran.constraint_variables.pflux_fw_neutron_max_mw
             - 1.0 * fortran.constraint_variables.fwalld
         ),
-        fortran.constraint_variables.fwalld * fortran.constraint_variables.walalw,
-        fortran.constraint_variables.fwalld * fortran.constraint_variables.walalw
+        fortran.constraint_variables.fwalld
+        * fortran.constraint_variables.pflux_fw_neutron_max_mw,
+        fortran.constraint_variables.fwalld
+        * fortran.constraint_variables.pflux_fw_neutron_max_mw
         - fortran.physics_variables.pflux_fw_neutron_mw,
     )
 
@@ -2414,7 +2416,7 @@ def init_constraint_variables():
     fortran.constraint_variables.tcycmn = 0.0
     fortran.constraint_variables.t_current_ramp_up_min = 1.0
     fortran.constraint_variables.vvhealw = 1.0
-    fortran.constraint_variables.walalw = 1.0
+    fortran.constraint_variables.pflux_fw_neutron_max_mw = 1.0
     fortran.constraint_variables.f_alpha_energy_confinement_min = 5.0
     fortran.constraint_variables.falpha_energy_confinement = 1.0
     fortran.constraint_variables.fniterpump = 1.0

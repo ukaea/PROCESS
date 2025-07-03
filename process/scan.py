@@ -49,7 +49,7 @@ SCAN_VARIABLES = {
     3: ScanVariable("pnetelin", "Net_electric_power_(MW)"),
     4: ScanVariable("hfact", "Confinement_H_factor"),
     5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
-    6: ScanVariable("walalw", "Allow._wall_load_(MW/m2)"),
+    6: ScanVariable("pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)"),
     7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
     8: ScanVariable("fqval", "Big_Q_f-value"),
     9: ScanVariable("te", "Electron_temperature_keV"),
@@ -935,7 +935,7 @@ class Scan:
             case 5:
                 tfcoil_variables.oacdcp = swp[iscn - 1]
             case 6:
-                constraint_variables.walalw = swp[iscn - 1]
+                constraint_variables.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:
                 physics_variables.beamfus0 = swp[iscn - 1]
             case 8:

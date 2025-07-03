@@ -2594,7 +2594,7 @@ f_fw_rad_max = 1.0
 * DESCRIPTION:   f-value for maximum neutron wall load
 * JUSTIFICATION: Used with icc=8 to enforce wall load limit               
 
-*walalw = 
+*pflux_fw_neutron_max_mw = 
 * DESCRIPTION:   Allowable neutron wall-load (MW/m2)
 * JUSTIFICATION: Used with icc=8 to enforce wall load limit
 
