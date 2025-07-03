@@ -721,7 +721,9 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(0.1, 100000000.0)
     ),
     "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
-    "fpflux_fw_rad_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "fpflux_fw_rad_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "frbeam": InputVariable(fortran.current_drive_variables, float, range=(0.5, 2.0)),
     "freinke": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "frhocp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
