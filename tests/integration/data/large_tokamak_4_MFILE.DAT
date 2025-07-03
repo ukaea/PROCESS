@@ -1264,7 +1264,7 @@ boundu(103) = 10.0
 * Injection power upper limit *
 *-----------------------------*
 icc = 30
-ixc = 46 * fpinj
+ixc = 46 * fp_hcd_injected_max
 * Maximum allowable value for injected power [MW]
 p_hcd_injected_max = 200.0
 
