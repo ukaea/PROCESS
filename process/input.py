@@ -1039,7 +1039,7 @@ INPUT_VARIABLES = {
     "plleno": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
     "plsepi": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
     "plsepo": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
-    "pnetelin": InputVariable(
+    "p_plant_electric_net_required_mw": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 10000.0)
     ),
     "pnuc_fw_ratio_dcll": InputVariable(

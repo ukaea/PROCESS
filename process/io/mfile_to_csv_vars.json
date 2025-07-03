@@ -2,7 +2,7 @@
     "vars": [
         "minmax",
         "p_hcd_injected_max",
-        "pnetelin",
+        "p_plant_electric_net_required_mw",
         "ripmax",
         "t_burn_min",
         "alstroh",

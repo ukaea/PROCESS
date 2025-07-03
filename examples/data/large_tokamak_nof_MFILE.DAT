@@ -1182,7 +1182,7 @@
  Nuclear_power_lost_to_TF_(MW)____________________________________________ (p_tf_nuclear_heat_mw)_______________________ 2.30106197305732889e-02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.36397698750976679e+03 OP
  Net_electric_power_output(MW)____________________________________________ (p_plant_electric_net_mw.)____________________ 4.04675729597187456e+02 OP
- Required_Net_electric_power_output(MW)___________________________________ (pnetelin)_____________________ 4.00000000000000000e+02
+ Required_Net_electric_power_output(MW)___________________________________ (p_plant_electric_net_required_mw)_____________________ 4.00000000000000000e+02
  Electric_power_for_heating_and_current_drive_(MW)________________________ (pinjwp)_______________________ 2.09975811652181591e+02 OP
  Electric_power_for_primary_coolant_pumps_(MW)____________________________ (p_coolant_pump_elec_total_mw)________________________ 2.10754419504584575e+02 OP
  Electric_power_for_vacuum_pumps_(MW)_____________________________________ (vachtmw)______________________ 5.00000000000000000e-01
@@ -1278,7 +1278,7 @@ boundu(103) = 10.0
 *--------------------------------*
 icc = 16
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*

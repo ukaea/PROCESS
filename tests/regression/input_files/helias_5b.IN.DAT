@@ -98,7 +98,7 @@ dz_xpoint_divertor     = 0.0          *Vertical gap between x-point and divertor
 
 *---------------Constraint Variables---------------*
 
-pnetelin = 1000         *Required net electric power (MW)
+p_plant_electric_net_required_mw = 1000         *Required net electric power (MW)
 beta_max = 0.05          *upper beta limit
 beta_min = 0.01    *lower beta limit
 

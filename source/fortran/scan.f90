@@ -39,7 +39,7 @@ module scan_module
   !! Switch denoting quantity to scan:<UL>
   !!         <LI> 1  aspect
   !!         <LI> 2  pflux_div_heat_load_max_mw
-  !!         <LI> 3  pnetelin
+  !!         <LI> 3  p_plant_electric_net_required_mw
   !!         <LI> 4  hfact
   !!         <LI> 5  oacdcp
   !!         <LI> 6  pflux_fw_neutron_max_mw

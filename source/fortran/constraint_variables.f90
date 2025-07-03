@@ -249,7 +249,7 @@ module constraint_variables
   real(dp) :: pflux_fw_rad_max_mw
   !! Peak radiation wall load (MW/m^2) (`constraint equation 67`)
 
-  real(dp) :: pnetelin
+  real(dp) :: p_plant_electric_net_required_mw
   !! required net electric power (MW) (`constraint equation 16`)
 
   real(dp) :: p_fusion_total_max_mw

@@ -1155,7 +1155,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      2.5460E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.1713E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      4.0001E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      4.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5942E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9007E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -1276,7 +1276,7 @@ p_hcd_injected_max = 200.0
 icc = 16
 ixc = 25 * fpnetel
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*

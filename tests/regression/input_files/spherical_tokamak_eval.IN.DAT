@@ -116,7 +116,7 @@ p_fusion_total_max_mw  = 2500.0 * maximum fusion power (MW) (`constraint equatio
 pseprmax = 40.0 * maximum ratio of power crossing the separatrix to plasma major radius (Psep/R) (MW/m)
 f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 falpha_energy_confinement = 1.0 * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
-pnetelin = 100.0 * minimum net electric
+p_plant_electric_net_required_mw = 100.0 * minimum net electric
 
 *-------------------Constraints--------------------*
 

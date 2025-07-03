@@ -979,7 +979,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -1974,7 +1974,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -2969,7 +2969,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -3964,7 +3964,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -4959,7 +4959,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -5954,7 +5954,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -6949,7 +6949,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -7944,7 +7944,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -8939,7 +8939,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -9115,7 +9115,7 @@ fpnetel  = 1.0 * F-value for net electric power
 ft_burn_min   = 1.00e+00 * F-value for minimum burn time
 fvdump   = 0.6116 * F-value for dump voltage
 fpflux_fw_neutron_max_mw   = 0.1312 * F-value for maximum wall load
-pnetelin = 500.0 * Required net electric power (mw)
+p_plant_electric_net_required_mw = 500.0 * Required net electric power (mw)
 t_burn_min   = 7.2e3 * Minimum burn time (s)
 pflux_fw_neutron_max_mw   = 8.0 * Allowable wall-load (mw/m2)
 psepbqarmax = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
