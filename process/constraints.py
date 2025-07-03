@@ -1194,7 +1194,7 @@ def constraint_equation_42():
     """Equation for cycle time lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftcycl: f-value for cycle time
+    ft_cycle_min: f-value for cycle time
     t_cycle: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
     """
@@ -1205,7 +1205,7 @@ def constraint_equation_42():
 
     cc = (
         1.0
-        - fortran.constraint_variables.ftcycl
+        - fortran.constraint_variables.ft_cycle_min
         * fortran.times_variables.t_cycle
         / fortran.constraint_variables.t_cycle_min
     )
@@ -2391,7 +2391,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fmaxvvstress = 1.0
     fortran.constraint_variables.ftbr = 1.0
     fortran.constraint_variables.ft_burn_min = 1.0
-    fortran.constraint_variables.ftcycl = 1.0
+    fortran.constraint_variables.ft_cycle_min = 1.0
     fortran.constraint_variables.ftmargoh = 1.0
     fortran.constraint_variables.ftmargtf = 1.0
     fortran.constraint_variables.ft_current_ramp_up = 1.0
