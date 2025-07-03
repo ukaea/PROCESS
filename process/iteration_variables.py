@@ -90,7 +90,9 @@ ITERATION_VARIABLES = {
     37: IterationVariable("j_cs_flat_top_end", fortran.pfcoil_variables, 1.0e5, 1.0e8),
     38: IterationVariable("fjohc", fortran.constraint_variables, 0.010, 1.0),
     39: IterationVariable("fjohc0", fortran.constraint_variables, 0.001, 1.0),
-    40: IterationVariable("feta_cd_norm_hcd_primary_max", fortran.constraint_variables, 0.001, 1.0),
+    40: IterationVariable(
+        "feta_cd_norm_hcd_primary_max", fortran.constraint_variables, 0.001, 1.0
+    ),
     41: IterationVariable(
         "f_j_cs_start_pulse_end_flat_top", fortran.pfcoil_variables, 0.001, 1.0
     ),

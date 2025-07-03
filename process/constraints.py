@@ -1196,23 +1196,23 @@ def constraint_equation_42():
 
     ftcycl: f-value for cycle time
     t_cycle: full cycle time (s)
-    tcycmn: minimum cycle time (s)
+    t_cycle_min: minimum cycle time (s)
     """
-    if fortran.constraint_variables.tcycmn < 1.0:
+    if fortran.constraint_variables.t_cycle_min < 1.0:
         raise ProcessValueError(
-            "tcycmn = 0 implies that i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
+            "t_cycle_min = 0 implies that i_pulsed_plant=0; do not use constraint 42 if i_pulsed_plant=0"
         )
 
     cc = (
         1.0
         - fortran.constraint_variables.ftcycl
         * fortran.times_variables.t_cycle
-        / fortran.constraint_variables.tcycmn
+        / fortran.constraint_variables.t_cycle_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.tcycmn * (1.0 - cc),
-        fortran.constraint_variables.tcycmn * cc,
+        fortran.constraint_variables.t_cycle_min * (1.0 - cc),
+        fortran.constraint_variables.t_cycle_min * cc,
     )
 
 
@@ -2417,7 +2417,7 @@ def init_constraint_variables():
     fortran.constraint_variables.ptfnucmax = 1e-3
     fortran.constraint_variables.tbrmin = 1.1
     fortran.constraint_variables.t_burn_min = 1.0
-    fortran.constraint_variables.tcycmn = 0.0
+    fortran.constraint_variables.t_cycle_min = 0.0
     fortran.constraint_variables.t_current_ramp_up_min = 1.0
     fortran.constraint_variables.vvhealw = 1.0
     fortran.constraint_variables.pflux_fw_neutron_max_mw = 1.0
