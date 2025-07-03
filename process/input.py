@@ -682,7 +682,9 @@ INPUT_VARIABLES = {
     "fp_plasma_separatrix_min_mw": InputVariable(
         fortran.physics_variables, float, range=(0.001, 1.0)
     ),
-    "fpeakb": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fb_tf_inboard_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fpinj": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fp_plant_electric_net_required_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)

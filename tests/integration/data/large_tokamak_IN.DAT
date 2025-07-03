@@ -96,7 +96,7 @@ fbeta_max = 0.5
 * Max TF field *
 *--------------*
 icc = 25
-ixc = 35 * fpeakb
+ixc = 35 * fb_tf_inboard_max
 * Maximum allowable value for toroidal magnetic field [T]
 b_tf_inboard_max = 14.0
 
