@@ -68,7 +68,7 @@ module constraint_variables
   real(dp) :: fp_fusion_total_max_mw
   !! f-value for maximum fusion power (`constraint equation 9`, `iteration variable 26`)
 
-  real(dp) :: fgamcd
+  real(dp) :: feta_cd_norm_hcd_primary_max
   !! f-value for current drive gamma (`constraint equation 37`, `iteration variable 40`)
 
   real(dp) :: fpflux_div_heat_load_mw
