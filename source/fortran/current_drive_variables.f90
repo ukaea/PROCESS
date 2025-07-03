@@ -295,6 +295,6 @@ module current_drive_variables
   real(dp) :: n_beam_decay_lengths_core
   !! neutral beam e-decay lengths to plasma centre
 
-  real(dp) :: tbeamin
+  real(dp) :: n_beam_decay_lengths_core_required
   !! permitted neutral beam e-decay lengths to plasma centre
 end module current_drive_variables
