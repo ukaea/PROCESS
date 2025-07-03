@@ -73,8 +73,8 @@ For example, to set the net electric power to a certain value, the following
 should be carried out:
 
 1. Activate `constraint 16` (net electric power lower limit) by including it in the `icc` array
-2. Set the corresponding `f-value` `fpnetel = 1.0D0`
-3. Ensure that `fpnetel` (iteration variable no. 25) **IS NOT** selected as an iteration variable.
+2. Set the corresponding `f-value` `fp_plant_electric_net_required_mw = 1.0D0`
+3. Ensure that `fp_plant_electric_net_required_mw` (iteration variable no. 25) **IS NOT** selected as an iteration variable.
 4. Set `p_plant_electric_net_required_mw` to the required net electric power.
 
 Limit equations are not restricted to optimisation mode. In non-optimisation mode, the iteration
