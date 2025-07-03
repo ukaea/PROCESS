@@ -740,7 +740,9 @@ INPUT_VARIABLES = {
     "fvoldw": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvolsi": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvolso": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
-    "fvs": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fvs_plasma_total_required": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "f_c_plasma_non_inductive": InputVariable(
         fortran.physics_variables, float, range=(0.0, 1.0)
     ),

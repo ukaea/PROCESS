@@ -501,13 +501,13 @@ def constraint_equation_12():
 
     vs_plasma_total_required: total V-s needed (Wb)
     vs_plasma_total_required (lower limit) is positive; vs_cs_pf_total_pulse (available) is negative
-    fvs: f-value for flux-swing (V-s) requirement (STEADY STATE)
+    fvs_plasma_total_required: f-value for flux-swing (V-s) requirement (STEADY STATE)
     vs_cs_pf_total_pulse: total flux swing for pulse (Wb)
     """
     # vs_cs_pf_total_pulse is negative, requires sign change
     cc = (
         1.0
-        - fortran.constraint_variables.fvs
+        - fortran.constraint_variables.fvs_plasma_total_required
         * (-fortran.pfcoil_variables.vs_cs_pf_total_pulse)
         / fortran.physics_variables.vs_plasma_total_required
     )
@@ -2393,7 +2393,7 @@ def init_constraint_variables():
     fortran.constraint_variables.ft_current_ramp_up = 1.0
     fortran.constraint_variables.ftpeak = 1.0
     fortran.constraint_variables.fvdump = 1.0
-    fortran.constraint_variables.fvs = 1.0
+    fortran.constraint_variables.fvs_plasma_total_required = 1.0
     fortran.constraint_variables.fvvhe = 1.0
     fortran.constraint_variables.fpflux_fw_neutron_max_mw = 1.0
     fortran.constraint_variables.fzeffmax = 1.0

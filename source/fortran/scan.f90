@@ -46,7 +46,7 @@ module scan_module
   !!         <LI> 7  beamfus0
   !!         <LI> 8  fqval
   !!         <LI> 9  te
-  !!         <LI> 10 boundu(15: fvs)
+  !!         <LI> 10 boundu(15: fvs_plasma_total_required)
   !!         <LI> 11 beta_norm_max
   !!         <LI> 12 f_c_plasma_bootstrap_max
   !!         <LI> 13 boundu(10: hfact)
