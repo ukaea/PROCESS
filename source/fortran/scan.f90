@@ -54,7 +54,7 @@ module scan_module
   !!         <LI> 15 fjprot
   !!         <LI> 16 rmajor
   !!         <LI> 17 b_tf_inboard_max
-  !!         <LI> 18 gammax
+  !!         <LI> 18 eta_cd_norm_hcd_primary_max
   !!         <LI> 19 boundl(16: dr_cs)
   !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used

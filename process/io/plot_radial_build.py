@@ -158,7 +158,7 @@ def main(args=None):
         "fjprot",
         "rmajor",
         "b_tf_inboard_peak",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
-        "gammax",
+        "eta_cd_norm_hcd_primary_max",
         "boundl(16)",
         "cnstv.t_burn_min",
         "",

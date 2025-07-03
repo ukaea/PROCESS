@@ -791,7 +791,9 @@ INPUT_VARIABLES = {
     "gamma_he": InputVariable(
         fortran.primary_pumping_variables, float, range=(1.0, 2.0)
     ),
-    "gammax": InputVariable(fortran.constraint_variables, float, range=(0.01, 10.0)),
+    "eta_cd_norm_hcd_primary_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.01, 10.0)
+    ),
     "gapomin": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "gas_buildings_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
