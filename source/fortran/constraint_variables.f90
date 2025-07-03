@@ -42,7 +42,7 @@ module constraint_variables
   real(dp) :: fbeta_min
   !! f-value for (lower) beta limit (`constraint equation 84`, `iteration variable 173`)
 
-  real(dp) :: fcpttf
+  real(dp) :: fc_tf_turn_max
   !! f-value for TF coil current per turn upper limit
   !! (`constraint equation 77`, `iteration variable 146`)
 
