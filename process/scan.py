@@ -60,7 +60,7 @@ SCAN_VARIABLES = {
     14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
     15: ScanVariable("fjprot", "TFC_Jprot_limit_f-value"),
     16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
-    17: ScanVariable("bmxlim", "Max_toroidal_field_(T)"),
+    17: ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)"),
     18: ScanVariable("gammax", "Maximum_CD_gamma"),
     19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
     20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
@@ -957,7 +957,7 @@ class Scan:
             case 16:
                 physics_variables.rmajor = swp[iscn - 1]
             case 17:
-                constraint_variables.bmxlim = swp[iscn - 1]
+                constraint_variables.b_tf_inboard_max = swp[iscn - 1]
             case 18:
                 constraint_variables.gammax = swp[iscn - 1]
             case 19:

@@ -1291,7 +1291,7 @@ fbetatry = 0.5
 icc = 25
 ixc = 35 * fpeakb
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*

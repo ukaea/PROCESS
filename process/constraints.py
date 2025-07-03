@@ -858,16 +858,17 @@ def constraint_equation_25():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fpeakb: f-value for maximum toroidal field
-    bmxlim: maximum peak toroidal field (T)
+    b_tf_inboard_max: maximum peak toroidal field (T)
     b_tf_inboard_peak: mean peak field at TF coil (T)
     """
     cc = (
-        fortran.tfcoil_variables.b_tf_inboard_peak / fortran.constraint_variables.bmxlim
+        fortran.tfcoil_variables.b_tf_inboard_peak
+        / fortran.constraint_variables.b_tf_inboard_max
         - 1.0 * fortran.constraint_variables.fpeakb
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.bmxlim * (1.0 - cc),
+        fortran.constraint_variables.b_tf_inboard_max * (1.0 - cc),
         fortran.tfcoil_variables.b_tf_inboard_peak * cc,
     )
 
@@ -2344,7 +2345,7 @@ def init_constraint_variables():
     fortran.constraint_variables.auxmin = 0.1
     fortran.constraint_variables.beta_poloidal_max = 0.19
     fortran.constraint_variables.bigqmin = 10.0
-    fortran.constraint_variables.bmxlim = 12.0
+    fortran.constraint_variables.b_tf_inboard_max = 12.0
     fortran.constraint_variables.fauxmn = 1.0
     fortran.constraint_variables.fbeta_poloidal_eps = 1.0
     fortran.constraint_variables.fbeta_poloidal = 1.0

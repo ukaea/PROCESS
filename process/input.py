@@ -233,7 +233,9 @@ INPUT_VARIABLES = {
         fortran.pfcoil_variables, float, range=(0.01, 100.0)
     ),
     "bmn": InputVariable(fortran.stellarator_variables, float, range=(0.0001, 0.01)),
-    "bmxlim": InputVariable(fortran.constraint_variables, float, range=(0.1, 50.0)),
+    "b_tf_inboard_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.1, 50.0)
+    ),
     "f_c_plasma_bootstrap_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
     ),
