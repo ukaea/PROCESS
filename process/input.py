@@ -680,7 +680,9 @@ INPUT_VARIABLES = {
     ),
     "fpeakb": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fpinj": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fpnetel": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fp_plant_electric_net_required_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fpoloidalpower": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),

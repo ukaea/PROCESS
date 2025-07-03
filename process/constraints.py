@@ -568,19 +568,19 @@ def constraint_equation_16():
     """Equation for net electric power lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpnetel: f-value for net electric power
+    fp_plant_electric_net_required_mw: f-value for net electric power
     p_plant_electric_net_mw: net electric power (MW)
     p_plant_electric_net_required_mw: required net electric power (MW)
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.fpnetel
+        - fortran.constraint_variables.fp_plant_electric_net_required_mw
         * fortran.heat_transport_variables.p_plant_electric_net_mw
         / fortran.constraint_variables.p_plant_electric_net_required_mw,
         fortran.constraint_variables.p_plant_electric_net_required_mw,
         fortran.heat_transport_variables.p_plant_electric_net_mw
         - fortran.constraint_variables.p_plant_electric_net_required_mw
-        / fortran.constraint_variables.fpnetel,
+        / fortran.constraint_variables.fp_plant_electric_net_required_mw,
     )
 
 
@@ -2372,7 +2372,7 @@ def init_constraint_variables():
     fortran.constraint_variables.foh_stress = 1.0
     fortran.constraint_variables.fpeakb = 1.0
     fortran.constraint_variables.fpinj = 1.0
-    fortran.constraint_variables.fpnetel = 1.0
+    fortran.constraint_variables.fp_plant_electric_net_required_mw = 1.0
     fortran.constraint_variables.fradius_beam_tangency = 1.0
     fortran.constraint_variables.fpsepbqar = 1.0
     fortran.constraint_variables.fpsepr = 1.0

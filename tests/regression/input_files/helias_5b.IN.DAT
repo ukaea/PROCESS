@@ -39,8 +39,8 @@ ixc = 10                *hfact
 hfact = 1.2187          *H-factor on energy confinement times
 boundu(10) = 2.0
 
-ixc = 25                *fpnetel
-fpnetel = 1.0000        *f-value for net electric power
+ixc = 25                *fp_plant_electric_net_required_mw
+fp_plant_electric_net_required_mw = 1.0000        *f-value for net electric power
 boundl(25) = 0.98
 boundu(25) = 1.0
 
