@@ -338,7 +338,7 @@ class PortszParam(NamedTuple):
 
     dx_beam_duct: Any = None
 
-    frbeam: Any = None
+    f_radius_beam_tangency_rmajor: Any = None
 
     rmajor: Any = None
 
@@ -361,7 +361,7 @@ class PortszParam(NamedTuple):
             radius_beam_tangency_max=0,
             dx_beam_shield=0.5,
             dx_beam_duct=0.57999999999999996,
-            frbeam=1.05,
+            f_radius_beam_tangency_rmajor=1.05,
             rmajor=8.8901000000000003,
             dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
@@ -375,7 +375,7 @@ class PortszParam(NamedTuple):
             radius_beam_tangency_max=14.735821603386416,
             dx_beam_shield=0.5,
             dx_beam_duct=0.57999999999999996,
-            frbeam=1.05,
+            f_radius_beam_tangency_rmajor=1.05,
             rmajor=8.8901000000000003,
             dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
@@ -426,7 +426,11 @@ def test_calculate_beam_port_size(portszparam, monkeypatch, build):
         current_drive_variables, "dx_beam_duct", portszparam.dx_beam_duct
     )
 
-    monkeypatch.setattr(current_drive_variables, "frbeam", portszparam.frbeam)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "f_radius_beam_tangency_rmajor",
+        portszparam.f_radius_beam_tangency_rmajor,
+    )
 
     monkeypatch.setattr(physics_variables, "rmajor", portszparam.rmajor)
 

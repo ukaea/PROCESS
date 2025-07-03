@@ -166,7 +166,7 @@ module current_drive_variables
   !! fraction of neutral beam power lost after ionisation but before
   !! thermalisation (orbit loss fraction)
 
-  real(dp) :: frbeam
+  real(dp) :: f_radius_beam_tangency_rmajor
   !! R_tangential / R_major for neutral beam injection
 
   real(dp) :: f_beam_tritium

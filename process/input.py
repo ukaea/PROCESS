@@ -710,7 +710,9 @@ INPUT_VARIABLES = {
     ),
     "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
     "fradwall": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "frbeam": InputVariable(fortran.current_drive_variables, float, range=(0.5, 2.0)),
+    "f_radius_beam_tangency_rmajor": InputVariable(
+        fortran.current_drive_variables, float, range=(0.5, 2.0)
+    ),
     "freinke": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "frhocp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
     "frholeg": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),

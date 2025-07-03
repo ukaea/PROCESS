@@ -41,7 +41,8 @@ class Build:
         A User's Guide to the PROCESS Systems Code
         """
         current_drive_variables.radius_beam_tangency = (
-            current_drive_variables.frbeam * physics_variables.rmajor
+            current_drive_variables.f_radius_beam_tangency_rmajor
+            * physics_variables.rmajor
         )
 
         #  Toroidal angle between adjacent TF coils

@@ -2756,7 +2756,7 @@ feffcd = 1.0
 * DESCRIPTION:   NBI power orbit loss fraction
 * JUSTIFICATION: Not used as no NBI used
 
-*frbeam
+*f_radius_beam_tangency_rmajor
 * DESCRIPTION:   R_tan / R_major for NBI
 * JUSTIFICATION: Not used as no NBI used
 

@@ -5,7 +5,7 @@
 
 ## Neutral beam access
 
-If present, a neutral beam injection system needs sufficient space between the TF coils to be able to intercept the plasma tangentially. The major radius `radius_beam_tangency` at which the centre-line of the beam is tangential to the toroidal direction is user-defined using input parameter `frbeam`, which is the ratio of `radius_beam_tangency` to the plasma major radius `rmajor`. The maximum possible tangency radius `radius_beam_tangency_max` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using constraint equation no. 20 with iteration variable no. 33 (`fportsz`). The thickness of the beam duct walls may be set using input parameter `dx_beam_shield`.
+If present, a neutral beam injection system needs sufficient space between the TF coils to be able to intercept the plasma tangentially. The major radius `radius_beam_tangency` at which the centre-line of the beam is tangential to the toroidal direction is user-defined using input parameter `f_radius_beam_tangency_rmajor`, which is the ratio of `radius_beam_tangency` to the plasma major radius `rmajor`. The maximum possible tangency radius `radius_beam_tangency_max` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using constraint equation no. 20 with iteration variable no. 33 (`fportsz`). The thickness of the beam duct walls may be set using input parameter `dx_beam_shield`.
 
 <figure markdown>
 ![NBI Port Size](../images/portsize.png){ width = "300"}
