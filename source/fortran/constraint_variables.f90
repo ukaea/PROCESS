@@ -155,7 +155,7 @@ module constraint_variables
   real(dp) :: fradpwr
   !! f-value for core radiation power limit (`constraint equation 17`, `iteration variable 28`)
 
-  real(dp) :: fradwall
+  real(dp) :: fpflux_fw_rad_max
   !! f-value for upper limit on radiation wall load (`constr. equ. 67`, `iteration variable 116`)
 
   real(dp) :: freinke

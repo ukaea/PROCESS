@@ -321,7 +321,7 @@ module numerics
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
   !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
-  !! <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)
+  !! <LI> (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
   !! <LI> (118) fpsep: f-value to ensure separatrix power is less than
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
