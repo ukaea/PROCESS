@@ -39,8 +39,8 @@ ixc = 10                *hfact
 hfact = 1.2187          *H-factor on energy confinement times
 boundu(10) = 2.0
 
-ixc = 25                *fpnetel
-fpnetel = 1.0000        *f-value for net electric power
+ixc = 25                *fp_plant_electric_net_required_mw
+fp_plant_electric_net_required_mw = 1.0000        *f-value for net electric power
 boundl(25) = 0.98
 boundu(25) = 1.0
 
@@ -98,7 +98,7 @@ dz_xpoint_divertor     = 0.0          *Vertical gap between x-point and divertor
 
 *---------------Constraint Variables---------------*
 
-pnetelin = 1000         *Required net electric power (MW)
+p_plant_electric_net_required_mw = 1000         *Required net electric power (MW)
 beta_max = 0.05          *upper beta limit
 beta_min = 0.01    *lower beta limit
 

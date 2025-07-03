@@ -46,10 +46,10 @@ class ScanVariable:
 SCAN_VARIABLES = {
     1: ScanVariable("aspect", "Aspect_ratio"),
     2: ScanVariable("pflux_div_heat_load_max_mw", "Div_heat_limit_(MW/m2)"),
-    3: ScanVariable("pnetelin", "Net_electric_power_(MW)"),
+    3: ScanVariable("p_plant_electric_net_required_mw", "Net_electric_power_(MW)"),
     4: ScanVariable("hfact", "Confinement_H_factor"),
     5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
-    6: ScanVariable("walalw", "Allow._wall_load_(MW/m2)"),
+    6: ScanVariable("pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)"),
     7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
     8: ScanVariable("fqval", "Big_Q_f-value"),
     9: ScanVariable("te", "Electron_temperature_keV"),
@@ -60,8 +60,8 @@ SCAN_VARIABLES = {
     14: ScanVariable("fiooic", "TFC_Iop_/_Icrit_f-value"),
     15: ScanVariable("fjprot", "TFC_Jprot_limit_f-value"),
     16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
-    17: ScanVariable("bmxlim", "Max_toroidal_field_(T)"),
-    18: ScanVariable("gammax", "Maximum_CD_gamma"),
+    17: ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)"),
+    18: ScanVariable("eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma"),
     19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
     20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
     22: ScanVariable("cfactr", "Plant_availability_factor"),
@@ -929,13 +929,13 @@ class Scan:
             case 2:
                 divertor_variables.pflux_div_heat_load_max_mw = swp[iscn - 1]
             case 3:
-                constraint_variables.pnetelin = swp[iscn - 1]
+                constraint_variables.p_plant_electric_net_required_mw = swp[iscn - 1]
             case 4:
                 physics_variables.hfact = swp[iscn - 1]
             case 5:
                 tfcoil_variables.oacdcp = swp[iscn - 1]
             case 6:
-                constraint_variables.walalw = swp[iscn - 1]
+                constraint_variables.pflux_fw_neutron_max_mw = swp[iscn - 1]
             case 7:
                 physics_variables.beamfus0 = swp[iscn - 1]
             case 8:
@@ -957,9 +957,9 @@ class Scan:
             case 16:
                 physics_variables.rmajor = swp[iscn - 1]
             case 17:
-                constraint_variables.bmxlim = swp[iscn - 1]
+                constraint_variables.b_tf_inboard_max = swp[iscn - 1]
             case 18:
-                constraint_variables.gammax = swp[iscn - 1]
+                constraint_variables.eta_cd_norm_hcd_primary_max = swp[iscn - 1]
             case 19:
                 numerics.boundl[15] = swp[iscn - 1]
             case 20:

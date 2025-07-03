@@ -28,9 +28,9 @@
  dene____________________________________________________________________ (itvar002)____________________      8.0130E+19    
  dene_(final_value/initial_value)________________________________________ (xcm002)______________________      1.0684E+00    
  dene_(range_normalised)_________________________________________________ (nitvar002)___________________      6.1358E-02    
- fwalld__________________________________________________________________ (itvar003)____________________      5.0678E-01    
- fwalld_(final_value/initial_value)______________________________________ (xcm003)______________________      5.0678E-01    
- fwalld_(range_normalised)_______________________________________________ (nitvar003)___________________      5.0629E-01    
+ fpflux_fw_neutron_max_mw__________________________________________________________________ (itvar003)____________________      5.0678E-01    
+ fpflux_fw_neutron_max_mw_(final_value/initial_value)______________________________________ (xcm003)______________________      5.0678E-01    
+ fpflux_fw_neutron_max_mw_(range_normalised)_______________________________________________ (nitvar003)___________________      5.0629E-01    
  ffuspow_________________________________________________________________ (itvar004)____________________      5.3921E-01    
  ffuspow_(final_value/initial_value)_____________________________________ (xcm004)______________________      5.3921E-01    
  ffuspow_(range_normalised)______________________________________________ (nitvar004)___________________      5.3875E-01    
@@ -40,18 +40,18 @@
  flhthresh_______________________________________________________________ (itvar006)____________________      1.6793E+00    
  flhthresh_(final_value/initial_value)___________________________________ (xcm006)______________________      1.6793E+00    
  flhthresh_(range_normalised)____________________________________________ (nitvar006)___________________      7.5473E-02    
- fpinj___________________________________________________________________ (itvar007)____________________      3.9855E-01    
- fpinj_(final_value/initial_value)_______________________________________ (xcm007)______________________      3.9855E-01    
- fpinj_(range_normalised)________________________________________________ (nitvar007)___________________      3.9795E-01    
- fpnetel_________________________________________________________________ (itvar008)____________________      1.0000E+00    
- fpnetel_(final_value/initial_value)_____________________________________ (xcm008)______________________      1.0000E+00    
- fpnetel_(range_normalised)______________________________________________ (nitvar008)___________________      1.0000E+00    
+ fp_hcd_injected_max___________________________________________________________________ (itvar007)____________________      3.9855E-01    
+ fp_hcd_injected_max_(final_value/initial_value)_______________________________________ (xcm007)______________________      3.9855E-01    
+ fp_hcd_injected_max_(range_normalised)________________________________________________ (nitvar007)___________________      3.9795E-01    
+ fp_plant_electric_net_required_mw_________________________________________________________________ (itvar008)____________________      1.0000E+00    
+ fp_plant_electric_net_required_mw_(final_value/initial_value)_____________________________________ (xcm008)______________________      1.0000E+00    
+ fp_plant_electric_net_required_mw_(range_normalised)______________________________________________ (nitvar008)___________________      1.0000E+00    
  fbetatry________________________________________________________________ (itvar009)____________________      5.0216E-01    
  fbetatry_(final_value/initial_value)____________________________________ (xcm009)______________________      1.0043E+00    
  fbetatry_(range_normalised)_____________________________________________ (nitvar009)___________________      5.0166E-01    
- fpeakb__________________________________________________________________ (itvar010)____________________      8.7830E-01    
- fpeakb_(final_value/initial_value)______________________________________ (xcm010)______________________      8.7830E-01    
- fpeakb_(range_normalised)_______________________________________________ (nitvar010)___________________      8.7818E-01    
+ fb_tf_inboard_max__________________________________________________________________ (itvar010)____________________      8.7830E-01    
+ fb_tf_inboard_max_(final_value/initial_value)______________________________________ (xcm010)______________________      8.7830E-01    
+ fb_tf_inboard_max_(range_normalised)_______________________________________________ (nitvar010)___________________      8.7818E-01    
  coheof__________________________________________________________________ (itvar011)____________________      2.0188E+07    
  coheof_(final_value/initial_value)______________________________________ (xcm011)______________________      1.3459E+00    
  coheof_(range_normalised)_______________________________________________ (nitvar011)___________________      2.0108E-01    
@@ -364,7 +364,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3887E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      8.0130E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      1.0540E+20 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      8.8740E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      8.8740E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      7.1228E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      6.4478E+19 OP 
@@ -1155,7 +1155,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      2.5460E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.1713E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      4.0001E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      4.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      4.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.5942E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      1.9007E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -1238,10 +1238,10 @@ dene = 7.5E19
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-ixc = 14 * fwalld
-fwalld = 1.0
+ixc = 14 * fpflux_fw_neutron_max_mw
+fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*
@@ -1254,7 +1254,7 @@ p_fusion_total_max_mw = 3000
 * Burn time lower limit *
 *-----------------------*
 icc = 13 
-ixc = 21 * ft_burn
+ixc = 21 * ft_burn_min
 * minimum burn time [s]
 t_burn_min = 7200.0
 
@@ -1267,16 +1267,16 @@ boundu(103) = 10.0
 * Injection power upper limit *
 *-----------------------------*
 icc = 30
-ixc = 46 * fpinj
+ixc = 46 * fp_hcd_injected_max
 * Maximum allowable value for injected power [MW]
 p_hcd_injected_max = 200.0
 
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-ixc = 25 * fpnetel
+ixc = 25 * fp_plant_electric_net_required_mw
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*
@@ -1287,9 +1287,9 @@ fbeta_max = 0.5
 * Max TF field *
 *--------------*
 icc = 25
-ixc = 35 * fpeakb
+ixc = 35 * fb_tf_inboard_max
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*

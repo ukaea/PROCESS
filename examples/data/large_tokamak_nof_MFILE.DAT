@@ -302,7 +302,7 @@
  Electron_temp.,_density_weighted_(keV)___________________________________ (ten)__________________________ 1.44360335891099503e+01 OP
  Volume_averaged_electron_number_density_(/m3)____________________________ (dene)_________________________ 8.50078961768999158e+19
  Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.11814263037413868e+20 OP
- Line-averaged_electron_number_density_(/m3)______________________________ (dnla)_________________________ 9.41418090734859715e+19 OP
+ Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_________________________ 9.41418090734859715e+19 OP
  Plasma_pressure_on_axis_(Pa)_____________________________________________ (p0)___________________________ 9.10652371594472905e+05 OP
  Volume_averaged_plasma_pressure_(Pa)_____________________________________ (vol_avg_pressure)_____________ 2.63957209157818230e+05 OP
  Line-averaged_electron_density_/_Greenwald_density_______________________ (dnla_gw)______________________ 1.19999999999999951e+00 OP
@@ -408,7 +408,7 @@
  Power_incident_on_the_lower_inner_target_(MW)____________________________ (pLImw)________________________ 1.10064821668574311e+01 OP
  Power_incident_on_the_lower_outer_target_(MW)____________________________ (pLOmw)________________________ 1.58385962888924041e+01 OP
  Ohmic_heating_power_(MW)_________________________________________________ (p_plasma_ohmic_mw)____________ 6.76139747896948751e-01 OP
- Fraction_of_alpha_power_deposited_in_plasma______________________________ (f_alpha_plasma)_______________ 9.49999999999999956e-01 IP
+ Fraction_of_alpha_power_deposited_in_plasma______________________________ (f_p_alpha_plasma_deposited)_______________ 9.49999999999999956e-01 IP
  Fraction_of_alpha_power_to_electrons_____________________________________ (f_alpha_electron)_____________ 7.11594827276366915e-01 OP
  Fraction_of_alpha_power_to_ions__________________________________________ (f_alpha_ion)__________________ 2.88405172723633085e-01 OP
  Ion_transport_(MW)_______________________________________________________ (p_ion_transport_loss_mw)______ 1.49230089218941515e+02 OP
@@ -1164,7 +1164,7 @@
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 3.21850327706303688e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.18176171262989300e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 4.40026498969293016e+02 OP
- Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*p_alpha_total_mw)_ 3.33015754620520056e+02 OP
+ Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_p_alpha_plasma_deposited*p_alpha_total_mw)_ 3.33015754620520056e+02 OP
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (p_non_alpha_charged_mw.)_____ 1.34669877478527300e+00 OP
  Ohmic_heating_(MW)_______________________________________________________ (p_plasma_ohmic_mw.)___________ 6.76139747896948751e-01 OP
  Injected_power_deposited_in_plasma_(MW)__________________________________ (pinjmw)_______________________ 1.04987905826090795e+02 OP
@@ -1182,7 +1182,7 @@
  Nuclear_power_lost_to_TF_(MW)____________________________________________ (p_tf_nuclear_heat_mw)_______________________ 2.30106197305732889e-02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.36397698750976679e+03 OP
  Net_electric_power_output(MW)____________________________________________ (p_plant_electric_net_mw.)____________________ 4.04675729597187456e+02 OP
- Required_Net_electric_power_output(MW)___________________________________ (pnetelin)_____________________ 4.00000000000000000e+02
+ Required_Net_electric_power_output(MW)___________________________________ (p_plant_electric_net_required_mw)_____________________ 4.00000000000000000e+02
  Electric_power_for_heating_and_current_drive_(MW)________________________ (pinjwp)_______________________ 2.09975811652181591e+02 OP
  Electric_power_for_primary_coolant_pumps_(MW)____________________________ (p_coolant_pump_elec_total_mw)________________________ 2.10754419504584575e+02 OP
  Electric_power_for_vacuum_pumps_(MW)_____________________________________ (vachtmw)______________________ 5.00000000000000000e-01
@@ -1278,7 +1278,7 @@ boundu(103) = 10.0
 *--------------------------------*
 icc = 16
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*
@@ -1289,7 +1289,7 @@ fbeta_max = 1.0
 *--------------*
 icc = 25
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
@@ -1376,9 +1376,9 @@ dene = 7.5E19
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-fwalld = 1.0
+fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*

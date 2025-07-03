@@ -2078,7 +2078,7 @@ def test_acpow(acpowparam, monkeypatch, power):
 
 
 class Power2Param(NamedTuple):
-    pnetelin: Any = None
+    p_plant_electric_net_required_mw: Any = None
 
     ipnet: Any = None
 
@@ -2216,7 +2216,7 @@ class Power2Param(NamedTuple):
 
     pscalingmw: Any = None
 
-    f_alpha_plasma: Any = None
+    f_p_alpha_plasma_deposited: Any = None
 
     p_cp_coolant_pump_elec: Any = None
 
@@ -2283,7 +2283,7 @@ class Power2Param(NamedTuple):
     "power2param",
     (
         Power2Param(
-            pnetelin=500,
+            p_plant_electric_net_required_mw=500,
             ipnet=0,
             ireactor=1,
             p_hcd_injected_total_mw=51.978447720428512,
@@ -2352,7 +2352,7 @@ class Power2Param(NamedTuple):
             p_fusion_total_mw=1985.785106643267,
             p_non_alpha_charged_mw=1.6064693283140403,
             pscalingmw=325.08626176539281,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             p_cp_coolant_pump_elec=0,
             i_tf_sup=1,
             tfcmw=0,
@@ -2385,7 +2385,7 @@ class Power2Param(NamedTuple):
             expected_pcoresystems=125.68822074464052,
         ),
         Power2Param(
-            pnetelin=500,
+            p_plant_electric_net_required_mw=500,
             ipnet=0,
             ireactor=1,
             p_hcd_injected_total_mw=51.978447720428512,
@@ -2454,7 +2454,7 @@ class Power2Param(NamedTuple):
             p_fusion_total_mw=1985.1653095257811,
             p_non_alpha_charged_mw=1.6059679220663614,
             pscalingmw=325.00280675287695,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             p_cp_coolant_pump_elec=0,
             i_tf_sup=1,
             tfcmw=0,
@@ -2501,7 +2501,11 @@ def test_power2(power2param, monkeypatch, power):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(constraint_variables, "pnetelin", power2param.pnetelin)
+    monkeypatch.setattr(
+        constraint_variables,
+        "p_plant_electric_net_required_mw",
+        power2param.p_plant_electric_net_required_mw,
+    )
 
     monkeypatch.setattr(cost_variables, "ipnet", power2param.ipnet)
 
@@ -2799,7 +2803,11 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(physics_variables, "pscalingmw", power2param.pscalingmw)
 
-    monkeypatch.setattr(physics_variables, "f_alpha_plasma", power2param.f_alpha_plasma)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_p_alpha_plasma_deposited",
+        power2param.f_p_alpha_plasma_deposited,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "p_cp_coolant_pump_elec", power2param.p_cp_coolant_pump_elec

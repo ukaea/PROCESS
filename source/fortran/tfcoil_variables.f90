@@ -143,7 +143,7 @@ module tfcoil_variables
   !! TF coil current per turn (A). (calculated for stellarators) (calculated for
   !! integer-turn TF coils `i_tf_turns_integer=1`) (`iteration variable 60`)
 
-  real(dp) :: cpttf_max
+  real(dp) :: c_tf_turn_max
   !! Max TF coil current per turn [A]. (for stellarators and `i_tf_turns_integer=1`)
   !! (`constraint equation 77`)
 

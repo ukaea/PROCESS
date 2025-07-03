@@ -157,7 +157,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     tratio: float = 0.0
 
-    dnla: float = 0.0
+    nd_electron_line: float = 0.0
 
     alphat: float = 0.0
 
@@ -207,7 +207,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     expected_ti0: float = 0.0
 
-    expected_dnla: float = 0.0
+    expected_nd_electron_line: float = 0.0
 
     expected_ti: float = 0.0
 
@@ -232,7 +232,7 @@ class PlasmaProfilesParam(NamedTuple):
             ne0=0.0,
             ti0=0.0,
             tratio=1,
-            dnla=0.0,
+            nd_electron_line=0.0,
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
             neped=6.1916268627398164e19,
@@ -257,7 +257,7 @@ class PlasmaProfilesParam(NamedTuple):
             expected_ni0=9.210720071916929e19,
             expected_ne0=1.0585658890823703e20,
             expected_ti0=27.370104119511087,
-            expected_dnla=8.8687354645836431e19,
+            expected_nd_electron_line=8.8687354645836431e19,
             expected_ti=13.07,
         ),
         PlasmaProfilesParam(
@@ -277,7 +277,7 @@ class PlasmaProfilesParam(NamedTuple):
             ne0=1.0585658890823703e20,
             ti0=27.369013322953624,
             tratio=1,
-            dnla=8.8687354645836431e19,
+            nd_electron_line=8.8687354645836431e19,
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
             neped=6.1916268627398164e19,
@@ -302,7 +302,7 @@ class PlasmaProfilesParam(NamedTuple):
             expected_ni0=9.210720071916929e19,
             expected_ne0=1.0585658890823703e20,
             expected_ti0=27.370104119511087,
-            expected_dnla=8.8687354645836431e19,
+            expected_nd_electron_line=8.8687354645836431e19,
             expected_ti=13.07,
         ),
     ),
@@ -353,7 +353,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "tratio", plasmaprofilesparam.tratio)
 
-    monkeypatch.setattr(physics_variables, "dnla", plasmaprofilesparam.dnla)
+    monkeypatch.setattr(
+        physics_variables, "nd_electron_line", plasmaprofilesparam.nd_electron_line
+    )
 
     monkeypatch.setattr(physics_variables, "alphat", plasmaprofilesparam.alphat)
 
@@ -414,6 +416,8 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     assert physics_variables.ti0 == pytest.approx(plasmaprofilesparam.expected_ti0)
 
-    assert physics_variables.dnla == pytest.approx(plasmaprofilesparam.expected_dnla)
+    assert physics_variables.nd_electron_line == pytest.approx(
+        plasmaprofilesparam.expected_nd_electron_line
+    )
 
     assert physics_variables.ti == pytest.approx(plasmaprofilesparam.expected_ti)

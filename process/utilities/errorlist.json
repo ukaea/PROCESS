@@ -1028,7 +1028,7 @@
     {
       "no": 204,
       "level": 1,
-      "message": "LH THRESHOLD: dnla outside Snipes 2000 fitted range"
+      "message": "LH THRESHOLD: nd_electron_line outside Snipes 2000 fitted range"
     },
     {
       "no": 205,
