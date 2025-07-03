@@ -349,7 +349,7 @@ def constraint_equation_5():
     fdene: f-value for density limit
     dene: electron density (/m3)
     dnelimt: density limit (/m3)
-    dnla: line averaged electron density (m-3)
+    nd_electron_line: line averaged electron density (m-3)
 
     i_density_limit:
     - 1 old ASDEX;
@@ -363,11 +363,12 @@ def constraint_equation_5():
     # Apply Greenwald limit to line-averaged density
     if fortran.physics_variables.i_density_limit == 7:
         return ConstraintResult(
-            fortran.physics_variables.dnla / fortran.physics_variables.dnelimt
+            fortran.physics_variables.nd_electron_line
+            / fortran.physics_variables.dnelimt
             - 1.0 * fortran.constraint_variables.fdene,
             fortran.constraint_variables.fdene * fortran.physics_variables.dnelimt,
             fortran.constraint_variables.fdene * fortran.physics_variables.dnelimt
-            - fortran.physics_variables.dnla,
+            - fortran.physics_variables.nd_electron_line,
         )
 
     cc = (

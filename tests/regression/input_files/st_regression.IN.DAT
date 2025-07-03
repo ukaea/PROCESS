@@ -237,7 +237,7 @@ triang = 0.5
 icc = 5
 * DESCRIPTION:   Density Upper Limit
 * JUSTIFICATION: Used to enforce Greenwald limit
-* VARIABLES:     dnelimt & dnla calculated in-situ
+* VARIABLES:     dnelimt & nd_electron_line calculated in-situ
 
 i_density_limit = 7
 * DESCRIPTION:   Switch for Density Limit to Enforce (icc=5) (7: Greenwald Limit)

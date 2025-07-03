@@ -198,7 +198,7 @@ module physics_variables
   real(dp) :: nd_ions_total
   !! total ion density (/m3)
 
-  real(dp) :: dnla
+  real(dp) :: nd_electron_line
   !! line averaged electron density (/m3)
 
   real(dp) :: nd_protons

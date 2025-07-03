@@ -144,12 +144,12 @@ class NeutralBeam:
         #  Calculate number of decay lengths to centre
 
         current_drive_variables.n_beam_decay_lengths_core = (
-            dpath * physics_variables.dnla * sigstop
+            dpath * physics_variables.nd_electron_line * sigstop
         )
 
         #  Shine-through fraction of beam
 
-        fshine = np.exp(-2.0e0 * dpath * physics_variables.dnla * sigstop)
+        fshine = np.exp(-2.0e0 * dpath * physics_variables.nd_electron_line * sigstop)
         fshine = max(fshine, 1.0e-20)
 
         #  Deuterium and tritium beam densities
@@ -180,7 +180,7 @@ class NeutralBeam:
             physics_variables.alphat,
             physics_variables.aspect,
             physics_variables.dene,
-            physics_variables.dnla,
+            physics_variables.nd_electron_line,
             current_drive_variables.e_beam_kev,
             current_drive_variables.f_radius_beam_tangency_rmajor,
             fshine,
@@ -199,7 +199,7 @@ class NeutralBeam:
         alphat,
         aspect,
         dene,
-        dnla,
+        nd_electron_line,
         e_beam_kev,
         f_radius_beam_tangency_rmajor,
         fshine,
@@ -217,7 +217,7 @@ class NeutralBeam:
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
         dene    : input real : volume averaged electron density (m**-3)
-        dnla    : input real : line averaged electron density (m**-3)
+        nd_electron_line    : input real : line averaged electron density (m**-3)
         e_beam_kev  : input real : neutral beam energy (keV)
         f_radius_beam_tangency_rmajor  : input real : R_tangent / R_major for neutral beam injection
         fshine  : input real : shine-through fraction of beam
@@ -243,7 +243,7 @@ class NeutralBeam:
         dene20 = dene / 1e20
 
         #  Line averaged electron density (10**20 m**-3)
-        dnla20 = dnla / 1e20
+        dnla20 = nd_electron_line / 1e20
 
         #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
         #  N.B. ten is in keV
