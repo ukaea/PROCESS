@@ -205,7 +205,7 @@ module constraint_variables
   real(dp) :: fvdump
   !! f-value for dump voltage (`constraint equation 34`, `iteration variable 51`)
 
-  real(dp) :: fvs
+  real(dp) :: fvs_plasma_total_required
   !! f-value for flux-swing (V-s) requirement (STEADY STATE)
   !! (`constraint equation 12`, `iteration variable 15`)
 

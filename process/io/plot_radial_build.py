@@ -217,7 +217,7 @@ def main(args=None):
         "",
         "",
         "",
-        "fvs",  # actaully lower bound fvs
+        "fvs_plasma_total_required",  # actaully lower bound fvs_plasma_total_required
         "v_plasma_loop_burn",
         "res_plasma",
     ]
