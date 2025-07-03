@@ -3161,7 +3161,7 @@ i_pulsed_plant = 0
 * JUSTIFICATION: No required burn time
 
 *ixc = 21
-*ft_burn = 1.0
+*ft_burn_min = 1.0
 *boundl(21) = 0.99
 *boundu(21) = 1.0
 * DESCRIPTION:   f-value for minimum burn time

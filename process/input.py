@@ -726,7 +726,9 @@ INPUT_VARIABLES = {
     "fstr_wp": InputVariable(fortran.constraint_variables, float, range=(1e-09, 10.0)),
     "fstrcase": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fstrcond": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ft_burn": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ft_burn_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ft_current_ramp_up": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),

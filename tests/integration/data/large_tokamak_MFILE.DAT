@@ -1254,7 +1254,7 @@ p_fusion_total_max_mw = 3000
 * Burn time lower limit *
 *-----------------------*
 icc = 13 
-ixc = 21 * ft_burn
+ixc = 21 * ft_burn_min
 * minimum burn time [s]
 t_burn_min = 7200.0
 
