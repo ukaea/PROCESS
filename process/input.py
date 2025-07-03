@@ -725,7 +725,7 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(0.1, 100000000.0)
     ),
     "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
-    "fradwall": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "fpflux_fw_rad_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "f_radius_beam_tangency_rmajor": InputVariable(
         fortran.current_drive_variables, float, range=(0.5, 2.0)
     ),

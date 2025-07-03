@@ -1656,14 +1656,14 @@ def constraint_equation_67():
     """Simple upper limit on radiation wall load
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fradwall: f-value for upper limit on radiation wall load
+    fpflux_fw_rad_max: f-value for upper limit on radiation wall load
     pflux_fw_rad_max: Maximum permitted radiation wall load (MW/m^2)
     pflux_fw_rad_max_mw: Peak radiation wall load (MW/m^2)
     """
     cc = (
         fortran.constraint_variables.pflux_fw_rad_max_mw
         / fortran.constraint_variables.pflux_fw_rad_max
-        - 1.0 * fortran.constraint_variables.fradwall
+        - 1.0 * fortran.constraint_variables.fpflux_fw_rad_max
     )
     return ConstraintResult(
         cc,
@@ -2384,7 +2384,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fq = 1.0
     fortran.constraint_variables.fqval = 1.0
     fortran.constraint_variables.fradpwr = 0.99
-    fortran.constraint_variables.fradwall = 1.0
+    fortran.constraint_variables.fpflux_fw_rad_max = 1.0
     fortran.constraint_variables.freinke = 1.0
     fortran.constraint_variables.frminor = 1.0
     fortran.constraint_variables.fstrcase = 1.0

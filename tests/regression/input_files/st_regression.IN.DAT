@@ -2610,7 +2610,7 @@ pflux_fw_rad_max = 1.2
 * JUSTIFICATION: 
 
 ixc = 116
-fradwall = 1.0
+fpflux_fw_rad_max = 1.0
 boundl(116) = 0.01
 boundu(116) = 1.0
 * DESCRIPTION:   f-value for upper limit on radiation wall load
