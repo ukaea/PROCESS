@@ -2326,7 +2326,7 @@ class Physics:
 
         # Calculate L- to H-mode power threshold for different scalings
         physics_variables.l_h_threshold_powers = l_h_threshold_power(
-            physics_variables.dnla,
+            physics_variables.nd_electron_line,
             physics_variables.bt,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -2429,7 +2429,7 @@ class Physics:
             physics_variables.bt,
             physics_variables.nd_ions_total,
             physics_variables.dene,
-            physics_variables.dnla,
+            physics_variables.nd_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
@@ -3780,7 +3780,7 @@ class Physics:
             * physics_variables.rmajor**2
             * physics_variables.bt
             * np.sqrt(physics_variables.eps)
-            * physics_variables.dnla**3
+            * physics_variables.nd_electron_line**3
             * physics_variables.kappa
             / (physics_module.e_plasma_beta**2 * physics_variables.plasma_current)
         )
@@ -3790,7 +3790,11 @@ class Physics:
             * constants.proton_mass
             * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
-            / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
+            / (
+                3.0e0
+                * physics_variables.vol_plasma
+                * physics_variables.nd_electron_line
+            )
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -4467,8 +4471,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Line-averaged electron number density (/m3)",
-            "(dnla)",
-            physics_variables.dnla,
+            "(nd_electron_line)",
+            physics_variables.nd_electron_line,
             "OP ",
         )
         po.ovarre(
@@ -4491,7 +4495,7 @@ class Physics:
                 self.outfile,
                 "Line-averaged electron density / Greenwald density",
                 "(dnla_gw)",
-                physics_variables.dnla / physics_variables.dlimit[6],
+                physics_variables.nd_electron_line / physics_variables.dlimit[6],
                 "OP ",
             )
 
@@ -5643,12 +5647,12 @@ class Physics:
                     )
                     error_handling.report_error(203)
 
-                if (physics_variables.dnla < 0.09e20) or (
-                    physics_variables.dnla > 3.16e20
+                if (physics_variables.nd_electron_line < 0.09e20) or (
+                    physics_variables.nd_electron_line > 3.16e20
                 ):
                     po.ocmmnt(
                         self.outfile,
-                        "(physics_variables.dnla outside Snipes 2000 fitted range)",
+                        "(physics_variables.nd_electron_line outside Snipes 2000 fitted range)",
                     )
                     error_handling.report_error(204)
 
@@ -6381,7 +6385,7 @@ class Physics:
                 physics_variables.bt,
                 physics_variables.nd_ions_total,
                 physics_variables.dene,
-                physics_variables.dnla,
+                physics_variables.nd_electron_line,
                 physics_variables.eps,
                 1.0,
                 i_confinement_time,
@@ -7305,7 +7309,7 @@ class Physics:
                 physics_variables.bt,
                 physics_variables.nd_ions_total,
                 physics_variables.dene,
-                physics_variables.dnla,
+                physics_variables.nd_electron_line,
                 physics_variables.eps,
                 hfact,
                 i_confinement_time,
@@ -7361,7 +7365,7 @@ class Physics:
         bt: float,
         nd_ions_total: float,
         dene: float,
-        dnla: float,
+        nd_electron_line: float,
         eps: float,
         hfact: float,
         i_confinement_time: int,
@@ -7390,7 +7394,7 @@ class Physics:
         :param bt: Toroidal field on axis (T)
         :param nd_ions_total: Total ion density (/m3)
         :param dene: Volume averaged electron density (/m3)
-        :param dnla: Line-averaged electron density (/m3)
+        :param nd_electron_line: Line-averaged electron density (/m3)
         :param eps: Inverse aspect ratio
         :param hfact: H factor on energy confinement scalings
         :param i_confinement_time: Switch for energy confinement scaling to use
@@ -7450,8 +7454,8 @@ class Physics:
         # ========================================================================
 
         # Line averaged electron density in scaled units
-        dnla20 = dnla * 1.0e-20
-        dnla19 = dnla * 1.0e-19
+        dnla20 = nd_electron_line * 1.0e-20
+        dnla19 = nd_electron_line * 1.0e-19
 
         # Volume averaged electron density in units of 10**20 m**-3
         n20 = dene / 1.0e20
@@ -8030,7 +8034,7 @@ class Physics:
             t_electron_confinement = confinement.lang_high_density_confinement_time(
                 plasma_current,
                 bt,
-                dnla,
+                nd_electron_line,
                 p_plasma_loss_mw,
                 rmajor,
                 rminor,
@@ -8291,7 +8295,7 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 
 def l_h_threshold_power(
-    dnla: float,
+    nd_electron_line: float,
     bt: float,
     rmajor: float,
     rminor: float,
@@ -8304,8 +8308,8 @@ def l_h_threshold_power(
     """
     L-mode to H-mode power threshold calculation.
 
-    :param dnla: Line-averaged electron density (/m3)
-    :type dnla: float
+    :param nd_electron_line: Line-averaged electron density (/m3)
+    :type nd_electron_line: float
     :param bt: Toroidal field on axis (T)
     :type bt: float
     :param rmajor: Plasma major radius (m)
@@ -8327,7 +8331,7 @@ def l_h_threshold_power(
     :rtype: list[float]
     """
 
-    dnla20 = 1e-20 * dnla
+    dnla20 = 1e-20 * nd_electron_line
 
     # ========================================================================
 
@@ -8567,7 +8571,7 @@ def init_physics_variables():
     physics_variables.beta_norm_max_stambaugh = 0.0
     physics_variables.dnelimt = 0.0
     physics_variables.nd_ions_total = 0.0
-    physics_variables.dnla = 0.0
+    physics_variables.nd_electron_line = 0.0
     physics_variables.nd_protons = 0.0
     physics_variables.ntau = 0.0
     physics_variables.nTtau = 0.0

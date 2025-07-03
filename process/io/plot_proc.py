@@ -1578,7 +1578,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             f"{ne0 / dene:.3f}",
             rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
             r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
-            f"{mfile_data.data['dnla'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
+            f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
             rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
             rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
         ))
@@ -3540,7 +3540,7 @@ def plot_physics_info(axis, mfile_data, scan):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    nong = mfile_data.data["dnla"].get_scan(scan) / mfile_data.data[
+    nong = mfile_data.data["nd_electron_line"].get_scan(scan) / mfile_data.data[
         "dlimit(7)"
     ].get_scan(scan)
 
@@ -4305,13 +4305,13 @@ def plot_confinement_time_comparison(
     rmajor = mfile_data.data["rmajor"].get_scan(scan)
     c_plasma_ma = mfile_data.data["plasma_current_ma"].get_scan(scan)
     kappa95 = mfile_data.data["kappa95"].get_scan(scan)
-    dnla20 = mfile_data.data["dnla"].get_scan(scan) / 1e20
+    dnla20 = mfile_data.data["nd_electron_line"].get_scan(scan) / 1e20
     afuel = mfile_data.data["m_fuel_amu"].get_scan(scan)
     bt = mfile_data.data["bt"].get_scan(scan)
     p_plasma_separatrix_mw = mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
     kappa = mfile_data.data["kappa"].get_scan(scan)
     aspect = mfile_data.data["aspect"].get_scan(scan)
-    dnla19 = mfile_data.data["dnla"].get_scan(scan) / 1e19
+    dnla19 = mfile_data.data["nd_electron_line"].get_scan(scan) / 1e19
     kappa_ipb = mfile_data.data["kappa_ipb"].get_scan(scan)
     triang = mfile_data.data["triang"].get_scan(scan)
     m_ions_total_amu = mfile_data.data["m_ions_total_amu"].get_scan(scan)
