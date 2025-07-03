@@ -3223,7 +3223,7 @@ t_between_pulse = 100.0
 * JUSTIFICATION: Turned off, do not care about the full pulse cycle time 
 * VARIABLES:     t_cycle (s) calculated in-situ
 
-*tcycmn =  
+*t_cycle_min =  
 * DESCRIPTION:   Minimum full pulse cycle time (s)
 * JUSTIFICATION: Turned off, not using icc = 42
 

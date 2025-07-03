@@ -271,7 +271,7 @@ module constraint_variables
   real(dp) :: t_burn_min
   !! minimum burn time (s) (KE - no longer itv., see issue #706)
 
-  real(dp) :: tcycmn
+  real(dp) :: t_cycle_min
   !! minimum cycle time (s) (`constraint equation 42`)
 
   real(dp) :: t_current_ramp_up_min
