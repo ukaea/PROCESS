@@ -235,7 +235,7 @@ module physics_variables
   real(dp) :: f_alpha_electron
   !! fraction of alpha energy to electrons
 
-  real(dp) :: f_alpha_plasma
+  real(dp) :: f_p_alpha_plasma_deposited
   !! Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305.
 
   real(dp) :: f_alpha_ion
