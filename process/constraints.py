@@ -570,16 +570,17 @@ def constraint_equation_16():
 
     fpnetel: f-value for net electric power
     p_plant_electric_net_mw: net electric power (MW)
-    pnetelin: required net electric power (MW)
+    p_plant_electric_net_required_mw: required net electric power (MW)
     """
     return ConstraintResult(
         1.0
         - fortran.constraint_variables.fpnetel
         * fortran.heat_transport_variables.p_plant_electric_net_mw
-        / fortran.constraint_variables.pnetelin,
-        fortran.constraint_variables.pnetelin,
+        / fortran.constraint_variables.p_plant_electric_net_required_mw,
+        fortran.constraint_variables.p_plant_electric_net_required_mw,
         fortran.heat_transport_variables.p_plant_electric_net_mw
-        - fortran.constraint_variables.pnetelin / fortran.constraint_variables.fpnetel,
+        - fortran.constraint_variables.p_plant_electric_net_required_mw
+        / fortran.constraint_variables.fpnetel,
     )
 
 
@@ -2408,7 +2409,7 @@ def init_constraint_variables():
     fortran.constraint_variables.p_plasma_separatrix_min_mw = 150.0
     fortran.constraint_variables.f_fw_rad_max = 3.33
     fortran.constraint_variables.pflux_fw_rad_max_mw = 0.0
-    fortran.constraint_variables.pnetelin = 1.0e3
+    fortran.constraint_variables.p_plant_electric_net_required_mw = 1.0e3
     fortran.constraint_variables.p_fusion_total_max_mw = 1.5e3
     fortran.constraint_variables.psepbqarmax = 9.5
     fortran.constraint_variables.pseprmax = 25.0

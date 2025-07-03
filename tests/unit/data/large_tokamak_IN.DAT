@@ -85,7 +85,7 @@ p_hcd_injected_max = 200.0
 icc = 16
 ixc = 25 * fpnetel
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*

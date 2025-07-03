@@ -1108,7 +1108,7 @@
  Nuclear_power_lost_to_TF_(MW)____________________________________________ (p_tf_nuclear_heat_mw)_______________________ 2.50975326006813229e-02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.16828420051550938e+03 OP
  Net_electric_power_output(MW)____________________________________________ (p_plant_electric_net_mw.)____________________ 3.88019059400626361e+02 OP
- Required_Net_electric_power_output(MW)___________________________________ (pnetelin)_____________________ 4.00000000000000000e+02
+ Required_Net_electric_power_output(MW)___________________________________ (p_plant_electric_net_required_mw)_____________________ 4.00000000000000000e+02
  Electric_power_for_heating_and_current_drive_(MW)________________________ (pinjwp)_______________________ 1.55055611144467917e+02 OP
  Electric_power_for_primary_coolant_pumps_(MW)____________________________ (p_coolant_pump_elec_total_mw)________________________ 2.00374097458155489e+02 OP
  Electric_power_for_vacuum_pumps_(MW)_____________________________________ (vachtmw)______________________ 5.00000000000000000e-01
@@ -1282,7 +1282,7 @@ foh_stress = 1.0 * f-value for Tresca yield criterion in Central Solenoid
 fmaxvvstress = 1.0 * f-value for maximum permitted stress of the VV
 fvdump   = 1.0 * f-value for dump voltage (`constraint equation 34`; `iteration variable 51`)
 fpflux_fw_neutron_max_mw   = 1.0 * f-value for maximum wall load (`constraint equation 8`; `iteration variable 14`)
-pnetelin = 400.0 * required net electric power (MW) (`constraint equation 16`)
+p_plant_electric_net_required_mw = 400.0 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
 psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
 t_burn_min   = 7200.0 * minimum burn time (s) (KE - no longer itv;; see issue #706)
