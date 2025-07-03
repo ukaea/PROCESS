@@ -14,7 +14,7 @@ module current_drive_variables
 
   public
 
-  real(dp) :: beamwd
+  real(dp) :: dx_beam_duct
   !! width of neutral beam duct where it passes between the TF coils (m)
   !! T Inoue et al, Design of neutral beam system for ITER-FEAT,
   !! <A HREF=http://dx.doi.org/10.1016/S0920-3796(01)00339-8>

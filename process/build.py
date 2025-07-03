@@ -68,7 +68,7 @@ class Build:
 
         #  Width of beam duct, including shielding on both sides (m)
         c = (
-            current_drive_variables.beamwd
+            current_drive_variables.dx_beam_duct
             + 2.0e0 * current_drive_variables.dx_beam_shield
         )
 
@@ -2433,8 +2433,8 @@ class Build:
                 po.ovarre(
                     self.mfile,
                     "Width of neutral beam duct where it passes between the TF coils (m)",
-                    "(beamwd)",
-                    current_drive_variables.beamwd,
+                    "(dx_beam_duct)",
+                    current_drive_variables.dx_beam_duct,
                 )
 
 

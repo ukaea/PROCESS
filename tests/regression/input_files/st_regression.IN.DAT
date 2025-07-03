@@ -2748,7 +2748,7 @@ feffcd = 1.0
 * DESCRIPTION:   NBI wall plug to injector efficiency
 * JUSTIFICATION: Not used as no NBI used
 
-*beamwd = 
+*dx_beam_duct = 
 * DESCRIPTION:   Width of neutral beam duct where it passes between the TF coils
 * JUSTIFICATION: Not used as no NBI used
 

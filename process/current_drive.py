@@ -2438,7 +2438,7 @@ class CurrentDrive:
 
 def init_current_drive_variables():
     """Initialise current drive variables"""
-    current_drive_variables.beamwd = 0.58
+    current_drive_variables.dx_beam_duct = 0.58
     current_drive_variables.bigq = 0.0
     current_drive_variables.f_c_plasma_bootstrap = 0.0
     current_drive_variables.f_c_plasma_bootstrap_max = 0.9

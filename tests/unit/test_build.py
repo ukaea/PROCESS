@@ -336,7 +336,7 @@ class PortszParam(NamedTuple):
 
     dx_beam_shield: Any = None
 
-    beamwd: Any = None
+    dx_beam_duct: Any = None
 
     frbeam: Any = None
 
@@ -360,7 +360,7 @@ class PortszParam(NamedTuple):
             radius_beam_tangency=0,
             rtanmax=0,
             dx_beam_shield=0.5,
-            beamwd=0.57999999999999996,
+            dx_beam_duct=0.57999999999999996,
             frbeam=1.05,
             rmajor=8.8901000000000003,
             dx_tf_inboard_out_toroidal=1.6395161177915356,
@@ -374,7 +374,7 @@ class PortszParam(NamedTuple):
             radius_beam_tangency=9.3346050000000016,
             rtanmax=14.735821603386416,
             dx_beam_shield=0.5,
-            beamwd=0.57999999999999996,
+            dx_beam_duct=0.57999999999999996,
             frbeam=1.05,
             rmajor=8.8901000000000003,
             dx_tf_inboard_out_toroidal=1.6395161177915356,
@@ -418,7 +418,9 @@ def test_portsz(portszparam, monkeypatch, build):
         current_drive_variables, "dx_beam_shield", portszparam.dx_beam_shield
     )
 
-    monkeypatch.setattr(current_drive_variables, "beamwd", portszparam.beamwd)
+    monkeypatch.setattr(
+        current_drive_variables, "dx_beam_duct", portszparam.dx_beam_duct
+    )
 
     monkeypatch.setattr(current_drive_variables, "frbeam", portszparam.frbeam)
 

@@ -193,7 +193,9 @@ INPUT_VARIABLES = {
     "e_beam_kev": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
-    "beamwd": InputVariable(fortran.current_drive_variables, float, range=(0.001, 5.0)),
+    "dx_beam_duct": InputVariable(
+        fortran.current_drive_variables, float, range=(0.001, 5.0)
+    ),
     "deg_div_field_plate": InputVariable(
         fortran.divertor_variables, float, range=(0.0, 360.0)
     ),
