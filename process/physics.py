@@ -47,7 +47,7 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     te     : input real :  electron temperature (keV)
     ti     : input real :  ion temperature (keV)
     zeffai : input real :  mass weighted plasma effective charge
-    piepv  : output real : ion/electron equilibration power (MW/m3)
+    pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
     ions and electrons.
     Unknown origin
@@ -2262,7 +2262,7 @@ class Physics:
 
         # Calculate ion/electron equilibration power
 
-        physics_variables.piepv = rether(
+        physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
@@ -8667,7 +8667,7 @@ def init_physics_variables():
     physics_variables.p_charged_particle_mw = 0.0
     physics_variables.vs_plasma_internal = 0.0
     physics_variables.pflux_fw_rad_mw = 0.0
-    physics_variables.piepv = 0.0
+    physics_variables.pden_ion_electron_equilibration_mw = 0.0
     physics_variables.plasma_current = 0.0
     physics_variables.p_plasma_neutron_mw = 0.0
     physics_variables.p_neutron_total_mw = 0.0

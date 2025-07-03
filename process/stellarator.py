@@ -4382,7 +4382,7 @@ class Stellarator:
 
         #  Calculate ion/electron equilibration power
 
-        physics_variables.piepv = rether(
+        physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
