@@ -5395,7 +5395,7 @@ def init_tfcoil_variables():
     tfv.cforce = 0.0
     tfv.cplen = 0.0
     tfv.c_tf_turn = 7.0e4
-    tfv.cpttf_max = 9.0e4
+    tfv.c_tf_turn_max = 9.0e4
     tfv.dcase = 8000.0
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
     tfv.dcondins = 1800.0

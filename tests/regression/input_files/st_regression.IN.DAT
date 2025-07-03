@@ -1127,7 +1127,7 @@ i_tf_turns_integer = 0
 *icc = 77
 * DESCRIPTION:   Constraint equation for maximum TF current per turn upper limit
 * JUSTIFICATION: Turned off, not concerned with current per turn
-* VARIABLES:     cpttf_max (Allowable TF coil current per turn [A/turn]). c_tf_turn calculated in-situ
+* VARIABLES:     c_tf_turn_max (Allowable TF coil current per turn [A/turn]). c_tf_turn calculated in-situ
 
 *ixc = 60
 *c_tf_turn =  
@@ -1136,7 +1136,7 @@ i_tf_turns_integer = 0
 * DESCRIPTION:   TF coil leg current per turn (A) (icc=77)
 * JUSTIFICATION: Not used, not constraining leg current
 
-*cpttf_max =  
+*c_tf_turn_max =  
 * DESCRIPTION:   Maximum allowable TF coil leg current per turn (A) (icc=77)
 * JUSTIFICATION: Not used, not constraining leg current
 
