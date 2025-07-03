@@ -672,7 +672,7 @@ module physics_variables
   real(dp) :: pflux_fw_rad_mw
   !! Nominal mean radiation load on inside surface of reactor (MW/m2)
 
-  real(dp) :: piepv
+  real(dp) :: pden_ion_electron_equilibration_mw
   !! ion/electron equilibration power per volume (MW/m3)
 
   real(dp) :: plasma_current
