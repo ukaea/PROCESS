@@ -61,7 +61,7 @@ SCAN_VARIABLES = {
     15: ScanVariable("fjprot", "TFC_Jprot_limit_f-value"),
     16: ScanVariable("rmajor", "Plasma_major_radius_(m)"),
     17: ScanVariable("b_tf_inboard_max", "Max_toroidal_field_(T)"),
-    18: ScanVariable("gammax", "Maximum_CD_gamma"),
+    18: ScanVariable("eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma"),
     19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
     20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
     22: ScanVariable("cfactr", "Plant_availability_factor"),
@@ -959,7 +959,7 @@ class Scan:
             case 17:
                 constraint_variables.b_tf_inboard_max = swp[iscn - 1]
             case 18:
-                constraint_variables.gammax = swp[iscn - 1]
+                constraint_variables.eta_cd_norm_hcd_primary_max = swp[iscn - 1]
             case 19:
                 numerics.boundl[15] = swp[iscn - 1]
             case 20:
