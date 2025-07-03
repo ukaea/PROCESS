@@ -2521,6 +2521,6 @@ def init_current_drive_variables():
     current_drive_variables.radius_beam_tangency = 0.0
     current_drive_variables.radius_beam_tangency_max = 0.0
     current_drive_variables.n_beam_decay_lengths_core = 0.0
-    current_drive_variables.tbeamin = 3.0
+    current_drive_variables.n_beam_decay_lengths_core_required = 3.0
     current_drive_variables.eta_cd_norm_hcd_secondary = 0.0
     current_drive_variables.eta_cd_hcd_secondary = 0.0

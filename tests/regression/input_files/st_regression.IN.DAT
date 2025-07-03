@@ -2740,7 +2740,7 @@ feffcd = 1.0
 * DESCRIPTION:   Neutral beam energy (keV)
 * JUSTIFICATION: Not used as no NBI used
 
-*tbeamin = 
+*n_beam_decay_lengths_core_required = 
 * DESCRIPTION:   Number of NB decay lengths to plasma centre
 * JUSTIFICATION: Not used as no NBI used
 

@@ -1263,7 +1263,9 @@ INPUT_VARIABLES = {
     "tauee_in": InputVariable(fortran.physics_variables, float, range=(0.0, 100.0)),
     "taumax": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
     "tauratio": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
-    "tbeamin": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
+    "n_beam_decay_lengths_core_required": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 10.0)
+    ),
     "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
     "tbktrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
     "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),

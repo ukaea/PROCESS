@@ -590,17 +590,17 @@ def constraint_equation_14():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     n_beam_decay_lengths_core: neutral beam e-decay lengths to plasma centre
-    tbeamin: permitted neutral beam e-decay lengths to plasma centre
+    n_beam_decay_lengths_core_required: permitted neutral beam e-decay lengths to plasma centre
     """
     cc = (
         1.0
         - fortran.current_drive_variables.n_beam_decay_lengths_core
-        / fortran.current_drive_variables.tbeamin
+        / fortran.current_drive_variables.n_beam_decay_lengths_core_required
     )
     return ConstraintResult(
         cc,
-        fortran.current_drive_variables.tbeamin * (1.0 - cc),
-        fortran.current_drive_variables.tbeamin * cc,
+        fortran.current_drive_variables.n_beam_decay_lengths_core_required * (1.0 - cc),
+        fortran.current_drive_variables.n_beam_decay_lengths_core_required * cc,
     )
 
 
