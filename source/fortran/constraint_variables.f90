@@ -199,7 +199,7 @@ module constraint_variables
   real(dp) :: ft_current_ramp_up
   !! f-value for plasma current ramp-up time (`constraint equation 41`, `iteration variable 66`)
 
-  real(dp) :: ftpeak
+  real(dp) :: ftemp_fw_max
   !! f-value for first wall peak temperature (`constraint equation 39`, `iteration variable 63`)
 
   real(dp) :: fvdump

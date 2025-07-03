@@ -118,7 +118,7 @@ ITERATION_VARIABLES = {
         "dr_shld_vv_gap_inboard", fortran.build_variables, 0.001, 10.00
     ),
     62: IterationVariable("fdtmp", fortran.constraint_variables, 0.001, 1.0),
-    63: IterationVariable("ftpeak", fortran.constraint_variables, 0.001, 1.0),
+    63: IterationVariable("ftemp_fw_max", fortran.constraint_variables, 0.001, 1.0),
     64: IterationVariable("fauxmn", fortran.constraint_variables, 0.001, 1.0),
     65: IterationVariable("t_current_ramp_up", fortran.times_variables, 0.1, 1.0e3),
     66: IterationVariable(
