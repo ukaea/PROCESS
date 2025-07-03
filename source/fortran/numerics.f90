@@ -268,7 +268,7 @@ module numerics
   !! <LI> (60) c_tf_turn
   !! <LI> (61) dr_shld_vv_gap_inboard
   !! <LI> (62) fdtmp (f-value for equation 38)
-  !! <LI> (63) ftpeak (f-value for equation 39)
+  !! <LI> (63) ftemp_fw_max (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)
   !! <LI> (65) t_current_ramp_up
   !! <LI> (66) ft_current_ramp_up (f-value for equation 41)

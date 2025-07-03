@@ -1126,7 +1126,7 @@ def constraint_equation_39():
     """Equation for first wall temperature upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ftpeak: f-value for first wall peak temperature
+    ftemp_fw_max: f-value for first wall peak temperature
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak: peak first wall temperature (K)
     """
@@ -1136,7 +1136,7 @@ def constraint_equation_39():
         )
     cc = (
         fortran.fwbs_variables.temp_fw_peak / fortran.fwbs_variables.temp_fw_max
-        - 1.0 * fortran.constraint_variables.ftpeak
+        - 1.0 * fortran.constraint_variables.ftemp_fw_max
     )
     return ConstraintResult(
         cc,
@@ -2395,7 +2395,7 @@ def init_constraint_variables():
     fortran.constraint_variables.ftmargoh = 1.0
     fortran.constraint_variables.ftmargtf = 1.0
     fortran.constraint_variables.ft_current_ramp_up = 1.0
-    fortran.constraint_variables.ftpeak = 1.0
+    fortran.constraint_variables.ftemp_fw_max = 1.0
     fortran.constraint_variables.fvdump = 1.0
     fortran.constraint_variables.fvs_plasma_total_required = 1.0
     fortran.constraint_variables.fvvhe = 1.0
