@@ -1105,14 +1105,14 @@ def constraint_equation_37():
     """Equation for current drive gamma upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fgamcd: f-value for current drive gamma
+    feta_cd_norm_hcd_primary_max: f-value for current drive gamma
     eta_cd_norm_hcd_primary_max: maximum current drive gamma
     eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
     """
     cc = (
         fortran.current_drive_variables.eta_cd_norm_hcd_primary
         / fortran.constraint_variables.eta_cd_norm_hcd_primary_max
-        - 1.0 * fortran.constraint_variables.fgamcd
+        - 1.0 * fortran.constraint_variables.feta_cd_norm_hcd_primary_max
     )
     return ConstraintResult(
         cc,
@@ -2357,7 +2357,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fdtmp = 1.0
     fortran.constraint_variables.fflutf = 1.0
     fortran.constraint_variables.fp_fusion_total_max_mw = 1.0
-    fortran.constraint_variables.fgamcd = 1.0
+    fortran.constraint_variables.feta_cd_norm_hcd_primary_max = 1.0
     fortran.constraint_variables.fpflux_div_heat_load_mw = 1.0
     fortran.constraint_variables.fiooic = 0.5
     fortran.constraint_variables.fipir = 1.0
