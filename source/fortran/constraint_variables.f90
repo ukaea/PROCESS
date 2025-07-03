@@ -186,7 +186,7 @@ module constraint_variables
   real(dp) :: ft_burn_min
   !! f-value for minimum burn time (`constraint equation 13`, `iteration variable 21`)
 
-  real(dp) :: ftcycl
+  real(dp) :: ft_cycle_min
   !! f-value for cycle time (`constraint equation 42`, `iteration variable 67`)
 
   real(dp) :: ftmargoh

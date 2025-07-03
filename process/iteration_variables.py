@@ -126,7 +126,7 @@ ITERATION_VARIABLES = {
     66: IterationVariable(
         "ft_current_ramp_up", fortran.constraint_variables, 0.001, 1.0
     ),
-    67: IterationVariable("ftcycl", fortran.constraint_variables, 0.001, 1.0),
+    67: IterationVariable("ft_cycle_min", fortran.constraint_variables, 0.001, 1.0),
     68: IterationVariable("fptemp", fortran.constraint_variables, 0.001, 1.0),
     69: IterationVariable("rcool", fortran.tfcoil_variables, 0.001, 0.010),
     70: IterationVariable("vcool", fortran.tfcoil_variables, 1.0, 1.0e2),

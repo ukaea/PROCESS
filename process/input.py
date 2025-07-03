@@ -745,7 +745,7 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "ftbr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ftcycl": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ft_cycle_min": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftmargoh": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftmargtf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftoroidalgap": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 10.0)),

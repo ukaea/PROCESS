@@ -272,7 +272,7 @@ module numerics
   !! <LI> (64) fauxmn (f-value for equation 40)
   !! <LI> (65) t_current_ramp_up
   !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
-  !! <LI> (67) ftcycl (f-value for equation 42)
+  !! <LI> (67) ft_cycle_min (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool
   !! <LI> (70) vcool
