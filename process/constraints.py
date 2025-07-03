@@ -681,14 +681,14 @@ def constraint_equation_20():
     """Equation for neutral beam tangency radius upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fportsz: f-value for neutral beam tangency radius limit
+    fradius_beam_tangency: f-value for neutral beam tangency radius limit
     radius_beam_tangency_max: maximum tangency radius for centreline of beam (m)
     radius_beam_tangency: neutral beam centreline tangency radius (m)
     """
     cc = (
         fortran.current_drive_variables.radius_beam_tangency
         / fortran.current_drive_variables.radius_beam_tangency_max
-        - 1.0 * fortran.constraint_variables.fportsz
+        - 1.0 * fortran.constraint_variables.fradius_beam_tangency
     )
     return ConstraintResult(
         cc,
@@ -2367,7 +2367,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fpeakb = 1.0
     fortran.constraint_variables.fpinj = 1.0
     fortran.constraint_variables.fpnetel = 1.0
-    fortran.constraint_variables.fportsz = 1.0
+    fortran.constraint_variables.fradius_beam_tangency = 1.0
     fortran.constraint_variables.fpsepbqar = 1.0
     fortran.constraint_variables.fpsepr = 1.0
     fortran.constraint_variables.fptemp = 1.0

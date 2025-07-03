@@ -684,7 +684,9 @@ INPUT_VARIABLES = {
     "fpoloidalpower": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
-    "fportsz": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fradius_beam_tangency": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fpsep": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepbqar": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
