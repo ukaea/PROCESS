@@ -83,7 +83,9 @@ ITERATION_VARIABLES = {
     33: IterationVariable(
         "fradius_beam_tangency", fortran.constraint_variables, 0.001, 1.0
     ),
-    35: IterationVariable("fpeakb", fortran.constraint_variables, 0.001, 1.0),
+    35: IterationVariable(
+        "fb_tf_inboard_max", fortran.constraint_variables, 0.001, 1.0
+    ),
     36: IterationVariable("fbeta_max", fortran.constraint_variables, 0.001, 1.0),
     37: IterationVariable("j_cs_flat_top_end", fortran.pfcoil_variables, 1.0e5, 1.0e8),
     38: IterationVariable("fjohc", fortran.constraint_variables, 0.010, 1.0),

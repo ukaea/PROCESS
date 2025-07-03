@@ -857,14 +857,14 @@ def constraint_equation_25():
     """Equation for peak toroidal field upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpeakb: f-value for maximum toroidal field
+    fb_tf_inboard_max: f-value for maximum toroidal field
     b_tf_inboard_max: maximum peak toroidal field (T)
     b_tf_inboard_peak: mean peak field at TF coil (T)
     """
     cc = (
         fortran.tfcoil_variables.b_tf_inboard_peak
         / fortran.constraint_variables.b_tf_inboard_max
-        - 1.0 * fortran.constraint_variables.fpeakb
+        - 1.0 * fortran.constraint_variables.fb_tf_inboard_max
     )
     return ConstraintResult(
         cc,
@@ -2371,7 +2371,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fncycle = 1.0
     fortran.constraint_variables.fnesep = 1.0
     fortran.constraint_variables.foh_stress = 1.0
-    fortran.constraint_variables.fpeakb = 1.0
+    fortran.constraint_variables.fb_tf_inboard_max = 1.0
     fortran.constraint_variables.fpinj = 1.0
     fortran.constraint_variables.fp_plant_electric_net_required_mw = 1.0
     fortran.constraint_variables.fradius_beam_tangency = 1.0

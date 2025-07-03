@@ -240,7 +240,7 @@ module numerics
   !! <LI> (32) frminor (f-value for equation 21)
   !! <LI> (33) fradius_beam_tangency (f-value for equation 20)
   !! <LI> (34) NOT USED
-  !! <LI> (35) fpeakb (f-value for equation 25)
+  !! <LI> (35) fb_tf_inboard_max (f-value for equation 25)
   !! <LI> (36) fbeta_max (f-value for equation 24)
   !! <LI> (37) j_cs_flat_top_end
   !! <LI> (38) fjohc (f-value for equation 26)

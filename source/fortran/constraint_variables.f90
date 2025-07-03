@@ -121,7 +121,7 @@ module constraint_variables
   !! f-value for Tresca yield criterion in Central Solenoid
   !! (`constraint equation 72`, `iteration variable 123`)
 
-  real(dp) :: fpeakb
+  real(dp) :: fb_tf_inboard_max
   !! f-value for maximum toroidal field (`constraint equation 25`, `iteration variable 35`)
 
   real(dp) :: fpinj
