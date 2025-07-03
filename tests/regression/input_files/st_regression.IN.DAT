@@ -2588,7 +2588,7 @@ f_fw_rad_max = 1.0
 * JUSTIFICATION: Not set, assuming default value
 
 *ixc = 14
-*fwalld = 0.99
+*fpflux_fw_neutron_max_mw = 0.99
 *boundl(14) = 0.99
 *boundu(14) = 1.0 
 * DESCRIPTION:   f-value for maximum neutron wall load

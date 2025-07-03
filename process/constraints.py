@@ -440,7 +440,7 @@ def constraint_equation_7():
 def constraint_equation_8():
     """Equation for neutron wall load upper limit
 
-    fwalld: f-value for maximum wall load
+    fpflux_fw_neutron_max_mw: f-value for maximum wall load
     pflux_fw_neutron_max_mw: allowable wall-load (MW/m2)
     pflux_fw_neutron_mw: average neutron wall load (MW/m2)
     """
@@ -448,11 +448,11 @@ def constraint_equation_8():
         (
             fortran.physics_variables.pflux_fw_neutron_mw
             / fortran.constraint_variables.pflux_fw_neutron_max_mw
-            - 1.0 * fortran.constraint_variables.fwalld
+            - 1.0 * fortran.constraint_variables.fpflux_fw_neutron_max_mw
         ),
-        fortran.constraint_variables.fwalld
+        fortran.constraint_variables.fpflux_fw_neutron_max_mw
         * fortran.constraint_variables.pflux_fw_neutron_max_mw,
-        fortran.constraint_variables.fwalld
+        fortran.constraint_variables.fpflux_fw_neutron_max_mw
         * fortran.constraint_variables.pflux_fw_neutron_max_mw
         - fortran.physics_variables.pflux_fw_neutron_mw,
     )
@@ -2395,7 +2395,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fvdump = 1.0
     fortran.constraint_variables.fvs = 1.0
     fortran.constraint_variables.fvvhe = 1.0
-    fortran.constraint_variables.fwalld = 1.0
+    fortran.constraint_variables.fpflux_fw_neutron_max_mw = 1.0
     fortran.constraint_variables.fzeffmax = 1.0
     fortran.constraint_variables.gammax = 2.0
     fortran.constraint_variables.i_q95_fixed = 0

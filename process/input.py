@@ -754,7 +754,9 @@ INPUT_VARIABLES = {
     "fw_th_conductivity": InputVariable(
         fortran.fwbs_variables, float, range=(1.0, 100.0)
     ),
-    "fwalld": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fpflux_fw_neutron_max_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fwbs_nref": InputVariable(
         fortran.cost_variables, float, range=(1000.0, 100000000.0)
     ),

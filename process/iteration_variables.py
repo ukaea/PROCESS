@@ -53,7 +53,9 @@ ITERATION_VARIABLES = {
     ),
     12: IterationVariable("oacdcp", fortran.tfcoil_variables, 1.0e5, 1.50e8),
     13: IterationVariable("dr_tf_inboard", fortran.build_variables, 0.1, 5.0),
-    14: IterationVariable("fwalld", fortran.constraint_variables, 0.001, 1.0),
+    14: IterationVariable(
+        "fpflux_fw_neutron_max_mw", fortran.constraint_variables, 0.001, 1.0
+    ),
     15: IterationVariable("fvs", fortran.constraint_variables, 0.001, 10.000),
     16: IterationVariable("dr_cs", fortran.build_variables, 0.01, 10.00),
     17: IterationVariable("t_between_pulse", fortran.times_variables, 0.1, 1.0e8),

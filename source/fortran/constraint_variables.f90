@@ -213,7 +213,7 @@ module constraint_variables
   !! f-value for vacuum vessel He concentration limit (`i_blanket_type = 2`)
   !! (`constraint equation 55`, `iteration variable 96`)
 
-  real(dp) :: fwalld
+  real(dp) :: fpflux_fw_neutron_max_mw
   !! f-value for maximum wall load (`constraint equation 8`, `iteration variable 14`)
 
   real(dp) :: fzeffmax
