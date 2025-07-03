@@ -9117,7 +9117,7 @@ fvdump   = 0.6116 * F-value for dump voltage
 fpflux_fw_neutron_max_mw   = 0.1312 * F-value for maximum wall load
 p_plant_electric_net_required_mw = 500.0 * Required net electric power (mw)
 t_burn_min   = 7.2e3 * Minimum burn time (s)
-walalw   = 8.0 * Allowable wall-load (mw/m2)
+pflux_fw_neutron_max_mw   = 8.0 * Allowable wall-load (mw/m2)
 psepbqarmax = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
 
 *------------------Cost Variables------------------*
