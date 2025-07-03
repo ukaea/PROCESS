@@ -28,86 +28,104 @@ class Build:
         self.outfile = constants.nout
         self.mfile = constants.mfile
 
-    def calculate_beam_port_size(self):
-        """Port size calculation
-        author: P J Knight, CCFE, Culham Science Centre
-        author: M D Kovari, CCFE, Culham Science Centre
-        None
-        This subroutine finds the maximum possible tangency radius
-        for adequate beam access.
-        <P>The outputs from the routine are
-        <UL> <P><LI>radius_beam_tangency : Beam tangency radius (m)
-        <P><LI>radius_beam_tangency_max : Maximum possible tangency radius (m) </UL>
-        A User's Guide to the PROCESS Systems Code
-        """
-        current_drive_variables.radius_beam_tangency = (
-            current_drive_variables.f_radius_beam_tangency_rmajor
-            * physics_variables.rmajor
+    def run(self) -> None:
+        self.calculate_radial_build(output=False)
+        self.calculate_vertical_build(output=False)
+
+        self.calculate_beam_port_size(
+            f_radius_beam_tangency_rmajor=current_drive_variables.f_radius_beam_tangency_rmajor,
+            rmajor=physics_variables.rmajor,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            dx_tf_inboard_out_toroidal=tfcoil_variables.dx_tf_inboard_out_toroidal,
+            dr_tf_outboard=build_variables.dr_tf_outboard,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            dx_beam_duct=current_drive_variables.dx_beam_duct,
+            dx_beam_shield=current_drive_variables.dx_beam_shield,
         )
 
-        #  Toroidal angle between adjacent TF coils
+    def calculate_beam_port_size(
+        self,
+        f_radius_beam_tangency_rmajor: float,
+        rmajor: float,
+        n_tf_coils: int,
+        dx_tf_inboard_out_toroidal: float,
+        dr_tf_outboard: float,
+        r_tf_outboard_mid: float,
+        dx_beam_duct: float,
+        dx_beam_shield: float,
+    ) -> tuple[float, float]:
+        """
+        Calculates the maximum possible tangency radius for adequate beam access.
 
-        omega = constants.twopi / tfcoil_variables.n_tf_coils
+        :param f_radius_beam_tangency_rmajor: Fraction of rmajor for beam tangency
+        :type f_radius_beam_tangency_rmajor: float
+        :param rmajor: Major radius
+        :type rmajor: float
+        :param n_tf_coils: Number of TF coils
+        :type n_tf_coils: int
+        :param dx_tf_inboard_out_toroidal: Toroidal width of outboard TF coil
+        :type dx_tf_inboard_out_toroidal: float
+        :param dr_tf_outboard: Radial thickness of outboard TF coil leg
+        :type dr_tf_outboard: float
+        :param r_tf_outboard_mid: Major radius of centre of outboard TF coil
+        :type r_tf_outboard_mid: float
+        :param dx_beam_duct: Width of beam duct
+        :type dx_beam_duct: float
+        :param dx_beam_shield: Shielding width on both sides of beam duct
+        :type dx_beam_shield: float
 
-        #  Half-width of outboard TF coil in toroidal direction (m)
-        a = (
-            0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
-        )  # (previously used inboard leg width)
+        :returns: Tuple containing (radius_beam_tangency, radius_beam_tangency_max)
+        :rtype: tuple[float, float]
+        """
+
+        # Have kept the single letter variable names to match the original code and documentation diagram.
+        radius_beam_tangency = f_radius_beam_tangency_rmajor * rmajor
+
+        omega = constants.twopi / n_tf_coils
+
+        a = 0.5e0 * dx_tf_inboard_out_toroidal
         try:
             assert a < np.inf
         except AssertionError:
             logger.exception("a is inf. Kludging to 1e10.")
             a = 1e10
 
-        #  Radial thickness of outboard TF coil leg (m)
-        b = build_variables.dr_tf_outboard
+        b = dr_tf_outboard
         try:
             assert b < np.inf
         except AssertionError:
             logger.exception("b is inf. Kludging to 1e10.")
             b = 1e10
 
-        #  Width of beam duct, including shielding on both sides (m)
-        c = (
-            current_drive_variables.dx_beam_duct
-            + 2.0e0 * current_drive_variables.dx_beam_shield
-        )
+        c = dx_beam_duct + 2.0e0 * dx_beam_shield
 
-        #  Major radius of inner edge of outboard TF coil (m)
-        d = build_variables.r_tf_outboard_mid - 0.5e0 * b
+        d = r_tf_outboard_mid - 0.5e0 * b
         try:
             assert d < np.inf
         except AssertionError:
             logger.exception("d is inf. Kludging to 1e10.")
             d = 1e10
 
-        #  Refer to figure in User Guide for remaining geometric calculations
-        e = np.sqrt(a * a + (d + b) * (d + b))
-        f = np.sqrt(a * a + d * d)
+        e = np.sqrt(a**2 + (d + b) ** 2)
+        f = np.sqrt(a**2 + d**2)
 
         theta = omega - np.arctan(a / d)
         phi = theta - np.arcsin(a / e)
 
-        g = np.sqrt(e * e + f * f - 2.0e0 * e * f * np.cos(phi))  # cosine rule
+        g = np.sqrt(e**2 + f**2 - 2.0e0 * e * f * np.cos(phi))
 
         if g > c:
-            h = np.sqrt(g * g - c * c)
-
+            h = np.sqrt(g**2 - c**2)
             alpha = np.arctan(h / c)
-            eps = np.arcsin(e * np.sin(phi) / g) - alpha  # from sine rule
-
-            #  Maximum tangency radius for centreline of beam (m)
-
-            current_drive_variables.radius_beam_tangency_max = (
-                f * np.cos(eps) - 0.5e0 * c
-            )
-
-        else:  # coil separation is too narrow for beam...
+            eps = np.arcsin(e * np.sin(phi) / g) - alpha
+            radius_beam_tangency_max = f * np.cos(eps) - 0.5e0 * c
+        else:
             error_handling.fdiags[0] = g
             error_handling.fdiags[1] = c
             error_handling.report_error(63)
+            radius_beam_tangency_max = 0.0e0
 
-            current_drive_variables.radius_beam_tangency_max = 0.0e0
+        return radius_beam_tangency, radius_beam_tangency_max
 
     def calculate_vertical_build(self, output: bool) -> None:
         """
