@@ -766,10 +766,12 @@ def set_fusion_powers(
     # and ion power balance equations only)
     # No consideration of pden_non_alpha_charged_mw here.
     f_pden_alpha_ions_mw = (
-        physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_ion
+        physics_variables.f_p_alpha_plasma_deposited * pden_alpha_total_mw * f_alpha_ion
     )
     f_pden_alpha_electron_mw = (
-        physics_variables.f_alpha_plasma * pden_alpha_total_mw * f_alpha_electron
+        physics_variables.f_p_alpha_plasma_deposited
+        * pden_alpha_total_mw
+        * f_alpha_electron
     )
 
     return (

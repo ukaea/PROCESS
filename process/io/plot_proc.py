@@ -790,7 +790,7 @@ def plot_main_plasma_information(
 
     textstr_alpha = (
         f"$P_{{\\alpha,\\text{{loss}}}}$ {mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW \n"
-        f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile_data.data['f_alpha_plasma'].get_scan(scan):.2f}"
+        f"$f_{{\\alpha,\\text{{coupled}}}}$ {mfile_data.data['f_p_alpha_plasma_deposited'].get_scan(scan):.2f}"
     )
 
     axis.text(

@@ -174,7 +174,7 @@ def constraint_equation_2():
      pden_ion_transport_loss_mw: ion transport power per volume (MW/m3)
      pden_plasma_rad_mw: total radiation power per volume (MW/m3)
      pden_plasma_core_rad_mw: total core radiation power per volume (MW/m3)
-     f_alpha_plasma: fraction of alpha power deposited in plasma
+     f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
      pden_alpha_total_mw: alpha power per volume (MW/m3)
      pden_non_alpha_charged_mw: non-alpha charged particle fusion power per volume (MW/m3)
      pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m3)
@@ -198,7 +198,7 @@ def constraint_equation_2():
     # if plasma not ignited include injected power
     if fortran.physics_variables.i_plasma_ignited == 0:
         pdenom = (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.pden_alpha_total_mw
             + fortran.physics_variables.pden_non_alpha_charged_mw
             + fortran.physics_variables.pden_plasma_ohmic_mw
@@ -208,7 +208,7 @@ def constraint_equation_2():
     else:
         # if plasma ignited
         pdenom = (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.pden_alpha_total_mw
             + fortran.physics_variables.pden_non_alpha_charged_mw
             + fortran.physics_variables.pden_plasma_ohmic_mw
@@ -228,7 +228,7 @@ def constraint_equation_3():
 
     pden_ion_transport_loss_mw: ion transport power per volume (MW/m3)
     pden_ion_electron_equilibration_mw: ion/electron equilibration power per volume (MW/m3)
-    f_alpha_plasma: fraction of alpha power deposited in plasma
+    f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     f_pden_alpha_ions_mw: alpha power per volume to ions (MW/m3)
     p_hcd_injected_ions_mw: auxiliary injected power to ions (MW)
     vol_plasma: plasma volume (m3)
@@ -239,7 +239,7 @@ def constraint_equation_3():
             fortran.physics_variables.pden_ion_transport_loss_mw
             + fortran.physics_variables.pden_ion_electron_equilibration_mw
         ) / (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_ions_mw
             + fortran.current_drive_variables.p_hcd_injected_ions_mw
             / fortran.physics_variables.vol_plasma
@@ -247,14 +247,14 @@ def constraint_equation_3():
         return ConstraintResult(
             cc,
             (
-                fortran.physics_variables.f_alpha_plasma
+                fortran.physics_variables.f_p_alpha_plasma_deposited
                 * fortran.physics_variables.f_pden_alpha_ions_mw
                 + fortran.current_drive_variables.p_hcd_injected_ions_mw
                 / fortran.physics_variables.vol_plasma
             )
             * (1.0 - cc),
             (
-                fortran.physics_variables.f_alpha_plasma
+                fortran.physics_variables.f_p_alpha_plasma_deposited
                 * fortran.physics_variables.f_pden_alpha_ions_mw
                 + fortran.current_drive_variables.p_hcd_injected_ions_mw
                 / fortran.physics_variables.vol_plasma
@@ -267,18 +267,18 @@ def constraint_equation_3():
         fortran.physics_variables.pden_ion_transport_loss_mw
         + fortran.physics_variables.pden_ion_electron_equilibration_mw
     ) / (
-        fortran.physics_variables.f_alpha_plasma
+        fortran.physics_variables.f_p_alpha_plasma_deposited
         * fortran.physics_variables.f_pden_alpha_ions_mw
     )
     return ConstraintResult(
         cc,
         (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_ions_mw
         )
         * (1.0 - cc),
         (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_ions_mw
         )
         * cc,
@@ -303,7 +303,7 @@ def constraint_equation_4():
     pden_electron_transport_loss_mw: electron transport power per volume (MW/m3)
     pden_plasma_rad_mw: total radiation power per volume (MW/m3)
     pden_plasma_core_rad_mw: total core radiation power per volume (MW/m3)
-    f_alpha_plasma: fraction of alpha power deposited in plasma
+    f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     f_pden_alpha_electron_mw: alpha power per volume to electrons (MW/m3)
     pden_ion_electron_equilibration_mw: ion/electron equilibration power per volume (MW/m3)
     p_hcd_injected_electrons_mw: auxiliary injected power to electrons (MW)
@@ -323,7 +323,7 @@ def constraint_equation_4():
     # if plasma not ignited include injected power
     if fortran.physics_variables.i_plasma_ignited == 0:
         pdenom = (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_electron_mw
             + fortran.physics_variables.pden_ion_electron_equilibration_mw
             + fortran.current_drive_variables.p_hcd_injected_electrons_mw
@@ -332,7 +332,7 @@ def constraint_equation_4():
     else:
         # if plasma ignited
         pdenom = (
-            fortran.physics_variables.f_alpha_plasma
+            fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_electron_mw
             + fortran.physics_variables.pden_ion_electron_equilibration_mw
         )
@@ -609,7 +609,7 @@ def constraint_equation_17():
     """Equation for radiation power upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    f_alpha_plasma: fraction of alpha power deposited in plasma
+    f_p_alpha_plasma_deposited: fraction of alpha power deposited in plasma
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
     vol_plasma: plasma volume (m3)
     pden_alpha_total_mw: alpha power per volume (MW/m3)
@@ -623,7 +623,7 @@ def constraint_equation_17():
         fortran.current_drive_variables.p_hcd_injected_total_mw
         / fortran.physics_variables.vol_plasma
         + fortran.physics_variables.pden_alpha_total_mw
-        * fortran.physics_variables.f_alpha_plasma
+        * fortran.physics_variables.f_p_alpha_plasma_deposited
         + fortran.physics_variables.pden_non_alpha_charged_mw
         + fortran.physics_variables.pden_plasma_ohmic_mw
     )

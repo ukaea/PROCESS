@@ -2352,7 +2352,8 @@ class Physics:
         )
 
         physics_variables.p_plasma_separatrix_mw = (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + pinj
             + physics_variables.p_plasma_ohmic_mw
@@ -2391,7 +2392,7 @@ class Physics:
 
         # Power transported to the first wall by escaped alpha particles
         physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_alpha_plasma
+            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
         )
 
         # Density limit
@@ -2705,7 +2706,8 @@ class Physics:
 
         # Calculate some derived quantities that may not have been defined earlier
         physics_module.total_loss_power = 1e6 * (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
@@ -5341,8 +5343,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Fraction of alpha power deposited in plasma",
-            "(f_alpha_plasma)",
-            physics_variables.f_alpha_plasma,
+            "(f_p_alpha_plasma_deposited)",
+            physics_variables.f_p_alpha_plasma_deposited,
             "IP",
         )
         po.ovarrf(
@@ -7334,7 +7336,7 @@ class Physics:
             fhz_value = (
                 ptrez
                 + ptriz
-                - physics_variables.f_alpha_plasma
+                - physics_variables.f_p_alpha_plasma_deposited
                 * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_non_alpha_charged_mw
                 - physics_variables.pden_plasma_ohmic_mw
@@ -7428,7 +7430,7 @@ class Physics:
 
         # Calculate heating power (MW)
         p_plasma_loss_mw = (
-            physics_variables.f_alpha_plasma * p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited * p_alpha_total_mw
             + p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
         )
@@ -8581,7 +8583,7 @@ def init_physics_variables():
     physics_variables.f_c_plasma_auxiliary = 0.0
     physics_variables.f_c_plasma_inductive = 0.0
     physics_variables.f_alpha_electron = 0.0
-    physics_variables.f_alpha_plasma = 0.95
+    physics_variables.f_p_alpha_plasma_deposited = 0.95
     physics_variables.f_alpha_ion = 0.0
     physics_variables.f_deuterium = 0.5
     physics_variables.f_p_div_lower = 1.0

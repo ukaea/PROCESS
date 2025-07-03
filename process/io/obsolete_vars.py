@@ -132,7 +132,7 @@ OBS_VARS = {
     "fdeut": "f_deuterium",
     "ftrit": "f_tritium",
     "fhe3": "f_helium3",
-    "falpha": "f_alpha_plasma",
+    "falpha": "f_p_alpha_plasma_deposited",
     "idensl": "i_density_limit",
     "ftburn": "ft_burn_min",
     "ftohs": "ft_current_ramp_up",

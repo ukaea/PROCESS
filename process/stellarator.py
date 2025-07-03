@@ -4442,7 +4442,8 @@ class Stellarator:
         #  physics_variables.p_plasma_rad_mw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
@@ -4484,7 +4485,7 @@ class Stellarator:
         #  Power transported to the first wall by escaped alpha particles
 
         physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_alpha_plasma
+            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
         )
 
         # Nominal mean photon wall load
@@ -4518,7 +4519,8 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
@@ -4810,7 +4812,8 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
+                physics_variables.f_p_alpha_plasma_deposited
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4819,7 +4822,8 @@ class Stellarator:
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
+                physics_variables.f_p_alpha_plasma_deposited
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4955,7 +4959,8 @@ class Stellarator:
         )
 
         nominator = (
-            physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.pden_alpha_total_mw
             - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 
