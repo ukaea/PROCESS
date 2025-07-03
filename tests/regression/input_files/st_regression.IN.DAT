@@ -2664,7 +2664,7 @@ i_hcd_calculations = 1
 * JUSTIFICATION: Turned off, do not care about maximum current drive gamma
 * VARIABLES:     eta_cd_norm_hcd_primary(1.0e20 A/W-m2) calculated in-situ
 
-*gammax =  
+*eta_cd_norm_hcd_primary_max =  
 * DESCRIPTION:   Maximum current drive gamma (icc = 37)
 * JUSTIFICATION: Turned off, not using icc = 37 
 

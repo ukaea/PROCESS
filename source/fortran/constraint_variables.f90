@@ -219,7 +219,7 @@ module constraint_variables
   real(dp) :: fzeffmax
   !! f-value for maximum zeff (`constraint equation 64`, `iteration variable 112`)
 
-  real(dp) :: gammax
+  real(dp) :: eta_cd_norm_hcd_primary_max
   !! maximum current drive gamma (`constraint equation 37`)
 
   integer :: i_q95_fixed
