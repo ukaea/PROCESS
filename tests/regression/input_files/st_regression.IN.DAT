@@ -1376,7 +1376,7 @@ boundu(49) = 1.0
 * JUSTIFICATION: Turned off, dont care toridal field limit
 * VARIABLES:     b_tf_inboard_peak calculated in-situ
 
-* bmxlim  = 
+* b_tf_inboard_max  = 
 * DESCRIPTION:   Maximum peak toroidal field (T) (`constraint equation 25`) (default = 12)
 * JUSTIFICATION: Not yet set, assuming default.
 

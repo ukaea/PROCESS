@@ -24,7 +24,7 @@ module constraint_variables
   real(dp) :: bigqmin
   !! minimum fusion gain Q (`constraint equation 28`)
 
-  real(dp) :: bmxlim
+  real(dp) :: b_tf_inboard_max
   !! maximum peak toroidal field (T) (`constraint equation 25`)
 
   real(dp) :: fauxmn

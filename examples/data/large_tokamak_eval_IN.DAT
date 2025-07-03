@@ -91,7 +91,7 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 
-bmxlim   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
+b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
 fbeta_max = 0.5 * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
 fdene    = 1.2 * f-value for density limit (`constraint equation 5`; `iteration variable 9`)
 fiooic   = 0.65 * f-value for TF coil operating current / critical current ratio
