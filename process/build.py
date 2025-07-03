@@ -28,7 +28,7 @@ class Build:
         self.outfile = constants.nout
         self.mfile = constants.mfile
 
-    def portsz(self):
+    def calculate_beam_port_size(self):
         """Port size calculation
         author: P J Knight, CCFE, Culham Science Centre
         author: M D Kovari, CCFE, Culham Science Centre

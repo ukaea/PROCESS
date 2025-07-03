@@ -270,7 +270,7 @@ class Caller:
         if ft.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
 
-        self.models.build.portsz()
+        self.models.build.calculate_beam_port_size()
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()

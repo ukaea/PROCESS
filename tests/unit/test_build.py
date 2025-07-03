@@ -384,7 +384,7 @@ class PortszParam(NamedTuple):
         ),
     ),
 )
-def test_portsz(portszparam, monkeypatch, build):
+def test_calculate_beam_port_size(portszparam, monkeypatch, build):
     """
     Automatically generated Regression Unit Test for portsz.
 
@@ -438,7 +438,7 @@ def test_portsz(portszparam, monkeypatch, build):
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", portszparam.n_tf_coils)
 
-    build.portsz()
+    build.calculate_beam_port_size()
 
     assert current_drive_variables.radius_beam_tangency == pytest.approx(
         portszparam.expected_radius_beam_tangency
