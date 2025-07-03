@@ -525,17 +525,19 @@ def constraint_equation_13():
 
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    ft_burn: f-value for minimum burn time
+    ft_burn_min: f-value for minimum burn time
     t_burn: burn time (s) (calculated if i_pulsed_plant=1)
     t_burn_min: minimum burn time (s)
     """
     return ConstraintResult(
         1.0
-        - fortran.constraint_variables.ft_burn
+        - fortran.constraint_variables.ft_burn_min
         * fortran.times_variables.t_burn
         / fortran.constraint_variables.t_burn_min,
-        fortran.constraint_variables.t_burn_min / fortran.constraint_variables.ft_burn,
-        fortran.constraint_variables.t_burn_min / fortran.constraint_variables.ft_burn
+        fortran.constraint_variables.t_burn_min
+        / fortran.constraint_variables.ft_burn_min,
+        fortran.constraint_variables.t_burn_min
+        / fortran.constraint_variables.ft_burn_min
         - fortran.times_variables.t_burn,
     )
 
@@ -2386,7 +2388,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fstr_wp = 1.0
     fortran.constraint_variables.fmaxvvstress = 1.0
     fortran.constraint_variables.ftbr = 1.0
-    fortran.constraint_variables.ft_burn = 1.0
+    fortran.constraint_variables.ft_burn_min = 1.0
     fortran.constraint_variables.ftcycl = 1.0
     fortran.constraint_variables.ftmargoh = 1.0
     fortran.constraint_variables.ftmargtf = 1.0
