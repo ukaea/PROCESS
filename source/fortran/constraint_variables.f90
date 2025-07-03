@@ -281,7 +281,7 @@ module constraint_variables
   !! allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
   !! (`i_blanket_type =2`) (`constraint equation 55`)
 
-  real(dp) :: walalw
+  real(dp) :: pflux_fw_neutron_max_mw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 
   real(dp) :: f_alpha_energy_confinement_min

@@ -95,7 +95,7 @@ fradwall = 1.0 * f-value for upper limit on radiation wall load (`constr; equ; 6
 pflux_fw_rad_max = 1 * Maximum permitted radiation wall load (MW/m^2) (`constraint equation 67`)
 pnetelin = 1000 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 500. * maximum fusion power (MW) (`constraint equation 9`)
-walalw   = 1.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
+pflux_fw_neutron_max_mw   = 1.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 f_alpha_energy_confinement_min = 6 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 falpha_energy_confinement = 1. * f-value for lower limit on taup/taueff the ratio of alpha particle to energy
 

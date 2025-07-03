@@ -160,7 +160,7 @@ dene = 7.5E19
 icc = 8
 fwalld = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*

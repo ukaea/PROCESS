@@ -295,7 +295,7 @@ def main(args=None):
         3: "p_plant_electric_net_mw",
         4: "hfact",
         5: "oacdcp",
-        6: "walalw",
+        6: "pflux_fw_neutron_max_mw",
         7: "beamfus0",
         8: "fqval",
         9: "te",

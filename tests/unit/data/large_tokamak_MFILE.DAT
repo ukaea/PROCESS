@@ -1241,7 +1241,7 @@ icc = 8
 ixc = 14 * fwalld
 fwalld = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*
