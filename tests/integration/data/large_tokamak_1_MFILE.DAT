@@ -1234,8 +1234,8 @@ dene = 7.5E19
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-ixc = 14 * fwalld
-fwalld = 1.0
+ixc = 14 * fpflux_fw_neutron_max_mw
+fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
 pflux_fw_neutron_max_mw = 2.0
 
