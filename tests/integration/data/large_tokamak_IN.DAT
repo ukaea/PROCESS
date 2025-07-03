@@ -83,7 +83,7 @@ p_hcd_injected_max = 200.0
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-ixc = 25 * fpnetel
+ixc = 25 * fp_plant_electric_net_required_mw
 * Minimum allowable value for net eletric power [MW]
 p_plant_electric_net_required_mw = 400.0
 

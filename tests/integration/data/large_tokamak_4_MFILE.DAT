@@ -44,9 +44,9 @@
  fpinj___________________________________________________________________ (itvar007)____________________      4.3071E-01    
  fpinj_(final_value/initial_value)_______________________________________ (xcm007)______________________      3.8071E-01    
  fpinj_(range_normalised)________________________________________________ (nitvar007)___________________      4.0011E-01    
- fpnetel_________________________________________________________________ (itvar008)____________________      1.7000E+00    
- fpnetel_(final_value/initial_value)_____________________________________ (xcm008)______________________      1.0000E+00    
- fpnetel_(range_normalised)______________________________________________ (nitvar008)___________________      1.0000E+00    
+ fp_plant_electric_net_required_mw_________________________________________________________________ (itvar008)____________________      1.7000E+00    
+ fp_plant_electric_net_required_mw_(final_value/initial_value)_____________________________________ (xcm008)______________________      1.0000E+00    
+ fp_plant_electric_net_required_mw_(range_normalised)______________________________________________ (nitvar008)___________________      1.0000E+00    
  fbetatry________________________________________________________________ (itvar009)____________________      5.3870E-01    
  fbetatry_(final_value/initial_value)____________________________________ (xcm009)______________________      1.0174E+00    
  fbetatry_(range_normalised)_____________________________________________ (nitvar009)___________________      5.0821E-01    
@@ -1271,7 +1271,7 @@ p_hcd_injected_max = 200.0
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-ixc = 25 * fpnetel
+ixc = 25 * fp_plant_electric_net_required_mw
 * Minimum allowable value for net eletric power [MW]
 p_plant_electric_net_required_mw = 400.0
 

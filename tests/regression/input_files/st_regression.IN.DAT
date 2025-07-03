@@ -129,7 +129,7 @@ p_plant_electric_net_required_mw = 100.0
 * JUSTIFICATION: Not used in this run
 
 ixc = 25
-fpnetel = 1.0 
+fp_plant_electric_net_required_mw = 1.0 
 * boundl(25) = 
 * boundu(25) = 
 * DESCRIPTION:   f-value for net electric power (constraint equation 16)

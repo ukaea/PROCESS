@@ -127,7 +127,7 @@ module constraint_variables
   real(dp) :: fpinj
   !! f-value for injection power (`constraint equation 30`, `iteration variable 46`)
 
-  real(dp) :: fpnetel
+  real(dp) :: fp_plant_electric_net_required_mw
   !! f-value for net electric power (`constraint equation 16`, `iteration variable 25`)
 
   real(dp) :: fradius_beam_tangency

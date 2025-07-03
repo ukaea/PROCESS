@@ -66,7 +66,9 @@ ITERATION_VARIABLES = {
     20: IterationVariable("temp_cp_average", fortran.tfcoil_variables, 40.00, 3.0e2),
     21: IterationVariable("ft_burn_min", fortran.constraint_variables, 0.001, 1.0),
     23: IterationVariable("fcoolcp", fortran.tfcoil_variables, 0.1, 0.50),
-    25: IterationVariable("fpnetel", fortran.constraint_variables, 0.001, 1.0),
+    25: IterationVariable(
+        "fp_plant_electric_net_required_mw", fortran.constraint_variables, 0.001, 1.0
+    ),
     26: IterationVariable(
         "fp_fusion_total_max_mw", fortran.constraint_variables, 0.001, 1.0
     ),
