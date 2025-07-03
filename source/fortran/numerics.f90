@@ -245,7 +245,7 @@ module numerics
   !! <LI> (37) j_cs_flat_top_end
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)
-  !! <LI> (40) fgamcd (f-value for equation 37)
+  !! <LI> (40) feta_cd_norm_hcd_primary_max (f-value for equation 37)
   !! <LI> (41) f_j_cs_start_pulse_end_flat_top
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
