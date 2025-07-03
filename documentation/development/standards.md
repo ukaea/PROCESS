@@ -406,6 +406,12 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Strain
+
+- Strains should start with the `str_` prefix.
+
+---------------------
+
 ##### Forces
 
 - Forces should start with the `forc_` prefix.
