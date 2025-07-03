@@ -416,7 +416,7 @@ def constraint_equation_7():
     If i_plasma_ignited=1, any auxiliary power is assumed to be used only
     during plasma start-up, and is excluded from all steady-state
     power balance calculations.
-    beam_density_out: hot beam ion density from calculation (/m3)
+    nd_beam_ions_out: hot beam ion density from calculation (/m3)
     nd_beam_ions: hot beam ion density, variable (/m3)
     """
     if fortran.physics_variables.i_plasma_ignited == 1:
@@ -426,7 +426,7 @@ def constraint_equation_7():
 
     cc = (
         1.0
-        - fortran.physics_variables.beam_density_out
+        - fortran.physics_variables.nd_beam_ions_out
         / fortran.physics_variables.nd_beam_ions
     )
     return ConstraintResult(
