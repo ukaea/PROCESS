@@ -4276,7 +4276,7 @@ class Stellarator:
         ):
             (
                 physics_variables.beta_beam,
-                physics_variables.beam_density_out,
+                physics_variables.nd_beam_ions_out,
                 physics_variables.p_beam_alpha_mw,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,

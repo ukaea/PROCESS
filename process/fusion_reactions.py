@@ -834,7 +834,7 @@ def beam_fusion(
             Returns:
                 tuple: A tuple containing the following elements:
                     - beta_beam (float): Neutral beam beta component.
-                    - beam_density_out (float): Hot beam ion density (m^-3).
+                    - nd_beam_ions_out (float): Hot beam ion density (m^-3).
                     - p_beam_alpha_mw (float): Alpha power from hot neutral beam ions (MW).
 
             Notes:

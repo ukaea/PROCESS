@@ -171,7 +171,7 @@ module physics_variables
   real(dp) :: nd_beam_ions
   !! hot beam ion density, variable (/m3)
 
-  real(dp) :: beam_density_out
+  real(dp) :: nd_beam_ions_out
   !! hot beam ion density from calculation (/m3)
 
   real(dp) :: beta_norm_max

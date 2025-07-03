@@ -2135,7 +2135,7 @@ class Physics:
         ):
             (
                 physics_variables.beta_beam,
-                physics_variables.beam_density_out,
+                physics_variables.nd_beam_ions_out,
                 physics_variables.p_beam_alpha_mw,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
@@ -8562,7 +8562,7 @@ def init_physics_variables():
     physics_variables.dlimit[:] = 0.0
     physics_variables.nd_alphas = 0.0
     physics_variables.nd_beam_ions = 0.0
-    physics_variables.beam_density_out = 0.0
+    physics_variables.nd_beam_ions_out = 0.0
     physics_variables.beta_norm_max = 3.5
     physics_variables.beta_norm_max_wesson = 0.0
     physics_variables.beta_norm_max_menard = 0.0
