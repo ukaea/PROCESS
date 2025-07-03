@@ -351,7 +351,7 @@ module numerics
   !! <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value
   !! <LI> (144) fnesep : Eich critical electron density at separatrix
   !! <LI> (145) fgwped :  fraction of Greenwald density to set as pedestal-top density
-  !! <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)
+  !! <LI> (146) fc_tf_turn_max : F-value for TF coil current per turn limit (constraint equation 77)
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
   !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)

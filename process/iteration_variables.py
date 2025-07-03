@@ -290,7 +290,7 @@ ITERATION_VARIABLES = {
     143: IterationVariable("f_coppera_m2", fortran.rebco_variables, 0.001, 1.0),
     144: IterationVariable("fnesep", fortran.constraint_variables, 0.001, 1.0),
     145: IterationVariable("fgwped", fortran.physics_variables, 0.1, 0.9),
-    146: IterationVariable("fcpttf", fortran.constraint_variables, 0.001, 1.0),
+    146: IterationVariable("fc_tf_turn_max", fortran.constraint_variables, 0.001, 1.0),
     147: IterationVariable("freinke", fortran.constraint_variables, 0.001, 1.0),
     149: IterationVariable("fb_cs_limit_max", fortran.pfcoil_variables, 0.001, 1.0),
     152: IterationVariable("fgwsep", fortran.physics_variables, 0.001, 0.5),
