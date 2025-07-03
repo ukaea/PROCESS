@@ -53,7 +53,7 @@ module scan_module
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
   !!         <LI> 16 rmajor
-  !!         <LI> 17 bmxlim
+  !!         <LI> 17 b_tf_inboard_max
   !!         <LI> 18 gammax
   !!         <LI> 19 boundl(16: dr_cs)
   !!         <LI> 20 t_burn_min

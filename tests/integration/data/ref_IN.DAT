@@ -298,7 +298,7 @@ t_precharge = 500.0
 *-----------------Tfcoil Variables-----------------*
 
 fpeakb = 1.0
-bmxlim = 11.2
+b_tf_inboard_max = 11.2
 dr_tf_plasma_case   = 0.06 * Inboard tf coil case inner \(plasma side) thickness (m)
 dx_tf_side_case   = 0.05 * Inboard tf coil sidewall case thickness (m)
 c_tf_turn    = 6.5e+04 * Tf coil current per turn (a);

@@ -1289,7 +1289,7 @@ fbeta_max = 1.0
 *--------------*
 icc = 25
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
