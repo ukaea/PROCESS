@@ -372,6 +372,18 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Forces
+
+- Forces should start with the `forc_` prefix.
+
+---------------------
+
+##### Torques
+
+- Torques should start with the `torq_` prefix
+
+---------------------
+
 ##### Current drive efficiencies
 
 Absolute current drive efficiencies ($\eta_{\text{CD}}$) representing Amps driven per Watt of injected power start with the `eta_cd` prefix.
