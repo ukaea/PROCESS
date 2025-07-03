@@ -64,7 +64,7 @@ ITERATION_VARIABLES = {
     18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
     19: IterationVariable("e_beam_kev", fortran.current_drive_variables, 1.0, 1.0e6),
     20: IterationVariable("temp_cp_average", fortran.tfcoil_variables, 40.00, 3.0e2),
-    21: IterationVariable("ft_burn", fortran.constraint_variables, 0.001, 1.0),
+    21: IterationVariable("ft_burn_min", fortran.constraint_variables, 0.001, 1.0),
     23: IterationVariable("fcoolcp", fortran.tfcoil_variables, 0.1, 0.50),
     25: IterationVariable("fpnetel", fortran.constraint_variables, 0.001, 1.0),
     26: IterationVariable(

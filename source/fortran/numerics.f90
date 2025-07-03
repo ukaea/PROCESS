@@ -226,7 +226,7 @@ module numerics
   !! <LI> (18) q
   !! <LI> (19) e_beam_kev
   !! <LI> (20) temp_cp_average
-  !! <LI> (21) ft_burn (f-value for equation 13)
+  !! <LI> (21) ft_burn_min (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED

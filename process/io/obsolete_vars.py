@@ -134,7 +134,7 @@ OBS_VARS = {
     "fhe3": "f_helium3",
     "falpha": "f_alpha_plasma",
     "idensl": "i_density_limit",
-    "ftburn": "ft_burn",
+    "ftburn": "ft_burn_min",
     "ftohs": "ft_current_ramp_up",
     "tbrnmn": "t_burn_min",
     "tohs": "t_current_ramp_up",

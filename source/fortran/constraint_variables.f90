@@ -183,7 +183,7 @@ module constraint_variables
   real(dp) :: ftbr
   !! f-value for minimum tritium breeding ratio (`constraint equation 52`, `iteration variable 89`)
 
-  real(dp) :: ft_burn
+  real(dp) :: ft_burn_min
   !! f-value for minimum burn time (`constraint equation 13`, `iteration variable 21`)
 
   real(dp) :: ftcycl
