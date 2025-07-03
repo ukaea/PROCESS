@@ -5572,7 +5572,7 @@ def main(args=None):
 
     global dx_beam_shield
     global radius_beam_tangency
-    global rtanmax
+    global radius_beam_tangency_max
     global dx_beam_duct
 
     i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
@@ -5581,10 +5581,14 @@ def main(args=None):
     if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
         dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
         radius_beam_tangency = m_file.data["radius_beam_tangency"].get_scan(scan)
-        rtanmax = m_file.data["rtanmax"].get_scan(scan)
+        radius_beam_tangency_max = m_file.data["radius_beam_tangency_max"].get_scan(
+            scan
+        )
         dx_beam_duct = m_file.data["dx_beam_duct"].get_scan(scan)
     else:
-        dx_beam_shield = radius_beam_tangency = rtanmax = dx_beam_duct = 0.0
+        dx_beam_shield = radius_beam_tangency = radius_beam_tangency_max = (
+            dx_beam_duct
+        ) = 0.0
 
     # Pedestal profile parameters
     global ipedestal

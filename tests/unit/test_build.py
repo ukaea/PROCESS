@@ -332,7 +332,7 @@ class PortszParam(NamedTuple):
 
     radius_beam_tangency: Any = None
 
-    rtanmax: Any = None
+    radius_beam_tangency_max: Any = None
 
     dx_beam_shield: Any = None
 
@@ -348,7 +348,7 @@ class PortszParam(NamedTuple):
 
     expected_radius_beam_tangency: Any = None
 
-    expected_rtanmax: Any = None
+    expected_radius_beam_tangency_max: Any = None
 
 
 @pytest.mark.parametrize(
@@ -358,7 +358,7 @@ class PortszParam(NamedTuple):
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
             radius_beam_tangency=0,
-            rtanmax=0,
+            radius_beam_tangency_max=0,
             dx_beam_shield=0.5,
             dx_beam_duct=0.57999999999999996,
             frbeam=1.05,
@@ -366,13 +366,13 @@ class PortszParam(NamedTuple):
             dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
             expected_radius_beam_tangency=9.3346050000000016,
-            expected_rtanmax=14.735821603386416,
+            expected_radius_beam_tangency_max=14.735821603386416,
         ),
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
             radius_beam_tangency=9.3346050000000016,
-            rtanmax=14.735821603386416,
+            radius_beam_tangency_max=14.735821603386416,
             dx_beam_shield=0.5,
             dx_beam_duct=0.57999999999999996,
             frbeam=1.05,
@@ -380,7 +380,7 @@ class PortszParam(NamedTuple):
             dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
             expected_radius_beam_tangency=9.3346050000000016,
-            expected_rtanmax=14.735821603386416,
+            expected_radius_beam_tangency_max=14.735821603386416,
         ),
     ),
 )
@@ -412,7 +412,11 @@ def test_portsz(portszparam, monkeypatch, build):
         portszparam.radius_beam_tangency,
     )
 
-    monkeypatch.setattr(current_drive_variables, "rtanmax", portszparam.rtanmax)
+    monkeypatch.setattr(
+        current_drive_variables,
+        "radius_beam_tangency_max",
+        portszparam.radius_beam_tangency_max,
+    )
 
     monkeypatch.setattr(
         current_drive_variables, "dx_beam_shield", portszparam.dx_beam_shield
@@ -440,6 +444,6 @@ def test_portsz(portszparam, monkeypatch, build):
         portszparam.expected_radius_beam_tangency
     )
 
-    assert current_drive_variables.rtanmax == pytest.approx(
-        portszparam.expected_rtanmax
+    assert current_drive_variables.radius_beam_tangency_max == pytest.approx(
+        portszparam.expected_radius_beam_tangency_max
     )

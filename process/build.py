@@ -37,7 +37,7 @@ class Build:
         for adequate beam access.
         <P>The outputs from the routine are
         <UL> <P><LI>radius_beam_tangency : Beam tangency radius (m)
-        <P><LI>rtanmax : Maximum possible tangency radius (m) </UL>
+        <P><LI>radius_beam_tangency_max : Maximum possible tangency radius (m) </UL>
         A User's Guide to the PROCESS Systems Code
         """
         current_drive_variables.radius_beam_tangency = (
@@ -97,14 +97,16 @@ class Build:
 
             #  Maximum tangency radius for centreline of beam (m)
 
-            current_drive_variables.rtanmax = f * np.cos(eps) - 0.5e0 * c
+            current_drive_variables.radius_beam_tangency_max = (
+                f * np.cos(eps) - 0.5e0 * c
+            )
 
         else:  # coil separation is too narrow for beam...
             error_handling.fdiags[0] = g
             error_handling.fdiags[1] = c
             error_handling.report_error(63)
 
-            current_drive_variables.rtanmax = 0.0e0
+            current_drive_variables.radius_beam_tangency_max = 0.0e0
 
     def calculate_vertical_build(self, output: bool) -> None:
         """

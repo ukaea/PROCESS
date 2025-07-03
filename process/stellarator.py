@@ -5170,8 +5170,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Maximum possible tangency radius (m)",
-                    "(rtanmax)",
-                    current_drive_variables.rtanmax,
+                    "(radius_beam_tangency_max)",
+                    current_drive_variables.radius_beam_tangency_max,
                 )
                 po.ovarre(
                     self.outfile,

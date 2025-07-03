@@ -289,7 +289,7 @@ module current_drive_variables
   real(dp) :: radius_beam_tangency
   !! neutral beam centreline tangency radius (m)
 
-  real(dp) :: rtanmax
+  real(dp) :: radius_beam_tangency_max
   !! maximum tangency radius for centreline of beam (m)
 
   real(dp) :: n_beam_decay_lengths_core
