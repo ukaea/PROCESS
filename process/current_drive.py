@@ -2082,8 +2082,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(rtanbeam)",
-                    current_drive_variables.rtanbeam,
+                    "(radius_beam_tangency)",
+                    current_drive_variables.radius_beam_tangency,
                     "OP ",
                 )
                 po.ovarre(
@@ -2288,8 +2288,8 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(rtanbeam)",
-                    current_drive_variables.rtanbeam,
+                    "(radius_beam_tangency)",
+                    current_drive_variables.radius_beam_tangency,
                     "OP ",
                 )
                 po.ovarre(
@@ -2502,7 +2502,7 @@ def init_current_drive_variables():
     current_drive_variables.f_c_plasma_pfirsch_schluter = 0.0
     current_drive_variables.pwplh = 0.0
     current_drive_variables.pwpnb = 0.0
-    current_drive_variables.rtanbeam = 0.0
+    current_drive_variables.radius_beam_tangency = 0.0
     current_drive_variables.rtanmax = 0.0
     current_drive_variables.n_beam_decay_lengths_core = 0.0
     current_drive_variables.tbeamin = 3.0

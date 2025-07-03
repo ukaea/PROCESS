@@ -36,11 +36,11 @@ class Build:
         This subroutine finds the maximum possible tangency radius
         for adequate beam access.
         <P>The outputs from the routine are
-        <UL> <P><LI>rtanbeam : Beam tangency radius (m)
+        <UL> <P><LI>radius_beam_tangency : Beam tangency radius (m)
         <P><LI>rtanmax : Maximum possible tangency radius (m) </UL>
         A User's Guide to the PROCESS Systems Code
         """
-        current_drive_variables.rtanbeam = (
+        current_drive_variables.radius_beam_tangency = (
             current_drive_variables.frbeam * physics_variables.rmajor
         )
 

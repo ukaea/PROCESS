@@ -286,7 +286,7 @@ module current_drive_variables
   real(dp) :: pwpnb
   !! neutral beam wall plug power (MW)
 
-  real(dp) :: rtanbeam
+  real(dp) :: radius_beam_tangency
   !! neutral beam centreline tangency radius (m)
 
   real(dp) :: rtanmax

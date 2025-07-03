@@ -683,17 +683,17 @@ def constraint_equation_20():
 
     fportsz: f-value for neutral beam tangency radius limit
     rtanmax: maximum tangency radius for centreline of beam (m)
-    rtanbeam: neutral beam centreline tangency radius (m)
+    radius_beam_tangency: neutral beam centreline tangency radius (m)
     """
     cc = (
-        fortran.current_drive_variables.rtanbeam
+        fortran.current_drive_variables.radius_beam_tangency
         / fortran.current_drive_variables.rtanmax
         - 1.0 * fortran.constraint_variables.fportsz
     )
     return ConstraintResult(
         cc,
         fortran.current_drive_variables.rtanmax * (1.0 - cc),
-        fortran.current_drive_variables.rtanbeam * cc,
+        fortran.current_drive_variables.radius_beam_tangency * cc,
     )
 
 

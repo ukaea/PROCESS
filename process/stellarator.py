@@ -5164,8 +5164,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(rtanbeam)",
-                    current_drive_variables.rtanbeam,
+                    "(radius_beam_tangency)",
+                    current_drive_variables.radius_beam_tangency,
                 )
                 po.ovarre(
                     self.outfile,
