@@ -127,9 +127,6 @@ module heat_transport_variables
     real(dp) :: p_hcd_electric_loss_mw
     !! power dissipated in heating and current drive system (MW)
 
-    real(dp) :: pinjmax
-    !! maximum injector power during pulse (heating and ramp-up/down phase) (MW)
-
     real(dp) :: p_hcd_electric_total_mw
     !! injector wall plug power (MW)
 
