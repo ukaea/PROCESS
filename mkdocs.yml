@@ -76,7 +76,10 @@ nav:
           - Structural Components: eng-models/structural-components.md
           - Buildings: eng-models/buildings.md
           - First Wall/Blanket: eng-models/fw-blanket.md
-          - TF Coil: eng-models/tf-coil.md
+          - TF Coil:
+              - Overview: eng-models/tf-coil.md
+              - Resistive TF Coil: eng-models/tf-coil-resistive.md
+              - Superconducting TF Coil: eng-models/tf-coil-superconducting.md
           - PF Coil: eng-models/pf-coil.md
           - Superconductors: eng-models/superconductors.md
           - Central Solenoid: eng-models/central-solenoid.md
