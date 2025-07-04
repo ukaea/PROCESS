@@ -57,7 +57,7 @@ module numerics
   !!  <LI> (13) hydrogen production rate OBSOLETE
   !!  <LI> (14) pulse length
   !!  <LI> (15) plant availability factor (N.B. requires
-  !!            iavail=1 to be set)
+  !!            i_plant_availability=1 to be set)
   !!  <LI> (16) linear combination of major radius (minimised) and pulse length (maximised)
   !!              note: FoM should be minimised only!
   !!  <LI> (17) net electrical output

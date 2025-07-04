@@ -106,7 +106,7 @@ falpha_energy_confinement = 1. * f-value for lower limit on taup/taueff the rati
 
 abktflnc = 5. * allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)
 adivflnc = 7. * allowable divertor heat fluence (MW-yr/m2)
-cfactr   = 0.75 * Total plant availability fraction; input if `iavail=0`
+cfactr   = 0.75 * Total plant availability fraction; input if `i_plant_availability=0`
 cost_model = 0 * Switch for cost model;
 dintrt   = 0. * diff between borrowing and saving interest rates
 fcap0    = 1.15 * average cost of money for construction of plant assuming design/construction time of six years
@@ -114,7 +114,7 @@ fcap0cp  = 1.06 * average cost of money for replaceable components assuming lead
 fcontng  = 0.15 * project contingency factor
 fcr0     = 0.065 * fixed charge rate during construction
 fkind    = 1. * multiplier for Nth of a kind costs
-iavail   = 0 * Switch for plant availability model;
+i_plant_availability   = 0 * Switch for plant availability model;
 ifueltyp = 0 * Switch for fuel type;
 ireactor = 1 * Switch for net electric power and cost of electricity calculations;
 lsa      = 2 * Level of safety assurance switch (generally; use 3 or 4);

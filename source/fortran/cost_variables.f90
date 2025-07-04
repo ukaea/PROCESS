@@ -54,7 +54,7 @@ module cost_variables
   !! Calendar year lifetime of heating/current drive system (y)
 
   real(dp) :: cfactr
-  !! Total plant availability fraction; input if `iavail=0`
+  !! Total plant availability fraction; input if `i_plant_availability=0`
 
   real(dp) :: cpfact
   !! Total plant capacity factor
@@ -200,7 +200,7 @@ module cost_variables
   real(dp) :: fwallcst
   !! first wall cost (M$)
 
-  integer :: iavail
+  integer :: i_plant_availability
   !! Switch for plant availability model:
   !!
   !! - =0 use input value for cfactr
@@ -272,34 +272,34 @@ module cost_variables
   !! Operational time (yrs)
 
   real(dp) :: tbktrepl
-  !! time taken to replace blanket (y) (`iavail=1`)
+  !! time taken to replace blanket (y) (`i_plant_availability=1`)
 
   real(dp) :: tcomrepl
-  !! time taken to replace both blanket and divertor (y) (`iavail=1`)
+  !! time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)
 
   real(dp) :: tdivrepl
-  !! time taken to replace divertor (y) (`iavail=1`)
+  !! time taken to replace divertor (y) (`i_plant_availability=1`)
 
   real(dp) :: uubop
-  !! unplanned unavailability factor for balance of plant (`iavail=1`)
+  !! unplanned unavailability factor for balance of plant (`i_plant_availability=1`)
 
   real(dp) :: uucd
-  !! unplanned unavailability factor for current drive (`iavail=1`)
+  !! unplanned unavailability factor for current drive (`i_plant_availability=1`)
 
   real(dp) :: uudiv
-  !! unplanned unavailability factor for divertor (`iavail=1`)
+  !! unplanned unavailability factor for divertor (`i_plant_availability=1`)
 
   real(dp) :: uufuel
-  !! unplanned unavailability factor for fuel system (`iavail=1`)
+  !! unplanned unavailability factor for fuel system (`i_plant_availability=1`)
 
   real(dp) :: uufw
-  !! unplanned unavailability factor for first wall (`iavail=1`)
+  !! unplanned unavailability factor for first wall (`i_plant_availability=1`)
 
   real(dp) :: uumag
-  !! unplanned unavailability factor for magnets (`iavail=1`)
+  !! unplanned unavailability factor for magnets (`i_plant_availability=1`)
 
   real(dp) :: uuves
-  !! unplanned unavailability factor for vessel (`iavail=1`)
+  !! unplanned unavailability factor for vessel (`i_plant_availability=1`)
 
   integer :: ifueltyp
   !! Switch for fuel type:
@@ -358,10 +358,10 @@ module cost_variables
   !! Full power year plant lifetime (years)
 
   real(dp) :: tmain
-  !! Maintenance time for replacing CP (years) (iavail = 3)
+  !! Maintenance time for replacing CP (years) (i_plant_availability = 3)
 
   real(dp) :: u_unplanned_cp
-  !! User-input CP unplanned unavailability (iavail = 3)
+  !! User-input CP unplanned unavailability (i_plant_availability = 3)
 
   real(dp), parameter :: ucad = 180.0D0
   !! unit cost for administration buildings (M$/m3)

@@ -49,7 +49,7 @@ To change the value or add/remove a regular input
 ```python
 # Add parameter will change the parameter value if it already exists
 i.add_parameter("blnktthdsd", 0.5)
-i.add_parameter("iavail", 1)
+i.add_parameter("i_plant_availability", 1)
 i.remove_parameter("blnkithsddd")
 i.remove_parameter("dr_blkt_inboard")
 i.add_parameter("sweep", [3.0, 3.0])

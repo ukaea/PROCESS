@@ -3350,7 +3350,7 @@ def init_cost_variables():
     cost_variables.fcr0 = 0.0966
     cost_variables.fkind = 1.0
     cost_variables.fwallcst = 0.0
-    cost_variables.iavail = 2
+    cost_variables.i_plant_availability = 2
     cost_variables.ibkt_life = 0
     cost_variables.life_dpa = 50
     cost_variables.bktcycles = 1.0e3

@@ -1552,7 +1552,7 @@ INPUT_VARIABLES = {
     "i_tf_tresca": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
     "i_tf_turns_integer": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
     "i_tf_wp_geom": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1, 2]),
-    "iavail": InputVariable(fortran.cost_variables, int, range=(0, 3)),
+    "i_plant_availability": InputVariable(fortran.cost_variables, int, range=(0, 3)),
     "ibkt_life": InputVariable(fortran.cost_variables, int, choices=[0, 1, 2]),
     "i_blkt_dual_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
