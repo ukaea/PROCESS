@@ -1150,6 +1150,7 @@ INPUT_VARIABLES = {
     "rpf2": InputVariable(fortran.pfcoil_variables, float, range=(-3.0, 3.0)),
     "rrin": InputVariable(fortran.ife_variables, float, range=(0.1, 50.0)),
     "rrmax": InputVariable(fortran.ife_variables, float, range=(1.0, 50.0)),
+    "rrr_tf_cu": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 1000.0)),
     "rxcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "sec_buildings_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
@@ -1233,6 +1234,9 @@ INPUT_VARIABLES = {
     ),
     "t_in_bb": InputVariable(
         fortran.primary_pumping_variables, float, range=(200.0, 1000.0)
+    ),
+    "t_tf_quench_detection": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 100.0)
     ),
     "t_out_bb": InputVariable(
         fortran.primary_pumping_variables, float, range=(200.0, 1000.0)
