@@ -3371,7 +3371,7 @@ def init_cost_variables():
     cost_variables.redun_vacp = 25.0
     cost_variables.redun_vac = 0
     cost_variables.t_operation = 0.0
-    cost_variables.tbktrepl = 0.5
+    cost_variables.t_blkt_replace_years = 0.5
     cost_variables.tcomrepl = 0.5
     cost_variables.t_div_replace_years = 0.25
     cost_variables.uubop = 0.02

@@ -271,7 +271,7 @@ module cost_variables
   real(dp) :: t_operation
   !! Operational time (yrs)
 
-  real(dp) :: tbktrepl
+  real(dp) :: t_blkt_replace_years
   !! time taken to replace blanket (y) (`i_plant_availability=1`)
 
   real(dp) :: tcomrepl

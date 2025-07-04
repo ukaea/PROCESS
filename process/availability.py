@@ -149,7 +149,7 @@ class Availability:
             else:
                 ld = fwbsv.life_blkt_fpy
                 lb = cv.divlife
-                td = cv.tbktrepl
+                td = cv.t_blkt_replace_years
 
             # Number of outages between each combined outage
             n = math.ceil(lb / ld) - 1
@@ -255,8 +255,8 @@ class Availability:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace blanket (years)",
-                        "(tbktrepl)",
-                        cv.tbktrepl,
+                        "(t_blkt_replace_years)",
+                        cv.t_blkt_replace_years,
                     )
 
                 po.ovarre(
