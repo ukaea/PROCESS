@@ -155,7 +155,7 @@ class Availability:
             n = math.ceil(lb / ld) - 1
 
             # Planned unavailability
-            uplanned = (n * td + cv.tcomrepl) / ((n + 1) * ld + (n * td + cv.tcomrepl))
+            uplanned = (n * td + cv.t_div_blkt_replace_years) / ((n + 1) * ld + (n * td + cv.t_div_blkt_replace_years))
 
             # Unplanned unavailability
             # Rather than simply summing the individual terms, the following protects
@@ -262,8 +262,8 @@ class Availability:
                 po.ovarre(
                     self.outfile,
                     "Time needed to replace blkt + div (years)",
-                    "(tcomrepl)",
-                    cv.tcomrepl,
+                    "(t_div_blkt_replace_years)",
+                    cv.t_div_blkt_replace_years,
                 )
                 po.ovarre(
                     self.outfile,

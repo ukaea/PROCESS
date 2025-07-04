@@ -3303,7 +3303,7 @@ i_plant_availability = 0
 * DESCRIPTION: Time needed to replace blanket (yr)
 * JUSTIFICATION: testing
 
-*tcomrepl = 
+*t_div_blkt_replace_years = 
 * DESCRIPTION: Time needed to replace blanket+divertor (yr)
 * JUSTIFICATION: testing
 

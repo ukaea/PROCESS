@@ -91,7 +91,7 @@ def test_avail_1(monkeypatch, availability):
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 7.0)
     monkeypatch.setattr(cv, "t_div_replace_years", 0.1)
     monkeypatch.setattr(cv, "t_blkt_replace_years", 0.2)
-    monkeypatch.setattr(cv, "tcomrepl", 0.3)
+    monkeypatch.setattr(cv, "t_div_blkt_replace_years", 0.3)
     monkeypatch.setattr(cv, "uubop", 0.4)
     monkeypatch.setattr(cv, "uucd", 0.5)
     monkeypatch.setattr(cv, "uudiv", 0.6)

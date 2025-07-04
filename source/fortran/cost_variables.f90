@@ -274,7 +274,7 @@ module cost_variables
   real(dp) :: t_blkt_replace_years
   !! time taken to replace blanket (y) (`i_plant_availability=1`)
 
-  real(dp) :: tcomrepl
+  real(dp) :: t_div_blkt_replace_years
   !! time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)
 
   real(dp) :: t_div_replace_years

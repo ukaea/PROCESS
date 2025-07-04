@@ -16,7 +16,7 @@ If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used inst
 | :-: | - |
 | `t_blkt_replace_years` | time needed to replace blanket (years) |
 | `t_div_replace_years` | time needed to replace divertor (years) |
-| `tcomrepl` | time  needed to replace both blanket and divertor (years) |
+| `t_div_blkt_replace_years` | time  needed to replace both blanket and divertor (years) |
 | `uubop` | unplanned unavailability of balance of plant |
 | `uucd` | unplanned unavailability of current drive system |
 | `uudiv` | unplanned unavailability of divertor |
