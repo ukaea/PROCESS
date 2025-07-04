@@ -1,8 +1,14 @@
-# Plant Availability
+# Plant Availability | `Availability`
 
 Switch `i_plant_availability` is used to control how the overall plant availability factor `cfactr` is calculated, as follows:
 
+## User input
+
 If `i_plant_availability = 0`, the input value of `cfactr` is used.
+
+--------------------
+
+## Taylor & Ward Model | `avail()`
 
 If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `cfactr` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
 
@@ -21,6 +27,10 @@ If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used inst
 
 Table 3.4: *Summary of the variables in `PROCESS` that relate to the Taylor-Ward availability model (`i_plant_availability=1`).*
 
+----------------------
+
+## Morris Model | `avail_2()`
+
 If `i_plant_availability = 2`, the new Morris model is implemented[^2]. It estimates both planned and unplanned unavailability, and the time during which no power is being generated if the reactor is pulsed.
 
 The panned unavailability is linked to the lifetime of the blanket and the time taken to replace them. The lifetime of the blanket is based on the allowable fast neutron fluence. In contrast, the lifetime of the divertor is estimated using the particle and photon load. The time to replace the blanket and divertor have been estimated by Crofts et al, who studied the influence of the number of remote handling systems working in parallel. `PROCESS` uses a simple fit to their results, and adds a month to allow the dose rate to reduce to an acceptable level before remote handling operations start, and a month to allow for pump-down and preparation for operation for operation at the enf of the shutdown.
@@ -32,6 +42,10 @@ For the toroidal field coils, the chance of a quench is likely to be the largest
 The unplanned downtime for the blanket is based on the number of cycles it experiences before planned replacement. (This model is restricted of pulsed reactors.) The cycle life of the blanket is expressed using a reference lifetime. Before this lifetime, there is a constant but small probability of failure in each pulse. After the reference lifetime the reliability of the blanket starts to decline, reaching zero at the upper lifetime limit.
 
 It is assumed that the vacuum system can be maintained in parallel with blanket replacement, so it does not contribute to the planned downtime. The unplanned downtime is baed on an assumed failure rate for a cryo-pump, and a specified total number pumps, with some of them being redundant. The resulting downtime can be reduced to a negligible level if there are several redundant pumps, but in addition, there is a fixed unavailability to allow for common mode failures affecting several pumps.
+
+--------------
+
+## ST model | `avail_st()`
 
 If `i_plant_availability = 3`, the availability model for Spherical Tokamaks (ST) is implemented. 
 
@@ -67,6 +81,8 @@ $$ C = A_{\text{tot}} (t_{\text{burn}} / t_{\text{cycle}}) $$
 
 where $t_{\text{burn}}$ is the burn time and $t_{\text{cycle}}$ is the full cycle time.
 
+--------------
+
 ## Centrepost Lifetime
 
 All availability models in PROCESS require the calculation of the centerpost lifetime, which is detailed here.
@@ -85,6 +101,8 @@ For copper or cryogenic aluminium magnets (`i_tf_sup = 0 or 2`), the centrepost 
 $$ t_{\text{CP,life}} = \min(f_{\text{CP, allowable}}/P_{\text{wall}}, t_{\text{life}}) $$
 
 where $f_{\text{CP, allowable}}$ is the allowable centrepost neutron fluence and $P_{\text{wall}}$ is the average neutron wall load ($\mathrm{MW} \mathrm{m}^{-2}$).
+
+-----------
 
 ## Divertor lifetime
 

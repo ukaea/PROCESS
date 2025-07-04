@@ -170,8 +170,8 @@ module cost_variables
   real(dp) :: divcst
   !! divertor direct cost (M$)
 
-  real(dp) :: divlife
-  !! Full power lifetime of divertor (y)
+  real(dp) :: life_div_fpy
+  !! Full power lifetime of divertor (fpy)
 
   real(dp) :: divlife_cal
   !! Calendar year lifetime of divertor (y)

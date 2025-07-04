@@ -125,7 +125,7 @@ class Availability:
                 dv.pflux_div_heat_load_mw = 1.0e-10
 
             # Divertor lifetime (years)
-            cv.divlife = self.divertor_lifetime()
+            cv.life_div_fpy = self.divertor_lifetime()
 
             # Centrepost lifetime (years) (ST machines only)
             if pv.itart == 1:
@@ -142,13 +142,13 @@ class Availability:
         # Taylor and Ward 1999 model (i_plant_availability=1)
         if cv.i_plant_availability == 1:
             # Which component has the shorter life?
-            if cv.divlife < fwbsv.life_blkt_fpy:
-                ld = cv.divlife
+            if cv.life_div_fpy < fwbsv.life_blkt_fpy:
+                ld = cv.life_div_fpy
                 lb = fwbsv.life_blkt_fpy
                 td = cv.t_div_replace_years
             else:
                 ld = fwbsv.life_blkt_fpy
-                lb = cv.divlife
+                lb = cv.life_div_fpy
                 td = cv.t_blkt_replace_years
 
             # Number of outages between each combined outage
@@ -183,8 +183,8 @@ class Availability:
                 fwbsv.life_blkt_fpy = min(fwbsv.life_blkt_fpy / cv.cfactr, cv.tlife)
 
             # Divertor
-            if cv.divlife < cv.tlife:
-                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+            if cv.life_div_fpy < cv.tlife:
+                cv.life_div_fpy = min(cv.life_div_fpy / cv.cfactr, cv.tlife)
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.tlife:
@@ -220,8 +220,8 @@ class Availability:
             po.ovarre(
                 self.outfile,
                 "Divertor lifetime (years)",
-                "(divlife)",
-                cv.divlife,
+                "(life_div_fpy)",
+                cv.life_div_fpy,
                 "OP ",
             )
 
@@ -244,7 +244,7 @@ class Availability:
             po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
 
             if cv.i_plant_availability == 1:
-                if cv.divlife < fwbsv.life_blkt_fpy:
+                if cv.life_div_fpy < fwbsv.life_blkt_fpy:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace divertor (years)",
@@ -373,8 +373,8 @@ class Availability:
                 cv.cdrlife = fwbsv.life_blkt_fpy
 
             # Divertor
-            if cv.divlife < cv.tlife:
-                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+            if cv.life_div_fpy < cv.tlife:
+                cv.life_div_fpy = min(cv.life_div_fpy / cv.cfactr, cv.tlife)
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.tlife:
@@ -393,7 +393,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(life_div_fpy)",
+                cv.life_div_fpy,
+                "OP ",
             )
             if pv.itart == 1:
                 po.ovarre(
@@ -485,7 +489,7 @@ class Availability:
             fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
 
         # Divertor lifetime (years)
-        cv.divlife = self.divertor_lifetime()
+        cv.life_div_fpy = self.divertor_lifetime()
 
         # Centrepost lifetime (years) (ST only)
         if pv.itart == 1:
@@ -509,13 +513,13 @@ class Availability:
         mttr_divertor = 0.7e0 * mttr_blanket
 
         #  Which component has the shorter life?
-        if cv.divlife < fwbsv.life_blkt_fpy:
-            lifetime_shortest = cv.divlife
+        if cv.life_div_fpy < fwbsv.life_blkt_fpy:
+            lifetime_shortest = cv.life_div_fpy
             lifetime_longest = fwbsv.life_blkt_fpy
             mttr_shortest = mttr_divertor
         else:
             lifetime_shortest = fwbsv.life_blkt_fpy
-            lifetime_longest = cv.divlife
+            lifetime_longest = cv.life_div_fpy
             mttr_shortest = mttr_blanket
 
         # Number of outages between each combined outage
@@ -669,7 +673,7 @@ class Availability:
 
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = cv.divlife * YEAR_SECONDS / tv.t_cycle
+        n = cv.life_div_fpy * YEAR_SECONDS / tv.t_cycle
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
         pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_cycle
@@ -1055,7 +1059,7 @@ class Availability:
             fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
 
         # Divertor lifetime (years)
-        cv.divlife = self.divertor_lifetime()
+        cv.life_div_fpy = self.divertor_lifetime()
 
         # CP lifetime (years)
         cv.cplife = self.cp_lifetime()
@@ -1066,7 +1070,7 @@ class Availability:
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
-            fwbsv.life_blkt_fpy, cv.divlife, cv.cplife, cv.cdrlife, cv.tlife
+            fwbsv.life_blkt_fpy, cv.life_div_fpy, cv.cplife, cv.cdrlife, cv.tlife
         )
         maint_cycle = shortest_lifetime + cv.tmain
 
@@ -1134,8 +1138,8 @@ class Availability:
                 cv.cdrlife = fwbsv.life_blkt_fpy
 
             # Divertor
-            if cv.divlife < cv.tlife:
-                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+            if cv.life_div_fpy < cv.tlife:
+                cv.life_div_fpy = min(cv.life_div_fpy / cv.cfactr, cv.tlife)
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.tlife:
@@ -1167,7 +1171,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(divlife)", cv.divlife, "OP "
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(life_div_fpy)",
+                cv.life_div_fpy,
+                "OP ",
             )
             if tfv.i_tf_sup == 1:
                 po.ovarre(

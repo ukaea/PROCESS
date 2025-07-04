@@ -1254,7 +1254,9 @@ INPUT_VARIABLES = {
     "tauratio": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
     "tbeamin": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
     "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
-    "t_blkt_replace_years": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
+    "t_blkt_replace_years": InputVariable(
+        fortran.cost_variables, float, range=(0.01, 2.0)
+    ),
     "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),
     "tcomrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
     "tcoolin": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 373.15)),
@@ -1263,7 +1265,9 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(fortran.divertor_variables, float, range=(0.1, 100.0)),
-    "t_div_replace_years": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
+    "t_div_replace_years": InputVariable(
+        fortran.cost_variables, float, range=(0.01, 2.0)
+    ),
     "tdmptf": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
     "te": InputVariable(fortran.physics_variables, float, range=(1.0, 200.0)),
     "te0_ecrh_achievable": InputVariable(

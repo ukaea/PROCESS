@@ -156,7 +156,7 @@ class ProcessTracker:
         "vs_cs_pf_total_pulse",
         "nd_ions_total",
         "t_burn",
-        "divlife",
+        "life_div_fpy",
         "CostModel2.step20",
         "CostModel2.step21",
         "CostModel2.step2101",
