@@ -189,15 +189,6 @@ def _copper_electrical_resistivity(
     return _copper_magneto_resistivity(rho_rrr + rho_irr, field)
 
 
-def _copper_electrical_resistivity_2(
-    temperature: float, field: float, rrr: float, fluence: float
-) -> float:
-    rho_rrr = _copper_rrr_resistivity(temperature, rrr)
-    rho_irr = _copper_irradiation_resistivity(fluence)
-    rho_mag = _copper_magneto_resistivity(rho_rrr, field)
-    return rho_mag + rho_irr
-
-
 def _nb3sn_density(temperature: float) -> float:  # noqa: ARG001
     """
     Calculate the density of Nb3Sn [kg/m^3].
