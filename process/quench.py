@@ -257,6 +257,10 @@ def _helium_specific_heat_capacity(temperature: float, pressure: float) -> float
 
 
 # Quench model
+# Gauss-Legendre quadrature nodes and weights for numerical integration
+# 75 points is a good compromise between speed and accuracy for the integrals used in this
+# model.
+GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS = np.polynomial.legendre.leggauss(75)
 
 
 def _quench_integrals(
@@ -265,7 +269,6 @@ def _quench_integrals(
     field: float,
     rrr: float,
     fluence: float,
-    n_quad: int,
 ) -> tuple[float, float, float]:
     """
     Calculates the material property integrals for quench protection.
@@ -280,7 +283,6 @@ def _quench_integrals(
     :param float field: Magnetic field [T].
     :param float rrr: Residual resistivity ratio of copper.
     :param float fluence: Neutron fluence [n/cm²] (for irradiation effects).
-    :param int n_quad: number of Gauss-Legendre quadrature points to use in the integration.
     :returns: Tuple of integrals for helium, copper, and superconductor contributions (I_He, I_Cu, I_sc).
     :rtype: Tuple[float, float, float]
 
@@ -292,13 +294,11 @@ def _quench_integrals(
     # Helium pressure [Pa] (assumed to be constant throughout quench) - no plans to make input
     pressure = 6e5  # ITER TF coolant pressure
 
-    nodes, weights = np.polynomial.legendre.leggauss(n_quad)
-
     ihe = 0.0
     icu = 0.0
     isc = 0.0
 
-    for xi, wi in zip(nodes, weights, strict=False):
+    for xi, wi in zip(GAUSS_LEG_NODES, GAUSS_LEG_WEIGHTS, strict=False):
         ti = 0.5 * (xi + 1.0) * (t_max - t_he_peak) + t_he_peak
         dti = 0.5 * wi * (t_max - t_he_peak)
 
@@ -326,7 +326,6 @@ def calculate_quench_protection_current_density(
     cu_rrr: float,
     detection_time: float,
     fluence: float,
-    n_quad: int = 75,
 ) -> float:
     """
     Calculates the current density limited by the protection limit.
@@ -349,7 +348,6 @@ def calculate_quench_protection_current_density(
     :param float cu_rrr: Residual resistivity ratio of copper.
     :param float detection_time: Detection time delay [s].
     :param float fluence: Neutron fluence [n/m²].
-    :param int n_quad: number of Gauss-Legendre quadrature points to use in the integration.
     :returns: Maximum allowable winding pack current density [A/m²].
     :rtype: float
 
@@ -368,9 +366,7 @@ def calculate_quench_protection_current_density(
         warn("Fluence values out of range [0.0, 1.5e23]; kludging.", stacklevel=2)
         fluence = np.clip(fluence, 0.0, 1.5e23)
 
-    i_he, i_cu, i_sc = _quench_integrals(
-        t_he_peak, t_max, peak_field, cu_rrr, fluence, n_quad
-    )
+    i_he, i_cu, i_sc = _quench_integrals(t_he_peak, t_max, peak_field, cu_rrr, fluence)
 
     f_cond = 1.0 - f_he  # Fraction of the cable XS area that is not helium
     f_cu_cable = f_cond * f_cu  # Fraction of the cable XS that is copper
