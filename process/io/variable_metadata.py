@@ -260,7 +260,7 @@ var_dicts = {
     "life_blkt_fpy": VariableMetadata(
         latex=r"$T_{\mathrm{blk}}$", description="Blanket lifetime", units=""
     ),
-    "bktcycles": VariableMetadata(
+    "n_blkt_pulse_cycles": VariableMetadata(
         latex=r"$N_{\mathrm{blk},\mathrm{cycle}}$",
         description="Blanket cycles",
         units="",

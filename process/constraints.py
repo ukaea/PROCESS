@@ -2209,7 +2209,9 @@ def constraint_equation_90():
         fortran.cost_variables.ibkt_life == 1
         and fortran.cs_fatigue_variables.bkt_life_csf == 1
     ):
-        fortran.cs_fatigue_variables.n_cycle_min = fortran.cost_variables.bktcycles
+        fortran.cs_fatigue_variables.n_cycle_min = (
+            fortran.cost_variables.n_blkt_pulse_cycles
+        )
 
     cc = (
         1.0

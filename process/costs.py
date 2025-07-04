@@ -3355,7 +3355,7 @@ def init_cost_variables():
     cost_variables.i_plant_availability = 2
     cost_variables.ibkt_life = 0
     cost_variables.life_dpa = 50
-    cost_variables.bktcycles = 1.0e3
+    cost_variables.n_blkt_pulse_cycles = 1.0e3
     cost_variables.avail_min = 0.75
     cost_variables.tok_build_cost_per_vol = 1283.0
     cost_variables.light_build_cost_per_vol = 270.0

@@ -217,7 +217,7 @@ module cost_variables
   real(dp) :: life_dpa
   !! Allowable DPA from DEMO fw/blanket lifetime calculation in availability module
 
-  real(dp) :: bktcycles
+  real(dp) :: n_blkt_pulse_cycles
   !! Number of fusion cycles to reach allowable DPA from DEMO fw/blanket lifetime calculation
 
   real(dp) :: avail_min

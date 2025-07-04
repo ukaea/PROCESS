@@ -135,7 +135,7 @@ class Availability:
 
         # Calculate the number of fusion cycles for a given blanket lifetime
         pulse_fpy = tv.t_cycle / YEAR_SECONDS
-        cv.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
+        cv.n_blkt_pulse_cycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
 
         # if i_plant_availability = 0 use input value for cfactr
 
@@ -155,7 +155,9 @@ class Availability:
             n = math.ceil(lb / ld) - 1
 
             # Planned unavailability
-            uplanned = (n * td + cv.t_div_blkt_replace_years) / ((n + 1) * ld + (n * td + cv.t_div_blkt_replace_years))
+            uplanned = (n * td + cv.t_div_blkt_replace_years) / (
+                (n + 1) * ld + (n * td + cv.t_div_blkt_replace_years)
+            )
 
             # Unplanned unavailability
             # Rather than simply summing the individual terms, the following protects
@@ -290,8 +292,8 @@ class Availability:
                 po.ovarre(
                     self.outfile,
                     "Number of fusion cycles to reach allowable fw/blanket DPA",
-                    "(bktcycles)",
-                    cv.bktcycles,
+                    "(n_blkt_pulse_cycles)",
+                    cv.n_blkt_pulse_cycles,
                 )
             else:
                 po.ovarre(

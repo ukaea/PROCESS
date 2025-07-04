@@ -119,7 +119,7 @@ The model has some limitations:
 
 The required cycle life is set in different ways depending on the following switch.
 
-If `bkt_life_csf` = 1 then `n_cycle_min` = `bktcycles`, which is calculated using the blanket life model.
+If `bkt_life_csf` = 1 then `n_cycle_min` = `n_blkt_pulse_cycles`, which is calculated using the blanket life model.
 If `bkt_life_csf` = 1 then `n_cycle_min` is an input.
 
 ## Pre-compression structure

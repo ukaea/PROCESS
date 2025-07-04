@@ -313,7 +313,7 @@
  Heating/CD_system_lifetime_(years)______________________________________ (cdrlife)_____________________      6.1663E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (cfactr)______________________      8.0000E-01    
- Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5825E+04    
+ Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (n_blkt_pulse_cycles)___________________      1.5825E+04    
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________      0.0000E+00    
  Major_radius_(m)________________________________________________________ (rmajor)______________________      8.0000E+00 ITV

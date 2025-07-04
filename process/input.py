@@ -1258,7 +1258,9 @@ INPUT_VARIABLES = {
         fortran.cost_variables, float, range=(0.01, 2.0)
     ),
     "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),
-    "t_div_blkt_replace_years": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
+    "t_div_blkt_replace_years": InputVariable(
+        fortran.cost_variables, float, range=(0.01, 2.0)
+    ),
     "tcoolin": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 373.15)),
     "tcritsc": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 300.0)),
     "tcycmn": InputVariable(
