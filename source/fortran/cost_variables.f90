@@ -277,7 +277,7 @@ module cost_variables
   real(dp) :: tcomrepl
   !! time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)
 
-  real(dp) :: tdivrepl
+  real(dp) :: t_div_replace_years
   !! time taken to replace divertor (y) (`i_plant_availability=1`)
 
   real(dp) :: uubop
