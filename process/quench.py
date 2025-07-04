@@ -64,7 +64,9 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
     p1: Final[float] = 1.171e-17
     p2: Final[float] = 4.49
     p3: Final[float] = 3.841e10
-    p4: Final[float] = -1.14  # Appears to be a typo in the original papers...
+    p4: Final[
+        float
+    ] = -1.14  # Appears to be a typo in the original papers... given as 1.14
     p5: Final[float] = 50.0
     p6: Final[float] = 6.428
     p7: Final[float] = 0.4531
