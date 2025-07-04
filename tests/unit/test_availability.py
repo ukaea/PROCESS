@@ -52,7 +52,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(tv, "t_cycle", 5.0)
     monkeypatch.setattr(cv, "i_plant_availability", 0)
-    monkeypatch.setattr(cv, "cfactr", 0.8)
+    monkeypatch.setattr(cv, "f_life_plant_available", 0.8)
     monkeypatch.setattr(tv, "t_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
@@ -101,9 +101,9 @@ def test_avail_1(monkeypatch, availability):
     monkeypatch.setattr(cv, "uuves", 0.11)
 
     availability.avail(output=False)
-    cfactr_obs = cv.cfactr
-    cfactr_exp = 0.0006344554455445239
-    assert pytest.approx(cfactr_exp) == cfactr_obs
+    f_life_plant_available_obs = cv.f_life_plant_available
+    f_life_plant_available_exp = 0.0006344554455445239
+    assert pytest.approx(f_life_plant_available_exp) == f_life_plant_available_obs
 
     # Initialise fortran variables again to reset for other tests
     init_all_module_vars()
@@ -541,9 +541,9 @@ def test_avail_2(monkeypatch, availability):
 
     availability.avail_2(False)
 
-    cfactr_obs = cv.cfactr
-    cfactr_exp = 0.7173
-    assert pytest.approx(cfactr_obs) == cfactr_exp
+    f_life_plant_available_obs = cv.f_life_plant_available
+    f_life_plant_available_exp = 0.7173
+    assert pytest.approx(f_life_plant_available_obs) == f_life_plant_available_exp
 
     cpfact_obs = cv.cpfact
     cpfact_exp = 0.07173
@@ -589,7 +589,7 @@ def test_avail_st(monkeypatch, availability):
     availability.avail_st(output=False)
 
     assert pytest.approx(cv.t_operation) == 15.0
-    assert pytest.approx(cv.cfactr) == 0.27008858
+    assert pytest.approx(cv.f_life_plant_available) == 0.27008858
     assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
 
 

@@ -1751,7 +1751,7 @@ i_pf_conductor = 0
 *icc = 60
 * DESCRIPTION:   Constraint equation for Central Solenoid s/c temperature margin lower limit
 * JUSTIFICATION: Turned off, do not care about temp lower limit 
-* VARIABLES:     avail_min (Minimum availability), cfactr calculated in-situ
+* VARIABLES:     avail_min (Minimum availability), f_life_plant_available calculated in-situ
 
 *tmargmin_cs = 
 * DESCRIPTION:   Minimum allowable temp margin: CS (K) (icc = 60)
@@ -3235,13 +3235,13 @@ t_between_pulse = 100.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
 i_plant_availability = 0
-* DESCRIPTION:   Switch for Plant Availability Model (0: Use Input Value For cfactr)
-* =0 use input value for cfactr
-* =1 calculate cfactr using Taylor and Ward 1999 model
-* =2 calculate cfactr using new (2015) model
+* DESCRIPTION:   Switch for Plant Availability Model (0: Use Input Value For f_life_plant_available)
+* =0 use input value for f_life_plant_available
+* =1 calculate f_life_plant_available using Taylor and Ward 1999 model
+* =2 calculate f_life_plant_available using new (2015) model
 * JUSTIFICATION: 
 
-*cfactr = 0.9
+*f_life_plant_available = 0.9
 * DESCRIPTION:   Total plant availability fraction; input if i_plant_availability=0
 * JUSTIFICATION: testing
 

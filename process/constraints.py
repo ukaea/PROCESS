@@ -1516,19 +1516,19 @@ def constraint_equation_61():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     favail: F-value for minimum availability
-    cfactr: Total plant availability fraction
+    f_life_plant_available: Total plant availability fraction
     avail_min: Minimum availability
     """
     cc = (
         1.0
         - fortran.cost_variables.favail
-        * fortran.cost_variables.cfactr
+        * fortran.cost_variables.f_life_plant_available
         / fortran.cost_variables.avail_min
     )
     return ConstraintResult(
         cc,
         fortran.cost_variables.avail_min * (1.0 - cc),
-        fortran.cost_variables.cfactr * cc,
+        fortran.cost_variables.f_life_plant_available * cc,
     )
 
 

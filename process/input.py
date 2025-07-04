@@ -258,7 +258,9 @@ INPUT_VARIABLES = {
     "cdriv0": InputVariable(fortran.ife_variables, float, range=(50.0, 500.0)),
     "cdriv1": InputVariable(fortran.ife_variables, float, range=(50.0, 500.0)),
     "cdriv2": InputVariable(fortran.ife_variables, float, range=(50.0, 500.0)),
-    "cfactr": InputVariable(fortran.cost_variables, float, range=(0.0, 1.0)),
+    "f_life_plant_available": InputVariable(
+        fortran.cost_variables, float, range=(0.0, 1.0)
+    ),
     "chdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "chdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "chemlab_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),

@@ -1,16 +1,16 @@
 # Plant Availability | `Availability`
 
-Switch `i_plant_availability` is used to control how the overall plant availability factor `cfactr` is calculated, as follows:
+Switch `i_plant_availability` is used to control how the overall plant availability factor `f_life_plant_available` is calculated, as follows:
 
 ## User input
 
-If `i_plant_availability = 0`, the input value of `cfactr` is used.
+If `i_plant_availability = 0`, the input value of `f_life_plant_available` is used.
 
 --------------------
 
 ## Taylor & Ward Model | `avail()`
 
-If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `cfactr` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
+If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `f_life_plant_available` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
 
 | Input parameter | Description |
 | :-: | - |

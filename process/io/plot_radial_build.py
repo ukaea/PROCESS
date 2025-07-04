@@ -162,7 +162,7 @@ def main(args=None):
         "boundl(16)",
         "cnstv.t_burn_min",
         "",
-        "cfactr",
+        "f_life_plant_available",
         "boundu(72)",
         "p_fusion_total_max_mw",
         "kappa",

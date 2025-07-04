@@ -53,7 +53,7 @@ module cost_variables
   real(dp) :: cdrlife_cal
   !! Calendar year lifetime of heating/current drive system (y)
 
-  real(dp) :: cfactr
+  real(dp) :: f_life_plant_available
   !! Total plant availability fraction; input if `i_plant_availability=0`
 
   real(dp) :: cpfact
@@ -203,10 +203,10 @@ module cost_variables
   integer :: i_plant_availability
   !! Switch for plant availability model:
   !!
-  !! - =0 use input value for cfactr
-  !! - =1 calculate cfactr using Taylor and Ward 1999 model
-  !! - =2 calculate cfactr using new (2015) model
-  !! - =3 calculate cfactr using ST model
+  !! - =0 use input value for f_life_plant_available
+  !! - =1 calculate f_life_plant_available using Taylor and Ward 1999 model
+  !! - =2 calculate f_life_plant_available using new (2015) model
+  !! - =3 calculate f_life_plant_available using ST model
 
   integer :: ibkt_life
   !! Switch for fw/blanket lifetime calculation in availability module:

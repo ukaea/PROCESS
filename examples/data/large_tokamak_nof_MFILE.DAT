@@ -244,7 +244,7 @@
  Divertor_lifetime_(years)________________________________________________ (life_div_fpy)______________________ 1.69241300679698057e+01 OP
  Heating/CD_system_lifetime_(years)_______________________________________ (cdrlife)______________________ 5.73108485454924654e+00 OP
  Total_plant_lifetime_(years)_____________________________________________ (tlife)________________________ 3.00000000000000000e+01
- Total_plant_availability_fraction________________________________________ (cfactr)_______________________ 8.00000000000000044e-01
+ Total_plant_availability_fraction________________________________________ (f_life_plant_available)_______________________ 8.00000000000000044e-01
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA________________ (n_blkt_pulse_cycles)____________________ 1.44618516211936785e+04
  # Plasma #
  Tokamak_aspect_ratio_=_Conventional,_itart_=_0__________________________ (itart)_______________________              0    
@@ -1726,7 +1726,7 @@ output_costs = 1
 cost_model = 0
 
 * Total plant availability fraction;
-cfactr = 0.80
+f_life_plant_available = 0.80
 
 * Switch for plant availability model
 i_plant_availability = 0
