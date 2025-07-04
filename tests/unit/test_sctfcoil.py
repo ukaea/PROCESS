@@ -5,11 +5,11 @@ import pytest
 from process import superconducting_tf_coil as sctf
 from process.fortran import (
     build_variables,
+    constraint_variables,
     divertor_variables,
     global_variables,
     sctfcoil_module,
     tfcoil_variables,
-    constraint_variables,
 )
 from process.superconducting_tf_coil import SuperconductingTFCoil
 
@@ -370,7 +370,9 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "rrr_tf_cu", superconparam.cu_rrr)
 
-    monkeypatch.setattr(tfcoil_variables, "t_tf_quench_detection", superconparam.detection_time)
+    monkeypatch.setattr(
+        tfcoil_variables, "t_tf_quench_detection", superconparam.detection_time
+    )
 
     monkeypatch.setattr(constraint_variables, "nflutfmax", superconparam.fluence)
 
