@@ -103,20 +103,22 @@ class Availability:
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
                     fwbsv.life_blkt_fpy = min(
-                        cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife
+                        cv.abktflnc / pv.pflux_fw_neutron_mw, cv.life_plant_fpy
                     )
                 else:
-                    fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
+                    fwbsv.life_blkt_fpy = min(
+                        cv.life_dpa / dpa_fpy, cv.life_plant_fpy
+                    )  # DEMO
             else:
                 if cv.ibkt_life == 0:
                     fwbsv.life_blkt_fpy = min(
                         fwbsv.life_fw_fpy,
                         cv.abktflnc / pv.pflux_fw_neutron_mw,
-                        cv.tlife,
+                        cv.life_plant_fpy,
                     )
                 else:
                     fwbsv.life_blkt_fpy = min(
-                        fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.tlife
+                        fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.life_plant_fpy
                     )  # DEMO
 
             # TODO Issue #834
@@ -181,20 +183,22 @@ class Availability:
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < cv.tlife:
+            if fwbsv.life_blkt_fpy < cv.life_plant_fpy:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / cv.f_life_plant_available, cv.tlife
+                    fwbsv.life_blkt_fpy / cv.f_life_plant_available, cv.life_plant_fpy
                 )
 
             # Divertor
-            if cv.life_div_fpy < cv.tlife:
+            if cv.life_div_fpy < cv.life_plant_fpy:
                 cv.life_div_fpy = min(
-                    cv.life_div_fpy / cv.f_life_plant_available, cv.tlife
+                    cv.life_div_fpy / cv.f_life_plant_available, cv.life_plant_fpy
                 )
 
             # Centrepost
-            if pv.itart == 1 and cv.cplife < cv.tlife:
-                cv.cplife = min(cv.cplife / cv.f_life_plant_available, cv.tlife)
+            if pv.itart == 1 and cv.cplife < cv.life_plant_fpy:
+                cv.cplife = min(
+                    cv.cplife / cv.f_life_plant_available, cv.life_plant_fpy
+                )
 
         # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
         cv.cdrlife = fwbsv.life_blkt_fpy
@@ -247,7 +251,12 @@ class Availability:
                 cv.cdrlife,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
+            po.ovarre(
+                self.outfile,
+                "Total plant lifetime (years)",
+                "(life_plant_fpy)",
+                cv.life_plant_fpy,
+            )
 
             if cv.i_plant_availability == 1:
                 if cv.life_div_fpy < fwbsv.life_blkt_fpy:
@@ -328,7 +337,7 @@ class Availability:
         u_planned = self.calc_u_planned(output)
 
         # Operational time (years)
-        cv.t_operation = cv.tlife * (1.0e0 - u_planned)
+        cv.t_operation = cv.life_plant_fpy * (1.0e0 - u_planned)
 
         # Un-planned unavailability
 
@@ -373,22 +382,24 @@ class Availability:
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < cv.tlife:
+            if fwbsv.life_blkt_fpy < cv.life_plant_fpy:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / cv.f_life_plant_available, cv.tlife
+                    fwbsv.life_blkt_fpy / cv.f_life_plant_available, cv.life_plant_fpy
                 )
                 # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
                 cv.cdrlife = fwbsv.life_blkt_fpy
 
             # Divertor
-            if cv.life_div_fpy < cv.tlife:
+            if cv.life_div_fpy < cv.life_plant_fpy:
                 cv.life_div_fpy = min(
-                    cv.life_div_fpy / cv.f_life_plant_available, cv.tlife
+                    cv.life_div_fpy / cv.f_life_plant_available, cv.life_plant_fpy
                 )
 
             # Centrepost
-            if pv.itart == 1 and cv.cplife < cv.tlife:
-                cv.cplife = min(cv.cplife / cv.f_life_plant_available, cv.tlife)
+            if pv.itart == 1 and cv.cplife < cv.life_plant_fpy:
+                cv.cplife = min(
+                    cv.cplife / cv.f_life_plant_available, cv.life_plant_fpy
+                )
 
         # Capacity factor
         cv.cpfact = cv.f_life_plant_available * (tv.t_burn / tv.t_cycle)
@@ -449,7 +460,12 @@ class Availability:
                 cv.t_operation,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
+            po.ovarre(
+                self.outfile,
+                "Total plant lifetime (years)",
+                "(life_plant_fpy)",
+                cv.life_plant_fpy,
+            )
             po.ovarre(
                 self.outfile,
                 "Capacity factor: total lifetime elec. energy output / output power",
@@ -494,9 +510,11 @@ class Availability:
         # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
         # or DEMO fusion power model (ibkt_life=1)
         if cv.ibkt_life == 0:
-            fwbsv.life_blkt_fpy = min(cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife)
+            fwbsv.life_blkt_fpy = min(
+                cv.abktflnc / pv.pflux_fw_neutron_mw, cv.life_plant_fpy
+            )
         else:
-            fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
+            fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.life_plant_fpy)  # DEMO
 
         # Divertor lifetime (years)
         cv.life_div_fpy = self.divertor_lifetime()
@@ -948,7 +966,7 @@ class Availability:
 
         # Number of shutdowns
         n_shutdown: int = round(
-            (cv.tlife - cv.t_operation)
+            (cv.life_plant_fpy - cv.t_operation)
             / ((21.0e0 * cv.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0)
         )
 
@@ -1064,9 +1082,11 @@ class Availability:
         dpa_fpy = f_scale * ref_dpa_fpy
 
         if cv.ibkt_life == 0:
-            fwbsv.life_blkt_fpy = min(cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife)
+            fwbsv.life_blkt_fpy = min(
+                cv.abktflnc / pv.pflux_fw_neutron_mw, cv.life_plant_fpy
+            )
         else:
-            fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
+            fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.life_plant_fpy)  # DEMO
 
         # Divertor lifetime (years)
         cv.life_div_fpy = self.divertor_lifetime()
@@ -1080,12 +1100,16 @@ class Availability:
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
-            fwbsv.life_blkt_fpy, cv.life_div_fpy, cv.cplife, cv.cdrlife, cv.tlife
+            fwbsv.life_blkt_fpy,
+            cv.life_div_fpy,
+            cv.cplife,
+            cv.cdrlife,
+            cv.life_plant_fpy,
         )
         maint_cycle = shortest_lifetime + cv.tmain
 
         # Number of maintenance cycles over plant lifetime
-        n_cycles_main = cv.tlife / maint_cycle
+        n_cycles_main = cv.life_plant_fpy / maint_cycle
 
         # Number of centre columns over plant lifetime
         n_centre_cols = math.ceil(n_cycles_main)
@@ -1094,7 +1118,7 @@ class Availability:
         u_planned = cv.tmain / maint_cycle
 
         # Operational time (years)
-        cv.t_operation = cv.tlife * (1.0e0 - u_planned)
+        cv.t_operation = cv.life_plant_fpy * (1.0e0 - u_planned)
 
         if output:
             po.oheadr(self.outfile, "Plant Availability")
@@ -1143,21 +1167,23 @@ class Availability:
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
-            if fwbsv.life_blkt_fpy < cv.tlife:
+            if fwbsv.life_blkt_fpy < cv.life_plant_fpy:
                 fwbsv.life_blkt_fpy = min(
-                    fwbsv.life_blkt_fpy / cv.f_life_plant_available, cv.tlife
+                    fwbsv.life_blkt_fpy / cv.f_life_plant_available, cv.life_plant_fpy
                 )
                 cv.cdrlife = fwbsv.life_blkt_fpy
 
             # Divertor
-            if cv.life_div_fpy < cv.tlife:
+            if cv.life_div_fpy < cv.life_plant_fpy:
                 cv.life_div_fpy = min(
-                    cv.life_div_fpy / cv.f_life_plant_available, cv.tlife
+                    cv.life_div_fpy / cv.f_life_plant_available, cv.life_plant_fpy
                 )
 
             # Centrepost
-            if pv.itart == 1 and cv.cplife < cv.tlife:
-                cv.cplife = min(cv.cplife / cv.f_life_plant_available, cv.tlife)
+            if pv.itart == 1 and cv.cplife < cv.life_plant_fpy:
+                cv.cplife = min(
+                    cv.cplife / cv.f_life_plant_available, cv.life_plant_fpy
+                )
 
         # Capacity factor
         cv.cpfact = cv.f_life_plant_available * (tv.t_burn / tv.t_cycle)
@@ -1294,7 +1320,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife, "OP"
+                self.outfile,
+                "Total plant lifetime (years)",
+                "(life_plant_fpy)",
+                cv.life_plant_fpy,
+                "OP",
             )
 
     @staticmethod
@@ -1310,12 +1340,14 @@ class Availability:
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
         if tfv.i_tf_sup == 1:
-            cplife = min(ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife)
+            cplife = min(
+                ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.life_plant_fpy
+            )
 
         # Aluminium/Copper magnets CP lifetime
         # For now, we keep the original def, developed for GLIDCOP magnets ...
         else:
-            cplife = min(cv.cpstflnc / pv.pflux_fw_neutron_mw, cv.tlife)
+            cplife = min(cv.cpstflnc / pv.pflux_fw_neutron_mw, cv.life_plant_fpy)
 
         return cplife
 
@@ -1329,4 +1361,4 @@ class Availability:
         """
         # Divertor lifetime
         # Either 0.0, calculated from allowable divertor fluence and heat load, or lifetime of the plant
-        return max(0.0, min(cv.adivflnc / dv.pflux_div_heat_load_mw, cv.tlife))
+        return max(0.0, min(cv.adivflnc / dv.pflux_div_heat_load_mw, cv.life_plant_fpy))

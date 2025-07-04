@@ -1208,7 +1208,7 @@ def test_iondrv(iondrvparam, ife):
 
 class IfefbsParam(NamedTuple):
     a_fw_total: Any = None
-    tlife: Any = None
+    life_plant_fpy: Any = None
     abktflnc: Any = None
     f_life_plant_available: Any = None
     denstl: Any = None
@@ -1258,7 +1258,7 @@ class IfefbsParam(NamedTuple):
     (
         IfefbsParam(
             a_fw_total=188.02432031734912,
-            tlife=30,
+            life_plant_fpy=30,
             abktflnc=20,
             f_life_plant_available=0.75000000000000011,
             denstl=7800,
@@ -1543,7 +1543,7 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(build_variables, "a_fw_total", ifefbsparam.a_fw_total)
-    monkeypatch.setattr(cost_variables, "tlife", ifefbsparam.tlife)
+    monkeypatch.setattr(cost_variables, "life_plant_fpy", ifefbsparam.life_plant_fpy)
     monkeypatch.setattr(cost_variables, "abktflnc", ifefbsparam.abktflnc)
     monkeypatch.setattr(
         cost_variables, "f_life_plant_available", ifefbsparam.f_life_plant_available

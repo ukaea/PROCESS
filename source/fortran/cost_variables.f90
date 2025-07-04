@@ -354,8 +354,8 @@ module cost_variables
   !! - =0 use $/kg
   !! - =1 use $/kAm
 
-  real(dp) :: tlife
-  !! Full power year plant lifetime (years)
+  real(dp) :: life_plant_fpy
+  !! Full power year plant lifetime (fpy)
 
   real(dp) :: tmain
   !! Maintenance time for replacing CP (years) (i_plant_availability = 3)

@@ -5507,7 +5507,7 @@ class CoelcParam(NamedTuple):
 
     uche3: Any = None
 
-    tlife: Any = None
+    life_plant_fpy: Any = None
 
     ifueltyp: Any = None
 
@@ -5618,7 +5618,7 @@ class CoelcParam(NamedTuple):
         CoelcParam(
             fcdfuel=0.10000000000000001,
             uche3=1000000,
-            tlife=40,
+            life_plant_fpy=40,
             ifueltyp=1,
             cpstcst=0,
             coeoam=0,
@@ -5702,7 +5702,7 @@ class CoelcParam(NamedTuple):
         CoelcParam(
             fcdfuel=0.10000000000000001,
             uche3=1000000,
-            tlife=40,
+            life_plant_fpy=40,
             ifueltyp=1,
             cpstcst=0,
             coeoam=4.4099029328740929e20,
@@ -5802,7 +5802,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "uche3", coelcparam.uche3)
 
-    monkeypatch.setattr(cost_variables, "tlife", coelcparam.tlife)
+    monkeypatch.setattr(cost_variables, "life_plant_fpy", coelcparam.life_plant_fpy)
 
     monkeypatch.setattr(cost_variables, "ifueltyp", coelcparam.ifueltyp)
 

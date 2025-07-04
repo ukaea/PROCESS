@@ -2108,7 +2108,7 @@ def constraint_equation_85():
         cc = 1.0 - fortran.cost_variables.cplife / fortran.fwbs_variables.life_blkt_fpy
 
     elif fortran.cost_variables.i_cp_lifetime == 3:
-        cc = 1.0 - fortran.cost_variables.cplife / fortran.cost_variables.tlife
+        cc = 1.0 - fortran.cost_variables.cplife / fortran.cost_variables.life_plant_fpy
 
     return ConstraintResult(
         cc,

@@ -1113,7 +1113,7 @@ class Stellarator:
         """
         fwbs_variables.life_fw_fpy = min(
             cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
-            cost_variables.tlife,
+            cost_variables.life_plant_fpy,
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
@@ -2465,7 +2465,9 @@ class Stellarator:
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
 
-            fpydt = cost_variables.f_life_plant_available * cost_variables.tlife
+            fpydt = (
+                cost_variables.f_life_plant_available * cost_variables.life_plant_fpy
+            )
             fpsdt = fpydt * 3.154e7  # seconds
 
             # Insulator dose (rad)

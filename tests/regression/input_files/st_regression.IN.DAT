@@ -3311,7 +3311,7 @@ i_plant_availability = 0
 * DESCRIPTION: Time needed to replace divertor (yr)
 * JUSTIFICATION: testing
 
-*tlife = 
+*life_plant_fpy = 
 * DESCRIPTION: Plant life (yr)
 * JUSTIFICATION: testing
 

@@ -1315,7 +1315,7 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insulation": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "tlife": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
+    "life_plant_fpy": InputVariable(fortran.cost_variables, float, range=(1.0, 100.0)),
     "tmain": InputVariable(fortran.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_cs": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
