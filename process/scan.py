@@ -444,13 +444,13 @@ class Scan:
             process_output.ovarre(
                 constants.mfile,
                 f"{name} (upper bound)",
-                f"(boundu{i + 1:03d})",
+                f"(boundu{i+1:03d})",
                 numerics.boundu[i],
             )
             process_output.ovarre(
                 constants.mfile,
                 f"{name} (lower bound)",
-                f"(boundl{i + 1:03d})",
+                f"(boundl{i+1:03d})",
                 numerics.boundl[i],
             )
 
