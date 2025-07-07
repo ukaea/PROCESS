@@ -4625,7 +4625,7 @@ def plot_confinement_time_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
+def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> None:
     """
     Plots the radial build of a fusion device on the given matplotlib axis.
 
@@ -4735,58 +4735,52 @@ def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
         radial_labels[5] = "TF Coil gap"
 
     radial_color = [
-        "lightgrey",
-        "green",
-        "yellow",
         "white",
-        "blue",
+        SOLENOID_COLOUR[colour_scheme - 1],
+        CSCOMPRESSION_COLOUR[colour_scheme - 1],
         "white",
-        "lime",
+        TFC_COLOUR[colour_scheme - 1],
         "white",
-        "dimgrey",
-        "violet",
+        THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        "goldenrod",
-        "steelblue",
-        "orange",
-        "red",
-        "orange",
-        "steelblue",
-        "goldenrod",
+        VESSEL_COLOUR[colour_scheme - 1],
+        SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        "dimgrey",
-        "violet",
+        BLANKET_COLOUR[colour_scheme - 1],
+        FIRSTWALL_COLOUR[colour_scheme - 1],
         "white",
-        "lime",
+        PLASMA_COLOUR[colour_scheme - 1],
         "white",
-        "blue",
+        FIRSTWALL_COLOUR[colour_scheme - 1],
+        BLANKET_COLOUR[colour_scheme - 1],
+        "white",
+        VESSEL_COLOUR[colour_scheme - 1],
+        SHIELD_COLOUR[colour_scheme - 1],
+        "white",
+        THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+        "white",
+        TFC_COLOUR[colour_scheme - 1],
     ]
     if int(mfile_data.data["i_tf_inside_cs"].get_scan(-1)) == 1:
-        radial_color[1] = "blue"
+        radial_color[1] = TFC_COLOUR[colour_scheme - 1]
         radial_color[2] = "white"
-        radial_color[3] = "green"
-        radial_color[4] = "yellow"
+        radial_color[3] = SOLENOID_COLOUR[colour_scheme - 1]
+        radial_color[4] = CSCOMPRESSION_COLOUR[colour_scheme - 1]
         radial_color[5] = "white"
 
-    # Remove build parts equal to zero
-    mask = ~(radial_build[:, 0] == 0.0)
-    filtered_radial_build = radial_build[mask]
-    filtered_labels = [lbl for i, lbl in enumerate(radial_labels) if mask[i]]
-    filtered_colors = [col for i, col in enumerate(radial_color) if mask[i]]
-
-    lower = np.zeros(filtered_radial_build.shape[1])
-    for kk in range(filtered_radial_build.shape[0]):
+    lower = np.zeros(radial_build.shape[1])
+    for kk in range(radial_build.shape[0]):
         axis.barh(
             0,
-            filtered_radial_build[kk, :],
+            radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{filtered_labels[kk]}\n[{radial_variables[kk]}]\n{filtered_radial_build[kk][0]:.3f} m",
-            color=filtered_colors[kk],
+            label=f"{radial_labels[kk]}\n[{radial_variables[kk]}]\n{radial_build[kk][0]:.3f} m",
+            color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
         )
-        lower += filtered_radial_build[kk, :]
+        lower += radial_build[kk, :]
 
     axis.set_yticks([])
 
@@ -4794,6 +4788,14 @@ def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
         bbox_to_anchor=(0.5, -0.1),
         loc="upper center",
         ncol=5,
+    )
+    # Plot a vertical dashed line at rmajor
+    axis.axvline(
+        mfile_data.data["rmajor"].get_scan(-1),
+        color="black",
+        linestyle="--",
+        linewidth=1.2,
+        label="Major Radius $R_0$",
     )
     axis.minorticks_on()
     axis.set_xlabel("Radius [m]")
@@ -4803,22 +4805,20 @@ def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> 
     """
     Plots the vertical build of a fusion device on the given matplotlib axis.
 
-    This function visualizes the different layers/components of the machine's radial build
-    (such as central solenoid, toroidal field coils, vacuum vessel, shields, blankets, etc.)
-    as a horizontal stacked bar chart. The thickness of each layer is extracted from the
+    This function visualizes the different layers/components of the machine's vertical build
+    (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF coil, etc.)
+    as a vertical stacked bar chart. The thickness of each layer is extracted from the
     provided `mfile_data`, and each segment is color-coded and labeled accordingly.
-
-    If the toroidal field coil is inside the central solenoid (as indicated by the
-    "i_tf_inside_cs" flag in `mfile_data`), the order and labels of the components are
-    adjusted accordingly.
 
     Parameters
     ----------
     axis : matplotlib.axes.Axes
-        The matplotlib axis on which to plot the radial build.
+        The matplotlib axis on which to plot the vertical build.
     mfile_data : mf.MFile
         An object containing the machine build data, with required fields for each
-        radial component and the "i_tf_inside_cs" flag.
+        vertical component.
+    colour_scheme : int
+        Colour scheme index to use for component colors.
 
     Returns
     -------
@@ -4850,23 +4850,19 @@ def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> 
 
     lower_vertical_build = np.array(lower_vertical_build)
 
-    # for kk in range(vertical_build.shape[0]):
-    #     vertical_build[kk, 14] = 2.0 * vertical_build[kk, 14]
-
     lower_vertical_build = np.transpose(lower_vertical_build)
-    # ====================
 
     lower_vertical_labels = [
-        "z_plasma_xpoint_upper",
-        "dz_fw_plasma_gap",
-        "dz_divertor",
-        "dz_shld_upper",
-        "dz_vv_upper",
-        "dz_shld_vv_gap",
-        "dz_shld_thermal",
-        "dr_tf_shld_gap",
-        "dr_tf_inboard",
-        "dz_tf_cryostat",
+        "Plasma Height",
+        "First Wall - Plasma Gap",
+        "Divertor",
+        "Shield",
+        "Vacuum Vessel",
+        "Shield - VV Gap",
+        "Thermal shield",
+        "TF Coil - Shield Gap",
+        "TF Coil",
+        "TF Coil - Cryostat gap",
     ]
 
     lower_vertical_color = [
@@ -4888,19 +4884,19 @@ def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> 
     filtered_labels = [lbl for i, lbl in enumerate(lower_vertical_labels) if mask[i]]
     filtered_colors = [col for i, col in enumerate(lower_vertical_color) if mask[i]]
 
-    left = np.zeros(filtered_vertical_build.shape[1])
+    bottom = np.zeros(filtered_vertical_build.shape[1])
     for kk in range(filtered_vertical_build.shape[0]):
         axis.bar(
             np.arange(filtered_vertical_build.shape[1]),
-            filtered_vertical_build[kk, :],
-            bottom=left,
+            -filtered_vertical_build[kk, :],
+            bottom=bottom,
             width=0.8,
             label=f"{filtered_labels[kk]}\n[{lower_vertical_variables[kk]}]\n{filtered_vertical_build[kk][0]:.3f} m",
             color=filtered_colors[kk],
             edgecolor="black",
             linewidth=0.05,
         )
-        left += filtered_vertical_build[kk, :]
+        bottom -= filtered_vertical_build[kk, :]
 
     axis.set_xticks([])
     axis.legend(
@@ -5725,7 +5721,7 @@ def main_plot(
 
     plot_16 = fig5.add_subplot(211)
     plot_16.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
-    plot_radial_build(plot_16, m_file_data)
+    plot_radial_build(plot_16, m_file_data, colour_scheme)
 
     plot_17 = fig6.add_subplot(121)
     plot_vertical_build(plot_17, m_file_data, colour_scheme)
