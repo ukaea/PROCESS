@@ -4625,6 +4625,10 @@ def plot_confinement_time_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
+def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile, scan: int) -> None:
+    pass
+
+
 def plot_density_limit_comparison(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int
 ) -> None:
@@ -5331,6 +5335,7 @@ def main_plot(
     fig9,
     fig10,
     fig11,
+    fig12,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -5434,47 +5439,50 @@ def main_plot(
     plot_15.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(plot_15, m_file_data, scan, colour_scheme)
 
+    plot_16 = fig5.add_subplot(111)
+    plot_radial_build(plot_16, m_file_data, scan)
+
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_16 = fig5.add_subplot(211, aspect="equal")
-        plot_16.set_position([0.05, 0.5, 0.8, 0.4])
-        plot_tf_wp(plot_16, m_file_data, scan)
+        plot_17 = fig6.add_subplot(211, aspect="equal")
+        plot_17.set_position([0.05, 0.5, 0.8, 0.4])
+        plot_tf_wp(plot_17, m_file_data, scan)
 
         # TF coil turn structure
-        plot_17 = fig5.add_subplot(325, aspect="equal")
-        plot_17.set_position([0.1, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_17, m_file_data, scan)
+        plot_18 = fig6.add_subplot(325, aspect="equal")
+        plot_18.set_position([0.1, 0.1, 0.3, 0.3])
+        plot_tf_turn(plot_18, m_file_data, scan)
 
-    plot_18 = fig6.add_subplot(111, aspect="equal")
-    plot_tf_coil_structure(plot_18, m_file_data, scan, colour_scheme)
+    plot_19 = fig7.add_subplot(111, aspect="equal")
+    plot_tf_coil_structure(plot_19, m_file_data, scan, colour_scheme)
 
-    plot_19 = fig7.add_subplot(221)
-    plot_bootstrap_comparison(plot_19, m_file_data, scan)
+    plot_20 = fig8.add_subplot(221)
+    plot_bootstrap_comparison(plot_20, m_file_data, scan)
 
-    plot_20 = fig7.add_subplot(224)
-    plot_h_threshold_comparison(plot_20, m_file_data, scan)
+    plot_21 = fig8.add_subplot(224)
+    plot_h_threshold_comparison(plot_21, m_file_data, scan)
 
-    plot_21 = fig8.add_subplot(221)
-    plot_density_limit_comparison(plot_21, m_file_data, scan)
+    plot_22 = fig9.add_subplot(221)
+    plot_density_limit_comparison(plot_22, m_file_data, scan)
 
-    plot_215 = fig8.add_subplot(224)
-    plot_confinement_time_comparison(plot_215, m_file_data, scan)
+    plot_23 = fig9.add_subplot(224)
+    plot_confinement_time_comparison(plot_23, m_file_data, scan)
 
-    plot_22 = fig9.add_subplot(111)
-    plot_current_profiles_over_time(plot_22, m_file_data, scan)
+    plot_24 = fig10.add_subplot(111)
+    plot_current_profiles_over_time(plot_24, m_file_data, scan)
 
-    plot_23 = fig10.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_23, fig10, m_file_data, scan)
+    plot_25 = fig11.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_25, fig10, m_file_data, scan)
 
-    plot_24 = fig10.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_24, fig10, m_file_data, scan)
+    plot_26 = fig11.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_26, fig10, m_file_data, scan)
 
-    plot_25 = fig11.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_25, m_file_data, scan)
+    plot_27 = fig12.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_27, m_file_data, scan)
 
-    plot_26 = fig11.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_26, m_file_data, scan)
+    plot_28 = fig12.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_28, m_file_data, scan)
 
 
 def main(args=None):
@@ -5751,6 +5759,7 @@ def main(args=None):
     page9 = plt.figure(figsize=(12, 9), dpi=80)
     page10 = plt.figure(figsize=(12, 9), dpi=80)
     page11 = plt.figure(figsize=(12, 9), dpi=80)
+    page12 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -5765,6 +5774,7 @@ def main(args=None):
         page9,
         page10,
         page11,
+        page12,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -5784,6 +5794,7 @@ def main(args=None):
         pdf.savefig(page9)
         pdf.savefig(page10)
         pdf.savefig(page11)
+        pdf.savefig(page12)
 
     # show fig if option used
     if args.show:
@@ -5800,6 +5811,7 @@ def main(args=None):
     plt.close(page9)
     plt.close(page10)
     plt.close(page11)
+    plt.close(page12)
 
 
 if __name__ == "__main__":
