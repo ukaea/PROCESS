@@ -42,37 +42,42 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 
 <figure markdown>
 ![plot_proc_5](../images/plot_proc_5.PNG){ width="100%"}
-<figcaption>Figure 5: plot_proc TF coil and turn cross-section page </figcaption>
+<figcaption>Figure 5: plot_proc radial build page </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_6](../images/plot_proc_6.PNG){ width="100%"}
-<figcaption>Figure 6: plot_proc bootstrap current model and L-H threshold comparison page </figcaption>
+![plot_proc_6](../images/plot_proc_5.PNG){ width="100%"}
+<figcaption>Figure 6: plot_proc TF coil and turn cross-section page </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_7](../images/plot_proc_7.PNG){ width="100%"}
-<figcaption>Figure 7: plot_proc TF coil structure  </figcaption>
+![plot_proc_7](../images/plot_proc_6.PNG){ width="100%"}
+<figcaption>Figure 7: plot_proc bootstrap current model and L-H threshold comparison page </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_8](../images/plot_proc_8.PNG){ width="100%"}
-<figcaption>Figure 8: plot_proc density limit and confinement time comparison page  </figcaption>
+![plot_proc_8](../images/plot_proc_7.PNG){ width="100%"}
+<figcaption>Figure 8: plot_proc TF coil structure  </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_9](../images/plot_proc_9.PNG){ width="100%"}
-<figcaption>Figure 9: plot_proc current profiles comparison page  </figcaption>
+![plot_proc_9](../images/plot_proc_8.PNG){ width="100%"}
+<figcaption>Figure 9: plot_proc density limit and confinement time comparison page  </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_10](../images/plot_proc_10.PNG){ width="100%"}
-<figcaption>Figure 10: plot_proc central solenoid and turn cross-section page  </figcaption>
+![plot_proc_10](../images/plot_proc_9.PNG){ width="100%"}
+<figcaption>Figure 10: plot_proc current profiles comparison page  </figcaption>
 </figure>
 
 <figure markdown>
-![plot_proc_11](../images/plot_proc_11.PNG){ width="100%"}
-<figcaption>Figure 11: plot_proc first wall comparison page  </figcaption>
+![plot_proc_11](../images/plot_proc_10.PNG){ width="100%"}
+<figcaption>Figure 11: plot_proc central solenoid and turn cross-section page  </figcaption>
+</figure>
+
+<figure markdown>
+![plot_proc_12](../images/plot_proc_11.PNG){ width="100%"}
+<figcaption>Figure 12: plot_proc first wall comparison page  </figcaption>
 </figure>
 
 ----------------
