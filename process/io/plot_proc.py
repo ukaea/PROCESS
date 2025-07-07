@@ -4781,7 +4781,7 @@ def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
             filtered_radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{filtered_labels[kk]}\n{filtered_radial_build[kk][0]:.3f} m",
+            label=f"{filtered_labels[kk]}\n[{radial_variables[kk]}]\n{filtered_radial_build[kk][0]:.3f} m",
             color=filtered_colors[kk],
             edgecolor="black",
             linewidth=0.05,
