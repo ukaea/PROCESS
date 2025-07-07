@@ -441,6 +441,18 @@ class Scan:
                 f"(nitvar{i + 1:03d})",
                 xnorm,
             )
+            process_output.ovarre(
+                constants.mfile,
+                f"{name} (upper bound)",
+                f"(boundu{i + 1:03d})",
+                numerics.boundu[i],
+            )
+            process_output.ovarre(
+                constants.mfile,
+                f"{name} (lower bound)",
+                f"(boundl{i + 1:03d})",
+                numerics.boundl[i],
+            )
 
         # Write optimisation parameter headings to output file
         process_output.osubhd(
