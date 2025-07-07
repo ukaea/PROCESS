@@ -151,7 +151,7 @@ class Build:
                     + build_variables.dz_vv_upper
                     + build_variables.dz_shld_upper
                     + divertor_variables.dz_divertor
-                    + build_variables.dz_fw_plasma_gap
+                    + build_variables.dz_xpoint_divertor
                     + build_variables.z_plasma_xpoint_upper
                 )
 
@@ -266,17 +266,17 @@ class Build:
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
-                    build_variables.dz_fw_plasma_gap,
+                    build_variables.dz_xpoint_divertor,
                     vbuild,
-                    "(dz_fw_plasma_gap)",
+                    "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
                     self.mfile,
                     "Top scrape-off vertical thickness (m)",
-                    "(dz_fw_plasma_gap)",
-                    build_variables.dz_fw_plasma_gap,
+                    "(dz_xpoint_divertor)",
+                    build_variables.dz_xpoint_divertor,
                 )
-                vbuild = vbuild - build_variables.dz_fw_plasma_gap
+                vbuild = vbuild - build_variables.dz_xpoint_divertor
 
                 po.obuild(
                     self.outfile,
