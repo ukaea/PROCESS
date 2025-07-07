@@ -4625,8 +4625,178 @@ def plot_confinement_time_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile, scan: int) -> None:
-    pass
+def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
+    """
+    Plots the radial build of a fusion device on the given matplotlib axis.
+
+    This function visualizes the different layers/components of the machine's radial build
+    (such as central solenoid, toroidal field coils, vacuum vessel, shields, blankets, etc.)
+    as a horizontal stacked bar chart. The thickness of each layer is extracted from the
+    provided `mfile_data`, and each segment is color-coded and labeled accordingly.
+
+    If the toroidal field coil is inside the central solenoid (as indicated by the
+    "i_tf_inside_cs" flag in `mfile_data`), the order and labels of the components are
+    adjusted accordingly.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+        The matplotlib axis on which to plot the radial build.
+    mfile_data : mf.MFile
+        An object containing the machine build data, with required fields for each
+        radial component and the "i_tf_inside_cs" flag.
+
+    Returns
+    -------
+    None
+        This function modifies the provided axis in-place and does not return a value.
+
+    Notes
+    -----
+    - Components with zero thickness are omitted from the plot.
+    - The legend displays the name and thickness (in meters) of each component.
+    """
+    radial_variables = [
+        "dr_bore",
+        "dr_cs",
+        "dr_cs_precomp",
+        "dr_cs_tf_gap",
+        "dr_tf_inboard",
+        "dr_tf_shld_gap",
+        "dr_shld_thermal_inboard",
+        "dr_shld_vv_gap_inboard",
+        "dr_vv_inboard",
+        "dr_shld_inboard",
+        "dr_shld_blkt_gap",
+        "dr_blkt_inboard",
+        "dr_fw_inboard",
+        "dr_fw_plasma_gap_inboard",
+        "rminor",
+        "dr_fw_plasma_gap_outboard",
+        "dr_fw_outboard",
+        "dr_blkt_outboard",
+        "dr_shld_blkt_gap",
+        "dr_vv_outboard",
+        "dr_shld_outboard",
+        "dr_shld_vv_gap_outboard",
+        "dr_shld_thermal_outboard",
+        "dr_tf_shld_gap",
+        "dr_tf_outboard",
+    ]
+    if int(mfile_data.data["i_tf_inside_cs"].get_scan(-1)) == 1:
+        radial_variables[1] = "dr_tf_inboard"
+        radial_variables[2] = "dr_cs_tf_gap"
+        radial_variables[3] = "dr_cs"
+        radial_variables[4] = "dr_cs_precomp"
+        radial_variables[5] = "dr_tf_shld_gap"
+
+    radial_build = [[mfile_data.data[rl].get_scan(-1) for rl in radial_variables]]
+
+    radial_build = np.array(radial_build)
+
+    for kk in range(radial_build.shape[0]):
+        radial_build[kk, 14] = 2.0 * radial_build[kk, 14]
+
+    radial_build = np.transpose(radial_build)
+    # ====================
+
+    radial_labels = [
+        "Machine Bore",
+        "Central Solenoid",
+        "CS precompression",
+        "CS Coil gap",
+        "TF Coil Inboard Leg",
+        "TF Coil gap",
+        "Inboard Thermal Shield",
+        "Gap",
+        "Inboard VV",
+        "Inboard Shield",
+        "Gap",
+        "Inboard Blanket",
+        "Inboard First Wall",
+        "Inboard SOL",
+        "Plasma",
+        "Outboard SOL",
+        "Outboard First Wall",
+        "Outboard Blanket",
+        "Gap",
+        "Outboard VV",
+        "Outboard Shield",
+        "Gap",
+        "Outboard Thermal Shield",
+        "Gap",
+        "TF Coil Outboard Leg",
+    ]
+    if int(mfile_data.data["i_tf_inside_cs"].get_scan(-1)) == 1:
+        radial_labels[1] = "TF Coil Inboard Leg"
+        radial_labels[2] = "CS Coil gap"
+        radial_labels[3] = "Central Solenoid"
+        radial_labels[4] = "CS precompression"
+        radial_labels[5] = "TF Coil gap"
+
+    radial_color = [
+        "lightgrey",
+        "green",
+        "yellow",
+        "white",
+        "blue",
+        "white",
+        "lime",
+        "white",
+        "dimgrey",
+        "violet",
+        "white",
+        "goldenrod",
+        "steelblue",
+        "orange",
+        "red",
+        "orange",
+        "steelblue",
+        "goldenrod",
+        "white",
+        "dimgrey",
+        "violet",
+        "white",
+        "lime",
+        "white",
+        "blue",
+    ]
+    if int(mfile_data.data["i_tf_inside_cs"].get_scan(-1)) == 1:
+        radial_color[1] = "blue"
+        radial_color[2] = "white"
+        radial_color[3] = "green"
+        radial_color[4] = "yellow"
+        radial_color[5] = "white"
+
+    # Remove build parts equal to zero
+    mask = ~(radial_build[:, 0] == 0.0)
+    filtered_radial_build = radial_build[mask]
+    filtered_labels = [lbl for i, lbl in enumerate(radial_labels) if mask[i]]
+    filtered_colors = [col for i, col in enumerate(radial_color) if mask[i]]
+
+    lower = np.zeros(filtered_radial_build.shape[1])
+    for kk in range(filtered_radial_build.shape[0]):
+        axis.barh(
+            0,
+            filtered_radial_build[kk, :],
+            left=lower,
+            height=0.8,
+            label=f"{filtered_labels[kk]}\n{filtered_radial_build[kk][0]:.3f} m",
+            color=filtered_colors[kk],
+            edgecolor="black",
+            linewidth=0.05,
+        )
+        lower += filtered_radial_build[kk, :]
+
+    axis.set_yticks([])
+
+    axis.legend(
+        bbox_to_anchor=(0.5, -0.1),
+        loc="upper center",
+        ncol=5,
+    )
+    axis.minorticks_on()
+    axis.set_xlabel("Radius [m]")
 
 
 def plot_density_limit_comparison(
@@ -5439,8 +5609,9 @@ def main_plot(
     plot_15.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(plot_15, m_file_data, scan, colour_scheme)
 
-    plot_16 = fig5.add_subplot(111)
-    plot_radial_build(plot_16, m_file_data, scan)
+    plot_16 = fig5.add_subplot(211)
+    plot_16.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
+    plot_radial_build(plot_16, m_file_data)
 
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
