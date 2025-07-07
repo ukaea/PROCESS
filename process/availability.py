@@ -66,7 +66,8 @@ class Availability:
             self.avail(output)  # Taylor and Ward model (1999)
 
     def avail(self, output: bool):
-        """Routine to calculate component lifetimes and the overall plant availability
+        """
+        Routine to calculate component lifetimes and the overall plant availability
         author: P J Knight, CCFE, Culham Science Centre
 
         This routine calculates the component lifetimes and the overall
@@ -75,29 +76,36 @@ class Availability:
 
         :param output: indicate whether output should be written to the output file, or not
         :type output: boolean
+
+        :notes:
+            - Scaling with respect to fusion power eliminates numerous factors related to neutronics,
+            including the actual neutron flux, the geometry and material composition affecting the neutron flux at the EUROfer FW OMP,
+            the neutron energy spectrum, and all these factors combined leading to the dpa/fpy in EUROfer at the FW OMP,
+            which we can reasonably assume to be equal to 1.0 at a relatively constant reference point.
+
+        :references:
+            - T. Franke et al., “The EU DEMO equatorial outboard limiter — Design and port integration concept,”
+            Fusion Engineering and Design, vol. 158, pp. 111647-111647, May 2020,
+            doi: https://doi.org/10.1016/j.fusengdes.2020.111647.
+        ‌
         """
 
         # Full power lifetime (in years)
         if ifev.ife != 1:
             # Calculate DPA per FPY - based on neutronics-derived fusion power relation to DEMO blanket lifetime provided by Matti Coleman
-            # Detailed and cited in T. Franke 2020, "The EU DEMO equatorial outboard limiter — Design and port integration concept"
-            # https://www.sciencedirect.com/science/article/pii/S0920379620301952#bib0075
-            # Scaling w.r.t. fusion power drops out a large number of factors relating to neutronics, such as:
-            # - the actual neutron flux
-            # - the geometry and material composition leading to the neutron flux at the EUROfer FW OMP
-            # - the neutron energy spectrum
-            # - all of the above and more leading to the dpa/fpy in EUROfer at the FW OMP
-            # About a relatively "constant" reference point, we can reasonably assume they all equal to 1.0.
-            ref_fusion_power = 2.0e3  # (MW) fusion power for EU-DEMO
+
+            # Fusion power for EU-DEMO [MW]
+            ref_fusion_power = 2.0e3
             f_scale = pv.p_fusion_total_mw / ref_fusion_power
+
+            # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
             ref_dpa_fpy = (
                 10.0e0  # dpa per fpy from T. Franke 2020 states up to 10 dpa/FPY
             )
             dpa_fpy = f_scale * ref_dpa_fpy
 
             # First wall / blanket lifetime (years)
-            # TODO MDK Do this calculation whatever the value of blktmodel (whatever that is)
-            # For some reason life_fw_fpy is not always calculated, so ignore it if it is still zero.
+
             if fwbsv.life_fw_fpy < 0.0001e0:
                 # Calculate blanket lifetime using neutron fluence model (ibkt_life=0)
                 # or DEMO fusion power model (ibkt_life=1)
@@ -121,8 +129,6 @@ class Availability:
                         fwbsv.life_fw_fpy, cv.life_dpa / dpa_fpy, cv.life_plant_fpy
                     )  # DEMO
 
-            # TODO Issue #834
-            # Add a test for pflux_div_heat_load_mw=0
             if dv.pflux_div_heat_load_mw < 1.0e-10:
                 dv.pflux_div_heat_load_mw = 1.0e-10
 

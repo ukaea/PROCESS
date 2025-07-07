@@ -25,7 +25,19 @@ If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used inst
 | `uumag` | unplanned unavailability of magnets |
 | `uuves` | unplanned unavailability of vessel |
 
-Table 3.4: *Summary of the variables in `PROCESS` that relate to the Taylor-Ward availability model (`i_plant_availability=1`).*
+Table 1: *Summary of the variables in `PROCESS` that relate to the Taylor-Ward availability model (`i_plant_availability=1`).*
+
+1. Using a reference fusion power of $2 \ \text{GW}$ with a $10 \ \text{dpa/fpy}$ limit from EU-DEMO given by T. Franke et al[^3] we scale the expected $\text{dpa/fpy}$.
+
+	!!! note
+
+		Scaling with respect to fusion power eliminates numerous factors related to neutronics, including the actual neutron flux, the geometry and material composition affecting the neutron flux at the EUROfer FW OMP, the neutron energy spectrum, and all these factors combined leading to the dpa/fpy in EUROfer at the FW OMP, which we can reasonably assume to be equal to 1.0 at a relatively constant reference point.
+
+2. Set the full power year lifetime of the blankets:
+
+	$$
+	t_{\text{blkt,life-fpy}} = \min{\left(\frac{\Phi_{\text{blkt,max}}}{q_{\text{FW,n}}}, t_{\text{plant,life-fpy}}\right)}
+	$$
 
 ----------------------
 
@@ -113,5 +125,7 @@ $$ t_{\text{div, life}} = \max (0, \min(f_{\text{div, allowable}} / P_{\text{div
 where $f_{\text{div, allowable}}$ is the allowable divertor heat fluence ($\mathrm{MW}\text{-}\mathrm{yr} \mathrm{m}^{-2}$) and $P_{\text{div}}$ is the heat load to the divertor ($\mathrm{MW} \mathrm{m}^{-2}$).
 
 [^1]: P. J. Knight, *"PROCESS 3020: Plant Availability Model"*, Work File Note
-F/PL/PJK/PROCESS/CODE/<br>
-[^2]: M. Kovari, F. Fox, C. Harrington, R. Kembleton, P. Knight, H. Lux, J. Morris *"PROCESS: a systems code for fusion power plants - Part 2: Engineering"*, Fus. Eng. & Des. 104, 9-20 (2016)
+F/PL/PJK/PROCESS/CODE/
+[^2]: M. Kovari et al., “‘PROCESS’: A systems code for fusion power plants – Part 2: Engineering,” Fusion Engineering and Design, vol. 104, pp. 9–20, Mar. 2016, doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
+‌
+[^3]: T. Franke et al., “The EU DEMO equatorial outboard limiter — Design and port integration concept,”Fusion Engineering and Design, vol. 158, pp. 111647-111647, May 2020, doi: https://doi.org/10.1016/j.fusengdes.2020.111647.
