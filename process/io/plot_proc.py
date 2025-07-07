@@ -6075,7 +6075,6 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 def plot_iteration_variables(axis, m_file_data, scan):
     """Plot the iteration variables for a given figure."""
     n_itvars = int(m_file_data.data["nvar"].get_scan(scan))
-    import matplotlib.patches as mpatches
 
     y_labels = []
     y_pos = []
@@ -6088,7 +6087,7 @@ def plot_iteration_variables(axis, m_file_data, scan):
             idx = int(var[5:])  # e.g. "itvar001" -> 1
             itvar_names[idx] = m_file_data.data[var].var_description
 
-    for n in range(1, n_itvars+1):
+    for n_plot, n in enumerate(range(1, n_itvars + 1)):
         itvar_final = m_file_data.data[f"itvar{n:03d}"].get_scan(scan)
         itvar_upper = m_file_data.data[f"boundu{n:03d}"].get_scan(scan)
         itvar_lower = m_file_data.data[f"boundl{n:03d}"].get_scan(scan)
@@ -6096,16 +6095,53 @@ def plot_iteration_variables(axis, m_file_data, scan):
         # Use the variable name if available, else fallback to "itvarXXX"
         var_label = itvar_names.get(n, f"itvar{n:03d}")
 
-        # Plot the lower bound at x=0
-        axis.plot(0, n_plot, "s", color="lightgray", markersize=8, label="Lower Bound" if n_plot == 0 else "")
-
-        # Plot the upper bound at x=1
-        axis.plot(1, n_plot, "s", color="lightgray", markersize=8, label="Upper Bound" if n_plot == 0 else "")
-
         # Plot the final value as a vertical marker, normalised to upper bound
-        norm_final = itvar_final / itvar_upper if itvar_upper != 0 else 0
-        axis.plot(norm_final, n_plot, "o", color="red")
-        # Plot the value of the upper bound to the right of x=1
+        norm_final = (
+            (itvar_final - itvar_lower) / (itvar_upper - itvar_lower)
+            if itvar_final != itvar_lower
+            else 0
+        )
+        if np.isclose(norm_final, 1.0, atol=1e-6):
+            # Plot the lower bound at x=0
+            axis.plot(
+                1,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                label="Lower Bound" if n_plot == 0 else "",
+            )
+        elif np.isclose(norm_final, 0.0, atol=1e-6):
+            # Plot the upper bound at x=1
+            axis.plot(
+                0,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                label="Upper Bound" if n_plot == 0 else "",
+            )
+        # Draw a horizontal bar from 0 to norm_final at y=n_plot
+        else:
+            axis.barh(
+                n_plot,
+                norm_final,
+                left=0,
+                height=0.8,
+                color="blue",
+                alpha=0.7,
+                label="Final Value" if n_plot == 0 else "",
+            )
+        # Plot the value as a number at x = 0.5
+        axis.text(
+            0.5,
+            n_plot,
+            f"{itvar_final:.8g}",
+            va="center",
+            ha="center",
+            fontsize=8,
+            color="black",
+        )
         # Plot the value of the upper bound to the right of x=1
         axis.text(
             1.05,
@@ -6118,7 +6154,7 @@ def plot_iteration_variables(axis, m_file_data, scan):
         )
         # Plot the value of the lower bound to the left of x=0
         axis.text(
-            -0.15,
+            -0.05,
             n_plot,
             f"{itvar_lower:.3g}",
             va="center",
@@ -6128,22 +6164,16 @@ def plot_iteration_variables(axis, m_file_data, scan):
         )
         y_labels.append(var_label)
         y_pos.append(n_plot)
-        n_plot += 1
 
-        axis.set_yticks(y_pos)
-        axis.set_yticklabels(y_labels)
-        axis.set_xlabel("Value")
-        axis.set_xlim(-0.5, 1.5)  # Normalised bounds
-        axis.set_title("Iteration Variables and Bounds")
-        
-        
-
-    legend_handles = [
-        mpatches.Patch(color="lightgray", label="Bounds"),
-        mpatches.Patch(color="red", label="Final Value", alpha=0.7),
-    ]
-    axis.legend(handles=legend_handles, loc="best")
-
+    # Plot vertical lines at x=0 and x=1 to indicate bounds
+    axis.axvline(0, color="darkgreen", linewidth=2, zorder=0)
+    axis.axvline(1, color="red", linewidth=2, zorder=0)
+    axis.set_yticks(y_pos)
+    axis.set_yticklabels(y_labels)
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_xlim(-0.2, 1.2)  # Normalised bounds
+    axis.set_title("Iteration Variables Final Values and Bounds")
 
 
 def main_plot(
@@ -6222,6 +6252,7 @@ def main_plot(
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
     plot_7 = fig2.add_subplot(121)
+    plot_7.set_position([0.175, 0.1, 0.35, 0.8])  # Move plot slightly to the right
     plot_iteration_variables(plot_7, m_file_data, scan)
 
     # Plot main plasma information

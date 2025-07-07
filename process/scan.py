@@ -444,14 +444,14 @@ class Scan:
             process_output.ovarre(
                 constants.mfile,
                 f"{name} (upper bound)",
-                f"(boundu{i+1:03d})",
-                numerics.boundu[i],
+                f"(boundu{i + 1:03d})",
+                numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i],
             )
             process_output.ovarre(
                 constants.mfile,
                 f"{name} (lower bound)",
-                f"(boundl{i+1:03d})",
-                numerics.boundl[i],
+                f"(boundl{i + 1:03d})",
+                numerics.itv_scaled_lower_bounds[i] * numerics.scafc[i],
             )
 
         # Write optimisation parameter headings to output file
