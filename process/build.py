@@ -142,7 +142,7 @@ class Build:
 
                 # Start at the top and work down.
 
-                vbuild = (
+                vertical_build_upper = (
                     buildings_variables.dz_tf_cryostat
                     + build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
@@ -156,13 +156,13 @@ class Build:
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                vbuile1 = vbuild
+                vbuile1 = vertical_build_upper
 
                 po.obuild(
                     self.outfile,
                     "Cryostat roof structure*",
                     buildings_variables.dz_tf_cryostat,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_tf_cryostat)",
                 )
                 po.ovarre(
@@ -171,34 +171,40 @@ class Build:
                     "(dz_tf_cryostat)",
                     buildings_variables.dz_tf_cryostat,
                 )
-                vbuild = vbuild - buildings_variables.dz_tf_cryostat
+                vertical_build_upper = (
+                    vertical_build_upper - buildings_variables.dz_tf_cryostat
+                )
 
                 # Top of TF coil
-                tf_top = vbuild
+                tf_top = vertical_build_upper
 
                 po.obuild(
                     self.outfile,
                     "TF coil",
                     build_variables.dr_tf_inboard,
-                    vbuild,
+                    vertical_build_upper,
                     "(dr_tf_inboard)",
                 )
-                vbuild = vbuild - build_variables.dr_tf_inboard
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dr_tf_inboard
+                )
 
                 po.obuild(
                     self.outfile,
                     "Gap",
                     build_variables.dr_tf_shld_gap,
-                    vbuild,
+                    vertical_build_upper,
                     "(dr_tf_shld_gap)",
                 )
-                vbuild = vbuild - build_variables.dr_tf_shld_gap
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dr_tf_shld_gap
+                )
 
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
                     build_variables.dz_shld_thermal,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_shld_thermal)",
                 )
 
@@ -208,13 +214,15 @@ class Build:
                     "(dz_shld_thermal)",
                     build_variables.dz_shld_thermal,
                 )
-                vbuild = vbuild - build_variables.dz_shld_thermal
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_shld_thermal
+                )
 
                 po.obuild(
                     self.outfile,
                     "Gap",
                     build_variables.dz_shld_vv_gap,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_shld_vv_gap)",
                 )
                 po.ovarre(
@@ -223,17 +231,21 @@ class Build:
                     "(dz_shld_vv_gap)",
                     build_variables.dz_shld_vv_gap,
                 )
-                vbuild = vbuild - build_variables.dz_shld_vv_gap
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_shld_vv_gap
+                )
 
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
                     build_variables.dz_vv_upper + build_variables.dz_shld_upper,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_vv_upper+dz_shld_upper)",
                 )
-                vbuild = (
-                    vbuild - build_variables.dz_vv_upper - build_variables.dz_shld_upper
+                vertical_build_upper = (
+                    vertical_build_upper
+                    - build_variables.dz_vv_upper
+                    - build_variables.dz_shld_upper
                 )
                 po.ovarre(
                     self.mfile,
@@ -252,7 +264,7 @@ class Build:
                     self.outfile,
                     "Divertor structure",
                     divertor_variables.dz_divertor,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_divertor)",
                 )
                 po.ovarre(
@@ -261,13 +273,15 @@ class Build:
                     "(dz_divertor)",
                     divertor_variables.dz_divertor,
                 )
-                vbuild = vbuild - divertor_variables.dz_divertor
+                vertical_build_upper = (
+                    vertical_build_upper - divertor_variables.dz_divertor
+                )
 
                 po.obuild(
                     self.outfile,
                     "Top scrape-off",
                     build_variables.dz_xpoint_divertor,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
@@ -276,13 +290,15 @@ class Build:
                     "(dz_xpoint_divertor)",
                     build_variables.dz_xpoint_divertor,
                 )
-                vbuild = vbuild - build_variables.dz_xpoint_divertor
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_xpoint_divertor
+                )
 
                 po.obuild(
                     self.outfile,
                     "Plasma upper X-point height (m)",
                     build_variables.z_plasma_xpoint_upper,
-                    vbuild,
+                    vertical_build_upper,
                     "(z_plasma_xpoint_upper)",
                 )
                 po.ovarre(
@@ -291,16 +307,20 @@ class Build:
                     "(z_plasma_xpoint_upper)",
                     build_variables.z_plasma_xpoint_upper,
                 )
-                vbuild = vbuild - build_variables.z_plasma_xpoint_upper
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.z_plasma_xpoint_upper
+                )
 
-                po.obuild(self.outfile, "Midplane", 0.0e0, vbuild)
+                po.obuild(self.outfile, "Midplane", 0.0e0, vertical_build_upper)
 
-                vbuild = vbuild - build_variables.z_plasma_xpoint_lower
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.z_plasma_xpoint_lower
+                )
                 po.obuild(
                     self.outfile,
                     "Plasma lower X-point height (m)",
                     build_variables.z_plasma_xpoint_lower,
-                    vbuild,
+                    vertical_build_upper,
                     "(z_plasma_xpoint_lower)",
                 )
                 po.ovarre(
@@ -310,12 +330,14 @@ class Build:
                     build_variables.z_plasma_xpoint_lower,
                 )
 
-                vbuild = vbuild - build_variables.dz_xpoint_divertor
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_xpoint_divertor
+                )
                 po.obuild(
                     self.outfile,
                     "Lower scrape-off",
                     build_variables.dz_xpoint_divertor,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_xpoint_divertor)",
                 )
                 po.ovarre(
@@ -325,12 +347,14 @@ class Build:
                     build_variables.dz_xpoint_divertor,
                 )
 
-                vbuild = vbuild - divertor_variables.dz_divertor
+                vertical_build_upper = (
+                    vertical_build_upper - divertor_variables.dz_divertor
+                )
                 po.obuild(
                     self.outfile,
                     "Divertor structure",
                     divertor_variables.dz_divertor,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_divertor)",
                 )
                 po.ovarre(
@@ -340,14 +364,18 @@ class Build:
                     divertor_variables.dz_divertor,
                 )
 
-                vbuild = vbuild - build_variables.dz_shld_lower
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_shld_lower
+                )
 
-                vbuild = vbuild - build_variables.dz_vv_lower
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_vv_lower
+                )
                 po.obuild(
                     self.outfile,
                     "Vacuum vessel (and shielding)",
                     build_variables.dz_vv_lower + build_variables.dz_shld_lower,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_vv_lower+dz_shld_lower)",
                 )
                 po.ovarre(
@@ -363,65 +391,81 @@ class Build:
                     build_variables.dz_vv_lower,
                 )
 
-                vbuild = vbuild - build_variables.dz_shld_vv_gap
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_shld_vv_gap
+                )
                 po.obuild(
                     self.outfile,
                     "Gap",
                     build_variables.dz_shld_vv_gap,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_shld_vv_gap)",
                 )
 
-                vbuild = vbuild - build_variables.dz_shld_thermal
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dz_shld_thermal
+                )
                 po.obuild(
                     self.outfile,
                     "Thermal shield, vertical",
                     build_variables.dz_shld_thermal,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_shld_thermal)",
                 )
 
-                vbuild = vbuild - build_variables.dr_tf_shld_gap
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dr_tf_shld_gap
+                )
                 po.obuild(
                     self.outfile,
                     "Gap",
                     build_variables.dr_tf_shld_gap,
-                    vbuild,
+                    vertical_build_upper,
                     "(dr_tf_shld_gap)",
                 )
 
-                vbuild = vbuild - build_variables.dr_tf_inboard
+                vertical_build_upper = (
+                    vertical_build_upper - build_variables.dr_tf_inboard
+                )
                 po.obuild(
                     self.outfile,
                     "TF coil",
                     build_variables.dr_tf_inboard,
-                    vbuild,
+                    vertical_build_upper,
                     "(dr_tf_inboard)",
                 )
 
                 # Total height of TF coil
-                tf_height = tf_top - vbuild
+                tf_height = tf_top - vertical_build_upper
                 # Inner vertical dimension of TF coil
                 build_variables.dh_tf_inner_bore = (
                     tf_height - 2 * build_variables.dr_tf_inboard
                 )
 
-                vbuild = vbuild - buildings_variables.dz_tf_cryostat
+                vertical_build_upper = (
+                    vertical_build_upper - buildings_variables.dz_tf_cryostat
+                )
                 po.obuild(
                     self.outfile,
                     "Cryostat floor structure**",
                     buildings_variables.dz_tf_cryostat,
-                    vbuild,
+                    vertical_build_upper,
                     "(dz_tf_cryostat)",
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.tfoffset = (vbuile1 + vbuild) / 2.0e0
+                build_variables.tfoffset = (vbuile1 + vertical_build_upper) / 2.0e0
 
                 # End of Double null case
             else:
-                #  po.ocmmnt(self.outfile, "Single null case")
-                #  write(self.outfile, 20)
+                po.ocmmnt(self.outfile, "Single null case")
+                build_variables.dz_vv_upper = 0.5 * (
+                    build_variables.dz_vv_upper + build_variables.dz_vv_lower
+                )
+
+                build_variables.dz_fw_upper = 0.5 * (
+                    build_variables.dr_fw_inboard + build_variables.dr_fw_outboard
+                )
 
                 vbuild = (
                     buildings_variables.dz_tf_cryostat
@@ -429,13 +473,11 @@ class Build:
                     + build_variables.dr_tf_shld_gap
                     + build_variables.dz_shld_thermal
                     + build_variables.dz_shld_vv_gap
-                    + 0.5e0
-                    * (build_variables.dz_vv_upper + build_variables.dz_vv_lower)
+                    + build_variables.dz_vv_upper
                     + build_variables.dr_shld_blkt_gap
                     + build_variables.dz_shld_upper
                     + build_variables.dz_blkt_upper
-                    + 0.5e0
-                    * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+                    + build_variables.dz_fw_upper
                     + build_variables.dz_fw_plasma_gap
                     + build_variables.z_plasma_xpoint_upper
                 )
