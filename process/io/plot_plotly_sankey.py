@@ -43,24 +43,16 @@ def main(args=None):
 
 def plot_power_balance_sankey(m_file):
     m_file = MFile(m_file)
-    # Example: Extract values from m_file as in your matplotlib code
-    # Replace these with actual values from your MFile object
-    p_fusion_total_mw = m_file.data["p_fusion_total_mw"].get_scan(-1)
     p_hcd_injected_total_mw = m_file.data["p_hcd_injected_total_mw"].get_scan(-1)
     p_plasma_ohmic_mw = m_file.data["p_plasma_ohmic_mw"].get_scan(-1)
     p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(-1)
     p_neutron_total_mw = m_file.data["p_neutron_total_mw"].get_scan(-1)
     p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(-1)
-    p_fw_nuclear_heat_total_mw = m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(-1)
     p_fw_rad_total_mw = m_file.data["p_fw_rad_total_mw"].get_scan(-1)
     p_fw_alpha_mw = p_alpha_total_mw * (1 - m_file.data["f_alpha_plasma"].get_scan(-1))
-    p_fw_heat_deposited_mw = m_file.data["p_fw_blkt_heat_deposited_mw"].get_scan(-1)
     p_blkt_nuclear_heat_total_mw = m_file.data["p_blkt_nuclear_heat_total_mw"].get_scan(
         -1
     )
-    p_blkt_multiplication_mw = m_file.data["p_blkt_multiplication_mw"].get_scan(-1)
-    p_plant_electric_gross_mw = m_file.data["p_plant_electric_gross_mw"].get_scan(-1)
-    p_plant_electric_net_mw = m_file.data["p_plant_electric_net_mw"].get_scan(-1)
 
     # Define node labels (linearized flow)
     labels = [
@@ -83,8 +75,8 @@ def plot_power_balance_sankey(m_file):
         "16: Core systems",
         "17: Cryo plant",
         "18: Base plant load",
-        "19: TF coils",
-        "20: PF coils",
+        "19: TF power supplies",
+        "20: PF power supplies",
         "21: Vacuum pumps",
         "22: Tritium plant",
         "23: Coolant pumps electric",
@@ -95,6 +87,9 @@ def plot_power_balance_sankey(m_file):
         "28: Shield",
         "29: Secondary heat",
         "30: TF nuclear heat",
+        "31: H&CD & Diagnostics",
+        "32: Total Secondary Heat",
+        "33: Turbine Loss",
     ]
 
     # Define links (source, target, value) for a more linear flow
@@ -146,6 +141,20 @@ def plot_power_balance_sankey(m_file):
         30,  # 44: TF nuclear heat to secondary heat
         15,  # 45: HCD electric losses to secondary heat
         24,  # 46: Coolant pumps electric to secondary heat
+        6,  # 47: FW pump to primary heat, Should only show if FW and Bkt pumps are separate
+        7,  # 48: Blkt pump to primary heat, Should only show if FW and Blkt pumps are separate
+        2,  # 49 Should show in beams are present
+        2,  # 50:  Should show in beams are present
+        4,  # 51 Neutrons to CP shield, should only show if CP shield is present
+        2,  # 52 Plasma separatrix power to divertor
+        8,  # 53 Divertor secondary heat,
+        28,  # 54 Shield secondary heat
+        4,  # 55 Neutron power to H&CD & Diagnostics
+        5,  # 56: Radiation to H&CD & Diagnostics
+        29,  # 57: Total Secondary Heat
+        31,  # 58: H&CD & Diagnostics secondary heat
+        11,  # 59: Turbine Loss
+        4,  # 60: FW nuclear heat
     ]
     targets = [
         2,  # 0: H&CD to Fusion
@@ -195,6 +204,20 @@ def plot_power_balance_sankey(m_file):
         29,  # 44: TF nuclear heat to secondary heat
         29,  # 45: HCD electric losses to secondary heat
         29,  # 46: Coolant pumps electric to secondary heat
+        9,  # 47: FW pump to primary heat, Should only show if FW and Bkt pumps are separate
+        9,  # 48: Blkt pump to primary heat, Should only show if FW and Blkt pumps are separate
+        6,  # 49 Should show in beams are present
+        6,  # 50:  Should show in beams are present
+        28,  # 51 Neutrons to CP shield, should only show if CP shield is present
+        8,  # 52 Plasma separatrix power to divertor
+        29,  # 53 Divertor secondary heat,
+        29,  # 54 Shield secondary heat
+        31,  # 55 Neutron power to H&CD & Diagnostics
+        31,  # 56: Radiation to H&CD & Diagnostics
+        32,  # 57: Total Secondary Heat
+        32,  # 58: H&CD & Diagnostics secondary heat
+        33,  # 59: Turbine Loss
+        6,  # 60: FW nuclear heat
     ]
     values = [
         p_hcd_injected_total_mw,  # 0
@@ -244,34 +267,115 @@ def plot_power_balance_sankey(m_file):
         m_file.data["p_tf_nuclear_heat_mw"].get_scan(-1),  # 44
         m_file.data["p_hcd_electric_loss_mw"].get_scan(-1),  # 45
         m_file.data["p_coolant_pump_loss_total_mw"].get_scan(-1),  # 46
+        m_file.data["p_fw_coolant_pump_mw"].get_scan(
+            -1
+        ),  # 47  Should only show if FW and Bkt pumps are seperate
+        m_file.data["p_blkt_coolant_pump_mw"].get_scan(
+            -1
+        ),  # 48  Should only show if FW and Blkt pumps are seperate
+        m_file.data["p_beam_shine_through_mw"].get_scan(
+            -1
+        ),  # 49 Should show in beams are present
+        m_file.data["p_beam_orbit_loss_mw"].get_scan(
+            -1
+        ),  # 50 Should show in beams are present
+        m_file.data["p_cp_shield_nuclear_heat_mw"].get_scan(
+            -1
+        ),  # 51 Neutrons to CP shield, should only show if CP shield is present
+        m_file.data["p_plasma_separatrix_mw"].get_scan(
+            -1
+        ),  # 52 Plasma separatrix power to divertor
+        m_file.data["p_div_secondary_heat_mw"].get_scan(
+            -1
+        ),  # 53 Divertor secondary heat,
+        m_file.data["p_shld_secondary_heat_mw"].get_scan(
+            -1
+        ),  # 54 Shield secondary heat
+        m_file.data["p_fw_hcd_nuclear_heat_mw"].get_scan(
+            -1
+        ),  # 55 Neutron power to H&CD & Diagnostics
+        m_file.data["p_fw_hcd_rad_total_mw"].get_scan(
+            -1
+        ),  # 56: Radiation to H&CD & Diagnostics
+        m_file.data["p_plant_secondary_heat_mw"].get_scan(
+            -1
+        ),  # 57: Total Secondary Heat
+        m_file.data["p_hcd_secondary_heat_mw"].get_scan(
+            -1
+        ),  # 58: H&CD & Diagnostics secondary heat
+        m_file.data["p_turbine_loss_mw"].get_scan(-1),  # 59: Turbine Loss
+        m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(-1),  # 60: FW nuclear heat
     ]
+
+    # Define colors for each node (hex or rgba)
+    node_colors = [
+        "#1f77b4",  # 0: H&CD injector
+        "#ff7f0e",  # 1: Ohmic
+        "#2ca02c",  # 2: Plasma Fusion Power
+        "#d62728",  # 3: Alpha particles
+        "#9467bd",  # 4: Neutrons
+        "#8c564b",  # 5: Radiation
+        "#e377c2",  # 6: First Wall
+        "#7f7f7f",  # 7: Blanket
+        "#bcbd22",  # 8: Divertor
+        "#17becf",  # 9: FW+Blkt
+        "#aec7e8",  # 10: Primary Thermal
+        "#ffbb78",  # 11: Turbine
+        "#98df8a",  # 12: Gross Electric
+        "#ff9896",  # 13: Net Electric
+        "#c5b0d5",  # 14: HCD Electric Power
+        "#c49c94",  # 15: HCD electric losses
+        "#f7b6d2",  # 16: Core systems
+        "#c7c7c7",  # 17: Cryo plant
+        "#dbdb8d",  # 18: Base plant load
+        "#9edae5",  # 19: TF coils
+        "#393b79",  # 20: PF coils
+        "#637939",  # 21: Vacuum pumps
+        "#8c6d31",  # 22: Tritium plant
+        "#843c39",  # 23: Coolant pumps electric
+        "#7b4173",  # 24: Coolant pump electric losses
+        "#5254a3",  # 25: Divertor pump
+        "#6b6ecf",  # 26: FW+Blkt pumps
+        "#b5cf6b",  # 27: Shield pump
+        "#cedb9c",  # 28: Shield
+        "#9c9ede",  # 29: Secondary heat
+        "#e7ba52",  # 30: TF nuclear heat
+        "#ad494a",  # 31: H&CD & Diagnostics
+        "#a55194",  # 32: Total Secondary Heat
+        "#393b79",  # 33: Turbine Loss
+    ]
+
+    # Assign link colors to match their source node
+    link_colors = [node_colors[src] for src in sources]
+
     # Add value labels to the links
     value_labels = [f"{v:.3f} MW" for v in values]
 
     sankey_dict = {
         "type": "sankey",
         "node": {
-            "pad": 15,
+            "pad": 30,
             "thickness": 20,
             "line": {"color": "black", "width": 0.5},
             "label": labels,
+            "color": node_colors,
         },
         "link": {
             "source": sources,
             "target": targets,
             "value": values,
             "label": value_labels,
+            "color": link_colors,
         },
     }
     fig = go.Figure(data=[sankey_dict])
 
-    fig.update_layout(title_text="Fusion Power Balance Sankey Diagram", font_size=7)
-    # Save as interactive HTML file
-    fig.update_layout(
-        title_text="Fusion Power Balance Sankey Diagram",
-        font_size=7,
-        autosize=True,
-    )
+    fig.update_layout({
+        "title_text": "Fusion Power Balance Sankey Diagram",
+        "font_size": 7,
+        "autosize": True,
+        "margin": {"l": 40, "r": 40, "t": 40, "b": 40},
+    })
     html_output_path = pathlib.Path(m_file.filename).with_suffix(".html")
     fig.write_html(str(html_output_path))
     print(f"Interactive Sankey diagram saved to {html_output_path}")
