@@ -1,7 +1,8 @@
 # Radial and Vertical Build
 
+
 Simplified scale diagrams of the vertical and horizontal cross-sections of the machine can be
-output in the `6-page summary` using the utility `plot_proc.py` (currently stored in `process/process/io`).  
+output in the `12-page summary` using the utility `plot_proc.py` (currently stored in `process/process/io`).  
 
 The coordinate system is $(R,Z)$ system, where $R$ is the radial distance from the vertical
 centreline (axis) of the torus, and $Z$ is the vertical distance from the equatorial midplane.
@@ -9,6 +10,10 @@ centreline (axis) of the torus, and $Z$ is the vertical distance from the equato
 Components are often referred to as being 'inboard' or 'outboard', which simply
 means that they lie at a radius $R$ less than or greater than $R_0$,
 respectively, where $R_0$ is the plasma major radius (`rmajor`).
+
+------------------
+
+## Radial Build
 
 The radial build is described in detail in the OUT.DAT file as in the example below, which lists
 the major radius of each component in the midplane.  The machine is axisymmetric, except for the
@@ -52,6 +57,10 @@ The radial build is shown schematically below (click to zoom).
 
 <img title="Radial build" src="../../images/radial-build.png" alt="Radial build">
 
+--------------------
+
+## Vertical Build
+
 The vertical build is described in detail in the OUT.DAT as in the following example, which lists
 the vertical coordinate of each component at the point furthest from the midplane (excluding the
 CS, the other PF coils and the cryostat).  The midplane is defined to be half way between the top
@@ -89,6 +98,10 @@ The vertical build is shown schematically below (click to zoom).
 
 <img title="Vertical build" src="../../images/vertical-build.png" alt="Vertical build">
 
+-------------------
+
+## First Wall area
+
 Since PROCESS is essentially a 0-D code, the shape of each component is used to estimate its mass
 and cost, but is not used otherwise.  The first wall, blanket, shield and vacuum vessel may be
 either D-shaped in cross-section, or each may be defined by two half-ellipses. The choice between
@@ -96,6 +109,40 @@ these two possibilities is set using input parameter `i_fw_blkt_vv_shape`, which
 
 - 1 for D-shaped,
 - 2 for ellipses.
+
+The bottom of the first wall is given by:
+
+$$
+z_{\text{FW,bottom}} = 
+$$
+
+
+### D-shaped | `dshellarea()`
+
+Major radius to outer edge of inboard section
+
+$$
+R_1 = R_0 - a - \overbrace{\Delta r_{\text{FW,plasma-gap inboard}}}^{\texttt{dr_fw_plasma_gap_inboard}}
+$$
+
+Area of inboard cylindrical shell:
+
+$$
+A_{\text{FW,inboard}} = 4 z \pi R_1
+$$
+
+
+$$
+R_2 = R_0 + a + \overbrace{\Delta r_{\text{FW,plasma-gap outboard}}}^{\texttt{dr_fw_plasma_gap_outboard}} - R_1
+$$
+
+--------------
+
+### Ellipse-shaped | `eshellarea()`
+
+
+
+-------------
 
 !!! Info "TF coil placement"
     The radial build can vary from the figures above dependant on the placement of the inboard TF
