@@ -155,6 +155,7 @@ def plot_power_balance_sankey(m_file):
         31,  # 58: H&CD & Diagnostics secondary heat
         11,  # 59: Turbine Loss
         4,  # 60: FW nuclear heat
+        3,  # 61: Alpha particles back to plasma
     ]
     targets = [
         2,  # 0: H&CD to Fusion
@@ -218,6 +219,7 @@ def plot_power_balance_sankey(m_file):
         32,  # 58: H&CD & Diagnostics secondary heat
         33,  # 59: Turbine Loss
         6,  # 60: FW nuclear heat
+        2,  # 61: Alpha particles back to plasma
     ]
     values = [
         p_hcd_injected_total_mw,  # 0
@@ -305,6 +307,10 @@ def plot_power_balance_sankey(m_file):
         ),  # 58: H&CD & Diagnostics secondary heat
         m_file.data["p_turbine_loss_mw"].get_scan(-1),  # 59: Turbine Loss
         m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(-1),  # 60: FW nuclear heat
+        p_alpha_total_mw
+        * m_file.data["f_alpha_plasma"].get_scan(
+            -1
+        ),  # 61: Alpha particles back to plasma
     ]
 
     # Define colors for each node (hex or rgba)
