@@ -19,7 +19,7 @@ $$
 The beam path length to centre is calculated:
 
 $$
-\underbrace{\mathtt{dpath}}_{\text{Path length to centre}} = R_0 \sqrt{\left(\left(1+\frac{1}{A}\right)^2-\mathtt{frbeam}^2\right)}
+\underbrace{\mathtt{dpath}}_{\text{Path length to centre}} = R_0 \sqrt{\left(\left(1+\frac{1}{A}\right)^2-\mathtt{f_radius_beam_tangency_rmajor}^2\right)}
 $$
 
 

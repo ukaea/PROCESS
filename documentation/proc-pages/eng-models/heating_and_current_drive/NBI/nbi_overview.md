@@ -3,14 +3,75 @@
 !!! Warning "NBI Models" 
     At present, the neutral beam models do not include the effect of an edge transport barrier (pedestal) in the plasma profile.
 
-## Neutral beam access
+## Neutral beam access | `calculate_beam_port_size()`
 
-If present, a neutral beam injection system needs sufficient space between the TF coils to be able to intercept the plasma tangentially. The major radius `rtanbeam` at which the centre-line of the beam is tangential to the toroidal direction is user-defined using input parameter `frbeam`, which is the ratio of `rtanbeam` to the plasma major radius `rmajor`. The maximum possible tangency radius `rtanmax` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using constraint equation no. 20 with iteration variable no. 33 (`fportsz`). The thickness of the beam duct walls may be set using input parameter `dx_beam_shield`.
+If present, a neutral beam injection system needs sufficient space between the TF coils to be able to intercept the plasma tangentially. The major radius `radius_beam_tangency` at which the centre-line of the beam is tangential to the toroidal direction is user-defined using input parameter `f_radius_beam_tangency_rmajor`, which is the ratio of `radius_beam_tangency` to the plasma major radius `rmajor`.
+
+The maximum possible tangency radius `radius_beam_tangency_max` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using `icc = 20` with `ixc = 33` (`fradius_beam_tangency`). The thickness of the beam duct walls may be set using input parameter `dx_beam_shield`.
+
 
 <figure markdown>
 ![NBI Port Size](../images/portsize.png){ width = "300"}
 <figcaption>Figure 1: Top-down schematic of the neutral beam access geometry. The beam with the maximum possible tangency radius is shown here.</figcaption>
 </figure>
+
+$$
+\Omega = \frac{2\pi}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}}
+$$
+
+$$
+a = 0.5 \times \overbrace{\mathrm{d}x_{\text{TF,inboard-out}}}^{\texttt{dx_tf_inboard_out_toroidal}}
+$$
+
+$$
+b = \overbrace{\mathrm{d}R_{\text{TF,outboard}}}^{\texttt{dr_tf_outboard}}
+$$
+
+$$
+c = \overbrace{\mathrm{d}x_{\text{beam,duct}}}^{\texttt{dx_beam_duct}} + \left(2 \times \overbrace{\mathrm{d}x_{\text{beam,shield}}}^{\texttt{dx_beam_shield}}\right)
+$$
+
+$$
+d = \overbrace{R_{\text{TF,outboard,mid}}}^{\texttt{r_tf_outboard_mid}} - \left(0.5 \times b\right)
+$$
+
+$$
+e = \sqrt{a^2+\left(d+b\right)^2}
+$$
+
+$$
+f = \sqrt{a^2 + d^2}
+$$
+
+$$
+\theta = \Omega - \arctan{\left(\frac{a}{d}\right)}
+$$
+
+$$
+\phi = \theta - \arcsin{\left(\frac{a}{e}\right)}
+$$
+
+$$
+g = \sqrt{e^2+f^2-2ef\cos{\phi}}
+$$
+
+If the value of $g$ is geater than $c$, then:
+
+$$
+h = \sqrt{g^2-c^2}
+$$
+
+$$
+\epsilon = \arcsin{\left(\frac{e\sin{\left(\phi\right)}}{g}\right)} - \arctan{\left(\frac{h}{c}\right)}
+$$
+
+The maximum possible tangency radius, which can be applied as a constraint, is:
+
+$$
+\overbrace{R_{\text{tangency,max}}}^{\texttt{radius_beam_tangency_max}} = f \cos{\left(\epsilon\right)}- \frac{c}{2}
+$$
+
+--------------
 
 ## Neutral beam losses
 
@@ -23,6 +84,8 @@ The power in the beam atoms that are not ionised as they pass through the plasma
 
 It is recommended that <b>only one</b> of these two constraint equations is used during a run.
 
+
+------------
 
 ## Beam stopping cross-section | `sigbeam()`
 
@@ -70,6 +133,7 @@ $$
 (\times 10^{-16} \mathrm{~cm}^2)
 $$
 
+---------------
 
 ## Ion coupled power | `cfnbi()`
 Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the `cfnbi` method to calculate the fraction of the fast particle energy coupled to the ions.

@@ -1406,12 +1406,12 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         # Neutral beam geometry
         a = w
         b = dr_tf_outboard
-        c = beamwd + 2 * dx_beam_shield
+        c = dx_beam_duct + 2 * dx_beam_shield
         d = r3
         e = np.sqrt(a**2 + (d + b) ** 2)
         # Coordinates of the inner and outer edges of the beam at its tangency point
-        rinner = rtanbeam - beamwd
-        router = rtanbeam + beamwd
+        rinner = radius_beam_tangency - dx_beam_duct
+        router = radius_beam_tangency + dx_beam_duct
         beta = np.arccos(rinner / e)
         xinner = rinner * np.cos(beta)
         yinner = rinner * np.sin(beta)
@@ -5863,20 +5863,24 @@ def main(args=None):
         dr_tf_plasma_case = m_file.data["dr_tf_plasma_case"].get_scan(scan)
 
     global dx_beam_shield
-    global rtanbeam
-    global rtanmax
-    global beamwd
+    global radius_beam_tangency
+    global radius_beam_tangency_max
+    global dx_beam_duct
 
     i_hcd_primary = int(m_file.data["i_hcd_primary"].get_scan(scan))
     i_hcd_secondary = int(m_file.data["i_hcd_secondary"].get_scan(scan))
 
     if (i_hcd_primary in [5, 8]) or (i_hcd_secondary in [5, 8]):
         dx_beam_shield = m_file.data["dx_beam_shield"].get_scan(scan)
-        rtanbeam = m_file.data["rtanbeam"].get_scan(scan)
-        rtanmax = m_file.data["rtanmax"].get_scan(scan)
-        beamwd = m_file.data["beamwd"].get_scan(scan)
+        radius_beam_tangency = m_file.data["radius_beam_tangency"].get_scan(scan)
+        radius_beam_tangency_max = m_file.data["radius_beam_tangency_max"].get_scan(
+            scan
+        )
+        dx_beam_duct = m_file.data["dx_beam_duct"].get_scan(scan)
     else:
-        dx_beam_shield = rtanbeam = rtanmax = beamwd = 0.0
+        dx_beam_shield = radius_beam_tangency = radius_beam_tangency_max = (
+            dx_beam_duct
+        ) = 0.0
 
     # Pedestal profile parameters
     global ipedestal
