@@ -2657,23 +2657,6 @@ class Power:
             "(tcoolin)",
             tfcoil_variables.tcoolin,
         )
-        # TODO: Both of these efficiencies are printed when it should be either 13% (ITER) or 40% (Strawbrige) - subset of TODO on line 1118
-        po.ovarre(
-            self.outfile,
-            "Efficiency (figure of merit) of cryogenic plant is 13% of ideal Carnot value:",
-            "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
-            / (constants.temp_room - tfcoil_variables.temp_tf_cryo),
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Efficiency (figure of merit) of cryogenic aluminium plant is 40% of ideal Carnot value:",
-            "",
-            (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
-            / (constants.temp_room - tfcoil_variables.tcoolin),
-            "OP ",
-        )
         po.ovarre(
             self.outfile,
             "Electric power for cryogenic plant (MW)",
