@@ -33,19 +33,16 @@ class NeutralBeam:
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
         # Check argument sanity
-        if (
-            1 + physics_variables.eps
-        ) < current_drive_variables.f_radius_beam_tangency_rmajor:
+        if (1 + physics_variables.eps) < current_drive_variables.frbeam:
             raise ProcessValueError(
                 "Imminent negative square root argument; NBI will miss plasma completely",
                 eps=physics_variables.eps,
-                f_radius_beam_tangency_rmajor=current_drive_variables.f_radius_beam_tangency_rmajor,
+                frbeam=current_drive_variables.frbeam,
             )
 
         # Calculate beam path length to centre
         dpath = physics_variables.rmajor * np.sqrt(
-            (1.0 + physics_variables.eps) ** 2
-            - current_drive_variables.f_radius_beam_tangency_rmajor**2
+            (1.0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
         )
 
         # Calculate beam stopping cross-section
@@ -87,7 +84,7 @@ class NeutralBeam:
         )
 
         # Current drive efficiency
-        effnbss = current_drive_variables.f_radius_beam_tangency_rmajor * self.etanb(
+        effnbss = current_drive_variables.frbeam * self.etanb(
             physics_variables.m_beam_amu,
             physics_variables.alphan,
             physics_variables.alphat,
@@ -113,20 +110,17 @@ class NeutralBeam:
         from that of ITER (approx. 2.8).
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
-        if (
-            1.0e0 + physics_variables.eps
-        ) < current_drive_variables.f_radius_beam_tangency_rmajor:
+        if (1.0e0 + physics_variables.eps) < current_drive_variables.frbeam:
             raise ProcessValueError(
                 "Imminent negative square root argument; NBI will miss plasma completely",
                 eps=physics_variables.eps,
-                f_radius_beam_tangency_rmajor=current_drive_variables.f_radius_beam_tangency_rmajor,
+                frbeam=current_drive_variables.frbeam,
             )
 
         #  Calculate beam path length to centre
 
         dpath = physics_variables.rmajor * np.sqrt(
-            (1.0e0 + physics_variables.eps) ** 2
-            - current_drive_variables.f_radius_beam_tangency_rmajor**2
+            (1.0e0 + physics_variables.eps) ** 2 - current_drive_variables.frbeam**2
         )
 
         #  Calculate beam stopping cross-section
@@ -182,7 +176,7 @@ class NeutralBeam:
             physics_variables.dene,
             physics_variables.dnla,
             current_drive_variables.e_beam_kev,
-            current_drive_variables.f_radius_beam_tangency_rmajor,
+            current_drive_variables.frbeam,
             fshine,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -201,7 +195,7 @@ class NeutralBeam:
         dene,
         dnla,
         e_beam_kev,
-        f_radius_beam_tangency_rmajor,
+        frbeam,
         fshine,
         rmajor,
         rminor,
@@ -219,7 +213,7 @@ class NeutralBeam:
         dene    : input real : volume averaged electron density (m**-3)
         dnla    : input real : line averaged electron density (m**-3)
         e_beam_kev  : input real : neutral beam energy (keV)
-        f_radius_beam_tangency_rmajor  : input real : R_tangent / R_major for neutral beam injection
+        frbeam  : input real : R_tangent / R_major for neutral beam injection
         fshine  : input real : shine-through fraction of beam
         rmajor  : input real : plasma major radius (m)
         rminor  : input real : plasma minor radius (m)
@@ -279,17 +273,17 @@ class NeutralBeam:
         nnorm = 1.0
 
         #  Distance along beam to plasma centre
-        r = max(rmajor, rmajor * f_radius_beam_tangency_rmajor)
+        r = max(rmajor, rmajor * frbeam)
         eps1 = rminor / r
 
-        if (1.0 + eps1) < f_radius_beam_tangency_rmajor:
+        if (1.0 + eps1) < frbeam:
             raise ProcessValueError(
                 "Imminent negative square root argument; NBI will miss plasma completely",
                 eps=eps1,
-                f_radius_beam_tangency_rmajor=f_radius_beam_tangency_rmajor,
+                frbeam=frbeam,
             )
 
-        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - f_radius_beam_tangency_rmajor**2)
+        d = rmajor * np.sqrt((1.0 + eps1) ** 2 - frbeam**2)
 
         # Distance along beam to plasma centre for ITER
         # assuming a tangency radius equal to the major radius
@@ -309,17 +303,7 @@ class NeutralBeam:
         )
 
         #  Normalised current drive efficiency (A/W m**-2) (IPDG89)
-        gamnb = (
-            5.0
-            * abd
-            * 0.1
-            * ten
-            * (1.0 - fshine)
-            * f_radius_beam_tangency_rmajor
-            * j0
-            / 0.2
-            * ffac
-        )
+        gamnb = 5.0 * abd * 0.1 * ten * (1.0 - fshine) * frbeam * j0 / 0.2 * ffac
 
         #  Current drive efficiency (A/W)
         return gamnb / (dene20 * rmajor)
@@ -2092,21 +2076,21 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Beam tangency radius / Plasma major radius",
-                    "(f_radius_beam_tangency_rmajor)",
-                    current_drive_variables.f_radius_beam_tangency_rmajor,
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(radius_beam_tangency)",
-                    current_drive_variables.radius_beam_tangency,
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Maximum possible tangency radius (m)",
-                    "(radius_beam_tangency_max)",
-                    current_drive_variables.radius_beam_tangency_max,
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
                     "OP ",
                 )
 
@@ -2298,21 +2282,21 @@ class CurrentDrive:
                 po.ovarre(
                     self.outfile,
                     "Beam tangency radius / Plasma major radius",
-                    "(f_radius_beam_tangency_rmajor)",
-                    current_drive_variables.f_radius_beam_tangency_rmajor,
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(radius_beam_tangency)",
-                    current_drive_variables.radius_beam_tangency,
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Maximum possible tangency radius (m)",
-                    "(radius_beam_tangency_max)",
-                    current_drive_variables.radius_beam_tangency_max,
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
                     "OP ",
                 )
 
@@ -2454,7 +2438,7 @@ class CurrentDrive:
 
 def init_current_drive_variables():
     """Initialise current drive variables"""
-    current_drive_variables.dx_beam_duct = 0.58
+    current_drive_variables.beamwd = 0.58
     current_drive_variables.bigq = 0.0
     current_drive_variables.f_c_plasma_bootstrap = 0.0
     current_drive_variables.f_c_plasma_bootstrap_max = 0.9
@@ -2493,7 +2477,7 @@ def init_current_drive_variables():
     current_drive_variables.p_beam_shine_through_mw = 0.0
     current_drive_variables.feffcd = 1.0
     current_drive_variables.f_p_beam_orbit_loss = 0.0
-    current_drive_variables.f_radius_beam_tangency_rmajor = 1.05
+    current_drive_variables.frbeam = 1.05
     current_drive_variables.f_beam_tritium = 1e-6
     current_drive_variables.eta_cd_norm_hcd_primary = 0.0
     current_drive_variables.eta_cd_norm_ecrh = 0.35
@@ -2518,8 +2502,8 @@ def init_current_drive_variables():
     current_drive_variables.f_c_plasma_pfirsch_schluter = 0.0
     current_drive_variables.pwplh = 0.0
     current_drive_variables.pwpnb = 0.0
-    current_drive_variables.radius_beam_tangency = 0.0
-    current_drive_variables.radius_beam_tangency_max = 0.0
+    current_drive_variables.rtanbeam = 0.0
+    current_drive_variables.rtanmax = 0.0
     current_drive_variables.n_beam_decay_lengths_core = 0.0
     current_drive_variables.tbeamin = 3.0
     current_drive_variables.eta_cd_norm_hcd_secondary = 0.0

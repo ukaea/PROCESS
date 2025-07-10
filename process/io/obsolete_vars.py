@@ -358,9 +358,6 @@ OBS_VARS = {
     "tfinsgap": "dx_tf_wp_insertion_gap",
     "tinstf": "dx_tf_wp_insulation",
     "vftf": "f_a_tf_turn_cable_space_extra_void",
-    "beamwd": "dx_beam_duct",
-    "frbeam": "f_radius_beam_tangency_rmajor",
-    "fportsz": "fradius_beam_tangency",
 }
 
 OBS_VARS_HELP = {

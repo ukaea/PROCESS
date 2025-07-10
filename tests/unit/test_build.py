@@ -5,6 +5,7 @@ import pytest
 from process.build import Build
 from process.fortran import (
     build_variables,
+    current_drive_variables,
     divertor_variables,
     physics_variables,
     tfcoil_variables,
@@ -329,15 +330,15 @@ class PortszParam(NamedTuple):
 
     dr_tf_outboard: Any = None
 
-    radius_beam_tangency: Any = None
+    rtanbeam: Any = None
 
-    radius_beam_tangency_max: Any = None
+    rtanmax: Any = None
 
     dx_beam_shield: Any = None
 
-    dx_beam_duct: Any = None
+    beamwd: Any = None
 
-    f_radius_beam_tangency_rmajor: Any = None
+    frbeam: Any = None
 
     rmajor: Any = None
 
@@ -345,9 +346,9 @@ class PortszParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    expected_radius_beam_tangency: Any = None
+    expected_rtanbeam: Any = None
 
-    expected_radius_beam_tangency_max: Any = None
+    expected_rtanmax: Any = None
 
 
 @pytest.mark.parametrize(
@@ -356,61 +357,83 @@ class PortszParam(NamedTuple):
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
-            radius_beam_tangency=0,
-            radius_beam_tangency_max=0,
+            rtanbeam=0,
+            rtanmax=0,
             dx_beam_shield=0.5,
-            dx_beam_duct=0.57999999999999996,
-            f_radius_beam_tangency_rmajor=1.05,
+            beamwd=0.57999999999999996,
+            frbeam=1.05,
             rmajor=8.8901000000000003,
             dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
-            expected_radius_beam_tangency=9.3346050000000016,
-            expected_radius_beam_tangency_max=14.735821603386416,
+            expected_rtanbeam=9.3346050000000016,
+            expected_rtanmax=14.735821603386416,
         ),
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
-            radius_beam_tangency=9.3346050000000016,
-            radius_beam_tangency_max=14.735821603386416,
+            rtanbeam=9.3346050000000016,
+            rtanmax=14.735821603386416,
             dx_beam_shield=0.5,
-            dx_beam_duct=0.57999999999999996,
-            f_radius_beam_tangency_rmajor=1.05,
+            beamwd=0.57999999999999996,
+            frbeam=1.05,
             rmajor=8.8901000000000003,
             dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
-            expected_radius_beam_tangency=9.3346050000000016,
-            expected_radius_beam_tangency_max=14.735821603386416,
+            expected_rtanbeam=9.3346050000000016,
+            expected_rtanmax=14.735821603386416,
         ),
     ),
 )
-def test_calculate_beam_port_size(portszparam, build):
+def test_portsz(portszparam, monkeypatch, build):
     """
-    Regression Unit Test for calculate_beam_port_size with explicit inputs.
+    Automatically generated Regression Unit Test for portsz.
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
     :param portszparam: the data used to mock and assert in this test.
     :type portszparam: portszparam
 
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+
     :param build: fixture containing an initialised `Build` object
     :type build: tests.unit.test_build.build (functional fixture)
     """
 
-    radius_beam_tangency, radius_beam_tangency_max = build.calculate_beam_port_size(
-        r_tf_outboard_mid=portszparam.r_tf_outboard_mid,
-        dr_tf_outboard=portszparam.dr_tf_outboard,
-        dx_beam_shield=portszparam.dx_beam_shield,
-        dx_beam_duct=portszparam.dx_beam_duct,
-        f_radius_beam_tangency_rmajor=portszparam.f_radius_beam_tangency_rmajor,
-        rmajor=portszparam.rmajor,
-        dx_tf_inboard_out_toroidal=portszparam.dx_tf_inboard_out_toroidal,
-        n_tf_coils=portszparam.n_tf_coils,
+    monkeypatch.setattr(
+        build_variables, "r_tf_outboard_mid", portszparam.r_tf_outboard_mid
     )
 
-    assert radius_beam_tangency == pytest.approx(
-        portszparam.expected_radius_beam_tangency
+    monkeypatch.setattr(build_variables, "dr_tf_outboard", portszparam.dr_tf_outboard)
+
+    monkeypatch.setattr(current_drive_variables, "rtanbeam", portszparam.rtanbeam)
+
+    monkeypatch.setattr(current_drive_variables, "rtanmax", portszparam.rtanmax)
+
+    monkeypatch.setattr(
+        current_drive_variables, "dx_beam_shield", portszparam.dx_beam_shield
     )
 
-    assert radius_beam_tangency_max == pytest.approx(
-        portszparam.expected_radius_beam_tangency_max
+    monkeypatch.setattr(current_drive_variables, "beamwd", portszparam.beamwd)
+
+    monkeypatch.setattr(current_drive_variables, "frbeam", portszparam.frbeam)
+
+    monkeypatch.setattr(physics_variables, "rmajor", portszparam.rmajor)
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        portszparam.dx_tf_inboard_out_toroidal,
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", portszparam.n_tf_coils)
+
+    build.portsz()
+
+    assert current_drive_variables.rtanbeam == pytest.approx(
+        portszparam.expected_rtanbeam
+    )
+
+    assert current_drive_variables.rtanmax == pytest.approx(
+        portszparam.expected_rtanmax
     )

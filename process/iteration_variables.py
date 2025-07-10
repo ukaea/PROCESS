@@ -74,9 +74,7 @@ ITERATION_VARIABLES = {
     30: IterationVariable("fmva", fortran.constraint_variables, 0.010, 1.0),
     31: IterationVariable("gapomin", fortran.build_variables, 0.001, 1.0e1),
     32: IterationVariable("frminor", fortran.constraint_variables, 0.001, 1.0),
-    33: IterationVariable(
-        "fradius_beam_tangency", fortran.constraint_variables, 0.001, 1.0
-    ),
+    33: IterationVariable("fportsz", fortran.constraint_variables, 0.001, 1.0),
     35: IterationVariable("fpeakb", fortran.constraint_variables, 0.001, 1.0),
     36: IterationVariable("fbeta_max", fortran.constraint_variables, 0.001, 1.0),
     37: IterationVariable("j_cs_flat_top_end", fortran.pfcoil_variables, 1.0e5, 1.0e8),

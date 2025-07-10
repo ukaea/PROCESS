@@ -130,7 +130,7 @@ module constraint_variables
   real(dp) :: fpnetel
   !! f-value for net electric power (`constraint equation 16`, `iteration variable 25`)
 
-  real(dp) :: fradius_beam_tangency
+  real(dp) :: fportsz
   !! f-value for neutral beam tangency radius limit
   !! (`constraint equation 20`, `iteration variable 33`)
 

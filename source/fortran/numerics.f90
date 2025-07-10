@@ -238,7 +238,7 @@ module numerics
   !! <LI> (30) fmva (f-value for equation 19)
   !! <LI> (31) gapomin
   !! <LI> (32) frminor (f-value for equation 21)
-  !! <LI> (33) fradius_beam_tangency (f-value for equation 20)
+  !! <LI> (33) fportsz (f-value for equation 20)
   !! <LI> (34) NOT USED
   !! <LI> (35) fpeakb (f-value for equation 25)
   !! <LI> (36) fbeta_max (f-value for equation 24)

@@ -5158,20 +5158,20 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "R injection tangent / R-major",
-                    "(f_radius_beam_tangency_rmajor)",
-                    current_drive_variables.f_radius_beam_tangency_rmajor,
+                    "(frbeam)",
+                    current_drive_variables.frbeam,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(radius_beam_tangency)",
-                    current_drive_variables.radius_beam_tangency,
+                    "(rtanbeam)",
+                    current_drive_variables.rtanbeam,
                 )
                 po.ovarre(
                     self.outfile,
                     "Maximum possible tangency radius (m)",
-                    "(radius_beam_tangency_max)",
-                    current_drive_variables.radius_beam_tangency_max,
+                    "(rtanmax)",
+                    current_drive_variables.rtanmax,
                 )
                 po.ovarre(
                     self.outfile,

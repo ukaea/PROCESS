@@ -14,7 +14,7 @@ module current_drive_variables
 
   public
 
-  real(dp) :: dx_beam_duct
+  real(dp) :: beamwd
   !! width of neutral beam duct where it passes between the TF coils (m)
   !! T Inoue et al, Design of neutral beam system for ITER-FEAT,
   !! <A HREF=http://dx.doi.org/10.1016/S0920-3796(01)00339-8>
@@ -166,7 +166,7 @@ module current_drive_variables
   !! fraction of neutral beam power lost after ionisation but before
   !! thermalisation (orbit loss fraction)
 
-  real(dp) :: f_radius_beam_tangency_rmajor
+  real(dp) :: frbeam
   !! R_tangential / R_major for neutral beam injection
 
   real(dp) :: f_beam_tritium
@@ -286,10 +286,10 @@ module current_drive_variables
   real(dp) :: pwpnb
   !! neutral beam wall plug power (MW)
 
-  real(dp) :: radius_beam_tangency
+  real(dp) :: rtanbeam
   !! neutral beam centreline tangency radius (m)
 
-  real(dp) :: radius_beam_tangency_max
+  real(dp) :: rtanmax
   !! maximum tangency radius for centreline of beam (m)
 
   real(dp) :: n_beam_decay_lengths_core

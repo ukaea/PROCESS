@@ -323,7 +323,7 @@
     {
       "no": 63,
       "level": 2,
-      "message": "PORTSZ: Max beam tangency radius set =0 temporarily; change dx_beam_duct"
+      "message": "PORTSZ: Max beam tangency radius set =0 temporarily; change beamwd"
     },
     {
       "no": 64,
