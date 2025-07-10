@@ -193,7 +193,9 @@ INPUT_VARIABLES = {
     "e_beam_kev": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
-    "beamwd": InputVariable(fortran.current_drive_variables, float, range=(0.001, 5.0)),
+    "dx_beam_duct": InputVariable(
+        fortran.current_drive_variables, float, range=(0.001, 5.0)
+    ),
     "deg_div_field_plate": InputVariable(
         fortran.divertor_variables, float, range=(0.0, 360.0)
     ),
@@ -682,7 +684,9 @@ INPUT_VARIABLES = {
     "fpoloidalpower": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
-    "fportsz": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fradius_beam_tangency": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fpsep": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepbqar": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -708,7 +712,9 @@ INPUT_VARIABLES = {
     ),
     "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
     "fradwall": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "frbeam": InputVariable(fortran.current_drive_variables, float, range=(0.5, 2.0)),
+    "f_radius_beam_tangency_rmajor": InputVariable(
+        fortran.current_drive_variables, float, range=(0.5, 2.0)
+    ),
     "freinke": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "frhocp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
     "frholeg": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
