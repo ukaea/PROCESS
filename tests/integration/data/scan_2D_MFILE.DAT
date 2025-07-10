@@ -604,7 +604,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -1767,7 +1767,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -2930,7 +2930,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -4093,7 +4093,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -5256,7 +5256,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -6419,7 +6419,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -7582,7 +7582,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -8745,7 +8745,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -9908,7 +9908,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -11071,7 +11071,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -12234,7 +12234,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -13397,7 +13397,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -14560,7 +14560,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -15723,7 +15723,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    
@@ -16886,7 +16886,7 @@
  Underside_vacuum_vessel_radial_thickness_(m)____________________________ (dz_vv_lower)____________________      3.0000E-01    
  External_cryostat_thickness_(m)_________________________________________ (dr_cryostat)_______________________      1.5000E-01    
  Ratio_of_Central_solenoid_height_to_TF_coil_internal_height_____________ (f_z_cs_tf_internal)______________________      9.0000E-01    
- Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (beamwd)______________________      5.8000E-01    
+ Width_of_neutral_beam_duct_where_it_passes_between_the_TF_coils_(m)_____ (dx_beam_duct)______________________      5.8000E-01    
  # Divertor build and plasma position #
  Plasma_top_position,_radial_(m)_________________________________________ (ptop_radial)_________________      6.6667E+00    
  Plasma_top_position,_vertical_(m)_______________________________________ (ptop_vertical)_______________      4.9333E+00    

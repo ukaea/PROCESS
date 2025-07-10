@@ -253,10 +253,8 @@ class Caller:
         # Radial build
         if ft.build_variables.i_tf_inside_cs == 1:
             self.models.build.tf_in_cs_bore_calc()
-        self.models.build.calculate_radial_build(output=False)
 
-        # Vertical build
-        self.models.build.calculate_vertical_build(output=False)
+        self.models.build.run()
 
         self.models.physics.physics()
 
@@ -269,8 +267,6 @@ class Caller:
         # Toroidal field coil superconductor model
         if ft.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
-
-        self.models.build.portsz()
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()
