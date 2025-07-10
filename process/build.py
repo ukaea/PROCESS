@@ -1998,10 +1998,6 @@ class Build:
             build_variables.r_tf_outboard_mid,
         )
 
-        #  Calculate first wall area
-        #  Old calculation... includes a mysterious factor 0.875
-        # a_fw_total = 0.875e0 *     #     ( 4.0e0*pi**2*sf*physics_variables.rmajor*(physics_variables.rminor+0.5e0*(build_variables.dr_fw_plasma_gap_inboard+build_variables.dr_fw_plasma_gap_outboard)) )
-
         #  Half-height of first wall (internal surface)
         hbot = (
             build_variables.z_plasma_xpoint_lower
