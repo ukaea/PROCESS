@@ -4625,7 +4625,7 @@ def plot_confinement_time_comparison(
     axis.set_facecolor("#f0f0f0")
 
 
-def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
+def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> None:
     """
     Plots the radial build of a fusion device on the given matplotlib axis.
 
@@ -4735,58 +4735,52 @@ def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
         radial_labels[5] = "TF Coil gap"
 
     radial_color = [
-        "lightgrey",
-        "green",
-        "yellow",
         "white",
-        "blue",
+        SOLENOID_COLOUR[colour_scheme - 1],
+        CSCOMPRESSION_COLOUR[colour_scheme - 1],
         "white",
-        "lime",
+        TFC_COLOUR[colour_scheme - 1],
         "white",
-        "dimgrey",
-        "violet",
+        THERMAL_SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        "goldenrod",
-        "steelblue",
-        "orange",
-        "red",
-        "orange",
-        "steelblue",
-        "goldenrod",
+        VESSEL_COLOUR[colour_scheme - 1],
+        SHIELD_COLOUR[colour_scheme - 1],
         "white",
-        "dimgrey",
-        "violet",
+        BLANKET_COLOUR[colour_scheme - 1],
+        FIRSTWALL_COLOUR[colour_scheme - 1],
         "white",
-        "lime",
+        PLASMA_COLOUR[colour_scheme - 1],
         "white",
-        "blue",
+        FIRSTWALL_COLOUR[colour_scheme - 1],
+        BLANKET_COLOUR[colour_scheme - 1],
+        "white",
+        VESSEL_COLOUR[colour_scheme - 1],
+        SHIELD_COLOUR[colour_scheme - 1],
+        "white",
+        THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+        "white",
+        TFC_COLOUR[colour_scheme - 1],
     ]
     if int(mfile_data.data["i_tf_inside_cs"].get_scan(-1)) == 1:
-        radial_color[1] = "blue"
+        radial_color[1] = TFC_COLOUR[colour_scheme - 1]
         radial_color[2] = "white"
-        radial_color[3] = "green"
-        radial_color[4] = "yellow"
+        radial_color[3] = SOLENOID_COLOUR[colour_scheme - 1]
+        radial_color[4] = CSCOMPRESSION_COLOUR[colour_scheme - 1]
         radial_color[5] = "white"
 
-    # Remove build parts equal to zero
-    mask = ~(radial_build[:, 0] == 0.0)
-    filtered_radial_build = radial_build[mask]
-    filtered_labels = [lbl for i, lbl in enumerate(radial_labels) if mask[i]]
-    filtered_colors = [col for i, col in enumerate(radial_color) if mask[i]]
-
-    lower = np.zeros(filtered_radial_build.shape[1])
-    for kk in range(filtered_radial_build.shape[0]):
+    lower = np.zeros(radial_build.shape[1])
+    for kk in range(radial_build.shape[0]):
         axis.barh(
             0,
-            filtered_radial_build[kk, :],
+            radial_build[kk, :],
             left=lower,
             height=0.8,
-            label=f"{filtered_labels[kk]}\n[{radial_variables[kk]}]\n{filtered_radial_build[kk][0]:.3f} m",
-            color=filtered_colors[kk],
+            label=f"{radial_labels[kk]}\n[{radial_variables[kk]}]\n{radial_build[kk][0]:.3f} m",
+            color=radial_color[kk],
             edgecolor="black",
             linewidth=0.05,
         )
-        lower += filtered_radial_build[kk, :]
+        lower += radial_build[kk, :]
 
     axis.set_yticks([])
 
@@ -4795,8 +4789,123 @@ def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile) -> None:
         loc="upper center",
         ncol=5,
     )
+    # Plot a vertical dashed line at rmajor
+    axis.axvline(
+        mfile_data.data["rmajor"].get_scan(-1),
+        color="black",
+        linestyle="--",
+        linewidth=1.2,
+        label="Major Radius $R_0$",
+    )
     axis.minorticks_on()
     axis.set_xlabel("Radius [m]")
+
+
+def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> None:
+    """
+    Plots the vertical build of a fusion device on the given matplotlib axis.
+
+    This function visualizes the different layers/components of the machine's vertical build
+    (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF coil, etc.)
+    as a vertical stacked bar chart. The thickness of each layer is extracted from the
+    provided `mfile_data`, and each segment is color-coded and labeled accordingly.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+        The matplotlib axis on which to plot the vertical build.
+    mfile_data : mf.MFile
+        An object containing the machine build data, with required fields for each
+        vertical component.
+    colour_scheme : int
+        Colour scheme index to use for component colors.
+
+    Returns
+    -------
+    None
+        This function modifies the provided axis in-place and does not return a value.
+
+    Notes
+    -----
+    - Components with zero thickness are omitted from the plot.
+    - The legend displays the name and thickness (in meters) of each component.
+    """
+
+    lower_vertical_variables = [
+        "z_plasma_xpoint_upper",
+        "dz_fw_plasma_gap",
+        "dz_divertor",
+        "dz_shld_upper",
+        "dz_vv_upper",
+        "dz_shld_vv_gap",
+        "dz_shld_thermal",
+        "dr_tf_shld_gap",
+        "dr_tf_inboard",
+        "dz_tf_cryostat",
+    ]
+
+    lower_vertical_build = [
+        [mfile_data.data[rl].get_scan(-1) for rl in lower_vertical_variables]
+    ]
+
+    lower_vertical_build = np.array(lower_vertical_build)
+
+    lower_vertical_build = np.transpose(lower_vertical_build)
+
+    lower_vertical_labels = [
+        "Plasma Height",
+        "First Wall - Plasma Gap",
+        "Divertor",
+        "Shield",
+        "Vacuum Vessel",
+        "Shield - VV Gap",
+        "Thermal shield",
+        "TF Coil - Shield Gap",
+        "TF Coil",
+        "TF Coil - Cryostat gap",
+    ]
+
+    lower_vertical_color = [
+        PLASMA_COLOUR[colour_scheme - 1],
+        "white",
+        "black",
+        SHIELD_COLOUR[colour_scheme - 1],
+        VESSEL_COLOUR[colour_scheme - 1],
+        "white",
+        THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+        "white",
+        TFC_COLOUR[colour_scheme - 1],
+        "white",
+    ]
+
+    # Remove build parts equal to zero
+    mask = ~(lower_vertical_build[:, 0] == 0.0)
+    filtered_vertical_build = lower_vertical_build[mask]
+    filtered_labels = [lbl for i, lbl in enumerate(lower_vertical_labels) if mask[i]]
+    filtered_colors = [col for i, col in enumerate(lower_vertical_color) if mask[i]]
+
+    bottom = np.zeros(filtered_vertical_build.shape[1])
+    for kk in range(filtered_vertical_build.shape[0]):
+        axis.bar(
+            np.arange(filtered_vertical_build.shape[1]),
+            -filtered_vertical_build[kk, :],
+            bottom=bottom,
+            width=0.8,
+            label=f"{filtered_labels[kk]}\n[{lower_vertical_variables[kk]}]\n{filtered_vertical_build[kk][0]:.3f} m",
+            color=filtered_colors[kk],
+            edgecolor="black",
+            linewidth=0.05,
+        )
+        bottom -= filtered_vertical_build[kk, :]
+
+    axis.set_xticks([])
+    axis.legend(
+        bbox_to_anchor=(1.05, 1),
+        loc="upper left",
+        ncol=1,
+    )
+    axis.minorticks_on()
+    axis.set_ylabel("Height [m]")
 
 
 def plot_density_limit_comparison(
@@ -5506,6 +5615,7 @@ def main_plot(
     fig10,
     fig11,
     fig12,
+    fig13,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -5611,49 +5721,52 @@ def main_plot(
 
     plot_16 = fig5.add_subplot(211)
     plot_16.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
-    plot_radial_build(plot_16, m_file_data)
+    plot_radial_build(plot_16, m_file_data, colour_scheme)
+
+    plot_17 = fig6.add_subplot(121)
+    plot_vertical_build(plot_17, m_file_data, colour_scheme)
 
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_17 = fig6.add_subplot(211, aspect="equal")
-        plot_17.set_position([0.05, 0.5, 0.8, 0.4])
-        plot_tf_wp(plot_17, m_file_data, scan)
+        plot_18 = fig7.add_subplot(211, aspect="equal")
+        plot_18.set_position([0.05, 0.5, 0.8, 0.4])
+        plot_tf_wp(plot_18, m_file_data, scan)
 
         # TF coil turn structure
-        plot_18 = fig6.add_subplot(325, aspect="equal")
-        plot_18.set_position([0.1, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_18, m_file_data, scan)
+        plot_19 = fig7.add_subplot(325, aspect="equal")
+        plot_19.set_position([0.1, 0.1, 0.3, 0.3])
+        plot_tf_turn(plot_19, m_file_data, scan)
 
-    plot_19 = fig7.add_subplot(111, aspect="equal")
-    plot_tf_coil_structure(plot_19, m_file_data, scan, colour_scheme)
+    plot_20 = fig8.add_subplot(111, aspect="equal")
+    plot_tf_coil_structure(plot_20, m_file_data, scan, colour_scheme)
 
-    plot_20 = fig8.add_subplot(221)
-    plot_bootstrap_comparison(plot_20, m_file_data, scan)
+    plot_21 = fig9.add_subplot(221)
+    plot_bootstrap_comparison(plot_21, m_file_data, scan)
 
-    plot_21 = fig8.add_subplot(224)
-    plot_h_threshold_comparison(plot_21, m_file_data, scan)
+    plot_22 = fig9.add_subplot(224)
+    plot_h_threshold_comparison(plot_22, m_file_data, scan)
 
-    plot_22 = fig9.add_subplot(221)
-    plot_density_limit_comparison(plot_22, m_file_data, scan)
+    plot_23 = fig10.add_subplot(221)
+    plot_density_limit_comparison(plot_23, m_file_data, scan)
 
-    plot_23 = fig9.add_subplot(224)
-    plot_confinement_time_comparison(plot_23, m_file_data, scan)
+    plot_24 = fig10.add_subplot(224)
+    plot_confinement_time_comparison(plot_24, m_file_data, scan)
 
-    plot_24 = fig10.add_subplot(111)
-    plot_current_profiles_over_time(plot_24, m_file_data, scan)
+    plot_25 = fig11.add_subplot(111)
+    plot_current_profiles_over_time(plot_25, m_file_data, scan)
 
-    plot_25 = fig11.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_25, fig10, m_file_data, scan)
+    plot_26 = fig12.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_26, fig10, m_file_data, scan)
 
-    plot_26 = fig11.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_26, fig10, m_file_data, scan)
+    plot_27 = fig12.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_27, fig10, m_file_data, scan)
 
-    plot_27 = fig12.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_27, m_file_data, scan)
+    plot_28 = fig13.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_28, m_file_data, scan)
 
-    plot_28 = fig12.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_28, m_file_data, scan)
+    plot_29 = fig13.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_29, m_file_data, scan)
 
 
 def main(args=None):
@@ -5931,6 +6044,7 @@ def main(args=None):
     page10 = plt.figure(figsize=(12, 9), dpi=80)
     page11 = plt.figure(figsize=(12, 9), dpi=80)
     page12 = plt.figure(figsize=(12, 9), dpi=80)
+    page13 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -5946,6 +6060,7 @@ def main(args=None):
         page10,
         page11,
         page12,
+        page13,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -5966,6 +6081,7 @@ def main(args=None):
         pdf.savefig(page10)
         pdf.savefig(page11)
         pdf.savefig(page12)
+        pdf.savefig(page13)
 
     # show fig if option used
     if args.show:
@@ -5983,6 +6099,7 @@ def main(args=None):
     plt.close(page10)
     plt.close(page11)
     plt.close(page12)
+    plt.close(page13)
 
 
 if __name__ == "__main__":
