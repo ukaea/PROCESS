@@ -2032,11 +2032,7 @@ class Build:
             )
             build_variables.a_fw_inboard = (
                 build_variables.a_fw_inboard_full_coverage
-                * (
-                    1.0e0
-                    - 2.0e0 * fwbs_variables.f_ster_div_single
-                    - fwbs_variables.f_a_fw_outboard_hcd
-                )
+                * (1.0e0 - 2.0e0 * fwbs_variables.f_ster_div_single)
             )
         else:
             # Single null configuration
@@ -2050,11 +2046,7 @@ class Build:
             )
             build_variables.a_fw_inboard = (
                 build_variables.a_fw_inboard_full_coverage
-                * (
-                    1.0e0
-                    - fwbs_variables.f_ster_div_single
-                    - fwbs_variables.f_a_fw_outboard_hcd
-                )
+                * (1.0e0 - fwbs_variables.f_ster_div_single)
             )
 
         build_variables.a_fw_total = (

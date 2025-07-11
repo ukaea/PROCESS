@@ -1485,9 +1485,15 @@ class CCFE_HCPB:
         )
         po.ovarre(
             self.outfile,
-            "First wall area (m2)",
+            "First wall area (m^2)",
             "(a_fw_total)",
             build_variables.a_fw_total,
+        )
+        po.ovarre(
+            self.outfile,
+            "First wall area, no holes (m^2)",
+            "(a_fw_total_full_coverage)",
+            build_variables.a_fw_total_full_coverage,
         )
         po.ovarre(
             self.outfile,
