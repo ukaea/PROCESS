@@ -856,6 +856,13 @@ class Power:
             "(p_blkt_nuclear_heat_total_mw)",
             fwbs_variables.p_blkt_nuclear_heat_total_mw,
         )
+        po.ovarrf(
+            self.outfile,
+            "Power from energy multiplication in blanket and shield (MW)",
+            "(p_blkt_multiplication_mw)",
+            fwbs_variables.p_blkt_multiplication_mw,
+            "OP ",
+        )
 
         po.ovarre(
             self.outfile,
