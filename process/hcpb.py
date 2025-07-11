@@ -3,6 +3,7 @@ import numpy as np
 from process import (
     process_output as po,
 )
+from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -23,7 +24,7 @@ from process.fortran import (
 )
 
 
-class CCFE_HCPB:
+class CCFE_HCPB(BlanketLibrary):
     """author: J Morris (UKAEA)
 
     This module contains the PROCESS CCFE HCPB blanket model
@@ -34,10 +35,8 @@ class CCFE_HCPB:
     - Kovari et al., Fusion Engineering and Design 104 (2016) 9-20
     """
 
-    def __init__(self, blanket_library) -> None:
+    def __init__(self) -> None:
         self.outfile = constants.nout
-
-        self.blanket_library = blanket_library
 
     def run(self, output: bool):
         # Coolant type
@@ -45,7 +44,7 @@ class CCFE_HCPB:
         # Note that the first wall coolant is now input separately.
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
-        self.blanket_library.component_volumes()
+        super().component_volumes()
 
         # Centrepost neutronics
         if physics_variables.itart == 1:
@@ -746,9 +745,9 @@ class CCFE_HCPB:
 
         elif fwbs_variables.i_coolant_pumping == 2:
             # Calculate the required material properties of the FW and BB coolant.
-            self.blanket_library.primary_coolant_properties(output=output)
+            super().primary_coolant_properties(output=output)
             # Mechanical pumping power is calculated for first wall and blanket
-            self.blanket_library.thermo_hydraulic_model(output)
+            super().thermo_hydraulic_model(output)
 
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
