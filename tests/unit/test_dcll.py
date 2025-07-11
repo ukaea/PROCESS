@@ -2,7 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.blanket_library import BlanketLibrary
 from process.dcll import DCLL
 from process.fortran import (
     build_variables,
@@ -11,7 +10,6 @@ from process.fortran import (
     fwbs_variables,
     physics_variables,
 )
-from process.fw import Fw
 
 
 @pytest.fixture
@@ -21,7 +19,7 @@ def dcll():
     :returns: initialised DCLL object
     :rtype: process.dcll.DCLL
     """
-    return DCLL(BlanketLibrary(Fw()))
+    return DCLL()
 
 
 class DcllNeutronicsAndPowerParam(NamedTuple):
