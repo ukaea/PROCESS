@@ -2467,6 +2467,7 @@ def init_build_variables():
     build_variables.a_fw_total = 0.0
     build_variables.a_fw_inboard = 0.0
     build_variables.a_fw_inboard_full_coverage = 0.0
+    build_variables.a_fw_outboard_full_coverage = 0.0
     build_variables.a_fw_outboard = 0.0
     build_variables.dr_fw_inboard = 0.0
     build_variables.dr_fw_outboard = 0.0
