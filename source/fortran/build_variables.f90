@@ -96,6 +96,9 @@ module build_variables
   real(dp) :: a_fw_total
   !! First wall total surface area [m^2]
 
+  real(dp) :: a_fw_total_full_coverage
+  !! First wall total surface area with no holes or ports [m^2]
+
   real(dp) :: a_fw_inboard
   !! Inboard first wall surface area [m^2]
 
