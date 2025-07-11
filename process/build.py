@@ -2465,6 +2465,7 @@ def init_build_variables():
     build_variables.fcspc = 0.6
     build_variables.fseppc = 3.5e8
     build_variables.a_fw_total = 0.0
+    build_variables.a_fw_total_full_coverage = 0.0
     build_variables.a_fw_inboard = 0.0
     build_variables.a_fw_inboard_full_coverage = 0.0
     build_variables.a_fw_outboard_full_coverage = 0.0
