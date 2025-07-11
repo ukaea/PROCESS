@@ -2,7 +2,6 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.blanket_library import BlanketLibrary
 from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
@@ -15,7 +14,6 @@ from process.fortran import (
     primary_pumping_variables,
     tfcoil_variables,
 )
-from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 
 
@@ -26,7 +24,7 @@ def ccfe_hcpb():
     :returns: initialised CCFE_HCPB object
     :rtype: process.hcpb.CCFE_HCPB
     """
-    return CCFE_HCPB(BlanketLibrary(Fw()))
+    return CCFE_HCPB()
 
 
 class NuclearHeatingMagnetsParam(NamedTuple):
