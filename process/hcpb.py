@@ -674,7 +674,7 @@ class CCFE_HCPB(BlanketLibrary):
 
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
+            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
         )
 
         # Radiation power incident on first wall (MW)
@@ -1484,9 +1484,15 @@ class CCFE_HCPB(BlanketLibrary):
         )
         po.ovarre(
             self.outfile,
-            "First wall area (m2)",
+            "First wall area (m^2)",
             "(a_fw_total)",
             build_variables.a_fw_total,
+        )
+        po.ovarre(
+            self.outfile,
+            "First wall area, no holes (m^2)",
+            "(a_fw_total_full_coverage)",
+            build_variables.a_fw_total_full_coverage,
         )
         po.ovarre(
             self.outfile,
