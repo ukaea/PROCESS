@@ -39,22 +39,22 @@ module scan_module
   !! Switch denoting quantity to scan:<UL>
   !!         <LI> 1  aspect
   !!         <LI> 2  pflux_div_heat_load_max_mw
-  !!         <LI> 3  pnetelin
+  !!         <LI> 3  p_plant_electric_net_required_mw
   !!         <LI> 4  hfact
   !!         <LI> 5  oacdcp
-  !!         <LI> 6  walalw
+  !!         <LI> 6  pflux_fw_neutron_max_mw
   !!         <LI> 7  beamfus0
   !!         <LI> 8  fqval
   !!         <LI> 9  te
-  !!         <LI> 10 boundu(15: fvs)
+  !!         <LI> 10 boundu(15: fvs_plasma_total_required)
   !!         <LI> 11 beta_norm_max
   !!         <LI> 12 f_c_plasma_bootstrap_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
   !!         <LI> 16 rmajor
-  !!         <LI> 17 bmxlim
-  !!         <LI> 18 gammax
+  !!         <LI> 17 b_tf_inboard_max
+  !!         <LI> 18 eta_cd_norm_hcd_primary_max
   !!         <LI> 19 boundl(16: dr_cs)
   !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used

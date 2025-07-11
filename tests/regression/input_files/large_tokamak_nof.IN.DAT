@@ -60,7 +60,7 @@ boundu(103) = 10.0
 *--------------------------------*
 icc = 16
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*
@@ -71,7 +71,7 @@ fbeta_max = 1.0
 *--------------*
 icc = 25
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
@@ -158,9 +158,9 @@ dene = 7.5E19
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-fwalld = 1.0
+fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*

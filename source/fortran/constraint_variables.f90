@@ -24,7 +24,7 @@ module constraint_variables
   real(dp) :: bigqmin
   !! minimum fusion gain Q (`constraint equation 28`)
 
-  real(dp) :: bmxlim
+  real(dp) :: b_tf_inboard_max
   !! maximum peak toroidal field (T) (`constraint equation 25`)
 
   real(dp) :: fauxmn
@@ -42,7 +42,7 @@ module constraint_variables
   real(dp) :: fbeta_min
   !! f-value for (lower) beta limit (`constraint equation 84`, `iteration variable 173`)
 
-  real(dp) :: fcpttf
+  real(dp) :: fc_tf_turn_max
   !! f-value for TF coil current per turn upper limit
   !! (`constraint equation 77`, `iteration variable 146`)
 
@@ -68,7 +68,7 @@ module constraint_variables
   real(dp) :: fp_fusion_total_max_mw
   !! f-value for maximum fusion power (`constraint equation 9`, `iteration variable 26`)
 
-  real(dp) :: fgamcd
+  real(dp) :: feta_cd_norm_hcd_primary_max
   !! f-value for current drive gamma (`constraint equation 37`, `iteration variable 40`)
 
   real(dp) :: fpflux_div_heat_load_mw
@@ -121,13 +121,13 @@ module constraint_variables
   !! f-value for Tresca yield criterion in Central Solenoid
   !! (`constraint equation 72`, `iteration variable 123`)
 
-  real(dp) :: fpeakb
+  real(dp) :: fb_tf_inboard_max
   !! f-value for maximum toroidal field (`constraint equation 25`, `iteration variable 35`)
 
-  real(dp) :: fpinj
+  real(dp) :: fp_hcd_injected_max
   !! f-value for injection power (`constraint equation 30`, `iteration variable 46`)
 
-  real(dp) :: fpnetel
+  real(dp) :: fp_plant_electric_net_required_mw
   !! f-value for net electric power (`constraint equation 16`, `iteration variable 25`)
 
   real(dp) :: fradius_beam_tangency
@@ -155,7 +155,7 @@ module constraint_variables
   real(dp) :: fradpwr
   !! f-value for core radiation power limit (`constraint equation 17`, `iteration variable 28`)
 
-  real(dp) :: fradwall
+  real(dp) :: fpflux_fw_rad_max
   !! f-value for upper limit on radiation wall load (`constr. equ. 67`, `iteration variable 116`)
 
   real(dp) :: freinke
@@ -183,10 +183,10 @@ module constraint_variables
   real(dp) :: ftbr
   !! f-value for minimum tritium breeding ratio (`constraint equation 52`, `iteration variable 89`)
 
-  real(dp) :: ft_burn
+  real(dp) :: ft_burn_min
   !! f-value for minimum burn time (`constraint equation 13`, `iteration variable 21`)
 
-  real(dp) :: ftcycl
+  real(dp) :: ft_cycle_min
   !! f-value for cycle time (`constraint equation 42`, `iteration variable 67`)
 
   real(dp) :: ftmargoh
@@ -199,13 +199,13 @@ module constraint_variables
   real(dp) :: ft_current_ramp_up
   !! f-value for plasma current ramp-up time (`constraint equation 41`, `iteration variable 66`)
 
-  real(dp) :: ftpeak
+  real(dp) :: ftemp_fw_max
   !! f-value for first wall peak temperature (`constraint equation 39`, `iteration variable 63`)
 
   real(dp) :: fvdump
   !! f-value for dump voltage (`constraint equation 34`, `iteration variable 51`)
 
-  real(dp) :: fvs
+  real(dp) :: fvs_plasma_total_required
   !! f-value for flux-swing (V-s) requirement (STEADY STATE)
   !! (`constraint equation 12`, `iteration variable 15`)
 
@@ -213,13 +213,13 @@ module constraint_variables
   !! f-value for vacuum vessel He concentration limit (`i_blanket_type = 2`)
   !! (`constraint equation 55`, `iteration variable 96`)
 
-  real(dp) :: fwalld
+  real(dp) :: fpflux_fw_neutron_max_mw
   !! f-value for maximum wall load (`constraint equation 8`, `iteration variable 14`)
 
   real(dp) :: fzeffmax
   !! f-value for maximum zeff (`constraint equation 64`, `iteration variable 112`)
 
-  real(dp) :: gammax
+  real(dp) :: eta_cd_norm_hcd_primary_max
   !! maximum current drive gamma (`constraint equation 37`)
 
   integer :: i_q95_fixed
@@ -249,7 +249,7 @@ module constraint_variables
   real(dp) :: pflux_fw_rad_max_mw
   !! Peak radiation wall load (MW/m^2) (`constraint equation 67`)
 
-  real(dp) :: pnetelin
+  real(dp) :: p_plant_electric_net_required_mw
   !! required net electric power (MW) (`constraint equation 16`)
 
   real(dp) :: p_fusion_total_max_mw
@@ -271,7 +271,7 @@ module constraint_variables
   real(dp) :: t_burn_min
   !! minimum burn time (s) (KE - no longer itv., see issue #706)
 
-  real(dp) :: tcycmn
+  real(dp) :: t_cycle_min
   !! minimum cycle time (s) (`constraint equation 42`)
 
   real(dp) :: t_current_ramp_up_min
@@ -281,7 +281,7 @@ module constraint_variables
   !! allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
   !! (`i_blanket_type =2`) (`constraint equation 55`)
 
-  real(dp) :: walalw
+  real(dp) :: pflux_fw_neutron_max_mw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 
   real(dp) :: f_alpha_energy_confinement_min

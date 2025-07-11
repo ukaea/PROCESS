@@ -219,18 +219,18 @@ module numerics
   !! <LI> (11) p_hcd_primary_extra_heat_mw
   !! <LI> (12) oacdcp
   !! <LI> (13) dr_tf_inboard (NOT RECOMMENDED)
-  !! <LI> (14) fwalld (f-value for equation 8)
-  !! <LI> (15) fvs (f-value for equation 12)
+  !! <LI> (14) fpflux_fw_neutron_max_mw (f-value for equation 8)
+  !! <LI> (15) fvs_plasma_total_required (f-value for equation 12)
   !! <LI> (16) dr_cs
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
   !! <LI> (19) e_beam_kev
   !! <LI> (20) temp_cp_average
-  !! <LI> (21) ft_burn (f-value for equation 13)
+  !! <LI> (21) ft_burn_min (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED
-  !! <LI> (25) fpnetel (f-value for equation 16)
+  !! <LI> (25) fp_plant_electric_net_required_mw (f-value for equation 16)
   !! <LI> (26) fp_fusion_total_max_mw (f-value for equation 9)
   !! <LI> (27) fpflux_div_heat_load_mw (f-value for equation 18)
   !! <LI> (28) fradpwr (f-value for equation 17), total radiation fraction
@@ -240,18 +240,18 @@ module numerics
   !! <LI> (32) frminor (f-value for equation 21)
   !! <LI> (33) fradius_beam_tangency (f-value for equation 20)
   !! <LI> (34) NOT USED
-  !! <LI> (35) fpeakb (f-value for equation 25)
+  !! <LI> (35) fb_tf_inboard_max (f-value for equation 25)
   !! <LI> (36) fbeta_max (f-value for equation 24)
   !! <LI> (37) j_cs_flat_top_end
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)
-  !! <LI> (40) fgamcd (f-value for equation 37)
+  !! <LI> (40) feta_cd_norm_hcd_primary_max (f-value for equation 37)
   !! <LI> (41) f_j_cs_start_pulse_end_flat_top
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
   !! <LI> (44) f_c_plasma_non_inductive
   !! <LI> (45) fqval (f-value for equation 28)
-  !! <LI> (46) fpinj (f-value for equation 30)
+  !! <LI> (46) fp_hcd_injected_max (f-value for equation 30)
   !! <LI> (47) feffcd
   !! <LI> (48) fstrcase (f-value for equation 31)
   !! <LI> (49) fstrcond (f-value for equation 32)
@@ -268,11 +268,11 @@ module numerics
   !! <LI> (60) c_tf_turn
   !! <LI> (61) dr_shld_vv_gap_inboard
   !! <LI> (62) fdtmp (f-value for equation 38)
-  !! <LI> (63) ftpeak (f-value for equation 39)
+  !! <LI> (63) ftemp_fw_max (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)
   !! <LI> (65) t_current_ramp_up
   !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
-  !! <LI> (67) ftcycl (f-value for equation 42)
+  !! <LI> (67) ft_cycle_min (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool
   !! <LI> (70) vcool
@@ -321,7 +321,7 @@ module numerics
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
   !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
-  !! <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)
+  !! <LI> (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
   !! <LI> (118) fpsep: f-value to ensure separatrix power is less than
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
@@ -351,7 +351,7 @@ module numerics
   !! <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value
   !! <LI> (144) fnesep : Eich critical electron density at separatrix
   !! <LI> (145) fgwped :  fraction of Greenwald density to set as pedestal-top density
-  !! <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)
+  !! <LI> (146) fc_tf_turn_max : F-value for TF coil current per turn limit (constraint equation 77)
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
   !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)

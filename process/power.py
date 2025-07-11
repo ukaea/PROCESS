@@ -1862,8 +1862,9 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Alpha power deposited in plasma (MW)",
-            "(f_alpha_plasma*p_alpha_total_mw)",
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw,
+            "(f_p_alpha_plasma_deposited*p_alpha_total_mw)",
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw,
             "OP ",
         )
         po.ovarrf(
@@ -1881,9 +1882,9 @@ class Power:
             "OP ",
         )
         # if (physics_variables.i_plasma_ignited == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+p_plasma_ohmic_mw, 'OP ')
+        #    po.ovarrf(self.outfile,'Total (MW)','',f_p_alpha_plasma_deposited*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+p_plasma_ohmic_mw, 'OP ')
         #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
+        #    if (abs(sum - (physics_variables.f_p_alpha_plasma_deposited*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
         #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
         #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
         #
@@ -1899,7 +1900,8 @@ class Power:
             self.outfile,
             "Total (MW)",
             "",
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + pinj,
@@ -1910,7 +1912,7 @@ class Power:
             abs(
                 total
                 - (
-                    physics_variables.f_alpha_plasma
+                    physics_variables.f_p_alpha_plasma_deposited
                     * physics_variables.p_alpha_total_mw
                     + physics_variables.p_non_alpha_charged_mw
                     + physics_variables.p_plasma_ohmic_mw
@@ -2075,8 +2077,8 @@ class Power:
         po.ovarrf(
             self.outfile,
             "Required Net electric power output(MW)",
-            "(pnetelin)",
-            constraint_variables.pnetelin,
+            "(p_plant_electric_net_required_mw)",
+            constraint_variables.p_plant_electric_net_required_mw,
         )
         po.ovarrf(
             self.outfile,

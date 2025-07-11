@@ -223,7 +223,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -979,7 +979,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -1218,7 +1218,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -1974,7 +1974,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8227E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -2213,7 +2213,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -2969,7 +2969,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -3208,7 +3208,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -3964,7 +3964,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -4203,7 +4203,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -4959,7 +4959,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -5198,7 +5198,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -5954,7 +5954,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -6193,7 +6193,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -6949,7 +6949,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -7188,7 +7188,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -7944,7 +7944,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -8183,7 +8183,7 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (dene)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (dnla)________________________      7.8780E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      6.4863E+19 OP 
  Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      5.9955E+19 OP 
@@ -8939,7 +8939,7 @@
  Nuclear_power_lost_to_TF_(MW)___________________________________________ (p_tf_nuclear_heat_mw)______________________      5.8228E-02    
  Total_(MW)______________________________________________________________ ______________________________      2.6502E+03    
  Net_electric_power_output(MW)___________________________________________ (p_plant_electric_net_mw.)___________________      5.0000E+02    
- Required_Net_electric_power_output(MW)__________________________________ (pnetelin)____________________      5.0000E+02    
+ Required_Net_electric_power_output(MW)__________________________________ (p_plant_electric_net_required_mw)____________________      5.0000E+02    
  Electric_power_for_heating_and_current_drive_(MW)_______________________ (p_hcd_electric_total_mw)______________________      1.2750E+02    
  Electric_power_for_primary_coolant_pumps_(MW)___________________________ (p_coolant_pump_elec_total_mw)_______________________      2.3440E+02    
  Electric_power_for_vacuum_pumps_(MW)____________________________________ (vachtmw)_____________________      5.0000E-01    
@@ -9016,7 +9016,7 @@ ixc = 9 * fdene
 boundu(9) = 1.2
 ixc = 13 * dr_tf_inboard
 boundl(13) = 1.4
-ixc = 14 * fwalld
+ixc = 14 * fpflux_fw_neutron_max_mw
 ixc = 16 * dr_cs
 boundl(16) = 0.5
 ixc = 18 * q
@@ -9058,8 +9058,8 @@ boundl(60) = 6.0e4
 boundu(60) = 9.0e4
 
 *icc = 77  * Max c_tf_turn
-*ixc = 145 * fcpttf
-*cpttf_max = 9.0e4
+*ixc = 145 * c_tf_turn_max
+*c_tf_turn_max = 9.0e4
 
 ixc = 59 * copper fraction of cable conductor (TF coils)
 boundl(59) = 0.50
@@ -9110,14 +9110,14 @@ fjohc    = 0.25 * F-value for central solenoid current at end-of-flattop
 fjohc0   = 0.25 * F-value for central solenoid current at beginning of pulse
 fjprot   = 1.0 * F-value for tf coil winding pack current density
 fl_h_threshold = 1.271 * F-value for l-h power threshold
-fpinj    = 1.0 * F-value for injection power
-fpnetel  = 1.0 * F-value for net electric power
-ft_burn   = 1.00e+00 * F-value for minimum burn time
+fp_hcd_injected_max    = 1.0 * F-value for injection power
+fp_plant_electric_net_required_mw  = 1.0 * F-value for net electric power
+ft_burn_min   = 1.00e+00 * F-value for minimum burn time
 fvdump   = 0.6116 * F-value for dump voltage
-fwalld   = 0.1312 * F-value for maximum wall load
-pnetelin = 500.0 * Required net electric power (mw)
+fpflux_fw_neutron_max_mw   = 0.1312 * F-value for maximum wall load
+p_plant_electric_net_required_mw = 500.0 * Required net electric power (mw)
 t_burn_min   = 7.2e3 * Minimum burn time (s)
-walalw   = 8.0 * Allowable wall-load (mw/m2)
+pflux_fw_neutron_max_mw   = 8.0 * Allowable wall-load (mw/m2)
 psepbqarmax = 9.2 * maximum ratio of Psep*Bt/qAR (MWT/m)
 
 *------------------Cost Variables------------------*
@@ -9276,8 +9276,8 @@ t_precharge = 500.0
 
 *-----------------Tfcoil Variables-----------------*
 
-fpeakb = 1.0
-bmxlim = 11.2
+fb_tf_inboard_max = 1.0
+b_tf_inboard_max = 11.2
 dr_tf_plasma_case   = 0.06 * Inboard tf coil case inner \(plasma side) thickness (m)
 dx_tf_side_case   = 0.05 * Inboard tf coil sidewall case thickness (m)
 c_tf_turn    = 6.5e+04 * Tf coil current per turn (a);
@@ -9320,7 +9320,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fdene          =  1.2000E+00
                      oacdcp         =  8.6739E+06
                      dr_tf_inboard          =  1.2080E+00
-                     fwalld         =  1.3100E-01
+                     fpflux_fw_neutron_max_mw         =  1.3100E-01
                      dr_cs          =  5.5242E-01
                      q95              =  3.5000E+00
                      dr_bore           =  2.3322E+00

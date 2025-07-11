@@ -2606,7 +2606,7 @@ def test_intersect(intersectparam, stellarator):
 class StdlimParam(NamedTuple):
     dene: Any = None
 
-    dnla: Any = None
+    nd_electron_line: Any = None
 
     dnelimt: Any = None
 
@@ -2628,7 +2628,7 @@ class StdlimParam(NamedTuple):
     (
         StdlimParam(
             dene=2.0914e20,
-            dnla=2.357822619799476e20,
+            nd_electron_line=2.357822619799476e20,
             dnelimt=0,
             bt=5.5,
             powht=432.20449197454559,
@@ -2639,7 +2639,7 @@ class StdlimParam(NamedTuple):
         ),
         StdlimParam(
             dene=2.0914e20,
-            dnla=2.357822619799476e20,
+            nd_electron_line=2.357822619799476e20,
             dnelimt=1.2918765671497731e20,
             bt=5.5,
             powht=431.98698920075435,
@@ -2665,7 +2665,9 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "dene", stdlimparam.dene)
 
-    monkeypatch.setattr(physics_variables, "dnla", stdlimparam.dnla)
+    monkeypatch.setattr(
+        physics_variables, "nd_electron_line", stdlimparam.nd_electron_line
+    )
 
     monkeypatch.setattr(physics_variables, "dnelimt", stdlimparam.dnelimt)
 
@@ -2734,7 +2736,7 @@ class StCalcEffChiParam(NamedTuple):
 
     ne0: Any = None
 
-    f_alpha_plasma: Any = None
+    f_p_alpha_plasma_deposited: Any = None
 
     pden_alpha_total_mw: Any = None
 
@@ -2765,7 +2767,7 @@ class StCalcEffChiParam(NamedTuple):
         StCalcEffChiParam(
             te0=19.108573496973477,
             ne0=3.4479000000000007e20,
-            f_alpha_plasma=0.95000000000000007,
+            f_p_alpha_plasma_deposited=0.95000000000000007,
             pden_alpha_total_mw=1.2629524018077414,
             pden_plasma_core_rad_mw=0.10762698429338043,
             alphan=0.35000000000000003,
@@ -2782,7 +2784,7 @@ class StCalcEffChiParam(NamedTuple):
         StCalcEffChiParam(
             te0=17.5,
             ne0=3.4479000000000007e20,
-            f_alpha_plasma=0.95000000000000007,
+            f_p_alpha_plasma_deposited=0.95000000000000007,
             pden_alpha_total_mw=1.0570658694225301,
             pden_plasma_core_rad_mw=0.1002475669217598,
             alphan=0.35000000000000003,
@@ -2816,7 +2818,9 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
 
     monkeypatch.setattr(
-        physics_variables, "f_alpha_plasma", stcalceffchiparam.f_alpha_plasma
+        physics_variables,
+        "f_p_alpha_plasma_deposited",
+        stcalceffchiparam.f_p_alpha_plasma_deposited,
     )
 
     monkeypatch.setattr(

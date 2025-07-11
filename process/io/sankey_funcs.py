@@ -76,11 +76,11 @@ def plot_full_sankey(
     p_plasma_separatrix_mw = m_file.data["p_plasma_separatrix_mw"].get_scan(
         -1
     )  # Charged particle power deposited on divertor (MW)
-    f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
+    f_p_alpha_plasma_deposited = m_file.data["f_p_alpha_plasma_deposited"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
     p_fw_alpha_mw = p_alpha_total_mw * (
-        1 - f_alpha_plasma
+        1 - f_p_alpha_plasma_deposited
     )  # Alpha particles hitting first wall (MW)
     p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(
         -1
@@ -575,11 +575,11 @@ def plot_sankey(mfilename="MFILE.DAT"):  # Plot simplified power flow Sankey Dia
         -1
     )  # Blanket energy multiplication (MW)
     p_alpha_total_mw = m_file.data["p_alpha_total_mw"].get_scan(-1)  # Alpha power (MW)
-    f_alpha_plasma = m_file.data["f_alpha_plasma"].get_scan(
+    f_p_alpha_plasma_deposited = m_file.data["f_p_alpha_plasma_deposited"].get_scan(
         -1
     )  # Fraction of alpha power deposited in plasma
     p_fw_alpha_mw = p_alpha_total_mw * (
-        1 - f_alpha_plasma
+        1 - f_p_alpha_plasma_deposited
     )  # Alpha power hitting 1st wall (MW)
     itart = m_file.data["itart"].get_scan(
         -1

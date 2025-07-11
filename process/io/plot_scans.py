@@ -295,7 +295,7 @@ def main(args=None):
         3: "p_plant_electric_net_mw",
         4: "hfact",
         5: "oacdcp",
-        6: "walalw",
+        6: "pflux_fw_neutron_max_mw",
         7: "beamfus0",
         8: "fqval",
         9: "te",
@@ -306,8 +306,8 @@ def main(args=None):
         14: "fiooic",
         15: "fjprot",
         16: "rmajor",
-        17: "b_tf_inboard_peak",  # bmxlim the maximum T field upper limit is the scan variable
-        18: "gammax",
+        17: "b_tf_inboard_peak",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
+        18: "eta_cd_norm_hcd_primary_max",
         19: "boundl(16)",
         20: "cnstv.t_burn_min",
         21: "",
