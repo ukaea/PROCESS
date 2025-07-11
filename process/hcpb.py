@@ -766,7 +766,7 @@ class CCFE_HCPB(BlanketLibrary):
 
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
+            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
         )
 
         # Radiation power incident on first wall (MW)

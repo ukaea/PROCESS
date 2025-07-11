@@ -2246,7 +2246,7 @@ class Physics:
                 physics_variables.pflux_fw_neutron_mw = (
                     (
                         1.0e0
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - 2.0e0 * fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_neutron_total_mw
@@ -2257,7 +2257,7 @@ class Physics:
                 physics_variables.pflux_fw_neutron_mw = (
                     (
                         1.0e0
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_neutron_total_mw
@@ -2606,14 +2606,14 @@ class Physics:
                 physics_variables.pflux_fw_rad_mw = (
                     (
                         1.0e0
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - 2.0e0 * fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.a_fw_total
                     + (
                         1.0e0
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - 2.0e0 * fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.rad_fraction_sol
@@ -2625,14 +2625,14 @@ class Physics:
                 physics_variables.pflux_fw_rad_mw = (
                     (
                         1.0e0
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.a_fw_total
                     + (
                         1.0e0
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.rad_fraction_sol
