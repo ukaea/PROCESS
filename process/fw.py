@@ -636,7 +636,7 @@ def init_fwbs_variables():
     fwbs_variables.p_blkt_multiplication_mw = 0.0
     fwbs_variables.fblss = 0.09705
     fwbs_variables.f_ster_div_single = 0.115
-    fwbs_variables.f_a_fw_hcd = 0.0
+    fwbs_variables.f_a_fw_outboard_hcd = 0.0
     fwbs_variables.fhole = 0.0
     fwbs_variables.i_fw_blkt_vv_shape = 2
     fwbs_variables.life_fw_fpy = 0.0

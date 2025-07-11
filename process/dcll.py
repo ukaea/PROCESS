@@ -119,11 +119,17 @@ class DCLL(BlanketLibrary):
         if physics_variables.n_divertors == 2:
             # Double null configuration
             covf = (
-                1 - (2 * fwbs_variables.f_ster_div_single) - fwbs_variables.f_a_fw_hcd
+                1
+                - (2 * fwbs_variables.f_ster_div_single)
+                - fwbs_variables.f_a_fw_outboard_hcd
             )
         else:
             # Single null configuration
-            covf = 1 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            covf = (
+                1
+                - fwbs_variables.f_ster_div_single
+                - fwbs_variables.f_a_fw_outboard_hcd
+            )
 
         # Nuclear heating in the first wall (MW)
         fwbs_variables.p_fw_nuclear_heat_total_mw = (
@@ -179,7 +185,7 @@ class DCLL(BlanketLibrary):
         fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0
         # Radiation power incident on HCD apparatus (MW)
         fwbs_variables.p_fw_hcd_rad_total_mw = (
-            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
+            physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
         )
 
         # FW

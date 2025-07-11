@@ -298,7 +298,7 @@ class StbildParam(NamedTuple):
 
     f_ster_div_single: Any = None
 
-    f_a_fw_hcd: Any = None
+    f_a_fw_outboard_hcd: Any = None
 
     fhole: Any = None
 
@@ -400,7 +400,7 @@ class StbildParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
             f_ster_div_single=0.115,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             fhole=0,
             dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
@@ -470,7 +470,7 @@ class StbildParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             blktmodel=0,
             f_ster_div_single=0.021924555536480182,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             fhole=0,
             dr_fw_wall=0.0030000000000000001,
             ipowerflow=1,
@@ -621,7 +621,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         fwbs_variables, "f_ster_div_single", stbildparam.f_ster_div_single
     )
 
-    monkeypatch.setattr(fwbs_variables, "f_a_fw_hcd", stbildparam.f_a_fw_hcd)
+    monkeypatch.setattr(
+        fwbs_variables, "f_a_fw_outboard_hcd", stbildparam.f_a_fw_outboard_hcd
+    )
 
     monkeypatch.setattr(fwbs_variables, "fhole", stbildparam.fhole)
 

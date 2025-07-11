@@ -2053,23 +2053,39 @@ class Build:
 
         if physics_variables.n_divertors == 2:
             # Double null configuration
-            build_variables.a_fw_outboard = build_variables.a_fw_outboard_full_coverage * (
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_outboard = (
+                build_variables.a_fw_outboard_full_coverage
+                * (
+                    1.0e0
+                    - 2.0e0 * fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard_full_coverage * (
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_inboard = (
+                build_variables.a_fw_inboard_full_coverage
+                * (
+                    1.0e0
+                    - 2.0e0 * fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
         else:
             # Single null configuration
-            build_variables.a_fw_outboard = build_variables.a_fw_outboard_full_coverage * (
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_outboard = (
+                build_variables.a_fw_outboard_full_coverage
+                * (
+                    1.0e0
+                    - fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard_full_coverage * (
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_inboard = (
+                build_variables.a_fw_inboard_full_coverage
+                * (
+                    1.0e0
+                    - fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
 
         build_variables.a_fw_total = (
@@ -2078,9 +2094,9 @@ class Build:
 
         if build_variables.a_fw_outboard <= 0.0e0:
             raise ProcessValueError(
-                "fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area",
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
                 f_ster_div_single=fwbs_variables.f_ster_div_single,
-                f_a_fw_hcd=fwbs_variables.f_a_fw_hcd,
+                f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
             )
 
         #

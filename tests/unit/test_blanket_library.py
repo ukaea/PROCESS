@@ -1246,7 +1246,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     a_shld_outboard_surface: Any = None
     a_shld_total_surface: Any = None
     f_ster_div_single: Any = None
-    f_a_fw_hcd: Any = None
+    f_a_fw_outboard_hcd: Any = None
     vol_blkt_outboard: Any = None
     vol_blkt_inboard: Any = None
     vol_blkt_total: Any = None
@@ -1280,7 +1280,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             a_shld_outboard_surface=1344.1106481995357,
             a_shld_total_surface=2044.1779608740142,
             f_ster_div_single=0.115,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_inboard=315.83946385183026,
             vol_blkt_total=1336.207205897842,
@@ -1352,7 +1352,9 @@ def test_apply_coverage_factors(
         fwbs_variables, "f_ster_div_single", applycoveragefactorsparam.f_ster_div_single
     )
     monkeypatch.setattr(
-        fwbs_variables, "f_a_fw_hcd", applycoveragefactorsparam.f_a_fw_hcd
+        fwbs_variables,
+        "f_a_fw_outboard_hcd",
+        applycoveragefactorsparam.f_a_fw_outboard_hcd,
     )
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_outboard", applycoveragefactorsparam.vol_blkt_outboard
