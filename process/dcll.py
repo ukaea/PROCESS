@@ -1,6 +1,7 @@
 from process import (
     process_output as po,
 )
+from process.blanket_library import BlanketLibrary
 from process.fortran import (
     build_variables,
     constants,
@@ -13,7 +14,7 @@ from process.fortran import (
 )
 
 
-class DCLL:
+class DCLL(BlanketLibrary):
     """This module contains the Dual Coolant Lead Lithium (DCLL) specific submods of PROCESSS.
 
     author: G. Graham, CCFE
@@ -85,15 +86,13 @@ class DCLL:
     Note: request for when CCFE Bluemira nutronics work is added: output maximum values, as well as average values, for wall neutronics calculation if possible.
     """
 
-    def __init__(self, blanket_library) -> None:
+    def __init__(self) -> None:
         self.outfile = constants.nout
 
-        self.blanket_library = blanket_library
-
     def run(self, output: bool):
-        self.blanket_library.component_volumes()
-        self.blanket_library.primary_coolant_properties(output=output)
-        self.blanket_library.liquid_breeder_properties(output)
+        super().component_volumes()
+        super().primary_coolant_properties(output=output)
+        super().liquid_breeder_properties(output=output)
         self.dcll_neutronics_and_power(output=output)
         self.dcll_masses(output=output)
         self.dcll_power_and_heating(output=output)
@@ -323,7 +322,7 @@ class DCLL:
 
         elif fwbs_variables.i_coolant_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
-            self.blanket_library.thermo_hydraulic_model(output=output)
+            super().thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv

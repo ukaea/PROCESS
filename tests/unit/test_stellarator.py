@@ -4,7 +4,6 @@ import numpy as np
 import pytest
 
 from process.availability import Availability
-from process.blanket_library import BlanketLibrary
 from process.buildings import Buildings
 from process.costs import Costs
 from process.current_drive import (
@@ -27,7 +26,6 @@ from process.fortran import (
     structure_variables,
     tfcoil_variables,
 )
-from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
@@ -50,7 +48,7 @@ def stellarator():
         Costs(),
         Power(),
         PlasmaProfile(),
-        CCFE_HCPB(BlanketLibrary(Fw())),
+        CCFE_HCPB(),
         CurrentDrive(
             PlasmaProfile(),
             ElectronCyclotron(plasma_profile=PlasmaProfile()),
