@@ -1483,9 +1483,9 @@ class CCFE_HCPB(BlanketLibrary):
         )
         po.ovarre(
             self.outfile,
-            "Fraction of first wall area covered by HCD and diagnostics",
-            "(f_a_fw_hcd)",
-            fwbs_variables.f_a_fw_hcd,
+            "Fraction of outboard first wall area covered by HCD and diagnostics",
+            "(v_tf_coil_dump_quench_max_kv)",
+            fwbs_variables.v_tf_coil_dump_quench_max_kv,
         )
         po.ovarin(
             self.outfile,
@@ -1581,9 +1581,15 @@ class CCFE_HCPB(BlanketLibrary):
         )
         po.ovarre(
             self.outfile,
-            "First wall area (m2)",
+            "First wall area (m^2)",
             "(a_fw_total)",
             build_variables.a_fw_total,
+        )
+        po.ovarre(
+            self.outfile,
+            "First wall area, no holes (m^2)",
+            "(a_fw_total_full_coverage)",
+            build_variables.a_fw_total_full_coverage,
         )
         po.ovarre(
             self.outfile,
