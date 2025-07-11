@@ -96,6 +96,9 @@ module build_variables
   real(dp) :: a_fw_inboard
   !! Inboard first wall surface area [m^2]
 
+  real(dp) :: a_fw_inboard_full_coverage
+  !! Inboard first wall surface area with no holes or ports [m^2]
+
   real(dp) :: a_fw_outboard
   !! Outboard first wall surface area [m^2]
 
