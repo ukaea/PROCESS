@@ -2104,7 +2104,7 @@ class Power2Param(NamedTuple):
 
     f_ster_div_single: Any = None
 
-    f_a_fw_hcd: Any = None
+    f_a_fw_outboard_hcd: Any = None
 
     i_thermal_electric_conversion: Any = None
 
@@ -2296,7 +2296,7 @@ class Power2Param(NamedTuple):
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.69222981118057,
@@ -2398,7 +2398,7 @@ class Power2Param(NamedTuple):
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.6352084763719,
@@ -2549,7 +2549,9 @@ def test_power2(power2param, monkeypatch, power):
         fwbs_variables, "f_ster_div_single", power2param.f_ster_div_single
     )
 
-    monkeypatch.setattr(fwbs_variables, "f_a_fw_hcd", power2param.f_a_fw_hcd)
+    monkeypatch.setattr(
+        fwbs_variables, "f_a_fw_outboard_hcd", power2param.f_a_fw_outboard_hcd
+    )
 
     monkeypatch.setattr(
         fwbs_variables,

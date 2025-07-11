@@ -50,7 +50,7 @@ module fwbs_variables
   real(dp) :: f_ster_div_single
   !! Solid angle fraction taken by one divertor
 
-  real(dp) :: f_a_fw_hcd
+  real(dp) :: f_a_fw_outboard_hcd
   !! area fraction of first wall covered by heating/current drive apparatus plus diagnostics
 
   real(dp) :: fhole

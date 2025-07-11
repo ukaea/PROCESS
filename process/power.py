@@ -1216,8 +1216,8 @@ class Power:
         po.ovarre(
             self.outfile,
             "H/CD apparatus + diagnostics area fraction",
-            "(f_a_fw_hcd)",
-            fwbs_variables.f_a_fw_hcd,
+            "(f_a_fw_outboard_hcd)",
+            fwbs_variables.f_a_fw_outboard_hcd,
         )
 
         if physics_variables.n_divertors == 2:
@@ -1225,18 +1225,20 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "First wall area fraction ",
-                "(1-2fdiv-f_a_fw_hcd)",
+                "(1-2fdiv-f_a_fw_outboard_hcd)",
                 1.0e0
                 - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd,
+                - fwbs_variables.f_a_fw_outboard_hcd,
             )
         else:
             # Single null configuration
             po.ovarre(
                 self.outfile,
                 "First wall area fraction ",
-                "(1-f_ster_div_single-f_a_fw_hcd)",
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd,
+                "(1-f_ster_div_single-f_a_fw_outboard_hcd)",
+                1.0e0
+                - fwbs_variables.f_ster_div_single
+                - fwbs_variables.f_a_fw_outboard_hcd,
             )
 
         po.ovarin(
