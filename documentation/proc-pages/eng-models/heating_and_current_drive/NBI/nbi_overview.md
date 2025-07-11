@@ -55,7 +55,7 @@ $$
 g = \sqrt{e^2+f^2-2ef\cos{\phi}}
 $$
 
-If the value of $g$ is geater than $c$, then:
+If the value of $g$ is greater than $c$, then:
 
 $$
 h = \sqrt{g^2-c^2}
