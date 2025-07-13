@@ -420,27 +420,27 @@ class NeutronFluxProfile:
             sinh_bz = np.sinh((self.extended_boundary[i] - x_fw) / l_bz)
             cosh_bz = np.cosh((self.extended_boundary[i] - x_fw) / l_bz)
             tanh_bz = np.tanh((self.extended_boundary[i] - x_fw) / l_bz)
-            sinh_bz_full = np.sinh((self.extended_boundary[i]) / l_bz)
-            cosh_bz_full = np.cosh((self.extended_boundary[i]) / l_bz)
         else:
             sinh_bz = np.sin((self.extended_boundary[i] - x_fw) / l_bz)
             cosh_bz = np.cos((self.extended_boundary[i] - x_fw) / l_bz)
             tanh_bz = np.tan((self.extended_boundary[i] - x_fw) / l_bz)
-            sinh_bz_full = np.sin((self.extended_boundary[i]) / l_bz)
-            cosh_bz_full = np.cos((self.extended_boundary[i]) / l_bz)
 
-        c1 = l_fw / d_fw
-        c2 = l_fw / d_fw - np.exp(x_fw / l_fw) * (
-            (l_fw / d_fw) + (l_bz / d_bz) * tanh_bz
-        ) / (cosh_fw + sinh_fw * tanh_bz * (d_fw / l_fw) * (l_bz / d_bz))
+        c2 = (
+            np.exp(x_fw / l_fw)
+            / 2
+            * ((l_fw / d_fw) + (l_bz / d_bz) * tanh_bz)
+            / (cosh_fw + sinh_fw * tanh_bz * (d_fw / l_fw) * (l_bz / d_bz))
+        )
+        c1 = c2 - l_fw / d_fw
 
         c3_c4_common_factor = (
             np.exp(x_fw / l_fw)
+            / 2
             * (1 - tanh_fw)
             / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
         )
-        c3 = c3_c4_common_factor * -cosh_bz_full
-        c4 = c3_c4_common_factor * sinh_bz_full
+        c3 = c3_c4_common_factor * np.exp(self.extended_boundary[i] / l_bz)
+        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary[i] / l_bz)
         self.integration_constants[i] = [c1, c2, c3, c4]
 
     def solve_group_n(self, n: int) -> None:
@@ -513,10 +513,7 @@ class NeutronFluxProfile:
         c1, c2 = self.integration_constants[i][:2]
         l_fw = np.sqrt(abs(self.l_fw_2[i]))
         x_l_fw = abs(x) / l_fw
-        s, c = (np.sinh, np.cosh) if self.l_fw_2[i] > 0 else (np.sin, np.cos)
-        # we specially store c1 and c2 as real values, such that if l_fw_2 is
-        # imaginary, then c1 * sin and c2 * cos is still real.
-        return self.flux * (c1 * s(x_l_fw) + c2 * c(x_l_fw))
+        return self.flux * (c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw))
 
     @groupwise
     def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
@@ -541,11 +538,8 @@ class NeutronFluxProfile:
         i = n - 1
         c3, c4 = self.integration_constants[i][2:]
         l_bz = np.sqrt(abs(self.l_bz_2[i]))
-        x_l_bz = x / abs(l_bz)
-        s, c = (np.sinh, np.cosh) if self.l_bz_2[i] > 0 else (np.sin, np.cos)
-        # we specially store c3 and c4 such that if l_bz_2 is imaginary, then a different
-        # then c3 * sin and c4 * cos becomes real again.
-        return self.flux * (c3 * s(x_l_bz) + c4 * c(x_l_bz))
+        x_l_bz = abs(x) / l_bz
+        return self.flux * (c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz))
 
     @groupwise
     def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
