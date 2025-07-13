@@ -318,11 +318,13 @@ def get_material_nuclear_data(
         scattering_weight_matrix(group_structure, avg_atomic_mass).T
         * discrete_macro_scattering_xs
     ).T
-    for modified_composition_file, modified_density, q_value in n2n_susceptible_species:
+    for (
+        modified_composition_file,
+        modified_density,
+        q_value,
+    ) in n2n_susceptible_species:
         source_matrix += expand_macro_neutron_multiplication_xs_into_matrix(
-            calculate_average_macro_xs(
-                composition, micro_n2n_xs, density
-            ),
+            calculate_average_macro_xs(composition, micro_n2n_xs, density),
             group_structure,
             q_value,
         )
@@ -402,13 +404,43 @@ class NeutronFluxProfile:
             self.bz_sigma_s[i, i],
             self.bz_A,
         )
-        l_fw = np.sqrt(abs(self.l_fw_2))
-        l_bz = np.sqrt(abs(self.l_bz_2))
-        c1 = self.flux * ... * l_fw
-        c2 = self.flux * ... * l_bz
-        c3 = self.flux * ...
-        c4 = self.flux * ...
-        self.extended_boundary[i] = self.x_bz + extrapolation_length(d_bz)
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        x_fw, x_bz = self.x_fw, self.x_bz
+        self.extended_boundary[i] = x_bz + extrapolation_length(d_bz)
+        if self.l_fw_2[i] > 0:
+            sinh_fw = np.sinh(x_fw / l_fw)
+            cosh_fw = np.cosh(x_fw / l_fw)
+            tanh_fw = np.tanh(x_fw / l_fw)
+        else:
+            sinh_fw = np.sin(x_fw / l_fw)
+            cosh_fw = np.cos(x_fw / l_fw)
+            tanh_fw = np.tan(x_fw / l_fw)
+        if self.l_bz_2[i] > 0:
+            sinh_bz = np.sinh((self.extended_boundary[i] - x_fw) / l_bz)
+            cosh_bz = np.cosh((self.extended_boundary[i] - x_fw) / l_bz)
+            tanh_bz = np.tanh((self.extended_boundary[i] - x_fw) / l_bz)
+            sinh_bz_full = np.sinh((self.extended_boundary[i]) / l_bz)
+            cosh_bz_full = np.cosh((self.extended_boundary[i]) / l_bz)
+        else:
+            sinh_bz = np.sin((self.extended_boundary[i] - x_fw) / l_bz)
+            cosh_bz = np.cos((self.extended_boundary[i] - x_fw) / l_bz)
+            tanh_bz = np.tan((self.extended_boundary[i] - x_fw) / l_bz)
+            sinh_bz_full = np.sin((self.extended_boundary[i]) / l_bz)
+            cosh_bz_full = np.cos((self.extended_boundary[i]) / l_bz)
+
+        c1 = l_fw / d_fw
+        c2 = l_fw / d_fw - np.exp(x_fw / l_fw) * (
+            (l_fw / d_fw) + (l_bz / d_bz) * tanh_bz
+        ) / (cosh_fw + sinh_fw * tanh_bz * (d_fw / l_fw) * (l_bz / d_bz))
+
+        c3_c4_common_factor = (
+            np.exp(x_fw / l_fw)
+            * (1 - tanh_fw)
+            / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
+        )
+        c3 = c3_c4_common_factor * -cosh_bz_full
+        c4 = c3_c4_common_factor * sinh_bz_full
         self.integration_constants[i] = [c1, c2, c3, c4]
 
     def solve_group_n(self, n: int) -> None:
@@ -430,13 +462,13 @@ class NeutronFluxProfile:
                 f"n must be a positive integer between 1 and {self.n_groups}!"
             )
         if n == 1:
-            self.solve_one_group()
+            return self.solve_one_group()
         for k in range(n - 1):
             if k not in self.integration_constants:
                 self.solve_group_n(k)
         i = n - 1
         if i in self.integration_constants:
-            return  # skip if it has already been solved.
+            return None  # skip if it has already been solved.
         self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
             self.fw_sigma_t[i],
             self.fw_sigma_s[i, i],
@@ -447,18 +479,19 @@ class NeutronFluxProfile:
             self.bz_sigma_s[i, i],
             self.bz_A,
         )
-        l_fw = np.sqrt(abs(self.l_fw_2))
-        l_bz = np.sqrt(abs(self.l_bz_2))
-        c1 = self.flux * ... * l_fw
-        c2 = self.flux * ... * l_bz
-        c3 = self.flux * ...
-        c4 = self.flux * ...
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        c1 = ...
+        c2 = ...
+        c3 = ...
+        c4 = ...
         self.extended_boundary[i] = self.x_bz + extrapolation_length(d_bz)
         self.integration_constants[i] = [c1, c2, c3, c4]
+        return None
 
     @groupwise
     def neutron_flux_fw(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
-        """Neutron flux at the first wall.
+        """Neutron flux of the n-th group at the first wall, at location x [m].
 
         Parameters
         ----------
@@ -470,49 +503,56 @@ class NeutronFluxProfile:
             thus if x is outside the first-wall, an extrapolated first-wall flux value up
             to that point will be given, this flux is still guaranteed to be non-singular
             i.e. finite, but not guaranteed to be positive.
+
+        Returns
+        -------
+        flux:
+            Neutron flux at x meter from the first wall.
         """
         i = n - 1
         c1, c2 = self.integration_constants[i][:2]
         l_fw = np.sqrt(abs(self.l_fw_2[i]))
         x_l_fw = abs(x) / l_fw
-        sinh, cosh = (
-            (np.sinh, np.cosh) if self.l_fw_2 > 0 else (np.sin, np.cos)
-        )
-        # we specially store c1 and c2 such that if l_fw_2 is imaginary, then a different
-        # then c1 * sin and c2 * cos becomes real again.
-        return c1 * sinh(x_l_fw) + c2 * cosh(x_l_fw)
+        s, c = (np.sinh, np.cosh) if self.l_fw_2[i] > 0 else (np.sin, np.cos)
+        # we specially store c1 and c2 as real values, such that if l_fw_2 is
+        # imaginary, then c1 * sin and c2 * cos is still real.
+        return self.flux * (c1 * s(x_l_fw) + c2 * c(x_l_fw))
 
     @groupwise
     def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
-        """
-        Neutron flux at the blanket.
+        """Neutron flux of the n-th groupat the blanket, at location x [m].
 
         Parameters
         ----------
         n:
             The index of the neutron group whose flux is being evaluated.
         x:
-            The position where the neutron flux has to be evaluated.
+            The position where the neutron flux has to be evaluated. [m]
             Note that this function does not enforce a check for x=inside the blanket,
             thus if x is outside the blanket, an extrapolated blanket flux value up to
             that point will be given, this flux is still guaranteed to be non-singular
             i.e. finite, but not guaranteed to be positive.
+
+        Returns
+        -------
+        flux:
+            Neutron flux at x meter from the first wall.
         """
         i = n - 1
         c3, c4 = self.integration_constants[i][2:]
         l_bz = np.sqrt(abs(self.l_bz_2[i]))
         x_l_bz = x / abs(l_bz)
-        sinh, cosh = (
-            (np.sinh, np.cosh) if self.l_bz_2 > 0 else (np.sin, np.cos)
-        )
+        s, c = (np.sinh, np.cosh) if self.l_bz_2[i] > 0 else (np.sin, np.cos)
         # we specially store c3 and c4 such that if l_bz_2 is imaginary, then a different
         # then c3 * sin and c4 * cos becomes real again.
-        return c3 * sinh(x_l_bz) + c4 * cosh(x_l_bz)
+        return self.flux * (c3 * s(x_l_bz) + c4 * c(x_l_bz))
 
     @groupwise
     def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
         """
-        Neutron flux
+        Neutron flux anywhere within the valid range of x,
+        i.e. from -self.x_bz to self.x_bz.
+
         Parameters
         ----------
         n:
@@ -520,6 +560,11 @@ class NeutronFluxProfile:
         x:
             The depth where we want the neutron flux (m).
             Valid only between x= -extended boundary to +-extended boundary of that group
+
+        Raises
+        ------
+        ValueError
+            The inputted x
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
@@ -529,7 +574,7 @@ class NeutronFluxProfile:
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated up to "
-                f"{self.extended_boundary[n]}, which {x} violates!"
+                f"{self.extended_boundary[n]} cm, which {x * 100} cm violates!"
             )
 
         out_flux = np.zeros_like(x)
