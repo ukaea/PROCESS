@@ -361,6 +361,7 @@ OBS_VARS = {
     "beamwd": "dx_beam_duct",
     "frbeam": "f_radius_beam_tangency_rmajor",
     "fportsz": "fradius_beam_tangency",
+    "pinjmax": None,
 }
 
 OBS_VARS_HELP = {
