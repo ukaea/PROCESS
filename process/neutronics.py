@@ -1,0 +1,677 @@
+"""
+Most of derivation is basd on the book Reactor Analysis, Duderstadt and Hamilton, 1976,
+ISBN:9780471223634.
+"""
+
+import functools
+
+import numpy as np
+from neutronics_data import (
+    ZeroContinuousFunc,
+    breeding_xs_data_bank,
+    extract_atomic_mass,
+    get_avg_atomic_mass,
+    material_composition_data_bank,
+    material_density_data_bank,
+    xs_data_bank,
+)
+from numpy import testing as npt
+from scipy.constants import Avogadro
+from scipy.special import expm1
+
+BARNS_CM2 = 1e-24
+N_A = Avogadro
+N2N_Q_VALUE = ...
+
+
+def groupwise(func):
+    """Rename the current func as groupwise_func, and over-write the current method
+    as one that sums up all group-wise func.
+    """
+    method_name = func.__name__
+    groupwise_name = f"groupwise_{method_name}"
+
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        groupwise_func = getattr(self, groupwise_name)
+        return np.array(
+            [
+                groupwise_func(n, *args, **kwargs)
+                for n in range(1, self.n_groups + 1)
+            ],
+        )
+
+    def wrapper_setattr(cls):
+        """Save the decorated (groupwise) function under a different name after it has
+        been created, then overwrite the current method with the np.sum implementation.
+        """
+        setattr(cls, groupwise_name, func)
+        setattr(cls, method_name, wrapper)
+        return cls
+
+    # Instead of returning a function, we return a descriptor that registers itself later
+    return RegisterLater(wrapper_setattr)
+
+
+class RegisterLater:
+    """Descriptor class"""
+
+    def __init__(self, installer):
+        """Modifies the class AFTER it has been created."""
+        self.installer = installer
+
+    def __set_name__(self, owner, name):
+        """Re-write method name"""
+        self.installer(owner)
+
+
+def get_diffusion_coefficient_and_length(
+    total_xs: float, scattering_xs: float, avg_atomic_mass: float
+) -> tuple[float, float]:
+    r"""
+    Calculate the diffusion coefficient for a given scattering and total macro-scopic
+    cross-section in a given medium.
+
+    Parameters
+    ----------
+    total_xs:
+        macroscopic total cross-section `\sigma_{total}`, i.e. any reaction between
+        nuclei and neutrons, that either changes the neutron's path or remove it from
+        that energy group.
+        Unit: cm^-1
+    scattering_xs:
+        macroscopic total cross-section `\sigma_{scatter}`, i.e. number of reactions per
+        unit distance travelled by the neutron that leads to it being scattered (without
+        getting absorbed).
+        Unit: cm^-1
+    avg_atomic_mass:
+        Average atomic mass in [amu]. This can be approximated by the atomic number 'A'
+        of the medium that the neutron passes through. The effect of the more-anisotropic
+        scattering due to smaller atomic number can be accounted for by increasing the
+        diffusion coefficient (which decreases the transport macroscopic cross-section,
+        :math:`\Sigma_{tr}=\frac{1}{3D}`).
+
+    Returns
+    -------
+    diffusion_coef:
+        The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
+        unit: [cm]
+    diffusion_len_2:
+        The square of the characteristic diffusion length as given by Reactor Analysis,
+        Duderstadt and Hamilton.
+        unit: [cm]
+    """
+
+    transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
+    diffusion_coef = 1 / 3 / transport_xs
+    diffusion_len_2 = diffusion_coef / (total_xs - scattering_xs)
+    return diffusion_coef, diffusion_len_2
+
+
+def extrapolation_length(diffusion_coefficient: float) -> float:
+    """Get the extrapolation length of the final medium :math:`\\delta`.
+
+    Notes
+    -----
+    Diffusion theory breaks down at the vacuum boundary, where once the neutron exits,
+    it will travel indefinitely into free space, never to return. To counteract this
+    problem, we can approximate the neutron profile quite closely by assuming that the
+    flux goes to 0 at an extended boundary, rather than at the vacuum boundary.
+    THis yields a very close approximation. All of this equation is provided by
+    Duderstadt and Hamilton.
+    """
+    return 0.7104 * 3 * diffusion_coefficient
+
+
+def calculate_average_macro_xs(
+    composition: dict[str, float],
+    micro_xs: dict[str, float | npt.NDArray[np.float64]],
+    density: float,
+) -> float | npt.NDArray[np.float64]:
+    r"""
+    Calculate the macroscopic cross-section for a specific energy group and a specific
+    reaction (a scalar value), when given the microscopic cross-section values of its
+    components and its density.
+
+    Parameters
+    ----------
+    composition:
+        Fraction of each species of atoms of the medium. Does not have to be normalised.
+        Given in the format {'species': float(fraction)}.
+    micro_xs:
+        A dictionary of each species, and their microscopic cross-sections, given in
+        [barns].
+        Given in the format {'species': float(microscopic cross-section)}.
+    density:
+        Density of the medium, given in [g/cm^3]
+
+    Notes
+    -----
+    .. math::
+        \Sigma &= N_d\sigma
+        &= \frac{N_A}{A} \rho \sigma
+    """
+
+    total_fraction = sum(composition.values())
+    weighted_micro_xs, weighted_atomic_mass = [], []
+    if composition.keys() != micro_xs.keys():
+        raise KeyError(
+            "The two dictionaries 'composition' and 'micro_xs' must have matching keys."
+        )
+    for species, fraction in composition.items():
+        normalized_fraction = fraction / total_fraction
+        weighted_atomic_mass.append(
+            normalized_fraction * extract_atomic_mass(species)
+        )
+        weighted_micro_xs.append(normalized_fraction * micro_xs[species])
+    avg_sigma = np.sum(weighted_micro_xs, axis=0)
+    avg_mass_amu = sum(weighted_atomic_mass)
+    return (
+        (BARNS_CM2 * N_A) / avg_mass_amu * avg_sigma * density
+    )  # N_A/A * rho * sigma
+
+
+def discretize_xs(
+    continuous_xs, group_structure: list[float]
+) -> npt.NDArray[np.float64]:
+    """
+    Discretise a continuous cross-section function into a group structure of n discrete
+    flaots.
+
+    Parameters
+    ----------
+    continuous_xs:
+        continuous cross-section function to be discretized.
+    group_structure:
+        group structure of neutron energies, the n+1 energy bin boundaries for the n
+        neutron groups, in descending energies.
+
+    Returns
+    -------
+    :
+        microscopic cross-section values discretized according to the group structure.
+    """
+    return
+
+
+def scattering_weight_matrix(
+    group_structure: list[float], atomic_mass: float
+) -> npt.NDArray:
+    """
+    Parameters
+    ----------
+    group_structure:
+        the n+1 energy bin boundaries for the n neutron groups, in descending energies.
+    atomic_mass:
+        atomic mass of the medium
+
+    Returns
+    -------
+    :
+        A lower triangular matrix, where the i-th row contains the normalized weights for
+        scattering down from the i-th bin to the j-th bin. The main-diagonal contains
+        the self-scattering cross-section.
+        e.g. [2,1] would be the fraction of elastic scattering reactions that causes
+        neutrons from group 3 to scatter into group 2.
+        The upper triangle must be all zeros.
+        np.sum(axis=1) == np.ones(len(group_structure)-1).
+    """
+    return
+
+
+def expand_macro_neutron_multiplication_xs_into_matrix(
+    discrete_n2n_xs: npt.NDArray[np.float64],
+    group_structure: list[float],
+    q_value: float,
+) -> npt.NDArray:
+    """Instead of only having the macroscopic cross-section values for the (n,2n)
+    reaction for each group, calculate the macroscopic cross-section of neutron in the
+    [i]-th bin producing a neutron in the [j]-bin, recorded as the [i,j] element in the
+    matrix.
+
+    Parameters
+    ----------
+    discrete_n2n_xs:
+        The group-wise macroscopic cross-section for the n2n reaction.
+        A 1D numpy array, with len==number of neutron groups.
+    group_structure:
+        The n+1 energy bin boundaries for the n neutron groups, in descending energies.
+    q_value:
+        The difference in q-value.
+
+    Returns
+    -------
+    :
+        A macroscopic neutron multiplication cross-section matrix, such that each row
+        should sum to = 2 * discrete_n2n_xs (since two neutrons should be produced per
+        neutron consumed in the (n,2n) reaction).
+
+    Notes
+    -----
+    This is a three body problem. TODO: further investigation is needed to figure out
+    how to distribute the two outputted neutron's energies!
+    """
+
+
+def get_material_nuclear_data(
+    material: str, group_structure: list[float]
+) -> tuple[npt.NDArray[np.float64], npt.NDArray, float]:
+    """
+    The constants that is directly used.
+
+    Parameters
+    ----------
+    materials:
+        Which material that we want to get the data out of.
+    group_structure:
+        the n+1 energy bin boundaries for the n neutron groups, in descending energies.
+
+    Returns
+    -------
+    discrete_macro_total_xs:
+        All group-wise total cross-sections, given in ascending order.
+    macroscopic scattering cross-section matrix:
+        A lower-triangular matrix of total scattering cross-sections,
+        e.g. [2,1] would be the scattering cross-section from neutron group 3 to group 2.
+        The upper triangle MUST be zeros.
+    avg_atomic_mass:
+        average atomic mass, used for further calcuations
+
+    Notes
+    -----
+    When calculating the group-wise diffusion coefficients, the i-th group's scattering
+    cross-section :math:`\\Sigma_{s}` is the i-th element on the main diagonal of the
+    macroscopic scattering cross-section matrix.
+    """
+    density = material_density_data_bank[material]
+    composition = material_composition_data_bank[material]
+    avg_atomic_mass = get_avg_atomic_mass(composition)
+
+    # dicts of {"isotope": npt.NDArray[np.float64] 1D arrays}
+    micro_total_xs = {}
+    micro_scattering_xs = {}
+    micro_n2n_xs = {}
+    for species in composition:
+        total_xs_continuous, elastic_scattering_xs_continuous = xs_data_bank[
+            species
+        ]
+        n2n_xs_continuous = breeding_xs_data_bank.get(
+            species, ZeroContinuousFunc
+        )
+        micro_total_xs[species] = discretize_xs(
+            total_xs_continuous, group_structure
+        )
+        micro_scattering_xs[species] = discretize_xs(
+            elastic_scattering_xs_continuous, group_structure
+        )
+        micro_n2n_xs[species] = discretize_xs(
+            n2n_xs_continuous, group_structure
+        )
+
+    discrete_macro_total_xs = calculate_average_macro_xs(
+        composition, micro_total_xs, density
+    )
+    discrete_macro_scattering_xs = calculate_average_macro_xs(
+        composition, micro_scattering_xs, density
+    )
+    source_matrix = (
+        scattering_weight_matrix(group_structure, avg_atomic_mass).T
+        * discrete_macro_scattering_xs
+    ).T
+    for (
+        modified_composition_file,
+        modified_density,
+        q_value,
+    ) in n2n_susceptible_species:
+        source_matrix += expand_macro_neutron_multiplication_xs_into_matrix(
+            calculate_average_macro_xs(composition, micro_n2n_xs, density),
+            group_structure,
+            q_value,
+        )
+
+    return discrete_macro_total_xs, source_matrix, avg_atomic_mass
+
+
+class NeutronFluxProfile:
+    """Neutron flux in the first wall or the blanket."""
+
+    def __init__(
+        self,
+        flux: float,
+        fw_mat: str,
+        x_fw: float,
+        bz_mat: str,
+        x_bz: float,
+        n_groups: int = 1,
+    ):
+        """Initialize a particular FW-BZ geometry and neutron flux.
+
+        Parameters
+        ----------
+        flux:
+            Nuetron flux directly emitted by the plasma, incident on the first wall.
+            unit: cm^-2 s^-1
+        fw_mat:
+            first wall material
+        x_fw:
+            thickness of the first wall [m]. It will be converted and stored in [cm].
+        bz_mat:
+            blanket material
+        x_bz:
+            thickness of the blanket [m]. It will be converted and stored in [cm].
+        n_groups:
+            number of groups used to approximate this.
+        """
+        self.flux = flux  # flux incident on the first wall.
+        if not (0 < x_fw < x_bz):
+            raise ValueError(
+                f"Cannot construct a first-wall+blanket module where{x_fw=}, {x_bz=}."
+            )
+        self.fw_mat = fw_mat
+        self.x_fw = x_fw * 100
+        self.bz_mat = bz_mat
+        self.x_bz = x_bz * 100
+        self.n_groups = n_groups
+
+        # macroscopic cross-sections Sigma saved here. Not capitalized due to style
+        self.fw_sigma_t, self.fw_sigma_s, self.fw_A = (
+            get_material_nuclear_data(self.fw_mat, n_groups)
+        )
+        self.bz_sigma_t, self.bz_sigma_s, self.bz_A = (
+            get_material_nuclear_data(self.bz_mat, n_groups)
+        )
+        # Dictionaries indexed by integers, so that we can create these values
+        # out of sequence without messing up the order.
+        self.integration_constants = {}
+        self.l_fw_2, self.l_bz_2 = {}, {}
+        self.extended_boundary = {}
+
+    def solve_one_group(self) -> None:
+        """
+        Solve the first-group's neutron diffusion equation.
+        Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
+        self.l_bz_2[0], and self.integration_constants[0].
+        """
+        i = 0
+        if i in self.integration_constants:
+            return  # skip if it has already been solved.
+        self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
+            self.fw_sigma_t[i],
+            self.fw_sigma_s[i, i],
+            self.fw_A,
+        )
+        self.l_bz_2[i], d_bz = get_diffusion_coefficient_and_length(
+            self.bz_sigma_t[i],
+            self.bz_sigma_s[i, i],
+            self.bz_A,
+        )
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        x_fw, x_bz = self.x_fw, self.x_bz
+        self.extended_boundary[i] = x_bz + extrapolation_length(d_bz)
+        if self.l_fw_2[i] > 0:
+            sinh_fw = np.sinh(x_fw / l_fw)
+            cosh_fw = np.cosh(x_fw / l_fw)
+            tanh_fw = np.tanh(x_fw / l_fw)
+        else:
+            sinh_fw = np.sin(x_fw / l_fw)
+            cosh_fw = np.cos(x_fw / l_fw)
+            tanh_fw = np.tan(x_fw / l_fw)
+        if self.l_bz_2[i] > 0:
+            sinh_bz = np.sinh((self.extended_boundary[i] - x_fw) / l_bz)
+            cosh_bz = np.cosh((self.extended_boundary[i] - x_fw) / l_bz)
+            tanh_bz = np.tanh((self.extended_boundary[i] - x_fw) / l_bz)
+        else:
+            sinh_bz = np.sin((self.extended_boundary[i] - x_fw) / l_bz)
+            cosh_bz = np.cos((self.extended_boundary[i] - x_fw) / l_bz)
+            tanh_bz = np.tan((self.extended_boundary[i] - x_fw) / l_bz)
+
+        c2 = (
+            self.flux
+            * np.exp(x_fw / l_fw)
+            / 2
+            * ((l_fw / d_fw) + (l_bz / d_bz) * tanh_bz)
+            / (cosh_fw + sinh_fw * tanh_bz * (d_fw / l_fw) * (l_bz / d_bz))
+        )
+        c1 = c2 - l_fw / d_fw * self.flux
+
+        c3_c4_common_factor = (
+            self.flux
+            * np.exp(x_fw / l_fw)
+            / 2
+            * (1 - tanh_fw)
+            / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
+        )
+        c3 = c3_c4_common_factor * np.exp(self.extended_boundary[i] / l_bz)
+        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary[i] / l_bz)
+        self.integration_constants[i] = [c1, c2, c3, c4]
+
+    def solve_group_n(self, n: int) -> None:
+        """
+        Solve the n-th group of neutron's diffusion equation.
+        Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
+        self.l_bz_2[n-1], and self.integration_constants[n-1].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose constants are being solved.
+            allowed range: [1, self.n_groups]
+            This gets translated to the index i=n-1 used for the dictionaries of
+            constants attached to self.
+        """
+        if n not in range(1, self.n_groups):
+            raise ValueError(
+                f"n must be a positive integer between 1 and {self.n_groups}!"
+            )
+        if n == 1:
+            return self.solve_one_group()
+        for k in range(n - 1):
+            if k not in self.integration_constants:
+                self.solve_group_n(k)
+        i = n - 1
+        if i in self.integration_constants:
+            return None  # skip if it has already been solved.
+        self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
+            self.fw_sigma_t[i],
+            self.fw_sigma_s[i, i],
+            self.fw_A,
+        )
+        self.l_bz_2[i], d_bz = get_diffusion_coefficient_and_length(
+            self.bz_sigma_t[i],
+            self.bz_sigma_s[i, i],
+            self.bz_A,
+        )
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        c1 = ...
+        c2 = ...
+        c3 = ...
+        c4 = ...
+        self.extended_boundary[i] = self.x_bz + extrapolation_length(d_bz)
+        self.integration_constants[i] = [c1, c2, c3, c4]
+        return None
+
+    @groupwise
+    def neutron_flux_fw(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
+        """Neutron flux of the n-th group at the first wall, at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose flux is being evaluated.
+        x:
+            The position where the neutron flux has to be evaluated.
+            Note that this function does not enforce a check for x=inside the first-wall,
+            thus if x is outside the first-wall, an extrapolated first-wall flux value up
+            to that point will be given, this flux is still guaranteed to be non-singular
+            i.e. finite, but not guaranteed to be positive.
+
+        Returns
+        -------
+        flux:
+            Neutron flux at x meter from the first wall.
+        """
+        i = n - 1
+        c1, c2 = self.integration_constants[i][:2]
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        x_l_fw = abs(x) / l_fw
+        return c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw)
+
+    @groupwise
+    def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
+        """Neutron flux of the n-th groupat the blanket, at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose flux is being evaluated.
+        x:
+            The position where the neutron flux has to be evaluated. [m]
+            Note that this function does not enforce a check for x=inside the blanket,
+            thus if x is outside the blanket, an extrapolated blanket flux value up to
+            that point will be given, this flux is still guaranteed to be non-singular
+            i.e. finite, but not guaranteed to be positive.
+
+        Returns
+        -------
+        flux:
+            Neutron flux at x meter from the first wall.
+        """
+        i = n - 1
+        c3, c4 = self.integration_constants[i][2:]
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        x_l_bz = abs(x) / l_bz
+        return c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz)
+
+    @groupwise
+    def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
+        """
+        Neutron flux anywhere within the valid range of x,
+        i.e. from -self.x_bz to self.x_bz.
+
+        Parameters
+        ----------
+        n:
+            Neutron group number
+        x:
+            The depth where we want the neutron flux (m).
+            Valid only between x= -extended boundary to +-extended boundary of that group
+
+        Raises
+        ------
+        ValueError
+            The inputted x
+        """
+        if np.isscalar(x):
+            return self.groupwise_neutron_flux_at(n, [x])[0]
+        x = np.asarray(x)
+        in_fw = abs(x) <= self.x_fw
+        in_bz = np.logical_and(self.x_fw < abs(x), abs(x) <= self.x_bz)
+        if (~np.logical_or(in_fw, in_bz)).any():
+            raise ValueError(
+                f"for neutron group {n}, neutron flux can only be calculated up to "
+                f"{self.extended_boundary[n]} cm, which {x * 100} cm violates!"
+            )
+
+        out_flux = np.zeros_like(x)
+        out_flux[in_fw] = self.groupwise_neutron_flux_fw(n, x[in_fw])
+        out_flux[in_bz] = self.groupwise_neutron_flux_bz(n, x[in_bz])
+        return out_flux
+
+    # scalar values (one or two such floats per neutron group.)
+    @groupwise
+    def reaction_rate_fw(self, n: int, reaction_type: str) -> float:
+        """Calculate the reaction rate in the first wall.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved.
+        reaction_type:
+            Two options: "total" or "non-scattering".
+
+        """
+        self.solve_group_n(n)
+        i = n - 1
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        c1, c2, c3, c4 = self.integration_constants[i]
+        if reaction_type == "non-scattering":
+            sigma = self.fw_sigma_t[i] - self.fw_sigma_s[i, i]
+        elif reaction_type == "total":
+            sigma = self.fw_sigma_t[i]
+        else:
+            raise NotImplementedError(
+                f"Not yet implemented the reaction type {reaction_type}"
+            )
+        return sigma * (
+            c1 * expm1(self.x_fw / l_fw) - c2 * expm1(-self.x_fw / l_fw)
+        )
+
+    @groupwise
+    def reaction_rate_bz(self, n: int, reaction_type: str) -> float:
+        """Calculate the reaction rate in the blanket.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved.
+        reaction_type:
+            Two options: "total" or "non-scattering".
+
+        """
+        self.solve_group_n(n)
+        i = n - 1
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        c1, c2, c3, c4 = self.integration_constants[i]
+        if reaction_type == "non-scattering":
+            sigma = self.bz_sigma_t[i] - self.bz_sigma_s[i, i]
+        elif reaction_type == "total":
+            sigma = self.bz_sigma_t[i]
+        else:
+            raise NotImplementedError(
+                f"Not yet implemented the reaction type {reaction_type}"
+            )
+        # thicknesses in terms of bz path lengths
+        bz_thick = (self.x_bz - self.x_fw) / l_bz
+        fw_thick = self.x_fw / l_bz
+        return sigma * (
+            c3 * np.exp(fw_thick) * expm1(bz_thick)
+            - c4 * np.exp(-fw_thick) * expm1(-bz_thick)
+        )
+
+    @groupwise
+    def flux_fw2bz(self, n: int) -> float:
+        self.solve_group_n(n)
+        i = n - 1
+        c1, c2, c3, c4 = self.integration_constants[i]
+        l_bz_2, d_bz = get_diffusion_coefficient_and_length(
+            self.bz_sigma_t[i],
+            self.bz_sigma_s[i, i],
+            self.bz_A,
+        )
+        l_bz = np.sqrt(abs(l_bz_2))
+        return (
+            -d_bz
+            / l_bz
+            * (c3 * np.exp(self.x_fw / l_bz) - c4 * np.exp(-self.x_fw / l_bz))
+        )
+        # equivalent definition below: (should yield the same answer)
+        # self.flux_fw2bz[i] = - d_fw / l_fw * (c1 * np.exp(x_fw/l_fw) - c2 * np.exp(-x_fw/l_fw))
+
+    @groupwise
+    def flux_escaped(self, n: int) -> float:
+        self.solve_group_n(n)
+        i = n - 1
+        c1, c2, c3, c4 = self.integration_constants[i]
+        l_bz_2, d_bz = get_diffusion_coefficient_and_length(
+            self.bz_sigma_t[i],
+            self.bz_sigma_s[i, i],
+            self.bz_A,
+        )
+        l_bz = np.sqrt(abs(l_bz_2))
+        self.flux_escaped[i] = (
+            -d_bz
+            / l_bz
+            * (c3 * np.exp(self.x_bz / l_bz) - c4 * np.exp(-self.x_bz / l_bz))
+        )
