@@ -1148,7 +1148,7 @@ def plot_main_power_flow(
         0.14,
         (
             f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile_data.data['p_plant_electric_recirc_mw'].get_scan(scan):.2f} MWe\n"
-            f"$f_{{\\text{{recirc}}}}$:\n{mfile_data.data['cirpowfr'].get_scan(scan):.2f}"
+            f"$f_{{\\text{{recirc}}}}$:\n{mfile_data.data['f_p_plant_electric_recirc'].get_scan(scan):.2f}"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -1949,7 +1949,7 @@ def plot_main_power_flow(
         0.225,
         (
             f"Coolant pumps electric:\n{mfile_data.data['p_coolant_pump_elec_total_mw'].get_scan(scan):.3f} MWe\n"
-            f"$\\eta$: {mfile_data.data['etahtp'].get_scan(scan):.3f}"
+            f"$\\eta$: {mfile_data.data['eta_coolant_pump_electric'].get_scan(scan):.3f}"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -2152,9 +2152,9 @@ def plot_main_power_flow(
         0.15,
         0.05,
         (
-            f"Plant base load:\n{mfile_data.data['fcsht'].get_scan(scan):.3f} MWe\n"
+            f"Plant base load:\n{mfile_data.data['p_plant_electric_base_total_mw'].get_scan(scan):.3f} MWe\n"
             f"Minimum base load:\n{mfile_data.data['p_plant_electric_base'].get_scan(scan) * 1.0e-6:.3f} MWe\n"
-            f"Plant floor power density:\n{mfile_data.data['pwpm2'].get_scan(scan) * 1.0e-3:.3f} kW/m^2"
+            f"Plant floor power density:\n{mfile_data.data['pflux_plant_floor_electric'].get_scan(scan) * 1.0e-3:.3f} kW/m^2"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -8262,8 +8262,8 @@ def main_plot(
     plot_30 = fig14.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
 
-    plot_24 = fig10.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_24, m_file_data, scan, fig10)
+    plot_30 = fig14.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_30, m_file_data, scan, fig14)
 
 
 def main(args=None):
