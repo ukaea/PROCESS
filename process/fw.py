@@ -652,6 +652,7 @@ def init_fwbs_variables():
     fwbs_variables.qnuc = 0.0
     fwbs_variables.f_blkt_li6_enrichment = 30.0
     fwbs_variables.p_blkt_nuclear_heat_total_mw = 0.0
+    fwbs_variables.p_blkt_nuclear_heat_mw = 0.0
     fwbs_variables.p_div_nuclear_heat_total_mw = 0.0
     fwbs_variables.p_fw_nuclear_heat_total_mw = 0.0
     fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
