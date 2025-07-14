@@ -4908,6 +4908,7 @@ def plot_lower_vertical_build(
     )
     axis.minorticks_on()
     axis.set_ylabel("Height [m]")
+    axis.title.set_text("Lower Vertical Build")
 
 
 def plot_upper_vertical_build(
@@ -4956,32 +4957,7 @@ def plot_upper_vertical_build(
             "dr_tf_inboard",
             "dz_tf_cryostat",
         ]
-    else:
-        upper_vertical_variables = [
-            "z_plasma_xpoint_upper",
-            "dz_fw_plasma_gap",
-            "dz_fw_upper",
-            "dz_blkt_upper",
-            "dr_shld_blkt_gap",
-            "dz_shld_upper",
-            "dz_vv_upper",
-            "dz_shld_vv_gap",
-            "dz_shld_thermal",
-            "dr_tf_shld_gap",
-            "dr_tf_inboard",
-        ]
-
-    # Get thicknesses for each layer
-    upper_vertical_build = np.array([
-        mfile_data.data[rl].get_scan(-1) for rl in upper_vertical_variables
-    ])
-
-    # Remove build parts equal to zero
-    mask = ~(upper_vertical_build == 0.0)
-    filtered_build = upper_vertical_build[mask]
-    filtered_labels = [
-        lbl
-        for i, lbl in enumerate([
+        upper_vertical_labels = [
             "Plasma Height",
             "First Wall - Plasma Gap",
             "First Wall Upper",
@@ -4994,12 +4970,8 @@ def plot_upper_vertical_build(
             "TF Coil - Shield Gap",
             "TF Coil",
             "TF Coil - Cryostat gap",
-        ])
-        if mask[i]
-    ]
-    filtered_colors = [
-        col
-        for i, col in enumerate([
+        ]
+        upper_vertical_colours = [
             PLASMA_COLOUR[colour_scheme - 1],
             "white",
             FIRSTWALL_COLOUR[colour_scheme - 1],
@@ -5012,9 +4984,56 @@ def plot_upper_vertical_build(
             "white",
             TFC_COLOUR[colour_scheme - 1],
             "white",
-        ])
-        if mask[i]
-    ]
+        ]
+    # Double null case
+    else:
+        upper_vertical_variables = [
+            "z_plasma_xpoint_upper",
+            "dz_xpoint_divertor",
+            "dz_divertor",
+            "dz_shld_upper",
+            "dz_vv_upper",
+            "dz_shld_vv_gap",
+            "dz_shld_thermal",
+            "dr_tf_shld_gap",
+            "dr_tf_inboard",
+            "dz_tf_cryostat",
+        ]
+        upper_vertical_labels = [
+            "Plasma Height",
+            "Plasma - Divertor Gap",
+            "Divertor Upper",
+            "Shield Upper",
+            "Vacuum Vessel Upper",
+            "Shield-VV Gap",
+            "Thermal Shield",
+            "TF Coil - Shield Gap",
+            "TF Coil",
+            "TF Coil - Cryostat gap",
+        ]
+        upper_vertical_colours = [
+            PLASMA_COLOUR[colour_scheme - 1],
+            "white",
+            "black",
+            SHIELD_COLOUR[colour_scheme - 1],
+            VESSEL_COLOUR[colour_scheme - 1],
+            "white",
+            THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+            "white",
+            TFC_COLOUR[colour_scheme - 1],
+            "white",
+        ]
+
+    # Get thicknesses for each layer
+    upper_vertical_build = np.array([
+        mfile_data.data[rl].get_scan(-1) for rl in upper_vertical_variables
+    ])
+
+    # Remove build parts equal to zero
+    mask = ~(upper_vertical_build == 0.0)
+    filtered_build = upper_vertical_build[mask]
+    filtered_labels = [lbl for i, lbl in enumerate(upper_vertical_labels) if mask[i]]
+    filtered_colors = [col for i, col in enumerate(upper_vertical_colours) if mask[i]]
     filtered_vars = [v for i, v in enumerate(upper_vertical_variables) if mask[i]]
 
     # Compute cumulative positions (bottoms) for stacking
@@ -5863,7 +5882,7 @@ def main_plot(
 
     # Make each axes smaller vertically to leave room for the legend
     plot_175 = fig6.add_subplot(211)
-    plot_175.set_position([0.1, 0.58, 0.8, 0.32])  # x0, y0, width, height
+    plot_175.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
 
     plot_17 = fig6.add_subplot(212)
     plot_17.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
