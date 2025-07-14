@@ -371,7 +371,7 @@ OBS_VARS = {
     "fpnetel": "fp_plant_electric_net_required_mw",
     "fradwall": "fpflux_fw_rad_max",
     "ft_burn": "ft_burn_min",
-    "ftcycle": "ft_cycle_min",
+    "ftcycl": "ft_cycle_min",
     "ftpeak": "ftemp_fw_max",
     "fvs": "fvs_plasma_total_required",
     "fwalld": "fpflux_fw_neutron_max_mw",
