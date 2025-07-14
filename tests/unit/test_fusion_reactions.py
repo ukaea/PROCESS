@@ -11,7 +11,7 @@ from process.fortran import physics_variables as pv
 
 
 class SetFusionPowersParam(NamedTuple):
-    f_alpha_plasma: Any = None
+    f_p_alpha_plasma_deposited: Any = None
 
     f_deuterium: Any = None
 
@@ -70,7 +70,7 @@ class SetFusionPowersParam(NamedTuple):
     "setfusionpowersparam",
     (
         SetFusionPowersParam(
-            f_alpha_plasma=0.95,
+            f_p_alpha_plasma_deposited=0.95,
             f_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
@@ -90,7 +90,7 @@ class SetFusionPowersParam(NamedTuple):
             expected_fusion_power=1983.847575,
         ),
         SetFusionPowersParam(
-            f_alpha_plasma=0.95,
+            f_p_alpha_plasma_deposited=0.95,
             f_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
@@ -110,7 +110,7 @@ class SetFusionPowersParam(NamedTuple):
             expected_fusion_power=2483.04427258794345,
         ),
         SetFusionPowersParam(
-            f_alpha_plasma=0.95,
+            f_p_alpha_plasma_deposited=0.95,
             f_deuterium=0.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
@@ -130,7 +130,7 @@ class SetFusionPowersParam(NamedTuple):
             expected_fusion_power=2483.0442725879434,
         ),
         SetFusionPowersParam(
-            f_alpha_plasma=0.95,
+            f_p_alpha_plasma_deposited=0.95,
             f_deuterium=2.5,
             f_alpha_electron=0.68,
             f_alpha_ion=0.32,
@@ -163,7 +163,11 @@ def test_set_fusion_powers(setfusionpowersparam, monkeypatch):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(pv, "f_alpha_plasma", setfusionpowersparam.f_alpha_plasma)
+    monkeypatch.setattr(
+        pv,
+        "f_p_alpha_plasma_deposited",
+        setfusionpowersparam.f_p_alpha_plasma_deposited,
+    )
     monkeypatch.setattr(pv, "f_deuterium", setfusionpowersparam.f_deuterium)
 
     (
@@ -246,7 +250,7 @@ def test_bosch_hale(t, reaction, expected_bosch_hale):
 
 
 def test_beam_fusion():
-    beta_beam, beam_density_out, p_beam_alpha_mw = reactions.beam_fusion(
+    beta_beam, nd_beam_ions_out, p_beam_alpha_mw = reactions.beam_fusion(
         1.0,
         1.5,
         0.85,
@@ -267,7 +271,7 @@ def test_beam_fusion():
     )
 
     assert beta_beam == pytest.approx(0.0026264022466211366)
-    assert beam_density_out == pytest.approx(4.2133504058678246e17)
+    assert nd_beam_ions_out == pytest.approx(4.2133504058678246e17)
     assert p_beam_alpha_mw == pytest.approx(11.593221085189192)
 
 

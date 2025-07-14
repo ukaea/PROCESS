@@ -124,12 +124,12 @@ icc = 16
 * JUSTIFICATION: Required to generate 100MW
 * VARIABLES:     p_plant_electric_net_mw (net electric power) calculated in-situ
 
-pnetelin = 100.0
+p_plant_electric_net_required_mw = 100.0
 * DESCRIPTION:   Required net electric power lower limit (MW) (icc=16)
 * JUSTIFICATION: Not used in this run
 
 ixc = 25
-fpnetel = 1.0 
+fp_plant_electric_net_required_mw = 1.0 
 * boundl(25) = 
 * boundu(25) = 
 * DESCRIPTION:   f-value for net electric power (constraint equation 16)
@@ -237,7 +237,7 @@ triang = 0.5
 icc = 5
 * DESCRIPTION:   Density Upper Limit
 * JUSTIFICATION: Used to enforce Greenwald limit
-* VARIABLES:     dnelimt & dnla calculated in-situ
+* VARIABLES:     dnelimt & nd_electron_line calculated in-situ
 
 i_density_limit = 7
 * DESCRIPTION:   Switch for Density Limit to Enforce (icc=5) (7: Greenwald Limit)
@@ -634,7 +634,7 @@ boundu(28) = 1.0
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 
-*f_alpha_plasma = 
+*f_p_alpha_plasma_deposited = 
 * DESCRIPTION:   Fraction of alpha power deposited to plasma
 * JUSTIFICATION: Using default = 0.95
 
@@ -1127,7 +1127,7 @@ i_tf_turns_integer = 0
 *icc = 77
 * DESCRIPTION:   Constraint equation for maximum TF current per turn upper limit
 * JUSTIFICATION: Turned off, not concerned with current per turn
-* VARIABLES:     cpttf_max (Allowable TF coil current per turn [A/turn]). c_tf_turn calculated in-situ
+* VARIABLES:     c_tf_turn_max (Allowable TF coil current per turn [A/turn]). c_tf_turn calculated in-situ
 
 *ixc = 60
 *c_tf_turn =  
@@ -1136,7 +1136,7 @@ i_tf_turns_integer = 0
 * DESCRIPTION:   TF coil leg current per turn (A) (icc=77)
 * JUSTIFICATION: Not used, not constraining leg current
 
-*cpttf_max =  
+*c_tf_turn_max =  
 * DESCRIPTION:   Maximum allowable TF coil leg current per turn (A) (icc=77)
 * JUSTIFICATION: Not used, not constraining leg current
 
@@ -1376,7 +1376,7 @@ boundu(49) = 1.0
 * JUSTIFICATION: Turned off, dont care toridal field limit
 * VARIABLES:     b_tf_inboard_peak calculated in-situ
 
-* bmxlim  = 
+* b_tf_inboard_max  = 
 * DESCRIPTION:   Maximum peak toroidal field (T) (`constraint equation 25`) (default = 12)
 * JUSTIFICATION: Not yet set, assuming default.
 
@@ -2588,13 +2588,13 @@ f_fw_rad_max = 1.0
 * JUSTIFICATION: Not set, assuming default value
 
 *ixc = 14
-*fwalld = 0.99
+*fpflux_fw_neutron_max_mw = 0.99
 *boundl(14) = 0.99
 *boundu(14) = 1.0 
 * DESCRIPTION:   f-value for maximum neutron wall load
 * JUSTIFICATION: Used with icc=8 to enforce wall load limit               
 
-*walalw = 
+*pflux_fw_neutron_max_mw = 
 * DESCRIPTION:   Allowable neutron wall-load (MW/m2)
 * JUSTIFICATION: Used with icc=8 to enforce wall load limit
 
@@ -2610,7 +2610,7 @@ pflux_fw_rad_max = 1.2
 * JUSTIFICATION: 
 
 ixc = 116
-fradwall = 1.0
+fpflux_fw_rad_max = 1.0
 boundl(116) = 0.01
 boundu(116) = 1.0
 * DESCRIPTION:   f-value for upper limit on radiation wall load
@@ -2664,7 +2664,7 @@ i_hcd_calculations = 1
 * JUSTIFICATION: Turned off, do not care about maximum current drive gamma
 * VARIABLES:     eta_cd_norm_hcd_primary(1.0e20 A/W-m2) calculated in-situ
 
-*gammax =  
+*eta_cd_norm_hcd_primary_max =  
 * DESCRIPTION:   Maximum current drive gamma (icc = 37)
 * JUSTIFICATION: Turned off, not using icc = 37 
 
@@ -2695,7 +2695,7 @@ icc = 30
 * VARIABLES:     p_hcd_injected_total_mw (total auxiliary injected power (MW)) summed from all injected power sources
 
 ixc = 46
-fpinj = 1.0
+fp_hcd_injected_max = 1.0
 boundl(46) = 0.6
 boundu(46) = 1.5
 * DESCRIPTION:   f-value for injected power variation range
@@ -2740,7 +2740,7 @@ feffcd = 1.0
 * DESCRIPTION:   Neutral beam energy (keV)
 * JUSTIFICATION: Not used as no NBI used
 
-*tbeamin = 
+*n_beam_decay_lengths_core_required = 
 * DESCRIPTION:   Number of NB decay lengths to plasma centre
 * JUSTIFICATION: Not used as no NBI used
 
@@ -3161,7 +3161,7 @@ i_pulsed_plant = 0
 * JUSTIFICATION: No required burn time
 
 *ixc = 21
-*ft_burn = 1.0
+*ft_burn_min = 1.0
 *boundl(21) = 0.99
 *boundu(21) = 1.0
 * DESCRIPTION:   f-value for minimum burn time
@@ -3223,7 +3223,7 @@ t_between_pulse = 100.0
 * JUSTIFICATION: Turned off, do not care about the full pulse cycle time 
 * VARIABLES:     t_cycle (s) calculated in-situ
 
-*tcycmn =  
+*t_cycle_min =  
 * DESCRIPTION:   Minimum full pulse cycle time (s)
 * JUSTIFICATION: Turned off, not using icc = 42
 

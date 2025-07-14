@@ -140,7 +140,9 @@ INPUT_VARIABLES = {
     "beta_poloidal_eps_max": InputVariable(
         fortran.physics_variables, float, range=(0.01, 10.0)
     ),
-    "f_alpha_plasma": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "f_p_alpha_plasma_deposited": InputVariable(
+        fortran.physics_variables, float, range=(0.0, 1.0)
+    ),
     "f_p_div_lower": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_deuterium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "ffwal": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
@@ -231,7 +233,9 @@ INPUT_VARIABLES = {
         fortran.pfcoil_variables, float, range=(0.01, 100.0)
     ),
     "bmn": InputVariable(fortran.stellarator_variables, float, range=(0.0001, 0.01)),
-    "bmxlim": InputVariable(fortran.constraint_variables, float, range=(0.1, 50.0)),
+    "b_tf_inboard_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.1, 50.0)
+    ),
     "f_c_plasma_bootstrap_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
     ),
@@ -320,7 +324,9 @@ INPUT_VARIABLES = {
     "c_tf_turn": InputVariable(
         fortran.tfcoil_variables, float, range=(0.001, 1000000.0)
     ),
-    "cpttf_max": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 1000000.0)),
+    "c_tf_turn_max": InputVariable(
+        fortran.tfcoil_variables, float, range=(1.0, 1000000.0)
+    ),
     "crane_arm_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -630,7 +636,9 @@ INPUT_VARIABLES = {
     "fp_fusion_total_max_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "fgamcd": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "feta_cd_norm_hcd_primary_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "f_a_fw_hcd": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fpflux_div_heat_load_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
@@ -678,9 +686,15 @@ INPUT_VARIABLES = {
     "fp_plasma_separatrix_min_mw": InputVariable(
         fortran.physics_variables, float, range=(0.001, 1.0)
     ),
-    "fpeakb": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fpinj": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fpnetel": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fb_tf_inboard_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fp_hcd_injected_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fp_plant_electric_net_required_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fpoloidalpower": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
@@ -711,7 +725,9 @@ INPUT_VARIABLES = {
         fortran.cs_fatigue_variables, float, range=(0.1, 100000000.0)
     ),
     "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
-    "fradwall": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "fpflux_fw_rad_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "f_radius_beam_tangency_rmajor": InputVariable(
         fortran.current_drive_variables, float, range=(0.5, 2.0)
     ),
@@ -726,21 +742,29 @@ INPUT_VARIABLES = {
     "fstr_wp": InputVariable(fortran.constraint_variables, float, range=(1e-09, 10.0)),
     "fstrcase": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fstrcond": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ft_burn": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ft_burn_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ft_current_ramp_up": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "ftbr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ftcycl": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ft_cycle_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ftmargoh": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftmargtf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftoroidalgap": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 10.0)),
-    "ftpeak": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ftemp_fw_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fvdump": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fvoldw": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvolsi": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvolso": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
-    "fvs": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fvs_plasma_total_required": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "f_c_plasma_non_inductive": InputVariable(
         fortran.physics_variables, float, range=(0.0, 1.0)
     ),
@@ -754,7 +778,9 @@ INPUT_VARIABLES = {
     "fw_th_conductivity": InputVariable(
         fortran.fwbs_variables, float, range=(1.0, 100.0)
     ),
-    "fwalld": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fpflux_fw_neutron_max_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fwbs_nref": InputVariable(
         fortran.cost_variables, float, range=(1000.0, 100000000.0)
     ),
@@ -775,7 +801,9 @@ INPUT_VARIABLES = {
     "gamma_he": InputVariable(
         fortran.primary_pumping_variables, float, range=(1.0, 2.0)
     ),
-    "gammax": InputVariable(fortran.constraint_variables, float, range=(0.01, 10.0)),
+    "eta_cd_norm_hcd_primary_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.01, 10.0)
+    ),
     "gapomin": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "gas_buildings_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
@@ -1033,7 +1061,7 @@ INPUT_VARIABLES = {
     "plleno": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
     "plsepi": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
     "plsepo": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
-    "pnetelin": InputVariable(
+    "p_plant_electric_net_required_mw": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 10000.0)
     ),
     "pnuc_fw_ratio_dcll": InputVariable(
@@ -1255,14 +1283,16 @@ INPUT_VARIABLES = {
     "tauee_in": InputVariable(fortran.physics_variables, float, range=(0.0, 100.0)),
     "taumax": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
     "tauratio": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
-    "tbeamin": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
+    "n_beam_decay_lengths_core_required": InputVariable(
+        fortran.current_drive_variables, float, range=(0.0, 10.0)
+    ),
     "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
     "tbktrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
     "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),
     "tcomrepl": InputVariable(fortran.cost_variables, float, range=(0.01, 2.0)),
     "tcoolin": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 373.15)),
     "tcritsc": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 300.0)),
-    "tcycmn": InputVariable(
+    "t_cycle_min": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(fortran.divertor_variables, float, range=(0.1, 100.0)),
@@ -1444,7 +1474,9 @@ INPUT_VARIABLES = {
         fortran.build_variables, float, range=(0.0, 10.0)
     ),
     "vvhealw": InputVariable(fortran.constraint_variables, float, range=(0.01, 10.0)),
-    "walalw": InputVariable(fortran.constraint_variables, float, range=(0.001, 50.0)),
+    "pflux_fw_neutron_max_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 50.0)
+    ),
     "walker_coefficient": InputVariable(
         fortran.cs_fatigue_variables, float, range=(0.1, 10.0)
     ),

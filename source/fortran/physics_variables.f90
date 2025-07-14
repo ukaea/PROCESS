@@ -171,7 +171,7 @@ module physics_variables
   real(dp) :: nd_beam_ions
   !! hot beam ion density, variable (/m3)
 
-  real(dp) :: beam_density_out
+  real(dp) :: nd_beam_ions_out
   !! hot beam ion density from calculation (/m3)
 
   real(dp) :: beta_norm_max
@@ -198,7 +198,7 @@ module physics_variables
   real(dp) :: nd_ions_total
   !! total ion density (/m3)
 
-  real(dp) :: dnla
+  real(dp) :: nd_electron_line
   !! line averaged electron density (/m3)
 
   real(dp) :: nd_protons
@@ -235,7 +235,7 @@ module physics_variables
   real(dp) :: f_alpha_electron
   !! fraction of alpha energy to electrons
 
-  real(dp) :: f_alpha_plasma
+  real(dp) :: f_p_alpha_plasma_deposited
   !! Fraction of alpha power deposited in plasma. Default of 0.95 taken from https://doi.org/10.1088/0029-5515/39/12/305.
 
   real(dp) :: f_alpha_ion
@@ -672,7 +672,7 @@ module physics_variables
   real(dp) :: pflux_fw_rad_mw
   !! Nominal mean radiation load on inside surface of reactor (MW/m2)
 
-  real(dp) :: piepv
+  real(dp) :: pden_ion_electron_equilibration_mw
   !! ion/electron equilibration power per volume (MW/m3)
 
   real(dp) :: plasma_current

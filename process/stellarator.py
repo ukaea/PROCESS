@@ -3637,7 +3637,7 @@ class Stellarator:
         #  Scale the result so that it applies to the volume-averaged
         #  electron density
 
-        dlimit = dnlamx * physics_variables.dene / physics_variables.dnla
+        dlimit = dnlamx * physics_variables.dene / physics_variables.nd_electron_line
 
         #  Set the required value for icc=5
 
@@ -4222,7 +4222,11 @@ class Stellarator:
             * constants.proton_mass
             * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
-            / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
+            / (
+                3.0e0
+                * physics_variables.vol_plasma
+                * physics_variables.nd_electron_line
+            )
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -4272,7 +4276,7 @@ class Stellarator:
         ):
             (
                 physics_variables.beta_beam,
-                physics_variables.beam_density_out,
+                physics_variables.nd_beam_ions_out,
                 physics_variables.p_beam_alpha_mw,
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
@@ -4382,7 +4386,7 @@ class Stellarator:
 
         #  Calculate ion/electron equilibration power
 
-        physics_variables.piepv = rether(
+        physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
@@ -4438,7 +4442,8 @@ class Stellarator:
         #  physics_variables.p_plasma_rad_mw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
@@ -4480,7 +4485,7 @@ class Stellarator:
         #  Power transported to the first wall by escaped alpha particles
 
         physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
-            1.0e0 - physics_variables.f_alpha_plasma
+            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
         )
 
         # Nominal mean photon wall load
@@ -4514,7 +4519,8 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
@@ -4538,7 +4544,7 @@ class Stellarator:
             physics_variables.bt,
             physics_variables.nd_ions_total,
             physics_variables.dene,
-            physics_variables.dnla,
+            physics_variables.nd_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
@@ -4654,7 +4660,7 @@ class Stellarator:
                 nu_star_d,
                 nu_star_T,
                 nu_star_He,
-                physics_variables.dnla,
+                physics_variables.nd_electron_line,
                 physics_variables.dnelimt,
             )
 
@@ -4678,7 +4684,7 @@ class Stellarator:
         nu_star_D,
         nu_star_T,
         nu_star_He,
-        dnla,
+        nd_electron_line,
         dnelimt,
     ):
         po.oheadr(self.outfile, "Stellarator Specific Physics:")
@@ -4786,15 +4792,15 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Obtained line averaged density at op. point (/m3)",
-            "(dnla)",
-            dnla,
+            "(nd_electron_line)",
+            nd_electron_line,
         )
         po.ovarre(self.outfile, "Sudo density limit (/m3)", "(dnelimt)", dnelimt)
         po.ovarre(
             self.outfile,
             "Ratio density to sudo limit (1)",
-            "(dnla/dnelimt)",
-            dnla / dnelimt,
+            "(nd_electron_line/dnelimt)",
+            nd_electron_line / dnelimt,
         )
 
     def calc_neoclassics(self):
@@ -4806,7 +4812,8 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
+                physics_variables.f_p_alpha_plasma_deposited
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4815,7 +4822,8 @@ class Stellarator:
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
+                physics_variables.f_p_alpha_plasma_deposited
+                * physics_variables.pden_alpha_total_mw
                 - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
@@ -4951,7 +4959,8 @@ class Stellarator:
         )
 
         nominator = (
-            physics_variables.f_alpha_plasma * physics_variables.pden_alpha_total_mw
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.pden_alpha_total_mw
             - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 

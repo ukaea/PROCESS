@@ -47,10 +47,10 @@ dene = 7.5E19
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-ixc = 14 * fwalld
-fwalld = 1.0
+ixc = 14 * fpflux_fw_neutron_max_mw
+fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*
@@ -63,7 +63,7 @@ p_fusion_total_max_mw = 3000
 * Burn time lower limit *
 *-----------------------*
 icc = 13 
-ixc = 21 * ft_burn
+ixc = 21 * fr_burn_min
 * minimum burn time [s]
 t_burn_min = 7200.0
 
@@ -76,16 +76,16 @@ boundu(103) = 10.0
 * Injection power upper limit *
 *-----------------------------*
 icc = 30
-ixc = 46 * fpinj
+ixc = 46 * fp_hcd_injected_max
 * Maximum allowable value for injected power [MW]
 p_hcd_injected_max = 200.0
 
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-ixc = 25 * fpnetel
+ixc = 25 * fp_plant_electric_net_required_mw
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*
@@ -96,9 +96,9 @@ fbeta_max = 0.5
 * Max TF field *
 *--------------*
 icc = 25
-ixc = 35 * fpeakb
+ixc = 35 * fb_tf_inboard_max
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
@@ -601,6 +601,6 @@ i_tf_sc_mat = 1
 
 * Scan Variables
 
-nsweep = 17 * bmxlim, maximum peak toroidal field 
+nsweep = 17 * b_tf_inboard_max, maximum peak toroidal field 
 isweep = 11
 sweep = 11., 11.2, 11.4, 11.6, 11.8, 12., 12.2, 12.4, 12.6, 12.8, 13.

@@ -230,7 +230,7 @@
  Electron_temp.,_density_weighted_(keV)___________________________________ (ten)__________________________ 1.34914174066700241e+01 OP
  Volume_averaged_electron_number_density_(/m3)____________________________ (dene)_________________________ 7.79622390002983731e+19
  Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.02466460344915771e+20 OP
- Line-averaged_electron_number_density_(/m3)______________________________ (dnla)_________________________ 8.63127495812675338e+19 OP
+ Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_________________________ 8.63127495812675338e+19 OP
  Plasma_pressure_on_axis_(Pa)_____________________________________________ (p0)___________________________ 7.82668759018785902e+05 OP
  Volume_averaged_plasma_pressure_(Pa)_____________________________________ (vol_avg_pressure)_____________ 2.26860509860517632e+05 OP
  Line-averaged_electron_density_/_Greenwald_density_______________________ (dnla_gw)______________________ 1.19833068191158598e+00 OP
@@ -335,7 +335,7 @@
  Power_incident_on_the_lower_inner_target_(MW)____________________________ (pLImw)________________________ 3.47389779090710737e+00 OP
  Power_incident_on_the_lower_outer_target_(MW)____________________________ (pLOmw)________________________ 4.99902365032974050e+00 OP
  Ohmic_heating_power_(MW)_________________________________________________ (p_plasma_ohmic_mw)____________ 6.88941757462895432e-01 OP
- Fraction_of_alpha_power_deposited_in_plasma______________________________ (f_alpha_plasma)_______________ 9.49999999999999956e-01 IP
+ Fraction_of_alpha_power_deposited_in_plasma______________________________ (f_p_alpha_plasma_deposited)_______________ 9.49999999999999956e-01 IP
  Fraction_of_alpha_power_to_electrons_____________________________________ (f_alpha_electron)_____________ 7.21637557531714102e-01 OP
  Fraction_of_alpha_power_to_ions__________________________________________ (f_alpha_ion)__________________ 2.78362442468285898e-01 OP
  Ion_transport_(MW)_______________________________________________________ (p_ion_transport_loss_mw)______ 1.27356207989057211e+02 OP
@@ -1090,7 +1090,7 @@
  Transport_power_from_scaling_law_(MW)____________________________________ (pscalingmw)___________________ 2.67976424195365780e+02 OP
  Radiation_power_from_inside_"coreradius"_(MW)____________________________ (pcoreradmw.)__________________ 1.30345146305381149e+02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 3.98321570500746930e+02 OP
- Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_alpha_plasma*p_alpha_total_mw)_ 3.07475058693256699e+02 OP
+ Alpha_power_deposited_in_plasma_(MW)_____________________________________ (f_p_alpha_plasma_deposited*p_alpha_total_mw)_ 3.07475058693256699e+02 OP
  Power_from_charged_products_of_DD_and/or_D-He3_fusion_(MW)_______________ (p_non_alpha_charged_mw.)_____ 1.20650459189592762e+00 OP
  Ohmic_heating_(MW)_______________________________________________________ (p_plasma_ohmic_mw.)___________ 6.88941757462895432e-01 OP
  Injected_power_deposited_in_plasma_(MW)__________________________________ (pinjmw)_______________________ 7.75278055722339587e+01 OP
@@ -1108,7 +1108,7 @@
  Nuclear_power_lost_to_TF_(MW)____________________________________________ (p_tf_nuclear_heat_mw)_______________________ 2.50975326006813229e-02 OP
  Total_(MW)_______________________________________________________________ _______________________________ 2.16828420051550938e+03 OP
  Net_electric_power_output(MW)____________________________________________ (p_plant_electric_net_mw.)____________________ 3.88019059400626361e+02 OP
- Required_Net_electric_power_output(MW)___________________________________ (pnetelin)_____________________ 4.00000000000000000e+02
+ Required_Net_electric_power_output(MW)___________________________________ (p_plant_electric_net_required_mw)_____________________ 4.00000000000000000e+02
  Electric_power_for_heating_and_current_drive_(MW)________________________ (pinjwp)_______________________ 1.55055611144467917e+02 OP
  Electric_power_for_primary_coolant_pumps_(MW)____________________________ (p_coolant_pump_elec_total_mw)________________________ 2.00374097458155489e+02 OP
  Electric_power_for_vacuum_pumps_(MW)_____________________________________ (vachtmw)______________________ 5.00000000000000000e-01
@@ -1271,7 +1271,7 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 
-bmxlim   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
+b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
 fbeta_max = 0.5 * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
 fdene    = 1.2 * f-value for density limit (`constraint equation 5`; `iteration variable 9`)
 fiooic   = 0.65 * f-value for TF coil operating current / critical current ratio
@@ -1281,12 +1281,12 @@ fjprot   = 1.0 * f-value for TF coil winding pack current density
 foh_stress = 1.0 * f-value for Tresca yield criterion in Central Solenoid
 fmaxvvstress = 1.0 * f-value for maximum permitted stress of the VV
 fvdump   = 1.0 * f-value for dump voltage (`constraint equation 34`; `iteration variable 51`)
-fwalld   = 1.0 * f-value for maximum wall load (`constraint equation 8`; `iteration variable 14`)
-pnetelin = 400.0 * required net electric power (MW) (`constraint equation 16`)
+fpflux_fw_neutron_max_mw   = 1.0 * f-value for maximum wall load (`constraint equation 8`; `iteration variable 14`)
+p_plant_electric_net_required_mw = 400.0 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
 psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
 t_burn_min   = 7200.0 * minimum burn time (s) (KE - no longer itv;; see issue #706)
-walalw   = 2.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
+pflux_fw_neutron_max_mw   = 2.0 * allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 f_alpha_energy_confinement_min = 5.0 * Lower limit on taup/taueff the ratio of alpha particle to energy confinement
 
 *-------------------Constraints--------------------*

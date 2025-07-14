@@ -49,7 +49,7 @@ ramp-up time.
 The length of the burn time is calculated from the surplus volt-seconds available from the Central 
 Solenoid and the other PF coils during the plasma burn phase, after the flux required during the 
 plasma start-up is taken into account. A minimum burn time (`t_burn_min`) can be enforced via 
-constraint equation no. 13 and iteration variable no 21 (`ft_burn`).
+constraint equation no. 13 and iteration variable no 21 (`ft_burn_min`).
 
 ## Currents over time
 

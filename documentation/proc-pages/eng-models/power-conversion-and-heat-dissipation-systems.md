@@ -11,7 +11,7 @@ turbines. Figure 1 shows the power flow.
 
 ## Divertor
 
-All of the charged particle transport power leaving the plasma (excluding the `1-f_alpha_plasma` portion of 
+All of the charged particle transport power leaving the plasma (excluding the `1-f_p_alpha_plasma_deposited` portion of 
 the alpha power that escapes directly to the first wall) is assumed to be absorbed in the divertor, 
 along with a proportion `f_ster_div_single` of the radiation power and the neutron power.
 
@@ -31,7 +31,7 @@ This performs calculations on the first wall of the machine. Evaluations of the 
 thermal stresses on this component lead to a measure of the maximum number of cycles to which the 
 first wall can be subjected, and hence to the minimum allowable length of each reactor cycle for a 
 specified first wall lifetime. The cycle time can be constrained to be at least the minimum value 
-by turning on constraint equation no. 42 with iteration variable no 67 (`ftcycl`).
+by turning on constraint equation no. 42 with iteration variable no 67 (`ft_cycle_min`).
 
 # Power conversion cycle
 

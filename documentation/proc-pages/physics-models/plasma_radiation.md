@@ -213,7 +213,7 @@ Ensures that the calculated total radiation power density does not exceed the to
 alpha power coupled to the plasma, other charged particle fusion power, auxiliary injected power and
 the ohmic heating power). If the radiation power is higher than the heating power then the change in the stored plasma thermal energy is negative, $-\frac{\mathrm{d}W}{\mathrm{d}T}$. This means the plasma is cooling and is thus not a viable plasma solution.
 
-$f_{\alpha, \text{plasma}}$ is the fraction of alpha power that is coupled to the plasma (`f_alpha_plasma`).
+$f_{\alpha, \text{plasma}}$ is the fraction of alpha power that is coupled to the plasma (`f_p_alpha_plasma_deposited`).
 
 The scaling value `fradpwr` can be varied also.
 
@@ -227,7 +227,7 @@ This constraint can be activated by stating `icc = 67` in the input file.
 
 The limiting value of $q_{\text{fw,rad}}$ in $\mathrm {MWm^{-2}}$ is be set using input parameter `pflux_fw_rad_max`.
 
-The scaling value `fradwall` can be varied also.
+The scaling value `fpflux_fw_rad_max` can be varied also.
 
 [^1]: “ADAS: Docmentation,” Adas.ac.uk, 2024. https://www.adas.ac.uk/manual.php
 [^2]: “OPEN-ADAS,” Adas.ac.uk, 2025. https://open.adas.ac.uk/adf11 (accessed Jan. 15, 2025).
