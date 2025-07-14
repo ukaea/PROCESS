@@ -17,6 +17,7 @@ from neutronics_data import (
 )
 from numpy import testing as npt
 from scipy.constants import Avogadro
+from scipy.special import expm1
 
 BARNS_CM2 = 1e-24
 N_A = Avogadro
@@ -33,12 +34,11 @@ def groupwise(func):
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
         groupwise_func = getattr(self, groupwise_name)
-        return np.sum(
+        return np.array(
             [
                 groupwise_func(n, *args, **kwargs)
                 for n in range(1, self.n_groups + 1)
             ],
-            axis=0,
         )
 
     def wrapper_setattr(cls):
@@ -350,8 +350,7 @@ class NeutronFluxProfile:
         ----------
         flux:
             Nuetron flux directly emitted by the plasma, incident on the first wall.
-            unit: arbitrary, but whichever unit used here will be the same unit used at
-            the output neutron_flux.
+            unit: cm^-2 s^-1
         fw_mat:
             first wall material
         x_fw:
@@ -363,7 +362,7 @@ class NeutronFluxProfile:
         n_groups:
             number of groups used to approximate this.
         """
-        self.flux = flux
+        self.flux = flux  # flux incident on the first wall.
         if not (0 < x_fw < x_bz):
             raise ValueError(
                 f"Cannot construct a first-wall+blanket module where{x_fw=}, {x_bz=}."
@@ -374,16 +373,18 @@ class NeutronFluxProfile:
         self.x_bz = x_bz * 100
         self.n_groups = n_groups
 
+        # macroscopic cross-sections Sigma saved here. Not capitalized due to style
         self.fw_sigma_t, self.fw_sigma_s, self.fw_A = (
             get_material_nuclear_data(self.fw_mat, n_groups)
         )
         self.bz_sigma_t, self.bz_sigma_s, self.bz_A = (
             get_material_nuclear_data(self.bz_mat, n_groups)
         )
-        # Dictionaries indexed by integers, so that we don't have to worry about ordering
+        # Dictionaries indexed by integers, so that we can create these values
+        # out of sequence without messing up the order.
         self.integration_constants = {}
-        self.extended_boundary = {}
         self.l_fw_2, self.l_bz_2 = {}, {}
+        self.extended_boundary = {}
 
     def solve_one_group(self) -> None:
         """
@@ -426,15 +427,17 @@ class NeutronFluxProfile:
             tanh_bz = np.tan((self.extended_boundary[i] - x_fw) / l_bz)
 
         c2 = (
-            np.exp(x_fw / l_fw)
+            self.flux
+            * np.exp(x_fw / l_fw)
             / 2
             * ((l_fw / d_fw) + (l_bz / d_bz) * tanh_bz)
             / (cosh_fw + sinh_fw * tanh_bz * (d_fw / l_fw) * (l_bz / d_bz))
         )
-        c1 = c2 - l_fw / d_fw
+        c1 = c2 - l_fw / d_fw * self.flux
 
         c3_c4_common_factor = (
-            np.exp(x_fw / l_fw)
+            self.flux
+            * np.exp(x_fw / l_fw)
             / 2
             * (1 - tanh_fw)
             / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
@@ -513,7 +516,7 @@ class NeutronFluxProfile:
         c1, c2 = self.integration_constants[i][:2]
         l_fw = np.sqrt(abs(self.l_fw_2[i]))
         x_l_fw = abs(x) / l_fw
-        return self.flux * (c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw))
+        return c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw)
 
     @groupwise
     def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
@@ -539,7 +542,7 @@ class NeutronFluxProfile:
         c3, c4 = self.integration_constants[i][2:]
         l_bz = np.sqrt(abs(self.l_bz_2[i]))
         x_l_bz = abs(x) / l_bz
-        return self.flux * (c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz))
+        return c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz)
 
     @groupwise
     def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
@@ -572,6 +575,103 @@ class NeutronFluxProfile:
             )
 
         out_flux = np.zeros_like(x)
-        out_flux[in_fw] = self.groupwise_neutron_flux_fw(x[in_fw])
-        out_flux[in_bz] = self.groupwise_neutron_flux_bz(x[in_bz])
+        out_flux[in_fw] = self.groupwise_neutron_flux_fw(n, x[in_fw])
+        out_flux[in_bz] = self.groupwise_neutron_flux_bz(n, x[in_bz])
         return out_flux
+
+    # scalar values (one or two such floats per neutron group.)
+    @groupwise
+    def reaction_rate_fw(self, n: int, reaction_type: str) -> float:
+        """Calculate the reaction rate in the first wall.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved.
+        reaction_type:
+            Two options: "total" or "non-scattering".
+
+        """
+        self.solve_group_n(n)
+        i = n - 1
+        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        c1, c2, c3, c4 = self.integration_constants[i]
+        if reaction_type == "non-scattering":
+            sigma = self.fw_sigma_t[i] - self.fw_sigma_s[i, i]
+        elif reaction_type == "total":
+            sigma = self.fw_sigma_t[i]
+        else:
+            raise NotImplementedError(
+                f"Not yet implemented the reaction type {reaction_type}"
+            )
+        return sigma * (
+            c1 * expm1(self.x_fw / l_fw) - c2 * expm1(-self.x_fw / l_fw)
+        )
+
+    @groupwise
+    def reaction_rate_bz(self, n: int, reaction_type: str) -> float:
+        """Calculate the reaction rate in the blanket.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved.
+        reaction_type:
+            Two options: "total" or "non-scattering".
+
+        """
+        self.solve_group_n(n)
+        i = n - 1
+        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        c1, c2, c3, c4 = self.integration_constants[i]
+        if reaction_type == "non-scattering":
+            sigma = self.bz_sigma_t[i] - self.bz_sigma_s[i, i]
+        elif reaction_type == "total":
+            sigma = self.bz_sigma_t[i]
+        else:
+            raise NotImplementedError(
+                f"Not yet implemented the reaction type {reaction_type}"
+            )
+        # thicknesses in terms of bz path lengths
+        bz_thick = (self.x_bz - self.x_fw) / l_bz
+        fw_thick = self.x_fw / l_bz
+        return sigma * (
+            c3 * np.exp(fw_thick) * expm1(bz_thick)
+            - c4 * np.exp(-fw_thick) * expm1(-bz_thick)
+        )
+
+    @groupwise
+    def flux_fw2bz(self, n: int) -> float:
+        self.solve_group_n(n)
+        i = n - 1
+        c1, c2, c3, c4 = self.integration_constants[i]
+        l_bz_2, d_bz = get_diffusion_coefficient_and_length(
+            self.bz_sigma_t[i],
+            self.bz_sigma_s[i, i],
+            self.bz_A,
+        )
+        l_bz = np.sqrt(abs(l_bz_2))
+        return (
+            -d_bz
+            / l_bz
+            * (c3 * np.exp(self.x_fw / l_bz) - c4 * np.exp(-self.x_fw / l_bz))
+        )
+        # equivalent definition below: (should yield the same answer)
+        # self.flux_fw2bz[i] = - d_fw / l_fw * (c1 * np.exp(x_fw/l_fw) - c2 * np.exp(-x_fw/l_fw))
+
+    @groupwise
+    def flux_escaped(self, n: int) -> float:
+        self.solve_group_n(n)
+        i = n - 1
+        c1, c2, c3, c4 = self.integration_constants[i]
+        l_bz_2, d_bz = get_diffusion_coefficient_and_length(
+            self.bz_sigma_t[i],
+            self.bz_sigma_s[i, i],
+            self.bz_A,
+        )
+        l_bz = np.sqrt(abs(l_bz_2))
+        self.flux_escaped[i] = (
+            -d_bz
+            / l_bz
+            * (c3 * np.exp(self.x_bz / l_bz) - c4 * np.exp(-self.x_bz / l_bz))
+        )
