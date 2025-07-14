@@ -10,7 +10,6 @@ from process.fortran import (
     build_variables,
     buildings_variables,
     constants,
-    constraint_variables,
     cost_variables,
     current_drive_variables,
     error_handling,
@@ -929,7 +928,7 @@ class Power:
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
-            "Plasma separatrix power deposited in divertor) [MW]",
+            "Plasma separatrix power deposited in divertor [MW]",
             "(p_plasma_separatrix_mw)",
             physics_variables.p_plasma_separatrix_mw,
         )
@@ -1076,7 +1075,192 @@ class Power:
             heat_transport_variables.p_plant_primary_heat_mw,
         )
 
-    def plant_electric_production(self, output: bool):
+    def output_plant_electric_powers(self):
+        po.oheadr(self.outfile, "Plant Electricity Production")
+
+        po.ocmmnt(self.outfile, "Turbine conversion : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total high grade thermal power used for electricity production [MWth]",
+            "(p_plant_primary_heat_mw)",
+            heat_transport_variables.p_plant_primary_heat_mw,
+        )
+
+        po.ovarrf(
+            self.outfile,
+            "Thermal to electric conversion efficiency of the turbine",
+            "(eta_turbine)",
+            heat_transport_variables.eta_turbine,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total thermal power lost in power conversion [MWth]",
+            "(p_turbine_loss_mw)",
+            power_variables.p_turbine_loss_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total electric power produced [MWe]",
+            "(p_plant_electric_gross_mw)",
+            heat_transport_variables.p_plant_electric_gross_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Electric requirements of core plant systems : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Base plant electric load [We]",
+            "(p_plant_electric_base)",
+            heat_transport_variables.p_plant_electric_base,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power per unit area of plant floor space [We/m^2]",
+            "(pflux_plant_floor_electric)",
+            heat_transport_variables.pflux_plant_floor_electric,
+        )
+        po.ovarre(
+            self.outfile,
+            "Effective area of plant buildings floor [m^2]",
+            "(a_plant_floor_effective)",
+            buildings_variables.a_plant_floor_effective,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total base plant electric load [MWe]",
+            "(p_plant_electric_base_total_mw)",
+            heat_transport_variables.p_plant_electric_base_total_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for cryo plant [MWe]",
+            "(p_cryo_plant_electric_mw)",
+            heat_transport_variables.p_cryo_plant_electric_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for tritium plant [MWe]",
+            "(p_tritium_plant_electric_mw)",
+            heat_transport_variables.p_tritium_plant_electric_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for vacuum pumps [MWe]",
+            "(vachtmw)",
+            heat_transport_variables.vachtmw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for TF coil system [MWe]",
+            "(p_tf_electric_supplies_mw)",
+            heat_transport_variables.p_tf_electric_supplies_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for PF coil system [MWe]",
+            "(p_pf_electric_supplies_mw)",
+            pfcoil_variables.p_pf_electric_supplies_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand for CP coolant pumps [MWe]",
+            "(p_cp_coolant_pump_elec_mw)",
+            power_variables.p_cp_coolant_pump_elec_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of core plant systems needed at all times [MWe]",
+            "(p_plant_core_systems_elec_mw)",
+            power_variables.p_plant_core_systems_elec_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
+
+        po.ocmmnt(self.outfile, "Electric requirements during plasma flat-top : ")
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of FW and Blanket coolant pumps [MWe]",
+            "(p_fw_blkt_coolant_pump_elec_mw)",
+            power_variables.p_fw_blkt_coolant_pump_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of Blanket secondary breeder coolant pumps [MWe]",
+            "(p_blkt_breeder_pump_elec_mw)",
+            power_variables.p_blkt_breeder_pump_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of VV and Shield coolant pumps [MWe]",
+            "(p_shld_coolant_pump_elec_mw)",
+            power_variables.p_shld_coolant_pump_elec_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Electric power demand of Divertor colant pumps [MWe]",
+            "(p_div_coolant_pump_elec_mw)",
+            power_variables.p_div_coolant_pump_elec_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Electric wall plug efficiency of coolant pumps",
+            "(eta_coolant_pump_electric)",
+            fwbs_variables.eta_coolant_pump_electric,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total electric demand of all coolant pumps [MWe]",
+            "(p_coolant_pump_elec_total_mw)",
+            heat_transport_variables.p_coolant_pump_elec_total_mw,
+        )
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Total electric demand of all H&CD systems [MWe]",
+            "(p_hcd_electric_total_mw)",
+            heat_transport_variables.p_hcd_electric_total_mw,
+        )
+
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total re-circulated electric power of the plant [MWe]",
+            "(p_plant_electric_recirc_mw)",
+            heat_transport_variables.p_plant_electric_recirc_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of gross electricity re-circulated",
+            "(f_p_plant_electric_recirc)",
+            heat_transport_variables.f_p_plant_electric_recirc,
+        )
+
+        po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Total net-electric power of the plant [MWe]",
+            "(p_plant_electric_net_mw)",
+            heat_transport_variables.p_plant_electric_net_mw,
+        )
+
+    def plant_electric_production(self) -> None:
         """
         This method completes the calculation of the plant's electrical and thermal power flows,
         including secondary heat, recirculating power, net and gross electric power, and various
@@ -1156,6 +1340,12 @@ class Power:
                     * heat_transport_variables.eta_turbine
                 )
 
+            # Total lost thermal power in the turbine
+            power_variables.p_turbine_loss_mw = (
+                heat_transport_variables.p_plant_primary_heat_mw
+                * (1 - heat_transport_variables.eta_turbine)
+            )
+
             #  Total recirculating power
             heat_transport_variables.p_plant_electric_recirc_mw = (
                 power_variables.p_plant_core_systems_elec_mw
@@ -1174,1353 +1364,6 @@ class Power:
                 heat_transport_variables.p_plant_electric_gross_mw
                 - heat_transport_variables.p_plant_electric_net_mw
             ) / heat_transport_variables.p_plant_electric_gross_mw
-
-        if output == 0:
-            return
-
-        po.oheadr(self.outfile, "Plant Power / Heat Transport Balance")
-        if heat_transport_variables.p_plant_electric_net_mw < 0:
-            po.ocmmnt(
-                self.outfile, "WARNING: Calculated net electric power is negative"
-            )
-            po.ocmmnt(
-                self.outfile, "--------------------------------------------------"
-            )
-
-        po.osubhd(self.outfile, "Assumptions :")
-
-        po.ovarre(
-            self.outfile,
-            "Neutron power multiplication in blanket",
-            "(f_p_blkt_multiplication)",
-            fwbs_variables.f_p_blkt_multiplication,
-        )
-
-        if physics_variables.n_divertors == 2:
-            # Double null configuration
-            po.ovarre(
-                self.outfile,
-                "Double Null Divertor area fraction of whole toroid surface",
-                "(2*f_ster_div_single)",
-                2.0e0 * fwbs_variables.f_ster_div_single,
-            )
-        else:
-            # Single null configuration
-            po.ovarre(
-                self.outfile,
-                "Divertor area fraction of whole toroid surface",
-                "(f_ster_div_single)",
-                fwbs_variables.f_ster_div_single,
-            )
-
-        po.ovarre(
-            self.outfile,
-            "H/CD apparatus + diagnostics area fraction",
-            "(f_a_fw_hcd)",
-            fwbs_variables.f_a_fw_hcd,
-        )
-
-        if physics_variables.n_divertors == 2:
-            # Double null configuration
-            po.ovarre(
-                self.outfile,
-                "First wall area fraction ",
-                "(1-2fdiv-f_a_fw_hcd)",
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd,
-            )
-        else:
-            # Single null configuration
-            po.ovarre(
-                self.outfile,
-                "First wall area fraction ",
-                "(1-f_ster_div_single-f_a_fw_hcd)",
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd,
-            )
-
-        po.ovarin(
-            self.outfile,
-            "Switch for pumping of primary coolant",
-            "(i_coolant_pumping)",
-            fwbs_variables.i_coolant_pumping,
-        )
-        if fwbs_variables.i_coolant_pumping == 0:
-            po.ocmmnt(self.outfile, "User sets mechanical pumping power directly")
-        elif fwbs_variables.i_coolant_pumping == 1:
-            po.ocmmnt(
-                self.outfile,
-                "User sets mechanical pumping power as a fraction of thermal power removed by coolant",
-            )
-        elif fwbs_variables.i_coolant_pumping == 2:
-            po.ocmmnt(
-                self.outfile,
-                "Mechanical pumping power is calculated for FW and blanket",
-            )
-        elif fwbs_variables.i_coolant_pumping == 3:
-            po.ocmmnt(
-                self.outfile, "Mechanical pumping power for FW and blanket cooling loop"
-            )
-            po.ocmmnt(
-                self.outfile, "includes heat exchanger, using specified pressure drop"
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Mechanical pumping power for FW cooling loop including heat exchanger (MW)",
-            "(p_fw_coolant_pump_mw)",
-            heat_transport_variables.p_fw_coolant_pump_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Mechanical pumping power for blanket cooling loop including heat exchanger (MW)",
-            "(p_blkt_coolant_pump_mw)",
-            heat_transport_variables.p_blkt_coolant_pump_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Mechanical pumping power for FW and blanket cooling loop including heat exchanger (MW)",
-            "(p_fw_blkt_coolant_pump_mw)",
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw,
-            "OP ",
-        )
-
-        if fwbs_variables.i_coolant_pumping != 3:
-            po.ovarre(
-                self.outfile,
-                "Mechanical pumping power for FW (MW)",
-                "(p_fw_coolant_pump_mw)",
-                heat_transport_variables.p_fw_coolant_pump_mw,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Mechanical pumping power for blanket (MW)",
-                "(p_blkt_coolant_pump_mw)",
-                heat_transport_variables.p_blkt_coolant_pump_mw,
-                "OP ",
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Mechanical pumping power for divertor (MW)",
-            "(p_div_coolant_pump_mw)",
-            heat_transport_variables.p_div_coolant_pump_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Mechanical pumping power for shield and vacuum vessel (MW)",
-            "(p_shld_coolant_pump_mw)",
-            heat_transport_variables.p_shld_coolant_pump_mw,
-            "OP ",
-        )
-
-        po.ovarre(
-            self.outfile,
-            "Electrical pumping power for FW and blanket (MW)",
-            "(p_fw_blkt_coolant_pump_elec_mw)",
-            power_variables.p_fw_blkt_coolant_pump_elec_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Electrical pumping power for shield (MW)",
-            "(p_shld_coolant_pump_elec_mw)",
-            power_variables.p_shld_coolant_pump_elec_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Electrical pumping power for divertor (MW)",
-            "(p_div_coolant_pump_elec_mw)",
-            power_variables.p_div_coolant_pump_elec_mw,
-            "OP ",
-        )
-        po.ovarre(
-            self.outfile,
-            "Total electrical pumping power for primary coolant (MW)",
-            "(p_coolant_pump_elec_total_mw)",
-            heat_transport_variables.p_coolant_pump_elec_total_mw,
-            "OP ",
-        )
-
-        if fwbs_variables.i_coolant_pumping == 1:
-            po.ovarre(
-                self.outfile,
-                "Coolant pump power / non-pumping thermal power in first wall",
-                "(fpumpfw)",
-                heat_transport_variables.fpumpfw,
-            )
-            po.ovarre(
-                self.outfile,
-                "Coolant pump power / non-pumping thermal power in blanket",
-                "(fpumpblkt)",
-                heat_transport_variables.fpumpblkt,
-            )
-
-        if fwbs_variables.i_coolant_pumping != 0:
-            po.ovarre(
-                self.outfile,
-                "Coolant pump power / non-pumping thermal power in shield",
-                "(fpumpshld)",
-                heat_transport_variables.fpumpshld,
-            )
-            po.ovarre(
-                self.outfile,
-                "Coolant pump power / non-pumping thermal power in divertor",
-                "(fpumpdiv)",
-                heat_transport_variables.fpumpdiv,
-            )
-
-        po.ovarre(
-            self.outfile,
-            "Electrical efficiency of heat transport coolant pumps",
-            "(eta_coolant_pump_electric)",
-            fwbs_variables.eta_coolant_pump_electric,
-        )
-        # #284
-        po.osubhd(self.outfile, "Plant thermodynamics: options :")
-        if power_variables.i_div_primary_heat == 1:
-            po.ocmmnt(
-                self.outfile,
-                "Divertor thermal power is collected at only 150 C and is used to preheat the coolant in the power cycle",
-            )
-        elif power_variables.i_div_primary_heat == 0:
-            po.ocmmnt(
-                self.outfile,
-                "Divertor thermal power is not used, but rejected directly to the environment.",
-            )
-
-        if heat_transport_variables.i_shld_primary_heat == 1:
-            po.ocmmnt(
-                self.outfile,
-                "Shield thermal power is collected at only 150 C and is used to preheat the coolant in the power cycle",
-            )
-        elif heat_transport_variables.i_shld_primary_heat == 0:
-            po.ocmmnt(
-                self.outfile,
-                "Shield thermal power is not used, but rejected directly to the environment.",
-            )
-
-        if cost_variables.ireactor == 1:
-            if fwbs_variables.i_thermal_electric_conversion == 0:
-                po.ocmmnt(
-                    self.outfile,
-                    "Power conversion cycle efficiency model: "
-                    "efficiency set according to blanket type (div power to secondary)",
-                )
-            elif fwbs_variables.i_thermal_electric_conversion == 1:
-                po.ocmmnt(
-                    self.outfile,
-                    "Power conversion cycle efficiency model: "
-                    "efficiency set according to blanket type (div power to primary)",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Thermal to electric conversion efficiency of the power conversion cycle",
-                    "(eta_turbine)",
-                    heat_transport_variables.eta_turbine,
-                )
-            elif fwbs_variables.i_thermal_electric_conversion == 2:
-                po.ocmmnt(
-                    self.outfile,
-                    "Power conversion cycle efficiency model: user-defined efficiency",
-                )
-                po.ovarrf(
-                    self.outfile,
-                    "Thermal to electric conversion efficiency of the power conversion cycle",
-                    "(eta_turbine)",
-                    heat_transport_variables.eta_turbine,
-                )
-            elif fwbs_variables.i_thermal_electric_conversion == 3:
-                po.ocmmnt(
-                    self.outfile,
-                    "Power conversion cycle efficiency model: steam Rankine cycle",
-                )
-            else:
-                po.ocmmnt(
-                    self.outfile,
-                    "Power conversion cycle efficiency model: supercritical CO2 cycle",
-                )
-
-            if fwbs_variables.i_thermal_electric_conversion > 2:
-                po.ovarrf(
-                    self.outfile,
-                    "Coolant temperature at turbine inlet (K)",
-                    "(temp_turbine_coolant_in)",
-                    heat_transport_variables.temp_turbine_coolant_in,
-                )
-
-            po.ovarrf(
-                self.outfile,
-                "Fraction of total high-grade thermal power to divertor",
-                "(f_p_div_primary_heat)",
-                power_variables.f_p_div_primary_heat,
-                "OP ",
-            )
-
-        po.oblnkl(self.outfile)
-        po.ocmmnt(
-            self.outfile,
-            "Power Balance for Reactor (across vacuum vessel boundary) - Detail",
-        )
-        po.ocmmnt(
-            self.outfile,
-            "------------------------------------------------------------------",
-        )
-
-        pinj = (
-            current_drive_variables.p_hcd_injected_total_mw
-            if physics_variables.i_plasma_ignited == 0
-            else 0.0
-        )
-
-        primsum = 0.0e0
-        secsum = 0.0e0
-
-        po.oblnkl(self.outfile)
-        po.write(self.outfile, "High-grade             Low-grade              Total")
-        po.write(self.outfile, "thermal power (MW)     thermal power (MW)      (MW)")
-
-        po.write(self.outfile, "First wall:")
-        po.dblcol(
-            self.outfile,
-            "p_fw_nuclear_heat_total_mw",
-            0.0e0,
-            fwbs_variables.p_fw_nuclear_heat_total_mw,
-        )
-        po.dblcol(self.outfile, "p_fw_alpha_mw", 0.0e0, physics_variables.p_fw_alpha_mw)
-        po.dblcol(
-            self.outfile, "p_fw_rad_total_mw", 0.0e0, fwbs_variables.p_fw_rad_total_mw
-        )
-        po.dblcol(
-            self.outfile,
-            "p_fw_coolant_pump_mw",
-            0.0e0,
-            heat_transport_variables.p_fw_coolant_pump_mw,
-        )
-
-        primsum = (
-            primsum
-            + fwbs_variables.p_fw_nuclear_heat_total_mw
-            + physics_variables.p_fw_alpha_mw
-            + fwbs_variables.p_fw_rad_total_mw
-            + heat_transport_variables.p_fw_coolant_pump_mw
-        )
-        secsum = secsum
-
-        po.oblnkl(self.outfile)
-
-        po.write(self.outfile, "Blanket:")
-        po.dblcol(
-            self.outfile,
-            "p_blkt_nuclear_heat_total_mw",
-            0.0e0,
-            fwbs_variables.p_blkt_nuclear_heat_total_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.dblcol(
-            self.outfile,
-            "p_blkt_coolant_pump_mw",
-            0.0e0,
-            heat_transport_variables.p_blkt_coolant_pump_mw,
-        )
-
-        primsum = (
-            primsum
-            + fwbs_variables.p_blkt_nuclear_heat_total_mw
-            + heat_transport_variables.p_blkt_coolant_pump_mw
-        )
-        secsum = secsum
-
-        po.oblnkl(self.outfile)
-
-        po.write(self.outfile, "Shield:")
-        po.write(
-            self.outfile,
-            (
-                f"{fwbs_variables.p_shld_nuclear_heat_mw * heat_transport_variables.i_shld_primary_heat} {fwbs_variables.p_shld_nuclear_heat_mw * (1 - heat_transport_variables.i_shld_primary_heat)} {fwbs_variables.p_shld_nuclear_heat_mw}"
-            ),
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(
-            self.outfile,
-            (
-                f"{heat_transport_variables.p_shld_coolant_pump_mw * heat_transport_variables.i_shld_primary_heat} {heat_transport_variables.p_shld_coolant_pump_mw * (1 - heat_transport_variables.i_shld_primary_heat)} {heat_transport_variables.p_shld_coolant_pump_mw}"
-            ),
-        )
-
-        primsum = (
-            primsum
-            + fwbs_variables.p_shld_nuclear_heat_mw
-            * heat_transport_variables.i_shld_primary_heat
-            + heat_transport_variables.p_shld_coolant_pump_mw
-            * heat_transport_variables.i_shld_primary_heat
-        )
-        secsum = (
-            secsum
-            + fwbs_variables.p_shld_nuclear_heat_mw
-            * (1 - heat_transport_variables.i_shld_primary_heat)
-            + heat_transport_variables.p_shld_coolant_pump_mw
-            * (1 - heat_transport_variables.i_shld_primary_heat)
-        )
-
-        po.oblnkl(self.outfile)
-
-        po.write(self.outfile, "Divertor:")
-        po.write(
-            self.outfile,
-            (
-                f"{fwbs_variables.p_div_nuclear_heat_total_mw * power_variables.i_div_primary_heat} {fwbs_variables.p_div_nuclear_heat_total_mw * (1 - power_variables.i_div_primary_heat)} {fwbs_variables.p_div_nuclear_heat_total_mw}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"{physics_variables.p_plasma_separatrix_mw * power_variables.i_div_primary_heat} {physics_variables.p_plasma_separatrix_mw * (1 - power_variables.i_div_primary_heat)} {physics_variables.p_plasma_separatrix_mw}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"{fwbs_variables.p_div_rad_total_mw * power_variables.i_div_primary_heat} {fwbs_variables.p_div_rad_total_mw * (1 - power_variables.i_div_primary_heat)} {fwbs_variables.p_div_rad_total_mw}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"{heat_transport_variables.p_div_coolant_pump_mw * power_variables.i_div_primary_heat} {heat_transport_variables.p_div_coolant_pump_mw * (1 - power_variables.i_div_primary_heat)} {heat_transport_variables.p_div_coolant_pump_mw}"
-            ),
-        )
-
-        primsum = (
-            primsum
-            + fwbs_variables.p_div_nuclear_heat_total_mw
-            * power_variables.i_div_primary_heat
-            + physics_variables.p_plasma_separatrix_mw
-            * power_variables.i_div_primary_heat
-            + fwbs_variables.p_div_rad_total_mw * power_variables.i_div_primary_heat
-            + heat_transport_variables.p_div_coolant_pump_mw
-            * power_variables.i_div_primary_heat
-        )
-        secsum = (
-            secsum
-            + fwbs_variables.p_div_nuclear_heat_total_mw
-            * (1 - power_variables.i_div_primary_heat)
-            + physics_variables.p_plasma_separatrix_mw
-            * (1 - power_variables.i_div_primary_heat)
-            + fwbs_variables.p_div_rad_total_mw
-            * (1 - power_variables.i_div_primary_heat)
-            + heat_transport_variables.p_div_coolant_pump_mw
-            * (1 - power_variables.i_div_primary_heat)
-        )
-
-        if physics_variables.itart == 1:
-            po.oblnkl(self.outfile)
-            po.write(self.outfile, "TART centrepost:")
-            po.dblcol(self.outfile, "pnuc_cp", 0.0e0, fwbs_variables.pnuc_cp)
-            po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-            po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-            po.dblcol(
-                self.outfile,
-                "p_cp_coolant_pump_elec_mw",
-                0.0e0,
-                power_variables.p_cp_coolant_pump_elec_mw,
-            )  # check
-
-        primsum = primsum
-        secsum = (
-            secsum + fwbs_variables.pnuc_cp + power_variables.p_cp_coolant_pump_elec_mw
-        )
-
-        po.oblnkl(self.outfile)
-        po.write(self.outfile, "TF coil:")
-        po.dblcol(
-            self.outfile,
-            "p_tf_nuclear_heat_mw",
-            0.0e0,
-            fwbs_variables.p_tf_nuclear_heat_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-
-        primsum = primsum
-        secsum = secsum + fwbs_variables.p_tf_nuclear_heat_mw
-
-        po.oblnkl(self.outfile)
-        po.write(self.outfile, "Losses to H/CD apparatus + diagnostics:")
-        po.dblcol(
-            self.outfile,
-            "p_fw_hcd_nuclear_heat_mw",
-            0.0e0,
-            fwbs_variables.p_fw_hcd_nuclear_heat_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-        po.dblcol(
-            self.outfile,
-            "p_fw_hcd_rad_total_mw",
-            0.0e0,
-            fwbs_variables.p_fw_hcd_rad_total_mw,
-        )
-        po.write(self.outfile, "0.0e0 0.0e0 0.0e0")
-
-        primsum = primsum
-        secsum = (
-            secsum
-            + fwbs_variables.p_fw_hcd_nuclear_heat_mw
-            + fwbs_variables.p_fw_hcd_rad_total_mw
-        )
-
-        po.oblnkl(self.outfile)
-        #     write(self.outfile,'(t10,a)') repeat('-',88)
-        po.write(self.outfile, (f"{primsum} {secsum} {primsum + secsum}"))
-        # 10    format(t32,'neutrons',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 20    format(t14,'charged particle transport',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 30    format(t31,'radiation',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 40    format(t25,'coolant pumping',t50,f8.2,t70,f8.2,t90,f8.2)
-        # 50    format(t34,'Totals',t50,f8.2,t70,f8.2,t90,f8.2)
-
-        po.oblnkl(self.outfile)
-        po.ovarrf(
-            self.outfile,
-            "Total power leaving reactor (across vacuum vessel boundary) (MW)",
-            "",
-            primsum + secsum + fwbs_variables.p_tf_nuclear_heat_mw,
-            "OP ",
-        )
-
-        po.osubhd(self.outfile, "Other secondary thermal power constituents :")
-        po.ovarrf(
-            self.outfile,
-            "Heat removal from cryogenic plant (MW)",
-            "(p_cryo_plant_electric_mw)",
-            heat_transport_variables.p_cryo_plant_electric_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat removal from facilities (MW)",
-            "(fachtmw)",
-            heat_transport_variables.fachtmw,
-            "OP ",
-        )
-
-        po.ovarrf(
-            self.outfile,
-            "Coolant pumping efficiency losses (MW)",
-            "(p_coolant_pump_loss_total_mw)",
-            heat_transport_variables.p_coolant_pump_loss_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat removal from injection power (MW)",
-            "(p_hcd_electric_loss_mw)",
-            heat_transport_variables.p_hcd_electric_loss_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat removal from tritium plant (MW)",
-            "(p_tritium_plant_electric_mw)",
-            heat_transport_variables.p_tritium_plant_electric_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat removal from vacuum pumps (MW)",
-            "(vachtmw)",
-            heat_transport_variables.vachtmw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "TF coil resistive power (MW)",
-            "(tfcmw)",
-            tfcoil_variables.tfcmw,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarrf(
-            self.outfile,
-            "Total low-grade thermal power (MW)",
-            "(p_plant_secondary_heat_mw)",
-            heat_transport_variables.p_plant_secondary_heat_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Total High-grade thermal power (MW)",
-            "(p_plant_primary_heat_mw)",
-            heat_transport_variables.p_plant_primary_heat_mw,
-            "OP ",
-        )
-
-        po.oblnkl(self.outfile)
-        po.ovarin(
-            self.outfile,
-            "Number of primary heat exchangers",
-            "(n_primary_heat_exchangers)",
-            heat_transport_variables.n_primary_heat_exchangers,
-            "OP ",
-        )
-
-        if cost_variables.ireactor != 1:
-            return
-
-        # MDK start
-        po.oblnkl(self.outfile)
-        po.oblnkl(self.outfile)
-        po.ocmmnt(self.outfile, "Power Balance across separatrix :")
-        po.ocmmnt(self.outfile, "-------------------------------")
-        po.ocmmnt(self.outfile, "Only energy deposited in the plasma is included here.")
-
-        if physics_variables.i_rad_loss == 0:
-            po.ocmmnt(
-                self.outfile,
-                "Total power loss is scaling power plus radiation (physics_variables.i_rad_loss = 0)",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Transport power from scaling law (MW)",
-                "(pscalingmw)",
-                physics_variables.pscalingmw,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Total net radiation power (MW)",
-                "(p_plasma_rad_mw)",
-                physics_variables.p_plasma_rad_mw,
-                "OP ",
-            )
-            total = physics_variables.pscalingmw + physics_variables.p_plasma_rad_mw
-            po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
-        elif physics_variables.i_rad_loss == 1:
-            po.ocmmnt(
-                self.outfile,
-                "Total power loss is scaling power plus core radiation only (physics_variables.i_rad_loss = 1)",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Transport power from scaling law (MW)",
-                "(pscalingmw)",
-                physics_variables.pscalingmw,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                'Radiation power from inside "radius_plasma_core_norm" (MW)',
-                "(pcoreradmw.)",
-                physics_variables.p_plasma_inner_rad_mw,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile,
-                "Total (MW)",
-                "",
-                physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw,
-                "OP ",
-            )
-            total = (
-                physics_variables.pscalingmw + physics_variables.p_plasma_inner_rad_mw
-            )
-        elif physics_variables.i_rad_loss == 2:
-            po.ocmmnt(
-                self.outfile,
-                "Total power loss is scaling power only (physics_variables.i_rad_loss = 2).",
-            )
-            po.ocmmnt(self.outfile, "This is not recommended for power plant models.")
-            po.ovarrf(
-                self.outfile,
-                "Transport power from scaling law (MW)",
-                "(pscalingmw)",
-                physics_variables.pscalingmw,
-                "OP ",
-            )
-            po.ovarrf(
-                self.outfile, "Total (MW)", "", physics_variables.pscalingmw, "OP "
-            )
-            total = physics_variables.pscalingmw
-        else:
-            logger.error(
-                f"{'The value of physics_variables.i_rad_loss appears to be invalid.'}"
-            )
-            po.ocmmnt(
-                self.outfile,
-                "ERROR: The value of physics_variables.i_rad_loss appears to be invalid.",
-            )
-
-        po.oblnkl(self.outfile)
-        po.ovarrf(
-            self.outfile,
-            "Alpha power deposited in plasma (MW)",
-            "(f_alpha_plasma*p_alpha_total_mw)",
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Power from charged products of DD and/or D-He3 fusion (MW)",
-            "(p_non_alpha_charged_mw.)",
-            physics_variables.p_non_alpha_charged_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ohmic heating (MW)",
-            "(p_plasma_ohmic_mw.)",
-            physics_variables.p_plasma_ohmic_mw,
-            "OP ",
-        )
-        # if (physics_variables.i_plasma_ignited == 1) :
-        #    po.ovarrf(self.outfile,'Total (MW)','',f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+p_plasma_ohmic_mw, 'OP ')
-        #    po.oblnkl(self.outfile)
-        #    if (abs(sum - (physics_variables.f_alpha_plasma*physics_variables.p_alpha_total_mw+physics_variables.p_non_alpha_charged_mw+physics_variables.p_plasma_ohmic_mw)) > 5.0e0) :
-        #        write(*,*) 'WARNING: Power balance across separatrix is in error by more than 5 MW.'
-        #    po.ocmmnt(self.outfile,'WARNING: Power balance across separatrix is in error by more than 5 MW.')
-        #
-        # else:
-        po.ovarrf(
-            self.outfile,
-            "Injected power deposited in plasma (MW)",
-            "(p_hcd_injected_total_mw)",
-            pinj,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Total (MW)",
-            "",
-            physics_variables.f_alpha_plasma * physics_variables.p_alpha_total_mw
-            + physics_variables.p_non_alpha_charged_mw
-            + physics_variables.p_plasma_ohmic_mw
-            + pinj,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        if (
-            abs(
-                total
-                - (
-                    physics_variables.f_alpha_plasma
-                    * physics_variables.p_alpha_total_mw
-                    + physics_variables.p_non_alpha_charged_mw
-                    + physics_variables.p_plasma_ohmic_mw
-                    + pinj
-                )
-            )
-            > 5.0e0
-        ):
-            logger.warning(
-                f"{'WARNING: Power balance across separatrix is in error by more than 5 MW.'}"
-            )
-            po.ocmmnt(
-                self.outfile,
-                "WARNING: Power balance across separatrix is in error by more than 5 MW.",
-            )
-
-        #
-
-        po.ocmmnt(self.outfile, "Power Balance for Reactor - Summary :")
-        po.ocmmnt(self.outfile, "-------------------------------------")
-        po.ovarrf(
-            self.outfile,
-            "Fusion power (MW)",
-            "(p_fusion_total_mw)",
-            physics_variables.p_fusion_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Power from energy multiplication in blanket and shield (MW)",
-            "(p_blkt_multiplication_mw)",
-            fwbs_variables.p_blkt_multiplication_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Injected power (MW)",
-            "(p_hcd_injected_total_mw.)",
-            pinj,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Ohmic power (MW)",
-            "(p_plasma_ohmic_mw.)",
-            physics_variables.p_plasma_ohmic_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Power deposited in primary coolant by pump (MW)",
-            "(p_coolant_pump_total_mw)",
-            power_variables.p_coolant_pump_total_mw,
-            "OP ",
-        )
-        total = (
-            physics_variables.p_fusion_total_mw
-            + fwbs_variables.p_blkt_multiplication_mw
-            + pinj
-            + power_variables.p_coolant_pump_total_mw
-            + physics_variables.p_plasma_ohmic_mw
-        )
-        po.ovarrf(self.outfile, "Total (MW)", "", total, "OP ")
-        po.oblnkl(self.outfile)
-        # po.ovarrf(self.outfile,'Heat extracted from armour and first wall (MW)','(p_fw_heat_deposited_mw)',p_fw_heat_deposited_mw, 'OP ')
-        po.ovarrf(
-            self.outfile,
-            "Heat extracted from first wall and blanket (MW)",
-            "(p_fw_blkt_heat_deposited_mw)",
-            power_variables.p_fw_blkt_heat_deposited_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat extracted from shield  (MW)",
-            "(p_shld_heat_deposited_mw)",
-            power_variables.p_shld_heat_deposited_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat extracted from divertor (MW)",
-            "(p_div_heat_deposited_mw)",
-            power_variables.p_div_heat_deposited_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Nuclear and photon power lost to H/CD system (MW)",
-            "(p_hcd_secondary_heat_mw)",
-            heat_transport_variables.p_hcd_secondary_heat_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Nuclear power lost to TF (MW)",
-            "(p_tf_nuclear_heat_mw)",
-            fwbs_variables.p_tf_nuclear_heat_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Total (MW)",
-            "",
-            power_variables.p_fw_blkt_heat_deposited_mw
-            + power_variables.p_shld_heat_deposited_mw
-            + power_variables.p_div_heat_deposited_mw
-            + heat_transport_variables.p_hcd_secondary_heat_mw
-            + fwbs_variables.p_tf_nuclear_heat_mw,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        if (
-            abs(
-                total
-                - (
-                    power_variables.p_fw_blkt_heat_deposited_mw
-                    + power_variables.p_shld_heat_deposited_mw
-                    + power_variables.p_div_heat_deposited_mw
-                    + heat_transport_variables.p_hcd_secondary_heat_mw
-                    + fwbs_variables.p_tf_nuclear_heat_mw
-                )
-            )
-            > 5.0e0
-        ):
-            logger.warning(
-                f"{'WARNING: Power balance for reactor is in error by more than 5 MW.'}"
-            )
-            po.ocmmnt(
-                self.outfile,
-                "WARNING: Power balance for reactor is in error by more than 5 MW.",
-            )
-
-        # Heat rejected by main power conversion circuit
-        if (
-            fwbs_variables.i_blkt_dual_coolant > 0
-            and fwbs_variables.i_coolant_pumping == 2
-        ):
-            power_variables.p_turbine_loss_mw = (
-                heat_transport_variables.p_plant_primary_heat_mw
-                - power_variables.p_blkt_liquid_breeder_heat_deposited_mw
-            ) * (
-                1 - heat_transport_variables.eta_turbine
-            ) + power_variables.p_blkt_liquid_breeder_heat_deposited_mw * (
-                1 - heat_transport_variables.etath_liq
-            )
-        else:
-            power_variables.p_turbine_loss_mw = (
-                heat_transport_variables.p_plant_primary_heat_mw
-                * (1 - heat_transport_variables.eta_turbine)
-            )
-
-        po.ocmmnt(self.outfile, "Electrical Power Balance :")
-        po.ocmmnt(self.outfile, "--------------------------")
-        po.ovarrf(
-            self.outfile,
-            "Net electric power output(MW)",
-            "(p_plant_electric_net_mw.)",
-            heat_transport_variables.p_plant_electric_net_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Required Net electric power output(MW)",
-            "(pnetelin)",
-            constraint_variables.pnetelin,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for heating and current drive (MW)",
-            "(p_hcd_electric_total_mw)",
-            heat_transport_variables.p_hcd_electric_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for primary coolant pumps (MW)",
-            "(p_coolant_pump_elec_total_mw)",
-            heat_transport_variables.p_coolant_pump_elec_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for vacuum pumps (MW)",
-            "(vachtmw)",
-            heat_transport_variables.vachtmw,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for tritium plant (MW)",
-            "(p_tritium_plant_electric_mw)",
-            heat_transport_variables.p_tritium_plant_electric_mw,
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for cryoplant (MW)",
-            "(p_cryo_plant_electric_mw)",
-            heat_transport_variables.p_cryo_plant_electric_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for TF coils (MW)",
-            "(p_tf_electric_supplies_mw)",
-            heat_transport_variables.p_tf_electric_supplies_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Electric power for PF coils (MW)",
-            "(p_pf_electric_supplies_mw)",
-            pfcoil_variables.p_pf_electric_supplies_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "All other internal electric power requirements (MW)",
-            "(fachtmw)",
-            heat_transport_variables.fachtmw,
-            "OP ",
-        )
-        total_plant_power = (
-            heat_transport_variables.p_plant_electric_net_mw
-            + heat_transport_variables.p_hcd_electric_total_mw
-            + heat_transport_variables.p_coolant_pump_elec_total_mw
-            + heat_transport_variables.vachtmw
-            + heat_transport_variables.p_tritium_plant_electric_mw
-            + heat_transport_variables.p_cryo_plant_electric_mw
-            + heat_transport_variables.p_tf_electric_supplies_mw
-            + heat_transport_variables.fachtmw
-            + pfcoil_variables.p_pf_electric_supplies_mw
-        )
-        po.ovarrf(
-            self.outfile, "Total (MW)", "(tot_plant_power)", total_plant_power, "OP "
-        )
-        po.ovarrf(self.outfile, "Total (MW)", "", total_plant_power, "OP ")
-        po.oblnkl(self.outfile)
-        po.ovarrf(
-            self.outfile,
-            "Gross electrical output* (MW)",
-            "(p_plant_electric_gross_mw)",
-            heat_transport_variables.p_plant_electric_gross_mw,
-            "OP ",
-        )
-        po.ocmmnt(
-            self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
-        )
-        po.oblnkl(self.outfile)
-        if (
-            abs(total_plant_power - heat_transport_variables.p_plant_electric_gross_mw)
-            > 5.0e0
-        ):
-            logger.warning(
-                f"{'WARNING: Electrical Power balance is in error by more than 5 MW.'}"
-            )
-            po.ocmmnt(
-                self.outfile,
-                "WARNING: Electrical Power balance is in error by more than 5 MW.",
-            )
-
-        po.ocmmnt(self.outfile, "Power balance for power plant :")
-        po.ocmmnt(self.outfile, "-------------------------------")
-        po.ovarrf(
-            self.outfile,
-            "Fusion power (MW)",
-            "(p_fusion_total_mw)",
-            physics_variables.p_fusion_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Power from energy multiplication in blanket and shield (MW)",
-            "(p_blkt_multiplication_mw)",
-            fwbs_variables.p_blkt_multiplication_mw,
-            "OP ",
-        )
-        total_power = (
-            physics_variables.p_fusion_total_mw
-            + fwbs_variables.p_blkt_multiplication_mw
-        )
-        po.ovarrf(self.outfile, "Total (MW)", "", total_power, "OP ")
-        po.oblnkl(self.outfile)
-        po.ovarrf(
-            self.outfile,
-            "Net electrical output (MW)	",
-            "(p_plant_electric_net_mw)",
-            heat_transport_variables.p_plant_electric_net_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat rejected by main power conversion circuit (MW)",
-            "(p_turbine_loss_mw)",
-            power_variables.p_turbine_loss_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Heat rejected by other cooling circuits (MW)",
-            "(p_plant_secondary_heat_mw)",
-            heat_transport_variables.p_plant_secondary_heat_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Total (MW)",
-            "",
-            heat_transport_variables.p_plant_electric_net_mw
-            + power_variables.p_turbine_loss_mw
-            + heat_transport_variables.p_plant_secondary_heat_mw,
-            "OP ",
-        )
-        po.oblnkl(self.outfile)
-        if (
-            abs(
-                total_power
-                - (
-                    heat_transport_variables.p_plant_electric_net_mw
-                    + power_variables.p_turbine_loss_mw
-                    + heat_transport_variables.p_plant_secondary_heat_mw
-                )
-            )
-            > 5.0e0
-        ):
-            logger.warning(
-                f"{'WARNING: Power balance for power plant is in error by more than 5 MW.'}"
-            )
-            po.ocmmnt(
-                self.outfile,
-                "WARNING: Power balance for power plant is in error by more than 5 MW.",
-            )
-
-        po.osubhd(self.outfile, "Plant efficiency measures :")
-        po.ovarrf(
-            self.outfile,
-            "Net electric power / total nuclear power (%)",
-            "(p_plant_electric_net_mw/(p_fusion_total_mw+p_blkt_multiplication_mw)",
-            100.0e0
-            * heat_transport_variables.p_plant_electric_net_mw
-            / (
-                physics_variables.p_fusion_total_mw
-                + fwbs_variables.p_blkt_multiplication_mw
-            ),
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Net electric power / total fusion power (%)",
-            "(p_plant_electric_net_mw/p_fusion_total_mw)",
-            100.0e0
-            * heat_transport_variables.p_plant_electric_net_mw
-            / physics_variables.p_fusion_total_mw,
-            "OP ",
-        )
-        po.ovarrf(
-            self.outfile,
-            "Gross electric power* / high grade heat (%)",
-            "(eta_turbine)",
-            100.0e0 * heat_transport_variables.eta_turbine,
-        )
-        po.ocmmnt(
-            self.outfile, "(*Power for pumps in secondary circuit already subtracted)"
-        )
-        po.ovarrf(
-            self.outfile,
-            "Recirculating power fraction",
-            "(f_p_plant_electric_recirc)",
-            heat_transport_variables.f_p_plant_electric_recirc,
-            "OP ",
-        )
-
-    def power3(self, output: bool):
-        """
-        Calculates the time-dependent power requirements
-        author: J Morris, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
-        This routine calculates the time dependent power requirements
-        and outputs them to the output file
-        None
-        """
-        p_cooling = np.zeros((6,))
-        p_cryo = np.zeros((6,))
-        p_vac = np.zeros((6,))
-        p_tritium = np.zeros((6,))
-        p_fac = np.zeros((6,))
-        p_tf = np.zeros((6,))
-        p_hcd = np.zeros((6,))
-        p_pf = np.zeros((6,))
-        p_int_tot = np.zeros((6,))
-        p_gross = np.zeros((6,))
-
-        t_cs = times_variables.t_precharge
-
-        # Plasma current ramp up time (s)
-        t_ip_up = times_variables.t_current_ramp_up
-
-        # Plasma heating phase (s)
-        t_heat = times_variables.t_fusion_ramp
-
-        # Flat-top phase (s)
-        t_flat_top = times_variables.t_burn
-
-        # Plasma current ramp down time (s)
-        t_ip_down = times_variables.t_ramp_down
-
-        # Extra time between pulses (s)
-        t_extra = times_variables.t_between_pulse
-
-        # Continuous power usage
-
-        # Primary pumping electrical power [MWe]
-        p_cooling[0:6] = heat_transport_variables.p_coolant_pump_elec_total_mw
-
-        # Cryoplant electrical power [MWe]
-        p_cryo[0:6] = heat_transport_variables.p_cryo_plant_electric_mw
-
-        # Vacuum electrical power [MWe]
-        p_vac[0:6] = heat_transport_variables.vachtmw
-
-        # Tritium system electrical power [MWe]
-        p_tritium[0:6] = heat_transport_variables.p_tritium_plant_electric_mw
-
-        # Facilities electrical power [MWe]
-        p_fac[0:6] = heat_transport_variables.fachtmw
-
-        # TF coil electrical power [MWe]
-        p_tf[0:6] = heat_transport_variables.p_tf_electric_supplies_mw
-
-        # Total continuous power [MWe]
-        p_cont_tot = p_cooling + p_cryo + p_vac + p_tritium + p_fac + p_tf
-
-        # Intermittent power usage
-
-        # Heating and current drive electrical power [MWe]
-        p_hcd[0] = 0.0e0
-        p_hcd[1] = (
-            heat_transport_variables.pinjmax
-            / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        )
-        p_hcd[2] = (
-            heat_transport_variables.pinjmax
-            / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        )
-        p_hcd[3] = heat_transport_variables.p_hcd_electric_total_mw
-        p_hcd[4] = (
-            heat_transport_variables.pinjmax
-            / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        )
-        p_hcd[5] = 0.0e0
-
-        # PF coils electrical power [MWe]
-        p_pf[0] = pf_power_variables.poloidalpower[0] / 1.0e6
-        p_pf[1] = pf_power_variables.poloidalpower[1] / 1.0e6
-        p_pf[2] = pf_power_variables.poloidalpower[2] / 1.0e6
-        p_pf[3] = pf_power_variables.poloidalpower[3] / 1.0e6
-        p_pf[4] = pf_power_variables.poloidalpower[4] / 1.0e6
-        p_pf[5] = 0.0e0
-
-        # Total intermittent power [MWe]
-        p_int_tot[0:6] = p_pf + p_hcd
-
-        # Gross power [MWe]
-        p_gross[0:3] = 0.0e0
-        p_gross[3] = heat_transport_variables.p_plant_electric_gross_mw
-        p_gross[4:6] = 0.0e0
-
-        # Net electric power [MWe]
-        p_net = p_gross - (
-            p_cooling + p_cryo + p_vac + p_fac + p_tritium + p_tf + p_pf + p_hcd
-        )
-
-        # Net electric power average [MWe]
-        p_net_avg = (  # noqa: F841
-            (p_net[0] * t_cs)
-            + (p_net[1] * t_ip_up)
-            + (p_net[2] * t_heat)
-            + (p_net[3] * t_flat_top)
-            + (p_net[4] * t_ip_down)
-            + (p_net[5] * t_extra)
-        ) / (t_cs + t_ip_up + t_heat + t_flat_top + t_ip_down + t_extra)
-
-        # Output
-        if output == 0:
-            return
-
-        po.osubhd(self.outfile, "Time-dependent power usage")
-
-        po.write(self.outfile, "Pulse timings [s]:")
-        po.oblnkl(self.outfile)
-        po.write(
-            self.outfile,
-            "t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
-        )
-        po.write(self.outfile, "----- ---- ----- ----- ----- ------")
-        po.write(
-            self.outfile,
-            (f"Duration {t_cs} {t_ip_up} {t_heat} {t_flat_top} {t_ip_down} {t_extra}"),
-        )
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-        po.oblnkl(self.outfile)
-
-        po.write(self.outfile, "Continous power usage [MWe]:")
-        po.oblnkl(self.outfile)
-        po.write(
-            self.outfile,
-            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
-        )
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-        po.write(
-            self.outfile,
-            (
-                f"Primary cooling {p_cooling[0]} {p_cooling[1]} {p_cooling[2]} {p_cooling[3]} {p_cooling[4]} {p_cooling[5]}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"Cryoplant {p_cryo[0]} {p_cryo[1]} {p_cryo[2]} {p_cryo[3]} {p_cryo[4]} {p_cryo[5]}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"Vacuum {p_vac[0]} {p_vac[1]} {p_vac[2]} {p_vac[3]} {p_vac[4]} {p_vac[5]}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"Tritium {p_tritium[0]} {p_tritium[1]} {p_tritium[2]} {p_tritium[3]} {p_tritium[4]} {p_tritium[5]}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (f"TF {p_tf[0]} {p_tf[1]} {p_tf[2]} {p_tf[3]} {p_tf[4]} {p_tf[5]}"),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"Facilities {p_fac[0]} {p_fac[1]} {p_fac[2]} {p_fac[3]} {p_fac[4]} {p_fac[5]}"
-            ),
-        )
-
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-        po.write(
-            self.outfile,
-            (
-                f"Total {p_cont_tot[0]} {p_cont_tot[1]} {p_cont_tot[2]} {p_cont_tot[3]} {p_cont_tot[4]} {p_cont_tot[5]}"
-            ),
-        )
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-        po.oblnkl(self.outfile)
-
-        po.write(self.outfile, "Intermittent power usage [MWe]:")
-        po.oblnkl(self.outfile)
-        po.write(
-            self.outfile,
-            "System t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse",
-        )
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-        po.write(
-            self.outfile,
-            (
-                f"H & CD {p_hcd[0]} {p_hcd[1]} {p_hcd[2]} {p_hcd[3]} {p_hcd[4]} {p_hcd[5]}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (f"PF {p_pf[0]} {p_pf[1]} {p_pf[2]} {p_pf[3]} {p_pf[4]} {p_pf[5]}"),
-        )
-
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-        po.write(
-            self.outfile,
-            (
-                f"Total {p_int_tot[0]} {p_int_tot[1]} {p_int_tot[2]} {p_int_tot[3]} {p_int_tot[4]} {p_int_tot[5]}"
-            ),
-        )
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-
-        po.oblnkl(self.outfile)
-
-        po.write(self.outfile, "Power production [MWe]:")
-        po.oblnkl(self.outfile)
-        po.write(
-            self.outfile,
-            " t_precharge t_current_ramp_up t_fusion_ramp t_burn t_ramp_down t_between_pulse avg",
-        )
-        po.write(self.outfile, " ----- ---- ----- ----- ----- ------ ---")
-        po.write(
-            self.outfile,
-            (
-                f"Gross power {p_gross[0]} {p_gross[1]} {p_gross[2]} {p_gross[3]} {p_gross[4]} {p_gross[5]}"
-            ),
-        )
-        po.write(
-            self.outfile,
-            (
-                f"Net power {p_net[0]} {p_net[1]} {p_net[2]} {p_net[3]} {p_net[4]} {p_net[5]}"
-            ),
-        )
-        po.write(self.outfile, "------ ----- ---- ----- ----- ----- ------")
-
-        po.oblnkl(self.outfile)
-
-    # 10    format(t20,a20,t40,a8,t50,a8,t60,a8,t70,a8,t80,a8,t90,a8)
-    # 20    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2)
-    # 30    format(t20,a20,t40,a8,t50,a8,t60,a8,t70,a8,t80,a8,t90,a8,t100,a8)
-    # 40    format(t20,a20,t40,f8.2,t50,f8.2,t60,f8.2,t70,f8.2,t80,f8.2,t90,f8.2,t100,f8.2,t110,f8.2)
 
     def cryo(
         self,
@@ -3377,7 +2220,6 @@ def init_heat_transport_variables():
     heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
     heat_transport_variables.p_plant_electric_gross_mw = 0.0
     heat_transport_variables.p_hcd_electric_loss_mw = 0.0
-    heat_transport_variables.pinjmax = 120.0
     heat_transport_variables.p_hcd_electric_total_mw = 0.0
     heat_transport_variables.p_hcd_secondary_electric_mw = 0.0
     heat_transport_variables.p_plant_electric_net_mw = 0.0

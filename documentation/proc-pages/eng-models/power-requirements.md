@@ -164,7 +164,13 @@ $$
 \\ + \underbrace{\overbrace{P_{\text{liquid breeder heat}}}^\texttt{p_blkt_liquid_breeder_heat_deposited_mw} \times \overbrace{\eta_{\text{liquid,turbine}}}}_{\text{If present}}^\texttt{etath_liq}
 $$
 
-5: The required recirculated electric power is calculated as the core system power and then the HCD and coolant pump electric powers that would also be on during a pulse.
+5: The thermal power lost in the turbine is calculated
+
+$$
+\overbrace{P_{\text{turbine,loss}}}^\texttt{p_turbine_loss_mw} = \overbrace{P_{\text{plant, primary-heat}}}^\texttt{p_plant_primary_heat_mw} \times (1-\overbrace{\eta_{\text{turbine}}}^\texttt{eta_turbine})
+$$
+
+6: The required recirculated electric power is calculated as the core system power and then the HCD and coolant pump electric powers that would also be on during a pulse.
 
 $$
 \overbrace{P_{\text{recirc, electric}}}^\texttt{p_plant_electric_recirc_mw} = P_{\text{core systems}}
@@ -172,22 +178,19 @@ $$
 $$
 
 
-6: The net-electric power is found by the different of gross and net
+7: The net-electric power is found by the different of gross and net
 
 $$
 \overbrace{P_{\text{net, electric}}}^\texttt{p_plant_electric_net_mw} = P_{\text{gross, electric}} - P_{\text{recirc, electric}}
 $$
 
 
-7: The recirculated power fraction is then quickly found as
+8: The recirculated power fraction is then quickly found as
 
 $$
 \overbrace{f_{\text{recirc}}}^\texttt{f_p_plant_electric_recirc} = \frac{P_{\text{gross, electric}} - P_{\text{net, electric}}}{P_{\text{gross, electric}}}
 $$
 
----
-
-#### Time dependent power requirements | `power3()`
 
 ---
 
