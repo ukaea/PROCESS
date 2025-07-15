@@ -113,9 +113,29 @@ these two possibilities is set using input parameter `i_fw_blkt_vv_shape`, which
 The bottom of the first wall is given by:
 
 $$
-z_{\text{FW,bottom}} = 
+z_{\text{FW,bottom}} = \overbrace{z_{\text{x-point}}}^{\texttt{z_plasma_xpoint_bottom}} + \overbrace{\mathrm{d}z_{\text{x-point,divertor}}}^{\texttt{dz_xpoint_divertor}} 
+\\ + \overbrace{\mathrm{d}z_{\text{divertor}}}^{\texttt{dz_divertor}} - \overbrace{\mathrm{d}z_{\text{Blanket,upper}}}^{\texttt{dz_blkt_upper}} - \overbrace{\mathrm{d}z_{\text{FW,upper}}}^{\texttt{dz_fw_upper}}
 $$
 
+If there is two divertors then:
+
+$$
+z_{\text{FW,bottom}} = z_{\text{FW,top}}
+$$
+
+else:
+
+$$
+z_{\text{FW,top}} = z_{\text{x-point}} + \overbrace{\mathrm{d}z_{\text{FW,plasma-gap}}}^{\texttt{dz_fw_plasma_gap}}
+$$
+
+The full height is then the average of th two
+
+$$
+\mathrm{d}z_{\text{FW,half}} = \frac{z_{\text{FW,top}} + z_{\text{FW,bottom}}}{2}
+$$
+
+---------------
 
 ### D-shaped | `dshellarea()`
 
@@ -125,16 +145,45 @@ $$
 R_1 = R_0 - a - \overbrace{\Delta r_{\text{FW,plasma-gap inboard}}}^{\texttt{dr_fw_plasma_gap_inboard}}
 $$
 
-Area of inboard cylindrical shell:
+Area of inboard cylindrical shell is simply:
 
 $$
-A_{\text{FW,inboard}} = 4 z \pi R_1
+A_{\text{FW,inboard}} = 4 \mathrm{d}z_{\text{FW,half}} \pi R_1
 $$
 
 
 $$
 R_2 = R_0 + a + \overbrace{\Delta r_{\text{FW,plasma-gap outboard}}}^{\texttt{dr_fw_plasma_gap_outboard}} - R_1
 $$
+
+In a similar fashion, the area element for the inner surface of the outboard wall (initially assuming it is
+semicircular) is given by:
+
+$$
+\mathrm{d}A = R_2 \left(R_1 + R_2 \sin{\left(\alpha\right)}\right) \mathrm{d} \phi \ \mathrm{d} \alpha
+$$
+
+where $\alpha$ is the poloidal angle and $\phi$ is the toroidal angle.
+
+$$
+A = 2\pi \int_{\alpha = 0}^\pi \left(R_1 R_2+R_2^2\sin{\left(\alpha\right)}\right) \ \mathrm{d} \alpha
+\\ = 2\pi \left[\alpha R_1 R_2 - R_2^2 \cos{\left(\alpha\right)}\right]^{\pi}_0
+$$
+
+$$
+A = 2 \pi \left(\pi R_1 R_2 + 2R_2^2\right)
+$$
+
+Taking into acount the elongation of the arc, $\kappa$:
+
+$$
+\kappa = \frac{\mathrm{d}z_{\text{FW,half}}}{R_2}
+$$
+
+$$
+A_{\text{out}} = 2 \pi \kappa \left(\pi R_1 R_2 + 2R_2^2\right)
+$$
+
 
 <!DOCTYPE html>
 <html lang="en">
