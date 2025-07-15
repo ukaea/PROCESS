@@ -1992,7 +1992,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # TF toroidal thickness at the WP inner radius [m]
-        dr_tf_at_wp = (
+        dx_tf_wp_inner_toroidal = (
             2.0e0
             * sctfcoil_module.r_tf_wp_inboard_inner
             * sctfcoil_module.tan_theta_coil
@@ -2000,7 +2000,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Minimal toroidal thickness of winding pack [m]
         sctfcoil_module.dx_tf_wp_toroidal_min = (
-            dr_tf_at_wp - 2.0e0 * tfcoil_variables.dx_tf_side_case
+            dx_tf_wp_inner_toroidal - 2.0e0 * tfcoil_variables.dx_tf_side_case
         )
 
         # Rectangular WP

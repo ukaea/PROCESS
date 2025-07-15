@@ -266,3 +266,47 @@ This is done as a conservative assumption as the radius is calculated with the W
 
 ## Supercoducting TF coil class | `SuperconductingTFCoil(TFCoil)`
 
+----------------
+
+### Winding Pack Geometry | `superconducting_tf_wp_geometry()`
+
+Depending on the value of `i_tf_wp_geom` different WP geometries will be configured
+
+Initial general dimensions are calculated first as follows:
+
+$$
+\overbrace{R_{\text{TF-inboard,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} = \overbrace{R_{\text{TF-inboard,in}}}^{\texttt{r_tf_inboard_in}} + \overbrace{\mathrm{d}R_{\text{TF,nose-case}}}^{\texttt{dr_tf_nose_case}}
+$$
+
+$$
+\overbrace{R_{\text{TF-inboard,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} = R_{\text{TF-inboard,WP-inner}} + \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}
+$$
+
+$$
+\overbrace{R_{\text{TF-inboard,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} = \frac{R_{\text{TF-inboard,WP-inner}} + R_{\text{TF-inboard,WP-outer}}}{2}
+$$
+
+Find the straight toroidal width of the TF coil at the inside edge of the winding pack:
+
+$$
+\mathrm{d}x_{\text{TF,toroidal,WP}} = 2 \times \overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \overbrace{\tan{\left(\phi_{\text{TF}}\right)}}^{\texttt{tan_theta_coil}}
+$$
+
+To find the straight toroidal length of the winding pack we now take off the side case thicknesses:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-min}}}^{\texttt{dx_tf_wp_toroidal_min}} = \mathrm{d}x_{\text{TF,toroidal,WP}} - \left(2 \times \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+$$
+
+
+#### Rectangular WP
+
+
+--------
+
+#### Double rectangular WP
+
+--------
+
+#### Trapezoidal WP 
+
