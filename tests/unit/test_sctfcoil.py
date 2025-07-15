@@ -720,7 +720,7 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "tan_theta_coil", tfwpgeomparam.tan_theta_coil)
 
-    sctfcoil.tf_wp_geom(i_tf_wp_geom=tfwpgeomparam.i_tf_wp_geom)
+    sctfcoil.superconducting_tf_wp_geometry(i_tf_wp_geom=tfwpgeomparam.i_tf_wp_geom)
 
     assert tfcoil_variables.wwp1 == pytest.approx(tfwpgeomparam.expected_wwp1)
 

@@ -1848,7 +1848,7 @@ class SuperconductingTFCoil(TFCoil):
         """
 
         # Calculating the WP / ground insulation areas
-        self.tf_wp_geom(i_tf_wp_geom)
+        self.superconducting_tf_wp_geometry(i_tf_wp_geom)
 
         # Calculating the TF steel casing areas
         self.tf_case_geom(i_tf_wp_geom, i_tf_case_geom)
@@ -1968,7 +1968,7 @@ class SuperconductingTFCoil(TFCoil):
             error_handling.fdiags[7] = sctfcoil_module.f_a_tf_coil_inboard_insulation
             error_handling.report_error(276)
 
-    def tf_wp_geom(self, i_tf_wp_geom):
+    def superconducting_tf_wp_geometry(self, i_tf_wp_geom):
         """
          Author : S. Kahn, CCFE
         Seting the WP geometry and area for SC magnets
