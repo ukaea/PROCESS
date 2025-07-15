@@ -2000,11 +2000,11 @@ class Build:
 
         #  Half-height of first wall (internal surface)
         hbot = (
-            build_variables.z_plasma_xpoint_lower
+            build_variables.z_plasma_xpoint_bottom
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
             - build_variables.dz_blkt_upper
-            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
+            - build_variables.dz_fw_upper
         )
         if (
             physics_variables.n_divertors == 2
