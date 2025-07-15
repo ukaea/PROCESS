@@ -3283,7 +3283,7 @@ class Acc2251Param(NamedTuple):
 
     len_tf_bus: Any = None
 
-    estotftgj: Any = None
+    e_tf_magnetic_stored_total_gj: Any = None
 
     i_tf_sup: Any = None
 
@@ -3337,7 +3337,7 @@ class Acc2251Param(NamedTuple):
             vtfskv=9.9882637896807953,
             tfcmw=0,
             len_tf_bus=3397.0129827974288,
-            estotftgj=152.78343648685947,
+            e_tf_magnetic_stored_total_gj=152.78343648685947,
             i_tf_sup=1,
             m_tf_bus=0,
             tfckw=32474.753636211804,
@@ -3368,7 +3368,7 @@ class Acc2251Param(NamedTuple):
             vtfskv=10.001287165953382,
             tfcmw=0,
             len_tf_bus=3397.0129827974288,
-            estotftgj=152.98264590137683,
+            e_tf_magnetic_stored_total_gj=152.98264590137683,
             i_tf_sup=1,
             m_tf_bus=0,
             tfckw=32505.257577809778,
@@ -3422,7 +3422,11 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(tfcoil_variables, "len_tf_bus", acc2251param.len_tf_bus)
 
-    monkeypatch.setattr(tfcoil_variables, "estotftgj", acc2251param.estotftgj)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "e_tf_magnetic_stored_total_gj",
+        acc2251param.e_tf_magnetic_stored_total_gj,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", acc2251param.i_tf_sup)
 

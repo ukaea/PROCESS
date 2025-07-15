@@ -44,7 +44,7 @@ class CalcBuildingCostsParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    estotftgj: Any = None
+    e_tf_magnetic_stored_total_gj: Any = None
 
     r_cryostat_inboard: Any = None
 
@@ -88,7 +88,7 @@ class CalcBuildingCostsParam(NamedTuple):
             helpow=142703.41458500578,
             c_tf_total=234156150,
             n_tf_coils=18,
-            estotftgj=130.10721529398921,
+            e_tf_magnetic_stored_total_gj=130.10721529398921,
             r_cryostat_inboard=18.314040399601147,
             z_cryostat_half_inside=15.118436894660423,
             cost_factor_buildings=1,
@@ -1188,7 +1188,7 @@ class CalcBuildingCostsParam(NamedTuple):
             helpow=823308.59959198488,
             c_tf_total=234156150,
             n_tf_coils=18,
-            estotftgj=129.99240835373195,
+            e_tf_magnetic_stored_total_gj=129.99240835373195,
             r_cryostat_inboard=18.31462428923539,
             z_cryostat_half_inside=15.165858901796364,
             cost_factor_buildings=1,
@@ -2322,7 +2322,11 @@ def test_calc_building_costs(calcbuildingcostsparam, monkeypatch, costs2015):
         tfcoil_variables, "n_tf_coils", calcbuildingcostsparam.n_tf_coils
     )
 
-    monkeypatch.setattr(tfcoil_variables, "estotftgj", calcbuildingcostsparam.estotftgj)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "e_tf_magnetic_stored_total_gj",
+        calcbuildingcostsparam.e_tf_magnetic_stored_total_gj,
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "r_cryostat_inboard", calcbuildingcostsparam.r_cryostat_inboard

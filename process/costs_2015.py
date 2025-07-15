@@ -583,7 +583,7 @@ class Costs2015:
             35000.0e0 * cost_variables.light_build_cost_per_vol
         )
         # Scale with total stored energy in TF coils (GJ)
-        cost_2015_variables.s_k[6] = tfcoil_variables.estotftgj
+        cost_2015_variables.s_k[6] = tfcoil_variables.e_tf_magnetic_stored_total_gj
         cost_2015_variables.s_kref[6] = 41.0e0
         cost_2015_variables.s_cost[6] = (
             cost_2015_variables.s_cost_factor[6]

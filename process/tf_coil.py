@@ -126,7 +126,9 @@ class TFCoil:
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
+            1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        )
 
         self.tf_field_and_force()
 
@@ -1569,8 +1571,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Total stored energy in TF coils (GJ)",
-            "(estotftgj)",
-            tfcoil_variables.estotftgj,
+            "(e_tf_magnetic_stored_total_gj)",
+            tfcoil_variables.e_tf_magnetic_stored_total_gj,
             "OP ",
         )
 
@@ -5400,7 +5402,7 @@ def init_tfcoil_variables():
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
     tfv.dcondins = 1800.0
     tfv.dia_tf_turn_coolant_channel = 0.005
-    tfv.estotftgj = 0.0
+    tfv.e_tf_magnetic_stored_total_gj = 0.0
     tfv.b_crit_upper_nbti = 14.86
     tfv.t_crit_nbti = 9.04
     tfv.max_force_density = 0.0

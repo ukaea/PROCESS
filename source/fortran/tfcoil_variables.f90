@@ -159,7 +159,7 @@ module tfcoil_variables
   real(dp) :: dia_tf_turn_coolant_channel
   !! diameter of central helium channel in TF winding (m)
 
-  real(dp) :: estotftgj
+  real(dp) :: e_tf_magnetic_stored_total_gj
   !! total stored energy in the toroidal field (GJ)
 
   real(dp) :: b_crit_upper_nbti

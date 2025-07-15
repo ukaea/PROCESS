@@ -740,7 +740,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2085E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.4422E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1672E+07    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.1034E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.1034E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      1.9146E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      1.9146E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 

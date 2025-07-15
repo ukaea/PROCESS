@@ -772,7 +772,10 @@ class Stellarator:
         #  F.C. Moon, J. Appl. Phys. 53(12) (1982) 9112
         #
         #  Values based on regression analysis by Greifswald, March 2014
-        m_struc = 1.3483e0 * (1000.0e0 * tfcoil_variables.estotftgj) ** 0.7821e0
+        m_struc = (
+            1.3483e0
+            * (1000.0e0 * tfcoil_variables.e_tf_magnetic_stored_total_gj) ** 0.7821e0
+        )
         msupstr = 1000.0e0 * m_struc  # kg
 
         ################################################################
@@ -2859,7 +2862,7 @@ class Stellarator:
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
             * st.f_n**2
         )
-        tfcoil_variables.estotftgj = (
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
             0.5e0
             * (
                 stellarator_configuration.stella_config_inductance
@@ -3042,10 +3045,12 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
-            tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
+            tfcoil_variables.e_tf_magnetic_stored_total_gj
+            / tfcoil_variables.n_tf_coils
+            * 1.0e9,
             tfcoil_variables.tdmptf,
             tfcoil_variables.c_tf_turn,
         )
@@ -3797,8 +3802,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total Stored energy (GJ)",
-            "(estotftgj)",
-            tfcoil_variables.estotftgj,
+            "(e_tf_magnetic_stored_total_gj)",
+            tfcoil_variables.e_tf_magnetic_stored_total_gj,
         )
         po.ovarre(
             self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
