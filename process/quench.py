@@ -10,12 +10,8 @@ __all__ = ["calculate_quench_protection_current_density"]
 
 # Material property parameterisations
 
-
-def _copper_density(temperature: float) -> float:  # noqa: ARG001
-    """
-    Calculate the density of cryogenic copper [kg/m^3].
-    """
-    return 8960.0  # No plans to include T-dependence
+COPPER_DENSITY = 8960  # [kg/m^3]
+NB3SN_DENSITY = 8040.0  # [kg/m^3]
 
 
 def _copper_specific_heat_capacity(temperature: float) -> float:
@@ -191,13 +187,6 @@ def _copper_electrical_resistivity(
     return _copper_magneto_resistivity(rho_rrr + rho_irr, field)
 
 
-def _nb3sn_density(temperature: float) -> float:  # noqa: ARG001
-    """
-    Calculate the density of Nb3Sn [kg/m^3].
-    """
-    return 8040.0  # No plans to include T-dependence
-
-
 def _nb3sn_specific_heat_capacity(temperature: float) -> float:
     """
     Calculates the specific heat capacity of Nb₃Sn as a function of temperature.
@@ -312,8 +301,8 @@ def _quench_integrals(
             * _helium_specific_heat_capacity(ti, pressure)
             * _helium_density(ti, pressure)
         )
-        icu += factor * _copper_specific_heat_capacity(ti) * _copper_density(ti)
-        isc += factor * _nb3sn_specific_heat_capacity(ti) * _nb3sn_density(ti)
+        icu += factor * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
+        isc += factor * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
 
     return ihe, icu, isc
 
