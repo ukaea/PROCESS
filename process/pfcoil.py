@@ -1847,14 +1847,12 @@ class PFCoil:
         # than each segment is tall, i.e. the segments are pancake-like,
         # for the benefit of the mutual inductance calculations later
 
-        noh = int(
-            math.ceil(
-                2.0e0
-                * pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
-                / (
-                    pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
-                    - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
-                )
+        noh = math.ceil(
+            2.0e0
+            * pfv.z_pf_coil_upper[pfv.n_cs_pf_coils - 1]
+            / (
+                pfv.r_pf_coil_outer[pfv.n_cs_pf_coils - 1]
+                - pfv.r_pf_coil_inner[pfv.n_cs_pf_coils - 1]
             )
         )
 
