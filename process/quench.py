@@ -4,7 +4,7 @@ from warnings import warn
 import numpy as np
 
 # TODO: Use of CoolProp prevents nb.jit at present...
-from CoolProp.CoolProp import PropsSI
+from process.coolprop_interface import FluidProperties
 
 __all__ = ["calculate_quench_protection_current_density"]
 
@@ -219,34 +219,6 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
     return 1.0 / (1.0 / cp_300 + 1.0 / cp_low)
 
 
-def _helium_density(temperature: float, pressure: float) -> float:
-    """
-    Calculate helium density at a specified temperature and pressure.
-
-    :param float temperature: He temperature [K].
-    :param float pressure: He pressure [Pa].
-    :returns: density [kg/m^3]
-    :rtype: float
-
-    :notes: CoolProp benchmarked with NIST data and virtually indistinguishable.
-    """
-    return PropsSI("D", "T", temperature, "P", pressure, "Helium")
-
-
-def _helium_specific_heat_capacity(temperature: float, pressure: float) -> float:
-    """
-    Calculate helium specific heat capacity at a specified temperature and (constant) pressure.
-
-    :param float temperature: He temperature [K].
-    :param float pressure: He pressure [Pa].
-    :returns: specific heat capacity [J/kg/K]
-    :rtype: float
-
-    :notes: CoolProp benchmarked with NIST data and virtually indistinguishable.
-    """
-    return PropsSI("CPMASS", "T", temperature, "P", pressure, "Helium")
-
-
 # Quench model
 # Gauss-Legendre quadrature nodes and weights for numerical integration
 # 75 points is a good compromise between speed and accuracy for the integrals used in this
@@ -296,11 +268,9 @@ def _quench_integrals(
         nu_cu = _copper_electrical_resistivity(ti, field, rrr, fluence)
         factor = dti / nu_cu
 
-        ihe += (
-            factor
-            * _helium_specific_heat_capacity(ti, pressure)
-            * _helium_density(ti, pressure)
-        )
+        he_properties = FluidProperties.of("He", temperature=ti, pressure=pressure)
+
+        ihe += factor * he_properties.specific_heat_const_p * he_properties.density
         icu += factor * _copper_specific_heat_capacity(ti) * COPPER_DENSITY
         isc += factor * _nb3sn_specific_heat_capacity(ti) * NB3SN_DENSITY
 
