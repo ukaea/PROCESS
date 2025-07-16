@@ -298,8 +298,39 @@ $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-min}}}^{\texttt{dx_tf_wp_toroidal_min}} = \mathrm{d}x_{\text{TF,toroidal,WP}} - \left(2 \times \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
 $$
 
+----------
 
 #### Rectangular WP
+
+
+For a [rectangular winding pack](#winding-pack-geometry) (`i_tf_wp_geom == 0`) of constant shape:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}}, \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-average}}}^{\texttt{dx_tf_wp_toroidal_average}} = \mathrm{d}x_{\text{TF,toroidal,WP-min}}
+$$
+
+The full winding pack area with insulation is:
+
+$$
+\overbrace{A_{\text{TF,WP}}}^{\texttt{a_tf_wp_with_insulation}} = \mathrm{d}x_{\text{TF,toroidal,WP-primary}} \times \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}
+$$
+
+The area of the winding pack with no insulation or gap is:
+
+$$
+\overbrace{A_{\text{TF,WP-no-insulation}}}^{\texttt{a_tf_wp_no_insulation}} = 
+\\ \left(\mathrm{d}R_{\text{TF,WP}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ \times \left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+$$
+
+The area of the surrounding winding pack insulation is:
+
+$$
+\overbrace{A_{\text{TF,WP-insulation}}}^{\texttt{a_tf_wp_ground_insulation}} =
+\\ \left(\left(\mathrm{d}R_{\text{TF,WP}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)
+\\ \times \left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ - A_{\text{TF,WP-no-insulation}}
+$$
 
 
 --------

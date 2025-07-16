@@ -1975,11 +1975,24 @@ class SuperconductingTFCoil(TFCoil):
             error_handling.fdiags[7] = sctfcoil_module.f_a_tf_coil_inboard_insulation
             error_handling.report_error(276)
 
-    def superconducting_tf_wp_geometry(self, i_tf_wp_geom):
+    def superconducting_tf_wp_geometry(self, i_tf_wp_geom: int) -> None:
         """
-         Author : S. Kahn, CCFE
-        Seting the WP geometry and area for SC magnets
+        Sets the winding pack (WP) geometry and area for superconducting (SC) toroidal field (TF) magnets.
+        This method calculates and assigns the geometry and cross-sectional areas of the winding pack
+        for superconducting TF coils, according to the specified geometry type.
+        
+        :param int i_tf_wp_geom: 
+            - 0: Rectangular WP
+            - 1: Double rectangular WP
+            - 2: Trapezoidal WP
+        
+        :returns: None
+        
+        :raises: 
+            Reports an error if the calculated winding pack area (with or without insulation) is non-positive.
+
         """
+
         sctfcoil_module.r_tf_wp_inboard_inner = (
             build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
         )
@@ -2021,13 +2034,13 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.dx_tf_wp_toroidal_min
             )
 
-            # Total cross-sectional area of winding pack [m2]
+            # Total cross-sectional area of winding pack [m²]
             sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
-                * sctfcoil_module.dx_tf_wp_toroidal_min
+                * tfcoil_variables.dx_tf_wp_primary_toroidal
             )
 
-            # WP cross-section without insertion gap and ground insulation [m2]
+            # WP cross-section without insertion gap and ground insulation [m²]
             sctfcoil_module.a_tf_wp_no_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0
@@ -2036,7 +2049,7 @@ class SuperconductingTFCoil(TFCoil):
                     + tfcoil_variables.dx_tf_wp_insertion_gap
                 )
             ) * (
-                sctfcoil_module.dx_tf_wp_toroidal_min
+                tfcoil_variables.dx_tf_wp_primary_toroidal
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_wp_insulation
@@ -2044,12 +2057,12 @@ class SuperconductingTFCoil(TFCoil):
                 )
             )
 
-            # Cross-section area of the WP ground insulation [m2]
+            # Cross-section area of the WP ground insulation [m²]
             sctfcoil_module.a_tf_wp_ground_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
-                sctfcoil_module.dx_tf_wp_toroidal_min
+                tfcoil_variables.dx_tf_wp_primary_toroidal
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) - sctfcoil_module.a_tf_wp_no_insulation
 
