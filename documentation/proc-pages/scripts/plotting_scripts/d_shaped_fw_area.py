@@ -127,6 +127,42 @@ fw_patch = plot.patch(
     line_width=0,
     legend_label="FW",
 )
+# Add a transparent patch between the two blue lines to indicate the divertor region
+# Define ColumnDataSource for divertor patch
+divertor_source = ColumnDataSource(
+    data={
+        "x": [
+            plot.x_range.start,
+            plot.x_range.end,
+            plot.x_range.end,
+            plot.x_range.start,
+        ],
+        "y": [
+            -(kappa.value * a.value + plasma_divertor_gap.value),
+            -(kappa.value * a.value + plasma_divertor_gap.value),
+            -(
+                kappa.value * a.value
+                + plasma_divertor_gap.value
+                + divertor_height.value
+            ),
+            -(
+                kappa.value * a.value
+                + plasma_divertor_gap.value
+                + divertor_height.value
+            ),
+        ],
+    }
+)
+
+plot.patch(
+    "x",
+    "y",
+    source=divertor_source,
+    fill_color="blue",
+    fill_alpha=0.15,
+    line_alpha=0,
+    legend_label="Divertor region",
+)
 
 # Add horizontal line for divertor to plasma gap
 hline = Span(
@@ -154,6 +190,7 @@ callback = CustomJS(
     args={
         "source": source,
         "fw_source": fw_source,
+        "divertor_source": divertor_source,
         "r0": r0,
         "a": a,
         "delta": delta,
@@ -167,6 +204,7 @@ callback = CustomJS(
         "divertor_height": divertor_height,
         "dz_blkt_upper": dz_blkt_upper,
         "left_rect": left_rect,
+        "plot": plot,
     },
     code="""
     const A = r0.value;
@@ -220,6 +258,15 @@ callback = CustomJS(
     fw_source.data['x'] = x_fw;
     fw_source.data['y'] = y_fw;
     fw_source.change.emit();
+
+    // Update divertor patch
+    const x_start = plot.x_range.start;
+    const x_end = plot.x_range.end;
+    const y_top = -(K*B + P);
+    const y_bottom = -(K*B + P + H);
+    divertor_source.data['x'] = [x_start, x_end, x_end, x_start];
+    divertor_source.data['y'] = [y_top, y_top, y_bottom, y_bottom];
+    divertor_source.change.emit();
 
     source.change.emit();
 """,
