@@ -328,8 +328,8 @@ maintenance_fwbs: float = None
 
 
 maintenance_gen: float = None
-"""Maintenance cost factor: All other components except coils, vacuum vessel,"""
-"""thermal shield, cryostat, land"""
+"""Maintenance cost factor: All other components except coils, vacuum vessel,
+thermal shield, cryostat, land"""
 
 
 amortization: float = None
@@ -337,18 +337,20 @@ amortization: float = None
 
 
 cost_model: int = None
-"""Switch for cost model:"""
-"""- =0 use $ 1990 PROCESS model"""
-"""- =1 use $ 2014 Kovari model"""
-"""- =2 use user-provided model"""
+"""Switch for cost model:
+- =0 use $ 1990 PROCESS model
+- =1 use $ 2014 Kovari model
+- =2 use user-provided model
+"""
 
 
 i_cp_lifetime: int = None
-"""Switch for the centrepost lifetime constraint"""
-"""0 : The CP full power year lifetime is set by the user via cplife_input"""
-"""1 : The CP lifetime is equal to the divertor lifetime"""
-"""2 : The CP lifetime is equal to the breeding blankets lifetime"""
-"""3 : The CP lifetime is equal to the plant lifetime"""
+"""Switch for the centrepost lifetime constraint
+0 : The CP full power year lifetime is set by the user via cplife_input
+1 : The CP lifetime is equal to the divertor lifetime
+2 : The CP lifetime is equal to the breeding blankets lifetime
+3 : The CP lifetime is equal to the plant lifetime
+"""
 
 
 cowner: float = None
@@ -440,17 +442,18 @@ fwallcst: float = None
 
 
 iavail: int = None
-"""Switch for plant availability model:"""
-"""- =0 use input value for cfactr"""
-"""- =1 calculate cfactr using Taylor and Ward 1999 model"""
-"""- =2 calculate cfactr using new (2015) model"""
-"""- =3 calculate cfactr using ST model"""
+"""Switch for plant availability model:
+- =0 use input value for cfactr
+- =1 calculate cfactr using Taylor and Ward 1999 model
+- =2 calculate cfactr using new (2015) model
+- =3 calculate cfactr using ST model
+"""
 
 
 ibkt_life: int = None
-"""Switch for fw/blanket lifetime calculation in availability module:"""
-"""- =0 use neutron fluence model"""
-"""- =1 use fusion power model (DEMO only)"""
+"""Switch for fw/blanket lifetime calculation in availability module:
+- =0 use neutron fluence model
+- =1 use fusion power model (DEMO only)"""
 
 
 life_dpa: float = None
@@ -570,32 +573,36 @@ uuves: float = None
 
 
 ifueltyp: int = None
-"""Switch for fuel type:"""
-"""- =2 treat initial blanket, divertor, first wall"""
-"""as capital costs. Treat all later items and"""
-"""fraction fcdfuel of CD equipment as fuel costs"""
-"""- =1 treat blanket divertor, first wall and"""
-"""fraction fcdfuel of CD equipment as fuel cost"""
-"""- =0 treat these as capital cost"""
+"""Switch for fuel type:
+- =2 treat initial blanket, divertor, first wall
+as capital costs. Treat all later items and
+fraction fcdfuel of CD equipment as fuel costs
+- =1 treat blanket divertor, first wall and
+fraction fcdfuel of CD equipment as fuel cost
+- =0 treat these as capital cost
+"""
 
 
 ipnet: int = None
-"""Switch for net electric power calculation:"""
-"""- =0 scale so that always > 0"""
-"""- =1 let go < 0 (no c-o-e)"""
+"""Switch for net electric power calculation:
+- =0 scale so that always > 0
+- =1 let go < 0 (no c-o-e)
+"""
 
 
 ireactor: int = None
-"""Switch for net electric power and cost of electricity calculations:"""
-"""- =0 do not calculate MW(electric) or c-o-e"""
-"""- =1 calculate MW(electric) and c-o-e"""
+"""Switch for net electric power and cost of electricity calculations:
+- =0 do not calculate MW(electric) or c-o-e
+- =1 calculate MW(electric) and c-o-e
+"""
 
 
 lsa: int = None
-"""Level of safety assurance switch (generally, use 3 or 4):"""
-"""- =1 truly passively safe plant"""
-"""- =2,3 in-between"""
-"""- =4 like current fission plant"""
+"""Level of safety assurance switch (generally, use 3 or 4):
+- =1 truly passively safe plant
+- =2,3 in-between
+- =4 like current fission plant
+"""
 
 
 moneyint: float = None
@@ -603,9 +610,10 @@ moneyint: float = None
 
 
 output_costs: int = None
-"""Switch for costs output:"""
-"""- =0 do not write cost-related outputs to file"""
-"""- =1 write cost-related outputs to file"""
+"""Switch for costs output:
+- =0 do not write cost-related outputs to file
+- =1 write cost-related outputs to file
+"""
 
 
 discount_rate: float = None
@@ -621,9 +629,9 @@ startuppwr: float = None
 
 
 supercond_cost_model: int = None
-"""Switch for superconductor cost model:"""
-"""- =0 use $/kg"""
-"""- =1 use $/kAm"""
+"""Switch for superconductor cost model:
+- =0 use $/kg
+- =1 use $/kAm"""
 
 
 tlife: float = None
@@ -638,16 +646,15 @@ u_unplanned_cp: float = None
 """User-input CP unplanned unavailability (iavail = 3)"""
 
 
-UCAD = 180.0
-
+UCAD: float = 180.0
 """unit cost for administration buildings (M$/m3)"""
 
 
-UCAF = 1.5e6
+UCAF: float = 1.5e6
 """unit cost for aux facility power equipment ($)"""
 
 
-UCAHTS = 31.0
+UCAHTS: float = 31.0
 """unit cost for aux heat transport equipment ($/W**exphts)"""
 
 
@@ -778,22 +785,18 @@ ucfuel: float = None
 
 
 UCFWA: float = 6.0e4
-
 """first wall armour cost ($/m2)"""
 
 
 UCFWPS: float = 1.0e7
-
 """first wall passive stabiliser cost ($)"""
 
 
 UCFWS: float = 5.3e4
-
 """first wall structure cost ($/m2)"""
 
 
 UCGSS: float = 35.0
-
 """cost of reactor structure ($/kg)"""
 
 
