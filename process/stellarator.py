@@ -2659,7 +2659,9 @@ class Stellarator:
         )  # Toroidal dimension
         awp_rad = wp_width_r_min  # Radial dimension
 
-        tfcoil_variables.wwp1 = awp_tor  # [m] toroidal thickness of winding pack
+        tfcoil_variables.dx_tf_wp_primary_toroidal = (
+            awp_tor  # [m] toroidal thickness of winding pack
+        )
         tfcoil_variables.wwp2 = (
             awp_tor  # [m] toroidal thickness of winding pack (region in front)
         )
@@ -2671,7 +2673,10 @@ class Stellarator:
         a_tf_wp_with_insulation = (
             tfcoil_variables.dr_tf_wp_with_insulation
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
-        ) * (tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
+        ) * (
+            tfcoil_variables.dx_tf_wp_primary_toroidal
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+        )
 
         a_tf_wp_no_insulation = (
             awp_tor * awp_rad
@@ -2780,7 +2785,7 @@ class Stellarator:
         #  General Coil Geometry values
         #
         tfcoil_variables.dx_tf_inboard_out_toroidal = (
-            tfcoil_variables.wwp1
+            tfcoil_variables.dx_tf_wp_primary_toroidal
             + 2.0e0 * tfcoil_variables.dx_tf_side_case
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in toroidal direction
@@ -3934,8 +3939,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Winding toroidal thickness (m)",
-            "(wwp1)",
-            tfcoil_variables.wwp1,
+            "(dx_tf_wp_primary_toroidal)",
+            tfcoil_variables.dx_tf_wp_primary_toroidal,
         )
         po.ovarre(
             self.outfile,

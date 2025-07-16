@@ -711,7 +711,7 @@ module tfcoil_variables
   real(dp) :: m_tf_coils_total
   !! total mass of the TF coils (kg)
 
-  real(dp) :: wwp1
+  real(dp) :: dx_tf_wp_primary_toroidal
   !! width of first step of winding pack (m)
 
   real(dp) :: wwp2

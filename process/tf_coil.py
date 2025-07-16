@@ -1064,16 +1064,16 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Winding pack toroidal width (m)",
-                    "(wwp1)",
-                    tfcoil_variables.wwp1,
+                    "(dx_tf_wp_primary_toroidal)",
+                    tfcoil_variables.dx_tf_wp_primary_toroidal,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Winding pack toroidal width 1 (m)",
-                    "(wwp1)",
-                    tfcoil_variables.wwp1,
+                    "(dx_tf_wp_primary_toroidal)",
+                    tfcoil_variables.dx_tf_wp_primary_toroidal,
                     "OP ",
                 )
                 po.ovarre(
@@ -5546,7 +5546,7 @@ def init_tfcoil_variables():
     tfv.m_tf_turn_steel = 0.0
     tfv.whtgw = 0.0
     tfv.m_tf_coils_total = 0.0
-    tfv.wwp1 = 0.0
+    tfv.dx_tf_wp_primary_toroidal = 0.0
     tfv.wwp2 = 0.0
     tfv.dthet[:] = 0.0
     tfv.radctf[:] = 0.0

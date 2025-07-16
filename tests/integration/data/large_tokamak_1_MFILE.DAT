@@ -697,7 +697,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.7486E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      5.1696E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      5.0416E-01 ITV
- Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1904E+00 OP 
+ Winding_pack_toroidal_width_1_(m)_______________________________________ (dx_tf_wp_primary_toroidal)________________________      1.1904E+00 OP 
  Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0901E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    

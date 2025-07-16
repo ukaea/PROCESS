@@ -2133,7 +2133,7 @@ class Build:
 
                 if build_python_variables.ripflag == 1:
                     error_handling.fdiags[0] = (
-                        tfcoil_variables.wwp1
+                        tfcoil_variables.dx_tf_wp_primary_toroidal
                         * tfcoil_variables.n_tf_coils
                         / physics_variables.rmajor
                     )
