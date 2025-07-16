@@ -30,6 +30,7 @@ def _copper_specific_heat_capacity(temperature: float) -> float:
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
         Equation 7-1
     """
     poly_coeffs: Final[list[float]] = [1.131, -9.454, 12.99, -5.501, 0.7637]
@@ -53,9 +54,11 @@ def _copper_rrr_resistivity(temperature: float, rrr: float) -> float:
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
         Equation 8-1
         - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM, COPPER, IRON, AND
         TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
+        https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
     """
     p1: Final[float] = 1.171e-17
     p2: Final[float] = 4.49
@@ -107,7 +110,8 @@ def _copper_irradiation_resistivity(fluence: float) -> float:
 
     :references:
         - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
-        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
+        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
+        https://doi.org/10.1103/PhysRevB.16.5285
         Figure 6
     """
     c1: Final[float] = 0.00283
@@ -138,6 +142,7 @@ def _copper_magneto_resistivity(resistivity: float, field: float) -> float:
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
         Equation 8-7
     """
     p9: Final[float] = 1.553e-8
@@ -175,11 +180,14 @@ def _copper_electrical_resistivity(
     :references:
         - J. Simon, E. S. Drexler, and R. P. Reed, *NIST Monograph 177*, "Properties of Copper and Copper Alloys
         at Cryogenic Temperatures", U.S. Government Printing Office, February 1992.
+        https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nistmonograph177.pdf
         Equation 8-1
         - J. G. Hust, A. B. Lankford, NBSIR 84-3007 "THERMAL CONDUCTIVITY OF  ALUMINUM, COPPER, IRON, AND
         TUNGSTEN FOR TEMPERATURES FROM  1 K TO THE MELTING POINT", 1984
+        https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir84-3007.pdf
         - M. Kovari, 09/11/2012, internal notes (Excel / Mathcad), Technology Program, WP12, PEX, Super-X Divertor for DEMO.
-        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977). https://doi.org/10.1103/PhysRevB.16.5285
+        - M. Nakagawa et al., "High-dose neutron-irradiation effects in fcc metals at 4.6 K", *Phys. Rev. B*, 16, 5285 (1977).
+        https://doi.org/10.1103/PhysRevB.16.5285
         Figure 6
     """
     rho_rrr = _copper_rrr_resistivity(temperature, rrr)
@@ -208,6 +216,7 @@ def _nb3sn_specific_heat_capacity(temperature: float) -> float:
         - ITER DRG1 Annex, Superconducting Material Database, Article 5, N 11 FDR 42 01-07-05 R 0.1.
         - V.D. Arp, Stability and Thermal Quenches in Force-Cooled Superconducting Cables, Superconducting MHD Magnet Design Conf., MIT, pp 142-157, 1980.
         - G.S. Knapp, S.D. Bader, Z. Fisk, Phonon properties of A-15 superconductors obtained from heat capacity measurements, Phys. Rev. B, 13(9), pp 3783-3789, 1976.
+        https://doi.org/10.1103/PhysRevB.13.3783
     """
     gamma: Final[float] = 0.1  # [J/K²/kg] (Grueneisen)
     beta: Final[float] = 0.001  # [J/K⁴/kg] (Debye)
