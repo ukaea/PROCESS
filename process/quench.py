@@ -10,7 +10,7 @@ __all__ = ["calculate_quench_protection_current_density"]
 
 # Material property parameterisations
 
-COPPER_DENSITY = 8960  # [kg/m^3]
+COPPER_DENSITY = 8960.0  # [kg/m^3]
 NB3SN_DENSITY = 8040.0  # [kg/m^3]
 
 
