@@ -4,13 +4,12 @@ import math
 import numpy as np
 
 from process import process_output as po
-from process.data_structure import power_variables
+from process.data_structure import cost_variables, power_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
     constants,
-    cost_variables,
     current_drive_variables,
     error_handling,
     fwbs_variables,

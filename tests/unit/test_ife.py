@@ -7,10 +7,10 @@ import pytest
 
 from process.availability import Availability
 from process.costs import Costs
+from process.data_structure import cost_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
-    cost_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,

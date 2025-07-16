@@ -48,8 +48,9 @@ from pathlib import Path
 from typing import Protocol
 
 import process
+import process.data_structure as data_structure
+import process.fortran as fortran
 import process.init as init
-from process import fortran
 from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.build import Build
@@ -696,11 +697,11 @@ class Models:
 
     @property
     def costs(self) -> CostsProtocol:
-        if fortran.cost_variables.cost_model == 0:
+        if data_structure.cost_variables.cost_model == 0:
             return self._costs_1990
-        if fortran.cost_variables.cost_model == 1:
+        if data_structure.cost_variables.cost_model == 1:
             return self._costs_2015
-        if fortran.cost_variables.cost_model == 2:
+        if data_structure.cost_variables.cost_model == 2:
             if self._costs_custom is not None:
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")
