@@ -714,7 +714,7 @@ module tfcoil_variables
   real(dp) :: dx_tf_wp_primary_toroidal
   !! width of first step of winding pack (m)
 
-  real(dp) :: wwp2
+  real(dp) :: dx_tf_wp_secondary_toroidal
   !! width of second step of winding pack (m)
 
   ! Superconducting TF coil shape parameters;

@@ -2681,7 +2681,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
     wp_toridal_dxbig = mfile_data.data["dx_tf_wp_primary_toroidal"].get_scan(scan)
-    wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
+    wp_toridal_dxsmall = mfile_data.data["dx_tf_wp_secondary_toroidal"].get_scan(scan)
     dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
         scan
     )
@@ -6010,7 +6010,7 @@ def main(args=None):
     # Magnets related
     global n_tf_coils
     global dx_tf_wp_primary_toroidal
-    global wwp2
+    global dx_tf_wp_secondary_toroidal
     global dr_tf_wp_with_insulation
     global dx_tf_wp_insulation
     global dr_tf_nose_case
@@ -6022,7 +6022,9 @@ def main(args=None):
             scan
         )
         if i_tf_wp_geom == 1:
-            wwp2 = m_file.data["wwp2"].get_scan(scan)
+            dx_tf_wp_secondary_toroidal = m_file.data[
+                "dx_tf_wp_secondary_toroidal"
+            ].get_scan(scan)
         dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(
             scan
         )

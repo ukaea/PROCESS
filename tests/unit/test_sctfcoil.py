@@ -505,7 +505,7 @@ class TfWpGeomParam(NamedTuple):
 
     dx_tf_wp_primary_toroidal: Any = None
 
-    wwp2: Any = None
+    dx_tf_wp_secondary_toroidal: Any = None
 
     dx_tf_wp_insulation: Any = None
 
@@ -564,7 +564,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
             dx_tf_wp_primary_toroidal=0,
-            wwp2=0,
+            dx_tf_wp_secondary_toroidal=0,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
             a_tf_wp_with_insulation=0,
@@ -597,7 +597,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_nose_case=0.52465000000000006,
             dx_tf_side_case=0.05000000000000001,
             dx_tf_wp_primary_toroidal=1.299782604942499,
-            wwp2=0,
+            dx_tf_wp_secondary_toroidal=0,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
             a_tf_wp_with_insulation=0.70527618095271016,
@@ -670,7 +670,11 @@ def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
         tfwpgeomparam.dx_tf_wp_primary_toroidal,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "wwp2", tfwpgeomparam.wwp2)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_secondary_toroidal",
+        tfwpgeomparam.dx_tf_wp_secondary_toroidal,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "dx_tf_wp_insulation", tfwpgeomparam.dx_tf_wp_insulation

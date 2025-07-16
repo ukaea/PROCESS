@@ -2662,7 +2662,7 @@ class Stellarator:
         tfcoil_variables.dx_tf_wp_primary_toroidal = (
             awp_tor  # [m] toroidal thickness of winding pack
         )
-        tfcoil_variables.wwp2 = (
+        tfcoil_variables.dx_tf_wp_secondary_toroidal = (
             awp_tor  # [m] toroidal thickness of winding pack (region in front)
         )
         tfcoil_variables.dr_tf_wp_with_insulation = (

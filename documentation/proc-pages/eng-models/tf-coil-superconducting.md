@@ -88,7 +88,7 @@ Several Winding pack geometries can chosen with the `i_tf_wp_geom` integer switc
     height="100"/>
     <br><br>
     <figcaption><i><p style='text-align: justify;'> 
-      Figure 3: Visual illustration of the WP shapes the user can select with the i_tf_wp_geom integer switch. The dx_tf_wp_primary_toroidal and wwp2 parameters, added in option i_tf_wp_geom = 1 are calculated using the minimal sidewall case thickness.
+      Figure 3: Visual illustration of the WP shapes the user can select with the i_tf_wp_geom integer switch. The dx_tf_wp_primary_toroidal and dx_tf_wp_secondary_toroidal parameters, added in option i_tf_wp_geom = 1 are calculated using the minimal sidewall case thickness.
     </p></i></figcaption>
     <br>
     </center>
