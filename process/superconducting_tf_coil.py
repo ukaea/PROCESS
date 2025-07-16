@@ -1980,15 +1980,15 @@ class SuperconductingTFCoil(TFCoil):
         Sets the winding pack (WP) geometry and area for superconducting (SC) toroidal field (TF) magnets.
         This method calculates and assigns the geometry and cross-sectional areas of the winding pack
         for superconducting TF coils, according to the specified geometry type.
-        
-        :param int i_tf_wp_geom: 
+
+        :param int i_tf_wp_geom:
             - 0: Rectangular WP
             - 1: Double rectangular WP
             - 2: Trapezoidal WP
-        
+
         :returns: None
-        
-        :raises: 
+
+        :raises:
             Reports an error if the calculated winding pack area (with or without insulation) is non-positive.
 
         """
@@ -2087,14 +2087,14 @@ class SuperconductingTFCoil(TFCoil):
                 + tfcoil_variables.dx_tf_wp_secondary_toroidal
             )
 
-            # Total cross-sectional area of winding pack [m2]
+            # Total cross-sectional area of winding pack [m²]
             # Including ground insulation and insertion gap
             sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 * sctfcoil_module.dx_tf_wp_toroidal_average
             )
 
-            # WP cross-section without insertion gap and ground insulation [m2]
+            # WP cross-section without insertion gap and ground insulation [m²]
             sctfcoil_module.a_tf_wp_no_insulation = (
                 0.5e0
                 * (
@@ -2116,7 +2116,7 @@ class SuperconductingTFCoil(TFCoil):
                 )
             )
 
-            # Cross-section area of the WP ground insulation [m2]
+            # Cross-section area of the WP ground insulation [m²]
             sctfcoil_module.a_tf_wp_ground_insulation = (
                 0.5e0
                 * (
