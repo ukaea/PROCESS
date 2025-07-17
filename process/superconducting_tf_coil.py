@@ -53,7 +53,7 @@ class SuperconductingTFCoil(TFCoil):
         (
             sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
-            tfcoil_variables.a_tf_coil_inboard,
+            tfcoil_variables.a_tf_inboard_total,
             sctfcoil_module.r_tf_outboard_in,
             sctfcoil_module.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
@@ -97,7 +97,7 @@ class SuperconductingTFCoil(TFCoil):
             bt=physics_variables.bt,
             rmajor=physics_variables.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
-            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
         )
 
         (
@@ -1958,7 +1958,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.f_a_tf_coil_inboard_steel = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_coil_inboard_steel
-            / tfcoil_variables.a_tf_coil_inboard
+            / tfcoil_variables.a_tf_inboard_total
         )
 
         # Inboard coil insulation cross-section [m2]
@@ -1971,7 +1971,7 @@ class SuperconductingTFCoil(TFCoil):
         sctfcoil_module.f_a_tf_coil_inboard_insulation = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_coil_inboard_insulation
-            / tfcoil_variables.a_tf_coil_inboard
+            / tfcoil_variables.a_tf_inboard_total
         )
 
         # Negative areas or fractions error reporting
@@ -2236,7 +2236,7 @@ class SuperconductingTFCoil(TFCoil):
         Setting the case geometry and area for SC magnets
         """
         tfcoil_variables.a_tf_coil_inboard_case = (
-            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
+            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.a_tf_wp_with_insulation
 
         # Outboard leg cross-sectional area of surrounding case [m2]
