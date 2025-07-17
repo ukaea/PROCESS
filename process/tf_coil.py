@@ -784,8 +784,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Inboard TF half angle [rad]",
-            "(rad_tf_coil_toroidal)",
-            sctfcoil_module.rad_tf_coil_toroidal,
+            "(rad_tf_coil_inboard_toroidal_half)",
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             "OP ",
         )
         po.ovarre(
@@ -827,6 +827,20 @@ class TFCoil:
             "Radial position of outer edge and of winding pack (m)",
             "(r_tf_wp_inboard_outer)",
             sctfcoil_module.r_tf_wp_inboard_outer,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Radial position of centre of winding pack (m)",
+            "(r_tf_wp_inboard_centre)",
+            sctfcoil_module.r_tf_wp_inboard_centre,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Minimum toroidal thickness of winding pack (m)",
+            "(dx_tf_wp_toroidal_min)",
+            sctfcoil_module.dx_tf_wp_toroidal_min,
             "OP ",
         )
         po.ovarre(

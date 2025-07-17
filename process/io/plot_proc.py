@@ -2712,32 +2712,40 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     # Import the TF variables
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
-    wp_toridal_dxbig = mfile_data.data["dx_tf_wp_primary_toroidal"].get_scan(scan)
-    wp_toridal_dxsmall = mfile_data.data["dx_tf_wp_secondary_toroidal"].get_scan(scan)
+    dx_tf_wp_primary_toroidal = mfile_data.data["dx_tf_wp_primary_toroidal"].get_scan(
+        scan
+    )
+    dx_tf_wp_secondary_toroidal = mfile_data.data[
+        "dx_tf_wp_secondary_toroidal"
+    ].get_scan(scan)
     dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
         scan
     )
-    side_case_dx = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
-    wp_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
+    dx_tf_side_case = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
+    r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
     dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
-    turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
-    wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
-    cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
-    nose_thickness = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
-    side_thickness = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
-    case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
+    n_tf_coil_turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
+    i_tf_wp_geom = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
+    i_tf_sup = round(mfile_data.data["i_tf_sup"].get_scan(scan))
+    dr_tf_nose_case = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
+    dx_tf_side_case = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
+    i_tf_case_geom = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
-    tf_thickness = mfile_data.data["dr_tf_inboard"].get_scan(scan)
-    integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    dr_tf_inboard = mfile_data.data["dr_tf_inboard"].get_scan(scan)
+    i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
     b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
+    dx_tf_wp_insertion_gap = mfile_data.data["dx_tf_wp_insertion_gap"].get_scan(scan)
+    dx_tf_wp_toroidal_min = mfile_data.data["dx_tf_wp_toroidal_min"].get_scan(scan)
+    r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
+    r_tf_wp_inboard_centre = mfile_data.data["r_tf_wp_inboard_centre"].get_scan(scan)
 
-    if integer_turns == 1:
+    if i_tf_turns_integer == 1:
         turn_layers = mfile_data.data["n_layer"].get_scan(scan)
         turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
 
     # Superconducting coil check
-    if cond_type == 1:
+    if i_tf_sup == 1:
         axis.add_patch(
             Circle(
                 [0, 0],
@@ -2748,7 +2756,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             ),
         )
 
-        if case_plasma == 0:
+        if i_tf_case_geom == 0:
             axis.add_patch(
                 Circle(
                     [0, 0],
@@ -2760,38 +2768,58 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             )
 
         # Equations for plotting the TF case
-        half_case_angle = np.arctan(
-            (side_case_dx + (0.5 * wp_toridal_dxbig)) / wp_inner
-        )
+        rad_tf_coil_inboard_toroidal_half = mfile_data.data[
+            "rad_tf_coil_inboard_toroidal_half"
+        ].get_scan(scan)
 
         # X points for inboard case curve
         x11 = r_tf_inboard_in * np.cos(
-            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            np.linspace(
+                rad_tf_coil_inboard_toroidal_half,
+                -rad_tf_coil_inboard_toroidal_half,
+                256,
+                endpoint=True,
+            )
         )
         # Y points for inboard case curve
         y11 = r_tf_inboard_in * np.sin(
-            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            np.linspace(
+                rad_tf_coil_inboard_toroidal_half,
+                -rad_tf_coil_inboard_toroidal_half,
+                256,
+                endpoint=True,
+            )
         )
         # Check for plasma side case type
-        if case_plasma == 0:
+        if i_tf_case_geom == 0:
             # Rounded case
 
             # X points for outboard case curve
             x12 = r_tf_inboard_out * np.cos(
-                np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+                np.linspace(
+                    rad_tf_coil_inboard_toroidal_half,
+                    -rad_tf_coil_inboard_toroidal_half,
+                    256,
+                    endpoint=True,
+                )
             )
 
-        elif case_plasma == 1:
+        elif i_tf_case_geom == 1:
             # Flat case
 
             # X points for outboard case
             x12 = np.full(256, r_tf_inboard_out)
         else:
-            raise NotImplementedError("case_plasma must be 0 or 1")
+            raise NotImplementedError("i_tf_case_geom must be 0 or 1")
 
         # Y points for outboard case
         y12 = r_tf_inboard_out * np.sin(
-            np.linspace(half_case_angle, -half_case_angle, 256, endpoint=True)
+            np.linspace(
+                rad_tf_coil_inboard_toroidal_half,
+                -rad_tf_coil_inboard_toroidal_half,
+                256,
+                endpoint=True,
+            )
         )
 
         # Cordinates of the top and bottom of case curves,
@@ -2811,15 +2839,15 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
         # Upper main
         case_plasma_label = (
-            f"Case: \n{nose_thickness:.4f} m nose thickness \n"
-            f"{side_thickness:.4f} m sidewall thickness \n$"
-            f"\\Delta$R = {tf_thickness:.4f} m \n "
+            f"Case: \n{dr_tf_nose_case:.4f} m nose thickness \n"
+            f"{dx_tf_side_case:.4f} m sidewall thickness \n$"
+            f"\\Delta$R = {dr_tf_inboard:.4f} m \n "
         )
-        if case_plasma == 0:
+        if i_tf_case_geom == 0:
             axis.fill_between(
                 [
-                    (r_tf_inboard_in * np.cos(half_case_angle)),
-                    (r_tf_inboard_out * np.cos(half_case_angle)),
+                    (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                    (r_tf_inboard_out * np.cos(rad_tf_coil_inboard_toroidal_half)),
                 ],
                 y13,
                 color="grey",
@@ -2829,8 +2857,8 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             # Lower main
             axis.fill_between(
                 [
-                    (r_tf_inboard_in * np.cos(half_case_angle)),
-                    (r_tf_inboard_out * np.cos(half_case_angle)),
+                    (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                    (r_tf_inboard_out * np.cos(rad_tf_coil_inboard_toroidal_half)),
                 ],
                 y14,
                 color="grey",
@@ -2842,10 +2870,10 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 color="grey",
                 alpha=0.25,
             )
-        elif case_plasma == 1:
+        elif i_tf_case_geom == 1:
             axis.fill_between(
                 [
-                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
                     (r_tf_inboard_out),
                 ],
                 y13,
@@ -2856,7 +2884,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             # Lower main
             axis.fill_between(
                 [
-                    (r_tf_inboard_in * np.cos(half_case_angle)),
+                    (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
                     (r_tf_inboard_out),
                 ],
                 y14,
@@ -2875,9 +2903,11 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         # Centre line for relative reference
         axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
 
+        # ================================================================
+
         # Plot the rectangular WP
-        if wp_shape == 0:
-            if integer_turns == 1:
+        if i_tf_wp_geom == 0:
+            if i_tf_turns_integer == 1:
                 long_turns = round(turn_layers)
                 short_turns = round(turn_pancakes)
             else:
@@ -2886,7 +2916,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 ) / (
                     dx_tf_wp_primary_toroidal - (2 * dx_tf_wp_insulation)
                 )  # row to height
-                side_unit = turns / wp_side_ratio
+                side_unit = n_tf_coil_turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
                 long_turns = round(root_turns * wp_side_ratio)
                 short_turns = round(root_turns)
@@ -2894,9 +2924,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             # Plots the surrounding insualtion
             axis.add_patch(
                 Rectangle(
-                    (wp_inner, -(0.5 * wp_toridal_dxbig)),
+                    (r_tf_wp_inboard_inner, -(0.5 * dx_tf_wp_primary_toroidal)),
                     dr_tf_wp_with_insulation,
-                    wp_toridal_dxbig,
+                    dx_tf_wp_primary_toroidal,
                     color="darkgreen",
                     label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
                 ),
@@ -2905,14 +2935,14 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner + dx_tf_wp_insulation,
-                        -(0.5 * wp_toridal_dxbig) + dx_tf_wp_insulation,
+                        r_tf_wp_inboard_inner + dx_tf_wp_insulation,
+                        -(0.5 * dx_tf_wp_primary_toroidal) + dx_tf_wp_insulation,
                     ),
                     (dr_tf_wp_with_insulation - (2 * dx_tf_wp_insulation)),
-                    (wp_toridal_dxbig - (2 * dx_tf_wp_insulation)),
+                    (dx_tf_wp_primary_toroidal - (2 * dx_tf_wp_insulation)),
                     color="blue",
                     label=(
-                        f"Winding pack:  \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
+                        f"Winding pack:  \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
                         f"\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
                     ),
                 )
@@ -2921,14 +2951,14 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             for i in range(1, long_turns):
                 axis.plot(
                     [
-                        (wp_inner + dx_tf_wp_insulation)
+                        (r_tf_wp_inboard_inner + dx_tf_wp_insulation)
                         + i * (dr_tf_wp_with_insulation / long_turns),
-                        (wp_inner + dx_tf_wp_insulation)
+                        (r_tf_wp_inboard_inner + dx_tf_wp_insulation)
                         + i * (dr_tf_wp_with_insulation / long_turns),
                     ],
                     [
-                        -0.5 * (wp_toridal_dxbig - 2 * dx_tf_wp_insulation),
-                        0.5 * (wp_toridal_dxbig - 2 * dx_tf_wp_insulation),
+                        -0.5 * (dx_tf_wp_primary_toroidal - 2 * dx_tf_wp_insulation),
+                        0.5 * (dx_tf_wp_primary_toroidal - 2 * dx_tf_wp_insulation),
                     ],
                     color="white",
                     linewidth="0.25",
@@ -2938,31 +2968,37 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             for i in range(1, short_turns):
                 axis.plot(
                     [
-                        (wp_inner + dx_tf_wp_insulation),
-                        (wp_inner - dx_tf_wp_insulation + dr_tf_wp_with_insulation),
+                        (r_tf_wp_inboard_inner + dx_tf_wp_insulation),
+                        (
+                            r_tf_wp_inboard_inner
+                            - dx_tf_wp_insulation
+                            + dr_tf_wp_with_insulation
+                        ),
                     ],
                     [
-                        (-0.5 * wp_toridal_dxbig)
-                        + (i * wp_toridal_dxbig / short_turns),
-                        (-0.5 * wp_toridal_dxbig)
-                        + (i * wp_toridal_dxbig / short_turns),
+                        (-0.5 * dx_tf_wp_primary_toroidal)
+                        + (i * dx_tf_wp_primary_toroidal / short_turns),
+                        (-0.5 * dx_tf_wp_primary_toroidal)
+                        + (i * dx_tf_wp_primary_toroidal / short_turns),
                     ],
                     color="white",
                     linewidth="0.25",
                     linestyle="dashed",
                 )
 
+        # ================================================================
+
         # Plot the double rectangle winding pack
-        if wp_shape == 1:
+        if i_tf_wp_geom == 1:
             # Inner WP insulation
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner - dx_tf_wp_insulation,
-                        -(0.5 * wp_toridal_dxsmall) - 2 * dx_tf_wp_insulation,
+                        r_tf_wp_inboard_inner,
+                        -(0.5 * dx_tf_wp_secondary_toroidal),
                     ),
                     (dr_tf_wp_with_insulation / 2) + (dx_tf_wp_insulation),
-                    wp_toridal_dxsmall + (dx_tf_wp_insulation),
+                    dx_tf_wp_secondary_toroidal,
                     color="darkgreen",
                     label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
                 ),
@@ -2972,13 +3008,11 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner
-                        + (0.5 * dr_tf_wp_with_insulation)
-                        - dx_tf_wp_insulation,
-                        -(0.5 * wp_toridal_dxbig) - dx_tf_wp_insulation,
+                        r_tf_wp_inboard_centre,
+                        -(0.5 * dx_tf_wp_primary_toroidal),
                     ),
-                    (dr_tf_wp_with_insulation / 2) + (dx_tf_wp_insulation),
-                    wp_toridal_dxbig + (dx_tf_wp_insulation),
+                    (dr_tf_wp_with_insulation / 2),
+                    dx_tf_wp_primary_toroidal,
                     color="darkgreen",
                 ),
             )
@@ -2987,14 +3021,20 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner + (0.5 * dr_tf_wp_with_insulation),
-                        -(0.5 * wp_toridal_dxbig),
+                        r_tf_wp_inboard_centre
+                        + dx_tf_wp_insulation
+                        + dx_tf_wp_insertion_gap,
+                        -(0.5 * dx_tf_wp_primary_toroidal)
+                        + dx_tf_wp_insulation
+                        + dx_tf_wp_insertion_gap,
                     ),
-                    (dr_tf_wp_with_insulation / 2) - (2 * dx_tf_wp_insulation),
-                    wp_toridal_dxbig - (2 * dx_tf_wp_insulation),
+                    (dr_tf_wp_with_insulation / 2)
+                    - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)),
+                    dx_tf_wp_primary_toroidal
+                    - (4 * dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
                     color="blue",
                     label=(
-                        f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
+                        f"Winding pack: \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
                         f"\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
                     ),
                 ),
@@ -3003,29 +3043,36 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             axis.add_patch(
                 Rectangle(
                     (
-                        wp_inner + dx_tf_wp_insulation,
-                        -(0.5 * wp_toridal_dxsmall) - dx_tf_wp_insulation,
+                        r_tf_wp_inboard_inner
+                        + dx_tf_wp_insulation
+                        + dx_tf_wp_insertion_gap,
+                        -(0.5 * dx_tf_wp_secondary_toroidal)
+                        + dx_tf_wp_insulation
+                        + dx_tf_wp_insertion_gap,
                     ),
-                    (dr_tf_wp_with_insulation / 2) - (2 * dx_tf_wp_insulation),
-                    wp_toridal_dxsmall - (2 * dx_tf_wp_insulation),
+                    (dr_tf_wp_with_insulation / 2),
+                    dx_tf_wp_secondary_toroidal
+                    - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)),
                     color="blue",
                 ),
             )
 
+        # ================================================================
+
         # Trapezium WP
-        if wp_shape == 2:
+        if i_tf_wp_geom == 2:
             # WP insulation
             x = [
-                wp_inner,
-                wp_inner,
-                (wp_inner + dr_tf_wp_with_insulation),
-                (wp_inner + dr_tf_wp_with_insulation),
+                r_tf_wp_inboard_inner,
+                r_tf_wp_inboard_inner,
+                (r_tf_wp_inboard_inner + dr_tf_wp_with_insulation),
+                (r_tf_wp_inboard_inner + dr_tf_wp_with_insulation),
             ]
             y = [
-                (-0.5 * wp_toridal_dxsmall),
-                (0.5 * wp_toridal_dxsmall),
-                (0.5 * wp_toridal_dxbig),
-                (-0.5 * wp_toridal_dxbig),
+                (-0.5 * dx_tf_wp_secondary_toroidal),
+                (0.5 * dx_tf_wp_secondary_toroidal),
+                (0.5 * dx_tf_wp_primary_toroidal),
+                (-0.5 * dx_tf_wp_primary_toroidal),
             ]
             axis.add_patch(
                 patches.Polygon(
@@ -3037,23 +3084,31 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
 
             # WP
             x = [
-                wp_inner + dx_tf_wp_insulation,
-                wp_inner + dx_tf_wp_insulation,
-                (wp_inner + dr_tf_wp_with_insulation - dx_tf_wp_insulation),
-                (wp_inner + dr_tf_wp_with_insulation - dx_tf_wp_insulation),
+                r_tf_wp_inboard_inner + dx_tf_wp_insulation,
+                r_tf_wp_inboard_inner + dx_tf_wp_insulation,
+                (
+                    r_tf_wp_inboard_inner
+                    + dr_tf_wp_with_insulation
+                    - dx_tf_wp_insulation
+                ),
+                (
+                    r_tf_wp_inboard_inner
+                    + dr_tf_wp_with_insulation
+                    - dx_tf_wp_insulation
+                ),
             ]
             y = [
-                (-0.5 * wp_toridal_dxsmall + dx_tf_wp_insulation),
-                (0.5 * wp_toridal_dxsmall - dx_tf_wp_insulation),
-                (0.5 * wp_toridal_dxbig - dx_tf_wp_insulation),
-                (-0.5 * wp_toridal_dxbig + dx_tf_wp_insulation),
+                (-0.5 * dx_tf_wp_secondary_toroidal + dx_tf_wp_insulation),
+                (0.5 * dx_tf_wp_secondary_toroidal - dx_tf_wp_insulation),
+                (0.5 * dx_tf_wp_primary_toroidal - dx_tf_wp_insulation),
+                (-0.5 * dx_tf_wp_primary_toroidal + dx_tf_wp_insulation),
             ]
             axis.add_patch(
                 patches.Polygon(
                     xy=list(zip(x, y, strict=False)),
                     color="blue",
                     label=(
-                        f"Winding pack: \n{turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n"
+                        f"Winding pack: \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n"
                         f"$\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
                     ),
                 )
@@ -3066,6 +3121,66 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             marker="o",
             color="red",
             label=f"Peak Field: {b_tf_inboard_peak:.2f} T",
+        )
+
+        # Plot a horizontal line at y = dx_tf_wp_inner_toroidal
+        axis.axhline(
+            y=dx_tf_wp_secondary_toroidal / 2,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a horizontal line at y = dx_tf_wp_inner_toroidal
+        axis.axhline(
+            y=-dx_tf_wp_secondary_toroidal / 2,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        axis.axhline(
+            y=dx_tf_wp_primary_toroidal / 2,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        axis.axhline(
+            y=-dx_tf_wp_primary_toroidal / 2,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+
+        axis.axvline(
+            x=r_tf_inboard_in,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        axis.axvline(
+            x=r_tf_wp_inboard_inner,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        axis.axvline(
+            x=r_tf_wp_inboard_outer,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        axis.axvline(
+            x=r_tf_wp_inboard_centre,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
         )
 
         axis.minorticks_on()
@@ -3098,9 +3213,9 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     """
 
     # Import the TF turn variables then multiply into mm
-    integer_turns = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
+    i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
     # If integer turns switch is on then the turns can have non square dimensions
-    if integer_turns == 1:
+    if i_tf_turns_integer == 1:
         turn_width = round(mfile_data.data["dr_tf_turn"].get_scan(scan) * 1e3, 5)
         turn_height = round(mfile_data.data["dx_tf_turn"].get_scan(scan) * 1e3, 5)
         cable_space_width_radial = round(
@@ -3109,7 +3224,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
         cable_space_width_toroidal = round(
             mfile_data.data["dx_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
         )
-    elif integer_turns == 0:
+    elif i_tf_turns_integer == 0:
         turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
         cable_space_width = round(
             mfile_data.data["dx_tf_turn_cable_space_average"].get_scan(scan) * 1e3, 5
@@ -3128,7 +3243,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
 
     # Plot the total turn shape
-    if integer_turns == 0:
+    if i_tf_turns_integer == 0:
         axis.add_patch(
             Rectangle(
                 [0, 0],
@@ -3178,7 +3293,7 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
         axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
     # Non square turns
-    elif integer_turns == 1:
+    elif i_tf_turns_integer == 1:
         axis.add_patch(
             Rectangle(
                 [0, 0],
