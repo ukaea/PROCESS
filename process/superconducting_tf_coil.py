@@ -2152,54 +2152,64 @@ class SuperconductingTFCoil(TFCoil):
                 + tfcoil_variables.dx_tf_wp_secondary_toroidal
             )
 
-            # Total cross-sectional area of winding pack [m2]
+            # Total cross-sectional area of winding pack [m²]
             # Including ground insulation and insertion gap
             sctfcoil_module.a_tf_wp_with_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
-                * (
-                    tfcoil_variables.dx_tf_wp_secondary_toroidal
-                    + 0.5e0
-                    * (
-                        tfcoil_variables.dx_tf_wp_primary_toroidal
-                        - tfcoil_variables.dx_tf_wp_secondary_toroidal
-                    )
-                )
-            )
-
-            # WP cross-section without insertion gap and ground insulation [m2]
-            sctfcoil_module.a_tf_wp_no_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0
-                * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
-                )
-            ) * (
-                tfcoil_variables.dx_tf_wp_secondary_toroidal
-                - 2.0e0
-                * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
-                )
-                + 0.5e0
+                * 0.5
                 * (
                     tfcoil_variables.dx_tf_wp_primary_toroidal
-                    - tfcoil_variables.dx_tf_wp_secondary_toroidal
+                    + tfcoil_variables.dx_tf_wp_secondary_toroidal
                 )
             )
 
-            # Cross-section area of the WP ground insulation [m2]
+            # WP cross-section without insertion gap and ground insulation [m²]
+            sctfcoil_module.a_tf_wp_no_insulation = (
+                (
+                    tfcoil_variables.dr_tf_wp_with_insulation
+                    - 2.0e0
+                    * (
+                        tfcoil_variables.dx_tf_wp_insulation
+                        + tfcoil_variables.dx_tf_wp_insertion_gap
+                    )
+                )
+                * (
+                    (
+                        tfcoil_variables.dx_tf_wp_secondary_toroidal
+                        - 2.0e0
+                        * (
+                            tfcoil_variables.dx_tf_wp_insulation
+                            + tfcoil_variables.dx_tf_wp_insertion_gap
+                        )
+                    )
+                    + (
+                        tfcoil_variables.dx_tf_wp_primary_toroidal
+                        - 2.0e0
+                        * (
+                            tfcoil_variables.dx_tf_wp_insulation
+                            + tfcoil_variables.dx_tf_wp_insertion_gap
+                        )
+                    )
+                )
+                / 2
+            )
+
+            # Cross-section area of the WP ground insulation [m²]
             sctfcoil_module.a_tf_wp_ground_insulation = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
             ) * (
-                tfcoil_variables.dx_tf_wp_secondary_toroidal
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
-                + 0.5e0
-                * (
-                    tfcoil_variables.dx_tf_wp_primary_toroidal
-                    - tfcoil_variables.dx_tf_wp_secondary_toroidal
+                (
+                    (
+                        tfcoil_variables.dx_tf_wp_primary_toroidal
+                        - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
+                    )
+                    + (
+                        tfcoil_variables.dx_tf_wp_secondary_toroidal
+                        - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
+                    )
                 )
+                / 2
             ) - sctfcoil_module.a_tf_wp_no_insulation
 
         # --------------
