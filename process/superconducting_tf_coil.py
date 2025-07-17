@@ -2075,9 +2075,10 @@ class SuperconductingTFCoil(TFCoil):
         # --------------
         if i_tf_wp_geom == 0:
             # Outer WP layer toroidal thickness [m]
-            dx_tf_wp_primary_toroidal, dx_tf_wp_secondary_toroidal = (
-                dx_tf_wp_toroidal_min
-            )
+            dx_tf_wp_primary_toroidal = dx_tf_wp_toroidal_min
+
+            # No secondary WP here but will set for consistency
+            dx_tf_wp_secondary_toroidal = dx_tf_wp_toroidal_min
 
             # Averaged toroidal thickness of of winding pack [m]
             dx_tf_wp_toroidal_average = dx_tf_wp_toroidal_min

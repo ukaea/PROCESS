@@ -625,6 +625,56 @@ class TfWpGeomParam(NamedTuple):
             expected_dx_tf_wp_toroidal_average=1.299782604942499,
             expected_a_tf_wp_ground_insulation=0.028582295732936136,
         ),
+        # New test case for i_tf_wp_geom=1
+        TfWpGeomParam(
+            dr_tf_inboard=1.208,
+            r_tf_inboard_in=2.9939411851091102,
+            r_tf_inboard_out=4.20194118510911,
+            dr_tf_wp_with_insulation=0.54261087836601019,
+            dr_tf_plasma_case=0.060000000000000012,
+            dr_tf_nose_case=0.52465000000000006,
+            dx_tf_side_case=0.05000000000000001,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_wp_insertion_gap=0.01,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
+            tan_theta_coil=0.19891236737965801,
+            i_tf_wp_geom=1,
+            expected_dx_tf_wp_primary_toroidal=1.4077146193242378,
+            expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
+            expected_a_tf_wp_with_insulation=0.7345587235164542,
+            expected_a_tf_wp_no_insulation=0.6675857818584766,
+            expected_r_tf_wp_inboard_inner=3.5185911851091101,
+            expected_r_tf_wp_inboard_outer=4.06120206347512,
+            expected_r_tf_wp_inboard_centre=3.789896624292115,
+            expected_t_wp_toroidal=1.299782604942499,
+            expected_dx_tf_wp_toroidal_average=1.3537486121333684,
+            expected_a_tf_wp_ground_insulation=0.02944575184799003,
+        ),
+        # New test case for i_tf_wp_geom=2
+        TfWpGeomParam(
+            dr_tf_inboard=1.208,
+            r_tf_inboard_in=2.9939411851091102,
+            r_tf_inboard_out=4.20194118510911,
+            dr_tf_wp_with_insulation=0.54261087836601019,
+            dr_tf_plasma_case=0.060000000000000012,
+            dr_tf_nose_case=0.52465000000000006,
+            dx_tf_side_case=0.05000000000000001,
+            dx_tf_wp_insulation=0.0080000000000000019,
+            dx_tf_wp_insertion_gap=0.01,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
+            tan_theta_coil=0.19891236737965801,
+            i_tf_wp_geom=2,
+            expected_dx_tf_wp_primary_toroidal=1.5156466337059764,
+            expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
+            expected_a_tf_wp_with_insulation=0.7638412660801982,
+            expected_a_tf_wp_no_insulation=0.6949255481633493,
+            expected_r_tf_wp_inboard_inner=3.5185911851091101,
+            expected_r_tf_wp_inboard_outer=4.06120206347512,
+            expected_r_tf_wp_inboard_centre=3.789896624292115,
+            expected_t_wp_toroidal=1.299782604942499,
+            expected_dx_tf_wp_toroidal_average=1.4077146193242376,
+            expected_a_tf_wp_ground_insulation=0.030309207963043927,
+        ),
     ),
 )
 def test_tf_wp_geom(tfwpgeomparam, sctfcoil):
@@ -666,7 +716,7 @@ def test_tf_wp_geom(tfwpgeomparam, sctfcoil):
     )
 
     assert dx_tf_wp_secondary_toroidal == pytest.approx(
-        tfwpgeomparam.expected_dx_tf_wp_primary_toroidal
+        tfwpgeomparam.expected_dx_tf_wp_secondary_toroidal
     )
 
     assert a_tf_wp_with_insulation == pytest.approx(
