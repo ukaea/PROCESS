@@ -2736,7 +2736,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
     dx_tf_wp_insertion_gap = mfile_data.data["dx_tf_wp_insertion_gap"].get_scan(scan)
-    dx_tf_wp_toroidal_min = mfile_data.data["dx_tf_wp_toroidal_min"].get_scan(scan)
     r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
     r_tf_wp_inboard_centre = mfile_data.data["r_tf_wp_inboard_centre"].get_scan(scan)
 
@@ -2912,9 +2911,11 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 short_turns = round(turn_pancakes)
             else:
                 wp_side_ratio = (
-                    dr_tf_wp_with_insulation - (2 * dx_tf_wp_insulation)
+                    dr_tf_wp_with_insulation
+                    - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap))
                 ) / (
-                    dx_tf_wp_primary_toroidal - (2 * dx_tf_wp_insulation)
+                    dx_tf_wp_primary_toroidal
+                    - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap))
                 )  # row to height
                 side_unit = n_tf_coil_turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
@@ -2928,18 +2929,28 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     dr_tf_wp_with_insulation,
                     dx_tf_wp_primary_toroidal,
                     color="darkgreen",
-                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
+                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000:.3f} mm thickness \n",
                 ),
             )
             # Plots the WP inside the insulation
             axis.add_patch(
                 Rectangle(
                     (
-                        r_tf_wp_inboard_inner + dx_tf_wp_insulation,
-                        -(0.5 * dx_tf_wp_primary_toroidal) + dx_tf_wp_insulation,
+                        r_tf_wp_inboard_inner
+                        + dx_tf_wp_insulation
+                        + dx_tf_wp_insertion_gap,
+                        -(0.5 * dx_tf_wp_primary_toroidal)
+                        + dx_tf_wp_insulation
+                        + dx_tf_wp_insertion_gap,
                     ),
-                    (dr_tf_wp_with_insulation - (2 * dx_tf_wp_insulation)),
-                    (dx_tf_wp_primary_toroidal - (2 * dx_tf_wp_insulation)),
+                    (
+                        dr_tf_wp_with_insulation
+                        - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap))
+                    ),
+                    (
+                        dx_tf_wp_primary_toroidal
+                        - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap))
+                    ),
                     color="blue",
                     label=(
                         f"Winding pack:  \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
@@ -2951,14 +2962,40 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             for i in range(1, long_turns):
                 axis.plot(
                     [
-                        (r_tf_wp_inboard_inner + dx_tf_wp_insulation)
-                        + i * (dr_tf_wp_with_insulation / long_turns),
-                        (r_tf_wp_inboard_inner + dx_tf_wp_insulation)
-                        + i * (dr_tf_wp_with_insulation / long_turns),
+                        (
+                            r_tf_wp_inboard_inner
+                            + dx_tf_wp_insulation
+                            + dx_tf_wp_insertion_gap
+                        )
+                        + i
+                        * (
+                            (
+                                dr_tf_wp_with_insulation
+                                - dx_tf_wp_insulation
+                                - dx_tf_wp_insertion_gap
+                            )
+                            / long_turns
+                        ),
+                        (
+                            r_tf_wp_inboard_inner
+                            + dx_tf_wp_insulation
+                            + dx_tf_wp_insertion_gap
+                        )
+                        + i
+                        * (
+                            (
+                                dr_tf_wp_with_insulation
+                                - dx_tf_wp_insulation
+                                - dx_tf_wp_insertion_gap
+                            )
+                            / long_turns
+                        ),
                     ],
                     [
-                        -0.5 * (dx_tf_wp_primary_toroidal - 2 * dx_tf_wp_insulation),
-                        0.5 * (dx_tf_wp_primary_toroidal - 2 * dx_tf_wp_insulation),
+                        -0.5 * dx_tf_wp_primary_toroidal
+                        + (dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
+                        0.5 * dx_tf_wp_primary_toroidal
+                        - (dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
                     ],
                     color="white",
                     linewidth="0.25",
@@ -2968,18 +3005,46 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             for i in range(1, short_turns):
                 axis.plot(
                     [
-                        (r_tf_wp_inboard_inner + dx_tf_wp_insulation),
                         (
                             r_tf_wp_inboard_inner
+                            + dx_tf_wp_insulation
+                            + dx_tf_wp_insertion_gap
+                        ),
+                        (
+                            r_tf_wp_inboard_outer
                             - dx_tf_wp_insulation
-                            + dr_tf_wp_with_insulation
+                            - dx_tf_wp_insertion_gap
                         ),
                     ],
                     [
-                        (-0.5 * dx_tf_wp_primary_toroidal)
-                        + (i * dx_tf_wp_primary_toroidal / short_turns),
-                        (-0.5 * dx_tf_wp_primary_toroidal)
-                        + (i * dx_tf_wp_primary_toroidal / short_turns),
+                        (
+                            -0.5 * dx_tf_wp_primary_toroidal
+                            + dx_tf_wp_insulation
+                            + dx_tf_wp_insertion_gap
+                        )
+                        + (
+                            i
+                            * (
+                                dx_tf_wp_primary_toroidal
+                                - dx_tf_wp_insulation
+                                - dx_tf_wp_insertion_gap
+                            )
+                            / short_turns
+                        ),
+                        (
+                            -0.5 * dx_tf_wp_primary_toroidal
+                            + dx_tf_wp_insulation
+                            + dx_tf_wp_insertion_gap
+                        )
+                        + (
+                            i
+                            * (
+                                dx_tf_wp_primary_toroidal
+                                - dx_tf_wp_insulation
+                                - dx_tf_wp_insertion_gap
+                            )
+                            / short_turns
+                        ),
                     ],
                     color="white",
                     linewidth="0.25",
@@ -3000,7 +3065,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp_with_insulation / 2) + (dx_tf_wp_insulation),
                     dx_tf_wp_secondary_toroidal,
                     color="darkgreen",
-                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
+                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000:.3f} mm thickness \n",
                 ),
             )
 
@@ -3031,7 +3096,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp_with_insulation / 2)
                     - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)),
                     dx_tf_wp_primary_toroidal
-                    - (4 * dx_tf_wp_insulation + dx_tf_wp_insertion_gap),
+                    - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)),
                     color="blue",
                     label=(
                         f"Winding pack: \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
@@ -3065,8 +3130,8 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             x = [
                 r_tf_wp_inboard_inner,
                 r_tf_wp_inboard_inner,
-                (r_tf_wp_inboard_inner + dr_tf_wp_with_insulation),
-                (r_tf_wp_inboard_inner + dr_tf_wp_with_insulation),
+                r_tf_wp_inboard_outer,
+                r_tf_wp_inboard_outer,
             ]
             y = [
                 (-0.5 * dx_tf_wp_secondary_toroidal),
@@ -3078,30 +3143,38 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y, strict=False)),
                     color="darkgreen",
-                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000} mm thickness \n",
+                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000:.3f} mm thickness \n",
                 )
             )
 
             # WP
             x = [
-                r_tf_wp_inboard_inner + dx_tf_wp_insulation,
-                r_tf_wp_inboard_inner + dx_tf_wp_insulation,
-                (
-                    r_tf_wp_inboard_inner
-                    + dr_tf_wp_with_insulation
-                    - dx_tf_wp_insulation
-                ),
-                (
-                    r_tf_wp_inboard_inner
-                    + dr_tf_wp_with_insulation
-                    - dx_tf_wp_insulation
-                ),
+                r_tf_wp_inboard_inner + dx_tf_wp_insulation + dx_tf_wp_insertion_gap,
+                r_tf_wp_inboard_inner + dx_tf_wp_insulation + dx_tf_wp_insertion_gap,
+                (r_tf_wp_inboard_outer - dx_tf_wp_insulation - dx_tf_wp_insertion_gap),
+                (r_tf_wp_inboard_outer - dx_tf_wp_insulation - dx_tf_wp_insertion_gap),
             ]
             y = [
-                (-0.5 * dx_tf_wp_secondary_toroidal + dx_tf_wp_insulation),
-                (0.5 * dx_tf_wp_secondary_toroidal - dx_tf_wp_insulation),
-                (0.5 * dx_tf_wp_primary_toroidal - dx_tf_wp_insulation),
-                (-0.5 * dx_tf_wp_primary_toroidal + dx_tf_wp_insulation),
+                (
+                    -0.5 * dx_tf_wp_secondary_toroidal
+                    + dx_tf_wp_insulation
+                    + dx_tf_wp_insertion_gap
+                ),
+                (
+                    0.5 * dx_tf_wp_secondary_toroidal
+                    - dx_tf_wp_insulation
+                    - dx_tf_wp_insertion_gap
+                ),
+                (
+                    0.5 * dx_tf_wp_primary_toroidal
+                    - dx_tf_wp_insulation
+                    - dx_tf_wp_insertion_gap
+                ),
+                (
+                    -0.5 * dx_tf_wp_primary_toroidal
+                    + dx_tf_wp_insulation
+                    + dx_tf_wp_insertion_gap
+                ),
             ]
             axis.add_patch(
                 patches.Polygon(
