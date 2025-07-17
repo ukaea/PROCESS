@@ -1,7 +1,8 @@
 import numpy as np
 from numba import njit
 
-from process.fortran import constants, cs_fatigue_variables
+import process.data_structure as data_structure
+from process.fortran import constants
 
 
 class CsFatigue:
@@ -21,8 +22,8 @@ class CsFatigue:
         # X. Sarasola et al, IEEE Transactions on Applied Superconductivity,
         # vol. 30, no. 4, pp. 1-5, June 2020, Art no. 4200705
 
-        n = -cs_fatigue_variables.paris_power_law * (
-            cs_fatigue_variables.walker_coefficient - 1.0e0
+        n = -data_structure.cs_fatigue_variables.paris_power_law * (
+            data_structure.cs_fatigue_variables.walker_coefficient - 1.0e0
         )
 
         # Set units to MPa
@@ -44,7 +45,7 @@ class CsFatigue:
 
         # Calculated constant for a given stress ratio using Walker equation
         # https://en.wikipedia.org/wiki/Crack_growth_equation#Walker_equation
-        cr = cs_fatigue_variables.paris_coefficient / (1.0e0 - r) ** n
+        cr = data_structure.cs_fatigue_variables.paris_coefficient / (1.0e0 - r) ** n
 
         # select given increase in crack area
         delta = 1.0e-4
@@ -57,12 +58,20 @@ class CsFatigue:
         # Default CS steel undergoes fast fracture when SIF > 200 MPa, under a saftey factor 1.5 we use 133MPa
         pi_2_arr = np.array([np.pi / 2.0e0, 0])
         while (
-            (a <= t_structural_vertical / cs_fatigue_variables.sf_vertical_crack)
-            and (c <= t_structural_radial / cs_fatigue_variables.sf_radial_crack)
+            (
+                a
+                <= t_structural_vertical
+                / data_structure.cs_fatigue_variables.sf_vertical_crack
+            )
+            and (
+                c
+                <= t_structural_radial
+                / data_structure.cs_fatigue_variables.sf_radial_crack
+            )
             and (
                 k_max
-                <= cs_fatigue_variables.fracture_toughness
-                / cs_fatigue_variables.sf_fast_fracture
+                <= data_structure.cs_fatigue_variables.fracture_toughness
+                / data_structure.cs_fatigue_variables.sf_fast_fracture
             )
         ):
             # find SIF max from SIF_a and SIF_c
@@ -77,11 +86,21 @@ class CsFatigue:
             k_max = max(k_a, k_c)
 
             # run euler_method and find number of cycles needed to give crack increase
-            delta_n = delta / (cr * (k_max**cs_fatigue_variables.paris_power_law))
+            delta_n = delta / (
+                cr * (k_max**data_structure.cs_fatigue_variables.paris_power_law)
+            )
 
             # update a and c, N (+= doesnt work for fortran (?) reasons)
-            a = a + delta * (k_a / k_max) ** cs_fatigue_variables.paris_power_law
-            c = c + delta * (k_c / k_max) ** cs_fatigue_variables.paris_power_law
+            a = (
+                a
+                + delta
+                * (k_a / k_max) ** data_structure.cs_fatigue_variables.paris_power_law
+            )
+            c = (
+                c
+                + delta
+                * (k_c / k_max) ** data_structure.cs_fatigue_variables.paris_power_law
+            )
             n_pulse = n_pulse + delta_n
 
         # two pulses - ramp to Vsmax and ramp down per cycle
@@ -230,21 +249,3 @@ class CsFatigue:
             )
             * np.sqrt(np.pi * a / q)
         )
-
-
-def init_cs_fatigue_variables():
-    cs_fatigue_variables.residual_sig_hoop = 2.4e8
-    cs_fatigue_variables.t_crack_radial = 6.0e-3
-    cs_fatigue_variables.t_crack_vertical = 0.89e-3
-    cs_fatigue_variables.n_cycle = 0.0
-    cs_fatigue_variables.n_cycle_min = 2.0e4
-    cs_fatigue_variables.t_structural_vertical = 0.022
-    cs_fatigue_variables.t_structural_radial = 0.07
-    cs_fatigue_variables.bkt_life_csf = 0
-    cs_fatigue_variables.sf_vertical_crack = 2.0
-    cs_fatigue_variables.sf_radial_crack = 2.0
-    cs_fatigue_variables.sf_fast_fracture = 1.5
-    cs_fatigue_variables.paris_coefficient = 65.0e-14
-    cs_fatigue_variables.paris_power_law = 3.5
-    cs_fatigue_variables.walker_coefficient = 0.436
-    cs_fatigue_variables.fracture_toughness = 2.0e2

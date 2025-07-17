@@ -10,11 +10,11 @@ from scipy.special import ellipe, ellipk
 import process.superconductors as superconductors
 from process import fortran as ft
 from process import process_output as op
+from process.data_structure import cs_fatigue_variables as csfv
 from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
 from process.fortran import constants, numerics, rebco_variables
 from process.fortran import constraint_variables as ctv
-from process.fortran import cs_fatigue_variables as csfv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_module as pf

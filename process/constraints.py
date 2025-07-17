@@ -2232,22 +2232,22 @@ def constraint_equation_90():
     """
     if (
         data_structure.cost_variables.ibkt_life == 1
-        and fortran.cs_fatigue_variables.bkt_life_csf == 1
+        and data_structure.cs_fatigue_variables.bkt_life_csf == 1
     ):
-        fortran.cs_fatigue_variables.n_cycle_min = (
+        data_structure.cs_fatigue_variables.n_cycle_min = (
             data_structure.cost_variables.bktcycles
         )
 
     cc = (
         1.0
         - fortran.constraint_variables.fncycle
-        * fortran.cs_fatigue_variables.n_cycle
-        / fortran.cs_fatigue_variables.n_cycle_min
+        * data_structure.cs_fatigue_variables.n_cycle
+        / data_structure.cs_fatigue_variables.n_cycle_min
     )
     return ConstraintResult(
         cc,
-        fortran.cs_fatigue_variables.n_cycle_min * (1.0 - cc),
-        fortran.cs_fatigue_variables.n_cycle * cc,
+        data_structure.cs_fatigue_variables.n_cycle_min * (1.0 - cc),
+        data_structure.cs_fatigue_variables.n_cycle * cc,
     )
 
 
