@@ -565,18 +565,48 @@ def plot_main_plasma_information(
         arrowprops={"facecolor": "red", "edgecolor": "red", "lw": 2},
     )
 
+    i_hcd_primary = mfile_data.data["i_hcd_primary"].get_scan(scan)
+    i_hcd_secondary = mfile_data.data["i_hcd_secondary"].get_scan(scan)
+
+    # Determine heating type for primary and secondary systems
+    if i_hcd_primary in [5, 8]:
+        primary_heating = "NBI"
+    elif i_hcd_primary in [3, 7, 10, 11, 13]:
+        primary_heating = "ECRH"
+    elif i_hcd_primary == 12:
+        primary_heating = "EBW"
+    elif i_hcd_primary in [1, 4, 6]:
+        primary_heating = "LHCD"
+    elif i_hcd_primary == 2:
+        primary_heating = "ICCD"
+    else:
+        primary_heating = ""
+
+    if i_hcd_secondary in [5, 8]:
+        secondary_heating = "NBI"
+    elif i_hcd_secondary in [3, 7, 10, 11, 13]:
+        secondary_heating = "ECRH"
+    elif i_hcd_secondary == 12:
+        secondary_heating = "EBW"
+    elif i_hcd_secondary in [1, 4, 6]:
+        secondary_heating = "LHCD"
+    elif i_hcd_secondary == 2:
+        secondary_heating = "ICCD"
+    else:
+        secondary_heating = ""
+
     # Add heating and current drive information
     textstr_hcd = (
         f"$\\mathbf{{Heating \\ & \\ current \\ drive:}}$\n \n"
         f"Total injected heat: {mfile_data.data['p_hcd_injected_total_mw'].get_scan(scan):.3f} MW                       \n"
         f"Ohmic heating power: {mfile_data.data['p_plasma_ohmic_mw'].get_scan(scan):.3f} MW         \n\n"
-        f"$\\mathbf{{Primary \\ system:}}$ \n"
+        f"$\\mathbf{{Primary \\ system: {primary_heating}}}$ \n"
         f"Current driving power {mfile_data.data['p_hcd_primary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_primary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
         f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_hcd_primary'].get_scan(scan):.4f} A/W\n"
         f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_norm_hcd_primary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile_data.data['c_hcd_primary_driven'].get_scan(scan) / 1e6:.3f} MA\n\n"
-        f"$\\mathbf{{Secondary \\ system:}}$ \n"
+        f"$\\mathbf{{Secondary \\ system: {secondary_heating}}}$ \n"
         f"Current driving power {mfile_data.data['p_hcd_secondary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_secondary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
         f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_hcd_secondary'].get_scan(scan):.4f} A/W\n"
@@ -1571,6 +1601,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
         # Add text box with density profile parameters
         textstr_density = "\n".join((
+            rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['dene'].get_scan(scan):.3e} m$^{{-3}}$",
             rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
             rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
             rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
@@ -1703,6 +1734,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     te = mfile_data.data["te"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
+        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['te'].get_scan(scan):.3f} keV",
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
