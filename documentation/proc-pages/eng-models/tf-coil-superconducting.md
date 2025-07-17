@@ -256,7 +256,7 @@ can be set using `tmargmin` together with constraint equation 36 and iteration v
 The radius of the peak field on the inboard leg is given as such:
 
 $$
-R_{\text{B,peak}} = \cos{(\phi_{\text{TF}})} \\
+R_{\text{B,peak}} = \cos{(\phi_{\text{TF,half}})} \\
 \times R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
 $$
 
@@ -289,7 +289,7 @@ $$
 Find the straight toroidal width of the TF coil at the inside edge of the winding pack:
 
 $$
-\mathrm{d}x_{\text{TF,toroidal,WP}} = 2 \times \overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \overbrace{\tan{\left(\phi_{\text{TF}}\right)}}^{\texttt{tan_theta_coil}}
+\mathrm{d}x_{\text{TF,toroidal,WP}} = 2 \times \overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}}
 $$
 
 To find the straight toroidal length of the winding pack we now take off the side case thicknesses:
@@ -343,14 +343,14 @@ The straight toroidal width of the primary winding pack is:
 
 $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}} = 2 \times 
-\\ \left(\overbrace{R_{\text{TF,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} \times \overbrace{\tan{\left(\phi_{\text{TF}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+\\ \left(\overbrace{R_{\text{TF,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
 $$
 
 The straight toroidal width of the secondary winding pack is:
 
 $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-secondary}}}^{\texttt{dx_tf_wp_secondary_toroidal}} = 2 \times 
-\\ \left(\overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \tan{\left(\phi_{\text{TF}}\right)} - \mathrm{d}x_{\text{TF,side case}}\right)
+\\ \left(\overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \tan{\left(\phi_{\text{TF,half}}\right)} - \mathrm{d}x_{\text{TF,side case}}\right)
 $$
 
 The average toroidal straight width is calculated:
@@ -393,14 +393,14 @@ The straight toroidal width of the primary winding pack is (longest side of trap
 
 $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}} = 2 \times 
-\\ \left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\tan{\left(\phi_{\text{TF}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+\\ \left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
 $$
 
 The straight toroidal width of the secondary winding pack is (shortest side of trapezoid):
 
 $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-secondary}}}^{\texttt{dx_tf_wp_secondary_toroidal}} = 2 \times 
-\\ \left(\overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \tan{\left(\phi_{\text{TF}}\right)} - \mathrm{d}x_{\text{TF,side case}}\right)
+\\ \left(\overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \tan{\left(\phi_{\text{TF,half}}\right)} - \mathrm{d}x_{\text{TF,side case}}\right)
 $$
 
 The average toroidal straight width is calculated:
