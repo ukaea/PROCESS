@@ -51,7 +51,7 @@ class SuperconductingTFCoil(TFCoil):
         """
         self.iprint = 0
         (
-            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
             tfcoil_variables.a_tf_coil_inboard,
             sctfcoil_module.r_tf_outboard_in,
@@ -81,7 +81,7 @@ class SuperconductingTFCoil(TFCoil):
 
         tfcoil_variables.r_b_tf_inboard_peak = (
             build_variables.r_tf_inboard_out
-            * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
+            * np.cos(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
             - tfcoil_variables.dr_tf_plasma_case
             - tfcoil_variables.dx_tf_wp_insulation
             - tfcoil_variables.dx_tf_wp_insertion_gap
@@ -232,7 +232,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.rad_tf_coil_toroidal,
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_tf_plasma_case,
@@ -2241,7 +2241,7 @@ class SuperconductingTFCoil(TFCoil):
         if i_tf_case_geom == 0:
             # Circular front case
             sctfcoil_module.a_tf_plasma_case = (
-                sctfcoil_module.rad_tf_coil_toroidal
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half
                 * build_variables.r_tf_inboard_out**2
                 - sctfcoil_module.tan_theta_coil
                 * sctfcoil_module.r_tf_wp_inboard_outer**2
@@ -2260,7 +2260,8 @@ class SuperconductingTFCoil(TFCoil):
         # Nose casing area [m2]
         sctfcoil_module.a_tf_coil_nose_case = (
             sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inboard_inner**2
-            - sctfcoil_module.rad_tf_coil_toroidal * build_variables.r_tf_inboard_in**2
+            - sctfcoil_module.rad_tf_coil_inboard_toroidal_half
+            * build_variables.r_tf_inboard_in**2
         )
 
         # Report error if the casing area is negative
@@ -2852,7 +2853,7 @@ def init_sctfcoil_module():
     sctfcoil_module.a_leg_ins = 0.0
     sctfcoil_module.a_leg_gr_ins = 0.0
     sctfcoil_module.a_leg_cond = 0.0
-    sctfcoil_module.rad_tf_coil_toroidal = 0.0
+    sctfcoil_module.rad_tf_coil_inboard_toroidal_half = 0.0
     sctfcoil_module.tan_theta_coil = 0.0
     sctfcoil_module.t_conductor_radial = 0.0
     sctfcoil_module.t_conductor_toroidal = 0.0

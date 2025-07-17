@@ -93,7 +93,7 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
 1. The toroidal angle taken up by a TF coil is equal to:
 
     $$
-    \overbrace{\phi_{\text{TF}}}^{\texttt{rad_tf_coil_toroidal}} = \frac{\pi}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}}
+    \overbrace{\phi_{\text{TF}}}^{\texttt{rad_tf_coil_inboard_toroidal_half}} = \frac{\pi}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}}
     $$
 
     This means the toroidal space between the TF coils is **equal** to the toroidal angle of each TF coil.
