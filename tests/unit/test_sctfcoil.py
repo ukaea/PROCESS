@@ -535,6 +535,8 @@ class TfWpGeomParam(NamedTuple):
 
     expected_dx_tf_wp_primary_toroidal: Any = None
 
+    expected_dx_tf_wp_secondary_toroidal: Any = None
+
     expected_a_tf_wp_with_insulation: Any = None
 
     expected_a_tf_wp_no_insulation: Any = None
@@ -579,6 +581,7 @@ class TfWpGeomParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_dx_tf_wp_primary_toroidal=1.299782604942499,
+            expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
             expected_a_tf_wp_with_insulation=0.70527618095271016,
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
@@ -612,6 +615,7 @@ class TfWpGeomParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             i_tf_wp_geom=0,
             expected_dx_tf_wp_primary_toroidal=1.299782604942499,
+            expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
             expected_a_tf_wp_with_insulation=0.70527618095271016,
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
@@ -623,148 +627,75 @@ class TfWpGeomParam(NamedTuple):
         ),
     ),
 )
-def test_tf_wp_geom(tfwpgeomparam, monkeypatch, sctfcoil):
+def test_tf_wp_geom(tfwpgeomparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for tf_wp_geom.
 
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+    This test was generated using data from
+    tracking/baseline_2018/baseline_2018_IN.DAT.
 
     :param tfwpgeomparam: the data used to mock and assert in this test.
     :type tfwpgeomparam: tfwpgeomparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "dr_tf_inboard", tfwpgeomparam.dr_tf_inboard)
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", tfwpgeomparam.r_tf_inboard_in
+    (
+        r_tf_wp_inboard_inner,
+        r_tf_wp_inboard_outer,
+        r_tf_wp_inboard_centre,
+        dx_tf_wp_toroidal_min,
+        dx_tf_wp_primary_toroidal,
+        dx_tf_wp_secondary_toroidal,
+        dx_tf_wp_toroidal_average,
+        a_tf_wp_with_insulation,
+        a_tf_wp_no_insulation,
+        a_tf_wp_ground_insulation,
+    ) = sctfcoil.superconducting_tf_wp_geometry(
+        i_tf_wp_geom=tfwpgeomparam.i_tf_wp_geom,
+        r_tf_inboard_in=tfwpgeomparam.r_tf_inboard_in,
+        dr_tf_nose_case=tfwpgeomparam.dr_tf_nose_case,
+        dr_tf_wp_with_insulation=tfwpgeomparam.dr_tf_wp_with_insulation,
+        tan_theta_coil=tfwpgeomparam.tan_theta_coil,
+        dx_tf_side_case=tfwpgeomparam.dx_tf_side_case,
+        dx_tf_wp_insulation=tfwpgeomparam.dx_tf_wp_insulation,
+        dx_tf_wp_insertion_gap=tfwpgeomparam.dx_tf_wp_insertion_gap,
     )
 
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_out", tfwpgeomparam.r_tf_inboard_out
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dr_tf_wp_with_insulation",
-        tfwpgeomparam.dr_tf_wp_with_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_plasma_case", tfwpgeomparam.dr_tf_plasma_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", tfwpgeomparam.dr_tf_nose_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dx_tf_side_case", tfwpgeomparam.dx_tf_side_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_primary_toroidal",
-        tfwpgeomparam.dx_tf_wp_primary_toroidal,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_secondary_toroidal",
-        tfwpgeomparam.dx_tf_wp_secondary_toroidal,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dx_tf_wp_insulation", tfwpgeomparam.dx_tf_wp_insulation
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dx_tf_wp_insertion_gap", tfwpgeomparam.dx_tf_wp_insertion_gap
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "a_tf_wp_with_insulation",
-        tfwpgeomparam.a_tf_wp_with_insulation,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "a_tf_wp_no_insulation", tfwpgeomparam.a_tf_wp_no_insulation
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "r_tf_wp_inboard_inner", tfwpgeomparam.r_tf_wp_inboard_inner
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "r_tf_wp_inboard_outer", tfwpgeomparam.r_tf_wp_inboard_outer
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "r_tf_wp_inboard_centre", tfwpgeomparam.r_tf_wp_inboard_centre
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "dx_tf_wp_toroidal_min", tfwpgeomparam.dx_tf_wp_toroidal_min
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "dx_tf_wp_toroidal_average",
-        tfwpgeomparam.dx_tf_wp_toroidal_average,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "a_tf_wp_ground_insulation",
-        tfwpgeomparam.a_tf_wp_ground_insulation,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "rad_tf_coil_inboard_toroidal_half",
-        tfwpgeomparam.rad_tf_coil_inboard_toroidal_half,
-    )
-
-    monkeypatch.setattr(sctfcoil_module, "tan_theta_coil", tfwpgeomparam.tan_theta_coil)
-
-    sctfcoil.superconducting_tf_wp_geometry(i_tf_wp_geom=tfwpgeomparam.i_tf_wp_geom)
-
-    assert tfcoil_variables.dx_tf_wp_primary_toroidal == pytest.approx(
+    assert dx_tf_wp_primary_toroidal == pytest.approx(
         tfwpgeomparam.expected_dx_tf_wp_primary_toroidal
     )
 
-    assert sctfcoil_module.a_tf_wp_with_insulation == pytest.approx(
+    assert dx_tf_wp_secondary_toroidal == pytest.approx(
+        tfwpgeomparam.expected_dx_tf_wp_primary_toroidal
+    )
+
+    assert a_tf_wp_with_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_with_insulation
     )
 
-    assert sctfcoil_module.a_tf_wp_no_insulation == pytest.approx(
+    assert a_tf_wp_no_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_no_insulation
     )
 
-    assert sctfcoil_module.r_tf_wp_inboard_inner == pytest.approx(
+    assert r_tf_wp_inboard_inner == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inboard_inner
     )
 
-    assert sctfcoil_module.r_tf_wp_inboard_outer == pytest.approx(
+    assert r_tf_wp_inboard_outer == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inboard_outer
     )
 
-    assert sctfcoil_module.r_tf_wp_inboard_centre == pytest.approx(
+    assert r_tf_wp_inboard_centre == pytest.approx(
         tfwpgeomparam.expected_r_tf_wp_inboard_centre
     )
 
-    assert sctfcoil_module.dx_tf_wp_toroidal_min == pytest.approx(
-        tfwpgeomparam.expected_t_wp_toroidal
-    )
+    assert dx_tf_wp_toroidal_min == pytest.approx(tfwpgeomparam.expected_t_wp_toroidal)
 
-    assert sctfcoil_module.dx_tf_wp_toroidal_average == pytest.approx(
+    assert dx_tf_wp_toroidal_average == pytest.approx(
         tfwpgeomparam.expected_dx_tf_wp_toroidal_average
     )
 
-    assert sctfcoil_module.a_tf_wp_ground_insulation == pytest.approx(
+    assert a_tf_wp_ground_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_ground_insulation
     )
 

@@ -1868,13 +1868,13 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.a_tf_wp_ground_insulation,
         ) = self.superconducting_tf_wp_geometry(
             i_tf_wp_geom=i_tf_wp_geom,
-            r_tf_inboard_in=sctfcoil_module.r_tf_inboard_in,
-            dr_tf_nose_case=sctfcoil_module.dr_tf_nose_case,
-            dr_tf_wp_with_insulation=sctfcoil_module.dr_tf_wp_with_insulation,
+            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
+            dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
             tan_theta_coil=sctfcoil_module.tan_theta_coil,
-            dx_tf_side_case=sctfcoil_module.dx_tf_side_case,
-            dx_tf_wp_insulation=sctfcoil_module.dx_tf_wp_insulation,
-            dx_tf_wp_insertion_gap=sctfcoil_module.dx_tf_wp_insertion_gap,
+            dx_tf_side_case=tfcoil_variables.dx_tf_side_case,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
         # Calculating the TF steel casing areas
