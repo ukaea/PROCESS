@@ -4804,9 +4804,11 @@ def plot_radial_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> No
     axis.set_xlabel("Radius [m]")
 
 
-def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> None:
+def plot_lower_vertical_build(
+    axis: plt.Axes, mfile_data: mf.MFile, colour_scheme
+) -> None:
     """
-    Plots the vertical build of a fusion device on the given matplotlib axis.
+    Plots the lower vertical build of a fusion device on the given matplotlib axis.
 
     This function visualizes the different layers/components of the machine's vertical build
     (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF coil, etc.)
@@ -4836,7 +4838,7 @@ def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> 
 
     lower_vertical_variables = [
         "z_plasma_xpoint_upper",
-        "dz_fw_plasma_gap",
+        "dz_xpoint_divertor",
         "dz_divertor",
         "dz_shld_upper",
         "dz_vv_upper",
@@ -4857,7 +4859,7 @@ def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> 
 
     lower_vertical_labels = [
         "Plasma Height",
-        "First Wall - Plasma Gap",
+        "Plasma - Divertor Gap",
         "Divertor",
         "Shield",
         "Vacuum Vessel",
@@ -4903,12 +4905,167 @@ def plot_vertical_build(axis: plt.Axes, mfile_data: mf.MFile, colour_scheme) -> 
 
     axis.set_xticks([])
     axis.legend(
-        bbox_to_anchor=(1.05, 1),
+        bbox_to_anchor=(0, 0),
         loc="upper left",
-        ncol=1,
+        ncol=5,
     )
     axis.minorticks_on()
     axis.set_ylabel("Height [m]")
+    axis.title.set_text("Lower Vertical Build")
+
+
+def plot_upper_vertical_build(
+    axis: plt.Axes, mfile_data: mf.MFile, colour_scheme
+) -> None:
+    """
+    Plots the upper vertical build of a fusion device on the given matplotlib axis.
+
+    This function visualizes the different layers/components of the machine's vertical build
+    (such as plasma, first wall, divertor, shield, vacuum vessel, thermal shield, TF coil, etc.)
+    as a vertical stacked bar chart. The thickness of each layer is extracted from the
+    provided `mfile_data`, and each segment is color-coded and labeled accordingly.
+
+    Parameters
+    ----------
+    axis : matplotlib.axes.Axes
+        The matplotlib axis on which to plot the vertical build.
+    mfile_data : mf.MFile
+        An object containing the machine build data, with required fields for each
+        vertical component.
+    colour_scheme : int
+        Colour scheme index to use for component colors.
+
+    Returns
+    -------
+    None
+        This function modifies the provided axis in-place and does not return a value.
+
+    Notes
+    -----
+    - Components with zero thickness are omitted from the plot.
+    - The legend displays the name and thickness (in meters) of each component.
+    """
+    if mfile_data.data["i_single_null"].get_scan(-1) == 1:
+        upper_vertical_variables = [
+            "z_plasma_xpoint_upper",
+            "dz_fw_plasma_gap",
+            "dz_fw_upper",
+            "dz_blkt_upper",
+            "dr_shld_blkt_gap",
+            "dz_shld_upper",
+            "dz_vv_upper",
+            "dz_shld_vv_gap",
+            "dz_shld_thermal",
+            "dr_tf_shld_gap",
+            "dr_tf_inboard",
+            "dz_tf_cryostat",
+        ]
+        upper_vertical_labels = [
+            "Plasma Height",
+            "First Wall - Plasma Gap",
+            "First Wall Upper",
+            "Blanket Upper",
+            "Shield-Blanket Gap",
+            "Shield Upper",
+            "Vacuum Vessel Upper",
+            "Shield-VV Gap",
+            "Thermal Shield",
+            "TF Coil - Shield Gap",
+            "TF Coil",
+            "TF Coil - Cryostat gap",
+        ]
+        upper_vertical_colours = [
+            PLASMA_COLOUR[colour_scheme - 1],
+            "white",
+            FIRSTWALL_COLOUR[colour_scheme - 1],
+            BLANKET_COLOUR[colour_scheme - 1],
+            "white",
+            SHIELD_COLOUR[colour_scheme - 1],
+            VESSEL_COLOUR[colour_scheme - 1],
+            "white",
+            THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+            "white",
+            TFC_COLOUR[colour_scheme - 1],
+            "white",
+        ]
+    # Double null case
+    else:
+        upper_vertical_variables = [
+            "z_plasma_xpoint_upper",
+            "dz_xpoint_divertor",
+            "dz_divertor",
+            "dz_shld_upper",
+            "dz_vv_upper",
+            "dz_shld_vv_gap",
+            "dz_shld_thermal",
+            "dr_tf_shld_gap",
+            "dr_tf_inboard",
+            "dz_tf_cryostat",
+        ]
+        upper_vertical_labels = [
+            "Plasma Height",
+            "Plasma - Divertor Gap",
+            "Divertor Upper",
+            "Shield Upper",
+            "Vacuum Vessel Upper",
+            "Shield-VV Gap",
+            "Thermal Shield",
+            "TF Coil - Shield Gap",
+            "TF Coil",
+            "TF Coil - Cryostat gap",
+        ]
+        upper_vertical_colours = [
+            PLASMA_COLOUR[colour_scheme - 1],
+            "white",
+            "black",
+            SHIELD_COLOUR[colour_scheme - 1],
+            VESSEL_COLOUR[colour_scheme - 1],
+            "white",
+            THERMAL_SHIELD_COLOUR[colour_scheme - 1],
+            "white",
+            TFC_COLOUR[colour_scheme - 1],
+            "white",
+        ]
+
+    # Get thicknesses for each layer
+    upper_vertical_build = np.array([
+        mfile_data.data[rl].get_scan(-1) for rl in upper_vertical_variables
+    ])
+
+    # Remove build parts equal to zero
+    mask = ~(upper_vertical_build == 0.0)
+    filtered_build = upper_vertical_build[mask]
+    filtered_labels = [lbl for i, lbl in enumerate(upper_vertical_labels) if mask[i]]
+    filtered_colors = [col for i, col in enumerate(upper_vertical_colours) if mask[i]]
+    filtered_vars = [v for i, v in enumerate(upper_vertical_variables) if mask[i]]
+
+    # Compute cumulative positions (bottoms) for stacking
+    bottoms = np.zeros_like(filtered_build)
+    for i in range(1, len(filtered_build)):
+        bottoms[i] = bottoms[i - 1] + filtered_build[i - 1]
+
+    # Plot each layer as a bar, stacking upwards from zero
+    for kk in range(len(filtered_build)):
+        axis.bar(
+            0,
+            filtered_build[kk],
+            bottom=bottoms[kk],
+            width=0.8,
+            label=f"{filtered_labels[kk]}\n[{filtered_vars[kk]}]\n{filtered_build[kk]:.3f} m",
+            color=filtered_colors[kk],
+            edgecolor="black",
+            linewidth=0.05,
+        )
+
+    axis.set_xticks([])
+    axis.legend(
+        bbox_to_anchor=(0, 0),
+        loc="upper left",
+        ncol=6,
+    )
+    axis.minorticks_on()
+    axis.set_ylabel("Height [m]")
+    axis.title.set_text("Upper Vertical Build")
 
 
 def plot_density_limit_comparison(
@@ -5726,8 +5883,14 @@ def main_plot(
     plot_16.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
     plot_radial_build(plot_16, m_file_data, colour_scheme)
 
-    plot_17 = fig6.add_subplot(121)
-    plot_vertical_build(plot_17, m_file_data, colour_scheme)
+    # Make each axes smaller vertically to leave room for the legend
+    plot_175 = fig6.add_subplot(211)
+    plot_175.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
+
+    plot_17 = fig6.add_subplot(212)
+    plot_17.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
+    plot_upper_vertical_build(plot_175, m_file_data, colour_scheme)
+    plot_lower_vertical_build(plot_17, m_file_data, colour_scheme)
 
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
@@ -5760,10 +5923,10 @@ def main_plot(
     plot_current_profiles_over_time(plot_25, m_file_data, scan)
 
     plot_26 = fig12.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_26, fig10, m_file_data, scan)
+    plot_cs_coil_structure(plot_26, fig12, m_file_data, scan)
 
     plot_27 = fig12.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_27, fig10, m_file_data, scan)
+    plot_cs_turn_structure(plot_27, fig12, m_file_data, scan)
 
     plot_28 = fig13.add_subplot(221, aspect="equal")
     plot_first_wall_top_down_cross_section(plot_28, m_file_data, scan)
