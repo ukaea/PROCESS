@@ -2004,7 +2004,7 @@ class Build:
             + build_variables.dz_xpoint_divertor
             + divertor_variables.dz_divertor
             - build_variables.dz_blkt_upper
-            - build_variables.dz_fw_upper
+            - 0.5e0 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
         )
         if (
             physics_variables.n_divertors == 2
@@ -2511,6 +2511,7 @@ def init_build_variables():
     build_variables.dr_blkt_inboard = 0.115
     build_variables.dr_blkt_outboard = 0.235
     build_variables.dz_blkt_upper = 0.0
+    build_python_variables.dz_fw_upper = 0.0
     build_variables.dr_bore = 1.42
     build_variables.f_z_cryostat = 4.268
     build_variables.dr_cryostat = 0.07
