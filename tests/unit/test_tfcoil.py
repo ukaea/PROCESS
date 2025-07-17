@@ -259,7 +259,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
             (
                 pytest.approx(0.19634954084936207),  # rad_tf_coil_inboard_toroidal_half
                 pytest.approx(0.198912367379658),  # tan_theta_coil
-                pytest.approx(5.497787143782138),  # a_tf_coil_inboard
+                pytest.approx(5.497787143782138),  # a_tf_inboard_total
                 pytest.approx(4.85),  # r_tf_outboard_in
                 pytest.approx(5.15),  # r_tf_outboard_out
                 pytest.approx(0.780361288064513),  # dx_tf_inboard_out_toroidal
@@ -284,7 +284,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
             (
                 pytest.approx(0.2617993877991494),  # rad_tf_coil_inboard_toroidal_half
                 pytest.approx(0.2679491924311227),  # tan_theta_coil
-                pytest.approx(3.562478398964007),  # a_tf_coil_inboard
+                pytest.approx(3.562478398964007),  # a_tf_inboard_total
                 pytest.approx(4.375),  # r_tf_outboard_in
                 pytest.approx(4.625),  # r_tf_outboard_out
                 pytest.approx(0.9317485623690747),  # dx_tf_inboard_out_toroidal
@@ -330,7 +330,7 @@ def test_tf_global_geometry(
 
 
 @pytest.mark.parametrize(
-    "n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard, expected",
+    "n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected",
     [
         (
             16,  # Number of TF coils
@@ -361,11 +361,11 @@ def test_tf_global_geometry(
     ],
 )
 def test_tf_current(
-    tfcoil, n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard, expected
+    tfcoil, n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected
 ):
     """Test the tf_current method."""
     result = tfcoil.tf_current(
-        n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard
+        n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total
     )
     assert result == expected
 

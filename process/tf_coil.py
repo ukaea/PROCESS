@@ -41,7 +41,7 @@ class TFCoil:
         self.outfile = ft.constants.nout  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
-        self.a_tf_coil_inboard = tfcoil_variables.a_tf_coil_inboard
+        self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
 
     def run(self, output):
         """Run main tfcoil subroutine without outputting."""
@@ -50,7 +50,7 @@ class TFCoil:
         (
             sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
-            tfcoil_variables.a_tf_coil_inboard,
+            tfcoil_variables.a_tf_inboard_total,
             sctfcoil_module.r_tf_outboard_in,
             sctfcoil_module.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
@@ -82,7 +82,7 @@ class TFCoil:
             bt=physics_variables.bt,
             rmajor=physics_variables.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
-            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
         )
 
         (
@@ -381,7 +381,7 @@ class TFCoil:
             A tuple containing:
             - **rad_tf_coil_inboard_toroidal_half** (*float*): Toroidal angular spacing of each TF coil [radians].
             - **tan_theta_coil** (*float*): Tangent of the toroidal angular spacing.
-            - **a_tf_coil_inboard** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
+            - **a_tf_inboard_total** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
             - **r_tf_outboard_in** (*float*): Inner radius of the outboard leg of the TF coil [m].
             - **r_tf_outboard_out** (*float*): Outer radius of the outboard leg of the TF coil [m].
             - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
@@ -398,10 +398,10 @@ class TFCoil:
         # TF coil inboard legs total mid-plane cross-section area [m^2]
         if i_tf_case_geom == 0:
             # Circular plasma facing front case
-            a_tf_coil_inboard = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
+            a_tf_inboard_total = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
         else:
             # Straight plasma facing front case
-            a_tf_coil_inboard = (
+            a_tf_inboard_total = (
                 n_tf_coils
                 * np.sin(rad_tf_coil_inboard_toroidal_half)
                 * np.cos(rad_tf_coil_inboard_toroidal_half)
@@ -443,7 +443,7 @@ class TFCoil:
         return (
             rad_tf_coil_inboard_toroidal_half,
             tan_theta_coil,
-            a_tf_coil_inboard,
+            a_tf_inboard_total,
             r_tf_outboard_in,
             r_tf_outboard_out,
             dx_tf_inboard_out_toroidal,
@@ -458,7 +458,7 @@ class TFCoil:
         bt: float,
         rmajor: float,
         r_b_tf_inboard_peak: float,
-        a_tf_coil_inboard: float,
+        a_tf_inboard_total: float,
     ) -> tuple[float, float, float, float]:
         """
         Calculate the maximum B field and the corresponding TF current.
@@ -471,8 +471,8 @@ class TFCoil:
         :type rmajor: float
         :param r_b_tf_inboard_peak: Radius at which the peak inboard B field occurs [m].
         :type r_b_tf_inboard_peak: float
-        :param a_tf_coil_inboard: Cross-sectional area of the inboard leg of the TF coil [m²].
-        :type a_tf_coil_inboard: float
+        :param a_tf_inboard_total: Cross-sectional area of the inboard leg of the TF coil [m²].
+        :type a_tf_inboard_total: float
 
         :returns: A tuple containing:
             - **b_tf_inboard_peak** (*float*): Maximum B field on the magnet [T].
@@ -494,7 +494,7 @@ class TFCoil:
         c_tf_coil = c_tf_total / n_tf_coils
 
         # Global inboard leg average current in TF coils [A/m2]
-        oacdcp = c_tf_total / a_tf_coil_inboard
+        oacdcp = c_tf_total / a_tf_inboard_total
 
         return b_tf_inboard_peak, c_tf_total, c_tf_coil, oacdcp
 
@@ -976,8 +976,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "TF cross-section (total) (m2)",
-                "(a_tf_coil_inboard)",
-                tfcoil_variables.a_tf_coil_inboard,
+                "(a_tf_inboard_total)",
+                tfcoil_variables.a_tf_inboard_total,
             )
             po.ovarre(
                 self.outfile,
@@ -5485,7 +5485,7 @@ def init_tfcoil_variables():
     tfv.time1 = 0
     tfv.tcritsc = 16.0
     tfv.tdmptf = 10.0
-    tfv.a_tf_coil_inboard = 0.0
+    tfv.a_tf_inboard_total = 0.0
     tfv.len_tf_bus = 300.0
     tfv.m_tf_bus = 0.0
     tfv.tfckw = 0.0
