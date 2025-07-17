@@ -6303,10 +6303,10 @@ def main_plot(
     plot_radial_build(plot_17, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    plot_175 = fig6.add_subplot(211)
+    plot_175 = fig7.add_subplot(211)
     plot_175.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
 
-    plot_17 = fig6.add_subplot(212)
+    plot_17 = fig7.add_subplot(212)
     plot_17.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
     plot_upper_vertical_build(plot_175, m_file_data, colour_scheme)
     plot_lower_vertical_build(plot_17, m_file_data, colour_scheme)

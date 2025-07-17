@@ -46,7 +46,7 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 </figure>
 
 <figure markdown>
-![plot_proc_6](../images/plot_proc_6.PNG){ width="100%"}
+![plot_proc_6](../images/plot_proc_6.png){ width="100%"}
 <figcaption>Figure 6: plot_proc radial build page </figcaption>
 </figure>
 
