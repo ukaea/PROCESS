@@ -952,7 +952,7 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "tan_theta_coil", tfcasegeomparam.tan_theta_coil
     )
 
-    sctfcoil.tf_case_geom(
+    sctfcoil.superconducting_tf_case_geometry(
         i_tf_wp_geom=tfcasegeomparam.i_tf_wp_geom,
         i_tf_case_geom=tfcasegeomparam.i_tf_case_geom,
     )
