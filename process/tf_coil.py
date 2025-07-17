@@ -783,6 +783,13 @@ class TFCoil:
         )
         po.ovarre(
             self.outfile,
+            "Inboard TF half angle [rad]",
+            "(rad_tf_coil_toroidal)",
+            sctfcoil_module.rad_tf_coil_toroidal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Inboard leg centre radius (m)",
             "(r_tf_inboard_mid)",
             build_variables.r_tf_inboard_mid,
@@ -813,6 +820,13 @@ class TFCoil:
             "Radial position of inner edge and centre of winding pack (m)",
             "(r_tf_wp_inboard_inner)",
             sctfcoil_module.r_tf_wp_inboard_inner,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Radial position of outer edge and of winding pack (m)",
+            "(r_tf_wp_inboard_outer)",
+            sctfcoil_module.r_tf_wp_inboard_outer,
             "OP ",
         )
         po.ovarre(
