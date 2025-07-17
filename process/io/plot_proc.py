@@ -2680,8 +2680,8 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     # Import the TF variables
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
-    wp_toridal_dxbig = mfile_data.data["wwp1"].get_scan(scan)
-    wp_toridal_dxsmall = mfile_data.data["wwp2"].get_scan(scan)
+    wp_toridal_dxbig = mfile_data.data["dx_tf_wp_primary_toroidal"].get_scan(scan)
+    wp_toridal_dxsmall = mfile_data.data["dx_tf_wp_secondary_toroidal"].get_scan(scan)
     dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
         scan
     )
@@ -2851,7 +2851,9 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             else:
                 wp_side_ratio = (
                     dr_tf_wp_with_insulation - (2 * dx_tf_wp_insulation)
-                ) / (wwp1 - (2 * dx_tf_wp_insulation))  # row to height
+                ) / (
+                    dx_tf_wp_primary_toroidal - (2 * dx_tf_wp_insulation)
+                )  # row to height
                 side_unit = turns / wp_side_ratio
                 root_turns = round(np.sqrt(side_unit), 1)
                 long_turns = round(root_turns * wp_side_ratio)
@@ -6007,8 +6009,8 @@ def main(args=None):
 
     # Magnets related
     global n_tf_coils
-    global wwp1
-    global wwp2
+    global dx_tf_wp_primary_toroidal
+    global dx_tf_wp_secondary_toroidal
     global dr_tf_wp_with_insulation
     global dx_tf_wp_insulation
     global dr_tf_nose_case
@@ -6016,9 +6018,13 @@ def main(args=None):
 
     n_tf_coils = m_file.data["n_tf_coils"].get_scan(scan)
     if i_tf_sup == 1:  # If superconducting magnets
-        wwp1 = m_file.data["wwp1"].get_scan(scan)
+        dx_tf_wp_primary_toroidal = m_file.data["dx_tf_wp_primary_toroidal"].get_scan(
+            scan
+        )
         if i_tf_wp_geom == 1:
-            wwp2 = m_file.data["wwp2"].get_scan(scan)
+            dx_tf_wp_secondary_toroidal = m_file.data[
+                "dx_tf_wp_secondary_toroidal"
+            ].get_scan(scan)
         dr_tf_wp_with_insulation = m_file.data["dr_tf_wp_with_insulation"].get_scan(
             scan
         )

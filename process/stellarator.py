@@ -772,7 +772,10 @@ class Stellarator:
         #  F.C. Moon, J. Appl. Phys. 53(12) (1982) 9112
         #
         #  Values based on regression analysis by Greifswald, March 2014
-        m_struc = 1.3483e0 * (1000.0e0 * tfcoil_variables.estotftgj) ** 0.7821e0
+        m_struc = (
+            1.3483e0
+            * (1000.0e0 * tfcoil_variables.e_tf_magnetic_stored_total_gj) ** 0.7821e0
+        )
         msupstr = 1000.0e0 * m_struc  # kg
 
         ################################################################
@@ -1054,7 +1057,7 @@ class Stellarator:
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_coil_inboard
+            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_inboard_total
             + 0.75
             * tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_leg_outboard
@@ -2656,8 +2659,10 @@ class Stellarator:
         )  # Toroidal dimension
         awp_rad = wp_width_r_min  # Radial dimension
 
-        tfcoil_variables.wwp1 = awp_tor  # [m] toroidal thickness of winding pack
-        tfcoil_variables.wwp2 = (
+        tfcoil_variables.dx_tf_wp_primary_toroidal = (
+            awp_tor  # [m] toroidal thickness of winding pack
+        )
+        tfcoil_variables.dx_tf_wp_secondary_toroidal = (
             awp_tor  # [m] toroidal thickness of winding pack (region in front)
         )
         tfcoil_variables.dr_tf_wp_with_insulation = (
@@ -2668,7 +2673,10 @@ class Stellarator:
         a_tf_wp_with_insulation = (
             tfcoil_variables.dr_tf_wp_with_insulation
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
-        ) * (tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation)
+        ) * (
+            tfcoil_variables.dx_tf_wp_primary_toroidal
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+        )
 
         a_tf_wp_no_insulation = (
             awp_tor * awp_rad
@@ -2777,7 +2785,7 @@ class Stellarator:
         #  General Coil Geometry values
         #
         tfcoil_variables.dx_tf_inboard_out_toroidal = (
-            tfcoil_variables.wwp1
+            tfcoil_variables.dx_tf_wp_primary_toroidal
             + 2.0e0 * tfcoil_variables.dx_tf_side_case
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in toroidal direction
@@ -2837,14 +2845,14 @@ class Stellarator:
         )
 
         #  Variables for ALL coils.
-        tfcoil_variables.a_tf_coil_inboard = (
+        tfcoil_variables.a_tf_inboard_total = (
             tfcoil_variables.n_tf_coils * tfcoil_variables.a_tf_leg_outboard
         )  # [m^2] Total area of all coil legs (midplane)
         tfcoil_variables.c_tf_total = (
             tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6
         )  # [A] Total current in ALL coils
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_coil_inboard
+            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_inboard_total
         )  # [A / m^2] overall current density
         tfcoil_variables.r_b_tf_inboard_peak = (
             r_coil_major - r_coil_minor + awp_rad
@@ -2859,7 +2867,7 @@ class Stellarator:
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
             * st.f_n**2
         )
-        tfcoil_variables.estotftgj = (
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
             0.5e0
             * (
                 stellarator_configuration.stella_config_inductance
@@ -3042,10 +3050,12 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
-            tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
+            tfcoil_variables.e_tf_magnetic_stored_total_gj
+            / tfcoil_variables.n_tf_coils
+            * 1.0e9,
             tfcoil_variables.tdmptf,
             tfcoil_variables.c_tf_turn,
         )
@@ -3705,7 +3715,7 @@ class Stellarator:
             self.outfile,
             "Cross-sectional area per coil (m2)",
             "(tfarea/n_tf_coils)",
-            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils,
+            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils,
         )
         po.ovarre(
             self.outfile,
@@ -3797,8 +3807,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total Stored energy (GJ)",
-            "(estotftgj)",
-            tfcoil_variables.estotftgj,
+            "(e_tf_magnetic_stored_total_gj)",
+            tfcoil_variables.e_tf_magnetic_stored_total_gj,
         )
         po.ovarre(
             self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
@@ -3929,8 +3939,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Winding toroidal thickness (m)",
-            "(wwp1)",
-            tfcoil_variables.wwp1,
+            "(dx_tf_wp_primary_toroidal)",
+            tfcoil_variables.dx_tf_wp_primary_toroidal,
         )
         po.ovarre(
             self.outfile,

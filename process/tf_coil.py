@@ -41,16 +41,16 @@ class TFCoil:
         self.outfile = ft.constants.nout  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
-        self.a_tf_coil_inboard = tfcoil_variables.a_tf_coil_inboard
+        self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
 
     def run(self, output):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
 
         (
-            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
-            tfcoil_variables.a_tf_coil_inboard,
+            tfcoil_variables.a_tf_inboard_total,
             sctfcoil_module.r_tf_outboard_in,
             sctfcoil_module.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
@@ -82,7 +82,7 @@ class TFCoil:
             bt=physics_variables.bt,
             rmajor=physics_variables.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
-            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
         )
 
         (
@@ -126,7 +126,9 @@ class TFCoil:
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
+            1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        )
 
         self.tf_field_and_force()
 
@@ -209,7 +211,7 @@ class TFCoil:
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.rad_tf_coil_toroidal,
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_tf_plasma_case,
@@ -377,9 +379,9 @@ class TFCoil:
 
         :returns:
             A tuple containing:
-            - **rad_tf_coil_toroidal** (*float*): Toroidal angular spacing of each TF coil [radians].
+            - **rad_tf_coil_inboard_toroidal_half** (*float*): Toroidal angular spacing of each TF coil [radians].
             - **tan_theta_coil** (*float*): Tangent of the toroidal angular spacing.
-            - **a_tf_coil_inboard** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
+            - **a_tf_inboard_total** (*float*): Cross-sectional area of the inboard leg of the TF coil [m²].
             - **r_tf_outboard_in** (*float*): Inner radius of the outboard leg of the TF coil [m].
             - **r_tf_outboard_out** (*float*): Outer radius of the outboard leg of the TF coil [m].
             - **dx_tf_inboard_out_toroidal** (*float*): Width of the inboard leg at the outer edge in the toroidal direction [m].
@@ -390,19 +392,19 @@ class TFCoil:
         # The angular space of each TF coil in the toroidal direction [rad]
         # The angular space between each coil is the same as that of the coils
 
-        rad_tf_coil_toroidal = np.pi / n_tf_coils
-        tan_theta_coil = np.tan(rad_tf_coil_toroidal)
+        rad_tf_coil_inboard_toroidal_half = np.pi / n_tf_coils
+        tan_theta_coil = np.tan(rad_tf_coil_inboard_toroidal_half)
 
         # TF coil inboard legs total mid-plane cross-section area [m^2]
         if i_tf_case_geom == 0:
             # Circular plasma facing front case
-            a_tf_coil_inboard = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
+            a_tf_inboard_total = np.pi * (r_tf_inboard_out**2 - r_tf_inboard_in**2)
         else:
             # Straight plasma facing front case
-            a_tf_coil_inboard = (
+            a_tf_inboard_total = (
                 n_tf_coils
-                * np.sin(rad_tf_coil_toroidal)
-                * np.cos(rad_tf_coil_toroidal)
+                * np.sin(rad_tf_coil_inboard_toroidal_half)
+                * np.cos(rad_tf_coil_inboard_toroidal_half)
                 * r_tf_inboard_out**2
                 - np.pi * r_tf_inboard_in**2
             )
@@ -410,7 +412,7 @@ class TFCoil:
         # TF coil width in toroidal direction at inboard leg outer edge [m]
 
         dx_tf_inboard_out_toroidal = (
-            2.0e0 * r_tf_inboard_out * np.sin(rad_tf_coil_toroidal)
+            2.0e0 * r_tf_inboard_out * np.sin(rad_tf_coil_inboard_toroidal_half)
         )
 
         # Outer leg geometry
@@ -439,9 +441,9 @@ class TFCoil:
             dx_tf_side_case = tfcoil_variables.dx_tf_side_case
 
         return (
-            rad_tf_coil_toroidal,
+            rad_tf_coil_inboard_toroidal_half,
             tan_theta_coil,
-            a_tf_coil_inboard,
+            a_tf_inboard_total,
             r_tf_outboard_in,
             r_tf_outboard_out,
             dx_tf_inboard_out_toroidal,
@@ -456,7 +458,7 @@ class TFCoil:
         bt: float,
         rmajor: float,
         r_b_tf_inboard_peak: float,
-        a_tf_coil_inboard: float,
+        a_tf_inboard_total: float,
     ) -> tuple[float, float, float, float]:
         """
         Calculate the maximum B field and the corresponding TF current.
@@ -469,8 +471,8 @@ class TFCoil:
         :type rmajor: float
         :param r_b_tf_inboard_peak: Radius at which the peak inboard B field occurs [m].
         :type r_b_tf_inboard_peak: float
-        :param a_tf_coil_inboard: Cross-sectional area of the inboard leg of the TF coil [m²].
-        :type a_tf_coil_inboard: float
+        :param a_tf_inboard_total: Cross-sectional area of the inboard leg of the TF coil [m²].
+        :type a_tf_inboard_total: float
 
         :returns: A tuple containing:
             - **b_tf_inboard_peak** (*float*): Maximum B field on the magnet [T].
@@ -492,7 +494,7 @@ class TFCoil:
         c_tf_coil = c_tf_total / n_tf_coils
 
         # Global inboard leg average current in TF coils [A/m2]
-        oacdcp = c_tf_total / a_tf_coil_inboard
+        oacdcp = c_tf_total / a_tf_inboard_total
 
         return b_tf_inboard_peak, c_tf_total, c_tf_coil, oacdcp
 
@@ -974,8 +976,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "TF cross-section (total) (m2)",
-                "(a_tf_coil_inboard)",
-                tfcoil_variables.a_tf_coil_inboard,
+                "(a_tf_inboard_total)",
+                tfcoil_variables.a_tf_inboard_total,
             )
             po.ovarre(
                 self.outfile,
@@ -1062,23 +1064,23 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Winding pack toroidal width (m)",
-                    "(wwp1)",
-                    tfcoil_variables.wwp1,
+                    "(dx_tf_wp_primary_toroidal)",
+                    tfcoil_variables.dx_tf_wp_primary_toroidal,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Winding pack toroidal width 1 (m)",
-                    "(wwp1)",
-                    tfcoil_variables.wwp1,
+                    "(dx_tf_wp_primary_toroidal)",
+                    tfcoil_variables.dx_tf_wp_primary_toroidal,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Winding pack toroidal width 2 (m)",
-                    "(wwp2)",
-                    tfcoil_variables.wwp2,
+                    "(dx_tf_wp_secondary_toroidal)",
+                    tfcoil_variables.dx_tf_wp_secondary_toroidal,
                     "OP ",
                 )
 
@@ -1569,8 +1571,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Total stored energy in TF coils (GJ)",
-            "(estotftgj)",
-            tfcoil_variables.estotftgj,
+            "(e_tf_magnetic_stored_total_gj)",
+            tfcoil_variables.e_tf_magnetic_stored_total_gj,
             "OP ",
         )
 
@@ -2124,7 +2126,7 @@ class TFCoil:
             tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
                 * build_variables.r_cp_top
-                * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
+                * np.sin(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
             )
 
         # Temperature margin used in calculations (K)
@@ -2905,7 +2907,7 @@ class TFCoil:
         # Surface areas (for cryo system) [m2]
         wbtf = (
             build_variables.r_tf_inboard_out
-            * np.sin(sctfcoil_module.rad_tf_coil_toroidal)
+            * np.sin(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
             - build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
         )
         tfcoil_variables.tfocrn = (
@@ -3235,7 +3237,7 @@ class TFCoil:
         eyoung_res_tf_buck,
         r_tf_wp_inboard_inner,
         tan_theta_coil,
-        rad_tf_coil_toroidal,
+        rad_tf_coil_inboard_toroidal_half,
         r_tf_wp_inboard_outer,
         a_tf_coil_inboard_steel,
         a_tf_plasma_case,
@@ -3566,14 +3568,16 @@ class TFCoil:
             # Inner/outer radii of the layer representing the WP in stress calculations [m]
             # These radii are chosen to preserve the true WP area; see Issue #1048
             r_wp_inner_eff = r_tf_wp_inboard_inner * np.sqrt(
-                tan_theta_coil / rad_tf_coil_toroidal
+                tan_theta_coil / rad_tf_coil_inboard_toroidal_half
             )
             r_wp_outer_eff = r_tf_wp_inboard_outer * np.sqrt(
-                tan_theta_coil / rad_tf_coil_toroidal
+                tan_theta_coil / rad_tf_coil_inboard_toroidal_half
             )
 
             # Area of the cylinder representing the WP in stress calculations [m2]
-            a_wp_eff = (r_wp_outer_eff**2 - r_wp_inner_eff**2) * rad_tf_coil_toroidal
+            a_wp_eff = (
+                r_wp_outer_eff**2 - r_wp_inner_eff**2
+            ) * rad_tf_coil_inboard_toroidal_half
 
             # Steel cross-section under the area representing the WP in stress calculations [m2]
             a_wp_steel_eff = (
@@ -3723,7 +3727,7 @@ class TFCoil:
             # WP area using the stress model circular geometry (per coil) [m2]
             a_wp_eff = (
                 r_tf_wp_inboard_outer**2 - r_tf_wp_inboard_inner**2
-            ) * rad_tf_coil_toroidal
+            ) * rad_tf_coil_inboard_toroidal_half
 
             # Effective conductor region young modulus in the vertical direction [Pa]
             # Parallel-composite conductor and insulator
@@ -3792,7 +3796,7 @@ class TFCoil:
         # front case, and that considered by the plane strain solver
         f_tf_stress_front_case = (
             a_tf_plasma_case
-            / rad_tf_coil_toroidal
+            / rad_tf_coil_inboard_toroidal_half
             / (radtf[n_tf_layer] ** 2 - radtf[n_tf_layer - 1] ** 2)
         )
 
@@ -5400,7 +5404,7 @@ def init_tfcoil_variables():
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
     tfv.dcondins = 1800.0
     tfv.dia_tf_turn_coolant_channel = 0.005
-    tfv.estotftgj = 0.0
+    tfv.e_tf_magnetic_stored_total_gj = 0.0
     tfv.b_crit_upper_nbti = 14.86
     tfv.t_crit_nbti = 9.04
     tfv.max_force_density = 0.0
@@ -5481,7 +5485,7 @@ def init_tfcoil_variables():
     tfv.time1 = 0
     tfv.tcritsc = 16.0
     tfv.tdmptf = 10.0
-    tfv.a_tf_coil_inboard = 0.0
+    tfv.a_tf_inboard_total = 0.0
     tfv.len_tf_bus = 300.0
     tfv.m_tf_bus = 0.0
     tfv.tfckw = 0.0
@@ -5544,8 +5548,8 @@ def init_tfcoil_variables():
     tfv.m_tf_turn_steel = 0.0
     tfv.whtgw = 0.0
     tfv.m_tf_coils_total = 0.0
-    tfv.wwp1 = 0.0
-    tfv.wwp2 = 0.0
+    tfv.dx_tf_wp_primary_toroidal = 0.0
+    tfv.dx_tf_wp_secondary_toroidal = 0.0
     tfv.dthet[:] = 0.0
     tfv.radctf[:] = 0.0
     tfv.r_tf_arc[:] = 0.0

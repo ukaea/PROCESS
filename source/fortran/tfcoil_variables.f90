@@ -159,7 +159,7 @@ module tfcoil_variables
   real(dp) :: dia_tf_turn_coolant_channel
   !! diameter of central helium channel in TF winding (m)
 
-  real(dp) :: estotftgj
+  real(dp) :: e_tf_magnetic_stored_total_gj
   !! total stored energy in the toroidal field (GJ)
 
   real(dp) :: b_crit_upper_nbti
@@ -499,7 +499,7 @@ module tfcoil_variables
   !! - exponential quench : e-folding time (s)`
   !! - linear quench : discharge time (s)
 
-  real(dp) :: a_tf_coil_inboard
+  real(dp) :: a_tf_inboard_total
   !! Area of inboard midplane TF legs (m2)
 
   real(dp) :: len_tf_bus
@@ -711,10 +711,10 @@ module tfcoil_variables
   real(dp) :: m_tf_coils_total
   !! total mass of the TF coils (kg)
 
-  real(dp) :: wwp1
+  real(dp) :: dx_tf_wp_primary_toroidal
   !! width of first step of winding pack (m)
 
-  real(dp) :: wwp2
+  real(dp) :: dx_tf_wp_secondary_toroidal
   !! width of second step of winding pack (m)
 
   ! Superconducting TF coil shape parameters;

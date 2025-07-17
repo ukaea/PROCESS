@@ -28,9 +28,9 @@ class ResistiveTFCoil(TFCoil):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
         (
-            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
-            tfcoil_variables.a_tf_coil_inboard,
+            tfcoil_variables.a_tf_inboard_total,
             sctfcoil_module.r_tf_outboard_in,
             sctfcoil_module.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
@@ -71,7 +71,7 @@ class ResistiveTFCoil(TFCoil):
             bt=physics_variables.bt,
             rmajor=physics_variables.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
-            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
         )
         (
             tfcoil_variables.len_tf_coil,
@@ -116,7 +116,9 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
+            1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        )
 
         self.tf_field_and_force()
 
@@ -199,7 +201,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.rad_tf_coil_toroidal,
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_tf_plasma_case,
@@ -428,14 +430,14 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.f_a_tf_coil_inboard_insulation = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_coil_inboard_insulation
-            / tfcoil_variables.a_tf_coil_inboard
+            / tfcoil_variables.a_tf_inboard_total
         )
 
         # Total cross-sectional area of the bucking cylindre and the outer support
         # support structure per coil [m2]
         # physics_variables.itart = 1 : Only valid at mid-plane
         tfcoil_variables.a_tf_coil_inboard_case = (
-            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
+            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.a_tf_wp_with_insulation
 
         # Current per turn

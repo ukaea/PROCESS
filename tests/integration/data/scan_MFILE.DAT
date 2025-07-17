@@ -532,7 +532,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4635E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4102E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3627E+00    
@@ -545,7 +545,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8367E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3795E+00    
@@ -585,7 +585,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -1527,7 +1527,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4635E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4102E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3627E+00    
@@ -1540,7 +1540,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8367E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3792E+00    
@@ -1580,7 +1580,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -2522,7 +2522,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4101E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -2535,7 +2535,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8366E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3789E+00    
@@ -2575,7 +2575,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -3517,7 +3517,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4101E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -3530,7 +3530,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8365E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3786E+00    
@@ -3570,7 +3570,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -4512,7 +4512,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4100E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -4525,7 +4525,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8365E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3783E+00    
@@ -4565,7 +4565,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -5507,7 +5507,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4100E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -5520,7 +5520,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8364E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3781E+00    
@@ -5560,7 +5560,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -6502,7 +6502,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4099E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -6515,7 +6515,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8363E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3779E+00    
@@ -6555,7 +6555,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -7497,7 +7497,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4099E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -7510,7 +7510,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0480E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8363E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3776E+00    
@@ -7550,7 +7550,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
@@ -8492,7 +8492,7 @@
  TF_coil_arc_point_4_Z_(m)_______________________________________________ (z_tf_arc(4))_____________________     -9.2447E+00    
  TF_coil_arc_point_5_R_(m)_______________________________________________ (r_tf_arc(5))_____________________      4.4793E+00    
  TF_coil_arc_point_5_Z_(m)_______________________________________________ (z_tf_arc(5))_____________________     -5.5468E+00    
- TF_cross-section_(total)_(m2)___________________________________________ (a_tf_coil_inboard)____________________      3.3244E+01    
+ TF_cross-section_(total)_(m2)___________________________________________ (a_tf_inboard_total)____________________      3.3244E+01    
  Total_steel_cross-section_(m2)__________________________________________ (a_tf_coil_inboard_steel*n_tf_coils)_____________      2.4634E+01    
  Total_steel_TF_fraction_________________________________________________ (f_a_tf_coil_inboard_steel)__________________      7.4098E-01    
  Total_Insulation_cross-section_(total)_(m2)_____________________________ (a_tf_coil_inboard_insulation*n_tf_coils)_______________      2.3626E+00    
@@ -8505,7 +8505,7 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      1.1243E+00    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      1.0479E+00    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      8.8362E-01 OP 
- Winding_pack_toroidal_width_(m)_________________________________________ (wwp1)________________________      1.2723E+00 OP 
+ Winding_pack_toroidal_width_(m)_________________________________________ (dx_tf_wp_primary_toroidal)________________________      1.2723E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      9.3774E+00    
@@ -8545,7 +8545,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.6312E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.5976E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.5976E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
