@@ -2239,12 +2239,12 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.a_tf_wp_with_insulation
 
-        # Outboard leg cross-sectional area of surrounding case [m2]
+        # Outboard leg cross-sectional area of surrounding case [m²]
         tfcoil_variables.a_tf_coil_outboard_case = (
             tfcoil_variables.a_tf_leg_outboard - sctfcoil_module.a_tf_wp_with_insulation
         )
 
-        # Front casing area [m2]
+        # Front casing area [m²]
         if i_tf_case_geom == 0:
             # Circular front case
             sctfcoil_module.a_tf_plasma_case = (
@@ -2264,7 +2264,7 @@ class SuperconductingTFCoil(TFCoil):
                 - sctfcoil_module.r_tf_wp_inboard_outer**2
             ) * sctfcoil_module.tan_theta_coil
 
-        # Nose casing area [m2]
+        # Nose casing area [m²]
         sctfcoil_module.a_tf_coil_nose_case = (
             sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inboard_inner**2
             - sctfcoil_module.rad_tf_coil_inboard_toroidal_half

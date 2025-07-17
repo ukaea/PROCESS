@@ -437,3 +437,24 @@ $$
 \\ - A_{\text{TF,WP-no-insulation}}
 $$
 
+-----------------
+
+### Case geometry | `superconducting_tf_case_geometry()`
+
+The areas of the total casing surrounding the winding packs on the inboard and outboard leg are calculated:
+
+$$
+\overbrace{A_{\text{TF,case-inboard}}}^{\texttt{a_tf_coil_inboard_case}} = \frac{\overbrace{A_{\text{TF,inboard-total}}}^{\texttt{a_tf_inboard_total}}}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}} - \overbrace{A_{\text{TF,WP-no-insulation}}}^{\texttt{a_tf_wp_with_insulation}}
+$$
+
+$$
+\overbrace{A_{\text{TF,case-outboard}}}^{\texttt{a_tf_coil_outboard_case}} = \overbrace{A_{\text{TF,outboard}}}^{\texttt{a_tf_leg_outboard}} - A_{\text{TF,WP-no-insulation}}
+$$
+
+The plasma facing front case area is calculated:
+
+If `i_tf_case_geom == 0` then the front case is circular so:
+
+$$
+\overbrace{A_{\text{TF,plasma-case}}}^{\texttt{a_tf_plasma_case}} = \overbrace{A_{\text{TF,outboard}}}^{\texttt{a_tf_leg_outboard}} - A_{\text{TF,WP-no-insulation}}
+$$
