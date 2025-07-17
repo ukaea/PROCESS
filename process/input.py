@@ -936,7 +936,7 @@ INPUT_VARIABLES = {
         fortran.physics_variables, float, range=(0.0, 10.0)
     ),
     "initialpressure": InputVariable(
-        fortran.vacuum_variables, float, range=(1e-06, 10000.0)
+        data_structure.vacuum_variables, float, range=(1e-06, 10000.0)
     ),
     "temp_blkt_coolant_in": InputVariable(
         fortran.fwbs_variables, float, range=(200.0, 600.0)
@@ -1053,10 +1053,10 @@ INPUT_VARIABLES = {
         fortran.pfcoil_variables, float, range=(0.0, 2.0)
     ),
     "outgasfactor": InputVariable(
-        fortran.vacuum_variables, float, range=(1e-06, 1000.0)
+        data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
     "outgasindex": InputVariable(
-        fortran.vacuum_variables, float, range=(1e-06, 1000.0)
+        data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
     "temp_blkt_coolant_out": InputVariable(
         fortran.fwbs_variables, float, range=(450.0, 900.0)
@@ -1073,7 +1073,9 @@ INPUT_VARIABLES = {
     "paris_power_law": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
-    "pbase": InputVariable(fortran.vacuum_variables, float, range=(1e-08, 0.001)),
+    "pbase": InputVariable(
+        data_structure.vacuum_variables, float, range=(1e-08, 0.001)
+    ),
     "p_plasma_separatrix_min_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.1, 1000.0)
     ),
@@ -1119,7 +1121,7 @@ INPUT_VARIABLES = {
     "p_fusion_total_max_mw": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 10000.0)
     ),
-    "prdiv": InputVariable(fortran.vacuum_variables, float, range=(0.0, 10.0)),
+    "prdiv": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable(
         fortran.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
@@ -1133,15 +1135,15 @@ INPUT_VARIABLES = {
     "ptfnucmax": InputVariable(fortran.constraint_variables, float, range=(1e-06, 1.0)),
     "pulsetimings": InputVariable(fortran.times_variables, float, range=(0.0, 1.0)),
     "pumpareafraction": InputVariable(
-        fortran.vacuum_variables, float, range=(1e-06, 1.0)
+        data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
     "pumpspeedfactor": InputVariable(
-        fortran.vacuum_variables, float, range=(1e-06, 1.0)
+        data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
     "pumpspeedmax": InputVariable(
-        fortran.vacuum_variables, float, range=(1e-06, 1000.0)
+        data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
-    "pumptp": InputVariable(fortran.vacuum_variables, float, range=(0.0, 1e30)),
+    "pumptp": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 1e30)),
     "pflux_plant_floor_electric": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -1159,7 +1161,7 @@ INPUT_VARIABLES = {
     "radius_fw_channel": InputVariable(
         fortran.fwbs_variables, float, range=(0.001, 0.5)
     ),
-    "rat": InputVariable(fortran.vacuum_variables, float, range=(1e-10, 1e-06)),
+    "rat": InputVariable(data_structure.vacuum_variables, float, range=(1e-10, 1e-06)),
     "rbrt": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "rbvfac": InputVariable(fortran.buildings_variables, float, range=(0.9, 3.0)),
     "rbwt": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
@@ -1398,7 +1400,7 @@ INPUT_VARIABLES = {
     "tmax_croco": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 1000.0)),
     "tmaxpro": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1000.0)),
     "temp_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
-    "tn": InputVariable(fortran.vacuum_variables, float, range=(1.0, 1000.0)),
+    "tn": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable(fortran.times_variables, int, choices=[0, 1]),
     "transp_clrnc": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 10.0)
@@ -1619,7 +1621,9 @@ INPUT_VARIABLES = {
         fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
-    "dwell_pump": InputVariable(fortran.vacuum_variables, int, choices=[0, 1, 2]),
+    "dwell_pump": InputVariable(
+        data_structure.vacuum_variables, int, choices=[0, 1, 2]
+    ),
     "i_fw_blkt_vv_shape": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
     "hcdportsize": InputVariable(fortran.fwbs_variables, int, range=(1, 2)),
     "i_blkt_liquid_breeder_type": InputVariable(
@@ -1754,7 +1758,7 @@ INPUT_VARIABLES = {
     "npdiv": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "nphcdin": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
     "nphcdout": InputVariable(fortran.fwbs_variables, int, range=(0, 4)),
-    "ntype": InputVariable(fortran.vacuum_variables, int, choices=[0, 1]),
+    "ntype": InputVariable(data_structure.vacuum_variables, int, choices=[0, 1]),
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "i_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
@@ -1783,7 +1787,7 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, str, choices=["helium", "water"]
     ),
     "vacuum_model": InputVariable(
-        fortran.vacuum_variables, str, choices=["old", "simple"]
+        data_structure.vacuum_variables, str, choices=["old", "simple"]
     ),
     "dcond": InputVariable(fortran.tfcoil_variables, float, array=True),
     "c_pf_coil_turn_peak_input": InputVariable(

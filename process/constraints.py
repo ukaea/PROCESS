@@ -1580,7 +1580,7 @@ def constraint_equation_63():
     niterpump: number of high vacuum pumps (real number), each with the throughput
     """
     cc = (
-        fortran.vacuum_variables.niterpump / fortran.tfcoil_variables.n_tf_coils
+        data_structure.vacuum_variables.niterpump / fortran.tfcoil_variables.n_tf_coils
         - 1.0 * fortran.constraint_variables.fniterpump
     )
     return ConstraintResult(
