@@ -167,7 +167,9 @@ INPUT_VARIABLES = {
     "amortization": InputVariable(
         data_structure.cost_variables, float, range=(1.0, 50.0)
     ),
-    "anginc": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.5707)),
+    "anginc": InputVariable(
+        data_structure.divertor_variables, float, range=(0.0, 1.5707)
+    ),
     "aplasmin": InputVariable(fortran.build_variables, float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable(
         fortran.buildings_variables, float, range=(1.0, 100.0)
@@ -204,13 +206,17 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(0.001, 5.0)
     ),
     "deg_div_field_plate": InputVariable(
-        fortran.divertor_variables, float, range=(0.0, 360.0)
+        data_structure.divertor_variables, float, range=(0.0, 360.0)
     ),
     "beta_poloidal_max": InputVariable(
         fortran.constraint_variables, float, range=(0.01, 2.0)
     ),
-    "betai": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.5707)),
-    "betao": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.5707)),
+    "betai": InputVariable(
+        data_structure.divertor_variables, float, range=(0.0, 1.5707)
+    ),
+    "betao": InputVariable(
+        data_structure.divertor_variables, float, range=(0.0, 1.5707)
+    ),
     "bigqmin": InputVariable(fortran.constraint_variables, float, range=(0.01, 100.0)),
     "bioshld_thk": InputVariable(
         fortran.buildings_variables, float, range=(0.25, 25.0)
@@ -413,13 +419,17 @@ INPUT_VARIABLES = {
         data_structure.cost_variables, float, range=(1000.0, 100000000.0)
     ),
     "f_vol_div_coolant": InputVariable(
-        fortran.divertor_variables, float, range=(0.0, 1.0)
+        data_structure.divertor_variables, float, range=(0.0, 1.0)
     ),
     "den_div_structure": InputVariable(
-        fortran.divertor_variables, float, range=(0.1, 100000.0)
+        data_structure.divertor_variables, float, range=(0.1, 100000.0)
     ),
-    "dz_divertor": InputVariable(fortran.divertor_variables, float, range=(0.1, 5.0)),
-    "dx_div_plate": InputVariable(fortran.divertor_variables, float, range=(0.01, 1.0)),
+    "dz_divertor": InputVariable(
+        data_structure.divertor_variables, float, range=(0.1, 5.0)
+    ),
+    "dx_div_plate": InputVariable(
+        data_structure.divertor_variables, float, range=(0.01, 1.0)
+    ),
     "dp_blkt": InputVariable(
         fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
@@ -651,7 +661,7 @@ INPUT_VARIABLES = {
     "fcutfsu": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
-    "fdiva": InputVariable(fortran.divertor_variables, float, range=(0.1, 2.0)),
+    "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
     "fdivwet": InputVariable(fortran.stellarator_variables, float, range=(0.01, 1.0)),
     "fdtmp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fecrh_ignition": InputVariable(
@@ -685,7 +695,7 @@ INPUT_VARIABLES = {
         fortran.stellarator_variables, float, range=(0.0001, 0.01)
     ),
     "f_div_flux_expansion": InputVariable(
-        fortran.divertor_variables, float, range=(0.0, 10.0)
+        data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
     "fmaxvvstress": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
@@ -875,10 +885,10 @@ INPUT_VARIABLES = {
     ),
     "hfact": InputVariable(fortran.physics_variables, float, range=(0.01, 10.0)),
     "pflux_div_heat_load_mw": InputVariable(
-        fortran.divertor_variables, float, range=(0.0, 10.0)
+        data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
     "pflux_div_heat_load_max_mw": InputVariable(
-        fortran.divertor_variables, float, range=(0.1, 20.0)
+        data_structure.divertor_variables, float, range=(0.1, 20.0)
     ),
     "hot_sepdist": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "hotcell_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
@@ -1113,7 +1123,7 @@ INPUT_VARIABLES = {
     "pres_fw_coolant": InputVariable(
         fortran.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
-    "prn1": InputVariable(fortran.divertor_variables, float, range=(0.0, 1.0)),
+    "prn1": InputVariable(data_structure.divertor_variables, float, range=(0.0, 1.0)),
     "psepbqarmax": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 50.0)
     ),
@@ -1335,7 +1345,7 @@ INPUT_VARIABLES = {
     "t_cycle_min": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 2000000.0)
     ),
-    "tdiv": InputVariable(fortran.divertor_variables, float, range=(0.1, 100.0)),
+    "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
     "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tdmptf": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
     "te": InputVariable(fortran.physics_variables, float, range=(1.0, 200.0)),
@@ -1594,7 +1604,9 @@ INPUT_VARIABLES = {
     ),
     "wsvfac": InputVariable(fortran.buildings_variables, float, range=(0.9, 3.0)),
     "xi_ebw": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
-    "xpertin": InputVariable(fortran.divertor_variables, float, range=(0.0, 10.0)),
+    "xpertin": InputVariable(
+        data_structure.divertor_variables, float, range=(0.0, 10.0)
+    ),
     "zeffmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
     "blktmodel": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "blkttype": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
@@ -1629,7 +1641,7 @@ INPUT_VARIABLES = {
         fortran.physics_variables, int, choices=[0, 1, 2]
     ),
     "i_div_heat_load": InputVariable(
-        fortran.divertor_variables, int, choices=[0, 1, 2]
+        data_structure.divertor_variables, int, choices=[0, 1, 2]
     ),
     "i_l_h_threshold": InputVariable(fortran.physics_variables, int, range=(1, 21)),
     "i_pf_current": InputVariable(fortran.pfcoil_variables, int, choices=[0, 1, 2]),

@@ -1,10 +1,10 @@
 import math
 
 from process import process_output as po
+from process.data_structure import divertor_variables as dv
 from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
 from process.fortran import constants
-from process.fortran import divertor_variables as dv
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
 
@@ -365,24 +365,3 @@ class Divertor:
                 dv.pflux_div_heat_load_mw,
             )
         return dv.pflux_div_heat_load_mw
-
-
-def init_divertor_variables():
-    dv.anginc = 0.262
-    dv.deg_div_field_plate = 1.0
-    dv.betai = 1.0
-    dv.betao = 1.0
-    dv.f_vol_div_coolant = 0.3
-    dv.den_div_structure = 1.0e4
-    dv.dz_divertor = 0.2
-    dv.m_div_plate = 0.0
-    dv.dx_div_plate = 0.035
-    dv.a_div_surface_total = 0.0
-    dv.fdiva = 1.11
-    dv.f_div_flux_expansion = 2.0
-    dv.pflux_div_heat_load_mw = 0.0
-    dv.i_div_heat_load = 2
-    dv.pflux_div_heat_load_max_mw = 5.0
-    dv.prn1 = 0.285
-    dv.tdiv = 2.0
-    dv.xpertin = 2.0

@@ -1,14 +1,13 @@
 import numpy as np
 
 from process import process_output as po
-from process.data_structure import cost_variables
+from process.data_structure import cost_variables, divertor_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
     constants,
     current_drive_variables,
-    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,

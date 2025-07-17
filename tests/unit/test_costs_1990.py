@@ -8,12 +8,11 @@ from pytest import approx
 
 from process import fortran
 from process.costs import Costs
-from process.data_structure import cost_variables
+from process.data_structure import cost_variables, divertor_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
     current_drive_variables,
-    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,

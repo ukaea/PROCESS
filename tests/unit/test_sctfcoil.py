@@ -3,9 +3,9 @@ from typing import Any, NamedTuple
 import pytest
 
 from process import superconducting_tf_coil as sctf
+from process.data_structure import divertor_variables
 from process.fortran import (
     build_variables,
-    divertor_variables,
     global_variables,
     sctfcoil_module,
     tfcoil_variables,

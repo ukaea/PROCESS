@@ -14,13 +14,13 @@ import process.physics_functions as physics_funcs
 from process import (
     process_output as po,
 )
+from process.data_structure import divertor_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
     constraint_variables,
     current_drive_variables,
-    divertor_variables,
     error_handling,
     fwbs_variables,
     impurity_radiation_module,
