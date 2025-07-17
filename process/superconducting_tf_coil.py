@@ -1878,7 +1878,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Calculating the TF steel casing areas
-        self.tf_case_geom(i_tf_wp_geom, i_tf_case_geom)
+        self.superconducting_tf_case_geometry(i_tf_wp_geom, i_tf_case_geom)
 
         # WP/trun currents
         self.tf_wp_currents()
@@ -2230,7 +2230,7 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_wp_ground_insulation,
         )
 
-    def tf_case_geom(self, i_tf_wp_geom, i_tf_case_geom):
+    def superconducting_tf_case_geometry(self, i_tf_wp_geom, i_tf_case_geom):
         """
         Author : S. Kahn, CCFE
         Setting the case geometry and area for SC magnets
