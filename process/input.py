@@ -157,7 +157,9 @@ INPUT_VARIABLES = {
     "abktflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "adivflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "admv": InputVariable(fortran.buildings_variables, float, range=(1.0e4, 1.0e6)),
-    "airtemp": InputVariable(fortran.water_usage_variables, float, range=(-15.0, 40.0)),
+    "airtemp": InputVariable(
+        data_structure.water_usage_variables, float, range=(-15.0, 40.0)
+    ),
     "alfapf": InputVariable(fortran.pfcoil_variables, float, range=(1e-12, 1.0)),
     "alstroh": InputVariable(
         fortran.pfcoil_variables, float, range=(1000000.0, 100000000000.0)
@@ -1571,14 +1573,18 @@ INPUT_VARIABLES = {
     "water_buildings_w": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "watertemp": InputVariable(fortran.water_usage_variables, float, range=(0.0, 25.0)),
+    "watertemp": InputVariable(
+        data_structure.water_usage_variables, float, range=(0.0, 25.0)
+    ),
     "wgt": InputVariable(
         fortran.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "wgt2": InputVariable(
         fortran.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
-    "windspeed": InputVariable(fortran.water_usage_variables, float, range=(0.0, 10.0)),
+    "windspeed": InputVariable(
+        data_structure.water_usage_variables, float, range=(0.0, 10.0)
+    ),
     "workshop_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
     "workshop_l": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
