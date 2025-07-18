@@ -968,7 +968,6 @@ $$
 </p>
 
 
-
 ## TF coil parameter summary table
 
 ### General parameters
