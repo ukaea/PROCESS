@@ -3,7 +3,8 @@ vacuum_model: str = None
 
  - ='old' for old detailed ETR model
  - ='simple' for simple steady-state model with comparison to ITER cryopumps
-  !#TODO: old and simple not suitable names."""
+  !#TODO: old and simple not suitable names.
+  """
 
 niterpump: float = None
 """number of high vacuum pumps (real number), each with the throughput of one
