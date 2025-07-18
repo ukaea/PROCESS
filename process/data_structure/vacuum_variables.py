@@ -4,11 +4,12 @@ vacuum_model: str = None
  - ='old' for old detailed ETR model
  - ='simple' for simple steady-state model with comparison to ITER cryopumps
   !#TODO: old and simple not suitable names.
-  """
+"""
 
 niterpump: float = None
 """number of high vacuum pumps (real number), each with the throughput of one
-ITER cryopump (50 Pa m3 s-1), all operating at the same time (`vacuum_model='simple'`)"""
+ITER cryopump (50 Pa m3 s-1), all operating at the same time (`vacuum_model='simple'`)
+"""
 
 ntype: int = None
 """switch for vacuum pump type:
@@ -16,7 +17,8 @@ ntype: int = None
    - =0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s
      (1.95 for N2, 1.8 for He, 1.8 for DT)
    - =1 - for compound cryopump with nominal speed of 10.0 m3/s
-     (9.0 for N2, 5.0 for He and 25.0 for DT)"""
+     (9.0 for N2, 5.0 for He and 25.0 for DT)
+"""
 
 nvduct: int = None
 """number of ducts (torus to pumps)"""
@@ -57,7 +59,8 @@ dwell_pump: int = None
 
    The following are used in the Battes, Day and Rohde pump-down model
    See "Basic considerations on the pump-down time in the dwell phase of a pulsed fusion DEMO"
-   http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(vacuum_model=simple')"""
+   http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(vacuum_model=simple')
+"""
 
 pumpareafraction: float = None
 """area of one pumping port as a fraction of plasma surface area"""
