@@ -4,6 +4,7 @@ from . import (
     cost_variables,
     cs_fatigue_variables,
     power_variables,
+    vacuum_variables,
     water_usage_variables,
 )
 
@@ -13,5 +14,6 @@ __all__ = [
     "cost_variables",
     "cs_fatigue_variables",
     "power_variables",
+    "vacuum_variables",
     "water_usage_variables",
 ]
