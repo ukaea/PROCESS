@@ -3,7 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import cost_variables, power_variables
+from process.data_structure import cost_variables, power_variables, times_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -16,7 +16,6 @@ from process.fortran import (
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
-    times_variables,
 )
 from process.fortran import primary_pumping_variables as ppv
 from process.power import Power

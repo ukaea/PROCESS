@@ -14,6 +14,7 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from process.cs_fatigue import CsFatigue
+from process.data_structure import times_variables as tv
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import error_handling as eh
@@ -22,7 +23,6 @@ from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
-from process.fortran import times_variables as tv
 from process.pfcoil import PFCoil, fixb, mtrx
 
 
