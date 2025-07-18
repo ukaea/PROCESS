@@ -72,26 +72,21 @@ def init_times_variables():
     global t_precharge
 
     pulsetimings = 1.0
-    t_burn = 1000.0
+    t_burn = np.array(1000.0, dtype=np.float64)
     t_burn_0 = 0.0
-    t_cycle = 0.0
+    t_cycle = np.array(0.0, dtype=np.float64)
     tdown = 0.0
     t_between_pulse = 1800.0
     t_fusion_ramp = 10.0
     tim = np.zeros(6, dtype=np.float64)
-    timelabel = np.array(
-        ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "], dtype=object
-    )
-    intervallabel = np.array(
-        [
-            "t_precharge        ",
-            "t_current_ramp_up  ",
-            "t_fusion_ramp      ",
-            "t_burn             ",
-            "t_ramp_down        ",
-        ],
-        dtype=object,
-    )
+    timelabel = ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
+    intervallabel = [
+        "t_precharge        ",
+        "t_current_ramp_up  ",
+        "t_fusion_ramp      ",
+        "t_burn             ",
+        "t_ramp_down        ",
+    ]
     t_current_ramp_up = 30.0
     i_t_current_ramp_up = 0
     t_pulse_repetition = 0.0
