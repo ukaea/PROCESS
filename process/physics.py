@@ -21,7 +21,6 @@ from process.fortran import (
     constraint_variables,
     current_drive_variables,
     divertor_variables,
-    error_handling,
     fwbs_variables,
     impurity_radiation_module,
     numerics,
@@ -33,6 +32,7 @@ from process.fortran import (
     times_variables,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.warning_handler import WarningManager
 
 
 @nb.jit(nopython=True, cache=True)
@@ -2747,7 +2747,9 @@ class Physics:
             )
 
             if reinke_variables.fzmin >= 1.0e0:
-                error_handling.report_error(217)
+                WarningManager.create_warning(
+                    "fzmin is greater than or equal to 1.0, this is at least notable"
+                )
 
             po.write(
                 self.outfile,
@@ -3057,9 +3059,10 @@ class Physics:
         denom = (zeff - 1.0) * (1.0 - 4.0 / (3.0 * qcyl))
         if denom <= 0.0:
             if i_density_limit == 4:
-                error_handling.fdiags[0] = denom
-                error_handling.fdiags[1] = qcyl
-                error_handling.report_error(80)
+                WarningManager.create_warning(
+                    "qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead.",
+                    qcyl=qcyl,
+                )
                 i_density_limit = 5
 
             dlimit[3] = 0.0
@@ -3476,8 +3479,8 @@ class Physics:
             f_alpha_energy_confinement,
         )
 
-    @staticmethod
     def plasma_ohmic_heating(
+        self,
         f_c_plasma_inductive: float,
         kappa95: float,
         plasma_current: float,
@@ -3538,9 +3541,11 @@ class Physics:
         # Check to see if plasma resistance is negative
         # (possible if aspect ratio is too high)
         if res_plasma <= 0.0:
-            error_handling.fdiags[0] = res_plasma
-            error_handling.fdiags[1] = physics_variables.aspect
-            error_handling.report_error(83)
+            WarningManager.create_warning(
+                "Negative plasma resistance res_plasma",
+                res_plasma=res_plasma,
+                aspect=physics_variables.aspect,
+            )
 
         # Ohmic heating power per unit volume
         # Corrected from: pden_plasma_ohmic_mw = (f_c_plasma_inductive*plasma_current)**2 * ...
@@ -4676,7 +4681,9 @@ class Physics:
 
         if physics_variables.ipedestal >= 1:
             if physics_variables.ne0 < physics_variables.neped:
-                error_handling.report_error(213)
+                WarningManager.create_warning(
+                    "Central density is less than pedestal density"
+                )
 
             po.ocmmnt(self.outfile, "Pedestal profiles are used.")
             po.ovarrf(
@@ -5409,8 +5416,10 @@ class Physics:
         )
 
         if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
-            error_handling.fdiags[0] = physics_variables.p_plasma_separatrix_mw
-            error_handling.report_error(87)
+            WarningManager.create_warning(
+                "Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values",
+                p_plasma_separatrix_mw=physics_variables.p_plasma_separatrix_mw,
+            )
             po.oblnkl(self.outfile)
             po.ocmmnt(
                 self.outfile, "  BEWARE: possible problem with high radiation power"
@@ -5632,13 +5641,15 @@ class Physics:
                         self.outfile,
                         "(physics_variables.bt outside Snipes 2000 fitted range)",
                     )
-                    error_handling.report_error(201)
+                    WarningManager.create_warning("bt outside Snipes 2000 fitted range")
 
                 if (physics_variables.rminor < 0.15e0) or (
                     physics_variables.rminor > 1.15e0
                 ):
                     po.ocmmnt(self.outfile, "(rminor outside Snipes 2000 fitted range)")
-                    error_handling.report_error(202)
+                    WarningManager.create_warning(
+                        "rminor outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.rmajor < 0.55e0) or (
                     physics_variables.rmajor > 3.37e0
@@ -5647,7 +5658,9 @@ class Physics:
                         self.outfile,
                         "(physics_variables.rmajor outside Snipes 2000 fitted range)",
                     )
-                    error_handling.report_error(203)
+                    WarningManager.create_warning(
+                        "rmajor outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.nd_electron_line < 0.09e20) or (
                     physics_variables.nd_electron_line > 3.16e20
@@ -5656,7 +5669,9 @@ class Physics:
                         self.outfile,
                         "(physics_variables.nd_electron_line outside Snipes 2000 fitted range)",
                     )
-                    error_handling.report_error(204)
+                    WarningManager.create_warning(
+                        "dnla outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.kappa < 1.0e0) or (
                     physics_variables.kappa > 2.04e0
@@ -5665,13 +5680,17 @@ class Physics:
                         self.outfile,
                         "(physics_variables.kappa outside Snipes 2000 fitted range)",
                     )
-                    error_handling.report_error(205)
+                    WarningManager.create_warning(
+                        "kappa outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.triang < 0.07e0) or (
                     physics_variables.triang > 0.74e0
                 ):
                     po.ocmmnt(self.outfile, "(triang outside Snipes 2000 fitted range)")
-                    error_handling.report_error(206)
+                    WarningManager.create_warning(
+                        "triang outside Snipes 2000 fitted range"
+                    )
 
             po.oblnkl(self.outfile)
 
@@ -5681,7 +5700,9 @@ class Physics:
                     "(L-H threshold for closed divertor only. Limited data used in Snipes fit)",
                 )
                 po.oblnkl(self.outfile)
-                error_handling.report_error(207)
+                WarningManager.create_warning(
+                    "Closed divertor only. Limited data used in Snipes fit"
+                )
 
             if (numerics.ioptimz > 0) and (numerics.active_constraints[14]):
                 po.ovarre(
@@ -6158,11 +6179,13 @@ class Physics:
             )
             # Error to catch if bootstap fraction limit has been enforced
             if physics_module.err242 == 1:
-                error_handling.report_error(242)
+                WarningManager.create_warning("Bootstrap fraction upper limit enforced")
 
             # Error to catch if self-driven current fraction limit has been enforced
             if physics_module.err243 == 1:
-                error_handling.report_error(243)
+                WarningManager.create_warning(
+                    "Predicted plasma driven current is more than upper limit on non-inductive fraction"
+                )
 
             if physics_variables.i_bootstrap_current == 0:
                 po.ocmmnt(
@@ -6228,7 +6251,10 @@ class Physics:
                 )
                 # Error to show if diamagnetic current is above 1% but not used
                 if current_drive_variables.f_c_plasma_diamagnetic_scene > 0.01e0:
-                    error_handling.report_error(244)
+                    WarningManager.create_warning(
+                        "Diamagnetic fraction is more than 1%, but not calculated. "
+                        "Consider using i_diamagnetic_current=2 and i_pfirsch_schluter_current=1."
+                    )
 
             elif physics_variables.i_diamagnetic_current == 1:
                 po.ocmmnt(

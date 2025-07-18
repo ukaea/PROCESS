@@ -6,13 +6,13 @@ import numpy as np
 from process.fortran import (
     build_variables,
     constants,
-    error_handling,
     pfcoil_variables,
     physics_variables,
     sctfcoil_module,
     tfcoil_variables,
 )
 from process.tf_coil import TFCoil
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 
@@ -294,7 +294,9 @@ class ResistiveTFCoil(TFCoil):
                 )
         except ValueError as e:
             if e.args[1] == 245 and e.args[2] == 0:
-                error_handling.report_error(245)
+                WarningManager.create_warning(
+                    "Invalid stress model (r_tf_inboard = 0), stress constraint switched off"
+                )
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
         if output:
@@ -467,13 +469,17 @@ class ResistiveTFCoil(TFCoil):
 
         # Reporting negative WP areas issues
         if sctfcoil_module.a_tf_wp_with_insulation < 0.0e0:
-            error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_with_insulation
-            error_handling.fdiags[0] = tfcoil_variables.dr_tf_wp_with_insulation
-            error_handling.report_error(99)
+            WarningManager.create_warning(
+                "Winding pack cross-section problem",
+                a_tf_wp_with_insulation=sctfcoil_module.a_tf_wp_with_insulation,
+                dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
+            )
 
         elif sctfcoil_module.a_tf_wp_no_insulation < 0.0e0:
-            error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_no_insulation
-            error_handling.report_error(101)
+            WarningManager.create_warning(
+                "Negative cable space dimension",
+                a_tf_wp_no_insulation=sctfcoil_module.a_tf_wp_no_insulation,
+            )
 
     def tf_res_heating(self) -> None:
         """
@@ -727,38 +733,6 @@ class ResistiveTFCoil(TFCoil):
         r_tfin_inleg = r_tf_inboard_in + cas_in_th + gr_ins_th
         # -#
 
-        #  Error traps
-        # ------------
-        # if rtop <= 0.0e0:
-        #     error_handling.fdiags[0] = rtop
-        #     error_handling.report_error(115)
-
-        # if ztop <= 0.0e0:
-        #     error_handling.fdiags[0] = ztop
-        #     error_handling.report_error(116)
-
-        # if rmid <= 0.0e0:
-        #     error_handling.fdiags[0] = rmid
-        #     error_handling.report_error(117)
-
-        # if build_variables.z_tf_inside_half <= 0.0e0:
-        #     error_handling.fdiags[0] = build_variables.z_tf_inside_half
-        #     error_handling.report_error(118)
-
-        # if (fcool < 0.0e0) or (fcool > 1.0e0):
-        #     error_handling.fdiags[0] = fcool
-        #     error_handling.report_error(119)
-
-        # if rtop < rmid:
-        #     error_handling.fdiags[0] = rtop
-        #     error_handling.fdiags[1] = rmid
-        #     error_handling.report_error(120)
-
-        # if build_variables.z_tf_inside_half < ztop:
-        #     error_handling.fdiags[0] = build_variables.z_tf_inside_half
-        #     error_handling.fdiags[1] = ztop
-        #     error_handling.report_error(121)
-
         # ------------
 
         # Mid-plane area calculations
@@ -803,7 +777,6 @@ class ResistiveTFCoil(TFCoil):
             vol_case_cp = 0.0e0
             vol_gr_ins_cp = 0.0e0
             vol_ins_cp = 0.0e0
-            # error_handling.report_error(122)
             return (
                 a_cp_cool,
                 vol_cond_cp,
@@ -862,14 +835,6 @@ class ResistiveTFCoil(TFCoil):
             z = np.fmin(np.array(z), ztop)
 
             r = rc - np.sqrt((rc - rmid) ** 2 - z * z)
-
-            # if r <= 0.0e0:
-            #     error_handling.fdiags[0] = r
-            #     error_handling.fdiags[1] = rc
-            #     error_handling.fdiags[2] = rmid
-            #     error_handling.fdiags[3] = z
-
-            #     error_handling.report_error(123)
 
             # Insulation cross-sectional area at z
             yy_ins[ii] = (

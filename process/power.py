@@ -11,7 +11,6 @@ from process.fortran import (
     buildings_variables,
     constants,
     current_drive_variables,
-    error_handling,
     fwbs_variables,
     heat_transport_variables,
     numerics,
@@ -23,6 +22,7 @@ from process.fortran import (
     tfcoil_variables,
     times_variables,
 )
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 
@@ -1573,11 +1573,10 @@ class Power:
                 if (heat_transport_variables.temp_turbine_coolant_in < 657.0e0) or (
                     heat_transport_variables.temp_turbine_coolant_in > 915.0e0
                 ):
-                    error_handling.idiags[0] = 2
-                    error_handling.fdiags[0] = (
-                        heat_transport_variables.temp_turbine_coolant_in
+                    WarningManager.create_warning(
+                        "Turbine temperature tturb out of range of validity",
+                        temp_turbine_coolant_in=heat_transport_variables.temp_turbine_coolant_in,
                     )
-                    error_handling.report_error(166)
 
                 eta_turbine = (
                     0.1802e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)
@@ -1605,11 +1604,10 @@ class Power:
             if (heat_transport_variables.temp_turbine_coolant_in < 408.0e0) or (
                 heat_transport_variables.temp_turbine_coolant_in > 1023.0e0
             ):
-                error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = (
-                    heat_transport_variables.temp_turbine_coolant_in
+                WarningManager.create_warning(
+                    "Turbine temperature tturb out of range of validity",
+                    temp_turbine_coolant_in=heat_transport_variables.temp_turbine_coolant_in,
                 )
-                error_handling.report_error(166)
 
             eta_turbine = (
                 0.4347e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)
@@ -1641,11 +1639,10 @@ class Power:
             if (heat_transport_variables.temp_turbine_coolant_in < 408.0e0) or (
                 heat_transport_variables.temp_turbine_coolant_in > 1023.0e0
             ):
-                error_handling.idiags[0] = 3
-                error_handling.fdiags[0] = (
-                    heat_transport_variables.temp_turbine_coolant_in
+                WarningManager.create_warning(
+                    "Turbine temperature tturb out of range of validity",
+                    temp_turbine_coolant_in=heat_transport_variables.temp_turbine_coolant_in,
                 )
-                error_handling.report_error(166)
 
             return (
                 0.4347e0 * np.log(heat_transport_variables.temp_turbine_coolant_in)

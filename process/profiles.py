@@ -4,7 +4,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 import scipy as sp
 
-from process.fortran import error_handling, physics_variables
+from process.fortran import physics_variables
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output
@@ -211,7 +212,9 @@ class NeProfile(Profile):
         if ncore < 0.0:
             # Allows solver to continue and
             # warns the user to raise the lower bound on dene if the run did not converge
-            error_handling.report_error(282)
+            WarningManager.create_warning(
+                "ncore is going negative when solving. Please raise the value of dene and or its lower limit"
+            )
             ncore = 1.0e-6
         return ncore
 

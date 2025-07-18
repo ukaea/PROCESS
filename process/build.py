@@ -12,13 +12,13 @@ from process.fortran import (
     constants,
     current_drive_variables,
     divertor_variables,
-    error_handling,
     fwbs_variables,
     numerics,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
+from process.warning_handler import WarningManager
 
 logger = logging.getLogger(__name__)
 
@@ -120,10 +120,11 @@ class Build:
             eps = np.arcsin(e * np.sin(phi) / g) - alpha
             radius_beam_tangency_max = f * np.cos(eps) - 0.5e0 * c
         else:
-            error_handling.fdiags[0] = g
-            error_handling.fdiags[1] = c
-            error_handling.report_error(63)
-            radius_beam_tangency_max = 0.0e0
+            WarningManager.create_warning(
+                "Max beam tangency radius set =0 temporarily; change dx_beam_duct",
+                g=g,
+                c=c,
+            )
 
         return radius_beam_tangency, radius_beam_tangency_max
 
@@ -1822,9 +1823,11 @@ class Build:
 
                 # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
                 if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
-                    error_handling.fdiags[0] = build_variables.r_cp_top
-                    error_handling.fdiags[1] = build_variables.r_tf_inboard_out
-                    error_handling.report_error(268)
+                    WarningManager.create_warning(
+                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue",
+                        r_cp_top=build_variables.r_cp_top,
+                        r_tf_inboard_out=build_variables.r_tf_inboard_out,
+                    )
 
                     # build_variables.r_cp_top correction
                     build_variables.r_cp_top = build_variables.r_tf_inboard_out * 1.01e0
@@ -1838,9 +1841,11 @@ class Build:
             elif build_variables.i_r_cp_top == 1:
                 # Notify user that build_variables.r_cp_top has been set to 1.01*build_variables.r_tf_inboard_out (lvl 2 error)
                 if build_variables.r_cp_top < 1.01e0 * build_variables.r_tf_inboard_out:
-                    error_handling.fdiags[0] = build_variables.r_cp_top
-                    error_handling.fdiags[1] = build_variables.r_tf_inboard_out
-                    error_handling.report_error(268)
+                    WarningManager.create_warning(
+                        "TF CP top radius (r_cp_top) replaced by 1.01*r_tf_inboard_out -> potential top rbuild issue",
+                        r_cp_top=build_variables.r_cp_top,
+                        r_tf_inboard_out=build_variables.r_tf_inboard_out,
+                    )
 
                     # build_variables.r_cp_top correction
                     build_variables.r_cp_top = build_variables.r_tf_inboard_out * 1.01e0
@@ -1874,8 +1879,10 @@ class Build:
             )
             + tfcoil_variables.drtop
         ):
-            error_handling.fdiags[0] = build_variables.r_cp_top
-            error_handling.report_error(256)
+            WarningManager.create_warning(
+                "Top CP radius larger that its value determined with plasma shape",
+                r_cp_top=build_variables.r_cp_top,
+            )
         if build_variables.i_tf_inside_cs == 1:
             #  Radial position of vacuum vessel [m]
             build_variables.r_vv_inboard_out = (
@@ -2129,24 +2136,34 @@ class Build:
                 )
                 po.ocmmnt(self.outfile, " its range of applicability.)")
                 po.oblnkl(self.outfile)
-                error_handling.report_error(62)
+                WarningManager.create_warning(
+                    "Ripple result may be inaccurate, as the fit has been extrapolated"
+                )
 
                 if build_python_variables.ripflag == 1:
-                    error_handling.fdiags[0] = (
-                        tfcoil_variables.wwp1
-                        * tfcoil_variables.n_tf_coils
-                        / physics_variables.rmajor
+                    WarningManager.create_warning(
+                        "(TF coil ripple calculation) Dimensionless coil width X out of fitted range",
+                        diagnostic=(
+                            tfcoil_variables.wwp1
+                            * tfcoil_variables.n_tf_coils
+                            / physics_variables.rmajor
+                        ),
                     )
-                    error_handling.report_error(141)
+
                 elif build_python_variables.ripflag == 2:
                     # Convert to integer as idiags is integer array
-                    error_handling.idiags[0] = int(tfcoil_variables.n_tf_coils)
-                    error_handling.report_error(142)
+                    WarningManager.create_warning(
+                        "(TF coil ripple calculation) No of TF coils not between 16 and 20 inclusive",
+                        n_tf_coils=tfcoil_variables.n_tf_coils,
+                    )
                 else:
-                    error_handling.fdiags[0] = (
-                        physics_variables.rmajor + physics_variables.rminor
-                    ) / build_variables.r_tf_outboard_mid
-                    error_handling.report_error(143)
+                    WarningManager.create_warning(
+                        "(TF coil ripple calculation) (R+a)/rtot out of fitted range",
+                        diagnostic=(
+                            (physics_variables.rmajor + physics_variables.rminor)
+                            / build_variables.r_tf_outboard_mid
+                        ),
+                    )
 
             po.ovarin(
                 self.outfile,

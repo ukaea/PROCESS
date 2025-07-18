@@ -11,11 +11,6 @@ def write(models, _outfile):
     :param outfile: Fortran output unit identifier
     :type outfile: int
     """
-    # Turn on error reporting
-    # (warnings etc. encountered in previous iterations may have cleared themselves
-    # during the solution process)
-    ft.error_handling.errors_on = True
-
     # Call stellarator output routine instead if relevant
     if ft.stellarator_variables.istell != 0:
         models.stellarator.run(output=True)
