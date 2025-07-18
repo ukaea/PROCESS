@@ -11,9 +11,6 @@ from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
-from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +45,7 @@ class Vacuum:
         # MDK Check this!!
         gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.umass
 
-        self.vacuum_model = f2py_compatible_to_string(vacv.vacuum_model)
+        self.vacuum_model = vacv.vacuum_model
 
         # vacuum_model required to be compared to a b string
         # as this is what f2py returns
