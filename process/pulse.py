@@ -1,4 +1,5 @@
 from process import process_output as po
+from process.data_structure import times_variables
 from process.fortran import (
     constants,
     constraint_variables,
@@ -8,7 +9,6 @@ from process.fortran import (
     pfcoil_variables,
     physics_variables,
     pulse_variables,
-    times_variables,
 )
 
 
