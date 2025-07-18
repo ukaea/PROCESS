@@ -9,12 +9,12 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
+from process.data_structure import divertor_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     blanket_library,
     build_variables,
     constants,
-    divertor_variables,
     error_handling,
     fwbs_variables,
     heat_transport_variables,

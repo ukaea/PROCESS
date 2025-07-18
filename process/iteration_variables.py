@@ -319,7 +319,7 @@ ITERATION_VARIABLES = {
         "te0_ecrh_achievable", fortran.stellarator_variables, 1.0, 1.0e3
     ),
     170: IterationVariable(
-        "deg_div_field_plate", fortran.divertor_variables, 0.49, 5.01
+        "deg_div_field_plate", data_structure.divertor_variables, 0.49, 5.01
     ),
     171: IterationVariable("casths_fraction", fortran.tfcoil_variables, 0.01, 0.99),
     172: IterationVariable("dx_tf_side_case", fortran.tfcoil_variables, 0.001, 1.0),

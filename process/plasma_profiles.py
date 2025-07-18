@@ -4,10 +4,10 @@ import numpy as np
 import scipy as sp
 
 import process.profiles as profiles
+from process.data_structure import divertor_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    divertor_variables,
     physics_variables,
 )
 

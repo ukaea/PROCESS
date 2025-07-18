@@ -648,14 +648,14 @@ def constraint_equation_18():
     pflux_div_heat_load_mw: divertor heat load (MW/m2)
     """
     cc = (
-        fortran.divertor_variables.pflux_div_heat_load_mw
-        / fortran.divertor_variables.pflux_div_heat_load_max_mw
+        data_structure.divertor_variables.pflux_div_heat_load_mw
+        / data_structure.divertor_variables.pflux_div_heat_load_max_mw
         - 1.0 * fortran.constraint_variables.fpflux_div_heat_load_mw
     )
     return ConstraintResult(
         cc,
-        fortran.divertor_variables.pflux_div_heat_load_max_mw * (1.0 - cc),
-        fortran.divertor_variables.pflux_div_heat_load_mw * cc,
+        data_structure.divertor_variables.pflux_div_heat_load_max_mw * (1.0 - cc),
+        data_structure.divertor_variables.pflux_div_heat_load_mw * cc,
     )
 
 

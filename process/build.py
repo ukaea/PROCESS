@@ -4,14 +4,13 @@ import numpy as np
 
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
-from process.data_structure import build_python_variables
+from process.data_structure import build_python_variables, divertor_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     buildings_variables,
     constants,
     current_drive_variables,
-    divertor_variables,
     error_handling,
     fwbs_variables,
     numerics,

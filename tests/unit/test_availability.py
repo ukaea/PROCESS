@@ -6,8 +6,8 @@ from pytest import approx
 from process import fortran
 from process.availability import Availability
 from process.data_structure import cost_variables as cv
+from process.data_structure import divertor_variables as dv
 from process.fortran import constraint_variables as ctv
-from process.fortran import divertor_variables as dv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import ife_variables as ifev
 from process.fortran import physics_variables as pv
@@ -206,7 +206,7 @@ def calc_u_planned_fix(request, monkeypatch):
     # Mock all module variables used by calc_u_planned()
     # Some are parameterised
     monkeypatch.setattr(
-        fortran.divertor_variables,
+        dv,
         "pflux_div_heat_load_mw",
         param["pflux_div_heat_load_mw"],
     )

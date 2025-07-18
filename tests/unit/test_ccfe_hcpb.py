@@ -2,11 +2,11 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.data_structure import divertor_variables
 from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
     current_drive_variables,
-    divertor_variables,
     fwbs_variables,
     global_variables,
     heat_transport_variables,

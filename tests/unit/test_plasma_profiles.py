@@ -3,7 +3,8 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.fortran import divertor_variables, physics_variables
+from process.data_structure import divertor_variables
+from process.fortran import physics_variables
 from process.plasma_profiles import PlasmaProfile
 from process.profiles import NeProfile, TeProfile
 

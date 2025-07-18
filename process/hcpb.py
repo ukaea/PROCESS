@@ -5,14 +5,13 @@ from process import (
 )
 from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
-from process.data_structure import cost_variables
+from process.data_structure import cost_variables, divertor_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
     constants,
     current_drive_variables,
-    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
