@@ -79,14 +79,19 @@ def init_times_variables():
     t_between_pulse = 1800.0
     t_fusion_ramp = 10.0
     tim = np.zeros(6, dtype=np.float64)
-    timelabel = ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
-    intervallabel = [
-        "t_precharge        ",
-        "t_current_ramp_up  ",
-        "t_fusion_ramp      ",
-        "t_burn             ",
-        "t_ramp_down        ",
-    ]
+    timelabel = np.array(
+        ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "], dtype=object
+    )
+    intervallabel = np.array(
+        [
+            "t_precharge        ",
+            "t_current_ramp_up  ",
+            "t_fusion_ramp      ",
+            "t_burn             ",
+            "t_ramp_down        ",
+        ],
+        dtype=object,
+    )
     t_current_ramp_up = 30.0
     i_t_current_ramp_up = 0
     t_pulse_repetition = 0.0
