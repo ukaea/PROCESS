@@ -533,13 +533,13 @@ def constraint_equation_13():
     return ConstraintResult(
         1.0
         - fortran.constraint_variables.ft_burn_min
-        * fortran.times_variables.t_burn
+        * data_structure.times_variables.t_burn
         / fortran.constraint_variables.t_burn_min,
         fortran.constraint_variables.t_burn_min
         / fortran.constraint_variables.ft_burn_min,
         fortran.constraint_variables.t_burn_min
         / fortran.constraint_variables.ft_burn_min
-        - fortran.times_variables.t_burn,
+        - data_structure.times_variables.t_burn,
     )
 
 
@@ -1180,7 +1180,7 @@ def constraint_equation_41():
     cc = (
         1.0
         - fortran.constraint_variables.ft_current_ramp_up
-        * fortran.times_variables.t_current_ramp_up
+        * data_structure.times_variables.t_current_ramp_up
         / fortran.constraint_variables.t_current_ramp_up_min
     )
     return ConstraintResult(
@@ -1207,7 +1207,7 @@ def constraint_equation_42():
     cc = (
         1.0
         - fortran.constraint_variables.ft_cycle_min
-        * fortran.times_variables.t_cycle
+        * data_structure.times_variables.t_cycle
         / fortran.constraint_variables.t_cycle_min
     )
     return ConstraintResult(

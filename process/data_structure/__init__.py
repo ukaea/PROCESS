@@ -6,6 +6,7 @@ from . import (
     divertor_variables,
     power_variables,
     structure_variables,
+    times_variables,
     vacuum_variables,
     water_usage_variables,
 )
@@ -18,6 +19,7 @@ __all__ = [
     "divertor_variables",
     "power_variables",
     "structure_variables",
+    "times_variables",
     "vacuum_variables",
     "water_usage_variables",
 ]

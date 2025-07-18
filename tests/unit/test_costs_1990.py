@@ -12,6 +12,7 @@ from process.data_structure import (
     cost_variables,
     divertor_variables,
     structure_variables,
+    times_variables,
     vacuum_variables,
 )
 from process.fortran import (
@@ -26,7 +27,6 @@ from process.fortran import (
     physics_variables,
     pulse_variables,
     tfcoil_variables,
-    times_variables,
 )
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fv

@@ -7,12 +7,12 @@ from process import fortran
 from process.availability import Availability
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import times_variables as tv
 from process.fortran import constraint_variables as ctv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import ife_variables as ifev
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
-from process.fortran import times_variables as tv
 from process.init import init_all_module_vars
 
 
@@ -379,7 +379,7 @@ def calc_u_unplanned_divertor_fix(request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_divertor()
     # Some may be parameterised
-    monkeypatch.setattr(fortran.times_variables, "t_cycle", param["t_cycle"])
+    monkeypatch.setattr(tv, "t_cycle", param["t_cycle"])
     monkeypatch.setattr(cv, "divlife", param["divlife"])
 
     # Return the expected result for the given parameter list
@@ -454,7 +454,7 @@ def calc_u_unplanned_fwbs_fix(request, monkeypatch):
 
     # Mock variables used by calc_u_unplanned_fwbs()
     # Some may be parameterised
-    monkeypatch.setattr(fortran.times_variables, "t_cycle", param["t_cycle"])
+    monkeypatch.setattr(tv, "t_cycle", param["t_cycle"])
     monkeypatch.setattr(fortran.fwbs_variables, "life_blkt_fpy", param["life_blkt_fpy"])
 
     # Return the expected result for the given parameter list

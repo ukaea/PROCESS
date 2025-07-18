@@ -1135,7 +1135,9 @@ INPUT_VARIABLES = {
     "ptargf": InputVariable(fortran.ife_variables, float, range=(0.1, 100.0)),
     "ptempalw": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 573.15)),
     "ptfnucmax": InputVariable(fortran.constraint_variables, float, range=(1e-06, 1.0)),
-    "pulsetimings": InputVariable(fortran.times_variables, float, range=(0.0, 1.0)),
+    "pulsetimings": InputVariable(
+        data_structure.times_variables, float, range=(0.0, 1.0)
+    ),
     "pumpareafraction": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
@@ -1296,9 +1298,11 @@ INPUT_VARIABLES = {
     ),
     "str_wp_max": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.3)),
     "t_between_pulse": InputVariable(
-        fortran.times_variables, float, range=(0.0, 100000000.0)
+        data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
-    "t_burn": InputVariable(fortran.times_variables, float, range=(0.0, 100000000.0)),
+    "t_burn": InputVariable(
+        data_structure.times_variables, float, range=(0.0, 100000000.0)
+    ),
     "t_burn_min": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1000000.0)
     ),
@@ -1311,10 +1315,10 @@ INPUT_VARIABLES = {
     ),
     "t_crit_nbti": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 15.0)),
     "t_current_ramp_up": InputVariable(
-        fortran.times_variables, float, range=(0.0, 10000.0)
+        data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_fusion_ramp": InputVariable(
-        fortran.times_variables, float, range=(0.0, 10000.0)
+        data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_in_bb": InputVariable(
         fortran.primary_pumping_variables, float, range=(200.0, 1000.0)
@@ -1322,8 +1326,12 @@ INPUT_VARIABLES = {
     "t_out_bb": InputVariable(
         fortran.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
-    "t_precharge": InputVariable(fortran.times_variables, float, range=(0.0, 10000.0)),
-    "t_ramp_down": InputVariable(fortran.times_variables, float, range=(0.0, 10000.0)),
+    "t_precharge": InputVariable(
+        data_structure.times_variables, float, range=(0.0, 10000.0)
+    ),
+    "t_ramp_down": InputVariable(
+        data_structure.times_variables, float, range=(0.0, 10000.0)
+    ),
     "t_structural_radial": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
@@ -1403,7 +1411,9 @@ INPUT_VARIABLES = {
     "tmaxpro": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1000.0)),
     "temp_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
     "tn": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
-    "i_t_current_ramp_up": InputVariable(fortran.times_variables, int, choices=[0, 1]),
+    "i_t_current_ramp_up": InputVariable(
+        data_structure.times_variables, int, choices=[0, 1]
+    ),
     "transp_clrnc": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 10.0)
     ),

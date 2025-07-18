@@ -11,6 +11,7 @@ import process.superconductors as superconductors
 from process import fortran as ft
 from process import process_output as op
 from process.data_structure import cs_fatigue_variables as csfv
+from process.data_structure import times_variables as tv
 from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
 from process.fortran import constants, numerics, rebco_variables
@@ -22,7 +23,6 @@ from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
 from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
-from process.fortran import times_variables as tv
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)

@@ -61,7 +61,9 @@ ITERATION_VARIABLES = {
         "fvs_plasma_total_required", fortran.constraint_variables, 0.001, 10.000
     ),
     16: IterationVariable("dr_cs", fortran.build_variables, 0.01, 10.00),
-    17: IterationVariable("t_between_pulse", fortran.times_variables, 0.1, 1.0e8),
+    17: IterationVariable(
+        "t_between_pulse", data_structure.times_variables, 0.1, 1.0e8
+    ),
     18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
     19: IterationVariable("e_beam_kev", fortran.current_drive_variables, 1.0, 1.0e6),
     20: IterationVariable("temp_cp_average", fortran.tfcoil_variables, 40.00, 3.0e2),
@@ -123,7 +125,9 @@ ITERATION_VARIABLES = {
     62: IterationVariable("fdtmp", fortran.constraint_variables, 0.001, 1.0),
     63: IterationVariable("ftemp_fw_max", fortran.constraint_variables, 0.001, 1.0),
     64: IterationVariable("fauxmn", fortran.constraint_variables, 0.001, 1.0),
-    65: IterationVariable("t_current_ramp_up", fortran.times_variables, 0.1, 1.0e3),
+    65: IterationVariable(
+        "t_current_ramp_up", data_structure.times_variables, 0.1, 1.0e3
+    ),
     66: IterationVariable(
         "ft_current_ramp_up", fortran.constraint_variables, 0.001, 1.0
     ),
