@@ -21,6 +21,7 @@ from process.data_structure.build_python_variables import (
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.power_variables import init_power_variables
+from process.data_structure.times_variables import init_times_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.dcll import init_dcll_module
 from process.divertor import init_divertor_variables
@@ -35,7 +36,6 @@ from process.physics import (
     init_physics_module,
     init_physics_variables,
     init_reinke_variables,
-    init_times_variables,
 )
 from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.pulse import init_pulse_variables
