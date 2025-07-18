@@ -13,13 +13,13 @@ from process.blanket_library import init_blanket_library, init_primary_pumping_v
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
 from process.constraints import ConstraintManager, init_constraint_variables
-from process.cs_fatigue import init_cs_fatigue_variables
 from process.current_drive import init_current_drive_variables
 from process.data_structure.build_python_variables import (
     init_build_variables as init_python_build_variables,
 )
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
+from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.dcll import init_dcll_module

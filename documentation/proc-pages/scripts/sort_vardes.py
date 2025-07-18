@@ -30,6 +30,5 @@ for counter, line in enumerate(lines):
     new_lines.append(new_line)
 
 with open(sys.argv[1], "w") as new_vardes:
-    for item in new_lines:
-        new_vardes.write(item)
+    new_vardes.writelines(new_lines)
     new_vardes.close()

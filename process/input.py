@@ -216,7 +216,7 @@ INPUT_VARIABLES = {
         fortran.buildings_variables, float, range=(0.25, 25.0)
     ),
     "bkt_life_csf": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.0, 1.0)
+        data_structure.cs_fatigue_variables, float, range=(0.0, 1.0)
     ),
     "blbmith": InputVariable(fortran.build_variables, float, range=(0.0, 2.0)),
     "blbmoth": InputVariable(fortran.build_variables, float, range=(0.0, 2.0)),
@@ -748,7 +748,7 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fracture_toughness": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.1, 100000000.0)
+        data_structure.cs_fatigue_variables, float, range=(0.1, 100000000.0)
     ),
     "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
     "fpflux_fw_rad_max": InputVariable(
@@ -1012,7 +1012,7 @@ INPUT_VARIABLES = {
     "mcdriv": InputVariable(fortran.ife_variables, float, range=(0.1, 10.0)),
     "mvalim": InputVariable(fortran.constraint_variables, float, range=(0.0, 1000.0)),
     "n_cycle_min": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.0, 100000000.0)
+        data_structure.cs_fatigue_variables, float, range=(0.0, 100000000.0)
     ),
     "n_tf_coils": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
     "n_tf_coil_turns": InputVariable(
@@ -1058,10 +1058,10 @@ INPUT_VARIABLES = {
         fortran.primary_pumping_variables, float, range=(0.0, 100000000.0)
     ),
     "paris_coefficient": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1e-20, 10.0)
+        data_structure.cs_fatigue_variables, float, range=(1e-20, 10.0)
     ),
     "paris_power_law": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1.0, 10.0)
+        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
     "pbase": InputVariable(fortran.vacuum_variables, float, range=(1e-08, 0.001)),
     "p_plasma_separatrix_min_mw": InputVariable(
@@ -1193,7 +1193,7 @@ INPUT_VARIABLES = {
         data_structure.cost_variables, float, range=(0.0, 100.0)
     ),
     "residual_sig_hoop": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.0, 1000000000.0)
+        data_structure.cs_fatigue_variables, float, range=(0.0, 1000000000.0)
     ),
     "rho_tf_bus": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1e-05)),
     "rho_tf_joints": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.01)),
@@ -1230,13 +1230,13 @@ INPUT_VARIABLES = {
         fortran.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "sf_fast_fracture": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1.0, 10.0)
+        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
     "sf_radial_crack": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1.0, 10.0)
+        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
     "sf_vertical_crack": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1.0, 10.0)
+        data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
     ),
     "shdr": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "shdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
@@ -1290,10 +1290,10 @@ INPUT_VARIABLES = {
     ),
     "t_cable_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
     "t_crack_radial": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1e-05, 1.0)
+        data_structure.cs_fatigue_variables, float, range=(1e-05, 1.0)
     ),
     "t_crack_vertical": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(1e-05, 1.0)
+        data_structure.cs_fatigue_variables, float, range=(1e-05, 1.0)
     ),
     "t_crit_nbti": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 15.0)),
     "t_current_ramp_up": InputVariable(
@@ -1311,10 +1311,10 @@ INPUT_VARIABLES = {
     "t_precharge": InputVariable(fortran.times_variables, float, range=(0.0, 10000.0)),
     "t_ramp_down": InputVariable(fortran.times_variables, float, range=(0.0, 10000.0)),
     "t_structural_radial": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.001, 1.0)
+        data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
     "t_structural_vertical": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.001, 1.0)
+        data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
     "t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
     "t_turn_tf_max": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
@@ -1552,7 +1552,7 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 50.0)
     ),
     "walker_coefficient": InputVariable(
-        fortran.cs_fatigue_variables, float, range=(0.1, 10.0)
+        data_structure.cs_fatigue_variables, float, range=(0.1, 10.0)
     ),
     "wallpf": InputVariable(fortran.fwbs_variables, float, range=(1.0, 2.0)),
     "warm_shop_h": InputVariable(
