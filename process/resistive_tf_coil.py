@@ -28,7 +28,7 @@ class ResistiveTFCoil(TFCoil):
         """Run main tfcoil subroutine without outputting."""
         self.iprint = 0
         (
-            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
             tfcoil_variables.a_tf_coil_inboard,
             sctfcoil_module.r_tf_outboard_in,
@@ -116,7 +116,9 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
+            1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        )
 
         self.tf_field_and_force()
 
@@ -199,7 +201,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.rad_tf_coil_toroidal,
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_tf_plasma_case,

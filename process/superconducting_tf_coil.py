@@ -51,7 +51,7 @@ class SuperconductingTFCoil(TFCoil):
         """
         self.iprint = 0
         (
-            sctfcoil_module.rad_tf_coil_toroidal,
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
             tfcoil_variables.a_tf_coil_inboard,
             sctfcoil_module.r_tf_outboard_in,
@@ -81,7 +81,7 @@ class SuperconductingTFCoil(TFCoil):
 
         tfcoil_variables.r_b_tf_inboard_peak = (
             build_variables.r_tf_inboard_out
-            * np.cos(sctfcoil_module.rad_tf_coil_toroidal)
+            * np.cos(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
             - tfcoil_variables.dr_tf_plasma_case
             - tfcoil_variables.dx_tf_wp_insulation
             - tfcoil_variables.dx_tf_wp_insertion_gap
@@ -147,7 +147,9 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.estotftgj = 1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
+            1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        )
 
         self.tf_field_and_force()
 
@@ -230,7 +232,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.eyoung_res_tf_buck,
                 sctfcoil_module.r_tf_wp_inboard_inner,
                 sctfcoil_module.tan_theta_coil,
-                sctfcoil_module.rad_tf_coil_toroidal,
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
                 sctfcoil_module.r_tf_wp_inboard_outer,
                 sctfcoil_module.a_tf_coil_inboard_steel,
                 sctfcoil_module.a_tf_plasma_case,
@@ -335,7 +337,7 @@ class SuperconductingTFCoil(TFCoil):
         # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
         tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
             tfcoil_variables.n_tf_coils,
-            tfcoil_variables.wwp1,
+            tfcoil_variables.dx_tf_wp_primary_toroidal,
             tfcoil_variables.dr_tf_wp_with_insulation
             - 2.0e0
             * (
@@ -1749,7 +1751,12 @@ class SuperconductingTFCoil(TFCoil):
         )
 
     def peak_tf_with_ripple(
-        self, n_tf_coils, wwp1, dr_tf_wp_with_insulation, tfin, b_tf_inboard_peak
+        self,
+        n_tf_coils,
+        dx_tf_wp_primary_toroidal,
+        dr_tf_wp_with_insulation,
+        tfin,
+        b_tf_inboard_peak,
     ):
         """Peak toroidal field on the conductor
         author: P J Knight, CCFE, Culham Science Centre
@@ -1766,8 +1773,8 @@ class SuperconductingTFCoil(TFCoil):
 
         :param n_tf_coils: number of TF coils
         :type n_tf_coils: float
-        :param wwp1: width of plasma-facing face of winding pack (m)
-        :type wwp1: float
+        :param dx_tf_wp_primary_toroidal: width of plasma-facing face of winding pack (m)
+        :type dx_tf_wp_primary_toroidal: float
         :param dr_tf_wp_with_insulation: radial thickness of winding pack (m)
         :type dr_tf_wp_with_insulation: float
         :param tfin: major radius of centre of winding pack (m)
@@ -1816,7 +1823,7 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Dimensionless winding pack width
 
-        sctfcoil_module.tf_fit_t = wwp1 / wmax
+        sctfcoil_module.tf_fit_t = dx_tf_wp_primary_toroidal / wmax
         if (sctfcoil_module.tf_fit_t < 0.3e0) or (sctfcoil_module.tf_fit_t > 1.1e0):
             # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; t = ',t
             flag = 1
@@ -1848,7 +1855,27 @@ class SuperconductingTFCoil(TFCoil):
         """
 
         # Calculating the WP / ground insulation areas
-        self.tf_wp_geom(i_tf_wp_geom)
+        (
+            sctfcoil_module.r_tf_wp_inboard_inner,
+            sctfcoil_module.r_tf_wp_inboard_outer,
+            sctfcoil_module.r_tf_wp_inboard_centre,
+            sctfcoil_module.dx_tf_wp_toroidal_min,
+            tfcoil_variables.dx_tf_wp_primary_toroidal,
+            tfcoil_variables.dx_tf_wp_secondary_toroidal,
+            sctfcoil_module.dx_tf_wp_toroidal_average,
+            sctfcoil_module.a_tf_wp_with_insulation,
+            sctfcoil_module.a_tf_wp_no_insulation,
+            sctfcoil_module.a_tf_wp_ground_insulation,
+        ) = self.superconducting_tf_wp_geometry(
+            i_tf_wp_geom=i_tf_wp_geom,
+            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
+            dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
+            tan_theta_coil=sctfcoil_module.tan_theta_coil,
+            dx_tf_side_case=tfcoil_variables.dx_tf_side_case,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
+        )
 
         # Calculating the TF steel casing areas
         self.tf_case_geom(i_tf_wp_geom, i_tf_case_geom)
@@ -1968,214 +1995,240 @@ class SuperconductingTFCoil(TFCoil):
             error_handling.fdiags[7] = sctfcoil_module.f_a_tf_coil_inboard_insulation
             error_handling.report_error(276)
 
-    def tf_wp_geom(self, i_tf_wp_geom):
+    def superconducting_tf_wp_geometry(
+        self,
+        i_tf_wp_geom: int,
+        r_tf_inboard_in: float,
+        dr_tf_nose_case: float,
+        dr_tf_wp_with_insulation: float,
+        tan_theta_coil: float,
+        dx_tf_side_case: float,
+        dx_tf_wp_insulation: float,
+        dx_tf_wp_insertion_gap: float,
+    ) -> tuple[
+        float,  # r_tf_wp_inboard_inner
+        float,  # r_tf_wp_inboard_outer
+        float,  # r_tf_wp_inboard_centre
+        float,  # dx_tf_wp_toroidal_min
+        float,  # dx_tf_wp_primary_toroidal
+        float,  # dx_tf_wp_secondary_toroidal
+        float,  # dx_tf_wp_toroidal_average
+        float,  # a_tf_wp_with_insulation
+        float,  # a_tf_wp_no_insulation
+        float,  # a_tf_wp_ground_insulation
+    ]:
         """
-         Author : S. Kahn, CCFE
-        Seting the WP geometry and area for SC magnets
+        Calculates the winding pack (WP) geometry and cross-sectional areas for superconducting toroidal field (TF) coils.
+
+        :param i_tf_wp_geom:
+            - 0: Rectangular
+            - 1: Double rectangular
+            - 2: Trapezoidal
+        :type i_tf_wp_geom: int
+        :param r_tf_inboard_in: Inboard inner radius [m].
+        :type r_tf_inboard_in: float
+        :param dr_tf_nose_case: Radial thickness of nose case [m].
+        :type dr_tf_nose_case: float
+        :param dr_tf_wp_with_insulation: Radial thickness of winding pack including insulation [m].
+        :type dr_tf_wp_with_insulation: float
+        :param tan_theta_coil: Tangent of coil half angle [-].
+        :type tan_theta_coil: float
+        :param dx_tf_side_case: Side case thickness [m].
+        :type dx_tf_side_case: float
+        :param dx_tf_wp_insulation: Insulation thickness [m].
+        :type dx_tf_wp_insulation: float
+        :param dx_tf_wp_insertion_gap: Insertion gap thickness [m].
+        :type dx_tf_wp_insertion_gap: float
+
+        :returns:
+            Tuple containing:
+            - r_tf_wp_inboard_inner (float): WP inboard inner radius [m]
+            - r_tf_wp_inboard_outer (float): WP inboard outer radius [m]
+            - r_tf_wp_inboard_centre (float): WP inboard centre radius [m]
+            - dx_tf_wp_toroidal_min (float): Minimal toroidal thickness of WP [m]
+            - dx_tf_wp_primary_toroidal (float): Primary toroidal thickness [m]
+            - dx_tf_wp_secondary_toroidal (float): Secondary toroidal thickness [m]
+            - dx_tf_wp_toroidal_average (float): Averaged toroidal thickness [m]
+            - a_tf_wp_with_insulation (float): WP cross-sectional area with insulation [m²]
+            - a_tf_wp_no_insulation (float): WP cross-sectional area without insulation [m²]
+            - a_tf_wp_ground_insulation (float): WP ground insulation cross-sectional area [m²]
+        :rtype: tuple[float, float, float, float, float, float, float, float, float, float]
+
+        :raises ValueError: If calculated winding pack area (with or without insulation) is non-positive.
         """
-        sctfcoil_module.r_tf_wp_inboard_inner = (
-            build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
-        )
+
+        r_tf_wp_inboard_inner = r_tf_inboard_in + dr_tf_nose_case
 
         # Radial position of outer edge of winding pack [m]
-        sctfcoil_module.r_tf_wp_inboard_outer = (
-            sctfcoil_module.r_tf_wp_inboard_inner
-            + tfcoil_variables.dr_tf_wp_with_insulation
-        )
+        r_tf_wp_inboard_outer = r_tf_wp_inboard_inner + dr_tf_wp_with_insulation
 
         # Radius of geometrical centre of winding pack [m]
-        sctfcoil_module.r_tf_wp_inboard_centre = 0.5e0 * (
-            sctfcoil_module.r_tf_wp_inboard_inner
-            + sctfcoil_module.r_tf_wp_inboard_outer
-        )
+        r_tf_wp_inboard_centre = 0.5e0 * (r_tf_wp_inboard_inner + r_tf_wp_inboard_outer)
 
         # TF toroidal thickness at the WP inner radius [m]
-        dr_tf_at_wp = (
-            2.0e0
-            * sctfcoil_module.r_tf_wp_inboard_inner
-            * sctfcoil_module.tan_theta_coil
-        )
+        dx_tf_wp_inner_toroidal = 2.0e0 * r_tf_wp_inboard_inner * tan_theta_coil
 
         # Minimal toroidal thickness of winding pack [m]
-        sctfcoil_module.dx_tf_wp_toroidal_min = (
-            dr_tf_at_wp - 2.0e0 * tfcoil_variables.dx_tf_side_case
-        )
+        dx_tf_wp_toroidal_min = dx_tf_wp_inner_toroidal - 2.0e0 * dx_tf_side_case
 
         # Rectangular WP
         # --------------
         if i_tf_wp_geom == 0:
             # Outer WP layer toroidal thickness [m]
-            tfcoil_variables.wwp1 = sctfcoil_module.dx_tf_wp_toroidal_min
+            dx_tf_wp_primary_toroidal = dx_tf_wp_toroidal_min
+
+            # No secondary WP here but will set for consistency
+            dx_tf_wp_secondary_toroidal = dx_tf_wp_toroidal_min
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.dx_tf_wp_toroidal_average = (
-                sctfcoil_module.dx_tf_wp_toroidal_min
+            dx_tf_wp_toroidal_average = dx_tf_wp_toroidal_min
+
+            # Total cross-sectional area of winding pack [m²]
+            a_tf_wp_with_insulation = (
+                dr_tf_wp_with_insulation * dx_tf_wp_primary_toroidal
             )
 
-            # Total cross-sectional area of winding pack [m2]
-            sctfcoil_module.a_tf_wp_with_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                * sctfcoil_module.dx_tf_wp_toroidal_min
-            )
-
-            # WP cross-section without insertion gap and ground insulation [m2]
-            sctfcoil_module.a_tf_wp_no_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0
-                * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
-                )
+            # WP cross-section without insertion gap and ground insulation [m²]
+            a_tf_wp_no_insulation = (
+                dr_tf_wp_with_insulation
+                - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
             ) * (
-                sctfcoil_module.dx_tf_wp_toroidal_min
-                - 2.0e0
-                * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
-                )
+                dx_tf_wp_primary_toroidal
+                - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
             )
 
-            # Cross-section area of the WP ground insulation [m2]
-            sctfcoil_module.a_tf_wp_ground_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
+            # Cross-section area of the WP ground insulation [m²]
+            a_tf_wp_ground_insulation = (
+                dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap
             ) * (
-                sctfcoil_module.dx_tf_wp_toroidal_min
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
-            ) - sctfcoil_module.a_tf_wp_no_insulation
+                dx_tf_wp_primary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap
+            ) - a_tf_wp_no_insulation
 
         # Double rectangular WP
         # ---------------------
         elif i_tf_wp_geom == 1:
             # Thickness of winding pack section at R > sctfcoil_module.r_tf_wp_inboard_centre [m]
-            tfcoil_variables.wwp1 = 2.0e0 * (
-                sctfcoil_module.r_tf_wp_inboard_centre * sctfcoil_module.tan_theta_coil
-                - tfcoil_variables.dx_tf_side_case
+            dx_tf_wp_primary_toroidal = 2.0e0 * (
+                r_tf_wp_inboard_centre * tan_theta_coil - dx_tf_side_case
             )
 
             # Thickness of winding pack section at R < sctfcoil_module.r_tf_wp_inboard_centre [m]
-            tfcoil_variables.wwp2 = 2.0e0 * (
-                sctfcoil_module.r_tf_wp_inboard_inner * sctfcoil_module.tan_theta_coil
-                - tfcoil_variables.dx_tf_side_case
+            dx_tf_wp_secondary_toroidal = 2.0e0 * (
+                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case
             )
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.dx_tf_wp_toroidal_average = 0.5e0 * (
-                tfcoil_variables.wwp1 + tfcoil_variables.wwp2
+            dx_tf_wp_toroidal_average = 0.5e0 * (
+                dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal
             )
 
-            # Total cross-sectional area of winding pack [m2]
+            # Total cross-sectional area of winding pack [m²]
             # Including ground insulation and insertion gap
-            sctfcoil_module.a_tf_wp_with_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                * sctfcoil_module.dx_tf_wp_toroidal_average
+            a_tf_wp_with_insulation = (
+                dr_tf_wp_with_insulation * dx_tf_wp_toroidal_average
             )
 
-            # WP cross-section without insertion gap and ground insulation [m2]
-            sctfcoil_module.a_tf_wp_no_insulation = (
+            # WP cross-section without insertion gap and ground insulation [m²]
+            a_tf_wp_no_insulation = (
                 0.5e0
                 * (
-                    tfcoil_variables.dr_tf_wp_with_insulation
-                    - 2.0e0
-                    * (
-                        tfcoil_variables.dx_tf_wp_insulation
-                        + tfcoil_variables.dx_tf_wp_insertion_gap
-                    )
+                    dr_tf_wp_with_insulation
+                    - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
                 )
                 * (
-                    tfcoil_variables.wwp1
-                    + tfcoil_variables.wwp2
-                    - 4.0e0
-                    * (
-                        tfcoil_variables.dx_tf_wp_insulation
-                        + tfcoil_variables.dx_tf_wp_insertion_gap
-                    )
+                    dx_tf_wp_primary_toroidal
+                    + dx_tf_wp_secondary_toroidal
+                    - 4.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
                 )
             )
 
-            # Cross-section area of the WP ground insulation [m2]
-            sctfcoil_module.a_tf_wp_ground_insulation = (
+            # Cross-section area of the WP ground insulation [m²]
+            a_tf_wp_ground_insulation = (
                 0.5e0
+                * (dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap)
                 * (
-                    tfcoil_variables.dr_tf_wp_with_insulation
-                    - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
+                    dx_tf_wp_primary_toroidal
+                    + dx_tf_wp_secondary_toroidal
+                    - 4.0e0 * dx_tf_wp_insertion_gap
                 )
-                * (
-                    tfcoil_variables.wwp1
-                    + tfcoil_variables.wwp2
-                    - 4.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
-                )
-                - sctfcoil_module.a_tf_wp_no_insulation
+                - a_tf_wp_no_insulation
             )
 
         # Trapezoidal WP
         # --------------
         else:
-            # Thickness of winding pack section at sctfcoil_module.r_tf_wp_inboard_outer [m]
-            tfcoil_variables.wwp1 = 2.0e0 * (
-                sctfcoil_module.r_tf_wp_inboard_outer * sctfcoil_module.tan_theta_coil
-                - tfcoil_variables.dx_tf_side_case
+            # Thickness of winding pack section at r_tf_wp_inboard_outer [m]
+            dx_tf_wp_primary_toroidal = 2.0e0 * (
+                r_tf_wp_inboard_outer * tan_theta_coil - dx_tf_side_case
             )
 
-            # Thickness of winding pack section at sctfcoil_module.r_tf_wp_inboard_inner [m]
-            tfcoil_variables.wwp2 = 2.0e0 * (
-                sctfcoil_module.r_tf_wp_inboard_inner * sctfcoil_module.tan_theta_coil
-                - tfcoil_variables.dx_tf_side_case
+            # Thickness of winding pack section at r_tf_wp_inboard_inner [m]
+            dx_tf_wp_secondary_toroidal = 2.0e0 * (
+                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case
             )
 
             # Averaged toroidal thickness of of winding pack [m]
-            sctfcoil_module.dx_tf_wp_toroidal_average = 0.5e0 * (
-                tfcoil_variables.wwp1 + tfcoil_variables.wwp2
+            dx_tf_wp_toroidal_average = 0.5e0 * (
+                dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal
             )
 
-            # Total cross-sectional area of winding pack [m2]
+            # Total cross-sectional area of winding pack [m²]
             # Including ground insulation and insertion gap
-            sctfcoil_module.a_tf_wp_with_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                * (
-                    tfcoil_variables.wwp2
-                    + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
-                )
+            a_tf_wp_with_insulation = (
+                dr_tf_wp_with_insulation
+                * 0.5
+                * (dx_tf_wp_primary_toroidal + dx_tf_wp_secondary_toroidal)
             )
 
-            # WP cross-section without insertion gap and ground insulation [m2]
-            sctfcoil_module.a_tf_wp_no_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0
-                * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
+            # WP cross-section without insertion gap and ground insulation [m²]
+            a_tf_wp_no_insulation = (
+                (
+                    dr_tf_wp_with_insulation
+                    - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
                 )
-            ) * (
-                tfcoil_variables.wwp2
-                - 2.0e0
                 * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
+                    (
+                        dx_tf_wp_secondary_toroidal
+                        - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+                    )
+                    + (
+                        dx_tf_wp_primary_toroidal
+                        - 2.0e0 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)
+                    )
                 )
-                + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
+                / 2
             )
 
-            # Cross-section area of the WP ground insulation [m2]
-            sctfcoil_module.a_tf_wp_ground_insulation = (
-                tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
+            # Cross-section area of the WP ground insulation [m²]
+            a_tf_wp_ground_insulation = (
+                dr_tf_wp_with_insulation - 2.0e0 * dx_tf_wp_insertion_gap
             ) * (
-                tfcoil_variables.wwp2
-                - 2.0e0 * tfcoil_variables.dx_tf_wp_insertion_gap
-                + 0.5e0 * (tfcoil_variables.wwp1 - tfcoil_variables.wwp2)
-            ) - sctfcoil_module.a_tf_wp_no_insulation
+                (
+                    (dx_tf_wp_primary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap)
+                    + (dx_tf_wp_secondary_toroidal - 2.0e0 * dx_tf_wp_insertion_gap)
+                )
+                / 2
+            ) - a_tf_wp_no_insulation
 
         # --------------
-
         # Negative WP area error reporting
-        if (
-            sctfcoil_module.a_tf_wp_no_insulation <= 0.0e0
-            or sctfcoil_module.a_tf_wp_with_insulation <= 0.0e0
-        ):
-            error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_no_insulation
-            error_handling.fdiags[1] = sctfcoil_module.a_tf_wp_with_insulation
+        if a_tf_wp_no_insulation <= 0.0e0 or a_tf_wp_with_insulation <= 0.0e0:
+            error_handling.fdiags[0] = a_tf_wp_no_insulation
+            error_handling.fdiags[1] = a_tf_wp_with_insulation
             error_handling.report_error(99)
+
+        return (
+            r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_outer,
+            r_tf_wp_inboard_centre,
+            dx_tf_wp_toroidal_min,
+            dx_tf_wp_primary_toroidal,
+            dx_tf_wp_secondary_toroidal,
+            dx_tf_wp_toroidal_average,
+            a_tf_wp_with_insulation,
+            a_tf_wp_no_insulation,
+            a_tf_wp_ground_insulation,
+        )
 
     def tf_case_geom(self, i_tf_wp_geom, i_tf_case_geom):
         """
@@ -2195,7 +2248,7 @@ class SuperconductingTFCoil(TFCoil):
         if i_tf_case_geom == 0:
             # Circular front case
             sctfcoil_module.a_tf_plasma_case = (
-                sctfcoil_module.rad_tf_coil_toroidal
+                sctfcoil_module.rad_tf_coil_inboard_toroidal_half
                 * build_variables.r_tf_inboard_out**2
                 - sctfcoil_module.tan_theta_coil
                 * sctfcoil_module.r_tf_wp_inboard_outer**2
@@ -2214,7 +2267,8 @@ class SuperconductingTFCoil(TFCoil):
         # Nose casing area [m2]
         sctfcoil_module.a_tf_coil_nose_case = (
             sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inboard_inner**2
-            - sctfcoil_module.rad_tf_coil_toroidal * build_variables.r_tf_inboard_in**2
+            - sctfcoil_module.rad_tf_coil_inboard_toroidal_half
+            * build_variables.r_tf_inboard_in**2
         )
 
         # Report error if the casing area is negative
@@ -2806,7 +2860,7 @@ def init_sctfcoil_module():
     sctfcoil_module.a_leg_ins = 0.0
     sctfcoil_module.a_leg_gr_ins = 0.0
     sctfcoil_module.a_leg_cond = 0.0
-    sctfcoil_module.rad_tf_coil_toroidal = 0.0
+    sctfcoil_module.rad_tf_coil_inboard_toroidal_half = 0.0
     sctfcoil_module.tan_theta_coil = 0.0
     sctfcoil_module.t_conductor_radial = 0.0
     sctfcoil_module.t_conductor_toroidal = 0.0

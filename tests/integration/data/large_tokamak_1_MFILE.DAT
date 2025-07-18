@@ -697,8 +697,8 @@
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.7486E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      5.1696E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      5.0416E-01 ITV
- Winding_pack_toroidal_width_1_(m)_______________________________________ (wwp1)________________________      1.1904E+00 OP 
- Winding_pack_toroidal_width_2_(m)_______________________________________ (wwp2)________________________      1.0901E+00 OP 
+ Winding_pack_toroidal_width_1_(m)_______________________________________ (dx_tf_wp_primary_toroidal)________________________      1.1904E+00 OP 
+ Winding_pack_toroidal_width_2_(m)_______________________________________ (dx_tf_wp_secondary_toroidal)________________________      1.0901E+00 OP 
  Ground_wall_insulation_thickness_(m)____________________________________ (dx_tf_wp_insulation)______________________      8.0000E-03    
  Winding_pack_insertion_gap_(m)__________________________________________ (dx_tf_wp_insertion_gap)____________________      1.0000E-02    
  Steel_WP_cross-section_(total)_(m2)_____________________________________ (a_tf_wp_steel*n_tf_coils)___________________      3.8217E+00    
@@ -736,7 +736,7 @@
  Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2636E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.5602E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1617E+07    
- Total_stored_energy_in_TF_coils_(GJ)____________________________________ (estotftgj)___________________      1.2161E+02 OP 
+ Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.2161E+02 OP 
  Inboard_vertical_tension_per_coil_(N)___________________________________ (vforce)______________________      2.0908E+08 OP 
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.0908E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 

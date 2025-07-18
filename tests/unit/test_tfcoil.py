@@ -257,7 +257,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
             5.0,
             0.3,
             (
-                pytest.approx(0.19634954084936207),  # rad_tf_coil_toroidal
+                pytest.approx(0.19634954084936207),  # rad_tf_coil_inboard_toroidal_half
                 pytest.approx(0.198912367379658),  # tan_theta_coil
                 pytest.approx(5.497787143782138),  # a_tf_coil_inboard
                 pytest.approx(4.85),  # r_tf_outboard_in
@@ -282,7 +282,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
             4.5,
             0.25,
             (
-                pytest.approx(0.2617993877991494),  # rad_tf_coil_toroidal
+                pytest.approx(0.2617993877991494),  # rad_tf_coil_inboard_toroidal_half
                 pytest.approx(0.2679491924311227),  # tan_theta_coil
                 pytest.approx(3.562478398964007),  # a_tf_coil_inboard
                 pytest.approx(4.375),  # r_tf_outboard_in
@@ -905,7 +905,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_leg_cond: Any = None
 
-    rad_tf_coil_toroidal: Any = None
+    rad_tf_coil_inboard_toroidal_half: Any = None
 
     tan_theta_coil: Any = None
 
@@ -993,7 +993,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_leg_ins=0,
             a_leg_gr_ins=0,
             a_leg_cond=0,
-            rad_tf_coil_toroidal=0.19634954084936207,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             expected_m_tf_turn_steel_conduit=115651.90127937049,
             expected_whtcas=1034021.9996272125,
@@ -1065,7 +1065,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_leg_ins=0,
             a_leg_gr_ins=0,
             a_leg_cond=0,
-            rad_tf_coil_toroidal=0.19634954084936207,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             expected_m_tf_turn_steel_conduit=115721.02357090525,
             expected_whtcas=1034699.2182961091,
@@ -1286,8 +1286,8 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(
         sctfcoil_module,
-        "rad_tf_coil_toroidal",
-        tfcoilareaandmassesparam.rad_tf_coil_toroidal,
+        "rad_tf_coil_inboard_toroidal_half",
+        tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
     )
 
     monkeypatch.setattr(
@@ -1494,7 +1494,7 @@ class StressclParam(NamedTuple):
 
     a_tf_coil_nose_case: Any = None
 
-    rad_tf_coil_toroidal: Any = None
+    rad_tf_coil_inboard_toroidal_half: Any = None
 
     tan_theta_coil: Any = None
 
@@ -1634,7 +1634,7 @@ class StressclParam(NamedTuple):
             t_lat_case_av=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
-            rad_tf_coil_toroidal=0.19634954084936207,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             dr_tf_turn_cable_space=0.030661087836601014,
             dx_tf_turn_cable_space_average=0.036389912284773368,
@@ -1757,7 +1757,7 @@ class StressclParam(NamedTuple):
             t_lat_case_av=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
-            rad_tf_coil_toroidal=0.19634954084936207,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
             dr_tf_turn_cable_space=0.030661087836601014,
             dx_tf_turn_cable_space_average=0.036389912284773368,
@@ -1858,7 +1858,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.eyoung_res_tf_buck,
         stressclparam.r_tf_wp_inboard_inner,
         stressclparam.tan_theta_coil,
-        stressclparam.rad_tf_coil_toroidal,
+        stressclparam.rad_tf_coil_inboard_toroidal_half,
         stressclparam.r_tf_wp_inboard_outer,
         stressclparam.a_tf_coil_inboard_steel,
         stressclparam.a_tf_plasma_case,
