@@ -2721,17 +2721,12 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
         scan
     )
-    dx_tf_side_case = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
     r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
     dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
     n_tf_coil_turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     i_tf_wp_geom = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     i_tf_sup = round(mfile_data.data["i_tf_sup"].get_scan(scan))
-    dr_tf_nose_case = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
-    dx_tf_side_case = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
     i_tf_case_geom = mfile_data.data["i_tf_case_geom"].get_scan(scan)
-    j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
-    dr_tf_inboard = mfile_data.data["dr_tf_inboard"].get_scan(scan)
     i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
     b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
@@ -3171,7 +3166,8 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             0,
             marker="o",
             color="red",
-            label=f"Peak Field: {b_tf_inboard_peak:.2f} T",
+            label=f"Peak Field: {b_tf_inboard_peak:.2f} T\n"
+            f"r={r_b_tf_inboard_peak:.3f} m",
         )
 
         # Plot a horizontal line at y = dx_tf_wp_inner_toroidal
@@ -3309,8 +3305,8 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$J$ no insulation: {mfile_data.data['j_tf_wp'].get_scan(scan) / 1e6:.4f} MA/m$^2$"
         )
         axis.text(
-            0.7,
-            0.4,
+            0.775,
+            0.425,
             textstr_wp,
             fontsize=9,
             verticalalignment="top",
@@ -3320,6 +3316,28 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             bbox={
                 "boxstyle": "round",
                 "facecolor": "blue",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add info about the Winding Pack
+        textstr_general_info = (
+            f"$\\mathbf{{General \\ info:}}$\n \n"
+            f"Self inductance: {mfile_data.data['ind_tf_coil'].get_scan(scan) * 1e6:.4f} $\\mu$H\n"
+            f"Stored energy of all coils: {mfile_data.data['e_tf_magnetic_stored_total_gj'].get_scan(scan):.4f} GJ\n"
+        )
+        axis.text(
+            0.55,
+            0.425,
+            textstr_general_info,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "wheat",
                 "alpha": 1.0,
                 "linewidth": 2,
             },
@@ -6192,7 +6210,7 @@ def main_plot(
 
         # TF coil turn structure
         plot_19 = fig7.add_subplot(325, aspect="equal")
-        plot_19.set_position([0.1, 0.1, 0.3, 0.3])
+        plot_19.set_position([0.025, 0.1, 0.3, 0.3])
         plot_tf_turn(plot_19, m_file_data, scan)
 
     plot_20 = fig8.add_subplot(111, aspect="equal")
