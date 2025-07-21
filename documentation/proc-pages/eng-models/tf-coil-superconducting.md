@@ -270,7 +270,7 @@ This is done as a conservative assumption as the radius is calculated with the W
 
 ### Winding Pack Geometry | `superconducting_tf_wp_geometry()`
 
-Depending on the value of `i_tf_wp_geom` different WP geometries will be configured
+Depending on the value of `i_tf_wp_geom` different WP geometries will be configured.
 
 Initial general dimensions are calculated first as follows:
 

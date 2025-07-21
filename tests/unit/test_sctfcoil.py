@@ -677,9 +677,9 @@ class TfWpGeomParam(NamedTuple):
         ),
     ),
 )
-def test_tf_wp_geom(tfwpgeomparam, sctfcoil):
+def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for tf_wp_geom.
+    Automatically generated Regression Unit Test for superconducting_tf_wp_geometry.
 
     This test was generated using data from
     tracking/baseline_2018/baseline_2018_IN.DAT.
