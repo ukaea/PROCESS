@@ -1878,7 +1878,29 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Calculating the TF steel casing areas
-        self.superconducting_tf_case_geometry(i_tf_wp_geom, i_tf_case_geom)
+        (
+            tfcoil_variables.a_tf_coil_inboard_case,
+            tfcoil_variables.a_tf_coil_outboard_case,
+            sctfcoil_module.a_tf_plasma_case,
+            sctfcoil_module.a_tf_coil_nose_case,
+            sctfcoil_module.dx_tf_side_case_average,
+        ) = self.superconducting_tf_case_geometry(
+            i_tf_case_geom=i_tf_case_geom,
+            i_tf_wp_geom=i_tf_wp_geom,
+            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            a_tf_wp_with_insulation=sctfcoil_module.a_tf_wp_with_insulation,
+            a_tf_leg_outboard=tfcoil_variables.a_tf_leg_outboard,
+            rad_tf_coil_inboard_toroidal_half=sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
+            r_tf_inboard_out=build_variables.r_tf_inboard_out,
+            tan_theta_coil=sctfcoil_module.tan_theta_coil,
+            r_tf_wp_inboard_outer=sctfcoil_module.r_tf_wp_inboard_outer,
+            dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
+            r_tf_wp_inboard_inner=sctfcoil_module.r_tf_wp_inboard_inner,
+            r_tf_inboard_in=build_variables.r_tf_inboard_in,
+            dx_tf_side_case_min=tfcoil_variables.dx_tf_side_case_min,
+            dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
+        )
 
         # WP/trun currents
         self.tf_wp_currents()
@@ -2230,84 +2252,127 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_wp_ground_insulation,
         )
 
-    def superconducting_tf_case_geometry(self, i_tf_wp_geom, i_tf_case_geom):
+    def superconducting_tf_case_geometry(
+        self,
+        i_tf_wp_geom: int,
+        i_tf_case_geom: int,
+        a_tf_inboard_total: float,
+        n_tf_coils: float,
+        a_tf_wp_with_insulation: float,
+        a_tf_leg_outboard: float,
+        rad_tf_coil_inboard_toroidal_half: float,
+        r_tf_inboard_out: float,
+        tan_theta_coil: float,
+        r_tf_wp_inboard_outer: float,
+        dr_tf_plasma_case: float,
+        r_tf_wp_inboard_inner: float,
+        r_tf_inboard_in: float,
+        dx_tf_side_case_min: float,
+        dr_tf_wp_with_insulation: float,
+    ) -> tuple[float, float, float, float, float]:
         """
-        Author : S. Kahn, CCFE
         Setting the case geometry and area for SC magnets
+
+        :param i_tf_wp_geom: Index specifying winding pack geometry (0: rectangular, 1: double rectangular, else: trapezoidal).
+        :type i_tf_wp_geom: int
+        :param i_tf_case_geom: Index specifying case geometry (0: circular, else: straight).
+        :type i_tf_case_geom: int
+        :param a_tf_inboard_total: Total inboard area for TF coils [m²].
+        :type a_tf_inboard_total: float
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: float
+        :param a_tf_wp_with_insulation: Area of winding pack with insulation [m²].
+        :type a_tf_wp_with_insulation: float
+        :param a_tf_leg_outboard: Outboard leg cross-sectional area [m²].
+        :type a_tf_leg_outboard: float
+        :param rad_tf_coil_inboard_toroidal_half: Half toroidal radius of inboard coil [m].
+        :type rad_tf_coil_inboard_toroidal_half: float
+        :param r_tf_inboard_out: Outer radius of inboard TF coil [m].
+        :type r_tf_inboard_out: float
+        :param tan_theta_coil: Tangent of coil angle theta.
+        :type tan_theta_coil: float
+        :param r_tf_wp_inboard_outer: Outer radius of inboard winding pack [m].
+        :type r_tf_wp_inboard_outer: float
+        :param dr_tf_plasma_case: Radial thickness of plasma case [m].
+        :type dr_tf_plasma_case: float
+        :param r_tf_wp_inboard_inner: Inner radius of inboard winding pack [m].
+        :type r_tf_wp_inboard_inner: float
+        :param r_tf_inboard_in: Inner radius of inboard TF coil [m].
+        :type r_tf_inboard_in: float
+        :param dx_tf_side_case_min: Minimum lateral casing thickness [m].
+        :type dx_tf_side_case_min: float
+        :param dr_tf_wp_with_insulation: Radial thickness of winding pack with insulation [m].
+        :type dr_tf_wp_with_insulation: float
+
+        :returns: Tuple containing:
+            - a_tf_coil_inboard_case (float): Inboard case area [m²].
+            - a_tf_coil_outboard_case (float): Outboard case area [m²].
+            - a_tf_plasma_case (float): Front casing area [m²].
+            - a_tf_coil_nose_case (float): Nose casing area [m²].
+            - dx_tf_side_case_average (float): Average lateral casing thickness [m].
+        :rtype: tuple[float, float, float, float, float]
+
+        :raises: Reports error if calculated casing areas are negative.
         """
-        tfcoil_variables.a_tf_coil_inboard_case = (
-            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
-        ) - sctfcoil_module.a_tf_wp_with_insulation
+
+        # Total area of inboard TF coil case [m²]
+        a_tf_coil_inboard_case = (
+            a_tf_inboard_total / n_tf_coils
+        ) - a_tf_wp_with_insulation
 
         # Outboard leg cross-sectional area of surrounding case [m²]
-        tfcoil_variables.a_tf_coil_outboard_case = (
-            tfcoil_variables.a_tf_leg_outboard - sctfcoil_module.a_tf_wp_with_insulation
-        )
+        a_tf_coil_outboard_case = a_tf_leg_outboard - a_tf_wp_with_insulation
 
         # Front casing area [m²]
         if i_tf_case_geom == 0:
             # Circular front case
-            sctfcoil_module.a_tf_plasma_case = (
-                sctfcoil_module.rad_tf_coil_inboard_toroidal_half
-                * build_variables.r_tf_inboard_out**2
-            ) - (
-                sctfcoil_module.tan_theta_coil
-                * sctfcoil_module.r_tf_wp_inboard_outer**2
-            )
+            a_tf_plasma_case = (
+                rad_tf_coil_inboard_toroidal_half * r_tf_inboard_out**2
+            ) - (tan_theta_coil * r_tf_wp_inboard_outer**2)
         else:
             # Straight front case [m²]
-            sctfcoil_module.a_tf_plasma_case = (
-                (
-                    sctfcoil_module.r_tf_wp_inboard_outer
-                    + tfcoil_variables.dr_tf_plasma_case
-                )
-                ** 2
-                - sctfcoil_module.r_tf_wp_inboard_outer**2
-            ) * sctfcoil_module.tan_theta_coil
+            a_tf_plasma_case = (
+                (r_tf_wp_inboard_outer + dr_tf_plasma_case) ** 2
+                - r_tf_wp_inboard_outer**2
+            ) * tan_theta_coil
 
         # Nose casing area [m²]
-        sctfcoil_module.a_tf_coil_nose_case = (
-            sctfcoil_module.tan_theta_coil * sctfcoil_module.r_tf_wp_inboard_inner**2
-            - sctfcoil_module.rad_tf_coil_inboard_toroidal_half
-            * build_variables.r_tf_inboard_in**2
+        a_tf_coil_nose_case = (
+            tan_theta_coil * r_tf_wp_inboard_inner**2
+            - rad_tf_coil_inboard_toroidal_half * r_tf_inboard_in**2
         )
 
         # Report error if the casing area is negative
-        if (
-            tfcoil_variables.a_tf_coil_inboard_case <= 0.0e0
-            or tfcoil_variables.a_tf_coil_outboard_case <= 0.0e0
-        ):
-            error_handling.fdiags[0] = tfcoil_variables.a_tf_coil_inboard_case
-            error_handling.fdiags[1] = tfcoil_variables.a_tf_coil_outboard_case
+        if a_tf_coil_inboard_case <= 0.0e0 or a_tf_coil_outboard_case <= 0.0e0:
+            error_handling.fdiags[0] = a_tf_coil_inboard_case
+            error_handling.fdiags[1] = a_tf_coil_outboard_case
             error_handling.report_error(99)
 
         # Average lateral casing thickness [m]
         # --------------
         # Rectangular casing
         if i_tf_wp_geom == 0:
-            sctfcoil_module.dx_tf_side_case_average = (
-                tfcoil_variables.dx_tf_side_case_min
-                + 0.5e0
-                * sctfcoil_module.tan_theta_coil
-                * tfcoil_variables.dr_tf_wp_with_insulation
+            dx_tf_side_case_average = (
+                dx_tf_side_case_min + 0.5e0 * tan_theta_coil * dr_tf_wp_with_insulation
             )
 
         # Double rectangular WP
         elif i_tf_wp_geom == 1:
-            sctfcoil_module.dx_tf_side_case_average = (
-                tfcoil_variables.dx_tf_side_case_min
-                + 0.25e0
-                * sctfcoil_module.tan_theta_coil
-                * tfcoil_variables.dr_tf_wp_with_insulation
+            dx_tf_side_case_average = (
+                dx_tf_side_case_min + 0.25e0 * tan_theta_coil * dr_tf_wp_with_insulation
             )
 
         # Trapezoidal WP
         else:
-            sctfcoil_module.dx_tf_side_case_average = (
-                tfcoil_variables.dx_tf_side_case_min
-            )
+            dx_tf_side_case_average = dx_tf_side_case_min
 
-        # --------------
+        return (
+            a_tf_coil_inboard_case,
+            a_tf_coil_outboard_case,
+            a_tf_plasma_case,
+            a_tf_coil_nose_case,
+            dx_tf_side_case_average,
+        )
 
     def tf_integer_turn_geom(
         self, n_layer, n_pancake, dx_tf_turn_steel, dx_tf_turn_insulation
