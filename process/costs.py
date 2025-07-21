@@ -2160,7 +2160,9 @@ class Costs:
         #  Account 225.1.3 : TF coil dump resistors
 
         cost_variables.c22513 = 1.0e-6 * (
-            1.0e9 * cost_variables.UCTFDR * tfcoil_variables.estotftgj
+            1.0e9
+            * cost_variables.UCTFDR
+            * tfcoil_variables.e_tf_magnetic_stored_total_gj
             + cost_variables.UCTFGR * 0.5e0 * tfcoil_variables.n_tf_coils
         )
         cost_variables.c22513 = cost_variables.fkind * cost_variables.c22513

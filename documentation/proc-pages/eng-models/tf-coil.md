@@ -90,13 +90,13 @@ This class contains all the methods that are used by all types of TF coils (resi
 
 This function calculates the global geometry of the TF, it sets up the toroidal spacing of the coils, the mid-plane areas of the inboard and outboard legs, the geometry of the steel casing. The radial thicknesses and positions of the TF coil parts are calculated in `build.py` as part of the radial build construction.
 
-1. The toroidal angle taken up by a TF coil is equal to:
+1. The half toroidal angle taken up by a TF coil is equal to:
 
     $$
-    \overbrace{\phi_{\text{TF}}}^{\texttt{rad_tf_coil_toroidal}} = \frac{\pi}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}}
+    \overbrace{\phi_{\text{TF,half}}}^{\texttt{rad_tf_coil_inboard_toroidal_half}} = \frac{\pi}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}}
     $$
 
-    This means the toroidal space between the TF coils is **equal** to the toroidal angle of each TF coil.
+    This means the inboard TF coils are all wedged together.
 
 2. The top down surface area of the TF coil at the mid-plane is calculated depending on what type of plasma case is selected:
 
@@ -111,14 +111,14 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
     Else, if `i_tf_case_geom == 1` the plasma case is flat and so the inboard TF leg mid-plane area is:
 
     $$
-    A_{\text{TF,inboard}} = N_{\text{TF,coils}} \times \left(\sin{(\phi_{\text{TF}})}\cos{(\phi_{\text{TF}})}R_{\text{TF,inboard-out}}^2\right) \\
+    A_{\text{TF,inboard}} = N_{\text{TF,coils}} \times \left(\sin{(\phi_{\text{TF,half}})}\cos{(\phi_{\text{TF,half}})}R_{\text{TF,inboard-out}}^2\right) \\
     - \left(\pi \times R_{\text{TF,inboard-in}}^2\right)
     $$
 
 3. The toroidal width at the outboard edge of the inboard TF coil leg is:
 
     $$
-    \mathrm{d}x_{\text{TF,inboard-out}} = 2R_{\text{inboard,-out}} \times \sin{(\phi_{\text{TF}})}
+    \mathrm{d}x_{\text{TF,inboard-out}} = 2R_{\text{inboard,-out}} \times \sin{(\phi_{\text{TF,half}})}
     $$
 
 4. The inboard and outboard edges of the outboard TF leg are simply set:

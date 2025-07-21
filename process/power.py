@@ -1721,7 +1721,7 @@ class Power:
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
             #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
-            #                                 estotf(=estotftgj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
+            #                                 estotf(=e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
             tfreacmw = 0.0e0
 
             # Total power consumption (MW)
@@ -1836,7 +1836,11 @@ class Power:
         the power conversion requirements for superconducting TF coils.
         None
         """
-        ettfmj = tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e3
+        ettfmj = (
+            tfcoil_variables.e_tf_magnetic_stored_total_gj
+            / tfcoil_variables.n_tf_coils
+            * 1.0e3
+        )
 
         #  TF coil current (kA)
 

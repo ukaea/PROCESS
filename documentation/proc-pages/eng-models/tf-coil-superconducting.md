@@ -88,7 +88,7 @@ Several Winding pack geometries can chosen with the `i_tf_wp_geom` integer switc
     height="100"/>
     <br><br>
     <figcaption><i><p style='text-align: justify;'> 
-      Figure 3: Visual illustration of the WP shapes the user can select with the i_tf_wp_geom integer switch. The wwp1 and wwp2 parameters, added in option i_tf_wp_geom = 1 are calculated using the minimal sidewall case thickness.
+      Figure 3: Visual illustration of the WP shapes the user can select with the i_tf_wp_geom integer switch. The dx_tf_wp_primary_toroidal and dx_tf_wp_secondary_toroidal parameters, added in option i_tf_wp_geom = 1 are calculated using the minimal sidewall case thickness.
     </p></i></figcaption>
     <br>
     </center>
@@ -256,7 +256,7 @@ can be set using `tmargmin` together with constraint equation 36 and iteration v
 The radius of the peak field on the inboard leg is given as such:
 
 $$
-R_{\text{B,peak}} = \cos{(\phi_{\text{TF}})} \\
+R_{\text{B,peak}} = \cos{(\phi_{\text{TF,half}})} \\
 \times R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
 $$
 
@@ -265,4 +265,175 @@ This is done as a conservative assumption as the radius is calculated with the W
 -----------------
 
 ## Supercoducting TF coil class | `SuperconductingTFCoil(TFCoil)`
+
+----------------
+
+### Winding Pack Geometry | `superconducting_tf_wp_geometry()`
+
+Depending on the value of `i_tf_wp_geom` different WP geometries will be configured.
+
+Initial general dimensions are calculated first as follows:
+
+$$
+\overbrace{R_{\text{TF-inboard,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} = \overbrace{R_{\text{TF-inboard,in}}}^{\texttt{r_tf_inboard_in}} + \overbrace{\mathrm{d}R_{\text{TF,nose-case}}}^{\texttt{dr_tf_nose_case}}
+$$
+
+$$
+\overbrace{R_{\text{TF-inboard,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} = R_{\text{TF-inboard,WP-inner}} + \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}
+$$
+
+$$
+\overbrace{R_{\text{TF-inboard,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} = \frac{R_{\text{TF-inboard,WP-inner}} + R_{\text{TF-inboard,WP-outer}}}{2}
+$$
+
+Find the straight toroidal width of the TF coil at the inside edge of the winding pack:
+
+$$
+\mathrm{d}x_{\text{TF,toroidal,WP}} = 2 \times \overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}}
+$$
+
+To find the straight toroidal length of the winding pack we now take off the side case thicknesses:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-min}}}^{\texttt{dx_tf_wp_toroidal_min}} = \mathrm{d}x_{\text{TF,toroidal,WP}} - \left(2 \times \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+$$
+
+----------
+
+#### Rectangular WP
+
+
+For a [rectangular winding pack](#winding-pack-geometry) (`i_tf_wp_geom == 0`) of constant shape:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}}, \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-average}}}^{\texttt{dx_tf_wp_toroidal_average}} = \mathrm{d}x_{\text{TF,toroidal,WP-min}}
+$$
+
+The full winding pack area with insulation is:
+
+$$
+\overbrace{A_{\text{TF,WP}}}^{\texttt{a_tf_wp_with_insulation}} = \mathrm{d}x_{\text{TF,toroidal,WP-primary}} \times \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}
+$$
+
+The area of the winding pack with no insulation or gap is:
+
+$$
+\overbrace{A_{\text{TF,WP-no-insulation}}}^{\texttt{a_tf_wp_no_insulation}} = 
+\\ \left(\mathrm{d}R_{\text{TF,WP}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ \times \left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+$$
+
+The area of the surrounding winding pack insulation is:
+
+$$
+\overbrace{A_{\text{TF,WP-insulation}}}^{\texttt{a_tf_wp_ground_insulation}} =
+\\ \left(\left(\mathrm{d}R_{\text{TF,WP}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)
+\\ \times \left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ - A_{\text{TF,WP-no-insulation}}
+$$
+
+
+--------
+
+#### Double rectangular WP
+
+For a [double rectangular winding pack](#winding-pack-geometry) (`i_tf_wp_geom == 1`):
+
+The straight toroidal width of the primary winding pack is:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}} = 2 \times 
+\\ \left(\overbrace{R_{\text{TF,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+$$
+
+The straight toroidal width of the secondary winding pack is:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-secondary}}}^{\texttt{dx_tf_wp_secondary_toroidal}} = 2 \times 
+\\ \left(\overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \tan{\left(\phi_{\text{TF,half}}\right)} - \mathrm{d}x_{\text{TF,side case}}\right)
+$$
+
+The average toroidal straight width is calculated:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-average}}}^{\texttt{dx_tf_wp_toroidal_average}} = \frac{\left(\mathrm{d}x_{\text{TF,toroidal,WP-secondary}} + \mathrm{d}x_{\text{TF,toroidal,WP-primary}}\right)}{2}
+$$
+
+The total winding pack area is calculated from the average:
+
+$$
+\overbrace{A_{\text{TF,WP}}}^{\texttt{a_tf_wp_with_insulation}} = \mathrm{d}x_{\text{TF,toroidal,WP-average}} \times \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}
+$$
+
+The area of the winding pack with no insulation or gap is:
+
+$$
+\overbrace{A_{\text{TF,WP-no-insulation}}}^{\texttt{a_tf_wp_no_insulation}} = 0.5 \times
+\\ \left(\mathrm{d}R_{\text{TF,WP}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ \times \left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} + \mathrm{d}x_{\text{TF,toroidal,WP-secondary}} - 
+\\ 4\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+$$
+
+The area of the surrounding winding pack insulation is:
+
+$$
+\overbrace{A_{\text{TF,WP-insulation}}}^{\texttt{a_tf_wp_ground_insulation}} = 0.5 \times
+\\ \left(\left(\mathrm{d}R_{\text{TF,WP}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)
+\\ \times \left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} + \mathrm{d}x_{\text{TF,toroidal,WP-secondary}} - 4\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ - A_{\text{TF,WP-no-insulation}}
+$$
+
+--------
+
+#### Trapezoidal WP 
+
+For a [trapezoidal winding pack](#winding-pack-geometry) (`i_tf_wp_geom == 2`):
+
+The straight toroidal width of the primary winding pack is (longest side of trapezoid):
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}} = 2 \times 
+\\ \left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+$$
+
+The straight toroidal width of the secondary winding pack is (shortest side of trapezoid):
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-secondary}}}^{\texttt{dx_tf_wp_secondary_toroidal}} = 2 \times 
+\\ \left(\overbrace{R_{\text{TF,WP-inner}}}^{\texttt{r_tf_wp_inboard_inner}} \times \tan{\left(\phi_{\text{TF,half}}\right)} - \mathrm{d}x_{\text{TF,side case}}\right)
+$$
+
+The average toroidal straight width is calculated:
+
+$$
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-average}}}^{\texttt{dx_tf_wp_toroidal_average}} = \frac{\left(\mathrm{d}x_{\text{TF,toroidal,WP-secondary}} + \mathrm{d}x_{\text{TF,toroidal,WP-primary}}\right)}{2}
+$$
+
+The total winding pack area is calculated from the average:
+
+$$
+\overbrace{A_{\text{TF,WP}}}^{\texttt{a_tf_wp_with_insulation}} = \frac{\left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}}+\mathrm{d}x_{\text{TF,toroidal,WP-secondary}}\right)}{2} 
+\\ \times \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}
+$$
+
+The area of the winding pack with no insulation or gap is:
+
+$$
+\overbrace{A_{\text{TF,WP-no-insulation}}}^{\texttt{a_tf_wp_no_insulation}} =
+\\ \left(\mathrm{d}R_{\text{TF,WP}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ \times \left(\left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ + \left(\mathrm{d}x_{\text{TF,toroidal,WP-secondary}} - 2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)\right)
+\\ \times 0.5
+$$
+
+The area of the surrounding winding pack insulation is:
+
+$$
+\overbrace{A_{\text{TF,WP-insulation}}}^{\texttt{a_tf_wp_ground_insulation}} =
+\\ \left(\left(\mathrm{d}R_{\text{TF,WP}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)
+\\ \times \left(\left(\mathrm{d}x_{\text{TF,toroidal,WP-primary}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right) 
+\\ + \left(\mathrm{d}x_{\text{TF,toroidal,WP-secondary}} - 2\times\overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)\right)
+\\ \times 0.5
+\\ - A_{\text{TF,WP-no-insulation}}
+$$
 
