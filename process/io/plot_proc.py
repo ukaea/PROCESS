@@ -2690,7 +2690,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
             )
 
 
-def plot_tf_wp(axis, mfile_data, scan: int) -> None:
+def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     """
     Plots inboard TF coil and winding pack.
     Author: C. Ashe
@@ -2837,11 +2837,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         # Fill in the case segemnts
 
         # Upper main
-        case_plasma_label = (
-            f"Case: \n{dr_tf_nose_case:.4f} m nose thickness \n"
-            f"{dx_tf_side_case:.4f} m sidewall thickness \n$"
-            f"\\Delta$R = {dr_tf_inboard:.4f} m \n "
-        )
         if i_tf_case_geom == 0:
             axis.fill_between(
                 [
@@ -2851,7 +2846,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=case_plasma_label,
             )
             # Lower main
             axis.fill_between(
@@ -2878,7 +2872,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 y13,
                 color="grey",
                 alpha=0.25,
-                label=case_plasma_label,
             )
             # Lower main
             axis.fill_between(
@@ -2929,7 +2922,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     dr_tf_wp_with_insulation,
                     dx_tf_wp_primary_toroidal,
                     color="darkgreen",
-                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000:.3f} mm thickness \n",
                 ),
             )
             # Plots the WP inside the insulation
@@ -2952,10 +2944,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                         - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap))
                     ),
                     color="blue",
-                    label=(
-                        f"Winding pack:  \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
-                        f"\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
-                    ),
                 )
             )
             # Dvides the WP up into the turn segments
@@ -3065,7 +3053,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     (dr_tf_wp_with_insulation / 2) + (dx_tf_wp_insulation),
                     dx_tf_wp_secondary_toroidal,
                     color="darkgreen",
-                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000:.3f} mm thickness \n",
                 ),
             )
 
@@ -3098,10 +3085,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                     dx_tf_wp_primary_toroidal
                     - (2 * (dx_tf_wp_insulation + dx_tf_wp_insertion_gap)),
                     color="blue",
-                    label=(
-                        f"Winding pack: \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n$"
-                        f"\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
-                    ),
                 ),
             )
             # Inner WP
@@ -3143,7 +3126,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y, strict=False)),
                     color="darkgreen",
-                    label=f"Insulation: \n{dx_tf_wp_insulation * 1000:.3f} mm thickness \n",
                 )
             )
 
@@ -3180,10 +3162,6 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
                 patches.Polygon(
                     xy=list(zip(x, y, strict=False)),
                     color="blue",
-                    label=(
-                        f"Winding pack: \n{n_tf_coil_turns} turns \n{j_tf_wp:.4f} MA/m$^2$ \n"
-                        f"$\\Delta$R= {dr_tf_wp_with_insulation:.4f} m \n  "
-                    ),
                 )
             )
 
@@ -3256,6 +3234,97 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
             alpha=0.5,
         )
 
+        # Add info about the steel casing surrounding the WP
+        textstr_casing = (
+            f"$\\mathbf{{Casing:}}$\n \n"
+            f"Coil half angle: {mfile_data.data['rad_tf_coil_inboard_toroidal_half'].get_scan(scan):.3f} radians\n\n"
+            f"$\\text{{Full Coil Case:}}$\n"
+            f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_inboard_in'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_inboard_out'].get_scan(scan):.3f} m\n"
+            f"$\\Delta r$: {mfile_data.data['dr_tf_inboard'].get_scan(scan):.3f} m\n"
+            f"Area of casing around WP: {mfile_data.data['a_tf_coil_inboard_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+            f"$\\text{{Nose Case:}}$\n"
+            f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_inboard_in'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} m\n"
+            f"$\\Delta r$: {mfile_data.data['dr_tf_nose_case'].get_scan(scan):.3f} m\n"
+            f"$A$: {mfile_data.data['a_tf_coil_nose_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+            f"$\\text{{Plasma Case:}}$\n"
+            f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_inboard_out'].get_scan(scan):.3f} m\n"
+            f"$\\Delta r$: {mfile_data.data['dr_tf_plasma_case'].get_scan(scan):.3f} m\n"
+            f"$A$: {mfile_data.data['a_tf_plasma_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+            f"$\\text{{Side Case:}}$\n"
+            f"$\\Delta r$: {mfile_data.data['dx_tf_side_case'].get_scan(scan):.3f} m"
+        )
+        axis.text(
+            0.775,
+            0.9,
+            textstr_casing,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "grey",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add info about the steel casing surrounding the WP
+        textstr_wp_insulation = (
+            f"$\\mathbf{{Insulation:}}$\n \n"
+            f"Area of insulation around WP: {mfile_data.data['a_tf_wp_ground_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
+            f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m\n\n"
+            f"WP Insertion Gap:\n"
+            f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insertion_gap'].get_scan(scan):.4f} m"
+        )
+        axis.text(
+            0.775,
+            0.55,
+            textstr_wp_insulation,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="left",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "green",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
+        # Add info about the Winding Pack
+        textstr_wp = (
+            f"$\\mathbf{{Winding Pack:}}$\n \n"
+            f"$N_{{\\text{{turns}}}}$: "
+            f"{int(mfile_data.data['n_tf_coil_turns'].get_scan(scan))} turns\n"
+            f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} m\n"
+            f"$\\Delta r$: {mfile_data.data['dr_tf_wp_with_insulation'].get_scan(scan):.3f} m\n"
+            f"$A$, with insulation: {mfile_data.data['a_tf_wp_with_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
+            f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+            f"Primary WP:\n"
+            f"$\\Delta x$: {mfile_data.data['dx_tf_wp_primary_toroidal'].get_scan(scan):.4f} m\n\n"
+            f"Secondary WP:\n"
+            f"$\\Delta x$: {mfile_data.data['dx_tf_wp_secondary_toroidal'].get_scan(scan):.4f} m\n\n"
+            f"$J$ no insulation: {mfile_data.data['j_tf_wp'].get_scan(scan) / 1e6:.4f} MA/m$^2$"
+        )
+        axis.text(
+            0.7,
+            0.4,
+            textstr_wp,
+            fontsize=9,
+            verticalalignment="top",
+            horizontalalignment="left",
+            color="white",
+            transform=fig.transFigure,
+            bbox={
+                "boxstyle": "round",
+                "facecolor": "blue",
+                "alpha": 1.0,
+                "linewidth": 2,
+            },
+        )
+
         axis.minorticks_on()
         axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
         axis.set_ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
@@ -3263,7 +3332,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
         axis.set_title("Top-down view of inboard TF coil at midplane")
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
-        axis.legend(bbox_to_anchor=(1.05, 1.0), loc="upper left")
+        axis.legend(loc="upper left")
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -6118,8 +6187,8 @@ def main_plot(
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
         plot_18 = fig7.add_subplot(211, aspect="equal")
-        plot_18.set_position([0.05, 0.5, 0.8, 0.4])
-        plot_tf_wp(plot_18, m_file_data, scan)
+        plot_18.set_position([0.05, 0.5, 0.7, 0.4])
+        plot_tf_wp(plot_18, m_file_data, scan, fig7)
 
         # TF coil turn structure
         plot_19 = fig7.add_subplot(325, aspect="equal")
