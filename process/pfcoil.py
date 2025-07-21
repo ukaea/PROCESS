@@ -23,7 +23,6 @@ from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
 from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -2867,7 +2866,7 @@ class PFCoil:
 
         line = "\t\t"
         for k in range(6):
-            label = f2py_compatible_to_string(tv.timelabel[k])
+            label = tv.timelabel[k]
             line += f"\t\t{label}"
         op.write(self.outfile, line)
 
