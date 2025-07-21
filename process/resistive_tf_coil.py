@@ -36,7 +36,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
             tfcoil_variables.dr_tf_plasma_case,
-            tfcoil_variables.dx_tf_side_case,
+            tfcoil_variables.dx_tf_side_case_min,
         ) = super().tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,

@@ -501,7 +501,7 @@ class TfWpGeomParam(NamedTuple):
 
     dr_tf_nose_case: Any = None
 
-    dx_tf_side_case: Any = None
+    dx_tf_side_case_min: Any = None
 
     dx_tf_wp_primary_toroidal: Any = None
 
@@ -564,7 +564,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
-            dx_tf_side_case=0.05000000000000001,
+            dx_tf_side_case_min=0.05000000000000001,
             dx_tf_wp_primary_toroidal=0,
             dx_tf_wp_secondary_toroidal=0,
             dx_tf_wp_insulation=0.0080000000000000019,
@@ -598,7 +598,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
-            dx_tf_side_case=0.05000000000000001,
+            dx_tf_side_case_min=0.05000000000000001,
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dx_tf_wp_secondary_toroidal=0,
             dx_tf_wp_insulation=0.0080000000000000019,
@@ -633,7 +633,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
-            dx_tf_side_case=0.05000000000000001,
+            dx_tf_side_case_min=0.05000000000000001,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -658,7 +658,7 @@ class TfWpGeomParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_nose_case=0.52465000000000006,
-            dx_tf_side_case=0.05000000000000001,
+            dx_tf_side_case_min=0.05000000000000001,
             dx_tf_wp_insulation=0.0080000000000000019,
             dx_tf_wp_insertion_gap=0.01,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -706,7 +706,7 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
         dr_tf_nose_case=tfwpgeomparam.dr_tf_nose_case,
         dr_tf_wp_with_insulation=tfwpgeomparam.dr_tf_wp_with_insulation,
         tan_theta_coil=tfwpgeomparam.tan_theta_coil,
-        dx_tf_side_case=tfwpgeomparam.dx_tf_side_case,
+        dx_tf_side_case_min=tfwpgeomparam.dx_tf_side_case_min,
         dx_tf_wp_insulation=tfwpgeomparam.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=tfwpgeomparam.dx_tf_wp_insertion_gap,
     )
@@ -761,7 +761,7 @@ class TfCaseGeomParam(NamedTuple):
 
     n_tf_coils: Any = None
 
-    dx_tf_side_case: Any = None
+    dx_tf_side_case_min: Any = None
 
     dr_tf_plasma_case: Any = None
 
@@ -811,7 +811,7 @@ class TfCaseGeomParam(NamedTuple):
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_inboard_total=27.308689677971632,
             n_tf_coils=16,
-            dx_tf_side_case=0.05000000000000001,
+            dx_tf_side_case_min=0.05000000000000001,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
@@ -838,7 +838,7 @@ class TfCaseGeomParam(NamedTuple):
             a_tf_leg_outboard=1.9805354702921749,
             a_tf_inboard_total=27.308689677971632,
             n_tf_coils=16,
-            dx_tf_side_case=0.05000000000000001,
+            dx_tf_side_case_min=0.05000000000000001,
             dr_tf_plasma_case=0.060000000000000012,
             dr_tf_wp_with_insulation=0.54261087836601019,
             r_tf_inboard_in=2.9939411851091102,
@@ -897,7 +897,7 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfcasegeomparam.n_tf_coils)
 
     monkeypatch.setattr(
-        tfcoil_variables, "dx_tf_side_case", tfcasegeomparam.dx_tf_side_case
+        tfcoil_variables, "dx_tf_side_case_min", tfcasegeomparam.dx_tf_side_case_min
     )
 
     monkeypatch.setattr(

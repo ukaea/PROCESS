@@ -575,7 +575,7 @@ i_cs_superconductor = 1
 dr_tf_plasma_case = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
-dx_tf_side_case = 0.05
+dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
 ripmax = 0.6

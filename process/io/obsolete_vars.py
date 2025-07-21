@@ -292,7 +292,7 @@ OBS_VARS = {
     "xparain": None,
     "zeffdiv": None,
     "divdum": None,
-    "casths": "dx_tf_side_case",
+    "casths": "dx_tf_side_case_min",
     "thkcas": "dr_tf_nose_case",
     "tmpcry": "temp_tf_cryo",
     "beam_energy": "e_beam_kev",

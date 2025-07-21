@@ -2729,7 +2729,7 @@ class Stellarator:
             tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness outboard distance (radial)
         # dr_tf_nose_case = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
-        tfcoil_variables.dx_tf_side_case = (
+        tfcoil_variables.dx_tf_side_case_min = (
             tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness toroidal distance (toroidal)
 
@@ -2785,7 +2785,7 @@ class Stellarator:
         #
         tfcoil_variables.dx_tf_inboard_out_toroidal = (
             tfcoil_variables.dx_tf_wp_primary_toroidal
-            + 2.0e0 * tfcoil_variables.dx_tf_side_case
+            + 2.0e0 * tfcoil_variables.dx_tf_side_case_min
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in toroidal direction
 
@@ -4089,8 +4089,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Case toroidal thickness (m)",
-            "(dx_tf_side_case)",
-            tfcoil_variables.dx_tf_side_case,
+            "(dx_tf_side_case_min)",
+            tfcoil_variables.dx_tf_side_case_min,
         )
         po.ovarre(
             self.outfile,

@@ -59,7 +59,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
             tfcoil_variables.dr_tf_plasma_case,
-            tfcoil_variables.dx_tf_side_case,
+            tfcoil_variables.dx_tf_side_case_min,
         ) = super().tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
@@ -1872,7 +1872,7 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
             dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
             tan_theta_coil=sctfcoil_module.tan_theta_coil,
-            dx_tf_side_case=tfcoil_variables.dx_tf_side_case,
+            dx_tf_side_case_min=tfcoil_variables.dx_tf_side_case_min,
             dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
             dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
@@ -2002,7 +2002,7 @@ class SuperconductingTFCoil(TFCoil):
         dr_tf_nose_case: float,
         dr_tf_wp_with_insulation: float,
         tan_theta_coil: float,
-        dx_tf_side_case: float,
+        dx_tf_side_case_min: float,
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
     ) -> tuple[
@@ -2033,8 +2033,8 @@ class SuperconductingTFCoil(TFCoil):
         :type dr_tf_wp_with_insulation: float
         :param tan_theta_coil: Tangent of coil half angle [-].
         :type tan_theta_coil: float
-        :param dx_tf_side_case: Side case thickness [m].
-        :type dx_tf_side_case: float
+        :param dx_tf_side_case_min: Side case thickness [m].
+        :type dx_tf_side_case_min: float
         :param dx_tf_wp_insulation: Insulation thickness [m].
         :type dx_tf_wp_insulation: float
         :param dx_tf_wp_insertion_gap: Insertion gap thickness [m].
@@ -2069,7 +2069,7 @@ class SuperconductingTFCoil(TFCoil):
         dx_tf_wp_inner_toroidal = 2.0e0 * r_tf_wp_inboard_inner * tan_theta_coil
 
         # Minimal toroidal thickness of winding pack [m]
-        dx_tf_wp_toroidal_min = dx_tf_wp_inner_toroidal - 2.0e0 * dx_tf_side_case
+        dx_tf_wp_toroidal_min = dx_tf_wp_inner_toroidal - 2.0e0 * dx_tf_side_case_min
 
         # Rectangular WP
         # --------------
@@ -2109,12 +2109,12 @@ class SuperconductingTFCoil(TFCoil):
         elif i_tf_wp_geom == 1:
             # Thickness of winding pack section at R > sctfcoil_module.r_tf_wp_inboard_centre [m]
             dx_tf_wp_primary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_centre * tan_theta_coil - dx_tf_side_case
+                r_tf_wp_inboard_centre * tan_theta_coil - dx_tf_side_case_min
             )
 
             # Thickness of winding pack section at R < sctfcoil_module.r_tf_wp_inboard_centre [m]
             dx_tf_wp_secondary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case
+                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case_min
             )
 
             # Averaged toroidal thickness of of winding pack [m]
@@ -2159,12 +2159,12 @@ class SuperconductingTFCoil(TFCoil):
         else:
             # Thickness of winding pack section at r_tf_wp_inboard_outer [m]
             dx_tf_wp_primary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_outer * tan_theta_coil - dx_tf_side_case
+                r_tf_wp_inboard_outer * tan_theta_coil - dx_tf_side_case_min
             )
 
             # Thickness of winding pack section at r_tf_wp_inboard_inner [m]
             dx_tf_wp_secondary_toroidal = 2.0e0 * (
-                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case
+                r_tf_wp_inboard_inner * tan_theta_coil - dx_tf_side_case_min
             )
 
             # Averaged toroidal thickness of of winding pack [m]
@@ -2286,7 +2286,7 @@ class SuperconductingTFCoil(TFCoil):
         # Rectangular casing
         if i_tf_wp_geom == 0:
             sctfcoil_module.t_lat_case_av = (
-                tfcoil_variables.dx_tf_side_case
+                tfcoil_variables.dx_tf_side_case_min
                 + 0.5e0
                 * sctfcoil_module.tan_theta_coil
                 * tfcoil_variables.dr_tf_wp_with_insulation
@@ -2295,7 +2295,7 @@ class SuperconductingTFCoil(TFCoil):
         # Double rectangular WP
         elif i_tf_wp_geom == 1:
             sctfcoil_module.t_lat_case_av = (
-                tfcoil_variables.dx_tf_side_case
+                tfcoil_variables.dx_tf_side_case_min
                 + 0.25e0
                 * sctfcoil_module.tan_theta_coil
                 * tfcoil_variables.dr_tf_wp_with_insulation
@@ -2303,7 +2303,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Trapezoidal WP
         else:
-            sctfcoil_module.t_lat_case_av = tfcoil_variables.dx_tf_side_case
+            sctfcoil_module.t_lat_case_av = tfcoil_variables.dx_tf_side_case_min
 
         # --------------
 

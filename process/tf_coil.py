@@ -56,7 +56,7 @@ class TFCoil:
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
             tfcoil_variables.dr_tf_plasma_case,
-            tfcoil_variables.dx_tf_side_case,
+            tfcoil_variables.dx_tf_side_case_min,
         ) = self.tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
@@ -432,13 +432,13 @@ class TFCoil:
 
         # Case thickness of side wall [m]
         if tfc_sidewall_is_fraction:
-            dx_tf_side_case = (
+            dx_tf_side_case_min = (
                 casths_fraction
                 * (r_tf_inboard_in + dr_tf_nose_case)
                 * np.tan(np.pi / n_tf_coils)
             )
         else:
-            dx_tf_side_case = tfcoil_variables.dx_tf_side_case
+            dx_tf_side_case_min = tfcoil_variables.dx_tf_side_case_min
 
         return (
             rad_tf_coil_inboard_toroidal_half,
@@ -449,7 +449,7 @@ class TFCoil:
             dx_tf_inboard_out_toroidal,
             a_tf_leg_outboard,
             dr_tf_plasma_case,
-            dx_tf_side_case,
+            dx_tf_side_case_min,
         )
 
     def tf_current(
@@ -1028,8 +1028,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Inboard leg case sidewall thickness at its narrowest point (m)",
-                "(dx_tf_side_case)",
-                tfcoil_variables.dx_tf_side_case,
+                "(dx_tf_side_case_min)",
+                tfcoil_variables.dx_tf_side_case_min,
             )
             po.ovarre(
                 self.outfile,
@@ -5385,7 +5385,7 @@ def init_tfcoil_variables():
     tfv.dr_tf_plasma_case = 0.0
     tfv.f_dr_tf_plasma_case = 0.05
     tfv.i_f_dr_tf_plasma_case = False
-    tfv.dx_tf_side_case = 0.0
+    tfv.dx_tf_side_case_min = 0.0
     tfv.casths_fraction = 0.06
     tfv.t_conductor = 0.0
     tfv.t_cable_tf = 0.0
