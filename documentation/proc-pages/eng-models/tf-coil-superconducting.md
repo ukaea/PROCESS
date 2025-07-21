@@ -456,5 +456,23 @@ The plasma facing front case area is calculated:
 If `i_tf_case_geom == 0` then the front case is circular so:
 
 $$
-\overbrace{A_{\text{TF,plasma-case}}}^{\texttt{a_tf_plasma_case}} = \overbrace{A_{\text{TF,outboard}}}^{\texttt{a_tf_leg_outboard}} - A_{\text{TF,WP-no-insulation}}
+\overbrace{A_{\text{TF,plasma-case}}}^{\texttt{a_tf_plasma_case}} = \left(\overbrace{\phi_{\text{TF,half}}}^{\texttt{rad_tf_coil_inboard_toroidal_half}} \times \overbrace{R_{\text{TF,inboard-out}}^2}^{\texttt{r_tf_inboard_out}}\right)
+\\ - \left(\overbrace{\tan{(\phi_{\text{TF,half}})}}^{\texttt{tan_theta_coil}} \times \overbrace{R_{\text{TF,WP-outer}}^2}^{\texttt{r_tf_wp_inboard_outer}}\right)
 $$
+
+The first term is equal to the area of an arc segment of radius $R_{\text{TF,inboard-out}}$. Since the value of `rad_tf_coil_inboard_toroidal_half` is a fraction of $\pi$ for each TF coil it can be substituted as the fraction of a full circle. 
+
+If `i_tf_case_geom == 1` then the front case is straight so:
+
+$$
+\overbrace{A_{\text{TF,plasma-case}}}^{\texttt{a_tf_plasma_case}} = \left(\left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\Delta R_{\text{TF,plasma-case}}}^{\texttt{dr_tf_plasma_case}}\right)^2- R_{\text{TF,WP-outer}}^2\right)
+\\ \times \tan{(\phi_{\text{TF,half}})}
+$$
+
+Next the nose case area is calculated:
+
+$$
+\overbrace{A_{\text{TF,nose-case}}}^{\texttt{a_tf_coil_nose_case}} = \left(\tan{(\phi_{\text{TF,half}})} \times \overbrace{R_{\text{TF,WP-inner}}^2}^{\texttt{r_tf_wp_inboard_inner}}\right)
+\\ - \left(\phi_{\text{TF,half}} \times \overbrace{R_{\text{TF,inboard-in}}^2}^{\texttt{r_tf_inboard_in}}\right) 
+$$
+

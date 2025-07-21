@@ -2250,11 +2250,12 @@ class SuperconductingTFCoil(TFCoil):
             sctfcoil_module.a_tf_plasma_case = (
                 sctfcoil_module.rad_tf_coil_inboard_toroidal_half
                 * build_variables.r_tf_inboard_out**2
-                - sctfcoil_module.tan_theta_coil
+            ) - (
+                sctfcoil_module.tan_theta_coil
                 * sctfcoil_module.r_tf_wp_inboard_outer**2
             )
         else:
-            # Straight front case
+            # Straight front case [m²]
             sctfcoil_module.a_tf_plasma_case = (
                 (
                     sctfcoil_module.r_tf_wp_inboard_outer
