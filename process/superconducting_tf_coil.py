@@ -2281,7 +2281,7 @@ class SuperconductingTFCoil(TFCoil):
             error_handling.fdiags[1] = tfcoil_variables.a_tf_coil_outboard_case
             error_handling.report_error(99)
 
-        # Average lateral casing thickness
+        # Average lateral casing thickness [m]
         # --------------
         # Rectangular casing
         if i_tf_wp_geom == 0:

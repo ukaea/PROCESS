@@ -476,3 +476,24 @@ $$
 \\ - \left(\phi_{\text{TF,half}} \times \overbrace{R_{\text{TF,inboard-in}}^2}^{\texttt{r_tf_inboard_in}}\right) 
 $$
 
+Finally the average side case thickness is calculated:
+
+If `i_tf_wp_geom == 0` then a rectangular casing is:
+
+$$
+\overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}} + \frac{1}{2}\left(\tan{(\phi_{\text{TF,half}})} \times \overbrace{\Delta R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}\right)
+$$
+
+This is equal to the sidewall casing thickness at the very centre of the winding pack.
+
+If `i_tf_wp_geom == 1` then a  double rectangular casing is:
+
+$$
+\overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}} + \frac{1}{4}\left(\tan{(\phi_{\text{TF,half}})} \times \overbrace{\Delta R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}\right)
+$$
+
+Finally, if `i_tf_wp_geom == 2` then a  trapezoidal casing is:
+
+$$
+\overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}}
+$$
