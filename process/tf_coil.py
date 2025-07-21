@@ -225,7 +225,7 @@ class TFCoil:
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
-                sctfcoil_module.t_lat_case_av,
+                sctfcoil_module.dx_tf_side_case_average,
                 sctfcoil_module.dx_tf_wp_toroidal_average,
                 sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
@@ -3251,7 +3251,7 @@ class TFCoil:
         dia_tf_turn_coolant_channel,
         fcutfsu,
         dx_tf_turn_steel,
-        t_lat_case_av,
+        dx_tf_side_case_average,
         dx_tf_wp_toroidal_average,
         a_tf_coil_inboard_insulation,
         a_tf_wp_steel,
@@ -3653,7 +3653,7 @@ class TFCoil:
                 np.double(dx_tf_wp_toroidal_average),
                 poisson_wp_trans,
                 np.double(eyoung_steel),
-                2.0e0 * t_lat_case_av,
+                2.0e0 * dx_tf_side_case_average,
                 np.double(poisson_steel),
             )
 

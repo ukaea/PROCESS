@@ -215,7 +215,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
-                sctfcoil_module.t_lat_case_av,
+                sctfcoil_module.dx_tf_side_case_average,
                 sctfcoil_module.dx_tf_wp_toroidal_average,
                 sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,

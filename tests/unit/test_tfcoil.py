@@ -1488,7 +1488,7 @@ class StressclParam(NamedTuple):
 
     dx_tf_wp_toroidal_average: Any = None
 
-    t_lat_case_av: Any = None
+    dx_tf_side_case_average: Any = None
 
     a_tf_plasma_case: Any = None
 
@@ -1631,7 +1631,7 @@ class StressclParam(NamedTuple):
             r_tf_wp_inboard_outer=4.06120206347512,
             dx_tf_wp_toroidal_min=1.299782604942499,
             dx_tf_wp_toroidal_average=1.299782604942499,
-            t_lat_case_av=0.10396600719086938,
+            dx_tf_side_case_average=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -1754,7 +1754,7 @@ class StressclParam(NamedTuple):
             r_tf_wp_inboard_outer=4.06120206347512,
             dx_tf_wp_toroidal_min=1.299782604942499,
             dx_tf_wp_toroidal_average=1.299782604942499,
-            t_lat_case_av=0.10396600719086938,
+            dx_tf_side_case_average=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -1872,7 +1872,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.dia_tf_turn_coolant_channel,
         stressclparam.fcutfsu,
         stressclparam.dx_tf_turn_steel,
-        stressclparam.t_lat_case_av,
+        stressclparam.dx_tf_side_case_average,
         stressclparam.dx_tf_wp_toroidal_average,
         stressclparam.a_tf_coil_inboard_insulation,
         stressclparam.a_tf_wp_steel,

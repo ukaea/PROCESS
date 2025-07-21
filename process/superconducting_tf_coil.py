@@ -246,7 +246,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
-                sctfcoil_module.t_lat_case_av,
+                sctfcoil_module.dx_tf_side_case_average,
                 sctfcoil_module.dx_tf_wp_toroidal_average,
                 sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
@@ -1742,7 +1742,7 @@ class SuperconductingTFCoil(TFCoil):
             s_rp=np.clip(sctfcoil_module.a_tf_coil_inboard_steel, 0, None),
             s_cc=sctfcoil_module.a_tf_plasma_case
             + sctfcoil_module.a_tf_coil_nose_case
-            + 2.0 * sctfcoil_module.t_lat_case_av,
+            + 2.0 * sctfcoil_module.dx_tf_side_case_average,
             taud=tfcoil_variables.tdmptf,
             # TODO: is this the correct current?
             i_op=sctfcoil_module.c_tf_coil / tfcoil_variables.n_tf_coil_turns,
@@ -2285,7 +2285,7 @@ class SuperconductingTFCoil(TFCoil):
         # --------------
         # Rectangular casing
         if i_tf_wp_geom == 0:
-            sctfcoil_module.t_lat_case_av = (
+            sctfcoil_module.dx_tf_side_case_average = (
                 tfcoil_variables.dx_tf_side_case_min
                 + 0.5e0
                 * sctfcoil_module.tan_theta_coil
@@ -2294,7 +2294,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Double rectangular WP
         elif i_tf_wp_geom == 1:
-            sctfcoil_module.t_lat_case_av = (
+            sctfcoil_module.dx_tf_side_case_average = (
                 tfcoil_variables.dx_tf_side_case_min
                 + 0.25e0
                 * sctfcoil_module.tan_theta_coil
@@ -2303,7 +2303,9 @@ class SuperconductingTFCoil(TFCoil):
 
         # Trapezoidal WP
         else:
-            sctfcoil_module.t_lat_case_av = tfcoil_variables.dx_tf_side_case_min
+            sctfcoil_module.dx_tf_side_case_average = (
+                tfcoil_variables.dx_tf_side_case_min
+            )
 
         # --------------
 
@@ -2854,7 +2856,7 @@ def init_sctfcoil_module():
     sctfcoil_module.vol_case_cp = 0.0
     sctfcoil_module.dx_tf_wp_toroidal_min = 0.0
     sctfcoil_module.dx_tf_wp_toroidal_average = 0.0
-    sctfcoil_module.t_lat_case_av = 0.0
+    sctfcoil_module.dx_tf_side_case_average = 0.0
     sctfcoil_module.a_tf_plasma_case = 0.0
     sctfcoil_module.a_tf_coil_nose_case = 0.0
     sctfcoil_module.a_tf_wp_ground_insulation = 0.0

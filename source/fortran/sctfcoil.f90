@@ -90,7 +90,7 @@ module sctfcoil_module
    real(dp) :: dx_tf_wp_toroidal_average
 !! Averaged toroidal thickness of of winding pack [m]
 
-   real(dp) :: t_lat_case_av
+   real(dp) :: dx_tf_side_case_average
 !! Average lateral casing thickness [m]
 
    real(dp) :: a_tf_plasma_case

@@ -777,7 +777,7 @@ class TfCaseGeomParam(NamedTuple):
 
     r_tf_wp_inboard_outer: Any = None
 
-    t_lat_case_av: Any = None
+    dx_tf_side_case_average: Any = None
 
     a_tf_plasma_case: Any = None
 
@@ -795,7 +795,7 @@ class TfCaseGeomParam(NamedTuple):
 
     expected_a_tf_coil_outboard_case: Any = None
 
-    expected_t_lat_case_av: Any = None
+    expected_dx_tf_side_case_average: Any = None
 
     expected_a_tf_plasma_case: Any = None
 
@@ -819,7 +819,7 @@ class TfCaseGeomParam(NamedTuple):
             a_tf_wp_with_insulation=0.70527618095271016,
             r_tf_wp_inboard_inner=3.5185911851091101,
             r_tf_wp_inboard_outer=4.06120206347512,
-            t_lat_case_av=0,
+            dx_tf_side_case_average=0,
             a_tf_plasma_case=0,
             a_tf_coil_nose_case=0,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -828,7 +828,7 @@ class TfCaseGeomParam(NamedTuple):
             i_tf_case_geom=0,
             expected_a_tf_coil_inboard_case=1.0015169239205168,
             expected_a_tf_coil_outboard_case=1.2752592893394648,
-            expected_t_lat_case_av=0.10396600719086938,
+            expected_dx_tf_side_case_average=0.10396600719086938,
             expected_a_tf_plasma_case=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
@@ -846,7 +846,7 @@ class TfCaseGeomParam(NamedTuple):
             a_tf_wp_with_insulation=0.70527618095271016,
             r_tf_wp_inboard_inner=3.5185911851091101,
             r_tf_wp_inboard_outer=4.06120206347512,
-            t_lat_case_av=0.10396600719086938,
+            dx_tf_side_case_average=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -855,7 +855,7 @@ class TfCaseGeomParam(NamedTuple):
             i_tf_case_geom=0,
             expected_a_tf_coil_inboard_case=1.0015169239205168,
             expected_a_tf_coil_outboard_case=1.2752592893394648,
-            expected_t_lat_case_av=0.10396600719086938,
+            expected_dx_tf_side_case_average=0.10396600719086938,
             expected_a_tf_plasma_case=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
@@ -932,7 +932,11 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         sctfcoil_module, "r_tf_wp_inboard_outer", tfcasegeomparam.r_tf_wp_inboard_outer
     )
 
-    monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", tfcasegeomparam.t_lat_case_av)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "dx_tf_side_case_average",
+        tfcasegeomparam.dx_tf_side_case_average,
+    )
 
     monkeypatch.setattr(
         sctfcoil_module, "a_tf_plasma_case", tfcasegeomparam.a_tf_plasma_case
@@ -965,8 +969,8 @@ def test_tf_case_geom(tfcasegeomparam, monkeypatch, sctfcoil):
         tfcasegeomparam.expected_a_tf_coil_outboard_case
     )
 
-    assert sctfcoil_module.t_lat_case_av == pytest.approx(
-        tfcasegeomparam.expected_t_lat_case_av
+    assert sctfcoil_module.dx_tf_side_case_average == pytest.approx(
+        tfcasegeomparam.expected_dx_tf_side_case_average
     )
 
     assert sctfcoil_module.a_tf_plasma_case == pytest.approx(
@@ -1662,7 +1666,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     # Sum from Section 3
     monkeypatch.setattr(sctfcoil_module, "a_tf_plasma_case", 0.42)
     monkeypatch.setattr(sctfcoil_module, "a_tf_coil_nose_case", 0.42)
-    monkeypatch.setattr(sctfcoil_module, "t_lat_case_av", 0.05)
+    monkeypatch.setattr(sctfcoil_module, "dx_tf_side_case_average", 0.05)
 
     monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "dz_shld_upper", 0.3)  # Baseline 2018
