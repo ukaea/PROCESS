@@ -1902,8 +1902,12 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
         )
 
-        # WP/trun currents
-        self.tf_wp_currents()
+        # WP current density [A/m²]
+        tfcoil_variables.j_tf_wp = self.tf_wp_currents(
+            c_tf_total=sctfcoil_module.c_tf_coil,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            a_tf_wp_no_insulation=sctfcoil_module.a_tf_wp_no_insulation,
+        )
 
         # Setting the WP turn geometry / areas
         if i_tf_turns_integer == 0:
@@ -2506,16 +2510,27 @@ class SuperconductingTFCoil(TFCoil):
 
         # -------------
 
-    def tf_wp_currents(self):
+    def tf_wp_currents(
+        self,
+        c_tf_total: float,
+        n_tf_coils: float,
+        a_tf_wp_no_insulation: float,
+    ) -> float:
         """
-        Author : S. Kahn, CCFE
-        Turn engineering turn currents/densities
+        Calculates the engineering turn current or current density for the toroidal field (TF) coil winding pack.
+
+        :param c_tf_total: Total TF coil current [A].
+        :type c_tf_total: float
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: float
+        :param a_tf_wp_no_insulation: Winding pack cross-sectional area without insulation [m²].
+        :type a_tf_wp_no_insulation: float
+
+        :returns: Engineering turn current or current density (minimum 1.0).
+        :rtype: float
+
         """
-        tfcoil_variables.j_tf_wp = max(
-            1.0e0,
-            tfcoil_variables.c_tf_total
-            / (tfcoil_variables.n_tf_coils * sctfcoil_module.a_tf_wp_no_insulation),
-        )
+        return max(1.0e0, (c_tf_total / (n_tf_coils * a_tf_wp_no_insulation)))
 
     def tf_averaged_turn_geom(
         self, j_tf_wp, dx_tf_turn_steel, dx_tf_turn_insulation, i_tf_sc_mat
@@ -2533,7 +2548,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Turn dimension is a an input
         if tfcoil_variables.t_turn_tf_is_input:
-            # Turn area [m2]
+            # Turn area [m²]
             a_turn = tfcoil_variables.t_turn_tf**2
 
             # Current per turn [A]
@@ -2546,7 +2561,7 @@ class SuperconductingTFCoil(TFCoil):
                 dx_tf_turn_insulation + dx_tf_turn_steel
             )
 
-            # Turn area [m2]
+            # Turn area [m²]
             a_turn = tfcoil_variables.t_turn_tf**2
 
             # Current per turn [A]
@@ -2554,7 +2569,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Current per turn is an input
         else:
-            # Turn area [m2]
+            # Turn area [m²]
             # Allow for additional inter-layer insulation MDK 13/11/18
             # Area of turn including conduit and inter-layer insulation
             a_turn = tfcoil_variables.c_tf_turn / j_tf_wp
@@ -2576,7 +2591,7 @@ class SuperconductingTFCoil(TFCoil):
         # Total number of turns per TF coil (not required to be an integer)
         n_tf_coil_turns = sctfcoil_module.a_tf_wp_no_insulation / a_turn
 
-        # Area of inter-turn insulation: single turn [m2]
+        # Area of inter-turn insulation: single turn [m²]
         a_tf_turn_insulation = a_turn - tfcoil_variables.t_conductor**2
 
         # NOTE: Fortran has a_tf_turn_cable_space_no_void as an intent(out) variable that was outputting
@@ -2622,7 +2637,7 @@ class SuperconductingTFCoil(TFCoil):
                         sctfcoil_module.dx_tf_turn_cable_space_average**2
                     )
 
-            # Cross-sectional area of conduit jacket per turn [m2]
+            # Cross-sectional area of conduit jacket per turn [m²]
             a_tf_turn_steel = (
                 tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space_no_void
             )
@@ -2634,7 +2649,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.t_conductor - 2.0e0 * dx_tf_turn_steel
             )
 
-            # Cross-sectional area of conduit jacket per turn [m2]
+            # Cross-sectional area of conduit jacket per turn [m²]
             a_tf_turn_steel = (
                 tfcoil_variables.t_conductor**2 - a_tf_turn_cable_space_no_void
             )
