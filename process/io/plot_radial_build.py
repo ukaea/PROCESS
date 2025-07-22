@@ -189,7 +189,7 @@ def main(args=None):
         "boundu(152)",
         "impurity_enrichment(9)",
         "n_pancake",
-        "n_layer",
+        "n_tf_wp_layers",
         "fimp(13)",
         "f_p_div_lower",
         "rad_fraction_sol",

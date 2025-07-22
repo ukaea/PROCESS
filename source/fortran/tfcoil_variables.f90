@@ -264,7 +264,7 @@ module tfcoil_variables
   integer :: n_pancake
   !! Number of pancakes in TF coil. Only used if `i_tf_turns_integer=1`
 
-  integer :: n_layer
+  integer :: n_tf_wp_layers
   !! Number of layers in TF coil. Only used if `i_tf_turns_integer=1`
 
   integer :: n_rad_per_layer

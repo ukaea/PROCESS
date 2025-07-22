@@ -2701,7 +2701,7 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
 
     if integer_turns == 1:
-        turn_layers = mfile_data.data["n_layer"].get_scan(scan)
+        turn_layers = mfile_data.data["n_tf_wp_layers"].get_scan(scan)
         turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
 
     # Superconducting coil check
