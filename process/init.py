@@ -23,6 +23,7 @@ from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.power_variables import init_power_variables
+from process.data_structure.reinke_variables import init_reinke_variables
 from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
@@ -38,7 +39,6 @@ from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import (
     init_physics_module,
     init_physics_variables,
-    init_reinke_variables,
 )
 from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.pulse import init_pulse_variables
