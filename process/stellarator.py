@@ -1056,7 +1056,7 @@ class Stellarator:
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_coil_inboard
+            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_inboard_total
             + 0.75
             * tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_leg_outboard
@@ -2729,7 +2729,7 @@ class Stellarator:
             tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness outboard distance (radial)
         # dr_tf_nose_case = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
-        tfcoil_variables.dx_tf_side_case = (
+        tfcoil_variables.dx_tf_side_case_min = (
             tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness toroidal distance (toroidal)
 
@@ -2785,7 +2785,7 @@ class Stellarator:
         #
         tfcoil_variables.dx_tf_inboard_out_toroidal = (
             tfcoil_variables.dx_tf_wp_primary_toroidal
-            + 2.0e0 * tfcoil_variables.dx_tf_side_case
+            + 2.0e0 * tfcoil_variables.dx_tf_side_case_min
             + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in toroidal direction
 
@@ -2844,14 +2844,14 @@ class Stellarator:
         )
 
         #  Variables for ALL coils.
-        tfcoil_variables.a_tf_coil_inboard = (
+        tfcoil_variables.a_tf_inboard_total = (
             tfcoil_variables.n_tf_coils * tfcoil_variables.a_tf_leg_outboard
         )  # [m^2] Total area of all coil legs (midplane)
         tfcoil_variables.c_tf_total = (
             tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6
         )  # [A] Total current in ALL coils
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_coil_inboard
+            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_inboard_total
         )  # [A / m^2] overall current density
         tfcoil_variables.r_b_tf_inboard_peak = (
             r_coil_major - r_coil_minor + awp_rad
@@ -3714,7 +3714,7 @@ class Stellarator:
             self.outfile,
             "Cross-sectional area per coil (m2)",
             "(tfarea/n_tf_coils)",
-            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils,
+            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils,
         )
         po.ovarre(
             self.outfile,
@@ -4089,8 +4089,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Case toroidal thickness (m)",
-            "(dx_tf_side_case)",
-            tfcoil_variables.dx_tf_side_case,
+            "(dx_tf_side_case_min)",
+            tfcoil_variables.dx_tf_side_case_min,
         )
         po.ovarre(
             self.outfile,

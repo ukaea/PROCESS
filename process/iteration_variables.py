@@ -322,7 +322,7 @@ ITERATION_VARIABLES = {
         "deg_div_field_plate", data_structure.divertor_variables, 0.49, 5.01
     ),
     171: IterationVariable("casths_fraction", fortran.tfcoil_variables, 0.01, 0.99),
-    172: IterationVariable("dx_tf_side_case", fortran.tfcoil_variables, 0.001, 1.0),
+    172: IterationVariable("dx_tf_side_case_min", fortran.tfcoil_variables, 0.001, 1.0),
     173: IterationVariable("f_tritium", fortran.physics_variables, 0.000, 1.000),
     174: IterationVariable("triang", fortran.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", fortran.physics_variables, 0.00, 10.00),

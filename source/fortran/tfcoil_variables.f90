@@ -82,14 +82,14 @@ module tfcoil_variables
   logical :: i_f_dr_tf_plasma_case
   !! logical switch to make dr_tf_plasma_case a fraction of TF coil thickness (`f_dr_tf_plasma_case`)
 
-  real(dp) :: dx_tf_side_case
+  real(dp) :: dx_tf_side_case_min
   !! inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 
   real(dp) :: casths_fraction
   !! inboard TF coil sidewall case thickness as a fraction of dx_tf_inboard_out_toroidal
 
   logical :: tfc_sidewall_is_fraction
-  !! logical switch to make dx_tf_side_case a fraction of TF coil thickness (`casths_fraction`)
+  !! logical switch to make dx_tf_side_case_min a fraction of TF coil thickness (`casths_fraction`)
 
   real(dp) :: t_conductor
   !! Conductor (cable + steel conduit) area averaged dimension [m]
@@ -499,7 +499,7 @@ module tfcoil_variables
   !! - exponential quench : e-folding time (s)`
   !! - linear quench : discharge time (s)
 
-  real(dp) :: a_tf_coil_inboard
+  real(dp) :: a_tf_inboard_total
   !! Area of inboard midplane TF legs (m2)
 
   real(dp) :: len_tf_bus

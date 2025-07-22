@@ -150,10 +150,10 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
 
 7. The toroidal thickness of the side case is set depending on the `tfc_sidewall_is_fraction` switch value:
 
-    If the switch is `True` then the value of the side case thickness is set as a fraction:
+    If the switch is `True` then the value of the minimum side case thickness is set as a fraction:
 
     $$
-    \overbrace{\mathrm{d}R_{\text{TF,side-case}}}^{\texttt{dx_tf_side_case}} = \overbrace{f_{\text{TF, side-case}}}^{\texttt{casths_fraction}} \times \left(R_{\text{TF,inboard-in}} + \mathrm{d}R_{\text{TF,nose-case}} \right)\\
+    \overbrace{\mathrm{d}R_{\text{TF,side-case}}}^{\texttt{dx_tf_side_case_min}} = \overbrace{f_{\text{TF, side-case}}}^{\texttt{casths_fraction}} \times \left(R_{\text{TF,inboard-in}} + \mathrm{d}R_{\text{TF,nose-case}} \right)\\
     \times \tan{\left(\frac{\pi}{N_{\text{TF,coils}}}\right)}
     $$
 
@@ -990,8 +990,8 @@ $$
 | `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
 | `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
-| `dx_tf_side_case`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
-| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value                       | -                  | 0.03                                 | -    |
+| `dx_tf_side_case_min`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
+| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case_min` input value                       | -                  | 0.03                                 | -    |
 | `casthi`              | Minimal plasma side casing thickness                                                                                                                 | -                  | -                                    | m    |
 | `casthi_fraction`     | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `casthi` input value                         | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |
@@ -1005,8 +1005,8 @@ $$
 | `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
 | `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
-| `dx_tf_side_case`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
-| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case` input value                       | -                  | 0.03                                 | -    |
+| `dx_tf_side_case_min`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
+| `casths_fraction`     | Minimal sidewall casing thickness as a fraction of the TF coil toroidal thickness. Overwites the `dx_tf_side_case_min` input value                       | -                  | 0.03                                 | -    |
 | `dr_tf_plasma_case`   | Minimal plasma side casing thickness                                                                                                                 | -                  | -                                    | m    |
 | `f_dr_tf_plasma_case` | Minimal plasma side casing thickness as a fraction of the TF thickness (`dr_tf_inboard`). Overwites the `dr_tf_plasma_case` input value              | -                  | 0.05                                 | -    |
 | `i_tf_case_geom`      | Plasma side casing geometry option:<br> - 0 : rounder front casing (ITER) <br> - 1 : Straight casing                                                 | -                  | 0                                    | -    |

@@ -259,13 +259,13 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
             (
                 pytest.approx(0.19634954084936207),  # rad_tf_coil_inboard_toroidal_half
                 pytest.approx(0.198912367379658),  # tan_theta_coil
-                pytest.approx(5.497787143782138),  # a_tf_coil_inboard
+                pytest.approx(5.497787143782138),  # a_tf_inboard_total
                 pytest.approx(4.85),  # r_tf_outboard_in
                 pytest.approx(5.15),  # r_tf_outboard_out
                 pytest.approx(0.780361288064513),  # dx_tf_inboard_out_toroidal
                 pytest.approx(0.2341083864193539),  # a_tf_leg_outboard
                 pytest.approx(0.0),  # dr_tf_plasma_case
-                pytest.approx(0.0),  # dx_tf_side_case
+                pytest.approx(0.0),  # dx_tf_side_case_min
             ),
         ),
         (
@@ -284,13 +284,13 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
             (
                 pytest.approx(0.2617993877991494),  # rad_tf_coil_inboard_toroidal_half
                 pytest.approx(0.2679491924311227),  # tan_theta_coil
-                pytest.approx(3.562478398964007),  # a_tf_coil_inboard
+                pytest.approx(3.562478398964007),  # a_tf_inboard_total
                 pytest.approx(4.375),  # r_tf_outboard_in
                 pytest.approx(4.625),  # r_tf_outboard_out
                 pytest.approx(0.9317485623690747),  # dx_tf_inboard_out_toroidal
                 pytest.approx(0.23293714059226867),  # a_tf_leg_outboard
                 pytest.approx(0.04),  # dr_tf_plasma_case
-                pytest.approx(0.019426316451256392),  # dx_tf_side_case
+                pytest.approx(0.019426316451256392),  # dx_tf_side_case_min
             ),
         ),
     ],
@@ -330,7 +330,7 @@ def test_tf_global_geometry(
 
 
 @pytest.mark.parametrize(
-    "n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard, expected",
+    "n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected",
     [
         (
             16,  # Number of TF coils
@@ -361,11 +361,11 @@ def test_tf_global_geometry(
     ],
 )
 def test_tf_current(
-    tfcoil, n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard, expected
+    tfcoil, n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected
 ):
     """Test the tf_current method."""
     result = tfcoil.tf_current(
-        n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_coil_inboard
+        n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total
     )
     assert result == expected
 
@@ -1488,7 +1488,7 @@ class StressclParam(NamedTuple):
 
     dx_tf_wp_toroidal_average: Any = None
 
-    t_lat_case_av: Any = None
+    dx_tf_side_case_average: Any = None
 
     a_tf_plasma_case: Any = None
 
@@ -1631,7 +1631,7 @@ class StressclParam(NamedTuple):
             r_tf_wp_inboard_outer=4.06120206347512,
             dx_tf_wp_toroidal_min=1.299782604942499,
             dx_tf_wp_toroidal_average=1.299782604942499,
-            t_lat_case_av=0.10396600719086938,
+            dx_tf_side_case_average=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -1754,7 +1754,7 @@ class StressclParam(NamedTuple):
             r_tf_wp_inboard_outer=4.06120206347512,
             dx_tf_wp_toroidal_min=1.299782604942499,
             dx_tf_wp_toroidal_average=1.299782604942499,
-            t_lat_case_av=0.10396600719086938,
+            dx_tf_side_case_average=0.10396600719086938,
             a_tf_plasma_case=0.18607458590131154,
             a_tf_coil_nose_case=0.70261616505511615,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
@@ -1872,7 +1872,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.dia_tf_turn_coolant_channel,
         stressclparam.fcutfsu,
         stressclparam.dx_tf_turn_steel,
-        stressclparam.t_lat_case_av,
+        stressclparam.dx_tf_side_case_average,
         stressclparam.dx_tf_wp_toroidal_average,
         stressclparam.a_tf_coil_inboard_insulation,
         stressclparam.a_tf_wp_steel,

@@ -2685,14 +2685,14 @@ def plot_tf_wp(axis, mfile_data, scan: int) -> None:
     dr_tf_wp_with_insulation = mfile_data.data["dr_tf_wp_with_insulation"].get_scan(
         scan
     )
-    side_case_dx = mfile_data.data["dx_tf_side_case"].get_scan(scan)
+    side_case_dx = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
     wp_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
     dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
     turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     wp_shape = round(mfile_data.data["i_tf_wp_geom"].get_scan(scan))
     cond_type = round(mfile_data.data["i_tf_sup"].get_scan(scan))
     nose_thickness = mfile_data.data["dr_tf_nose_case"].get_scan(scan)
-    side_thickness = mfile_data.data["dx_tf_side_case"].get_scan(scan)
+    side_thickness = mfile_data.data["dx_tf_side_case_min"].get_scan(scan)
     case_plasma = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     j_tf_wp = round(mfile_data.data["j_tf_wp"].get_scan(scan)) / 1e6
     tf_thickness = mfile_data.data["dr_tf_inboard"].get_scan(scan)

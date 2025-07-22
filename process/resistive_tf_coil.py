@@ -30,13 +30,13 @@ class ResistiveTFCoil(TFCoil):
         (
             sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
             sctfcoil_module.tan_theta_coil,
-            tfcoil_variables.a_tf_coil_inboard,
+            tfcoil_variables.a_tf_inboard_total,
             sctfcoil_module.r_tf_outboard_in,
             sctfcoil_module.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
             tfcoil_variables.dr_tf_plasma_case,
-            tfcoil_variables.dx_tf_side_case,
+            tfcoil_variables.dx_tf_side_case_min,
         ) = super().tf_global_geometry(
             i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
             i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
@@ -71,7 +71,7 @@ class ResistiveTFCoil(TFCoil):
             bt=physics_variables.bt,
             rmajor=physics_variables.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
-            a_tf_coil_inboard=tfcoil_variables.a_tf_coil_inboard,
+            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
         )
         (
             tfcoil_variables.len_tf_coil,
@@ -215,7 +215,7 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.dia_tf_turn_coolant_channel,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.dx_tf_turn_steel,
-                sctfcoil_module.t_lat_case_av,
+                sctfcoil_module.dx_tf_side_case_average,
                 sctfcoil_module.dx_tf_wp_toroidal_average,
                 sctfcoil_module.a_tf_coil_inboard_insulation,
                 tfcoil_variables.a_tf_wp_steel,
@@ -430,14 +430,14 @@ class ResistiveTFCoil(TFCoil):
         sctfcoil_module.f_a_tf_coil_inboard_insulation = (
             tfcoil_variables.n_tf_coils
             * sctfcoil_module.a_tf_coil_inboard_insulation
-            / tfcoil_variables.a_tf_coil_inboard
+            / tfcoil_variables.a_tf_inboard_total
         )
 
         # Total cross-sectional area of the bucking cylindre and the outer support
         # support structure per coil [m2]
         # physics_variables.itart = 1 : Only valid at mid-plane
         tfcoil_variables.a_tf_coil_inboard_case = (
-            tfcoil_variables.a_tf_coil_inboard / tfcoil_variables.n_tf_coils
+            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils
         ) - sctfcoil_module.a_tf_wp_with_insulation
 
         # Current per turn

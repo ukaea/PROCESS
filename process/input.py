@@ -266,7 +266,9 @@ INPUT_VARIABLES = {
     "f_dr_tf_plasma_case": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "dx_tf_side_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "dx_tf_side_case_min": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "casths_fraction": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "cboot": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
     "cconfix": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),

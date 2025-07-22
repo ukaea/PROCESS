@@ -58,7 +58,7 @@ $$
     **The nose casing:** this section corresponds to the case separating the WP with the machine center. Due to the presence of net electromechanical centering forces, this case has a major structural purpose and is often much larger than the other sides. The nose case dimension is set by its radial thickness that the user can specify using the `dr_tf_nose_case`  input variable (iteration variable 57).
   </p>
 - <p style='text-align: justify;'> 
-    **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `dx_tf_side_case`. The user can either directly specify `dx_tf_side_case` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_tf_wp_inboard_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `dx_tf_side_case` value will be overwritten.
+    **Sidewall casing:** this section corresponds to the lateral side of the case, separating the WP with the other vaulted coils. As in the WP geometry is generally squared, the sidewall case thickness may vary with the machine radius. For this reason, the user sets its dimensions though its minimal thickness `dx_tf_side_case_min`. The user can either directly specify `dx_tf_side_case_min` or define it as a fraction of the total coil thickness at the inner radius of the WP (`r_tf_wp_inboard_inner`) with the `casths_fraction` input. If `casths_fraction` is set in the input file, the `dx_tf_side_case_min` value will be overwritten.
   </p>
 - <p style='text-align: justify;'> 
     **Plasma side casing:** this section corresponds to the case section separating the WP with the plasma. As the geometry of this section is rounded, its thickness is set by its minimal value `dr_tf_plasma_case` (user input). This parameter can also be defined as a fraction of the total TF coil thickness `dr_tf_inboard` using `f_dr_tf_plasma_case`. If the `f_dr_tf_plasma_case` parametrization is used, the `dr_tf_plasma_case` value will be overwritten.
@@ -295,7 +295,7 @@ $$
 To find the straight toroidal length of the winding pack we now take off the side case thicknesses:
 
 $$
-\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-min}}}^{\texttt{dx_tf_wp_toroidal_min}} = \mathrm{d}x_{\text{TF,toroidal,WP}} - \left(2 \times \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+\overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-min}}}^{\texttt{dx_tf_wp_toroidal_min}} = \mathrm{d}x_{\text{TF,toroidal,WP}} - \left(2 \times \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case_min}}\right)
 $$
 
 ----------
@@ -343,7 +343,7 @@ The straight toroidal width of the primary winding pack is:
 
 $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}} = 2 \times 
-\\ \left(\overbrace{R_{\text{TF,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+\\ \left(\overbrace{R_{\text{TF,WP-centre}}}^{\texttt{r_tf_wp_inboard_centre}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case_min}}\right)
 $$
 
 The straight toroidal width of the secondary winding pack is:
@@ -393,7 +393,7 @@ The straight toroidal width of the primary winding pack is (longest side of trap
 
 $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-primary}}}^{\texttt{dx_tf_wp_primary_toroidal}} = 2 \times 
-\\ \left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case}}\right)
+\\ \left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\tan{\left(\phi_{\text{TF,half}}\right)}}^{\texttt{tan_theta_coil}} - \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case_min}}\right)
 $$
 
 The straight toroidal width of the secondary winding pack is (shortest side of trapezoid):
@@ -437,3 +437,63 @@ $$
 \\ - A_{\text{TF,WP-no-insulation}}
 $$
 
+-----------------
+
+### Case geometry | `superconducting_tf_case_geometry()`
+
+The areas of the total casing surrounding the winding packs on the inboard and outboard leg are calculated:
+
+$$
+\overbrace{A_{\text{TF,case-inboard}}}^{\texttt{a_tf_coil_inboard_case}} = \frac{\overbrace{A_{\text{TF,inboard-total}}}^{\texttt{a_tf_inboard_total}}}{\underbrace{N_{\text{TF,coils}}}_{\texttt{n_tf_coils}}} - \overbrace{A_{\text{TF,WP-no-insulation}}}^{\texttt{a_tf_wp_with_insulation}}
+$$
+
+$$
+\overbrace{A_{\text{TF,case-outboard}}}^{\texttt{a_tf_coil_outboard_case}} = \overbrace{A_{\text{TF,outboard}}}^{\texttt{a_tf_leg_outboard}} - A_{\text{TF,WP-no-insulation}}
+$$
+
+The plasma facing front case area is calculated:
+
+If `i_tf_case_geom == 0` then the front case is circular so:
+
+$$
+\overbrace{A_{\text{TF,plasma-case}}}^{\texttt{a_tf_plasma_case}} = \left(\overbrace{\phi_{\text{TF,half}}}^{\texttt{rad_tf_coil_inboard_toroidal_half}} \times \overbrace{R_{\text{TF,inboard-out}}^2}^{\texttt{r_tf_inboard_out}}\right)
+\\ - \left(\overbrace{\tan{(\phi_{\text{TF,half}})}}^{\texttt{tan_theta_coil}} \times \overbrace{R_{\text{TF,WP-outer}}^2}^{\texttt{r_tf_wp_inboard_outer}}\right)
+$$
+
+The first term is equal to the area of an arc segment of radius $R_{\text{TF,inboard-out}}$. Since the value of `rad_tf_coil_inboard_toroidal_half` is a fraction of $\pi$ for each TF coil it can be substituted as the fraction of a full circle. 
+
+If `i_tf_case_geom == 1` then the front case is straight so:
+
+$$
+\overbrace{A_{\text{TF,plasma-case}}}^{\texttt{a_tf_plasma_case}} = \left(\left(\overbrace{R_{\text{TF,WP-outer}}}^{\texttt{r_tf_wp_inboard_outer}} \times \overbrace{\Delta R_{\text{TF,plasma-case}}}^{\texttt{dr_tf_plasma_case}}\right)^2- R_{\text{TF,WP-outer}}^2\right)
+\\ \times \tan{(\phi_{\text{TF,half}})}
+$$
+
+Next the nose case area is calculated:
+
+$$
+\overbrace{A_{\text{TF,nose-case}}}^{\texttt{a_tf_coil_nose_case}} = \left(\tan{(\phi_{\text{TF,half}})} \times \overbrace{R_{\text{TF,WP-inner}}^2}^{\texttt{r_tf_wp_inboard_inner}}\right)
+\\ - \left(\phi_{\text{TF,half}} \times \overbrace{R_{\text{TF,inboard-in}}^2}^{\texttt{r_tf_inboard_in}}\right) 
+$$
+
+Finally the average side case thickness is calculated:
+
+If `i_tf_wp_geom == 0` then a rectangular casing is:
+
+$$
+\overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}} + \frac{1}{2}\left(\tan{(\phi_{\text{TF,half}})} \times \overbrace{\Delta R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}\right)
+$$
+
+This is equal to the sidewall casing thickness at the very centre of the winding pack.
+
+If `i_tf_wp_geom == 1` then a  double rectangular casing is:
+
+$$
+\overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}} + \frac{1}{4}\left(\tan{(\phi_{\text{TF,half}})} \times \overbrace{\Delta R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}}\right)
+$$
+
+Finally, if `i_tf_wp_geom == 2` then a  trapezoidal casing is:
+
+$$
+\overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}}
+$$
