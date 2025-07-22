@@ -1526,20 +1526,18 @@ class TfWpCurrentsParam(NamedTuple):
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            j_tf_wp=0,
             a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            j_tf_wp=26493137.688284047,
             a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
     ),
 )
-def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
+def test_tf_wp_currents(tfwpcurrentsparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for tf_wp_currents.
 
@@ -1552,21 +1550,13 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfwpcurrentsparam.c_tf_total)
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfwpcurrentsparam.n_tf_coils)
-
-    monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "a_tf_wp_no_insulation",
-        tfwpcurrentsparam.a_tf_wp_no_insulation,
+    j_tf_wp = sctfcoil.tf_wp_currents(
+        c_tf_total=tfwpcurrentsparam.c_tf_total,
+        n_tf_coils=tfwpcurrentsparam.n_tf_coils,
+        a_tf_wp_no_insulation=tfwpcurrentsparam.a_tf_wp_no_insulation,
     )
 
-    sctfcoil.tf_wp_currents()
-
-    assert tfcoil_variables.j_tf_wp == pytest.approx(tfwpcurrentsparam.expected_j_tf_wp)
+    assert j_tf_wp == pytest.approx(tfwpcurrentsparam.expected_j_tf_wp)
 
 
 def test_vv_stress_on_quench():
