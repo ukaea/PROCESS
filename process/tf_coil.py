@@ -3249,7 +3249,7 @@ class TFCoil:
     def stresscl(
         n_tf_layer,
         n_radial_array,
-        n_tf_wp_layers,
+        n_tf_wp_stress_layers,
         i_tf_bucking,
         r_tf_inboard_in,
         dr_bore,
@@ -3346,15 +3346,15 @@ class TFCoil:
         # two transverse directions (radial and toroidal). Used in the
         # stress models.
 
-        eyoung_member_array = np.zeros((n_tf_wp_layers,))
+        eyoung_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the Young's moduli of the members to composite into smeared
         # properties [Pa]
 
-        poisson_member_array = np.zeros((n_tf_wp_layers,))
+        poisson_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the Poisson's ratios of the members to composite into smeared
         # properti
 
-        l_member_array = np.zeros((n_tf_wp_layers,))
+        l_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the linear dimension (thickness) of the members to composite into smeared
         # properties [m]
 

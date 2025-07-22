@@ -1381,7 +1381,7 @@ class StressclParam(NamedTuple):
 
     str_wp: Any = None
 
-    n_tf_wp_layers: Any = None
+    n_tf_wp_stress_layers: Any = None
 
     i_pf_conductor: Any = None
 
@@ -1508,7 +1508,7 @@ class StressclParam(NamedTuple):
             dia_tf_turn_coolant_channel=0.010000000000000002,
             fcutfsu=0.80884,
             str_wp=0,
-            n_tf_wp_layers=5,
+            n_tf_wp_stress_layers=5,
             i_pf_conductor=0,
             f_a_cs_steel=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
@@ -1631,7 +1631,7 @@ class StressclParam(NamedTuple):
             dia_tf_turn_coolant_channel=0.010000000000000002,
             fcutfsu=0.80884,
             str_wp=0.0015619754370069119,
-            n_tf_wp_layers=5,
+            n_tf_wp_stress_layers=5,
             i_pf_conductor=0,
             f_a_cs_steel=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
@@ -1748,7 +1748,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
     ) = tfcoil.stresscl(
         stressclparam.n_tf_layer,
         stressclparam.n_radial_array,
-        stressclparam.n_tf_wp_layers,
+        stressclparam.n_tf_wp_stress_layers,
         stressclparam.i_tf_bucking,
         stressclparam.r_tf_inboard_in,
         stressclparam.dr_bore,
