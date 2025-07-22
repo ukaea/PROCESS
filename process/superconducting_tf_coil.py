@@ -130,7 +130,7 @@ class SuperconductingTFCoil(TFCoil):
             ) = self.stresscl(
                 int(tfcoil_variables.n_tf_stress_layers),
                 int(tfcoil_variables.n_rad_per_layer),
-                int(tfcoil_variables.n_tf_wp_layers),
+                int(tfcoil_variables.n_tf_wp_stress_layers),
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,
@@ -2488,7 +2488,7 @@ class SuperconductingTFCoil(TFCoil):
         :rtype: float
 
         """
-        return max(1.0e0, (c_tf_total / (n_tf_coils * a_tf_wp_no_insulation)))
+        return max(1.0e0, c_tf_total / (n_tf_coils * a_tf_wp_no_insulation))
 
     def tf_averaged_turn_geom(
         self, j_tf_wp, dx_tf_turn_steel, dx_tf_turn_insulation, i_tf_sc_mat
