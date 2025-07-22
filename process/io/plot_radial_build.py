@@ -188,7 +188,7 @@ def main(args=None):
         "tmargmin_tf",
         "boundu(152)",
         "impurity_enrichment(9)",
-        "n_pancake",
+        "n_tf_wp_pancakes",
         "n_tf_wp_layers",
         "fimp(13)",
         "f_p_div_lower",

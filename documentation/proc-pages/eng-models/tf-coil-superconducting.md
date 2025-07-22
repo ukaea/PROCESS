@@ -160,7 +160,7 @@ turns. The number of turns can be parametrized in three different ways :
 - <p style='text-align: justify;'> 
     **Integer turn parametrization:** `i_tf_turns_integer = 1` the user sets the
     number of layers in the radial direction (`n_tf_wp_layers`) and the number of turns in the toroidal direction
-    (`n_pancake`). The number of turns is integer. The turn cross-section is not necessarily square, giving different
+    (`n_tf_wp_pancakes`). The number of turns is integer. The turn cross-section is not necessarily square, giving different
     averaged structural properties in the radial and toroidal directions. Only a rectangular WP can be used for this parametrization.
   </p>
 
