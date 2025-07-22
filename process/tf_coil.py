@@ -783,6 +783,13 @@ class TFCoil:
         )
         po.ovarre(
             self.outfile,
+            "Inboard TF half angle [rad]",
+            "(rad_tf_coil_inboard_toroidal_half)",
+            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
             "Inboard leg centre radius (m)",
             "(r_tf_inboard_mid)",
             build_variables.r_tf_inboard_mid,
@@ -813,6 +820,27 @@ class TFCoil:
             "Radial position of inner edge and centre of winding pack (m)",
             "(r_tf_wp_inboard_inner)",
             sctfcoil_module.r_tf_wp_inboard_inner,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Radial position of outer edge and of winding pack (m)",
+            "(r_tf_wp_inboard_outer)",
+            sctfcoil_module.r_tf_wp_inboard_outer,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Radial position of centre of winding pack (m)",
+            "(r_tf_wp_inboard_centre)",
+            sctfcoil_module.r_tf_wp_inboard_centre,
+            "OP ",
+        )
+        po.ovarre(
+            constants.mfile,
+            "Minimum toroidal thickness of winding pack (m)",
+            "(dx_tf_wp_toroidal_min)",
+            sctfcoil_module.dx_tf_wp_toroidal_min,
             "OP ",
         )
         po.ovarre(
@@ -1021,15 +1049,33 @@ class TFCoil:
             )
             po.ovarre(
                 self.outfile,
+                "Inboard leg plasma case area (m^2)",
+                "(a_tf_plasma_case)",
+                sctfcoil_module.a_tf_plasma_case,
+            )
+            po.ovarre(
+                self.outfile,
                 'Inboard leg case inboard "nose" thickness (m)',
                 "(dr_tf_nose_case)",
                 tfcoil_variables.dr_tf_nose_case,
             )
             po.ovarre(
                 self.outfile,
+                'Inboard leg case inboard "nose" area (m^2)',
+                "(a_tf_coil_nose_case)",
+                sctfcoil_module.a_tf_coil_nose_case,
+            )
+            po.ovarre(
+                self.outfile,
                 "Inboard leg case sidewall thickness at its narrowest point (m)",
                 "(dx_tf_side_case_min)",
                 tfcoil_variables.dx_tf_side_case_min,
+            )
+            po.ovarre(
+                self.outfile,
+                "Inboard leg case sidewall average thickness (m)",
+                "(dx_tf_side_case_average)",
+                sctfcoil_module.dx_tf_side_case_average,
             )
             po.ovarre(
                 self.outfile,
@@ -1046,6 +1092,12 @@ class TFCoil:
                 "WP cross section area with insulation and insertion (per coil) (m2)",
                 "(a_tf_wp_with_insulation)",
                 sctfcoil_module.a_tf_wp_with_insulation,
+            )
+            po.ovarre(
+                self.outfile,
+                "WP cross section area with no insulation and insertion (per coil) (m2)",
+                "(a_tf_wp_no_insulation)",
+                sctfcoil_module.a_tf_wp_no_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -1089,6 +1141,12 @@ class TFCoil:
                 "Ground wall insulation thickness (m)",
                 "(dx_tf_wp_insulation)",
                 tfcoil_variables.dx_tf_wp_insulation,
+            )
+            po.ovarre(
+                self.outfile,
+                "Ground wall insulation area (m^2)",
+                "(a_tf_wp_ground_insulation)",
+                sctfcoil_module.a_tf_wp_ground_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -1567,7 +1625,13 @@ class TFCoil:
                 "(cdtfleg)",
                 tfcoil_variables.cdtfleg,
             )
-
+        po.ovarre(
+            self.outfile,
+            "Self inductance of a TF coil (H)",
+            "(ind_tf_coil)",
+            tfcoil_variables.ind_tf_coil,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Total stored energy in TF coils (GJ)",

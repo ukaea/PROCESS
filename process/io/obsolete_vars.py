@@ -380,6 +380,7 @@ OBS_VARS = {
     "tbeamin": "n_beam_decay_lengths_core_required",
     "tcycmn": "t_cycle_min",
     "walalw": "pflux_fw_neutron_max_mw",
+    "dx_tf_side_case": "dx_tf_side_case_min",
 }
 
 OBS_VARS_HELP = {

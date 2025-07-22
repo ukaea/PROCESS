@@ -51,7 +51,7 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 </figure>
 
 <figure markdown>
-![plot_proc_7](../images/plot_proc_7.PNG){ width="100%"}
+![plot_proc_7](../images/plot_proc_7.png){ width="100%"}
 <figcaption>Figure 7: plot_proc TF coil and turn cross-section page </figcaption>
 </figure>
 
