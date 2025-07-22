@@ -1092,7 +1092,7 @@ $$
 | Parameter            | description                                                                                                                 | Iteration variable | Default       | Unit |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------- | ---- |
 | `i_tf_turns_integer` | Switch activating the integer turn parametrization <br> - 0 : Integer number of turns <br> - 1 : non integer number of turn | -                  | 0             | -    |
-| `n_layer`            | Number of turns in the radial direction (`i_tf_turns_integer = 1` only)                                                     | -                  | 20            | -    |
+| `n_tf_wp_layers`            | Number of turns in the radial direction (`i_tf_turns_integer = 1` only)                                                     | -                  | 20            | -    |
 | `n_pancake`          | Number of turns in the toroidal direction (`i_tf_turns_integer = 1` only)                                                   | -                  | 10            | -    |
 | `t_turn_tf`          | TF turn squared size                                                                                                        | -                  | No default    | m    |
 | `t_cable_tf`         | TF cable diameter size                                                                                                      | -                  | No default    | m    |

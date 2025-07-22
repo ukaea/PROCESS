@@ -1040,8 +1040,8 @@ class TFCoil:
                 po.ovarin(
                     self.outfile,
                     "Number of TF layers",
-                    "(n_layer)",
-                    tfcoil_variables.n_layer,
+                    "(n_tf_wp_layers)",
+                    tfcoil_variables.n_tf_wp_layers,
                 )
 
             po.oblnkl(self.outfile)

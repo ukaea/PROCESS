@@ -1861,7 +1861,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_coil_turns,
             ) = self.tf_integer_turn_geom(
-                tfcoil_variables.n_layer,
+                tfcoil_variables.n_tf_wp_layers,
                 tfcoil_variables.n_pancake,
                 tfcoil_variables.dx_tf_turn_steel,
                 tfcoil_variables.dx_tf_turn_insulation,
@@ -2307,7 +2307,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
     def tf_integer_turn_geom(
-        self, n_layer, n_pancake, dx_tf_turn_steel, dx_tf_turn_insulation
+        self, n_tf_wp_layers, n_pancake, dx_tf_turn_steel, dx_tf_turn_insulation
     ):
         """
         Authors: J Morris & S Khan
@@ -2329,7 +2329,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.dx_tf_wp_insulation
                 + tfcoil_variables.dx_tf_wp_insertion_gap
             )
-        ) / n_layer
+        ) / n_tf_wp_layers
 
         if sctfcoil_module.dr_tf_turn <= (
             2.0e0 * dx_tf_turn_insulation + 2.0e0 * dx_tf_turn_steel
@@ -2362,7 +2362,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Number of TF turns
-        n_tf_coil_turns = np.double(n_layer * n_pancake)
+        n_tf_coil_turns = np.double(n_tf_wp_layers * n_pancake)
 
         # Current per turn [A/turn]
         c_tf_turn = sctfcoil_module.c_tf_coil / n_tf_coil_turns
