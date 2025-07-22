@@ -93,7 +93,7 @@ from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.pulse import Pulse
-from process.resistive_tf_coil import ResistiveTFCoil
+from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
@@ -656,6 +656,8 @@ class Models:
         self.sctfcoil = SuperconductingTFCoil()
         self.tfcoil = TFCoil(build=self.build)
         self.resistive_tf_coil = ResistiveTFCoil()
+        self.copper_tf_coil = CopperTFCoil()
+        self.aluminium_tf_coil = AluminiumTFCoil()
         self.divertor = Divertor()
         self.structure = Structure()
         self.plasma_geom = PlasmaGeom()
