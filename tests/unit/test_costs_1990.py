@@ -8,7 +8,7 @@ from pytest import approx
 
 from process import fortran
 from process.costs import Costs
-from process.data_structure import cost_variables, divertor_variables
+from process.data_structure import cost_variables, divertor_variables, times_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
@@ -22,7 +22,6 @@ from process.fortran import (
     pulse_variables,
     structure_variables,
     tfcoil_variables,
-    times_variables,
     vacuum_variables,
 )
 from process.fortran import error_handling as eh

@@ -14,7 +14,7 @@ import process.physics_functions as physics_funcs
 from process import (
     process_output as po,
 )
-from process.data_structure import divertor_variables
+from process.data_structure import divertor_variables, times_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -30,7 +30,6 @@ from process.fortran import (
     pulse_variables,
     reinke_variables,
     stellarator_variables,
-    times_variables,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -8784,31 +8783,6 @@ def init_physics_module():
     physics_module.nu_star = 0.0
     physics_module.beta_mcdonald = 0.0
     physics_module.itart_r = 0.0
-
-
-def init_times_variables():
-    """Initialise plasma pulse timing variables"""
-    times_variables.pulsetimings = 1.0
-    times_variables.t_burn = 1000.0
-    times_variables.t_burn_0 = 0.0
-    times_variables.t_cycle = 0.0
-    times_variables.tdown = 0.0
-    times_variables.t_between_pulse = 1800.0
-    times_variables.t_fusion_ramp = 10.0
-    times_variables.tim[:] = 0.0
-    times_variables.timelabel = ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
-    times_variables.intervallabel = [
-        "t_precharge        ",
-        "t_current_ramp_up  ",
-        "t_fusion_ramp      ",
-        "t_burn             ",
-        "t_ramp_down        ",
-    ]
-    times_variables.t_current_ramp_up = 30.0
-    times_variables.i_t_current_ramp_up = 0
-    times_variables.t_pulse_repetition = 0.0
-    times_variables.t_ramp_down = 15.0
-    times_variables.t_precharge = 15.0
 
 
 def init_reinke_variables():
