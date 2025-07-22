@@ -265,7 +265,7 @@ module tfcoil_variables
   !!       transverse Young's modulus of the conductor is equal to the axial,
   !!       which is set to a sensible material-dependent default.
 
-  integer :: n_pancake
+  integer :: n_tf_wp_pancakes
   !! Number of pancakes in TF coil. Only used if `i_tf_turns_integer=1`
 
   integer :: n_tf_wp_layers
