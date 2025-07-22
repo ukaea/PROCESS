@@ -1073,6 +1073,12 @@ class TFCoil:
             )
             po.ovarre(
                 self.outfile,
+                "Inboard leg case sidewall average thickness (m)",
+                "(dx_tf_side_case_average)",
+                sctfcoil_module.dx_tf_side_case_average,
+            )
+            po.ovarre(
+                self.outfile,
                 "External case mass per coil (kg)",
                 "(whtcas)",
                 tfcoil_variables.whtcas,

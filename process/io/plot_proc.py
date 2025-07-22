@@ -3247,11 +3247,12 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$\\Delta r$: {mfile_data.data['dr_tf_plasma_case'].get_scan(scan):.3f} m\n"
             f"$A$: {mfile_data.data['a_tf_plasma_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
             f"$\\text{{Side Case:}}$\n"
-            f"$\\Delta r$: {mfile_data.data['dx_tf_side_case'].get_scan(scan):.3f} m"
+            f"Minimum $\\Delta r$: {mfile_data.data['dx_tf_side_case_min'].get_scan(scan):.3f} m\n"
+            f"Average $\\Delta r$: {mfile_data.data['dx_tf_side_case_average'].get_scan(scan):.3f} m"
         )
         axis.text(
             0.775,
-            0.9,
+            0.925,
             textstr_casing,
             fontsize=9,
             verticalalignment="top",
