@@ -11,7 +11,11 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
-from process.data_structure import cost_variables, divertor_variables
+from process.data_structure import (
+    cost_variables,
+    divertor_variables,
+    structure_variables,
+)
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -32,7 +36,6 @@ from process.fortran import (
     sctfcoil_module,
     stellarator_configuration,
     stellarator_variables,
-    structure_variables,
     tfcoil_variables,
     times_variables,
 )
