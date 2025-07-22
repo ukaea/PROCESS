@@ -261,12 +261,15 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if ft.tfcoil_variables.i_tf_sup != 1:
-            self.models.resistive_tf_coil.run(output=False)
+        if ft.tfcoil_variables.i_tf_sup == 0:
+            self.models.copper_tf_coil.run(output=False)
 
         # Toroidal field coil superconductor model
         if ft.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
+
+        if ft.tfcoil_variables.i_tf_sup == 2:
+            self.models.aluminium_tf_coil.run(output=False)
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()
