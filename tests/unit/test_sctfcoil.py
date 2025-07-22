@@ -1550,7 +1550,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    j_tf_wp = sctfcoil.tf_wp_currents(
+    j_tf_wp = sctfcoil.tf_wp_current_density(
         c_tf_total=tfwpcurrentsparam.c_tf_total,
         n_tf_coils=tfwpcurrentsparam.n_tf_coils,
         a_tf_wp_no_insulation=tfwpcurrentsparam.a_tf_wp_no_insulation,

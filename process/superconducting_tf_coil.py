@@ -1808,7 +1808,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # WP current density [A/m²]
-        tfcoil_variables.j_tf_wp = self.tf_wp_currents(
+        tfcoil_variables.j_tf_wp = self.tf_wp_current_density(
             c_tf_total=sctfcoil_module.c_tf_coil,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             a_tf_wp_no_insulation=sctfcoil_module.a_tf_wp_no_insulation,
@@ -2415,7 +2415,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # -------------
 
-    def tf_wp_currents(
+    def tf_wp_current_density(
         self,
         c_tf_total: float,
         n_tf_coils: float,
