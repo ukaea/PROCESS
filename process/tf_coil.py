@@ -1034,8 +1034,8 @@ class TFCoil:
                 po.ovarin(
                     self.outfile,
                     "Number of TF pancakes",
-                    "(n_pancake)",
-                    tfcoil_variables.n_pancake,
+                    "(n_tf_wp_pancakes)",
+                    tfcoil_variables.n_tf_wp_pancakes,
                 )
                 po.ovarin(
                     self.outfile,

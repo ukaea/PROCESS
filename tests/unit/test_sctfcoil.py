@@ -981,7 +981,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     n_tf_wp_layers: Any = None
 
-    n_pancake: Any = None
+    n_tf_wp_pancakes: Any = None
 
     dx_tf_turn_steel: Any = None
 
@@ -1035,7 +1035,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dx_tf_turn=0,
             dx_tf_turn_cable_space_average=0,
             n_tf_wp_layers=10,
-            n_pancake=20,
+            n_tf_wp_pancakes=20,
             dx_tf_turn_steel=0.0080000000000000002,
             dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
@@ -1069,7 +1069,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dx_tf_turn=0.063189130247124942,
             dx_tf_turn_cable_space_average=0.036389912284773368,
             n_tf_wp_layers=10,
-            n_pancake=20,
+            n_tf_wp_pancakes=20,
             dx_tf_turn_steel=0.0080000000000000002,
             dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
@@ -1178,7 +1178,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
         n_tf_coil_turns,
     ) = sctfcoil.tf_integer_turn_geom(
         n_tf_wp_layers=tfintegerturngeomparam.n_tf_wp_layers,
-        n_pancake=tfintegerturngeomparam.n_pancake,
+        n_tf_wp_pancakes=tfintegerturngeomparam.n_tf_wp_pancakes,
         dx_tf_turn_steel=tfintegerturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfintegerturngeomparam.dx_tf_turn_insulation,
     )
