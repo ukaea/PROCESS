@@ -1043,8 +1043,8 @@ class TFCoil:
                 po.ovarin(
                     self.outfile,
                     "Number of TF layers",
-                    "(n_layer)",
-                    tfcoil_variables.n_layer,
+                    "(n_tf_wp_layers)",
+                    tfcoil_variables.n_tf_wp_layers,
                 )
 
             po.oblnkl(self.outfile)
@@ -5338,7 +5338,7 @@ def init_tfcoil_variables():
     tfv.i_tf_cond_eyoung_axial = 0
     tfv.i_tf_cond_eyoung_trans = 1
     tfv.n_pancake = 10
-    tfv.n_layer = 20
+    tfv.n_tf_wp_layers = 20
     tfv.n_rad_per_layer = 100
     tfv.i_tf_bucking = -1
     tfv.n_tf_graded_layers = 1
