@@ -9,6 +9,7 @@ import process
 import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
+from process import data_structure
 from process.blanket_library import init_blanket_library, init_primary_pumping_variables
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
@@ -22,6 +23,7 @@ from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.power_variables import init_power_variables
+from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.dcll import init_dcll_module
 from process.exceptions import ProcessValidationError
@@ -49,7 +51,6 @@ from process.structure import init_structure_variables
 from process.superconducting_tf_coil import init_rebco_variables, init_sctfcoil_module
 from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
-from process.vacuum import init_vacuum_variables
 
 
 def init_process():
@@ -346,7 +347,7 @@ def check_process(inputs):  # noqa: ARG001
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 63
-    ).any() and fortran.vacuum_variables.vacuum_model != "simple":
+    ).any() and data_structure.vacuum_variables.vacuum_model != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
         )
