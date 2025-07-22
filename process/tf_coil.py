@@ -1213,8 +1213,8 @@ class TFCoil:
                 po.ovarin(
                     self.outfile,
                     "Number of TF pancakes",
-                    "(n_pancake)",
-                    tfcoil_variables.n_pancake,
+                    "(n_tf_wp_pancakes)",
+                    tfcoil_variables.n_tf_wp_pancakes,
                 )
                 po.ovarin(
                     self.outfile,
@@ -5485,7 +5485,7 @@ def init_tfcoil_variables():
     tfv.i_tf_shape = 0
     tfv.i_tf_cond_eyoung_axial = 0
     tfv.i_tf_cond_eyoung_trans = 1
-    tfv.n_pancake = 10
+    tfv.n_tf_wp_pancakes = 10
     tfv.n_tf_wp_layers = 20
     tfv.n_rad_per_layer = 100
     tfv.i_tf_bucking = -1

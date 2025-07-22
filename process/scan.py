@@ -86,7 +86,7 @@ SCAN_VARIABLES = {
     44: ScanVariable("sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)"),
     45: ScanVariable("tmargmin_tf", "Minimum_allowable_temperature_margin"),
     46: ScanVariable("boundu(152)", "Max allowable fgwsep"),
-    48: ScanVariable("n_pancake", "TF Coil - n_pancake"),
+    48: ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes"),
     49: ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers"),
     50: ScanVariable("fimp(13)", "Xenon fraction"),
     51: ScanVariable("f_p_div_lower", "lower_divertor_power_fraction"),
@@ -1020,7 +1020,7 @@ class Scan:
             case 46:
                 numerics.boundu[151] = swp[iscn - 1]
             case 48:
-                tfcoil_variables.n_pancake = int(swp[iscn - 1])
+                tfcoil_variables.n_tf_wp_pancakes = int(swp[iscn - 1])
             case 49:
                 tfcoil_variables.n_tf_wp_layers = int(swp[iscn - 1])
             case 50:

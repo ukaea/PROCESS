@@ -1152,7 +1152,7 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*n_pancake = 4
+*n_tf_wp_pancakes = 4
 * DESCRIPTION:   Number of pancakes in TF coil (i_tf_turns_integer=1)
 * JUSTIFICATION: Not set, as i_tf_turns_integer = 0 
 
