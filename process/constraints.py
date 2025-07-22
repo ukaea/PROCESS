@@ -1931,13 +1931,13 @@ def constraint_equation_78():
     cc = (
         1.0
         - fortran.constraint_variables.freinke
-        * fortran.reinke_variables.fzactual
-        / fortran.reinke_variables.fzmin
+        * data_structure.reinke_variables.fzactual
+        / data_structure.reinke_variables.fzmin
     )
     return ConstraintResult(
         cc,
-        fortran.reinke_variables.fzmin * (1.0 - cc),
-        fortran.reinke_variables.fzmin * cc,
+        data_structure.reinke_variables.fzmin * (1.0 - cc),
+        data_structure.reinke_variables.fzmin * cc,
     )
 
 
