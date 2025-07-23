@@ -9,6 +9,7 @@ import process
 import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
+from process import data_structure
 from process.blanket_library import init_blanket_library, init_primary_pumping_variables
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
@@ -22,6 +23,7 @@ from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.power_variables import init_power_variables
+from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.dcll import init_dcll_module
 from process.exceptions import ProcessValidationError
@@ -38,7 +40,6 @@ from process.physics import (
     init_times_variables,
 )
 from process.power import init_heat_transport_variables, init_pf_power_variables
-from process.pulse import init_pulse_variables
 from process.scan import init_scan_module
 from process.stellarator import (
     init_stellarator_module,
@@ -741,7 +742,7 @@ def check_process(inputs):  # noqa: ARG001
             )
 
     #  Pulsed power plant model
-    if fortran.pulse_variables.i_pulsed_plant == 1:
+    if data_structure.pulse_variables.i_pulsed_plant == 1:
         fortran.global_variables.icase = "Pulsed tokamak model"
     else:
         fortran.buildings_variables.esbldgm3 = 0.0
