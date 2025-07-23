@@ -97,7 +97,6 @@ LIST(APPEND PROCESS_SRCS
     constraint_variables.f90
     vacuum_variables.f90
     impurity_radiation.f90
-    pulse_variables.f90
     pf_power_variables.f90
     dcll.f90
     rebco_variables.f90
