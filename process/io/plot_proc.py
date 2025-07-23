@@ -6072,6 +6072,110 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     axis.legend(labels, loc="upper center", bbox_to_anchor=(1.01, 0.85), ncol=1)
 
 
+def plot_iteration_variables(axis, m_file_data, scan):
+    """Plot the iteration variables for a given figure."""
+    n_itvars = int(m_file_data.data["nvar"].get_scan(scan))
+
+    y_labels = []
+    y_pos = []
+    n_plot = 0
+
+    # Build a mapping from itvar index to its name (description)
+    itvar_names = {}
+    for var in m_file_data.data:
+        if var.startswith("itvar"):
+            idx = int(var[5:])  # e.g. "itvar001" -> 1
+            itvar_names[idx] = m_file_data.data[var].var_description
+
+    for n_plot, n in enumerate(range(1, n_itvars + 1)):
+        itvar_final = m_file_data.data[f"itvar{n:03d}"].get_scan(scan)
+        itvar_upper = m_file_data.data[f"boundu{n:03d}"].get_scan(scan)
+        itvar_lower = m_file_data.data[f"boundl{n:03d}"].get_scan(scan)
+
+        # Use the variable name if available, else fallback to "itvarXXX"
+        var_label = itvar_names.get(n, f"itvar{n:03d}")
+
+        # Plot the final value as a vertical marker, normalised to upper bound
+        norm_final = (
+            (itvar_final - itvar_lower) / (itvar_upper - itvar_lower)
+            if itvar_final != itvar_lower
+            else 0
+        )
+        if np.isclose(norm_final, 1.0, atol=1e-6):
+            # Plot the lower bound at x=0
+            axis.plot(
+                1,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                label="Lower Bound" if n_plot == 0 else "",
+            )
+        elif np.isclose(norm_final, 0.0, atol=1e-6):
+            # Plot the upper bound at x=1
+            axis.plot(
+                0,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                label="Upper Bound" if n_plot == 0 else "",
+            )
+        # Draw a horizontal bar from 0 to norm_final at y=n_plot
+        else:
+            axis.barh(
+                n_plot,
+                norm_final,
+                left=0,
+                height=0.8,
+                color="blue",
+                alpha=0.7,
+                label="Final Value" if n_plot == 0 else "",
+            )
+        # Plot the value as a number at x = 0.5
+        axis.text(
+            0.5,
+            n_plot,
+            f"{itvar_final:.8g}",
+            va="center",
+            ha="center",
+            fontsize=8,
+            color="black",
+        )
+        # Plot the value of the upper bound to the right of x=1
+        axis.text(
+            1.05,
+            n_plot,
+            f"{itvar_upper:.3g}",
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="gray",
+        )
+        # Plot the value of the lower bound to the left of x=0
+        axis.text(
+            -0.05,
+            n_plot,
+            f"{itvar_lower:.3g}",
+            va="center",
+            ha="right",
+            fontsize=8,
+            color="gray",
+        )
+        y_labels.append(var_label)
+        y_pos.append(n_plot)
+
+    # Plot vertical lines at x=0 and x=1 to indicate bounds
+    axis.axvline(0, color="darkgreen", linewidth=2, zorder=0)
+    axis.axvline(1, color="red", linewidth=2, zorder=0)
+    axis.set_yticks(y_pos)
+    axis.set_yticklabels(y_labels)
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_xlim(-0.2, 1.2)  # Normalised bounds
+    axis.set_title("Iteration Variables Final Values and Bounds")
+
+
 def main_plot(
     fig1,
     fig2,
@@ -6086,6 +6190,7 @@ def main_plot(
     fig11,
     fig12,
     fig13,
+    fig14,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -6146,58 +6251,62 @@ def main_plot(
     plot_current_drive_info(plot_6, m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
+    plot_7 = fig2.add_subplot(121)
+    plot_7.set_position([0.175, 0.1, 0.35, 0.8])  # Move plot slightly to the right
+    plot_iteration_variables(plot_7, m_file_data, scan)
+
     # Plot main plasma information
-    plot_7 = fig2.add_subplot(111, aspect="equal")
-    plot_main_plasma_information(plot_7, m_file_data, scan, colour_scheme, fig2)
+    plot_8 = fig3.add_subplot(111, aspect="equal")
+    plot_main_plasma_information(plot_8, m_file_data, scan, colour_scheme, fig3)
 
     # Plot density profiles
-    plot_8 = fig3.add_subplot(231)  # , aspect= 0.05)
-    plot_8.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_n_profiles(plot_8, demo_ranges, m_file_data, scan)
+    plot_9 = fig4.add_subplot(231)  # , aspect= 0.05)
+    plot_9.set_position([0.075, 0.55, 0.25, 0.4])
+    plot_n_profiles(plot_9, demo_ranges, m_file_data, scan)
 
     # Plot temperature profiles
-    plot_9 = fig3.add_subplot(232)
-    plot_9.set_position([0.375, 0.55, 0.25, 0.4])
-    plot_t_profiles(plot_9, demo_ranges, m_file_data, scan)
+    plot_10 = fig4.add_subplot(232)
+    plot_10.set_position([0.375, 0.55, 0.25, 0.4])
+    plot_t_profiles(plot_10, demo_ranges, m_file_data, scan)
 
     # Plot impurity profiles
-    plot_10 = fig3.add_subplot(233)
-    plot_10.set_position([0.7, 0.45, 0.25, 0.5])
-    plot_radprofile(plot_10, m_file_data, scan, imp, demo_ranges)
+    plot_11 = fig4.add_subplot(233)
+    plot_11.set_position([0.7, 0.45, 0.25, 0.5])
+    plot_radprofile(plot_11, m_file_data, scan, imp, demo_ranges)
 
     # Plot current density profile
-    plot_11 = fig3.add_subplot(4, 3, 10)
-    plot_11.set_position([0.075, 0.125, 0.25, 0.15])
-    plot_jprofile(plot_11)
+    plot_12 = fig4.add_subplot(4, 3, 10)
+    plot_12.set_position([0.075, 0.125, 0.25, 0.15])
+    plot_jprofile(plot_12)
 
     # Plot q profile
-    plot_12 = fig3.add_subplot(4, 3, 12)
-    plot_12.set_position([0.7, 0.125, 0.25, 0.15])
-    plot_qprofile(plot_12, demo_ranges, m_file_data, scan)
+    plot_13 = fig4.add_subplot(4, 3, 12)
+    plot_13.set_position([0.7, 0.125, 0.25, 0.15])
+    plot_qprofile(plot_13, demo_ranges, m_file_data, scan)
 
     # Plot poloidal cross-section
-    plot_13 = fig4.add_subplot(121, aspect="equal")
-    poloidal_cross_section(plot_13, m_file_data, scan, demo_ranges, colour_scheme)
+    plot_14 = fig5.add_subplot(121, aspect="equal")
+    poloidal_cross_section(plot_14, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
-    plot_14 = fig4.add_subplot(122, aspect="equal")
-    toroidal_cross_section(plot_14, m_file_data, scan, demo_ranges, colour_scheme)
+    plot_15 = fig5.add_subplot(122, aspect="equal")
+    toroidal_cross_section(plot_15, m_file_data, scan, demo_ranges, colour_scheme)
     # fig4.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
-    plot_15 = fig4.add_subplot(222)
-    plot_15.set_position([0.5, 0.5, 0.5, 0.5])
-    color_key(plot_15, m_file_data, scan, colour_scheme)
+    plot_16 = fig5.add_subplot(222)
+    plot_16.set_position([0.5, 0.5, 0.5, 0.5])
+    color_key(plot_16, m_file_data, scan, colour_scheme)
 
-    plot_16 = fig5.add_subplot(211)
-    plot_16.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
-    plot_radial_build(plot_16, m_file_data, colour_scheme)
+    plot_17 = fig6.add_subplot(211)
+    plot_17.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
+    plot_radial_build(plot_17, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    plot_175 = fig6.add_subplot(211)
+    plot_175 = fig7.add_subplot(211)
     plot_175.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
 
-    plot_17 = fig6.add_subplot(212)
+    plot_17 = fig7.add_subplot(212)
     plot_17.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
     plot_upper_vertical_build(plot_175, m_file_data, colour_scheme)
     plot_lower_vertical_build(plot_17, m_file_data, colour_scheme)
@@ -6205,44 +6314,44 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_18 = fig7.add_subplot(211, aspect="equal")
-        plot_18.set_position([0.05, 0.5, 0.7, 0.4])
-        plot_tf_wp(plot_18, m_file_data, scan, fig7)
+        plot_19 = fig8.add_subplot(211, aspect="equal")
+        plot_19.set_position([0.05, 0.5, 0.7, 0.4])
+        plot_tf_wp(plot_19, m_file_data, scan, fig7)
 
         # TF coil turn structure
-        plot_19 = fig7.add_subplot(325, aspect="equal")
-        plot_19.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_19, m_file_data, scan)
+        plot_20 = fig8.add_subplot(325, aspect="equal")
+        plot_20.set_position([0.025, 0.1, 0.3, 0.3])
+        plot_tf_turn(plot_20, m_file_data, scan)
 
-    plot_20 = fig8.add_subplot(111, aspect="equal")
-    plot_tf_coil_structure(plot_20, m_file_data, scan, colour_scheme)
+    plot_21 = fig9.add_subplot(111, aspect="equal")
+    plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
 
-    plot_21 = fig9.add_subplot(221)
-    plot_bootstrap_comparison(plot_21, m_file_data, scan)
+    plot_22 = fig10.add_subplot(221)
+    plot_bootstrap_comparison(plot_22, m_file_data, scan)
 
-    plot_22 = fig9.add_subplot(224)
-    plot_h_threshold_comparison(plot_22, m_file_data, scan)
+    plot_23 = fig10.add_subplot(224)
+    plot_h_threshold_comparison(plot_23, m_file_data, scan)
 
-    plot_23 = fig10.add_subplot(221)
-    plot_density_limit_comparison(plot_23, m_file_data, scan)
+    plot_24 = fig11.add_subplot(221)
+    plot_density_limit_comparison(plot_24, m_file_data, scan)
 
-    plot_24 = fig10.add_subplot(224)
-    plot_confinement_time_comparison(plot_24, m_file_data, scan)
+    plot_25 = fig11.add_subplot(224)
+    plot_confinement_time_comparison(plot_25, m_file_data, scan)
 
-    plot_25 = fig11.add_subplot(111)
-    plot_current_profiles_over_time(plot_25, m_file_data, scan)
+    plot_26 = fig12.add_subplot(111)
+    plot_current_profiles_over_time(plot_26, m_file_data, scan)
 
-    plot_26 = fig12.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_26, fig12, m_file_data, scan)
+    plot_27 = fig13.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_27, fig13, m_file_data, scan)
 
-    plot_27 = fig12.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_27, fig12, m_file_data, scan)
+    plot_28 = fig13.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_28, fig13, m_file_data, scan)
 
-    plot_28 = fig13.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_28, m_file_data, scan)
+    plot_29 = fig14.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_29, m_file_data, scan)
 
-    plot_29 = fig13.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_29, m_file_data, scan)
+    plot_30 = fig14.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
 
 
 def main(args=None):
@@ -6529,6 +6638,7 @@ def main(args=None):
     page11 = plt.figure(figsize=(12, 9), dpi=80)
     page12 = plt.figure(figsize=(12, 9), dpi=80)
     page13 = plt.figure(figsize=(12, 9), dpi=80)
+    page14 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -6545,6 +6655,7 @@ def main(args=None):
         page11,
         page12,
         page13,
+        page14,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -6566,6 +6677,7 @@ def main(args=None):
         pdf.savefig(page11)
         pdf.savefig(page12)
         pdf.savefig(page13)
+        pdf.savefig(page14)
 
     # show fig if option used
     if args.show:
@@ -6584,6 +6696,7 @@ def main(args=None):
     plt.close(page11)
     plt.close(page12)
     plt.close(page13)
+    plt.close(page14)
 
 
 if __name__ == "__main__":
