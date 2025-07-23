@@ -10,6 +10,7 @@ from process.data_structure import (
     cost_variables,
     cs_fatigue_variables,
     divertor_variables,
+    rebco_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -25,7 +26,6 @@ from process.fortran import (
     numerics,
     pfcoil_variables,
     physics_variables,
-    rebco_variables,
     scan_module,
     tfcoil_variables,
 )
