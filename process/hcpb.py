@@ -5,7 +5,11 @@ from process import (
 )
 from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
-from process.data_structure import cost_variables, divertor_variables
+from process.data_structure import (
+    cost_variables,
+    divertor_variables,
+    primary_pumping_variables,
+)
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -15,7 +19,6 @@ from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
     tfcoil_variables,
 )
 from process.fortran import (
