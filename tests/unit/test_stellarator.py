@@ -14,7 +14,7 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import cost_variables
+from process.data_structure import cost_variables, structure_variables
 from process.fortran import (
     build_variables,
     fwbs_variables,
@@ -23,7 +23,6 @@ from process.fortran import (
     physics_variables,
     stellarator_configuration,
     stellarator_module,
-    structure_variables,
     tfcoil_variables,
 )
 from process.hcpb import CCFE_HCPB

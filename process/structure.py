@@ -5,12 +5,12 @@ import numpy as np
 
 from process import process_output as po
 from process.data_structure import divertor_variables as divv
+from process.data_structure import structure_variables as stv
 from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
-from process.fortran import structure_variables as stv
 from process.fortran import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
@@ -242,12 +242,3 @@ class Structure:
             po.ovarre(self.outfile, "Ring legs mass (kg)", "(gsm3)", gsm3, "OP ")
 
         return fncmass, aintmass, clgsmass, coldmass, gsm
-
-
-def init_structure_variables():
-    """Initialise structure variables"""
-    stv.aintmass = 0.0
-    stv.clgsmass = 0.0
-    stv.coldmass = 0.0
-    stv.fncmass = 0.0
-    stv.gsmass = 0.0
