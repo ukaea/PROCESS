@@ -107,7 +107,10 @@ module fwbs_variables
   !! lithium-6 enrichment of breeding material (%)
 
   real(dp) :: p_blkt_nuclear_heat_total_mw
-  !! nuclear heating in the blanket [MW]
+  !! total nuclear heating in the blanket (with multiplication) [MW]
+
+  real(dp) :: p_blkt_nuclear_heat_mw
+  !! nuclear heating in the blanket from plasma neutrons only [MW]
 
   real(dp) :: pnuc_cp
   !! Total nuclear heating in the ST centrepost [MW]
