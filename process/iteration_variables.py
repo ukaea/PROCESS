@@ -288,13 +288,15 @@ ITERATION_VARIABLES = {
     138: IterationVariable(
         "rebco_thickness", fortran.physics_variables, 0.01e-6, 100.0e-6
     ),
-    139: IterationVariable("copper_thick", fortran.rebco_variables, 1.0e-6, 1.0e-3),
+    139: IterationVariable(
+        "copper_thick", data_structure.rebco_variables, 1.0e-6, 1.0e-3
+    ),
     140: IterationVariable(
         "dr_tf_wp_with_insulation", fortran.tfcoil_variables, 0.001, 2.0
     ),
     141: IterationVariable("fcqt", fortran.constraint_variables, 0.001, 1.0),
     142: IterationVariable("nesep", fortran.physics_variables, 1.0e17, 1.0e20),
-    143: IterationVariable("f_coppera_m2", fortran.rebco_variables, 0.001, 1.0),
+    143: IterationVariable("f_coppera_m2", data_structure.rebco_variables, 0.001, 1.0),
     144: IterationVariable("fnesep", fortran.constraint_variables, 0.001, 1.0),
     145: IterationVariable("fgwped", fortran.physics_variables, 0.1, 0.9),
     146: IterationVariable("fc_tf_turn_max", fortran.constraint_variables, 0.001, 1.0),
@@ -308,7 +310,9 @@ ITERATION_VARIABLES = {
     157: IterationVariable(
         "fvs_cs_pf_total_ramp", fortran.pfcoil_variables, 1.0e-3, 1.0e1
     ),
-    158: IterationVariable("croco_thick", fortran.rebco_variables, 1.0e-3, 1.0e-1),
+    158: IterationVariable(
+        "croco_thick", data_structure.rebco_variables, 1.0e-3, 1.0e-1
+    ),
     159: IterationVariable("ftoroidalgap", fortran.tfcoil_variables, 1.0e-4, 1.0),
     160: IterationVariable("f_avspace", fortran.build_variables, 0.010, 1.0),
     161: IterationVariable("fbeta_min", fortran.constraint_variables, 0.010, 1.0),
@@ -316,7 +320,9 @@ ITERATION_VARIABLES = {
     163: IterationVariable("f_t_turn_tf", fortran.tfcoil_variables, 0.0010, 1000.0),
     164: IterationVariable("f_crypmw", fortran.heat_transport_variables, 0.001, 1.0),
     165: IterationVariable("fstr_wp", fortran.constraint_variables, 1.0e-9, 1.0),
-    166: IterationVariable("f_copperaoh_m2", fortran.rebco_variables, 0.001, 1.0),
+    166: IterationVariable(
+        "f_copperaoh_m2", data_structure.rebco_variables, 0.001, 1.0
+    ),
     167: IterationVariable("fncycle", fortran.constraint_variables, 1.0e-8, 1.0),
     168: IterationVariable("fecrh_ignition", fortran.constraint_variables, 0.010, 2.0),
     169: IterationVariable(

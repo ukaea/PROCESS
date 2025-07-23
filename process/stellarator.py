@@ -14,6 +14,7 @@ from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     cost_variables,
     divertor_variables,
+    rebco_variables,
     structure_variables,
     times_variables,
 )
@@ -33,7 +34,6 @@ from process.fortran import (
     pfcoil_variables,
     physics_module,
     physics_variables,
-    rebco_variables,
     sctfcoil_module,
     stellarator_configuration,
     stellarator_variables,

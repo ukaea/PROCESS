@@ -1852,11 +1852,14 @@ def constraint_equation_75():
     f_coppera_m2: f-value for TF coil current / copper area < copperA_m2_max
     """
     cc = (
-        fortran.rebco_variables.coppera_m2 / fortran.rebco_variables.coppera_m2_max
-        - 1.0 * fortran.rebco_variables.f_coppera_m2
+        data_structure.rebco_variables.coppera_m2
+        / data_structure.rebco_variables.coppera_m2_max
+        - 1.0 * data_structure.rebco_variables.f_coppera_m2
     )
     return ConstraintResult(
-        cc, fortran.rebco_variables.coppera_m2, fortran.rebco_variables.coppera_m2 * cc
+        cc,
+        data_structure.rebco_variables.coppera_m2,
+        data_structure.rebco_variables.coppera_m2 * cc,
     )
 
 
@@ -2211,13 +2214,14 @@ def constraint_equation_89():
     f_copperaoh_m2: f-value for CS coil current / copper area
     """
     cc = (
-        fortran.rebco_variables.copperaoh_m2 / fortran.rebco_variables.copperaoh_m2_max
-        - 1.0 * fortran.rebco_variables.f_copperaoh_m2
+        data_structure.rebco_variables.copperaoh_m2
+        / data_structure.rebco_variables.copperaoh_m2_max
+        - 1.0 * data_structure.rebco_variables.f_copperaoh_m2
     )
     return ConstraintResult(
         cc,
-        fortran.rebco_variables.copperaoh_m2,
-        fortran.rebco_variables.copperaoh_m2 * cc,
+        data_structure.rebco_variables.copperaoh_m2,
+        data_structure.rebco_variables.copperaoh_m2 * cc,
     )
 
 

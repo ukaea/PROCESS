@@ -7,6 +7,7 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
+from process.data_structure import rebco_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -17,7 +18,6 @@ from process.fortran import (
     numerics,
     pfcoil_variables,
     physics_variables,
-    rebco_variables,
     sctfcoil_module,
     tfcoil_variables,
 )
