@@ -8635,7 +8635,7 @@ def plot_iteration_variables(axis, m_file_data, scan):
 def plot_tf_stress(axis):
     """
     Function to plot the TF coil stress from the SIG_TF.json file.
-    
+
     Input file:
     SIG_TF.json
     """
@@ -8907,7 +8907,6 @@ def plot_tf_stress(axis):
     mark_size = 10
     line_width = 3.5
 
-
     # PLOT 1 : Stress summary
     # ------------------------
 
@@ -9110,83 +9109,6 @@ def plot_tf_stress(axis):
     ax.set_ylabel(r"$\sigma$ [$MPa$]", fontsize=axis_tick_size)
     ax.set_title("Smeared Stress Summary")
     ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize=legend_size)
-
-    # # PLOT 3 : Strain summary
-    # # ------------------------
-    # if  len(sig_file_data) > 15:
-    #     ax = axis[2]
-    #     for ii in range(n_layers):
-    #         ax.plot(
-    #             radius[ii],
-    #             radial_strain[ii],
-    #             "-",
-    #             linewidth=line_width,
-    #             color="lightblue",
-    #         )
-    #         ax.plot(
-    #             radius[ii],
-    #             toroidal_strain[ii],
-    #             "-",
-    #             linewidth=line_width,
-    #             color="wheat",
-    #         )
-    #         ax.plot(
-    #             radius[ii],
-    #             vertical_strain[ii],
-    #             "-",
-    #             linewidth=line_width,
-    #             color="lightgrey",
-    #         )
-    #     ax.plot(
-    #         radius[0],
-    #         radial_strain[0],
-    #         "--",
-    #         color="dodgerblue",
-    #         label=r"$\epsilon_{rr}$",
-    #     )
-    #     ax.plot(
-    #         radius[0],
-    #         toroidal_strain[0],
-    #         "--",
-    #         color="orange",
-    #         label=r"$\epsilon_{\theta\theta}$",
-    #     )
-    #     ax.plot(
-    #         radius[0],
-    #         vertical_strain[0],
-    #         "--",
-    #         color="mediumseagreen",
-    #         label=r"$\epsilon_{zz}$",
-    #     )
-    #     for ii in range(1, n_layers):
-    #         ax.plot(radius[ii], radial_strain[ii], "--", color="dodgerblue")
-    #         ax.plot(radius[ii], toroidal_strain[ii], "--", color="orange")
-    #         ax.plot(radius[ii], vertical_strain[ii], "--", color="mediumseagreen")
-    #     ax.plot(
-    #         bound_radius,
-    #         bound_radial_strain,
-    #         "|",
-    #         markersize=mark_size,
-    #         color="dodgerblue",
-    #     )
-    #     ax.plot(
-    #         bound_radius,
-    #         bound_toroidal_strain,
-    #         "|",
-    #         markersize=mark_size,
-    #         color="orange",
-    #     )
-    #     ax.plot(
-    #         bound_radius,
-    #         bound_vertical_strain,
-    #         "|",
-    #         markersize=mark_size,
-    #         color="mediumseagreen",
-    #     )
-    #     ax.grid(True)
-    #     ax.set_ylabel(r"$\epsilon$", fontsize=axis_tick_size)
-    #     ax.set_title("Strain Summary")
-    #     ax.legend(loc="best", fontsize=legend_size)
 
     # PLOT 4 : Displacement
     # ----------------------
