@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import divertor_variables
+from process.data_structure import divertor_variables, primary_pumping_variables
 from process.fortran import (
     build_variables,
     ccfe_hcpb_module,
@@ -11,7 +11,6 @@ from process.fortran import (
     global_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
     tfcoil_variables,
 )
 from process.hcpb import CCFE_HCPB

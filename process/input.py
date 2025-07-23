@@ -439,22 +439,22 @@ INPUT_VARIABLES = {
         data_structure.divertor_variables, float, range=(0.01, 1.0)
     ),
     "dp_blkt": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
     "dp_fw": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
     "dp_fw_blkt": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
     "dp_he": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
     "dp_liq": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 10000000.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 10000000.0)
     ),
     "f_p_fw_blkt_pump": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 10.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 10.0)
     ),
     "dr_blkt_inboard": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dr_blkt_outboard": InputVariable(
@@ -851,7 +851,7 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "gamma_he": InputVariable(
-        fortran.primary_pumping_variables, float, range=(1.0, 2.0)
+        data_structure.primary_pumping_variables, float, range=(1.0, 2.0)
     ),
     "eta_cd_norm_hcd_primary_max": InputVariable(
         fortran.constraint_variables, float, range=(0.01, 10.0)
@@ -1077,7 +1077,7 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, float, range=(508.0, 1500.0)
     ),
     "p_he": InputVariable(
-        fortran.primary_pumping_variables, float, range=(0.0, 100000000.0)
+        data_structure.primary_pumping_variables, float, range=(0.0, 100000000.0)
     ),
     "paris_coefficient": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(1e-20, 10.0)
@@ -1331,10 +1331,10 @@ INPUT_VARIABLES = {
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_in_bb": InputVariable(
-        fortran.primary_pumping_variables, float, range=(200.0, 1000.0)
+        data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
     "t_out_bb": InputVariable(
-        fortran.primary_pumping_variables, float, range=(200.0, 1000.0)
+        data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
     "t_precharge": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)

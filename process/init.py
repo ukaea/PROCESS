@@ -9,8 +9,7 @@ import process
 import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
-from process import data_structure
-from process.blanket_library import init_blanket_library, init_primary_pumping_variables
+from process.blanket_library import init_blanket_library
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
 from process.constraints import ConstraintManager, init_constraint_variables
@@ -23,6 +22,9 @@ from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.power_variables import init_power_variables
+from process.data_structure.primary_pumping_variables import (
+    init_primary_pumping_variables,
+)
 from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
