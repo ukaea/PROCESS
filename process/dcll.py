@@ -2,6 +2,7 @@ from process import (
     process_output as po,
 )
 from process.blanket_library import BlanketLibrary
+from process.data_structure import primary_pumping_variables
 from process.fortran import (
     build_variables,
     constants,
@@ -10,7 +11,6 @@ from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
 )
 
 

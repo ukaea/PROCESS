@@ -9,7 +9,7 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
-from process.data_structure import divertor_variables
+from process.data_structure import divertor_variables, primary_pumping_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     blanket_library,
@@ -19,7 +19,6 @@ from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
-    primary_pumping_variables,
 )
 from process.fortran import (
     error_handling as eh,
@@ -2982,18 +2981,3 @@ def init_blanket_library():
     blanket_library.htpmw_blkto = 0.0
     blanket_library.vfblkti = 0.0
     blanket_library.vfblkto = 0.0
-
-
-def init_primary_pumping_variables():
-    """Initialise primary pumping variables"""
-    primary_pumping_variables.gamma_he = 1.667  # Ratio of specific heats  Helium
-    primary_pumping_variables.t_in_bb = 573.13  # K
-    primary_pumping_variables.t_out_bb = 773.13  # K
-    primary_pumping_variables.p_he = 8.0e6  # Pa
-    primary_pumping_variables.dp_he = 5.5e5  # Pa
-    primary_pumping_variables.dp_fw_blkt = 1.5e5  # Pa
-    primary_pumping_variables.dp_fw = 1.5e5  # Pa
-    primary_pumping_variables.dp_blkt = 3.5e3  # Pa
-    primary_pumping_variables.dp_liq = 1.0e7  # Pa
-    primary_pumping_variables.p_fw_blkt_coolant_pump_mw = 0.0
-    primary_pumping_variables.f_p_fw_blkt_pump = 1.0

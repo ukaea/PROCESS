@@ -101,7 +101,6 @@ LIST(APPEND PROCESS_SRCS
     pf_power_variables.f90
     dcll.f90
     rebco_variables.f90
-    primary_pumping_variables.f90
     reinke_variables.f90
     neoclassics_module.f90
     blanket_library.f90
