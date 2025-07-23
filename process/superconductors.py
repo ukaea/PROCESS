@@ -3,9 +3,9 @@ import logging
 import numpy as np
 from scipy import optimize
 
+from process.data_structure import rebco_variables
 from process.exceptions import ProcessValueError
 from process.fortran import error_handling as eh
-from process.fortran import rebco_variables
 
 logger = logging.getLogger(__name__)
 

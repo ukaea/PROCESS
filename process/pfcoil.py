@@ -11,16 +11,16 @@ import process.superconductors as superconductors
 from process import fortran as ft
 from process import process_output as op
 from process.data_structure import cs_fatigue_variables as csfv
+from process.data_structure import rebco_variables as rcv
 from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
-from process.fortran import constants, numerics, rebco_variables
+from process.fortran import constants, numerics
 from process.fortran import constraint_variables as ctv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
-from process.fortran import rebco_variables as rcv
 from process.fortran import tfcoil_variables as tfv
 from process.fortran import times_variables as tv
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -3203,9 +3203,9 @@ class PFCoil:
                 bmax,
                 bc20m,
                 tc0m,
-                rebco_variables.tape_width,
-                rebco_variables.rebco_thickness,
-                rebco_variables.tape_thickness,
+                rcv.tape_width,
+                rcv.rebco_thickness,
+                rcv.tape_thickness,
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
