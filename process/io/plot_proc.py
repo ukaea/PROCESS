@@ -8100,6 +8100,7 @@ def main_plot(
     fig12,
     fig13,
     fig14,
+    fig15,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -8225,7 +8226,7 @@ def main_plot(
         # TF coil with WP
         plot_19 = fig8.add_subplot(211, aspect="equal")
         plot_19.set_position([0.05, 0.5, 0.7, 0.4])
-        plot_tf_wp(plot_19, m_file_data, scan, fig7)
+        plot_tf_wp(plot_19, m_file_data, scan, fig8)
 
         # TF coil turn structure
         plot_20 = fig8.add_subplot(325, aspect="equal")
@@ -8262,8 +8263,8 @@ def main_plot(
     plot_30 = fig14.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
 
-    plot_30 = fig14.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_30, m_file_data, scan, fig14)
+    plot_31 = fig15.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_31, m_file_data, scan, fig15)
 
 
 def main(args=None):
@@ -8551,6 +8552,7 @@ def main(args=None):
     page12 = plt.figure(figsize=(12, 9), dpi=80)
     page13 = plt.figure(figsize=(12, 9), dpi=80)
     page14 = plt.figure(figsize=(12, 9), dpi=80)
+    page15 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -8568,6 +8570,7 @@ def main(args=None):
         page12,
         page13,
         page14,
+        page15,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -8590,6 +8593,7 @@ def main(args=None):
         pdf.savefig(page12)
         pdf.savefig(page13)
         pdf.savefig(page14)
+        pdf.savefig(page15)
 
     # show fig if option used
     if args.show:
@@ -8609,6 +8613,7 @@ def main(args=None):
     plt.close(page12)
     plt.close(page13)
     plt.close(page14)
+    plt.close(page15)
 
 
 if __name__ == "__main__":

@@ -90,6 +90,11 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 <figcaption>Figure 14: plot_proc first wall comparison page  </figcaption>
 </figure>
 
+<figure markdown>
+![plot_proc_15](../images/plot_proc_15.PNG){ width="100%"}
+<figcaption>Figure 14: plot_proc power flow page  </figcaption>
+</figure>
+
 ----------------
 
 ### Scan files
