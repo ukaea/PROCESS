@@ -215,6 +215,12 @@ class DCLL(BlanketLibrary):
                 "(f_ster_div_single)",
                 fwbs_variables.f_ster_div_single,
             )
+            po.ovarre(
+                self.outfile,
+                "Fraction of first wall area covered by HCD and diagnostics",
+                "(f_a_fw_hcd)",
+                fwbs_variables.f_a_fw_hcd,
+            )
             po.ovarre(self.outfile, "Blanket coverage factor", "(covf)", covf)
 
             po.osubhd(self.outfile, "Nuclear heating :")

@@ -854,6 +854,18 @@ class Power:
             "(p_blkt_nuclear_heat_total_mw)",
             fwbs_variables.p_blkt_nuclear_heat_total_mw,
         )
+        po.ovarre(
+            self.outfile,
+            "Total multiplication neutronic nuclear heat created in Blanket(s) [MW]",
+            "(p_blkt_multiplication_mw)",
+            fwbs_variables.p_blkt_multiplication_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Neutron nuclear heat multiplication factor in Blanket(s)",
+            "(f_p_blkt_multiplication)",
+            fwbs_variables.f_p_blkt_multiplication,
+        )
 
         po.ovarre(
             self.outfile,
@@ -962,6 +974,17 @@ class Power:
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
         po.oblnkl(self.outfile)
+
+        po.ovarre(
+            self.outfile,
+            "Mechanical pumping power of all coolant pumps [MW]",
+            "(p_coolant_pump_total_mw)",
+            power_variables.p_coolant_pump_total_mw,
+        )
+
+        po.oblnkl(self.outfile)
+        po.ocmmnt(self.outfile, "----------------------------")
+        po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "Secondary heat : ")
         po.oblnkl(self.outfile)
 
@@ -1060,11 +1083,18 @@ class Power:
             "(p_shld_heat_deposited_mw)",
             power_variables.p_shld_heat_deposited_mw,
         )
+        po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total heat deposited in divertor and coolants [MW]",
             "(p_div_heat_deposited_mw)",
             power_variables.p_div_heat_deposited_mw,
+        )
+        po.ovarre(
+            self.outfile,
+            "Fraction of total primary heat originating from divertor",
+            "(f_p_div_primary_heat)",
+            power_variables.f_p_div_primary_heat,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
