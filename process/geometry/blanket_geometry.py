@@ -22,7 +22,7 @@ def blanket_geometry_single_null(
     dr_blkt_inboard: float,
     dr_blkt_outboard: float,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of blanket in a single null configuration
+    """Calculates radial and vertical distances for the geometry of the blanket in a single null configuration
 
     :param radx_outer: outboard radius of outer surface of blanket
     :type radx_outer: float
