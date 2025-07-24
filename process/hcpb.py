@@ -24,14 +24,16 @@ from process.fortran import (
 
 
 class CCFE_HCPB(BlanketLibrary):
-    """author: J Morris (UKAEA)
+    """
 
     This module contains the PROCESS CCFE HCPB blanket model
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)
 
-    ### References
-    - Kovari et al., Fusion Engineering and Design 104 (2016) 9-20
+    :References:
+        - M. Kovari et al., “‘PROCESS’: A systems code for fusion power plants – Part 2: Engineering,” 
+        Fusion Engineering and Design, vol. 104, pp. 9–20, Mar. 2016, 
+        doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
     def __init__(self) -> None:

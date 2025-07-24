@@ -75,7 +75,12 @@ nav:
           - Machine Build: eng-models/machine-build.md
           - Structural Components: eng-models/structural-components.md
           - Buildings: eng-models/buildings.md
-          - First Wall/Blanket: eng-models/fw-blanket.md
+          - First Wall/Blanket:
+            - Overview: eng-models/fw-blanket.md
+            - Blanket: 
+                - Overview: eng-models/blanket_overview.md
+                - CCFE HCPB: eng-models/ccfe_hcpb.md
+
           - TF Coil:
               - Overview: eng-models/tf-coil.md
               - Resistive TF Coil: eng-models/tf-coil-resistive.md
