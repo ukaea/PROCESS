@@ -57,6 +57,9 @@ module build_variables
   real(dp) :: dz_blkt_upper
   !! top blanket thickness (m), = mean of inboard and outboard blanket thicknesses
 
+  real(dp) :: dz_fw_upper
+  !! upper first wall thickness (m)
+
   real(dp) :: dr_bore
   !! central solenoid inboard radius (m) (`iteration variable 29`)
 

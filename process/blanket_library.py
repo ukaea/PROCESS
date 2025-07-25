@@ -2795,22 +2795,27 @@ def eshellarea(rshell, rmini, rmino, zminor):
     return ain, aout, ain + aout
 
 
-def dshellarea(rmajor, rminor, zminor):
-    """Routine to calculate the inboard, outboard and total surface areas
-    of a D-shaped toroidal shell
-    author: P J Knight, CCFE, Culham Science Centre
-    rmajor : input real : major radius of inboard straight section (m)
-    rminor : input real : horizontal width of shell (m)
-    zminor : input real : vertical half-height of shell (m)
-    ain    : output real : surface area of inboard straight section (m3)
-    aout   : output real : surface area of outboard curved section (m3)
-    atot   : output real : total surface area of shell (m3)
-    This routine calculates the surface area of the inboard and outboard
-    sections of a D-shaped toroidal shell defined by the above input
-    parameters.
+def dshellarea(
+    rmajor: float, rminor: float, zminor: float
+) -> tuple[float, float, float]:
+    """
+    Calculate the inboard, outboard, and total surface areas of a D-shaped toroidal shell.
+
+    :param rmajor: Major radius of inboard straight section (m)
+    :type rmajor: float
+    :param rminor: Horizontal width of shell (m)
+    :type rminor: float
+    :param zminor: Vertical half-height of shell (m)
+    :type zminor: float
+
+    :return: Tuple containing:
+        - ain: Surface area of inboard straight section (m²)
+        - aout: Surface area of outboard curved section (m²)
+        - atot: Total surface area of shell (m²)
+    :rtype: tuple[float, float, float]
+
     The inboard section is assumed to be a cylinder.
-    The outboard section is defined by a semi-ellipse, centred on the
-    major radius of the inboard section.
+    The outboard section is defined by a semi-ellipse, centred on the major radius of the inboard section.
     """
     # Area of inboard cylindrical shell
     ain = 4.0 * zminor * np.pi * rmajor
