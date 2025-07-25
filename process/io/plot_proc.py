@@ -2904,6 +2904,7 @@ def plot_main_plasma_information(
         f"            - Diamagnetic fraction {mfile_data.data['f_c_plasma_diamagnetic'].get_scan(scan):.4f}\n"
         f"            - Pfirsch-Schlüter fraction {mfile_data.data['f_c_plasma_pfirsch_schluter'].get_scan(scan):.4f}\n"
         f"            - Auxiliary fraction {mfile_data.data['f_c_plasma_auxiliary'].get_scan(scan):.4f}\n"
+        f"            - Inductive fraction {mfile_data.data['f_c_plasma_inductive'].get_scan(scan):.4f}"
     )
 
     axis.text(
@@ -3470,6 +3471,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
+        ni = (ne0 * (nd_fuel_ions / dene)) * (1 - rho**2) ** alphan
     ne = ne / 1e19
     ni = ni / 1e19
     prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
@@ -3508,35 +3510,35 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         )
         prof.minorticks_on()
 
-        # Add text box with density profile parameters
-        textstr_density = "\n".join((
-            rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['dene'].get_scan(scan):.3e} m$^{{-3}}$",
-            rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
-            rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
-            rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
-            r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-            f"{nd_fuel_ions / dene:.3f}",
-            rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
-            r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
-            f"{ne0 / dene:.3f}",
-            rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
-            r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
-            f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
-            rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
-            rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
-        ))
+    # Add text box with density profile parameters
+    textstr_density = "\n".join((
+        rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['dene'].get_scan(scan):.3e} m$^{{-3}}$",
+        rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
+        rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
+        rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
+        r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
+        f"{nd_fuel_ions / dene:.3f}",
+        rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
+        r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
+        f"{ne0 / dene:.3f}",
+        rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
+        r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
+        f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
+        rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
+        rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
+    ))
 
-        props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-        prof.text(
-            0.0,
-            -0.16,
-            textstr_density,
-            transform=prof.transAxes,
-            fontsize=9,
-            verticalalignment="top",
-            bbox=props_density,
-        )
-        prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
+    prof.text(
+        0.0,
+        -0.16,
+        textstr_density,
+        transform=prof.transAxes,
+        fontsize=9,
+        verticalalignment="top",
+        bbox=props_density,
+    )
+    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     # ---
 
