@@ -713,16 +713,14 @@ class CCFE_HCPB(BlanketLibrary):
         if physics_variables.n_divertors == 2:
             # Double null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8
-                * physics_variables.p_fusion_total_mw
+                physics_variables.p_neutron_total_mw
                 * 2
                 * fwbs_variables.f_ster_div_single
             )
         else:
             # single null configuration
             fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8
-                * physics_variables.p_fusion_total_mw
+                physics_variables.p_neutron_total_mw
                 * fwbs_variables.f_ster_div_single
             )
 
