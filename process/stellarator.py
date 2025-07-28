@@ -1177,14 +1177,14 @@ class Stellarator:
         build_variables.sharea = (
             physics_variables.a_plasma_surface * r1 / physics_variables.rminor
         )
-        build_variables.shareaib = (
+        build_variables.a_shld_inboard_surface = (
             0.5e0 * build_variables.sharea * fwbs_variables.fvolsi
         )
         build_variables.shareaob = (
             0.5e0 * build_variables.sharea * fwbs_variables.fvolso
         )
 
-        vol_shld_inboard = build_variables.shareaib * build_variables.dr_shld_inboard
+        vol_shld_inboard = build_variables.a_shld_inboard_surface * build_variables.dr_shld_inboard
         vol_shld_outboard = build_variables.shareaob * build_variables.dr_shld_outboard
         fwbs_variables.vol_shld_total = vol_shld_inboard + vol_shld_outboard
 
