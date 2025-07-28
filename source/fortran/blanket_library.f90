@@ -108,7 +108,7 @@ module blanket_library
     real(dp) :: htpmw_fw_blkti, htpmw_fw_blkto
     !! Inboard/outboard fw and blanket pumping power (MW)
 
-    real(dp) :: hblnkt
+    real(dp) :: dz_blkt_half
     !! Blanket internal half-height (m)
 
     real(dp) :: hshld

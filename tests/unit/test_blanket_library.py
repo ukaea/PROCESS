@@ -531,7 +531,7 @@ class DshapedComponentParam(NamedTuple):
     volshldo: Any = None
     vol_vv_inboard: Any = None
     vol_vv_outboard: Any = None
-    hblnkt: Any = None
+    dz_blkt_half: Any = None
     hshld: Any = None
     hvv: Any = None
     icomponent: Any = None
@@ -588,7 +588,7 @@ class DshapedComponentParam(NamedTuple):
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
-            hblnkt=8.25,
+            dz_blkt_half=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
             icomponent=0,
@@ -641,7 +641,7 @@ class DshapedComponentParam(NamedTuple):
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
-            hblnkt=8.25,
+            dz_blkt_half=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
             icomponent=0,
@@ -694,7 +694,7 @@ class DshapedComponentParam(NamedTuple):
             volshldo=370.5642451119993,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
-            hblnkt=8.25,
+            dz_blkt_half=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
             icomponent=1,
@@ -802,7 +802,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         blanket_library, "vol_vv_outboard", dshapedcomponentparam.vol_vv_outboard
     )
-    monkeypatch.setattr(blanket_library, "hblnkt", dshapedcomponentparam.hblnkt)
+    monkeypatch.setattr(
+        blanket_library, "dz_blkt_half", dshapedcomponentparam.dz_blkt_half
+    )
     monkeypatch.setattr(blanket_library, "hshld", dshapedcomponentparam.hshld)
     monkeypatch.setattr(blanket_library, "hvv", dshapedcomponentparam.hvv)
 
@@ -856,7 +858,7 @@ class EllipticalComponentParam(NamedTuple):
     volshldo: Any = None
     vol_vv_inboard: Any = None
     vol_vv_outboard: Any = None
-    hblnkt: Any = None
+    dz_blkt_half: Any = None
     hshld: Any = None
     hvv: Any = None
     icomponent: Any = None
@@ -912,7 +914,7 @@ class EllipticalComponentParam(NamedTuple):
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
-            hblnkt=5.9532752487304119,
+            dz_blkt_half=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
             icomponent=0,
@@ -964,7 +966,7 @@ class EllipticalComponentParam(NamedTuple):
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
-            hblnkt=5.9532752487304119,
+            dz_blkt_half=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
             icomponent=1,
@@ -1016,7 +1018,7 @@ class EllipticalComponentParam(NamedTuple):
             volshldo=946.56393192782434,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
-            hblnkt=5.9532752487304119,
+            dz_blkt_half=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
             icomponent=2,
@@ -1113,7 +1115,9 @@ def test_elliptical_component(
     monkeypatch.setattr(
         blanket_library, "vol_vv_outboard", ellipticalcomponentparam.vol_vv_outboard
     )
-    monkeypatch.setattr(blanket_library, "hblnkt", ellipticalcomponentparam.hblnkt)
+    monkeypatch.setattr(
+        blanket_library, "dz_blkt_half", ellipticalcomponentparam.dz_blkt_half
+    )
     monkeypatch.setattr(blanket_library, "hshld", ellipticalcomponentparam.hshld)
     monkeypatch.setattr(blanket_library, "hvv", ellipticalcomponentparam.hvv)
 
@@ -1323,7 +1327,7 @@ class BlanketModPolHeightParam(NamedTuple):
     triang: Any = None
     bllengi: Any = None
     bllengo: Any = None
-    hblnkt: Any = None
+    dz_blkt_half: Any = None
     expected_bllengi: Any = None
     expected_bllengo: Any = None
 
@@ -1345,7 +1349,7 @@ class BlanketModPolHeightParam(NamedTuple):
             triang=0.5,
             bllengi=0,
             bllengo=0,
-            hblnkt=5.9532752487304119,
+            dz_blkt_half=5.9532752487304119,
             expected_bllengi=1.6252823720672551,
             expected_bllengo=1.7853902013340495,
         ),
@@ -1363,7 +1367,7 @@ class BlanketModPolHeightParam(NamedTuple):
             triang=0.5,
             bllengi=0,
             bllengo=0,
-            hblnkt=8.25,
+            dz_blkt_half=8.25,
             expected_bllengi=2.3571428571428572,
             expected_bllengo=2.0597205347177807,
         ),
@@ -1422,7 +1426,9 @@ def test_blanket_mod_pol_height(
     monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
     monkeypatch.setattr(blanket_library, "bllengi", blanketmodpolheightparam.bllengi)
     monkeypatch.setattr(blanket_library, "bllengo", blanketmodpolheightparam.bllengo)
-    monkeypatch.setattr(blanket_library, "hblnkt", blanketmodpolheightparam.hblnkt)
+    monkeypatch.setattr(
+        blanket_library, "dz_blkt_half", blanketmodpolheightparam.dz_blkt_half
+    )
 
     blanket_library_fixture.blanket_mod_pol_height()
 
