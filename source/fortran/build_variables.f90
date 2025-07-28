@@ -20,7 +20,7 @@ module build_variables
   real(dp) :: available_radial_space
   !! Minimal radial space between plasma and coils (m)
 
-  real(dp) :: blarea
+  real(dp) :: a_blkt_total_surface
   !! blanket total surface area (m2)
 
   real(dp) :: a_blkt_inboard_surface
