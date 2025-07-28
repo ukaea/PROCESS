@@ -527,7 +527,7 @@ class DshapedComponentParam(NamedTuple):
     volshld: Any = None
     vol_vv: Any = None
     rminor: Any = None
-    volshldi: Any = None
+    vol_shld_inboard: Any = None
     volshldo: Any = None
     vol_vv_inboard: Any = None
     vol_vv_outboard: Any = None
@@ -584,7 +584,7 @@ class DshapedComponentParam(NamedTuple):
             volshld=0,
             vol_vv=0,
             rminor=2.5,
-            volshldi=0,
+            vol_shld_inboard=0,
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
@@ -637,7 +637,7 @@ class DshapedComponentParam(NamedTuple):
             volshld=0,
             vol_vv=0,
             rminor=2.5,
-            volshldi=0,
+            vol_shld_inboard=0,
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
@@ -690,7 +690,7 @@ class DshapedComponentParam(NamedTuple):
             volshld=450.46122947809488,
             vol_vv=0,
             rminor=2.5,
-            volshldi=79.896984366095609,
+            vol_shld_inboard=79.896984366095609,
             volshldo=370.5642451119993,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
@@ -794,7 +794,7 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(fwbs_variables, "volshld", dshapedcomponentparam.volshld)
     monkeypatch.setattr(fwbs_variables, "vol_vv", dshapedcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rminor", dshapedcomponentparam.rminor)
-    monkeypatch.setattr(blanket_library, "volshldi", dshapedcomponentparam.volshldi)
+    monkeypatch.setattr(blanket_library, "vol_shld_inboard", dshapedcomponentparam.vol_shld_inboard)
     monkeypatch.setattr(blanket_library, "volshldo", dshapedcomponentparam.volshldo)
     monkeypatch.setattr(
         blanket_library, "vol_vv_inboard", dshapedcomponentparam.vol_vv_inboard
@@ -856,7 +856,7 @@ class EllipticalComponentParam(NamedTuple):
     rmajor: Any = None
     rminor: Any = None
     triang: Any = None
-    volshldi: Any = None
+    vol_shld_inboard: Any = None
     volshldo: Any = None
     vol_vv_inboard: Any = None
     vol_vv_outboard: Any = None
@@ -912,7 +912,7 @@ class EllipticalComponentParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
-            volshldi=0,
+            vol_shld_inboard=0,
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
@@ -964,7 +964,7 @@ class EllipticalComponentParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
-            volshldi=0,
+            vol_shld_inboard=0,
             volshldo=0,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
@@ -1016,7 +1016,7 @@ class EllipticalComponentParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
-            volshldi=177.89822933168091,
+            vol_shld_inboard=177.89822933168091,
             volshldo=946.56393192782434,
             vol_vv_inboard=0,
             vol_vv_outboard=0,
@@ -1109,7 +1109,7 @@ def test_elliptical_component(
     monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", ellipticalcomponentparam.rminor)
     monkeypatch.setattr(physics_variables, "triang", ellipticalcomponentparam.triang)
-    monkeypatch.setattr(blanket_library, "volshldi", ellipticalcomponentparam.volshldi)
+    monkeypatch.setattr(blanket_library, "vol_shld_inboard", ellipticalcomponentparam.vol_shld_inboard)
     monkeypatch.setattr(blanket_library, "volshldo", ellipticalcomponentparam.volshldo)
     monkeypatch.setattr(
         blanket_library, "vol_vv_inboard", ellipticalcomponentparam.vol_vv_inboard
@@ -1162,7 +1162,7 @@ def test_elliptical_component(
     assert fwbs_variables.vol_vv == pytest.approx(
         ellipticalcomponentparam.expected_vol_vv
     )
-    assert blanket_library.volshldi == pytest.approx(
+    assert blanket_library.vol_shld_inboard == pytest.approx(
         ellipticalcomponentparam.expected_volshldi
     )
     assert blanket_library.volshldo == pytest.approx(
@@ -1194,7 +1194,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     vol_vv: Any = None
     fvoldw: Any = None
     n_divertors: Any = None
-    volshldi: Any = None
+    vol_shld_inboard: Any = None
     volshldo: Any = None
     expected_blareaob: Any = None
     expected_blarea: Any = None
@@ -1228,7 +1228,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             vol_vv=584.07334775041659,
             fvoldw=1.74,
             n_divertors=1,
-            volshldi=177.89822933168091,
+            vol_shld_inboard=177.89822933168091,
             volshldo=946.56393192782434,
             expected_blareaob=898.23806738434075,
             expected_blarea=1563.2068386818949,
@@ -1285,7 +1285,7 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(
         physics_variables, "n_divertors", applycoveragefactorsparam.n_divertors
     )
-    monkeypatch.setattr(blanket_library, "volshldi", applycoveragefactorsparam.volshldi)
+    monkeypatch.setattr(blanket_library, "vol_shld_inboard", applycoveragefactorsparam.vol_shld_inboard)
     monkeypatch.setattr(blanket_library, "volshldo", applycoveragefactorsparam.volshldo)
 
     blanket_library_fixture.apply_coverage_factors()
