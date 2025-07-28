@@ -524,7 +524,7 @@ class DshapedComponentParam(NamedTuple):
     vol_blkt_inboard: Any = None
     vol_blkt_outboard: Any = None
     vol_blkt_total: Any = None
-    volshld: Any = None
+    vol_shld_total: Any = None
     vol_vv: Any = None
     rminor: Any = None
     vol_shld_inboard: Any = None
@@ -543,7 +543,7 @@ class DshapedComponentParam(NamedTuple):
     expected_sharea: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
-    expected_volshld: Any = None
+    expected_vol_shld_total: Any = None
     expected_vol_vv: Any = None
     expected_vol_shld_inboard: Any = None
     expected_vol_shld_outboard: Any = None
@@ -581,7 +581,7 @@ class DshapedComponentParam(NamedTuple):
             vol_blkt_inboard=0,
             vol_blkt_outboard=0,
             vol_blkt_total=0,
-            volshld=0,
+            vol_shld_total=0,
             vol_vv=0,
             rminor=2.5,
             vol_shld_inboard=0,
@@ -600,7 +600,7 @@ class DshapedComponentParam(NamedTuple):
             expected_sharea=0,
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
-            expected_volshld=0,
+            expected_vol_shld_total=0,
             expected_vol_vv=0,
             expected_vol_shld_inboard=0,
             expected_vol_shld_outboard=0,
@@ -634,7 +634,7 @@ class DshapedComponentParam(NamedTuple):
             vol_blkt_inboard=0,
             vol_blkt_outboard=691.06561956756764,
             vol_blkt_total=691.06561956756764,
-            volshld=0,
+            vol_shld_total=0,
             vol_vv=0,
             rminor=2.5,
             vol_shld_inboard=0,
@@ -653,7 +653,7 @@ class DshapedComponentParam(NamedTuple):
             expected_sharea=1222.7642703724505,
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
-            expected_volshld=450.46122947809488,
+            expected_vol_shld_total=450.46122947809488,
             expected_vol_vv=0,
             expected_vol_shld_inboard=79.896984366095609,
             expected_vol_shld_outboard=370.5642451119993,
@@ -687,7 +687,7 @@ class DshapedComponentParam(NamedTuple):
             vol_blkt_inboard=0,
             vol_blkt_outboard=691.06561956756764,
             vol_blkt_total=691.06561956756764,
-            volshld=450.46122947809488,
+            vol_shld_total=450.46122947809488,
             vol_vv=0,
             rminor=2.5,
             vol_shld_inboard=79.896984366095609,
@@ -706,7 +706,7 @@ class DshapedComponentParam(NamedTuple):
             expected_sharea=1222.7642703724505,
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
-            expected_volshld=450.46122947809488,
+            expected_vol_shld_total=450.46122947809488,
             expected_vol_vv=340.45369594344834,
             expected_vol_shld_inboard=79.896984366095609,
             expected_vol_shld_outboard=370.5642451119993,
@@ -791,7 +791,9 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", dshapedcomponentparam.vol_blkt_total
     )
-    monkeypatch.setattr(fwbs_variables, "volshld", dshapedcomponentparam.volshld)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_shld_total", dshapedcomponentparam.vol_shld_total
+    )
     monkeypatch.setattr(fwbs_variables, "vol_vv", dshapedcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rminor", dshapedcomponentparam.rminor)
     monkeypatch.setattr(
@@ -855,7 +857,7 @@ class EllipticalComponentParam(NamedTuple):
     vol_blkt_inboard: Any = None
     vol_blkt_outboard: Any = None
     vol_blkt_total: Any = None
-    volshld: Any = None
+    vol_shld_total: Any = None
     vol_vv: Any = None
     rmajor: Any = None
     rminor: Any = None
@@ -877,7 +879,7 @@ class EllipticalComponentParam(NamedTuple):
     expected_vol_blkt_inboard: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
-    expected_volshld: Any = None
+    expected_vol_shld_total: Any = None
     expected_vol_vv: Any = None
     expected_vol_shld_inboard: Any = None
     expected_vol_shld_outboard: Any = None
@@ -911,7 +913,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_blkt_inboard=0,
             vol_blkt_outboard=0,
             vol_blkt_total=0,
-            volshld=0,
+            vol_shld_total=0,
             vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -933,7 +935,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_blkt_inboard=315.83946385183026,
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
-            expected_volshld=0,
+            expected_vol_shld_total=0,
             expected_vol_vv=0,
             expected_vol_shld_inboard=0,
             expected_vol_shld_outboard=0,
@@ -963,7 +965,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_blkt_inboard=315.83946385183026,
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_total=1336.207205897842,
-            volshld=0,
+            vol_shld_total=0,
             vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -985,7 +987,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_blkt_inboard=315.83946385183026,
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
-            expected_volshld=1124.4621612595051,
+            expected_vol_shld_total=1124.4621612595051,
             expected_vol_vv=0,
             expected_vol_shld_inboard=177.89822933168091,
             expected_vol_shld_outboard=946.56393192782434,
@@ -1015,7 +1017,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_blkt_inboard=315.83946385183026,
             vol_blkt_outboard=1020.3677420460117,
             vol_blkt_total=1336.207205897842,
-            volshld=1124.4621612595051,
+            vol_shld_total=1124.4621612595051,
             vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
@@ -1037,7 +1039,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_vol_blkt_inboard=315.83946385183026,
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
-            expected_volshld=1124.4621612595051,
+            expected_vol_shld_total=1124.4621612595051,
             expected_vol_vv=584.07334775041659,
             expected_vol_shld_inboard=177.89822933168091,
             expected_vol_shld_outboard=946.56393192782434,
@@ -1108,7 +1110,9 @@ def test_elliptical_component(
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", ellipticalcomponentparam.vol_blkt_total
     )
-    monkeypatch.setattr(fwbs_variables, "volshld", ellipticalcomponentparam.volshld)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_shld_total", ellipticalcomponentparam.vol_shld_total
+    )
     monkeypatch.setattr(fwbs_variables, "vol_vv", ellipticalcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", ellipticalcomponentparam.rminor)
@@ -1164,8 +1168,8 @@ def test_elliptical_component(
     assert fwbs_variables.vol_blkt_total == pytest.approx(
         ellipticalcomponentparam.expected_volblkt
     )
-    assert fwbs_variables.volshld == pytest.approx(
-        ellipticalcomponentparam.expected_volshld
+    assert fwbs_variables.vol_shld_total == pytest.approx(
+        ellipticalcomponentparam.expected_vol_shld_total
     )
     assert fwbs_variables.vol_vv == pytest.approx(
         ellipticalcomponentparam.expected_vol_vv
@@ -1198,7 +1202,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     vol_blkt_total: Any = None
     fvolsi: Any = None
     fvolso: Any = None
-    volshld: Any = None
+    vol_shld_total: Any = None
     vol_vv: Any = None
     fvoldw: Any = None
     n_divertors: Any = None
@@ -1210,7 +1214,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     expected_sharea: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
-    expected_volshld: Any = None
+    expected_vol_shld_total: Any = None
     expected_vol_vv: Any = None
     expected_vol_shld_outboard: Any = None
 
@@ -1232,7 +1236,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             vol_blkt_total=1336.207205897842,
             fvolsi=1,
             fvolso=0.64000000000000001,
-            volshld=1124.4621612595051,
+            vol_shld_total=1124.4621612595051,
             vol_vv=584.07334775041659,
             fvoldw=1.74,
             n_divertors=1,
@@ -1244,7 +1248,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             expected_sharea=1560.2981275221814,
             expected_vol_blkt_outboard=866.70391336775992,
             expected_volblkt=1182.5433772195902,
-            expected_volshld=783.69914576548854,
+            expected_vol_shld_total=783.69914576548854,
             expected_vol_vv=1016.2876250857248,
             expected_vol_shld_outboard=605.80091643380763,
         ),
@@ -1287,7 +1291,9 @@ def test_apply_coverage_factors(
     )
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
-    monkeypatch.setattr(fwbs_variables, "volshld", applycoveragefactorsparam.volshld)
+    monkeypatch.setattr(
+        fwbs_variables, "vol_shld_total", applycoveragefactorsparam.vol_shld_total
+    )
     monkeypatch.setattr(fwbs_variables, "vol_vv", applycoveragefactorsparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "fvoldw", applycoveragefactorsparam.fvoldw)
     monkeypatch.setattr(
@@ -1322,8 +1328,8 @@ def test_apply_coverage_factors(
     assert fwbs_variables.vol_blkt_total == pytest.approx(
         applycoveragefactorsparam.expected_volblkt
     )
-    assert fwbs_variables.volshld == pytest.approx(
-        applycoveragefactorsparam.expected_volshld
+    assert fwbs_variables.vol_shld_total == pytest.approx(
+        applycoveragefactorsparam.expected_vol_shld_total
     )
     assert fwbs_variables.vol_vv == pytest.approx(
         applycoveragefactorsparam.expected_vol_vv

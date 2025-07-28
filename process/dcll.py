@@ -935,8 +935,8 @@ class DCLL(BlanketLibrary):
         po.ovarrf(
             self.outfile,
             "Shield Volume (m3)",
-            "(volshld)",
-            fwbs_variables.volshld,
+            "(vol_shld_total)",
+            fwbs_variables.vol_shld_total,
             "OP ",
         )
         po.ovarrf(

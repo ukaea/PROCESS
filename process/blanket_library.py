@@ -207,7 +207,7 @@ class BlanketLibrary:
             (
                 blanket_library.vol_shld_inboard,
                 blanket_library.vol_shld_outboard,
-                fwbs_variables.volshld,
+                fwbs_variables.vol_shld_total,
             ) = dshellvol(
                 r1,
                 r2,
@@ -298,7 +298,7 @@ class BlanketLibrary:
             (
                 blanket_library.vol_shld_inboard,
                 blanket_library.vol_shld_outboard,
-                fwbs_variables.volshld,
+                fwbs_variables.vol_shld_total,
             ) = eshellvol(
                 r1,
                 r2,
@@ -370,7 +370,7 @@ class BlanketLibrary:
         blanket_library.vol_shld_outboard = (
             fwbs_variables.fvolso * blanket_library.vol_shld_outboard
         )
-        fwbs_variables.volshld = (
+        fwbs_variables.vol_shld_total = (
             blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
         )
 

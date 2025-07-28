@@ -738,7 +738,7 @@ def init_fwbs_variables():
     fwbs_variables.vol_blkt_total = 0.0
     fwbs_variables.vol_blkt_inboard = 0.0
     fwbs_variables.vol_blkt_outboard = 0.0
-    fwbs_variables.volshld = 0.0
+    fwbs_variables.vol_shld_total = 0.0
     fwbs_variables.whtshld = 0.0
     fwbs_variables.wpenshld = 0.0
     fwbs_variables.wtshldi = 0.0
