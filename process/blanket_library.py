@@ -56,7 +56,7 @@ class BlanketLibrary:
 
         # Calculate half-height
         # Blanket
-        blanket_library.hblnkt = self.component_half_height(icomponent=0)
+        blanket_library.dz_blkt_half = self.component_half_height(icomponent=0)
         # Shield
         blanket_library.hshld = self.component_half_height(icomponent=1)
         # Vacuum Vessel
@@ -178,7 +178,7 @@ class BlanketLibrary:
                 build_variables.blareaib,
                 build_variables.blareaob,
                 build_variables.blarea,
-            ) = dshellarea(r1, r2, blanket_library.hblnkt)
+            ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
         if icomponent == 1:
             (
                 build_variables.shareaib,
@@ -195,7 +195,7 @@ class BlanketLibrary:
             ) = dshellvol(
                 r1,
                 r2,
-                blanket_library.hblnkt,
+                blanket_library.dz_blkt_half,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
                 build_variables.dz_blkt_upper,
@@ -268,7 +268,7 @@ class BlanketLibrary:
                 build_variables.blareaib,
                 build_variables.blareaob,
                 build_variables.blarea,
-            ) = eshellarea(r1, r2, r3, blanket_library.hblnkt)
+            ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
         if icomponent == 1:
             (
                 build_variables.shareaib,
@@ -286,7 +286,7 @@ class BlanketLibrary:
                 r1,
                 r2,
                 r3,
-                blanket_library.hblnkt,
+                blanket_library.dz_blkt_half,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
                 build_variables.dz_blkt_upper,
@@ -1079,7 +1079,7 @@ class BlanketLibrary:
         ):  # D-shaped machine
             # Segment vertical inboard surface (m)
             blanket_library.bllengi = (
-                2.0 * blanket_library.hblnkt
+                2.0 * blanket_library.dz_blkt_half
             ) / fwbs_variables.n_blkt_inboard_modules_poloidal
 
             # Calculate perimeter of ellipse that defines the internal
@@ -1093,7 +1093,7 @@ class BlanketLibrary:
             )
 
             # Internal half-height of blanket (m)
-            b = blanket_library.hblnkt
+            b = blanket_library.dz_blkt_half
 
             # Calculate ellipse circumference using Ramanujan approximation (m)
             ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
@@ -1126,7 +1126,7 @@ class BlanketLibrary:
             )
 
             # Internal half-height of blanket (m)
-            b = blanket_library.hblnkt
+            b = blanket_library.dz_blkt_half
 
             # Distance between r1 and nearest edge of inboard first wall / blanket (m)
             a = r1 - (
@@ -2936,7 +2936,7 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
 
 
 def init_blanket_library():
-    blanket_library.hblnkt = 0.0
+    blanket_library.dz_blkt_half = 0.0
     blanket_library.hshld = 0.0
     blanket_library.dz_pf_cryostat = 0.0
     blanket_library.hvv = 0.0
