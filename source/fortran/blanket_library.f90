@@ -114,7 +114,7 @@ module blanket_library
     real(dp) :: dz_shld_half
     !! Shield internal half-height (m)
 
-    real(dp) :: hvv
+    real(dp) :: dz_vv_half
     !! Vacuum vessel internal half-height (m)
 
     integer :: icomponent

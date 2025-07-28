@@ -63,7 +63,7 @@ class BlanketLibrary:
         # Shield
         blanket_library.dz_shld_half = self.component_half_height(icomponent=1)
         # Vacuum Vessel
-        blanket_library.hvv = self.component_half_height(icomponent=2)
+        blanket_library.dz_vv_half = self.component_half_height(icomponent=2)
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
@@ -224,7 +224,7 @@ class BlanketLibrary:
             ) = dshellvol(
                 r1,
                 r2,
-                blanket_library.hvv,
+                blanket_library.dz_vv_half,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
                 (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
@@ -317,7 +317,7 @@ class BlanketLibrary:
                 r1,
                 r2,
                 r3,
-                blanket_library.hvv,
+                blanket_library.dz_vv_half,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
                 (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
@@ -2942,7 +2942,7 @@ def init_blanket_library():
     blanket_library.dz_blkt_half = 0.0
     blanket_library.dz_shld_half = 0.0
     blanket_library.dz_pf_cryostat = 0.0
-    blanket_library.hvv = 0.0
+    blanket_library.dz_vv_half = 0.0
     blanket_library.volshldi = 0.0
     blanket_library.volshldo = 0.0
     blanket_library.vol_vv_inboard = 0.0

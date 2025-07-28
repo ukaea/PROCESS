@@ -533,7 +533,7 @@ class DshapedComponentParam(NamedTuple):
     vol_vv_outboard: Any = None
     dz_blkt_half: Any = None
     dz_shld_half: Any = None
-    hvv: Any = None
+    dz_vv_half: Any = None
     icomponent: Any = None
     expected_blareaib: Any = None
     expected_blareaob: Any = None
@@ -590,7 +590,7 @@ class DshapedComponentParam(NamedTuple):
             vol_vv_outboard=0,
             dz_blkt_half=8.25,
             dz_shld_half=8.75,
-            hvv=9.4349999999999987,
+            dz_vv_half=9.4349999999999987,
             icomponent=0,
             expected_blareaib=196.97785938008002,
             expected_blareaob=852.24160940262459,
@@ -643,7 +643,7 @@ class DshapedComponentParam(NamedTuple):
             vol_vv_outboard=0,
             dz_blkt_half=8.25,
             dz_shld_half=8.75,
-            hvv=9.4349999999999987,
+            dz_vv_half=9.4349999999999987,
             icomponent=0,
             expected_blareaib=196.97785938008002,
             expected_blareaob=852.24160940262459,
@@ -696,7 +696,7 @@ class DshapedComponentParam(NamedTuple):
             vol_vv_outboard=0,
             dz_blkt_half=8.25,
             dz_shld_half=8.75,
-            hvv=9.4349999999999987,
+            dz_vv_half=9.4349999999999987,
             icomponent=1,
             expected_blareaib=196.97785938008002,
             expected_blareaob=852.24160940262459,
@@ -805,8 +805,10 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         blanket_library, "dz_blkt_half", dshapedcomponentparam.dz_blkt_half
     )
-    monkeypatch.setattr(blanket_library, "dz_shld_half", dshapedcomponentparam.dz_shld_half)
-    monkeypatch.setattr(blanket_library, "hvv", dshapedcomponentparam.hvv)
+    monkeypatch.setattr(
+        blanket_library, "dz_shld_half", dshapedcomponentparam.dz_shld_half
+    )
+    monkeypatch.setattr(blanket_library, "dz_vv_half", dshapedcomponentparam.dz_vv_half)
 
     blanket_library_fixture.dshaped_component(dshapedcomponentparam.icomponent)
 
@@ -860,7 +862,7 @@ class EllipticalComponentParam(NamedTuple):
     vol_vv_outboard: Any = None
     dz_blkt_half: Any = None
     dz_shld_half: Any = None
-    hvv: Any = None
+    dz_vv_half: Any = None
     icomponent: Any = None
     expected_blareaib: Any = None
     expected_blareaob: Any = None
@@ -916,7 +918,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_vv_outboard=0,
             dz_blkt_half=5.9532752487304119,
             dz_shld_half=6.8032752487304133,
-            hvv=7.5032752487304135,
+            dz_vv_half=7.5032752487304135,
             icomponent=0,
             expected_blareaib=664.9687712975541,
             expected_blareaob=1101.3666396424403,
@@ -968,7 +970,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_vv_outboard=0,
             dz_blkt_half=5.9532752487304119,
             dz_shld_half=6.8032752487304133,
-            hvv=7.5032752487304135,
+            dz_vv_half=7.5032752487304135,
             icomponent=1,
             expected_blareaib=664.9687712975541,
             expected_blareaob=1101.3666396424403,
@@ -1020,7 +1022,7 @@ class EllipticalComponentParam(NamedTuple):
             vol_vv_outboard=0,
             dz_blkt_half=5.9532752487304119,
             dz_shld_half=6.8032752487304133,
-            hvv=7.5032752487304135,
+            dz_vv_half=7.5032752487304135,
             icomponent=2,
             expected_blareaib=664.9687712975541,
             expected_blareaob=1101.3666396424403,
@@ -1118,8 +1120,12 @@ def test_elliptical_component(
     monkeypatch.setattr(
         blanket_library, "dz_blkt_half", ellipticalcomponentparam.dz_blkt_half
     )
-    monkeypatch.setattr(blanket_library, "dz_shld_half", ellipticalcomponentparam.dz_shld_half)
-    monkeypatch.setattr(blanket_library, "hvv", ellipticalcomponentparam.hvv)
+    monkeypatch.setattr(
+        blanket_library, "dz_shld_half", ellipticalcomponentparam.dz_shld_half
+    )
+    monkeypatch.setattr(
+        blanket_library, "dz_vv_half", ellipticalcomponentparam.dz_vv_half
+    )
 
     blanket_library_fixture.elliptical_component(ellipticalcomponentparam.icomponent)
 
