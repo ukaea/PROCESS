@@ -2536,7 +2536,7 @@ def init_build_variables():
     build_variables.dr_fw_plasma_gap_outboard = 0.15
     build_variables.sharea = 0.0
     build_variables.a_shld_inboard_surface = 0.0
-    build_variables.shareaob = 0.0
+    build_variables.a_shld_outboard_surface = 0.0
     build_variables.dr_shld_inboard = 0.69
     build_variables.dz_shld_lower = 0.7
     build_variables.dr_shld_outboard = 1.05
