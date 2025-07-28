@@ -604,10 +604,14 @@ class BlanketLibrary:
 
         if fwbs_variables.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
-            blanket_library.bldepti = build_variables.blbuith
+            blanket_library.len_blkt_inboard_coolant_channel_radial = (
+                build_variables.blbuith
+            )
             blanket_library.bldepto = build_variables.blbuoth
         else:
-            blanket_library.bldepti = 0.8e0 * build_variables.dr_blkt_inboard
+            blanket_library.len_blkt_inboard_coolant_channel_radial = (
+                0.8e0 * build_variables.dr_blkt_inboard
+            )
             blanket_library.bldepto = 0.8e0 * build_variables.dr_blkt_outboard
 
         # Using the total perimeter of the machine, segment the outboard
@@ -648,7 +652,10 @@ class BlanketLibrary:
                 # Radial direction
                 fwbs_variables.b_bz_liq = (
                     min(
-                        (blanket_library.bldepti * fwbs_variables.r_f_liq_ib),
+                        (
+                            blanket_library.len_blkt_inboard_coolant_channel_radial
+                            * fwbs_variables.r_f_liq_ib
+                        ),
                         (blanket_library.bldepto * fwbs_variables.r_f_liq_ob),
                     )
                     / fwbs_variables.nopol
@@ -684,7 +691,8 @@ class BlanketLibrary:
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
         blanket_library.len_blkt_inboard_channel_total = (
-            fwbs_variables.bzfllengi_n_rad * blanket_library.bldepti
+            fwbs_variables.bzfllengi_n_rad
+            * blanket_library.len_blkt_inboard_coolant_channel_radial
             + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
         )
         blanket_library.len_blkt_outboard_channel_total = (
@@ -697,7 +705,8 @@ class BlanketLibrary:
         fwbs_variables.nopol = 2
         fwbs_variables.nopipes = 4
         bzfllengi_liq = (
-            fwbs_variables.bzfllengi_n_rad_liq * blanket_library.bldepti
+            fwbs_variables.bzfllengi_n_rad_liq
+            * blanket_library.len_blkt_inboard_coolant_channel_radial
             + fwbs_variables.bzfllengi_n_pol_liq * blanket_library.bllengi
         )
         bzfllengo_liq = (
@@ -2963,7 +2972,7 @@ def init_blanket_library():
     blanket_library.vol_shld_outboard = 0.0
     blanket_library.vol_vv_inboard = 0.0
     blanket_library.vol_vv_outboard = 0.0
-    blanket_library.bldepti = 0.0
+    blanket_library.len_blkt_inboard_coolant_channel_radial = 0.0
     blanket_library.bldepto = 0.0
     blanket_library.blwidti = 0.0
     blanket_library.blwidto = 0.0
