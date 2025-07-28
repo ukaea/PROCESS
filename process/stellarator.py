@@ -1155,11 +1155,11 @@ class Stellarator:
                 )
             )
 
-        build_variables.blareaib = 0.5e0 * build_variables.blarea
+        build_variables.a_blkt_inboard_surface = 0.5e0 * build_variables.blarea
         build_variables.blareaob = 0.5e0 * build_variables.blarea
 
         fwbs_variables.vol_blkt_inboard = (
-            build_variables.blareaib * build_variables.dr_blkt_inboard
+            build_variables.a_blkt_inboard_surface * build_variables.dr_blkt_inboard
         )
         fwbs_variables.vol_blkt_outboard = (
             build_variables.blareaob * build_variables.dr_blkt_outboard
