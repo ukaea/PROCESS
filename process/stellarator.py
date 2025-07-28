@@ -1180,12 +1180,12 @@ class Stellarator:
         build_variables.a_shld_inboard_surface = (
             0.5e0 * build_variables.sharea * fwbs_variables.fvolsi
         )
-        build_variables.shareaob = (
+        build_variables.a_shld_outboard_surface = (
             0.5e0 * build_variables.sharea * fwbs_variables.fvolso
         )
 
         vol_shld_inboard = build_variables.a_shld_inboard_surface * build_variables.dr_shld_inboard
-        vol_shld_outboard = build_variables.shareaob * build_variables.dr_shld_outboard
+        vol_shld_outboard = build_variables.a_shld_outboard_surface * build_variables.dr_shld_outboard
         fwbs_variables.vol_shld_total = vol_shld_inboard + vol_shld_outboard
 
         #  Neutron power lost through holes in first wall (eventually absorbed by
