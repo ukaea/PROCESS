@@ -607,12 +607,12 @@ class BlanketLibrary:
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 build_variables.blbuith
             )
-            blanket_library.bldepto = build_variables.blbuoth
+            blanket_library.len_blkt_outboard_coolant_channel_radial = build_variables.blbuoth
         else:
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 0.8e0 * build_variables.dr_blkt_inboard
             )
-            blanket_library.bldepto = 0.8e0 * build_variables.dr_blkt_outboard
+            blanket_library.len_blkt_outboard_coolant_channel_radial = 0.8e0 * build_variables.dr_blkt_outboard
 
         # Using the total perimeter of the machine, segment the outboard
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
@@ -656,7 +656,7 @@ class BlanketLibrary:
                             blanket_library.len_blkt_inboard_coolant_channel_radial
                             * fwbs_variables.r_f_liq_ib
                         ),
-                        (blanket_library.bldepto * fwbs_variables.r_f_liq_ob),
+                        (blanket_library.len_blkt_outboard_coolant_channel_radial * fwbs_variables.r_f_liq_ob),
                     )
                     / fwbs_variables.nopol
                 )
@@ -678,7 +678,7 @@ class BlanketLibrary:
             else:
                 # Radial direction
                 fwbs_variables.b_bz_liq = (
-                    blanket_library.bldepto * fwbs_variables.r_f_liq_ob
+                    blanket_library.len_blkt_outboard_coolant_channel_radial * fwbs_variables.r_f_liq_ob
                 ) / fwbs_variables.nopol
                 # Toroidal direction
                 fwbs_variables.a_bz_liq = (
@@ -696,7 +696,7 @@ class BlanketLibrary:
             + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
         )
         blanket_library.len_blkt_outboard_channel_total = (
-            fwbs_variables.bzfllengo_n_rad * blanket_library.bldepto
+            fwbs_variables.bzfllengo_n_rad * blanket_library.len_blkt_outboard_coolant_channel_radial
             + fwbs_variables.bzfllengo_n_pol * blanket_library.bllengo
         )
         # Blanket secondary coolant/breeder flow
@@ -710,7 +710,7 @@ class BlanketLibrary:
             + fwbs_variables.bzfllengi_n_pol_liq * blanket_library.bllengi
         )
         bzfllengo_liq = (
-            fwbs_variables.bzfllengo_n_rad_liq * blanket_library.bldepto
+            fwbs_variables.bzfllengo_n_rad_liq * blanket_library.len_blkt_outboard_coolant_channel_radial
             + fwbs_variables.bzfllengo_n_pol_liq * blanket_library.bllengo
         )
 
@@ -2973,7 +2973,7 @@ def init_blanket_library():
     blanket_library.vol_vv_inboard = 0.0
     blanket_library.vol_vv_outboard = 0.0
     blanket_library.len_blkt_inboard_coolant_channel_radial = 0.0
-    blanket_library.bldepto = 0.0
+    blanket_library.len_blkt_outboard_coolant_channel_radial = 0.0
     blanket_library.blwidti = 0.0
     blanket_library.blwidto = 0.0
     blanket_library.bllengi = 0.0
