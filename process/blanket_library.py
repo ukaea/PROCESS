@@ -186,7 +186,7 @@ class BlanketLibrary:
             (
                 build_variables.a_shld_inboard_surface,
                 build_variables.a_shld_outboard_surface,
-                build_variables.sharea,
+                build_variables.a_shld_total_surface,
             ) = dshellarea(r1, r2, blanket_library.dz_shld_half)
 
         # Calculate volumes, assuming 100% coverage
@@ -276,7 +276,7 @@ class BlanketLibrary:
             (
                 build_variables.a_shld_inboard_surface,
                 build_variables.a_shld_outboard_surface,
-                build_variables.sharea,
+                build_variables.a_shld_total_surface,
             ) = eshellarea(r1, r2, r3, blanket_library.dz_shld_half)
 
         # Calculate volumes, assuming 100% coverage
@@ -363,9 +363,16 @@ class BlanketLibrary:
         )
 
         # Apply shield coverage factors
-        build_variables.a_shld_inboard_surface = fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
-        build_variables.a_shld_outboard_surface = fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
-        build_variables.sharea = build_variables.a_shld_inboard_surface + build_variables.a_shld_outboard_surface
+        build_variables.a_shld_inboard_surface = (
+            fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
+        )
+        build_variables.a_shld_outboard_surface = (
+            fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
+        )
+        build_variables.a_shld_total_surface = (
+            build_variables.a_shld_inboard_surface
+            + build_variables.a_shld_outboard_surface
+        )
 
         blanket_library.vol_shld_inboard = (
             fwbs_variables.fvolsi * blanket_library.vol_shld_inboard

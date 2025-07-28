@@ -513,7 +513,7 @@ class DshapedComponentParam(NamedTuple):
     dz_blkt_upper: Any = None
     a_shld_inboard_surface: Any = None
     a_shld_outboard_surface: Any = None
-    sharea: Any = None
+    a_shld_total_surface: Any = None
     dr_shld_outboard: Any = None
     dz_shld_upper: Any = None
     rsldo: Any = None
@@ -540,7 +540,7 @@ class DshapedComponentParam(NamedTuple):
     expected_a_blkt_total_surface: Any = None
     expected_a_shld_inboard_surface: Any = None
     expected_a_shld_outboard_surface: Any = None
-    expected_sharea: Any = None
+    expected_a_shld_total_surface: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_vol_shld_total: Any = None
@@ -570,7 +570,7 @@ class DshapedComponentParam(NamedTuple):
             dz_blkt_upper=0.5,
             a_shld_inboard_surface=0,
             a_shld_outboard_surface=0,
-            sharea=0,
+            a_shld_total_surface=0,
             dr_shld_outboard=0.30000000000000004,
             dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
@@ -597,7 +597,7 @@ class DshapedComponentParam(NamedTuple):
             expected_a_blkt_total_surface=1049.2194687827046,
             expected_a_shld_inboard_surface=0,
             expected_a_shld_outboard_surface=0,
-            expected_sharea=0,
+            expected_a_shld_total_surface=0,
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_vol_shld_total=0,
@@ -623,7 +623,7 @@ class DshapedComponentParam(NamedTuple):
             dz_blkt_upper=0.5,
             a_shld_inboard_surface=0,
             a_shld_outboard_surface=0,
-            sharea=0,
+            a_shld_total_surface=0,
             dr_shld_outboard=0.30000000000000004,
             dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
@@ -650,7 +650,7 @@ class DshapedComponentParam(NamedTuple):
             expected_a_blkt_total_surface=1049.2194687827046,
             expected_a_shld_inboard_surface=208.91591146372122,
             expected_a_shld_outboard_surface=1013.8483589087293,
-            expected_sharea=1222.7642703724505,
+            expected_a_shld_total_surface=1222.7642703724505,
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_vol_shld_total=450.46122947809488,
@@ -676,7 +676,7 @@ class DshapedComponentParam(NamedTuple):
             dz_blkt_upper=0.5,
             a_shld_inboard_surface=208.91591146372122,
             a_shld_outboard_surface=1013.8483589087293,
-            sharea=1222.7642703724505,
+            a_shld_total_surface=1222.7642703724505,
             dr_shld_outboard=0.30000000000000004,
             dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
@@ -703,7 +703,7 @@ class DshapedComponentParam(NamedTuple):
             expected_a_blkt_total_surface=1049.2194687827046,
             expected_a_shld_inboard_surface=208.91591146372122,
             expected_a_shld_outboard_surface=1013.8483589087293,
-            expected_sharea=1222.7642703724505,
+            expected_a_shld_total_surface=1222.7642703724505,
             expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_vol_shld_total=450.46122947809488,
@@ -761,16 +761,32 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
         "a_blkt_outboard_surface",
         dshapedcomponentparam.a_blkt_outboard_surface,
     )
-    monkeypatch.setattr(build_variables, "a_blkt_total_surface", dshapedcomponentparam.a_blkt_total_surface)
+    monkeypatch.setattr(
+        build_variables,
+        "a_blkt_total_surface",
+        dshapedcomponentparam.a_blkt_total_surface,
+    )
     monkeypatch.setattr(
         build_variables, "dr_blkt_outboard", dshapedcomponentparam.dr_blkt_outboard
     )
     monkeypatch.setattr(
         build_variables, "dz_blkt_upper", dshapedcomponentparam.dz_blkt_upper
     )
-    monkeypatch.setattr(build_variables, "a_shld_inboard_surface", dshapedcomponentparam.a_shld_inboard_surface)
-    monkeypatch.setattr(build_variables, "a_shld_outboard_surface", dshapedcomponentparam.a_shld_outboard_surface)
-    monkeypatch.setattr(build_variables, "sharea", dshapedcomponentparam.sharea)
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_inboard_surface",
+        dshapedcomponentparam.a_shld_inboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_outboard_surface",
+        dshapedcomponentparam.a_shld_outboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_total_surface",
+        dshapedcomponentparam.a_shld_total_surface,
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_outboard", dshapedcomponentparam.dr_shld_outboard
     )
@@ -856,7 +872,7 @@ class EllipticalComponentParam(NamedTuple):
     dz_blkt_upper: Any = None
     a_shld_inboard_surface: Any = None
     a_shld_outboard_surface: Any = None
-    sharea: Any = None
+    a_shld_total_surface: Any = None
     dz_shld_upper: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
@@ -883,7 +899,7 @@ class EllipticalComponentParam(NamedTuple):
     expected_a_blkt_total_surface: Any = None
     expected_a_shld_inboard_surface: Any = None
     expected_a_shld_outboard_surface: Any = None
-    expected_sharea: Any = None
+    expected_a_shld_total_surface: Any = None
     expected_vol_blkt_inboard: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
@@ -912,7 +928,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_blkt_upper=0.85000000000000009,
             a_shld_inboard_surface=0,
             a_shld_outboard_surface=0,
-            sharea=0,
+            a_shld_total_surface=0,
             dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
@@ -939,7 +955,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_a_blkt_total_surface=1766.3354109399943,
             expected_a_shld_inboard_surface=0,
             expected_a_shld_outboard_surface=0,
-            expected_sharea=0,
+            expected_a_shld_total_surface=0,
             expected_vol_blkt_inboard=315.83946385183026,
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
@@ -964,7 +980,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_blkt_upper=0.85000000000000009,
             a_shld_inboard_surface=0,
             a_shld_outboard_surface=0,
-            sharea=0,
+            a_shld_total_surface=0,
             dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
@@ -991,7 +1007,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_a_blkt_total_surface=1766.3354109399943,
             expected_a_shld_inboard_surface=700.06731267447844,
             expected_a_shld_outboard_surface=1344.1106481995357,
-            expected_sharea=2044.1779608740142,
+            expected_a_shld_total_surface=2044.1779608740142,
             expected_vol_blkt_inboard=315.83946385183026,
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
@@ -1016,7 +1032,7 @@ class EllipticalComponentParam(NamedTuple):
             dz_blkt_upper=0.85000000000000009,
             a_shld_inboard_surface=700.06731267447844,
             a_shld_outboard_surface=1344.1106481995357,
-            sharea=2044.1779608740142,
+            a_shld_total_surface=2044.1779608740142,
             dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
@@ -1043,7 +1059,7 @@ class EllipticalComponentParam(NamedTuple):
             expected_a_blkt_total_surface=1766.3354109399943,
             expected_a_shld_inboard_surface=700.06731267447844,
             expected_a_shld_outboard_surface=1344.1106481995357,
-            expected_sharea=2044.1779608740142,
+            expected_a_shld_total_surface=2044.1779608740142,
             expected_vol_blkt_inboard=315.83946385183026,
             expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
@@ -1095,13 +1111,29 @@ def test_elliptical_component(
         "a_blkt_outboard_surface",
         ellipticalcomponentparam.a_blkt_outboard_surface,
     )
-    monkeypatch.setattr(build_variables, "a_blkt_total_surface", ellipticalcomponentparam.a_blkt_total_surface)
+    monkeypatch.setattr(
+        build_variables,
+        "a_blkt_total_surface",
+        ellipticalcomponentparam.a_blkt_total_surface,
+    )
     monkeypatch.setattr(
         build_variables, "dz_blkt_upper", ellipticalcomponentparam.dz_blkt_upper
     )
-    monkeypatch.setattr(build_variables, "a_shld_inboard_surface", ellipticalcomponentparam.a_shld_inboard_surface)
-    monkeypatch.setattr(build_variables, "a_shld_outboard_surface", ellipticalcomponentparam.a_shld_outboard_surface)
-    monkeypatch.setattr(build_variables, "sharea", ellipticalcomponentparam.sharea)
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_inboard_surface",
+        ellipticalcomponentparam.a_shld_inboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_outboard_surface",
+        ellipticalcomponentparam.a_shld_outboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_total_surface",
+        ellipticalcomponentparam.a_shld_total_surface,
+    )
     monkeypatch.setattr(
         build_variables, "dz_shld_upper", ellipticalcomponentparam.dz_shld_upper
     )
@@ -1172,8 +1204,8 @@ def test_elliptical_component(
     assert build_variables.a_shld_outboard_surface == pytest.approx(
         ellipticalcomponentparam.expected_a_shld_outboard_surface
     )
-    assert build_variables.sharea == pytest.approx(
-        ellipticalcomponentparam.expected_sharea
+    assert build_variables.a_shld_total_surface == pytest.approx(
+        ellipticalcomponentparam.expected_a_shld_total_surface
     )
     assert fwbs_variables.vol_blkt_inboard == pytest.approx(
         ellipticalcomponentparam.expected_vol_blkt_inboard
@@ -1210,7 +1242,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     a_blkt_inboard_surface: Any = None
     a_shld_inboard_surface: Any = None
     a_shld_outboard_surface: Any = None
-    sharea: Any = None
+    a_shld_total_surface: Any = None
     f_ster_div_single: Any = None
     f_a_fw_hcd: Any = None
     vol_blkt_outboard: Any = None
@@ -1227,7 +1259,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
     expected_a_blkt_outboard_surface: Any = None
     expected_a_blkt_total_surface: Any = None
     expected_a_shld_outboard_surface: Any = None
-    expected_sharea: Any = None
+    expected_a_shld_total_surface: Any = None
     expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_vol_shld_total: Any = None
@@ -1244,7 +1276,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             a_blkt_inboard_surface=664.9687712975541,
             a_shld_inboard_surface=700.06731267447844,
             a_shld_outboard_surface=1344.1106481995357,
-            sharea=2044.1779608740142,
+            a_shld_total_surface=2044.1779608740142,
             f_ster_div_single=0.115,
             f_a_fw_hcd=0,
             vol_blkt_outboard=1020.3677420460117,
@@ -1261,7 +1293,7 @@ class ApplyCoverageFactorsParam(NamedTuple):
             expected_a_blkt_outboard_surface=898.23806738434075,
             expected_a_blkt_total_surface=1563.2068386818949,
             expected_a_shld_outboard_surface=860.23081484770285,
-            expected_sharea=1560.2981275221814,
+            expected_a_shld_total_surface=1560.2981275221814,
             expected_vol_blkt_outboard=866.70391336775992,
             expected_volblkt=1182.5433772195902,
             expected_vol_shld_total=783.69914576548854,
@@ -1289,15 +1321,31 @@ def test_apply_coverage_factors(
         "a_blkt_outboard_surface",
         applycoveragefactorsparam.a_blkt_outboard_surface,
     )
-    monkeypatch.setattr(build_variables, "a_blkt_total_surface", applycoveragefactorsparam.a_blkt_total_surface)
+    monkeypatch.setattr(
+        build_variables,
+        "a_blkt_total_surface",
+        applycoveragefactorsparam.a_blkt_total_surface,
+    )
     monkeypatch.setattr(
         build_variables,
         "a_blkt_inboard_surface",
         applycoveragefactorsparam.a_blkt_inboard_surface,
     )
-    monkeypatch.setattr(build_variables, "a_shld_inboard_surface", applycoveragefactorsparam.a_shld_inboard_surface)
-    monkeypatch.setattr(build_variables, "a_shld_outboard_surface", applycoveragefactorsparam.a_shld_outboard_surface)
-    monkeypatch.setattr(build_variables, "sharea", applycoveragefactorsparam.sharea)
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_inboard_surface",
+        applycoveragefactorsparam.a_shld_inboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_outboard_surface",
+        applycoveragefactorsparam.a_shld_outboard_surface,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "a_shld_total_surface",
+        applycoveragefactorsparam.a_shld_total_surface,
+    )
     monkeypatch.setattr(
         fwbs_variables, "f_ster_div_single", applycoveragefactorsparam.f_ster_div_single
     )
@@ -1343,8 +1391,8 @@ def test_apply_coverage_factors(
     assert build_variables.a_shld_outboard_surface == pytest.approx(
         applycoveragefactorsparam.expected_a_shld_outboard_surface
     )
-    assert build_variables.sharea == pytest.approx(
-        applycoveragefactorsparam.expected_sharea
+    assert build_variables.a_shld_total_surface == pytest.approx(
+        applycoveragefactorsparam.expected_a_shld_total_surface
     )
     assert fwbs_variables.vol_blkt_outboard == pytest.approx(
         applycoveragefactorsparam.expected_vol_blkt_outboard

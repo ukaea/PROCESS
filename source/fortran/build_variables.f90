@@ -222,7 +222,7 @@ module build_variables
   !! Iteration variable: ixc = 74
   !! Scan variable: nsweep = 59
 
-  real(dp) :: sharea
+  real(dp) :: a_shld_total_surface
   !! shield total surface area (m2)
 
   real(dp) :: a_shld_inboard_surface
