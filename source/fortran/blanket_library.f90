@@ -48,7 +48,7 @@ module blanket_library
     real(dp) :: vfblkti, vfblkto
     !! Inboard/outboard void fraction of blanket
 
-    real(dp) :: len_blkt_inboard_coolant_channel_radial, bldepto
+    real(dp) :: len_blkt_inboard_coolant_channel_radial, len_blkt_outboard_coolant_channel_radial
     !! Inboard/outboard blanket coolant channel length (radial direction) (m)
 
     real(dp) :: blwidti, blwidto
