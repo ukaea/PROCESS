@@ -524,7 +524,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
         ),
     ),
 )
-def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_hcpb):
+def test_nuclear_heating_blanket(nuclearheatingblanketparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_blanket.
 
@@ -533,39 +533,18 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
     :param nuclearheatingblanketparam: the data used to mock and assert in this test.
     :type nuclearheatingblanketparam: nuclearheatingblanketparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        fwbs_variables, "m_blkt_total", nuclearheatingblanketparam.m_blkt_total
+    p_blkt_nuclear_heat_total_mw, exp_blanket = ccfe_hcpb.nuclear_heating_blanket(
+        m_blkt_total=nuclearheatingblanketparam.m_blkt_total,
+        p_fusion_total_mw=nuclearheatingblanketparam.p_fusion_total_mw,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_blkt_nuclear_heat_total_mw",
-        nuclearheatingblanketparam.p_blkt_nuclear_heat_total_mw,
-    )
-
-    monkeypatch.setattr(
-        physics_variables,
-        "p_fusion_total_mw",
-        nuclearheatingblanketparam.p_fusion_total_mw,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_blanket", nuclearheatingblanketparam.exp_blanket
-    )
-
-    ccfe_hcpb.nuclear_heating_blanket()
-
-    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+    assert p_blkt_nuclear_heat_total_mw == pytest.approx(
         nuclearheatingblanketparam.expected_p_blkt_nuclear_heat_total_mw
     )
 
-    assert ccfe_hcpb_module.exp_blanket == pytest.approx(
-        nuclearheatingblanketparam.expected_exp_blanket
-    )
+    assert exp_blanket == pytest.approx(nuclearheatingblanketparam.expected_exp_blanket)
 
 
 class NuclearHeatingShieldParam(NamedTuple):

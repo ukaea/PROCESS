@@ -101,12 +101,19 @@ class CCFE_HCPB(BlanketLibrary):
         # Rem : The heating power will be normalized to the neutron power using
         #       the divertor and the centrepost (for itart == 1),
         self.nuclear_heating_magnets(output=output)
+
         fwbs_variables.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
             m_fw_total=fwbs_variables.m_fw_total,
             fw_armour_u_nuc_heating=fwbs_variables.fw_armour_u_nuc_heating,
             p_fusion_total_mw=physics_variables.p_fusion_total_mw,
         )
-        self.nuclear_heating_blanket()
+
+        fwbs_variables.p_blkt_nuclear_heat_total_mwccfe_hcpb_module.exp_blanket = (
+            self.nuclear_heating_blanket(
+                m_blkt_total=fwbs_variables.m_blkt_total,
+                p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            )
+        )
         self.nuclear_heating_shield()
         self.nuclear_heating_divertor()
 
@@ -577,30 +584,44 @@ class CCFE_HCPB(BlanketLibrary):
             )
         return p_fw_nuclear_heat_total_mw
 
-    def nuclear_heating_blanket(self):
-        """Nuclear heating in the blanket for CCFE HCPB model
-        author: J. Morris, CCFE, Culham Science Centre
-        This subroutine calculates the nuclear heating in the blanket
+    def nuclear_heating_blanket(
+        self, m_blkt_total: float, p_fusion_total_mw: float
+    ) -> tuple[float, float]:
+        """
+        Calculates the nuclear heating in the blanket for the CCFE HCPB model.
+
+        :param m_blkt_total: Total mass of the blanket in kilograms.
+        :type m_blkt_total: float
+        :param p_fusion_total_mw: Total fusion power in megawatts.
+        :type p_fusion_total_mw: float
+
+        :returns:
+            - p_blkt_nuclear_heat_total_mw (float): Total nuclear heating in the blanket (MW).
+            - exp_blanket (float): Exponential blanket factor (dimensionless).
+        :rtype: tuple[float, float]
+
+        :raises ProcessValueError: If the calculated nuclear heating is less than 1 MW.
+
         """
         # Blanket nuclear heating coefficient and exponent
         a = 0.764
         b = 2.476e-3  # 1/tonne
 
         # Mass of the blanket in tonnes
-        mass = fwbs_variables.m_blkt_total / 1000
+        m_blkt_total_tonnes = m_blkt_total / 1000
 
         # Total blanket nuclear heating (MW)
-        ccfe_hcpb_module.exp_blanket = 1 - np.exp(-b * mass)
-        fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-            physics_variables.p_fusion_total_mw * a * ccfe_hcpb_module.exp_blanket
-        )
+        exp_blanket = 1 - np.exp(-b * m_blkt_total_tonnes)
+        p_blkt_nuclear_heat_total_mw = p_fusion_total_mw * a * exp_blanket
 
-        if fwbs_variables.p_blkt_nuclear_heat_total_mw < 1:
-            eh.fdiags[0] = fwbs_variables.p_blkt_nuclear_heat_total_mw
-            eh.fdiags[1] = ccfe_hcpb_module.exp_blanket
-            eh.fdiags[2] = physics_variables.p_fusion_total_mw
-            eh.fdiags[3] = mass
+        if p_blkt_nuclear_heat_total_mw < 1:
+            eh.fdiags[0] = p_blkt_nuclear_heat_total_mw
+            eh.fdiags[1] = exp_blanket
+            eh.fdiags[2] = p_fusion_total_mw
+            eh.fdiags[3] = m_blkt_total_tonnes
             eh.report_error(274)
+
+        return p_blkt_nuclear_heat_total_mw, exp_blanket
 
     def nuclear_heating_shield(self):
         """Nuclear heating in the shield for CCFE HCPB model
