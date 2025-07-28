@@ -26,7 +26,7 @@ module build_variables
   real(dp) :: a_blkt_inboard_surface
   !! inboard blanket surface area (m2)
 
-  real(dp) :: blareaob
+  real(dp) :: a_blkt_outboard_surface
   !! outboard blanket surface area (m2)
 
   real(dp) :: blbmith
