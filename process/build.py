@@ -2477,7 +2477,7 @@ class Build:
 def init_build_variables():
     build_variables.aplasmin = 0.25
     build_variables.available_radial_space = 0.0
-    build_variables.blarea = 0.0
+    build_variables.a_blkt_total_surface = 0.0
     build_variables.a_blkt_inboard_surface = 0.0
     build_variables.a_blkt_outboard_surface = 0.0
     build_variables.blbmith = 0.17
