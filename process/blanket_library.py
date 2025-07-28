@@ -175,7 +175,7 @@ class BlanketLibrary:
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
             (
-                build_variables.blareaib,
+                build_variables.a_blkt_inboard_surface,
                 build_variables.blareaob,
                 build_variables.blarea,
             ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
@@ -265,7 +265,7 @@ class BlanketLibrary:
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
             (
-                build_variables.blareaib,
+                build_variables.a_blkt_inboard_surface,
                 build_variables.blareaob,
                 build_variables.blarea,
             ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
@@ -335,17 +335,17 @@ class BlanketLibrary:
                     - 2.0 * fwbs_variables.f_ster_div_single
                     - fwbs_variables.f_a_fw_hcd
                 )
-                - build_variables.blareaib
+                - build_variables.a_blkt_inboard_surface
             )
         else:
             # single null configuration
             build_variables.blareaob = (
                 build_variables.blarea
                 * (1.0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd)
-                - build_variables.blareaib
+                - build_variables.a_blkt_inboard_surface
             )
 
-        build_variables.blarea = build_variables.blareaib + build_variables.blareaob
+        build_variables.blarea = build_variables.a_blkt_inboard_surface + build_variables.blareaob
 
         fwbs_variables.vol_blkt_outboard = (
             fwbs_variables.vol_blkt_total
