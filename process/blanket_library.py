@@ -180,7 +180,7 @@ class BlanketLibrary:
             (
                 build_variables.a_blkt_inboard_surface,
                 build_variables.a_blkt_outboard_surface,
-                build_variables.blarea,
+                build_variables.a_blkt_total_surface,
             ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
         if icomponent == 1:
             (
@@ -270,7 +270,7 @@ class BlanketLibrary:
             (
                 build_variables.a_blkt_inboard_surface,
                 build_variables.a_blkt_outboard_surface,
-                build_variables.blarea,
+                build_variables.a_blkt_total_surface,
             ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
         if icomponent == 1:
             (
@@ -332,7 +332,7 @@ class BlanketLibrary:
         if physics_variables.n_divertors == 2:
             # double null configuration
             build_variables.a_blkt_outboard_surface = (
-                build_variables.blarea
+                build_variables.a_blkt_total_surface
                 * (
                     1.0
                     - 2.0 * fwbs_variables.f_ster_div_single
@@ -343,12 +343,12 @@ class BlanketLibrary:
         else:
             # single null configuration
             build_variables.a_blkt_outboard_surface = (
-                build_variables.blarea
+                build_variables.a_blkt_total_surface
                 * (1.0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd)
                 - build_variables.a_blkt_inboard_surface
             )
 
-        build_variables.blarea = (
+        build_variables.a_blkt_total_surface = (
             build_variables.a_blkt_inboard_surface
             + build_variables.a_blkt_outboard_surface
         )

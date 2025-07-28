@@ -1136,14 +1136,14 @@ class Stellarator:
             + build_variables.dr_fw_outboard
         )
         if heat_transport_variables.ipowerflow == 0:
-            build_variables.blarea = (
+            build_variables.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (1.0e0 - fwbs_variables.fhole)
             )
         else:
-            build_variables.blarea = (
+            build_variables.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
@@ -1155,8 +1155,8 @@ class Stellarator:
                 )
             )
 
-        build_variables.a_blkt_inboard_surface = 0.5e0 * build_variables.blarea
-        build_variables.a_blkt_outboard_surface = 0.5e0 * build_variables.blarea
+        build_variables.a_blkt_inboard_surface = 0.5e0 * build_variables.a_blkt_total_surface
+        build_variables.a_blkt_outboard_surface = 0.5e0 * build_variables.a_blkt_total_surface
 
         fwbs_variables.vol_blkt_inboard = (
             build_variables.a_blkt_inboard_surface * build_variables.dr_blkt_inboard
