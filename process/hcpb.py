@@ -707,13 +707,7 @@ class CCFE_HCPB(BlanketLibrary):
         author: J. Morris, CCFE, Culham Science Centre
         This subroutine calculates the nuclear heating in the divertor
         """
-        # Unfortunately the divertor heating was not tallied in the neutronics calcs
-        # Assume that all the neutron energy + energy multiplication is absorbed in the reactor +
-        # coils. It turns out that f_p_blkt_multiplication is also approx constant, but this is not used. No energy
-        # multiplication in the divertor
 
-        # Overwrite global variable for f_ster_div_single 07/11/18 SIM: Removed having spoken to JM
-        # f_ster_div_single = 0.115D0
 
         # Nuclear heating in the divertor just the neutron power times f_ster_div_single
         if physics_variables.n_divertors == 2:
@@ -732,8 +726,6 @@ class CCFE_HCPB(BlanketLibrary):
                 * fwbs_variables.f_ster_div_single
             )
 
-        # No heating of the H & CD
-        fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
 
     def powerflow_calc(self, output: bool):
         """Calculations for powerflow
