@@ -58,7 +58,7 @@ class BlanketLibrary:
         # Blanket
         blanket_library.dz_blkt_half = self.component_half_height(icomponent=0)
         # Shield
-        blanket_library.hshld = self.component_half_height(icomponent=1)
+        blanket_library.dz_shld_half = self.component_half_height(icomponent=1)
         # Vacuum Vessel
         blanket_library.hvv = self.component_half_height(icomponent=2)
 
@@ -184,7 +184,7 @@ class BlanketLibrary:
                 build_variables.shareaib,
                 build_variables.shareaob,
                 build_variables.sharea,
-            ) = dshellarea(r1, r2, blanket_library.hshld)
+            ) = dshellarea(r1, r2, blanket_library.dz_shld_half)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -208,7 +208,7 @@ class BlanketLibrary:
             ) = dshellvol(
                 r1,
                 r2,
-                blanket_library.hshld,
+                blanket_library.dz_shld_half,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
                 build_variables.dz_shld_upper,
@@ -274,7 +274,7 @@ class BlanketLibrary:
                 build_variables.shareaib,
                 build_variables.shareaob,
                 build_variables.sharea,
-            ) = eshellarea(r1, r2, r3, blanket_library.hshld)
+            ) = eshellarea(r1, r2, r3, blanket_library.dz_shld_half)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -300,7 +300,7 @@ class BlanketLibrary:
                 r1,
                 r2,
                 r3,
-                blanket_library.hshld,
+                blanket_library.dz_shld_half,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
                 build_variables.dz_shld_upper,
@@ -2937,7 +2937,7 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
 
 def init_blanket_library():
     blanket_library.dz_blkt_half = 0.0
-    blanket_library.hshld = 0.0
+    blanket_library.dz_shld_half = 0.0
     blanket_library.dz_pf_cryostat = 0.0
     blanket_library.hvv = 0.0
     blanket_library.volshldi = 0.0

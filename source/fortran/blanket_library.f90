@@ -111,7 +111,7 @@ module blanket_library
     real(dp) :: dz_blkt_half
     !! Blanket internal half-height (m)
 
-    real(dp) :: hshld
+    real(dp) :: dz_shld_half
     !! Shield internal half-height (m)
 
     real(dp) :: hvv
