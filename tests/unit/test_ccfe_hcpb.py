@@ -657,13 +657,9 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
 class NuclearHeatingDivertorParam(NamedTuple):
     f_ster_div_single: Any = None
 
-    p_div_nuclear_heat_total_mw: Any = None
-
-    p_fw_hcd_nuclear_heat_mw: Any = None
-
     n_divertors: Any = None
 
-    p_fusion_total_mw: Any = None
+    p_neutron_total_mw: Any = None
 
     expected_p_div_nuclear_heat_total_mw: Any = None
 
@@ -673,23 +669,19 @@ class NuclearHeatingDivertorParam(NamedTuple):
     (
         NuclearHeatingDivertorParam(
             f_ster_div_single=0.115,
-            p_div_nuclear_heat_total_mw=0,
-            p_fw_hcd_nuclear_heat_mw=0,
             n_divertors=1,
-            p_fusion_total_mw=1986.0623241661431,
-            expected_p_div_nuclear_heat_total_mw=182.71773382328519,
+            p_neutron_total_mw=1986.0623241661431,
+            expected_p_div_nuclear_heat_total_mw=228.39716727910647,
         ),
         NuclearHeatingDivertorParam(
             f_ster_div_single=0.115,
-            p_div_nuclear_heat_total_mw=182.71773382328519,
-            p_fw_hcd_nuclear_heat_mw=0,
-            n_divertors=1,
-            p_fusion_total_mw=1985.4423932312809,
-            expected_p_div_nuclear_heat_total_mw=182.66070017727785,
+            n_divertors=2,
+            p_neutron_total_mw=1985.4423932312809,
+            expected_p_div_nuclear_heat_total_mw=456.6517504431946,
         ),
     ),
 )
-def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe_hcpb):
+def test_nuclear_heating_divertor(nuclearheatingdivertorparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_divertor.
 
@@ -698,41 +690,15 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     :param nuclearheatingdivertorparam: the data used to mock and assert in this test.
     :type nuclearheatingdivertorparam: nuclearheatingdivertorparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        fwbs_variables,
-        "f_ster_div_single",
-        nuclearheatingdivertorparam.f_ster_div_single,
+    p_div_nuclear_heat_total_mw = ccfe_hcpb.nuclear_heating_divertor(
+        n_divertors=nuclearheatingdivertorparam.n_divertors,
+        p_neutron_total_mw=nuclearheatingdivertorparam.p_neutron_total_mw,
+        f_ster_div_single=nuclearheatingdivertorparam.f_ster_div_single,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_div_nuclear_heat_total_mw",
-        nuclearheatingdivertorparam.p_div_nuclear_heat_total_mw,
-    )
-
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_fw_hcd_nuclear_heat_mw",
-        nuclearheatingdivertorparam.p_fw_hcd_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        physics_variables, "n_divertors", nuclearheatingdivertorparam.n_divertors
-    )
-
-    monkeypatch.setattr(
-        physics_variables,
-        "p_fusion_total_mw",
-        nuclearheatingdivertorparam.p_fusion_total_mw,
-    )
-
-    ccfe_hcpb.nuclear_heating_divertor()
-
-    assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
+    assert p_div_nuclear_heat_total_mw == pytest.approx(
         nuclearheatingdivertorparam.expected_p_div_nuclear_heat_total_mw
     )
 
