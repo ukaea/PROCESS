@@ -2537,7 +2537,7 @@ def init_build_variables():
     build_variables.dh_tf_inner_bore = 0.0
     build_variables.dr_fw_plasma_gap_inboard = 0.14
     build_variables.dr_fw_plasma_gap_outboard = 0.15
-    build_variables.sharea = 0.0
+    build_variables.a_shld_total_surface = 0.0
     build_variables.a_shld_inboard_surface = 0.0
     build_variables.a_shld_outboard_surface = 0.0
     build_variables.dr_shld_inboard = 0.69
