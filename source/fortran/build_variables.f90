@@ -228,7 +228,7 @@ module build_variables
   real(dp) :: a_shld_inboard_surface
   !! inboard shield surface area (m2)
 
-  real(dp) :: shareaob
+  real(dp) :: a_shld_outboard_surface
   !! outboard shield surface area (m2)
 
   real(dp) :: dr_shld_inboard

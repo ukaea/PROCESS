@@ -185,7 +185,7 @@ class BlanketLibrary:
         if icomponent == 1:
             (
                 build_variables.a_shld_inboard_surface,
-                build_variables.shareaob,
+                build_variables.a_shld_outboard_surface,
                 build_variables.sharea,
             ) = dshellarea(r1, r2, blanket_library.dz_shld_half)
 
@@ -275,7 +275,7 @@ class BlanketLibrary:
         if icomponent == 1:
             (
                 build_variables.a_shld_inboard_surface,
-                build_variables.shareaob,
+                build_variables.a_shld_outboard_surface,
                 build_variables.sharea,
             ) = eshellarea(r1, r2, r3, blanket_library.dz_shld_half)
 
@@ -364,8 +364,8 @@ class BlanketLibrary:
 
         # Apply shield coverage factors
         build_variables.a_shld_inboard_surface = fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
-        build_variables.shareaob = fwbs_variables.fvolso * build_variables.shareaob
-        build_variables.sharea = build_variables.a_shld_inboard_surface + build_variables.shareaob
+        build_variables.a_shld_outboard_surface = fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
+        build_variables.sharea = build_variables.a_shld_inboard_surface + build_variables.a_shld_outboard_surface
 
         blanket_library.vol_shld_inboard = (
             fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
