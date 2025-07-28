@@ -435,9 +435,8 @@ class NuclearHeatingFwParam(NamedTuple):
             p_fw_nuclear_heat_total_mw=0,
             m_fw_total=224802.80270851994,
             p_fusion_total_mw=1986.0623241661431,
-            fw_armour_u_nuc_heating=0,
+            fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_p_fw_nuclear_heat_total_mw=279.04523551646628,
-            expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
         NuclearHeatingFwParam(
             p_fw_nuclear_heat_total_mw=276.80690153753221,
@@ -445,7 +444,6 @@ class NuclearHeatingFwParam(NamedTuple):
             p_fusion_total_mw=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_p_fw_nuclear_heat_total_mw=225.98781165610032,
-            expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
     ),
 )
@@ -480,14 +478,14 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
         nuclearheatingfwparam.fw_armour_u_nuc_heating,
     )
 
-    ccfe_hcpb.nuclear_heating_fw()
-
-    assert fwbs_variables.p_fw_nuclear_heat_total_mw == pytest.approx(
-        nuclearheatingfwparam.expected_p_fw_nuclear_heat_total_mw
+    p_fw_nuclear_heat_total_mw = ccfe_hcpb.nuclear_heating_fw(
+        m_fw_total=nuclearheatingfwparam.m_fw_total,
+        fw_armour_u_nuc_heating=nuclearheatingfwparam.fw_armour_u_nuc_heating,
+        p_fusion_total_mw=nuclearheatingfwparam.p_fusion_total_mw,
     )
 
-    assert ccfe_hcpb_module.fw_armour_u_nuc_heating == pytest.approx(
-        nuclearheatingfwparam.expected_fw_armour_u_nuc_heating
+    assert p_fw_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingfwparam.expected_p_fw_nuclear_heat_total_mw
     )
 
 

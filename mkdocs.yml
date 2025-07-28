@@ -76,10 +76,10 @@ nav:
           - Structural Components: eng-models/structural-components.md
           - Buildings: eng-models/buildings.md
           - First Wall/Blanket:
-            - Overview: eng-models/fw-blanket.md
-            - Blanket: 
-                - Overview: eng-models/blanket_overview.md
-                - CCFE HCPB: eng-models/ccfe_hcpb.md
+              - Overview: eng-models/fw-blanket.md
+              - Blanket:
+                  - Overview: eng-models/blanket_overview.md
+                  - CCFE HCPB: eng-models/ccfe_hcpb.md
 
           - TF Coil:
               - Overview: eng-models/tf-coil.md

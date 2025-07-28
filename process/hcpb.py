@@ -31,8 +31,8 @@ class CCFE_HCPB(BlanketLibrary):
     PROCESS Engineering paper (M. Kovari et al.)
 
     :References:
-        - M. Kovari et al., “‘PROCESS’: A systems code for fusion power plants – Part 2: Engineering,” 
-        Fusion Engineering and Design, vol. 104, pp. 9–20, Mar. 2016, 
+        - M. Kovari et al., “PROCESS: A systems code for fusion power plants - Part 2: Engineering,”
+        Fusion Engineering and Design, vol. 104, pp. 9-20, Mar. 2016,
         doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
@@ -101,7 +101,11 @@ class CCFE_HCPB(BlanketLibrary):
         # Rem : The heating power will be normalized to the neutron power using
         #       the divertor and the centrepost (for itart == 1),
         self.nuclear_heating_magnets(output=output)
-        self.nuclear_heating_fw()
+        fwbs_variables.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
+            m_fw_total=fwbs_variables.m_fw_total,
+            fw_armour_u_nuc_heating=fwbs_variables.fw_armour_u_nuc_heating,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+        )
         self.nuclear_heating_blanket()
         self.nuclear_heating_shield()
         self.nuclear_heating_divertor()
@@ -533,27 +537,45 @@ class CCFE_HCPB(BlanketLibrary):
                 tfcoil_variables.m_tf_coils_total,
             )
 
-    def nuclear_heating_fw(self):
-        """Nuclear heating in the FW for CCFE HCPB model
-        author: J. Morris, CCFE, Culham Science Centre
-
-        This subroutine calculates the nuclear heating in the FW
+    def nuclear_heating_fw(
+        self,
+        m_fw_total: float,
+        fw_armour_u_nuc_heating: float,
+        p_fusion_total_mw: float,
+    ) -> float:
         """
-        # Unit heating of FW and armour (W/kg per W of fusion power)
-        ccfe_hcpb_module.fw_armour_u_nuc_heating = 6.25e-7
+        Calculate the nuclear heating in the first wall (FW) for the CCFE HCPB model.
+
+        :param m_fw_total: Total mass of the first wall (kg).
+        :type m_fw_total: float
+        :param fw_armour_u_nuc_heating: Unit nuclear heating of the FW and armour (W/kg per W of fusion power).
+        :type fw_armour_u_nuc_heating: float
+        :param p_fusion_total_mw: Total fusion power (MW).
+        :type p_fusion_total_mw: float
+
+        :returns: Total nuclear heating in the first wall (MW).
+        :rtype: float
+
+        :raises ProcessValueError: If the calculated nuclear heating is negative.
+
+
+        This subroutine calculates the nuclear heating in the FW.
+        """
 
         # Total nuclear heating in FW (MW)
-        fwbs_variables.p_fw_nuclear_heat_total_mw = (
-            fwbs_variables.m_fw_total
-            * ccfe_hcpb_module.fw_armour_u_nuc_heating
-            * physics_variables.p_fusion_total_mw
+        p_fw_nuclear_heat_total_mw = (
+            m_fw_total
+            # Unit heating of FW and armour (W/kg per W of fusion power)
+            * fw_armour_u_nuc_heating
+            * p_fusion_total_mw
         )
 
-        if fwbs_variables.p_fw_nuclear_heat_total_mw < 0:
+        if p_fw_nuclear_heat_total_mw < 0:
             raise ProcessValueError(
-                f"""Error in nuclear_heating_fw. {fwbs_variables.p_fw_nuclear_heat_total_mw = },
-                {physics_variables.p_fusion_total_mw = }, {fwbs_variables.m_fw_total = }"""
+                f"""Error in nuclear_heating_fw. {p_fw_nuclear_heat_total_mw = },
+                {p_fusion_total_mw = }, {m_fw_total = }"""
             )
+        return p_fw_nuclear_heat_total_mw
 
     def nuclear_heating_blanket(self):
         """Nuclear heating in the blanket for CCFE HCPB model
@@ -1512,7 +1534,7 @@ def init_ccfe_hcpb_module():
     ccfe_hcpb_module.x_blanket = 0.0
     ccfe_hcpb_module.x_shield = 0.0
     ccfe_hcpb_module.tfc_nuc_heating = 0.0
-    ccfe_hcpb_module.fw_armour_u_nuc_heating = 0.0
+    ccfe_hcpb_module.fw_armour_u_nuc_heating = 6.25e-7
     ccfe_hcpb_module.shld_u_nuc_heating = 0.0
     ccfe_hcpb_module.exp_blanket = 0.0
     ccfe_hcpb_module.exp_shield1 = 0.0
