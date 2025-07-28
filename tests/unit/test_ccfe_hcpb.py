@@ -618,7 +618,7 @@ class NuclearHeatingShieldParam(NamedTuple):
         ),
     ),
 )
-def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcpb):
+def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_shield.
 
@@ -627,73 +627,31 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
     :param nuclearheatingshieldparam: the data used to mock and assert in this test.
     :type nuclearheatingshieldparam: nuclearheatingshieldparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        build_variables, "dr_shld_inboard", nuclearheatingshieldparam.dr_shld_inboard
+    p_shld_nuclear_heat_mw, exp_shield1, exp_shield2, shld_u_nuc_heating = (
+        ccfe_hcpb.nuclear_heating_shield(
+            itart=nuclearheatingshieldparam.itart,
+            dr_shld_inboard=nuclearheatingshieldparam.dr_shld_inboard,
+            dr_shld_outboard=nuclearheatingshieldparam.dr_shld_outboard,
+            shield_density=nuclearheatingshieldparam.shield_density,
+            whtshld=nuclearheatingshieldparam.whtshld,
+            x_blanket=nuclearheatingshieldparam.x_blanket,
+            p_fusion_total_mw=nuclearheatingshieldparam.p_fusion_total_mw,
+        )
     )
 
-    monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", nuclearheatingshieldparam.dr_shld_outboard
-    )
-
-    monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingshieldparam.whtshld)
-
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_shld_nuclear_heat_mw",
-        nuclearheatingshieldparam.p_shld_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        physics_variables,
-        "p_fusion_total_mw",
-        nuclearheatingshieldparam.p_fusion_total_mw,
-    )
-
-    monkeypatch.setattr(physics_variables, "itart", nuclearheatingshieldparam.itart)
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "shield_density", nuclearheatingshieldparam.shield_density
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "x_blanket", nuclearheatingshieldparam.x_blanket
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module,
-        "shld_u_nuc_heating",
-        nuclearheatingshieldparam.shld_u_nuc_heating,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_shield1", nuclearheatingshieldparam.exp_shield1
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_shield2", nuclearheatingshieldparam.exp_shield2
-    )
-
-    ccfe_hcpb.nuclear_heating_shield()
-
-    assert fwbs_variables.p_shld_nuclear_heat_mw == pytest.approx(
+    assert p_shld_nuclear_heat_mw == pytest.approx(
         nuclearheatingshieldparam.expected_p_shld_nuclear_heat_mw
     )
 
-    assert ccfe_hcpb_module.shld_u_nuc_heating == pytest.approx(
+    assert shld_u_nuc_heating == pytest.approx(
         nuclearheatingshieldparam.expected_shld_u_nuc_heating
     )
 
-    assert ccfe_hcpb_module.exp_shield1 == pytest.approx(
-        nuclearheatingshieldparam.expected_exp_shield1
-    )
+    assert exp_shield1 == pytest.approx(nuclearheatingshieldparam.expected_exp_shield1)
 
-    assert ccfe_hcpb_module.exp_shield2 == pytest.approx(
-        nuclearheatingshieldparam.expected_exp_shield2
-    )
+    assert exp_shield2 == pytest.approx(nuclearheatingshieldparam.expected_exp_shield2)
 
 
 class NuclearHeatingDivertorParam(NamedTuple):
