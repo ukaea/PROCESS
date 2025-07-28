@@ -202,7 +202,7 @@ class BlanketLibrary:
             )
         elif icomponent == 1:
             (
-                blanket_library.volshldi,
+                blanket_library.vol_shld_inboard,
                 blanket_library.volshldo,
                 fwbs_variables.volshld,
             ) = dshellvol(
@@ -293,7 +293,7 @@ class BlanketLibrary:
             )
         if icomponent == 1:
             (
-                blanket_library.volshldi,
+                blanket_library.vol_shld_inboard,
                 blanket_library.volshldo,
                 fwbs_variables.volshld,
             ) = eshellvol(
@@ -361,9 +361,9 @@ class BlanketLibrary:
         build_variables.shareaob = fwbs_variables.fvolso * build_variables.shareaob
         build_variables.sharea = build_variables.shareaib + build_variables.shareaob
 
-        blanket_library.volshldi = fwbs_variables.fvolsi * blanket_library.volshldi
+        blanket_library.vol_shld_inboard = fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
         blanket_library.volshldo = fwbs_variables.fvolso * blanket_library.volshldo
-        fwbs_variables.volshld = blanket_library.volshldi + blanket_library.volshldo
+        fwbs_variables.volshld = blanket_library.vol_shld_inboard + blanket_library.volshldo
 
         # Apply vacuum vessel coverage factor
         # moved from dshaped_* and elliptical_* to keep coverage factor
@@ -2940,7 +2940,7 @@ def init_blanket_library():
     blanket_library.dz_shld_half = 0.0
     blanket_library.dz_pf_cryostat = 0.0
     blanket_library.dz_vv_half = 0.0
-    blanket_library.volshldi = 0.0
+    blanket_library.vol_shld_inboard = 0.0
     blanket_library.volshldo = 0.0
     blanket_library.vol_vv_inboard = 0.0
     blanket_library.vol_vv_outboard = 0.0
