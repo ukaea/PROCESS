@@ -36,7 +36,7 @@ module blanket_library
 
     implicit none
 
-    real(dp) :: vol_shld_inboard, volshldo
+    real(dp) :: vol_shld_inboard, vol_shld_outboard
     !! Volume of inboard and outboard shield (m3)
 
     real(dp) :: vol_vv_inboard, vol_vv_outboard
