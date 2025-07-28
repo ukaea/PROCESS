@@ -2476,7 +2476,7 @@ def init_build_variables():
     build_variables.available_radial_space = 0.0
     build_variables.blarea = 0.0
     build_variables.a_blkt_inboard_surface = 0.0
-    build_variables.blareaob = 0.0
+    build_variables.a_blkt_outboard_surface = 0.0
     build_variables.blbmith = 0.17
     build_variables.blbmoth = 0.27
     build_variables.blbpith = 0.30
