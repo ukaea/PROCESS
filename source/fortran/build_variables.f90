@@ -23,7 +23,7 @@ module build_variables
   real(dp) :: blarea
   !! blanket total surface area (m2)
 
-  real(dp) :: blareaib
+  real(dp) :: a_blkt_inboard_surface
   !! inboard blanket surface area (m2)
 
   real(dp) :: blareaob
