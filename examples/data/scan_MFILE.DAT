@@ -576,7 +576,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5743E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3757E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4640E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4640E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -1571,7 +1571,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5748E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3757E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4640E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4640E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -2566,7 +2566,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5751E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3756E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4640E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4640E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -3561,7 +3561,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5755E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3755E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4639E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4639E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -4556,7 +4556,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5759E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3755E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4639E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4639E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -5551,7 +5551,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5762E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3754E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4639E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4639E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -6546,7 +6546,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5765E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3753E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4638E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4638E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -7541,7 +7541,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5768E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3753E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4638E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4638E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 
@@ -8536,7 +8536,7 @@
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      8.5771E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      2.3752E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      1.0668E+04 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      3.4638E+05 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      3.4638E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      1.5629E+06 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      2.5007E+07    
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1200E+01 OP 

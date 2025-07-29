@@ -684,7 +684,7 @@ module tfcoil_variables
   real(dp) :: m_tf_coil_case
   !! mass per coil of external case (kg)
 
-  real(dp) :: whtcon
+  real(dp) :: m_tf_coil_conductor
   !! TF coil conductor mass per coil (kg/coil).
   !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 

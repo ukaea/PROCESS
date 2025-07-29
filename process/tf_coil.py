@@ -1531,8 +1531,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Total conduit mass per coil (kg)",
-                "(whtcon)",
-                tfcoil_variables.whtcon,
+                "(m_tf_coil_conductor)",
+                tfcoil_variables.m_tf_coil_conductor,
                 "OP ",
             )
 
@@ -3084,7 +3084,7 @@ class TFCoil:
             )
 
             # Total conductor mass [kg]
-            tfcoil_variables.whtcon = (
+            tfcoil_variables.m_tf_coil_conductor = (
                 tfcoil_variables.m_tf_coil_superconductor
                 + tfcoil_variables.m_tf_coil_copper
                 + tfcoil_variables.m_tf_wp_steel_conduit
@@ -3095,7 +3095,7 @@ class TFCoil:
             # Total TF coil mass [kg] (all coils)
             tfcoil_variables.m_tf_coils_total = (
                 tfcoil_variables.m_tf_coil_case
-                + tfcoil_variables.whtcon
+                + tfcoil_variables.m_tf_coil_conductor
                 + tfcoil_variables.m_tf_coil_wp_insulation
             ) * tfcoil_variables.n_tf_coils
 
@@ -5611,7 +5611,7 @@ def init_tfcoil_variables():
     tfv.vtfkv = 0.0
     tfv.vtfskv = 0.0
     tfv.m_tf_coil_case = 0.0
-    tfv.whtcon = 0.0
+    tfv.m_tf_coil_conductor = 0.0
     tfv.m_tf_coil_copper = 0.0
     tfv.whtconal = 0.0
     tfv.m_tf_coil_wp_turn_insulation = 0.0
