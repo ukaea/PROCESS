@@ -191,7 +191,7 @@ c_tf_turn_max: float = None
 """
 
 
-dcase: float = None
+den_tf_coil_case: float = None
 """density of coil case (kg/m3)"""
 
 
@@ -199,7 +199,7 @@ dcond: list[float] = None
 """density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/i_pf_superconductor (kg/m3)"""
 
 
-dcondins: float = None
+den_tf_wp_turn_insulation: float = None
 """density of conduit + ground-wall insulation (kg/m3)"""
 
 
@@ -865,17 +865,17 @@ v_tf_coil_dump_quench_kv: float = None
 """voltage across a TF coil during quench (kV)"""
 
 
-whtcas: float = None
+m_tf_coil_case: float = None
 """mass per coil of external case (kg)"""
 
 
-whtcon: float = None
+m_tf_coil_conductor: float = None
 """TF coil conductor mass per coil (kg/coil).
 For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 """
 
 
-whtconcu: float = None
+m_tf_coil_copper: float = None
 """copper mass in TF coil conductor (kg/coil).
 For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 """
@@ -887,19 +887,19 @@ For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 """
 
 
-whtconin: float = None
+m_tf_coil_wp_turn_insulation: float = None
 """conduit insulation mass in TF coil conductor (kg/coil)"""
 
 
-whtconsc: float = None
+m_tf_coil_superconductor: float = None
 """superconductor mass in TF coil cable (kg/coil)"""
 
 
-m_tf_turn_steel_conduit: float = None
+m_tf_wp_steel_conduit: float = None
 """steel conduit mass in TF coil conductor (kg/coil)"""
 
 
-whtgw: float = None
+m_tf_coil_wp_insulation: float = None
 """mass of ground-wall insulation layer per coil (kg/coil)"""
 
 
@@ -1118,9 +1118,9 @@ def init_tfcoil_variables():
     global cplen
     global c_tf_turn
     global c_tf_turn_max
-    global dcase
+    global den_tf_coil_case
     global dcond
-    global dcondins
+    global den_tf_wp_turn_insulation
     global dia_tf_turn_coolant_channel
     global e_tf_magnetic_stored_total_gj
     global b_crit_upper_nbti
@@ -1248,14 +1248,14 @@ def init_tfcoil_variables():
     global voltfleg
     global vtfkv
     global v_tf_coil_dump_quench_kv
-    global whtcas
-    global whtcon
-    global whtconcu
+    global m_tf_coil_case
+    global m_tf_coil_conductor
+    global m_tf_coil_copper
     global whtconal
-    global whtconin
-    global whtconsc
-    global m_tf_turn_steel_conduit
-    global whtgw
+    global m_tf_coil_wp_turn_insulation
+    global m_tf_coil_superconductor
+    global m_tf_wp_steel_conduit
+    global m_tf_coil_wp_insulation
     global m_tf_coils_total
     global dx_tf_wp_primary_toroidal
     global dx_tf_wp_secondary_toroidal
@@ -1332,7 +1332,7 @@ def init_tfcoil_variables():
     cplen = 0.0
     c_tf_turn = 7.0e4
     c_tf_turn_max = 9.0e4
-    dcase = 8000.0
+    den_tf_coil_case = 8000.0
     dcond = np.array([
         6080.0,
         6080.0,
@@ -1344,7 +1344,7 @@ def init_tfcoil_variables():
         8500.0,
         8500.0,
     ])
-    dcondins = 1800.0
+    den_tf_wp_turn_insulation = 1800.0
     dia_tf_turn_coolant_channel = 0.005
     e_tf_magnetic_stored_total_gj = 0.0
     b_crit_upper_nbti = 14.86
@@ -1481,13 +1481,13 @@ def init_tfcoil_variables():
     voltfleg = 0.0
     vtfkv = 0.0
     v_tf_coil_dump_quench_kv = 0.0
-    whtcas = 0.0
-    whtcon = 0.0
-    whtconcu = 0.0
+    m_tf_coil_case = 0.0
+    m_tf_coil_conductor = 0.0
+    m_tf_coil_copper = 0.0
     whtconal = 0.0
-    whtconin = 0.0
-    whtconsc = 0.0
-    whtgw = 0.0
+    m_tf_coil_wp_turn_insulation = 0.0
+    m_tf_coil_superconductor = 0.0
+    m_tf_coil_wp_insulation = 0.0
     m_tf_coils_total = 0.0
     dx_tf_wp_primary_toroidal = 0.0
     dx_tf_wp_secondary_toroidal = 0.0

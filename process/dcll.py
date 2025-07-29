@@ -675,9 +675,7 @@ class DCLL(BlanketLibrary):
         # Back Wall
         dcll_variables.wht_bw_stl = (
             fwbs_variables.den_steel
-           
             * dcll_variables.f_vol_stl_back_wall
-           
             * dcll_variables.vol_bw
         )
         dcll_variables.wht_bw_cool = (

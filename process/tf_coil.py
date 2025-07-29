@@ -3198,25 +3198,25 @@ class TFCoil:
             elif tfcoil_variables.i_tf_sup == 2:
                 # Casing weight (CP only if physics_variables.itart = 1)bper leg/coil
                 tfcoil_variables.m_tf_coil_case = (
-                    constants.dalu * vol_case / tfcoil_variables.n_tf_coils
+                    constants.den_aluminium * vol_case / tfcoil_variables.n_tf_coils
                 )
                 tfcoil_variables.m_tf_coil_copper = 0.0e0
                 tfcoil_variables.whtconal = (
-                    constants.dalu * vol_cond / tfcoil_variables.n_tf_coils
+                    constants.den_aluminium * vol_cond / tfcoil_variables.n_tf_coils
                 )
 
                 # Outer legs/CP weights
                 if physics_variables.itart == 1:
                     # Weight of all the TF legs
                     tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
-                        constants.dalu * vol_cond_leg
+                        constants.den_aluminium * vol_cond_leg
                         + tfcoil_variables.den_tf_wp_turn_insulation
                         * (vol_ins_leg + vol_gr_ins_leg)
                     )
 
                     # CP weight
                     tfcoil_variables.whtcp = (
-                        constants.dalu * tfcoil_variables.vol_cond_cp
+                        constants.den_aluminium * tfcoil_variables.vol_cond_cp
                         + tfcoil_variables.den_tf_wp_turn_insulation
                         * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
                         + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
