@@ -1628,7 +1628,7 @@ class Costs:
 
             cost_variables.c22213 = (
                 1.0e-6
-                * (tfcoil_variables.whtcas * cost_variables.uccase)
+                * (tfcoil_variables.m_tf_coil_case * cost_variables.uccase)
                 * tfcoil_variables.n_tf_coils
             )
             cost_variables.c22213 = (

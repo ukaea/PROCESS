@@ -901,8 +901,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "External case mass per coil (kg)",
-                "(whtcas)",
-                tfcoil_variables.whtcas,
+                "(m_tf_coil_case)",
+                tfcoil_variables.m_tf_coil_case,
                 "OP ",
             )
 
@@ -2993,7 +2993,7 @@ class TFCoil:
             # to the ITER-FDR value of 450 tonnes; see CCFE note T&M/PKNIGHT/PROCESS/026
             if physics_variables.itart == 1:
                 # tfcoil_variables.len_tf_coil does not include inboard leg ('centrepost') length in TART
-                tfcoil_variables.whtcas = (
+                tfcoil_variables.m_tf_coil_case = (
                     2.2e0
                     * tfcoil_variables.dcase
                     * (
@@ -3003,7 +3003,7 @@ class TFCoil:
                     )
                 )
             else:
-                tfcoil_variables.whtcas = (
+                tfcoil_variables.m_tf_coil_case = (
                     2.2e0
                     * tfcoil_variables.dcase
                     * (
@@ -3069,7 +3069,7 @@ class TFCoil:
 
             # Total TF coil mass [kg] (all coils)
             tfcoil_variables.m_tf_coils_total = (
-                tfcoil_variables.whtcas
+                tfcoil_variables.m_tf_coil_case
                 + tfcoil_variables.whtcon
                 + tfcoil_variables.m_tf_coil_wp_insulation
             ) * tfcoil_variables.n_tf_coils
@@ -3168,7 +3168,7 @@ class TFCoil:
 
             # Copper magnets casing/conductor weights per coil [kg]
             if tfcoil_variables.i_tf_sup == 0:
-                tfcoil_variables.whtcas = (
+                tfcoil_variables.m_tf_coil_case = (
                     fwbs_variables.denstl * vol_case / tfcoil_variables.n_tf_coils
                 )  # Per TF leg, no casing for outer leg
                 tfcoil_variables.whtconcu = (
@@ -3181,7 +3181,8 @@ class TFCoil:
                     # Weight of all the TF legs
                     tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                         constants.dcopper * vol_cond_leg
-                        + tfcoil_variables.den_tf_wp_turn_insulation * (vol_ins_leg + vol_gr_ins_leg)
+                        + tfcoil_variables.den_tf_wp_turn_insulation
+                        * (vol_ins_leg + vol_gr_ins_leg)
                     )
 
                     # CP weight
@@ -3196,7 +3197,7 @@ class TFCoil:
             # Casing made of re-inforced aluminium alloy
             elif tfcoil_variables.i_tf_sup == 2:
                 # Casing weight (CP only if physics_variables.itart = 1)bper leg/coil
-                tfcoil_variables.whtcas = (
+                tfcoil_variables.m_tf_coil_case = (
                     constants.dalu * vol_case / tfcoil_variables.n_tf_coils
                 )
                 tfcoil_variables.whtconcu = 0.0e0
@@ -3209,7 +3210,8 @@ class TFCoil:
                     # Weight of all the TF legs
                     tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                         constants.dalu * vol_cond_leg
-                        + tfcoil_variables.den_tf_wp_turn_insulation * (vol_ins_leg + vol_gr_ins_leg)
+                        + tfcoil_variables.den_tf_wp_turn_insulation
+                        * (vol_ins_leg + vol_gr_ins_leg)
                     )
 
                     # CP weight
@@ -3222,17 +3224,21 @@ class TFCoil:
 
             # Turn insulation mass [kg]
             tfcoil_variables.whtconin = (
-                tfcoil_variables.den_tf_wp_turn_insulation * vol_ins / tfcoil_variables.n_tf_coils
+                tfcoil_variables.den_tf_wp_turn_insulation
+                * vol_ins
+                / tfcoil_variables.n_tf_coils
             )
 
             # Ground wall insulation layer weight
             tfcoil_variables.m_tf_coil_wp_insulation = (
-                tfcoil_variables.den_tf_wp_turn_insulation * vol_gr_ins / tfcoil_variables.n_tf_coils
+                tfcoil_variables.den_tf_wp_turn_insulation
+                * vol_gr_ins
+                / tfcoil_variables.n_tf_coils
             )
 
             # Total weight
             tfcoil_variables.m_tf_coils_total = (
-                tfcoil_variables.whtcas
+                tfcoil_variables.m_tf_coil_case
                 + tfcoil_variables.whtconcu
                 + tfcoil_variables.whtconal
                 + tfcoil_variables.whtconin

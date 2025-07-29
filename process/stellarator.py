@@ -2964,7 +2964,7 @@ class Stellarator:
         # [kg] Mass of case
         #  (no need for correction factors as is the case for tokamaks)
         # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.a_tf_coil_inboard_case)).
-        tfcoil_variables.whtcas = (
+        tfcoil_variables.m_tf_coil_case = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_inboard_case
             * tfcoil_variables.dcase
@@ -3022,7 +3022,7 @@ class Stellarator:
         )
         # [kg] Total coil mass
         tfcoil_variables.m_tf_coils_total = (
-            tfcoil_variables.whtcas
+            tfcoil_variables.m_tf_coil_case
             + tfcoil_variables.whtcon
             + tfcoil_variables.m_tf_coil_wp_insulation
         ) * tfcoil_variables.n_tf_coils
@@ -4145,8 +4145,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "External case mass per coil (kg)",
-            "(whtcas)",
-            tfcoil_variables.whtcas,
+            "(m_tf_coil_case)",
+            tfcoil_variables.m_tf_coil_case,
         )
 
         po.osubhd(self.outfile, "Available Space for Ports :")
