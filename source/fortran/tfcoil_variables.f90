@@ -147,7 +147,7 @@ module tfcoil_variables
   !! Max TF coil current per turn [A]. (for stellarators and `i_tf_turns_integer=1`)
   !! (`constraint equation 77`)
 
-  real(dp) :: dcase
+  real(dp) :: den_tf_coil_case
   !! density of coil case (kg/m3)
 
   real(dp), dimension(9) :: dcond

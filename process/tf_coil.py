@@ -3020,7 +3020,7 @@ class TFCoil:
                 # tfcoil_variables.len_tf_coil does not include inboard leg ('centrepost') length in TART
                 tfcoil_variables.m_tf_coil_case = (
                     2.2e0
-                    * tfcoil_variables.dcase
+                    * tfcoil_variables.den_tf_coil_case
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + tfcoil_variables.len_tf_coil
@@ -3030,7 +3030,7 @@ class TFCoil:
             else:
                 tfcoil_variables.m_tf_coil_case = (
                     2.2e0
-                    * tfcoil_variables.dcase
+                    * tfcoil_variables.den_tf_coil_case
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + (tfcoil_variables.len_tf_coil - tfcoil_variables.cplen)
@@ -5471,7 +5471,7 @@ def init_tfcoil_variables():
     tfv.cplen = 0.0
     tfv.c_tf_turn = 7.0e4
     tfv.c_tf_turn_max = 9.0e4
-    tfv.dcase = 8000.0
+    tfv.den_tf_coil_case = 8000.0
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
     tfv.den_tf_wp_turn_insulation = 1800.0
     tfv.dia_tf_turn_coolant_channel = 0.005
