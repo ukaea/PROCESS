@@ -688,7 +688,7 @@ module tfcoil_variables
   !! TF coil conductor mass per coil (kg/coil).
   !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
-  real(dp) :: whtconcu
+  real(dp) :: m_tf_coil_copper
   !! copper mass in TF coil conductor (kg/coil).
   !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
