@@ -705,7 +705,7 @@ module tfcoil_variables
   real(dp) :: m_tf_turn_steel_conduit
   !! steel conduit mass in TF coil conductor (kg/coil)
 
-  real(dp) :: whtgw
+  real(dp) :: m_tf_coil_wp_insulation
   !! mass of ground-wall insulation layer per coil (kg/coil)
 
   real(dp) :: m_tf_coils_total

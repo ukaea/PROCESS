@@ -2959,6 +2959,7 @@ class TFCoil:
 
     def tf_coil_area_and_masses(self):
         """Subroutine to calculate the TF coil areas and masses"""
+
         vol_case = 0.0e0  # Total TF case volume [m3]
         vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
         vol_gr_ins = 0.0e0  # Total leg turn insulation volume [m3]
@@ -2968,7 +2969,7 @@ class TFCoil:
         vol_cond_leg = 0.0e0  # Outboard leg conductor insulator volume [m3]
         # ---
 
-        # Surface areas (for cryo system) [m2]
+        # Surface areas (for cryo system) [m²]
         wbtf = (
             build_variables.r_tf_inboard_out
             * np.sin(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
@@ -2998,7 +2999,7 @@ class TFCoil:
 
             # Mass of ground-wall insulation [kg]
             # (assumed to be same density/material as turn insulation)
-            tfcoil_variables.whtgw = (
+            tfcoil_variables.m_tf_coil_wp_insulation = (
                 tfcoil_variables.len_tf_coil
                 * (
                     sctfcoil_module.a_tf_wp_with_insulation
@@ -3095,7 +3096,7 @@ class TFCoil:
             tfcoil_variables.m_tf_coils_total = (
                 tfcoil_variables.whtcas
                 + tfcoil_variables.whtcon
-                + tfcoil_variables.whtgw
+                + tfcoil_variables.m_tf_coil_wp_insulation
             ) * tfcoil_variables.n_tf_coils
 
             # If spherical tokamak, distribute between centrepost and outboard legs
@@ -3250,7 +3251,7 @@ class TFCoil:
             )
 
             # Ground wall insulation layer weight
-            tfcoil_variables.whtgw = (
+            tfcoil_variables.m_tf_coil_wp_insulation = (
                 tfcoil_variables.dcondins * vol_gr_ins / tfcoil_variables.n_tf_coils
             )
 
@@ -3260,7 +3261,7 @@ class TFCoil:
                 + tfcoil_variables.whtconcu
                 + tfcoil_variables.whtconal
                 + tfcoil_variables.whtconin
-                + tfcoil_variables.whtgw
+                + tfcoil_variables.m_tf_coil_wp_insulation
             ) * tfcoil_variables.n_tf_coils
 
     @staticmethod
@@ -5610,7 +5611,7 @@ def init_tfcoil_variables():
     tfv.whtconin = 0.0
     tfv.whtconsc = 0.0
     tfv.m_tf_turn_steel = 0.0
-    tfv.whtgw = 0.0
+    tfv.m_tf_coil_wp_insulation = 0.0
     tfv.m_tf_coils_total = 0.0
     tfv.dx_tf_wp_primary_toroidal = 0.0
     tfv.dx_tf_wp_secondary_toroidal = 0.0
