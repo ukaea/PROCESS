@@ -2974,7 +2974,7 @@ class Stellarator:
         tfcoil_variables.m_tf_coil_wp_insulation = (
             tfcoil_variables.len_tf_coil
             * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
-            * tfcoil_variables.dcondins
+            * tfcoil_variables.den_tf_wp_turn_insulation
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
@@ -3011,7 +3011,7 @@ class Stellarator:
         tfcoil_variables.whtconin = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_wp_turn_insulation
-            * tfcoil_variables.dcondins
+            * tfcoil_variables.den_tf_wp_turn_insulation
         )
         # [kg] Total conductor mass
         tfcoil_variables.whtcon = (

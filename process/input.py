@@ -437,7 +437,7 @@ INPUT_VARIABLES = {
     "dcdrv0": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),
     "dcdrv1": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),
     "dcdrv2": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),
-    "dcondins": InputVariable(
+    "den_tf_wp_turn_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(500.0, 10000.0)
     ),
     "dcopper": InputVariable(fortran.constants, float, range=(8000.0, 10000.0)),

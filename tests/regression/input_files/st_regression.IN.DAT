@@ -1171,7 +1171,7 @@ i_tf_turns_integer = 0
 *                on the CS magnet maximum current
 
 
-*dcondins = 
+*den_tf_wp_turn_insulation = 
 * DESCRIPTION: Density of TF coil insulation (kg/m3)
 * JUSTIFICATION: Not set, assuming default
 
