@@ -738,7 +738,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     z_tf_inside_half: Any = None
 
-    denstl: Any = None
+    den_steel: Any = None
 
     m_tf_wp_steel_conduit: Any = None
 
@@ -866,7 +866,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             z_tf_inside_half=9.0730900215620327,
-            denstl=7800,
+            den_steel=7800,
             m_tf_wp_steel_conduit=0,
             m_tf_coils_total=0,
             m_tf_coil_case=0,
@@ -938,7 +938,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
             z_tf_inside_half=9.0730900215620327,
-            denstl=7800,
+            den_steel=7800,
             m_tf_wp_steel_conduit=115651.90127937049,
             m_tf_coils_total=19649856.627845347,
             m_tf_coil_case=1034021.9996272125,
@@ -1043,7 +1043,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         build_variables, "z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half
     )
 
-    monkeypatch.setattr(fwbs_variables, "denstl", tfcoilareaandmassesparam.denstl)
+    monkeypatch.setattr(fwbs_variables, "den_steel", tfcoilareaandmassesparam.den_steel)
 
     monkeypatch.setattr(
         tfcoil_variables,

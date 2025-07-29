@@ -323,7 +323,7 @@ class CCFE_HCPB(BlanketLibrary):
         # Shield mass (kg)
         fwbs_variables.whtshld = (
             fwbs_variables.vol_shld_total
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
             * (1.0 - fwbs_variables.vfshld)
         )
 
@@ -341,7 +341,7 @@ class CCFE_HCPB(BlanketLibrary):
         )
 
         # First wall mass, excluding armour (kg)
-        fwbs_variables.m_fw_total = fwbs_variables.denstl * fwbs_variables.vol_fw_total
+        fwbs_variables.m_fw_total = fwbs_variables.den_steel * fwbs_variables.vol_fw_total
 
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (
@@ -397,7 +397,7 @@ class CCFE_HCPB(BlanketLibrary):
         fwbs_variables.m_blkt_steel_total = (
             fwbs_variables.vol_blkt_total
             * fwbs_variables.f_vol_blkt_steel
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
         )
 
         # Total blanket mass (kg)
@@ -446,7 +446,7 @@ class CCFE_HCPB(BlanketLibrary):
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
         ccfe_hcpb_module.armour_density = constants.den_tungsten * (1.0 - vffwm)
-        ccfe_hcpb_module.fw_density = fwbs_variables.denstl * (1.0 - vffwm)
+        ccfe_hcpb_module.fw_density = fwbs_variables.den_steel * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
             fwbs_variables.m_blkt_total / fwbs_variables.vol_blkt_total
         )

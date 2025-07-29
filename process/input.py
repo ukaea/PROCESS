@@ -449,7 +449,7 @@ INPUT_VARIABLES = {
     "declfw": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declshld": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "decomf": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
-    "denstl": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
+    "den_steel": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
     "dia_tf_turn_coolant_channel": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),

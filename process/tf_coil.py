@@ -3047,7 +3047,7 @@ class TFCoil:
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_steel
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
             )
 
             # Conduit insulation mass [kg]
@@ -3169,7 +3169,7 @@ class TFCoil:
             # Copper magnets casing/conductor weights per coil [kg]
             if tfcoil_variables.i_tf_sup == 0:
                 tfcoil_variables.m_tf_coil_case = (
-                    fwbs_variables.denstl * vol_case / tfcoil_variables.n_tf_coils
+                    fwbs_variables.den_steel * vol_case / tfcoil_variables.n_tf_coils
                 )  # Per TF leg, no casing for outer leg
                 tfcoil_variables.m_tf_coil_copper = (
                     constants.den_copper * vol_cond / tfcoil_variables.n_tf_coils
@@ -3190,7 +3190,7 @@ class TFCoil:
                         constants.den_copper * tfcoil_variables.vol_cond_cp
                         + tfcoil_variables.den_tf_wp_turn_insulation
                         * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
-                        + sctfcoil_module.vol_case_cp * fwbs_variables.denstl
+                        + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
                     )
 
             # Cryo-aluminium conductor weights
@@ -3219,7 +3219,7 @@ class TFCoil:
                         constants.dalu * tfcoil_variables.vol_cond_cp
                         + tfcoil_variables.den_tf_wp_turn_insulation
                         * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
-                        + sctfcoil_module.vol_case_cp * fwbs_variables.denstl
+                        + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
                     )
 
             # Turn insulation mass [kg]

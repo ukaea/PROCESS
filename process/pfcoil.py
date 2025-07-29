@@ -907,7 +907,7 @@ class PFCoil:
                     * 2.0e0
                     * constants.pi
                     * pfcoil_variables.r_pf_coil_middle[i]
-                    * fwbsv.denstl
+                    * fwbsv.den_steel
                 )
 
                 # Mass of heaviest PF coil (tonnes)
@@ -1467,7 +1467,7 @@ class PFCoil:
             * 2.0e0
             * constants.pi
             * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-            * fwbsv.denstl
+            * fwbsv.den_steel
         )
 
         # Non-steel cross-sectional area

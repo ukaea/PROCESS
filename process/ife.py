@@ -1765,7 +1765,7 @@ class IFE:
 
         matden = [
             0.0,
-            fwbs_variables.denstl,
+            fwbs_variables.den_steel,
             2300.0,
             2020.0,
             2010.0,
