@@ -275,7 +275,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         fwbs_variables, "dx_fw_module", nuclearheatingmagnetsparam.dx_fw_module
     )
 
-    monkeypatch.setattr(fwbs_variables, "den_steel", nuclearheatingmagnetsparam.den_steel)
+    monkeypatch.setattr(
+        fwbs_variables, "den_steel", nuclearheatingmagnetsparam.den_steel
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_total", nuclearheatingmagnetsparam.m_blkt_total

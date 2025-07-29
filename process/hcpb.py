@@ -341,7 +341,9 @@ class CCFE_HCPB(BlanketLibrary):
         )
 
         # First wall mass, excluding armour (kg)
-        fwbs_variables.m_fw_total = fwbs_variables.den_steel * fwbs_variables.vol_fw_total
+        fwbs_variables.m_fw_total = (
+            fwbs_variables.den_steel * fwbs_variables.vol_fw_total
+        )
 
         # First wall armour volume (m^3)
         fwbs_variables.fw_armour_vol = (

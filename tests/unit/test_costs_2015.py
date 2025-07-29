@@ -6917,7 +6917,9 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
         tfcoil_variables, "n_tf_coil_turns", calctfcoilcostsparam.n_tf_coil_turns
     )
 
-    monkeypatch.setattr(tfcoil_variables, "m_tf_coil_copper", calctfcoilcostsparam.m_tf_coil_copper)
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coil_copper", calctfcoilcostsparam.m_tf_coil_copper
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

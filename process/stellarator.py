@@ -3008,7 +3008,7 @@ class Stellarator:
         # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.den_steel
         # Conduit insulation mass [kg]
         # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
-        tfcoil_variables.whtconin = (
+        tfcoil_variables.m_tf_coil_wp_turn_insulation = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_wp_turn_insulation
             * tfcoil_variables.den_tf_wp_turn_insulation
@@ -3018,7 +3018,7 @@ class Stellarator:
             tfcoil_variables.m_tf_coil_superconductor
             + tfcoil_variables.m_tf_coil_copper
             + tfcoil_variables.m_tf_wp_steel_conduit
-            + tfcoil_variables.whtconin
+            + tfcoil_variables.m_tf_coil_wp_turn_insulation
         )
         # [kg] Total coil mass
         tfcoil_variables.m_tf_coils_total = (
