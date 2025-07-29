@@ -431,7 +431,7 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
     "dalu": InputVariable(fortran.constants, float, range=(2500.0, 30000.0)),
-    "dcase": InputVariable(
+    "den_tf_coil_case": InputVariable(
         data_structure.tfcoil_variables, float, range=(1000.0, 100000.0)
     ),
     "dcdrv0": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),

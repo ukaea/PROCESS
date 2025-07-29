@@ -770,7 +770,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     len_tf_coil: Any = None
 
-    dcase: Any = None
+    den_tf_coil_case: Any = None
 
     a_tf_turn_steel: Any = None
 
@@ -887,7 +887,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             ).transpose(),
             den_tf_wp_turn_insulation=1800,
             len_tf_coil=50.483843027201402,
-            dcase=8000,
+            den_tf_coil_case=8000,
             a_tf_turn_steel=0.0014685061538103825,
             n_tf_coil_turns=200,
             n_tf_coils=16,
@@ -959,7 +959,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             ).transpose(),
             den_tf_wp_turn_insulation=1800,
             len_tf_coil=50.514015976170839,
-            dcase=8000,
+            den_tf_coil_case=8000,
             a_tf_turn_steel=0.0014685061538103825,
             n_tf_coil_turns=200,
             n_tf_coils=16,
@@ -1103,7 +1103,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
     )
 
-    monkeypatch.setattr(tfcoil_variables, "dcase", tfcoilareaandmassesparam.dcase)
+    monkeypatch.setattr(tfcoil_variables, "den_tf_coil_case", tfcoilareaandmassesparam.den_tf_coil_case)
 
     monkeypatch.setattr(
         tfcoil_variables, "a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel

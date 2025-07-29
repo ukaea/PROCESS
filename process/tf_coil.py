@@ -2995,7 +2995,7 @@ class TFCoil:
                 # tfcoil_variables.len_tf_coil does not include inboard leg ('centrepost') length in TART
                 tfcoil_variables.m_tf_coil_case = (
                     2.2e0
-                    * tfcoil_variables.dcase
+                    * tfcoil_variables.den_tf_coil_case
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + tfcoil_variables.len_tf_coil
@@ -3005,7 +3005,7 @@ class TFCoil:
             else:
                 tfcoil_variables.m_tf_coil_case = (
                     2.2e0
-                    * tfcoil_variables.dcase
+                    * tfcoil_variables.den_tf_coil_case
                     * (
                         tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
                         + (tfcoil_variables.len_tf_coil - tfcoil_variables.cplen)

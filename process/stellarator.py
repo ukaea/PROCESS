@@ -2967,7 +2967,7 @@ class Stellarator:
         tfcoil_variables.m_tf_coil_case = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_inboard_case
-            * tfcoil_variables.dcase
+            * tfcoil_variables.den_tf_coil_case
         )
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
