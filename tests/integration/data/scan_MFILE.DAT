@@ -572,7 +572,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5743E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3757E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -1567,7 +1567,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5748E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3757E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -2562,7 +2562,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5751E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3756E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -3557,7 +3557,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5755E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3755E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -4552,7 +4552,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5759E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3755E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -5547,7 +5547,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5762E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3754E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -6542,7 +6542,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5765E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3753E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -7537,7 +7537,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5768E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3753E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 
@@ -8532,7 +8532,7 @@
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      1.2418E+04 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      1.2418E+04 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      8.5771E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      2.3752E+05 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      1.0668E+04 OP 

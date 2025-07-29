@@ -1347,8 +1347,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Superconductor mass per coil (kg)",
-            "(whtconsc)",
-            tfcoil_variables.whtconsc,
+            "(m_tf_coil_superconductor)",
+            tfcoil_variables.m_tf_coil_superconductor,
             "OP ",
         )
         po.ovarre(
@@ -3019,7 +3019,7 @@ class TFCoil:
             # ---------------------------------
             # Superconductor mass [kg]
             # Includes space allowance for central helium channel, area tfcoil_variables.a_tf_wp_coolant_channels
-            tfcoil_variables.whtconsc = (
+            tfcoil_variables.m_tf_coil_superconductor = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space_no_void
@@ -3060,7 +3060,7 @@ class TFCoil:
 
             # Total conductor mass [kg]
             tfcoil_variables.whtcon = (
-                tfcoil_variables.whtconsc
+                tfcoil_variables.m_tf_coil_superconductor
                 + tfcoil_variables.whtconcu
                 + tfcoil_variables.m_tf_turn_steel_conduit
                 + tfcoil_variables.whtconin

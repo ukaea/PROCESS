@@ -686,7 +686,7 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus___________________________________________ (eyoung_cond_axial)____________ 0.00000000000000000e+00
  Conductor_transverse_Youngs_modulus______________________________________ (eyoung_cond_trans)____________ 0.00000000000000000e+00
- Superconductor_mass_per_coil_(kg)________________________________________ (whtconsc)_____________________ 5.52634887087653533e+03 OP
+ Superconductor_mass_per_coil_(kg)________________________________________ (m_tf_coil_superconductor)_____________________ 5.52634887087653533e+03 OP
  Copper_mass_per_coil_(kg)________________________________________________ (whtconcu)_____________________ 5.67354345038117754e+04 OP
  Steel_conduit_mass_per_coil_(kg)_________________________________________ (whtconsh)_____________________ 9.25139987479312113e+04 OP
  Conduit_insulation_mass_per_coil_(kg)____________________________________ (whtconin)_____________________ 2.46888585662830837e+03 OP

@@ -2977,7 +2977,7 @@ class Stellarator:
             * tfcoil_variables.den_tf_wp_turn_insulation
         )
         # [kg] mass of Superconductor
-        tfcoil_variables.whtconsc = (
+        tfcoil_variables.m_tf_coil_superconductor = (
             (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
@@ -3015,7 +3015,7 @@ class Stellarator:
         )
         # [kg] Total conductor mass
         tfcoil_variables.whtcon = (
-            tfcoil_variables.whtconsc
+            tfcoil_variables.m_tf_coil_superconductor
             + tfcoil_variables.whtconcu
             + tfcoil_variables.m_tf_turn_steel_conduit
             + tfcoil_variables.whtconin
@@ -3888,8 +3888,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Superconductor mass per coil (kg)",
-            "(whtconsc)",
-            tfcoil_variables.whtconsc,
+            "(m_tf_coil_superconductor)",
+            tfcoil_variables.m_tf_coil_superconductor,
         )
         po.ovarre(
             self.outfile,
