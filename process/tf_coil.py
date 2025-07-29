@@ -3038,7 +3038,7 @@ class TFCoil:
                 * tfcoil_variables.fcutfsu
                 - tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_wp_coolant_channels
-            ) * constants.dcopper
+            ) * constants.den_copper
             if tfcoil_variables.m_tf_coil_copper <= 0.0e0:
                 tfcoil_variables.m_tf_coil_copper = 0.0e0
 
@@ -3172,7 +3172,7 @@ class TFCoil:
                     fwbs_variables.denstl * vol_case / tfcoil_variables.n_tf_coils
                 )  # Per TF leg, no casing for outer leg
                 tfcoil_variables.m_tf_coil_copper = (
-                    constants.dcopper * vol_cond / tfcoil_variables.n_tf_coils
+                    constants.den_copper * vol_cond / tfcoil_variables.n_tf_coils
                 )
                 tfcoil_variables.whtconal = 0.0e0
 
@@ -3180,14 +3180,14 @@ class TFCoil:
                 if physics_variables.itart == 1:
                     # Weight of all the TF legs
                     tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
-                        constants.dcopper * vol_cond_leg
+                        constants.den_copper * vol_cond_leg
                         + tfcoil_variables.den_tf_wp_turn_insulation
                         * (vol_ins_leg + vol_gr_ins_leg)
                     )
 
                     # CP weight
                     tfcoil_variables.whtcp = (
-                        constants.dcopper * tfcoil_variables.vol_cond_cp
+                        constants.den_copper * tfcoil_variables.vol_cond_cp
                         + tfcoil_variables.den_tf_wp_turn_insulation
                         * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
                         + sctfcoil_module.vol_case_cp * fwbs_variables.denstl

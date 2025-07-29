@@ -444,7 +444,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(500.0, 10000.0)
     
     ),
-    "dcopper": InputVariable(fortran.constants, float, range=(8000.0, 10000.0)),
+    "den_copper": InputVariable(fortran.constants, float, range=(8000.0, 10000.0)),
     "declblkt": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declfw": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declshld": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),

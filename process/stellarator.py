@@ -2997,7 +2997,7 @@ class Stellarator:
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             * tfcoil_variables.fcutfsu
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
-        ) * constants.dcopper
+        ) * constants.den_copper
         # [kg] mass of Steel conduit (sheath)
         tfcoil_variables.m_tf_turn_steel_conduit = (
             tfcoil_variables.len_tf_coil

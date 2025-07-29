@@ -851,7 +851,7 @@ class PFCoil:
                 else:
                     pfcoil_variables.m_pf_coil_conductor[i] = (
                         volpf
-                        * constants.dcopper
+                        * constants.den_copper
                         * (1.0e0 - pfcoil_variables.f_a_pf_coil_void[i])
                     )
 
@@ -1497,7 +1497,7 @@ class PFCoil:
                 * 2.0e0
                 * constants.pi
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-                * constants.dcopper
+                * constants.den_copper
             )
 
         if pfcoil_variables.i_pf_conductor == 0:

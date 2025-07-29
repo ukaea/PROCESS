@@ -1716,7 +1716,7 @@ class Power:
 
             #  Bus mass (kg)
             tfcoil_variables.m_tf_bus = (
-                tfcoil_variables.len_tf_bus * a_tf_bus * constants.dcopper
+                tfcoil_variables.len_tf_bus * a_tf_bus * constants.den_copper
             )
 
             #  Total maximum impedance MDK actually just fixed resistance

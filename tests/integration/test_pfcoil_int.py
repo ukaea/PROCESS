@@ -157,7 +157,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tv, "t_current_ramp_up", 1.82538e2)
     monkeypatch.setattr(tv, "t_ramp_down", 1.82538e2)
     monkeypatch.setattr(tv, "t_fusion_ramp", 1.0e1)
-    monkeypatch.setattr(constants, "dcopper", 8.9e3)
+    monkeypatch.setattr(constants, "den_copper", 8.9e3)
     monkeypatch.setattr(pfcoil_variables, "first_call", True)
 
     pfcoil.pfcoil()
@@ -260,7 +260,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(tfv, "bcritsc", 2.4e1)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
-    monkeypatch.setattr(constants, "dcopper", 8.9e3)
+    monkeypatch.setattr(constants, "den_copper", 8.9e3)
 
     # Mocks for peakb()
     monkeypatch.setattr(bv, "iohcl", 1)
