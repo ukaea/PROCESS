@@ -1582,7 +1582,7 @@ class Costs:
 
             costtfcu = (
                 cost_variables.uccu
-                * tfcoil_variables.whtconcu
+                * tfcoil_variables.m_tf_coil_copper
                 / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
             )
 

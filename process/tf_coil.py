@@ -1354,8 +1354,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Copper mass per coil (kg)",
-            "(whtconcu)",
-            tfcoil_variables.whtconcu,
+            "(m_tf_coil_copper)",
+            tfcoil_variables.m_tf_coil_copper,
             "OP ",
         )
         po.ovarre(
@@ -3030,7 +3030,7 @@ class TFCoil:
             ) * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
 
             # Copper mass [kg]
-            tfcoil_variables.whtconcu = (
+            tfcoil_variables.m_tf_coil_copper = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space_no_void
@@ -3039,8 +3039,8 @@ class TFCoil:
                 - tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_wp_coolant_channels
             ) * constants.dcopper
-            if tfcoil_variables.whtconcu <= 0.0e0:
-                tfcoil_variables.whtconcu = 0.0e0
+            if tfcoil_variables.m_tf_coil_copper <= 0.0e0:
+                tfcoil_variables.m_tf_coil_copper = 0.0e0
 
             # Steel conduit (sheath) mass [kg]
             tfcoil_variables.m_tf_turn_steel_conduit = (
@@ -3061,7 +3061,7 @@ class TFCoil:
             # Total conductor mass [kg]
             tfcoil_variables.whtcon = (
                 tfcoil_variables.m_tf_coil_superconductor
-                + tfcoil_variables.whtconcu
+                + tfcoil_variables.m_tf_coil_copper
                 + tfcoil_variables.m_tf_turn_steel_conduit
                 + tfcoil_variables.whtconin
             )
@@ -3171,7 +3171,7 @@ class TFCoil:
                 tfcoil_variables.m_tf_coil_case = (
                     fwbs_variables.denstl * vol_case / tfcoil_variables.n_tf_coils
                 )  # Per TF leg, no casing for outer leg
-                tfcoil_variables.whtconcu = (
+                tfcoil_variables.m_tf_coil_copper = (
                     constants.dcopper * vol_cond / tfcoil_variables.n_tf_coils
                 )
                 tfcoil_variables.whtconal = 0.0e0
@@ -3200,7 +3200,7 @@ class TFCoil:
                 tfcoil_variables.m_tf_coil_case = (
                     constants.dalu * vol_case / tfcoil_variables.n_tf_coils
                 )
-                tfcoil_variables.whtconcu = 0.0e0
+                tfcoil_variables.m_tf_coil_copper = 0.0e0
                 tfcoil_variables.whtconal = (
                     constants.dalu * vol_cond / tfcoil_variables.n_tf_coils
                 )
@@ -3239,7 +3239,7 @@ class TFCoil:
             # Total weight
             tfcoil_variables.m_tf_coils_total = (
                 tfcoil_variables.m_tf_coil_case
-                + tfcoil_variables.whtconcu
+                + tfcoil_variables.m_tf_coil_copper
                 + tfcoil_variables.whtconal
                 + tfcoil_variables.whtconin
                 + tfcoil_variables.m_tf_coil_wp_insulation

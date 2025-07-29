@@ -1753,7 +1753,7 @@ class Acc2221Param(NamedTuple):
 
     aintmass: Any = None
 
-    whtconcu: Any = None
+    m_tf_coil_copper: Any = None
 
     m_tf_coil_superconductor: Any = None
 
@@ -1818,7 +1818,7 @@ class Acc2221Param(NamedTuple):
             itart=0,
             clgsmass=1953582.3684708222,
             aintmass=5829865.436088616,
-            whtconcu=58744.465423173802,
+            m_tf_coil_copper=58744.465423173802,
             m_tf_coil_superconductor=5802.5700395134345,
             m_tf_coil_case=1034021.9996272125,
             n_tf_coils=16,
@@ -1859,7 +1859,7 @@ class Acc2221Param(NamedTuple):
             itart=0,
             clgsmass=1951781.4798732549,
             aintmass=5829865.436088616,
-            whtconcu=58779.575542593491,
+            m_tf_coil_copper=58779.575542593491,
             m_tf_coil_superconductor=5806.038092640837,
             m_tf_coil_case=1034699.2182961091,
             n_tf_coils=16,
@@ -1900,7 +1900,7 @@ class Acc2221Param(NamedTuple):
             itart=0,
             clgsmass=1951781.4798732549,
             aintmass=5829865.436088616,
-            whtconcu=58779.575542593491,
+            m_tf_coil_copper=58779.575542593491,
             m_tf_coil_superconductor=5806.038092640837,
             m_tf_coil_case=1034699.2182961091,
             n_tf_coils=16,
@@ -1967,7 +1967,7 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(structure_variables, "aintmass", acc2221param.aintmass)
 
-    monkeypatch.setattr(tfcoil_variables, "whtconcu", acc2221param.whtconcu)
+    monkeypatch.setattr(tfcoil_variables, "m_tf_coil_copper", acc2221param.m_tf_coil_copper)
 
     monkeypatch.setattr(
         tfcoil_variables,

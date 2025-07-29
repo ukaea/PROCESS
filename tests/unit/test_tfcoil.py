@@ -756,7 +756,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     m_tf_coil_superconductor: Any = None
 
-    whtconcu: Any = None
+    m_tf_coil_copper: Any = None
 
     whtcon: Any = None
 
@@ -846,7 +846,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     expected_m_tf_coil_superconductor: Any = None
 
-    expected_whtconcu: Any = None
+    expected_m_tf_coil_copper: Any = None
 
     expected_whtcon: Any = None
 
@@ -875,7 +875,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             m_tf_coil_wp_insulation=0,
             tfocrn=0,
             m_tf_coil_superconductor=0,
-            whtconcu=0,
+            m_tf_coil_copper=0,
             whtcon=0,
             whtconin=0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
@@ -925,7 +925,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_m_tf_coil_wp_insulation=5909.3507916745702,
             expected_tfocrn=0.59553192892551199,
             expected_m_tf_coil_superconductor=5802.5700395134345,
-            expected_whtconcu=58744.465423173802,
+            expected_m_tf_coil_copper=58744.465423173802,
             expected_whtcon=188184.68882144717,
             expected_whtconin=7985.7520793894437,
             expected_cplen=20.562180043124066,
@@ -947,7 +947,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             m_tf_coil_wp_insulation=5909.3507916745702,
             tfocrn=0.59553192892551199,
             m_tf_coil_superconductor=5802.5700395134345,
-            whtconcu=58744.465423173802,
+            m_tf_coil_copper=58744.465423173802,
             whtcon=0,
             whtconin=0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
@@ -997,7 +997,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_m_tf_coil_wp_insulation=5912.8826650262808,
             expected_tfocrn=0.59553192892551199,
             expected_m_tf_coil_superconductor=5806.038092640837,
-            expected_whtconcu=58779.575542593491,
+            expected_m_tf_coil_copper=58779.575542593491,
             expected_whtcon=188297.16217276,
             expected_whtconin=7990.5249666247555,
             expected_cplen=20.562180043124066,
@@ -1079,7 +1079,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.m_tf_coil_superconductor,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "whtconcu", tfcoilareaandmassesparam.whtconcu)
+    monkeypatch.setattr(tfcoil_variables, "m_tf_coil_copper", tfcoilareaandmassesparam.m_tf_coil_copper)
 
     monkeypatch.setattr(tfcoil_variables, "whtcon", tfcoilareaandmassesparam.whtcon)
 
@@ -1263,8 +1263,8 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.expected_m_tf_coil_superconductor
     )
 
-    assert tfcoil_variables.whtconcu == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconcu
+    assert tfcoil_variables.m_tf_coil_copper == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_copper
     )
 
     assert tfcoil_variables.whtcon == pytest.approx(

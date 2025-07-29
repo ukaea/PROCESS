@@ -728,7 +728,7 @@
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
  Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.2728E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.7530E+04 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.7530E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      9.1497E+04 OP 
  Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.4504E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.5475E+05 OP 
