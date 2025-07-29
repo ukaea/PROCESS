@@ -702,7 +702,7 @@ module tfcoil_variables
   real(dp) :: m_tf_coil_superconductor
   !! superconductor mass in TF coil cable (kg/coil)
 
-  real(dp) :: m_tf_turn_steel_conduit
+  real(dp) :: m_tf_wp_steel_conduit
   !! steel conduit mass in TF coil conductor (kg/coil)
 
   real(dp) :: m_tf_coil_wp_insulation
