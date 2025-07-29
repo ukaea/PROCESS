@@ -797,7 +797,7 @@ class Stellarator:
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
         # The thickness 0.18m was obtained as a measured value from Schauer, F. and Bykov, V. design of Helias 5-B. (Nucl Fus. 2013)
         structure_variables.aintmass = (
-            0.18e0 * st.f_b**2 * intercoil_surface * fwbs_variables.denstl
+            0.18e0 * st.f_b**2 * intercoil_surface * fwbs_variables.den_steel
         )
 
         structure_variables.clgsmass = (
@@ -1662,7 +1662,7 @@ class Stellarator:
 
             fwbs_variables.m_blkt_steel_total = (
                 fwbs_variables.vol_blkt_total
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
                 * fwbs_variables.fblss
             )
             fwbs_variables.m_blkt_vanadium = (
@@ -1676,7 +1676,7 @@ class Stellarator:
             )
 
         else:  # volume fractions proportional to sub-assembly thicknesses
-            fwbs_variables.m_blkt_steel_total = fwbs_variables.denstl * (
+            fwbs_variables.m_blkt_steel_total = fwbs_variables.den_steel * (
                 fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
                 * (
@@ -1778,7 +1778,7 @@ class Stellarator:
         # Shield mass
         fwbs_variables.whtshld = (
             fwbs_variables.volshld
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
             * (1.0e0 - fwbs_variables.vfshld)
         )
 
@@ -1796,7 +1796,7 @@ class Stellarator:
                 build_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
                 * (1.0e0 - fwbs_variables.fwclfr)
             )
 
@@ -1811,7 +1811,7 @@ class Stellarator:
             )
 
         else:
-            fwbs_variables.m_fw_total = fwbs_variables.denstl * (
+            fwbs_variables.m_fw_total = fwbs_variables.den_steel * (
                 build_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
@@ -1904,13 +1904,13 @@ class Stellarator:
 
         #  Vacuum vessel mass
 
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.denstl
+        ) * fwbs_variables.den_steel
 
         if output:
             #  Output section
@@ -2967,9 +2967,9 @@ class Stellarator:
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_steel
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.den_steel
         # Conduit insulation mass [kg]
         # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
         tfcoil_variables.whtconin = (

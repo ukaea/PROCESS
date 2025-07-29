@@ -162,7 +162,7 @@ xpertin  = 1.5 * perpendicular heat transport coefficient (m2/s)
 
 *------------------Fwbs Variables------------------*
 
-denstl   = 7800. * density of steel [kg m^-3]
+den_steel   = 7800. * density of steel [kg m^-3]
 f_p_blkt_multiplication    = 1.3 * energy multiplication in blanket and shield
 fblss    = 0.13 * KIT blanket model; steel fraction of breeding zone
 fhole    = 0. * area fraction taken up by other holes (IFE)

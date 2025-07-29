@@ -706,7 +706,7 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 class StstrcParam(NamedTuple):
     dewmkg: Any = None
 
-    denstl: Any = None
+    den_steel: Any = None
 
     aintmass: Any = None
 
@@ -754,7 +754,7 @@ class StstrcParam(NamedTuple):
     (
         StstrcParam(
             dewmkg=0,
-            denstl=7800,
+            den_steel=7800,
             aintmass=0,
             clgsmass=0,
             coldmass=0,
@@ -778,7 +778,7 @@ class StstrcParam(NamedTuple):
         ),
         StstrcParam(
             dewmkg=22397931.480129492,
-            denstl=7800,
+            den_steel=7800,
             aintmass=4882304.266547408,
             clgsmass=976460.85330948164,
             coldmass=10087177.087209985,
@@ -817,7 +817,7 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(fwbs_variables, "dewmkg", ststrcparam.dewmkg)
 
-    monkeypatch.setattr(fwbs_variables, "denstl", ststrcparam.denstl)
+    monkeypatch.setattr(fwbs_variables, "den_steel", ststrcparam.den_steel)
 
     monkeypatch.setattr(structure_variables, "aintmass", ststrcparam.aintmass)
 

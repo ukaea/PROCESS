@@ -27,7 +27,7 @@ module fwbs_variables
   real(dp) :: m_vv
   !! vacuum vessel mass [kg]
 
-  real(dp) :: denstl
+  real(dp) :: den_steel
   !! density of steel [kg m^-3]
   !#TODO: should this be in constants. Is currently an input. Should be a list of preapproved options?
 
