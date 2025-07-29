@@ -3014,7 +3014,7 @@ class Stellarator:
             * tfcoil_variables.den_tf_wp_turn_insulation
         )
         # [kg] Total conductor mass
-        tfcoil_variables.whtcon = (
+        tfcoil_variables.m_tf_coil_conductor = (
             tfcoil_variables.m_tf_coil_superconductor
             + tfcoil_variables.m_tf_coil_copper
             + tfcoil_variables.m_tf_wp_steel_conduit
@@ -3023,7 +3023,7 @@ class Stellarator:
         # [kg] Total coil mass
         tfcoil_variables.m_tf_coils_total = (
             tfcoil_variables.m_tf_coil_case
-            + tfcoil_variables.whtcon
+            + tfcoil_variables.m_tf_coil_conductor
             + tfcoil_variables.m_tf_coil_wp_insulation
         ) * tfcoil_variables.n_tf_coils
         # End of general coil geometry values
@@ -3906,8 +3906,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Total conductor cable mass per coil (kg)",
-            "(whtcon)",
-            tfcoil_variables.whtcon,
+            "(m_tf_coil_conductor)",
+            tfcoil_variables.m_tf_coil_conductor,
         )
         po.ovarre(
             self.outfile,

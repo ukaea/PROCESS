@@ -758,7 +758,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     m_tf_coil_copper: Any = None
 
-    whtcon: Any = None
+    m_tf_coil_conductor: Any = None
 
     m_tf_coil_wp_turn_insulation: Any = None
 
@@ -876,7 +876,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             tfocrn=0,
             m_tf_coil_superconductor=0,
             m_tf_coil_copper=0,
-            whtcon=0,
+            m_tf_coil_conductor=0,
             m_tf_coil_wp_turn_insulation=0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
             dcond=np.array(
@@ -948,7 +948,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             tfocrn=0.59553192892551199,
             m_tf_coil_superconductor=5802.5700395134345,
             m_tf_coil_copper=58744.465423173802,
-            whtcon=0,
+            m_tf_coil_conductor=0,
             m_tf_coil_wp_turn_insulation=0,
             f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
             dcond=np.array(
@@ -1083,7 +1083,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoil_variables, "m_tf_coil_copper", tfcoilareaandmassesparam.m_tf_coil_copper
     )
 
-    monkeypatch.setattr(tfcoil_variables, "whtcon", tfcoilareaandmassesparam.whtcon)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_conductor",
+        tfcoilareaandmassesparam.m_tf_coil_conductor,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -1273,7 +1277,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.expected_m_tf_coil_copper
     )
 
-    assert tfcoil_variables.whtcon == pytest.approx(
+    assert tfcoil_variables.m_tf_coil_conductor == pytest.approx(
         tfcoilareaandmassesparam.expected_whtcon
     )
 
