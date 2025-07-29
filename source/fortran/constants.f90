@@ -273,7 +273,7 @@ module constants
   real(dp), parameter :: cph2o = 4180.0D0
 
   ! density of copper (kg/m3)
-  real(dp) :: dcopper
+  real(dp) :: den_copper
 
   ! density of aluminium (kg/m3)
   real(dp) :: dalu
@@ -302,7 +302,7 @@ module constants
     !! Initialise module variables
     implicit none
 
-    dcopper = 8900.0D0
+    den_copper = 8900.0D0
     dalu = 2700.0D0
   end subroutine init_constants
 end module constants

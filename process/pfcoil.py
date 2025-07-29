@@ -751,7 +751,7 @@ class PFCoil:
                     )
                 else:
                     pfv.m_pf_coil_conductor[i] = (
-                        volpf * constants.dcopper * (1.0e0 - pfv.f_a_pf_coil_void[i])
+                        volpf * constants.den_copper * (1.0e0 - pfv.f_a_pf_coil_void[i])
                     )
 
                 # (J x B) force on coil
@@ -1304,7 +1304,7 @@ class PFCoil:
                 * 2.0e0
                 * constants.pi
                 * pfv.r_pf_coil_middle[pfv.n_cs_pf_coils - 1]
-                * constants.dcopper
+                * constants.den_copper
             )
 
         if pfv.i_pf_conductor == 0:
