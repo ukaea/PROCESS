@@ -398,7 +398,7 @@ INPUT_VARIABLES = {
     ),
     "dz_vv_lower": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dz_vv_upper": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
-    "dalu": InputVariable(fortran.constants, float, range=(2500.0, 30000.0)),
+    "den_aluminium": InputVariable(fortran.constants, float, range=(2500.0, 30000.0)),
     "den_tf_coil_case": InputVariable(
         fortran.tfcoil_variables, float, range=(1000.0, 100000.0)
     ),

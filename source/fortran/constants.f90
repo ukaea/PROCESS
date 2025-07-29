@@ -276,7 +276,7 @@ module constants
   real(dp) :: den_copper
 
   ! density of aluminium (kg/m3)
-  real(dp) :: dalu
+  real(dp) :: den_aluminium
 
   ! density of water (kg/m3)
   real(dp), parameter :: denh2o = 985.0D0
@@ -303,6 +303,6 @@ module constants
     implicit none
 
     den_copper = 8900.0D0
-    dalu = 2700.0D0
+    den_aluminium = 2700.0D0
   end subroutine init_constants
 end module constants
