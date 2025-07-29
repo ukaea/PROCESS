@@ -2971,7 +2971,7 @@ class Stellarator:
         )
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
-        tfcoil_variables.whtgw = (
+        tfcoil_variables.m_tf_coil_wp_insulation = (
             tfcoil_variables.len_tf_coil
             * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
             * tfcoil_variables.dcondins
@@ -3022,7 +3022,9 @@ class Stellarator:
         )
         # [kg] Total coil mass
         tfcoil_variables.m_tf_coils_total = (
-            tfcoil_variables.whtcas + tfcoil_variables.whtcon + tfcoil_variables.whtgw
+            tfcoil_variables.whtcas
+            + tfcoil_variables.whtcon
+            + tfcoil_variables.m_tf_coil_wp_insulation
         ) * tfcoil_variables.n_tf_coils
         # End of general coil geometry values
         #######################################################################################

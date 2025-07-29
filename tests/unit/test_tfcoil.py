@@ -750,7 +750,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     tfcryoarea: Any = None
 
-    whtgw: Any = None
+    m_tf_coil_wp_insulation: Any = None
 
     tfocrn: Any = None
 
@@ -840,7 +840,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     expected_tfcryoarea: Any = None
 
-    expected_whtgw: Any = None
+    expected_m_tf_coil_wp_insulation: Any = None
 
     expected_tfocrn: Any = None
 
@@ -872,7 +872,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtcas=0,
             tficrn=0,
             tfcryoarea=0,
-            whtgw=0,
+            m_tf_coil_wp_insulation=0,
             tfocrn=0,
             whtconsc=0,
             whtconcu=0,
@@ -922,7 +922,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_whtcas=1034021.9996272125,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6381.2092203414386,
-            expected_whtgw=5909.3507916745702,
+            expected_m_tf_coil_wp_insulation=5909.3507916745702,
             expected_tfocrn=0.59553192892551199,
             expected_whtconsc=5802.5700395134345,
             expected_whtconcu=58744.465423173802,
@@ -944,7 +944,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             whtcas=1034021.9996272125,
             tficrn=0.8197580588957678,
             tfcryoarea=6381.2092203414386,
-            whtgw=5909.3507916745702,
+            m_tf_coil_wp_insulation=5909.3507916745702,
             tfocrn=0.59553192892551199,
             whtconsc=5802.5700395134345,
             whtconcu=58744.465423173802,
@@ -994,7 +994,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             expected_whtcas=1034699.2182961091,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6385.0231118485681,
-            expected_whtgw=5912.8826650262808,
+            expected_m_tf_coil_wp_insulation=5912.8826650262808,
             expected_tfocrn=0.59553192892551199,
             expected_whtconsc=5806.038092640837,
             expected_whtconcu=58779.575542593491,
@@ -1063,7 +1063,11 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
     )
 
-    monkeypatch.setattr(tfcoil_variables, "whtgw", tfcoilareaandmassesparam.whtgw)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_wp_insulation",
+        tfcoilareaandmassesparam.m_tf_coil_wp_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tfocrn", tfcoilareaandmassesparam.tfocrn)
 
@@ -1235,8 +1239,8 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.expected_tfcryoarea
     )
 
-    assert tfcoil_variables.whtgw == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtgw
+    assert tfcoil_variables.m_tf_coil_wp_insulation == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_wp_insulation
     )
 
     assert tfcoil_variables.tfocrn == pytest.approx(
