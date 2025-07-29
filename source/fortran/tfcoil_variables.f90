@@ -681,7 +681,7 @@ module tfcoil_variables
   real(dp) :: vtfskv
   !! voltage across a TF coil during quench (kV)
 
-  real(dp) :: whtcas
+  real(dp) :: m_tf_coil_case
   !! mass per coil of external case (kg)
 
   real(dp) :: whtcon
