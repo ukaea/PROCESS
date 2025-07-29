@@ -1753,13 +1753,10 @@ class Build:
             # SC TF coil thickness defined using its maximum (diagonal)
             if tfcoil_variables.i_tf_sup == 1:
                 build_variables.dr_tf_inboard = (
-                    build_variables.r_tf_inboard_in
-                    + tfcoil_variables.dr_tf_wp_with_insulation
+                    tfcoil_variables.dr_tf_wp_with_insulation
                     + tfcoil_variables.dr_tf_plasma_case
                     + tfcoil_variables.dr_tf_nose_case
-                ) / np.cos(
-                    np.pi / tfcoil_variables.n_tf_coils
-                ) - build_variables.r_tf_inboard_in
+                )
 
             # Rounded resistive TF geometry
             else:
@@ -1784,9 +1781,7 @@ class Build:
         if not any(numerics.ixc[0 : numerics.nvar] == 140):
             # SC magnets
             if tfcoil_variables.i_tf_sup == 1:
-                tfcoil_variables.dr_tf_wp_with_insulation = (
-                    np.cos(np.pi / tfcoil_variables.n_tf_coils)
-                    * build_variables.r_tf_inboard_out
+                tfcoil_variables.dr_tf_wp_with_insulation = (build_variables.r_tf_inboard_out
                     - build_variables.r_tf_inboard_in
                     - tfcoil_variables.dr_tf_plasma_case
                     - tfcoil_variables.dr_tf_nose_case
