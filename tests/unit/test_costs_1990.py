@@ -1964,7 +1964,9 @@ def test_acc2221(acc2221param, monkeypatch, costs):
 
     monkeypatch.setattr(structure_variables, "aintmass", acc2221param.aintmass)
 
-    monkeypatch.setattr(tfcoil_variables, "m_tf_coil_copper", acc2221param.m_tf_coil_copper)
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coil_copper", acc2221param.m_tf_coil_copper
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

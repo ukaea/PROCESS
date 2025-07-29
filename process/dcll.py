@@ -660,7 +660,9 @@ class DCLL(BlanketLibrary):
         dcll_module.wht_cer = fwbs_variables.den_ceramic * dcll_module.vol_fci
         # Back Wall
         dcll_module.wht_bw_stl = (
-            fwbs_variables.den_steel * dcll_module.f_vol_stl_back_wall * dcll_module.vol_bw
+            fwbs_variables.den_steel
+            * dcll_module.f_vol_stl_back_wall
+            * dcll_module.vol_bw
         )
         dcll_module.wht_bw_cool = (
             fwbs_variables.den_blkt_coolant

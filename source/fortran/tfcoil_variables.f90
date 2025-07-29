@@ -696,7 +696,7 @@ module tfcoil_variables
   !! Aluminium mass in TF coil conductor (kg/coil).
   !! For `itart=1`, coil is return limb plus centrepost/n_tf_coils
 
-  real(dp) :: whtconin
+  real(dp) :: m_tf_coil_wp_turn_insulation
   !! conduit insulation mass in TF coil conductor (kg/coil)
 
   real(dp) :: m_tf_coil_superconductor

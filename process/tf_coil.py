@@ -1523,8 +1523,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Conduit insulation mass per coil (kg)",
-            "(whtconin)",
-            tfcoil_variables.whtconin,
+            "(m_tf_coil_wp_turn_insulation)",
+            tfcoil_variables.m_tf_coil_wp_turn_insulation,
             "OP ",
         )
         if tfcoil_variables.i_tf_sup == 1:
@@ -3077,7 +3077,7 @@ class TFCoil:
 
             # Conduit insulation mass [kg]
             # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
-            tfcoil_variables.whtconin = (
+            tfcoil_variables.m_tf_coil_wp_turn_insulation = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_coil_wp_turn_insulation
                 * tfcoil_variables.den_tf_wp_turn_insulation
@@ -3088,7 +3088,7 @@ class TFCoil:
                 tfcoil_variables.m_tf_coil_superconductor
                 + tfcoil_variables.m_tf_coil_copper
                 + tfcoil_variables.m_tf_wp_steel_conduit
-                + tfcoil_variables.whtconin
+                + tfcoil_variables.m_tf_coil_wp_turn_insulation
             )
             # ---------------------------------
 
@@ -3248,7 +3248,7 @@ class TFCoil:
                     )
 
             # Turn insulation mass [kg]
-            tfcoil_variables.whtconin = (
+            tfcoil_variables.m_tf_coil_wp_turn_insulation = (
                 tfcoil_variables.den_tf_wp_turn_insulation
                 * vol_ins
                 / tfcoil_variables.n_tf_coils
@@ -3266,7 +3266,7 @@ class TFCoil:
                 tfcoil_variables.m_tf_coil_case
                 + tfcoil_variables.m_tf_coil_copper
                 + tfcoil_variables.whtconal
-                + tfcoil_variables.whtconin
+                + tfcoil_variables.m_tf_coil_wp_turn_insulation
                 + tfcoil_variables.m_tf_coil_wp_insulation
             ) * tfcoil_variables.n_tf_coils
 
@@ -5614,7 +5614,7 @@ def init_tfcoil_variables():
     tfv.whtcon = 0.0
     tfv.m_tf_coil_copper = 0.0
     tfv.whtconal = 0.0
-    tfv.whtconin = 0.0
+    tfv.m_tf_coil_wp_turn_insulation = 0.0
     tfv.m_tf_coil_superconductor = 0.0
     tfv.m_tf_turn_steel = 0.0
     tfv.m_tf_coil_wp_insulation = 0.0

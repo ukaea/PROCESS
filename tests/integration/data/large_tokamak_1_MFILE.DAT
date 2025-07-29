@@ -726,7 +726,7 @@
  Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.6964E+03 OP 
  Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.8073E+04 OP 
  Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.9310E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3777E+03 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3777E+03 OP 
  Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.5446E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      7.1402E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.1424E+07 OP 
