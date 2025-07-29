@@ -1361,8 +1361,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Steel conduit mass per coil (kg)",
-            "(m_tf_turn_steel_conduit)",
-            tfcoil_variables.m_tf_turn_steel_conduit,
+            "(m_tf_wp_steel_conduit)",
+            tfcoil_variables.m_tf_wp_steel_conduit,
             "OP ",
         )
         po.ovarre(
@@ -3043,7 +3043,7 @@ class TFCoil:
                 tfcoil_variables.m_tf_coil_copper = 0.0e0
 
             # Steel conduit (sheath) mass [kg]
-            tfcoil_variables.m_tf_turn_steel_conduit = (
+            tfcoil_variables.m_tf_wp_steel_conduit = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_steel
@@ -3062,7 +3062,7 @@ class TFCoil:
             tfcoil_variables.whtcon = (
                 tfcoil_variables.m_tf_coil_superconductor
                 + tfcoil_variables.m_tf_coil_copper
-                + tfcoil_variables.m_tf_turn_steel_conduit
+                + tfcoil_variables.m_tf_wp_steel_conduit
                 + tfcoil_variables.whtconin
             )
             # ---------------------------------
