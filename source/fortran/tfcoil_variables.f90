@@ -699,7 +699,7 @@ module tfcoil_variables
   real(dp) :: whtconin
   !! conduit insulation mass in TF coil conductor (kg/coil)
 
-  real(dp) :: whtconsc
+  real(dp) :: m_tf_coil_superconductor
   !! superconductor mass in TF coil cable (kg/coil)
 
   real(dp) :: m_tf_turn_steel_conduit
