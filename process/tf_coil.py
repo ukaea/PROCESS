@@ -3005,7 +3005,7 @@ class TFCoil:
                     sctfcoil_module.a_tf_wp_with_insulation
                     - sctfcoil_module.a_tf_wp_no_insulation
                 )
-                * tfcoil_variables.dcondins
+                * tfcoil_variables.den_tf_wp_turn_insulation
             )
 
             # The length of the vertical section is that of the first (inboard) segment
@@ -3080,7 +3080,7 @@ class TFCoil:
             tfcoil_variables.whtconin = (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_coil_wp_turn_insulation
-                * tfcoil_variables.dcondins
+                * tfcoil_variables.den_tf_wp_turn_insulation
             )
 
             # Total conductor mass [kg]
@@ -3206,13 +3206,13 @@ class TFCoil:
                     # Weight of all the TF legs
                     tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                         constants.dcopper * vol_cond_leg
-                        + tfcoil_variables.dcondins * (vol_ins_leg + vol_gr_ins_leg)
+                        + tfcoil_variables.den_tf_wp_turn_insulation * (vol_ins_leg + vol_gr_ins_leg)
                     )
 
                     # CP weight
                     tfcoil_variables.whtcp = (
                         constants.dcopper * tfcoil_variables.vol_cond_cp
-                        + tfcoil_variables.dcondins
+                        + tfcoil_variables.den_tf_wp_turn_insulation
                         * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
                         + sctfcoil_module.vol_case_cp * fwbs_variables.denstl
                     )
@@ -3234,25 +3234,25 @@ class TFCoil:
                     # Weight of all the TF legs
                     tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
                         constants.dalu * vol_cond_leg
-                        + tfcoil_variables.dcondins * (vol_ins_leg + vol_gr_ins_leg)
+                        + tfcoil_variables.den_tf_wp_turn_insulation * (vol_ins_leg + vol_gr_ins_leg)
                     )
 
                     # CP weight
                     tfcoil_variables.whtcp = (
                         constants.dalu * tfcoil_variables.vol_cond_cp
-                        + tfcoil_variables.dcondins
+                        + tfcoil_variables.den_tf_wp_turn_insulation
                         * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
                         + sctfcoil_module.vol_case_cp * fwbs_variables.denstl
                     )
 
             # Turn insulation mass [kg]
             tfcoil_variables.whtconin = (
-                tfcoil_variables.dcondins * vol_ins / tfcoil_variables.n_tf_coils
+                tfcoil_variables.den_tf_wp_turn_insulation * vol_ins / tfcoil_variables.n_tf_coils
             )
 
             # Ground wall insulation layer weight
             tfcoil_variables.m_tf_coil_wp_insulation = (
-                tfcoil_variables.dcondins * vol_gr_ins / tfcoil_variables.n_tf_coils
+                tfcoil_variables.den_tf_wp_turn_insulation * vol_gr_ins / tfcoil_variables.n_tf_coils
             )
 
             # Total weight
@@ -5467,7 +5467,7 @@ def init_tfcoil_variables():
     tfv.c_tf_turn_max = 9.0e4
     tfv.dcase = 8000.0
     tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
-    tfv.dcondins = 1800.0
+    tfv.den_tf_wp_turn_insulation = 1800.0
     tfv.dia_tf_turn_coolant_channel = 0.005
     tfv.e_tf_magnetic_stored_total_gj = 0.0
     tfv.b_crit_upper_nbti = 14.86

@@ -153,7 +153,7 @@ module tfcoil_variables
   real(dp), dimension(9) :: dcond
   !! density of superconductor type given by i_tf_sc_mat/i_cs_superconductor/i_pf_superconductor (kg/m3)
 
-  real(dp) :: dcondins
+  real(dp) :: den_tf_wp_turn_insulation
   !! density of conduit + ground-wall insulation (kg/m3)
 
   real(dp) :: dia_tf_turn_coolant_channel
