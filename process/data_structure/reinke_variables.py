@@ -3,7 +3,7 @@ impvardiv: int = None
 
 lhat: float = None
 """Connection length factor L|| = lhat qstar R for Reinke criterion, default value from
-   Post et al. 1995 J. Nucl. Mat.  220-2 1014
+Post et al. 1995 J. Nucl. Mat.  220-2 1014
 """
 
 fzmin: float = None
