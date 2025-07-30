@@ -7,17 +7,17 @@ Below is a list of publications using or citing PROCESS by year:
 
 ## 2025
 
-[Design space and architecture study of Tokamak-based Hybrid Fusion–Fission Power Plants](https://www.sciencedirect.com/science/article/pii/S0920379625000213)   
-S. Ha   
-Fusion Engineering & Design 212 (2025) 114817   
+[Definition of an EU-DEMO design point robust to epistemic plasma physics uncertainties](https://iopscience.iop.org/article/10.1088/1741-4326/ada6d9)   
+M. Coleman, H. Zohm, C. Bourdelle, F. Maviglia, A. Pearce, M. Siccinio, A. Spagnuolo, S. Wiesen   
+Nuclear Fusion 65 (2025) 036039   
 
 [Hybrid hydrogen-electricity production using Spherical Tokamaks: a cost-driver sensitivity study and techno-economic analysis](https://iopscience.iop.org/article/10.1088/1741-4326/adaa01)   
 J. Hidalgo-Salaverri, T. Griffiths, Z. Xuereb Conti, P. Cano-Megias, R. Chacartegui, M. Bluck, J. Ayllon-Guerola, A. Mancini, M. Garcia-Munoz, E. Viezzer   
-Nuclear Fusion (2025) in press   
+Nuclear Fusion 65 (2025) 036027   
 
-[Definition of an EU-DEMO design point robust to epistemic plasma physics uncertainties](https://iopscience.iop.org/article/10.1088/1741-4326/ada6d9)   
-M. Coleman, H. Zohm, C. Bourdelle, F. Maviglia, A. Pearce, M. Siccinio, A. Spagnuolo, S. Wiesen   
-Nuclear Fusion (2025) in press 
+[Design space and architecture study of Tokamak-based Hybrid Fusion–Fission Power Plants](https://www.sciencedirect.com/science/article/pii/S0920379625000213)   
+S. Ha   
+Fusion Engineering & Design 212 (2025) 114817   
 
 ## 2024
 
