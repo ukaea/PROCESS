@@ -5,11 +5,10 @@ dtstor: float = None
 """maximum allowable temperature change in stainless steel thermal storage block (K) (`istore=3`)"""
 
 istore: int = None
-""" Switch for thermal storage method:
-
-   - =1 option 1 of Electrowatt report, AEA FUS 205
-   - =2 option 2 of Electrowatt report, AEA FUS 205
-   - =3 stainless steel block
+"""Switch for thermal storage method:
+- =1 option 1 of Electrowatt report, AEA FUS 205
+- =2 option 2 of Electrowatt report, AEA FUS 205
+- =3 stainless steel block
 """
 
 itcycl: int = None
