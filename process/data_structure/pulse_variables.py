@@ -19,10 +19,9 @@ itcycl: int = None
 """
 
 i_pulsed_plant: int = None
-""" Switch for reactor model:
-
-   - =0 continuous operation
-   - =1 pulsed operation
+"""Switch for reactor model:
+- =0 continuous operation
+- =1 pulsed operation
 """
 
 
