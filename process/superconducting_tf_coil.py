@@ -2457,7 +2457,7 @@ class SuperconductingTFCoil(TFCoil):
                 error_handling.fdiags[1] = dx_tf_turn_cable_space
                 error_handling.report_error(102)
 
-                sctfcoil_module.radius_tf_turn_cable_space_corners = 0.0e0
+                radius_tf_turn_cable_space_corners = 0.0e0
 
                 a_tf_turn_cable_space_no_void = (
                     dr_tf_turn_cable_space * dx_tf_turn_cable_space
@@ -2927,3 +2927,4 @@ def init_sctfcoil_module():
     sctfcoil_module.time2 = 0.0
     sctfcoil_module.tau2 = 0.0
     sctfcoil_module.e_tf_magnetic_stored_total = 0.0
+    sctfcoil_module.radius_tf_turn_cable_space_corners = 0.0
