@@ -16,9 +16,8 @@ fzactual: float = None
 
 reinke_mode: int = None
 """Switch for Reinke criterion H/I mode:
-
-   - =0 H-mode
-   - =1 I-mode
+- =0 H-mode
+- =1 I-mode
 """
 
 
