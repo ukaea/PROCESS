@@ -11,7 +11,7 @@ fzmin: float = None
 
 fzactual: float = None
 """Actual impurity fraction of divertor impurity (impvardiv) in the SoL (taking
-   impurity_enrichment into account) (`iteration variable 148`)
+impurity_enrichment into account) (`iteration variable 148`)
 """
 
 reinke_mode: int = None
