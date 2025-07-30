@@ -115,6 +115,7 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
     - \left(\pi \times R_{\text{TF,inboard-in}}^2\right)
     $$
 
+
 3. The toroidal width at the outboard edge of the inboard TF coil leg is:
 
     $$
@@ -147,6 +148,16 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
     $$
     \mathrm{d}R_{\text{TF,plasma-case}} \equiv \mathrm{d}R_{\text{TF,plasma-case}}
     $$
+
+    It is possible that if the value of $\mathrm{d}R_{\text{TF,plasma-case}}$ is too small then the WP will clash with the corners of the casing.
+
+    To prevent this the minimum required value of $\mathrm{d}R_{\text{TF,plasma-case}}$ to prevent collisions is defined as:
+
+    $$
+    \mathrm{d}R_{\text{TF,plasma-case}} \ge \left(R_{\text{TF,inboard-in}}+\mathrm{d}R_{\text{TF,inboard}}\right) \times \left(1 -\cos\left(\frac{\pi}{N_{TF}}\right)\right)
+    $$
+
+    For self-consistency `PROCESS` will force $\mathrm{d}R_{\text{TF,plasma-case}}$ to always be equal to or greater than this value.
 
 7. The toroidal thickness of the side case is set depending on the `tfc_sidewall_is_fraction` switch value:
 
