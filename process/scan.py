@@ -479,6 +479,12 @@ class Scan:
                 con1[i],
             ])
             process_output.ovarre(
+                constants.mfile,
+                f"{name} constraint value",
+                f"(val_eq_con{numerics.icc[i]:03d})",
+                con2[i],
+            )
+            process_output.ovarre(
                 constants.MFILE,
                 f"{name:<33} normalised residue",
                 f"(eq_con{numerics.icc[i]:03d})",
@@ -534,6 +540,7 @@ class Scan:
                     f"{con2[i]} {lab[i]}",
                     f"{numerics.rcm[i]}",
                 ])
+
                 process_output.ovarre(
                     constants.MFILE,
                     f"{name} normalised residue",
