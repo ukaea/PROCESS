@@ -5879,7 +5879,7 @@ class Physics:
         )
 
         # Plot table of al the H-factor scalings and coparison values
-        self.output_confinement_comparison(istell=stellarator_variables.istell)
+        # self.output_confinement_comparison(istell=stellarator_variables.istell)
 
         if stellarator_variables.istell == 0:
             # Issues 363 Output dimensionless plasma parameters MDK
