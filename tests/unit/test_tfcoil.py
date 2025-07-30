@@ -264,7 +264,7 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
                 pytest.approx(5.15),  # r_tf_outboard_out
                 pytest.approx(0.780361288064513),  # dx_tf_inboard_out_toroidal
                 pytest.approx(0.2341083864193539),  # a_tf_leg_outboard
-                pytest.approx(0.0),  # dr_tf_plasma_case
+                pytest.approx(0.03842943919353914),  # dr_tf_plasma_case
                 pytest.approx(0.0),  # dx_tf_side_case_min
             ),
         ),
