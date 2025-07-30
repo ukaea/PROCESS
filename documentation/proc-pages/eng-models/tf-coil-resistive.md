@@ -107,17 +107,5 @@ different ways:
 
 --------------
 
-## Inboard peak field radius
-
-The radius of the peak field on the inboard leg is given as such:
-
-$$
-R_{\text{B,peak}} = R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
-$$
-
-This is done as the coil symmetry is cylindrical. 
-
-----------------
-
 
 ## Resistive TF coil class | `ResistiveTFCoil(TFCoil)`

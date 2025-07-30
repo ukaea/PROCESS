@@ -175,7 +175,12 @@ This function calculates the required currents in the TF coils given a required 
     \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
     $$
 
-    The value of $R_{\text{TF,peak}}$ depends on wether the coil is [resistive](./tf-coil-resistive.md#inboard-peak-field-radius) or [superconducting](./tf-coil-superconducting.md#inboard-peak-field-radius). 
+    The value of $R_{\text{TF,peak}}$ is specified as:
+
+    $$
+    R_{\text{TF,peak}} = 
+    \\ R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
+    $$
 
 2. The total current flowing in the TF coil set is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`bt`) and the plasma geometric major radius $R_0$ (`rmajor`):
 

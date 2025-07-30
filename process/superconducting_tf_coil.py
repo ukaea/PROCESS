@@ -76,8 +76,6 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Radial position of peak toroidal field [m]
-        # SC : conservative assumption as the radius is calculated with the
-        # WP radial distances defined at the TF middle (cos)
 
         tfcoil_variables.r_b_tf_inboard_peak = (
             build_variables.r_tf_inboard_out

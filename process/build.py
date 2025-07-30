@@ -1750,21 +1750,11 @@ class Build:
         # Issue #514 Radial dimensions of inboard leg
         # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
         if any(numerics.ixc[0 : numerics.nvar] == 140):
-            # SC TF coil thickness defined using its maximum (diagonal)
-            if tfcoil_variables.i_tf_sup == 1:
-                build_variables.dr_tf_inboard = (
-                    tfcoil_variables.dr_tf_wp_with_insulation
-                    + tfcoil_variables.dr_tf_plasma_case
-                    + tfcoil_variables.dr_tf_nose_case
-                )
-
-            # Rounded resistive TF geometry
-            else:
-                build_variables.dr_tf_inboard = (
-                    tfcoil_variables.dr_tf_wp_with_insulation
-                    + tfcoil_variables.dr_tf_plasma_case
-                    + tfcoil_variables.dr_tf_nose_case
-                )
+            build_variables.dr_tf_inboard = (
+                tfcoil_variables.dr_tf_wp_with_insulation
+                + tfcoil_variables.dr_tf_plasma_case
+                + tfcoil_variables.dr_tf_nose_case
+            )
 
         # Radial build to tfcoil middle [m]
         build_variables.r_tf_inboard_mid = (
@@ -1779,22 +1769,11 @@ class Build:
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
         if not any(numerics.ixc[0 : numerics.nvar] == 140):
-            # SC magnets
-            if tfcoil_variables.i_tf_sup == 1:
-                tfcoil_variables.dr_tf_wp_with_insulation = (
-                    build_variables.r_tf_inboard_out
-                    - build_variables.r_tf_inboard_in
-                    - tfcoil_variables.dr_tf_plasma_case
-                    - tfcoil_variables.dr_tf_nose_case
-                )
-
-            # Resistive magnets
-            else:
-                tfcoil_variables.dr_tf_wp_with_insulation = (
-                    build_variables.dr_tf_inboard
-                    - tfcoil_variables.dr_tf_plasma_case
-                    - tfcoil_variables.dr_tf_nose_case
-                )
+            tfcoil_variables.dr_tf_wp_with_insulation = (
+                build_variables.dr_tf_inboard
+                - tfcoil_variables.dr_tf_plasma_case
+                - tfcoil_variables.dr_tf_nose_case
+            )
 
         # Radius of the centrepost at the top of the machine
         if physics_variables.itart == 1 and tfcoil_variables.i_tf_sup != 1:

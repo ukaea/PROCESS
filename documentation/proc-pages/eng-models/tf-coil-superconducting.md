@@ -28,7 +28,7 @@ The TF coils are assumed to be supporting each other against the net centering f
 </p>
 
 $$ 
-\Delta R_\mathrm{TF} = \frac{R_\mathrm{TF}^\mathrm{in} + \Delta R_\mathrm{WP} + \Delta R_\mathrm{case}^\mathrm{out} + \Delta R_\mathrm{case}^\mathrm{in} }{\cos\left(\frac{\pi}{N_\mathrm{TF}}\right)} - R_\mathrm{TF}^\mathrm{in}
+\Delta R_\mathrm{TF} = R_\mathrm{TF}^\mathrm{in} + \Delta R_\mathrm{WP} + \Delta R_\mathrm{case}^\mathrm{out} + \Delta R_\mathrm{case}^\mathrm{in} - R_\mathrm{TF}^\mathrm{in}
 $$
 
 <p style='text-align: justify;'> 
@@ -36,7 +36,7 @@ $$
 </p>
 
 $$  
-\Delta R_\mathrm{WP} = \cos\left(\frac{\pi}{N_\mathrm{TF}}\right) \left( R_\mathrm{TF}^\mathrm{in} + \Delta R_\mathrm{TF} \right) - R_\mathrm{TF}^\mathrm{in} - \Delta R_\mathrm{case}^\mathrm{out} - \Delta R_\mathrm{case}^\mathrm{in}
+\Delta R_\mathrm{WP} = \left( R_\mathrm{TF}^\mathrm{in} + \Delta R_\mathrm{TF} \right) - R_\mathrm{TF}^\mathrm{in} - \Delta R_\mathrm{case}^\mathrm{out} - \Delta R_\mathrm{case}^\mathrm{in}
 $$
 
 <p style='text-align: justify;'> 
@@ -251,18 +251,6 @@ can be set using `tmargmin` together with constraint equation 36 and iteration v
 
 -----------------------
 
-## Inboard peak field radius
-
-The radius of the peak field on the inboard leg is given as such:
-
-$$
-R_{\text{B,peak}} = \cos{(\phi_{\text{TF,half}})} \\
-\times R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
-$$
-
-This is done as a conservative assumption as the radius is calculated with the WP radial distances defined at the TF middle.
-
------------------
 
 ## Supercoducting TF coil class | `SuperconductingTFCoil(TFCoil)`
 
