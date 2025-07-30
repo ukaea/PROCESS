@@ -5,7 +5,7 @@
 # Get the location of the GFortran Libraries so they can
 # be included with the Python module
 # TODO: Ideally we do not want to do this (likely be removed
-# when f90wrap is dropped)
+# when f2py is dropped)
 
 MACRO(GET_GFORTRANLIBS)
     MESSAGE(STATUS "[gfortran libraries]")

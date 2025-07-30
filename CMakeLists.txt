@@ -23,15 +23,12 @@ find_package(Python3 3.10 COMPONENTS Interpreter Development)
 
 # Read in external CMake scripts for preprocessing, f2py, ford, etc.
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/pip.cmake)
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/process_preprocessing.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/preprocess.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/f2py.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/ford.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/gfortranlibs.cmake)
 
-# Retrieve and set information for preprocessor
-FindPreprocessingVars()
-
+ADD_DEFINITIONS(-DINSTALLDIR="${CMAKE_SOURCE_DIR}")
 SET(CMAKE_Fortran_FLAGS "-cpp -ffree-line-length-none -fPIC -ftest-coverage -fprofile-arcs -finit-local-zero")
 
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
