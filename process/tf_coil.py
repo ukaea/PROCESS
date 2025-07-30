@@ -446,6 +446,10 @@ class TFCoil:
                 * (1 - (np.cos(np.pi / tfcoil_variables.n_tf_coils)))
             )
 
+        # Warn that the value has be forced to a minimum value at some point in
+        # iteration
+        error_handling.report_error(290)
+
         # ======================================================================
 
         # Case thickness of side wall [m]
