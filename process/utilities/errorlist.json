@@ -8,7 +8,7 @@
   "comment2": [
     "Increment n_errortypes if an error is added to this list"
   ],
-  "n_errortypes": 289,
+  "n_errortypes": 290,
   "errors": [
     {
       "no": 1,
@@ -1454,6 +1454,11 @@
       "no": 289,
       "level": 0,
       "message": "REMOVED"
-    }
+    },
+    {
+      "no": 290,
+      "level": 2,
+      "message": "[tfcoil]: dr_tf_plasma_case to small to accommodate the WP, forced to minimum value"
+    },
   ]
 }

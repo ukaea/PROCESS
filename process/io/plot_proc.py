@@ -5140,6 +5140,13 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             linewidth=0.6,
             alpha=0.5,
         )
+        axis.axvline(
+            x=r_tf_inboard_out,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
 
         # Add info about the steel casing surrounding the WP
         textstr_casing = (

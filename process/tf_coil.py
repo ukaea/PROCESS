@@ -424,11 +424,33 @@ class TFCoil:
         # Area of rectangular cross-section TF outboard leg [m^2]
         a_tf_leg_outboard = dx_tf_inboard_out_toroidal * dr_tf_outboard
 
+        # ======================================================================
         # Plasma facing front case thickness [m]
+
         if i_f_dr_tf_plasma_case:
+            # Set as fraction of the coil radial thickness
             dr_tf_plasma_case = f_dr_tf_plasma_case * dr_tf_inboard
         else:
+            # Set directly as input
             dr_tf_plasma_case = tfcoil_variables.dr_tf_plasma_case
+
+        # This ensures that there is sufficent radial space for the WP to not
+        # clip the edges of the plasma-facing front case
+
+        if dr_tf_plasma_case < (r_tf_inboard_in + dr_tf_inboard) * (
+            1 - (np.cos(np.pi / tfcoil_variables.n_tf_coils))
+        ):
+            dr_tf_plasma_case = (
+                1.0
+                * (r_tf_inboard_in + dr_tf_inboard)
+                * (1 - (np.cos(np.pi / tfcoil_variables.n_tf_coils)))
+            )
+
+        # Warn that the value has be forced to a minimum value at some point in
+        # iteration
+        error_handling.report_error(290)
+
+        # ======================================================================
 
         # Case thickness of side wall [m]
         if tfc_sidewall_is_fraction:

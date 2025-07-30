@@ -115,6 +115,7 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
     - \left(\pi \times R_{\text{TF,inboard-in}}^2\right)
     $$
 
+
 3. The toroidal width at the outboard edge of the inboard TF coil leg is:
 
     $$
@@ -148,6 +149,16 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
     \mathrm{d}R_{\text{TF,plasma-case}} \equiv \mathrm{d}R_{\text{TF,plasma-case}}
     $$
 
+    It is possible that if the value of $\mathrm{d}R_{\text{TF,plasma-case}}$ is too small then the WP will clash with the corners of the casing.
+
+    To prevent this the minimum required value of $\mathrm{d}R_{\text{TF,plasma-case}}$ to prevent collisions is defined as:
+
+    $$
+    \mathrm{d}R_{\text{TF,plasma-case}} \ge \left(R_{\text{TF,inboard-in}}+\mathrm{d}R_{\text{TF,inboard}}\right) \times \left(1 -\cos\left(\frac{\pi}{N_{TF}}\right)\right)
+    $$
+
+    For self-consistency `PROCESS` will force $\mathrm{d}R_{\text{TF,plasma-case}}$ to always be equal to or greater than this value.
+
 7. The toroidal thickness of the side case is set depending on the `tfc_sidewall_is_fraction` switch value:
 
     If the switch is `True` then the value of the minimum side case thickness is set as a fraction:
@@ -175,7 +186,12 @@ This function calculates the required currents in the TF coils given a required 
     \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
     $$
 
-    The value of $R_{\text{TF,peak}}$ depends on wether the coil is [resistive](./tf-coil-resistive.md#inboard-peak-field-radius) or [superconducting](./tf-coil-superconducting.md#inboard-peak-field-radius). 
+    The value of $R_{\text{TF,peak}}$ is specified as:
+
+    $$
+    R_{\text{TF,peak}} = 
+    \\ R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
+    $$
 
 2. The total current flowing in the TF coil set is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`bt`) and the plasma geometric major radius $R_0$ (`rmajor`):
 
