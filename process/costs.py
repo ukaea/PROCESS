@@ -5,6 +5,7 @@ from process.data_structure import (
     cost_variables,
     divertor_variables,
     structure_variables,
+    times_variables,
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
@@ -21,7 +22,6 @@ from process.fortran import (
     physics_variables,
     pulse_variables,
     tfcoil_variables,
-    times_variables,
 )
 
 

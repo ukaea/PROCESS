@@ -4,7 +4,12 @@ import math
 import numpy as np
 
 from process import process_output as po
-from process.data_structure import cost_variables, power_variables, structure_variables
+from process.data_structure import (
+    cost_variables,
+    power_variables,
+    structure_variables,
+    times_variables,
+)
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -20,7 +25,6 @@ from process.fortran import (
     physics_variables,
     primary_pumping_variables,
     tfcoil_variables,
-    times_variables,
 )
 
 logger = logging.getLogger(__name__)
