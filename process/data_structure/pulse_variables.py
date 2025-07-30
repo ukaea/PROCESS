@@ -13,10 +13,9 @@ istore: int = None
 
 itcycl: int = None
 """Switch for first wall axial stress model:
-
-   - =1 total axial constraint, no bending
-   - =2 no axial constraint, no bending
-   - =3 no axial constraint, bending
+- =1 total axial constraint, no bending
+- =2 no axial constraint, no bending
+- =3 no axial constraint, bending
 """
 
 i_pulsed_plant: int = None
