@@ -10409,6 +10409,111 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     inset_ax.axis("off")
 
 
+def plot_constraint_equations(axis, m_file_data, scan):
+    """Plot the constaint equations for a given figure."""
+
+    n_constraints = int(m_file_data.data["neqns+nineqns"].get_scan(scan))
+
+    y_labels = []
+    y_pos = []
+    n_plot = 0
+
+    # Build a mapping from itvar index to its name (description)
+    con_names = {}
+    for var in m_file_data.data:
+        if var.startswith("eq_con"):
+            idx = int(var[6:])  # e.g. "itvar001" -> 1
+            con_names[idx] = m_file_data.data[var].var_description
+    print("Constraint names:", con_names)
+    for n_plot, n in enumerate(range(1, n_constraints + 1)):
+        itvar_final = m_file_data.data[f"itvar{n:03d}"].get_scan(scan)
+        itvar_upper = m_file_data.data[f"boundu{n:03d}"].get_scan(scan)
+        itvar_lower = m_file_data.data[f"boundl{n:03d}"].get_scan(scan)
+
+        # Use the variable name if available, else fallback to "itvarXXX"
+        var_label = con_names.get(n, f"eq_con{n:03d}")
+
+        # Plot the final value as a vertical marker, normalised to upper bound
+        norm_final = (
+            (itvar_final - itvar_lower) / (itvar_upper - itvar_lower)
+            if itvar_final != itvar_lower
+            else 0
+        )
+        if np.isclose(norm_final, 1.0, atol=1e-6):
+            # Plot the lower bound at x=0
+            axis.plot(
+                1,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                label="Lower Bound" if n_plot == 0 else "",
+            )
+        elif np.isclose(norm_final, 0.0, atol=1e-6):
+            # Plot the upper bound at x=1
+            axis.plot(
+                0,
+                n_plot,
+                "s",
+                color="black",
+                markersize=8,
+                label="Upper Bound" if n_plot == 0 else "",
+            )
+        # Draw a horizontal bar from 0 to norm_final at y=n_plot
+        else:
+            axis.barh(
+                n_plot,
+                norm_final,
+                left=0,
+                height=0.8,
+                color="blue",
+                alpha=0.7,
+                label="Final Value" if n_plot == 0 else "",
+            )
+        # Plot the value as a number at x = 0.5
+        axis.text(
+            0.5,
+            n_plot,
+            f"{itvar_final:.8g}",
+            va="center",
+            ha="center",
+            fontsize=8,
+            color="black",
+        )
+        # Plot the value of the upper bound to the right of x=1
+        axis.text(
+            1.05,
+            n_plot,
+            f"{itvar_upper:.3g}",
+            va="center",
+            ha="left",
+            fontsize=8,
+            color="gray",
+        )
+        # Plot the value of the lower bound to the left of x=0
+        axis.text(
+            -0.05,
+            n_plot,
+            f"{itvar_lower:.3g}",
+            va="center",
+            ha="right",
+            fontsize=8,
+            color="gray",
+        )
+        y_labels.append(var_label)
+        y_pos.append(n_plot)
+
+    # Plot vertical lines at x=0 and x=1 to indicate bounds
+    axis.axvline(0, color="darkgreen", linewidth=2, zorder=0)
+    axis.axvline(1, color="red", linewidth=2, zorder=0)
+    axis.set_yticks(y_pos)
+    axis.set_yticklabels(y_labels)
+    axis.set_xticks([])
+    axis.set_xticklabels([])
+    axis.set_xlim(-0.2, 1.2)  # Normalised bounds
+    axis.set_title("Iteration Variables Final Values and Bounds")
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10493,8 +10598,11 @@ def main_plot(
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
     plot_7 = fig2.add_subplot(121)
-    plot_7.set_position([0.175, 0.1, 0.35, 0.8])  # Move plot slightly to the right
+    plot_7.set_position([0.175, 0.1, 0.3, 0.8])  # Move plot slightly to the right
     plot_iteration_variables(plot_7, m_file_data, scan)
+    plot_7_5 = fig2.add_subplot(122)
+    plot_7_5.set_position([0.65, 0.1, 0.3, 0.8])  # Move plot slightly to the right
+    plot_constraint_equations(plot_7_5, m_file_data, scan)
 
     # Plot main plasma information
     plot_8 = fig3.add_subplot(111, aspect="equal")
