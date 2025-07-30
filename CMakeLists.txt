@@ -93,7 +93,6 @@ LIST(APPEND PROCESS_SRCS
     impurity_radiation.f90
     pf_power_variables.f90
     dcll.f90
-    neoclassics_module.f90
     blanket_library.f90
     stellarator_variables.f90
     stellarator.f90

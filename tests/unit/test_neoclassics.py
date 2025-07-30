@@ -3,7 +3,8 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.fortran import neoclassics_module, physics_variables
+from process.data_structure import neoclassics_variables
+from process.fortran import physics_variables
 from process.stellarator import Neoclassics
 
 
@@ -992,28 +993,30 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     monkeypatch.setattr(
         physics_variables, "nd_fuel_ions", initneoclassicsparam.nd_fuel_ions
     )
-    monkeypatch.setattr(neoclassics_module, "densities", initneoclassicsparam.densities)
     monkeypatch.setattr(
-        neoclassics_module, "temperatures", initneoclassicsparam.temperatures
+        neoclassics_variables, "densities", initneoclassicsparam.densities
     )
     monkeypatch.setattr(
-        neoclassics_module, "dr_densities", initneoclassicsparam.dr_densities
+        neoclassics_variables, "temperatures", initneoclassicsparam.temperatures
     )
     monkeypatch.setattr(
-        neoclassics_module, "dr_temperatures", initneoclassicsparam.dr_temperatures
+        neoclassics_variables, "dr_densities", initneoclassicsparam.dr_densities
     )
-    monkeypatch.setattr(neoclassics_module, "roots", initneoclassicsparam.roots)
-    monkeypatch.setattr(neoclassics_module, "weights", initneoclassicsparam.weights)
-    monkeypatch.setattr(neoclassics_module, "nu", initneoclassicsparam.nu)
-    monkeypatch.setattr(neoclassics_module, "nu_star", initneoclassicsparam.nu_star)
     monkeypatch.setattr(
-        neoclassics_module, "nu_star_averaged", initneoclassicsparam.nu_star_averaged
+        neoclassics_variables, "dr_temperatures", initneoclassicsparam.dr_temperatures
     )
-    monkeypatch.setattr(neoclassics_module, "vd", initneoclassicsparam.vd)
-    monkeypatch.setattr(neoclassics_module, "iota", initneoclassicsparam.iota)
-    monkeypatch.setattr(neoclassics_module, "q_flux", initneoclassicsparam.q_flux)
-    monkeypatch.setattr(neoclassics_module, "eps_eff", initneoclassicsparam.eps_eff)
-    monkeypatch.setattr(neoclassics_module, "r_eff", initneoclassicsparam.r_eff)
+    monkeypatch.setattr(neoclassics_variables, "roots", initneoclassicsparam.roots)
+    monkeypatch.setattr(neoclassics_variables, "weights", initneoclassicsparam.weights)
+    monkeypatch.setattr(neoclassics_variables, "nu", initneoclassicsparam.nu)
+    monkeypatch.setattr(neoclassics_variables, "nu_star", initneoclassicsparam.nu_star)
+    monkeypatch.setattr(
+        neoclassics_variables, "nu_star_averaged", initneoclassicsparam.nu_star_averaged
+    )
+    monkeypatch.setattr(neoclassics_variables, "vd", initneoclassicsparam.vd)
+    monkeypatch.setattr(neoclassics_variables, "iota", initneoclassicsparam.iota)
+    monkeypatch.setattr(neoclassics_variables, "q_flux", initneoclassicsparam.q_flux)
+    monkeypatch.setattr(neoclassics_variables, "eps_eff", initneoclassicsparam.eps_eff)
+    monkeypatch.setattr(neoclassics_variables, "r_eff", initneoclassicsparam.r_eff)
 
     neoclassics.init_neoclassics(
         r_effin=initneoclassicsparam.r_effin,
@@ -1021,36 +1024,36 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
         iotain=initneoclassicsparam.iotain,
     )
 
-    assert neoclassics_module.densities == pytest.approx(
+    assert neoclassics_variables.densities == pytest.approx(
         initneoclassicsparam.expected_densities, rel=0.001
     )
-    assert neoclassics_module.temperatures == pytest.approx(
+    assert neoclassics_variables.temperatures == pytest.approx(
         initneoclassicsparam.expected_temperatures, rel=0.001
     )
-    assert neoclassics_module.dr_densities == pytest.approx(
+    assert neoclassics_variables.dr_densities == pytest.approx(
         initneoclassicsparam.expected_dr_densities, rel=0.001
     )
-    assert neoclassics_module.dr_temperatures == pytest.approx(
+    assert neoclassics_variables.dr_temperatures == pytest.approx(
         initneoclassicsparam.expected_dr_temperatures, rel=0.001
     )
-    assert neoclassics_module.roots == pytest.approx(
+    assert neoclassics_variables.roots == pytest.approx(
         initneoclassicsparam.expected_roots, rel=0.001
     )
-    assert neoclassics_module.weights == pytest.approx(
+    assert neoclassics_variables.weights == pytest.approx(
         initneoclassicsparam.expected_weights, rel=0.001
     )
-    assert neoclassics_module.nu == pytest.approx(
+    assert neoclassics_variables.nu == pytest.approx(
         initneoclassicsparam.expected_nu, rel=0.001
     )
-    assert neoclassics_module.nu_star == pytest.approx(
+    assert neoclassics_variables.nu_star == pytest.approx(
         initneoclassicsparam.expected_nu_star, rel=0.001
     )
-    assert neoclassics_module.nu_star_averaged == pytest.approx(
+    assert neoclassics_variables.nu_star_averaged == pytest.approx(
         initneoclassicsparam.expected_nu_star_averaged, rel=0.001
     )
-    assert neoclassics_module.vd == pytest.approx(
+    assert neoclassics_variables.vd == pytest.approx(
         initneoclassicsparam.expected_vd, rel=0.001
     )
-    assert neoclassics_module.q_flux == pytest.approx(
+    assert neoclassics_variables.q_flux == pytest.approx(
         initneoclassicsparam.expected_q_flux, rel=0.001
     )
