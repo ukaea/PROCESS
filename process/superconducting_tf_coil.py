@@ -11,6 +11,7 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
+    constraint_variables,
     error_handling,
     global_variables,
     pfcoil_variables,
