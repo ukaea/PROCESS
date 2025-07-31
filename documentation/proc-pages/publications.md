@@ -6,6 +6,10 @@ The [physics](http://www.sciencedirect.com/science/article/pii/S0920379614005961
 Below is a list of publications using or citing PROCESS by year:
 
 ## 2025
+[Optimisation of STEP poloidal field coils with superconducting coil constraints in STEP-Bluemira power plant design framework](https://www.sciencedirect.com/science/article/pii/S0920379625005538)   
+A. Nilima, M. Bluteau, J. Cook, O. Funk, G. Graham, J. Matthews, S.I. Muldrew, A.J. Pearce, D. Vaccaro   
+Fusion Engineering & Design 220 (2025) 115357   
+
 [On the minimum size of tokamaks aimed at fusion energy gain with optimum plasma temperature](https://www.sciencedirect.com/science/article/pii/S0920379625005046)   
 J.R. Wu, G.S. Xu, D.H. Chen, F.J. Wang, B.N. Wan   
 Fusion Engineering & Design 220 (2025) 115308   
