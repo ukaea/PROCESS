@@ -346,7 +346,7 @@ def test_pumppower_primary_helium(monkeypatch, blanket_library_fixture):
     }
 
     assert (
-        pytest.approx(blanket_library_fixture.pumppower(False, **data))
+        pytest.approx(blanket_library_fixture.coolant_pumping_power(False, **data))
         == 1.8251284651310427
     )
 
@@ -368,7 +368,7 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library_fixture):
     }
 
     assert (
-        pytest.approx(blanket_library_fixture.pumppower(False, **data), rel=1e-4)
+        pytest.approx(blanket_library_fixture.coolant_pumping_power(False, **data), rel=1e-4)
         == 3.2374845432302464
     )
 
