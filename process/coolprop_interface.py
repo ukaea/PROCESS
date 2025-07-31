@@ -1,28 +1,54 @@
-import dataclasses
-
 from CoolProp.CoolProp import PropsSI
 
 
-@dataclasses.dataclass
 class FluidProperties:
-    temperature: float
-    """fluid temperature [K]"""
-    pressure: float
-    """fluid pressure [Pa]"""
-    density: float
-    """fluid density [kg/m3]"""
-    enthalpy: float
-    """fluid specific enthalpy [J/kg]"""
-    entropy: float
-    """fluid entropy [J/kg/K]"""
-    specific_heat_const_p: float
-    """fluid specific heat capacity at constant pressure [J/kg/K]"""
-    specific_heat_const_v: float
-    """fluid specific heat capacity at constant volume [J/kg/K]"""
-    viscosity: float
-    """fluid viscosity [Pa.s]"""
-    thermal_conductivity: float
-    """fluid thermal conductivity [W/m/K]"""
+    def __init__(self, coolprop_inputs: list[str | float]):
+        self._coolprop_inputs = coolprop_inputs
+
+    @property
+    def temperature(self):
+        """fluid temperature [K]"""
+        return PropsSI("T", *self._coolprop_inputs)
+
+    @property
+    def pressure(self):
+        """fluid pressure [Pa]"""
+        return PropsSI("P", *self._coolprop_inputs)
+
+    @property
+    def density(self):
+        """fluid density [kg/m3]"""
+        return PropsSI("D", *self._coolprop_inputs)
+
+    @property
+    def enthalpy(self):
+        """fluid specific enthalpy [J/kg]"""
+        return PropsSI("H", *self._coolprop_inputs)
+
+    @property
+    def entropy(self):
+        """fluid entropy [J/kg/K]"""
+        return PropsSI("S", *self._coolprop_inputs)
+
+    @property
+    def specific_heat_const_p(self):
+        """fluid specific heat capacity at constant pressure [J/kg/K]"""
+        return PropsSI("C", *self._coolprop_inputs)
+
+    @property
+    def specific_heat_const_v(self):
+        """fluid specific heat capacity at constant volume [J/kg/K]"""
+        return PropsSI("CVMASS", *self._coolprop_inputs)
+
+    @property
+    def viscosity(self):
+        """fluid viscosity [Pa.s]"""
+        return PropsSI("V", *self._coolprop_inputs)
+
+    @property
+    def thermal_conductivity(self):
+        """fluid thermal conductivity [W/m/K]"""
+        return PropsSI("CONDUCTIVITY", *self._coolprop_inputs)
 
     @classmethod
     def of(
@@ -59,14 +85,4 @@ class FluidProperties:
 
         coolprop_inputs.append(fluid_name.title())
 
-        return cls(
-            temperature=PropsSI("T", *coolprop_inputs),
-            pressure=PropsSI("P", *coolprop_inputs),
-            density=PropsSI("D", *coolprop_inputs),
-            enthalpy=PropsSI("H", *coolprop_inputs),
-            entropy=PropsSI("S", *coolprop_inputs),
-            specific_heat_const_p=PropsSI("C", *coolprop_inputs),
-            specific_heat_const_v=PropsSI("CVMASS", *coolprop_inputs),
-            viscosity=PropsSI("V", *coolprop_inputs),
-            thermal_conductivity=PropsSI("CONDUCTIVITY", *coolprop_inputs),
-        )
+        return cls(coolprop_inputs)

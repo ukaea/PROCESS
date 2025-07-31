@@ -36,6 +36,9 @@ from process.fortran import (
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
+ELECTRON_CHARGE: float = constants.electron_charge.item()
+RMU0: float = constants.rmu0.item()
+
 
 @nb.jit(nopython=True, cache=True)
 def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
@@ -62,6 +65,7 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     return conie * (ti - te) / (te**1.5)
 
 
+@nb.jit(nopython=True, cache=True)
 def calculate_volt_second_requirements(
     csawth: float,
     eps: float,
@@ -77,60 +81,59 @@ def calculate_volt_second_requirements(
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
 
-            :param csawth: Coefficient for sawteeth effects
-            :type csawth: float
-            :param eps: Inverse aspect ratio
-            :type eps: float
-            :param f_c_plasma_inductive: Fraction of plasma current produced inductively
-            :type f_c_plasma_inductive: float
-            :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
-            :type ejima_coeff: float
-            :param kappa: Plasma elongation
-            :type kappa: float
-            :param rmajor: Plasma major radius (m)
-            :type rmajor: float
-            :param res_plasma: Plasma resistance (ohm)
-            :type res_plasma: float
-            :param plasma_current: Plasma current (A)
-            :type plasma_current: float
-            :param t_fusion_ramp: Heating time (s)
-            :type t_fusion_ramp: float
-            :param t_burn: Burn time (s)
-            :type t_burn: float
-            :param ind_plasma_internal_norm: Plasma normalized internal inductance
-            :type ind_plasma_internal_norm: float
+    :param csawth: Coefficient for sawteeth effects
+    :type csawth: float
+    :param eps: Inverse aspect ratio
+    :type eps: float
+    :param f_c_plasma_inductive: Fraction of plasma current produced inductively
+    :type f_c_plasma_inductive: float
+    :param ejima_coeff: Ejima coefficient for resistive start-up V-s component
+    :type ejima_coeff: float
+    :param kappa: Plasma elongation
+    :type kappa: float
+    :param rmajor: Plasma major radius (m)
+    :type rmajor: float
+    :param res_plasma: Plasma resistance (ohm)
+    :type res_plasma: float
+    :param plasma_current: Plasma current (A)
+    :type plasma_current: float
+    :param t_fusion_ramp: Heating time (s)
+    :type t_fusion_ramp: float
+    :param t_burn: Burn time (s)
+    :type t_burn: float
+    :param ind_plasma_internal_norm: Plasma normalized internal inductance
+    :type ind_plasma_internal_norm: float
 
-            :return: A tuple containing:
-                - vs_plasma_internal: Internal plasma volt-seconds (Wb)
-                - ind_plasma_internal: Plasma inductance (H)
-                - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
-                - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
-                - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
-                - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
-                - vs_plasma_total_required: Total volt-seconds needed (Wb)
-            :rtype: tuple[float, float, float, float, float, float]
+    :return: A tuple containing:
+        - vs_plasma_internal: Internal plasma volt-seconds (Wb)
+        - ind_plasma_internal: Plasma inductance (H)
+        - vs_plasma_burn_required: Volt-seconds needed during flat-top (heat+burn) (Wb)
+        - vs_plasma_ramp_required: Volt-seconds needed during ramp-up (Wb)
+        - ind_plasma_total,: Internal and external plasma inductance V-s (Wb)
+        - vs_res_ramp: Resistive losses in start-up volt-seconds (Wb)
+        - vs_plasma_total_required: Total volt-seconds needed (Wb)
+    :rtype: tuple[float, float, float, float, float, float]
 
-            :notes:
+    :notes:
 
-            :references:
-                - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
-                “Volt-second analysis and consumption in Doublet III plasmas,”
-                Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
-                https://doi.org/10.1088/0029-5515/22/10/006.
-    ‌
-                - S. C. Jardin, C. E. Kessel, and N Pomphrey,
-                “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
-                Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
-                doi: https://doi.org/10.1088/0029-5515/34/8/i07.
-    ‌
-                - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
-                The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
-                doi: https://doi.org/10.1063/1.865934.
-        ‌
+    :references:
+        - S. Ejima, R. W. Callis, J. L. Luxon, R. D. Stambaugh, T. S. Taylor, and J. C. Wesley,
+        “Volt-second analysis and consumption in Doublet III plasmas,”
+        Nuclear Fusion, vol. 22, no. 10, pp. 1313-1319, Oct. 1982, doi:
+        https://doi.org/10.1088/0029-5515/22/10/006.
+
+        - S. C. Jardin, C. E. Kessel, and N Pomphrey,
+        “Poloidal flux linkage requirements for the International Thermonuclear Experimental Reactor,”
+        Nuclear Fusion, vol. 34, no. 8, pp. 1145-1160, Aug. 1994,
+        doi: https://doi.org/10.1088/0029-5515/34/8/i07.
+
+        - S. P. Hirshman and G. H. Neilson, “External inductance of an axisymmetric plasma,”
+        The Physics of Fluids, vol. 29, no. 3, pp. 790-793, Mar. 1986,
+        doi: https://doi.org/10.1063/1.865934.
     """
     # Plasma internal inductance
 
-    ind_plasma_internal = constants.rmu0 * rmajor * ind_plasma_internal_norm / 2.0
+    ind_plasma_internal = RMU0 * rmajor * ind_plasma_internal_norm / 2.0
 
     # Internal plasma flux (V-s) component
     vs_plasma_internal = ind_plasma_internal * plasma_current
@@ -138,7 +141,7 @@ def calculate_volt_second_requirements(
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vs_res_ramp = ejima_coeff * constants.rmu0 * plasma_current * rmajor
+    vs_res_ramp = ejima_coeff * RMU0 * plasma_current * rmajor
 
     # ======================================================================
 
@@ -150,7 +153,7 @@ def calculate_volt_second_requirements(
     beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
 
     ind_plasma_external = (
-        rmajor * constants.rmu0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+        rmajor * RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
     )
 
     # ======================================================================
@@ -639,6 +642,7 @@ def calculate_current_coefficient_fiesta(
 # --------------------------------
 
 
+@nb.jit(nopython=True, cache=True)
 def _nevins_integral(
     y: float,
     dene: float,
@@ -687,9 +691,7 @@ def _nevins_integral(
     """
 
     # Compute average electron beta
-    betae = (
-        dene * te * 1.0e3 * constants.electron_charge / (bt**2 / (2.0 * constants.rmu0))
-    )
+    betae = dene * te * 1.0e3 * ELECTRON_CHARGE / (bt**2 / (2.0 * RMU0))
 
     nabla = rminor * np.sqrt(y) / rmajor
     x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5

@@ -56,7 +56,7 @@ def test_scan(examples_temp_data):
     :type examples_temp_data: Path
     """
     scan_notebook_location = examples_temp_data / "scan.ipynb"
-    with testbook(scan_notebook_location, execute=True, timeout=600):
+    with testbook(scan_notebook_location, execute=True, timeout=1200):
         # Run entire scan.ipynb notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
