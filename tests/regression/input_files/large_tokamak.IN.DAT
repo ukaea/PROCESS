@@ -611,4 +611,4 @@ f_a_tf_turn_cable_space_extra_void = 0.3
 i_tf_sc_mat = 1
 
 * max fluence in the TF coil
-nflutfmax = 3.21e21
+nflutfmax = 1e22
