@@ -6,6 +6,7 @@ from pathlib import Path
 from warnings import warn
 
 import process
+import process.data_structure as data_structure
 import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
