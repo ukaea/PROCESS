@@ -27,7 +27,7 @@ dp_liq: float = None
 
 p_fw_blkt_coolant_pump_mw: float = None
 """mechanical pumping power for FW and blanket including heat exchanger and
-   pipes (`i_coolant_pumping=3`) [MW]
+pipes (`i_coolant_pumping=3`) [MW]
 """
 
 f_p_fw_blkt_pump: float = None
