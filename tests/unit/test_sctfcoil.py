@@ -923,9 +923,9 @@ class TfIntegerTurnGeomParam(NamedTuple):
 
     dx_tf_turn_cable_space_average: Any = None
 
-    n_layer: Any = None
+    n_tf_wp_layers: Any = None
 
-    n_pancake: Any = None
+    n_tf_wp_pancakes: Any = None
 
     dx_tf_turn_steel: Any = None
 
@@ -978,8 +978,8 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dr_tf_turn=0,
             dx_tf_turn=0,
             dx_tf_turn_cable_space_average=0,
-            n_layer=10,
-            n_pancake=20,
+            n_tf_wp_layers=10,
+            n_tf_wp_pancakes=20,
             dx_tf_turn_steel=0.0080000000000000002,
             dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
@@ -1012,8 +1012,8 @@ class TfIntegerTurnGeomParam(NamedTuple):
             dr_tf_turn=0.050661087836601018,
             dx_tf_turn=0.063189130247124942,
             dx_tf_turn_cable_space_average=0.036389912284773368,
-            n_layer=10,
-            n_pancake=20,
+            n_tf_wp_layers=10,
+            n_tf_wp_pancakes=20,
             dx_tf_turn_steel=0.0080000000000000002,
             dx_tf_turn_insulation=0.002,
             expected_t_conductor=0.052553108427885735,
@@ -1033,7 +1033,7 @@ class TfIntegerTurnGeomParam(NamedTuple):
         ),
     ),
 )
-def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
+def test_tf_integer_turn_geom(tfintegerturngeomparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for tf_integer_turn_geom.
 
@@ -1046,120 +1046,64 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dr_tf_wp_with_insulation",
-        tfintegerturngeomparam.dr_tf_wp_with_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_insulation",
-        tfintegerturngeomparam.dx_tf_wp_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_insertion_gap",
-        tfintegerturngeomparam.dx_tf_wp_insertion_gap,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "t_conductor", tfintegerturngeomparam.t_conductor
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "t_turn_tf", tfintegerturngeomparam.t_turn_tf)
-
-    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", tfintegerturngeomparam.c_tf_coil)
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "dx_tf_wp_toroidal_min",
-        tfintegerturngeomparam.dx_tf_wp_toroidal_min,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "t_conductor_radial", tfintegerturngeomparam.t_conductor_radial
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "t_conductor_toroidal",
-        tfintegerturngeomparam.t_conductor_toroidal,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "dr_tf_turn_cable_space",
-        tfintegerturngeomparam.dr_tf_turn_cable_space,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "dx_tf_turn_cable_space",
-        tfintegerturngeomparam.dx_tf_turn_cable_space,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "dr_tf_turn", tfintegerturngeomparam.dr_tf_turn
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "dx_tf_turn", tfintegerturngeomparam.dx_tf_turn
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "dx_tf_turn_cable_space_average",
-        tfintegerturngeomparam.dx_tf_turn_cable_space_average,
-    )
-
     (
+        radius_tf_turn_cable_space_corners,
+        dr_tf_turn,
+        dx_tf_turn,
         a_tf_turn_cable_space_no_void,
         a_tf_turn_steel,
         a_tf_turn_insulation,
         c_tf_turn,
         n_tf_coil_turns,
+        t_conductor_radial,
+        t_conductor_toroidal,
+        t_conductor,
+        dr_tf_turn_cable_space,
+        dx_tf_turn_cable_space,
+        dx_tf_turn_cable_space_average,
     ) = sctfcoil.tf_integer_turn_geom(
-        n_layer=tfintegerturngeomparam.n_layer,
-        n_pancake=tfintegerturngeomparam.n_pancake,
+        dr_tf_wp_with_insulation=tfintegerturngeomparam.dr_tf_wp_with_insulation,
+        dx_tf_wp_insulation=tfintegerturngeomparam.dx_tf_wp_insulation,
+        dx_tf_wp_insertion_gap=tfintegerturngeomparam.dx_tf_wp_insertion_gap,
+        n_tf_wp_layers=tfintegerturngeomparam.n_tf_wp_layers,
+        dx_tf_wp_toroidal_min=tfintegerturngeomparam.dx_tf_wp_toroidal_min,
+        n_tf_wp_pancakes=tfintegerturngeomparam.n_tf_wp_pancakes,
+        c_tf_coil=tfintegerturngeomparam.c_tf_coil,
         dx_tf_turn_steel=tfintegerturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfintegerturngeomparam.dx_tf_turn_insulation,
     )
 
-    assert tfcoil_variables.t_conductor == pytest.approx(
-        tfintegerturngeomparam.expected_t_conductor
+    assert radius_tf_turn_cable_space_corners == pytest.approx(
+        0.75 * tfintegerturngeomparam.dx_tf_turn_steel
     )
+
+    assert t_conductor == pytest.approx(tfintegerturngeomparam.expected_t_conductor)
 
     assert tfcoil_variables.t_turn_tf == pytest.approx(
         tfintegerturngeomparam.expected_t_turn_tf
     )
 
-    assert sctfcoil_module.t_conductor_radial == pytest.approx(
+    assert t_conductor_radial == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_radial
     )
 
-    assert sctfcoil_module.t_conductor_toroidal == pytest.approx(
+    assert t_conductor_toroidal == pytest.approx(
         tfintegerturngeomparam.expected_t_conductor_toroidal
     )
 
-    assert sctfcoil_module.dr_tf_turn_cable_space == pytest.approx(
+    assert dr_tf_turn_cable_space == pytest.approx(
         tfintegerturngeomparam.expected_dr_tf_turn_cable_space
     )
 
-    assert sctfcoil_module.dx_tf_turn_cable_space == pytest.approx(
+    assert dx_tf_turn_cable_space == pytest.approx(
         tfintegerturngeomparam.expected_dx_tf_turn_cable_space
     )
 
-    assert sctfcoil_module.dr_tf_turn == pytest.approx(
-        tfintegerturngeomparam.expected_t_turn_radial
-    )
+    assert dr_tf_turn == pytest.approx(tfintegerturngeomparam.expected_t_turn_radial)
 
-    assert sctfcoil_module.dx_tf_turn == pytest.approx(
-        tfintegerturngeomparam.expected_dx_tf_turn
-    )
+    assert dx_tf_turn == pytest.approx(tfintegerturngeomparam.expected_dx_tf_turn)
 
-    assert sctfcoil_module.dx_tf_turn_cable_space_average == pytest.approx(
+    assert dx_tf_turn_cable_space_average == pytest.approx(
         tfintegerturngeomparam.expected_t_cable
     )
 
@@ -1473,20 +1417,18 @@ class TfWpCurrentsParam(NamedTuple):
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            j_tf_wp=0,
             a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
         TfWpCurrentsParam(
             c_tf_total=256500000.00000003,
             n_tf_coils=16,
-            j_tf_wp=26493137.688284047,
             a_tf_wp_no_insulation=0.60510952642236249,
             expected_j_tf_wp=26493137.688284047,
         ),
     ),
 )
-def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
+def test_tf_wp_currents(tfwpcurrentsparam, sctfcoil):
     """
     Automatically generated Regression Unit Test for tf_wp_currents.
 
@@ -1499,21 +1441,13 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(tfcoil_variables, "c_tf_total", tfwpcurrentsparam.c_tf_total)
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tfwpcurrentsparam.n_tf_coils)
-
-    monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "a_tf_wp_no_insulation",
-        tfwpcurrentsparam.a_tf_wp_no_insulation,
+    j_tf_wp = sctfcoil.tf_wp_current_density(
+        c_tf_total=tfwpcurrentsparam.c_tf_total,
+        n_tf_coils=tfwpcurrentsparam.n_tf_coils,
+        a_tf_wp_no_insulation=tfwpcurrentsparam.a_tf_wp_no_insulation,
     )
 
-    sctfcoil.tf_wp_currents()
-
-    assert tfcoil_variables.j_tf_wp == pytest.approx(tfwpcurrentsparam.expected_j_tf_wp)
+    assert j_tf_wp == pytest.approx(tfwpcurrentsparam.expected_j_tf_wp)
 
 
 def test_vv_stress_on_quench():

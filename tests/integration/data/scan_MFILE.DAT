@@ -554,8 +554,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7714E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4767E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0767E-02 OP 
@@ -1549,8 +1549,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7716E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4767E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0767E-02 OP 
@@ -2544,8 +2544,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7717E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4766E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0766E-02 OP 
@@ -3539,8 +3539,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7718E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4765E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0765E-02 OP 
@@ -4534,8 +4534,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7719E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4765E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0765E-02 OP 
@@ -5529,8 +5529,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7721E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4764E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1816E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0764E-02 OP 
@@ -6524,8 +6524,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7722E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4763E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1817E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0763E-02 OP 
@@ -7519,8 +7519,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7723E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4763E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1817E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0763E-02 OP 
@@ -8514,8 +8514,8 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      3.7723E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              1    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      2.0000E+02 OP 
- Number_of_TF_pancakes___________________________________________________ (n_pancake)___________________             20    
- Number_of_TF_layers_____________________________________________________ (n_layer)_____________________             10    
+ Number_of_TF_pancakes___________________________________________________ (n_tf_wp_pancakes)___________________             20    
+ Number_of_TF_layers_____________________________________________________ (n_tf_wp_layers)_____________________             10    
  Radial_width_of_turn_(m)________________________________________________ (dr_tf_turn)_______________      8.4762E-02    
  Toroidal_width_of_turn_(m)______________________________________________ (dx_tf_turn)_____________      6.1817E-02    
  Radial_width_of_conductor_(m)___________________________________________ (elonductor_radial)___________      8.0762E-02 OP 
@@ -9298,8 +9298,8 @@ f_a_tf_turn_cable_space_extra_void     = 0.300 * Coolant fraction of tfc 'cable'
 i_tf_sc_mat = 5
 *strncon = -0.0066
 
-n_pancake = 20
-n_layer = 10
+n_tf_wp_pancakes = 20
+n_tf_wp_layers = 10
 i_tf_turns_integer = 1
 
 inuclear = 1
