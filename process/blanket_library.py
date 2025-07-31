@@ -2618,35 +2618,46 @@ class BlanketLibrary:
             f"i_channel_shape ={i_channel_shape} is an invalid option."
         )
 
-    def elbow_coeff(self, r_elbow, ang_elbow, lamda, dh):
-        """Function calculates elbow bends coefficients for pressure drop
-        calculations.
+    def elbow_coeff(
+        self,
+        radius_pipe_elbow: float,
+        deg_pipe_elbow: float,
+        darcy_friction: float,
+        dia_pipe: float
+    ) -> float:
+        """
+        Calculates elbow bend coefficients for pressure drop calculations.
 
-        author: G. Graham, CCFE
+        :param radius_pipe_elbow: Pipe elbow radius (m)
+        :type radius_pipe_elbow: float
+        :param deg_pipe_elbow: Pipe elbow angle (degrees)
+        :type deg_pipe_elbow: float
+        :param darcy_friction: Darcy friction factor
+        :type darcy_friction: float
+        :param dia_pipe: Pipe diameter (m)
+        :type dia_pipe: float
+        :return: Elbow coefficient for pressure drop calculation
+        :rtype: float
 
-        :param r_elbow: pipe elbow radius (m)
-        :param ang_elbow: pipe elbow angle (degrees)
-        :param lamda: darcy Friction Factor
-        :param dh: hydraulic diameter (m)
+        :References:
+        - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
+          Collection de la Direction des Etudes et Recherches d'Electricité de France.
 
-        References:
-
-             [Ide1969]   Idel'Cik, I. E. (1969), Memento des pertes de charge,
-                         Collection de la Direction des Etudes et Recherches d'Electricité de France.
         """
 
-        if ang_elbow == 90:
+        if deg_pipe_elbow == 90:
             a = 1.0
-        elif ang_elbow < 70:
-            a = 0.9 * np.sin(ang_elbow * np.pi / 180.0)
-        elif ang_elbow > 100:
-            a = 0.7 + (0.35 * np.sin((ang_elbow / 90.0) * (np.pi / 180.0)))
+        elif deg_pipe_elbow < 70:
+            a = 0.9 * np.sin(deg_pipe_elbow * np.pi / 180.0)
+        elif deg_pipe_elbow > 100:
+            a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
         else:
             raise ProcessValueError(
                 "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
             )
 
-        r_ratio = r_elbow / dh
+        r_ratio = radius_pipe_elbow / dia_pipe
+        
         if r_ratio > 1:
             b = 0.21 / r_ratio**0.5
         elif r_ratio < 1:
@@ -2658,7 +2669,7 @@ class BlanketLibrary:
         ximt = a * b
 
         # Friction
-        xift = 0.0175 * lamda * (r_elbow / dh) * ang_elbow
+        xift = 0.0175 * darcy_friction * (radius_pipe_elbow / dia_pipe) * deg_pipe_elbow
 
         # Elbow Coefficient
         return ximt + xift
