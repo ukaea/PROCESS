@@ -9,6 +9,7 @@ import process
 import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
+from process import data_structure
 from process.blanket_library import init_blanket_library
 from process.build import init_build_variables
 from process.buildings import init_buildings_variables
