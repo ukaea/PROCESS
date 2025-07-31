@@ -4,6 +4,7 @@ from process import process_output as po
 from process.data_structure import (
     cost_variables,
     divertor_variables,
+    pulse_variables,
     structure_variables,
     times_variables,
     vacuum_variables,
@@ -20,7 +21,6 @@ from process.fortran import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
     tfcoil_variables,
 )
 

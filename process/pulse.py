@@ -1,5 +1,5 @@
 from process import process_output as po
-from process.data_structure import times_variables
+from process.data_structure import pulse_variables, times_variables
 from process.fortran import (
     constants,
     constraint_variables,
@@ -8,7 +8,6 @@ from process.fortran import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
 )
 
 
@@ -185,12 +184,3 @@ class Pulse:
             error_handling.report_error(93)
 
         return t_burn
-
-
-def init_pulse_variables():
-    """Initialise the pulse variables"""
-    pulse_variables.bctmp = 320.0
-    pulse_variables.dtstor = 300.0
-    pulse_variables.istore = 1
-    pulse_variables.itcycl = 1
-    pulse_variables.i_pulsed_plant = 0

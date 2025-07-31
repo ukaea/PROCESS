@@ -198,7 +198,7 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
     "bcritsc": InputVariable(fortran.tfcoil_variables, float, range=(10.0, 50.0)),
-    "bctmp": InputVariable(fortran.pulse_variables, float, range=(1.0, 800.0)),
+    "bctmp": InputVariable(data_structure.pulse_variables, float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
@@ -490,7 +490,7 @@ INPUT_VARIABLES = {
     "drtop": InputVariable(fortran.tfcoil_variables, float, range=(-1.5, 1.5)),
     "drveff": InputVariable(fortran.ife_variables, float, range=(0.01, 1.0)),
     "dtlife": InputVariable(data_structure.cost_variables, float, range=(0.0, 15.0)),
-    "dtstor": InputVariable(fortran.pulse_variables, float, range=(50.0, 500.0)),
+    "dtstor": InputVariable(data_structure.pulse_variables, float, range=(50.0, 500.0)),
     "dx_fw_module": InputVariable(fortran.fwbs_variables, float, range=(0.0005, 0.1)),
     "dz_tf_cryostat": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 20.0)
@@ -1668,7 +1668,9 @@ INPUT_VARIABLES = {
     "i_plasma_geometry": InputVariable(fortran.physics_variables, int, range=(0, 11)),
     "i_plasma_shape": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "i_plasma_wall_gap": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "i_pulsed_plant": InputVariable(fortran.pulse_variables, int, choices=[0, 1]),
+    "i_pulsed_plant": InputVariable(
+        data_structure.pulse_variables, int, choices=[0, 1]
+    ),
     "i_q95_fixed": InputVariable(fortran.constraint_variables, int, choices=[0, 1]),
     "i_r_cp_top": InputVariable(fortran.build_variables, int, choices=[0, 1, 2]),
     "i_rad_loss": InputVariable(fortran.physics_variables, int, choices=[0, 1, 2]),
@@ -1738,12 +1740,12 @@ INPUT_VARIABLES = {
     ),
     "istell": InputVariable(fortran.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(fortran.stellarator_variables, int, range=(1, 3)),
-    "istore": InputVariable(fortran.pulse_variables, int, range=(1, 3)),
+    "istore": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
     "i_cs_superconductor": InputVariable(fortran.pfcoil_variables, int, range=(1, 9)),
     "i_pf_superconductor": InputVariable(fortran.pfcoil_variables, int, range=(1, 9)),
     "itart": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "itartpf": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "itcycl": InputVariable(fortran.pulse_variables, int, range=(1, 3)),
+    "itcycl": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
     "iwalld": InputVariable(fortran.physics_variables, int, range=(1, 2)),
     "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
     "m_res": InputVariable(fortran.stellarator_variables, int, range=(1, 10)),
