@@ -7,6 +7,7 @@ from process import process_output as po
 from process.data_structure import (
     cost_variables,
     power_variables,
+    primary_pumping_variables,
     structure_variables,
     times_variables,
 )
@@ -23,7 +24,6 @@ from process.fortran import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    primary_pumping_variables,
     tfcoil_variables,
 )
 
