@@ -2,6 +2,26 @@
 
 ## General Blanket methods | `BlanketLibrary`
 
+
+--------------------
+
+### Coolant mechanical pumping power | `coolant_pumping_power()`
+
+To calculate the coolant pumping power we use the change in enthalpies of the coolant as it goes through the pump. 
+**We assume the pump is isentropic so the entropy change of the coolant is 0**. 
+
+The mechanical pumping power is defined as:
+
+$$
+P = \frac{\dot{m} \times \left(H_{\text{out}}-H_{\text{in}}\right)}{\eta}
+$$
+
+$$
+fp = \frac{T_{\text{pump,out}}\left(\frac{P_{\text{pump,out}}}{P_{\text{pump,out}}}\right)^{-\frac{\gamma -1}{\gamma}}}{\eta \left(T_{\text{pump,in}}-T_{\text{pump,out}}\right)}
+$$
+
+------------------
+
 ### Coolant pressure drop | `coolant_pressure_drop()`
 
 The pressure drop in the coolant is given by the [Darcy-Weisbach Equation](https://en.wikipedia.org/wiki/Darcy%E2%80%93Weisbach_equation)
