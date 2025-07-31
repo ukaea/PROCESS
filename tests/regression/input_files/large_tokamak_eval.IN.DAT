@@ -390,6 +390,8 @@ tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
 vdalw    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
+nflutfmax = 1e22 * max fluence in the TF coil
+
 
 *-----------------Times Variables------------------*
 

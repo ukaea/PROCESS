@@ -11,6 +11,7 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
+    constraint_variables,
     error_handling,
     global_variables,
     pfcoil_variables,
@@ -18,6 +19,7 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
+from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -1312,10 +1314,8 @@ class SuperconductingTFCoil(TFCoil):
             tmarg = t_zero_margin - temp_tf_coolant_peak_field
             tfcoil_variables.temp_margin = tmarg
 
-        #  Find the current density limited by the protection limit
-        #  (N.B. Unclear of this routine's relevance for Bi-2212 (i_tf_superconductor=2), due
-        #  to presence of f_a_tf_turn_cable_copper argument, which is not used for this model above)
-
+        # Find the current density limited by the protection limit
+        # At present only valid for LTS windings (Nb3Sn properties assumed)
         tfcoil_variables.jwdgpro, vd = self.protect(
             c_tf_turn,
             e_tf_coil_magnetic_stored,
@@ -1326,6 +1326,10 @@ class SuperconductingTFCoil(TFCoil):
             f_a_tf_turn_cable_copper,
             temp_tf_coolant_peak_field,
             temp_tf_conductor_peak_quench,
+            b_tf_inboard_peak,
+            tfcoil_variables.rrr_tf_cu,
+            tfcoil_variables.t_tf_quench_detection,
+            constraint_variables.nflutfmax,
         )
 
         if output:  # Output --------------------------
@@ -1582,93 +1586,62 @@ class SuperconductingTFCoil(TFCoil):
 
         return j_tf_wp_critical, vd, tmarg
 
-    def protect(self, aio, tfes, acs, aturn, tdump, fcond, fcu, tba, tmax):
-        """Finds the current density limited by the protection limit
-        author: P J Knight, CCFE, Culham Science Centre
-        author: J Miller, ORNL
-        aio : input real : Operating current (A)
-        tfes : input real : Energy stored in one TF coil (J)
-        acs : input real : Cable space - inside area (m2)
-        aturn : input real : Area per turn (i.e.  entire cable) (m2)
-        tdump : input real : Dump time (sec)
-        fcond : input real : Fraction of cable space containing conductor
-        fcu : input real : Fraction of conductor that is copper
-        tba : input real : He temperature at peak field point (K)
-        tmax : input real : Max conductor temperature during quench (K)
-        ajwpro : output real :  Winding pack current density from temperature
-        rise protection (A/m2)
-        vd : output real :  Discharge voltage imposed on a TF coil (V)
-        This routine calculates maximum conductor current density which
-        limits the peak temperature in the winding to a given limit (tmax).
-        It also finds the dump voltage.
-        <P>These calculations are based on Miller's formulations.
+    def protect(
+        self,
+        aio,
+        tfes,
+        acs,
+        aturn,
+        tdump,
+        fcond,
+        fcu,
+        tba,
+        tmax,
+        peak_field,
+        cu_rrr,
+        detection_time,
+        fluence,
+    ):
         """
-        # Integration coefficients p1,p2,p3
-        p1 = (
-            0.0e0,
-            0.8e0,
-            1.75e0,
-            2.4e0,
-            2.7e0,
-            2.95e0,
-            3.1e0,
-            3.2e0,
-            3.3e0,
-            3.4e0,
-            3.5e0,
-        )
-        p2 = (
-            0.0e0,
-            0.05e0,
-            0.5e0,
-            1.4e0,
-            2.6e0,
-            3.7e0,
-            4.6e0,
-            5.3e0,
-            5.95e0,
-            6.55e0,
-            7.1e0,
-        )
-        p3 = (
-            0.0e0,
-            0.05e0,
-            0.5e0,
-            1.4e0,
-            2.6e0,
-            3.7e0,
-            4.6e0,
-            5.4e0,
-            6.05e0,
-            6.8e0,
-            7.2e0,
-        )
+        Calculates the maximum conductor current density limited by the protection limit,
+        and the discharge voltage for a TF coil.
 
+        :param float aio: Operating current (A)
+        :param float tfes: Energy stored in one TF coil (J)
+        :param float acs: Cable space - inside area (m²)
+        :param float aturn: Area per turn (i.e. entire cable) (m²)
+        :param float tdump: Dump time (s)
+        :param float fcond: Fraction of cable space containing conductor
+        :param float fcu: Fraction of conductor that is copper
+        :param float tba: Helium temperature at peak field point (K)
+        :param float tmax: Maximum conductor temperature during quench (K)
+        :param float peak_field: Maximum conductor temperature during quench (T)
+        :param float cur_rrr: Copper residual-resistance-ratio
+        :param float detection_time: Quench detection time (s)
+        :param float fluence: End-of-life neutron fluence in the copper (1/m²)
+
+        :return float ajwpro: Winding pack current density from temperature rise protection (A/m²)
+        :return float vd: Discharge voltage imposed on a TF coil (V)
+        """
         #  Dump voltage
-
         vd = 2.0e0 * tfes / (tdump * aio)
-
-        #  Current density limited by temperature rise during quench
-
-        tav = 1.0e0 + (tmax - tba) / 20.0e0
-        n_o = int(tav)
-        n_p = n_o + 1
-        n_p = min(n_p, 11)
-
-        ai1 = 1.0e16 * (p1[n_o - 1] + (p1[n_p - 1] - p1[n_o - 1]) * (tav - n_o))
-        ai2 = 1.0e16 * (p2[n_o - 1] + (p2[n_p - 1] - p2[n_o - 1]) * (tav - n_o))
-        ai3 = 1.0e16 * (p3[n_o - 1] + (p3[n_p - 1] - p3[n_o - 1]) * (tav - n_o))
-
-        aa = vd * aio / tfes
-        bb = (1.0e0 - fcond) * fcond * fcu * ai1
-        cc = (fcu * fcond) ** 2 * ai2
-        dd = (1.0e0 - fcu) * fcu * fcond**2 * ai3
-        ajcp = np.sqrt(aa * (bb + cc + dd))
-        ajwpro = ajcp * (acs / aturn)
+        ajwpro = (
+            acs
+            / aturn
+            * calculate_quench_protection_current_density(
+                tdump,
+                peak_field,
+                fcu,
+                1.0 - fcond,
+                tba,
+                tmax,
+                cu_rrr,
+                detection_time,
+                fluence,
+            )
+        )
 
         return ajwpro, vd
-
-        # ---
 
     def vv_stress_on_quench(self):
         """Calculate the Tresca stress [Pa] of the Vacuum Vessel (VV)

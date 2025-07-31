@@ -609,3 +609,6 @@ f_a_tf_turn_cable_space_extra_void = 0.3
 
 * Conductor type switch (ITER Nb3Sn)
 i_tf_sc_mat = 1
+
+* max fluence in the TF coil
+nflutfmax = 1e22
