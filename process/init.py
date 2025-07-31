@@ -24,6 +24,7 @@ from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variable
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.pulse_variables import init_pulse_variables
+from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
 from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.times_variables import init_times_variables
@@ -48,7 +49,7 @@ from process.stellarator import (
     init_stellarator_variables,
     stinit,
 )
-from process.superconducting_tf_coil import init_rebco_variables, init_sctfcoil_module
+from process.superconducting_tf_coil import init_sctfcoil_module
 from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 

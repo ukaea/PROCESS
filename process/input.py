@@ -313,13 +313,17 @@ INPUT_VARIABLES = {
     "coolp": InputVariable(
         fortran.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
-    "copper_rrr": InputVariable(fortran.rebco_variables, float, range=(1.0, 10000.0)),
-    "copper_thick": InputVariable(fortran.rebco_variables, float, range=(0.0, 0.001)),
+    "copper_rrr": InputVariable(
+        data_structure.rebco_variables, float, range=(1.0, 10000.0)
+    ),
+    "copper_thick": InputVariable(
+        data_structure.rebco_variables, float, range=(0.0, 0.001)
+    ),
     "copperaoh_m2": InputVariable(
-        fortran.rebco_variables, float, range=(1.0, 10000000000.0)
+        data_structure.rebco_variables, float, range=(1.0, 10000000000.0)
     ),
     "copperaoh_m2_max": InputVariable(
-        fortran.rebco_variables, float, range=(10000.0, 10000000000.0)
+        data_structure.rebco_variables, float, range=(10000.0, 10000000000.0)
     ),
     "cost_factor_bop": InputVariable(
         data_structure.cost_variables, float, range=(0.1, 10.0)
@@ -369,7 +373,9 @@ INPUT_VARIABLES = {
     "crane_clrnc_v": InputVariable(
         fortran.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "croco_thick": InputVariable(fortran.rebco_variables, float, range=(0.001, 0.1)),
+    "croco_thick": InputVariable(
+        data_structure.rebco_variables, float, range=(0.001, 0.1)
+    ),
     "cryomag_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
     "cryomag_l": InputVariable(
         fortran.buildings_variables, float, range=(10.0, 1000.0)
@@ -574,8 +580,12 @@ INPUT_VARIABLES = {
     ),
     "f_asym": InputVariable(fortran.stellarator_variables, float, range=(0.9, 2.0)),
     "f_avspace": InputVariable(fortran.build_variables, float, range=(0.001, 10.0)),
-    "f_coppera_m2": InputVariable(fortran.rebco_variables, float, range=(0.001, 10.0)),
-    "f_copperaoh_m2": InputVariable(fortran.rebco_variables, float, range=(0.001, 1.0)),
+    "f_coppera_m2": InputVariable(
+        data_structure.rebco_variables, float, range=(0.001, 10.0)
+    ),
+    "f_copperaoh_m2": InputVariable(
+        data_structure.rebco_variables, float, range=(0.001, 1.0)
+    ),
     "f_crypmw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
@@ -863,7 +873,7 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(1.0, 10.0)
     ),
     "hastelloy_thickness": InputVariable(
-        fortran.rebco_variables, float, range=(1e-08, 0.001)
+        data_structure.rebco_variables, float, range=(1e-08, 0.001)
     ),
     "hccl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
     "hcd_building_h": InputVariable(
@@ -1192,7 +1202,7 @@ INPUT_VARIABLES = {
         fortran.buildings_variables, float, range=(0.25, 25.0)
     ),
     "rebco_thickness": InputVariable(
-        fortran.rebco_variables,
+        data_structure.rebco_variables,
         float,
         range=(1e-08, 0.0001),
         additional_actions=lambda _n, rt, _i, _c: rt <= 1e-6
@@ -1340,8 +1350,12 @@ INPUT_VARIABLES = {
     ),
     "t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
     "t_turn_tf_max": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "tape_thickness": InputVariable(fortran.rebco_variables, float, range=(0.0, 0.1)),
-    "tape_width": InputVariable(fortran.rebco_variables, float, range=(0.0, 0.1)),
+    "tape_thickness": InputVariable(
+        data_structure.rebco_variables, float, range=(0.0, 0.1)
+    ),
+    "tape_width": InputVariable(
+        data_structure.rebco_variables, float, range=(0.0, 0.1)
+    ),
     "tauee_in": InputVariable(fortran.physics_variables, float, range=(0.0, 100.0)),
     "taumax": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
     "tauratio": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
@@ -1630,7 +1644,7 @@ INPUT_VARIABLES = {
     "cfind": InputVariable(data_structure.cost_variables, float, array=True),
     "i_blkt_coolant_type": InputVariable(fortran.fwbs_variables, int, choices=[1, 2]),
     "coppera_m2_max": InputVariable(
-        fortran.rebco_variables, float, range=(1.0e6, 1.0e10)
+        data_structure.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "dwell_pump": InputVariable(
