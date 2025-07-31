@@ -1814,14 +1814,14 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
         fwbs_variables, "roughness_fw_channel", pressuredropparam.roughness_fw_channel
     )
 
-    pressure_drop_out = blanket_library_fixture.pressure_drop(
+    pressure_drop_out = blanket_library_fixture.coolant_pressure_drop(
         i_ps=pressuredropparam.i_ps,
-        num_90=pressuredropparam.num_90,
-        num_180=pressuredropparam.num_180,
-        l_pipe=pressuredropparam.l_pipe,
-        den=pressuredropparam.den,
-        vsc=pressuredropparam.vsc,
-        vv=pressuredropparam.vv,
+        n_pipe_90_deg_bends=pressuredropparam.num_90,
+        n_pipe_180_deg_bends=pressuredropparam.num_180,
+        len_pipe=pressuredropparam.l_pipe,
+        den_coolant=pressuredropparam.den,
+        visc_coolant=pressuredropparam.vsc,
+        vel_coolant=pressuredropparam.vv,
         label=pressuredropparam.label,
     )
 
