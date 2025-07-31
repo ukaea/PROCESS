@@ -1,3 +1,4 @@
+from process import data_structure
 from process import fortran as ft
 
 
@@ -22,7 +23,7 @@ def write(models, _outfile):
         return
 
     #  Call IFE output routine instead if relevant
-    if ft.ife_variables.ife != 0:
+    if data_structure.ife_variables.ife != 0:
         models.ife.run(output=True)
         return
 

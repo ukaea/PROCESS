@@ -11,6 +11,7 @@ from process.costs import Costs
 from process.data_structure import (
     cost_variables,
     divertor_variables,
+    ife_variables,
     pulse_variables,
     structure_variables,
     times_variables,
@@ -22,7 +23,6 @@ from process.fortran import (
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
-    ife_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
