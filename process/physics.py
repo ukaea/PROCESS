@@ -14,7 +14,7 @@ import process.physics_functions as physics_funcs
 from process import (
     process_output as po,
 )
-from process.data_structure import divertor_variables, times_variables
+from process.data_structure import divertor_variables, reinke_variables, times_variables
 from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
@@ -28,7 +28,6 @@ from process.fortran import (
     physics_module,
     physics_variables,
     pulse_variables,
-    reinke_variables,
     stellarator_variables,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -8783,12 +8782,3 @@ def init_physics_module():
     physics_module.nu_star = 0.0
     physics_module.beta_mcdonald = 0.0
     physics_module.itart_r = 0.0
-
-
-def init_reinke_variables():
-    """Initialise Reinke criterion variables"""
-    reinke_variables.impvardiv = 9
-    reinke_variables.lhat = 4.33
-    reinke_variables.fzmin = 0.0
-    reinke_variables.fzactual = 0.001
-    reinke_variables.reinke_mode = 0

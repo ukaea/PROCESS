@@ -835,7 +835,7 @@ INPUT_VARIABLES = {
     "fwdr": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fwdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fwdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
-    "fzactual": InputVariable(fortran.reinke_variables, float, range=(0.0, 1.0)),
+    "fzactual": InputVariable(data_structure.reinke_variables, float, range=(0.0, 1.0)),
     "fzeffmax": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "eta_cd_norm_ecrh": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
@@ -958,7 +958,7 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, float, range=(0.001, 1000.0)
     ),
     "len_tf_bus": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1000.0)),
-    "lhat": InputVariable(fortran.reinke_variables, float, range=(1.0, 15.0)),
+    "lhat": InputVariable(data_structure.reinke_variables, float, range=(1.0, 15.0)),
     "f_blkt_li6_enrichment": InputVariable(
         fortran.fwbs_variables, float, range=(7.4, 100.0)
     ),
@@ -1774,7 +1774,7 @@ INPUT_VARIABLES = {
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "i_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
-    "reinke_mode": InputVariable(fortran.reinke_variables, int, choices=[0, 1]),
+    "reinke_mode": InputVariable(data_structure.reinke_variables, int, choices=[0, 1]),
     "scan_dim": InputVariable(fortran.scan_module, int, range=(1, 2)),
     "i_thermal_electric_conversion": InputVariable(
         fortran.fwbs_variables, int, range=(0, 4)
@@ -1849,7 +1849,7 @@ INPUT_VARIABLES = {
     "sweep": InputVariable(fortran.scan_module, float, array=True),
     "sweep_2": InputVariable(fortran.scan_module, float, array=True),
     "impvardiv": InputVariable(
-        fortran.reinke_variables,
+        data_structure.reinke_variables,
         int,
         choices=range(3, fortran.impurity_radiation_module.n_impurities.item() + 1),
     ),
