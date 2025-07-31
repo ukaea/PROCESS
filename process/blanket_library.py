@@ -607,12 +607,16 @@ class BlanketLibrary:
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 build_variables.blbuith
             )
-            blanket_library.len_blkt_outboard_coolant_channel_radial = build_variables.blbuoth
+            blanket_library.len_blkt_outboard_coolant_channel_radial = (
+                build_variables.blbuoth
+            )
         else:
             blanket_library.len_blkt_inboard_coolant_channel_radial = (
                 0.8e0 * build_variables.dr_blkt_inboard
             )
-            blanket_library.len_blkt_outboard_coolant_channel_radial = 0.8e0 * build_variables.dr_blkt_outboard
+            blanket_library.len_blkt_outboard_coolant_channel_radial = (
+                0.8e0 * build_variables.dr_blkt_outboard
+            )
 
         # Using the total perimeter of the machine, segment the outboard
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
@@ -656,7 +660,10 @@ class BlanketLibrary:
                             blanket_library.len_blkt_inboard_coolant_channel_radial
                             * fwbs_variables.r_f_liq_ib
                         ),
-                        (blanket_library.len_blkt_outboard_coolant_channel_radial * fwbs_variables.r_f_liq_ob),
+                        (
+                            blanket_library.len_blkt_outboard_coolant_channel_radial
+                            * fwbs_variables.r_f_liq_ob
+                        ),
                     )
                     / fwbs_variables.nopol
                 )
@@ -678,7 +685,8 @@ class BlanketLibrary:
             else:
                 # Radial direction
                 fwbs_variables.b_bz_liq = (
-                    blanket_library.len_blkt_outboard_coolant_channel_radial * fwbs_variables.r_f_liq_ob
+                    blanket_library.len_blkt_outboard_coolant_channel_radial
+                    * fwbs_variables.r_f_liq_ob
                 ) / fwbs_variables.nopol
                 # Toroidal direction
                 fwbs_variables.a_bz_liq = (
@@ -696,7 +704,8 @@ class BlanketLibrary:
             + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
         )
         blanket_library.len_blkt_outboard_channel_total = (
-            fwbs_variables.bzfllengo_n_rad * blanket_library.len_blkt_outboard_coolant_channel_radial
+            fwbs_variables.bzfllengo_n_rad
+            * blanket_library.len_blkt_outboard_coolant_channel_radial
             + fwbs_variables.bzfllengo_n_pol * blanket_library.bllengo
         )
         # Blanket secondary coolant/breeder flow
@@ -710,7 +719,8 @@ class BlanketLibrary:
             + fwbs_variables.bzfllengi_n_pol_liq * blanket_library.bllengi
         )
         bzfllengo_liq = (
-            fwbs_variables.bzfllengo_n_rad_liq * blanket_library.len_blkt_outboard_coolant_channel_radial
+            fwbs_variables.bzfllengo_n_rad_liq
+            * blanket_library.len_blkt_outboard_coolant_channel_radial
             + fwbs_variables.bzfllengo_n_pol_liq * blanket_library.bllengo
         )
 
@@ -2450,104 +2460,118 @@ class BlanketLibrary:
     def pressure_drop(
         self,
         i_ps: int,
-        num_90: float,
-        num_180: float,
-        l_pipe: float,
-        den: float,
-        vsc: float,
-        vv: float,
+        n_pipe_90_deg_bends: float,
+        n_pipe_180_deg_bends: float,
+        len_pipe: float,
+        den_coolant: float,
+        visc_coolant: float,
+        vel_coolant: float,
         label: str,
         output: bool = False,
     ):
-        """Pressure drops are calculated for a pipe with a number of 90
+        """
+        Pressure drops are calculated for a pipe with a number of 90
         and 180 degree bends. The pressure drop due to frictional forces along
         the total straight length of the pipe is calculated, then the pressure
         drop due to the bends is calculated. The total pressure drop is the sum
         of all contributions.
 
-        original author: P. J. Knight, CCFE
-        moved from previous version of pumppower function by: G Graham, CCFE
-
         :param i_ps: switch for primary or secondary coolant
-        :param num_90: number of 90 degree bends in the pipe
-        :param num_180: number of 180 degree bends in the pipe
-        :param l_pipe: total flow length along pipe (m)
-        :param den: coolant density (kg/m3)
-        :param vsc: coolant viscosity (Pa s)
-        :param vv: coolant flow velocity (m/s)
+        :param n_pipe_90_deg_bends: number of 90 degree bends in the pipe
+        :param n_pipe_180_deg_bends: number of 180 degree bends in the pipe
+        :param len_pipe: total flow length along pipe (m)
+        :param den_coolant: coolant density (kg/m³)
+        :param visc_coolant: coolant viscosity (Pa s)
+        :param vel_coolant: coolant flow velocity (m/s)
         :param label: component name
         :param output: boolean of whether to write data to output file
 
-        N.B Darcy-Weisbach Equation (straight pipe):
+        :Notes:
+            Darcy-Weisbach Equation (straight pipe):
 
-         kstrght = lambda * L/D
+            ΔP = λ * L/D * (ρ 〈v〉²) / 2
 
-         pressure drop = kstrght * (rho*V^2)/2
+            λ - Darcy friction factor, L - pipe length, D - hydraulic diameter,
+            ρ - fluid density, 〈v〉 - fluid flow average velocity
 
-         lambda - Darcy friction factor, L - pipe length, D - hydraulic diameter,
-         rho - fluid density, V - fluid flow average velocity
+            This function also calculates pressure drop equations for elbow bends,
+            with modified coefficients.
 
-        This function also calculates pressure drop equations for elbow bends,
-        with modified coefficients.
-
-        N.B. Darcy friction factor is estimated from the Haaland approximation.
+            N.B. Darcy friction factor is estimated from the Haaland approximation.
         """
 
         # Calculate hydraulic dimater for round or retancular pipe (m)
-        dh = self.hydraulic_diameter(i_ps)
+        dia_pipe = self.hydraulic_diameter(i_ps)
 
         # Reynolds number
-        reyn = den * vv * dh / vsc
+        reynolds_number = den_coolant * vel_coolant * dia_pipe / visc_coolant
 
         # Calculate Darcy friction factor
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
-        lamda = self.fw.darcy_friction_haaland(
-            reyn, fwbs_variables.roughness_fw_channel, fwbs_variables.radius_fw_channel
+
+        darcy_friction_factor = self.fw.darcy_friction_haaland(
+            reynolds_number,
+            fwbs_variables.roughness_fw_channel,
+            fwbs_variables.radius_fw_channel,
         )
 
         # Pressure drop coefficient
 
         # Straight section
-        kstrght = lamda * l_pipe / dh
-
-        # In preveious version of pumppower:
-        # - elbow radius assumed = 0.018m for 90 degree elbow, from WCLL
-        # - elbow radius assumed half that of 90 deg case for 180 deg elbow
-        # Intialised value for radius_fw_channel is 0.006m, so elbow radius = 3 * radius_fw_channel,
-        # aka 1.5 * pipe diameter, which seems to be engineering standard for
-        # a steel pipe long-radius elbow (short-radius elbow = 2 * radius_fw_channel).
+        f_straight = darcy_friction_factor * len_pipe / dia_pipe
 
         # If primary coolant or secondary coolant (See DCLL)
-        elbow_radius = (
+        radius_pipe_elbow = (
             (3 * fwbs_variables.radius_fw_channel)
             if (i_ps == 1)
             else fwbs_variables.b_bz_liq
         )
 
         # 90 degree elbow pressure drop coefficient
-        kelbwn = self.elbow_coeff(elbow_radius, 90.0, lamda, dh)
+        f_elbow_90 = self.elbow_coeff(
+            radius_pipe_elbow=radius_pipe_elbow,
+            deg_pipe_elbow=90.0,
+            darcy_friction=darcy_friction_factor,
+            dia_pipe=dia_pipe,
+        )
 
         # 180 degree elbow pressure drop coefficient
-        kelbwt = self.elbow_coeff(elbow_radius / 2, 180.0, lamda, dh)
+        f_elbow_180 = self.elbow_coeff(
+            radius_pipe_elbow=radius_pipe_elbow / 2,
+            deg_pipe_elbow=180.0,
+            darcy_friction=darcy_friction_factor,
+            dia_pipe=dia_pipe,
+        )
 
-        # Total (Pa)
-        pdropstraight = kstrght * 0.5 * den * vv * vv
-        pdrop90 = num_90 * kelbwn * 0.5 * den * vv * vv
-        pdrop180 = num_180 * kelbwt * 0.5 * den * vv * vv
+        # Pressure drop due to friction in straight sections
+        dpres_straight = f_straight * 0.5 * den_coolant * vel_coolant**2
 
-        pressure_drop = pdropstraight + pdrop90 + pdrop180
+        # Pressure drop due to 90 and 180 degree bends
+        dpres_90 = n_pipe_90_deg_bends * f_elbow_90 * 0.5 * den_coolant * vel_coolant**2
+        dpres_180 = (
+            n_pipe_180_deg_bends * f_elbow_180 * 0.5 * den_coolant * vel_coolant**2
+        )
+
+        # Total pressure drop (Pa)
+        dpres_total = dpres_straight + dpres_90 + dpres_180
 
         if output:
             po.osubhd(self.outfile, f"Pressure drop (friction) for {label}")
-            po.ovarre(self.outfile, "Reynolds number", "(reyn)", reyn, "OP ")
-            po.ovarre(self.outfile, "Darcy friction factor", "(lambda)", lamda, "OP ")
+            po.ovarre(self.outfile, "Reynolds number", "(reyn)", reynolds_number, "OP ")
+            po.ovarre(
+                self.outfile,
+                "Darcy friction factor",
+                "(lambda)",
+                darcy_friction_factor,
+                "OP ",
+            )
             po.ovarre(
                 self.outfile,
                 "Pressure drop (Pa)",
                 "(pressure_drop)",
-                pressure_drop,
+                dpres_total,
                 "OP ",
             )
             po.ocmmnt(self.outfile, "This is the sum of the following:")
@@ -2555,21 +2579,21 @@ class BlanketLibrary:
                 self.outfile,
                 "            Straight sections (Pa)",
                 "(pdropstraight)",
-                pdropstraight,
+                dpres_straight,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "            90 degree bends (Pa)",
                 "(pdrop90)",
-                pdrop90,
+                dpres_90,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "            180 degree bends (Pa)",
                 "(pdrop180)",
-                pdrop180,
+                dpres_180,
                 "OP ",
             )
 
@@ -2578,21 +2602,25 @@ class BlanketLibrary:
                 self.outfile,
                 "Straight section pressure drop coefficient",
                 "(kstrght)",
-                kstrght,
+                f_straight,
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "90 degree elbow coefficient", "(kelbwn)", kelbwn, "OP "
+                self.outfile,
+                "90 degree elbow coefficient",
+                "(kelbwn)",
+                f_elbow_90,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "180 degree elbow coefficient coefficient",
                 "(kelbwt)",
-                kelbwt,
+                f_elbow_180,
                 "OP ",
             )
 
-        return pressure_drop
+        return dpres_total
 
     def hydraulic_diameter(self, i_channel_shape):
         """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
@@ -2623,7 +2651,7 @@ class BlanketLibrary:
         radius_pipe_elbow: float,
         deg_pipe_elbow: float,
         darcy_friction: float,
-        dia_pipe: float
+        dia_pipe: float,
     ) -> float:
         """
         Calculates elbow bend coefficients for pressure drop calculations.
@@ -2657,7 +2685,7 @@ class BlanketLibrary:
             )
 
         r_ratio = radius_pipe_elbow / dia_pipe
-        
+
         if r_ratio > 1:
             b = 0.21 / r_ratio**0.5
         elif r_ratio < 1:
