@@ -1900,7 +1900,7 @@ class BlanketLibrary:
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = self.pumppower(
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_coolant_in.item(),
@@ -1942,7 +1942,7 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the first wall (MW)
-            heat_transport_variables.p_fw_coolant_pump_mw = self.pumppower(
+            heat_transport_variables.p_fw_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_fw_coolant_in.item(),
@@ -1958,7 +1958,7 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_coolant_pump_mw = self.pumppower(
+            heat_transport_variables.p_blkt_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
                 icoolpump=1,
                 temp_in=fwbs_variables.temp_blkt_coolant_in.item(),
@@ -1995,7 +1995,7 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_breeder_pump_mw = self.pumppower(
+            heat_transport_variables.p_blkt_breeder_pump_mw = self.coolant_pumping_power(
                 output=output,
                 icoolpump=2,
                 temp_in=fwbs_variables.inlet_temp_liq.item(),
@@ -2699,7 +2699,7 @@ class BlanketLibrary:
         # Elbow Coefficient
         return ximt + xift
 
-    def pumppower(
+    def coolant_pumping_power(
         self,
         output,
         icoolpump,
