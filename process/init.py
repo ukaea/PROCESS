@@ -22,6 +22,7 @@ from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
+from process.data_structure.ife_variables import init_ife_variables
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.rebco_variables import init_rebco_variables
@@ -34,7 +35,6 @@ from process.dcll import init_dcll_module
 from process.exceptions import ProcessValidationError
 from process.fw import init_fwbs_variables
 from process.hcpb import init_ccfe_hcpb_module
-from process.ife import init_ife_variables
 from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
@@ -395,7 +395,10 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     # Plasma profile consistency checks
-    if fortran.ife_variables.ife != 1 and fortran.physics_variables.ipedestal == 1:
+    if (
+        data_structure.ife_variables.ife != 1
+        and fortran.physics_variables.ipedestal == 1
+    ):
         # Temperature checks
         if fortran.physics_variables.teped < fortran.physics_variables.tesep:
             raise ProcessValidationError(
@@ -1163,7 +1166,7 @@ def set_active_constraints():
 
 
 def set_device_type():
-    if fortran.ife_variables.ife == 1:
+    if data_structure.ife_variables.ife == 1:
         fortran.global_variables.icase = "Inertial Fusion model"
     elif fortran.stellarator_variables.istell != 0:
         fortran.global_variables.icase = "Stellarator model"
