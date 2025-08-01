@@ -1906,16 +1906,16 @@ class BlanketLibrary:
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 self.coolant_pumping_power(
                     output=output,
-                    icoolpump=1,
-                    temp_in=fwbs_variables.temp_fw_coolant_in.item(),
-                    temp_out=fwbs_variables.temp_blkt_coolant_out.item(),
-                    pressure=fwbs_variables.pres_fw_coolant.item(),
-                    pdrop=deltap_fw_blkt,
-                    mf=blanket_library.mftotal,
+                    i_liquid_breeder=1,
+                    temp_coolant_pump_outlet=fwbs_variables.temp_fw_coolant_in.item(),
+                    temp_coolant_pump_inlet=fwbs_variables.temp_blkt_coolant_out.item(),
+                    pres_coolant_pump_inlet=fwbs_variables.pres_fw_coolant.item(),
+                    dpres_coolant=deltap_fw_blkt,
+                    mflow_coolant_total=blanket_library.mftotal,
                     primary_coolant_switch=f2py_compatible_to_string(
                         fwbs_variables.i_fw_coolant_type
                     ),
-                    coolant_density=fwbs_variables.den_fw_coolant,
+                    den_coolant=fwbs_variables.den_fw_coolant,
                     label="First Wall and Blanket",
                 )
             )
@@ -1949,16 +1949,16 @@ class BlanketLibrary:
             # Mechanical pumping power for the first wall (MW)
             heat_transport_variables.p_fw_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
-                icoolpump=1,
-                temp_in=fwbs_variables.temp_fw_coolant_in.item(),
-                temp_out=fwbs_variables.temp_fw_coolant_out.item(),
-                pressure=fwbs_variables.pres_fw_coolant.item(),
-                pdrop=deltap_fw.item(),
-                mf=blanket_library.mflow_fw_coolant_total,
+                i_liquid_breeder=1,
+                temp_coolant_pump_outlet=fwbs_variables.temp_fw_coolant_in.item(),
+                temp_coolant_pump_inlet=fwbs_variables.temp_fw_coolant_out.item(),
+                pres_coolant_pump_inlet=fwbs_variables.pres_fw_coolant.item(),
+                dpres_coolant=deltap_fw.item(),
+                mflow_coolant_total=blanket_library.mflow_fw_coolant_total,
                 primary_coolant_switch=f2py_compatible_to_string(
                     fwbs_variables.i_fw_coolant_type
                 ),
-                coolant_density=fwbs_variables.den_fw_coolant,
+                den_coolant=fwbs_variables.den_fw_coolant,
                 label="First Wall",
             )
 
@@ -1966,16 +1966,16 @@ class BlanketLibrary:
             heat_transport_variables.p_blkt_coolant_pump_mw = (
                 self.coolant_pumping_power(
                     output=output,
-                    icoolpump=1,
-                    temp_in=fwbs_variables.temp_blkt_coolant_in.item(),
-                    temp_out=fwbs_variables.temp_blkt_coolant_out.item(),
-                    pressure=fwbs_variables.pres_blkt_coolant.item(),
-                    pdrop=deltap_blkt.item(),
-                    mf=blanket_library.mflow_blkt_coolant_total,
+                    i_liquid_breeder=1,
+                    temp_coolant_pump_outlet=fwbs_variables.temp_blkt_coolant_in.item(),
+                    temp_coolant_pump_inlet=fwbs_variables.temp_blkt_coolant_out.item(),
+                    pres_coolant_pump_inlet=fwbs_variables.pres_blkt_coolant.item(),
+                    dpres_coolant=deltap_blkt.item(),
+                    mflow_coolant_total=blanket_library.mflow_blkt_coolant_total,
                     primary_coolant_switch=(
                         "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
                     ),
-                    coolant_density=blanket_library.den_blkt_coolant,
+                    den_coolant=blanket_library.den_blkt_coolant,
                     label="Blanket",
                 )
             )
@@ -2005,16 +2005,16 @@ class BlanketLibrary:
             heat_transport_variables.p_blkt_breeder_pump_mw = (
                 self.coolant_pumping_power(
                     output=output,
-                    icoolpump=2,
-                    temp_in=fwbs_variables.inlet_temp_liq.item(),
-                    temp_out=fwbs_variables.outlet_temp_liq.item(),
-                    pressure=fwbs_variables.blpressure_liq.item(),
-                    pdrop=deltap_bl_liq,
-                    mf=fwbs_variables.mfblkt_liq,
+                    i_liquid_breeder=2,
+                    temp_coolant_pump_outlet=fwbs_variables.inlet_temp_liq.item(),
+                    temp_coolant_pump_inlet=fwbs_variables.outlet_temp_liq.item(),
+                    pres_coolant_pump_inlet=fwbs_variables.blpressure_liq.item(),
+                    dpres_coolant=deltap_bl_liq,
+                    mflow_coolant_total=fwbs_variables.mfblkt_liq,
                     primary_coolant_switch=(
                         "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
                     ),
-                    coolant_density=fwbs_variables.den_liq,
+                    den_coolant=fwbs_variables.den_liq,
                     label="Liquid Metal Breeder/Coolant",
                 )
             )
@@ -2495,10 +2495,10 @@ class BlanketLibrary:
         :Notes:
             Darcy-Weisbach Equation (straight pipe):
 
-            ΔP = λ * L/D * (ρ 〈v〉²) / 2
+            ΔP = λ * L/D * (p 〈v〉²) / 2
 
             λ - Darcy friction factor, L - pipe length, D - hydraulic diameter,
-            ρ - fluid density, 〈v〉 - fluid flow average velocity
+            p - fluid density, 〈v〉 - fluid flow average velocity
 
             This function also calculates pressure drop equations for elbow bends,
             with modified coefficients.
@@ -2711,7 +2711,7 @@ class BlanketLibrary:
     def coolant_pumping_power(
         self,
         output: bool,
-        icoolpump: int,
+        i_liquid_breeder: int,
         temp_coolant_pump_outlet: float,
         temp_coolant_pump_inlet: float,
         pres_coolant_pump_inlet: float,
@@ -2726,8 +2726,8 @@ class BlanketLibrary:
 
         :param output: Whether to write data to output file.
         :type output: bool
-        :param icoolpump: Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
-        :type icoolpump: int
+        :param i_liquid_breeder: Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
+        :type i_liquid_breeder: int
         :param temp_coolant_pump_outlet: Pump outlet temperature (K).
         :type temp_coolant_pump_outlet: float
         :param temp_coolant_pump_inlet: Pump inlet temperature (K).
@@ -2760,8 +2760,7 @@ class BlanketLibrary:
         gamma = (5 / 3) if fwbs_variables.i_blkt_coolant_type == 1 else (4 / 3)
 
         # If calculating for primary coolant
-        if icoolpump == 1:
-
+        if i_liquid_breeder == 1:
             # The pumping power is be calculated in the most general way,
             # using enthalpies before and after the pump.
 
@@ -2785,7 +2784,11 @@ class BlanketLibrary:
             # the isentropic efficiency of the pump.
             fp = (
                 temp_coolant_pump_outlet
-                * (1 - (pres_coolant_pump_outlet / pres_coolant_pump_inlet) ** -((gamma - 1) / gamma))
+                * (
+                    1
+                    - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
+                    ** -((gamma - 1) / gamma)
+                )
                 / (
                     fwbs_variables.etaiso
                     * (temp_coolant_pump_inlet - temp_coolant_pump_outlet)
@@ -2810,7 +2813,11 @@ class BlanketLibrary:
             # the isentropic efficiency of the pump.
             fp = (
                 temp_coolant_pump_outlet
-                * (1 - (pres_coolant_pump_outlet / pres_coolant_pump_inlet) ** -((gamma - 1) / gamma))
+                * (
+                    1
+                    - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
+                    ** -((gamma - 1) / gamma)
+                )
                 / (
                     fwbs_variables.etaiso_liq
                     * (temp_coolant_pump_inlet - temp_coolant_pump_outlet)
@@ -2841,7 +2848,7 @@ class BlanketLibrary:
                 self.outfile,
                 "FW or Blanket inlet (pump oulet) pressure (Pa)",
                 "(coolpin)",
-                coolpin,
+                pres_coolant_pump_outlet,
                 "OP ",
             )
             po.ovarre(
@@ -2858,7 +2865,13 @@ class BlanketLibrary:
                 dpres_coolant,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Mass flow rate in (kg/s) = ", "(mf)", mf, "OP ")
+            po.ovarre(
+                self.outfile,
+                "Mass flow rate in (kg/s) = ",
+                "(mf)",
+                mflow_coolant_total,
+                "OP ",
+            )
 
         return pumppower
 

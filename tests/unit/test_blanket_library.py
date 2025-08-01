@@ -334,14 +334,14 @@ def test_pumppower_primary_helium(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs_variables, "etaiso_liq", 0.85)
 
     data = {
-        "icoolpump": 2,
-        "temp_in": 570,
-        "temp_out": 720,
-        "pressure": 1700000,
-        "pdrop": 303517.3,
-        "mf": 35677.7,
+        "i_liquid_breeder": 2,
+        "temp_coolant_pump_outlet": 570,
+        "temp_coolant_pump_inlet": 720,
+        "pres_coolant_pump_inlet": 1700000,
+        "dpres_coolant": 303517.3,
+        "mflow_coolant_total": 35677.7,
         "primary_coolant_switch": 1,
-        "coolant_density": 9753.25,
+        "den_coolant": 9753.25,
         "label": "Liquid Metal Breeder/Coolant",
     }
 
@@ -356,14 +356,14 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs_variables, "etaiso_liq", 0.85)
 
     data = {
-        "icoolpump": 1,
-        "temp_in": 573,
-        "temp_out": 773,
-        "pressure": 8000000,
-        "pdrop": 20088.23,
-        "mf": 956.3,
+        "i_liquid_breeder": 1,
+        "temp_coolant_pump_outlet": 573,
+        "temp_coolant_pump_inlet": 773,
+        "pres_coolant_pump_inlet": 8000000,
+        "dpres_coolant": 20088.23,
+        "mflow_coolant_total": 956.3,
         "primary_coolant_switch": "Helium",
-        "coolant_density": 5.64,
+        "den_coolant": 5.64,
         "label": "First Wall and Blanket",
     }
 
