@@ -10,7 +10,7 @@ import pytest
 from process.init import init_all_module_vars
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def reinit_fix():
     """Re-initialise Fortran module variables before each test module is run.
 
