@@ -27,14 +27,16 @@ from process.fortran import (
 
 
 class CCFE_HCPB(BlanketLibrary):
-    """author: J Morris (UKAEA)
+    """
 
     This module contains the PROCESS CCFE HCPB blanket model
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)
 
-    ### References
-    - Kovari et al., Fusion Engineering and Design 104 (2016) 9-20
+    :References:
+        - M. Kovari et al., "PROCESS": A systems code for fusion power plants - Part 2: Engineering,”
+        Fusion Engineering and Design, vol. 104, pp. 9-20, Mar. 2016,
+        doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
     def __init__(self) -> None:
@@ -231,7 +233,7 @@ class CCFE_HCPB(BlanketLibrary):
         coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
 
         # Shield coolant volume (m3)
-        coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
+        coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld
 
         # First wall coolant volume (m3)
         coolvol = (
@@ -290,7 +292,7 @@ class CCFE_HCPB(BlanketLibrary):
 
         # Shield mass (kg)
         fwbs_variables.whtshld = (
-            fwbs_variables.volshld
+            fwbs_variables.vol_shld_total
             * fwbs_variables.denstl
             * (1.0 - fwbs_variables.vfshld)
         )
@@ -419,7 +421,7 @@ class CCFE_HCPB(BlanketLibrary):
             fwbs_variables.m_blkt_total / fwbs_variables.vol_blkt_total
         )
         ccfe_hcpb_module.shield_density = (
-            fwbs_variables.whtshld / fwbs_variables.volshld
+            fwbs_variables.whtshld / fwbs_variables.vol_shld_total
         )
         # Picking the largest value for VV thickness
         d_vv_all = build_variables.dr_vv_inboard
@@ -1209,8 +1211,8 @@ class CCFE_HCPB(BlanketLibrary):
         po.ovarrf(
             self.outfile,
             "Shield Volume (m3)",
-            "(volshld)",
-            fwbs_variables.volshld,
+            "(vol_shld_total)",
+            fwbs_variables.vol_shld_total,
             "OP ",
         )
         po.ovarrf(

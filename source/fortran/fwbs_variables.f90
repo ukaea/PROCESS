@@ -426,7 +426,7 @@ module fwbs_variables
   real(dp) :: vol_blkt_outboard
   !! volume of outboard blanket [m^3]
 
-  real(dp) :: volshld
+  real(dp) :: vol_shld_total
   !! volume of shield [m^3]
 
   real(dp) :: whtshld
