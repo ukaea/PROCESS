@@ -22,6 +22,7 @@ from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
+from process.data_structure.neoclassics_variables import init_neoclassics_variables
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.primary_pumping_variables import (
     init_primary_pumping_variables,
@@ -293,6 +294,7 @@ def init_all_module_vars():
     init_cost_2015_variables()
     init_power_variables()
     init_python_build_variables()
+    init_neoclassics_variables()
 
     fortran.init_module.init_fortran_modules()
 
