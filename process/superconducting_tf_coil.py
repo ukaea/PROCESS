@@ -51,75 +51,9 @@ class SuperconductingTFCoil(TFCoil):
         Routine to call the superconductor module for the TF coils
         """
         self.iprint = 0
-        (
-            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
-            sctfcoil_module.tan_theta_coil,
-            tfcoil_variables.a_tf_inboard_total,
-            sctfcoil_module.r_tf_outboard_in,
-            sctfcoil_module.r_tf_outboard_out,
-            tfcoil_variables.dx_tf_inboard_out_toroidal,
-            tfcoil_variables.a_tf_leg_outboard,
-            tfcoil_variables.dr_tf_plasma_case,
-            tfcoil_variables.dx_tf_side_case_min,
-        ) = super().tf_global_geometry(
-            i_tf_case_geom=tfcoil_variables.i_tf_case_geom,
-            i_f_dr_tf_plasma_case=tfcoil_variables.i_f_dr_tf_plasma_case,
-            f_dr_tf_plasma_case=tfcoil_variables.f_dr_tf_plasma_case,
-            tfc_sidewall_is_fraction=tfcoil_variables.tfc_sidewall_is_fraction,
-            casths_fraction=tfcoil_variables.casths_fraction,
-            n_tf_coils=tfcoil_variables.n_tf_coils,
-            dr_tf_inboard=build_variables.dr_tf_inboard,
-            dr_tf_nose_case=tfcoil_variables.dr_tf_nose_case,
-            r_tf_inboard_out=build_variables.r_tf_inboard_out,
-            r_tf_inboard_in=build_variables.r_tf_inboard_in,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-        )
 
-        # Radial position of peak toroidal field [m]
-
-        tfcoil_variables.r_b_tf_inboard_peak = (
-            build_variables.r_tf_inboard_out
-            - tfcoil_variables.dr_tf_plasma_case
-            - tfcoil_variables.dx_tf_wp_insulation
-            - tfcoil_variables.dx_tf_wp_insertion_gap
-        )
-
-        (
-            tfcoil_variables.b_tf_inboard_peak,
-            tfcoil_variables.c_tf_total,
-            sctfcoil_module.c_tf_coil,
-            tfcoil_variables.oacdcp,
-        ) = super().tf_current(
-            n_tf_coils=tfcoil_variables.n_tf_coils,
-            bt=physics_variables.bt,
-            rmajor=physics_variables.rmajor,
-            r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
-            a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
-        )
-
-        (
-            tfcoil_variables.len_tf_coil,
-            tfcoil_variables.tfa,
-            tfcoil_variables.tfb,
-            tfcoil_variables.r_tf_arc,
-            tfcoil_variables.z_tf_arc,
-        ) = super().tf_coil_shape_inner(
-            i_tf_shape=tfcoil_variables.i_tf_shape,
-            itart=physics_variables.itart,
-            i_single_null=physics_variables.i_single_null,
-            r_tf_inboard_out=build_variables.r_tf_inboard_out,
-            r_cp_top=build_variables.r_cp_top,
-            rmajor=physics_variables.rmajor,
-            rminor=physics_variables.rminor,
-            r_tf_outboard_in=sctfcoil_module.r_tf_outboard_in,
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            z_tf_top=build_variables.z_tf_top,
-            dr_tf_inboard=build_variables.dr_tf_inboard,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
-        )
+        # Set up TF values share by all coil types
+        super().run_base_tf()
 
         self.sc_tf_internal_geom(
             tfcoil_variables.i_tf_wp_geom,
@@ -329,6 +263,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
         peaktfflag = 0
+
         self.vv_stress_on_quench()
 
         # Peak field including ripple
