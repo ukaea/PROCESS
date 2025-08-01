@@ -2703,7 +2703,12 @@ class BlanketLibrary:
         ximt = a * b
 
         # Friction
-        xift = 0.0175 * darcy_friction * (radius_pipe_elbow / dia_pipe) * deg_pipe_elbow
+        xift = (
+            (np.pi / 180.0)
+            * darcy_friction
+            * (radius_pipe_elbow / dia_pipe)
+            * deg_pipe_elbow
+        )
 
         # Elbow Coefficient
         return ximt + xift

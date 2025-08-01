@@ -99,6 +99,6 @@ $$
 The elbow coefficient is given by:
 
 $$
-ab + \left(0.0175 \times f_{\text{D}} \times \frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right) \times \theta
+ab + \left( f_{\text{D}} \times \frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right) \times \theta \times \left(\frac{\pi}{180^{\circ}}\right)
 $$
 

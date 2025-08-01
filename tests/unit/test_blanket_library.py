@@ -294,7 +294,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
 
     assert (
         pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
-        == 5885.192672142268
+        == 5884.982168510442
     )
 
 
@@ -325,7 +325,7 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
 
     assert (
         pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
-        == 56.962742615936264
+        == 56.95922064419226
     )
 
 
@@ -1791,7 +1791,7 @@ class PressureDropParam(NamedTuple):
             vsc=3.604452999475736e-05,
             vv=32.753134225223164,
             label="Inboard first wall",
-            expected_pressure_drop_out=36214.869527556766,
+            expected_pressure_drop_out=36213.58989742931,
         ),
     ),
 )
