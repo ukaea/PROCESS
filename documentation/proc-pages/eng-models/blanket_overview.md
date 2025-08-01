@@ -1,6 +1,6 @@
 # Blanket
 
-## General Blanket methods | `BlanketLibrary`
+## General blanket methods | `BlanketLibrary`
 
 
 --------------------
@@ -13,11 +13,13 @@ To calculate the coolant pumping power we use the change in enthalpies of the co
 The mechanical pumping power is defined as:
 
 $$
-P = \frac{\dot{m} \times \left(H_{\text{out}}-H_{\text{in}}\right)}{\eta}
+P = \frac{\frac{\dot{m} \times \left(H_{\text{out}}-H_{\text{in}}\right)}{\eta}}{\left(1-fp\right)}
 $$
 
+where $\dot{m}$ is the coolant mass flow rate, $H$ is the coolant enthalpy, $\eta$ is the isentropic efficiency of the pump and $\gamma$ is the adiabatic index of the coolant.
+
 $$
-fp = \frac{T_{\text{pump,out}}\left(\frac{P_{\text{pump,out}}}{P_{\text{pump,out}}}\right)^{-\frac{\gamma -1}{\gamma}}}{\eta \left(T_{\text{pump,in}}-T_{\text{pump,out}}\right)}
+fp = \frac{T_{\text{pump,out}}\left(\frac{P_{\text{pump,out}}}{P_{\text{pump,in}}}\right)^{-\frac{\gamma -1}{\gamma}}}{\eta \left(T_{\text{pump,in}}-T_{\text{pump,out}}\right)}
 $$
 
 ------------------
