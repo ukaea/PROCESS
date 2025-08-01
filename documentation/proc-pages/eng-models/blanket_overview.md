@@ -76,5 +76,29 @@ $$
 \Delta P = L\left[f_{\text{D}}\frac{\rho}{2}\frac{\langle v \rangle^2}{D_{\text{H}}}\right] + N_{\text{90}} \left[f_{\text{90,elbow}} \frac{\rho \langle v \rangle^2}{2}\right] + N_{\text{180}} \left[f_{\text{180,elbow}} \frac{\rho \langle v \rangle^2}{2}\right]
 $$
 
+-------------------
 
 ### Pipe bend elbow coefficient | `elbow_coeff()`
+
+This function calculates the elbow bend coefficients for pressure drop calculations.
+
+$$
+a = 1.0 \quad \text{if} \ \theta = 90^{\circ} \\
+a = 0.9 \times \sin{\left(\frac{\theta \pi}{180^{\circ}}\right)} \quad \text{if} \ \theta < 70^{\circ} \\
+a = 0.7 + 0.35 \times \sin{\left(\frac{\theta}{90^{\circ}} \times \frac{\pi}{180^{\circ}}\right)} \quad \text{if} \ \theta > 90^{\circ} \\
+$$
+
+where $\theta$ is the angle of the pipe bend.
+
+$$
+b = \frac{0.21}{\sqrt{\frac{R_{\text{elbow}}}{D_{\text{pipe}}}}}\quad \text{if} \ \frac{R_{\text{elbow}}}{D_{\text{pipe}}} \ge 1 \\
+b = \frac{0.21}{\left(\frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right)^{2.5}}\quad \text{if} \ \frac{R_{\text{elbow}}}{D_{\text{pipe}}} \le 1 \\
+\text{else} \quad b =0.21
+$$
+
+The elbow coefficient is given by:
+
+$$
+ab + \left(0.0175 \times f_{\text{D}} \times \frac{R_{\text{elbow}}}{D_{\text{pipe}}}\right) \times \theta
+$$
+
