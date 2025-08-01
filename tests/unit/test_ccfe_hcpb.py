@@ -434,9 +434,8 @@ class NuclearHeatingFwParam(NamedTuple):
             p_fw_nuclear_heat_total_mw=0,
             m_fw_total=224802.80270851994,
             p_fusion_total_mw=1986.0623241661431,
-            fw_armour_u_nuc_heating=0,
+            fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_p_fw_nuclear_heat_total_mw=279.04523551646628,
-            expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
         NuclearHeatingFwParam(
             p_fw_nuclear_heat_total_mw=276.80690153753221,
@@ -444,7 +443,6 @@ class NuclearHeatingFwParam(NamedTuple):
             p_fusion_total_mw=1985.4423932312809,
             fw_armour_u_nuc_heating=6.2500000000000005e-07,
             expected_p_fw_nuclear_heat_total_mw=225.98781165610032,
-            expected_fw_armour_u_nuc_heating=6.2500000000000005e-07,
         ),
     ),
 )
@@ -479,14 +477,14 @@ def test_nuclear_heating_fw(nuclearheatingfwparam, monkeypatch, ccfe_hcpb):
         nuclearheatingfwparam.fw_armour_u_nuc_heating,
     )
 
-    ccfe_hcpb.nuclear_heating_fw()
-
-    assert fwbs_variables.p_fw_nuclear_heat_total_mw == pytest.approx(
-        nuclearheatingfwparam.expected_p_fw_nuclear_heat_total_mw
+    p_fw_nuclear_heat_total_mw = ccfe_hcpb.nuclear_heating_fw(
+        m_fw_total=nuclearheatingfwparam.m_fw_total,
+        fw_armour_u_nuc_heating=nuclearheatingfwparam.fw_armour_u_nuc_heating,
+        p_fusion_total_mw=nuclearheatingfwparam.p_fusion_total_mw,
     )
 
-    assert ccfe_hcpb_module.fw_armour_u_nuc_heating == pytest.approx(
-        nuclearheatingfwparam.expected_fw_armour_u_nuc_heating
+    assert p_fw_nuclear_heat_total_mw == pytest.approx(
+        nuclearheatingfwparam.expected_p_fw_nuclear_heat_total_mw
     )
 
 
@@ -525,7 +523,7 @@ class NuclearHeatingBlanketParam(NamedTuple):
         ),
     ),
 )
-def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_hcpb):
+def test_nuclear_heating_blanket(nuclearheatingblanketparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_blanket.
 
@@ -534,39 +532,18 @@ def test_nuclear_heating_blanket(nuclearheatingblanketparam, monkeypatch, ccfe_h
     :param nuclearheatingblanketparam: the data used to mock and assert in this test.
     :type nuclearheatingblanketparam: nuclearheatingblanketparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        fwbs_variables, "m_blkt_total", nuclearheatingblanketparam.m_blkt_total
+    p_blkt_nuclear_heat_total_mw, exp_blanket = ccfe_hcpb.nuclear_heating_blanket(
+        m_blkt_total=nuclearheatingblanketparam.m_blkt_total,
+        p_fusion_total_mw=nuclearheatingblanketparam.p_fusion_total_mw,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_blkt_nuclear_heat_total_mw",
-        nuclearheatingblanketparam.p_blkt_nuclear_heat_total_mw,
-    )
-
-    monkeypatch.setattr(
-        physics_variables,
-        "p_fusion_total_mw",
-        nuclearheatingblanketparam.p_fusion_total_mw,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_blanket", nuclearheatingblanketparam.exp_blanket
-    )
-
-    ccfe_hcpb.nuclear_heating_blanket()
-
-    assert fwbs_variables.p_blkt_nuclear_heat_total_mw == pytest.approx(
+    assert p_blkt_nuclear_heat_total_mw == pytest.approx(
         nuclearheatingblanketparam.expected_p_blkt_nuclear_heat_total_mw
     )
 
-    assert ccfe_hcpb_module.exp_blanket == pytest.approx(
-        nuclearheatingblanketparam.expected_exp_blanket
-    )
+    assert exp_blanket == pytest.approx(nuclearheatingblanketparam.expected_exp_blanket)
 
 
 class NuclearHeatingShieldParam(NamedTuple):
@@ -640,7 +617,7 @@ class NuclearHeatingShieldParam(NamedTuple):
         ),
     ),
 )
-def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcpb):
+def test_nuclear_heating_shield(nuclearheatingshieldparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_shield.
 
@@ -649,85 +626,39 @@ def test_nuclear_heating_shield(nuclearheatingshieldparam, monkeypatch, ccfe_hcp
     :param nuclearheatingshieldparam: the data used to mock and assert in this test.
     :type nuclearheatingshieldparam: nuclearheatingshieldparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        build_variables, "dr_shld_inboard", nuclearheatingshieldparam.dr_shld_inboard
+    p_shld_nuclear_heat_mw, exp_shield1, exp_shield2, shld_u_nuc_heating = (
+        ccfe_hcpb.nuclear_heating_shield(
+            itart=nuclearheatingshieldparam.itart,
+            dr_shld_inboard=nuclearheatingshieldparam.dr_shld_inboard,
+            dr_shld_outboard=nuclearheatingshieldparam.dr_shld_outboard,
+            shield_density=nuclearheatingshieldparam.shield_density,
+            whtshld=nuclearheatingshieldparam.whtshld,
+            x_blanket=nuclearheatingshieldparam.x_blanket,
+            p_fusion_total_mw=nuclearheatingshieldparam.p_fusion_total_mw,
+        )
     )
 
-    monkeypatch.setattr(
-        build_variables, "dr_shld_outboard", nuclearheatingshieldparam.dr_shld_outboard
-    )
-
-    monkeypatch.setattr(fwbs_variables, "whtshld", nuclearheatingshieldparam.whtshld)
-
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_shld_nuclear_heat_mw",
-        nuclearheatingshieldparam.p_shld_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        physics_variables,
-        "p_fusion_total_mw",
-        nuclearheatingshieldparam.p_fusion_total_mw,
-    )
-
-    monkeypatch.setattr(physics_variables, "itart", nuclearheatingshieldparam.itart)
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "shield_density", nuclearheatingshieldparam.shield_density
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "x_blanket", nuclearheatingshieldparam.x_blanket
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module,
-        "shld_u_nuc_heating",
-        nuclearheatingshieldparam.shld_u_nuc_heating,
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_shield1", nuclearheatingshieldparam.exp_shield1
-    )
-
-    monkeypatch.setattr(
-        ccfe_hcpb_module, "exp_shield2", nuclearheatingshieldparam.exp_shield2
-    )
-
-    ccfe_hcpb.nuclear_heating_shield()
-
-    assert fwbs_variables.p_shld_nuclear_heat_mw == pytest.approx(
+    assert p_shld_nuclear_heat_mw == pytest.approx(
         nuclearheatingshieldparam.expected_p_shld_nuclear_heat_mw
     )
 
-    assert ccfe_hcpb_module.shld_u_nuc_heating == pytest.approx(
+    assert shld_u_nuc_heating == pytest.approx(
         nuclearheatingshieldparam.expected_shld_u_nuc_heating
     )
 
-    assert ccfe_hcpb_module.exp_shield1 == pytest.approx(
-        nuclearheatingshieldparam.expected_exp_shield1
-    )
+    assert exp_shield1 == pytest.approx(nuclearheatingshieldparam.expected_exp_shield1)
 
-    assert ccfe_hcpb_module.exp_shield2 == pytest.approx(
-        nuclearheatingshieldparam.expected_exp_shield2
-    )
+    assert exp_shield2 == pytest.approx(nuclearheatingshieldparam.expected_exp_shield2)
 
 
 class NuclearHeatingDivertorParam(NamedTuple):
     f_ster_div_single: Any = None
 
-    p_div_nuclear_heat_total_mw: Any = None
-
-    p_fw_hcd_nuclear_heat_mw: Any = None
-
     n_divertors: Any = None
 
-    p_fusion_total_mw: Any = None
+    p_neutron_total_mw: Any = None
 
     expected_p_div_nuclear_heat_total_mw: Any = None
 
@@ -737,23 +668,19 @@ class NuclearHeatingDivertorParam(NamedTuple):
     (
         NuclearHeatingDivertorParam(
             f_ster_div_single=0.115,
-            p_div_nuclear_heat_total_mw=0,
-            p_fw_hcd_nuclear_heat_mw=0,
             n_divertors=1,
-            p_fusion_total_mw=1986.0623241661431,
-            expected_p_div_nuclear_heat_total_mw=182.71773382328519,
+            p_neutron_total_mw=1986.0623241661431,
+            expected_p_div_nuclear_heat_total_mw=228.39716727910647,
         ),
         NuclearHeatingDivertorParam(
             f_ster_div_single=0.115,
-            p_div_nuclear_heat_total_mw=182.71773382328519,
-            p_fw_hcd_nuclear_heat_mw=0,
-            n_divertors=1,
-            p_fusion_total_mw=1985.4423932312809,
-            expected_p_div_nuclear_heat_total_mw=182.66070017727785,
+            n_divertors=2,
+            p_neutron_total_mw=1985.4423932312809,
+            expected_p_div_nuclear_heat_total_mw=456.6517504431946,
         ),
     ),
 )
-def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe_hcpb):
+def test_nuclear_heating_divertor(nuclearheatingdivertorparam, ccfe_hcpb):
     """
     Automatically generated Regression Unit Test for nuclear_heating_divertor.
 
@@ -762,41 +689,15 @@ def test_nuclear_heating_divertor(nuclearheatingdivertorparam, monkeypatch, ccfe
     :param nuclearheatingdivertorparam: the data used to mock and assert in this test.
     :type nuclearheatingdivertorparam: nuclearheatingdivertorparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        fwbs_variables,
-        "f_ster_div_single",
-        nuclearheatingdivertorparam.f_ster_div_single,
+    p_div_nuclear_heat_total_mw = ccfe_hcpb.nuclear_heating_divertor(
+        n_divertors=nuclearheatingdivertorparam.n_divertors,
+        p_neutron_total_mw=nuclearheatingdivertorparam.p_neutron_total_mw,
+        f_ster_div_single=nuclearheatingdivertorparam.f_ster_div_single,
     )
 
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_div_nuclear_heat_total_mw",
-        nuclearheatingdivertorparam.p_div_nuclear_heat_total_mw,
-    )
-
-    monkeypatch.setattr(
-        fwbs_variables,
-        "p_fw_hcd_nuclear_heat_mw",
-        nuclearheatingdivertorparam.p_fw_hcd_nuclear_heat_mw,
-    )
-
-    monkeypatch.setattr(
-        physics_variables, "n_divertors", nuclearheatingdivertorparam.n_divertors
-    )
-
-    monkeypatch.setattr(
-        physics_variables,
-        "p_fusion_total_mw",
-        nuclearheatingdivertorparam.p_fusion_total_mw,
-    )
-
-    ccfe_hcpb.nuclear_heating_divertor()
-
-    assert fwbs_variables.p_div_nuclear_heat_total_mw == pytest.approx(
+    assert p_div_nuclear_heat_total_mw == pytest.approx(
         nuclearheatingdivertorparam.expected_p_div_nuclear_heat_total_mw
     )
 
