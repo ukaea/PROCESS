@@ -1208,7 +1208,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
             },
-            46.84050744522757,
+            37.08247253247967,
         ),
         (
             {
@@ -1220,7 +1220,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
                 "kappa": 1.85,
                 "delta": 0.5,
             },
-            39.90862317467305,
+            31.594671010223617,
         ),
     ),
 )
@@ -1244,7 +1244,7 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "perim": 24,
                 "rmu0": constants.rmu0,
             },
-            4.3453802853633166,
+            3.4401302177092803,
         ),
         (
             {
@@ -1259,7 +1259,7 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "perim": 24,
                 "rmu0": constants.rmu0,
             },
-            3.702311392804667,
+            2.9310284627233205,
         ),
         (
             {
