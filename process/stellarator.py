@@ -245,6 +245,25 @@ class Stellarator:
             physics_variables.bt / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
+        # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
+        st.f_coil_aspect = 1.0
+
+        # Coil aspect ration factor can be described with the reversed equation (so if we would know r_coil_minor)
+        # st.f_coil_aspect = (
+        #     (physics_variables.rmajor / st.r_coil_minor) /
+        #     (stellarator_configuration.stella_config_rmajor_ref / 
+        #      stellarator_configuration.stella_config_coil_rminor)
+        # ) 
+
+        # Coil major radius, scaled with respect to the reference calculation
+        st.r_coil_major = stellarator_configuration.stella_config_coil_rmajor * st.f_r
+        # Coil minor radius, scaled with respect to the reference calculation
+        st.r_coil_minor = stellarator_configuration.stella_config_coil_rminor * st.f_r / st.f_coil_aspect
+
+        st.f_coil_shape = (( stellarator_configuration.stella_config_min_plasma_coil_distance
+                           + stellarator_configuration.stella_config_rminor_ref )
+                           / stellarator_configuration.stella_config_coil_rminor)
+
     def stgeom(self):
         """
                 author: J Lion, IPP Greifswald
@@ -395,11 +414,15 @@ class Stellarator:
         )
 
         # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
-        build_variables.available_radial_space = st.f_r * (
+        build_variables.available_radial_space = (st.f_r * (
             stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
             * stellarator_configuration.stella_config_rminor_ref
             * (1 / st.f_aspect - 1)
             + stellarator_configuration.stella_config_min_plasma_coil_distance
+            )
+        * (st.r_coil_minor * st.f_coil_shape - physics_variables.rminor)
+        / (stellarator_configuration.stella_config_coil_rminor * st.f_coil_shape 
+           - stellarator_configuration.stella_config_rminor_ref)
         )
 
         #  Radius to inner edge of inboard shield
@@ -2482,8 +2505,8 @@ class Stellarator:
         are assumed to be a fixed shape, but are scaled in size
         appropriately for the machine being modelled.
         """
-        r_coil_major = stellarator_configuration.stella_config_coil_rmajor * st.f_r
-        r_coil_minor = stellarator_configuration.stella_config_coil_rminor * st.f_r
+        r_coil_major = st.r_coil_major
+        r_coil_minor = st.r_coil_minor
 
         ########################################################################################
         # Winding Pack Geometry: for one conductor
@@ -2514,7 +2537,7 @@ class Stellarator:
         #
         # Total coil current (MA)
         coilcurrent = (
-            st.f_b * stellarator_configuration.stella_config_i0 * st.f_r / st.f_n
+            st.f_b * stellarator_configuration.stella_config_i0 * st.f_r / st.f_coil_aspect / st.f_n
         )
         st.f_i = coilcurrent / stellarator_configuration.stella_config_i0
 
