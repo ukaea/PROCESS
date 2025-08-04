@@ -11,13 +11,9 @@ from pathlib import Path
 import os
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
-# prefix = "/squid"
-# prefix = "/transition"
-# prefix = "/updated"
-# prefix = "/rebuild"
-# prefix = "/stellarator_helias_once_through"
-prefix = "/helias5_7T"
-# prefix = "/helias5"
+
+prefix = "/squid"
+
 
 
 def postprocess(single_run):

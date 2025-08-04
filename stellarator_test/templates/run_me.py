@@ -15,7 +15,7 @@ if __name__ == "__main__":
         prog='run_PROCESS',
         description="Run PROCESS with IN.DAT file present in the same directory",
     )
-    parser.add_argument("-n", "--input_name")
+    parser.add_argument("-n", "--input_name", "-v")
     args = parser.parse_args()
 
     if args.input_name is not None:

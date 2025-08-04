@@ -6,10 +6,11 @@ Generate directory structure and input files for selected case.
 from pathlib import Path
 import os, shutil
 import numpy as np
+import warnings
 
 from process.io.in_dat import InDat
 
-def main(main_name='cases', prefix = 'squid', create_scan=False, clean_start=True):
+def main(main_name, prefix, B_min = 5.0, B_max = 6.0, create_scan=False, clean_start=True):
     """
     Generate input files in the directory defined by main_name
     prefix is used to fine stella_conf file and input template 
@@ -19,16 +20,15 @@ def main(main_name='cases', prefix = 'squid', create_scan=False, clean_start=Tru
     default_dir = 'stellarator_test/autostart'
     templates_dir = 'stellarator_test/templates'
 
-    if os.path.isfile(templates_dir+'/'+prefix+'.IN.DAT'):
-        input_file_path = templates_dir+'/'+prefix+'.IN.DAT'
-    else:
+    input_file_path = os.path.join(templates_dir+'/'+prefix+'.IN.DAT')
+    if not os.path.isfile(input_file_path):
+        warnings.warn('\nNo input file found with given prefix, using default\n', stacklevel=2)
         input_file_path = templates_dir+'/input.IN.DAT'
+        
     
     create_directory(Path(default_dir+'/'+main_name), clean_start)
 
-    B_min = 5
-    B_max = 6
-    B_list = list(np.linspace(B_min,B_max,(B_max-B_min)*10+1))
+    B_list = list(np.linspace(B_min,B_max,round((B_max-B_min)*10+1)))
     print('B list: ', B_list)
 
     if create_scan:
@@ -50,14 +50,14 @@ def main(main_name='cases', prefix = 'squid', create_scan=False, clean_start=Tru
     i = InDat(input_file_path)
     i.remove_iteration_variable(2)  # remove bt from iteration variables
 
-    i.add_parameter("beta_max", 0.05)
-    i.add_bound(10, "upper", 1.6)
     
     cases = B_list
     for case in cases:
+        case_path = default_dir+'/'+main_name+'/B_'+f'{case:.1f}'
+        if not os.path.isdir(case_path):
+            os.mkdir(case_path)
+
         i.add_parameter("bt", case)
-        case_path = default_dir+'/'+main_name+'/B_'+str(case)
-        os.mkdir(case_path)
         i.write_in_dat()
         i.write_in_dat(output_filename=case_path+'/'+prefix+'.IN.DAT')
         shutil.copyfile(templates_dir+'/run_me.py', case_path+'/run_me.py')

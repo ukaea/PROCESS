@@ -28,7 +28,7 @@ lablxc(ipnvars) : labels describing iteration variables
     (25) fpnetel (f-value for equation 16)
     (26) fp_fusion_total_max_mw (f-value for equation 9)
     (27) fpflux_div_heat_load_mw (f-value for equation 18)
-    (28) fradpwr (f-value for equation 17), total radiation fraction
+    (28) fradpwr (f-value for equation 17), F-Value For Core Radiation Power Limit
     (29) dr_bore
     (30) fmva (f-value for equation 19)
     (31) gapomin

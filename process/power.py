@@ -752,6 +752,8 @@ class Power:
         )
 
         #  Number of primary heat exchangers
+        if heat_transport_variables.pthermmw is None: 
+            print('pthermmw is None, check input and settings.')
         heat_transport_variables.nphx = math.ceil(
             heat_transport_variables.pthermmw / 1000.0e0
         )

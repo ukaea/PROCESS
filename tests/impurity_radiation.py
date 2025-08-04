@@ -1,3 +1,6 @@
+'''
+This is not a real test, it was made to manually compare some selected values'''
+
 import process.impurity_radiation as impurity_radiation
 from process.fortran import impurity_radiation_module
 import numpy as np

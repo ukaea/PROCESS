@@ -58,6 +58,7 @@ env_process/
 !scenario_examples/*/*.pdf
 !stellerator_test/*.DAT
 stellarator_test/autostart/*
+stellarator_analysis/*
 !stellarator_test/autostart/*.py
 */.ipynb_checkpoints/
 REBCO_JC.DAT

@@ -203,12 +203,16 @@ class Stellarator:
             ),
         )
 
-        # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
-        # Or when you call it the first time
-        if 1 not in numerics.ixc:
-            physics_variables.aspect = (
-                stellarator_configuration.stella_config_aspect_ref
-            )
+        # This section should be remove, it prevents from manual change of the aspect ratio.
+        # Now the aspect ration from the input is compared to the reference value,
+        # in the same way as during iteration of aspect variable.
+
+        # # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
+        # # Or when you call it the first time
+        # if 1 not in numerics.ixc:
+        #     physics_variables.aspect = (
+        #         stellarator_configuration.stella_config_aspect_ref
+        #     )
 
         # Set the physics_variables.rminor radius as result here.
         physics_variables.rminor = physics_variables.rmajor / physics_variables.aspect

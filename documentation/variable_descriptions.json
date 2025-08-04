@@ -192,7 +192,7 @@
         "fwalld": "F-Value For Max Wall Load (`Constraint Equation 8`, `Iteration Variable 14`)",
         "fzeffmax": "F-Value For Max Zeff (`Constraint Equation 64`, `Iteration Variable 112`)",
         "gammax": "Max Current Drive Gamma (`Constraint Equation 37`)",
-        "pflux_fw_rad_max": "Max Permitted Radiation Wall Load (MW/M^2) (`Constraint Equation 67`)",
+        "maxradwallload": "Max Permitted Radiation Wall Load (MW/M^2) (`Constraint Equation 67`)",
         "mvalim": "Max MVA Limit (`Constraint Equation 19`)",
         "nbshinefmax": "Max Neutral Beam Shine-Through Fraction (`Constraint Equation 59`)",
         "nflutfmax": "Max Fast Neutron Fluence On TF Coil (N/M2) (`Blktmodel>0`) (`Constraint Equation 53`)",
