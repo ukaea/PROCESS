@@ -683,9 +683,10 @@ class BlanketLibrary:
                     / fwbs_variables.nopipes
                 )
                 # Poloidal
-                if (blanket_library.bllengi < (fwbs_variables.b_bz_liq * 3)) or (
-                    blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3)
-                ):
+                if (
+                    blanket_library.len_blkt_inboard_segment_poloidal
+                    < (fwbs_variables.b_bz_liq * 3)
+                ) or (blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3)):
                     eh.report_error(278)
 
             # Unless there is no IB blanket...
@@ -709,7 +710,8 @@ class BlanketLibrary:
         blanket_library.len_blkt_inboard_channel_total = (
             fwbs_variables.bzfllengi_n_rad
             * blanket_library.len_blkt_inboard_coolant_channel_radial
-            + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
+            + fwbs_variables.bzfllengi_n_pol
+            * blanket_library.len_blkt_inboard_segment_poloidal
         )
         blanket_library.len_blkt_outboard_channel_total = (
             fwbs_variables.bzfllengo_n_rad
@@ -717,14 +719,15 @@ class BlanketLibrary:
             + fwbs_variables.bzfllengo_n_pol * blanket_library.bllengo
         )
         # Blanket secondary coolant/breeder flow
-        pollengi = blanket_library.bllengi
+        pollengi = blanket_library.len_blkt_inboard_segment_poloidal
         pollengo = blanket_library.bllengo
         fwbs_variables.nopol = 2
         fwbs_variables.nopipes = 4
         bzfllengi_liq = (
             fwbs_variables.bzfllengi_n_rad_liq
             * blanket_library.len_blkt_inboard_coolant_channel_radial
-            + fwbs_variables.bzfllengi_n_pol_liq * blanket_library.bllengi
+            + fwbs_variables.bzfllengi_n_pol_liq
+            * blanket_library.len_blkt_inboard_segment_poloidal
         )
         bzfllengo_liq = (
             fwbs_variables.bzfllengo_n_rad_liq
@@ -1124,7 +1127,7 @@ class BlanketLibrary:
             physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1
         ):  # D-shaped machine
             # Segment vertical inboard surface (m)
-            blanket_library.bllengi = (
+            blanket_library.len_blkt_inboard_segment_poloidal = (
                 2.0 * blanket_library.dz_blkt_half
             ) / fwbs_variables.n_blkt_inboard_modules_poloidal
 
@@ -1190,7 +1193,7 @@ class BlanketLibrary:
             # kit hcll version only had the single null option
             if physics_variables.n_divertors == 2:
                 # Double null configuration
-                blanket_library.bllengi = (
+                blanket_library.len_blkt_inboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
@@ -1198,7 +1201,7 @@ class BlanketLibrary:
                 )
             else:
                 # single null configuration
-                blanket_library.bllengi = (
+                blanket_library.len_blkt_inboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - fwbs_variables.f_ster_div_single)
@@ -3071,7 +3074,7 @@ def init_blanket_library():
     blanket_library.len_blkt_outboard_coolant_channel_radial = 0.0
     blanket_library.circ_blkt_inboard_segment_toroidal = 0.0
     blanket_library.circ_blkt_outboard_segment_toroidal = 0.0
-    blanket_library.bllengi = 0.0
+    blanket_library.len_blkt_inboard_segment_poloidal = 0.0
     blanket_library.bllengo = 0.0
     blanket_library.len_blkt_inboard_channel_total = 0.0
     blanket_library.bzfllengi_liq = 0.0
