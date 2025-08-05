@@ -2340,32 +2340,89 @@ class TFCoil:
                 tfv.p_cp_coolant_pump_elec,
             )
 
-    def tf_field_and_force(self):
+    def tf_field_and_force(
+        self,
+        i_tf_sup: int,
+        r_tf_wp_inboard_outer: float,
+        r_tf_wp_inboard_inner: float,
+        r_tf_outboard_in: float,
+        dx_tf_wp_insulation: float,
+        dx_tf_wp_insertion_gap: float,
+        b_tf_inboard_peak: float,
+        c_tf_total: float,
+        n_tf_coils: int,
+        dr_tf_plasma_case: float,
+        rmajor: float,
+        bt: float,
+        r_cp_top: float,
+        itart: int,
+        i_cp_joints: int,
+        f_vforce_inboard: float,
+    ) -> tuple[float, float, float, float, float]:
         """
-        Calculate the TF coil field, force and VV quench consideration, and the resistive magnets resistance/volume
+        Calculates the Toroidal Field (TF) coil field, forces, vacuum vessel (VV) quench considerations,
+        and resistive magnet resistance/volume.
+
+        :param i_tf_sup: TF coil support type (1 = superconducting, 0 = resistive copper, 2 = resistive aluminium)
+        :type i_tf_sup: int
+        :param r_tf_wp_inboard_outer: Outer radius of the inboard winding pack [m]
+        :type r_tf_wp_inboard_outer: float
+        :param r_tf_wp_inboard_inner: Inner radius of the inboard winding pack [m]
+        :type r_tf_wp_inboard_inner: float
+        :param r_tf_outboard_in: Inner radius of the outboard leg [m]
+        :type r_tf_outboard_in: float
+        :param dx_tf_wp_insulation: Thickness of winding pack ground insulation [m]
+        :type dx_tf_wp_insulation: float
+        :param dx_tf_wp_insertion_gap: Thickness of winding pack insertion gap [m]
+        :type dx_tf_wp_insertion_gap: float
+        :param b_tf_inboard_peak: Peak inboard magnetic field [T]
+        :type b_tf_inboard_peak: float
+        :param c_tf_total: Total current in TF coils [A]
+        :type c_tf_total: float
+        :param n_tf_coils: Number of TF coils
+        :type n_tf_coils: int
+        :param dr_tf_plasma_case: Plasma-facing case thickness [m]
+        :type dr_tf_plasma_case: float
+        :param rmajor: Major radius of the plasma [m]
+        :type rmajor: float
+        :param bt: Toroidal magnetic field at plasma center [T]
+        :type bt: float
+        :param r_cp_top: Centrepost outer radius at the top [m]
+        :type r_cp_top: float
+        :param itart: TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART)
+        :type itart: int
+        :param i_cp_joints: Centrepost joints switch (1 = with sliding joints, 0 = without)
+        :type i_cp_joints: int
+        :param f_vforce_inboard: Inboard vertical tension fraction
+        :type f_vforce_inboard: float
+
+        :returns: Tuple containing:
+            - cforce (float): Centering force per TF coil [N/m]
+            - vforce (float): Inboard vertical tension [N]
+            - vforce_outboard (float): Outboard vertical tension [N]
+            - vforce_inboard_tot (float): Total inboard vertical force [N]
+            - f_vforce_inboard (float): Inboard vertical tension fraction
+        :rtype: tuple[float, float, float, float]
+
+        :raises: None
+
+        :notes:
+            - This method computes the centering and vertical forces on the TF coil, as well as
+              the vacuum vessel stress during a quench and the resistance/volume for resistive magnets.
+            - The calculation depends on the coil support type and geometry.
         """
 
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
-        if tfcoil_variables.i_tf_sup == 1:
+        if i_tf_sup == 1:
             r_out_wp = (
-                sctfcoil_module.r_tf_wp_inboard_outer
-                - tfcoil_variables.dx_tf_wp_insulation
-                - tfcoil_variables.dx_tf_wp_insertion_gap
+                r_tf_wp_inboard_outer - dx_tf_wp_insulation - dx_tf_wp_insertion_gap
             )
             r_in_wp = (
-                sctfcoil_module.r_tf_wp_inboard_inner
-                + tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.dx_tf_wp_insertion_gap
+                r_tf_wp_inboard_inner + dx_tf_wp_insulation + dx_tf_wp_insertion_gap
             )
         else:
-            r_out_wp = (
-                sctfcoil_module.r_tf_wp_inboard_outer
-                - tfcoil_variables.dx_tf_wp_insulation
-            )
-            r_in_wp = (
-                sctfcoil_module.r_tf_wp_inboard_inner
-                + tfcoil_variables.dx_tf_wp_insulation
-            )
+            r_out_wp = r_tf_wp_inboard_outer - dx_tf_wp_insulation
+            r_in_wp = r_tf_wp_inboard_inner + dx_tf_wp_insulation
 
         # Associated WP thickness
         dr_wp = r_out_wp - r_in_wp
@@ -2373,12 +2430,7 @@ class TFCoil:
         # In plane forces
         # ---
         # Centering force = net inwards radial force per meters per TF coil [N/m]
-        tfcoil_variables.cforce = (
-            0.5e0
-            * tfcoil_variables.b_tf_inboard_peak
-            * tfcoil_variables.c_tf_total
-            / tfcoil_variables.n_tf_coils
-        )
+        cforce = 0.5e0 * b_tf_inboard_peak * c_tf_total / n_tf_coils
 
         # Vertical force per coil [N]
         # ***
@@ -2386,17 +2438,15 @@ class TFCoil:
         #        sliding joints, the in/outboard vertical tension repartition is
         # -#
         # Ouboard leg WP plasma side radius without ground insulation/insertion gat [m]
-        if tfcoil_variables.i_tf_sup == 1:
+        if i_tf_sup == 1:
             r_in_outwp = (
-                sctfcoil_module.r_tf_outboard_in
-                + tfcoil_variables.dr_tf_plasma_case
-                + tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.dx_tf_wp_insertion_gap
+                r_tf_outboard_in
+                + dr_tf_plasma_case
+                + dx_tf_wp_insulation
+                + dx_tf_wp_insertion_gap
             )
         else:
-            r_in_outwp = (
-                sctfcoil_module.r_tf_outboard_in + tfcoil_variables.dx_tf_wp_insulation
-            )
+            r_in_outwp = r_tf_outboard_in + dx_tf_wp_insulation
 
         # If the TF coil has no dr_bore it would induce division by 0.
         # In this situation, the dr_bore radius is set to a very small value : 1.0e-9 m
@@ -2406,12 +2456,8 @@ class TFCoil:
         # May the force be with you
         vforce_tot = (
             0.5e0
-            * (
-                physics_variables.bt
-                * physics_variables.rmajor
-                * tfcoil_variables.c_tf_total
-            )
-            / (tfcoil_variables.n_tf_coils * dr_wp**2)
+            * (bt * rmajor * c_tf_total)
+            / (n_tf_coils * dr_wp**2)
             * (
                 r_out_wp**2 * np.log(r_out_wp / r_in_wp)
                 + r_in_outwp**2 * np.log((r_in_outwp + dr_wp) / r_in_outwp)
@@ -2428,19 +2474,15 @@ class TFCoil:
 
         # Case of a centrepost (physics_variables.itart == 1) with sliding joints (the CP vertical are separated from the leg ones)
         # Rem SK : casing/insulation thickness not subtracted as part of the CP is genuinely connected to the legs..
-        if physics_variables.itart == 1 and tfcoil_variables.i_cp_joints == 1:
+        if itart == 1 and i_cp_joints == 1:
             # CP vertical tension [N]
-            tfcoil_variables.vforce = (
+            vforce = (
                 0.25e0
-                * (
-                    physics_variables.bt
-                    * physics_variables.rmajor
-                    * tfcoil_variables.c_tf_total
-                )
-                / (tfcoil_variables.n_tf_coils * dr_wp**2)
+                * (bt * rmajor * c_tf_total)
+                / (n_tf_coils * dr_wp**2)
                 * (
                     2.0e0 * r_out_wp**2 * np.log(r_out_wp / r_in_wp)
-                    + 2.0e0 * dr_wp**2 * np.log(build_variables.r_cp_top / r_in_wp)
+                    + 2.0e0 * dr_wp**2 * np.log(r_cp_top / r_in_wp)
                     + 3.0e0 * dr_wp**2
                     - 2.0e0 * dr_wp * r_out_wp
                     + 4.0e0 * dr_wp * r_out_wp * np.log(r_in_wp / r_out_wp)
@@ -2448,27 +2490,25 @@ class TFCoil:
             )
 
             # Vertical tension applied on the outer leg [N]
-            tfcoil_variables.vforce_outboard = vforce_tot - tfcoil_variables.vforce
+            vforce_outboard = vforce_tot - vforce
 
             # Inboard vertical tension fraction
-            tfcoil_variables.f_vforce_inboard = tfcoil_variables.vforce / vforce_tot
+            f_vforce_inboard = vforce / vforce_tot
 
         # Case of TF without joints or with clamped joints vertical tension
         else:
             # Inboard vertical tension [N]
-            tfcoil_variables.vforce = tfcoil_variables.f_vforce_inboard * vforce_tot
+            vforce = f_vforce_inboard * vforce_tot
 
             # Ouboard vertical tension [N]
-            tfcoil_variables.vforce_outboard = tfcoil_variables.vforce * (
-                (1.0e0 / tfcoil_variables.f_vforce_inboard) - 1.0e0
-            )
+            vforce_outboard = vforce * ((1.0e0 / f_vforce_inboard) - 1.0e0)
 
         # ***
 
         # Total vertical force
-        sctfcoil_module.vforce_inboard_tot = (
-            tfcoil_variables.vforce * tfcoil_variables.n_tf_coils
-        )
+        vforce_inboard_tot = vforce * n_tf_coils
+
+        return cforce, vforce, vforce_outboard, vforce_inboard_tot, f_vforce_inboard
 
     @staticmethod
     def he_density(temp: float) -> float:
