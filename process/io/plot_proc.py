@@ -5296,7 +5296,6 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
 
     r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
-    n_tf_coil_turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
     i_tf_case_geom = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
@@ -5458,7 +5457,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
 
     # Plot the WP insulation
 
-    # X points for inboard case curve
+    # X points for inboard insulation curve
     x11 = r_tf_wp_inboard_inner * np.cos(
         np.linspace(
             rad_tf_coil_inboard_toroidal_half,
@@ -5467,7 +5466,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             endpoint=True,
         )
     )
-    # Y points for inboard case curve
+    # Y points for inboard insulation curve
     y11 = r_tf_wp_inboard_inner * np.sin(
         np.linspace(
             rad_tf_coil_inboard_toroidal_half,
@@ -5476,29 +5475,18 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             endpoint=True,
         )
     )
-    # Check for plasma side case type
-    if i_tf_case_geom == 0:
-        # Rounded case
 
-        # X points for outboard case curve
-        x12 = r_tf_wp_inboard_outer * np.cos(
-            np.linspace(
-                rad_tf_coil_inboard_toroidal_half,
-                -rad_tf_coil_inboard_toroidal_half,
-                500,
-                endpoint=True,
-            )
+    # X points for outboard insulation curve
+    x12 = r_tf_wp_inboard_outer * np.cos(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            500,
+            endpoint=True,
         )
+    )
 
-    elif i_tf_case_geom == 1:
-        # Flat case
-
-        # X points for outboard case
-        x12 = np.full(500, r_tf_inboard_out)
-    else:
-        raise NotImplementedError("i_tf_case_geom must be 0 or 1")
-
-    # Y points for outboard case
+    # Y points for outboard insulation curve
     y12 = r_tf_wp_inboard_outer * np.sin(
         np.linspace(
             rad_tf_coil_inboard_toroidal_half,
@@ -5544,14 +5532,6 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             y12,
             color="green",
         )
-
-    # # Removes ovelapping colours on inner nose case
-    # axis.fill_between(
-    #     x11,
-    #     y11,
-    #     color="white",
-    #     alpha=1.0,
-    # )
 
     # ================================================================
 
@@ -5619,13 +5599,32 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         color="#b87333",  # copper color
     )
 
-    # # Removes ovelapping colours on inner nose case
-    # axis.fill_between(
-    #     x11,
-    #     y11,
-    #     color="white",
-    #     alpha=1.0,
-    # )
+    # ================================================================
+
+    # Divide the winding pack into toroidal segments based on n_tf_coil_turns
+    n_turns = int(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
+    if n_turns > 0:
+        # Calculate the angular extent for each turn
+        theta_start = rad_tf_coil_inboard_toroidal_half - angle_offset
+        theta_end = -rad_tf_coil_inboard_toroidal_half + angle_offset
+        theta_vals = np.linspace(theta_start, theta_end, 256, endpoint=True)
+
+        # For each turn, plot a radial line at the corresponding angle
+        turn_angles = np.linspace(theta_start, theta_end, n_turns + 1)
+        for t in range(1, n_turns):
+            angle = turn_angles[t]
+            # Inner and outer points for this turn
+            x_in = (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.cos(angle)
+            y_in = (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.sin(angle)
+            x_out = (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.cos(angle)
+            y_out = (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.sin(angle)
+            axis.plot(
+                [x_in, x_out],
+                [y_in, y_out],
+                color="white",
+                linewidth=0.5,
+                linestyle="--",
+            )
 
     # ================================================================
 
@@ -5685,14 +5684,11 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         f"$\\text{{Nose Case:}}$\n"
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_inboard_in'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} m\n"
         f"$\\Delta r$: {mfile_data.data['dr_tf_nose_case'].get_scan(scan):.3f} m\n"
-        f"$A$: {mfile_data.data['a_tf_coil_nose_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+        f"$A$: {mfile_data.data['a_tf_coil_nose_case'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n\n"
         f"$\\text{{Plasma Case:}}$\n"
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_inboard_out'].get_scan(scan):.3f} m\n"
         f"$\\Delta r$: {mfile_data.data['dr_tf_plasma_case'].get_scan(scan):.3f} m\n"
-        f"$A$: {mfile_data.data['a_tf_plasma_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
-        f"$\\text{{Side Case:}}$\n"
-        f"Minimum $\\Delta r$: {mfile_data.data['dx_tf_side_case_min'].get_scan(scan):.3f} m\n"
-        f"Average $\\Delta r$: {mfile_data.data['dx_tf_side_case_average'].get_scan(scan):.3f} m"
+        f"$A$: {mfile_data.data['a_tf_plasma_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$"
     )
     axis.text(
         0.775,
@@ -5714,13 +5710,11 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     textstr_wp_insulation = (
         f"$\\mathbf{{Insulation:}}$\n \n"
         f"Area of insulation around WP: {mfile_data.data['a_tf_wp_ground_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
-        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m\n\n"
-        f"WP Insertion Gap:\n"
-        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insertion_gap'].get_scan(scan):.4f} m"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m"
     )
     axis.text(
         0.775,
-        0.55,
+        0.6,
         textstr_wp_insulation,
         fontsize=9,
         verticalalignment="top",
@@ -5742,12 +5736,11 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} m\n"
         f"$\\Delta r$: {mfile_data.data['dr_tf_wp_with_insulation'].get_scan(scan):.3f} m\n"
         f"$A$, with insulation: {mfile_data.data['a_tf_wp_with_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
-        f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
-        f"$J$ no insulation: {mfile_data.data['j_tf_wp'].get_scan(scan) / 1e6:.4f} MA/m$^2$"
+        f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$"
     )
     axis.text(
         0.775,
-        0.425,
+        0.5,
         textstr_wp,
         fontsize=9,
         verticalalignment="top",
@@ -5770,7 +5763,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     )
     axis.text(
         0.55,
-        0.425,
+        0.5,
         textstr_general_info,
         fontsize=9,
         verticalalignment="top",
@@ -5786,7 +5779,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
 
     axis.minorticks_on()
     axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
-    axis.set_ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
+    axis.set_ylim((y14[-1] * 1.65), (-y14[-1] * 1.65))
 
     axis.set_title("Top-down view of inboard TF coil at midplane")
     axis.set_xlabel("Radial distance [m]")
@@ -8765,7 +8758,7 @@ def main_plot(
         plot_tf_turn(plot_20, m_file_data, scan)
     else:
         plot_19 = fig8.add_subplot(211, aspect="equal")
-        plot_19.set_position([0.05, 0.5, 0.7, 0.4])
+        plot_19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(plot_19, m_file_data, scan, fig8)
 
     plot_21 = fig9.add_subplot(111, aspect="equal")

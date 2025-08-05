@@ -1441,9 +1441,21 @@ class TFCoil:
             )
             po.ovarre(
                 self.outfile,
+                "Inboard leg plasma case area (m^2)",
+                "(a_tf_plasma_case)",
+                sctfcoil_module.a_tf_plasma_case,
+            )
+            po.ovarre(
+                self.outfile,
                 "Inboard leg bucking cylinder thickness (m)",
                 "(dr_tf_nose_case)",
                 tfcoil_variables.dr_tf_nose_case,
+            )
+            po.ovarre(
+                self.outfile,
+                'Inboard leg case inboard "nose" area (m^2)',
+                "(a_tf_coil_nose_case)",
+                sctfcoil_module.a_tf_coil_nose_case,
             )
 
             # Conductor layer geometry
@@ -1459,6 +1471,12 @@ class TFCoil:
                 "Inboard TFC conductor sector area, NO ground & gap (per leg) (m2)",
                 "(a_tf_wp_no_insulation)",
                 sctfcoil_module.a_tf_wp_no_insulation,
+            )
+            po.ovarre(
+                self.outfile,
+                "Ground wall insulation area (m^2)",
+                "(a_tf_wp_ground_insulation)",
+                sctfcoil_module.a_tf_wp_ground_insulation,
             )
             po.ovarre(
                 self.outfile,
