@@ -5473,6 +5473,7 @@ def init_tfcoil_variables():
     tfv.a_tf_coil_outboard_case = 0.0
     tfv.a_tf_turn_steel = 0.0
     tfv.a_tf_wp_conductor = 0.0
+    tfv.a_res_tf_coil_conductor = 0.0
     tfv.a_tf_turn_cable_space_no_void = 0.0
     tfv.a_tf_turn_insulation = 0.0
     tfv.a_tf_coil_wp_turn_insulation = 0.0
