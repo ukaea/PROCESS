@@ -2331,7 +2331,7 @@ i_blkt_inboard = 0
 * Needs to be set when using DCLL
 * JUSTIFICATION: Not yet set.
 
-*ims = 
+*i_blkt_module_segmentation = 
 * DESCRIPTION:   Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS) (default = 0)
 * =0    MMS
 * =1    SMS

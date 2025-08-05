@@ -768,7 +768,7 @@ def init_fwbs_variables():
     fwbs_variables.i_blkt_liquid_breeder_type = 0
     fwbs_variables.i_blkt_dual_coolant = 0
     fwbs_variables.i_blkt_liquid_breeder_channel_type = 0
-    fwbs_variables.ims = 0
+    fwbs_variables.i_blkt_module_segmentation = 0
     fwbs_variables.n_liq_recirc = 10
     fwbs_variables.r_f_liq_ib = 0.5
     fwbs_variables.r_f_liq_ob = 0.5

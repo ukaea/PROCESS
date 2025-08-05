@@ -1826,7 +1826,9 @@ INPUT_VARIABLES = {
     "ifetyp": InputVariable(data_structure.ife_variables, int, range=(0, 4)),
     "ifueltyp": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_plasma_ignited": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "ims": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
+    "i_blkt_module_segmentation": InputVariable(
+        fortran.fwbs_variables, int, choices=[0, 1]
+    ),
     "inuclear": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "iohcl": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
     "ipedestal": InputVariable(fortran.physics_variables, int, choices=[0, 1]),

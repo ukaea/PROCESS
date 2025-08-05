@@ -539,7 +539,7 @@ module fwbs_variables
   !!  - =1    Insulating Material, assumed perfect electrical insulator, default density (den_ceramic) is for SiC
   !!  - =2    Insulating Material, electrical conductivity (bz_channel_conduct_liq) is input (default Eurofer), default density (den_ceramic) is for SiC
 
-  integer :: ims
+  integer :: i_blkt_module_segmentation
   !! Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS)
   !!  - =0    MMS
   !!  - =1    SMS

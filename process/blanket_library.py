@@ -631,7 +631,7 @@ class BlanketLibrary:
 
         # If SMS blanket then do not have seperate poloidal modules....
         # Should not need this as n_blkt_inboard_modules_poloidal is input but make sure here.
-        if fwbs_variables.ims == 1:
+        if fwbs_variables.i_blkt_module_segmentation == 1:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
