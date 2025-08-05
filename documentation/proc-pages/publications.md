@@ -6,18 +6,49 @@ The [physics](http://www.sciencedirect.com/science/article/pii/S0920379614005961
 Below is a list of publications using or citing PROCESS by year:
 
 ## 2025
+[Optimisation of STEP poloidal field coils with superconducting coil constraints in STEP-Bluemira power plant design framework](https://www.sciencedirect.com/science/article/pii/S0920379625005538)   
+A. Nilima, M. Bluteau, J. Cook, O. Funk, G. Graham, J. Matthews, S.I. Muldrew, A.J. Pearce, D. Vaccaro   
+Fusion Engineering & Design 220 (2025) 115357   
+
+[On the minimum size of tokamaks aimed at fusion energy gain with optimum plasma temperature](https://www.sciencedirect.com/science/article/pii/S0920379625005046)   
+J.R. Wu, G.S. Xu, D.H. Chen, F.J. Wang, B.N. Wan   
+Fusion Engineering & Design 220 (2025) 115308   
+
+[Component lifetimes and their impact on the availability of commercial fusion power plants](https://www.sciencedirect.com/science/article/pii/S0920379625004272)   
+J. Foster, S. Knight, S.I. Muldrew   
+Fusion Engineering & Design 219 (2025) 115231   
+
+[Heating and current drive in STEP: why neutral beam injection is not desirable](https://iopscience.iop.org/article/10.1088/1741-4326/add4ef/meta)   
+T. Wilson, M. Henderson, H. El-Haroun, A. Saigiridhari, E. Tholerus   
+Nuclear Fusion 65 (2025) 066020   
+
+[Economic study on the key aspects required for a commercial fusion power plant design based on EUROfusion-DEMO to become commercially viable](https://www.sciencedirect.com/science/article/pii/S0920379625003023)   
+J. Matthews, A. Pearce, S.I. Muldrew   
+Fusion Engineering & Design 217 (2025) 115105   
+
+[An analytical framework for computing AC losses in the HTS insert of the EU-DEMO central solenoid](https://www.sciencedirect.com/science/article/pii/S0011227525000566)   
+G. De Marzi, V. Corato, M. Lewandowska   
+Cryogenics 149 (2025) 104078   
+
+[Runaway electron beam formation, vertical motion, termination and wall loads in EU-DEMO](https://iopscience.iop.org/article/10.1088/1741-4326/adac77/meta)   
+F. Vannini, V. Bandaru, H. Bergström, N. Schwarz, F.J. Artola, M. Hoelzl, G. Pautasso, E. Nardon, F. Maviglia, M.L. Richiusa, E. Emanuelli, the JOREK Team   
+Nuclear Fusion 65 (2025) 046006
+
+[Definition of an EU-DEMO design point robust to epistemic plasma physics uncertainties](https://iopscience.iop.org/article/10.1088/1741-4326/ada6d9)   
+M. Coleman, H. Zohm, C. Bourdelle, F. Maviglia, A. Pearce, M. Siccinio, A. Spagnuolo, S. Wiesen   
+Nuclear Fusion 65 (2025) 036039   
+
+[Using Bayesian Networks as Metamodels for Predicting Uncertain Fusion Economics in Spherical Tokamaks](https://ieeexplore.ieee.org/abstract/document/10904113)   
+T. Griffiths, Z. Xuereb Conti, J. Hidalgo-Salaverri, M. Bluck   
+IEEE Transactions on Plasma Science (Early Access)   
+
+[Hybrid hydrogen-electricity production using Spherical Tokamaks: a cost-driver sensitivity study and techno-economic analysis](https://iopscience.iop.org/article/10.1088/1741-4326/adaa01)   
+J. Hidalgo-Salaverri, T. Griffiths, Z. Xuereb Conti, P. Cano-Megias, R. Chacartegui, M. Bluck, J. Ayllon-Guerola, A. Mancini, M. Garcia-Munoz, E. Viezzer   
+Nuclear Fusion 65 (2025) 036027   
 
 [Design space and architecture study of Tokamak-based Hybrid Fusion–Fission Power Plants](https://www.sciencedirect.com/science/article/pii/S0920379625000213)   
 S. Ha   
 Fusion Engineering & Design 212 (2025) 114817   
-
-[Hybrid hydrogen-electricity production using Spherical Tokamaks: a cost-driver sensitivity study and techno-economic analysis](https://iopscience.iop.org/article/10.1088/1741-4326/adaa01)   
-J. Hidalgo-Salaverri, T. Griffiths, Z. Xuereb Conti, P. Cano-Megias, R. Chacartegui, M. Bluck, J. Ayllon-Guerola, A. Mancini, M. Garcia-Munoz, E. Viezzer   
-Nuclear Fusion (2025) in press   
-
-[Definition of an EU-DEMO design point robust to epistemic plasma physics uncertainties](https://iopscience.iop.org/article/10.1088/1741-4326/ada6d9)   
-M. Coleman, H. Zohm, C. Bourdelle, F. Maviglia, A. Pearce, M. Siccinio, A. Spagnuolo, S. Wiesen   
-Nuclear Fusion (2025) in press 
 
 ## 2024
 
