@@ -1520,6 +1520,12 @@ class TFCoil:
             )
             po.ovarre(
                 self.outfile,
+                "Area of resistive conductor per coil",
+                "(a_res_tf_coil_conductor)",
+                tfcoil_variables.a_res_tf_coil_conductor,
+            )
+            po.ovarre(
+                self.outfile,
                 "Outboard leg current per turn (A)",
                 "(c_tf_turn)",
                 tfcoil_variables.c_tf_turn,

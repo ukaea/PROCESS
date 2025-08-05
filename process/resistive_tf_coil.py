@@ -388,7 +388,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Exact mid-plane cross-section area of the conductor per TF coil [m2]
-        a_tf_cond = np.pi * (
+        tfcoil_variables.a_res_tf_coil_conductor = np.pi * (
             (
                 sctfcoil_module.r_tf_wp_inboard_outer
                 - tfcoil_variables.dx_tf_wp_insulation
@@ -412,12 +412,16 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.dx_tf_wp_insulation
             + tfcoil_variables.dx_tf_turn_insulation * tfcoil_variables.n_tf_coil_turns
         )
-        a_tf_cond = a_tf_cond * (1.0e0 - tfcoil_variables.fcoolcp)
+        tfcoil_variables.a_res_tf_coil_conductor = (
+            tfcoil_variables.a_res_tf_coil_conductor
+            * (1.0e0 - tfcoil_variables.fcoolcp)
+        )
 
         # Inter turn insulation area per coil [m2]
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
             sctfcoil_module.a_tf_wp_no_insulation
-            - a_tf_cond / (1.0e0 - tfcoil_variables.fcoolcp)
+            - tfcoil_variables.a_res_tf_coil_conductor
+            / (1.0e0 - tfcoil_variables.fcoolcp)
         )
 
         # Total insulation cross-section per coil [m2]

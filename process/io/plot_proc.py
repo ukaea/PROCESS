@@ -5576,13 +5576,19 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     axis.plot(x13, y13, color="black")
     axis.plot(x14, y14, color="black")
 
+    # Choose color based on i_tf_sup: copper for resistive, aluminium for cryo
+    if mfile_data.data["i_tf_sup"].get_scan(scan) == 2:
+        wp_color = "#b0c4de"  # light steel blue (cryo aluminium)
+    else:
+        wp_color = "#b87333"  # copper color
+
     axis.fill_between(
         [
             (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.cos(theta_vals[0]),
             (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.cos(theta_vals[0]),
         ],
         y13,
-        color="#b87333",  # copper color
+        color=wp_color,
     )
     # Lower main
     axis.fill_between(
@@ -5591,12 +5597,12 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.cos(theta_vals[-1]),
         ],
         y14,
-        color="#b87333",  # copper color
+        color=wp_color,
     )
     axis.fill_between(
         x12,
         y12,
-        color="#b87333",  # copper color
+        color=wp_color,
     )
 
     # ================================================================
@@ -5710,11 +5716,13 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     textstr_wp_insulation = (
         f"$\\mathbf{{Insulation:}}$\n \n"
         f"Area of insulation around WP: {mfile_data.data['a_tf_wp_ground_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
-        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m\n\n"
+        f"$\\text{{Turn Insulation:}}$\n"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_turn_insulation'].get_scan(scan):.4f} m"
     )
     axis.text(
         0.775,
-        0.6,
+        0.62,
         textstr_wp_insulation,
         fontsize=9,
         verticalalignment="top",
@@ -5736,11 +5744,14 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} m\n"
         f"$\\Delta r$: {mfile_data.data['dr_tf_wp_with_insulation'].get_scan(scan):.3f} m\n"
         f"$A$, with insulation: {mfile_data.data['a_tf_wp_with_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
-        f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$"
+        f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+        f"Current per turn: {mfile_data.data['c_tf_turn'].get_scan(scan) / 1e3:.3f} $\\mathrm{{kA}}$\n"
+        f"Resistive conductor per coil: {mfile_data.data['a_res_tf_coil_conductor'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
+        f"Coolant area void fraction per turn: {mfile_data.data['fcoolcp'].get_scan(scan):.3f}"
     )
     axis.text(
-        0.775,
-        0.5,
+        0.77,
+        0.475,
         textstr_wp,
         fontsize=9,
         verticalalignment="top",
@@ -5763,7 +5774,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     )
     axis.text(
         0.55,
-        0.5,
+        0.475,
         textstr_general_info,
         fontsize=9,
         verticalalignment="top",
@@ -5785,6 +5796,17 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     axis.set_xlabel("Radial distance [m]")
     axis.set_ylabel("Toroidal distance [m]")
     axis.legend(loc="upper left")
+
+    axis.text(
+        0.05,
+        0.975,
+        "*Turn insulation and cooling pipes not shown",
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        color="black",
+        transform=fig.transFigure,
+    )
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
