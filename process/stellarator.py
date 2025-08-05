@@ -414,16 +414,20 @@ class Stellarator:
         )
 
         # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
-        build_variables.available_radial_space = (st.f_r * (
-            stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
-            * stellarator_configuration.stella_config_rminor_ref
-            * (1 / st.f_aspect - 1)
-            + stellarator_configuration.stella_config_min_plasma_coil_distance
-            )
-        * (st.r_coil_minor * st.f_coil_shape - physics_variables.rminor)
-        / (stellarator_configuration.stella_config_coil_rminor * st.f_coil_shape 
-           - stellarator_configuration.stella_config_rminor_ref)
+        build_variables.available_radial_space = (             
+            (st.r_coil_minor * st.f_coil_shape
+                - st.f_r * stellarator_configuration.stella_config_rminor_ref)
+            + stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
+                * (physics_variables.rminor - st.f_r * stellarator_configuration.stella_config_rminor_ref)
         )
+        # This is the old version, left for now for comparison.
+            # st.f_r * (
+            # stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
+            # * stellarator_configuration.stella_config_rminor_ref
+            # * (1 / st.f_aspect - 1)
+            # + stellarator_configuration.stella_config_min_plasma_coil_distance
+            # )
+
 
         #  Radius to inner edge of inboard shield
         build_variables.rsldi = (
