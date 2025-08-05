@@ -54,7 +54,7 @@ module blanket_library
     real(dp) :: circ_blkt_inboard_segment_toroidal, circ_blkt_outboard_segment_toroidal
     !! Inboard/outboard blanket mid-plane toroidal circumference for segment (m)
 
-    real(dp) :: bllengi, bllengo
+    real(dp) :: len_blkt_inboard_segment_poloidal, bllengo
     !! Inboard/outboard blanket segment poloidal length (m)
 
     real(dp) :: len_blkt_inboard_channel_total, len_blkt_outboard_channel_total

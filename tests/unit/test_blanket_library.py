@@ -1427,10 +1427,10 @@ class BlanketModPolHeightParam(NamedTuple):
     n_divertors: Any = None
     rmajor: Any = None
     triang: Any = None
-    bllengi: Any = None
+    len_blkt_inboard_segment_poloidal: Any = None
     bllengo: Any = None
     dz_blkt_half: Any = None
-    expected_bllengi: Any = None
+    expected_len_blkt_inboard_segment_poloidal: Any = None
     expected_bllengo: Any = None
 
 
@@ -1449,10 +1449,10 @@ class BlanketModPolHeightParam(NamedTuple):
             n_divertors=1,
             rmajor=8,
             triang=0.5,
-            bllengi=0,
+            len_blkt_inboard_segment_poloidal=0,
             bllengo=0,
             dz_blkt_half=5.9532752487304119,
-            expected_bllengi=1.6252823720672551,
+            expected_len_blkt_inboard_segment_poloidal=1.6252823720672551,
             expected_bllengo=1.7853902013340495,
         ),
         BlanketModPolHeightParam(
@@ -1467,10 +1467,10 @@ class BlanketModPolHeightParam(NamedTuple):
             n_divertors=2,
             rmajor=4.5,
             triang=0.5,
-            bllengi=0,
+            len_blkt_inboard_segment_poloidal=0,
             bllengo=0,
             dz_blkt_half=8.25,
-            expected_bllengi=2.3571428571428572,
+            expected_len_blkt_inboard_segment_poloidal=2.3571428571428572,
             expected_bllengo=2.0597205347177807,
         ),
     ),
@@ -1526,7 +1526,11 @@ def test_blanket_mod_pol_height(
     )
     monkeypatch.setattr(physics_variables, "rmajor", blanketmodpolheightparam.rmajor)
     monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
-    monkeypatch.setattr(blanket_library, "bllengi", blanketmodpolheightparam.bllengi)
+    monkeypatch.setattr(
+        blanket_library,
+        "len_blkt_inboard_segment_poloidal",
+        blanketmodpolheightparam.len_blkt_inboard_segment_poloidal,
+    )
     monkeypatch.setattr(blanket_library, "bllengo", blanketmodpolheightparam.bllengo)
     monkeypatch.setattr(
         blanket_library, "dz_blkt_half", blanketmodpolheightparam.dz_blkt_half
@@ -1534,8 +1538,8 @@ def test_blanket_mod_pol_height(
 
     blanket_library_fixture.blanket_mod_pol_height()
 
-    assert blanket_library.bllengi == pytest.approx(
-        blanketmodpolheightparam.expected_bllengi
+    assert blanket_library.len_blkt_inboard_segment_poloidal == pytest.approx(
+        blanketmodpolheightparam.expected_len_blkt_inboard_segment_poloidal
     )
     assert blanket_library.bllengo == pytest.approx(
         blanketmodpolheightparam.expected_bllengo
