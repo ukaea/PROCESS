@@ -636,7 +636,8 @@ class BlanketLibrary:
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
         # Calculate mid-plane toroidal circumference and segment
-        blanket_library.blwidti = (
+        # of inboard blanket
+        blanket_library.circ_blkt_inboard_segment_toroidal = (
             2.0e0
             * np.pi
             * (
@@ -645,6 +646,9 @@ class BlanketLibrary:
                 - build_variables.dr_fw_plasma_gap_inboard
             )
         ) / fwbs_variables.n_blkt_inboard_modules_toroidal
+
+        # Calculate mid-plane toroidal circumference and segment
+        # of outboard blanke
         blanket_library.blwidto = (
             2.0e0
             * np.pi
@@ -678,7 +682,10 @@ class BlanketLibrary:
                 # Toroidal direction
                 fwbs_variables.a_bz_liq = (
                     min(
-                        (blanket_library.blwidti * fwbs_variables.w_f_liq_ib),
+                        (
+                            blanket_library.circ_blkt_inboard_segment_toroidal
+                            * fwbs_variables.w_f_liq_ib
+                        ),
                         (blanket_library.blwidto * fwbs_variables.w_f_liq_ob),
                     )
                     / fwbs_variables.nopipes
@@ -3069,7 +3076,7 @@ def init_blanket_library():
     blanket_library.vol_vv_outboard = 0.0
     blanket_library.len_blkt_inboard_coolant_channel_radial = 0.0
     blanket_library.len_blkt_outboard_coolant_channel_radial = 0.0
-    blanket_library.blwidti = 0.0
+    blanket_library.circ_blkt_inboard_segment_toroidal = 0.0
     blanket_library.blwidto = 0.0
     blanket_library.bllengi = 0.0
     blanket_library.bllengo = 0.0
