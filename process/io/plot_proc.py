@@ -4601,7 +4601,7 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
             )
 
 
-def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
+def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     """
     Plots inboard TF coil and winding pack.
     Author: C. Ashe
@@ -5270,6 +5270,528 @@ def plot_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         axis.set_xlabel("Radial distance [m]")
         axis.set_ylabel("Toroidal distance [m]")
         axis.legend(loc="upper left")
+
+
+def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
+    """
+    Plots inboard TF coil and winding pack.
+    Author: C. Ashe
+
+    Parameters
+    ----------
+    axis : matplotlib.axes object
+        Axis object to plot to.
+    mfile_data : MFILE data object
+        Object containing data for the plot.
+    scan : int
+        Scan number to use.
+
+    Returns
+    -------
+    None
+    """
+
+    # Import the TF variables
+    r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
+    r_tf_inboard_out = mfile_data.data["r_tf_inboard_out"].get_scan(scan)
+
+    r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
+    n_tf_coil_turns = round(mfile_data.data["n_tf_coil_turns"].get_scan(scan))
+    i_tf_case_geom = mfile_data.data["i_tf_case_geom"].get_scan(scan)
+    b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
+    r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
+    r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
+    r_tf_wp_inboard_centre = mfile_data.data["r_tf_wp_inboard_centre"].get_scan(scan)
+    dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
+
+    axis.add_patch(
+        Circle(
+            [0, 0],
+            r_tf_inboard_in,
+            facecolor="none",
+            edgecolor="black",
+            linestyle="--",
+        ),
+    )
+
+    if i_tf_case_geom == 0:
+        axis.add_patch(
+            Circle(
+                [0, 0],
+                r_tf_inboard_out,
+                facecolor="none",
+                edgecolor="black",
+                linestyle="--",
+            ),
+        )
+
+    # Equations for plotting the TF case
+    rad_tf_coil_inboard_toroidal_half = mfile_data.data[
+        "rad_tf_coil_inboard_toroidal_half"
+    ].get_scan(scan)
+
+    # X points for inboard case curve
+    x11 = r_tf_inboard_in * np.cos(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            256,
+            endpoint=True,
+        )
+    )
+    # Y points for inboard case curve
+    y11 = r_tf_inboard_in * np.sin(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            256,
+            endpoint=True,
+        )
+    )
+    # Check for plasma side case type
+    if i_tf_case_geom == 0:
+        # Rounded case
+
+        # X points for outboard case curve
+        x12 = r_tf_inboard_out * np.cos(
+            np.linspace(
+                rad_tf_coil_inboard_toroidal_half,
+                -rad_tf_coil_inboard_toroidal_half,
+                256,
+                endpoint=True,
+            )
+        )
+
+    elif i_tf_case_geom == 1:
+        # Flat case
+
+        # X points for outboard case
+        x12 = np.full(256, r_tf_inboard_out)
+    else:
+        raise NotImplementedError("i_tf_case_geom must be 0 or 1")
+
+    # Y points for outboard case
+    y12 = r_tf_inboard_out * np.sin(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            256,
+            endpoint=True,
+        )
+    )
+
+    # Cordinates of the top and bottom of case curves,
+    # used to plot the lines connecting the inside and outside of the case
+    y13 = [y11[0], y12[0]]
+    x13 = [x11[0], x12[0]]
+    y14 = [y11[-1], y12[-1]]
+    x14 = [x11[-1], x12[-1]]
+
+    # Plot the case outline
+    axis.plot(x11, y11, color="black")
+    axis.plot(x12, y12, color="black")
+    axis.plot(x13, y13, color="black")
+    axis.plot(x14, y14, color="black")
+
+    # Fill in the case segemnts
+
+    # Upper main
+    if i_tf_case_geom == 0:
+        axis.fill_between(
+            [
+                (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                (r_tf_inboard_out * np.cos(rad_tf_coil_inboard_toroidal_half)),
+            ],
+            y13,
+            color="grey",
+            alpha=0.25,
+        )
+        # Lower main
+        axis.fill_between(
+            [
+                (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                (r_tf_inboard_out * np.cos(rad_tf_coil_inboard_toroidal_half)),
+            ],
+            y14,
+            color="grey",
+            alpha=0.25,
+        )
+        axis.fill_between(
+            x12,
+            y12,
+            color="grey",
+            alpha=0.25,
+        )
+    elif i_tf_case_geom == 1:
+        axis.fill_between(
+            [
+                (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                (r_tf_inboard_out),
+            ],
+            y13,
+            color="grey",
+            alpha=0.25,
+        )
+        # Lower main
+        axis.fill_between(
+            [
+                (r_tf_inboard_in * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                (r_tf_inboard_out),
+            ],
+            y14,
+            color="grey",
+            alpha=0.25,
+        )
+
+    # Removes ovelapping colours on inner nose case
+    axis.fill_between(
+        x11,
+        y11,
+        color="white",
+        alpha=1.0,
+    )
+
+    # Centre line for relative reference
+    axis.axhline(y=0.0, color="r", linestyle="--", linewidth=0.25)
+
+    # ================================================================
+
+    # Plot the WP insulation
+
+    # X points for inboard case curve
+    x11 = r_tf_wp_inboard_inner * np.cos(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            500,
+            endpoint=True,
+        )
+    )
+    # Y points for inboard case curve
+    y11 = r_tf_wp_inboard_inner * np.sin(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            500,
+            endpoint=True,
+        )
+    )
+    # Check for plasma side case type
+    if i_tf_case_geom == 0:
+        # Rounded case
+
+        # X points for outboard case curve
+        x12 = r_tf_wp_inboard_outer * np.cos(
+            np.linspace(
+                rad_tf_coil_inboard_toroidal_half,
+                -rad_tf_coil_inboard_toroidal_half,
+                500,
+                endpoint=True,
+            )
+        )
+
+    elif i_tf_case_geom == 1:
+        # Flat case
+
+        # X points for outboard case
+        x12 = np.full(500, r_tf_inboard_out)
+    else:
+        raise NotImplementedError("i_tf_case_geom must be 0 or 1")
+
+    # Y points for outboard case
+    y12 = r_tf_wp_inboard_outer * np.sin(
+        np.linspace(
+            rad_tf_coil_inboard_toroidal_half,
+            -rad_tf_coil_inboard_toroidal_half,
+            500,
+            endpoint=True,
+        )
+    )
+
+    # Cordinates of the top and bottom of WP insulation curves,
+    y13 = [y11[0], y12[0]]
+    x13 = [x11[0], x12[0]]
+    y14 = [y11[-1], y12[-1]]
+    x14 = [x11[-1], x12[-1]]
+
+    # Plot the insualtion outline
+    axis.plot(x11, y11, color="black")
+    axis.plot(x12, y12, color="black")
+    axis.plot(x13, y13, color="black")
+    axis.plot(x14, y14, color="black")
+
+    # Upper main
+    if i_tf_case_geom == 0:
+        axis.fill_between(
+            [
+                (r_tf_wp_inboard_inner * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                (r_tf_wp_inboard_outer * np.cos(rad_tf_coil_inboard_toroidal_half)),
+            ],
+            y13,
+            color="green",
+        )
+        # Lower main
+        axis.fill_between(
+            [
+                (r_tf_wp_inboard_inner * np.cos(rad_tf_coil_inboard_toroidal_half)),
+                (r_tf_wp_inboard_outer * np.cos(rad_tf_coil_inboard_toroidal_half)),
+            ],
+            y14,
+            color="green",
+        )
+        axis.fill_between(
+            x12,
+            y12,
+            color="green",
+        )
+
+    # # Removes ovelapping colours on inner nose case
+    # axis.fill_between(
+    #     x11,
+    #     y11,
+    #     color="white",
+    #     alpha=1.0,
+    # )
+
+    # ================================================================
+
+    # Plot the WP
+
+    # The winding pack should be inside the insulation, so subtract dx_tf_wp_insulation from both the inner and outer radii.
+    # The angular extent should also be reduced by the insulation thickness, i.e., the winding pack does not extend all the way to the top/bottom.
+
+    # Calculate the reduced angle for the winding pack (subtract insulation thickness in arc length, convert to angle)
+    # arc_length = r * angle => angle = arc_length / r
+    # So, for both inner and outer radii, compute the angle offset due to insulation thickness
+    angle_offset_inner = (
+        dx_tf_wp_insulation / r_tf_wp_inboard_inner if r_tf_wp_inboard_inner > 0 else 0
+    )
+    angle_offset_outer = (
+        dx_tf_wp_insulation / r_tf_wp_inboard_outer if r_tf_wp_inboard_outer > 0 else 0
+    )
+
+    # Use the maximum angle offset to ensure the winding pack stays within the insulation
+    angle_offset = max(angle_offset_inner, angle_offset_outer)
+
+    # Define the angular range for the winding pack
+    theta_start = rad_tf_coil_inboard_toroidal_half - angle_offset
+    theta_end = -rad_tf_coil_inboard_toroidal_half + angle_offset
+    theta_vals = np.linspace(theta_start, theta_end, 256, endpoint=True)
+
+    # X and Y points for inboard and outboard winding pack curves
+    x11 = (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.cos(theta_vals)
+    y11 = (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.sin(theta_vals)
+    x12 = (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.cos(theta_vals)
+    y12 = (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.sin(theta_vals)
+
+    # Cordinates of the top and bottom of WP curves,
+    y13 = [y11[0], y12[0]]
+    x13 = [x11[0], x12[0]]
+    y14 = [y11[-1], y12[-1]]
+    x14 = [x11[-1], x12[-1]]
+
+    # Plot the winding pack outline
+    axis.plot(x11, y11, color="black")
+    axis.plot(x12, y12, color="black")
+    axis.plot(x13, y13, color="black")
+    axis.plot(x14, y14, color="black")
+
+    axis.fill_between(
+        [
+            (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.cos(theta_vals[0]),
+            (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.cos(theta_vals[0]),
+        ],
+        y13,
+        color="#b87333",  # copper color
+    )
+    # Lower main
+    axis.fill_between(
+        [
+            (r_tf_wp_inboard_inner + dx_tf_wp_insulation) * np.cos(theta_vals[-1]),
+            (r_tf_wp_inboard_outer - dx_tf_wp_insulation) * np.cos(theta_vals[-1]),
+        ],
+        y14,
+        color="#b87333",  # copper color
+    )
+    axis.fill_between(
+        x12,
+        y12,
+        color="#b87333",  # copper color
+    )
+
+    # # Removes ovelapping colours on inner nose case
+    # axis.fill_between(
+    #     x11,
+    #     y11,
+    #     color="white",
+    #     alpha=1.0,
+    # )
+
+    # ================================================================
+
+    # Plot a dot for the location of the peak field
+    axis.plot(
+        r_b_tf_inboard_peak,
+        0,
+        marker="o",
+        color="red",
+        label=f"Peak Field: {b_tf_inboard_peak:.2f} T\nr={r_b_tf_inboard_peak:.3f} m",
+    )
+
+    axis.axvline(
+        x=r_tf_inboard_in,
+        color="black",
+        linestyle="--",
+        linewidth=0.6,
+        alpha=0.5,
+    )
+    axis.axvline(
+        x=r_tf_wp_inboard_inner,
+        color="black",
+        linestyle="--",
+        linewidth=0.6,
+        alpha=0.5,
+    )
+    axis.axvline(
+        x=r_tf_wp_inboard_outer,
+        color="black",
+        linestyle="--",
+        linewidth=0.6,
+        alpha=0.5,
+    )
+    axis.axvline(
+        x=r_tf_wp_inboard_centre,
+        color="black",
+        linestyle="--",
+        linewidth=0.6,
+        alpha=0.5,
+    )
+    axis.axvline(
+        x=r_tf_inboard_out,
+        color="black",
+        linestyle="--",
+        linewidth=0.6,
+        alpha=0.5,
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_casing = (
+        f"$\\mathbf{{Casing:}}$\n \n"
+        f"Coil half angle: {mfile_data.data['rad_tf_coil_inboard_toroidal_half'].get_scan(scan):.3f} radians\n\n"
+        f"$\\text{{Full Coil Case:}}$\n"
+        f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_inboard_in'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_inboard_out'].get_scan(scan):.3f} m\n"
+        f"$\\Delta r$: {mfile_data.data['dr_tf_inboard'].get_scan(scan):.3f} m\n"
+        f"Area of casing around WP: {mfile_data.data['a_tf_coil_inboard_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+        f"$\\text{{Nose Case:}}$\n"
+        f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_inboard_in'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} m\n"
+        f"$\\Delta r$: {mfile_data.data['dr_tf_nose_case'].get_scan(scan):.3f} m\n"
+        f"$A$: {mfile_data.data['a_tf_coil_nose_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+        f"$\\text{{Plasma Case:}}$\n"
+        f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_inboard_out'].get_scan(scan):.3f} m\n"
+        f"$\\Delta r$: {mfile_data.data['dr_tf_plasma_case'].get_scan(scan):.3f} m\n"
+        f"$A$: {mfile_data.data['a_tf_plasma_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+        f"$\\text{{Side Case:}}$\n"
+        f"Minimum $\\Delta r$: {mfile_data.data['dx_tf_side_case_min'].get_scan(scan):.3f} m\n"
+        f"Average $\\Delta r$: {mfile_data.data['dx_tf_side_case_average'].get_scan(scan):.3f} m"
+    )
+    axis.text(
+        0.775,
+        0.925,
+        textstr_casing,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_wp_insulation = (
+        f"$\\mathbf{{Insulation:}}$\n \n"
+        f"Area of insulation around WP: {mfile_data.data['a_tf_wp_ground_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m\n\n"
+        f"WP Insertion Gap:\n"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insertion_gap'].get_scan(scan):.4f} m"
+    )
+    axis.text(
+        0.775,
+        0.55,
+        textstr_wp_insulation,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "green",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the Winding Pack
+    textstr_wp = (
+        f"$\\mathbf{{Winding Pack:}}$\n \n"
+        f"$N_{{\\text{{turns}}}}$: "
+        f"{int(mfile_data.data['n_tf_coil_turns'].get_scan(scan))} turns\n"
+        f"$r_{{start}} \\rightarrow r_{{end}}$: {mfile_data.data['r_tf_wp_inboard_inner'].get_scan(scan):.3f} $\\rightarrow$ {mfile_data.data['r_tf_wp_inboard_outer'].get_scan(scan):.3f} m\n"
+        f"$\\Delta r$: {mfile_data.data['dr_tf_wp_with_insulation'].get_scan(scan):.3f} m\n"
+        f"$A$, with insulation: {mfile_data.data['a_tf_wp_with_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
+        f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
+        f"$J$ no insulation: {mfile_data.data['j_tf_wp'].get_scan(scan) / 1e6:.4f} MA/m$^2$"
+    )
+    axis.text(
+        0.775,
+        0.425,
+        textstr_wp,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        color="white",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "blue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the Winding Pack
+    textstr_general_info = (
+        f"$\\mathbf{{General \\ info:}}$\n \n"
+        f"Self inductance: {mfile_data.data['ind_tf_coil'].get_scan(scan) * 1e6:.4f} $\\mu$H\n"
+        f"Stored energy of all coils: {mfile_data.data['e_tf_magnetic_stored_total_gj'].get_scan(scan):.4f} GJ\n"
+    )
+    axis.text(
+        0.55,
+        0.425,
+        textstr_general_info,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.minorticks_on()
+    axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+    axis.set_ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
+
+    axis.set_title("Top-down view of inboard TF coil at midplane")
+    axis.set_xlabel("Radial distance [m]")
+    axis.set_ylabel("Toroidal distance [m]")
+    axis.legend(loc="upper left")
 
 
 def plot_tf_turn(axis, mfile_data, scan: int) -> None:
@@ -8235,12 +8757,16 @@ def main_plot(
         # TF coil with WP
         plot_19 = fig8.add_subplot(211, aspect="equal")
         plot_19.set_position([0.05, 0.5, 0.7, 0.4])
-        plot_tf_wp(plot_19, m_file_data, scan, fig8)
+        plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig8)
 
         # TF coil turn structure
         plot_20 = fig8.add_subplot(325, aspect="equal")
         plot_20.set_position([0.025, 0.1, 0.3, 0.3])
         plot_tf_turn(plot_20, m_file_data, scan)
+    else:
+        plot_19 = fig8.add_subplot(211, aspect="equal")
+        plot_19.set_position([0.05, 0.5, 0.7, 0.4])
+        plot_resistive_tf_wp(plot_19, m_file_data, scan, fig8)
 
     plot_21 = fig9.add_subplot(111, aspect="equal")
     plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
