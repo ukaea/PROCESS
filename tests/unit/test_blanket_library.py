@@ -4,13 +4,11 @@ import numpy as np
 import pytest
 
 from process.blanket_library import BlanketLibrary
+from process.data_structure import divertor_variables
 from process.fortran import (
     blanket_library,
     build_variables,
-    buildings_variables,
-    divertor_variables,
     fwbs_variables,
-    pfcoil_variables,
     physics_variables,
 )
 from process.fw import Fw
@@ -41,19 +39,19 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     cv_fw: Any = None
 
-    coolwh: Any = None
+    i_blkt_coolant_type: Any = None
 
-    inlet_temp: Any = None
+    temp_blkt_coolant_in: Any = None
 
-    outlet_temp: Any = None
+    temp_blkt_coolant_out: Any = None
 
-    blpressure: Any = None
+    pres_blkt_coolant: Any = None
 
-    rhof_bl: Any = None
+    den_blkt_coolant: Any = None
 
-    icooldual: Any = None
+    i_blkt_dual_coolant: Any = None
 
-    visc_bl: Any = None
+    visc_blkt_coolant: Any = None
 
     cp_bl: Any = None
 
@@ -61,7 +59,7 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     visc_fw_coolant: Any = None
 
-    ipump: Any = None
+    i_fw_blkt_shared_coolant: Any = None
 
     expected_den_fw_coolant: Any = None
 
@@ -69,9 +67,9 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
 
     expected_cv_fw: Any = None
 
-    expected_rhof_bl: Any = None
+    expected_den_blkt_coolant: Any = None
 
-    expected_visc_bl: Any = None
+    expected_visc_blkt_coolant: Any = None
 
     expected_cp_bl: Any = None
 
@@ -91,22 +89,22 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_fw_coolant=0,
             cp_fw=0,
             cv_fw=0,
-            coolwh=1,
-            inlet_temp=573,
-            outlet_temp=773,
-            blpressure=8000000,
-            rhof_bl=0,
-            icooldual=2,
-            visc_bl=0,
+            i_blkt_coolant_type=1,
+            temp_blkt_coolant_in=573,
+            temp_blkt_coolant_out=773,
+            pres_blkt_coolant=8000000,
+            den_blkt_coolant=0,
+            i_blkt_dual_coolant=2,
+            visc_blkt_coolant=0,
             cp_bl=0,
             cv_bl=0,
             visc_fw_coolant=0,
-            ipump=0,
+            i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
-            expected_rhof_bl=5.6389735407435868,
-            expected_visc_bl=3.5036293160410249e-05,
+            expected_den_blkt_coolant=5.6389735407435868,
+            expected_visc_blkt_coolant=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
             expected_visc_fw_coolant=3.5036293160410249e-05,
@@ -119,22 +117,22 @@ class PrimaryCoolantPropertiesParam(NamedTuple):
             den_fw_coolant=5.6389735407435868,
             cp_fw=5188.5588430173211,
             cv_fw=3123.5687263525392,
-            coolwh=1,
-            inlet_temp=573,
-            outlet_temp=773,
-            blpressure=8000000,
-            rhof_bl=5.6389735407435868,
-            icooldual=2,
-            visc_bl=3.5036293160410249e-05,
+            i_blkt_coolant_type=1,
+            temp_blkt_coolant_in=573,
+            temp_blkt_coolant_out=773,
+            pres_blkt_coolant=8000000,
+            den_blkt_coolant=5.6389735407435868,
+            i_blkt_dual_coolant=2,
+            visc_blkt_coolant=3.5036293160410249e-05,
             cp_bl=5188.5588430173211,
             cv_bl=3123.5687263525392,
             visc_fw_coolant=3.5036293160410249e-05,
-            ipump=0,
+            i_fw_blkt_shared_coolant=0,
             expected_den_fw_coolant=5.6389735407435868,
             expected_cp_fw=5188.5588430173211,
             expected_cv_fw=3123.5687263525392,
-            expected_rhof_bl=5.6389735407435868,
-            expected_visc_bl=3.5036293160410249e-05,
+            expected_den_blkt_coolant=5.6389735407435868,
+            expected_visc_blkt_coolant=3.5036293160410249e-05,
             expected_cp_bl=5188.5588430173211,
             expected_cv_bl=3123.5687263525392,
             expected_visc_fw_coolant=3.5036293160410249e-05,
@@ -186,30 +184,46 @@ def test_primary_coolant_properties(
 
     monkeypatch.setattr(fwbs_variables, "cv_fw", primarycoolantpropertiesparam.cv_fw)
 
-    monkeypatch.setattr(fwbs_variables, "coolwh", primarycoolantpropertiesparam.coolwh)
-
     monkeypatch.setattr(
-        fwbs_variables, "inlet_temp", primarycoolantpropertiesparam.inlet_temp
+        fwbs_variables,
+        "i_blkt_coolant_type",
+        primarycoolantpropertiesparam.i_blkt_coolant_type,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "outlet_temp", primarycoolantpropertiesparam.outlet_temp
+        fwbs_variables,
+        "temp_blkt_coolant_in",
+        primarycoolantpropertiesparam.temp_blkt_coolant_in,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "blpressure", primarycoolantpropertiesparam.blpressure
+        fwbs_variables,
+        "temp_blkt_coolant_out",
+        primarycoolantpropertiesparam.temp_blkt_coolant_out,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "rhof_bl", primarycoolantpropertiesparam.rhof_bl
+        fwbs_variables,
+        "pres_blkt_coolant",
+        primarycoolantpropertiesparam.pres_blkt_coolant,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "icooldual", primarycoolantpropertiesparam.icooldual
+        fwbs_variables,
+        "den_blkt_coolant",
+        primarycoolantpropertiesparam.den_blkt_coolant,
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "visc_bl", primarycoolantpropertiesparam.visc_bl
+        fwbs_variables,
+        "i_blkt_dual_coolant",
+        primarycoolantpropertiesparam.i_blkt_dual_coolant,
+    )
+
+    monkeypatch.setattr(
+        fwbs_variables,
+        "visc_blkt_coolant",
+        primarycoolantpropertiesparam.visc_blkt_coolant,
     )
 
     monkeypatch.setattr(fwbs_variables, "cp_bl", primarycoolantpropertiesparam.cp_bl)
@@ -220,7 +234,11 @@ def test_primary_coolant_properties(
         fwbs_variables, "visc_fw_coolant", primarycoolantpropertiesparam.visc_fw_coolant
     )
 
-    monkeypatch.setattr(fwbs_variables, "ipump", primarycoolantpropertiesparam.ipump)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_fw_blkt_shared_coolant",
+        primarycoolantpropertiesparam.i_fw_blkt_shared_coolant,
+    )
 
     blanket_library_fixture.primary_coolant_properties(output=False)
 
@@ -236,12 +254,12 @@ def test_primary_coolant_properties(
         primarycoolantpropertiesparam.expected_cv_fw, rel=1e-4
     )
 
-    assert fwbs_variables.rhof_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_rhof_bl, rel=1e-4
+    assert fwbs_variables.den_blkt_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_den_blkt_coolant, rel=1e-4
     )
 
-    assert fwbs_variables.visc_bl == pytest.approx(
-        primarycoolantpropertiesparam.expected_visc_bl, rel=1e-4
+    assert fwbs_variables.visc_blkt_coolant == pytest.approx(
+        primarycoolantpropertiesparam.expected_visc_blkt_coolant, rel=1e-4
     )
 
     assert fwbs_variables.cp_bl == pytest.approx(
@@ -286,7 +304,7 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
 ):
     monkeypatch.setattr(fwbs_variables, "radius_fw_channel", 0.006)
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", 0.22481)
-    monkeypatch.setattr(fwbs_variables, "ifci", 1)
+    monkeypatch.setattr(fwbs_variables, "i_blkt_liquid_breeder_channel_type", 1)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", 0.11625)
     monkeypatch.setattr(fwbs_variables, "b_mag_blkt", [8.393, 3.868])
     monkeypatch.setattr(fwbs_variables, "bz_channel_conduct_liq", 833000)
@@ -357,21 +375,21 @@ def test_pumppower_secondary_pb_li(monkeypatch, blanket_library_fixture):
 
 
 class ComponentHalfHeightParam(NamedTuple):
-    hmax: Any = None
-    vgap_xpoint_divertor: Any = None
-    vgap_vv_thermalshield: Any = None
-    blnktth: Any = None
-    shldtth: Any = None
+    z_tf_inside_half: Any = None
+    dz_xpoint_divertor: Any = None
+    dz_shld_vv_gap: Any = None
+    dz_blkt_upper: Any = None
+    dz_shld_upper: Any = None
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
     dr_fw_inboard: Any = None
     dr_fw_outboard: Any = None
-    d_vv_bot: Any = None
-    d_vv_top: Any = None
-    rminor: Any = None
-    kappa: Any = None
-    idivrt: Any = None
-    divfix: Any = None
+    dz_vv_lower: Any = None
+    dz_vv_upper: Any = None
+    z_plasma_xpoint_lower: Any = None
+    z_plasma_xpoint_upper: Any = None
+    n_divertors: Any = None
+    dz_divertor: Any = None
     icomponent: Any = None
     expected_icomponent: Any = None
     expected_half_height: Any = None
@@ -381,21 +399,21 @@ class ComponentHalfHeightParam(NamedTuple):
     "componenthalfheightparam",
     (
         ComponentHalfHeightParam(
-            hmax=8.8182171641274945,
-            vgap_xpoint_divertor=2.0018838307941582,
-            vgap_vv_thermalshield=0.16300000000000001,
-            blnktth=0.85000000000000009,
-            shldtth=0.59999999999999998,
+            z_tf_inside_half=8.8182171641274945,
+            dz_xpoint_divertor=2.0018838307941582,
+            dz_shld_vv_gap=0.16300000000000001,
+            dz_blkt_upper=0.85000000000000009,
+            dz_shld_upper=0.59999999999999998,
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
             dr_fw_inboard=0.018000000000000002,
             dr_fw_outboard=0.018000000000000002,
-            d_vv_bot=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            rminor=2.6666666666666665,
-            kappa=1.8500000000000001,
-            idivrt=1,
-            divfix=0.62000000000000011,
+            dz_vv_lower=0.30000000000000004,
+            dz_vv_upper=0.30000000000000004,
+            z_plasma_xpoint_lower=4.93333333333333333,
+            z_plasma_xpoint_upper=4.93333333333333333,
+            n_divertors=1,
+            dz_divertor=0.62000000000000011,
             icomponent=0,
             expected_icomponent=0,
             expected_half_height=5.9532752487304119,
@@ -416,19 +434,25 @@ def test_component_half_height(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(build_variables, "hmax", componenthalfheightparam.hmax)
     monkeypatch.setattr(
-        build_variables,
-        "vgap_xpoint_divertor",
-        componenthalfheightparam.vgap_xpoint_divertor,
+        build_variables, "z_tf_inside_half", componenthalfheightparam.z_tf_inside_half
     )
     monkeypatch.setattr(
         build_variables,
-        "vgap_vv_thermalshield",
-        componenthalfheightparam.vgap_vv_thermalshield,
+        "dz_xpoint_divertor",
+        componenthalfheightparam.dz_xpoint_divertor,
     )
-    monkeypatch.setattr(build_variables, "blnktth", componenthalfheightparam.blnktth)
-    monkeypatch.setattr(build_variables, "shldtth", componenthalfheightparam.shldtth)
+    monkeypatch.setattr(
+        build_variables,
+        "dz_shld_vv_gap",
+        componenthalfheightparam.dz_shld_vv_gap,
+    )
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_upper", componenthalfheightparam.dz_blkt_upper
+    )
+    monkeypatch.setattr(
+        build_variables, "dz_shld_upper", componenthalfheightparam.dz_shld_upper
+    )
     monkeypatch.setattr(
         build_variables,
         "dr_fw_plasma_gap_inboard",
@@ -445,12 +469,28 @@ def test_component_half_height(
     monkeypatch.setattr(
         build_variables, "dr_fw_outboard", componenthalfheightparam.dr_fw_outboard
     )
-    monkeypatch.setattr(build_variables, "d_vv_bot", componenthalfheightparam.d_vv_bot)
-    monkeypatch.setattr(build_variables, "d_vv_top", componenthalfheightparam.d_vv_top)
-    monkeypatch.setattr(physics_variables, "rminor", componenthalfheightparam.rminor)
-    monkeypatch.setattr(physics_variables, "kappa", componenthalfheightparam.kappa)
-    monkeypatch.setattr(physics_variables, "idivrt", componenthalfheightparam.idivrt)
-    monkeypatch.setattr(divertor_variables, "divfix", componenthalfheightparam.divfix)
+    monkeypatch.setattr(
+        build_variables, "dz_vv_lower", componenthalfheightparam.dz_vv_lower
+    )
+    monkeypatch.setattr(
+        build_variables, "dz_vv_upper", componenthalfheightparam.dz_vv_upper
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "z_plasma_xpoint_lower",
+        componenthalfheightparam.z_plasma_xpoint_lower,
+    )
+    monkeypatch.setattr(
+        build_variables,
+        "z_plasma_xpoint_upper",
+        componenthalfheightparam.z_plasma_xpoint_upper,
+    )
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", componenthalfheightparam.n_divertors
+    )
+    monkeypatch.setattr(
+        divertor_variables, "dz_divertor", componenthalfheightparam.dz_divertor
+    )
 
     half_height = blanket_library_fixture.component_half_height(
         componenthalfheightparam.icomponent
@@ -471,27 +511,27 @@ class DshapedComponentParam(NamedTuple):
     blareaob: Any = None
     blarea: Any = None
     dr_blkt_outboard: Any = None
-    blnktth: Any = None
+    dz_blkt_upper: Any = None
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
     dr_shld_outboard: Any = None
-    shldtth: Any = None
+    dz_shld_upper: Any = None
     rsldo: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
-    d_vv_top: Any = None
-    d_vv_bot: Any = None
-    volblkti: Any = None
-    volblkto: Any = None
-    volblkt: Any = None
+    dz_vv_upper: Any = None
+    dz_vv_lower: Any = None
+    vol_blkt_inboard: Any = None
+    vol_blkt_outboard: Any = None
+    vol_blkt_total: Any = None
     volshld: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     rminor: Any = None
     volshldi: Any = None
     volshldo: Any = None
-    volvvi: Any = None
-    volvvo: Any = None
+    vol_vv_inboard: Any = None
+    vol_vv_outboard: Any = None
     hblnkt: Any = None
     hshld: Any = None
     hvv: Any = None
@@ -502,14 +542,14 @@ class DshapedComponentParam(NamedTuple):
     expected_shareaib: Any = None
     expected_shareaob: Any = None
     expected_sharea: Any = None
-    expected_volblkto: Any = None
+    expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
-    expected_vdewin: Any = None
+    expected_vol_vv: Any = None
     expected_volshldi: Any = None
     expected_volshldo: Any = None
-    expected_volvvi: Any = None
-    expected_volvvo: Any = None
+    expected_vol_vv_inboard: Any = None
+    expected_vol_vv_outboard: Any = None
     expected_icomponent: Any = None
 
 
@@ -528,27 +568,27 @@ class DshapedComponentParam(NamedTuple):
             blareaob=0,
             blarea=0,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_upper=0.5,
             shareaib=0,
             shareaob=0,
             sharea=0,
             dr_shld_outboard=0.30000000000000004,
-            shldtth=0.60000000000000009,
+            dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            d_vv_bot=0.30000000000000004,
-            volblkti=0,
-            volblkto=0,
-            volblkt=0,
+            dz_vv_upper=0.30000000000000004,
+            dz_vv_lower=0.30000000000000004,
+            vol_blkt_inboard=0,
+            vol_blkt_outboard=0,
+            vol_blkt_total=0,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rminor=2.5,
             volshldi=0,
             volshldo=0,
-            volvvi=0,
-            volvvo=0,
+            vol_vv_inboard=0,
+            vol_vv_outboard=0,
             hblnkt=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
@@ -559,14 +599,14 @@ class DshapedComponentParam(NamedTuple):
             expected_shareaib=0,
             expected_shareaob=0,
             expected_sharea=0,
-            expected_volblkto=691.06561956756764,
+            expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=0,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=0,
             expected_volshldo=0,
-            expected_volvvi=0,
-            expected_volvvo=0,
+            expected_vol_vv_inboard=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=0,
         ),
         DshapedComponentParam(
@@ -581,27 +621,27 @@ class DshapedComponentParam(NamedTuple):
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_upper=0.5,
             shareaib=0,
             shareaob=0,
             sharea=0,
             dr_shld_outboard=0.30000000000000004,
-            shldtth=0.60000000000000009,
+            dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            d_vv_bot=0.30000000000000004,
-            volblkti=0,
-            volblkto=691.06561956756764,
-            volblkt=691.06561956756764,
+            dz_vv_upper=0.30000000000000004,
+            dz_vv_lower=0.30000000000000004,
+            vol_blkt_inboard=0,
+            vol_blkt_outboard=691.06561956756764,
+            vol_blkt_total=691.06561956756764,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rminor=2.5,
             volshldi=0,
             volshldo=0,
-            volvvi=0,
-            volvvo=0,
+            vol_vv_inboard=0,
+            vol_vv_outboard=0,
             hblnkt=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
@@ -612,14 +652,14 @@ class DshapedComponentParam(NamedTuple):
             expected_shareaib=208.91591146372122,
             expected_shareaob=1013.8483589087293,
             expected_sharea=1222.7642703724505,
-            expected_volblkto=691.06561956756764,
+            expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=450.46122947809488,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=79.896984366095609,
             expected_volshldo=370.5642451119993,
-            expected_volvvi=0,
-            expected_volvvo=0,
+            expected_vol_vv_inboard=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=1,
         ),
         DshapedComponentParam(
@@ -634,27 +674,27 @@ class DshapedComponentParam(NamedTuple):
             blareaob=852.24160940262459,
             blarea=1049.2194687827046,
             dr_blkt_outboard=1,
-            blnktth=0.5,
+            dz_blkt_upper=0.5,
             shareaib=208.91591146372122,
             shareaob=1013.8483589087293,
             sharea=1222.7642703724505,
             dr_shld_outboard=0.30000000000000004,
-            shldtth=0.60000000000000009,
+            dz_shld_upper=0.60000000000000009,
             rsldo=8.4000000000000004,
             dr_vv_inboard=0.20000000000000001,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            d_vv_bot=0.30000000000000004,
-            volblkti=0,
-            volblkto=691.06561956756764,
-            volblkt=691.06561956756764,
+            dz_vv_upper=0.30000000000000004,
+            dz_vv_lower=0.30000000000000004,
+            vol_blkt_inboard=0,
+            vol_blkt_outboard=691.06561956756764,
+            vol_blkt_total=691.06561956756764,
             volshld=450.46122947809488,
-            vdewin=0,
+            vol_vv=0,
             rminor=2.5,
             volshldi=79.896984366095609,
             volshldo=370.5642451119993,
-            volvvi=0,
-            volvvo=0,
+            vol_vv_inboard=0,
+            vol_vv_outboard=0,
             hblnkt=8.25,
             hshld=8.75,
             hvv=9.4349999999999987,
@@ -665,14 +705,14 @@ class DshapedComponentParam(NamedTuple):
             expected_shareaib=208.91591146372122,
             expected_shareaob=1013.8483589087293,
             expected_sharea=1222.7642703724505,
-            expected_volblkto=691.06561956756764,
+            expected_vol_blkt_outboard=691.06561956756764,
             expected_volblkt=691.06561956756764,
             expected_volshld=450.46122947809488,
-            expected_vdewin=340.45369594344834,
+            expected_vol_vv=340.45369594344834,
             expected_volshldi=79.896984366095609,
             expected_volshldo=370.5642451119993,
-            expected_volvvi=34.253413020620215,
-            expected_volvvo=306.20028292282814,
+            expected_vol_vv_inboard=34.253413020620215,
+            expected_vol_vv_outboard=306.20028292282814,
             expected_icomponent=2,
         ),
     ),
@@ -718,14 +758,18 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_blkt_outboard", dshapedcomponentparam.dr_blkt_outboard
     )
-    monkeypatch.setattr(build_variables, "blnktth", dshapedcomponentparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_upper", dshapedcomponentparam.dz_blkt_upper
+    )
     monkeypatch.setattr(build_variables, "shareaib", dshapedcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", dshapedcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", dshapedcomponentparam.sharea)
     monkeypatch.setattr(
         build_variables, "dr_shld_outboard", dshapedcomponentparam.dr_shld_outboard
     )
-    monkeypatch.setattr(build_variables, "shldtth", dshapedcomponentparam.shldtth)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_upper", dshapedcomponentparam.dz_shld_upper
+    )
     monkeypatch.setattr(build_variables, "rsldo", dshapedcomponentparam.rsldo)
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", dshapedcomponentparam.dr_vv_inboard
@@ -733,18 +777,32 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dr_vv_outboard", dshapedcomponentparam.dr_vv_outboard
     )
-    monkeypatch.setattr(build_variables, "d_vv_top", dshapedcomponentparam.d_vv_top)
-    monkeypatch.setattr(build_variables, "d_vv_bot", dshapedcomponentparam.d_vv_bot)
-    monkeypatch.setattr(fwbs_variables, "volblkti", dshapedcomponentparam.volblkti)
-    monkeypatch.setattr(fwbs_variables, "volblkto", dshapedcomponentparam.volblkto)
-    monkeypatch.setattr(fwbs_variables, "volblkt", dshapedcomponentparam.volblkt)
+    monkeypatch.setattr(
+        build_variables, "dz_vv_upper", dshapedcomponentparam.dz_vv_upper
+    )
+    monkeypatch.setattr(
+        build_variables, "dz_vv_lower", dshapedcomponentparam.dz_vv_lower
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_inboard", dshapedcomponentparam.vol_blkt_inboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", dshapedcomponentparam.vol_blkt_outboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", dshapedcomponentparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "volshld", dshapedcomponentparam.volshld)
-    monkeypatch.setattr(fwbs_variables, "vdewin", dshapedcomponentparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", dshapedcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rminor", dshapedcomponentparam.rminor)
     monkeypatch.setattr(blanket_library, "volshldi", dshapedcomponentparam.volshldi)
     monkeypatch.setattr(blanket_library, "volshldo", dshapedcomponentparam.volshldo)
-    monkeypatch.setattr(blanket_library, "volvvi", dshapedcomponentparam.volvvi)
-    monkeypatch.setattr(blanket_library, "volvvo", dshapedcomponentparam.volvvo)
+    monkeypatch.setattr(
+        blanket_library, "vol_vv_inboard", dshapedcomponentparam.vol_vv_inboard
+    )
+    monkeypatch.setattr(
+        blanket_library, "vol_vv_outboard", dshapedcomponentparam.vol_vv_outboard
+    )
     monkeypatch.setattr(blanket_library, "hblnkt", dshapedcomponentparam.hblnkt)
     monkeypatch.setattr(blanket_library, "hshld", dshapedcomponentparam.hshld)
     monkeypatch.setattr(blanket_library, "hvv", dshapedcomponentparam.hvv)
@@ -760,10 +818,10 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     assert build_variables.blarea == pytest.approx(
         dshapedcomponentparam.expected_blarea
     )
-    assert fwbs_variables.volblkto == pytest.approx(
-        dshapedcomponentparam.expected_volblkto
+    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
+        dshapedcomponentparam.expected_vol_blkt_outboard
     )
-    assert fwbs_variables.volblkt == pytest.approx(
+    assert fwbs_variables.vol_blkt_total == pytest.approx(
         dshapedcomponentparam.expected_volblkt
     )
 
@@ -778,27 +836,27 @@ class EllipticalComponentParam(NamedTuple):
     blareaib: Any = None
     blareaob: Any = None
     blarea: Any = None
-    blnktth: Any = None
+    dz_blkt_upper: Any = None
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
-    shldtth: Any = None
+    dz_shld_upper: Any = None
     dr_vv_inboard: Any = None
     dr_vv_outboard: Any = None
-    d_vv_top: Any = None
-    d_vv_bot: Any = None
-    volblkti: Any = None
-    volblkto: Any = None
-    volblkt: Any = None
+    dz_vv_upper: Any = None
+    dz_vv_lower: Any = None
+    vol_blkt_inboard: Any = None
+    vol_blkt_outboard: Any = None
+    vol_blkt_total: Any = None
     volshld: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     rmajor: Any = None
     rminor: Any = None
     triang: Any = None
     volshldi: Any = None
     volshldo: Any = None
-    volvvi: Any = None
-    volvvo: Any = None
+    vol_vv_inboard: Any = None
+    vol_vv_outboard: Any = None
     hblnkt: Any = None
     hshld: Any = None
     hvv: Any = None
@@ -809,15 +867,15 @@ class EllipticalComponentParam(NamedTuple):
     expected_shareaib: Any = None
     expected_shareaob: Any = None
     expected_sharea: Any = None
-    expected_volblkti: Any = None
-    expected_volblkto: Any = None
+    expected_vol_blkt_inboard: Any = None
+    expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
-    expected_vdewin: Any = None
+    expected_vol_vv: Any = None
     expected_volshldi: Any = None
     expected_volshldo: Any = None
-    expected_volvvi: Any = None
-    expected_volvvo: Any = None
+    expected_vol_vv_inboard: Any = None
+    expected_vol_vv_outboard: Any = None
     expected_icomponent: Any = None
 
 
@@ -834,27 +892,27 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=0,
             blareaob=0,
             blarea=0,
-            blnktth=0.85000000000000009,
+            dz_blkt_upper=0.85000000000000009,
             shareaib=0,
             shareaob=0,
             sharea=0,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            d_vv_bot=0.30000000000000004,
-            volblkti=0,
-            volblkto=0,
-            volblkt=0,
+            dz_vv_upper=0.30000000000000004,
+            dz_vv_lower=0.30000000000000004,
+            vol_blkt_inboard=0,
+            vol_blkt_outboard=0,
+            vol_blkt_total=0,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             volshldi=0,
             volshldo=0,
-            volvvi=0,
-            volvvo=0,
+            vol_vv_inboard=0,
+            vol_vv_outboard=0,
             hblnkt=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
@@ -865,15 +923,15 @@ class EllipticalComponentParam(NamedTuple):
             expected_shareaib=0,
             expected_shareaob=0,
             expected_sharea=0,
-            expected_volblkti=315.83946385183026,
-            expected_volblkto=1020.3677420460117,
+            expected_vol_blkt_inboard=315.83946385183026,
+            expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=0,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=0,
             expected_volshldo=0,
-            expected_volvvi=0,
-            expected_volvvo=0,
+            expected_vol_vv_inboard=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=0,
         ),
         EllipticalComponentParam(
@@ -886,27 +944,27 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
-            blnktth=0.85000000000000009,
+            dz_blkt_upper=0.85000000000000009,
             shareaib=0,
             shareaob=0,
             sharea=0,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            d_vv_bot=0.30000000000000004,
-            volblkti=315.83946385183026,
-            volblkto=1020.3677420460117,
-            volblkt=1336.207205897842,
+            dz_vv_upper=0.30000000000000004,
+            dz_vv_lower=0.30000000000000004,
+            vol_blkt_inboard=315.83946385183026,
+            vol_blkt_outboard=1020.3677420460117,
+            vol_blkt_total=1336.207205897842,
             volshld=0,
-            vdewin=0,
+            vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             volshldi=0,
             volshldo=0,
-            volvvi=0,
-            volvvo=0,
+            vol_vv_inboard=0,
+            vol_vv_outboard=0,
             hblnkt=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
@@ -917,15 +975,15 @@ class EllipticalComponentParam(NamedTuple):
             expected_shareaib=700.06731267447844,
             expected_shareaob=1344.1106481995357,
             expected_sharea=2044.1779608740142,
-            expected_volblkti=315.83946385183026,
-            expected_volblkto=1020.3677420460117,
+            expected_vol_blkt_inboard=315.83946385183026,
+            expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=1124.4621612595051,
-            expected_vdewin=0,
+            expected_vol_vv=0,
             expected_volshldi=177.89822933168091,
             expected_volshldo=946.56393192782434,
-            expected_volvvi=0,
-            expected_volvvo=0,
+            expected_vol_vv_inboard=0,
+            expected_vol_vv_outboard=0,
             expected_icomponent=1,
         ),
         EllipticalComponentParam(
@@ -938,27 +996,27 @@ class EllipticalComponentParam(NamedTuple):
             blareaib=664.9687712975541,
             blareaob=1101.3666396424403,
             blarea=1766.3354109399943,
-            blnktth=0.85000000000000009,
+            dz_blkt_upper=0.85000000000000009,
             shareaib=700.06731267447844,
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
-            shldtth=0.59999999999999998,
+            dz_shld_upper=0.59999999999999998,
             dr_vv_inboard=0.30000000000000004,
             dr_vv_outboard=0.30000000000000004,
-            d_vv_top=0.30000000000000004,
-            d_vv_bot=0.30000000000000004,
-            volblkti=315.83946385183026,
-            volblkto=1020.3677420460117,
-            volblkt=1336.207205897842,
+            dz_vv_upper=0.30000000000000004,
+            dz_vv_lower=0.30000000000000004,
+            vol_blkt_inboard=315.83946385183026,
+            vol_blkt_outboard=1020.3677420460117,
+            vol_blkt_total=1336.207205897842,
             volshld=1124.4621612595051,
-            vdewin=0,
+            vol_vv=0,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             volshldi=177.89822933168091,
             volshldo=946.56393192782434,
-            volvvi=0,
-            volvvo=0,
+            vol_vv_inboard=0,
+            vol_vv_outboard=0,
             hblnkt=5.9532752487304119,
             hshld=6.8032752487304133,
             hvv=7.5032752487304135,
@@ -969,15 +1027,15 @@ class EllipticalComponentParam(NamedTuple):
             expected_shareaib=700.06731267447844,
             expected_shareaob=1344.1106481995357,
             expected_sharea=2044.1779608740142,
-            expected_volblkti=315.83946385183026,
-            expected_volblkto=1020.3677420460117,
+            expected_vol_blkt_inboard=315.83946385183026,
+            expected_vol_blkt_outboard=1020.3677420460117,
             expected_volblkt=1336.207205897842,
             expected_volshld=1124.4621612595051,
-            expected_vdewin=584.07334775041659,
+            expected_vol_vv=584.07334775041659,
             expected_volshldi=177.89822933168091,
             expected_volshldo=946.56393192782434,
-            expected_volvvi=143.03162449152501,
-            expected_volvvo=441.04172325889158,
+            expected_vol_vv_inboard=143.03162449152501,
+            expected_vol_vv_outboard=441.04172325889158,
             expected_icomponent=2,
         ),
     ),
@@ -988,7 +1046,7 @@ def test_elliptical_component(
     """
     Automatically generated Regression Unit Test for elliptical_component.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param ellipticalcomponentparam: the data used to mock and assert in this test.
     :type ellipticalcomponentparam: ellipticalcomponentparam
@@ -1013,31 +1071,49 @@ def test_elliptical_component(
     monkeypatch.setattr(build_variables, "blareaib", ellipticalcomponentparam.blareaib)
     monkeypatch.setattr(build_variables, "blareaob", ellipticalcomponentparam.blareaob)
     monkeypatch.setattr(build_variables, "blarea", ellipticalcomponentparam.blarea)
-    monkeypatch.setattr(build_variables, "blnktth", ellipticalcomponentparam.blnktth)
+    monkeypatch.setattr(
+        build_variables, "dz_blkt_upper", ellipticalcomponentparam.dz_blkt_upper
+    )
     monkeypatch.setattr(build_variables, "shareaib", ellipticalcomponentparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", ellipticalcomponentparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", ellipticalcomponentparam.sharea)
-    monkeypatch.setattr(build_variables, "shldtth", ellipticalcomponentparam.shldtth)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_upper", ellipticalcomponentparam.dz_shld_upper
+    )
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", ellipticalcomponentparam.dr_vv_inboard
     )
     monkeypatch.setattr(
         build_variables, "dr_vv_outboard", ellipticalcomponentparam.dr_vv_outboard
     )
-    monkeypatch.setattr(build_variables, "d_vv_top", ellipticalcomponentparam.d_vv_top)
-    monkeypatch.setattr(build_variables, "d_vv_bot", ellipticalcomponentparam.d_vv_bot)
-    monkeypatch.setattr(fwbs_variables, "volblkti", ellipticalcomponentparam.volblkti)
-    monkeypatch.setattr(fwbs_variables, "volblkto", ellipticalcomponentparam.volblkto)
-    monkeypatch.setattr(fwbs_variables, "volblkt", ellipticalcomponentparam.volblkt)
+    monkeypatch.setattr(
+        build_variables, "dz_vv_upper", ellipticalcomponentparam.dz_vv_upper
+    )
+    monkeypatch.setattr(
+        build_variables, "dz_vv_lower", ellipticalcomponentparam.dz_vv_lower
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_inboard", ellipticalcomponentparam.vol_blkt_inboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", ellipticalcomponentparam.vol_blkt_outboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", ellipticalcomponentparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "volshld", ellipticalcomponentparam.volshld)
-    monkeypatch.setattr(fwbs_variables, "vdewin", ellipticalcomponentparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", ellipticalcomponentparam.vol_vv)
     monkeypatch.setattr(physics_variables, "rmajor", ellipticalcomponentparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", ellipticalcomponentparam.rminor)
     monkeypatch.setattr(physics_variables, "triang", ellipticalcomponentparam.triang)
     monkeypatch.setattr(blanket_library, "volshldi", ellipticalcomponentparam.volshldi)
     monkeypatch.setattr(blanket_library, "volshldo", ellipticalcomponentparam.volshldo)
-    monkeypatch.setattr(blanket_library, "volvvi", ellipticalcomponentparam.volvvi)
-    monkeypatch.setattr(blanket_library, "volvvo", ellipticalcomponentparam.volvvo)
+    monkeypatch.setattr(
+        blanket_library, "vol_vv_inboard", ellipticalcomponentparam.vol_vv_inboard
+    )
+    monkeypatch.setattr(
+        blanket_library, "vol_vv_outboard", ellipticalcomponentparam.vol_vv_outboard
+    )
     monkeypatch.setattr(blanket_library, "hblnkt", ellipticalcomponentparam.hblnkt)
     monkeypatch.setattr(blanket_library, "hshld", ellipticalcomponentparam.hshld)
     monkeypatch.setattr(blanket_library, "hvv", ellipticalcomponentparam.hvv)
@@ -1062,20 +1138,20 @@ def test_elliptical_component(
     assert build_variables.sharea == pytest.approx(
         ellipticalcomponentparam.expected_sharea
     )
-    assert fwbs_variables.volblkti == pytest.approx(
-        ellipticalcomponentparam.expected_volblkti
+    assert fwbs_variables.vol_blkt_inboard == pytest.approx(
+        ellipticalcomponentparam.expected_vol_blkt_inboard
     )
-    assert fwbs_variables.volblkto == pytest.approx(
-        ellipticalcomponentparam.expected_volblkto
+    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
+        ellipticalcomponentparam.expected_vol_blkt_outboard
     )
-    assert fwbs_variables.volblkt == pytest.approx(
+    assert fwbs_variables.vol_blkt_total == pytest.approx(
         ellipticalcomponentparam.expected_volblkt
     )
     assert fwbs_variables.volshld == pytest.approx(
         ellipticalcomponentparam.expected_volshld
     )
-    assert fwbs_variables.vdewin == pytest.approx(
-        ellipticalcomponentparam.expected_vdewin
+    assert fwbs_variables.vol_vv == pytest.approx(
+        ellipticalcomponentparam.expected_vol_vv
     )
     assert blanket_library.volshldi == pytest.approx(
         ellipticalcomponentparam.expected_volshldi
@@ -1083,11 +1159,11 @@ def test_elliptical_component(
     assert blanket_library.volshldo == pytest.approx(
         ellipticalcomponentparam.expected_volshldo
     )
-    assert blanket_library.volvvi == pytest.approx(
-        ellipticalcomponentparam.expected_volvvi
+    assert blanket_library.vol_vv_inboard == pytest.approx(
+        ellipticalcomponentparam.expected_vol_vv_inboard
     )
-    assert blanket_library.volvvo == pytest.approx(
-        ellipticalcomponentparam.expected_volvvo
+    assert blanket_library.vol_vv_outboard == pytest.approx(
+        ellipticalcomponentparam.expected_vol_vv_outboard
     )
 
 
@@ -1098,27 +1174,27 @@ class ApplyCoverageFactorsParam(NamedTuple):
     shareaib: Any = None
     shareaob: Any = None
     sharea: Any = None
-    fdiv: Any = None
-    fhcd: Any = None
-    volblkto: Any = None
-    volblkti: Any = None
-    volblkt: Any = None
+    f_ster_div_single: Any = None
+    f_a_fw_hcd: Any = None
+    vol_blkt_outboard: Any = None
+    vol_blkt_inboard: Any = None
+    vol_blkt_total: Any = None
     fvolsi: Any = None
     fvolso: Any = None
     volshld: Any = None
-    vdewin: Any = None
+    vol_vv: Any = None
     fvoldw: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     volshldi: Any = None
     volshldo: Any = None
     expected_blareaob: Any = None
     expected_blarea: Any = None
     expected_shareaob: Any = None
     expected_sharea: Any = None
-    expected_volblkto: Any = None
+    expected_vol_blkt_outboard: Any = None
     expected_volblkt: Any = None
     expected_volshld: Any = None
-    expected_vdewin: Any = None
+    expected_vol_vv: Any = None
     expected_volshldo: Any = None
 
 
@@ -1132,27 +1208,27 @@ class ApplyCoverageFactorsParam(NamedTuple):
             shareaib=700.06731267447844,
             shareaob=1344.1106481995357,
             sharea=2044.1779608740142,
-            fdiv=0.115,
-            fhcd=0,
-            volblkto=1020.3677420460117,
-            volblkti=315.83946385183026,
-            volblkt=1336.207205897842,
+            f_ster_div_single=0.115,
+            f_a_fw_hcd=0,
+            vol_blkt_outboard=1020.3677420460117,
+            vol_blkt_inboard=315.83946385183026,
+            vol_blkt_total=1336.207205897842,
             fvolsi=1,
             fvolso=0.64000000000000001,
             volshld=1124.4621612595051,
-            vdewin=584.07334775041659,
+            vol_vv=584.07334775041659,
             fvoldw=1.74,
-            idivrt=1,
+            n_divertors=1,
             volshldi=177.89822933168091,
             volshldo=946.56393192782434,
             expected_blareaob=898.23806738434075,
             expected_blarea=1563.2068386818949,
             expected_shareaob=860.23081484770285,
             expected_sharea=1560.2981275221814,
-            expected_volblkto=866.70391336775992,
+            expected_vol_blkt_outboard=866.70391336775992,
             expected_volblkt=1182.5433772195902,
             expected_volshld=783.69914576548854,
-            expected_vdewin=1016.2876250857248,
+            expected_vol_vv=1016.2876250857248,
             expected_volshldo=605.80091643380763,
         ),
     ),
@@ -1163,7 +1239,7 @@ def test_apply_coverage_factors(
     """
     Automatically generated Regression Unit Test for apply_coverage_factors.
 
-    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
+    This test was generated using data from tests/regression/input_files/large_tokamak_eval.IN.DAT.
 
     :param applycoveragefactorsparam: the data used to mock and assert in this test.
     :type applycoveragefactorsparam: applycoveragefactorsparam
@@ -1177,17 +1253,29 @@ def test_apply_coverage_factors(
     monkeypatch.setattr(build_variables, "shareaib", applycoveragefactorsparam.shareaib)
     monkeypatch.setattr(build_variables, "shareaob", applycoveragefactorsparam.shareaob)
     monkeypatch.setattr(build_variables, "sharea", applycoveragefactorsparam.sharea)
-    monkeypatch.setattr(fwbs_variables, "fdiv", applycoveragefactorsparam.fdiv)
-    monkeypatch.setattr(fwbs_variables, "fhcd", applycoveragefactorsparam.fhcd)
-    monkeypatch.setattr(fwbs_variables, "volblkto", applycoveragefactorsparam.volblkto)
-    monkeypatch.setattr(fwbs_variables, "volblkti", applycoveragefactorsparam.volblkti)
-    monkeypatch.setattr(fwbs_variables, "volblkt", applycoveragefactorsparam.volblkt)
+    monkeypatch.setattr(
+        fwbs_variables, "f_ster_div_single", applycoveragefactorsparam.f_ster_div_single
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "f_a_fw_hcd", applycoveragefactorsparam.f_a_fw_hcd
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_outboard", applycoveragefactorsparam.vol_blkt_outboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_inboard", applycoveragefactorsparam.vol_blkt_inboard
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "vol_blkt_total", applycoveragefactorsparam.vol_blkt_total
+    )
     monkeypatch.setattr(fwbs_variables, "fvolsi", applycoveragefactorsparam.fvolsi)
     monkeypatch.setattr(fwbs_variables, "fvolso", applycoveragefactorsparam.fvolso)
     monkeypatch.setattr(fwbs_variables, "volshld", applycoveragefactorsparam.volshld)
-    monkeypatch.setattr(fwbs_variables, "vdewin", applycoveragefactorsparam.vdewin)
+    monkeypatch.setattr(fwbs_variables, "vol_vv", applycoveragefactorsparam.vol_vv)
     monkeypatch.setattr(fwbs_variables, "fvoldw", applycoveragefactorsparam.fvoldw)
-    monkeypatch.setattr(physics_variables, "idivrt", applycoveragefactorsparam.idivrt)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", applycoveragefactorsparam.n_divertors
+    )
     monkeypatch.setattr(blanket_library, "volshldi", applycoveragefactorsparam.volshldi)
     monkeypatch.setattr(blanket_library, "volshldo", applycoveragefactorsparam.volshldo)
 
@@ -1205,225 +1293,33 @@ def test_apply_coverage_factors(
     assert build_variables.sharea == pytest.approx(
         applycoveragefactorsparam.expected_sharea
     )
-    assert fwbs_variables.volblkto == pytest.approx(
-        applycoveragefactorsparam.expected_volblkto
+    assert fwbs_variables.vol_blkt_outboard == pytest.approx(
+        applycoveragefactorsparam.expected_vol_blkt_outboard
     )
-    assert fwbs_variables.volblkt == pytest.approx(
+    assert fwbs_variables.vol_blkt_total == pytest.approx(
         applycoveragefactorsparam.expected_volblkt
     )
     assert fwbs_variables.volshld == pytest.approx(
         applycoveragefactorsparam.expected_volshld
     )
-    assert fwbs_variables.vdewin == pytest.approx(
-        applycoveragefactorsparam.expected_vdewin
+    assert fwbs_variables.vol_vv == pytest.approx(
+        applycoveragefactorsparam.expected_vol_vv
     )
     assert blanket_library.volshldo == pytest.approx(
         applycoveragefactorsparam.expected_volshldo
     )
 
 
-class ExternalCryoGeometryParam(NamedTuple):
-    f_z_cryostat: Any = None
-    hmax: Any = None
-    dr_tf_inboard: Any = None
-    dr_cryostat: Any = None
-    r_cryostat_inboard: Any = None
-    dr_pf_cryostat: Any = None
-    z_cryostat_half_inside: Any = None
-    vol_cryostat: Any = None
-    vvmass: Any = None
-    vdewin: Any = None
-    denstl: Any = None
-    dewmkg: Any = None
-    rb: Any = None
-    zh: Any = None
-    dz_tf_cryostat: Any = None
-    dz_pf_cryostat: Any = None
-    expected_r_cryostat_inboard: Any = None
-    expected_z_cryostat_half_inside: Any = None
-    expected_vol_cryostat: Any = None
-    expected_vvmass: Any = None
-    expected_dewmkg: Any = None
-    expected_dz_tf_cryostat: Any = None
-    expected_dz_pf_cryostat: Any = None
-
-
-@pytest.mark.parametrize(
-    "externalcryogeometryparam",
-    (
-        ExternalCryoGeometryParam(
-            f_z_cryostat=4.2679999999999998,
-            hmax=8.8182171641274945,
-            dr_tf_inboard=0.92672586247397692,
-            dr_cryostat=0.15000000000000002,
-            r_cryostat_inboard=0,
-            dr_pf_cryostat=0.5,
-            z_cryostat_half_inside=0,
-            vol_cryostat=0,
-            vvmass=0,
-            vdewin=1016.2876250857248,
-            denstl=7800,
-            dewmkg=0,
-            rb=np.array(
-                np.array(
-                    (
-                        6.1290994712971543,
-                        6.2110624909068086,
-                        17.305470903073743,
-                        17.305470903073743,
-                        15.620546715016166,
-                        15.620546715016166,
-                        2.5506597842255361,
-                        10.666666666666666,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
-            zh=np.array(
-                np.array(
-                    (
-                        9.9154920004377978,
-                        -11.249338850841614,
-                        3.2350365669570316,
-                        -3.2350365669570316,
-                        7.8723998771612473,
-                        -7.8723998771612473,
-                        7.9363954477147454,
-                        4.9333333333333336,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ),
-                    order="F",
-                ),
-                order="F",
-            ).transpose(),
-            dz_tf_cryostat=2.5,
-            dz_pf_cryostat=0,
-            expected_r_cryostat_inboard=17.805470903073743,
-            expected_z_cryostat_half_inside=15.259637557000296,
-            expected_vol_cryostat=818.1630389343372,
-            expected_vvmass=7927043.4756686538,
-            expected_dewmkg=14308715.179356484,
-            expected_dz_tf_cryostat=5.514694530398824,
-            expected_dz_pf_cryostat=5.3441455565624985,
-        ),
-    ),
-)
-def test_external_cryo_geometry(
-    externalcryogeometryparam, monkeypatch, blanket_library_fixture
-):
-    """
-    Automatically generated Regression Unit Test for external_cryo_geometry.
-
-    This test was generated using data from tests/regression/input_files/large_tokamak_once_through.IN.DAT.
-
-    :param externalcryogeometryparam: the data used to mock and assert in this test.
-    :type externalcryogeometryparam: externalcryogeometryparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-    monkeypatch.setattr(
-        build_variables, "f_z_cryostat", externalcryogeometryparam.f_z_cryostat
-    )
-    monkeypatch.setattr(build_variables, "hmax", externalcryogeometryparam.hmax)
-    monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", externalcryogeometryparam.dr_tf_inboard
-    )
-    monkeypatch.setattr(
-        build_variables, "dr_cryostat", externalcryogeometryparam.dr_cryostat
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "r_cryostat_inboard",
-        externalcryogeometryparam.r_cryostat_inboard,
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "dr_pf_cryostat", externalcryogeometryparam.dr_pf_cryostat
-    )
-    monkeypatch.setattr(
-        fwbs_variables,
-        "z_cryostat_half_inside",
-        externalcryogeometryparam.z_cryostat_half_inside,
-    )
-    monkeypatch.setattr(
-        fwbs_variables, "vol_cryostat", externalcryogeometryparam.vol_cryostat
-    )
-    monkeypatch.setattr(fwbs_variables, "vvmass", externalcryogeometryparam.vvmass)
-    monkeypatch.setattr(fwbs_variables, "vdewin", externalcryogeometryparam.vdewin)
-    monkeypatch.setattr(fwbs_variables, "denstl", externalcryogeometryparam.denstl)
-    monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
-    monkeypatch.setattr(pfcoil_variables, "rb", externalcryogeometryparam.rb)
-    monkeypatch.setattr(pfcoil_variables, "zh", externalcryogeometryparam.zh)
-    monkeypatch.setattr(
-        buildings_variables, "dz_tf_cryostat", externalcryogeometryparam.dz_tf_cryostat
-    )
-    monkeypatch.setattr(
-        blanket_library, "dz_pf_cryostat", externalcryogeometryparam.dz_pf_cryostat
-    )
-
-    blanket_library_fixture.external_cryo_geometry()
-
-    assert fwbs_variables.r_cryostat_inboard == pytest.approx(
-        externalcryogeometryparam.expected_r_cryostat_inboard
-    )
-    assert fwbs_variables.z_cryostat_half_inside == pytest.approx(
-        externalcryogeometryparam.expected_z_cryostat_half_inside
-    )
-    assert fwbs_variables.vol_cryostat == pytest.approx(
-        externalcryogeometryparam.expected_vol_cryostat
-    )
-    assert fwbs_variables.vvmass == pytest.approx(
-        externalcryogeometryparam.expected_vvmass
-    )
-    assert fwbs_variables.dewmkg == pytest.approx(
-        externalcryogeometryparam.expected_dewmkg
-    )
-    assert buildings_variables.dz_tf_cryostat == pytest.approx(
-        externalcryogeometryparam.expected_dz_tf_cryostat
-    )
-    assert blanket_library.dz_pf_cryostat == pytest.approx(
-        externalcryogeometryparam.expected_dz_pf_cryostat
-    )
-
-
 class BlanketModPolHeightParam(NamedTuple):
     dr_fw_plasma_gap_inboard: Any = None
     dr_fw_plasma_gap_outboard: Any = None
-    fwbsshape: Any = None
-    nblktmodpi: Any = None
-    fdiv: Any = None
-    nblktmodpo: Any = None
+    i_fw_blkt_vv_shape: Any = None
+    n_blkt_inboard_modules_poloidal: Any = None
+    f_ster_div_single: Any = None
+    n_blkt_outboard_modules_poloidal: Any = None
     itart: Any = None
     rminor: Any = None
-    idivrt: Any = None
+    n_divertors: Any = None
     rmajor: Any = None
     triang: Any = None
     bllengi: Any = None
@@ -1439,13 +1335,13 @@ class BlanketModPolHeightParam(NamedTuple):
         BlanketModPolHeightParam(
             dr_fw_plasma_gap_inboard=0.25,
             dr_fw_plasma_gap_outboard=0.25,
-            fwbsshape=2,
-            nblktmodpi=7,
-            fdiv=0.115,
-            nblktmodpo=8,
+            i_fw_blkt_vv_shape=2,
+            n_blkt_inboard_modules_poloidal=7,
+            f_ster_div_single=0.115,
+            n_blkt_outboard_modules_poloidal=8,
             itart=0,
             rminor=2.6666666666666665,
-            idivrt=1,
+            n_divertors=1,
             rmajor=8,
             triang=0.5,
             bllengi=0,
@@ -1457,13 +1353,13 @@ class BlanketModPolHeightParam(NamedTuple):
         BlanketModPolHeightParam(
             dr_fw_plasma_gap_inboard=0.10000000000000001,
             dr_fw_plasma_gap_outboard=0.10000000000000001,
-            fwbsshape=1,
-            nblktmodpi=7,
-            fdiv=0.115,
-            nblktmodpo=8,
+            i_fw_blkt_vv_shape=1,
+            n_blkt_inboard_modules_poloidal=7,
+            f_ster_div_single=0.115,
+            n_blkt_outboard_modules_poloidal=8,
             itart=1,
             rminor=2.5,
-            idivrt=2,
+            n_divertors=2,
             rmajor=4.5,
             triang=0.5,
             bllengi=0,
@@ -1500,17 +1396,29 @@ def test_blanket_mod_pol_height(
         "dr_fw_plasma_gap_outboard",
         blanketmodpolheightparam.dr_fw_plasma_gap_outboard,
     )
-    monkeypatch.setattr(fwbs_variables, "fwbsshape", blanketmodpolheightparam.fwbsshape)
     monkeypatch.setattr(
-        fwbs_variables, "nblktmodpi", blanketmodpolheightparam.nblktmodpi
+        fwbs_variables,
+        "i_fw_blkt_vv_shape",
+        blanketmodpolheightparam.i_fw_blkt_vv_shape,
     )
-    monkeypatch.setattr(fwbs_variables, "fdiv", blanketmodpolheightparam.fdiv)
     monkeypatch.setattr(
-        fwbs_variables, "nblktmodpo", blanketmodpolheightparam.nblktmodpo
+        fwbs_variables,
+        "n_blkt_inboard_modules_poloidal",
+        blanketmodpolheightparam.n_blkt_inboard_modules_poloidal,
+    )
+    monkeypatch.setattr(
+        fwbs_variables, "f_ster_div_single", blanketmodpolheightparam.f_ster_div_single
+    )
+    monkeypatch.setattr(
+        fwbs_variables,
+        "n_blkt_outboard_modules_poloidal",
+        blanketmodpolheightparam.n_blkt_outboard_modules_poloidal,
     )
     monkeypatch.setattr(physics_variables, "itart", blanketmodpolheightparam.itart)
     monkeypatch.setattr(physics_variables, "rminor", blanketmodpolheightparam.rminor)
-    monkeypatch.setattr(physics_variables, "idivrt", blanketmodpolheightparam.idivrt)
+    monkeypatch.setattr(
+        physics_variables, "n_divertors", blanketmodpolheightparam.n_divertors
+    )
     monkeypatch.setattr(physics_variables, "rmajor", blanketmodpolheightparam.rmajor)
     monkeypatch.setattr(physics_variables, "triang", blanketmodpolheightparam.triang)
     monkeypatch.setattr(blanket_library, "bllengi", blanketmodpolheightparam.bllengi)
@@ -1537,11 +1445,11 @@ class LiquidBreederPropertiesParam(NamedTuple):
     thermal_conductivity_liq: Any = None
     dynamic_viscosity_liq: Any = None
     electrical_conductivity_liq: Any = None
-    i_bb_liq: Any = None
+    i_blkt_liquid_breeder_type: Any = None
     hartmann_liq: Any = None
     b_mag_blkt: Any = None
     i_blkt_inboard: Any = None
-    icooldual: Any = None
+    i_blkt_dual_coolant: Any = None
     bt: Any = None
     aspect: Any = None
     rmajor: Any = None
@@ -1571,11 +1479,11 @@ class LiquidBreederPropertiesParam(NamedTuple):
             thermal_conductivity_liq=30,
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
-            i_bb_liq=0,
+            i_blkt_liquid_breeder_type=0,
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
-            icooldual=0,
+            i_blkt_dual_coolant=0,
             bt=5.7000000000000002,
             aspect=3,
             rmajor=8,
@@ -1605,14 +1513,14 @@ class LiquidBreederPropertiesParam(NamedTuple):
             den_liq=9500,
             specific_heat_liq=190,
             thermal_conductivity_liq=30,
-            expected_thermal_conductivity_liq=30,  # doesn't change when i_bb_liq=1
+            expected_thermal_conductivity_liq=30,  # doesn't change when i_blkt_liquid_breeder_type=1
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
-            i_bb_liq=1,
+            i_blkt_liquid_breeder_type=1,
             hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
             b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
-            icooldual=0,
+            i_blkt_dual_coolant=0,
             bt=5.7000000000000002,
             aspect=3,
             rmajor=8,
@@ -1683,7 +1591,9 @@ def test_liquid_breeder_properties(
         liquidbreederpropertiesparam.electrical_conductivity_liq,
     )
     monkeypatch.setattr(
-        fwbs_variables, "i_bb_liq", liquidbreederpropertiesparam.i_bb_liq
+        fwbs_variables,
+        "i_blkt_liquid_breeder_type",
+        liquidbreederpropertiesparam.i_blkt_liquid_breeder_type,
     )
     monkeypatch.setattr(
         fwbs_variables, "hartmann_liq", liquidbreederpropertiesparam.hartmann_liq
@@ -1695,7 +1605,9 @@ def test_liquid_breeder_properties(
         fwbs_variables, "i_blkt_inboard", liquidbreederpropertiesparam.i_blkt_inboard
     )
     monkeypatch.setattr(
-        fwbs_variables, "icooldual", liquidbreederpropertiesparam.icooldual
+        fwbs_variables,
+        "i_blkt_dual_coolant",
+        liquidbreederpropertiesparam.i_blkt_dual_coolant,
     )
     monkeypatch.setattr(physics_variables, "bt", liquidbreederpropertiesparam.bt)
     monkeypatch.setattr(
@@ -1742,7 +1654,7 @@ class PressureDropParam(NamedTuple):
     radius_fw_channel: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
-    roughness: Any = None
+    roughness_fw_channel: Any = None
     ip: Any = None
     ofile: Any = None
     i_ps: Any = None
@@ -1763,7 +1675,7 @@ class PressureDropParam(NamedTuple):
             radius_fw_channel=0.0060000000000000001,
             a_bz_liq=0.20000000000000001,
             b_bz_liq=0.20000000000000001,
-            roughness=9.9999999999999995e-07,
+            roughness_fw_channel=9.9999999999999995e-07,
             ip=0,
             ofile=11,
             i_ps=1,
@@ -1795,7 +1707,9 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
     )
     monkeypatch.setattr(fwbs_variables, "a_bz_liq", pressuredropparam.a_bz_liq)
     monkeypatch.setattr(fwbs_variables, "b_bz_liq", pressuredropparam.b_bz_liq)
-    monkeypatch.setattr(fwbs_variables, "roughness", pressuredropparam.roughness)
+    monkeypatch.setattr(
+        fwbs_variables, "roughness_fw_channel", pressuredropparam.roughness_fw_channel
+    )
 
     pressure_drop_out = blanket_library_fixture.pressure_drop(
         i_ps=pressuredropparam.i_ps,
@@ -1814,7 +1728,7 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
 
 
 class LiquidBreederPressureDropMhdParam(NamedTuple):
-    ifci: Any = None
+    i_blkt_liquid_breeder_channel_type: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
     b_mag_blkt: Any = None
@@ -1835,7 +1749,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
     "liquidbreederpressuredropmhdparam",
     (
         LiquidBreederPressureDropMhdParam(
-            ifci=0,
+            i_blkt_liquid_breeder_channel_type=0,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1855,7 +1769,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             expected_liquid_breeder_pressure_drop_mhd_out=282697824.60502106,
         ),
         LiquidBreederPressureDropMhdParam(
-            ifci=1,
+            i_blkt_liquid_breeder_channel_type=1,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1875,7 +1789,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             expected_liquid_breeder_pressure_drop_mhd_out=160029.28473931071,
         ),
         LiquidBreederPressureDropMhdParam(
-            ifci=2,
+            i_blkt_liquid_breeder_channel_type=2,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1895,7 +1809,7 @@ class LiquidBreederPressureDropMhdParam(NamedTuple):
             expected_liquid_breeder_pressure_drop_mhd_out=282697824.60502106,
         ),
         LiquidBreederPressureDropMhdParam(
-            ifci=2,
+            i_blkt_liquid_breeder_channel_type=2,
             a_bz_liq=0.22481469639955909,
             b_bz_liq=0.11625000000000001,
             b_mag_blkt=np.array(
@@ -1930,7 +1844,11 @@ def test_liquid_breeder_pressure_drop_mhd(
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(fwbs_variables, "ifci", liquidbreederpressuredropmhdparam.ifci)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "i_blkt_liquid_breeder_channel_type",
+        liquidbreederpressuredropmhdparam.i_blkt_liquid_breeder_channel_type,
+    )
     monkeypatch.setattr(
         fwbs_variables, "a_bz_liq", liquidbreederpressuredropmhdparam.a_bz_liq
     )

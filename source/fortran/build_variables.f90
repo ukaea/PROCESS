@@ -54,8 +54,11 @@ module build_variables
   real(dp) :: dr_blkt_outboard
   !! outboard blanket thickness (m); calculated if `blktmodel>0`
 
-  real(dp) :: blnktth
+  real(dp) :: dz_blkt_upper
   !! top blanket thickness (m), = mean of inboard and outboard blanket thicknesses
+
+  real(dp) :: dz_fw_upper
+  !! upper first wall thickness (m)
 
   real(dp) :: dr_bore
   !! central solenoid inboard radius (m) (`iteration variable 29`)
@@ -72,11 +75,14 @@ module build_variables
   real(dp) :: dr_vv_outboard
   !! vacuum vessel outboard thickness (TF coil / shield) (m)
 
-  real(dp) :: d_vv_top
-  !! vacuum vessel topside thickness (TF coil / shield) (m) (= d_vv_bot if double-null)
+  real(dp) :: dz_vv_upper
+  !! vacuum vessel topside thickness (TF coil / shield) (m) (= dz_vv_lower if double-null)
 
-  real(dp) :: d_vv_bot
+  real(dp) :: dz_vv_lower
   !! vacuum vessel underside thickness (TF coil / shield) (m)
+
+  real(dp) :: dr_vv_shells
+  !! vacuum vessel double walled shell thicknesses (m)
 
   real(dp) :: f_avspace
   !! F-value for stellarator radial space check (`constraint equation 83`)
@@ -114,14 +120,14 @@ module build_variables
   real(dp) :: dr_shld_vv_gap_outboard
   !! gap between outboard vacuum vessel and TF coil (m)
 
-  real(dp) :: hmax
+  real(dp) :: z_tf_inside_half
   !! maximum (half-)height of TF coil (inside edge) (m)
 
   real(dp) :: hpfdif
   !! difference in distance from midplane of upper and lower portions of TF
   !! legs (non-zero for single-null devices) (m)
 
-  real(dp) :: hpfu
+  real(dp) :: z_tf_top
   !! height to top of (upper) TF coil leg (m)
 
   real(dp) :: hr1
@@ -139,7 +145,7 @@ module build_variables
   !! - =0 no pre-compression structure
   !! - =1 calculated pre-compression structure
 
-  integer :: tf_in_cs
+  integer :: i_tf_inside_cs
   !! Switch for placing the TF coil inside the CS
   !!
   !! - = 0 TF coil is outside the CS (default)
@@ -228,14 +234,14 @@ module build_variables
   real(dp) :: dr_shld_inboard
   !! inboard shield thickness (m) (`iteration variable 93`)
 
-  real(dp) :: shldlth
+  real(dp) :: dz_shld_lower
   !! lower (under divertor) shield thickness (m)
 
   real(dp) :: dr_shld_outboard
   !! outboard shield thickness (m) (`iteration variable 94`)
 
-  real(dp) :: shldtth
-  !! upper/lower shield thickness (m); calculated if `blktmodel > 0` (= shldlth if double-null)
+  real(dp) :: dz_shld_upper
+  !! upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)
 
   real(dp) :: sigallpc
   !! allowable stress in CSpre-compression structure (Pa)
@@ -264,17 +270,17 @@ module build_variables
   real(dp) :: dr_shld_thermal_outboard
   !! TF-VV thermal shield thickness, outboard (m)
 
-  real(dp) :: thshield_vb
+  real(dp) :: dz_shld_thermal
   !! TF-VV thermal shield thickness, vertical build (m)
 
-  real(dp) :: vgap_vv_thermalshield
+  real(dp) :: dz_shld_vv_gap
   !! vertical gap between vacuum vessel and thermal shields (m)
 
-  real(dp) :: vgap_xpoint_divertor
+  real(dp) :: dz_xpoint_divertor
   !! vertical gap between x-point and divertor (m) (if = 0, it is calculated)
 
-  real(dp) :: vgaptop
-  !! vertical gap between top of plasma and first wall (m) (= vgap_xpoint_divertor if double-null)
+  real(dp) :: dz_fw_plasma_gap
+  !! vertical gap between top of plasma and first wall (m) (= dz_xpoint_divertor if double-null)
 
   real(dp) :: dr_shld_blkt_gap
   !! gap between vacuum vessel and blanket (m)
@@ -294,97 +300,9 @@ module build_variables
   real(dp) :: rspo
   !! outboard strike point radius (m)
 
-  contains
+  real(dp) :: z_plasma_xpoint_upper
+  !! Vertical height of the upper plasma x-point (m)
 
-  subroutine init_build_variables
-    !! Initialise module variables
-    implicit none
-
-    aplasmin = 0.25D0
-    available_radial_space = 0.0D0
-    blarea = 0.0D0
-    blareaib = 0.0D0
-    blareaob = 0.0D0
-    blbmith = 0.17D0
-    blbmoth = 0.27D0
-    blbpith = 0.30D0
-    blbpoth = 0.35D0
-    blbuith = 0.365D0
-    blbuoth = 0.465D0
-    dr_blkt_inboard = 0.115D0
-    dr_blkt_outboard = 0.235D0
-    blnktth = 0.0D0
-    dr_bore = 1.42D0
-    f_z_cryostat = 4.268D0
-    dr_cryostat = 0.07D0
-    dr_vv_inboard = 0.07D0
-    dr_vv_outboard = 0.07D0
-    d_vv_top = 0.07D0
-    d_vv_bot = 0.07D0
-    f_avspace = 1.0D0
-    fcspc = 0.6D0
-    fseppc = 3.5D8
-    a_fw_total = 0.0D0
-    a_fw_inboard = 0.0D0
-    a_fw_outboard = 0.0D0
-    dr_fw_inboard = 0.0D0
-    dr_fw_outboard = 0.0D0
-    dr_shld_vv_gap_inboard = 0.155D0
-    dr_cs_tf_gap = 0.08D0
-    gapomin = 0.234D0
-    dr_shld_vv_gap_outboard = 0.0D0
-    hmax = 0.0D0
-    hpfdif = 0.0D0
-    hpfu = 0.0D0
-    hr1 = 0.0D0
-    iohcl = 1
-    i_cs_precomp = 1
-    tf_in_cs = 0
-    dr_cs = 0.811D0
-    dr_cs_precomp = 0.0D0
-    rbld = 0.0D0
-    required_radial_space = 0.0D0
-    rinboard = 0.651D0
-    rsldi = 0.0D0
-    rsldo = 0.0D0
-    r_vv_inboard_out = 0.0D0
-    r_sh_inboard_out = 0.0D0
-    r_tf_inboard_in = 0.0D0
-    r_tf_inboard_mid = 0.0D0
-    r_tf_inboard_out = 0.0D0
-    r_tf_outboard_mid = 0.0D0
-    i_r_cp_top = 0
-    r_cp_top = 0.0D0
-    f_r_cp = 1.4D0
-    dr_tf_inner_bore = 0.0D0
-    dh_tf_inner_bore = 0.0D0
-    dr_fw_plasma_gap_inboard = 0.14D0
-    dr_fw_plasma_gap_outboard = 0.15D0
-    sharea = 0.0D0
-    shareaib = 0.0D0
-    shareaob = 0.0D0
-    dr_shld_inboard = 0.69D0
-    shldlth = 0.7D0
-    dr_shld_outboard = 1.05D0
-    shldtth = 0.6D0
-    sigallpc = 3.0D8
-    dr_tf_inboard = 0.0D0
-    tfoffset = 0.0D0
-    tfootfi = 1.19D0
-    dr_tf_outboard = 0.0D0
-    dr_tf_shld_gap = 0.05D0
-    dr_shld_thermal_inboard = 0.05D0
-    dr_shld_thermal_outboard = 0.05D0
-    thshield_vb = 0.05D0
-    vgap_vv_thermalshield = 0.163D0
-    vgap_xpoint_divertor= 0.0D0
-    vgaptop = 0.60D0
-    dr_shld_blkt_gap = 0.05D0
-    plleni = 1.0D0
-    plleno = 1.0D0
-    plsepi = 1.0D0
-    plsepo = 1.5D0
-    rspo = 0.0D0
-    r_sh_inboard_in = 0.0D0
-  end subroutine init_build_variables
+  real(dp) :: z_plasma_xpoint_lower
+  !! Vertical height of the lower plasma x-point (m)
 end module build_variables

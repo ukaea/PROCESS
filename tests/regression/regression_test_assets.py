@@ -87,10 +87,12 @@ class RegressionTestAssetCollector:
         hashes returned from `_git_commit_hashes`.
         :rtype: list[TrackedMFile]
         """
-        repository_files = requests.get(
+        repository_files_request = requests.get(
             f"https://api.github.com/repos/"
             f"{self.remote_repository_owner}/{self.remote_repository_repo}/git/trees/master"
-        ).json()["tree"]
+        )
+        repository_files_request.raise_for_status()
+        repository_files = repository_files_request.json()["tree"]
 
         # create a list of tracked MFiles from the list of all files
         # in the remote repository.

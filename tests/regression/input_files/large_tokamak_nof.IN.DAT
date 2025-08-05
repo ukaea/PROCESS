@@ -45,7 +45,7 @@ icc = 11
 *-----------------------------*
 icc = 30
 * Maximum allowable value for injected power [MW]
-pinjalw = 200.0
+p_hcd_injected_max = 200.0
 
 
 
@@ -60,7 +60,7 @@ boundu(103) = 10.0
 *--------------------------------*
 icc = 16
 * Minimum allowable value for net eletric power [MW]
-pnetelin = 400.0
+p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*
@@ -71,20 +71,20 @@ fbeta_max = 1.0
 *--------------*
 icc = 25
 * Maximum allowable value for toroidal magnetic field [T]
-bmxlim = 14.0
+b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
-ixc = 37 * coheof [A/m2]
-coheof = 1.5E7
+ixc = 37 * j_cs_flat_top_end [A/m2]
+j_cs_flat_top_end = 1.5E7
 fjohc = 1.0
 
 * Central solenoid BOP current density upper limit *
 *--------------------------------------------------*
 icc = 27
 fjohc0 = 1.0
-fcohbop = 1.0
+f_j_cs_start_pulse_end_flat_top = 1.0
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*
@@ -158,15 +158,15 @@ dene = 7.5E19
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-fwalld = 1.0
+fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
-walalw = 2.0
+pflux_fw_neutron_max_mw = 2.0
 
 * Fusion power upper limit *
 *--------------------------*
 icc = 9
 * Maximum allowable value fusion power [MW]
-powfmax = 3000
+p_fusion_total_max_mw = 3000
 
 * Burn time lower limit *
 *-----------------------*
@@ -198,11 +198,6 @@ te = 12.0
 ixc = 10
 boundu(10) = 1.2
 
-* dr_tf_inboard [m]
-ixc = 13
-boundl(13) = 0.7
-dr_tf_inboard = 1.2
-
 * dr_cs [m]
 ixc = 16
 boundl(16) = 0.3
@@ -218,22 +213,22 @@ ixc = 29
 boundl(29) = 0.1
 dr_bore = 2.0
 
-* fvsbrnni
+* f_c_plasma_non_inductive
 ixc = 44
-fvsbrnni = 0.4
+f_c_plasma_non_inductive = 0.4
 
 * tdmptf [s]
 ixc = 56
 tdmptf = 25.0
 
-* thkcas [m]
+* dr_tf_nose_case [m]
 ixc = 57
-thkcas = 0.5
+dr_tf_nose_case = 0.5
 
 * TF coil conduit thickness [m]
 ixc = 58
 boundl(58) = 0.008
-thwcndut = 0.008
+dx_tf_turn_steel = 0.008
 
 * copper fraction of cable conductor (TF coils)
 ixc = 59 
@@ -245,15 +240,15 @@ fcutfsu = 0.8
 ixc = 60
 boundl(60) = 65000.0
 boundu(60) = 90000.0
-cpttf = 65000.0
+c_tf_turn = 65000.0
 
 * Helium fraction (f_nd_alpha_electron)
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, oh_steel_frac
+* CS steel fraction, f_a_cs_steel
 ixc = 122
-oh_steel_frac = 0.8
+f_a_cs_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135
@@ -262,7 +257,7 @@ fimp(13) = 0.00038
 * TF winding pack thickness [m]
 ixc = 140
 boundl(140) = 0.4
-dr_tf_wp = 0.5
+dr_tf_wp_with_insulation = 0.5
 
 * Inputs *
 **********
@@ -273,7 +268,7 @@ dr_tf_wp = 0.5
 * Thermal shield radial thickness [m]
 dr_shld_thermal_inboard = 0.050
 dr_shld_thermal_outboard = 0.050
-thshield_vb = 0.050
+dz_shld_thermal = 0.050
 
 * Gap between thermal shield and vacuum vessel [m]
 dr_shld_vv_gap_inboard = 0.02
@@ -285,10 +280,10 @@ dr_vv_inboard  = 0.3
 dr_vv_outboard = 0.3
 
 * Topside vacuum vessel radial thickness [m]
-d_vv_top = 0.3
+dz_vv_upper = 0.3
 
 * Underside vacuum vessel radial thickness [m]
-d_vv_bot = 0.3
+dz_vv_lower = 0.3
 
 * Inboard vacuum vessel thickness [m]
 dr_shld_inboard = 0.3
@@ -315,7 +310,10 @@ dr_cryostat = 0.15
 dr_shld_outboard = 0.800
 
 * Divertor structure vertical thickness [m]
-divfix = 0.62 
+dz_divertor = 0.62 
+
+* Use Wade divertor heat load model
+i_div_heat_load = 2
 
 * Coolant void fraction in shield
 vfshld = 0.60 
@@ -395,9 +393,6 @@ teped = 5.5
 * Electron temperature at separatrix (kev) (ipedestal=1)
 tesep = 0.1
 
-* Switch for current profile consistency
-iprofile = 1
-
 * Switch for energy confinement time scaling law
 i_confinement_time = 34
 
@@ -432,25 +427,25 @@ t_precharge = 500.0
 *---------------*
 
 * Maximum fraction of plasma current from bootstrap
-bootstrap_current_fraction_max = 0.95
+f_c_plasma_bootstrap_max = 0.95
 
 * Switch for current drive efficiency model
-iefrf = 10
+i_hcd_primary = 10
 
 * ECRH gamma_CD (user input)
-gamma_ecrh = 0.30
+eta_cd_norm_ecrh = 0.30
 
 * ECRH wall-plug efficiency
-etaech = 0.5
+eta_ecrh_injector_wall_plug = 0.5
 
 * Amount of injected power for heating [MW]
-pheat = 75.0
+p_hcd_primary_extra_heat_mw = 75.0
 
 * Impurity radiation *
 **********************
 
 * Normalised radius defining the 'core' region
-coreradius = 0.75
+radius_plasma_core_norm = 0.75
 
 * fraction of radiation from 'core' region that is subtracted
 coreradiationfraction = 0.6
@@ -478,22 +473,22 @@ fimp(14) = 0.000005
 ipowerflow = 0
 
 * Switch for pumping power for primary coolant
-primary_pumping = 3
+i_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
-etahtp = 0.87
+eta_coolant_pump_electric = 0.87
 
 * Isentropic efficiency of FW and blanket coolant pumps
 etaiso = 0.9
 
 * Switch for secondary cycle - User input thermal-electric efficiency
-secondary_cycle = 2
+i_thermal_electric_conversion = 2
 
 * Thermal to electric conversion efficiency
-etath = 0.4
+eta_turbine = 0.4
 
 * Switch for shield thermal power density
-iprimshld = 1
+i_shld_primary_heat = 1
 
 * Nuclear heating switch
 inuclear = 1
@@ -520,27 +515,27 @@ iavail = 0
 ************
 
 * Peak current per turn input for PF coil i [A]
-cptdin = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
+c_pf_coil_turn_peak_input = 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4, 4.0d4
 
 * Switch for locating scheme of pf coil group i
-ipfloc = 2,2,3,3
+i_pf_location = 2,2,3,3
 
 * Switch for superconductor material in pf coils
-isumatpf = 3
+i_pf_superconductor = 3
 
 * Number of pf coils in group j
-ncls = 1,1,2,2
+n_pf_coils_in_group = 1,1,2,2
 
 * Number of groups of PF coils
-ngrp = 4
+n_pf_coil_groups = 4
 
 * Central solenoid height / TF coil internal height
-ohhghf = 0.9
+f_z_cs_tf_internal = 0.9
 
 * Average winding pack current density of PF coil i [A/m2]
-rjconpf  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
+j_pf_coil_wp_peak  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6
 
-* Offset of radial position of ipfloc=2 pf coils [m]
+* Offset of radial position of i_pf_location=2 pf coils [m]
 rpf2 = -1.825 
 
 zref(1) = 3.6
@@ -556,16 +551,16 @@ zref(8) = 1.0
 fcuohsu = 0.70
 
 * ITER Nb3Sn parameterisation
-isumatoh = 1
+i_cs_superconductor = 1
 
 * TF Coil *
 ***********
 
 * Inboard TF coil plasma-facing case thickness [m]
-casthi = 0.06
+dr_tf_plasma_case = 0.06
 
 * Inboard TF coil side-wall case thickness [m]
-casths = 0.05
+dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
 ripmax = 0.6
@@ -574,16 +569,19 @@ ripmax = 0.6
 n_tf_coils = 16
 
 * Groundwall insulation thickness [m]
-tinstf = 0.008
+dx_tf_wp_insulation = 0.008
 
 * Diameter if He channel in winding [m]
-dhecoil = 0.01
+dia_tf_turn_coolant_channel = 0.01
 
 * Helium coolant temperature [K]
 tftmp = 4.75
 
 * Coolant fraction of TF cable [-]
-vftf = 0.3
+f_a_tf_turn_cable_space_extra_void = 0.3
 
 * Conductor type switch (ITER Nb3Sn)
 i_tf_sc_mat = 1
+
+* max fluence in the TF coil
+nflutfmax = 1e22

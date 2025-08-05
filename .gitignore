@@ -1,6 +1,5 @@
 *.o
 *.so*
-*.html
 *.x
 *.mod
 *.aux
@@ -55,6 +54,7 @@ env_process/
 *.DAT
 !scenario_examples/*/*.DAT
 !tests/regression/input_files/*.IN.DAT
+!tests/integration/data/*.IN.DAT
 !scenario_examples/*/*.pdf
 !stellerator_test/*.DAT
 stellarator_test/autostart/*

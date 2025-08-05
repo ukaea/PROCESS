@@ -7,7 +7,54 @@ from warnings import warn
 
 import process
 import process.fortran as fortran
+import process.iteration_variables as iteration_variables
+import process.process_output as process_output
+from process import data_structure
+from process.blanket_library import init_blanket_library
+from process.build import init_build_variables
+from process.buildings import init_buildings_variables
+from process.constraints import ConstraintManager, init_constraint_variables
+from process.current_drive import init_current_drive_variables
+from process.data_structure.build_python_variables import (
+    init_build_variables as init_python_build_variables,
+)
+from process.data_structure.cost_2015_variables import init_cost_2015_variables
+from process.data_structure.cost_variables import init_cost_variables
+from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
+from process.data_structure.divertor_variables import init_divertor_variables
+from process.data_structure.neoclassics_variables import init_neoclassics_variables
+from process.data_structure.power_variables import init_power_variables
+from process.data_structure.primary_pumping_variables import (
+    init_primary_pumping_variables,
+)
+from process.data_structure.pulse_variables import init_pulse_variables
+from process.data_structure.rebco_variables import init_rebco_variables
+from process.data_structure.reinke_variables import init_reinke_variables
+from process.data_structure.structure_variables import init_structure_variables
+from process.data_structure.times_variables import init_times_variables
+from process.data_structure.vacuum_variables import init_vacuum_variables
+from process.data_structure.water_usage_variables import init_watuse_variables
+from process.dcll import init_dcll_module
 from process.exceptions import ProcessValidationError
+from process.fw import init_fwbs_variables
+from process.hcpb import init_ccfe_hcpb_module
+from process.ife import init_ife_variables
+from process.impurity_radiation import init_impurity_radiation_module
+from process.input import parse_input_file
+from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
+from process.physics import (
+    init_physics_module,
+    init_physics_variables,
+)
+from process.power import init_heat_transport_variables, init_pf_power_variables
+from process.scan import init_scan_module
+from process.stellarator import (
+    init_stellarator_module,
+    init_stellarator_variables,
+    stinit,
+)
+from process.superconducting_tf_coil import init_sctfcoil_module
+from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -23,20 +70,26 @@ def init_process():
     fortran.error_handling.initialise_error_list()
 
     # Initialise the program variables
-    initialise_iterative_variables()
+    iteration_variables.initialise_iteration_variables()
 
     # Initialise the Fortran file specifiers
     # (creating and opening the files in the process)
     fortran.init_module.open_files()
 
     # Input any desired new initial values
-    fortran.process_input.input()
+    inputs = parse_input_file()
+
+    # Set active constraints
+    set_active_constraints()
+
+    # set the device type (icase)
+    set_device_type()
 
     # Initialise the Stellarator
-    fortran.stellarator_module.stinit()
+    stinit()
 
     # Check input data for errors/ambiguities
-    check_process()
+    check_process(inputs)
 
     run_summary()
 
@@ -79,119 +132,118 @@ def run_summary():
     # Outfile and terminal #
     for outfile in [fortran.constants.nout, fortran.constants.iotty]:
         # PROCESS code header
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.ocentr(outfile, "PROCESS", 110)
-        process.process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.oblnkl(outfile)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
+        process_output.ocentr(outfile, "PROCESS", 110)
+        process_output.ocentr(outfile, "Power Reactor Optimisation Code", 110)
+        process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
 
         # Run execution details
         version = process.__version__
-        process.process_output.ocmmnt(outfile, f"Version : {version}")
+        process_output.ocmmnt(outfile, f"Version : {version}")
 
         git_branch, git_tag = get_git_summary()
 
-        process.process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
-        process.process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
+        process_output.ocmmnt(outfile, f"Git Tag : {git_tag}")
+        process_output.ocmmnt(outfile, f"Git Branch : {git_branch}")
 
         date_string = datetime.datetime.now(datetime.timezone.utc).strftime(
             "%d/%m/%Y %Z"
         )
         time_string = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M")
 
-        process.process_output.ocmmnt(outfile, f"Date : {date_string}")
-        process.process_output.ocmmnt(outfile, f"Time : {time_string}")
+        process_output.ocmmnt(outfile, f"Date : {date_string}")
+        process_output.ocmmnt(outfile, f"Time : {time_string}")
 
         user = getpass.getuser()
         machine = socket.gethostname()
 
-        process.process_output.ocmmnt(outfile, f"User : {user}")
-        process.process_output.ocmmnt(outfile, f"Computer : {machine}")
-        process.process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
+        process_output.ocmmnt(outfile, f"User : {user}")
+        process_output.ocmmnt(outfile, f"Computer : {machine}")
+        process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
         fileprefix = f2py_compatible_to_string(fortran.global_variables.fileprefix)
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
         runtitle = f2py_compatible_to_string(fortran.global_variables.runtitle)
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
         )
 
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Run type : Reactor concept design: {f2py_compatible_to_string(fortran.global_variables.icase)}, (c) UK Atomic Energy Authority",
         )
 
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
-        process.process_output.oblnkl(outfile)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
 
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Equality constraints : {fortran.numerics.neqns.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Inequality constraints : {fortran.numerics.nineqns.item()}"
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile,
             f"Total constraints : {fortran.numerics.nineqns.item() + fortran.numerics.neqns.item()}",
         )
-        process.process_output.ocmmnt(
+        process_output.ocmmnt(
             outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
         )
-        process.process_output.ocmmnt(
-            outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
-        )
+        # If optimising, write objective function and convergence parameter
+        if fortran.numerics.ioptimz == 1:
+            process_output.ocmmnt(
+                outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
+            )
 
-        if fortran.numerics.minmax > 0:
-            minmax_string = "  -- minimise "
-            minmax_sign = "+"
-        else:
-            minmax_string = "  -- maximise "
-            minmax_sign = "-"
+            if fortran.numerics.minmax > 0:
+                minmax_string = "  -- minimise "
+                minmax_sign = "+"
+            else:
+                minmax_string = "  -- maximise "
+                minmax_sign = "-"
 
-        fom_string = f2py_compatible_to_string(
-            fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
-        )
-        process.process_output.ocmmnt(
-            outfile,
-            f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
-        )
-        process.process_output.ocmmnt(
-            outfile,
-            f"Convergence parameter : {fortran.numerics.epsvmc}",
-        )
+            fom_string = f2py_compatible_to_string(
+                fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
+            )
+            process_output.ocmmnt(
+                outfile,
+                f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
+            )
+            process_output.ocmmnt(
+                outfile,
+                f"Convergence parameter : {fortran.numerics.epsvmc}",
+            )
 
-        process.process_output.oblnkl(outfile)
-        process.process_output.ostars(outfile, 110)
+        process_output.oblnkl(outfile)
+        process_output.ostars(outfile, 110)
 
     # MFile #
     mfile = fortran.constants.mfile
 
-    process.process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
-    process.process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
-    process.process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
-    process.process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
-    process.process_output.ovarst(
-        mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"'
-    )
-    process.process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
-    process.process_output.ovarst(
+    process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
+    process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
+    process_output.ovarst(mfile, "Time of run", "(time)", f'"{time_string}"')
+    process_output.ovarst(mfile, "User", "(username)", f'"{user}"')
+    process_output.ovarst(mfile, "PROCESS run title", "(runtitle)", f'"{runtitle}"')
+    process_output.ovarst(mfile, "PROCESS git tag", "(tagno)", f'"{git_tag}"')
+    process_output.ovarst(
         mfile, "PROCESS git branch", "(branch_name)", f'"{git_branch}"'
     )
-    process.process_output.ovarst(
-        mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"'
-    )
+    process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
-    process.process_output.ovarin(
+    process_output.ovarin(
         mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
     )
-    if fortran.numerics.ioptimz == -2:
-        process.process_output.ovarin(
+    # If optimising, write figure of merit switch
+    if fortran.numerics.ioptimz == 1:
+        process_output.ovarin(
             mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
         )
 
@@ -204,220 +256,50 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     fortran.numerics.init_numerics()
-    fortran.process_input.init_input()
-    fortran.buildings_variables.init_buildings_variables()
-    fortran.cost_variables.init_cost_variables()
-    fortran.divertor_variables.init_divertor_variables()
+    init_buildings_variables()
+    init_cost_variables()
+    init_divertor_variables()
     fortran.error_handling.init_error_handling()
-    fortran.fwbs_variables.init_fwbs_variables()
+    init_fwbs_variables()
     fortran.global_variables.init_global_variables()
-    fortran.ccfe_hcpb_module.init_ccfe_hcpb_module()
-    fortran.heat_transport_variables.init_heat_transport_variables()
-    fortran.ife_variables.init_ife_variables()
-    fortran.impurity_radiation_module.init_impurity_radiation_module()
-    fortran.pfcoil_module.init_pfcoil_module()
-    fortran.physics_module.init_physics_module()
-    fortran.physics_variables.init_physics_variables()
-    fortran.scan_module.init_scan_module()
-    fortran.sctfcoil_module.init_sctfcoil_module()
-    fortran.stellarator_module.init_stellarator_module()
-    fortran.stellarator_variables.init_stellarator_variables()
-    fortran.tfcoil_variables.init_tfcoil_variables()
-    fortran.times_variables.init_times_variables()
+    init_ccfe_hcpb_module()
+    init_heat_transport_variables()
+    init_ife_variables()
+    init_impurity_radiation_module()
+    init_pfcoil_module()
+    init_physics_module()
+    init_physics_variables()
+    init_scan_module()
+    init_sctfcoil_module()
+    init_stellarator_module()
+    init_stellarator_variables()
+    init_tfcoil_variables()
+    init_times_variables()
     fortran.constants.init_constants()
-    fortran.current_drive_variables.init_current_drive_variables()
-    fortran.primary_pumping_variables.init_primary_pumping_variables()
-    fortran.pfcoil_variables.init_pfcoil_variables()
-    fortran.structure_variables.init_structure_variables()
-    fortran.vacuum_variables.init_vacuum_variables()
-    fortran.pf_power_variables.init_pf_power_variables()
-    fortran.build_variables.init_build_variables()
-    fortran.constraint_variables.init_constraint_variables()
-    fortran.pulse_variables.init_pulse_variables()
-    fortran.rebco_variables.init_rebco_variables()
-    fortran.reinke_variables.init_reinke_variables()
-    fortran.define_iteration_variables.init_define_iteration_variables()
-    fortran.reinke_module.init_reinke_module()
-    fortran.water_usage_variables.init_watuse_variables()
-    fortran.cs_fatigue_variables.init_cs_fatigue_variables()
-    fortran.blanket_library.init_blanket_library()
-    fortran.dcll_module.init_dcll_module()
+    init_current_drive_variables()
+    init_primary_pumping_variables()
+    init_pfcoil_variables()
+    init_structure_variables()
+    init_vacuum_variables()
+    init_pf_power_variables()
+    init_build_variables()
+    init_constraint_variables()
+    init_pulse_variables()
+    init_rebco_variables()
+    init_reinke_variables()
+    init_watuse_variables()
+    init_cs_fatigue_variables()
+    init_blanket_library()
+    init_dcll_module()
+    init_cost_2015_variables()
+    init_power_variables()
+    init_python_build_variables()
+    init_neoclassics_variables()
 
     fortran.init_module.init_fortran_modules()
 
 
-def initialise_iterative_variables():
-    """Initialise each of the iteration variables"""
-    fortran.define_iteration_variables.init_itv_1()
-    fortran.define_iteration_variables.init_itv_2()
-    fortran.define_iteration_variables.init_itv_3()
-    fortran.define_iteration_variables.init_itv_4()
-    fortran.define_iteration_variables.init_itv_5()
-    fortran.define_iteration_variables.init_itv_6()
-    fortran.define_iteration_variables.init_itv_7()
-    fortran.define_iteration_variables.init_itv_8()
-    fortran.define_iteration_variables.init_itv_9()
-    fortran.define_iteration_variables.init_itv_10()
-    fortran.define_iteration_variables.init_itv_11()
-    fortran.define_iteration_variables.init_itv_12()
-    fortran.define_iteration_variables.init_itv_13()
-    fortran.define_iteration_variables.init_itv_14()
-    fortran.define_iteration_variables.init_itv_15()
-    fortran.define_iteration_variables.init_itv_16()
-    fortran.define_iteration_variables.init_itv_17()
-    fortran.define_iteration_variables.init_itv_18()
-    fortran.define_iteration_variables.init_itv_19()
-    fortran.define_iteration_variables.init_itv_20()
-    fortran.define_iteration_variables.init_itv_21()
-
-    fortran.define_iteration_variables.init_itv_23()
-
-    fortran.define_iteration_variables.init_itv_25()
-    fortran.define_iteration_variables.init_itv_26()
-    fortran.define_iteration_variables.init_itv_27()
-    fortran.define_iteration_variables.init_itv_28()
-    fortran.define_iteration_variables.init_itv_29()
-    fortran.define_iteration_variables.init_itv_30()
-    fortran.define_iteration_variables.init_itv_31()
-    fortran.define_iteration_variables.init_itv_32()
-    fortran.define_iteration_variables.init_itv_33()
-    fortran.define_iteration_variables.init_itv_34()
-    fortran.define_iteration_variables.init_itv_35()
-    fortran.define_iteration_variables.init_itv_36()
-    fortran.define_iteration_variables.init_itv_37()
-    fortran.define_iteration_variables.init_itv_38()
-    fortran.define_iteration_variables.init_itv_39()
-    fortran.define_iteration_variables.init_itv_40()
-    fortran.define_iteration_variables.init_itv_41()
-    fortran.define_iteration_variables.init_itv_42()
-
-    fortran.define_iteration_variables.init_itv_44()
-    fortran.define_iteration_variables.init_itv_45()
-    fortran.define_iteration_variables.init_itv_46()
-    fortran.define_iteration_variables.init_itv_47()
-    fortran.define_iteration_variables.init_itv_48()
-    fortran.define_iteration_variables.init_itv_49()
-    fortran.define_iteration_variables.init_itv_50()
-    fortran.define_iteration_variables.init_itv_51()
-
-    fortran.define_iteration_variables.init_itv_53()
-    fortran.define_iteration_variables.init_itv_54()
-
-    fortran.define_iteration_variables.init_itv_56()
-    fortran.define_iteration_variables.init_itv_57()
-    fortran.define_iteration_variables.init_itv_58()
-    fortran.define_iteration_variables.init_itv_59()
-    fortran.define_iteration_variables.init_itv_60()
-    fortran.define_iteration_variables.init_itv_61()
-    fortran.define_iteration_variables.init_itv_62()
-    fortran.define_iteration_variables.init_itv_63()
-    fortran.define_iteration_variables.init_itv_64()
-    fortran.define_iteration_variables.init_itv_65()
-    fortran.define_iteration_variables.init_itv_66()
-    fortran.define_iteration_variables.init_itv_67()
-    fortran.define_iteration_variables.init_itv_68()
-    fortran.define_iteration_variables.init_itv_69()
-    fortran.define_iteration_variables.init_itv_70()
-    fortran.define_iteration_variables.init_itv_71()
-    fortran.define_iteration_variables.init_itv_72()
-    fortran.define_iteration_variables.init_itv_73()
-    fortran.define_iteration_variables.init_itv_74()
-    fortran.define_iteration_variables.init_itv_75()
-
-    fortran.define_iteration_variables.init_itv_79()
-
-    fortran.define_iteration_variables.init_itv_81()
-    fortran.define_iteration_variables.init_itv_82()
-    fortran.define_iteration_variables.init_itv_83()
-
-    fortran.define_iteration_variables.init_itv_85()
-    fortran.define_iteration_variables.init_itv_86()
-
-    fortran.define_iteration_variables.init_itv_89()
-    fortran.define_iteration_variables.init_itv_90()
-    fortran.define_iteration_variables.init_itv_91()
-    fortran.define_iteration_variables.init_itv_92()
-    fortran.define_iteration_variables.init_itv_93()
-    fortran.define_iteration_variables.init_itv_94()
-    fortran.define_iteration_variables.init_itv_95()
-    fortran.define_iteration_variables.init_itv_96()
-    fortran.define_iteration_variables.init_itv_97()
-    fortran.define_iteration_variables.init_itv_98()
-
-    fortran.define_iteration_variables.init_itv_103()
-    fortran.define_iteration_variables.init_itv_104()
-    fortran.define_iteration_variables.init_itv_105()
-    fortran.define_iteration_variables.init_itv_106()
-    fortran.define_iteration_variables.init_itv_107()
-    fortran.define_iteration_variables.init_itv_108()
-    fortran.define_iteration_variables.init_itv_109()
-    fortran.define_iteration_variables.init_itv_110()
-    fortran.define_iteration_variables.init_itv_111()
-    fortran.define_iteration_variables.init_itv_112()
-    fortran.define_iteration_variables.init_itv_113()
-    fortran.define_iteration_variables.init_itv_114()
-    fortran.define_iteration_variables.init_itv_115()
-    fortran.define_iteration_variables.init_itv_116()
-    fortran.define_iteration_variables.init_itv_117()
-    fortran.define_iteration_variables.init_itv_118()
-    fortran.define_iteration_variables.init_itv_119()
-    fortran.define_iteration_variables.init_itv_120()
-    fortran.define_iteration_variables.init_itv_121()
-    fortran.define_iteration_variables.init_itv_122()
-    fortran.define_iteration_variables.init_itv_123()
-    fortran.define_iteration_variables.init_itv_124()
-    fortran.define_iteration_variables.init_itv_125()
-    fortran.define_iteration_variables.init_itv_126()
-    fortran.define_iteration_variables.init_itv_127()
-    fortran.define_iteration_variables.init_itv_128()
-    fortran.define_iteration_variables.init_itv_129()
-    fortran.define_iteration_variables.init_itv_130()
-    fortran.define_iteration_variables.init_itv_131()
-    fortran.define_iteration_variables.init_itv_132()
-    fortran.define_iteration_variables.init_itv_133()
-    fortran.define_iteration_variables.init_itv_134()
-    fortran.define_iteration_variables.init_itv_135()
-    fortran.define_iteration_variables.init_itv_136()
-    fortran.define_iteration_variables.init_itv_137()
-    fortran.define_iteration_variables.init_itv_138()
-    fortran.define_iteration_variables.init_itv_139()
-    fortran.define_iteration_variables.init_itv_140()
-    fortran.define_iteration_variables.init_itv_141()
-    fortran.define_iteration_variables.init_itv_142()
-    fortran.define_iteration_variables.init_itv_143()
-    fortran.define_iteration_variables.init_itv_144()
-    fortran.define_iteration_variables.init_itv_145()
-    fortran.define_iteration_variables.init_itv_146()
-    fortran.define_iteration_variables.init_itv_147()
-    fortran.define_iteration_variables.init_itv_148()
-    fortran.define_iteration_variables.init_itv_149()
-    fortran.define_iteration_variables.init_itv_152()
-    fortran.define_iteration_variables.init_itv_153()
-    fortran.define_iteration_variables.init_itv_154()
-    fortran.define_iteration_variables.init_itv_155()
-    fortran.define_iteration_variables.init_itv_156()
-    fortran.define_iteration_variables.init_itv_157()
-    fortran.define_iteration_variables.init_itv_158()
-    fortran.define_iteration_variables.init_itv_159()
-    fortran.define_iteration_variables.init_itv_160()
-    fortran.define_iteration_variables.init_itv_161()
-    fortran.define_iteration_variables.init_itv_162()
-    fortran.define_iteration_variables.init_itv_163()
-    fortran.define_iteration_variables.init_itv_164()
-    fortran.define_iteration_variables.init_itv_165()
-    fortran.define_iteration_variables.init_itv_166()
-    fortran.define_iteration_variables.init_itv_167()
-    fortran.define_iteration_variables.init_itv_168()
-    fortran.define_iteration_variables.init_itv_169()
-    fortran.define_iteration_variables.init_itv_170()
-    fortran.define_iteration_variables.init_itv_171()
-    fortran.define_iteration_variables.init_itv_172()
-    fortran.define_iteration_variables.init_itv_173()
-    fortran.define_iteration_variables.init_itv_174()
-    fortran.define_iteration_variables.init_itv_175()
-
-
-def check_process():
+def check_process(inputs):  # noqa: ARG001
     """Routine to reset specific variables if certain options are
     being used
     author: P J Knight, CCFE, Culham Science Centre
@@ -425,7 +307,6 @@ def check_process():
     This routine performs a sanity check of the input variables
     and ensures other dependent variables are given suitable values.
     """
-    # error_handling.errors_on = True
 
     # Check that there are sufficient iteration variables
     if fortran.numerics.nvar < fortran.numerics.neqns:
@@ -440,6 +321,14 @@ def check_process():
         raise ProcessValidationError(
             "The number of iteration variables specified is smaller than the number stated in ixc",
             nvar=fortran.numerics.nvar,
+        )
+
+    # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
+    if (fortran.numerics.ixc[: fortran.numerics.nvar] == 13).any() and (
+        fortran.numerics.ixc[: fortran.numerics.nvar] == 140
+    ).any():
+        raise ProcessValidationError(
+            "Iteration variables 13 and 140 cannot be used simultaneously",
         )
 
     if (
@@ -464,7 +353,7 @@ def check_process():
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 63
-    ).any() and fortran.vacuum_variables.vacuum_model != "simple":
+    ).any() and data_structure.vacuum_variables.vacuum_model != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
         )
@@ -488,7 +377,7 @@ def check_process():
 
     if fortran.physics_variables.f_tritium < 1.0e-3:  # tritium fraction is negligible
         fortran.buildings_variables.triv = 0.0
-        fortran.heat_transport_variables.trithtmw = 0.0
+        fortran.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
     if fortran.impurity_radiation_module.fimp[1] != 0.1:
         raise ProcessValidationError(
@@ -657,13 +546,15 @@ def check_process():
             )
 
     if fortran.physics_variables.i_single_null == 0:
-        fortran.physics_variables.idivrt = 2
-        fortran.build_variables.vgaptop = fortran.build_variables.vgap_xpoint_divertor
-        fortran.build_variables.shldtth = fortran.build_variables.shldlth
-        fortran.build_variables.d_vv_top = fortran.build_variables.d_vv_bot
+        fortran.physics_variables.n_divertors = 2
+        fortran.build_variables.dz_fw_plasma_gap = (
+            fortran.build_variables.dz_xpoint_divertor
+        )
+        fortran.build_variables.dz_shld_upper = fortran.build_variables.dz_shld_lower
+        fortran.build_variables.dz_vv_upper = fortran.build_variables.dz_vv_lower
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
-        fortran.physics_variables.idivrt = 1
+        fortran.physics_variables.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
     if fortran.physics_variables.itart == 1:
@@ -689,9 +580,9 @@ def check_process():
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
         if fortran.physics_variables.itartpf == 0:
-            fortran.pfcoil_variables.ipfloc[0] = 2
-            fortran.pfcoil_variables.ipfloc[1] = 3
-            fortran.pfcoil_variables.ipfloc[2] = 3
+            fortran.pfcoil_variables.i_pf_location[0] = 2
+            fortran.pfcoil_variables.i_pf_location[1] = 3
+            fortran.pfcoil_variables.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
         if fortran.tfcoil_variables.i_tf_sup == 0:
@@ -761,8 +652,8 @@ def check_process():
 
         # Check if a single null divertor is used in double null machine
         if fortran.physics_variables.i_single_null == 0 and (
-            fortran.physics_variables.ftar == 1.0
-            or fortran.physics_variables.ftar == 0.0
+            fortran.physics_variables.f_p_div_lower == 1.0
+            or fortran.physics_variables.f_p_div_lower == 0.0
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
 
@@ -821,30 +712,30 @@ def check_process():
         # Check PF coil configurations
         j = 0
         k = 0
-        for i in range(fortran.pfcoil_variables.ngrp):
+        for i in range(fortran.pfcoil_variables.n_pf_coil_groups):
             if (
-                fortran.pfcoil_variables.ipfloc[i] != 2
-                and fortran.pfcoil_variables.ncls[i] != 2
+                fortran.pfcoil_variables.i_pf_location[i] != 2
+                and fortran.pfcoil_variables.n_pf_coils_in_group[i] != 2
             ):
                 raise ProcessValidationError(
-                    "ncls(i) .ne. 2 is not a valid option except for (ipfloc = 2)"
+                    "n_pf_coils_in_group(i) .ne. 2 is not a valid option except for (i_pf_location = 2)"
                 )
 
-            if fortran.pfcoil_variables.ipfloc[i] == 2:
+            if fortran.pfcoil_variables.i_pf_location[i] == 2:
                 j = j + 1
-                k = k + fortran.pfcoil_variables.ncls[i]
+                k = k + fortran.pfcoil_variables.n_pf_coils_in_group[i]
 
         if k == 1:
             raise ProcessValidationError(
-                "Only 1 divertor coil (ipfloc = 2) is not a valid configuration"
+                "Only 1 divertor coil (i_pf_location = 2) is not a valid configuration"
             )
         if k > 2:
             raise ProcessValidationError(
-                "More than 2 divertor coils (ipfloc = 2) is not a valid configuration"
+                "More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
             )
         if fortran.physics_variables.i_single_null == 1 and j < 2:
             raise ProcessValidationError(
-                "If i_single_null=1, use 2 individual divertor coils (ipfloc = 2, 2; ncls = 1, 1)"
+                "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
             )
 
         # Constraint 10 is dedicated to ST designs with demountable joints
@@ -857,7 +748,7 @@ def check_process():
             )
 
     #  Pulsed power plant model
-    if fortran.pulse_variables.i_pulsed_plant == 1:
+    if data_structure.pulse_variables.i_pulsed_plant == 1:
         fortran.global_variables.icase = "Pulsed tokamak model"
     else:
         fortran.buildings_variables.esbldgm3 = 0.0
@@ -930,9 +821,11 @@ def check_process():
     # CS which is now outside it
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.tf_in_cs == 1
+        and fortran.build_variables.i_tf_inside_cs == 1
     ):
-        raise ProcessValidationError("Cannot have i_tf_bucking >= 2 when tf_in_cs = 1")
+        raise ProcessValidationError(
+            "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
+        )
 
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
@@ -953,12 +846,12 @@ def check_process():
     )
 
     # If TFC sidewall has not been set by user
-    if fortran.tfcoil_variables.casths < 0.1e-10:
+    if fortran.tfcoil_variables.dx_tf_side_case_min < 0.1e-10:
         fortran.tfcoil_variables.tfc_sidewall_is_fraction = True
 
     # If inboard TF coil case plasma side thickness has not been set by user
-    if fortran.tfcoil_variables.casthi < 0.1e-10:
-        fortran.tfcoil_variables.casthi_is_fraction = True
+    if fortran.tfcoil_variables.dr_tf_plasma_case < 0.1e-10:
+        fortran.tfcoil_variables.i_f_dr_tf_plasma_case = True
 
     # Setting the default cryo-plants efficiencies
     if abs(fortran.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
@@ -1044,24 +937,26 @@ def check_process():
                 fortran.tfcoil_variables.eyoung_cond_axial
             )
 
-    # Check if the WP/conductor radial thickness (dr_tf_wp) is large enough
+    # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
     if (fortran.numerics.ixc[: fortran.numerics.nvar] == 140).any():
         # Minimal WP thickness
         if fortran.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (
-                fortran.tfcoil_variables.tinstf
-                + fortran.tfcoil_variables.tfinsgap
-                + fortran.tfcoil_variables.thicndut
-                + fortran.tfcoil_variables.dhecoil
+                fortran.tfcoil_variables.dx_tf_wp_insulation
+                + fortran.tfcoil_variables.dx_tf_wp_insertion_gap
+                + fortran.tfcoil_variables.dx_tf_turn_insulation
+                + fortran.tfcoil_variables.dia_tf_turn_coolant_channel
             )
 
             # Steel conduit thickness (can be an iteration variable)
             if (fortran.numerics.ixc[: fortran.numerics.nvar] == 58).any():
                 dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.numerics.boundl[57]
             else:
-                dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.thwcndut
+                dr_tf_wp_min = (
+                    dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.dx_tf_turn_steel
+                )
 
         # Minimal conductor layer thickness
         elif (
@@ -1070,13 +965,16 @@ def check_process():
         ):
             dr_tf_wp_min = (
                 2.0
-                * (fortran.tfcoil_variables.thicndut + fortran.tfcoil_variables.tinstf)
+                * (
+                    fortran.tfcoil_variables.dx_tf_turn_insulation
+                    + fortran.tfcoil_variables.dx_tf_wp_insulation
+                )
                 + 4.0 * fortran.tfcoil_variables.rcool
             )
 
         if fortran.numerics.boundl[139] < dr_tf_wp_min:
             raise ProcessValidationError(
-                "The TF coil WP thickness (dr_tf_wp) must be at least",
+                "The TF coil WP thickness (dr_tf_wp_with_insulation) must be at least",
                 dr_tf_wp_min=dr_tf_wp_min,
             )
 
@@ -1143,14 +1041,14 @@ def check_process():
         )
 
     # PF coil resistivity is zero if superconducting
-    if fortran.pfcoil_variables.ipfres == 0:
-        fortran.pfcoil_variables.pfclres = 0.0
+    if fortran.pfcoil_variables.i_pf_conductor == 0:
+        fortran.pfcoil_variables.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
-    if fortran.current_drive_variables.irfcd == 1:
+    if fortran.current_drive_variables.i_hcd_calculations == 1:
         if (
-            fortran.current_drive_variables.iefrf != 5
-            and fortran.current_drive_variables.iefrf != 8
+            fortran.current_drive_variables.i_hcd_primary != 5
+            and fortran.current_drive_variables.i_hcd_primary != 8
         ):
             fortran.physics_variables.f_nd_beam_electron = 0.0
     else:
@@ -1166,7 +1064,6 @@ def check_process():
 
     if fortran.stellarator_variables.istell == 0 and (
         fortran.fwbs_variables.i_blanket_type == 1
-        or fortran.fwbs_variables.i_blanket_type == 3
     ):
         fsum = (
             fortran.fwbs_variables.breeder_multiplier
@@ -1182,10 +1079,6 @@ def check_process():
                 vfpblkt=fortran.fwbs_variables.vfpblkt,
                 fsum=fsum,
             )
-
-    # Initialise superconductor cable parameters
-    if fortran.tfcoil_variables.i_tf_sup == 1:
-        fortran.sctfcoil_module.initialise_cables()
 
     # Check that the temperature margins are not overdetermined
     if fortran.tfcoil_variables.tmargmin > 0.0001:
@@ -1243,17 +1136,39 @@ def check_process():
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 60
-    ).any() and fortran.pfcoil_variables.isumatoh == 8:
+    ).any() and fortran.pfcoil_variables.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
         )
 
     # Cold end of the cryocooler should be colder than the TF
-    if fortran.tfcoil_variables.tmpcry > fortran.tfcoil_variables.tftmp:
-        raise ProcessValidationError("tmpcry should be lower than tftmp")
+    if fortran.tfcoil_variables.temp_tf_cryo > fortran.tfcoil_variables.tftmp:
+        raise ProcessValidationError("temp_tf_cryo should be lower than tftmp")
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 88
     ).any() and fortran.tfcoil_variables.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
+
+
+def set_active_constraints():
+    """Set constraints provided in the input file as 'active'"""
+    num_constraints = 0
+    for i in range(ConstraintManager.num_constraints()):
+        if fortran.numerics.icc[i] != 0:
+            fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
+            num_constraints += 1
+
+    if fortran.numerics.neqns == 0:
+        # The value of neqns has not been set in the input file.  Default = 0.
+        fortran.numerics.neqns = num_constraints - fortran.numerics.nineqns
+    else:
+        fortran.numerics.nineqns = num_constraints - fortran.numerics.neqns
+
+
+def set_device_type():
+    if fortran.ife_variables.ife == 1:
+        fortran.global_variables.icase = "Inertial Fusion model"
+    elif fortran.stellarator_variables.istell != 0:
+        fortran.global_variables.icase = "Stellarator model"

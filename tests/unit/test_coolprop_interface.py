@@ -2,17 +2,17 @@ import pytest
 
 from process.coolprop_interface import FluidProperties
 
-WATER_PROPERTIES = FluidProperties(
-    293.15,
-    101325,
-    998.20609246795,
-    84013.058152596,
-    296.48264655725,
-    4184.7940947755,
-    4157.4368513145,
-    0.0010016053256479,
-    0.5984608954958,
-)
+
+class WATER_PROPERTIES:
+    temperature = 293.15
+    pressure = 101325
+    density = 998.20609246795
+    enthalpy = 84013.058152596
+    entropy = 296.48264655725
+    specific_heat_const_p = 4184.7940947755
+    specific_heat_const_v = 4157.4368513145
+    viscosity = 0.0010016053256479
+    thermal_conductivity = 0.5984608954958
 
 
 def test_water_with_pressure_temp():

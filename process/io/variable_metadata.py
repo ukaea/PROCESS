@@ -17,7 +17,7 @@ var_dicts = {
     "rmajor": VariableMetadata(
         latex=r"$R_\mathrm{major}$ [$m$]", description="Major radius", units="m"
     ),
-    "crypmw": VariableMetadata(
+    "p_cryo_plant_electric_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
     "bt": VariableMetadata(
@@ -28,13 +28,13 @@ var_dicts = {
         description="TF coil thickness",
         units="m",
     ),
-    "fusion_power": VariableMetadata(
+    "p_fusion_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{fus}$ [$MW$]", description="Fusion power", units="MW"
     ),
-    "pinjemw": VariableMetadata(
+    "p_hcd_injected_electrons_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
-    "pnetelmw": VariableMetadata(
+    "p_plant_electric_net_mw": VariableMetadata(
         latex=r"$P_\mathrm{Net\ elec}$ [$MW$]",
         description="Net electrical power",
         units="MW",
@@ -74,12 +74,12 @@ var_dicts = {
         description="TF coil vertical force",
         units="N",
     ),
-    "thkcas": VariableMetadata(
+    "dr_tf_nose_case": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{buck}$ [$m$]",
         description="Inboard TF coil case outer (non-plasma side) thickness",
         units="m",
     ),
-    "bmaxtf": VariableMetadata(
+    "b_tf_inboard_peak": VariableMetadata(
         latex=r"$B_\mathrm{TF}^\mathrm{max}$ [$T$]",
         description="Mean peak field at TF coil",
         units="T",
@@ -89,7 +89,7 @@ var_dicts = {
         description="Total TF coil current",
         units="A",
     ),
-    "dr_tf_wp": VariableMetadata(
+    "dr_tf_wp_with_insulation": VariableMetadata(
         latex=r"$\Delta R_\mathrm{TF}^\mathrm{WP}$ [$m$]",
         description="TF coil winding pack width",
         units="m",
@@ -106,12 +106,12 @@ var_dicts = {
         description="Mid-plane outboard TF coil leg radius at the middle of the coil",
         units="m",
     ),
-    "pgrossmw": VariableMetadata(
+    "p_plant_electric_gross_mw": VariableMetadata(
         latex=r"$P_\mathrm{gross}^\mathrm{elec}$ [$MW$]",
         description="Gross electrical power",
         units="MW",
     ),
-    "htpmw": VariableMetadata(
+    "p_coolant_pump_elec_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{Primary\ coolant}^\mathrm{elec}$ [$MW$]",
         description="Primary coolant power",
         units="MW",
@@ -121,17 +121,17 @@ var_dicts = {
         description="Poloidal field power",
         units="MW",
     ),
-    "hmax": VariableMetadata(
+    "z_tf_inside_half": VariableMetadata(
         latex=r"$z_\mathrm{TF}^\mathrm{pl\ side}$ [$m$]",
         description="maximum (half-)height of TF coil (inside edge)",
         units="m",
     ),
-    "thicndut": VariableMetadata(
+    "dx_tf_turn_insulation": VariableMetadata(
         latex=r"\Delta l_\mathrm{steel\ jacket}^\mathrm{turn}",
         description="Thickness of steel jacket turn",
         units="",
     ),
-    "cpttf": VariableMetadata(
+    "c_tf_turn": VariableMetadata(
         latex=r"$I_\mathrm{TF}^\mathrm{turn}$ [$A$]",
         description="TF turn current",
         units="A",
@@ -141,10 +141,10 @@ var_dicts = {
         description="Toroidal field lower bound",
         units="A",
     ),
-    "pinjmw": VariableMetadata(
+    "p_hcd_injected_total_mw": VariableMetadata(
         latex=r"$P_\mathrm{inj}$ [$MW$]", description="Injected power", units="MW"
     ),
-    "hldivlim": VariableMetadata(
+    "pflux_div_heat_load_max_mw": VariableMetadata(
         latex=r"$q_\mathrm{div}^\mathrm{max}$ [$MW.m^{-2}$]",
         description="Maximum divertor heat load",
         units="MW.m^{-2}",
@@ -158,7 +158,7 @@ var_dicts = {
     "triang": VariableMetadata(
         latex=r"$\delta_\mathrm{sep}$", description="Triangularity", units=""
     ),
-    "f_tf_steel": VariableMetadata(
+    "f_a_tf_coil_inboard_steel": VariableMetadata(
         latex=r"f_\mathrm{steel}^\mathrm{TF}", description="TF steel fraction", units=""
     ),
     "plasma_current_MA": VariableMetadata(
@@ -184,7 +184,7 @@ var_dicts = {
         description="Bore radius",
         units="m",
     ),
-    "dnla": VariableMetadata(
+    "nd_electron_line": VariableMetadata(
         latex=r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]",
         description="Average electron density",
         units="m^{-3}",
@@ -207,7 +207,7 @@ var_dicts = {
         description="Maximum copper-to-area ratio",
         units="A m^{-2}",
     ),
-    "coreradius": VariableMetadata(
+    "radius_plasma_core_norm": VariableMetadata(
         latex=r"$r_{core} [M]$", description="Core radius", units="M"
     ),
     "fcuohsu": VariableMetadata(
@@ -215,33 +215,33 @@ var_dicts = {
         description="Copper fraction of strand in central solenoid",
         units="",
     ),
-    "coheof": VariableMetadata(
+    "j_cs_flat_top_end": VariableMetadata(
         latex=r"$J [A m^{-2}]$",
         description="central solenoid overall current density at end of flat-top",
         units="A m^{-2}",
     ),
-    "ohhghf": VariableMetadata(
+    "f_z_cs_tf_internal": VariableMetadata(
         latex=r"$Thickness_{\mathrm{CS}}[m]$",
         description="Central solenoid height / TF coil internal height",
         units="m",
     ),
-    "pheat": VariableMetadata(
+    "p_hcd_primary_extra_heat_mw": VariableMetadata(
         latex=r"$ P_{\mathrm{heat}}$ [$MW$]", description="Heat power", units="MW"
     ),
-    "effcd": VariableMetadata(
+    "eta_cd_hcd_primary": VariableMetadata(
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
     "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
-    "aux_current_fraction": VariableMetadata(
+    "f_c_plasma_auxiliary": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
-    "inductive_current_fraction": VariableMetadata(
+    "f_c_plasma_inductive": VariableMetadata(
         latex=r"$f_{\mathrm{CD,ind}}$", description="Inductive CD factor", units=""
     ),
-    "bootstrap_current_fraction": VariableMetadata(
+    "f_c_plasma_bootstrap": VariableMetadata(
         latex=r"$f_{\mathrm{BS}}$", description="Bootstrap current fraction", units=""
     ),
-    "pdivt": VariableMetadata(
+    "p_plasma_separatrix_mw": VariableMetadata(
         latex=r"$P_{\mathrm{sep}}$ [$MW$]", description="Power to divertor", units="MW"
     ),
     "p_plasma_rad_mw": VariableMetadata(
@@ -257,7 +257,7 @@ var_dicts = {
         description="Normalized TF current",
         units="",
     ),
-    "bktlife": VariableMetadata(
+    "life_blkt_fpy": VariableMetadata(
         latex=r"$T_{\mathrm{blk}}$", description="Blanket lifetime", units=""
     ),
     "bktcycles": VariableMetadata(
@@ -289,7 +289,7 @@ var_dicts = {
         description="Minimum cycles for stress",
         units="",
     ),
-    "a_oh_turn": VariableMetadata(
+    "a_cs_turn": VariableMetadata(
         latex=r"$Turn_{\mathrm{area}}^{\mathrm{CS}}[$m$^{2}]$",
         description="Cross-sectional area of CS coil turns",
         units="m^2",
@@ -299,7 +299,7 @@ var_dicts = {
         description="Minimum burn time",
         units="s",
     ),
-    "pfv.oh_steel_frac": VariableMetadata(
+    "pfv.f_a_cs_steel": VariableMetadata(
         latex=r"$f_{\mathrm{Steel}}^{\mathrm{CS}}$",
         description="Steel fraction in CS coil",
         units="",
@@ -370,7 +370,7 @@ var_dicts = {
         description="Divertor power per major radius",
         units="MW/m",
     ),
-    "etath": VariableMetadata(
+    "eta_turbine": VariableMetadata(
         latex=r"Thermal to Electric efficiency",
         description="Thermal to electric efficiency",
         units="",
@@ -385,7 +385,7 @@ var_dicts = {
         description="Redundancy factor for gyrotrons",
         units="",
     ),
-    "etaech": VariableMetadata(
+    "eta_ecrh_injector_wall_plug": VariableMetadata(
         latex=r"ECH wall plug to injector efficiency",
         description="Efficiency of electron cyclotron heating",
         units="",

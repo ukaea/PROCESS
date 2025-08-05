@@ -31,10 +31,10 @@ class TestStructure:
         tfmass: float = 21234909.756419446
         m_fw_total: float = 224802.80270851994
         blmass: float = 3501027.3252278985
-        coolmass: float = 1199.6389920083477
+        m_fw_blkt_div_coolant_total: float = 1199.6389920083477
         dewmass: float = 16426726.727684354
         i_tf_sup: int = 1
-        ipfres: int = 0
+        i_pf_conductor: int = 0
 
         expected_fncmass: float = 310716.52923547616
         expected_aintmass: float = 5829865.436088617
@@ -49,7 +49,7 @@ class TestStructure:
             akappa,
             b0,
             i_tf_sup,
-            ipfres,
+            i_pf_conductor,
             tf_h_width,
             tfhmax,
             shldmass,
@@ -58,7 +58,7 @@ class TestStructure:
             tfmass,
             m_fw_total,
             blmass,
-            coolmass,
+            m_fw_blkt_div_coolant_total,
             dewmass,
             output=False,
         )

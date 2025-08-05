@@ -23,15 +23,12 @@ find_package(Python3 3.10 COMPONENTS Interpreter Development)
 
 # Read in external CMake scripts for preprocessing, f2py, ford, etc.
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/pip.cmake)
-INCLUDE(${CMAKE_SOURCE_DIR}/cmake/process_preprocessing.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/preprocess.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/f2py.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/ford.cmake)
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/gfortranlibs.cmake)
 
-# Retrieve and set information for preprocessor
-FindPreprocessingVars()
-
+ADD_DEFINITIONS(-DINSTALLDIR="${CMAKE_SOURCE_DIR}")
 SET(CMAKE_Fortran_FLAGS "-cpp -ffree-line-length-none -fPIC -ftest-coverage -fprofile-arcs -finit-local-zero")
 
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -76,46 +73,30 @@ LIST(APPEND PROCESS_SRCS
     scan.f90
     hcpb.f90
     pfcoil.f90
-    reinke_module.f90
     sctfcoil.f90
-    cost_variables.f90
-    divertor_variables.f90
     fwbs_variables.f90
     physics.f90
     physics_variables.f90
     tfcoil_variables.f90
-    times_variables.f90
     ife_variables.f90
     heat_transport_variables.f90
     buildings_variables.f90
-    iteration_variables.f90
-    water_usage_variables.f90
-    constraint_equations.f90
     constants.f90
     build_variables.f90
     current_drive_variables.f90
     pfcoil_variables.f90
-    structure_variables.f90
     output.f90
     init_module.f90
     error_handling.f90
     global_variables.f90
     constraint_variables.f90
-    vacuum_variables.f90
-    CS_fatigue_variables.f90
     impurity_radiation.f90
-    pulse_variables.f90
     pf_power_variables.f90
     dcll.f90
-    rebco_variables.f90
-    primary_pumping_variables.f90
-    reinke_variables.f90
-    neoclassics_module.f90
     blanket_library.f90
     stellarator_variables.f90
     stellarator.f90
     stellarator_configuration.f90
-    input.f90
 )
 
 PREPROCESS()

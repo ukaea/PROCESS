@@ -42,13 +42,6 @@ def parse_args(args):
     )
 
     parser.add_argument(
-        "-op",
-        "--outputdir",
-        default=Path.cwd(),
-        help="Output directory for plot, defaults to current working directory.",
-    )
-
-    parser.add_argument(
         "-sf",
         "--save_format",
         nargs="?",
@@ -109,7 +102,7 @@ def get_radial_build(m_file):
         "dr_tf_shld_gap",
         "dr_tf_outboard",
     ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+    if int(m_file.data["i_tf_inside_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "dr_tf_inboard"
         radial_labels[2] = "dr_cs_tf_gap"
         radial_labels[3] = "dr_cs"
@@ -149,34 +142,34 @@ def main(args=None):
 
     nsweep_list = [
         "aspect",
-        "hldivlim",
-        "pnetelmw",
+        "pflux_div_heat_load_max_mw",
+        "p_plant_electric_net_mw",
         "hfact",
         "oacdcp",
-        "walalw",
+        "pflux_fw_neutron_max_mw",
         "beamfus0",
         "fqval",
         "te",
         "boundu(15)",
         "beta_norm_max",
-        "bootstrap_current_fraction_max",
+        "f_c_plasma_bootstrap_max",
         "boundu(10)",
         "fiooic",
         "fjprot",
         "rmajor",
-        "bmaxtf",  # bmxlim the maximum T field upper limit is the scan variable
-        "gammax",
+        "b_tf_inboard_peak",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
+        "eta_cd_norm_hcd_primary_max",
         "boundl(16)",
         "cnstv.t_burn_min",
         "",
         "cfactr",
         "boundu(72)",
-        "powfmax",
+        "p_fusion_total_max_mw",
         "kappa",
         "triang",
         "tbrmin",
         "bt",
-        "coreradius",
+        "radius_plasma_core_norm",
         "Obsolete",  # Removed
         "f_alpha_energy_confinement_min",
         "epsvmc",
@@ -198,22 +191,22 @@ def main(args=None):
         "n_pancake",
         "n_layer",
         "fimp(13)",
-        "ftar",
+        "f_p_div_lower",
         "rad_fraction_sol",
         "",
         "b_crit_upper_nbti",
         "dr_shld_inboard",
-        "crypmw_max",
+        "p_cryo_plant_electric_max_mw",
         "bt",  # Genuinly bt lower bound
         "dr_fw_plasma_gap_inboard",
         "dr_fw_plasma_gap_outboard",
         "sig_tf_wp_max",
         "copperaoh_m2_max",
-        "coheof",
+        "j_cs_flat_top_end",
         "dr_cs",
-        "ohhghf",
+        "f_z_cs_tf_internal",
         "csfv.n_cycle_min",
-        "pfv.oh_steel_frac",
+        "pfv.f_a_cs_steel",
         "csfv.t_crack_vertical",
         "",
         "",
@@ -224,7 +217,7 @@ def main(args=None):
         "",
         "",
         "",
-        "fvs",  # actaully lower bound fvs
+        "fvs_plasma_total_required",  # actaully lower bound fvs_plasma_total_required
         "v_plasma_loop_burn",
         "res_plasma",
     ]
@@ -264,7 +257,7 @@ def main(args=None):
         "Gap",
         "TF Coil Outboard Leg",
     ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+    if int(m_file.data["i_tf_inside_cs"].get_scan(-1)) == 1:
         radial_labels[1] = "TF Coil Inboard Leg"
         radial_labels[2] = "CS Coil gap"
         radial_labels[3] = "Central Solenoid"
@@ -297,7 +290,7 @@ def main(args=None):
         "white",
         "blue",
     ]
-    if int(m_file.data["tf_in_cs"].get_scan(-1)) == 1:
+    if int(m_file.data["i_tf_inside_cs"].get_scan(-1)) == 1:
         radial_color[1] = "blue"
         radial_color[2] = "white"
         radial_color[3] = "green"
@@ -370,10 +363,10 @@ def main(args=None):
     )
     plt.xlabel("Radius [m]")
     plt.tight_layout()
-    plt.savefig(
-        f"{args.outputdir}/{Path(args.input).stem}_radial_build.{save_format}",
-        bbox_inches="tight",
+    output_path = (
+        Path(args.input).parent / f"{Path(args.input).stem}_radial_build.{save_format}"
     )
+    plt.savefig(output_path, bbox_inches="tight")
 
     # Display plot (used in Jupyter notebooks)
     plt.show()

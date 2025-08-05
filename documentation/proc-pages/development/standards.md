@@ -4,7 +4,7 @@
 
 --------------------
 
-## Line Length
+##  Line Length
 
 For optimal readability, a limit of 79 characters for maximum line length has been encouraged, as recommended in [PEP8](https://peps.python.org/pep-0008/). This is below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
 
@@ -13,7 +13,7 @@ For optimal readability, a limit of 79 characters for maximum line length has be
 ## Double declarations
 
 PROCESS uses the Fortran 2008+ intrinsic precision module as shown in the example below. The
-use statement will need to be at the module level. See the 
+use statement will need to be at the module level. See the
 [fortran wiki](http://fortranwiki.org/fortran/show/Real+precision) for more information.
 
 ```fortran
@@ -102,6 +102,10 @@ $$
 
 This means the variable represents the fraction of the TF coil area taken up by the winding pack.
 
+!!! note "Naming conventions with limit variables"
+
+    For naming variables which represent either upper or lower limits the words `_max` and `_min` should be used in the variable name. Though if a variable represents the highest of a measured value then the variable name should use the word `_peak`.
+
 
 --------------
 
@@ -118,11 +122,12 @@ Below are a few shorthand designations for different systems that should be used
 - Shield: `_shld_`
 - Central Solenoid: `_cs_`
 - Heating & Current Drive: `_hcd_`
-    - Electron cyclotron current drive: `_eccd_`
-    - Ion cyclotron current drive: `_iccd_`
-    - Electron Bernstein Wave: `_ebw_`
-    - Neutral Beam: `_nb_`
+  - Electron cyclotron current drive: `_eccd_`
+  - Ion cyclotron current drive: `_iccd_`
+  - Electron Bernstein Wave: `_ebw_`
+  - Neutral Beam: `_nb_`
 - Centre post: `_cp_` Should only be used for ST's
+- The fusion power plant as a whole: `_plant_`
 
 If the variables are physics variables and do not belong to a system then:
 
@@ -186,6 +191,12 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+##### Diameters
+
+- Diameters should start with the `dia_` prefix
+
+---------------------
+
 ##### Velocities
 
 - Velocities should start with the `vel_` prefix
@@ -221,7 +232,6 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
-
 ##### Densities
 
 - Densities should start with the `den_` prefix
@@ -243,6 +253,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 ##### Resistivity
 
 - Resistivity variables should start with the `rho_` prefix
+
+---------------------
+
+##### Residual resistance ratios
+
+- Residual resistance ratios should start with the `rrr_` prefix
 
 ---------------------
 
@@ -309,7 +325,7 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ##### Magnetic field strengths
 
-- Magnetic field strengths should start with the `b_`
+- Magnetic field strengths should start with the `b_` prefix
 
 ---------------------
 
@@ -334,9 +350,17 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Solid Angles
+
+- Solid angles should start with the `ster_` prefix. Short for steradians.
+
+---------------------
+
 ##### Lifetimes
 
-- Lifetimes of componenets should start with the `life_` prefix.
+- Lifetimes of components should start with the `life_` prefix.
+
+The default units for lifetimes is in years.
 
 The unit declaration `_fpy` can be used to specify that it is the full-power year lifetime.
 
@@ -348,10 +372,66 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ---------------------
 
+##### Stress
+
+- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
+
+---------------------
+
+##### Forces
+
+- Forces should start with the `forc_` prefix.
+
+---------------------
+
+##### Torques
+
+- Torques should start with the `torq_` prefix
+
+---------------------
+
+##### Current drive efficiencies
+
+Absolute current drive efficiencies ($\eta_{\text{CD}}$) representing Amps driven per Watt of injected power start with the `eta_cd` prefix.
+
+$$
+\eta_{\text{CD}} = \frac{I_{\text{driven}}}{P_{\text{injected}}}
+$$
+
+Normalized current drive efficiecnies using major radius and volume averaged electron temperature start with the `eta_cd_norm` prefix
+
+$$
+\eta_{\text{CD,norm}} = R_0 n_{\text{e,20}} \eta_{\text{CD}}
+$$
+
+$\eta_{\text{CD,norm}}$ has the units of $\frac{1\times 10^{20} \text{A}}{\text{W} \text{m}^2}$
+
+The above is concurrent with that of general efficiencies given [below](#efficiencies).
+
+--------------
+
+
+##### Fusion rates
+
+- Fusion rates should start with the `fusrat_` prefix.
+
+This should be used for units of reactions per second.
+
+---------------------
+
+##### Fusion rate densities
+
+- Fusion rate densities should start with the `fusden_` prefix.
+
+This should be used for units of reactions per cubic metre, per second ($\text{reactions} \ \text{m}^{-3}\text{s}^{-1}$).
+
+---------------------
 
 ##### Variables representing fractions
 
 If a variable is intended to demonstrate a fraction of a value or distribution etc. Then it should start with the `f_` prefix.
+
+###### Efficiencies
 
 Similar to this is variables representing efficiencies.
 
@@ -365,11 +445,12 @@ Variables used within constraint equations to scale iteration variables (f-value
 
 ---------------------
 
-### Length
+### Variable Length
 
 Try to keep names to a sensible length while also keeping the name explicit and descriptive.
 
 ---------------------
+
 
 ### Physical Type
 
@@ -393,7 +474,7 @@ Inside PROCESS all variables should be in SI units unless otherwise stated. For 
 
 ```fortran
 ! Fusion power [W]
-fusion_power = 1000.0d6
+p_fusion_total = 1000.0d6
 ```
 
 If a variable is not in SI units then its units should be put at the end of of the variable name.
@@ -401,14 +482,14 @@ Example:
 
 ```fortran
 ! Fusion power [MW]
-fusion_power_MW = 1000.0d0
+p_fusion_total_mw = 1000.0d0
 ```
 
 !!! note
 
     With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
 
----------------------    
+---------------------
 
 ### Coordinates and dimensions
 
@@ -471,7 +552,7 @@ ii
 | `a_plasma` | Plasma area | m2 |
 | `rad_div_target` | Divertor target angle | radians |
 | `deg_div_target` | Divertor target angle | deg |
-| `sig_tf_r` | TF radial stress  | Pa |
+| `s_shear_tf` | TF shear stress  | Pa |
 | `` |  |  |
 
 Please see issue [#940](https://github.com/ukaea/PROCESS/issues/940) to discuss new conventions.
@@ -557,15 +638,14 @@ class ExampleClass:
 
 - Comments above apply to code below.
 
-
 ## Code Documentation Using FORD
 
-PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments 
-in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well 
+PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
+in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
 as picking up "docmarked" comments in the source to create the documentation.
 
-Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into 
-the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up 
+Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
+the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
 by FORD and go into the documentation.
 
 The "!!" docmark goes after the statement it documents. For example, to document variables:
@@ -582,6 +662,7 @@ real(kind(1.0D0)) :: alpha_rate_density = 0.0D0
 ```
 
 ...and to document modules:
+
 ```fortran
 module global_variables
   !! Module containing miscellaneous global variables
@@ -589,13 +670,13 @@ module global_variables
   !! well-suited to any of the other 'variables' modules.
 ```
 
-This documentation will appear in the 
-[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the 
-left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar 
-provides variable descriptions in the same manner as the original "vardes" page. 
+This documentation will appear in the
+[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
+left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
+provides variable descriptions in the same manner as the original "vardes" page.
 
-To document a statement before it occurs in the source, use "!>". However, it is encouraged to 
-use "!!" for consistency. The rationale behind this and further information is included on the 
+To document a statement before it occurs in the source, use "!>". However, it is encouraged to
+use "!!" for consistency. The rationale behind this and further information is included on the
 [FORD wiki](https://github.com/Fortran-FOSS-Programmers/ford/wiki/Writing-Documentation).
 
 The FORD project on github can be found [here](https://github.com/Fortran-FOSS-Programmers/ford).

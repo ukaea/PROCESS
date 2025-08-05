@@ -65,11 +65,11 @@ A `.csv` file will be saved to the directory of the input file.
 
 
 
-## PROCESS 7-Page PDF Summary
+## PROCESS 14-Page PDF Summary
 
 > `process/io/plot_proc.py`
 
-A utility to produce a five-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles, TF coil layout and turn structure, density, bootstrap and L-H scaling comparisons and a plasma and PF coil current over the pulse duration plot.
+A utility to produce a eleven-page PDF summary of the output from PROCESS, including the major parameters, poloidal and toroidal cross-sections, temperature and density profiles, TF coil layout and turn structure, density, bootstrap and L-H scaling comparisons, plasma and PF coil current over the pulse duration plot and first wall geometry and pumping plot.
 
 ### Usage
 
@@ -309,7 +309,7 @@ This utility plots the output of a PROCESS scan. PROCESS must be run on a scan-e
 
 **Input**: `MFILE.DAT`
 
-**Output** `scan_var1_vs_var2.pdf` (var1 by default is `bmaxtf`, var2 specified by user)
+**Output** `scan_var1_vs_var2.pdf` (var1 by default is `b_tf_inboard_peak`, var2 specified by user)
 
 ### Usage
 
@@ -383,163 +383,6 @@ python process/io/costs_bar.py [-h] [-f f [f ...]] [-s] [-inf INF]
 | `-f MFILE`   | specify the MFILE(s) to plot        |
 | `-s, --save` | save figure                         |
 | `-inf INF`   | Inflation Factor (multiplies costs) |
-
-
-
-# Uncertainty Tools
-
-In this section, we explain the usage of the PROCESS tools to both evaluate the uncertainties of a design point and display them using a simple plotting facility.
-
-The uncertainty evaluation tool has a significantly longer run time than typical evaluations of PROCESS design points and therefore should only be used once a suitable design point has been found. As only user selected output data is kept, the user is recommended to put careful thought into the list of needed output variables.
-
-## `evaluate_uncertainties.py`
-
-This program evaluates the uncertainties of a single PROCESS design point by use of Monte Carlo method as described in[^5] by default, and can also use the Morris method and Sobol techniques. It is recommended to submit this script as a [batch job](#batch-jobs) to Freia when 1000s of sample points are required.
-
-### Input
-
-This script requires two files to run:
-
-* `config_evaluate_uncertainties.json`: A configuration file which details the uncertain parameters under investigation. These are described by probability distributions such as Gaussian, lower half Gaussian, flat top, etc.
-
-* `IN.DAT`: A PROCESS input file which describes the relevant design point. The path to this file should be specified in the `config_evaluate_uncertainties.json` file.
-
-The configuration file `config_evaluate_uncertainties.json` uses the [JSON format](https://www.json.org), and has the following style:
-
-```
-{
-    "_description": "Configuration file for uncertainties evaluation in PROCESS",
-    "_author": "Process McCoder",
-    "config": {
-        "runtitle": "testrun for uncertainty tool",
-        "IN.DAT_path": "path_to_input_file/IN.DAT",
-        "working_directory": "path_to_output_folder/",
-        "pseudorandom_seed": 16,
-        "no_iter": 1
-    },
-    "uncertainties": [
-        {
-            "Varname": "boundu(9)",
-            "Errortype": "LowerHalfGaussian",
-            "Mean": 1.2,
-            "Std": 0.1
-        },
-        {
-            "Varname": "boundu(10)",
-            "Errortype": "LowerHalfGaussian",
-            "Mean": 1.2,
-            "Std": 0.1
-        },
-        {
-            "Varname": "coreradius",
-            "Errortype": "Gaussian",
-            "Mean": 0.6,
-            "Std": 0.15
-        }
-    ],
-    "output_vars": [],
-    "no_scans": 1,
-    "no_samples": 100,
-    "output_mean": 8056.98,
-    "figure_of_merit": "rmajor",
-    "vary_iteration_variables": false,
-    "latin_hypercube_level": 4
-    ...
-
-```
-By convention, we have designated metadata about the PROCESS runs as having a preceding underscore to distinguish these values from the other configuration data used directly by the tools or PROCESS itself. Furthermore, all the optional attributes that can be changed when running PROCESS from most Python utilities can be specified in the "config" section. All these values have default values and do not need to be set.
-
-- `runtitle`: is a one line description of the purpose of the run to be saved in `README.txt` in the working directory as well as the `runtitle` parameter in the `OUT.DAT` and `MFILE.DAT` files. Per default it is empty.
-
-- `IN.DAT_path:` is the name/path of the `IN.DAT` file describing the design point. If not specified it is assumed to be `IN.DAT`.
-
-- `working_directory`: directs to the working directory in which PROCESS will be executed. It is recommended to create a directory for each run as this can aide organisation while several runs are executed with slightly different configs.
-
-- `pseudorandom_seed`: is the value of the seed for the random number generator. It can be any integer value. If it is not specified, its default value is taken from the system clock.
-
-- `no_iter`: sets `Niter`, the maximum number of retries that the tool will attempt if PROCESS fails to find a feasible solution. The default value is 10, but this can be changed depending on the user's preference for speed and solutions. 
-
-- `factor`: varies the start values of the iteration variables by a `factor` of the original values. This does not change the physical meaning of the input file, but can help the solver to find a better starting point for its iteration. The default value is `factor=1.5`.
-
-- `uncertainties`: any uncertain parameters should be specified in the `uncertainties` section. Each parameter is specified in its own sub-directory in the config file example above. For each entry, the `Varname` and `Errortype` need to be specified and each `Errorrtype` must be include the appropriate boundaries, listed below:
- - `Errortype` :
-    - `Gaussian` (`Mean` and `Std`)
-    - `LowerHalfGaussian` (`Mean` and `Std`)
-    - `UpperHalfGaussian` (`Mean` and `Std`)
-    - `Uniform` (`Lowerbound` and `Upperbound`)
-    - `Relative` (`Mean` and `Percentage`)
-
-
-    Please note that *all distributions are cut off at the boundaries for the input values for PROCESS*! At least one uncertain parameter has to be specified for the program to run and there is no upper limit to how many uncertain parameters can be used. However, for large numbers of uncertain parameters it is recommended to increase the number of sampling points.
-
-
-- `no_samples`: sets the number of sample points in the Monte Carlo method. It is by default set to its recommended minimum value of 1000, but the user should contemplate higher values especially if a large number of uncertain parameters are involved.
-
-- `no_scans`: can be used to set the number of scan runs in each MC sample point. Only the last scan point is stored in the data ouput. Older versions of the code made more use of this feature and it is recommended to set this to 1.
-
-- `no_allowed_unfeasible`: is the number of allowed unfeasible points in a run which is set as 2  by default.
-
-- `vary_iteration_variables`: This enables a shuffle of the iteration variables in the Monte Carlo method. By default it is set to false and may be set to true to recreate old runs of the MC code.
-
-### Output 
-
-- `uncertainties_data.h5`: This file contains the output variables of each successfully converged PROCESS run generated by the `evaluate_uncertainties.py` script. PROCESS output variables can be plotted using using the `hdf_to_scatter_plot.py` script. This file uses the [HDF format](https://www.hdfgroup.org/solutions/hdf5/) and requires [software](https://www.hdfgroup.org/downloads/hdfview/) to view its contents in a human legible format.
-
-
-- `README.txt`, `process.log`, `MFILE.DAT`, `OUT.DAT`, `SIG_TF.json`: Typical PROCESS output generated by the last run.
-
-
-### Usage
-
-The `evaluate_uncertainties.py` script is run with with the option `-f` to specify the path to the `config_evaluate_uncertainties.json` file:
-
-```
-python process/uncertainties/evaluate_uncertainties.py -f path/to/config_evaluate_uncertainties.json -m method
-```
-
-### Options
-
-| Argument        | Description                                                                                                |
-| --------------- | ---------------------------------------------------------------------------------------------------------- |
-| `-h, --help`    | show help message and exit                                                                                 |
-| `-f CONFIGFILE` | specify the path to the config file                                                                        |
-| `-m METHOD`     | type of uncertainty analysis performed, default = monte_carlo, other options = sobol_method, morris_method |
-
-The uncertainty analysis technique used can be specified using '`-m monte_carlo/sobol_method/morris_method`' but the default is Monte Carlo. Use `-h` or `--help` for help.
-
-
-## Sobol Plotting
-
-> `process/uncertainties/sobol_plotting.py`
-
-Program to plot the output of the the Sobols sensitivity analysis at a given PROCESS design point. 
-It creates a bar chart showing both the first order and total Sobol indices for each variable and gives 
-the 95% confidence intervals.
-
-### Usage
-
-```bash
-python process/uncertainties/sobol_plotting.py [-h] [-f path/to/DATAFILE] [-o OUTPUTFILE]
-```
-If no `-f` argument is provided it assumes a file named `sobol.txt` is in the current directory.
-
-### Options
-
-| Argument        | Description                                               |
-| --------------- | --------------------------------------------------------- |
-| `-h, --help`    | show help message and exit                                |
-| `-f DATAFILE`   | path to datafile for plotting, default = sobol.txt        |
-| `-o OUTPUTFILE` | filename of outputed pdf file, default = sobol_output.pdf |
-
-### Configuration File
-
-The tool reads the data contained `sobol.txt` produced from running `evaluate_uncertainties.py` with the `sobol_method`. The name and location of the data file can be modified using the option DATAFILE.
-
-### Output
-
-A .pdf file is created called `sobol_output.pdf`. The name of the produced pdf file can be specified 
-using the option OUTPUTFILE.
-
 
 
 ## References

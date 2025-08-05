@@ -15,8 +15,7 @@ module sctfcoil_module
 #ifndef dp
    use, intrinsic :: iso_fortran_env, only: dp=>real64
 #endif
-   use resistive_materials, only: resistive_material, volume_fractions, &
-      supercon_strand
+
    implicit none
 
 ! Module variables
@@ -31,30 +30,30 @@ module sctfcoil_module
    real(dp) :: tf_fit_y
 !! Ratio of peak field with ripple to nominal axisymmetric peak field
 
-   real(dp) :: tfc_current
+   real(dp) :: c_tf_coil
 !! Current in each TF coil
 
-   real(dp) :: awpc
+   real(dp) :: a_tf_wp_with_insulation
 !! Total cross-sectional area of winding pack including
 !! GW insulation and insertion gap [m2]
 
-   real(dp) :: awptf
+   real(dp) :: a_tf_wp_no_insulation
 !! Total cross-sectional area of winding pack without
 !! ground insulation and insertion gap [m2]
 
-   real(dp) :: a_tf_steel
+   real(dp) :: a_tf_coil_inboard_steel
 !! Inboard coil steel coil cross-sectional area [m2]
 
-   real(dp) :: a_tf_ins
+   real(dp) :: a_tf_coil_inboard_insulation
 !! Inboard coil insulation cross-section per coil [m2]
 
-   real(dp) :: f_tf_steel
+   real(dp) :: f_a_tf_coil_inboard_steel
 !! Inboard coil steel fraction [-]
 
-   real(dp) :: f_tf_ins
+   real(dp) :: f_a_tf_coil_inboard_insulation
 !! Inboard coil insulation fraction [-]
 
-   real(dp) :: h_cp_top
+   real(dp) :: z_cp_top
 !! Vertical distance from the midplane to the top of the tapered section [m]
 
    real(dp) :: r_tf_outboard_in
@@ -63,13 +62,13 @@ module sctfcoil_module
    real(dp) :: r_tf_outboard_out
 !! Radial position of outer edge of TF coil inboard leg [m]
 
-   real(dp) :: r_wp_inner
+   real(dp) :: r_tf_wp_inboard_inner
 !! Radial position of inner edge and centre of winding pack [m]
 
-   real(dp) :: r_wp_outer
+   real(dp) :: r_tf_wp_inboard_outer
 !! Radial position of outer edge and centre of winding pack [m]
 
-   real(dp) :: r_wp_centre
+   real(dp) :: r_tf_wp_inboard_centre
 !! Radial position of centre and centre of winding pack [m]
 
    real(dp) :: dr_tf_wp_top
@@ -85,22 +84,22 @@ module sctfcoil_module
    real(dp) :: vol_case_cp
 !! Volume of the CP outer casing cylinder
 
-   real(dp) :: t_wp_toroidal
+   real(dp) :: dx_tf_wp_toroidal_min
 !! Minimal toroidal thickness of of winding pack [m]
 
-   real(dp) :: t_wp_toroidal_av
+   real(dp) :: dx_tf_wp_toroidal_average
 !! Averaged toroidal thickness of of winding pack [m]
 
-   real(dp) :: t_lat_case_av
+   real(dp) :: dx_tf_side_case_average
 !! Average lateral casing thickness [m]
 
-   real(dp) :: a_case_front
+   real(dp) :: a_tf_plasma_case
 !! Front casing area [m2]
 
-   real(dp) :: a_case_nose
+   real(dp) :: a_tf_coil_nose_case
 !! Nose casing area [m2]
 
-   real(dp) :: a_ground_ins
+   real(dp) :: a_tf_wp_ground_insulation
 !! Inboard mid-plane cross-section area of the WP ground insulation [m2]
 
    real(dp) :: a_leg_ins
@@ -112,7 +111,7 @@ module sctfcoil_module
    real(dp) :: a_leg_cond
 !! Exact TF ouboard leg conductor area [m2]
 
-   real(dp) :: theta_coil
+   real(dp) :: rad_tf_coil_inboard_toroidal_half
 !! Half toroidal angular extent of a single TF coil inboard leg
 
    real(dp) :: tan_theta_coil
@@ -121,13 +120,13 @@ module sctfcoil_module
    real(dp) :: t_conductor_radial, t_conductor_toroidal
 !! Conductor area radial and toroidal dimension (integer turn only) [m]
 
-   real(dp) :: t_cable_radial, t_cable_toroidal
+   real(dp) :: dr_tf_turn_cable_space, dx_tf_turn_cable_space
 !! Cable area radial and toroidal dimension (integer turn only) [m]
 
-   real(dp) :: t_turn_radial, t_turn_toroidal
+   real(dp) :: dr_tf_turn, dx_tf_turn
 !! Turn radial and toroidal dimension (integer turn only) [m]
 
-   real(dp) :: t_cable
+   real(dp) :: dx_tf_turn_cable_space_average
 !! Cable area averaged dimension (square shape) [m]
 
    real(dp) :: vforce_inboard_tot
@@ -137,13 +136,6 @@ module sctfcoil_module
 
    real(dp) :: vv_stress_quench
    !! The Tresca stress experienced by the Vacuum Vessel when the SCTF coil quenches [Pa]
-
-
-   type(resistive_material), private :: copper
-   type(resistive_material), private :: hastelloy
-   type(resistive_material), private :: solder
-   type(resistive_material), private :: jacket
-   type(resistive_material), private :: helium
 
 ! croco_strand
    real(dp) :: croco_strand_area
@@ -162,7 +154,7 @@ module sctfcoil_module
    real(dp) :: conductor_area
 !! Area of cable space inside jacket
 
-   real(dp):: T1, time2, tau2, estotft
+   real(dp):: T1, time2, tau2, e_tf_magnetic_stored_total
 ! (OBSOLETE, but leave for moment)
 ! real (kind(1.0D0)) ::croco_quench_factor
 ! real(dp):: jwdgpro_1, jwdgpro_2,  etamax
@@ -170,72 +162,4 @@ module sctfcoil_module
 ! Var in tf_res_heating requiring re-initialisation on each new run
 ! Not sure what is really doing --> to be checked
    integer :: is_leg_cp_temp_same
-
-contains
-
-   subroutine init_sctfcoil_module
-      !! Initialise module variables
-      implicit none
-
-      is_leg_cp_temp_same = 0
-      tf_fit_t = 0.0D0
-      tf_fit_z = 0.0D0
-      tf_fit_y = 0.0D0
-      tfc_current = 0.0D0
-      awpc = 0.0D0
-      awptf = 0.0D0
-      a_tf_steel = 0.0D0
-      a_tf_ins = 0.0D0
-      f_tf_steel = 0.0D0
-      f_tf_ins = 0.0D0
-      h_cp_top = 0.0D0
-      r_tf_outboard_in = 0.0D0
-      r_tf_outboard_out = 0.0D0
-      r_wp_inner = 0.0D0
-      r_wp_outer = 0.0D0
-      r_wp_centre = 0.0D0
-      dr_tf_wp_top = 0.0D0
-      vol_ins_cp = 0.0d0
-      vol_gr_ins_cp = 0.0D0
-      vol_case_cp = 0.0D0
-      t_wp_toroidal = 0.0D0
-      t_wp_toroidal_av = 0.0D0
-      t_lat_case_av = 0.0D0
-      a_case_front = 0.0D0
-      a_case_nose = 0.0D0
-      a_ground_ins = 0.0D0
-      a_leg_ins = 0.0D0
-      a_leg_gr_ins = 0.0D0
-      a_leg_cond = 0.0D0
-      theta_coil = 0.0D0
-      tan_theta_coil = 0.0D0
-      t_conductor_radial = 0.0D0
-      t_conductor_toroidal = 0.0D0
-      t_cable_radial = 0.0D0
-      t_cable_toroidal = 0.0D0
-      t_turn_radial = 0.0D0
-      t_turn_toroidal = 0.0D0
-      t_cable = 0.0D0
-      vforce_inboard_tot = 0.0D0
-      T1 = 0.0D0
-      time2 = 0.0D0
-      tau2 = 0.0D0
-      estotft = 0.0D0
-   end subroutine init_sctfcoil_module
-
-! --------------------------------------------------------------------------
-   subroutine initialise_cables()
-      use rebco_variables, only: copper_rrr
-
-      implicit none
-
-      copper%rrr = copper_rrr
-      copper%density = 8960.0d0
-      hastelloy%density = 8890.0d0
-      ! Solder: 60EN ie 60%Sn + 40%Pb solder (approx the same as eutectic 63/37)
-      solder%density = 8400.0d0
-      jacket%density = 8000.0d0       ! 304 stainless
-   end subroutine initialise_cables
-! --------------------------------------------------------------------------
-
 end module sctfcoil_module

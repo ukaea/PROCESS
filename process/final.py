@@ -2,13 +2,13 @@
 
 from tabulate import tabulate
 
+import process.constraints as constraints
 from process import output as op
 from process import (
     process_output as po,
 )
 from process.fortran import (
     constants,
-    constraints,
     numerics,
 )
 from process.objectives import objective_function
@@ -34,7 +34,7 @@ def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
 
     # Output relevant to no optimisation
     if numerics.ioptimz == -2:
-        output_once_through()
+        output_evaluation()
 
     # Print non-idempotence warning to OUT.DAT only
     if non_idempotent_msg:
@@ -45,10 +45,10 @@ def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
     op.write(models, constants.nout)
 
 
-def output_once_through():
-    """Write output for a once-through run of PROCESS"""
+def output_evaluation():
+    """Write output for an evaluation run of PROCESS"""
     po.oheadr(constants.nout, "Numerics")
-    po.ocmmnt(constants.nout, "PROCESS has performed a run witout optimisation.")
+    po.ocmmnt(constants.nout, "PROCESS has performed an evaluation run.")
     po.oblnkl(constants.nout)
 
     # Evaluate objective function
@@ -67,20 +67,15 @@ def output_once_through():
         f2py_compatible_to_string(i)
         for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns] - 1]
     ]
-    units = [f2py_compatible_to_string(i) for i in units]
-    physical_constraint = [
-        f"{c} {u}" for c, u in zip(value.tolist(), units, strict=False)
-    ]
-    physical_residual = [
-        f"{c} {u}" for c, u in zip(residual.tolist(), units, strict=False)
-    ]
+    physical_constraint = [f"{c} {u}" for c, u in zip(value, units, strict=False)]
+    physical_residual = [f"{c} {u}" for c, u in zip(residual, units, strict=False)]
 
     table_data = {
         "Constraint Name": labels,
-        "Constraint Type": symbols.tolist(),
+        "Constraint Type": symbols,
         "Physical constraint": physical_constraint,
         "Constraint residual": physical_residual,
-        "Normalised residual": residual_error.tolist(),
+        "Normalised residual": residual_error,
     }
 
     po.write(constants.nout, tabulate(table_data, headers="keys"))

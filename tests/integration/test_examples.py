@@ -56,7 +56,7 @@ def test_scan(examples_temp_data):
     :type examples_temp_data: Path
     """
     scan_notebook_location = examples_temp_data / "scan.ipynb"
-    with testbook(scan_notebook_location, execute=True, timeout=600):
+    with testbook(scan_notebook_location, execute=True, timeout=1200):
         # Run entire scan.ipynb notebook and assert an MFILE is created
         assert os.path.exists(examples_temp_data / "data/scan_example_file_MFILE.DAT")
 
@@ -103,4 +103,18 @@ def test_plot_solutions(examples_temp_data):
     """
     plot_solutions_notebook_location = examples_temp_data / "plot_solutions.ipynb"
     with testbook(plot_solutions_notebook_location, execute=True, timeout=600):
+        pass
+
+
+def test_single_model_evaluation(examples_temp_data):
+    """Run single_model_evaluation.ipynb and check no exceptions are raised.
+
+    :param examples_temp_data: temporary dir containing examples files
+    :type examples_temp_data: Path
+
+    """
+    single_model_evaluation_notebook_location = (
+        examples_temp_data / "single_model_evaluation.ipynb"
+    )
+    with testbook(single_model_evaluation_notebook_location, execute=True, timeout=600):
         pass

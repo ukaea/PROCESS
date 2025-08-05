@@ -3,14 +3,13 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process.data_structure import pulse_variables
 from process.fortran import (
     constraint_variables,
     numerics,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
-    pulse_variables,
-    times_variables,
 )
 from process.pulse import Pulse
 
@@ -30,23 +29,23 @@ class TohswgParam(NamedTuple):
 
     vpfskv: Any = None
 
-    ncirt: Any = None
+    n_pf_cs_plasma_circuits: Any = None
 
-    ipfres: Any = None
+    i_pf_conductor: Any = None
 
-    nohc: Any = None
+    n_cs_pf_coils: Any = None
 
-    powohres: Any = None
+    p_cs_resistive_flat_top: Any = None
 
-    sxlg: Any = None
+    ind_pf_cs_plasma_mutual: Any = None
 
-    cpt: Any = None
+    c_pf_coil_turn: Any = None
 
-    ric: Any = None
+    c_pf_cs_coils_peak_ma: Any = None
 
-    turns: Any = None
+    n_pf_coil_turns: Any = None
 
-    cptdin: Any = None
+    c_pf_coil_turn_peak_input: Any = None
 
     plasma_current: Any = None
 
@@ -63,47 +62,17 @@ class TohswgParam(NamedTuple):
     expected_tohsmn: Any = None
 
 
-class BurnParam(NamedTuple):
-    res_plasma: Any = None
-
-    vs_plasma_res_ramp: Any = None
-
-    vs_plasma_ind_ramp: Any = None
-
-    vsbn: Any = None
-
-    vstot: Any = None
-
-    plasma_current: Any = None
-
-    inductive_current_fraction: Any = None
-
-    csawth: Any = None
-
-    i_pulsed_plant: Any = None
-
-    t_burn: Any = None
-
-    t_fusion_ramp: Any = None
-
-    outfile: Any = None
-
-    iprint: Any = None
-
-    expected_tburn: Any = None
-
-
 @pytest.mark.parametrize(
     "tohswgparam",
     (
         TohswgParam(
             t_current_ramp_up_min=0,
             vpfskv=0,
-            ncirt=8,
-            ipfres=0,
-            nohc=7,
-            powohres=0,
-            sxlg=np.array(
+            n_pf_cs_plasma_circuits=8,
+            i_pf_conductor=0,
+            n_cs_pf_coils=7,
+            p_cs_resistive_flat_top=0,
+            ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
                         2.4933245328128733,
@@ -314,7 +283,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -463,7 +432,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         14.742063826112572,
@@ -493,7 +462,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         349.33800535811781,
@@ -523,7 +492,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -657,11 +626,11 @@ class BurnParam(NamedTuple):
         TohswgParam(
             t_current_ramp_up_min=-526.67247746645455,
             vpfskv=20,
-            ncirt=8,
-            ipfres=0,
-            nohc=7,
-            powohres=0,
-            sxlg=np.array(
+            n_pf_cs_plasma_circuits=8,
+            i_pf_conductor=0,
+            n_cs_pf_coils=7,
+            p_cs_resistive_flat_top=0,
+            ind_pf_cs_plasma_mutual=np.array(
                 (
                     (
                         3.7857701742128254,
@@ -872,7 +841,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cpt=np.array(
+            c_pf_coil_turn=np.array(
                 (
                     (
                         0,
@@ -1021,7 +990,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            ric=np.array(
+            c_pf_cs_coils_peak_ma=np.array(
                 np.array(
                     (
                         18.585545191033798,
@@ -1051,7 +1020,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            turns=np.array(
+            n_pf_coil_turns=np.array(
                 np.array(
                     (
                         440.41576282070616,
@@ -1081,7 +1050,7 @@ class BurnParam(NamedTuple):
                 ),
                 order="F",
             ).transpose(),
-            cptdin=np.array(
+            c_pf_coil_turn_peak_input=np.array(
                 np.array(
                     (
                         42200,
@@ -1233,23 +1202,37 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
     monkeypatch.setattr(pf_power_variables, "vpfskv", tohswgparam.vpfskv)
 
-    monkeypatch.setattr(pfcoil_variables, "ncirt", tohswgparam.ncirt)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_cs_plasma_circuits", tohswgparam.n_pf_cs_plasma_circuits
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "ipfres", tohswgparam.ipfres)
+    monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", tohswgparam.i_pf_conductor)
 
-    monkeypatch.setattr(pfcoil_variables, "nohc", tohswgparam.nohc)
+    monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", tohswgparam.n_cs_pf_coils)
 
-    monkeypatch.setattr(pfcoil_variables, "powohres", tohswgparam.powohres)
+    monkeypatch.setattr(
+        pfcoil_variables, "p_cs_resistive_flat_top", tohswgparam.p_cs_resistive_flat_top
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "sxlg", tohswgparam.sxlg)
+    monkeypatch.setattr(
+        pfcoil_variables, "ind_pf_cs_plasma_mutual", tohswgparam.ind_pf_cs_plasma_mutual
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "cpt", tohswgparam.cpt)
+    monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", tohswgparam.c_pf_coil_turn)
 
-    monkeypatch.setattr(pfcoil_variables, "ric", tohswgparam.ric)
+    monkeypatch.setattr(
+        pfcoil_variables, "c_pf_cs_coils_peak_ma", tohswgparam.c_pf_cs_coils_peak_ma
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "turns", tohswgparam.turns)
+    monkeypatch.setattr(
+        pfcoil_variables, "n_pf_coil_turns", tohswgparam.n_pf_coil_turns
+    )
 
-    monkeypatch.setattr(pfcoil_variables, "cptdin", tohswgparam.cptdin)
+    monkeypatch.setattr(
+        pfcoil_variables,
+        "c_pf_coil_turn_peak_input",
+        tohswgparam.c_pf_coil_turn_peak_input,
+    )
 
     monkeypatch.setattr(physics_variables, "plasma_current", tohswgparam.plasma_current)
 
@@ -1267,85 +1250,23 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
 
 @pytest.mark.parametrize(
-    "burnparam",
-    (
-        BurnParam(
-            res_plasma=3.2347283861249307e-09,
-            vs_plasma_res_ramp=59.392760827339345,
-            vs_plasma_ind_ramp=284.23601098215397,
-            vsbn=0,
-            vstot=-718.91787876294552,
-            plasma_current=17721306.969367817,
-            inductive_current_fraction=0.60433999999999999,
-            csawth=1,
-            i_pulsed_plant=1,
-            t_burn=0,
-            t_fusion_ramp=10,
-            outfile=11,
-            iprint=0,
-            expected_tburn=0,
-        ),
-        BurnParam(
-            res_plasma=3.2347283861249307e-09,
-            vs_plasma_res_ramp=59.392760827339345,
-            vs_plasma_ind_ramp=284.23601098215397,
-            vstot=-718.9849676846776,
-            vsbn=-354.76231817639609,
-            plasma_current=17721306.969367817,
-            inductive_current_fraction=0.60433999999999999,
-            csawth=1,
-            i_pulsed_plant=1,
-            t_burn=10234.092022756307,
-            t_fusion_ramp=10,
-            outfile=11,
-            iprint=0,
-            expected_tburn=10230.533336387545,
-        ),
-    ),
+    "vs_cs_pf_total_burn, v_plasma_loop_burn, t_fusion_ramp, expected",
+    [
+        (100.0, 10.0, 2.0, 8.0),
+        (-100.0, 10.0, 2.0, 8.0),  # abs() should be used
+        (50.0, 5.0, 0.0, 10.0),
+    ],
 )
-def test_burn(burnparam, monkeypatch, initialise_error_module, pulse):
-    """
-    Automatically generated Regression Unit Test for burn.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param burnparam: the data used to mock and assert in this test.
-    :type burnparam: burnparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-    """
-
-    monkeypatch.setattr(physics_variables, "res_plasma", burnparam.res_plasma)
-
-    monkeypatch.setattr(
-        physics_variables, "vs_plasma_res_ramp", burnparam.vs_plasma_res_ramp
+def test_calculate_burn_time_valid(
+    vs_cs_pf_total_burn,
+    v_plasma_loop_burn,
+    t_fusion_ramp,
+    expected,
+):
+    pulse = Pulse()
+    result = pulse.calculate_burn_time(
+        vs_cs_pf_total_burn=vs_cs_pf_total_burn,
+        v_plasma_loop_burn=v_plasma_loop_burn,
+        t_fusion_ramp=t_fusion_ramp,
     )
-
-    monkeypatch.setattr(
-        physics_variables, "vs_plasma_ind_ramp", burnparam.vs_plasma_ind_ramp
-    )
-
-    monkeypatch.setattr(pfcoil_variables, "vstot", burnparam.vstot)
-
-    monkeypatch.setattr(pfcoil_variables, "vsbn", burnparam.vsbn)
-
-    monkeypatch.setattr(physics_variables, "plasma_current", burnparam.plasma_current)
-
-    monkeypatch.setattr(
-        physics_variables,
-        "inductive_current_fraction",
-        burnparam.inductive_current_fraction,
-    )
-
-    monkeypatch.setattr(physics_variables, "csawth", burnparam.csawth)
-
-    monkeypatch.setattr(pulse_variables, "i_pulsed_plant", burnparam.i_pulsed_plant)
-
-    monkeypatch.setattr(times_variables, "t_burn", burnparam.t_burn)
-
-    monkeypatch.setattr(times_variables, "t_fusion_ramp", burnparam.t_fusion_ramp)
-
-    pulse.burn(output=True)
-
-    assert times_variables.t_burn == pytest.approx(burnparam.expected_tburn)
+    assert result == expected

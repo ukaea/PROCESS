@@ -3,12 +3,11 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.buildings import Buildings
+from process.data_structure import cost_variables, divertor_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
-    cost_variables,
     current_drive_variables,
-    divertor_variables,
     fwbs_variables,
     pfcoil_variables,
     physics_variables,
@@ -28,7 +27,7 @@ def buildings():
 
 class BldgsSizesParam(NamedTuple):
     i_bldgs_v: Any
-    efloor: Any
+    a_plant_floor_effective: Any
     volnucb: Any
     bioshld_thk: Any
     reactor_wall_thk: Any
@@ -130,21 +129,21 @@ class BldgsSizesParam(NamedTuple):
     qnty_sfty_fac: Any
     hotcell_h: Any
     hot_sepdist: Any
-    iefrf: Any
+    i_hcd_primary: Any
     n_tf_coils: Any
     i_tf_sup: Any
-    pfrmax: Any
+    r_pf_coil_outer_max: Any
     tlife: Any
     cplife: Any
     divlife: Any
     r_cryostat_inboard: Any
-    bktlife: Any
-    hmax: Any
+    life_blkt_fpy: Any
+    z_tf_inside_half: Any
     dr_tf_inboard: Any
     dr_tf_shld_gap: Any
     dr_shld_thermal_inboard: Any
     dr_shld_thermal_outboard: Any
-    thshield_vb: Any
+    dz_shld_thermal: Any
     dr_shld_inboard: Any
     dr_shld_outboard: Any
     dr_fw_plasma_gap_inboard: Any
@@ -154,7 +153,7 @@ class BldgsSizesParam(NamedTuple):
     dr_blkt_inboard: Any
     dr_blkt_outboard: Any
     r_cp_top: Any
-    divfix: Any
+    dz_divertor: Any
     rmajor: Any
     rminor: Any
     tf_radial_dim: Any
@@ -171,7 +170,7 @@ class BldgsSizesParam(NamedTuple):
     (
         BldgsSizesParam(
             i_bldgs_v=0,
-            efloor=0,
+            a_plant_floor_effective=0,
             volnucb=0,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
@@ -273,21 +272,21 @@ class BldgsSizesParam(NamedTuple):
             qnty_sfty_fac=2,
             hotcell_h=12,
             hot_sepdist=2,
-            iefrf=10,
+            i_hcd_primary=10,
             n_tf_coils=16,
             i_tf_sup=1,
-            pfrmax=18.98258241468535,
+            r_pf_coil_outer_max=18.98258241468535,
             tlife=40,
             cplife=0,
             divlife=0,
             r_cryostat_inboard=19.48258241468535,
-            bktlife=0,
-            hmax=9.0730900215620327,
+            life_blkt_fpy=0,
+            z_tf_inside_half=9.0730900215620327,
             dr_tf_inboard=1.208,
             dr_tf_shld_gap=0.05000000000000001,
             dr_shld_thermal_inboard=0.050000000000000003,
             dr_shld_thermal_outboard=0.050000000000000003,
-            thshield_vb=0.050000000000000003,
+            dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             dr_fw_plasma_gap_inboard=0.22500000000000003,
@@ -297,7 +296,7 @@ class BldgsSizesParam(NamedTuple):
             dr_blkt_inboard=0.75500000000000012,
             dr_blkt_outboard=0.98199999999999998,
             r_cp_top=4.20194118510911,
-            divfix=0.62100000000000011,
+            dz_divertor=0.62100000000000011,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
             tf_radial_dim=14.129464674334221,
@@ -310,7 +309,7 @@ class BldgsSizesParam(NamedTuple):
         ),
         BldgsSizesParam(
             i_bldgs_v=0,
-            efloor=1539392.0963074313,
+            a_plant_floor_effective=1539392.0963074313,
             volnucb=5212998.1139194397,
             bioshld_thk=2.5,
             reactor_wall_thk=2,
@@ -412,21 +411,21 @@ class BldgsSizesParam(NamedTuple):
             qnty_sfty_fac=2,
             hotcell_h=12,
             hot_sepdist=2,
-            iefrf=10,
+            i_hcd_primary=10,
             n_tf_coils=16,
             i_tf_sup=1,
-            pfrmax=18.982980877139834,
+            r_pf_coil_outer_max=18.982980877139834,
             tlife=40,
             cplife=0,
             divlife=6.1337250397740126,
             r_cryostat_inboard=19.482980877139834,
-            bktlife=19.216116010620578,
-            hmax=9.0730900215620327,
+            life_blkt_fpy=19.216116010620578,
+            z_tf_inside_half=9.0730900215620327,
             dr_tf_inboard=1.208,
             dr_tf_shld_gap=0.05000000000000001,
             dr_shld_thermal_inboard=0.050000000000000003,
             dr_shld_thermal_outboard=0.050000000000000003,
-            thshield_vb=0.050000000000000003,
+            dz_shld_thermal=0.050000000000000003,
             dr_shld_inboard=0.30000000000000004,
             dr_shld_outboard=0.80000000000000004,
             dr_fw_plasma_gap_inboard=0.22500000000000003,
@@ -436,7 +435,7 @@ class BldgsSizesParam(NamedTuple):
             dr_blkt_inboard=0.75500000000000012,
             dr_blkt_outboard=0.98199999999999998,
             r_cp_top=4.20194118510911,
-            divfix=0.62100000000000011,
+            dz_divertor=0.62100000000000011,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
             tf_radial_dim=14.129464674334221,
@@ -451,7 +450,11 @@ class BldgsSizesParam(NamedTuple):
 )
 def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "i_bldgs_v", bldgssizesparam.i_bldgs_v)
-    monkeypatch.setattr(buildings_variables, "efloor", bldgssizesparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        bldgssizesparam.a_plant_floor_effective,
+    )
     monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
@@ -671,18 +674,24 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     )
     monkeypatch.setattr(buildings_variables, "hotcell_h", bldgssizesparam.hotcell_h)
     monkeypatch.setattr(buildings_variables, "hot_sepdist", bldgssizesparam.hot_sepdist)
-    monkeypatch.setattr(current_drive_variables, "iefrf", bldgssizesparam.iefrf)
+    monkeypatch.setattr(
+        current_drive_variables, "i_hcd_primary", bldgssizesparam.i_hcd_primary
+    )
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", bldgssizesparam.n_tf_coils)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", bldgssizesparam.i_tf_sup)
-    monkeypatch.setattr(pfcoil_variables, "pfrmax", bldgssizesparam.pfrmax)
+    monkeypatch.setattr(
+        pfcoil_variables, "r_pf_coil_outer_max", bldgssizesparam.r_pf_coil_outer_max
+    )
     monkeypatch.setattr(cost_variables, "tlife", bldgssizesparam.tlife)
     monkeypatch.setattr(cost_variables, "cplife", bldgssizesparam.cplife)
     monkeypatch.setattr(cost_variables, "divlife", bldgssizesparam.divlife)
     monkeypatch.setattr(
         fwbs_variables, "r_cryostat_inboard", bldgssizesparam.r_cryostat_inboard
     )
-    monkeypatch.setattr(fwbs_variables, "bktlife", bldgssizesparam.bktlife)
-    monkeypatch.setattr(build_variables, "hmax", bldgssizesparam.hmax)
+    monkeypatch.setattr(fwbs_variables, "life_blkt_fpy", bldgssizesparam.life_blkt_fpy)
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", bldgssizesparam.z_tf_inside_half
+    )
     monkeypatch.setattr(build_variables, "dr_tf_inboard", bldgssizesparam.dr_tf_inboard)
     monkeypatch.setattr(
         build_variables, "dr_tf_shld_gap", bldgssizesparam.dr_tf_shld_gap
@@ -697,7 +706,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         "dr_shld_thermal_outboard",
         bldgssizesparam.dr_shld_thermal_outboard,
     )
-    monkeypatch.setattr(build_variables, "thshield_vb", bldgssizesparam.thshield_vb)
+    monkeypatch.setattr(
+        build_variables, "dz_shld_thermal", bldgssizesparam.dz_shld_thermal
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_inboard", bldgssizesparam.dr_shld_inboard
     )
@@ -725,7 +736,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         build_variables, "dr_blkt_outboard", bldgssizesparam.dr_blkt_outboard
     )
     monkeypatch.setattr(build_variables, "r_cp_top", bldgssizesparam.r_cp_top)
-    monkeypatch.setattr(divertor_variables, "divfix", bldgssizesparam.divfix)
+    monkeypatch.setattr(divertor_variables, "dz_divertor", bldgssizesparam.dz_divertor)
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 
@@ -769,7 +780,7 @@ class BldgsParam(NamedTuple):
     pfbldgm3: Any
     esbldgm3: Any
     pibv: Any
-    efloor: Any
+    a_plant_floor_effective: Any
     admvol: Any
     triv: Any
     conv: Any
@@ -794,7 +805,7 @@ class BldgsParam(NamedTuple):
     crr: Any
     helpow: Any
     expected_wrbi: Any
-    expected_efloor: Any
+    expected_a_plant_floor_effective: Any
     expected_admvol: Any
     expected_shovol: Any
     expected_convol: Any
@@ -833,7 +844,7 @@ class BldgsParam(NamedTuple):
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
-            efloor=0,
+            a_plant_floor_effective=0,
             admvol=0,
             triv=40000,
             conv=60000,
@@ -858,7 +869,7 @@ class BldgsParam(NamedTuple):
             crr=19.48258241468535,
             helpow=77840.021662652987,
             expected_wrbi=42.612047089019569,
-            expected_efloor=379235.17804514873,
+            expected_a_plant_floor_effective=379235.17804514873,
             expected_admvol=100000,
             expected_shovol=100000,
             expected_convol=60000,
@@ -893,7 +904,7 @@ class BldgsParam(NamedTuple):
             pfbldgm3=20000,
             esbldgm3=1000,
             pibv=20000,
-            efloor=379235.17804514873,
+            a_plant_floor_effective=379235.17804514873,
             admvol=100000,
             triv=40000,
             conv=60000,
@@ -918,7 +929,7 @@ class BldgsParam(NamedTuple):
             crr=19.482980877139834,
             helpow=221493.99746816326,
             expected_wrbi=42.612445551474053,
-            expected_efloor=381590.59475257091,
+            expected_a_plant_floor_effective=381590.59475257091,
             expected_admvol=100000,
             expected_shovol=100000,
             expected_convol=60000,
@@ -957,7 +968,11 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "pfbldgm3", bldgsparam.pfbldgm3)
     monkeypatch.setattr(buildings_variables, "esbldgm3", bldgsparam.esbldgm3)
     monkeypatch.setattr(buildings_variables, "pibv", bldgsparam.pibv)
-    monkeypatch.setattr(buildings_variables, "efloor", bldgsparam.efloor)
+    monkeypatch.setattr(
+        buildings_variables,
+        "a_plant_floor_effective",
+        bldgsparam.a_plant_floor_effective,
+    )
     monkeypatch.setattr(buildings_variables, "admvol", bldgsparam.admvol)
     monkeypatch.setattr(buildings_variables, "triv", bldgsparam.triv)
     monkeypatch.setattr(buildings_variables, "conv", bldgsparam.conv)
@@ -985,7 +1000,9 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     )
 
     assert buildings_variables.wrbi == pytest.approx(bldgsparam.expected_wrbi)
-    assert buildings_variables.efloor == pytest.approx(bldgsparam.expected_efloor)
+    assert buildings_variables.a_plant_floor_effective == pytest.approx(
+        bldgsparam.expected_a_plant_floor_effective
+    )
     assert buildings_variables.admvol == pytest.approx(bldgsparam.expected_admvol)
     assert buildings_variables.shovol == pytest.approx(bldgsparam.expected_shovol)
     assert buildings_variables.convol == pytest.approx(bldgsparam.expected_convol)

@@ -48,24 +48,32 @@ from pathlib import Path
 from typing import Protocol
 
 import process
+import process.data_structure as data_structure
+import process.fortran as fortran
 import process.init as init
-from process import fortran
 from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.build import Build
 from process.buildings import Buildings
-from process.caller import write_output_files
 from process.costs import Costs
 from process.costs_2015 import Costs2015
+from process.cryostat import Cryostat
 from process.cs_fatigue import CsFatigue
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.dcll import DCLL
 from process.divertor import Divertor
 from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
-from process.io import mfile, plot_proc
+from process.io import mfile, plot_proc, plot_radial_build, plot_sankey
 from process.io import obsolete_vars as ov
 
 # For VaryRun
@@ -85,11 +93,12 @@ from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
 from process.pulse import Pulse
+from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
-from process.sctfcoil import Sctfcoil
 from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
-from process.tfcoil import TFcoil
+from process.superconducting_tf_coil import SuperconductingTFCoil
+from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
@@ -177,7 +186,6 @@ class Process:
             default="run_process.conf",
             help="configuration file for varying iteration parameters",
         )
-        parser.add_argument("-p", "--plot", action="store_true", help="plot an mfile")
         parser.add_argument(
             "-m",
             "--mfile",
@@ -199,6 +207,11 @@ class Process:
             "--update-obsolete",
             action="store_true",
             help="Automatically update obsolete variables in the IN.DAT file",
+        )
+        parser.add_argument(
+            "--full-output",
+            action="store_true",
+            help="Run all summary plotting scripts for the output",
         )
 
         # If args is not None, then parse the supplied arguments. This is likely
@@ -230,22 +243,23 @@ class Process:
         # TODO Currently, Process will always run on an input file beforehand.
         # It would be better to not require this, so just plot_proc could be
         # run, for example.
-        if self.args.plot:
-            # Check mfile exists, then plot
-            mfile_path = Path(self.args.mfile)
-            mfile_str = str(mfile_path.resolve())
-            if mfile_path.exists():
-                # TODO Get --show arg to work: actually show the plot, don't
-                # just save it
-                plot_proc.main(args=["-f", mfile_str])
-            else:
-                logger.error("mfile to be used for plotting doesn't exist")
         if self.args.mfilejson:
             # Produce a json file containing mfile output, useful for VVUQ work.
             mfile_path = Path(self.args.mfile)
             mfile_data = mfile.MFile(filename=mfile_path)
             mfile_data.open_mfile()
             mfile_data.write_to_json()
+        if self.args.full_output:
+            # Run all summary plotting scripts for the output
+            mfile_path = Path(str(self.args.input).replace("IN.DAT", "MFILE.DAT"))
+            mfile_str = str(mfile_path.resolve())
+            print(f"Plotting mfile {mfile_str}")
+            if mfile_path.exists():
+                plot_proc.main(args=["-f", mfile_str])
+                plot_radial_build.main(args=["-f", mfile_str, "-nm"])
+                plot_sankey.main(args=["-m", mfile_str])
+            else:
+                logger.error("mfile to be used for plotting doesn't exist")
 
 
 class VaryRun:
@@ -379,8 +393,7 @@ class SingleRun:
         This is separate from init to allow model instances to be modified before a run.
         """
         self.validate_user_model()
-        self.call_solver()
-        self.run_scan(self.solver)
+        self.run_scan()
         self.finish()
         self.append_input()
 
@@ -455,38 +468,22 @@ class SingleRun:
         # [:n] as array always at max size: contains 0s
         fortran.numerics.ixc[:n].sort()
 
-    def call_solver(self):
-        """Call the equation solver (HYBRD)."""
-        # If no HYBRD (non-optimisation) runs are required, return
-        if (fortran.numerics.ioptimz > 0) or (fortran.numerics.ioptimz == -2):
-            return
-        # eqslv() has been temporarily commented out. Please see the comment
-        # in fortran.function_evaluator.fcnhyb() for an explanation.
-        # Original call:
-        # self.ifail = fortran.main_module.eqslv()
-        raise NotImplementedError("HYBRD non-optimisation solver is not implemented")
-
-    def run_scan(self, solver):
-        """Create scan object if required.
-
-        :param solver: which solver to use, as specified in solver.py
-        :type solver: str
-        """
+    def run_scan(self):
+        """Create scan object if required."""
+        # TODO Move this solver logic up to init?
+        # ioptimz == 1: optimisation
         if fortran.numerics.ioptimz == 1:
-            # VMCON optimisation
-            self.scan = Scan(self.models, solver)
+            pass
+        # ioptimz == -2: evaluation
         elif fortran.numerics.ioptimz == -2:
-            # No optimisation: compute the output variables now
-            # Get optimisation parameters x, evaluate models
-            fortran.define_iteration_variables.loadxc()
-            self.ifail = 6
-            write_output_files(models=self.models, ifail=self.ifail)
-            self.show_errors()
+            # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
+            self.solver = "fsolve"
         else:
             raise ValueError(
                 f"Invalid ioptimz value: {fortran.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
+        self.scan = Scan(self.models, self.solver)
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
@@ -654,9 +651,13 @@ class Models:
         self.cs_fatigue = CsFatigue()
         self.pfcoil = PFCoil(cs_fatigue=self.cs_fatigue)
         self.power = Power()
+        self.cryostat = Cryostat()
         self.build = Build()
-        self.sctfcoil = Sctfcoil()
-        self.tfcoil = TFcoil(build=self.build, sctfcoil=self.sctfcoil)
+        self.sctfcoil = SuperconductingTFCoil()
+        self.tfcoil = TFCoil(build=self.build)
+        self.resistive_tf_coil = ResistiveTFCoil()
+        self.copper_tf_coil = CopperTFCoil()
+        self.aluminium_tf_coil = AluminiumTFCoil()
         self.divertor = Divertor()
         self.structure = Structure()
         self.plasma_geom = PlasmaGeom()
@@ -669,8 +670,15 @@ class Models:
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
-        self.ccfe_hcpb = CCFE_HCPB(blanket_library=self.blanket_library)
-        self.current_drive = CurrentDrive(plasma_profile=self.plasma_profile)
+        self.ccfe_hcpb = CCFE_HCPB()
+        self.current_drive = CurrentDrive(
+            plasma_profile=self.plasma_profile,
+            electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
+            ion_cyclotron=IonCyclotron(plasma_profile=self.plasma_profile),
+            lower_hybrid=LowerHybrid(plasma_profile=self.plasma_profile),
+            neutral_beam=NeutralBeam(plasma_profile=self.plasma_profile),
+            electron_bernstein=ElectronBernstein(plasma_profile=self.plasma_profile),
+        )
         self.physics = Physics(
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
@@ -687,15 +695,15 @@ class Models:
             physics=self.physics,
             neoclassics=self.neoclassics,
         )
-        self.dcll = DCLL(blanket_library=self.blanket_library)
+        self.dcll = DCLL()
 
     @property
     def costs(self) -> CostsProtocol:
-        if fortran.cost_variables.cost_model == 0:
+        if data_structure.cost_variables.cost_model == 0:
             return self._costs_1990
-        if fortran.cost_variables.cost_model == 1:
+        if data_structure.cost_variables.cost_model == 1:
             return self._costs_2015
-        if fortran.cost_variables.cost_model == 2:
+        if data_structure.cost_variables.cost_model == 2:
             if self._costs_custom is not None:
                 return self._costs_custom
             raise ValueError("Custom costs model not initialised")

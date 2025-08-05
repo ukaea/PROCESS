@@ -7,7 +7,8 @@ from pathlib import Path
 import numpy as np
 from scipy import integrate
 
-from process.fortran import constants, error_handling, impurity_radiation_module
+from process.exceptions import ProcessError, ProcessValueError
+from process.fortran import constants, impurity_radiation_module
 
 logger = logging.getLogger(__name__)
 
@@ -246,9 +247,11 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
         return
 
     if no > len(impurity_radiation_module.impurity_arr_label):
-        error_handling.idiags[0] = no
-        error_handling.idiags[1] = len(impurity_radiation_module.impurity_arr_label)
-        error_handling.report_error(27)
+        raise ProcessValueError(
+            "Illegal impurity number",
+            number=no,
+            max=len(impurity_radiation_module.impurity_arr_label),
+        )
 
     impurity_radiation_module.impurity_arr_label[no - 1] = label
     impurity_radiation_module.impurity_arr_z[no - 1] = z
@@ -286,9 +289,9 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
             lz = np.asarray(header.data, dtype=float)
 
     if Te is None:
-        raise RuntimeError(f"Cannot locate Te data in {lz_file}")
+        raise ProcessError(f"Cannot locate Te data in {lz_file}")
     if lz is None:
-        raise RuntimeError(
+        raise ProcessError(
             f"Cannot locate Lz for infinite confinement data in {lz_file}"
         )
 
@@ -298,7 +301,7 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
             zav = np.asarray(header.data, dtype=float)
 
     if zav is None:
-        raise RuntimeError(
+        raise ProcessError(
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 
@@ -313,28 +316,25 @@ def z2index(zimp):
             return i
 
     # Should only get here if there is a problem
-
-    error_handling.idiags[0] = zimp
-    error_handling.report_error(33)
-
-    # Explicit return
-    return None
+    raise ProcessValueError(
+        "Element with the given charge is not in the impurity array", zimp=zimp
+    )
 
 
-def fradcore(rho, coreradius, coreradiationfraction):
+def fradcore(rho, radius_plasma_core_norm, coreradiationfraction):
     """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
 
     :param rho: normalised minor radius
     :type rho: numpy.array
-    :param coreradius: normalised radius defining the 'core' region
-    :type coreradius: float
+    :param radius_plasma_core_norm: normalised radius defining the 'core' region
+    :type radius_plasma_core_norm: float
     :param coreradiationfraction: fraction of radiation from the core region
     :type coreradiationfraction: float
     :return: fradcore - array filled with the coreradiationfraction
     :rtype: numpy.array
     """
     fradcore = np.zeros(len(rho))
-    rho_mask = rho < coreradius
+    rho_mask = rho < radius_plasma_core_norm
     fradcore[rho_mask] = coreradiationfraction
 
     return fradcore
@@ -441,10 +441,6 @@ def pimpden(imp_element_index, neprofile, teprofile):
     pimpden[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
         imp_element_index, 0
     ]
-    # if not impurity_radiation_module.toolow:  # Only print warning once during a run
-    #     impurity_radiation_module.toolow = True
-    #     error_handling.fdiags[0] = teprofile
-    #     error_handling.report_error(35)
 
     greater_than_imp_temp_mask = (
         teprofile
@@ -473,7 +469,9 @@ def element2index(element: str):
             .index(element)
         )
     except ValueError as e:
-        raise ValueError(f"Element {element} is not found in impurity_arr_label") from e
+        raise ProcessValueError(
+            f"Element {element} is not found in impurity_arr_label"
+        ) from e
 
 
 class ImpurityRadiation:
@@ -541,7 +539,7 @@ class ImpurityRadiation:
             self.rho
             * fradcore(
                 self.rho,
-                impurity_radiation_module.coreradius,
+                impurity_radiation_module.radius_plasma_core_norm,
                 impurity_radiation_module.coreradiationfraction,
             )
         )
@@ -567,3 +565,47 @@ class ImpurityRadiation:
         self.map_imprad_profile()
         self.calculate_radiation_loss_profiles()
         self.integrate_radiation_loss_profiles()
+
+
+def init_impurity_radiation_module():
+    impurity_radiation_module.radius_plasma_core_norm = 0.6
+    impurity_radiation_module.coreradiationfraction = 1.0
+    impurity_radiation_module.fimp = [
+        1.0,
+        0.1,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    ]
+    impurity_radiation_module.imp_label = [
+        "H_",
+        "He",
+        "Be",
+        "C_",
+        "N_",
+        "O_",
+        "Ne",
+        "Si",
+        "Ar",
+        "Fe",
+        "Ni",
+        "Kr",
+        "Xe",
+        "W_",
+    ]
+    impurity_radiation_module.impurity_arr_label[:] = "  "
+    impurity_radiation_module.impurity_arr_z[:] = 0
+    impurity_radiation_module.impurity_arr_amass[:] = 0.0
+    impurity_radiation_module.impurity_arr_len_tab[:] = 0.0
+    impurity_radiation_module.impurity_arr_temp_kev[:] = 0.0
+    impurity_radiation_module.impurity_arr_lz_wm3[:] = 0.0
+    impurity_radiation_module.impurity_arr_zav[:] = 0.0

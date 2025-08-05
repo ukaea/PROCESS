@@ -1,14 +1,13 @@
 import numpy as np
 
+from process.data_structure import cost_variables, divertor_variables, times_variables
+from process.exceptions import ProcessValueError
 from process.fortran import (
-    cost_variables,
     current_drive_variables,
-    divertor_variables,
     heat_transport_variables,
     pf_power_variables,
     physics_variables,
     tfcoil_variables,
-    times_variables,
 )
 
 OBJECTIVE_NAMES = {
@@ -65,15 +64,15 @@ def objective_function(minmax: int) -> float:
         case 1:
             objective_metric = 0.2 * physics_variables.rmajor
         case 3:
-            objective_metric = physics_variables.wallmw
+            objective_metric = physics_variables.pflux_fw_neutron_mw
         case 4:
             objective_metric = (
                 tfcoil_variables.tfcmw + 1e-3 * pf_power_variables.srcktpm
             ) / 10.0
         case 5:
-            objective_metric = physics_variables.fusion_power / (
-                current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+            objective_metric = physics_variables.p_fusion_total_mw / (
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
         case 6:
@@ -87,23 +86,23 @@ def objective_function(minmax: int) -> float:
         case 8:
             objective_metric = physics_variables.aspect
         case 9:
-            objective_metric = divertor_variables.hldiv
+            objective_metric = divertor_variables.pflux_div_heat_load_mw
         case 10:
             objective_metric = physics_variables.bt
         case 11:
-            objective_metric = current_drive_variables.pinjmw
+            objective_metric = current_drive_variables.p_hcd_injected_total_mw
         case 14:
             objective_metric = times_variables.t_burn / 2.0e4
         case 15:
             if cost_variables.iavail != 1:
-                raise ValueError("minmax=15 requires iavail=1")
+                raise ProcessValueError("minmax=15 requires iavail=1")
             objective_metric = cost_variables.cfactr
         case 16:
             objective_metric = 0.95 * (physics_variables.rmajor / 9.0) - 0.05 * (
                 times_variables.t_burn / 7200.0
             )
         case 17:
-            objective_metric = heat_transport_variables.pnetelmw / 500.0
+            objective_metric = heat_transport_variables.p_plant_electric_net_mw / 500.0
         case 18:
             objective_metric = 1.0
         case 19:

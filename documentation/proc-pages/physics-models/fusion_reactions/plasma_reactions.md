@@ -11,8 +11,8 @@ $$
 
 Roughly 20% of the energy produced is given to the alpha particles (\(^4\)He). The remaining 80% is carried
 away by the neutrons, which deposit their energy within the blanket and shield and other reactor components.
-The fraction of the alpha energy deposited in the plasma is [`f_alpha_plasma`](#coupled-alpha-particle-power).
-**`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
+The fraction of the alpha energy deposited in the plasma is [`f_p_alpha_plasma_deposited`](#coupled-alpha-particle-power).
+
 
 PROCESS can also model D-\(^3\)He power plants, which utilise the following
 primary fusion reaction:
@@ -79,12 +79,12 @@ Initialize the FusionReactionRate class with the given plasma profile.
 
 #### Attributes:
 - `plasma_profile (PlasmaProfile)`: The parameterized temperature and density profiles of the plasma.
-- `sigmav_dt_average (float)`: Average fusion reaction rate $<\sigma v>$ for D-T.
+- `sigmav_dt_average (float)`: Average fusion reaction rate $\langle \sigma v \rangle$ for D-T.
 - `dhe3_power_density (float)`: Fusion power density produced by the D-3He reaction.
 - `dd_power_density (float)`: Fusion power density produced by the D-D reactions.
 - `dt_power_density (float)`: Fusion power density produced by the D-T reaction.
 - `alpha_power_density (float)`: Power density of alpha particles produced.
-- `charged_power_density (float)`: Power density of charged particles produced.
+- `pden_non_alpha_charged_mw (float)`: Power density of charged particles produced.
 - `neutron_power_density (float)`: Power density of neutrons produced.
 - `fusion_rate_density (float)`: Fusion reaction rate density.
 - `alpha_rate_density (float)`: Alpha particle production rate density.
@@ -137,7 +137,7 @@ The method updates the following attributes:
 - `self.sigmav_dt_average`: Average fusion reaction rate `<sigma v>` for D-T.
 - `self.dt_power_density`: Fusion power density produced by the D-T reaction.
 - `self.alpha_power_density`: Power density of alpha particles produced.
-- `self.charged_power_density`: Power density of charged particles produced.
+- `self.pden_non_alpha_charged_mw`: Power density of charged particles produced.
 - `self.neutron_power_density`: Power density of neutrons produced.
 - `self.fusion_rate_density`: Fusion reaction rate density.
 - `self.alpha_rate_density`: Alpha particle production rate density.
@@ -180,11 +180,11 @@ It updates the instance attributes for the cumulative power densities and reacti
 This method sets the required physics variables in the `physics_variables` and `physics_module` modules. It updates the global physics variables and module variables with the current instance's fusion power densities and reaction rates.
 
 #### Updates:
-- `physics_variables.alpha_power_density_plasma`: Updated with `self.alpha_power_density`
-- `physics_variables.charged_power_density`: Updated with `self.charged_power_density`
-- `physics_variables.neutron_power_density_plasma`: Updated with `self.neutron_power_density`
-- `physics_variables.fusion_rate_density_plasma`: Updated with `self.fusion_rate_density`
-- `physics_variables.alpha_rate_density_plasma`: Updated with `self.alpha_rate_density`
+- `physics_variables.pden_plasma_alpha_mw`: Updated with `self.alpha_power_density`
+- `physics_variables.pden_non_alpha_charged_mw`: Updated with `self.pden_non_alpha_charged_mw`
+- `physics_variables.pden_plasma_neutron_mw`: Updated with `self.neutron_power_density`
+- `physics_variables.fusden_plasma`: Updated with `self.fusion_rate_density`
+- `physics_variables.fusden_plasma_alpha`: Updated with `self.alpha_rate_density`
 - `physics_variables.proton_rate_density`: Updated with `self.proton_rate_density`
 - `physics_module.sigmav_dt_average`: Updated with `self.sigmav_dt_average`
 - `physics_module.dt_power_density_plasma`: Updated with `self.dt_power_density`
@@ -200,9 +200,7 @@ This method sets the required physics variables in the `physics_variables` and `
 
     *"Present day experiments (1999) show that in a quiescent plasma the diffusion rate of the fast particles is close to the neoclassical level. Even if one considers the case when anomalous diffusion by the fast alpha particles is at a rate nearly the same as that predicted by empirical scaling for the particles in the main plasma, estimates show that the energy loss fraction will be less than the ITER design specification of 5%.[^2]"*
 
-The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_alpha_plasma` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
-
-**`PROCESS` only assumes the alpha power produced is coupled to and self heats the plasma, other charged particles do not.**
+The fraction of alpha particle power produced by the plasma that gets coupled to the plasma for internal heating can be set in `PROCESS` with the `f_p_alpha_plasma_deposited` input variable. By default it is set to 95% or 0.95 as is the assumed ITER default.[^2]
 
 -----------------------------
 
@@ -224,7 +222,7 @@ If the plasma is classed as ignited then the injected heating power density is n
 
 This constraint can be activated by stating `icc = 9` in the input file.
 
-The value of `powfmax` can be set to the desired maximum fusion power. The scaling value `ffuspow` can be varied also.
+The value of `p_fusion_total_max_mw` can be set to the desired maximum fusion power. The scaling value `fp_fusion_total_max_mw` can be varied also.
 
 ---------------------------------
 

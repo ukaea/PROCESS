@@ -12,8 +12,8 @@ cases, as even a steady-state reactor has to be started up.
 ## Start-up power requirements
 
 The auxiliary power reaching the plasma can be constrained to be more than the minimum allowable 
-value `auxmin` by turning on constraint equation no. 40 with iteration variable no. 64 (`fauxmn`). 
-The value of `auxmin` is set in the input file.
+value `p_hcd_injected_min_mw` by turning on constraint equation no. 40 with iteration variable no. 64 (`fauxmn`). 
+The value of `p_hcd_injected_min_mw` is set in the input file.
 
 The auxiliary power required during the start-up and ramp-up phase is not calculated.  (The code 
 contains a routine based on a POPCON analysis of access via the Cordey Pass - the path in plasma 
@@ -49,7 +49,7 @@ ramp-up time.
 The length of the burn time is calculated from the surplus volt-seconds available from the Central 
 Solenoid and the other PF coils during the plasma burn phase, after the flux required during the 
 plasma start-up is taken into account. A minimum burn time (`t_burn_min`) can be enforced via 
-constraint equation no. 13 and iteration variable no 21 (`ft_burn`).
+constraint equation no. 13 and iteration variable no 21 (`ft_burn_min`).
 
 ## Currents over time
 

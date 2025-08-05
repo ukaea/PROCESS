@@ -19,7 +19,7 @@ edrive = 5.0D6         *IFE driver energy (J)
 runtitle = IFE_001
 
 *---------------Constraint Variables---------------*
-pnetelin  = 1000.0     *Required net electric power (MW)
+p_plant_electric_net_required_mw  = 1000.0     *Required net electric power (MW)
 
 *---------------Numerics Variables-----------------*
 IOPTIMZ   = 1         *Code operation switch (1: for optimisation VMCON only)
@@ -230,7 +230,7 @@ v3matf(26)  = 0.0000   *Void 3 material fraction (upper lithium)
 v3matf(27)  = 0.0000   *Void 3 material fraction (lower lithium)
 
 *------------------FWBS Variables------------------*
-emult       = 1.26     *Energy multiplication in blanket and shield
+f_p_blkt_multiplication       = 1.26     *Energy multiplication in blanket and shield
 fhole       = 0.0      *Area fraction taken up by other holes 
 
 *-----------------Cost Variables-------------------*
@@ -253,6 +253,6 @@ rbrt        = 3.2      *Reactor building roof thickness (m)
 rbwt        = 3.2      *Reactor building wall thickness (m)
 
 *---------------Heat Transport Variables-----------*
-etath       = 0.45    *Thermal-to-electric conversion efficiency
+eta_turbine       = 0.45    *Thermal-to-electric conversion efficiency
 fauxbop     = 0.0     *Fraction of gross electric power to balance-of-plant
 htpmw_ife   = 10.0    *IFE heat transport system electrical pump power (MW)

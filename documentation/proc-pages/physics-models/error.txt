@@ -207,7 +207,7 @@ deuterium-tritium reaction:
 \]
 
 20\% of the energy produced is given to the alpha particles (\(^4\)He),
-a fraction of which remain (c.f. \texttt{f_alpha_plasma}) within the plasma and
+a fraction of which remain (c.f. \texttt{f_p_alpha_plasma_deposited}) within the plasma and
 thermalise (slow down) due to collisions, thus heating the plasma. The
 remaining 80\% is carried away by the neutrons, which deposit their
 energy within the blanket and shield.
@@ -512,7 +512,7 @@ The synchrotron radiation power\footnote{Albajar, Nuclear Fusion
 plasma core. The wall reflection factor \texttt{f_sync_reflect} may be set by the
 user.
 
-By changing the input parameter \texttt{coreradius}, the user may set
+By changing the input parameter \texttt{radius_plasma_core_norm}, the user may set
 the normalised radius defining the core region. Only the impurity and
 synchrotron radiation from the core region affects the confinement
 scaling. Figure 1 below shows the radiation power contributions.
@@ -994,18 +994,18 @@ is derived directly from the energy confinement scaling law.
 \texttt{i_rad_loss\ =\ 0} -- Total power lost is scaling power plus
 radiation
 
-\texttt{pscaling\ +\ pden_plasma_rad_mw\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
+\texttt{pscaling\ +\ pden_plasma_rad_mw\ =\ f_p_alpha_plasma_deposited*alpha_power_density\ +\ pden_non_alpha_charged_mw\ +\ pden_plasma_ohmic_mw\ +\ p_hcd_injected_total_mw/vol_plasma}
 
 \texttt{i_rad_loss\ =\ 1} -- Total power lost is scaling power plus core
 radiation only
 
-\texttt{pscaling\ +\ pcoreradpv\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
+\texttt{pscaling\ +\ pden_plasma_core_rad_mw\ =\ f_p_alpha_plasma_deposited*alpha_power_density\ +\ pden_non_alpha_charged_mw\ +\ pden_plasma_ohmic_mw\ +\ p_hcd_injected_total_mw/vol_plasma}
 
 \texttt{i_rad_loss\ =\ 2} -- Total power lost is scaling power only, with
 no additional allowance for radiation. This is not recommended for power
 plant models.
 
-\texttt{pscaling\ =\ f_alpha_plasma*alpha_power_density\ +\ charged_power_density\ +\ pden_plasma_ohmic_mw\ +\ pinjmw/vol_plasma}
+\texttt{pscaling\ =\ f_p_alpha_plasma_deposited*alpha_power_density\ +\ pden_non_alpha_charged_mw\ +\ pden_plasma_ohmic_mw\ +\ p_hcd_injected_total_mw/vol_plasma}
 
 \subsection{Plasma Core Power Balance}\label{plasma-core-power-balance}
 
@@ -1027,7 +1027,7 @@ The primary sources of power are the fusion reactions themselves, ohmic
 power due to resistive heating within the plasma, and any auxiliary
 power provided for heating and current drive. The power carried by the
 fusion-generated neutrons is lost from the plasma, but is deposited in
-the surrounding material. A fraction \texttt{f_alpha_plasma} of the alpha
+the surrounding material. A fraction \texttt{f_p_alpha_plasma_deposited} of the alpha
 particle power is assumed to stay within the plasma core to contribute
 to the plasma power balance. The sum of this core alpha power, any power
 carried by non-alpha charged particles, the ohmic power and any injected

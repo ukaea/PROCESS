@@ -6,10 +6,10 @@ solvers within PROCESS act on a special class, known as constraint equations,
 all of which are formulated in the source file `constraint equations.f90`. These 
 can be split into two types:
  
-**Consistency equations** -- that enforce consistency between the physics and 
-engineering parameters
+**Equality constraints (consistency equations)** -- that enforce consistency between the physics and 
+engineering parameters in the various models
 
-**limit equations** -- that enforce various parameters to lie within their allowed 
+**Inequality constraints (limit equations)** -- that enforce various parameters to lie within their allowed 
 limits. The `neqns` constraint equations that the user chooses for a given run are 
 activated by including the equation numbers in the first `neqns` elements of 
 array `icc`.
@@ -73,9 +73,9 @@ For example, to set the net electric power to a certain value, the following
 should be carried out:
 
 1. Activate `constraint 16` (net electric power lower limit) by including it in the `icc` array
-2. Set the corresponding `f-value` `fpnetel = 1.0D0`
-3. Ensure that `fpnetel` (iteration variable no. 25) **IS NOT** selected as an iteration variable.
-4. Set `pnetelin` to the required net electric power.
+2. Set the corresponding `f-value` `fp_plant_electric_net_required_mw = 1.0D0`
+3. Ensure that `fp_plant_electric_net_required_mw` (iteration variable no. 25) **IS NOT** selected as an iteration variable.
+4. Set `p_plant_electric_net_required_mw` to the required net electric power.
 
 Limit equations are not restricted to optimisation mode. In non-optimisation mode, the iteration
 variables are not bounded, but the `f-values` can still be used to provide information about 
@@ -124,18 +124,44 @@ It should be remembered that the value of the scan variable is set in the array 
 
 The output from an optimisation run contains an indication as to which iteration variables lie at their limit values.
 
-## Non-optimisation mode
+## Evaluation mode
 
-Non-optimisation mode is sometimes used to perform benchmark comparison, whereby the machine size, output power etc. are known and one only wishes to find the calculated stresses, beta values and fusion powers, for example.
+Evaluation mode is used to evaluate models for a given set of input parameters (a "point") whilst ensuring that the models are self-consistent. It can also be used to perform benchmark comparison, whereby the machine size, output power etc. are known and one only wishes to find the calculated stresses, beta values and fusion powers, for example.
 
-Running `PROCESS` in non-optimisation mode requires few changes to be made to the input file from the optimisation case. The main differences between optimisation mode and non-optimisation mode are:
+Running `PROCESS` in evaluation mode requires few changes to be made to the input file from the optimisation case. The main differences between optimisation mode and evaluation mode are:
 
-1. Non-optimisation mode does NOT apply lower or upper bounds to the iteration variables. It follows that limit equations are no enforced.
+1. Evaluation mode does not apply lower or upper bounds to the iteration variables. 
 
-2. In non-optimisation mode the number of active iteration variables must be equal to the number of constraints.
+1. Inequality constraints are not enforced.
 
-3. A figure of merit is not available in non-optimisation mode.
+2. The number of iteration variables must be equal to the number of equality constraints being solved.
 
-4. Scans cannot be performed in non-optimisation mode.
+3. An objective function is not available, as no optimisation is taking place.
 
-As before, the user must decide which constraint equations and iteration variables to activate.
+As before, the user must decide which constraint equations and iteration variables to activate. For example, an extract from an input file might look like:
+```
+* Evaluation problem: evaluate models consistently by solving equality constraints only
+ioptimz  = -2 * evaluation mode
+
+*---------------Constraint Equations---------------*
+* Define number of equality constraints
+neqns = 2
+
+* Equalities
+icc = 1 * Beta
+icc = 2 * Global power balance
+
+* Inequalities
+* Not enforced, but values reported
+icc = 5 * Density upper limit
+icc = 8 * Neutron wall load upper limit
+icc = 9 * Fusion power upper limit
+...
+
+*---------------Iteration Variables----------------*
+* Used to solve equality constraints
+ixc = 4 * te
+ixc = 6 * dene
+...
+```
+The beta and plasma power balance equality constraints are recommended to ensure model consistency, and the `te` and `dene` iteration variables used to solve them.

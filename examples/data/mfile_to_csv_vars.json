@@ -1,23 +1,23 @@
 {
     "vars": [
         "minmax",
-        "pinjalw",
-        "pnetelin",
+        "p_hcd_injected_max",
+        "p_plant_electric_net_required_mw",
         "ripmax",
         "t_burn_min",
         "alstroh",
         "sig_tf_wp_max",
-        "thwcndut",
-        "fcohbop",
+        "dx_tf_turn_steel",
+        "f_j_cs_start_pulse_end_flat_top",
         "alstroh",
         "rmajor",
         "dr_tf_inboard",
         "dr_cs",
-        "cpttf",
-        "dr_tf_wp",
+        "c_tf_turn",
+        "dr_tf_wp_with_insulation",
         "dr_cryostat",
         "dr_shld_outboard",
-        "divfix",
+        "dz_divertor",
         "rmajor"
     ]
 }

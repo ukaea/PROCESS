@@ -693,15 +693,97 @@ $$
 
 ---------------------
 
+### Sugiyama Scaling's
+
+This scaling is found by solving the Hirshman-Sigmar bootstrap current model using the matrix inversion method to create bootstrap current scalings with variables given explicitly in the TPC systems code[^14]. The databases are constructed with the ACCOME code, with the ohmic and externally driven currents not considered and the total plasma current is achieved by
+introducing a virtual additional current of the shape:
+
+$$
+j_{\text{add}}(\rho) \propto \left(1-\rho^{b_{\text{j}}}\right)^{a_{\text{j}}}
+$$
+
+The parameters for the ACCOME database are as follows, with the scan range in the table below:
+
+- $R$ = 6 m
+- $\kappa \sim 1.8$ 
+- $\delta \sim 0.4$
+- $Z_{\text{eff}}$ has a uniform profile, and only fully stripped carbon is considered as an impurity.
+- $T_{\text{e}} = T_{\text{i}}$
+
+| Parameter                              | Range                                                                 |
+|----------------------------------------|----------------------------------------------------------------------|
+| Aspect ratio, $A$                      | 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0                    |
+| Plasma Current, $I_{\text{p}} [\mathrm{MA}]$ | 30.0, 27.0, 22.0, 20.0, 17.5, 13.0, 11.5, 10.0, 8.8, 8.0             |
+| Toroidal magnetic field on axis, $B_{\text{T}} [\mathrm{T}]$ | 3.5, 3.5, 3.5, 4.1, 4.5, 4.5, 5.2, 5.67, 6.8, 8.5                  |
+
+---------------
+
+#### L-mode Scaling | `bootstrap_fraction_sugiyama_l_mode()`
+
+Is selected by setting `i_bootstrap_current = 12`
+
+
+| Parameter                              | Range                                                                 |
+|----------------------------------------|----------------------------------------------------------------------|
+| Aspect ratio, $A$                      | 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0                    |
+| $\alpha_{\text{n}}$ | 0.1, 0.3, 0.5, 0.7, 0.3, 1.1            |
+| $\alpha_{\text{T}}$ | 1.0, 1.4, 1.8, 2.2, 2.6, 3.0            |
+| $Z_{\text{eff}}$ | 1.2, 1.5, 2.0, 2.5, 3.0           |
+| $n_{\text{e,0}} \  [10^{20} \text{m}^{-3}]$  | 0.5, 1.0, 2.0                  |
+| $T_{\text{e,0}} \  [\text{keV}]$  | 20, 30, 30                  |
+| $a_{\text{j}}$  | 0.2, 0.5, 1.0, 1.1, 2.0, 2.0, 4.0, 10.0, 50.0                 |
+| $b_{\text{j}}$  | 2.0, 2.0, 1.0, 2.0, 1.0, 2.0, 4.0, 4.0, 4.0                  |
+
+The scan range for the L-mode scaling is seen in the table above and for the variables in the top table which are shared between both scalings.  For all combinations in both tables there are 48,600 cases of which 47,652 converged. The mean error of the scaling with the ACCOME data is, $\text{ME} = 5.92 \times 10^{-4}$, with the root mean squared error being,  $\text{RMSE} = 0.0236$.
+
+$$
+f_{\text{BS}}^{\text{L}} = 0.740 \epsilon^{0.418} \beta_{\text{p}}^{0.904} \alpha_{\text{n}}^{0.06} \alpha_{\text{T}}^{-0.138} Z_{\text{eff}}^{0.230} \left(\frac{q_{95}}{q_0}\right)^{-0.142}
+$$
+
+------------
+
+#### H-mode Scaling | `bootstrap_fraction_sugiyama_h_mode()`
+
+Is selected by setting `i_bootstrap_current = 13`
+
+| Parameter                              | Range                                                                 |
+|----------------------------------------|----------------------------------------------------------------------|
+| Aspect ratio, $A$                      | 1.5, 1.7, 2.0, 2.2, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0                    |
+| $\alpha_{\text{n}}$ | 0.8, 1.4, 2.2, 3.0           |
+| $\alpha_{\text{T}}$ | 1.2, 1.5, 3.0, 6.0            |
+| $b_{\text{T}}$ | 1.2, 1.5, 3.0, 6.0            |
+| $Z_{\text{eff}}$ | 1.2, 1.5, 2.0, 3.0           |
+| $n_{\text{e,0}} \  [10^{20} \text{m}^{-3}]$ | 1.5 |
+| $T_{\text{e,0}} \  [\text{keV}]$  | 30                  |
+| $n_{\text{e,ped}} \  [10^{20} \text{m}^{-3}]$  | 0.6, 1.05, 1.5                 |
+| $T_{\text{ped}} \ [\text{keV}]$  | 0.5, 2.0, 4.0, 8.0 |
+| $\rho_{\text{ped}}$  | 0.85, 0.92, 0.99 |
+| $a_{\text{j}}$  | 0.6, 1.2, 1.5, 1.1, 10.0, 50.0                 |
+| $b_{\text{j}}$  | 2.0, 1.5, 1.0, 4.0, 4.0                |
+
+The scan range for the H-mode scaling is seen in the table above and for the variables in the top table which are shared between both scalings.  For all combinations in both tables there are 460,800 cases of which 330,149 converged. The mean error of the scaling with the ACCOME data is, $\text{ME} = 1.17 \times 10^{-4}$, with the root mean squared error being,  $\text{RMSE} = 0.0324$.
+
+It is also assumed that:
+
+- $n_{\text{sep}} = 0 \ \text{m}^{-3}$
+- $T_{\text{sep}} = 0 \ \text{keV}$
+- $\rho_{\text{ped}} = \rho_{\text{ped,n}} = \rho_{\text{ped,T}}$
+
+$$
+f_{\text{BS}}^{\text{H}} = 0.789 \epsilon^{0.606} \beta_{\text{p}}^{0.960} \alpha_{\text{n}}^{0.0319} \alpha_{\text{T}}^{0.00822} b_{\text{T}}^{-0.0783} Z_{\text{eff}}^{0.241} \\ \times \left(\frac{q_{95}}{q_0}\right)^{-0.103} \rho_{\text{ped}}^{0.367} \left(\frac{n_{\text{e,ped}}}{n_{\text{GW}}}\right)^{-0.174} T_{\text{ped,keV}}^{0.0552}
+$$
+
+---------------------
+
 ## Setting of maximum desirable bootstrap current fraction
 
-The variable `bootstrap_current_fraction_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `bootstrap_current_fraction` for the model selected with `i_bootstrap_current` exceeds this value, then `bootstrap_current_fraction` is set to the value of `bootstrap_current_fraction_max`.
+The variable `f_c_plasma_bootstrap_max` can be set to the value of maximum desirable bootstrap current fraction for a specific design. When optimising if the value of the calculated `f_c_plasma_bootstrap` for the model selected with `i_bootstrap_current` exceeds this value, then `f_c_plasma_bootstrap` is set to the value of `f_c_plasma_bootstrap_max`.
 
 An error is also raised to the user in the terminal output at the end of the run saying "Bootstrap fraction upper limit enforced".
 
 ## Fixing the bootstrap current fraction
 
-If the user wants to set the value of the bootstrap current fraction directly then the value can be set by assigning the negative of the desired value to `bootstrap_current_fraction_max`.
+If the user wants to set the value of the bootstrap current fraction directly then the value can be set by setting `i_bootstrap_current = 0` and then writing the value directly with 
 
 
 ```txt
@@ -709,7 +791,8 @@ If the user wants to set the value of the bootstrap current fraction directly th
 
 # Setting a fixed bootstrap current fraction of 80%
 
-bootstrap_current_fraction_max = -0.8
+i_bootstrap_current = 0
+f_c_plasma_bootstrap = 0.8
 ```
 
 
@@ -728,3 +811,5 @@ Fusion Engineering and Design, Volume 89, Issue 11, 2014, Pages 2709-2715, ISSN 
 [^11]: C.-P. Wong, J. C. Wesley, R. D. Stambaugh, and E. T. Cheng, “Toroidal reactor designs as a function of aspect ratio and elongation,” vol. 42, no. 5, pp. 547–556, May 2002, doi: https://doi.org/10.1088/0029-5515/42/5/307.
 [^12]: Miller, R L, "Stable bootstrap-current driven equilibria for low aspect ratio tokamaks". Switzerland: N. p., 1996. Web.https://fusion.gat.com/pubs-ext/MISCONF96/A22433.pdf
 [^13]: K. Gi, M. Nakamura, Kenji Tobita, and Y. Ono, “Bootstrap current fraction scaling for a tokamak reactor design study,” Fusion Engineering and Design, vol. 89, no. 11, pp. 2709–2715, Aug. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.07.009.
+[^14]: S. Sugiyama, T. Goto, H. Utoh, and Y. Sakamoto, “Improvement of core plasma power and current balance models for tokamak systems code considering H-mode plasma profiles,” Fusion Engineering and Design, vol. 216, p. 115022, Jul. 2025, doi: https://doi.org/10.1016/j.fusengdes.2025.115022.
+‌ 

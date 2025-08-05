@@ -6,6 +6,8 @@ use, intrinsic :: iso_fortran_env, only: dp=>real64
 
    implicit none
 
+   integer, parameter :: nin = 10
+
 contains
 
    subroutine init_fortran_modules
@@ -23,7 +25,6 @@ contains
    subroutine open_files
       use global_variables, only: verbose, fileprefix, output_prefix
       use constants, only: nout, mfile
-      use process_input, only: nin
 
       implicit none
 
@@ -79,7 +80,6 @@ contains
       ! completely dealt with in Python
       ! # TODO Move this output and file handling to Python
 
-      use process_input, only: nin
       use constants, only: iotty, mfile, nout, nplot, opt_file, vfile
       use process_output_fortran, only: oheadr
       use global_variables, only: verbose

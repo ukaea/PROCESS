@@ -43,7 +43,7 @@ def write(models, _outfile):
     models.physics.outplas()
 
     # TODO what is this? Not in caller.f90?
-    models.current_drive.cudriv(output=True)
+    models.current_drive.output_current_drive()
 
     # Pulsed reactor model
     models.pulse.run(output=True)
@@ -58,12 +58,20 @@ def write(models, _outfile):
     # Vertical build
     models.build.calculate_vertical_build(output=True)
 
-    # Toroidal field coil model
-    models.tfcoil.output()
+    # Cryostat build
+    models.cryostat.cryostat_output()
+
+    # Toroidal field coil copper model
+    if ft.tfcoil_variables.i_tf_sup == 0:
+        models.copper_tf_coil.run(output=True)
 
     # Toroidal field coil superconductor model
     if ft.tfcoil_variables.i_tf_sup == 1:
         models.sctfcoil.run(output=True)
+
+    # Toroidal field coil aluminium model
+    if ft.tfcoil_variables.i_tf_sup == 2:
+        models.aluminium_tf_coil.run(output=True)
 
     # Tight aspect ratio machine model
     if ft.physics_variables.itart == 1 and ft.tfcoil_variables.i_tf_sup != 1:
@@ -89,19 +97,18 @@ def write(models, _outfile):
     # 3    |  CCFE HCPB model with Tritium Breeding Ratio calculation
     # 4    |  KIT HCLL model
     # 5    |  DCLL model
+
+    # First wall geometry
+    models.fw.output_fw_geometry()
+
+    # First wall pumping
+    models.fw.output_fw_pumping()
+
     if ft.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.run(output=True)
     # i_blanket_type = 2, KIT HCPB removed
-    elif ft.fwbs_variables.i_blanket_type == 3:
-        # CCFE HCPB model with Tritium Breeding Ratio calculation
-        models.ccfe_hcpb.run(output=True)
-        ft.fwbs_variables.tbr = models.ccfe_hcpb.tbr_shimwell(
-            ft.fwbs_variables.breeder_f,
-            ft.fwbs_variables.li6enrich,
-            ft.fwbs_variables.iblanket_thickness,
-            output=True,
-        )
+    # i_blanket_type = 3, CCFE HCPB with TBR calculation removed
     # i_blanket_type = 4, KIT HCLL removed
     elif ft.fwbs_variables.i_blanket_type == 5:
         # DCLL model
@@ -125,8 +132,9 @@ def write(models, _outfile):
     models.power.acpow(output=True)
 
     # Plant heat transport pt 2 & 3
-    models.power.power2(output=True)
-    models.power.power3(output=True)
+    models.power.output_cryogenics()
+    models.power.output_plant_thermal_powers()
+    models.power.output_plant_electric_powers()
 
     # Water usage in secondary cooling system
     models.water_use.run(output=True)

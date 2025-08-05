@@ -64,6 +64,8 @@ module numerics
   !!  <LI> (18) Null Figure of Merit
   !!  <LI> (19) linear combination of big Q and pulse length (maximised)
   !!              note: FoM should be minimised only!</UL>
+  integer :: n_constraints
+  !! Total number of constraints (neqns + nineqns)
 
   integer :: ncalls
   !!  ncalls : number of function calls during solution
@@ -123,9 +125,9 @@ module numerics
   !!            (itv 104,1,74)
   !!  <LI> (24) Beta upper limit (itv 36,1,2,3,4,6,18)
   !!  <LI> (25) Peak toroidal field upper limit (itv 35,3,13,29)
-  !!  <LI> (26) Central solenoid EOF current density upper limit (ipfres=0)
+  !!  <LI> (26) Central solenoid EOF current density upper limit (i_pf_conductor=0)
   !!            (itv 38,37,41,12)
-  !!  <LI> (27) Central solenoid BOP current density upper limit (ipfres=0)
+  !!  <LI> (27) Central solenoid BOP current density upper limit (i_pf_conductor=0)
   !!            (itv 39,37,41,12)
   !!  <LI> (28) Fusion gain Q lower limit (itv 45,47,40)
   !!  <LI> (29) Inboard radial build consistency (itv 3,1,13,16,29,42,61)
@@ -181,10 +183,10 @@ module numerics
   !!  <LI> (76) Eich critical separatrix density
   !!  <LI> (77) TF coil current per turn upper limit
   !!  <LI> (78) Reinke criterion impurity fraction lower limit (itv  147 freinke)
-  !!  <LI> (79) Peak CS field upper limit (itv  149 fbmaxcs)
-  !!  <LI> (80) Divertor power lower limit pdivt (itv  153 fpdivlim)
+  !!  <LI> (79) Peak CS field upper limit (itv  149 fb_cs_limit_max)
+  !!  <LI> (80) Divertor power lower limit p_plasma_separatrix_mw (itv  153 fp_plasma_separatrix_min_mw)
   !!  <LI> (81) Ne(0) > ne(ped) constraint (itv  154 fne0)
-  !!  <LI> (82) toroidalgap >  tftort constraint (itv  171 ftoroidalgap)
+  !!  <LI> (82) toroidalgap >  dx_tf_inboard_out_toroidal constraint (itv  171 ftoroidalgap)
   !!  <LI> (83) Radial build consistency for stellarators (itv 172 f_avspace)
   !!  <LI> (84) Lower limit for beta (itv 173 fbeta_min)
   !!  <LI> (85) Constraint for CP lifetime
@@ -202,7 +204,7 @@ module numerics
   !!               array defining which iteration variables to activate
   !!               (see lablxc for descriptions)
 
-  character*30, dimension(ipnvars) :: lablxc
+  character*50, dimension(ipnvars) :: lablxc
   !! lablxc(ipnvars) : labels describing iteration variables<UL>
   !!  <LI> ( 1) aspect
   !!  <LI> ( 2) bt
@@ -214,42 +216,42 @@ module numerics
   !! <LI> ( 8) fbeta_poloidal_eps (f-value for equation 6)
   !! <LI> ( 9) fdene (f-value for equation 5)
   !! <LI> (10) hfact
-  !! <LI> (11) pheat
+  !! <LI> (11) p_hcd_primary_extra_heat_mw
   !! <LI> (12) oacdcp
   !! <LI> (13) dr_tf_inboard (NOT RECOMMENDED)
-  !! <LI> (14) fwalld (f-value for equation 8)
-  !! <LI> (15) fvs (f-value for equation 12)
+  !! <LI> (14) fpflux_fw_neutron_max_mw (f-value for equation 8)
+  !! <LI> (15) fvs_plasma_total_required (f-value for equation 12)
   !! <LI> (16) dr_cs
   !! <LI> (17) t_between_pulse
   !! <LI> (18) q
-  !! <LI> (19) beam_energy
+  !! <LI> (19) e_beam_kev
   !! <LI> (20) temp_cp_average
-  !! <LI> (21) ft_burn (f-value for equation 13)
+  !! <LI> (21) ft_burn_min (f-value for equation 13)
   !! <LI> (22) NOT USED
   !! <LI> (23) fcoolcp
   !! <LI> (24) NOT USED
-  !! <LI> (25) fpnetel (f-value for equation 16)
-  !! <LI> (26) ffuspow (f-value for equation 9)
-  !! <LI> (27) fhldiv (f-value for equation 18)
+  !! <LI> (25) fp_plant_electric_net_required_mw (f-value for equation 16)
+  !! <LI> (26) fp_fusion_total_max_mw (f-value for equation 9)
+  !! <LI> (27) fpflux_div_heat_load_mw (f-value for equation 18)
   !! <LI> (28) fradpwr (f-value for equation 17), total radiation fraction
   !! <LI> (29) dr_bore
   !! <LI> (30) fmva (f-value for equation 19)
   !! <LI> (31) gapomin
   !! <LI> (32) frminor (f-value for equation 21)
-  !! <LI> (33) fportsz (f-value for equation 20)
-  !! <LI> (34) fdivcol (f-value for equation 22)
-  !! <LI> (35) fpeakb (f-value for equation 25)
+  !! <LI> (33) fradius_beam_tangency (f-value for equation 20)
+  !! <LI> (34) NOT USED
+  !! <LI> (35) fb_tf_inboard_max (f-value for equation 25)
   !! <LI> (36) fbeta_max (f-value for equation 24)
-  !! <LI> (37) coheof
+  !! <LI> (37) j_cs_flat_top_end
   !! <LI> (38) fjohc (f-value for equation 26)
   !! <LI> (39) fjohc0 (f-value for equation 27)
-  !! <LI> (40) fgamcd (f-value for equation 37)
-  !! <LI> (41) fcohbop
+  !! <LI> (40) feta_cd_norm_hcd_primary_max (f-value for equation 37)
+  !! <LI> (41) f_j_cs_start_pulse_end_flat_top
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
-  !! <LI> (44) fvsbrnni
+  !! <LI> (44) f_c_plasma_non_inductive
   !! <LI> (45) fqval (f-value for equation 28)
-  !! <LI> (46) fpinj (f-value for equation 30)
+  !! <LI> (46) fp_hcd_injected_max (f-value for equation 30)
   !! <LI> (47) feffcd
   !! <LI> (48) fstrcase (f-value for equation 31)
   !! <LI> (49) fstrcond (f-value for equation 32)
@@ -260,17 +262,17 @@ module numerics
   !! <LI> (54) ftmargtf (f-value for equation 36)
   !! <LI> (55) NOT USED
   !! <LI> (56) tdmptf
-  !! <LI> (57) thkcas
-  !! <LI> (58) thwcndut
+  !! <LI> (57) dr_tf_nose_case
+  !! <LI> (58) dx_tf_turn_steel
   !! <LI> (59) fcutfsu
-  !! <LI> (60) cpttf
+  !! <LI> (60) c_tf_turn
   !! <LI> (61) dr_shld_vv_gap_inboard
   !! <LI> (62) fdtmp (f-value for equation 38)
-  !! <LI> (63) ftpeak (f-value for equation 39)
+  !! <LI> (63) ftemp_fw_max (f-value for equation 39)
   !! <LI> (64) fauxmn (f-value for equation 40)
   !! <LI> (65) t_current_ramp_up
   !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
-  !! <LI> (67) ftcycl (f-value for equation 42)
+  !! <LI> (67) ft_cycle_min (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool
   !! <LI> (70) vcool
@@ -301,7 +303,7 @@ module numerics
   !! <LI> (95) fptfnuc (f-value for equation 54)
   !! <LI> (96) fvvhe (f-value for equation 55)
   !! <LI> (97) fpsepr (f-value for equation 56)
-  !! <LI> (98) li6enrich
+  !! <LI> (98) f_blkt_li6_enrichment
   !! <LI> (99) NOT USED
   !! <LI> (100) NOT USED
   !! <LI> (101) NOT USED
@@ -319,13 +321,13 @@ module numerics
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
   !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
-  !! <LI> (116) fradwall: f-value for radiation wall load limit (eq. 67)
+  !! <LI> (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
   !! <LI> (118) fpsep: f-value to ensure separatrix power is less than
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
   !! <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
   !! <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
-  !! <LI> (122) oh_steel_frac : streel fraction of Central Solenoid
+  !! <LI> (122) f_a_cs_steel : streel fraction of Central Solenoid
   !! <LI> (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)
   !! <LI> (124) qtargettotal : Power density on target including surface recombination [W/m2]
   !! <LI> (125) fimp(3) :  Beryllium density fraction relative to electron density
@@ -343,26 +345,26 @@ module numerics
   !! <LI> (137) fplhsep (f-value for equation 73)
   !! <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)
   !! <LI> (139) copper_thick : thickness of copper layer in tape (m)
-  !! <LI> (140) dr_tf_wp : radial thickness of TFC winding pack (m)
+  !! <LI> (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
   !! <LI> (141) fcqt : TF coil quench temperature < tmax_croco (f-value for equation 74)
   !! <LI> (142) nesep : electron density at separatrix [m-3]
   !! <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value
   !! <LI> (144) fnesep : Eich critical electron density at separatrix
   !! <LI> (145) fgwped :  fraction of Greenwald density to set as pedestal-top density
-  !! <LI> (146) fcpttf : F-value for TF coil current per turn limit (constraint equation 77)
+  !! <LI> (146) fc_tf_turn_max : F-value for TF coil current per turn limit (constraint equation 77)
   !! <LI> (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
   !! <LI> (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
-  !! <LI> (149) fbmaxcs : F-value for max peak CS field (con. 79, itvar 149)
+  !! <LI> (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
   !! <LI> (150) REMOVED
   !! <LI> (151) REMOVED
   !! <LI> (152) fgwsep : Ratio of separatrix density to Greenwald density
-  !! <LI> (153) fpdivlim : F-value for minimum pdivt (con. 80)
+  !! <LI> (153) fp_plasma_separatrix_min_mw : F-value for minimum p_plasma_separatrix_mw (con. 80)
   !! <LI> (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
   !! <LI> (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
   !! <LI> (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
-  !! <LI> (157) fvssu : F-value for available to required start up flux (con. 51)
+  !! <LI> (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
   !! <LI> (158) croco_thick : Thickness of CroCo copper tube (m)
-  !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  tftort constraint (con. 82)
+  !! <LI> (159) ftoroidalgap : F-value for toroidalgap >  dx_tf_inboard_out_toroidal constraint (con. 82)
   !! <LI> (160) f_avspace (f-value for equation 83)
   !! <LI> (161) fbeta_min (f-value for equation 84)
   !! <LI> (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
@@ -373,15 +375,15 @@ module numerics
   !! <LI> (167) fncycle : f-value for minimum CS coil stress load cycles
   !! <LI> (168) fecrh_ignition: f-value for equation 91
   !! <LI> (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
-  !! <LI> (170) beta_div : field line angle wrt divertor target plate (degrees)
+  !! <LI> (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
   !! <LI> (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
-  !! <LI> (172) casths : TF side case thickness [m]
+  !! <LI> (172) dx_tf_side_case_min : TF side case thickness [m]
   !! <LI> (173) f_deuterium : Deuterium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
 
-  character(len=14), dimension(:), allocatable :: name_xc
+  character*32, dimension(ipnvars) :: name_xc
 
   real(dp) :: sqsumsq
   !!  sqsumsq : sqrt of the sum of the square of the constraint residuals
@@ -461,7 +463,8 @@ contains
     nfev1 = 0
     nfev2 = 0
     nineqns = 0
-    nvar = 16
+    nvar = 0
+    n_constraints = 0
     nviter = 0
     icc = 0
     active_constraints = .false.
@@ -535,7 +538,7 @@ contains
       'Rate of change of energy in field', &
       'Upper Lim. on Radiation Wall load', &
       'Upper Lim. on Psep * Bt / q A R  ', &
-      'pdivt < psep_kallenbach divertor ', &
+      'p_sep < psep_kallenbach divertor ', &
       'Separatrix temp consistency      ', &
       'Separatrix density consistency   ', &
       'CS Tresca yield criterion        ', &
@@ -546,9 +549,9 @@ contains
       'TFC current per turn upper limit ', &
       'Reinke criterion fZ lower limit  ', &
       'Peak CS field upper limit        ', &
-      'pdivt lower limit                ', &
+      'p_sep lower limit                ', &
       'ne0 > neped                      ', &
-      'toroidalgap >  tftort            ', &
+      'toroidalgap > dx_tf_inboard_out_t', &
       'available_space > required_space ', &
       'beta > beta_min                  ', &
       'CP lifetime                      ', &
@@ -594,8 +597,6 @@ contains
     xcm = 0.0D0
     xcs = 0.0D0
     vlam = 0.0D0
-    if (allocated(name_xc)) deallocate(name_xc)
-    allocate(name_xc(1))
     name_xc = ""
   end subroutine init_numerics
 

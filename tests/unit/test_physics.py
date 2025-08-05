@@ -5,7 +5,14 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.current_drive import CurrentDrive
+from process.current_drive import (
+    CurrentDrive,
+    ElectronBernstein,
+    ElectronCyclotron,
+    IonCyclotron,
+    LowerHybrid,
+    NeutralBeam,
+)
 from process.fortran import (
     constants,
     current_drive_variables,
@@ -13,7 +20,7 @@ from process.fortran import (
     physics_module,
     physics_variables,
 )
-from process.impurity_radiation import initialise_imprad
+from process.impurity_radiation import init_impurity_radiation_module, initialise_imprad
 from process.physics import (
     Physics,
     calculate_beta_limit,
@@ -38,7 +45,17 @@ def physics():
     :returns: initialised Physics object
     :rtype: process.physics.Physics
     """
-    return Physics(PlasmaProfile(), CurrentDrive(PlasmaProfile()))
+    return Physics(
+        PlasmaProfile(),
+        CurrentDrive(
+            PlasmaProfile(),
+            electron_cyclotron=ElectronCyclotron(plasma_profile=PlasmaProfile()),
+            ion_cyclotron=IonCyclotron(plasma_profile=PlasmaProfile()),
+            neutral_beam=NeutralBeam(plasma_profile=PlasmaProfile()),
+            electron_bernstein=ElectronBernstein(plasma_profile=PlasmaProfile()),
+            lower_hybrid=LowerHybrid(plasma_profile=PlasmaProfile()),
+        ),
+    )
 
 
 def test_calculate_poloidal_beta():
@@ -125,7 +142,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    bootstrap_current_fraction = physics.bootstrap_fraction_iter89(
+    f_c_plasma_bootstrap = physics.bootstrap_fraction_iter89(
         aspect=bootstrapfractioniter89param.aspect,
         beta=bootstrapfractioniter89param.beta,
         bt=bootstrapfractioniter89param.bt,
@@ -136,7 +153,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
         vol_plasma=bootstrapfractioniter89param.vol_plasma,
     )
 
-    assert bootstrap_current_fraction == pytest.approx(
+    assert f_c_plasma_bootstrap == pytest.approx(
         bootstrapfractioniter89param.expected_bootipf
     )
 
@@ -868,6 +885,176 @@ def test_bootstrap_fraction_gi_II(bootstrapfractiongiiiparam, physics):  # noqa:
     assert bfs == pytest.approx(bootstrapfractiongiiiparam.expected_bfs)
 
 
+class BootstrapFractionSugiyamaLModeParam(NamedTuple):
+    eps: Any = None
+    beta_poloidal: Any = None
+    alphan: Any = None
+    alphat: Any = None
+    zeff: Any = None
+    q95: Any = None
+    q0: Any = None
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractionsugiyamalparam",
+    (
+        BootstrapFractionSugiyamaLModeParam(
+            eps=0.33333333,
+            beta_poloidal=1.2708883332338736,
+            alphan=1.0,
+            alphat=1.45,
+            zeff=2.5,
+            q95=3.5,
+            q0=1.0,
+            expected_bfs=0.5700433347072669,
+        ),
+        BootstrapFractionSugiyamaLModeParam(
+            eps=0.25,
+            beta_poloidal=1.1,
+            alphan=0.9,
+            alphat=1.3,
+            zeff=2.0,
+            q95=4.0,
+            q0=1.2,
+            expected_bfs=0.42806341892858024,
+        ),
+    ),
+)
+def test_bootstrap_fraction_sugiyama_l_mode(bootstrapfractionsugiyamalparam, physics):
+    """
+    Test bootstrap_fraction_sugiyama_l_mode function.
+
+    This test validates the Sugiyama L-mode bootstrap fraction calculation
+    using predefined parameters and expected results.
+
+    :param bootstrapfractionsugiyamalparam: Parameters for the test case.
+    :type bootstrapfractionsugiyamalparam: BootstrapFractionSugiyamaLModeParam
+    """
+    bfs = physics.bootstrap_fraction_sugiyama_l_mode(
+        eps=bootstrapfractionsugiyamalparam.eps,
+        beta_poloidal=bootstrapfractionsugiyamalparam.beta_poloidal,
+        alphan=bootstrapfractionsugiyamalparam.alphan,
+        alphat=bootstrapfractionsugiyamalparam.alphat,
+        zeff=bootstrapfractionsugiyamalparam.zeff,
+        q95=bootstrapfractionsugiyamalparam.q95,
+        q0=bootstrapfractionsugiyamalparam.q0,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractionsugiyamalparam.expected_bfs)
+
+
+class BootstrapFractionSugiyamaHModeParam(NamedTuple):
+    eps: Any = None
+    beta_poloidal: Any = None
+    alphan: Any = None
+    alphat: Any = None
+    tbeta: Any = None
+    zeff: Any = None
+    q95: Any = None
+    q0: Any = None
+    rhopedn: Any = None
+    neped: Any = None
+    n_greenwald: Any = None
+    teped: Any = None
+    expected_bfs: Any = None
+
+
+@pytest.mark.parametrize(
+    "bootstrapfractionsugiyamahparam",
+    (
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.33333333,
+            beta_poloidal=1.2708883332338736,
+            alphan=1.0,
+            alphat=1.45,
+            tbeta=2.0,
+            zeff=2.5,
+            q95=3.5,
+            q0=1.0,
+            rhopedn=0.9,
+            neped=6.0e19,
+            n_greenwald=8.0e19,
+            teped=5.0,
+            expected_bfs=0.5875359328840783,
+        ),
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.25,
+            beta_poloidal=1.1,
+            alphan=0.9,
+            alphat=1.3,
+            tbeta=1.8,
+            zeff=2.0,
+            q95=4.0,
+            q0=1.2,
+            rhopedn=0.85,
+            neped=5.5e19,
+            n_greenwald=7.5e19,
+            teped=4.5,
+            expected_bfs=0.40154857221044604,
+        ),
+        # JA-DEMO steady state case from the paper
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.2847058823529412,
+            beta_poloidal=1.52,
+            alphan=1.7,
+            alphat=4.5,
+            tbeta=2.65,
+            zeff=1.84,
+            q95=4.09,
+            q0=1.0,
+            rhopedn=0.91,
+            neped=0.98e20,
+            n_greenwald=1e20,
+            teped=6.0,
+            expected_bfs=0.5634482876932788,
+        ),
+        # ITER 15MA case from the paper
+        BootstrapFractionSugiyamaHModeParam(
+            eps=0.3225806451612903,
+            beta_poloidal=0.691,
+            alphan=0.3,
+            alphat=4.0,
+            tbeta=2.0,
+            zeff=1.8,
+            q95=6.26,
+            q0=1.0,
+            rhopedn=0.93,
+            neped=0.75e20,
+            n_greenwald=1e20,
+            teped=6.0,
+            expected_bfs=0.2770187998673241,
+        ),
+    ),
+)
+def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, physics):
+    """
+    Test bootstrap_fraction_sugiyama_h_mode function.
+
+    This test validates the Sugiyama H-mode bootstrap fraction calculation
+    using predefined parameters and expected results.
+
+    :param bootstrapfractionsugiyamahparam: Parameters for the test case.
+    :type bootstrapfractionsugiyamahparam: BootstrapFractionSugiyamaHModeParam
+    """
+    bfs = physics.bootstrap_fraction_sugiyama_h_mode(
+        eps=bootstrapfractionsugiyamahparam.eps,
+        beta_poloidal=bootstrapfractionsugiyamahparam.beta_poloidal,
+        alphan=bootstrapfractionsugiyamahparam.alphan,
+        alphat=bootstrapfractionsugiyamahparam.alphat,
+        tbeta=bootstrapfractionsugiyamahparam.tbeta,
+        zeff=bootstrapfractionsugiyamahparam.zeff,
+        q95=bootstrapfractionsugiyamahparam.q95,
+        q0=bootstrapfractionsugiyamahparam.q0,
+        rhopedn=bootstrapfractionsugiyamahparam.rhopedn,
+        neped=bootstrapfractionsugiyamahparam.neped,
+        n_greenwald=bootstrapfractionsugiyamahparam.n_greenwald,
+        teped=bootstrapfractionsugiyamahparam.teped,
+    )
+
+    assert bfs == pytest.approx(bootstrapfractionsugiyamahparam.expected_bfs)
+
+
 class PlasmaCurrentParam(NamedTuple):
     beta_norm_total: Any = None
 
@@ -875,11 +1062,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     i_plasma_current: Any = None
 
-    iprofile: Any = None
-
     alphaj: Any = None
-
-    ind_plasma_internal_norm: Any = None
 
     alphap: Any = None
 
@@ -895,8 +1078,6 @@ class PlasmaCurrentParam(NamedTuple):
 
     len_plasma_poloidal: Any = None
 
-    q0: Any = None
-
     q95: Any = None
 
     rmajor: Any = None
@@ -908,10 +1089,6 @@ class PlasmaCurrentParam(NamedTuple):
     triang95: Any = None
 
     expected_normalised_total_beta: Any = None
-
-    expected_alphaj: Any = None
-
-    expected_ind_plasma_internal_norm: Any = None
 
     expected_bp: Any = None
 
@@ -927,9 +1104,7 @@ class PlasmaCurrentParam(NamedTuple):
             beta_norm_total=0,
             beta=0.030000000000000006,
             i_plasma_current=4,
-            iprofile=1,
             alphaj=1,
-            ind_plasma_internal_norm=0.90000000000000002,
             alphap=0,
             bt=5.7000000000000002,
             eps=0.33333333333333331,
@@ -937,26 +1112,21 @@ class PlasmaCurrentParam(NamedTuple):
             kappa95=1.6517857142857142,
             p0=0,
             len_plasma_poloidal=24.081367139525412,
-            q0=1,
             q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_alphaj=1.9008029008029004,
-            expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=3.869423496255382,
+            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
         PlasmaCurrentParam(
             beta_norm_total=2.4784688886891844,
             beta=0.030000000000000006,
             i_plasma_current=4,
-            iprofile=1,
             alphaj=1.9008029008029004,
-            ind_plasma_internal_norm=1.2064840230894305,
             alphap=2.4500000000000002,
             bt=5.7000000000000002,
             eps=0.33333333333333331,
@@ -964,17 +1134,14 @@ class PlasmaCurrentParam(NamedTuple):
             kappa95=1.6517857142857142,
             p0=626431.90482713911,
             len_plasma_poloidal=24.081367139525412,
-            q0=1,
             q95=3.5,
             rmajor=8,
             rminor=2.6666666666666665,
             triang=0.5,
             triang95=0.33333333333333331,
             expected_normalised_total_beta=2.4784688886891844,
-            expected_alphaj=1.9008029008029004,
-            expected_ind_plasma_internal_norm=1.2064840230894305,
             expected_bp=0.96008591022564971,
-            expected_qstar=3.869423496255382,
+            expected_qstar=2.900802902105021,
             expected_plasma_current=18398455.678867526,
         ),
     ),
@@ -1000,11 +1167,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
 
-    _, _, bp, qstar, plasma_current = physics.calculate_plasma_current(
+    bp, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
-        iprofile=plasmacurrentparam.iprofile,
         alphaj=plasmacurrentparam.alphaj,
-        ind_plasma_internal_norm=plasmacurrentparam.ind_plasma_internal_norm,
         alphap=plasmacurrentparam.alphap,
         bt=plasmacurrentparam.bt,
         eps=plasmacurrentparam.eps,
@@ -1012,7 +1177,6 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         kappa95=plasmacurrentparam.kappa95,
         p0=plasmacurrentparam.p0,
         len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
-        q0=plasmacurrentparam.q0,
         q95=plasmacurrentparam.q95,
         rmajor=plasmacurrentparam.rmajor,
         rminor=plasmacurrentparam.rminor,
@@ -1129,7 +1293,7 @@ def test_conhas():
 
 
 class PlasmaCompositionParam(NamedTuple):
-    f_tritium_beam: Any = None
+    f_beam_tritium: Any = None
 
     impurity_arr_frac: Any = None
 
@@ -1139,7 +1303,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     alphat: Any = None
 
-    ignite: Any = None
+    i_plasma_ignited: Any = None
 
     f_alpha_electron: Any = None
 
@@ -1175,7 +1339,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     pcoef: Any = None
 
-    alpha_rate_density_total: Any = None
+    fusden_alpha_total: Any = None
 
     rnfene: Any = None
 
@@ -1258,7 +1422,7 @@ class PlasmaCompositionParam(NamedTuple):
     "plasmacompositionparam",
     (
         PlasmaCompositionParam(
-            f_tritium_beam=9.9999999999999995e-07,
+            f_beam_tritium=9.9999999999999995e-07,
             impurity_arr_frac=[
                 0.90000000000000002,
                 0.10000000000000001,
@@ -1293,7 +1457,7 @@ class PlasmaCompositionParam(NamedTuple):
                 183.84999999999999,
             ],
             alphat=1.45,
-            ignite=0,
+            i_plasma_ignited=0,
             f_alpha_electron=0,
             m_fuel_amu=0,
             f_tritium=0.5,
@@ -1311,7 +1475,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=0,
             nd_impurities=0,
             pcoef=0,
-            alpha_rate_density_total=0,
+            fusden_alpha_total=0,
             rnfene=0,
             m_beam_amu=0,
             te=12,
@@ -1367,7 +1531,7 @@ class PlasmaCompositionParam(NamedTuple):
             expected_first_call=0,
         ),
         PlasmaCompositionParam(
-            f_tritium_beam=9.9999999999999995e-07,
+            f_beam_tritium=9.9999999999999995e-07,
             impurity_arr_frac=(
                 0.78128900936605694,
                 0.10000000000000001,
@@ -1411,7 +1575,7 @@ class PlasmaCompositionParam(NamedTuple):
                 order="F",
             ).transpose(),
             alphat=1.45,
-            ignite=0,
+            i_plasma_ignited=0,
             f_alpha_electron=0.6845930883190634,
             m_fuel_amu=2.5,
             f_tritium=0.5,
@@ -1429,7 +1593,7 @@ class PlasmaCompositionParam(NamedTuple):
             zeff=2.0909945616489103,
             nd_impurities=28875000000000004,
             pcoef=1.0521775929921553,
-            alpha_rate_density_total=1.973996644759543e17,
+            fusden_alpha_total=1.973996644759543e17,
             rnfene=0,
             m_beam_amu=2.01355414,
             te=12,
@@ -1498,11 +1662,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    impurity_radiation_module.init_impurity_radiation_module()
+    init_impurity_radiation_module()
     initialise_imprad()
 
     monkeypatch.setattr(
-        current_drive_variables, "f_tritium_beam", plasmacompositionparam.f_tritium_beam
+        current_drive_variables, "f_beam_tritium", plasmacompositionparam.f_beam_tritium
     )
 
     monkeypatch.setattr(
@@ -1525,7 +1689,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "alphat", plasmacompositionparam.alphat)
 
-    monkeypatch.setattr(physics_variables, "ignite", plasmacompositionparam.ignite)
+    monkeypatch.setattr(
+        physics_variables, "i_plasma_ignited", plasmacompositionparam.i_plasma_ignited
+    )
 
     monkeypatch.setattr(
         physics_variables, "f_alpha_electron", plasmacompositionparam.f_alpha_electron
@@ -1591,8 +1757,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         physics_variables,
-        "alpha_rate_density_total",
-        plasmacompositionparam.alpha_rate_density_total,
+        "fusden_alpha_total",
+        plasmacompositionparam.fusden_alpha_total,
     )
 
     monkeypatch.setattr(physics_variables, "rnfene", plasmacompositionparam.rnfene)
@@ -1721,7 +1887,7 @@ class VoltSecondReqParam(NamedTuple):
 
     eps: Any = None
 
-    inductive_current_fraction: Any = None
+    f_c_plasma_inductive: Any = None
 
     ejima_coeff: Any = None
 
@@ -1745,6 +1911,8 @@ class VoltSecondReqParam(NamedTuple):
 
     expected_vs_plasma_burn_required: Any = None
 
+    expected_vs_plasma_ramp_required: Any = None
+
     expected_vs_plasma_ind_ramp: Any = None
 
     expected_vs_plasma_res_ramp: Any = None
@@ -1760,7 +1928,7 @@ class VoltSecondReqParam(NamedTuple):
         VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
-            inductive_current_fraction=0.59999999999999998,
+            f_c_plasma_inductive=0.59999999999999998,
             ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
@@ -1772,6 +1940,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_internal=111.57651734747576,
             expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_plasma_burn_required=42.109179697761263,
+            expected_vs_plasma_ramp_required=314.4596753393147,
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_plasma_total_required=356.56885503707593,
@@ -1780,7 +1949,7 @@ class VoltSecondReqParam(NamedTuple):
         VoltSecondReqParam(
             csawth=1,
             eps=0.33333333333333331,
-            inductive_current_fraction=0.59999999999999998,
+            f_c_plasma_inductive=0.59999999999999998,
             ejima_coeff=0.30000000000000004,
             kappa=1.8500000000000001,
             plasma_current=18398455.678867526,
@@ -1792,6 +1961,7 @@ class VoltSecondReqParam(NamedTuple):
             expected_vs_plasma_internal=111.57651734747576,
             expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_plasma_burn_required=0.41692257126496302,
+            expected_vs_plasma_ramp_required=314.4596753393147,
             expected_vs_plasma_ind_ramp=258.97124024420435,
             expected_vs_plasma_res_ramp=55.488435095110333,
             expected_vs_plasma_total_required=314.87659791057968,
@@ -1813,6 +1983,7 @@ def test_vscalc(voltsecondreqparam):
         vs_plasma_internal,
         ind_plasma,
         vs_plasma_burn_required,
+        vs_plasma_ramp_required,
         vs_plasma_ind_ramp,
         vs_plasma_res_ramp,
         vs_plasma_total_required,
@@ -1820,7 +1991,7 @@ def test_vscalc(voltsecondreqparam):
     ) = calculate_volt_second_requirements(
         csawth=voltsecondreqparam.csawth,
         eps=voltsecondreqparam.eps,
-        inductive_current_fraction=voltsecondreqparam.inductive_current_fraction,
+        f_c_plasma_inductive=voltsecondreqparam.f_c_plasma_inductive,
         ejima_coeff=voltsecondreqparam.ejima_coeff,
         kappa=voltsecondreqparam.kappa,
         plasma_current=voltsecondreqparam.plasma_current,
@@ -1839,6 +2010,10 @@ def test_vscalc(voltsecondreqparam):
 
     assert vs_plasma_burn_required == pytest.approx(
         voltsecondreqparam.expected_vs_plasma_burn_required
+    )
+
+    assert vs_plasma_ramp_required == pytest.approx(
+        voltsecondreqparam.expected_vs_plasma_ramp_required
     )
 
     assert vs_plasma_ind_ramp == pytest.approx(
@@ -1873,9 +2048,9 @@ class PhyauxParam(NamedTuple):
 
     nd_alphas: Any = None
 
-    fusion_rate_density_total: Any = None
+    fusden_total: Any = None
 
-    alpha_rate_density_total: Any = None
+    fusden_alpha_total: Any = None
 
     plasma_current: Any = None
 
@@ -1913,8 +2088,8 @@ class PhyauxParam(NamedTuple):
             te=12.569,
             nd_fuel_ions=5.8589175702454272e19,
             nd_alphas=7.5e18,
-            fusion_rate_density_total=1.9852091609123786e17,
-            alpha_rate_density_total=1.973996644759543e17,
+            fusden_total=1.9852091609123786e17,
+            fusden_alpha_total=1.973996644759543e17,
             plasma_current=18398455.678867526,
             sbar=1,
             t_energy_confinement=3.401323521525641,
@@ -1936,8 +2111,8 @@ class PhyauxParam(NamedTuple):
             te=12.569,
             nd_fuel_ions=5.8576156204039725e19,
             nd_alphas=7.5e18,
-            fusion_rate_density_total=1.9843269653375773e17,
-            alpha_rate_density_total=1.9731194318497056e17,
+            fusden_total=1.9843269653375773e17,
+            fusden_alpha_total=1.9731194318497056e17,
             plasma_current=18398455.678867526,
             sbar=1,
             t_energy_confinement=3.402116961408892,
@@ -1977,8 +2152,8 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
             te=phyauxparam.te,
             nd_fuel_ions=phyauxparam.nd_fuel_ions,
             nd_alphas=phyauxparam.nd_alphas,
-            fusion_rate_density_total=phyauxparam.fusion_rate_density_total,
-            alpha_rate_density_total=phyauxparam.alpha_rate_density_total,
+            fusden_total=phyauxparam.fusden_total,
+            fusden_alpha_total=phyauxparam.fusden_alpha_total,
             plasma_current=phyauxparam.plasma_current,
             sbar=phyauxparam.sbar,
             t_energy_confinement=phyauxparam.t_energy_confinement,
@@ -2014,7 +2189,7 @@ class PohmParam(NamedTuple):
 
     plasma_res_factor: Any = None
 
-    inductive_current_fraction: Any = None
+    f_c_plasma_inductive: Any = None
 
     kappa95: Any = None
 
@@ -2045,7 +2220,7 @@ class PohmParam(NamedTuple):
         PohmParam(
             aspect=3,
             plasma_res_factor=0.70000000000000007,
-            inductive_current_fraction=0.59999999999999998,
+            f_c_plasma_inductive=0.59999999999999998,
             kappa95=1.6517857142857142,
             plasma_current=18398455.678867526,
             rmajor=8,
@@ -2085,7 +2260,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         f_res_plasma_neo,
         res_plasma,
     ) = physics.plasma_ohmic_heating(
-        inductive_current_fraction=pohmparam.inductive_current_fraction,
+        f_c_plasma_inductive=pohmparam.f_c_plasma_inductive,
         kappa95=pohmparam.kappa95,
         plasma_current=pohmparam.plasma_current,
         rmajor=pohmparam.rmajor,
@@ -2111,9 +2286,9 @@ class CalculateDensityLimitParam(NamedTuple):
 
     bt: Any = None
 
-    pdivt: Any = None
+    p_plasma_separatrix_mw: Any = None
 
-    pinjmw: Any = None
+    p_hcd_injected_total_mw: Any = None
 
     plasma_current: Any = None
 
@@ -2142,8 +2317,8 @@ class CalculateDensityLimitParam(NamedTuple):
         CalculateDensityLimitParam(
             i_density_limit=7,
             bt=5.1847188735686647,
-            pdivt=162.32943903093374,
-            pinjmw=79.928763793309031,
+            p_plasma_separatrix_mw=162.32943903093374,
+            p_hcd_injected_total_mw=79.928763793309031,
             plasma_current=16702766.338258133,
             prn1=0.4614366315228275,
             q95=3.5068029786872268,
@@ -2182,8 +2357,8 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     dlimit, dnelimt = physics.calculate_density_limit(
         i_density_limit=calculatedensitylimitparam.i_density_limit,
         bt=calculatedensitylimitparam.bt,
-        pdivt=calculatedensitylimitparam.pdivt,
-        pinjmw=calculatedensitylimitparam.pinjmw,
+        p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
+        p_hcd_injected_total_mw=calculatedensitylimitparam.p_hcd_injected_total_mw,
         plasma_current=calculatedensitylimitparam.plasma_current,
         prn1=calculatedensitylimitparam.prn1,
         q95=calculatedensitylimitparam.q95,
@@ -2210,15 +2385,15 @@ class ConfinementTimeParam(NamedTuple):
 
     p_plasma_ohmic_mw: Any = None
 
-    f_alpha_plasma: Any = None
+    f_p_alpha_plasma_deposited: Any = None
 
     i_confinement_time: Any = None
 
-    ignite: Any = None
+    i_plasma_ignited: Any = None
 
     m_fuel_amu: Any = None
 
-    alpha_power_total: Any = None
+    p_alpha_total_mw: Any = None
 
     aspect: Any = None
 
@@ -2228,7 +2403,7 @@ class ConfinementTimeParam(NamedTuple):
 
     nd_ions_total: Any = None
 
-    dnla: Any = None
+    nd_electron_line: Any = None
 
     eps: Any = None
 
@@ -2238,13 +2413,13 @@ class ConfinementTimeParam(NamedTuple):
 
     kappa95: Any = None
 
-    non_alpha_charged_power: Any = None
+    p_non_alpha_charged_mw: Any = None
 
-    pinjmw: Any = None
+    p_hcd_injected_total_mw: Any = None
 
     plasma_current: Any = None
 
-    pcoreradpv: Any = None
+    pden_plasma_core_rad_mw: Any = None
 
     q95: Any = None
 
@@ -2292,24 +2467,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=32,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=6.1946504123280199,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2334,24 +2509,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=33,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.96163409847948844,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2376,24 +2551,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=34,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1960655150953154,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2418,24 +2593,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=35,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.78453691772934719,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2460,24 +2635,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=36,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1619079679077555,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2502,24 +2677,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=37,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.7340642483550435,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2544,24 +2719,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=38,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1117392853827024,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2586,24 +2761,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=39,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.84477227311274361,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2628,24 +2803,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=40,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.6096667103064701,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2670,24 +2845,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=41,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.67053301699102119,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2712,24 +2887,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=42,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=2.1212580310552207,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2754,24 +2929,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=43,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=50.095480115636271,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2796,24 +2971,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=44,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=87.869318916638761,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2838,24 +3013,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=45,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=28.562137619592285,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2880,24 +3055,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=46,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.50082256309019457,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2922,24 +3097,24 @@ class ConfinementTimeParam(NamedTuple):
             pden_plasma_rad_mw=0.11824275660100725,
             kappa_ipb=1.68145080681586,
             p_plasma_ohmic_mw=0.63634001890069991,
-            f_alpha_plasma=0.94999999999999996,
+            f_p_alpha_plasma_deposited=0.94999999999999996,
             i_confinement_time=47,
-            ignite=0,
+            i_plasma_ignited=0,
             m_fuel_amu=2.5,
-            alpha_power_total=319.03020327154269,
+            p_alpha_total_mw=319.03020327154269,
             aspect=3,
             bt=5.2375830857646202,
             dene=8.0593948787884524e19,
             nd_ions_total=7.1529510234203251e19,
-            dnla=8.925359201116491e19,
+            nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.77961193402355955,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            non_alpha_charged_power=1.2453296074483358,
-            pinjmw=75.397788712812741,
+            p_non_alpha_charged_mw=1.2453296074483358,
+            p_hcd_injected_total_mw=75.397788712812741,
             plasma_current=16616203.759182997,
-            pcoreradpv=0.047757569353246924,
+            pden_plasma_core_rad_mw=0.047757569353246924,
             q95=3.5610139569387185,
             qstar=2.9513713188821282,
             rmajor=8,
@@ -2990,7 +3165,9 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_alpha_plasma", confinementtimeparam.f_alpha_plasma
+        physics_variables,
+        "f_p_alpha_plasma_deposited",
+        confinementtimeparam.f_p_alpha_plasma_deposited,
     )
 
     (
@@ -3002,22 +3179,22 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         p_plasma_loss_mw,
     ) = physics.calculate_confinement_time(
         i_confinement_time=confinementtimeparam.i_confinement_time,
-        ignite=confinementtimeparam.ignite,
+        i_plasma_ignited=confinementtimeparam.i_plasma_ignited,
         m_fuel_amu=confinementtimeparam.m_fuel_amu,
-        alpha_power_total=confinementtimeparam.alpha_power_total,
+        p_alpha_total_mw=confinementtimeparam.p_alpha_total_mw,
         aspect=confinementtimeparam.aspect,
         bt=confinementtimeparam.bt,
         dene=confinementtimeparam.dene,
         nd_ions_total=confinementtimeparam.nd_ions_total,
-        dnla=confinementtimeparam.dnla,
+        nd_electron_line=confinementtimeparam.nd_electron_line,
         eps=confinementtimeparam.eps,
         hfact=confinementtimeparam.hfact,
         kappa=confinementtimeparam.kappa,
         kappa95=confinementtimeparam.kappa95,
-        non_alpha_charged_power=confinementtimeparam.non_alpha_charged_power,
-        pinjmw=confinementtimeparam.pinjmw,
+        p_non_alpha_charged_mw=confinementtimeparam.p_non_alpha_charged_mw,
+        p_hcd_injected_total_mw=confinementtimeparam.p_hcd_injected_total_mw,
         plasma_current=confinementtimeparam.plasma_current,
-        pcoreradpv=confinementtimeparam.pcoreradpv,
+        pden_plasma_core_rad_mw=confinementtimeparam.pden_plasma_core_rad_mw,
         q95=confinementtimeparam.q95,
         qstar=confinementtimeparam.qstar,
         rmajor=confinementtimeparam.rmajor,
@@ -3055,3 +3232,99 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
     assert t_ion_energy_confinement == pytest.approx(
         confinementtimeparam.expected_t_ion_energy_confinement
     )
+
+
+def test_calculate_plasma_masses():
+    """Test calculate_plasma_masses()"""
+    m_fuel_amu = 2.5
+    m_ions_total_amu = 3.0
+    nd_ions_total = 1.0e20
+    nd_fuel_ions = 0.8e20
+    nd_alphas = 0.1e20
+    vol_plasma = 100.0
+    dene = 1.0e20
+
+    (
+        m_plasma_fuel_ions,
+        m_plasma_ions_total,
+        m_plasma_alpha,
+        m_plasma_electron,
+        m_plasma,
+    ) = Physics.calculate_plasma_masses(
+        m_fuel_amu=m_fuel_amu,
+        m_ions_total_amu=m_ions_total_amu,
+        nd_ions_total=nd_ions_total,
+        nd_fuel_ions=nd_fuel_ions,
+        nd_alphas=nd_alphas,
+        vol_plasma=vol_plasma,
+        dene=dene,
+    )
+
+    assert m_plasma_fuel_ions == pytest.approx(3.32107813784e-05, abs=1e-30)
+    assert m_plasma_ions_total == pytest.approx(4.9816172067599995e-05, abs=1e-30)
+    assert m_plasma_alpha == pytest.approx(6.644657345e-06, abs=1e-30)
+    assert m_plasma_electron == pytest.approx(9.1093837139e-09, abs=1e-34)
+    assert m_plasma == pytest.approx(4.982528145131389e-05, abs=1e-30)
+
+
+def test_calculate_current_profile_index_wesson():
+    """Test calculate_current_profile_index_wesson()."""
+    qstar = 3.5
+    q0 = 1.5
+    result = Physics.calculate_current_profile_index_wesson(qstar, q0)
+    assert result == pytest.approx(1.33333, abs=0.0001)
+
+
+def test_calculate_internal_inductance_wesson():
+    """Test calculate_internal_inductance_wesson()."""
+    alphaj = 0.8
+    result = Physics.calculate_internal_inductance_wesson(alphaj)
+    assert result == pytest.approx(0.8595087177751706, abs=0.0001)
+
+
+def test_calculate_internal_inductance_menard():
+    """Test calculate_internal_inductance_menard()."""
+    kappa = 2.8
+    result = Physics.calculate_internal_inductance_menard(kappa)
+    assert result == pytest.approx(0.6, abs=0.001)
+
+
+def test_calculate_beta_norm_max_wesson():
+    """Test calculate_beta_norm_max_wesson()."""
+    ind_plasma_internal_norm = 1.5
+    result = Physics.calculate_beta_norm_max_wesson(ind_plasma_internal_norm)
+    assert result == pytest.approx(6.0, abs=0.001)
+
+
+def test_calculate_beta_norm_max_original():
+    """Test calculate_beta_norm_max_original()"""
+    eps = 0.5
+    result = Physics.calculate_beta_norm_max_original(eps)
+    assert result == pytest.approx(3.8932426932522994, abs=0.00001)
+
+
+def test_calculate_beta_norm_max_menard():
+    """Test calculate_beta_norm_max_menard()."""
+    eps = 0.5
+    result = Physics.calculate_beta_norm_max_menard(eps)
+    assert result == pytest.approx(4.197251361676802, abs=0.000001)
+
+
+def test_calculate_beta_norm_max_thloreus():
+    """Test calculate_beta_norm_max_thloreus()"""
+    c_beta = 0.5
+    p0 = 2.0
+    vol_avg_pressure = 1.0
+    result = Physics.calculate_beta_norm_max_thloreus(c_beta, p0, vol_avg_pressure)
+    assert result == pytest.approx(5.075, abs=0.00001)
+
+
+def test_calculate_beta_norm_max_stambaugh():
+    """Test calculate_beta_norm_max_thloreus()"""
+    f_c_plasma_bootstrap = 0.7
+    kappa = 2.0
+    aspect = 2.5
+    result = Physics.calculate_beta_norm_max_stambaugh(
+        f_c_plasma_bootstrap, kappa, aspect
+    )
+    assert result == pytest.approx(3.840954484207041, abs=0.00001)

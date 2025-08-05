@@ -65,6 +65,7 @@ nav:
                   - Pfirsch-Schlüter Current: physics-models/plasma_current/pfirsch_schlüter_current_drive.md
                   - Inductive Current:
                       - Inductive Current: physics-models/plasma_current/inductive_plasma_current.md
+                      - Plasma Inductance: physics-models/plasma_current/plasma_inductance.md
                       - Plasma Resistive Heating: physics-models/plasma_current/plasma_resistive_heating.md
               - Confinement time: physics-models/plasma_confinement.md
               - L-H transition: physics-models/plasma_h_mode.md
@@ -75,8 +76,12 @@ nav:
           - Structural Components: eng-models/structural-components.md
           - Buildings: eng-models/buildings.md
           - First Wall/Blanket: eng-models/fw-blanket.md
-          - TF Coil: eng-models/tf-coil.md
+          - TF Coil:
+              - Overview: eng-models/tf-coil.md
+              - Resistive TF Coil: eng-models/tf-coil-resistive.md
+              - Superconducting TF Coil: eng-models/tf-coil-superconducting.md
           - PF Coil: eng-models/pf-coil.md
+          - Superconductors: eng-models/superconductors.md
           - Central Solenoid: eng-models/central-solenoid.md
           - Shield: eng-models/shield.md
           - Divertor: eng-models/divertor.md

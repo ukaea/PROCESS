@@ -511,7 +511,7 @@ It is not possible to derive a general analytic expression for $F$, so it has be
 The cylindrical equivalent $q$ definition used currently is the one given below from IPDG89[^5]
 
 $$
-q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa^2(1+2\delta^2-1.2\delta^3))}{2}
+q_* = \frac{5 \times 10^6a^2B_T}{RI_{\text{p}}}\frac{(1+\kappa_{95}^2(1+2\delta_{95}^2-1.2\delta_{95}^3))}{2}
 $$
 
 
@@ -550,39 +550,47 @@ $$
 B_{\text{p}} = B_{\text{T}}\frac{F_1 + F_2}{2\pi \overline{q}}
 $$
 
-------------
-
-### 5. Plasma Current Profile Consistency
-
-A limited degree of self-consistency between the plasma current profile and other parameters can be 
-enforced by setting switch `iprofile = 1`. This sets the current 
-profile peaking factor $\alpha_J$ (`alphaj`),  the normalised internal inductance $l_i$ (`ind_plasma_internal_norm`) and beta limit $g$-factor (`beta_norm_max`) using the 
-safety factor on axis `q0` and the cylindrical safety factor $q_*$ (`qstar`):   
-
-$$\begin{aligned}
-\alpha_J = \frac{q*}{q_0} - 1
-\end{aligned}$$
-
-$$\begin{aligned}
-l_i = \rm{ln}(1.65+0.89\alpha_J)
-\end{aligned}$$
-
-$$\begin{aligned}
-g = 4 l_i
-\end{aligned}$$
-
-It is recommended that current scaling law `i_plasma_current = 4` is used if `iprofile = 1`. 
-This relation is only applicable to large aspect ratio tokamaks.
-
-For spherical tokamaks, the normalised internal inductance can be set from the elongation using `iprofile = 4` or `iprofile = 5` or `iprofile = 6`[^11]:
-
-$$\begin{aligned}
-l_i = 3.4 - \kappa_x
-\end{aligned}$$
-
-Further description of `iprofile` is given in [Beta Limit](../plasma_beta.md).
 
 -----------------------
+
+## Setting the current profile index
+
+The value of the current profile indez $\alpha_{\text{J}}$ can be set with the `i_alphaj` switch.
+
+
+### User input
+
+
+The user can specify the value of $\alpha_{\text{J}}$ directly by stating `i_alphaj = 0` in the input file.
+
+```python
+IN.DAT
+
+i_alphaj = 0
+alphaj = 1.0
+
+
+```
+
+-----------
+
+### Wesson relation
+
+This can be activated by stating `i_alphaj = 1` in the input file.
+
+`alphaj` is set to `alphaj_wesson` using:  
+
+$$
+\texttt{alphaj_wesson} = \frac{q^*}{q_0} - 1
+$$
+
+This relation is based off of data taken from DIII-D shots[^15].
+
+This is only recommended for high aspect ratio tokamaks[^13].
+
+**It is recommended to use this switch with [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) and [`i_beta_norm_max = 1`](../plasma_beta/plasma_beta.md#wesson-relation) as they are self-consistent with each other.**
+
+-----------
 
 ## _plasc_bpol
 
@@ -710,6 +718,11 @@ http://doi.org/10.1098/rsta.2017.0437
 [^13]: Wesson, J. and Campbell, D. J. (2004) Tokamaks. Clarendon Press (International series of monographs on physics). Available at: https://books.google.co.uk/books?id=iPlAwZI6HIYC.
 [^14]: Stuart I. Muldrew, Hanni Lux, Geof Cunningham, Tim C. Hender, Sebastien Kahn, Peter J. Knight, Bhavin Patel, Garry M. Voss, Howard R. Wilson,“PROCESS”: Systems studies of spherical tokamaks, Fusion Engineering and Design, Volume 154, 2020,
 111530, ISSN 0920-3796, https://doi.org/10.1016/j.fusengdes.2020.111530.
+[^15]: T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+
+
+
+
 
 
 

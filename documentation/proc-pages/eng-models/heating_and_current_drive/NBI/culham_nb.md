@@ -1,6 +1,6 @@
 # Culham Neutral Beam Model | `culnbi()`
 
-- `iefrf/iefrffix` = 8 
+- `i_hcd_primary/i_hcd_secondary` = 8 
 
 
 
@@ -12,24 +12,24 @@ from that of ITER (approx. 2.8).
 | Output | Description |
 |----------|-------------|
 | $\mathtt{effnbss}$  | Neutral beam current drive efficiency in Amperes per Watt |
-| $\mathtt{fpion}$    | Fraction of NB power given to ions |
+| $\mathtt{f_p_beam_injected_ions}$    | Fraction of NB power given to ions |
 | $\mathtt{fshine}$   | Shine-through fraction of the beam |
 
 $$
-\mathtt{frbeam} = \frac{R_{\text{tan}}}{R_0}
+\mathtt{f_radius_beam_tangency_rmajor} = \frac{R_{\text{tan}}}{R_0}
 $$
 
 Where $R_{\text{tan}}$ is major radius at which the centre-line of the beam is tangential to the toroidal direction. This can be user defined
 
 $$
-\left(1+ \frac{1}{A}\right) < \mathtt{frbeam}
+\left(1+ \frac{1}{A}\right) < \mathtt{f_radius_beam_tangency_rmajor}
 $$
 
 A quick sanity check is done to make sure no negative roots are formed when calculating $\mathtt{dpath}$ this prevents setups where the NBI beam would miss the plasma
 
 
 $$
-\mathtt{dpath} = R_0 \sqrt{\left(1+\frac{1}{A}\right)^2-\mathtt{frbeam}^2}
+\mathtt{dpath} = R_0 \sqrt{\left(1+\frac{1}{A}\right)^2-\mathtt{f_radius_beam_tangency_rmajor}^2}
 $$
 
 Beams topping cross section is calculated via $\mathtt{sigbeam}$ found [here](../NBI/nbi_overview.md/#beam-stopping-cross-section-sigbeam). This produces $\mathtt{sigstop}$
@@ -37,7 +37,7 @@ Beams topping cross section is calculated via $\mathtt{sigbeam}$ found [here](..
 Calculate number of decay lengths to centre
 
 $$
-\mathtt{taubeam} = \mathtt{dpath} \times n_{\text{e,0}} \times \mathtt{sigstop}
+\mathtt{n_beam_decay_lengths_core} = \mathtt{dpath} \times n_{\text{e,0}} \times \mathtt{sigstop}
 $$
 
 Calculate the shine through fraction of the beam
@@ -49,14 +49,14 @@ $$
 Deuterium and tritium beam densities
 
 $$
-\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_tritium_beam})
+\mathtt{dend} = n_{\text{ion}} \times (1-\mathtt{f_beam_tritium})
 $$
 
 $$
-\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_tritium_beam}
+\mathtt{dent} = n_{\text{ion}} \times \mathtt{f_beam_tritium}
 $$
 
-Power split to the ions and electrons is clauclated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{fpion}$
+Power split to the ions and electrons is calculated with the $\mathtt{cfnbi()}$ method found [here](../NBI/nbi_overview.md/#ion-coupled-power-cfnbi) and outputs $\mathtt{f_p_beam_injected_ions}$
 
 ## Current drive efficiency | `etanb2()`
 
@@ -71,9 +71,9 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 | $\mathtt{alphat}$, $\alpha_T$       | temperature profile factor  |
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
 |  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
-|  $\mathtt{dnla}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
-|  $\mathtt{beam_energy}$      |  neutral beam energy $(\text{keV})$                             |
-|  $\mathtt{frbeam}$      |   R_tangent / R_major for neutral beam injection                            |
+|  $\mathtt{nd_electron_line}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
+|  $\mathtt{e_beam_kev}$      |  neutral beam energy $(\text{keV})$                             |
+|  $\mathtt{f_radius_beam_tangency_rmajor}$      |   R_tangent / R_major for neutral beam injection                            |
 |  $\mathtt{fshine}$      |  shine-through fraction of beam                             |
 |  $\mathtt{rmajor}$, $R$      |  plasma major radius $(\text{m})$                              |
 |  $\mathtt{rminor}$, $a$      |  plasma minor radius $(\text{m})$                             |
@@ -114,7 +114,7 @@ $$
 Beam energy in MeV
 
 $$
-\mathtt{ebmev} = \frac{\mathtt{beam_energy}}{10^3}
+\mathtt{ebmev} = \frac{\mathtt{e_beam_kev}}{10^3}
 $$
 
 x and y coefficients of function J0(x,y) (IPDG89)
@@ -169,7 +169,7 @@ $$
 Distance along beam to plasma centre
 
 $$
-\mathtt{r} = \text{max}(R, R \times \mathtt{frbeam})
+\mathtt{r} = \text{max}(R, R \times \mathtt{f_radius_beam_tangency_rmajor})
 $$
 
 $$
@@ -178,7 +178,7 @@ $$
 
 
 $$
-\mathtt{d} = R \times \sqrt{((1.0 + \mathtt{eps1})^2 - \mathtt{frbeam}^2)}
+\mathtt{d} = R \times \sqrt{((1.0 + \mathtt{eps1})^2 - \mathtt{f_radius_beam_tangency_rmajor}^2)}
 $$
 
 Distance along beam to plasma centre for ITER
@@ -213,7 +213,7 @@ $$
 Normalised current drive efficiency ($\text{A/W} \text{m}^{2}$) (IPDG89)
 
 $$
-\mathtt{gamnb} = 5.0 \times \mathtt{abd} \times 0.1 \times \mathtt{ten} \times (1.0 - \mathtt{fshine}) \times \mathtt{frbeam} \times \frac{\mathtt{j0}}{0.2} \times \mathtt{ffac}
+\mathtt{gamnb} = 5.0 \times \mathtt{abd} \times 0.1 \times \mathtt{ten} \times (1.0 - \mathtt{fshine}) \times \mathtt{f_radius_beam_tangency_rmajor} \times \frac{\mathtt{j0}}{0.2} \times \mathtt{ffac}
 $$
 
 Current drive efficiency (A/W)

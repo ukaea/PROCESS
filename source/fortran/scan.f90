@@ -38,34 +38,34 @@ module scan_module
   integer :: nsweep
   !! Switch denoting quantity to scan:<UL>
   !!         <LI> 1  aspect
-  !!         <LI> 2  hldivlim
-  !!         <LI> 3  pnetelin
+  !!         <LI> 2  pflux_div_heat_load_max_mw
+  !!         <LI> 3  p_plant_electric_net_required_mw
   !!         <LI> 4  hfact
   !!         <LI> 5  oacdcp
-  !!         <LI> 6  walalw
+  !!         <LI> 6  pflux_fw_neutron_max_mw
   !!         <LI> 7  beamfus0
   !!         <LI> 8  fqval
   !!         <LI> 9  te
-  !!         <LI> 10 boundu(15: fvs)
+  !!         <LI> 10 boundu(15: fvs_plasma_total_required)
   !!         <LI> 11 beta_norm_max
-  !!         <LI> 12 bootstrap_current_fraction_max
+  !!         <LI> 12 f_c_plasma_bootstrap_max
   !!         <LI> 13 boundu(10: hfact)
   !!         <LI> 14 fiooic
   !!         <LI> 15 fjprot
   !!         <LI> 16 rmajor
-  !!         <LI> 17 bmxlim
-  !!         <LI> 18 gammax
+  !!         <LI> 17 b_tf_inboard_max
+  !!         <LI> 18 eta_cd_norm_hcd_primary_max
   !!         <LI> 19 boundl(16: dr_cs)
   !!         <LI> 20 t_burn_min
   !!         <LI> 21 not used
   !!         <LI> 22 cfactr (N.B. requires iavail=0)
   !!         <LI> 23 boundu(72: fipir)
-  !!         <LI> 24 powfmax
+  !!         <LI> 24 p_fusion_total_max_mw
   !!         <LI> 25 kappa
   !!         <LI> 26 triang
   !!         <LI> 27 tbrmin (for blktmodel > 0 only)
   !!         <LI> 28 bt
-  !!         <LI> 29 coreradius
+  !!         <LI> 29 radius_plasma_core_norm
   !!         <LI> 30 fimpvar # OBSOLETE
   !!         <LI> 31 f_alpha_energy_confinement_min
   !!         <LI> 32 epsvmc
@@ -87,21 +87,21 @@ module scan_module
   !!         <LI> 48 TF coil - n_pancake (integer turn winding pack)
   !!         <LI> 49 TF coil - n_layer (integer turn winding pack)
   !!         <LI> 50 Xenon fraction fimp(13)
-  !!         <LI> 51 Power fraction to lower DN Divertor ftar
+  !!         <LI> 51 Power fraction to lower DN Divertor f_p_div_lower
   !!         <LI> 52 SoL radiation fraction
   !!         <LI> 54 GL_nbti upper critical field at 0 Kelvin
   !!         <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness
-  !!         <LI> 56 crypmw_max: Maximum cryogenic power (ixx=164, ixc=87)
+  !!         <LI> 56 p_cryo_plant_electric_max_mw: Maximum cryogenic power (ixx=164, ixc=87)
   !!         <LI> 57 `bt` lower boundary
   !!         <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap
   !!         <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
   !!         <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)
   !!         <LI> 61 copperaoh_m2_max : CS coil current / copper area
-  !!         <LI> 62 coheof : CS coil current density at EOF
+  !!         <LI> 62 j_cs_flat_top_end : CS coil current density at EOF
   !!         <LI> 63 dr_cs : CS thickness (m)
-  !!         <LI> 64 ohhghf : CS height (m)
+  !!         <LI> 64 f_z_cs_tf_internal : CS height (m)
   !!         <LI> 65 n_cycle_min : Minimum cycles for CS stress model constraint 90
-  !!         <LI> 66 oh_steel_frac: Steel fraction in CS coil
+  !!         <LI> 66 f_a_cs_steel: Steel fraction in CS coil
   !!         <LI> 67 t_crack_vertical: Initial crack vertical dimension (m) </UL>
   !!         <LI> 68 `inlet_temp_liq' : Inlet temperature of blanket liquid metal coolant/breeder (K)
   !!         <LI> 69 `outlet_temp_liq' : Outlet temperature of blanket liquid metal coolant/breeder (K)
@@ -111,10 +111,10 @@ module scan_module
   !!         <LI> 73 `pnuc_fw_ratio_dcll' : Ratio of FW nuclear power as fraction of total (FW+BB)
   !!         <LI> 74 `f_nuc_pow_bz_struct' : Fraction of BZ power cooled by primary coolant for dual-coolant balnket
   !!         <LI> 75 dx_fw_module : pitch of first wall cooling channels (m)
-  !!         <LI> 76 etath : Thermal conversion eff.
+  !!         <LI> 76 eta_turbine : Thermal conversion eff.
   !!         <LI> 77 startupratio : Gyrotron redundancy
   !!         <LI> 78 fkind : Multiplier for Nth of a kind costs
-  !!         <LI> 79 etaech : ECH wall plug to injector efficiency
+  !!         <LI> 79 eta_ecrh_injector_wall_plug : ECH wall plug to injector efficiency
 
   integer :: nsweep_2
   !! nsweep_2 /3/ : switch denoting quantity to scan for 2D scan:
@@ -129,21 +129,4 @@ module scan_module
   ! each new run
   logical :: first_call_1d
   logical :: first_call_2d
-
-contains
-
-  subroutine init_scan_module
-    !! Initialise module variables
-    implicit none
-
-    scan_dim = 1
-    isweep = 0
-    isweep_2 = 0
-    nsweep = 1
-    nsweep_2 = 3
-    sweep = 0.0D0
-    sweep_2 = 0.0D0
-    first_call_1d = .true.
-    first_call_2d = .true.
-  end subroutine init_scan_module
 end module scan_module

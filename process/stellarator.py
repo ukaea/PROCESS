@@ -4,33 +4,39 @@ from pathlib import Path
 
 import numpy as np
 
+import process.fusion_reactions as reactions
 import process.physics_functions as physics_funcs
 import process.superconductors as superconductors
 from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
+from process.data_structure import (
+    cost_variables,
+    divertor_variables,
+    neoclassics_variables,
+    rebco_variables,
+    structure_variables,
+    times_variables,
+)
+from process.exceptions import ProcessValueError
 from process.fortran import (
     build_variables,
     constants,
     constraint_variables,
-    cost_variables,
     current_drive_variables,
-    divertor_variables,
     error_handling,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
     impurity_radiation_module,
-    neoclassics_module,
     numerics,
+    pfcoil_variables,
     physics_module,
     physics_variables,
-    rebco_variables,
     sctfcoil_module,
     stellarator_configuration,
     stellarator_variables,
-    structure_variables,
     tfcoil_variables,
 )
 from process.fortran import (
@@ -148,7 +154,7 @@ class Stellarator:
             self.buildings.run(output=True)
             self.vacuum.run(output=True)
             self.power.acpow(output=True)
-            self.power.power2(output=True)
+            self.power.output_plant_electric_powers()
 
             return
 
@@ -163,11 +169,12 @@ class Stellarator:
         self.stdiv(False)
 
         self.power.tfpwr(output=False)
-        self.power.power1()
+        self.power.component_thermal_powers()
+        self.power.calculate_cryo_loads()
         self.buildings.run(output=False)
         self.vacuum.run(output=False)
         self.power.acpow(output=False)
-        self.power.power2(output=False)
+        self.power.plant_electric_production()
         # TODO: should availability.run be called
         # rather than availability.avail?
         self.availability.avail(output=False)
@@ -357,13 +364,13 @@ class Stellarator:
                 + build_variables.blbmoth
                 + build_variables.blbpoth
             )
-            build_variables.shldtth = 0.5e0 * (
+            build_variables.dz_shld_upper = 0.5e0 * (
                 build_variables.dr_shld_inboard + build_variables.dr_shld_outboard
             )
 
         #  Top/bottom blanket thickness
 
-        build_variables.blnktth = 0.5e0 * (
+        build_variables.dz_blkt_upper = 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
 
@@ -466,7 +473,7 @@ class Stellarator:
         #  Roughly equal to average of (inboard build from TF coil to plasma
         #  centre) and (outboard build from plasma centre to TF coil)
 
-        build_variables.hmax = 0.5e0 * (
+        build_variables.z_tf_inside_half = 0.5e0 * (
             (
                 build_variables.dr_shld_vv_gap_inboard
                 + build_variables.dr_vv_inboard
@@ -508,7 +515,10 @@ class Stellarator:
             ) * build_variables.a_fw_total
         else:
             build_variables.a_fw_total = (
-                1.0e0 - fwbs_variables.fhole - fwbs_variables.fdiv - fwbs_variables.fhcd
+                1.0e0
+                - fwbs_variables.fhole
+                - fwbs_variables.f_ster_div_single
+                - fwbs_variables.f_a_fw_hcd
             ) * build_variables.a_fw_total
 
         if output:
@@ -796,7 +806,10 @@ class Stellarator:
         #  F.C. Moon, J. Appl. Phys. 53(12) (1982) 9112
         #
         #  Values based on regression analysis by Greifswald, March 2014
-        m_struc = 1.3483e0 * (1000.0e0 * tfcoil_variables.estotftgj) ** 0.7821e0
+        m_struc = (
+            1.3483e0
+            * (1000.0e0 * tfcoil_variables.e_tf_magnetic_stored_total_gj) ** 0.7821e0
+        )
         msupstr = 1000.0e0 * m_struc  # kg
 
         ################################################################
@@ -810,7 +823,7 @@ class Stellarator:
         # The following line is correct AS LONG AS we do not scale the coil sizes
         intercoil_surface = (
             stellarator_configuration.stella_config_coilsurface * st.f_r**2
-            - tfcoil_variables.tftort
+            - tfcoil_variables.dx_tf_inboard_out_toroidal
             * stellarator_configuration.stella_config_coillength
             * st.f_r
             * st.f_n
@@ -829,7 +842,7 @@ class Stellarator:
 
         #  Total mass of cooled components
         structure_variables.coldmass = (
-            tfcoil_variables.whttf
+            tfcoil_variables.m_tf_coils_total
             + structure_variables.aintmass
             + fwbs_variables.dewmkg
         )
@@ -876,7 +889,7 @@ class Stellarator:
         """
         Theta = stellarator_variables.flpitch  # ~bmn [rad] field line pitch
         r = physics_variables.rmajor
-        p_div = physics_variables.pdivt
+        p_div = physics_variables.p_plasma_separatrix_mw
         alpha = divertor_variables.anginc
         xi_p = divertor_variables.xpertin
         T_scrape = divertor_variables.tdiv
@@ -946,10 +959,10 @@ class Stellarator:
 
         #  Transfer to global variables
 
-        divertor_variables.hldiv = q_div
-        divertor_variables.divsur = darea
+        divertor_variables.pflux_div_heat_load_mw = q_div
+        divertor_variables.a_div_surface_total = darea
 
-        fwbs_variables.fdiv = darea / build_variables.a_fw_total
+        fwbs_variables.f_ster_div_single = darea / build_variables.a_fw_total
 
         if output:
             po.oheadr(self.outfile, "Divertor")
@@ -957,8 +970,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Power to divertor (MW)",
-                "(pdivt.)",
-                physics_variables.pdivt,
+                "(p_plasma_separatrix_mw.)",
+                physics_variables.p_plasma_separatrix_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -1049,8 +1062,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Peak heat load (MW/m2)",
-                "(hldiv)",
-                divertor_variables.hldiv,
+                "(pflux_div_heat_load_mw)",
+                divertor_variables.pflux_div_heat_load_mw,
             )
 
     def blanket_neutronics(self):
@@ -1067,7 +1080,9 @@ class Stellarator:
             )
             fwbs_variables.densbreed = 2.12e3
 
-        fwbs_variables.whtblkt = fwbs_variables.volblkt * fwbs_variables.densbreed
+        fwbs_variables.m_blkt_total = (
+            fwbs_variables.vol_blkt_total * fwbs_variables.densbreed
+        )
         self.hcpb.nuclear_heating_blanket()
 
         # Heating of the magnets
@@ -1076,25 +1091,20 @@ class Stellarator:
         # Rough estimate of TF coil volume used, assuming 25% of the total
         # TF coil perimeter is inboard, 75% outboard
         tf_volume = (
-            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.tfareain
+            0.25 * tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_inboard_total
             + 0.75
             * tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_leg_outboard
             * tfcoil_variables.n_tf_coils
         )
 
-        fwbs_variables.ptfnucpm3 = fwbs_variables.ptfnuc / tf_volume
+        fwbs_variables.ptfnucpm3 = fwbs_variables.p_tf_nuclear_heat_mw / tf_volume
 
         # heating of the shield
         self.hcpb.nuclear_heating_shield()
 
         # Energy multiplication factor
-        fwbs_variables.emult = 1.269
-
-        # Tritium breeding ratio
-        fwbs_variables.tbr = self.hcpb.tbr_shimwell(
-            fwbs_variables.volblkt, fwbs_variables.li6enrich, 1, output=False
-        )
+        fwbs_variables.f_p_blkt_multiplication = 1.269
 
         # Use older model to calculate neutron fluence since it
         # is not calculated in the CCFE blanket model
@@ -1139,7 +1149,8 @@ class Stellarator:
         of the plasma.
         """
         fwbs_variables.life_fw_fpy = min(
-            cost_variables.abktflnc / physics_variables.wallmw, cost_variables.tlife
+            cost_variables.abktflnc / physics_variables.pflux_fw_neutron_mw,
+            cost_variables.tlife,
         )
 
         #  First wall inboard, outboard areas (assume 50% of total each)
@@ -1171,21 +1182,23 @@ class Stellarator:
                 * (
                     1.0e0
                     - fwbs_variables.fhole
-                    - fwbs_variables.fdiv
-                    - fwbs_variables.fhcd
+                    - fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_hcd
                 )
             )
 
         build_variables.blareaib = 0.5e0 * build_variables.blarea
         build_variables.blareaob = 0.5e0 * build_variables.blarea
 
-        fwbs_variables.volblkti = (
+        fwbs_variables.vol_blkt_inboard = (
             build_variables.blareaib * build_variables.dr_blkt_inboard
         )
-        fwbs_variables.volblkto = (
+        fwbs_variables.vol_blkt_outboard = (
             build_variables.blareaob * build_variables.dr_blkt_outboard
         )
-        fwbs_variables.volblkt = fwbs_variables.volblkti + fwbs_variables.volblkto
+        fwbs_variables.vol_blkt_total = (
+            fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
+        )
 
         #  Shield volume
         #  Uses fvolsi, fwbs_variables.fvolso as area coverage factors
@@ -1211,7 +1224,7 @@ class Stellarator:
         #  shield)
 
         fwbs_variables.pnucloss = (
-            physics_variables.neutron_power_total * fwbs_variables.fhole
+            physics_variables.p_neutron_total_mw * fwbs_variables.fhole
         )
 
         # The peaking factor, obtained as precalculated parameter
@@ -1224,52 +1237,58 @@ class Stellarator:
             self.blanket_neutronics()
 
             if heat_transport_variables.ipowerflow == 1:
-                fwbs_variables.pnucdiv = (
-                    physics_variables.neutron_power_total * fwbs_variables.fdiv
+                fwbs_variables.p_div_nuclear_heat_total_mw = (
+                    physics_variables.p_neutron_total_mw
+                    * fwbs_variables.f_ster_div_single
                 )
-                fwbs_variables.pnuchcd = (
-                    physics_variables.neutron_power_total * fwbs_variables.fhcd
+                fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
+                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
-                    physics_variables.neutron_power_total
-                    - fwbs_variables.pnucdiv
+                    physics_variables.p_neutron_total_mw
+                    - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
-                    - fwbs_variables.pnuchcd
+                    - fwbs_variables.p_fw_hcd_nuclear_heat_mw
                 )
 
                 fwbs_variables.pradloss = (
                     physics_variables.p_plasma_rad_mw * fwbs_variables.fhole
                 )
-                fwbs_variables.praddiv = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                fwbs_variables.p_div_rad_total_mw = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
                 )
-                fwbs_variables.pradhcd = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+                fwbs_variables.p_fw_hcd_rad_total_mw = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
                 )
-                fwbs_variables.pradfw = (
+                fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_rad_total_mw
                     - fwbs_variables.pradloss
-                    - fwbs_variables.pradhcd
+                    - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
 
-                heat_transport_variables.htpmw_fw = heat_transport_variables.fpumpfw * (
-                    fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.pradfw
-                    + current_drive_variables.porbitlossmw
+                heat_transport_variables.p_fw_coolant_pump_mw = (
+                    heat_transport_variables.fpumpfw
+                    * (
+                        fwbs_variables.p_fw_nuclear_heat_total_mw
+                        + fwbs_variables.p_fw_rad_total_mw
+                        + current_drive_variables.p_beam_orbit_loss_mw
+                    )
                 )
-                heat_transport_variables.htpmw_blkt = (
-                    heat_transport_variables.fpumpblkt * fwbs_variables.pnucblkt
+                heat_transport_variables.p_blkt_coolant_pump_mw = (
+                    heat_transport_variables.fpumpblkt
+                    * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
-                heat_transport_variables.htpmw_shld = (
-                    heat_transport_variables.fpumpshld * fwbs_variables.pnucshld
+                heat_transport_variables.p_shld_coolant_pump_mw = (
+                    heat_transport_variables.fpumpshld
+                    * fwbs_variables.p_shld_nuclear_heat_mw
                 )
-                heat_transport_variables.htpmw_div = (
+                heat_transport_variables.p_div_coolant_pump_mw = (
                     heat_transport_variables.fpumpdiv
                     * (
-                        physics_variables.pdivt
-                        + fwbs_variables.pnucdiv
-                        + fwbs_variables.praddiv
+                        physics_variables.p_plasma_separatrix_mw
+                        + fwbs_variables.p_div_nuclear_heat_total_mw
+                        + fwbs_variables.p_div_rad_total_mw
                     )
                 )
 
@@ -1291,13 +1310,13 @@ class Stellarator:
                 #  Energy-multiplied neutron power
 
                 pneut2 = (
-                    physics_variables.neutron_power_total
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
-                ) * fwbs_variables.emult
+                ) * fwbs_variables.f_p_blkt_multiplication
 
-                fwbs_variables.emultmw = pneut2 - (
-                    physics_variables.neutron_power_total
+                fwbs_variables.p_blkt_multiplication_mw = pneut2 - (
+                    physics_variables.p_neutron_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
                 )
@@ -1311,12 +1330,14 @@ class Stellarator:
                     - fwbs_variables.fblbe
                 )
 
-                fwbs_variables.pnucblkt = pneut2 * (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw = pneut2 * (
                     1.0e0 - np.exp(-build_variables.dr_blkt_outboard / decaybl)
                 )
 
                 #  Nuclear heating in the shield
-                fwbs_variables.pnucshld = pneut2 - fwbs_variables.pnucblkt
+                fwbs_variables.p_shld_nuclear_heat_mw = (
+                    pneut2 - fwbs_variables.p_blkt_nuclear_heat_total_mw
+                )
 
                 #  Superconducting coil shielding calculations
                 (
@@ -1329,30 +1350,31 @@ class Stellarator:
                     ptfiwp,
                     ptfowp,
                     raddose,
-                    fwbs_variables.ptfnuc,
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 ) = self.sctfcoil_nuclear_heating_iter90()
 
             else:  # heat_transport_variables.ipowerflow == 1
                 #  Neutron power incident on divertor (MW)
 
-                fwbs_variables.pnucdiv = (
-                    physics_variables.neutron_power_total * fwbs_variables.fdiv
+                fwbs_variables.p_div_nuclear_heat_total_mw = (
+                    physics_variables.p_neutron_total_mw
+                    * fwbs_variables.f_ster_div_single
                 )
 
                 #  Neutron power incident on HCD apparatus (MW)
 
-                fwbs_variables.pnuchcd = (
-                    physics_variables.neutron_power_total * fwbs_variables.fhcd
+                fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
+                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
                 )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
 
                 pnucfwbs = (
-                    physics_variables.neutron_power_total
-                    - fwbs_variables.pnucdiv
+                    physics_variables.p_neutron_total_mw
+                    - fwbs_variables.p_div_nuclear_heat_total_mw
                     - fwbs_variables.pnucloss
                     - fwbs_variables.pnuc_cp
-                    - fwbs_variables.pnuchcd
+                    - fwbs_variables.p_fw_hcd_nuclear_heat_mw
                 )
 
                 #  Split between inboard and outboard by first wall area fractions
@@ -1368,14 +1390,14 @@ class Stellarator:
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.praddiv = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fdiv
+                fwbs_variables.p_div_rad_total_mw = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
                 )
 
                 #  Radiation power incident on HCD apparatus (MW)
 
-                fwbs_variables.pradhcd = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.fhcd
+                fwbs_variables.p_fw_hcd_rad_total_mw = (
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
                 )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)
@@ -1386,11 +1408,11 @@ class Stellarator:
 
                 #  Radiation power incident on first wall (MW)
 
-                fwbs_variables.pradfw = (
+                fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
-                    - fwbs_variables.praddiv
+                    - fwbs_variables.p_div_rad_total_mw
                     - fwbs_variables.pradloss
-                    - fwbs_variables.pradhcd
+                    - fwbs_variables.p_fw_hcd_rad_total_mw
                 )
 
                 #  Calculate the power deposited in the first wall, blanket and shield,
@@ -1399,9 +1421,9 @@ class Stellarator:
                 #  If we have chosen pressurised water as the coolant, set the
                 #  coolant outlet temperature as 20 deg C below the boiling point
 
-                if fwbs_variables.coolwh == 2:
+                if fwbs_variables.i_blkt_coolant_type == 2:
                     if fwbs_variables.irefprop:
-                        fwbs_variables.outlet_temp = (
+                        fwbs_variables.temp_blkt_coolant_out = (
                             FluidProperties.of(
                                 "Water",
                                 pressure=fwbs_variables.coolp,
@@ -1410,7 +1432,7 @@ class Stellarator:
                             - 20
                         )
                     else:
-                        fwbs_variables.outlet_temp = (
+                        fwbs_variables.temp_blkt_coolant_out = (
                             273.15
                             + 168.396
                             + 0.314653 / fwbs_variables.coolp
@@ -1425,10 +1447,14 @@ class Stellarator:
                 bfwo = 0.5e0 * build_variables.dr_fw_outboard
 
                 f_a_fw_coolant_inboard = (
-                    fwbs_variables.afwi * fwbs_variables.afwi / (bfwi * bfwi)
+                    fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
+                    / (bfwi * bfwi)
                 )  # inboard FW coolant void fraction
                 f_a_fw_coolant_outboard = (
-                    fwbs_variables.afwo * fwbs_variables.afwo / (bfwo * bfwo)
+                    fwbs_variables.radius_fw_channel
+                    * fwbs_variables.radius_fw_channel
+                    / (bfwo * bfwo)
                 )  # outboard FW coolant void fraction
 
                 #  First wall decay length (m) - improved calculation required
@@ -1436,20 +1462,20 @@ class Stellarator:
                 decayfwi = fwbs_variables.declfw
                 decayfwo = fwbs_variables.declfw
 
-                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.pradfw)
+                #  Surface heat flux on first wall (MW) (sum = fwbs_variables.p_fw_rad_total_mw)
 
                 psurffwi = (
-                    fwbs_variables.pradfw
+                    fwbs_variables.p_fw_rad_total_mw
                     * build_variables.a_fw_inboard
                     / build_variables.a_fw_total
                 )
                 psurffwo = (
-                    fwbs_variables.pradfw
+                    fwbs_variables.p_fw_rad_total_mw
                     * build_variables.a_fw_outboard
                     / build_variables.a_fw_total
                 )
 
-                #  Simple blanket model (fwbs_variables.primary_pumping = 0 or 1) is assumed for stellarators
+                #  Simple blanket model (fwbs_variables.i_coolant_pumping = 0 or 1) is assumed for stellarators
 
                 #  The power deposited in the first wall, breeder zone and shield is
                 #  calculated according to their dimensions and materials assuming
@@ -1458,13 +1484,17 @@ class Stellarator:
                 #  as a fraction of the total thermal power deposited in the
                 #  coolant.
 
-                pnucfwi = pnucfwbsi * (1.0e0 - np.exp(-2.0e0 * bfwi / decayfwi))
-                pnucfwo = pnucfwbso * (1.0e0 - np.exp(-2.0e0 * bfwo / decayfwo))
+                p_fw_inboard_nuclear_heat_mw = pnucfwbsi * (
+                    1.0e0 - np.exp(-2.0e0 * bfwi / decayfwi)
+                )
+                p_fw_outboard_nuclear_heat_mw = pnucfwbso * (
+                    1.0e0 - np.exp(-2.0e0 * bfwo / decayfwo)
+                )
 
                 #  Neutron power reaching blanket and shield (MW)
 
-                pnucbsi = pnucfwbsi - pnucfwi
-                pnucbso = pnucfwbso - pnucfwo
+                pnucbsi = pnucfwbsi - p_fw_inboard_nuclear_heat_mw
+                pnucbso = pnucfwbso - p_fw_outboard_nuclear_heat_mw
 
                 #  Blanket decay length (m) - improved calculation required
 
@@ -1488,51 +1518,59 @@ class Stellarator:
 
                 #  First wall and Blanket pumping power (MW)
 
-                if fwbs_variables.primary_pumping == 0:
+                if fwbs_variables.i_coolant_pumping == 0:
                     #    Use input
                     pass
-                elif fwbs_variables.primary_pumping == 1:
-                    heat_transport_variables.htpmw_fw = (
+                elif fwbs_variables.i_coolant_pumping == 1:
+                    heat_transport_variables.p_fw_coolant_pump_mw = (
                         heat_transport_variables.fpumpfw
                         * (
-                            pnucfwi
-                            + pnucfwo
+                            p_fw_inboard_nuclear_heat_mw
+                            + p_fw_outboard_nuclear_heat_mw
                             + psurffwi
                             + psurffwo
-                            + current_drive_variables.porbitlossmw
+                            + current_drive_variables.p_beam_orbit_loss_mw
                         )
                     )
-                    heat_transport_variables.htpmw_blkt = (
+                    heat_transport_variables.p_blkt_coolant_pump_mw = (
                         heat_transport_variables.fpumpblkt
                         * (
-                            pnucbzi * fwbs_variables.emult
-                            + pnucbzo * fwbs_variables.emult
+                            pnucbzi * fwbs_variables.f_p_blkt_multiplication
+                            + pnucbzo * fwbs_variables.f_p_blkt_multiplication
                         )
                     )
                 else:
-                    error_handling.report_error(215)
+                    raise ProcessValueError(
+                        "i_coolant_pumping = 0 or 1 only for stellarator"
+                    )
 
-                fwbs_variables.emultmw = (
+                fwbs_variables.p_blkt_multiplication_mw = (
                     heat_transport_variables.fpumpblkt
-                    * (pnucbzi * fwbs_variables.emult + pnucbzo)
-                    * (fwbs_variables.emult - 1.0e0)
+                    * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
+                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
                 )
 
                 #  Total nuclear heating of first wall (MW)
 
-                fwbs_variables.p_fw_nuclear_heat_total_mw = pnucfwi + pnucfwo
+                fwbs_variables.p_fw_nuclear_heat_total_mw = (
+                    p_fw_inboard_nuclear_heat_mw + p_fw_outboard_nuclear_heat_mw
+                )
 
                 #  Total nuclear heating of blanket (MW)
 
-                fwbs_variables.pnucblkt = (pnucbzi + pnucbzo) * fwbs_variables.emult
-
-                fwbs_variables.emultmw = fwbs_variables.emultmw + (
+                fwbs_variables.p_blkt_nuclear_heat_total_mw = (
                     pnucbzi + pnucbzo
-                ) * (fwbs_variables.emult - 1.0e0)
+                ) * fwbs_variables.f_p_blkt_multiplication
+
+                fwbs_variables.p_blkt_multiplication_mw = (
+                    fwbs_variables.p_blkt_multiplication_mw
+                    + (pnucbzi + pnucbzo)
+                    * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
+                )
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
-                #  simplified method as the first wall and breeder zone when fwbs_variables.primary_pumping = 1.
+                #  simplified method as the first wall and breeder zone when fwbs_variables.i_coolant_pumping = 1.
                 #  i.e. the pumping power is a fraction of the total thermal power deposited in the
                 #  coolant.
 
@@ -1568,7 +1606,7 @@ class Stellarator:
                     1.0e0 - np.exp(-build_variables.dr_shld_outboard / decayshldo)
                 )
 
-                fwbs_variables.pnucshld = pnucshldi + pnucshldo
+                fwbs_variables.p_shld_nuclear_heat_mw = pnucshldi + pnucshldo
 
                 #  Calculate coolant pumping powers from input fraction.
                 #  The pumping power is assumed to be a fraction, fpump, of the incident
@@ -1576,19 +1614,19 @@ class Stellarator:
                 #     htpmw_i = fpump_i*C
                 #  where C is the non-pumping thermal power deposited in the coolant
 
-                if fwbs_variables.primary_pumping == 1:
+                if fwbs_variables.i_coolant_pumping == 1:
                     #  Shield pumping power (MW)
-                    heat_transport_variables.htpmw_shld = (
+                    heat_transport_variables.p_shld_coolant_pump_mw = (
                         heat_transport_variables.fpumpshld * (pnucshldi + pnucshldo)
                     )
 
                     #  Divertor pumping power (MW)
-                    heat_transport_variables.htpmw_div = (
+                    heat_transport_variables.p_div_coolant_pump_mw = (
                         heat_transport_variables.fpumpdiv
                         * (
-                            physics_variables.pdivt
-                            + fwbs_variables.pnucdiv
-                            + fwbs_variables.praddiv
+                            physics_variables.p_plasma_separatrix_mw
+                            + fwbs_variables.p_div_nuclear_heat_total_mw
+                            + fwbs_variables.p_div_rad_total_mw
                         )
                     )
 
@@ -1597,36 +1635,38 @@ class Stellarator:
                 #  coils, and so contributes to the cryogenic load
 
                 if tfcoil_variables.i_tf_sup == 1:
-                    fwbs_variables.ptfnuc = pnucsi + pnucso - pnucshldi - pnucshldo
+                    fwbs_variables.p_tf_nuclear_heat_mw = (
+                        pnucsi + pnucso - pnucshldi - pnucshldo
+                    )
                 else:  # resistive coils
-                    fwbs_variables.ptfnuc = 0.0e0
+                    fwbs_variables.p_tf_nuclear_heat_mw = 0.0e0
 
         #  heat_transport_variables.ipowerflow
 
         #  fwbs_variables.blktmodel
 
         #  Divertor mass
-        #  N.B. divertor_variables.divsur is calculated in stdiv after this point, so will
+        #  N.B. divertor_variables.a_div_surface_total is calculated in stdiv after this point, so will
         #  be zero on first lap, hence the initial approximation
 
         if self.first_call_stfwbs:
-            divertor_variables.divsur = 50.0e0
+            divertor_variables.a_div_surface_total = 50.0e0
             self.first_call_stfwbs = False
 
-        divertor_variables.divmas = (
-            divertor_variables.divsur
-            * divertor_variables.divdens
-            * (1.0e0 - divertor_variables.divclfr)
-            * divertor_variables.divplt
+        divertor_variables.m_div_plate = (
+            divertor_variables.a_div_surface_total
+            * divertor_variables.den_div_structure
+            * (1.0e0 - divertor_variables.f_vol_div_coolant)
+            * divertor_variables.dx_div_plate
         )
 
         #  Start adding components of the coolant mass:
         #  Divertor coolant volume (m3)
 
         coolvol = (
-            divertor_variables.divsur
-            * divertor_variables.divclfr
-            * divertor_variables.divplt
+            divertor_variables.a_div_surface_total
+            * divertor_variables.f_vol_div_coolant
+            * divertor_variables.dx_div_plate
         )
 
         #  Blanket mass, excluding coolant
@@ -1636,46 +1676,50 @@ class Stellarator:
                 fwbs_variables.blkttype == 2
             ):  # liquid breeder (WCLL or HCLL)
                 fwbs_variables.wtbllipb = (
-                    fwbs_variables.volblkt * fwbs_variables.fbllipb * 9400.0e0
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fbllipb * 9400.0e0
                 )
-                fwbs_variables.whtblli = (
-                    fwbs_variables.volblkt * fwbs_variables.fblli * 534.0e0
+                fwbs_variables.m_blkt_lithium = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli * 534.0e0
                 )
-                fwbs_variables.whtblkt = (
-                    fwbs_variables.wtbllipb + fwbs_variables.whtblli
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.wtbllipb + fwbs_variables.m_blkt_lithium
                 )
             else:  # solid breeder (HCPB); always for ipowerflow=0
-                fwbs_variables.wtblli2o = (
-                    fwbs_variables.volblkt * fwbs_variables.fblli2o * 2010.0e0
+                fwbs_variables.m_blkt_li2o = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblli2o * 2010.0e0
                 )
-                fwbs_variables.whtblbe = (
-                    fwbs_variables.volblkt * fwbs_variables.fblbe * 1850.0e0
+                fwbs_variables.m_blkt_beryllium = (
+                    fwbs_variables.vol_blkt_total * fwbs_variables.fblbe * 1850.0e0
                 )
-                fwbs_variables.whtblkt = (
-                    fwbs_variables.wtblli2o + fwbs_variables.whtblbe
+                fwbs_variables.m_blkt_total = (
+                    fwbs_variables.m_blkt_li2o + fwbs_variables.m_blkt_beryllium
                 )
 
-            fwbs_variables.whtblss = (
-                fwbs_variables.volblkt * fwbs_variables.denstl * fwbs_variables.fblss
+            fwbs_variables.m_blkt_steel_total = (
+                fwbs_variables.vol_blkt_total
+                * fwbs_variables.denstl
+                * fwbs_variables.fblss
             )
-            fwbs_variables.whtblvd = (
-                fwbs_variables.volblkt * 5870.0e0 * fwbs_variables.fblvd
+            fwbs_variables.m_blkt_vanadium = (
+                fwbs_variables.vol_blkt_total * 5870.0e0 * fwbs_variables.fblvd
             )
 
-            fwbs_variables.whtblkt = (
-                fwbs_variables.whtblkt + fwbs_variables.whtblss + fwbs_variables.whtblvd
+            fwbs_variables.m_blkt_total = (
+                fwbs_variables.m_blkt_total
+                + fwbs_variables.m_blkt_steel_total
+                + fwbs_variables.m_blkt_vanadium
             )
 
         else:  # volume fractions proportional to sub-assembly thicknesses
-            fwbs_variables.whtblss = fwbs_variables.denstl * (
-                fwbs_variables.volblkti
+            fwbs_variables.m_blkt_steel_total = fwbs_variables.denstl * (
+                fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
                 * (
                     build_variables.blbuith * fwbs_variables.fblss
                     + build_variables.blbmith * (1.0e0 - fwbs_variables.fblhebmi)
                     + build_variables.blbpith * (1.0e0 - fwbs_variables.fblhebpi)
                 )
-                + fwbs_variables.volblkto
+                + fwbs_variables.vol_blkt_outboard
                 / build_variables.dr_blkt_outboard
                 * (
                     build_variables.blbuoth * fwbs_variables.fblss
@@ -1683,17 +1727,17 @@ class Stellarator:
                     + build_variables.blbpoth * (1.0e0 - fwbs_variables.fblhebpo)
                 )
             )
-            fwbs_variables.whtblbe = (
+            fwbs_variables.m_blkt_beryllium = (
                 1850.0e0
                 * fwbs_variables.fblbe
                 * (
                     (
-                        fwbs_variables.volblkti
+                        fwbs_variables.vol_blkt_inboard
                         * build_variables.blbuith
                         / build_variables.dr_blkt_inboard
                     )
                     + (
-                        fwbs_variables.volblkto
+                        fwbs_variables.vol_blkt_outboard
                         * build_variables.blbuoth
                         / build_variables.dr_blkt_outboard
                     )
@@ -1704,26 +1748,26 @@ class Stellarator:
                 * fwbs_variables.fblbreed
                 * (
                     (
-                        fwbs_variables.volblkti
+                        fwbs_variables.vol_blkt_inboard
                         * build_variables.blbuith
                         / build_variables.dr_blkt_inboard
                     )
                     + (
-                        fwbs_variables.volblkto
+                        fwbs_variables.vol_blkt_outboard
                         * build_variables.blbuoth
                         / build_variables.dr_blkt_outboard
                     )
                 )
             )
-            fwbs_variables.whtblkt = (
-                fwbs_variables.whtblss
-                + fwbs_variables.whtblbe
+            fwbs_variables.m_blkt_total = (
+                fwbs_variables.m_blkt_steel_total
+                + fwbs_variables.m_blkt_beryllium
                 + fwbs_variables.whtblbreed
             )
 
             fwbs_variables.vfblkt = (
-                fwbs_variables.volblkti
-                / fwbs_variables.volblkt
+                fwbs_variables.vol_blkt_inboard
+                / fwbs_variables.vol_blkt_total
                 * (  # inboard portion
                     (build_variables.blbuith / build_variables.dr_blkt_inboard)
                     * (
@@ -1740,8 +1784,8 @@ class Stellarator:
             )
             fwbs_variables.vfblkt = (
                 fwbs_variables.vfblkt
-                + fwbs_variables.volblkto
-                / fwbs_variables.volblkt
+                + fwbs_variables.vol_blkt_outboard
+                / fwbs_variables.vol_blkt_total
                 * (  # outboard portion
                     (build_variables.blbuoth / build_variables.dr_blkt_outboard)
                     * (
@@ -1759,12 +1803,12 @@ class Stellarator:
 
         #  When fwbs_variables.blktmodel > 0, although the blanket is by definition helium-cooled
         #  in this case, the shield etc. are assumed to be water-cooled, and since
-        #  water is heavier the calculation for fwbs_variables.coolmass is better done with
-        #  coolwh=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
+        #  water is heavier the calculation for fwbs_variables.m_fw_blkt_div_coolant_total is better done with
+        #  i_blkt_coolant_type=2 if fwbs_variables.blktmodel > 0; thus we can ignore the helium coolant mass
         #  in the blanket.
 
         if fwbs_variables.blktmodel == 0:
-            coolvol = coolvol + fwbs_variables.volblkt * fwbs_variables.vfblkt
+            coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
 
         # Shield mass
         fwbs_variables.whtshld = (
@@ -1842,11 +1886,11 @@ class Stellarator:
         #  structures is used (see comment above)
 
         if (fwbs_variables.blktmodel > 0) or (
-            fwbs_variables.coolwh == 2
+            fwbs_variables.i_blkt_coolant_type == 2
         ):  # pressurised water coolant
-            fwbs_variables.coolmass = coolvol * 806.719e0
+            fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 806.719e0
         else:  # gaseous helium coolant
-            fwbs_variables.coolmass = coolvol * 1.517e0
+            fwbs_variables.m_fw_blkt_div_coolant_total = coolvol * 1.517e0
 
         #  Assume external cryostat is a torus with circular cross-section,
         #  centred on plasma major radius.
@@ -1884,7 +1928,7 @@ class Stellarator:
             + build_variables.dr_blkt_outboard
             + build_variables.dr_shld_outboard
         )
-        fwbs_variables.vdewin = (
+        fwbs_variables.vol_vv = (
             (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
             / 2.0e0
             * physics_variables.a_plasma_surface
@@ -1895,12 +1939,12 @@ class Stellarator:
 
         #  Vacuum vessel mass
 
-        fwbs_variables.vvmass = fwbs_variables.vdewin * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
-            fwbs_variables.vdewin + fwbs_variables.vol_cryostat
+            fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
         ) * fwbs_variables.denstl
 
         if output:
@@ -1910,8 +1954,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Average neutron wall load (MW/m2)",
-                "(wallmw)",
-                physics_variables.wallmw,
+                "(pflux_fw_neutron_mw)",
+                physics_variables.pflux_fw_neutron_mw,
             )
             if fwbs_variables.blktmodel > 0:
                 po.ovarre(
@@ -1943,8 +1987,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Top shield thickness (m)",
-                "(shldtth)",
-                build_variables.shldtth,
+                "(dz_shld_upper)",
+                build_variables.dz_shld_upper,
             )
 
             if fwbs_variables.blktmodel > 0:
@@ -2002,8 +2046,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Top blanket thickness (m)",
-                "(blnktth)",
-                build_variables.blnktth,
+                "(dz_blkt_upper)",
+                build_variables.dz_blkt_upper,
             )
 
             if (heat_transport_variables.ipowerflow == 0) and (
@@ -2053,40 +2097,40 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
-                    "(pnucblkt)",
-                    fwbs_variables.pnucblkt,
+                    "(p_blkt_nuclear_heat_total_mw)",
+                    fwbs_variables.p_blkt_nuclear_heat_total_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Shield nuclear heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shld_nuclear_heat_mw)",
+                    fwbs_variables.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Coil nuclear heating (MW)",
-                    "(ptfnuc)",
-                    fwbs_variables.ptfnuc,
+                    "(p_tf_nuclear_heat_mw)",
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 )
             else:
                 po.osubhd(self.outfile, "Blanket neutronics :")
                 po.ovarre(
                     self.outfile,
                     "Blanket heating (including energy multiplication) (MW)",
-                    "(pnucblkt)",
-                    fwbs_variables.pnucblkt,
+                    "(p_blkt_nuclear_heat_total_mw)",
+                    fwbs_variables.p_blkt_nuclear_heat_total_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Shield heating (MW)",
-                    "(pnucshld)",
-                    fwbs_variables.pnucshld,
+                    "(p_shld_nuclear_heat_mw)",
+                    fwbs_variables.p_shld_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Energy multiplication in blanket",
-                    "(emult)",
-                    fwbs_variables.emult,
+                    "(f_p_blkt_multiplication)",
+                    fwbs_variables.f_p_blkt_multiplication,
                 )
                 po.ovarin(
                     self.outfile,
@@ -2135,8 +2179,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Lithium-6 enrichment (%)",
-                    "(li6enrich)",
-                    fwbs_variables.li6enrich,
+                    "(f_blkt_li6_enrichment)",
+                    fwbs_variables.f_blkt_li6_enrichment,
                 )
                 po.ovarre(
                     self.outfile, "Tritium breeding ratio", "(tbr)", fwbs_variables.tbr
@@ -2162,8 +2206,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Total nuclear heating on coil (MW)",
-                    "(ptfnuc)",
-                    fwbs_variables.ptfnuc,
+                    "(p_tf_nuclear_heat_mw)",
+                    fwbs_variables.p_tf_nuclear_heat_mw,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2204,8 +2248,8 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Blanket lifetime (full power years)",
-                    "(bktlife)",
-                    fwbs_variables.bktlife,
+                    "(life_blkt_fpy)",
+                    fwbs_variables.life_blkt_fpy,
                 )
                 po.ovarre(
                     self.outfile,
@@ -2221,22 +2265,22 @@ class Stellarator:
                 po.ovarin(
                     self.outfile,
                     "First wall / blanket thermodynamic model",
-                    "(secondary_cycle)",
-                    fwbs_variables.secondary_cycle,
+                    "(i_thermal_electric_conversion)",
+                    fwbs_variables.i_thermal_electric_conversion,
                 )
-                if fwbs_variables.secondary_cycle == 0:
+                if fwbs_variables.i_thermal_electric_conversion == 0:
                     po.ocmmnt(self.outfile, "   (Simple calculation)")
 
             po.osubhd(self.outfile, "Blanket / shield volumes and weights :")
 
             #     if (fwbs_variables.blktmodel == 0) :
             #         if ((fwbs_variables.blkttype == 1)or(fwbs_variables.blkttype == 2)) :
-            #             po.write(self.outfile,601) volblkti, volblkto, volblkt,                whtblkt, vfblkt, fbllipb, wtbllipb, fblli, whtblli,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fbllipb, wtbllipb, fblli, m_blkt_lithium,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
             #         else:  #  (also if ipowerflow=0)
-            #             po.write(self.outfile,600) volblkti, volblkto, volblkt,                whtblkt, vfblkt, fblbe, whtblbe, fblli2o, wtblli2o,                fblss, whtblss, fblvd, whtblvd, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fblbe, m_blkt_beryllium, fblli2o, m_blkt_li2o,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             #     else:
-            #         po.write(self.outfile,602) volblkti, volblkto, volblkt, whtblkt, vfblkt,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, whtblbe,             (fwbs_variables.volblkti/fwbs_variables.volblkt * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.volblkto/fwbs_variables.volblkt * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.volblkti/fwbs_variables.volblkt/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.volblkto/fwbs_variables.volblkt/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             whtblss,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #         po.write(self.outfile,602) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total, m_blkt_total, vfblkt,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, m_blkt_beryllium,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             m_blkt_steel_total,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
 
             # 600 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li2O ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
 
@@ -2288,19 +2332,19 @@ class Stellarator:
                 self.outfile,
                 "External cryostat mass (kg)",
                 "",
-                fwbs_variables.dewmkg - fwbs_variables.vvmass,
+                fwbs_variables.dewmkg - fwbs_variables.m_vv,
             )
             po.ovarre(
                 self.outfile,
                 "Internal vacuum vessel shell volume (m3)",
-                "(vdewin)",
-                fwbs_variables.vdewin,
+                "(vol_vv)",
+                fwbs_variables.vol_vv,
             )
             po.ovarre(
                 self.outfile,
                 "Vacuum vessel mass (kg)",
-                "(vvmass)",
-                fwbs_variables.vvmass,
+                "(m_vv)",
+                fwbs_variables.m_vv,
             )
             po.ovarre(
                 self.outfile,
@@ -2311,14 +2355,14 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Divertor area (m2)",
-                "(divsur)",
-                divertor_variables.divsur,
+                "(a_div_surface_total)",
+                divertor_variables.a_div_surface_total,
             )
             po.ovarre(
                 self.outfile,
                 "Divertor mass (kg)",
-                "(divmas)",
-                divertor_variables.divmas,
+                "(m_div_plate)",
+                divertor_variables.m_div_plate,
             )
 
     def sctfcoil_nuclear_heating_iter90(self):
@@ -2333,7 +2377,7 @@ class Stellarator:
         ptfiwp : output real : inboard TF coil winding pack heating (MW)
         ptfowp : output real : outboard TF coil winding pack heating (MW)
         raddose : output real : insulator dose (rad)
-        ptfnuc : output real : TF coil nuclear heating (MW)
+        p_tf_nuclear_heat_mw : output real : TF coil nuclear heating (MW)
         This subroutine calculates the nuclear heating in the
         superconducting TF coils, assuming an exponential neutron
         attenuation through the blanket and shield materials.
@@ -2359,7 +2403,7 @@ class Stellarator:
             raddose = 0.0
             nflutf = 0.0
             dpacop = 0.0
-            ptfnuc = 0.0
+            p_tf_nuclear_heat_mw = 0.0
 
         else:
             # TF coil nuclear heating coefficients in region i (first element),
@@ -2391,15 +2435,20 @@ class Stellarator:
 
             # Winding pack radial thickness, including groundwall insulation
 
-            wpthk = tfcoil_variables.dr_tf_wp + 2.0 * tfcoil_variables.tinstf
+            wpthk = (
+                tfcoil_variables.dr_tf_wp_with_insulation
+                + 2.0 * tfcoil_variables.dx_tf_wp_insulation
+            )
 
             # Nuclear heating rate in inboard TF coil (MW/m**3)
 
             coilhtmx = (
                 fact[0]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[0, ishmat]
-                * np.exp(-decay[5, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[5, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
             # Total nuclear heating (MW)
@@ -2412,9 +2461,11 @@ class Stellarator:
             )
             ptfowp = (
                 fact[0]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[0, ishmat]
-                * np.exp(-decay[5, ishmat] * (dshoeq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[5, ishmat] * (dshoeq + tfcoil_variables.dr_tf_plasma_case)
+                )
                 * tfcoil_variables.tfsao
                 * (1.0 - np.exp(-decay[0, ishmat] * wpthk))
                 / decay[0, ishmat]
@@ -2424,29 +2475,29 @@ class Stellarator:
 
             htheci = (
                 fact[1]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[1, ishmat]
                 * np.exp(-decay[6, ishmat] * dshieq)
             )
             pheci = (
                 htheci
                 * tfcoil_variables.tfsai
-                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.casthi))
+                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.dr_tf_plasma_case))
                 / decay[1, ishmat]
             )
             pheco = (
                 fact[1]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[1, ishmat]
                 * np.exp(-decay[6, ishmat] * dshoeq)
                 * tfcoil_variables.tfsao
-                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.casthi))
+                * (1.0 - np.exp(-decay[1, ishmat] * tfcoil_variables.dr_tf_plasma_case))
                 / decay[1, ishmat]
             )
             ptfi = ptfiwp + pheci
             ptfo = ptfowp + pheco
 
-            ptfnuc = ptfi + ptfo
+            p_tf_nuclear_heat_mw = ptfi + ptfo
 
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
@@ -2460,8 +2511,10 @@ class Stellarator:
                 coef[2, ishmat]
                 * fpsdt
                 * fact[2]
-                * physics_variables.wallmw
-                * np.exp(-decay[2, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * physics_variables.pflux_fw_neutron_mw
+                * np.exp(
+                    -decay[2, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
             # Maximum neutron fluence in superconductor (n/m**2)
@@ -2469,9 +2522,11 @@ class Stellarator:
             nflutf = (
                 fpsdt
                 * fact[3]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[3, ishmat]
-                * np.exp(-decay[3, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[3, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
             # Atomic displacement in copper stabilizer
@@ -2479,9 +2534,11 @@ class Stellarator:
             dpacop = (
                 fpsdt
                 * fact[4]
-                * physics_variables.wallmw
+                * physics_variables.pflux_fw_neutron_mw
                 * coef[4, ishmat]
-                * np.exp(-decay[4, ishmat] * (dshieq + tfcoil_variables.casthi))
+                * np.exp(
+                    -decay[4, ishmat] * (dshieq + tfcoil_variables.dr_tf_plasma_case)
+                )
             )
 
         return (
@@ -2494,7 +2551,7 @@ class Stellarator:
             ptfiwp,
             ptfowp,
             raddose,
-            ptfnuc,
+            p_tf_nuclear_heat_mw,
         )
 
     def stcoil(self, output: bool):
@@ -2519,21 +2576,21 @@ class Stellarator:
         #
         # [m] Dimension of square cable space inside insulation
         #     and case of the conduit of each turn
-        t_cable = tfcoil_variables.t_turn_tf - 2.0e0 * (
-            tfcoil_variables.thwcndut + tfcoil_variables.thicndut
-        )  # t_cable = t_w
-        if t_cable < 0:
+        dx_tf_turn_cable_space_average = tfcoil_variables.t_turn_tf - 2.0e0 * (
+            tfcoil_variables.dx_tf_turn_steel + tfcoil_variables.dx_tf_turn_insulation
+        )  # dx_tf_turn_cable_space_average = t_w
+        if dx_tf_turn_cable_space_average < 0:
             print(
-                "t_cable is negative. Check t_turn, tfcoil_variables.thwcndut and thicndut."
+                "dx_tf_turn_cable_space_average is negative. Check t_turn, tfcoil_variables.dx_tf_turn_steel and dx_tf_turn_insulation."
             )
         # [m^2] Cross-sectional area of cable space per turn
-        tfcoil_variables.acstf = (
-            0.9e0 * t_cable**2
-        )  # 0.9 to include some rounded corners. (tfcoil_variables.acstf = pi (t_cable/2)**2 = pi/4 *t_cable**2 for perfect round conductor). This factor depends on how round the corners are.
+        tfcoil_variables.a_tf_turn_cable_space_no_void = (
+            0.9e0 * dx_tf_turn_cable_space_average**2
+        )  # 0.9 to include some rounded corners. (tfcoil_variables.a_tf_turn_cable_space_no_void = pi (dx_tf_turn_cable_space_average/2)**2 = pi/4 *dx_tf_turn_cable_space_average**2 for perfect round conductor). This factor depends on how round the corners are.
         # [m^2] Cross-sectional area of conduit case per turn
-        tfcoil_variables.acndttf = (
-            t_cable + 2.0e0 * tfcoil_variables.thwcndut
-        ) ** 2 - tfcoil_variables.acstf
+        tfcoil_variables.a_tf_turn_steel = (
+            dx_tf_turn_cable_space_average + 2.0e0 * tfcoil_variables.dx_tf_turn_steel
+        ) ** 2 - tfcoil_variables.a_tf_turn_cable_space_no_void
         #######################################################################################
 
         #######################################################################################
@@ -2583,8 +2640,8 @@ class Stellarator:
                 tfcoil_variables.fhts,
                 tfcoil_variables.t_crit_nbti,
                 tfcoil_variables.tcritsc,
-                tfcoil_variables.vftf,
-                tfcoil_variables.jwptf,
+                tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+                tfcoil_variables.j_tf_wp,
             )  # Get here a temperature margin of 1.5K.
 
         # The operation current density weighted with the global iop/icrit fraction
@@ -2592,7 +2649,10 @@ class Stellarator:
 
         # Conduct fraction of conduit * Superconductor fraction in conductor
         f_scu = (
-            (tfcoil_variables.acstf * (1.0e0 - tfcoil_variables.vftf))
+            (
+                tfcoil_variables.a_tf_turn_cable_space_no_void
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
+            )
             / (tfcoil_variables.t_turn_tf**2)
             * (1.0e0 - tfcoil_variables.fcutfsu)
         )  # fraction that is SC of wp.
@@ -2618,8 +2678,8 @@ class Stellarator:
         # Maximum field at superconductor surface (T)
         wp_width_r_min = max(tfcoil_variables.t_turn_tf**2, wp_width_r_min)
 
-        # Recalculate tfcoil_variables.bmaxtf at the found awp_min:
-        tfcoil_variables.bmaxtf = self.bmax_from_awp(
+        # Recalculate tfcoil_variables.b_tf_inboard_peak at the found awp_min:
+        tfcoil_variables.b_tf_inboard_peak = self.bmax_from_awp(
             wp_width_r_min,
             coilcurrent,
             tfcoil_variables.n_tf_coils,
@@ -2633,45 +2693,62 @@ class Stellarator:
         )  # Toroidal dimension
         awp_rad = wp_width_r_min  # Radial dimension
 
-        tfcoil_variables.wwp1 = awp_tor  # [m] toroidal thickness of winding pack
-        tfcoil_variables.wwp2 = (
+        tfcoil_variables.dx_tf_wp_primary_toroidal = (
+            awp_tor  # [m] toroidal thickness of winding pack
+        )
+        tfcoil_variables.dx_tf_wp_secondary_toroidal = (
             awp_tor  # [m] toroidal thickness of winding pack (region in front)
         )
-        tfcoil_variables.dr_tf_wp = awp_rad  # [m] radial thickness of winding pack
+        tfcoil_variables.dr_tf_wp_with_insulation = (
+            awp_rad  # [m] radial thickness of winding pack
+        )
 
         #  [m^2] winding-pack cross sectional area including insulation (not global)
-        awpc = (tfcoil_variables.dr_tf_wp + 2.0e0 * tfcoil_variables.tinstf) * (
-            tfcoil_variables.wwp1 + 2.0e0 * tfcoil_variables.tinstf
+        a_tf_wp_with_insulation = (
+            tfcoil_variables.dr_tf_wp_with_insulation
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
+        ) * (
+            tfcoil_variables.dx_tf_wp_primary_toroidal
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )
 
-        awptf = awp_tor * awp_rad  # [m^2] winding-pack cross sectional area
-        tfcoil_variables.jwptf = (
-            coilcurrent * 1.0e6 / awptf
+        a_tf_wp_no_insulation = (
+            awp_tor * awp_rad
+        )  # [m^2] winding-pack cross sectional area
+        tfcoil_variables.j_tf_wp = (
+            coilcurrent * 1.0e6 / a_tf_wp_no_insulation
         )  # [A/m^2] winding pack current density
-        tfcoil_variables.n_tf_turn = (
-            awptf / (tfcoil_variables.t_turn_tf**2)
+        tfcoil_variables.n_tf_coil_turns = (
+            a_tf_wp_no_insulation / (tfcoil_variables.t_turn_tf**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
-        tfcoil_variables.cpttf = (
-            coilcurrent * 1.0e6 / tfcoil_variables.n_tf_turn
+        tfcoil_variables.c_tf_turn = (
+            coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
         )  # [A] current per turn - estimation
         # [m^2] Total conductor cross-sectional area, taking account of void area
-        tfcoil_variables.acond = (
-            tfcoil_variables.acstf
-            * tfcoil_variables.n_tf_turn
-            * (1.0e0 - tfcoil_variables.vftf)
+        tfcoil_variables.a_tf_wp_conductor = (
+            tfcoil_variables.a_tf_turn_cable_space_no_void
+            * tfcoil_variables.n_tf_coil_turns
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
         )
         # [m^2] Void area in cable, for He
-        tfcoil_variables.avwp = (
-            tfcoil_variables.acstf * tfcoil_variables.n_tf_turn * tfcoil_variables.vftf
+        tfcoil_variables.a_tf_wp_extra_void = (
+            tfcoil_variables.a_tf_turn_cable_space_no_void
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.f_a_tf_turn_cable_space_extra_void
         )
         # [m^2] Insulation area (not including ground-wall)
-        tfcoil_variables.aiwp = tfcoil_variables.n_tf_turn * (
-            tfcoil_variables.t_turn_tf**2
-            - tfcoil_variables.acndttf
-            - tfcoil_variables.acstf
+        tfcoil_variables.a_tf_coil_wp_turn_insulation = (
+            tfcoil_variables.n_tf_coil_turns
+            * (
+                tfcoil_variables.t_turn_tf**2
+                - tfcoil_variables.a_tf_turn_steel
+                - tfcoil_variables.a_tf_turn_cable_space_no_void
+            )
         )
         # [m^2] Structure area for cable
-        tfcoil_variables.aswp = tfcoil_variables.n_tf_turn * tfcoil_variables.acndttf
+        tfcoil_variables.a_tf_wp_steel = (
+            tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
+        )
         # End of winding pack calculations
         #######################################################################################
 
@@ -2680,15 +2757,15 @@ class Stellarator:
         #
         # Coil case thickness (m). Here assumed to be constant
         # until something better comes up.
-        # case_thickness_constant = tfcoil_variables.thkcas #0.2e0 # #? Leave this constant for now... Check this## Should be scaled with forces I think.
+        # case_thickness_constant = tfcoil_variables.dr_tf_nose_case #0.2e0 # #? Leave this constant for now... Check this## Should be scaled with forces I think.
         #  For now assumed to be constant in a bolted plate model.
         #
-        tfcoil_variables.casthi = (
-            tfcoil_variables.thkcas
+        tfcoil_variables.dr_tf_plasma_case = (
+            tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness outboard distance (radial)
-        # thkcas = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
-        tfcoil_variables.casths = (
-            tfcoil_variables.thkcas
+        # dr_tf_nose_case = case_thickness_constant/2.0e0 # [m] coil case thickness inboard distance  (radial).
+        tfcoil_variables.dx_tf_side_case_min = (
+            tfcoil_variables.dr_tf_nose_case
         )  # [m] coil case thickness toroidal distance (toroidal)
 
         # End of casing calculations
@@ -2741,43 +2818,43 @@ class Stellarator:
         #######################################################################################
         #  General Coil Geometry values
         #
-        tfcoil_variables.tftort = (
-            tfcoil_variables.wwp1
-            + 2.0e0 * tfcoil_variables.casths
-            + 2.0e0 * tfcoil_variables.tinstf
+        tfcoil_variables.dx_tf_inboard_out_toroidal = (
+            tfcoil_variables.dx_tf_wp_primary_toroidal
+            + 2.0e0 * tfcoil_variables.dx_tf_side_case_min
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in toroidal direction
 
         build_variables.dr_tf_inboard = (
-            tfcoil_variables.thkcas
-            + tfcoil_variables.dr_tf_wp
-            + tfcoil_variables.casthi
-            + 2.0e0 * tfcoil_variables.tinstf
+            tfcoil_variables.dr_tf_nose_case
+            + tfcoil_variables.dr_tf_wp_with_insulation
+            + tfcoil_variables.dr_tf_plasma_case
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of inboard leg in radial direction
         build_variables.dr_tf_outboard = (
-            tfcoil_variables.thkcas
-            + tfcoil_variables.dr_tf_wp
-            + tfcoil_variables.casthi
-            + 2.0e0 * tfcoil_variables.tinstf
+            tfcoil_variables.dr_tf_nose_case
+            + tfcoil_variables.dr_tf_wp_with_insulation
+            + tfcoil_variables.dr_tf_plasma_case
+            + 2.0e0 * tfcoil_variables.dx_tf_wp_insulation
         )  # [m] Thickness of outboard leg in radial direction (same as inboard)
         tfcoil_variables.a_tf_leg_outboard = (
-            build_variables.dr_tf_inboard * tfcoil_variables.tftort
+            build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m^2] overall coil cross-sectional area (assuming inboard and
         #       outboard leg are the same)
-        tfcoil_variables.acasetf = (
-            build_variables.dr_tf_inboard * tfcoil_variables.tftort
-        ) - awpc  # [m^2] Cross-sectional area of surrounding case
+        tfcoil_variables.a_tf_coil_inboard_case = (
+            build_variables.dr_tf_inboard * tfcoil_variables.dx_tf_inboard_out_toroidal
+        ) - a_tf_wp_with_insulation  # [m^2] Cross-sectional area of surrounding case
 
         tfcoil_variables.tfocrn = (
-            0.5e0 * tfcoil_variables.tftort
+            0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m] Half-width of side of coil nearest torus centreline
         tfcoil_variables.tficrn = (
-            0.5e0 * tfcoil_variables.tftort
+            0.5e0 * tfcoil_variables.dx_tf_inboard_out_toroidal
         )  # [m] Half-width of side of coil nearest plasma
 
         # [m^2] Total surface area of coil side facing plasma: inboard region
         tfcoil_variables.tfsai = (
             tfcoil_variables.n_tf_coils
-            * tfcoil_variables.tftort
+            * tfcoil_variables.dx_tf_inboard_out_toroidal
             * 0.5e0
             * tfcoil_variables.len_tf_coil
         )
@@ -2797,19 +2874,21 @@ class Stellarator:
             )
         )
         # Left-Over coil gap between two coils (m)
-        coilcoilgap = tfcoil_variables.toroidalgap - tfcoil_variables.tftort
+        coilcoilgap = (
+            tfcoil_variables.toroidalgap - tfcoil_variables.dx_tf_inboard_out_toroidal
+        )
 
         #  Variables for ALL coils.
-        tfcoil_variables.tfareain = (
+        tfcoil_variables.a_tf_inboard_total = (
             tfcoil_variables.n_tf_coils * tfcoil_variables.a_tf_leg_outboard
         )  # [m^2] Total area of all coil legs (midplane)
         tfcoil_variables.c_tf_total = (
             tfcoil_variables.n_tf_coils * coilcurrent * 1.0e6
         )  # [A] Total current in ALL coils
         tfcoil_variables.oacdcp = (
-            tfcoil_variables.c_tf_total / tfcoil_variables.tfareain
+            tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_inboard_total
         )  # [A / m^2] overall current density
-        tfcoil_variables.rbmax = (
+        tfcoil_variables.r_b_tf_inboard_peak = (
             r_coil_major - r_coil_minor + awp_rad
         )  # [m] radius of peak field occurrence, average
         # jlion: not sure what this will be used for. Not very
@@ -2822,7 +2901,7 @@ class Stellarator:
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
             * st.f_n**2
         )
-        tfcoil_variables.estotftgj = (
+        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
             0.5e0
             * (
                 stellarator_configuration.stella_config_inductance
@@ -2836,7 +2915,7 @@ class Stellarator:
         )  # [GJ] Total magnetic energy
 
         #  Coil dimensions
-        build_variables.hmax = (
+        build_variables.z_tf_inside_half = (
             0.5e0
             * stellarator_configuration.stella_config_maximal_coil_height
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
@@ -2850,7 +2929,9 @@ class Stellarator:
         )
         # the average minor coil radius
 
-        tfborev = 2.0e0 * build_variables.hmax  # [m] estimated vertical coil dr_bore
+        tfborev = (
+            2.0e0 * build_variables.z_tf_inside_half
+        )  # [m] estimated vertical coil dr_bore
 
         tfcoil_variables.len_tf_coil = (
             stellarator_configuration.stella_config_coillength
@@ -2870,7 +2951,7 @@ class Stellarator:
             stellarator_configuration.stella_config_min_bend_radius
             * st.f_r
             * 1.0
-            / (1.0 - tfcoil_variables.dr_tf_wp / (2.0 * r_coil_minor))
+            / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
         )
 
         # End of general coil geometry values
@@ -2881,61 +2962,65 @@ class Stellarator:
         #
         # [kg] Mass of case
         #  (no need for correction factors as is the case for tokamaks)
-        # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.acasetf)).
+        # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.a_tf_coil_inboard_case)).
         tfcoil_variables.whtcas = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.acasetf
+            * tfcoil_variables.a_tf_coil_inboard_case
             * tfcoil_variables.dcase
         )
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
         tfcoil_variables.whtgw = (
-            tfcoil_variables.len_tf_coil * (awpc - awptf) * tfcoil_variables.dcondins
+            tfcoil_variables.len_tf_coil
+            * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
+            * tfcoil_variables.dcondins
         )
         # [kg] mass of Superconductor
         tfcoil_variables.whtconsc = (
-            tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acstf
-            * (1.0e0 - tfcoil_variables.vftf)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
-            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
-        ) * tfcoil_variables.dcond[
-            tfcoil_variables.i_tf_sc_mat - 1
-        ]  # awphec is 0 for a stellarator. but keep this term for now.
+            (
+                tfcoil_variables.len_tf_coil
+                * tfcoil_variables.n_tf_coil_turns
+                * tfcoil_variables.a_tf_turn_cable_space_no_void
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
+                * (1.0e0 - tfcoil_variables.fcutfsu)
+                - tfcoil_variables.len_tf_coil
+                * tfcoil_variables.a_tf_wp_coolant_channels
+            )
+            * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
+        )  # a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
         tfcoil_variables.whtconcu = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acstf
-            * (1.0e0 - tfcoil_variables.vftf)
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_cable_space_no_void
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             * tfcoil_variables.fcutfsu
-            - tfcoil_variables.len_tf_coil * tfcoil_variables.awphec
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.dcopper
         # [kg] mass of Steel conduit (sheath)
-        tfcoil_variables.whtconsh = (
+        tfcoil_variables.m_tf_turn_steel_conduit = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.n_tf_turn
-            * tfcoil_variables.acndttf
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_steel
             * fwbs_variables.denstl
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.whtconsh = fcondsteel * awptf *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
         # Conduit insulation mass [kg]
-        # (tfcoil_variables.aiwp already contains tfcoil_variables.n_tf_turn)
+        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
         tfcoil_variables.whtconin = (
             tfcoil_variables.len_tf_coil
-            * tfcoil_variables.aiwp
+            * tfcoil_variables.a_tf_coil_wp_turn_insulation
             * tfcoil_variables.dcondins
         )
         # [kg] Total conductor mass
         tfcoil_variables.whtcon = (
             tfcoil_variables.whtconsc
             + tfcoil_variables.whtconcu
-            + tfcoil_variables.whtconsh
+            + tfcoil_variables.m_tf_turn_steel_conduit
             + tfcoil_variables.whtconin
         )
         # [kg] Total coil mass
-        tfcoil_variables.whttf = (
+        tfcoil_variables.m_tf_coils_total = (
             tfcoil_variables.whtcas + tfcoil_variables.whtcon + tfcoil_variables.whtgw
         ) * tfcoil_variables.n_tf_coils
         # End of general coil geometry values
@@ -2999,12 +3084,14 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(cpttf,estotftgj/tfcoil_variables.n_tf_coils*1.0e9,acstf,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-vftf,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
-            tfcoil_variables.estotftgj / tfcoil_variables.n_tf_coils * 1.0e9,
+            tfcoil_variables.e_tf_magnetic_stored_total_gj
+            / tfcoil_variables.n_tf_coils
+            * 1.0e9,
             tfcoil_variables.tdmptf,
-            tfcoil_variables.cpttf,
+            tfcoil_variables.c_tf_turn,
         )
 
         # comparison
@@ -3013,17 +3100,19 @@ class Stellarator:
             tfcoil_variables.tdmptf,
             0.0e0,
             tfcoil_variables.fcutfsu,
-            1 - tfcoil_variables.vftf,
+            1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             tfcoil_variables.tftmp,
-            tfcoil_variables.acstf,
+            tfcoil_variables.a_tf_turn_cable_space_no_void,
             tfcoil_variables.t_turn_tf**2,
         )
 
-        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",jwptf/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
-        # print *, "acstf: ", tfcoil_variables.acstf
+        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
+        # print *, "a_tf_turn_cable_space_no_void: ", tfcoil_variables.a_tf_turn_cable_space_no_void
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
-            coilcurrent * 1.0e6 / (tfcoil_variables.acond * tfcoil_variables.fcutfsu)
+            coilcurrent
+            * 1.0e6
+            / (tfcoil_variables.a_tf_wp_conductor * tfcoil_variables.fcutfsu)
         )
         tfcoil_variables.vtfskv = vd / 1.0e3  # Dump voltage
         #
@@ -3034,15 +3123,17 @@ class Stellarator:
             stellarator_configuration.stella_config_max_force_density
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
-            / awptf
+            / a_tf_wp_no_insulation
         )
 
         # Approximate, very simple maxiumum stress: (needed for limitation of icc 32)
         tfcoil_variables.sig_tf_wp = (
-            tfcoil_variables.max_force_density * tfcoil_variables.dr_tf_wp * 1.0e6
+            tfcoil_variables.max_force_density
+            * tfcoil_variables.dr_tf_wp_with_insulation
+            * 1.0e6
         )  # in Pa
 
         # Units: MN/m
@@ -3050,7 +3141,7 @@ class Stellarator:
             stellarator_configuration.stella_config_max_force_density_mnm
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
         )
         #
@@ -3058,19 +3149,19 @@ class Stellarator:
             stellarator_configuration.stella_config_max_lateral_force_density
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
-            / awptf
+            / a_tf_wp_no_insulation
         )
         max_radial_force_density = (
             stellarator_configuration.stella_config_max_radial_force_density
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
-            / awptf
+            / a_tf_wp_no_insulation
         )
         #
         # F = f*V = B*j*V \propto B/B0 * I/I0 * A0/A * A/A0 * len/len0
@@ -3078,7 +3169,7 @@ class Stellarator:
             stellarator_configuration.stella_config_centering_force_max_mn
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
@@ -3088,7 +3179,7 @@ class Stellarator:
             stellarator_configuration.stella_config_centering_force_min_mn
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
@@ -3098,7 +3189,7 @@ class Stellarator:
             stellarator_configuration.stella_config_centering_force_avg_mn
             * st.f_i
             / st.f_n
-            * tfcoil_variables.bmaxtf
+            * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
@@ -3109,7 +3200,7 @@ class Stellarator:
 
         if output:
             self.stcoil_output(
-                awptf,
+                a_tf_wp_no_insulation,
                 centering_force_avg_mn,
                 centering_force_max_mn,
                 centering_force_min_mn,
@@ -3199,11 +3290,11 @@ class Stellarator:
         fhts,
         t_crit_nbti,
         tcritsc,
-        vftf,
+        f_a_tf_turn_cable_space_extra_void,
         jwp,
     ):
         strain = -0.005  # for now a small value
-        fhe = vftf  # this is helium fraction in the superconductor (set it to the fixed global variable here)
+        fhe = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
         fcu = fcutfsu  # fcutfsu is a global variable. Is the copper fraction
         # of a cable conductor.
@@ -3286,7 +3377,7 @@ class Stellarator:
             #  j_crit_sc returned by itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
 
-            j_crit_sc, bcrit, tcrit = superconductors.wstsc(
+            j_crit_sc, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
                 thelium,
                 bmax,
                 strain,
@@ -3321,8 +3412,9 @@ class Stellarator:
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
         else:
-            error_handling.idiags[0] = i_tf_sc_mat
-            error_handling.report_error(156)
+            raise ProcessValueError(
+                "Illegal value for i_pf_superconductor", i_tf_sc_mat=i_tf_sc_mat
+            )
 
         return j_crit_sc * 1e-6
 
@@ -3573,12 +3665,14 @@ class Stellarator:
         arg = powht * bt / (rmajor * rminor * rminor)
 
         if arg <= 0.0e0:
-            error_handling.fdiags[0] = arg
-            error_handling.fdiags[1] = powht
-            error_handling.fdiags[2] = bt
-            error_handling.fdiags[3] = rmajor
-            error_handling.fdiags[4] = rminor
-            error_handling.report_error(108)
+            raise ProcessValueError(
+                "Negative square root imminent",
+                arg=arg,
+                powht=powht,
+                bt=bt,
+                rmajor=rmajor,
+                rminor=rminor,
+            )
 
         #  Maximum line-averaged electron density
 
@@ -3587,7 +3681,7 @@ class Stellarator:
         #  Scale the result so that it applies to the volume-averaged
         #  electron density
 
-        dlimit = dnlamx * physics_variables.dene / physics_variables.dnla
+        dlimit = dnlamx * physics_variables.dene / physics_variables.nd_electron_line
 
         #  Set the required value for icc=5
 
@@ -3597,7 +3691,7 @@ class Stellarator:
 
     def stcoil_output(
         self,
-        awptf,
+        a_tf_wp_no_insulation,
         centering_force_avg_mn,
         centering_force_max_mn,
         centering_force_min_mn,
@@ -3655,7 +3749,7 @@ class Stellarator:
             self.outfile,
             "Cross-sectional area per coil (m2)",
             "(tfarea/n_tf_coils)",
-            tfcoil_variables.tfareain / tfcoil_variables.n_tf_coils,
+            tfcoil_variables.a_tf_inboard_total / tfcoil_variables.n_tf_coils,
         )
         po.ovarre(
             self.outfile,
@@ -3684,8 +3778,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Outboard leg toroidal thickness (m)",
-            "(tftort)",
-            tfcoil_variables.tftort,
+            "(dx_tf_inboard_out_toroidal)",
+            tfcoil_variables.dx_tf_inboard_out_toroidal,
         )
         po.ovarre(
             self.outfile, "Minimum coil distance (m)", "(toroidalgap)", toroidalgap
@@ -3723,8 +3817,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Winding pack current density (A/m2)",
-            "(jwptf)",
-            tfcoil_variables.jwptf,
+            "(j_tf_wp)",
+            tfcoil_variables.j_tf_wp,
         )
         po.ovarre(
             self.outfile,
@@ -3741,20 +3835,23 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Maximum field on superconductor (T)",
-            "(bmaxtf)",
-            tfcoil_variables.bmaxtf,
+            "(b_tf_inboard_peak)",
+            tfcoil_variables.b_tf_inboard_peak,
         )
         po.ovarre(
             self.outfile,
             "Total Stored energy (GJ)",
-            "(estotftgj)",
-            tfcoil_variables.estotftgj,
+            "(e_tf_magnetic_stored_total_gj)",
+            tfcoil_variables.e_tf_magnetic_stored_total_gj,
         )
         po.ovarre(
             self.outfile, "Inductance of TF Coils (H)", "(inductance)", inductance
         )
         po.ovarre(
-            self.outfile, "Total mass of coils (kg)", "(whttf)", tfcoil_variables.whttf
+            self.outfile,
+            "Total mass of coils (kg)",
+            "(m_tf_coils_total)",
+            tfcoil_variables.m_tf_coils_total,
         )
 
         po.osubhd(self.outfile, "Coil Geometry :")
@@ -3773,8 +3870,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Maximum inboard edge height (m)",
-            "(hmax)",
-            build_variables.hmax,
+            "(z_tf_inside_half)",
+            build_variables.z_tf_inside_half,
         )
         po.ovarre(
             self.outfile,
@@ -3800,8 +3897,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Steel conduit mass per coil (kg)",
-            "(whtconsh)",
-            tfcoil_variables.whtconsh,
+            "(m_tf_turn_steel_conduit)",
+            tfcoil_variables.m_tf_turn_steel_conduit,
         )
         po.ovarre(
             self.outfile,
@@ -3812,36 +3909,36 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Cable conductor + void area (m2)",
-            "(acstf)",
-            tfcoil_variables.acstf,
+            "(a_tf_turn_cable_space_no_void)",
+            tfcoil_variables.a_tf_turn_cable_space_no_void,
         )
         po.ovarre(
             self.outfile,
             "Cable space coolant fraction",
-            "(vftf)",
-            tfcoil_variables.vftf,
+            "(f_a_tf_turn_cable_space_extra_void)",
+            tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
         )
         po.ovarre(
             self.outfile,
             "Conduit case thickness (m)",
-            "(thwcndut)",
-            tfcoil_variables.thwcndut,
+            "(dx_tf_turn_steel)",
+            tfcoil_variables.dx_tf_turn_steel,
         )
         po.ovarre(
             self.outfile,
             "Cable insulation thickness (m)",
-            "(thicndut)",
-            tfcoil_variables.thicndut,
+            "(dx_tf_turn_insulation)",
+            tfcoil_variables.dx_tf_turn_insulation,
         )
 
-        ap = awptf
+        ap = a_tf_wp_no_insulation
         po.osubhd(self.outfile, "Winding Pack Information :")
         po.ovarre(self.outfile, "Winding pack area", "(ap)", ap)
         po.ovarre(
             self.outfile,
             "Conductor fraction of winding pack",
-            "(acond/ap)",
-            tfcoil_variables.acond / ap,
+            "(a_tf_wp_conductor/ap)",
+            tfcoil_variables.a_tf_wp_conductor / ap,
         )
         po.ovarre(
             self.outfile,
@@ -3852,44 +3949,44 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Structure fraction of winding pack",
-            "(aswp/ap)",
-            tfcoil_variables.aswp / ap,
+            "(a_tf_wp_steel/ap)",
+            tfcoil_variables.a_tf_wp_steel / ap,
         )
         po.ovarre(
             self.outfile,
             "Insulator fraction of winding pack",
-            "(aiwp/ap)",
-            tfcoil_variables.aiwp / ap,
+            "(a_tf_coil_wp_turn_insulation/ap)",
+            tfcoil_variables.a_tf_coil_wp_turn_insulation / ap,
         )
         po.ovarre(
             self.outfile,
             "Helium fraction of winding pack",
-            "(avwp/ap)",
-            tfcoil_variables.avwp / ap,
+            "(a_tf_wp_extra_void/ap)",
+            tfcoil_variables.a_tf_wp_extra_void / ap,
         )
         po.ovarre(
             self.outfile,
             "Winding radial thickness (m)",
-            "(dr_tf_wp)",
-            tfcoil_variables.dr_tf_wp,
+            "(dr_tf_wp_with_insulation)",
+            tfcoil_variables.dr_tf_wp_with_insulation,
         )
         po.ovarre(
             self.outfile,
             "Winding toroidal thickness (m)",
-            "(wwp1)",
-            tfcoil_variables.wwp1,
+            "(dx_tf_wp_primary_toroidal)",
+            tfcoil_variables.dx_tf_wp_primary_toroidal,
         )
         po.ovarre(
             self.outfile,
             "Ground wall insulation thickness (m)",
-            "(tinstf)",
-            tfcoil_variables.tinstf,
+            "(dx_tf_wp_insulation)",
+            tfcoil_variables.dx_tf_wp_insulation,
         )
         po.ovarre(
             self.outfile,
             "Number of turns per coil",
-            "(n_tf_turn)",
-            tfcoil_variables.n_tf_turn,
+            "(n_tf_coil_turns)",
+            tfcoil_variables.n_tf_coil_turns,
         )
         po.ovarre(
             self.outfile,
@@ -3898,22 +3995,25 @@ class Stellarator:
             t_turn_tf,
         )
         po.ovarre(
-            self.outfile, "Current per turn (A)", "(cpttf)", tfcoil_variables.cpttf
+            self.outfile,
+            "Current per turn (A)",
+            "(c_tf_turn)",
+            tfcoil_variables.c_tf_turn,
         )
         po.ovarre(self.outfile, "jop/jcrit", "(fiooic)", fiooic)
         po.ovarre(
             self.outfile,
             "Current density in conductor area (A/m2)",
-            "(c_tf_total/acond)",
+            "(c_tf_total/a_tf_wp_conductor)",
             1.0e-6
             * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
-            / tfcoil_variables.acond,
+            / tfcoil_variables.a_tf_wp_conductor,
         )
         po.ovarre(
             self.outfile,
             "Current density in SC area (A/m2)",
-            "(c_tf_total/acond/f_scu)",
+            "(c_tf_total/a_tf_wp_conductor/f_scu)",
             1.0e-6
             * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
@@ -4012,26 +4112,26 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Case thickness, plasma side (m)",
-            "(casthi)",
-            tfcoil_variables.casthi,
+            "(dr_tf_plasma_case)",
+            tfcoil_variables.dr_tf_plasma_case,
         )
         po.ovarre(
             self.outfile,
             "Case thickness, outer side (m)",
-            "(thkcas)",
-            tfcoil_variables.thkcas,
+            "(dr_tf_nose_case)",
+            tfcoil_variables.dr_tf_nose_case,
         )
         po.ovarre(
             self.outfile,
             "Case toroidal thickness (m)",
-            "(casths)",
-            tfcoil_variables.casths,
+            "(dx_tf_side_case_min)",
+            tfcoil_variables.dx_tf_side_case_min,
         )
         po.ovarre(
             self.outfile,
             "Case area per coil (m2)",
-            "(acasetf)",
-            tfcoil_variables.acasetf,
+            "(a_tf_coil_inboard_case)",
+            tfcoil_variables.a_tf_coil_inboard_case,
         )
         po.ovarre(
             self.outfile,
@@ -4132,10 +4232,11 @@ class Stellarator:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
-        if (
-            5 in numerics.ixc
-        ):  # Check if physics_variables.beta (iteration variable 5) is an iteration variable
-            error_handling.report_error(251)
+        # Check if physics_variables.beta (iteration variable 5) is an iteration variable
+        if 5 in numerics.ixc:
+            raise ProcessValueError(
+                "Beta should not be in ixc if istell>0. Use Constraints 24 and 84 instead"
+            )
 
         #  Set physics_variables.beta as a consequence:
         #  This replaces constraint equation 1 as it is just an equality.
@@ -4165,7 +4266,11 @@ class Stellarator:
             * constants.proton_mass
             * physics_variables.m_ions_total_amu
             * physics_module.e_plasma_beta
-            / (3.0e0 * physics_variables.vol_plasma * physics_variables.dnla)
+            / (
+                3.0e0
+                * physics_variables.vol_plasma
+                * physics_variables.nd_electron_line
+            )
         ) / (
             constants.electron_charge
             * physics_variables.bt
@@ -4191,100 +4296,96 @@ class Stellarator:
 
         #  Calculate fusion power
 
-        fusion_reactions = physics_funcs.FusionReactionRate(self.plasma_profile)
+        fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
         fusion_reactions.deuterium_branching(physics_variables.ti)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given component
-        physics_variables.dt_power_plasma = (
+        physics_variables.p_plasma_dt_mw = (
             physics_module.dt_power_density_plasma * physics_variables.vol_plasma
         )
-        physics_variables.dhe3_power = (
+        physics_variables.p_dhe3_total_mw = (
             physics_module.dhe3_power_density * physics_variables.vol_plasma
         )
-        physics_variables.dd_power = (
+        physics_variables.p_dd_total_mw = (
             physics_module.dd_power_density * physics_variables.vol_plasma
         )
 
         #  Calculate neutral beam slowing down effects
         #  If ignited, then ignore beam fusion effects
 
-        if (current_drive_variables.pnbeam != 0.0e0) and (
-            physics_variables.ignite == 0
+        if (current_drive_variables.p_hcd_beam_injected_total_mw != 0.0e0) and (
+            physics_variables.i_plasma_ignited == 0
         ):
             (
                 physics_variables.beta_beam,
-                physics_variables.beam_density_out,
-                physics_variables.alpha_power_beams,
-            ) = physics_funcs.beam_fusion(
+                physics_variables.nd_beam_ions_out,
+                physics_variables.p_beam_alpha_mw,
+            ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.bp,
                 physics_variables.bt,
-                current_drive_variables.beam_current,
+                current_drive_variables.c_beam_total,
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
-                current_drive_variables.beam_energy,
+                current_drive_variables.e_beam_kev,
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
-                current_drive_variables.f_tritium_beam,
+                current_drive_variables.f_beam_tritium,
                 physics_module.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
-            physics_variables.fusion_rate_density_total = (
-                physics_variables.fusion_rate_density_plasma
+            physics_variables.fusden_total = (
+                physics_variables.fusden_plasma
                 + 1.0e6
-                * physics_variables.alpha_power_beams
+                * physics_variables.p_beam_alpha_mw
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.alpha_rate_density_total = (
-                physics_variables.alpha_rate_density_plasma
+            physics_variables.fusden_alpha_total = (
+                physics_variables.fusden_plasma_alpha
                 + 1.0e6
-                * physics_variables.alpha_power_beams
+                * physics_variables.p_beam_alpha_mw
                 / (constants.dt_alpha_energy)
                 / physics_variables.vol_plasma
             )
-            physics_variables.dt_power_total = (
-                physics_variables.dt_power_plasma
-                + 5.0e0 * physics_variables.alpha_power_beams
+            physics_variables.p_dt_total_mw = (
+                physics_variables.p_plasma_dt_mw
+                + 5.0e0 * physics_variables.p_beam_alpha_mw
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
-            physics_variables.fusion_rate_density_total = (
-                physics_variables.fusion_rate_density_plasma
-            )
-            physics_variables.alpha_rate_density_total = (
-                physics_variables.alpha_rate_density_plasma
-            )
-            physics_variables.dt_power_total = physics_variables.dt_power_plasma
+            physics_variables.fusden_total = physics_variables.fusden_plasma
+            physics_variables.fusden_alpha_total = physics_variables.fusden_plasma_alpha
+            physics_variables.p_dt_total_mw = physics_variables.p_plasma_dt_mw
 
         # Create some derived values and add beam contribution to fusion power
         (
-            physics_variables.neutron_power_density_total,
-            physics_variables.alpha_power_plasma,
-            physics_variables.alpha_power_total,
-            physics_variables.neutron_power_plasma,
-            physics_variables.neutron_power_total,
-            physics_variables.non_alpha_charged_power,
-            physics_variables.alpha_power_density_total,
-            physics_variables.alpha_power_electron_density,
-            physics_variables.alpha_power_ions_density,
-            physics_variables.charged_particle_power,
-            physics_variables.fusion_power,
-        ) = physics_funcs.set_fusion_powers(
+            physics_variables.pden_neutron_total_mw,
+            physics_variables.p_plasma_alpha_mw,
+            physics_variables.p_alpha_total_mw,
+            physics_variables.p_plasma_neutron_mw,
+            physics_variables.p_neutron_total_mw,
+            physics_variables.p_non_alpha_charged_mw,
+            physics_variables.pden_alpha_total_mw,
+            physics_variables.f_pden_alpha_electron_mw,
+            physics_variables.f_pden_alpha_ions_mw,
+            physics_variables.p_charged_particle_mw,
+            physics_variables.p_fusion_total_mw,
+        ) = reactions.set_fusion_powers(
             physics_variables.f_alpha_electron,
             physics_variables.f_alpha_ion,
-            physics_variables.alpha_power_beams,
-            physics_variables.charged_power_density,
-            physics_variables.neutron_power_density_plasma,
+            physics_variables.p_beam_alpha_mw,
+            physics_variables.pden_non_alpha_charged_mw,
+            physics_variables.pden_plasma_neutron_mw,
             physics_variables.vol_plasma,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_plasma_alpha_mw,
         )
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
@@ -4295,41 +4396,41 @@ class Stellarator:
             physics_variables.nd_ions_total,
             physics_variables.ten,
             physics_variables.tin,
-            physics_variables.alpha_power_density_total,
-            physics_variables.alpha_power_density_plasma,
+            physics_variables.pden_alpha_total_mw,
+            physics_variables.pden_plasma_alpha_mw,
             physics_variables.i_beta_fast_alpha,
         )
 
         #  Neutron wall load
 
         if physics_variables.iwalld == 1:
-            physics_variables.wallmw = (
+            physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
-                * physics_variables.neutron_power_total
+                * physics_variables.p_neutron_total_mw
                 / physics_variables.a_plasma_surface
             )
         else:
             if heat_transport_variables.ipowerflow == 0:
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (1.0e0 - fwbs_variables.fhole)
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
             else:
-                physics_variables.wallmw = (
+                physics_variables.pflux_fw_neutron_mw = (
                     (
                         1.0e0
                         - fwbs_variables.fhole
-                        - fwbs_variables.fhcd
-                        - fwbs_variables.fdiv
+                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_ster_div_single
                     )
-                    * physics_variables.neutron_power_total
+                    * physics_variables.p_neutron_total_mw
                     / build_variables.a_fw_total
                 )
 
         #  Calculate ion/electron equilibration power
 
-        physics_variables.piepv = rether(
+        physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.dene,
@@ -4340,20 +4441,40 @@ class Stellarator:
         )
 
         #  Calculate radiation power
-        radpwr_data = physics_funcs.calculate_radiation_powers(self.plasma_profile)
+        radpwr_data = physics_funcs.calculate_radiation_powers(
+            self.plasma_profile,
+            physics_variables.ne0,
+            physics_variables.rminor,
+            physics_variables.bt,
+            physics_variables.aspect,
+            physics_variables.alphan,
+            physics_variables.alphat,
+            physics_variables.tbeta,
+            physics_variables.te0,
+            physics_variables.f_sync_reflect,
+            physics_variables.rmajor,
+            physics_variables.kappa,
+            physics_variables.vol_plasma,
+        )
         physics_variables.pden_plasma_sync_mw = radpwr_data.pden_plasma_sync_mw
-        physics_variables.pcoreradpv = radpwr_data.pcoreradpv
-        physics_variables.pedgeradpv = radpwr_data.pedgeradpv
+        physics_variables.pden_plasma_core_rad_mw = radpwr_data.pden_plasma_core_rad_mw
+        physics_variables.pden_plasma_outer_rad_mw = (
+            radpwr_data.pden_plasma_outer_rad_mw
+        )
         physics_variables.pden_plasma_rad_mw = radpwr_data.pden_plasma_rad_mw
 
-        physics_variables.pcoreradpv = max(physics_variables.pcoreradpv, 0.0e0)
-        physics_variables.pedgeradpv = max(physics_variables.pedgeradpv, 0.0e0)
+        physics_variables.pden_plasma_core_rad_mw = max(
+            physics_variables.pden_plasma_core_rad_mw, 0.0e0
+        )
+        physics_variables.pden_plasma_outer_rad_mw = max(
+            physics_variables.pden_plasma_outer_rad_mw, 0.0e0
+        )
 
         physics_variables.p_plasma_inner_rad_mw = (
-            physics_variables.pcoreradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_core_rad_mw * physics_variables.vol_plasma
         )  # Should probably be vol_core
         physics_variables.p_plasma_outer_rad_mw = (
-            physics_variables.pedgeradpv * physics_variables.vol_plasma
+            physics_variables.pden_plasma_outer_rad_mw * physics_variables.vol_plasma
         )
 
         physics_variables.p_plasma_rad_mw = (
@@ -4365,8 +4486,9 @@ class Stellarator:
         #  physics_variables.p_plasma_rad_mw here is core + edge (no SOL)
 
         powht = (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
-            + physics_variables.non_alpha_charged_power
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             - physics_variables.pden_plasma_rad_mw * physics_variables.vol_plasma
         )
@@ -4374,9 +4496,9 @@ class Stellarator:
             0.00001e0, powht
         )  # To avoid negative heating power. This line is VERY important
 
-        if physics_variables.ignite == 0:
+        if physics_variables.i_plasma_ignited == 0:
             powht = (
-                powht + current_drive_variables.pinjmw
+                powht + current_drive_variables.p_hcd_injected_total_mw
             )  # if not ignited add the auxiliary power
 
         # Here the implementation sometimes leaves the accessible regime when p_plasma_rad_mw> powht which is unphysical and
@@ -4389,7 +4511,7 @@ class Stellarator:
 
         # The SOL radiation needs to be smaller than the physics_variables.p_plasma_rad_mw
         physics_variables.psolradmw = stellarator_variables.f_rad * powht
-        physics_variables.pdivt = powht - physics_variables.psolradmw
+        physics_variables.p_plasma_separatrix_mw = powht - physics_variables.psolradmw
 
         # Add SOL Radiation to total
         physics_variables.p_plasma_rad_mw = (
@@ -4400,12 +4522,14 @@ class Stellarator:
         #  The following line is unphysical, but prevents -ve sqrt argument
         #  Should be obsolete if constraint eqn 17 is turned on (but beware -
         #  this may not be quite correct for stellarators)
-        physics_variables.pdivt = max(0.001e0, physics_variables.pdivt)
+        physics_variables.p_plasma_separatrix_mw = max(
+            0.001e0, physics_variables.p_plasma_separatrix_mw
+        )
 
         #  Power transported to the first wall by escaped alpha particles
 
-        physics_variables.palpfwmw = physics_variables.alpha_power_total * (
-            1.0e0 - physics_variables.f_alpha_plasma
+        physics_variables.p_fw_alpha_mw = physics_variables.p_alpha_total_mw * (
+            1.0e0 - physics_variables.f_p_alpha_plasma_deposited
         )
 
         # Nominal mean photon wall load
@@ -4427,8 +4551,8 @@ class Stellarator:
                     (
                         1.0e0
                         - fwbs_variables.fhole
-                        - fwbs_variables.fhcd
-                        - fwbs_variables.fdiv
+                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
                     / build_variables.a_fw_total
@@ -4439,10 +4563,11 @@ class Stellarator:
         )
 
         physics_variables.rad_fraction_total = physics_variables.p_plasma_rad_mw / (
-            physics_variables.f_alpha_plasma * physics_variables.alpha_power_total
-            + physics_variables.non_alpha_charged_power
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.p_alpha_total_mw
+            + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
-            + current_drive_variables.pinjmw
+            + current_drive_variables.p_hcd_injected_total_mw
         )
 
         #  Calculate transport losses and energy confinement time using the
@@ -4458,22 +4583,22 @@ class Stellarator:
             physics_variables.p_plasma_loss_mw,
         ) = self.physics.calculate_confinement_time(
             physics_variables.m_fuel_amu,
-            physics_variables.alpha_power_total,
+            physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
             physics_variables.bt,
             physics_variables.nd_ions_total,
             physics_variables.dene,
-            physics_variables.dnla,
+            physics_variables.nd_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
-            physics_variables.ignite,
+            physics_variables.i_plasma_ignited,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.non_alpha_charged_power,
-            current_drive_variables.pinjmw,
+            physics_variables.p_non_alpha_charged_mw,
+            current_drive_variables.p_hcd_injected_total_mw,
             physics_variables.plasma_current,
-            physics_variables.pcoreradpv,
+            physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.ten,
@@ -4516,8 +4641,8 @@ class Stellarator:
             physics_variables.dene,
             physics_variables.te,
             physics_variables.nd_fuel_ions,
-            physics_variables.fusion_rate_density_total,
-            physics_variables.alpha_rate_density_total,
+            physics_variables.fusden_total,
+            physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
             sbar,
             physics_variables.nd_alphas,
@@ -4579,7 +4704,7 @@ class Stellarator:
                 nu_star_d,
                 nu_star_T,
                 nu_star_He,
-                physics_variables.dnla,
+                physics_variables.nd_electron_line,
                 physics_variables.dnelimt,
             )
 
@@ -4603,7 +4728,7 @@ class Stellarator:
         nu_star_D,
         nu_star_T,
         nu_star_He,
-        dnla,
+        nd_electron_line,
         dnelimt,
     ):
         po.oheadr(self.outfile, "Stellarator Specific Physics:")
@@ -4711,15 +4836,15 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Obtained line averaged density at op. point (/m3)",
-            "(dnla)",
-            dnla,
+            "(nd_electron_line)",
+            nd_electron_line,
         )
         po.ovarre(self.outfile, "Sudo density limit (/m3)", "(dnelimt)", dnelimt)
         po.ovarre(
             self.outfile,
             "Ratio density to sudo limit (1)",
-            "(dnla/dnelimt)",
-            dnla / dnelimt,
+            "(nd_electron_line/dnelimt)",
+            nd_electron_line / dnelimt,
         )
 
     def calc_neoclassics(self):
@@ -4731,72 +4856,82 @@ class Stellarator:
 
         q_PROCESS = (
             (
-                physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
-                - physics_variables.pcoreradpv
+                physics_variables.f_p_alpha_plasma_deposited
+                * physics_variables.pden_alpha_total_mw
+                - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
             / physics_variables.a_plasma_surface
-            * impurity_radiation_module.coreradius
+            * impurity_radiation_module.radius_plasma_core_norm
         )
         q_PROCESS_r1 = (
             (
-                physics_variables.f_alpha_plasma
-                * physics_variables.alpha_power_density_total
-                - physics_variables.pcoreradpv
+                physics_variables.f_p_alpha_plasma_deposited
+                * physics_variables.pden_alpha_total_mw
+                - physics_variables.pden_plasma_core_rad_mw
             )
             * physics_variables.vol_plasma
             / physics_variables.a_plasma_surface
         )
 
-        q_neo = sum(neoclassics_module.q_flux * 1e-6)
+        q_neo = sum(neoclassics_variables.q_flux * 1e-6)
         gamma_neo = sum(
-            neoclassics_module.gamma_flux * neoclassics_module.temperatures * 1e-6
+            neoclassics_variables.gamma_flux * neoclassics_variables.temperatures * 1e-6
         )
 
         total_q_neo = sum(
-            neoclassics_module.q_flux * 1e-6
-            + neoclassics_module.gamma_flux * neoclassics_module.temperatures * 1e-6
+            neoclassics_variables.q_flux * 1e-6
+            + neoclassics_variables.gamma_flux
+            * neoclassics_variables.temperatures
+            * 1e-6
         )
 
         total_q_neo_e = (
             2
             * 2
             * (
-                neoclassics_module.q_flux[0] * 1e-6
-                + neoclassics_module.gamma_flux[0]
-                * neoclassics_module.temperatures[0]
+                neoclassics_variables.q_flux[0] * 1e-6
+                + neoclassics_variables.gamma_flux[0]
+                * neoclassics_variables.temperatures[0]
                 * 1e-6
             )
         )
 
-        q_neo_e = neoclassics_module.q_flux[0] * 1e-6
-        q_neo_D = neoclassics_module.q_flux[1] * 1e-6
-        q_neo_a = neoclassics_module.q_flux[3] * 1e-6
-        q_neo_T = neoclassics_module.q_flux[2] * 1e-6
+        q_neo_e = neoclassics_variables.q_flux[0] * 1e-6
+        q_neo_D = neoclassics_variables.q_flux[1] * 1e-6
+        q_neo_a = neoclassics_variables.q_flux[3] * 1e-6
+        q_neo_T = neoclassics_variables.q_flux[2] * 1e-6
 
         g_neo_e = (
-            neoclassics_module.gamma_flux[0] * 1e-6 * neoclassics_module.temperatures[0]
+            neoclassics_variables.gamma_flux[0]
+            * 1e-6
+            * neoclassics_variables.temperatures[0]
         )
         g_neo_D = (
-            neoclassics_module.gamma_flux[1] * 1e-6 * neoclassics_module.temperatures[1]
+            neoclassics_variables.gamma_flux[1]
+            * 1e-6
+            * neoclassics_variables.temperatures[1]
         )
         g_neo_a = (
-            neoclassics_module.gamma_flux[3] * 1e-6 * neoclassics_module.temperatures[3]
+            neoclassics_variables.gamma_flux[3]
+            * 1e-6
+            * neoclassics_variables.temperatures[3]
         )
         g_neo_T = (
-            neoclassics_module.gamma_flux[2] * 1e-6 * neoclassics_module.temperatures[2]
+            neoclassics_variables.gamma_flux[2]
+            * 1e-6
+            * neoclassics_variables.temperatures[2]
         )
 
-        dndt_neo_e = neoclassics_module.gamma_flux[0]
-        dndt_neo_D = neoclassics_module.gamma_flux[1]
-        dndt_neo_a = neoclassics_module.gamma_flux[3]
-        dndt_neo_T = neoclassics_module.gamma_flux[2]
+        dndt_neo_e = neoclassics_variables.gamma_flux[0]
+        dndt_neo_D = neoclassics_variables.gamma_flux[1]
+        dndt_neo_a = neoclassics_variables.gamma_flux[3]
+        dndt_neo_T = neoclassics_variables.gamma_flux[2]
 
         dndt_neo_fuel = (
             (dndt_neo_D + dndt_neo_T)
             * physics_variables.a_plasma_surface
-            * impurity_radiation_module.coreradius
+            * impurity_radiation_module.radius_plasma_core_norm
         )
         dmdt_neo_fuel = (
             dndt_neo_fuel * physics_variables.m_fuel_amu * constants.proton_mass * 1.0e6
@@ -4805,26 +4940,29 @@ class Stellarator:
             4
             * dndt_neo_e
             * physics_variables.a_plasma_surface
-            * impurity_radiation_module.coreradius
+            * impurity_radiation_module.radius_plasma_core_norm
             * physics_variables.m_fuel_amu
             * constants.proton_mass
             * 1.0e6
         )  # kg
 
         chi_neo_e = -(
-            neoclassics_module.q_flux[0]
-            + neoclassics_module.gamma_flux[0] * neoclassics_module.temperatures[0]
+            neoclassics_variables.q_flux[0]
+            + neoclassics_variables.gamma_flux[0]
+            * neoclassics_variables.temperatures[0]
         ) / (
-            neoclassics_module.densities[0] * neoclassics_module.dr_temperatures[0]
-            + neoclassics_module.temperatures[0] * neoclassics_module.dr_densities[0]
+            neoclassics_variables.densities[0]
+            * neoclassics_variables.dr_temperatures[0]
+            + neoclassics_variables.temperatures[0]
+            * neoclassics_variables.dr_densities[0]
         )
 
         chi_PROCESS_e = self.st_calc_eff_chi()
 
-        nu_star_e = neoclassics_module.nu_star_averaged[0]
-        nu_star_d = neoclassics_module.nu_star_averaged[1]
-        nu_star_T = neoclassics_module.nu_star_averaged[2]
-        nu_star_He = neoclassics_module.nu_star_averaged[3]
+        nu_star_e = neoclassics_variables.nu_star_averaged[0]
+        nu_star_d = neoclassics_variables.nu_star_averaged[1]
+        nu_star_T = neoclassics_variables.nu_star_averaged[2]
+        nu_star_He = neoclassics_variables.nu_star_averaged[3]
 
         return (
             q_PROCESS,
@@ -4861,7 +4999,7 @@ class Stellarator:
             physics_variables.vol_plasma
             * st.f_r
             * (
-                impurity_radiation_module.coreradius
+                impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
                 / stellarator_configuration.stella_config_rminor_ref
             )
@@ -4871,16 +5009,16 @@ class Stellarator:
             physics_variables.a_plasma_surface
             * st.f_r
             * (
-                impurity_radiation_module.coreradius
+                impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
                 / stellarator_configuration.stella_config_rminor_ref
             )
         )
 
         nominator = (
-            physics_variables.f_alpha_plasma
-            * physics_variables.alpha_power_density_total
-            - physics_variables.pcoreradpv
+            physics_variables.f_p_alpha_plasma_deposited
+            * physics_variables.pden_alpha_total_mw
+            - physics_variables.pden_plasma_core_rad_mw
         ) * volscaling
 
         # in fortran there was a 0*alphan term which I have removed for obvious reasons
@@ -4895,8 +5033,8 @@ class Stellarator:
                 * physics_variables.te0
                 * 1e3
                 * physics_variables.alphat
-                * impurity_radiation_module.coreradius
-                * (1 - impurity_radiation_module.coreradius**2)
+                * impurity_radiation_module.radius_plasma_core_norm
+                * (1 - impurity_radiation_module.radius_plasma_core_norm**2)
                 ** (physics_variables.alphan + physics_variables.alphat - 1)
             )
             * surfacescaling
@@ -4916,77 +5054,102 @@ class Stellarator:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         if stellarator_variables.isthtr == 1:
-            current_drive_variables.echpwr = current_drive_variables.pheat
-            current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.echpwr
-            current_drive_variables.etacd = current_drive_variables.etaech
-            current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+            current_drive_variables.p_hcd_ecrh_injected_total_mw = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+            current_drive_variables.p_hcd_injected_ions_mw = 0
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.p_hcd_ecrh_injected_total_mw
+            )
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                current_drive_variables.eta_ecrh_injector_wall_plug
+            )
+            current_drive_variables.p_hcd_electric_total_mw = (
+                current_drive_variables.p_hcd_injected_ions_mw
+                + current_drive_variables.p_hcd_injected_electrons_mw
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 2:
-            current_drive_variables.plhybd = current_drive_variables.pheat
-            current_drive_variables.pinjimw = 0
-            current_drive_variables.pinjemw = current_drive_variables.plhybd
-            current_drive_variables.etacd = current_drive_variables.etalh
-            current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+            current_drive_variables.p_hcd_lowhyb_injected_total_mw = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+            )
+            current_drive_variables.p_hcd_injected_ions_mw = 0
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.p_hcd_lowhyb_injected_total_mw
+            )
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                current_drive_variables.eta_lowhyb_injector_wall_plug
+            )
+            current_drive_variables.p_hcd_electric_total_mw = (
+                current_drive_variables.p_hcd_injected_ions_mw
+                + current_drive_variables.p_hcd_injected_electrons_mw
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         elif stellarator_variables.isthtr == 3:
             (
                 effnbss,
-                fpion,
-                current_drive_variables.nbshinef,
+                f_p_beam_injected_ions,
+                current_drive_variables.f_p_beam_shine_through,
             ) = self.current_drive.culnbi()
-            current_drive_variables.pnbeam = current_drive_variables.pheat * (
-                1 - current_drive_variables.forbitloss
+            current_drive_variables.p_hcd_beam_injected_total_mw = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+                * (1 - current_drive_variables.f_p_beam_orbit_loss)
             )
-            current_drive_variables.porbitlossmw = (
-                current_drive_variables.pheat * current_drive_variables.forbitloss
+            current_drive_variables.p_beam_orbit_loss_mw = (
+                current_drive_variables.p_hcd_primary_extra_heat_mw
+                * current_drive_variables.f_p_beam_orbit_loss
             )
-            current_drive_variables.pinjimw = current_drive_variables.pnbeam * fpion
-            current_drive_variables.pinjemw = current_drive_variables.pnbeam * (
-                1 - fpion
+            current_drive_variables.p_hcd_injected_ions_mw = (
+                current_drive_variables.p_hcd_beam_injected_total_mw
+                * f_p_beam_injected_ions
             )
-            current_drive_variables.etacd = current_drive_variables.etanbi
-            current_drive_variables.pinjwp = (
-                current_drive_variables.pinjimw + current_drive_variables.pinjemw
-            ) / current_drive_variables.etacd
+            current_drive_variables.p_hcd_injected_electrons_mw = (
+                current_drive_variables.p_hcd_beam_injected_total_mw
+                * (1 - f_p_beam_injected_ions)
+            )
+            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
+                current_drive_variables.eta_beam_injector_wall_plug
+            )
+            current_drive_variables.p_hcd_electric_total_mw = (
+                current_drive_variables.p_hcd_injected_ions_mw
+                + current_drive_variables.p_hcd_injected_electrons_mw
+            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
         else:
-            error_handling.idiags[0] = stellarator_variables.isthtr
-            error_handling.report_error(107)
+            raise ProcessValueError(
+                "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
+            )
 
         #  Total injected power
 
-        current_drive_variables.pinjmw = (
-            current_drive_variables.pinjemw + current_drive_variables.pinjimw
+        current_drive_variables.p_hcd_injected_total_mw = (
+            current_drive_variables.p_hcd_injected_electrons_mw
+            + current_drive_variables.p_hcd_injected_ions_mw
         )
 
         #  Calculate neutral beam current
 
-        if abs(current_drive_variables.pnbeam) > 1e-8:
-            current_drive_variables.beam_current = (
+        if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:
+            current_drive_variables.c_beam_total = (
                 1e-3
-                * (current_drive_variables.pnbeam * 1e6)
-                / current_drive_variables.beam_energy
+                * (current_drive_variables.p_hcd_beam_injected_total_mw * 1e6)
+                / current_drive_variables.e_beam_kev
             )
         else:
-            current_drive_variables.beam_current = 0
+            current_drive_variables.c_beam_total = 0
 
         #  Ratio of fusion to input (injection+ohmic) power
 
         if (
             abs(
-                current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
             < 1e-6
         ):
             current_drive_variables.bigq = 1e18
         else:
-            current_drive_variables.bigq = physics_variables.fusion_power / (
-                current_drive_variables.pinjmw
-                + current_drive_variables.porbitlossmw
+            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
+                current_drive_variables.p_hcd_injected_total_mw
+                + current_drive_variables.p_beam_orbit_loss_mw
                 + physics_variables.p_plasma_ohmic_mw
             )
 
@@ -5000,7 +5163,7 @@ class Stellarator:
             elif stellarator_variables.isthtr == 3:
                 po.ocmmnt(self.outfile, "Neutral Beam Injection Heating")
 
-            if physics_variables.ignite == 1:
+            if physics_variables.i_plasma_ignited == 1:
                 po.ocmmnt(
                     self.outfile,
                     "Ignited plasma; injected power only used for start-up phase",
@@ -5011,8 +5174,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Auxiliary power supplied to plasma (MW)",
-                "(pheat)",
-                current_drive_variables.pheat,
+                "(p_hcd_primary_extra_heat_mw)",
+                current_drive_variables.p_hcd_primary_extra_heat_mw,
             )
             po.ovarre(
                 self.outfile,
@@ -5021,7 +5184,7 @@ class Stellarator:
                 current_drive_variables.bigq,
             )
 
-            if abs(current_drive_variables.pnbeam) > 1e-8:
+            if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam energy (KEV)",
@@ -5031,72 +5194,75 @@ class Stellarator:
                 po.ovarre(
                     self.outfile,
                     "Neutral beam current (A)",
-                    "(beam_current)",
-                    current_drive_variables.beam_current,
+                    "(c_beam_total)",
+                    current_drive_variables.c_beam_total,
                 )
                 po.ovarre(
-                    self.outfile, "Fraction of beam energy to ions", "(fpion)", fpion
+                    self.outfile,
+                    "Fraction of beam energy to ions",
+                    "(f_p_beam_injected_ions)",
+                    f_p_beam_injected_ions,
                 )
                 po.ovarre(
                     self.outfile,
                     "Neutral beam shine-through fraction",
-                    "(nbshinef)",
-                    current_drive_variables.nbshinef,
+                    "(f_p_beam_shine_through)",
+                    current_drive_variables.f_p_beam_shine_through,
                 )
                 po.ovarre(
                     self.outfile,
                     "Neutral beam orbit loss power (MW)",
-                    "(porbitlossmw)",
-                    current_drive_variables.porbitlossmw,
+                    "(p_beam_orbit_loss_mw)",
+                    current_drive_variables.p_beam_orbit_loss_mw,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam duct shielding thickness (m)",
-                    "(nbshield)",
-                    current_drive_variables.nbshield,
+                    "(dx_beam_shield)",
+                    current_drive_variables.dx_beam_shield,
                 )
                 po.ovarre(
                     self.outfile,
                     "R injection tangent / R-major",
-                    "(frbeam)",
-                    current_drive_variables.frbeam,
+                    "(f_radius_beam_tangency_rmajor)",
+                    current_drive_variables.f_radius_beam_tangency_rmajor,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam centreline tangency radius (m)",
-                    "(rtanbeam)",
-                    current_drive_variables.rtanbeam,
+                    "(radius_beam_tangency)",
+                    current_drive_variables.radius_beam_tangency,
                 )
                 po.ovarre(
                     self.outfile,
                     "Maximum possible tangency radius (m)",
-                    "(rtanmax)",
-                    current_drive_variables.rtanmax,
+                    "(radius_beam_tangency_max)",
+                    current_drive_variables.radius_beam_tangency_max,
                 )
                 po.ovarre(
                     self.outfile,
                     "Beam decay lengths to centre",
-                    "(taubeam)",
-                    current_drive_variables.taubeam,
+                    "(n_beam_decay_lengths_core)",
+                    current_drive_variables.n_beam_decay_lengths_core,
                 )
 
 
 class Neoclassics:
     @property
     def no_roots(self):
-        return neoclassics_module.roots.shape[0]
+        return neoclassics_variables.roots.shape[0]
 
     def init_neoclassics(self, r_effin, eps_effin, iotain):
         """Constructor of the neoclassics object from the effective radius,
         epsilon effective and iota only.
         """
         (
-            neoclassics_module.densities,
-            neoclassics_module.temperatures,
-            neoclassics_module.dr_densities,
-            neoclassics_module.dr_temperatures,
+            neoclassics_variables.densities,
+            neoclassics_variables.temperatures,
+            neoclassics_variables.dr_densities,
+            neoclassics_variables.dr_temperatures,
         ) = self.init_profile_values_from_PROCESS(r_effin)
-        neoclassics_module.roots = np.array([
+        neoclassics_variables.roots = np.array([
             4.740718054080526184e-2,
             2.499239167531593919e-1,
             6.148334543927683749e-1,
@@ -5128,7 +5294,7 @@ class Neoclassics:
             9.155646652253683726e1,
             1.041575244310588886e2,
         ])
-        neoclassics_module.weights = np.array([
+        neoclassics_variables.weights = np.array([
             1.160440860204388913e-1,
             2.208511247506771413e-1,
             2.413998275878537214e-1,
@@ -5161,31 +5327,37 @@ class Neoclassics:
             8.745980440465011553e-45,
         ])
 
-        neoclassics_module.kt = self.neoclassics_calc_KT()
-        neoclassics_module.nu = self.neoclassics_calc_nu()
-        neoclassics_module.nu_star = self.neoclassics_calc_nu_star()
-        neoclassics_module.nu_star_averaged = self.neoclassics_calc_nu_star_fromT(
+        neoclassics_variables.kt = self.neoclassics_calc_KT()
+        neoclassics_variables.nu = self.neoclassics_calc_nu()
+        neoclassics_variables.nu_star = self.neoclassics_calc_nu_star()
+        neoclassics_variables.nu_star_averaged = self.neoclassics_calc_nu_star_fromT(
             iotain
         )
-        neoclassics_module.vd = self.neoclassics_calc_vd()
+        neoclassics_variables.vd = self.neoclassics_calc_vd()
 
-        neoclassics_module.d11_plateau = self.neoclassics_calc_D11_plateau()
+        neoclassics_variables.d11_plateau = self.neoclassics_calc_D11_plateau()
 
-        neoclassics_module.d11_mono = self.neoclassics_calc_d11_mono(
+        neoclassics_variables.d11_mono = self.neoclassics_calc_d11_mono(
             eps_effin
         )  # for using epseff
 
-        neoclassics_module.d111 = self.calc_integrated_radial_transport_coeffs(index=1)
-        neoclassics_module.d112 = self.calc_integrated_radial_transport_coeffs(index=2)
-        neoclassics_module.d113 = self.calc_integrated_radial_transport_coeffs(index=3)
-
-        neoclassics_module.gamma_flux = self.neoclassics_calc_gamma_flux(
-            neoclassics_module.densities,
-            neoclassics_module.temperatures,
-            neoclassics_module.dr_densities,
-            neoclassics_module.dr_temperatures,
+        neoclassics_variables.d111 = self.calc_integrated_radial_transport_coeffs(
+            index=1
         )
-        neoclassics_module.q_flux = self.neoclassics_calc_q_flux()
+        neoclassics_variables.d112 = self.calc_integrated_radial_transport_coeffs(
+            index=2
+        )
+        neoclassics_variables.d113 = self.calc_integrated_radial_transport_coeffs(
+            index=3
+        )
+
+        neoclassics_variables.gamma_flux = self.neoclassics_calc_gamma_flux(
+            neoclassics_variables.densities,
+            neoclassics_variables.temperatures,
+            neoclassics_variables.dr_densities,
+            neoclassics_variables.dr_temperatures,
+        )
+        neoclassics_variables.q_flux = self.neoclassics_calc_q_flux()
 
     def init_profile_values_from_PROCESS(self, rho):
         """Initializes the profile_values object from PROCESS' parabolic profiles"""
@@ -5304,9 +5476,9 @@ class Neoclassics:
         """Calculates the energy on the given grid
         which is given by the gauss laguerre roots.
         """
-        k = np.repeat((neoclassics_module.roots / KEV)[:, np.newaxis], 4, axis=1)
+        k = np.repeat((neoclassics_variables.roots / KEV)[:, np.newaxis], 4, axis=1)
 
-        return (k * neoclassics_module.temperatures).T
+        return (k * neoclassics_variables.temperatures).T
 
     def neoclassics_calc_nu(self):
         """Calculates the collision frequency"""
@@ -5322,22 +5494,24 @@ class Neoclassics:
         # Formula from L. Spitzer.Physics of fully ionized gases.  Interscience, New York, 1962
         lnlambda = (
             32.2
-            - 1.15 * np.log10(neoclassics_module.densities[0])
+            - 1.15 * np.log10(neoclassics_variables.densities[0])
             + 2.3
-            * np.log10(neoclassics_module.temperatures[0] / constants.electron_charge)
+            * np.log10(
+                neoclassics_variables.temperatures[0] / constants.electron_charge
+            )
         )
 
         neoclassics_calc_nu = np.zeros((4, self.no_roots), order="F")
 
         for j in range(4):
             for i in range(self.no_roots):
-                x = neoclassics_module.roots[i]
+                x = neoclassics_variables.roots[i]
                 for k in range(4):
                     xk = (
                         (mass[k] / mass[j])
                         * (
-                            neoclassics_module.temperatures[j]
-                            / neoclassics_module.temperatures[k]
+                            neoclassics_variables.temperatures[j]
+                            / neoclassics_variables.temperatures[k]
                         )
                         * x
                     )
@@ -5358,10 +5532,12 @@ class Neoclassics:
                         * expxk
                     )
                     phixmgx = (1.0 - 0.5 / xk) * erfn + expxk / np.sqrt(np.pi * xk)
-                    v = np.sqrt(2.0 * x * neoclassics_module.temperatures[j] / mass[j])
+                    v = np.sqrt(
+                        2.0 * x * neoclassics_variables.temperatures[j] / mass[j]
+                    )
                     neoclassics_calc_nu[j, i] = neoclassics_calc_nu[
                         j, i
-                    ] + neoclassics_module.densities[k] * (
+                    ] + neoclassics_variables.densities[k] * (
                         z[j] * z[k]
                     ) ** 2 * lnlambda * phixmgx / (
                         4.0 * np.pi * constants.epsilon0**2 * mass[j] ** 2 * v**3
@@ -5371,8 +5547,8 @@ class Neoclassics:
 
     def neoclassics_calc_nu_star(self):
         """Calculates the normalized collision frequency"""
-        k = np.repeat(neoclassics_module.roots[:, np.newaxis], 4, axis=1)
-        kk = (k * neoclassics_module.temperatures).T
+        k = np.repeat(neoclassics_variables.roots[:, np.newaxis], 4, axis=1)
+        kk = (k * neoclassics_variables.temperatures).T
 
         mass = np.array([
             constants.electron_mass,
@@ -5397,8 +5573,8 @@ class Neoclassics:
 
         return (
             physics_variables.rmajor
-            * neoclassics_module.nu
-            / (neoclassics_module.iota * v)
+            * neoclassics_variables.nu
+            / (neoclassics_variables.iota * v)
         )
 
     def neoclassics_calc_nu_star_fromT(self, iota):
@@ -5475,8 +5651,8 @@ class Neoclassics:
 
     def neoclassics_calc_vd(self):
         vde = (
-            neoclassics_module.roots
-            * neoclassics_module.temperatures[0]
+            neoclassics_variables.roots
+            * neoclassics_variables.temperatures[0]
             / (
                 constants.electron_charge
                 * physics_variables.rmajor
@@ -5484,8 +5660,8 @@ class Neoclassics:
             )
         )
         vdD = (
-            neoclassics_module.roots
-            * neoclassics_module.temperatures[1]
+            neoclassics_variables.roots
+            * neoclassics_variables.temperatures[1]
             / (
                 constants.electron_charge
                 * physics_variables.rmajor
@@ -5493,8 +5669,8 @@ class Neoclassics:
             )
         )
         vdT = (
-            neoclassics_module.roots
-            * neoclassics_module.temperatures[2]
+            neoclassics_variables.roots
+            * neoclassics_variables.temperatures[2]
             / (
                 constants.electron_charge
                 * physics_variables.rmajor
@@ -5502,8 +5678,8 @@ class Neoclassics:
             )
         )
         vda = (
-            neoclassics_module.roots
-            * neoclassics_module.temperatures[3]
+            neoclassics_variables.roots
+            * neoclassics_variables.temperatures[3]
             / (
                 2.0
                 * constants.electron_charge
@@ -5533,31 +5709,43 @@ class Neoclassics:
         v = np.empty((4, self.no_roots))
         v[0, :] = constants.speed_light * np.sqrt(
             1.0
-            - (neoclassics_module.kt[0, :] / (mass[0] * constants.speed_light**2) + 1)
+            - (
+                neoclassics_variables.kt[0, :] / (mass[0] * constants.speed_light**2)
+                + 1
+            )
             ** (-1)
         )
         v[1, :] = constants.speed_light * np.sqrt(
             1.0
-            - (neoclassics_module.kt[1, :] / (mass[1] * constants.speed_light**2) + 1)
+            - (
+                neoclassics_variables.kt[1, :] / (mass[1] * constants.speed_light**2)
+                + 1
+            )
             ** (-1)
         )
         v[2, :] = constants.speed_light * np.sqrt(
             1.0
-            - (neoclassics_module.kt[2, :] / (mass[2] * constants.speed_light**2) + 1)
+            - (
+                neoclassics_variables.kt[2, :] / (mass[2] * constants.speed_light**2)
+                + 1
+            )
             ** (-1)
         )
         v[3, :] = constants.speed_light * np.sqrt(
             1.0
-            - (neoclassics_module.kt[3, :] / (mass[3] * constants.speed_light**2) + 1)
+            - (
+                neoclassics_variables.kt[3, :] / (mass[3] * constants.speed_light**2)
+                + 1
+            )
             ** (-1)
         )
 
         return (
             np.pi
             / 4.0
-            * neoclassics_module.vd**2
+            * neoclassics_variables.vd**2
             * physics_variables.rmajor
-            / neoclassics_module.iota
+            / neoclassics_variables.iota
             / v
         )
 
@@ -5569,8 +5757,8 @@ class Neoclassics:
             4.0
             / (9.0 * np.pi)
             * (2.0 * eps_eff) ** (3.0 / 2.0)
-            * neoclassics_module.vd**2
-            / neoclassics_module.nu
+            * neoclassics_variables.vd**2
+            / neoclassics_variables.nu
         )
 
     def calc_integrated_radial_transport_coeffs(self, index: int):
@@ -5581,9 +5769,9 @@ class Neoclassics:
         return np.sum(
             2.0
             / np.sqrt(np.pi)
-            * neoclassics_module.d11_mono
-            * neoclassics_module.roots ** (index - 0.5)
-            * neoclassics_module.weights,
+            * neoclassics_variables.d11_mono
+            * neoclassics_variables.roots ** (index - 0.5)
+            * neoclassics_variables.weights,
             axis=1,
         )
 
@@ -5596,10 +5784,10 @@ class Neoclassics:
 
         return (
             -densities
-            * neoclassics_module.d111
+            * neoclassics_variables.d111
             * (
-                (dr_densities / densities - z * neoclassics_module.er / temperatures)
-                + (neoclassics_module.d112 / neoclassics_module.d111 - 3.0 / 2.0)
+                (dr_densities / densities - z * neoclassics_variables.er / temperatures)
+                + (neoclassics_variables.d112 / neoclassics_variables.d111 - 3.0 / 2.0)
                 * dr_temperatures
                 / temperatures
             )
@@ -5611,16 +5799,112 @@ class Neoclassics:
         z = np.array([-1.0, 1.0, 1.0, 2.0])
 
         return (
-            -neoclassics_module.densities
-            * neoclassics_module.temperatures
-            * neoclassics_module.d112
+            -neoclassics_variables.densities
+            * neoclassics_variables.temperatures
+            * neoclassics_variables.d112
             * (
                 (
-                    neoclassics_module.dr_densities / neoclassics_module.densities
-                    - z * neoclassics_module.er / neoclassics_module.temperatures
+                    neoclassics_variables.dr_densities / neoclassics_variables.densities
+                    - z * neoclassics_variables.er / neoclassics_variables.temperatures
                 )
-                + (neoclassics_module.d113 / neoclassics_module.d112 - 3.0 / 2.0)
-                * neoclassics_module.dr_temperatures
-                / neoclassics_module.temperatures
+                + (neoclassics_variables.d113 / neoclassics_variables.d112 - 3.0 / 2.0)
+                * neoclassics_variables.dr_temperatures
+                / neoclassics_variables.temperatures
             )
         )
+
+
+def init_stellarator_variables():
+    stellarator_variables.istell = 0
+    stellarator_variables.bmn = 1e-3
+    stellarator_variables.f_asym = 1.0
+    stellarator_variables.f_rad = 0.85
+    stellarator_variables.f_w = 0.5
+    stellarator_variables.fdivwet = 0.333333333333333
+    stellarator_variables.flpitch = 1e-3
+    stellarator_variables.hportamax = 0.0
+    stellarator_variables.hportpmax = 0.0
+    stellarator_variables.hporttmax = 0.0
+    stellarator_variables.iotabar = 1.0
+    stellarator_variables.isthtr = 3
+    stellarator_variables.m_res = 5
+    stellarator_variables.n_res = 5
+    stellarator_variables.shear = 0.5
+    stellarator_variables.vportamax = 0.0
+    stellarator_variables.vportpmax = 0.0
+    stellarator_variables.vporttmax = 0.0
+    stellarator_variables.max_gyrotron_frequency = 1.0e9
+    stellarator_variables.te0_ecrh_achievable = 1.0e2
+
+
+def init_stellarator_module():
+    st.first_call = True
+    st.first_call_stfwbs = True
+    st.f_n = 0.0
+    st.f_r = 0.0
+    st.f_a = 0.0
+    st.f_b = 0.0
+    st.f_i = 0.0
+
+
+def stinit():
+    """Routine to initialise the variables relevant to stellarators
+    author: P J Knight, CCFE, Culham Science Centre
+    author: F Warmer, IPP Greifswald
+
+    This routine initialises the variables relevant to stellarators.
+    Many of these may override the values set in routine
+    """
+    if stellarator_variables.istell == 0:
+        return
+
+    numerics.boundu[0] = 40.0  # allow higher aspect ratio
+
+    # These lines switch off tokamak specifics (solenoid, pf coils, pulses etc.).
+    # Are they still up to date? (26/07/22 JL)
+
+    # Build quantities
+
+    build_variables.dr_cs = 0.0
+    build_variables.iohcl = 0
+    pfcoil_variables.f_z_cs_tf_internal = 0.0
+    build_variables.dr_cs_tf_gap = 0.0
+    build_variables.tfootfi = 1.0
+
+    #  Physics quantities
+
+    physics_variables.beta_norm_max = 0.0
+    physics_variables.kappa95 = 1.0
+    physics_variables.triang = 0.0
+    physics_variables.q95 = 1.03
+
+    #  Turn off current drive
+
+    current_drive_variables.i_hcd_calculations = 0
+
+    #  Times for different phases
+
+    times_variables.t_precharge = 0.0
+    times_variables.t_current_ramp_up = 0.0
+    times_variables.t_burn = 3.15576e7  # one year
+    times_variables.t_ramp_down = 0.0
+    times_variables.t_pulse_repetition = (
+        times_variables.t_current_ramp_up
+        + times_variables.t_fusion_ramp
+        + times_variables.t_burn
+        + times_variables.t_ramp_down
+    )
+    times_variables.tdown = (
+        times_variables.t_precharge
+        + times_variables.t_current_ramp_up
+        + times_variables.t_ramp_down
+        + times_variables.t_between_pulse
+    )
+    times_variables.t_cycle = (
+        times_variables.t_precharge
+        + times_variables.t_current_ramp_up
+        + times_variables.t_fusion_ramp
+        + times_variables.t_burn
+        + times_variables.t_ramp_down
+        + times_variables.t_between_pulse
+    )

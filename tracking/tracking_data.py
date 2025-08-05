@@ -90,9 +90,9 @@ class ProcessTracker:
     # Variables in an MFile that hold metadata we want to show on the graph
 
     tracking_variables: ClassVar = {
-        "pheat",
-        "bootstrap_current_fraction",
-        "pinjmw",
+        "p_hcd_primary_extra_heat_mw",
+        "f_c_plasma_bootstrap",
+        "p_hcd_injected_total_mw",
         "dr_shld_inboard",
         "dr_fw_inboard",
         "dr_fw_outboard",
@@ -112,26 +112,26 @@ class ProcessTracker:
         "dr_shld_outboard",
         "dr_tf_inboard",
         "dr_shld_vv_gap_inboard",
-        "pnucshld",
-        "pnucblkt",
+        "p_shld_nuclear_heat_mw",
+        "p_blkt_nuclear_heat_total_mw",
         "triang",
         "triang95",
         "p_plasma_inner_rad_mw",
         "tesep",
         "f_nd_alpha_electron",
-        "wallmw",
+        "pflux_fw_neutron_mw",
         "aspect",
         "rminor",
         "rmajor",
         "q95",
         "te",
         "beta",
-        "inductive_current_fraction",
+        "f_c_plasma_inductive",
         "zeff",
         "bt",
         "hfact",
         "kappa",
-        "fusion_power",
+        "p_fusion_total_mw",
         "teped",
         "p_plasma_loss_mw",
         "kappa95",
@@ -139,21 +139,21 @@ class ProcessTracker:
         "dene",
         "p_plasma_rad_mw",
         "ne0",
-        "aux_current_fraction",
+        "f_c_plasma_auxiliary",
         "nd_impurities",
         "t_energy_confinement",
         "te0",
-        "pdivt",
+        "p_plasma_separatrix_mw",
         "nesep",
         "vol_plasma",
         "a_plasma_surface",
-        "pnetelmw",
-        "etath",
-        "pgrossmw",
+        "p_plant_electric_net_mw",
+        "eta_turbine",
+        "p_plant_electric_gross_mw",
         "tftmp",
         "n_tf_coils",
-        "bmaxtf",
-        "vstot",
+        "b_tf_inboard_peak",
+        "vs_cs_pf_total_pulse",
         "nd_ions_total",
         "t_burn",
         "divlife",
@@ -559,10 +559,10 @@ class PythonFortranInterfaceVariables:
         variables = []
 
         for name, function in inspect.getmembers(fortran_module):
-            # type(fortran.physics_variables.init_physics_variables) => fortran subroutine
+            # type(fortran.physics_variables.constants.init_constants) => fortran subroutine
             # if its not a fortran subroutine, its a variable
             # because type `fortran` cannot be checked as a type
-            if type(function) != type(fortran.physics_variables.init_physics_variables):  # noqa: E721
+            if type(function) != type(fortran.constants.init_constants):  # noqa: E721
                 variables.append(name)
 
         return variables

@@ -4,9 +4,10 @@ import numpy as np
 import scipy as sp
 
 import process.profiles as profiles
+from process.data_structure import divertor_variables
+from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    divertor_variables,
     physics_variables,
 )
 
@@ -149,7 +150,7 @@ class PlasmaProfile:
         # Line averaged electron density (IPDG89)
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
 
-        physics_variables.dnla = (
+        physics_variables.nd_electron_line = (
             physics_variables.dene
             * (1.0 + physics_variables.alphan)
             * (sp.special.gamma(0.5) / 2.0)
@@ -224,7 +225,7 @@ class PlasmaProfile:
         #  Line-averaged electron density
         #  = integral(n(rho).drho)
 
-        physics_variables.dnla = self.neprofile.profile_integ
+        physics_variables.nd_electron_line = self.neprofile.profile_integ
 
         #  Scrape-off density / volume averaged density
         #  (Input value is used if ipedestal = 0)
@@ -334,7 +335,9 @@ class PlasmaProfile:
                     * (1 - rho_te_max**2) ** physics_variables.alphat
                 )
             else:
-                raise ValueError(f"alphat is negative: {physics_variables.alphat}")
+                raise ProcessValueError(
+                    f"alphat is negative: {physics_variables.alphat}"
+                )
 
             # Same for density
             if physics_variables.alphan > 1.0:
@@ -369,7 +372,9 @@ class PlasmaProfile:
                     * (1 - rho_ne_max**2) ** physics_variables.alphan
                 )
             else:
-                raise ValueError(f"alphan is negative: {physics_variables.alphan}")
+                raise ProcessValueError(
+                    f"alphan is negative: {physics_variables.alphan}"
+                )
 
             # set normalized gradient length
             # te at rho_te_max

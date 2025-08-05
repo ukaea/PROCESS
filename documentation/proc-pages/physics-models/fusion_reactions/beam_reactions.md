@@ -4,7 +4,7 @@ The main function called for calculating the fusion reactions produced by neutra
 Due to the small contribution of fusion power from the neutral beams only D-T reactions are taken into account, as D-D additions to fusion power are deemed to be negligible.
 The beam fusion calculations will only run if the calculated beam current is greater than 0. This is done by having a NBI heating and current drive configuration. 
 
-The NBI parameters taken from the current drive module to be used in the beam fusion calculations are the beam current (`beam_current`), beam energy (`beam_energy`) and the tritium component of the beam (`f_tritium_beam`).
+The NBI parameters taken from the current drive module to be used in the beam fusion calculations are the beam current (`c_beam_total`), beam energy (`e_beam_kev`) and the tritium component of the beam (`f_beam_tritium`).
 
 Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating-and-current-drive.md) of the docs for more info.
 
@@ -385,7 +385,7 @@ Please see the [H&CD section](../../eng-models/heating_and_current_drive/heating
 
 This constraint can be activated by stating `icc = 7` in the input file.
 
-The desired value of the hot ion beam density calculated from the code (`beam_density_out`) can be constrained using the input variable, `f_nd_beam_electron`. Which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
+The desired value of the hot ion beam density calculated from the code (`nd_beam_ions_out`) can be constrained using the input variable, `f_nd_beam_electron`. Which is the ratio of the beam density to the plasma electron density. It can be set as an iteration variable by setting `ixc = 7`.
 
 [^1]: J. W. Sheffield, “The physics of magnetic fusion reactors,” vol. 66, no. 3, pp. 1015–1103,Jul. 1994, doi: https://doi.org/10.1103/revmodphys.66.1015.
 [^2]: Deng Baiquan and G. A. Emmert, “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,vol. 9, no. 3, pp. 136–141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf  

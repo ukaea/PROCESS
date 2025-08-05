@@ -114,45 +114,52 @@ By default, $\beta$ is defined with respect to the total equilibrium B-field. Th
 
 ------------
 
-### Setting the Beta $g$ Coefficient
+### Setting the Beta g Coefficient
 
-Switch `iprofile` determines how the beta $g$ coefficient `beta_norm_max` should
+Switch `i_beta_norm_max` determines how the beta $g$ coefficient `beta_norm_max` should
 be calculated. The following switch options are available below:
 
 #### User Input
 
-This can be activated by stating `iprofile = 0` in the input file.
+The user can specify the maximum allowed value of $\beta_{\text{N}}$ directly by stating `i_beta_norm_max = 0` in the input file.
 
-`alphaj`, `ind_plasma_internal_norm` and `beta_norm_max` are inputs.
+```python
+IN.DAT
+
+i_beta_norm_max = 0
+beta_norm_max = 3.0
+
+
+```
 
 ---------
 
 #### Wesson Relation
 
-This can be activated by stating `iprofile = 1` in the input file.
+This can be activated by stating `i_beta_norm_max = 1` in the input file.
 
-`alphaj`, `ind_plasma_internal_norm` and `beta_norm_max` are calculated consistently. 
-
-`beta_norm_max` is calculated using:  
+`beta_norm_max` is set to `beta_norm_max_wesson` using:  
 
 $$
-g = 4l_i
+\texttt{beta_norm_max_wesson} = g = 4l_i
 $$
 
-This relation is based off of data taken from DIII-D shots[^7].
+This relation is based off of data taken from DIII-D shots for $\beta_{\text{N}} \ge 2.5$[^7].
 
 This is only recommended for high aspect ratio tokamaks[^3].
+
+**It is recommended to use this switch with [`i_alphaj = 1`](../plasma_current/plasma_current.md#wesson-relation) and [`i_ind_plasma_internal_norm = 1`](../plasma_current/plasma_inductance.md#wesson-relation) as they are self-consistent with each other.**
 
 ---------
 
 #### Original Scaling Law
 
-This can be activated by stating `iprofile = 2` in the input file.
+This can be activated by stating `i_beta_norm_max = 2` in the input file.
 
-`alphaj` and `ind_plasma_internal_norm` are inputs. `beta_norm_max` calculated using:
+`beta_norm_max` is set to `beta_norm_max_original_scaling` using:  
 
 $$
-g=2.7(1+5\epsilon^{3.5})
+\texttt{beta_norm_max_original_scaling} = g =2.7(1+5\epsilon^{3.5})
 $$ 
 
 <!DOCTYPE html>
@@ -222,13 +229,20 @@ $$
 
 #### Menard Beta Relation
 
-This can be activated by stating `iprofile = 3` in the input file.
+This can be activated by stating `i_beta_norm_max = 3` in the input file.
 
-`alphaj` and `ind_plasma_internal_norm` are inputs. `beta_norm_max` calculated using[^4]:
+`beta_norm_max` is set to `beta_norm_max_menard` using[^4]:
+
 
 $$
-g=3.12+3.5\epsilon^{1.7}
+\texttt{beta_norm_max_menard} = g =3.12+3.5\epsilon^{1.7}
 $$
+
+Found as a reasonable fit to the computed no wall limit at $f_{\text{BS}} \approx 50%$. Uses maximum $\kappa$ data from NSTX at $A = 1.45, A = 1.75.$ Along with record $\beta_{\text{T}}$ data from DIII-D at $A = 2.9$ and high $\kappa$.
+
+**This is only recommended for spherical tokamaks**
+
+**It is recommended to use this switch with [`i_ind_plasma_internal_norm = 2`](../plasma_current/plasma_inductance.md#menard-inductance-relation) as they are self-consistent with each other.**
 
 <!DOCTYPE html>
 <html lang="en">
@@ -295,27 +309,12 @@ $$
 
 ---------
 
-#### Menard Inductance Relation
-
-This can be activated by stating `iprofile = 4` in the input file.
-
-`alphaj` and `beta_norm_max` are inputs. `ind_plasma_internal_norm` calculated from elongation [^4]. This is only recommended for spherical tokamaks.
-
----------
-
-#### Menard Beta & Inductance Relation
-
-This can be activated by stating `iprofile = 5` in the input file.
-
-`alphaj` is an input.  `ind_plasma_internal_norm` calculated from elongation and `beta_norm_max` calculated using $g=3.12+3.5\epsilon^{1.7}$ [^4]. This is only recommended for spherical tokamaks.
-
----------
-
 #### Tholerus Relation
 
-This can be activated by stating `iprofile = 6` in the input file.
+This can be activated by stating `i_beta_norm_max = 4` in the input file.
 
-`alphaj` and `c_beta` are inputs.  `ind_plasma_internal_norm` calculated from elongation and `beta_norm_max` calculated using 
+`beta_norm_max` is set to `beta_norm_max_tholerus` using[^5]:
+
 
 $$
 C_{\beta}\approx\frac{(g-3.7)F_p}{12.5-3.5 F_p}
@@ -323,13 +322,24 @@ $$
 
 where $F_p$ is the pressure peaking, $F_p = p_{\text{ax}} / \langle p \rangle$ and $C_{\beta}$ is the destabilization parameter (default 0.5)[^5].  
 
-<u> This is only recommended for spherical tokamaks </u>
+**This is only recommended for spherical tokamaks**
+
+-------------
+
+#### Stambaugh Relation
+
+This can be activated by stating `i_beta_norm_max = 5` in the input file.
+
+`beta_norm_max` is set to `beta_norm_max_stambaugh` using[^8] [^9]:
+
+
+$$
+g=\frac{f_\beta \times 10 \times\left(-0.7748+1.2869 \kappa-0.2921 \kappa^2+0.0197 \kappa^3\right)}{A^{0.5523} \times \tanh \left[(1.8524+0.2319 \kappa) / A^{0.6163}\right]}
+$$
+
+This fit was done for $A = 1.2 -7.0, \kappa = 1.5-6.0$ with $\delta = 0.5$ for nearly 100% bootstrap current
 
 ---------
-
-Further details on the calculation of `alphaj` and `ind_plasma_internal_norm` is given in [Plasma Current](./plasma_current.md).
-
-----------------------
 
 ## Key Constraints
 
@@ -373,7 +383,7 @@ This constraint can be activated by stating `icc = 24` in the input file.
 It is the general setting of the $\beta$ limit depending on the $\beta_{\text{N}}$ value calculated in the [beta limit](#beta-limit) calculations.
 
 The upper limit value of beta is calculated by `calculate_beta_limit()`. The beta
-coefficient $g$ can be set using `beta_norm_max`, depending on the setting of [`iprofile`](#setting-the-beta--coefficient). It can be set directly or follow some relation.
+coefficient $g$ can be set using `beta_norm_max`, depending on the setting of [`i_beta_norm_max`](#setting-the-beta--coefficient). It can be set directly or follow some relation.
 
 The scaling value `fbeta_max` can be varied also.
 
@@ -410,4 +420,10 @@ The value of `beta_min` can be set to the desired minimum total beta. The scalin
 [^6]: M. E. Mauel et al., “Operation at the tokamak equilibrium poloidal beta-limit in TFTR,” Nuclear Fusion, vol. 32, no. 8, pp. 1468–1473, Aug. 1992. doi:https://dx.doi.org/10.1088/0029-5515/32/8/I14
 
 [^7]: T. T. S et al., “Profile Optimization and High Beta Discharges and Stability of High Elongation Plasmas in the DIII-D Tokamak,” Osti.gov, Oct. 1990. https://www.osti.gov/biblio/6194284 (accessed Dec. 19, 2024).
+
+[^8]: R. D. Stambaugh et al., “Fusion Nuclear Science Facility Candidates,” Fusion Science and Technology, vol. 59, no. 2, pp. 279–307, Feb. 2011, doi: https://doi.org/10.13182/fst59-279.
+
+[^9]: Y. R. Lin-Liu and R. D. Stambaugh, “Optimum equilibria for high performance, steady state tokamaks,” Nuclear Fusion, vol. 44, no. 4, pp. 548–554, Mar. 2004, doi: https://doi.org/10.1088/0029-5515/44/4/009.
+‌
+‌
 ‌

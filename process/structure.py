@@ -4,13 +4,13 @@ import math
 import numpy as np
 
 from process import process_output as po
+from process.data_structure import divertor_variables as divv
+from process.data_structure import structure_variables as stv
 from process.fortran import build_variables as bv
 from process.fortran import constants
-from process.fortran import divertor_variables as divv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
-from process.fortran import structure_variables as stv
 from process.fortran import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ class Structure:
         """
 
         # Total weight of the PF coil conductor and its structure
-        total_weight_pf = pfv.whtpf + pfv.whtpfs
+        total_weight_pf = pfv.m_pf_coil_conductor_total + pfv.m_pf_coil_structure_total
 
         (
             stv.fncmass,
@@ -54,16 +54,16 @@ class Structure:
             pv.kappa,
             pv.bt,
             tfv.i_tf_sup,
-            pfv.ipfres,
+            pfv.i_pf_conductor,
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,
-            bv.hmax,
+            bv.z_tf_inside_half,
             fwbsv.whtshld,
-            divv.divmas,
+            divv.m_div_plate,
             total_weight_pf,
-            tfv.whttf,
+            tfv.m_tf_coils_total,
             fwbsv.m_fw_total,
-            fwbsv.whtblkt,
-            fwbsv.coolmass,
+            fwbsv.m_blkt_total,
+            fwbsv.m_fw_blkt_div_coolant_total,
             fwbsv.dewmkg,
             output=output,
         )
@@ -76,7 +76,7 @@ class Structure:
         akappa,
         b0,
         i_tf_sup,
-        ipfres,
+        i_pf_conductor,
         tf_h_width,
         tfhmax,
         shldmass,
@@ -85,7 +85,7 @@ class Structure:
         tfmass,
         m_fw_total,
         blmass,
-        coolmass,
+        m_fw_blkt_div_coolant_total,
         dewmass,
         output,
     ):
@@ -112,8 +112,8 @@ class Structure:
         :param itfsup: switch denoting whether TF coils are superconducting
         :type itfsup: integer
 
-        :param ipfres: switch denoting whether PF & CS coils are resistive
-        :type ipfres: integer
+        :param i_pf_conductor: switch denoting whether PF & CS coils are resistive
+        :type i_pf_conductor: integer
 
         :param tf_h_width: TF coil horizontal dr_bore (m)
         :type tf_h_width: float
@@ -139,8 +139,8 @@ class Structure:
         :param m_fw_total: first wall mass (kg)
         :type m_fw_total: float
 
-        :param coolmass: total water coolant mass (kg)
-        :type coolmass: float
+        :param m_fw_blkt_div_coolant_total: total water coolant mass (kg)
+        :type m_fw_blkt_div_coolant_total: float
 
         :param dewmass: vacuum vessel + cryostat mass (kg)
         :type dewmass: float
@@ -175,7 +175,7 @@ class Structure:
         coldmass = 0.0e0
         if i_tf_sup == 1:
             coldmass = coldmass + tfmass + aintmass + dewmass
-        if ipfres != 1:
+        if i_pf_conductor != 1:
             coldmass = coldmass + pfmass
 
         #  Coil gravity support mass
@@ -189,7 +189,7 @@ class Structure:
 
         #  Torus leg support
 
-        ws1 = coolmass + m_fw_total + blmass + shldmass + dvrtmass
+        ws1 = m_fw_blkt_div_coolant_total + m_fw_total + blmass + shldmass + dvrtmass
         gsm1 = 5.0e0 * 9.807e0 * ws1 * dens / sigal
 
         #  Ring beam

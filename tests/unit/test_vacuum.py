@@ -1,9 +1,9 @@
 import pytest
 
+from process.data_structure import times_variables as tv
+from process.data_structure import vacuum_variables as vacv
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
-from process.fortran import times_variables as tv
-from process.fortran import vacuum_variables as vacv
 from process.vacuum import Vacuum
 
 
@@ -26,7 +26,7 @@ class TestVacuum:
         :param monkeypatch: Mock fixture
         :type monkeypatch: object
 
-        :param tfcoil: fixture containing an initialised `TFcoil` object
+        :param tfcoil: fixture containing an initialised `TFCoil` object
         :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
         """
         monkeypatch.setattr(pv, "qfuel", 7.5745668997694112e22)
@@ -50,7 +50,7 @@ class TestVacuum:
 
         Values taken from first calling of the model in G-L_Nb-Ti regression test.
         """
-        monkeypatch.setattr(pv, "fusion_power", 2115.3899563651776)
+        monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
         monkeypatch.setattr(pv, "te", 15.872999999999999)
         monkeypatch.setattr(tv, "t_precharge", 30)
         monkeypatch.setattr(vacv, "dwell_pump", 0)

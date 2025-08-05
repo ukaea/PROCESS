@@ -14,7 +14,7 @@ module current_drive_variables
 
   public
 
-  real(dp) :: beamwd
+  real(dp) :: dx_beam_duct
   !! width of neutral beam duct where it passes between the TF coils (m)
   !! T Inoue et al, Design of neutral beam system for ITER-FEAT,
   !! <A HREF=http://dx.doi.org/10.1016/S0920-3796(01)00339-8>
@@ -23,38 +23,38 @@ module current_drive_variables
   real(dp) :: bigq
   !! Fusion gain; P_fusion / (P_injection + P_ohmic)
 
-  real(dp) :: bootstrap_current_fraction
+  real(dp) :: f_c_plasma_bootstrap
   !! bootstrap current fraction (enforced; see i_bootstrap_current)
 
-  real(dp) :: bootstrap_current_fraction_max
-  !! maximum fraction of plasma current from bootstrap; if `bootstrap_current_fraction_max < 0`,
-  !! bootstrap fraction = abs(bootstrap_current_fraction_max)
+  real(dp) :: f_c_plasma_bootstrap_max
+  !! maximum fraction of plasma current from bootstrap; if `f_c_plasma_bootstrap_max < 0`,
+  !! bootstrap fraction = abs(f_c_plasma_bootstrap_max)
 
-  real(dp) :: bscf_iter89
+  real(dp) :: f_c_plasma_bootstrap_iter89
   !! bootstrap current fraction, ITER 1989 model
 
-  real(dp) :: bscf_nevins
+  real(dp) :: f_c_plasma_bootstrap_nevins
   !! bootstrap current fraction, Nevins et al model
 
-  real(dp) :: bscf_sauter
+  real(dp) :: f_c_plasma_bootstrap_sauter
   !! bootstrap current fraction, Sauter et al model
 
-  real(dp) :: bscf_wilson
+  real(dp) :: f_c_plasma_bootstrap_wilson
   !! bootstrap current fraction, Wilson et al model
 
-  real(dp) :: bscf_sakai
+  real(dp) :: f_c_plasma_bootstrap_sakai
   !! Bootstrap current fraction, Sakai et al model
 
-  real(dp) :: bscf_aries
+  real(dp) :: f_c_plasma_bootstrap_aries
   !! Bootstrap current fraction, ARIES model
 
-  real(dp) :: bscf_andrade
+  real(dp) :: f_c_plasma_bootstrap_andrade
   !! Bootstrap current fraction, Andrade et al model
 
-  real(dp) :: bscf_hoang
+  real(dp) :: f_c_plasma_bootstrap_hoang
   !! Bootstrap current fraction, Hoang et al model
 
-  real(dp) :: bscf_wong
+  real(dp) :: f_c_plasma_bootstrap_wong
   !! Bootstrap current fraction, Wong et al model
 
   real(dp) :: bscf_gi_I
@@ -63,92 +63,128 @@ module current_drive_variables
   real(dp) :: bscf_gi_II
   !! Bootstrap current fraction, second Gi et al model
 
+  real(dp) :: f_c_plasma_bootstrap_sugiyama_l
+  !! Bootstrap current fraction, L-mode Sugiyama et al model
+
+  real(dp) :: f_c_plasma_bootstrap_sugiyama_h
+  !! Bootstrap current fraction, H-mode Sugiyama et al model
+
   real(dp) :: cboot
   !! bootstrap current fraction multiplier
 
-  real(dp) :: beam_current
+  real(dp) :: c_beam_total
   !! neutral beam current (A)
 
-  real(dp) :: diacf_hender
+  real(dp) :: f_c_plasma_diamagnetic_hender
   !! diamagnetic current fraction, Hender fit
 
-  real(dp) :: diacf_scene
+  real(dp) :: f_c_plasma_diamagnetic_scene
   !! diamagnetic current fraction, SCENE fit
 
-  real(dp) :: diamagnetic_current_fraction
+  real(dp) :: f_c_plasma_diamagnetic
   !! diamagnetic current fraction
 
-  real(dp) :: echpwr
+  real(dp) :: p_hcd_ecrh_injected_total_mw
   !! ECH power (MW)
 
-  real(dp) :: echwpow
+  real(dp) :: p_ebw_injected_mw
+  !! Electron bernstein power (MW)
+
+  real(dp) :: p_hcd_ecrh_electric_mw
   !! ECH wall plug power (MW)
 
-  real(dp) :: effcd
-  !! current drive efficiency (A/W)
+  real(dp) :: p_hcd_ebw_electric_mw
+  !! Electron bernstein wall plug power (MW)
 
-  real(dp) :: harnum
+  real(dp) :: eta_cd_hcd_primary
+  !! Current drive efficiency of primary HCD system (A/W)
+
+  real(dp) :: eta_cd_hcd_secondary
+  !! Current drive efficiency of secondary HCD system (A/W)
+
+  real(dp) :: c_hcd_primary_driven
+  !! Current in plasma driven by primary HCD system (A)
+
+  real(dp) :: c_hcd_secondary_driven
+  !! Current in plasma driven by secondary HCD system (A)
+
+  real(dp) :: f_c_plasma_hcd_primary
+  !! Fraction of plasma current driven by primary HCD system
+
+  real(dp) :: f_c_plasma_hcd_secondary
+  !! Fraction of plasma current driven by secondary HCD system
+
+  real(dp) :: n_ecrh_harmonic
   !! cyclotron harmonic frequency number, used in cut-off function
 
-  integer :: wave_mode
+  integer :: i_ecrh_wave_mode
   !! Switch for ECRH wave mode :
   !!
   !!  - =0 O-mode
   !!  - =1 X-mode
 
-  real(dp) :: beam_energy
+  real(dp) :: e_beam_kev
   !! neutral beam energy (keV) (`iteration variable 19`)
 
-  real(dp) :: etacd
+  real(dp) :: eta_hcd_primary_injector_wall_plug
   !! auxiliary power wall plug to injector efficiency
 
-  real(dp) :: etacdfix
+  real(dp) :: eta_hcd_secondary_injector_wall_plug
   !! secondary auxiliary power wall plug to injector efficiency
 
-  real(dp) :: etaech
+  real(dp) :: eta_ecrh_injector_wall_plug
   !! ECH wall plug to injector efficiency
 
-  real(dp) :: etalh
+  real(dp) :: eta_lowhyb_injector_wall_plug
   !! lower hybrid wall plug to injector efficiency
 
-  real(dp) :: etanbi
+  real(dp) :: eta_icrh_injector_wall_plug
+  !! Ion cyclotron wall plug to injector efficiency
+
+  real(dp) :: eta_ebw_injector_wall_plug
+  !! Electron bernstein wave wall plug to injector efficiency
+
+  real(dp) :: eta_beam_injector_wall_plug
   !! neutral beam wall plug to injector efficiency
 
-  real(dp) :: fpion
+  real(dp) :: f_p_beam_injected_ions
   !! fraction of beam energy to ions
 
-  real(dp) :: pnbitot
+  real(dp) :: p_beam_injected_mw
   !! neutral beam power entering vacuum vessel
 
-  real(dp) :: pscf_scene
+  real(dp) :: f_c_plasma_pfirsch_schluter_scene
   !! Pfirsch-Schlüter current fraction, SCENE fit
 
-  real(dp) :: nbshinemw
+  real(dp) :: p_beam_shine_through_mw
   !! neutral beam shine-through power
 
   real(dp) :: feffcd
   !! current drive efficiency fudge factor (`iteration variable 47`)
 
-  real(dp) :: forbitloss
+  real(dp) :: f_p_beam_orbit_loss
   !! fraction of neutral beam power lost after ionisation but before
   !! thermalisation (orbit loss fraction)
 
-  real(dp) :: frbeam
+  real(dp) :: f_radius_beam_tangency_rmajor
   !! R_tangential / R_major for neutral beam injection
 
-  real(dp) :: f_tritium_beam
+  real(dp) :: f_beam_tritium
   !! fraction of beam that is tritium
 
-  real(dp) :: gamcd
-  !! normalised current drive efficiency (1.0e20 A/(W m^2))
+  real(dp) :: eta_cd_norm_hcd_primary
+  !! Normalised current drive efficiency for primary HCD system [(1.0e20 A)/(W m^2)]
 
-  real(dp) :: gamma_ecrh
+  real(dp) :: eta_cd_norm_hcd_secondary
+  !! Normalised current drive efficiency for secondary HCD system [(1.0e20 A)/(W m^2)]
+
+  real(dp) :: eta_cd_norm_ecrh
   !! User input ECRH gamma (1.0e20 A/(W m^2))
 
   real(dp) :: xi_ebw
   !! User scaling input for EBW plasma heating. Default 0.43
 
-  integer :: iefrf
+  integer :: i_hcd_primary
   !! Switch for current drive efficiency model:
   !!
   !!  - =1 Fenstermacher Lower Hybrid
@@ -164,7 +200,7 @@ module current_drive_variables
   !!  - =11 ECRH "HARE" model (E. Poli, Physics of Plasmas 2019). Removed in #1811.
   !!  - =12 EBW user scaling input. Scaling (S. Freethy)
 
-  integer :: iefrffix
+  integer :: i_hcd_secondary
   !! Switch for 2nd current drive efficiency model:
   !!
   !! - =0 No fixed current drive
@@ -181,142 +217,84 @@ module current_drive_variables
   !! - =11 ECRH "HARE" model (E. Poli, Physics of Plasmas 2019). Removed in #1811.
   !! - =12 EBW user scaling input. Scaling (S. Freethy)
 
-  integer :: irfcd
+  integer :: i_hcd_calculations
   !! Switch for current drive calculation:
   !!
   !! - =0 turned off
   !! - =1 turned on
 
-  real(dp) :: nbshinef
+  real(dp) :: f_p_beam_shine_through
   !! neutral beam shine-through fraction
 
-  real(dp) :: nbshield
+  real(dp) :: dx_beam_shield
   !! neutral beam duct shielding thickness (m)
 
-  real(dp) :: pheat
+  real(dp) :: p_hcd_primary_extra_heat_mw
   !! heating power not used for current drive (MW) (`iteration variable 11`)
 
-  real(dp) :: pheatfix
+  real(dp) :: p_hcd_secondary_extra_heat_mw
   !! secondary fixed heating power not used for current drive (MW)
 
-  real(dp) :: pinjalw
+  real(dp) :: p_hcd_injected_max
   !! maximum allowable value for injected power (MW) (`constraint equation 30`)
 
-  real(dp) :: pinjemw
+  real(dp) :: p_hcd_injected_electrons_mw
   !! auxiliary injected power to electrons (MW)
 
-  real(dp) :: pinjimw
+  real(dp) :: p_hcd_injected_ions_mw
   !! auxiliary injected power to ions (MW)
 
-  real(dp) :: pinjmw
+  real(dp) :: p_hcd_injected_total_mw
   !! total auxiliary injected power (MW)
 
-  real(dp)  :: pinjfixmw
+  real(dp) :: p_hcd_injected_current_total_mw
+  !! total auxiliary injected power (MW)
+
+  real(dp)  :: p_hcd_secondary_injected_mw
   !! secondary total fixed auxiliary injected power (MW)
 
-  real(dp) :: plasma_current_internal_fraction
+  real(dp)  :: p_hcd_primary_injected_mw
+  !! primary auxiliary injected power (MW)
+
+  real(dp) :: f_c_plasma_internal
   !! plasma current fraction driven internally (Bootstrap + Diamagnetic + PS)
 
-  real(dp) :: plhybd
-  !! lower hybrid injection power (MW)
+  real(dp) :: p_hcd_lowhyb_injected_total_mw
+  !! Total lower hybrid injection power (MW)
 
-  real(dp) :: pnbeam
+  real(dp) :: p_hcd_icrh_injected_total_mw
+  !! Total ion cyclotron injection power (MW)
+
+  real(dp) :: p_hcd_ebw_injected_total_mw
+  !! Total electron bernstein wave injection power (MW)
+
+  real(dp) :: p_beam_plasma_coupled_mw
+  !! Total neutral beam power that is coupled to plasma after losses (MW)
+
+  real(dp) :: p_hcd_beam_injected_total_mw
   !! neutral beam injection power (MW)
 
-  real(dp) :: porbitlossmw
+  real(dp) :: p_beam_orbit_loss_mw
   !! neutral beam power lost after ionisation but before thermalisation (orbit loss power) (MW)
 
-  real(dp) :: ps_current_fraction
+  real(dp) :: f_c_plasma_pfirsch_schluter
   !! Pfirsch-Schlüter current fraction
 
-  real(dp) :: pwplh
+  real(dp) :: p_hcd_lowhyb_electric_mw
   !! lower hybrid wall plug power (MW)
 
   real(dp) :: pwpnb
   !! neutral beam wall plug power (MW)
 
-  real(dp) :: rtanbeam
+  real(dp) :: radius_beam_tangency
   !! neutral beam centreline tangency radius (m)
 
-  real(dp) :: rtanmax
+  real(dp) :: radius_beam_tangency_max
   !! maximum tangency radius for centreline of beam (m)
 
-  real(dp) :: taubeam
+  real(dp) :: n_beam_decay_lengths_core
   !! neutral beam e-decay lengths to plasma centre
 
-  real(dp) :: tbeamin
+  real(dp) :: n_beam_decay_lengths_core_required
   !! permitted neutral beam e-decay lengths to plasma centre
-
-  contains
-
-  subroutine init_current_drive_variables
-    !! Initialise module variables
-    implicit none
-
-    beamwd = 0.58D0
-    bigq = 0.0D0
-    bootstrap_current_fraction = 0.0D0
-    bootstrap_current_fraction_max = 0.9D0
-    bscf_iter89 = 0.0D0
-    bscf_nevins = 0.0D0
-    bscf_sauter = 0.0D0
-    bscf_wilson = 0.0D0
-    bscf_sakai = 0.0D0
-    bscf_aries = 0.0D0
-    bscf_andrade = 0.0D0
-    bscf_hoang = 0.0D0
-    bscf_wong = 0.0D0
-    bscf_gi_I = 0.0D0
-    bscf_gi_II = 0.0D0
-    cboot = 1.0D0
-    beam_current = 0.0D0
-    diacf_hender = 0.0D0
-    diacf_scene = 0.0D0
-    diamagnetic_current_fraction = 0.0D0
-    echpwr = 0.0D0
-    echwpow = 0.0D0
-    effcd = 0.0D0
-    harnum = 2.0
-    wave_mode = 0
-    beam_energy = 1.0D3
-    etacd = 0.0D0
-    etacdfix = 0.0D0
-    etaech = 0.3D0
-    etalh = 0.3D0
-    etanbi = 0.3D0
-    fpion = 0.5D0
-    pnbitot = 0.0D0
-    pscf_scene = 0.0D0
-    nbshinemw = 0.0D0
-    feffcd = 1.0D0
-    forbitloss = 0.0D0
-    frbeam = 1.05D0
-    f_tritium_beam = 1.0D-6
-    gamcd = 0.0D0
-    gamma_ecrh = 0.35D0
-    xi_ebw = 0.8D0
-    iefrf = 5
-    iefrffix = 0
-    irfcd = 1
-    nbshinef = 0.0D0
-    nbshield = 0.5D0
-    pheat = 0.0D0
-    pheatfix = 0.0D0
-    pinjalw = 150.0D0
-    pinjemw = 0.0D0
-    pinjimw = 0.0D0
-    pinjmw = 0.0D0
-    pinjfixmw = 0.0D0
-    plasma_current_internal_fraction = 0.0D0
-    plhybd = 0.0D0
-    pnbeam = 0.0D0
-    porbitlossmw = 0.0D0
-    ps_current_fraction = 0.0D0
-    pwplh = 0.0D0
-    pwpnb = 0.0D0
-    rtanbeam = 0.0D0
-    rtanmax = 0.0D0
-    taubeam = 0.0D0
-    tbeamin = 3.0D0
-  end subroutine init_current_drive_variables
 end module current_drive_variables

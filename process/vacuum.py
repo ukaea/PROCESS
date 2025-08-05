@@ -4,14 +4,13 @@ import math
 import numpy as np
 
 from process import process_output as po
+from process.data_structure import times_variables as tv
+from process.data_structure import vacuum_variables as vacv
 from process.fortran import build_variables as buv
 from process.fortran import constants
 from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
-from process.fortran import times_variables as tv
-from process.fortran import vacuum_variables as vacv
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -46,13 +45,13 @@ class Vacuum:
         # MDK Check this!!
         gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.umass
 
-        self.vacuum_model = f2py_compatible_to_string(vacv.vacuum_model)
+        self.vacuum_model = vacv.vacuum_model
 
         # vacuum_model required to be compared to a b string
         # as this is what f2py returns
         if self.vacuum_model == "old":
             pumpn, vacv.nvduct, vacv.dlscal, vacv.vacdshm, vacv.vcdimax = self.vacuum(
-                pv.fusion_power,
+                pv.p_fusion_total_mw,
                 pv.rmajor,
                 pv.rminor,
                 0.5e0 * (buv.dr_fw_plasma_gap_inboard + buv.dr_fw_plasma_gap_outboard),
@@ -65,7 +64,7 @@ class Vacuum:
                 tfv.n_tf_coils,
                 tv.t_between_pulse,
                 pv.dene,
-                pv.idivrt,
+                pv.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
@@ -445,7 +444,7 @@ class Vacuum:
                         break
 
                 else:
-                    eh.fdiags[0] = pv.fusion_power
+                    eh.fdiags[0] = pv.p_fusion_total_mw
                     eh.fdiags[1] = pv.te
                     eh.report_error(124)
 
@@ -625,7 +624,7 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "Conductance is inadequate.")
                 po.oblnkl(self.outfile)
 
-            ipump = "cryo " if vacv.ntype == 1 else "turbo"
+            i_fw_blkt_shared_coolant = "cryo " if vacv.ntype == 1 else "turbo"
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")
@@ -659,6 +658,9 @@ class Vacuum:
             po.ovarre(self.outfile, "Duct length, elbow to pumps (m)", "(l3)", l3)
             po.ovarre(self.outfile, "Number of pumps", "(pumpn)", pumpn, "OP ")
             po.oblnkl(self.outfile)
-            po.ocmmnt(self.outfile, f"The vacuum system uses {ipump} pumps.")
+            po.ocmmnt(
+                self.outfile,
+                f"The vacuum system uses {i_fw_blkt_shared_coolant} pumps.",
+            )
 
         return pumpn, nduct, dlscalc, mvdsh, dimax

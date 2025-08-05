@@ -17,17 +17,25 @@ information in the Process Fortran source code.
 """
 
 import argparse
+import ast
+import inspect
 import json
 import logging
 import pickle
 import re
+from importlib import import_module
+from itertools import pairwise
 from pathlib import Path
 
 import create_dicts_config
 import numpy as np
-from python_dicts import get_python_variables
 
+from process.init import init_all_module_vars
+from process.input import INPUT_VARIABLES
+from process.iteration_variables import ITERATION_VARIABLES
 from process.scan import SCAN_VARIABLES
+
+INPUT_TYPE_MAP = {int: "int", float: "real", str: "string"}
 
 output_dict = {}
 # Dict of nested dicts e.g. output_dict['DICT_DESCRIPTIONS'] =
@@ -59,12 +67,9 @@ class Dictionary:
 
 class ProjectDictionary(Dictionary):
     # Dicts that rely on the Ford project object
-    def __init__(self, name, project, python_variables, value_type):
+    def __init__(self, name, project, value_type):
         Dictionary.__init__(self, name)
         self.project = project  # The Ford project object
-        self.python_variables = (
-            python_variables  # List of AnnotatedVariables from Python PhysEng models
-        )
         self.value_type = value_type
         # The attribute in the project to make a dict for
 
@@ -74,11 +79,6 @@ class ProjectDictionary(Dictionary):
         for module in self.project.modules:
             for var in module.variables:
                 self.dict[self.name][var.name] = getattr(var, self.value_type)
-
-        for annotated_variable in self.python_variables:
-            self.dict[self.name][annotated_variable.name] = getattr(
-                annotated_variable, self.value_type
-            )
 
 
 class SourceDictionary(Dictionary):
@@ -109,10 +109,8 @@ class HardcodedDictionary(Dictionary):
 
 class VariableDescriptions(ProjectDictionary):
     # Dictionary of variable descriptions
-    def __init__(self, project, python_variables):
-        ProjectDictionary.__init__(
-            self, "DICT_DESCRIPTIONS", project, python_variables, "doc"
-        )
+    def __init__(self, project):
+        ProjectDictionary.__init__(self, "DICT_DESCRIPTIONS", project, "doc")
 
     def make_dict(self):
         # Assign the variable name key to the var description
@@ -129,9 +127,6 @@ class VariableDescriptions(ProjectDictionary):
                     # Guards against multiple declarations in different modules,
                     # when only one declaration is commented
                     self.dict[self.name][var.name] = desc
-
-        for annotated_variable in self.python_variables:
-            self.dict[self.name][annotated_variable.name] = annotated_variable.units
 
     def post_process(self):
         for var_name, var_desc in self.dict[self.name].items():
@@ -168,10 +163,8 @@ class DefaultValues(ProjectDictionary):
     """
 
     # Dictionary of default values of variables
-    def __init__(self, project, python_variables):
-        ProjectDictionary.__init__(
-            self, "DICT_DEFAULT", project, python_variables, "initial"
-        )
+    def __init__(self, project):
+        ProjectDictionary.__init__(self, "DICT_DEFAULT", project, "initial")
 
     def make_dict(self):
         # Assign the variable name key to the initial value of the variable
@@ -184,10 +177,6 @@ class DefaultValues(ProjectDictionary):
         # Now fetch values in init subroutines to overwrite Ford's initial
         # values if necessary
         self.parse_init_subroutines()
-
-        for annotated_variable in self.python_variables:
-            self.dict[self.name][annotated_variable.name] = annotated_variable.obj
-            # obj is the initial value also
 
     def process_initial_value(self, var):
         """Process the initial value of a var from Ford.
@@ -499,10 +488,8 @@ class DefaultValues(ProjectDictionary):
 
 class Modules(ProjectDictionary):
     # Dictionary mapping modules to arrays of its module-level variables
-    def __init__(self, project, python_variables):
-        ProjectDictionary.__init__(
-            self, "DICT_MODULE", project, python_variables, "name"
-        )
+    def __init__(self, project):
+        ProjectDictionary.__init__(self, "DICT_MODULE", project, "name")
 
     def make_dict(self):
         for module in self.project.modules:
@@ -511,13 +498,6 @@ class Modules(ProjectDictionary):
             for var in module.variables:
                 # Add module-level variables
                 self.dict[self.name][module.name].append(var.name)
-
-        for annotated_variable in self.python_variables:
-            if annotated_variable.parent not in self.dict[self.name]:
-                self.dict[self.name][annotated_variable.parent] = []
-            self.dict[self.name][annotated_variable.parent].append(
-                annotated_variable.name
-            )
 
 
 def to_type(string):
@@ -674,6 +654,14 @@ def dict_var_type():
         DICT_VAR_TYPE['beta'] = 'real_variable'
     """
     di = {}
+
+    for var_name, config in INPUT_VARIABLES.items():
+        var_type = (
+            f"{INPUT_TYPE_MAP[config.type]}_{'array' if config.array else 'variable'}"
+        )
+
+        di[var_name] = var_type
+
     regexp = r"call parse_(real|int|string)_(array|variable)\("
     lines = grep(SOURCEDIR + "/input.f90", regexp)
     for line in lines:
@@ -750,6 +738,18 @@ def dict_input_bounds():
     regexp = r"call parse_(real|int)_variable\((.*)"
     lines = grep(SOURCEDIR + "/input.f90", regexp)
 
+    for var_name, config in INPUT_VARIABLES.items():
+        lb, ub = None, None
+        if config.range is not None:
+            lb, ub = config.range
+
+        elif config.choices is not None and config.type in [int, float]:
+            lb = min(config.choices)
+            ub = max(config.choices)
+
+        if lb is not None:
+            di[var_name] = {"lb": lb, "ub": ub}
+
     for line in lines:
         match = re.search(regexp, line)
         try:
@@ -780,57 +780,16 @@ def dict_nsweep2varname():
 
 def dict_ixc_full():
     """Function to return a dictionary matching str(ixc_no) to a dictionary
-    containing the name, lower and upper bounds of that variable. Looks in
-    numerics.f90 at !+ad_varc lines in lablxc to get ixc_no and
-    variable names, and looks at boundu and boundl for upper and
-    lower bounds.
-
-    Example of a lablxc line we are looking for:
-        lablxc(1) = 'aspect        '
-
-    Example of a boundl line we are looking for:
-        boundl(1) = 0.0D0
-
-    Example of a boundu line we are looking for:
-        boundu(1) = 1.0D0
+    containing the name, lower and upper bounds of that variable.
 
     Example dictionary entry:
         DICT_IXC_FULL['5'] = {'name' : 'beta', 'lb' : 0.001, 'ub' : 1.0}
     """
 
-    with open(SOURCEDIR + "/iteration_variables.f90") as my_file:
-        lines = my_file.readlines()
-
-    ixc_full = {}
-
-    for lline in lines:
-        if "subroutine init_itv_" in lline and "end" not in lline:
-            itv_num = lline.split("_")[-1].strip("\n").replace(" ", "")
-            ixc_full[itv_num] = {}
-
-    for line in lines:
-        if ("lablxc" in line and "=" in line) and (
-            "lablxc(i)" not in line and "lablxc(ixc(i))" not in line
-        ):
-            labl_num = line.split("(")[1].split(")")[0]
-            labl = line.split("=")[-1].strip("\n").replace(" ", "").replace("'", "")
-            ixc_full[labl_num]["name"] = labl
-
-        if ("boundl(" in line and "=" in line) and (
-            "boundl(i)" not in line and "boundl(ixc(i))" not in line
-        ):
-            boundl_num = line.split("(")[1].split(")")[0]
-            boundl_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
-            ixc_full[boundl_num]["lb"] = float(boundl_val)
-
-        if ("boundu(" in line and "=" in line) and (
-            "boundu(i)" not in line and "boundu(ixc(i))" not in line
-        ):
-            boundu_num = line.split("(")[1].split(")")[0]
-            boundu_val = line.split("=")[-1].strip("\n").lower().replace("d", "e")
-            ixc_full[boundu_num]["ub"] = float(boundu_val)
-
-    return ixc_full
+    return {
+        str(k): {"name": v.name, "lb": v.lower_bound, "ub": v.upper_bound}
+        for k, v in ITERATION_VARIABLES.items()
+    }
 
 
 def dict_ixc_bounds():
@@ -869,15 +828,14 @@ def create_dicts(project):
     dict_objects = []
     # Different dict objects, e.g. variable descriptions
 
-    python_variables = get_python_variables()
-
+    init_all_module_vars()
     # Make dict objects
     # Some dicts depend on other dicts already existing in output_dicts, so
     # be careful if changing the order!
     dict_objects.extend([
-        VariableDescriptions(project, python_variables),
-        DefaultValues(project, python_variables),
-        Modules(project, python_variables),
+        VariableDescriptions(project),
+        DefaultValues(project),
+        Modules(project),
         HardcodedDictionary("NON_F_VALUES", create_dicts_config.NON_F_VALUES),
         SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
@@ -896,6 +854,100 @@ def create_dicts(project):
         dict_object.make_dict()
         dict_object.post_process()
         dict_object.publish()
+
+    variable_module_location = Path(__file__).parent.parent / "process/data_structure"
+    module_names = [
+        file.name for file in variable_module_location.iterdir() if file.is_file()
+    ]
+
+    for module_name in module_names:
+        if module_name == "__init__.py":
+            continue
+        module = import_module(f"process.data_structure.{module_name.split('.', 1)[0]}")
+
+        module_tree = ast.parse(inspect.getsource(module))
+        initial_values_dict = {}
+        variable_names = []
+        var_names_and_descriptions = {}
+        dict_module_entry = {}
+        variable_types = {}
+
+        # get the variable names and initial values
+        for node in ast.walk(module_tree):
+            if isinstance(node, ast.AnnAssign):
+                # for each variable in the file, get the initial value
+                # (either is None, or value initialised in init_variables fn)
+                # set default to be None if variable is not being initialised eg if you
+                # just have `example_double: float` instead of `example_double: float = None`
+                initial_value = getattr(module, node.target.id)
+                # JSON doesn't like np arrays
+                if type(initial_value) is np.ndarray:
+                    initial_value = initial_value.tolist()
+                initial_values_dict[node.target.id] = initial_value
+                # get the variable name and add to variable_names list
+                var_name = node.target.id
+                variable_names.append(var_name)
+                # Now want to get the types of these variables
+                if isinstance(node.annotation, ast.Subscript):
+                    if node.annotation.value.id == "list":
+                        if node.annotation.slice.id == "str":
+                            var_type = "string_array"
+                        elif node.annotation.slice.id == "float":
+                            var_type = "real_array"
+                        elif node.annotation.slice.id == "int":
+                            var_type = "int_array"
+                        else:
+                            raise TypeError(
+                                f"The type annotation of variable {node.target.id} is "
+                                f"{node.annotation.value.id}[{node.annotation.slice.id}], and "
+                                "this is not recognised. Please change your type annotation for "
+                                "this variable. PROCESS recognises the following type annotations: "
+                                "list[float], list[int], list[str]."
+                            )
+                else:
+                    if node.annotation.id == "float":
+                        var_type = "real_variable"
+                    elif node.annotation.id == "int":
+                        var_type = "int_variable"
+                    elif node.annotation.id == "str":
+                        var_type = "str_variable"
+                    else:
+                        raise TypeError(
+                            f"The type annotation of variable {node.target.id} is "
+                            f"{node.annotation.id}, and this is not recognised. Please change your "
+                            "type annotation for this variable. PROCESS recognises the following "
+                            "type annotations: float, int, str."
+                        )
+
+                variable_types[node.target.id] = var_type
+        # get the variable descriptions
+        # need to check for pairs of ast.AnnAssign followed by an ast.Expr - this is the form of
+        # a variable being declared followed by a docstring expression. can get these var descriptions
+        # from here, and if there is no ast.Expr immediately after an ast.AnnAssign then this var does not
+        # have a docstring and so set the description to be ""
+        for node1, node2 in pairwise(module_tree.body):
+            if isinstance(node1, ast.AnnAssign) and isinstance(node2, ast.Expr):
+                # if docstring immediately follows the variable declaration, add docstring to descriptions dict
+                var_names_and_descriptions[node1.target.id] = node2.value.value
+            if isinstance(node1, ast.AnnAssign) and not isinstance(node2, ast.Expr):
+                # if no docstring for variable, have a blank description
+                var_names_and_descriptions[node1.target.id] = ""
+        # check if last entry of ast.body is declaring a var. if it is then this var has no description and will be missing
+        # from var_names_and_descriptions. need to add to var_names_and_descriptions dict
+        lastvar = module_tree.body[-1]
+
+        if (
+            isinstance(lastvar, ast.AnnAssign)
+            and lastvar not in var_names_and_descriptions
+        ):
+            var_names_and_descriptions[lastvar.target.id] = ""
+        # Add to relevant dicts
+        dict_module_entry[module_name.replace(".py", "")] = variable_names
+
+        output_dict["DICT_MODULE"].update(dict_module_entry)
+        output_dict["DICT_DEFAULT"].update(initial_values_dict)
+        output_dict["DICT_DESCRIPTIONS"].update(var_names_and_descriptions)
+        output_dict["DICT_VAR_TYPE"].update(variable_types)
 
     # Save output_dict as JSON, to be used by utilities scripts
     with open(DICTS_FILENAME, "w") as dicts_file:

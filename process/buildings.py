@@ -3,13 +3,12 @@ import logging
 import numpy as np
 
 from process import process_output as po
+from process.data_structure import cost_variables, divertor_variables
 from process.fortran import (
     build_variables,
     buildings_variables,
     constants,
-    cost_variables,
     current_drive_variables,
-    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     pfcoil_variables,
@@ -51,11 +50,11 @@ class Buildings:
         # Find full height of TF coil (m)
         #  = 2 * (mid-plane to TF coil inside edge + thickness of coil)
         tf_vertical_dim = 2.0e0 * (
-            build_variables.hmax + build_variables.dr_tf_outboard
+            build_variables.z_tf_inside_half + build_variables.dr_tf_outboard
         )
 
         # Find mass of each TF coil, in tonnes
-        tfmtn = 1.0e-3 * tfcoil_variables.whttf / tfcoil_variables.n_tf_coils
+        tfmtn = 1.0e-3 * tfcoil_variables.m_tf_coils_total / tfcoil_variables.n_tf_coils
 
         # Calculate building areas and volumes
 
@@ -74,8 +73,8 @@ class Buildings:
                 buildings_variables.elevol,
             ) = self.bldgs(
                 output,
-                pfcoil_variables.pfrmax,
-                pfcoil_variables.pfmmax,
+                pfcoil_variables.r_pf_coil_outer_max,
+                pfcoil_variables.m_pf_coil_max,
                 tfro,
                 tfri,
                 tf_vertical_dim,
@@ -83,9 +82,10 @@ class Buildings:
                 tfcoil_variables.n_tf_coils,
                 build_variables.rsldo,
                 build_variables.rsldi,
-                2.0e0 * (build_variables.hmax - build_variables.vgap_vv_thermalshield)
-                - build_variables.d_vv_top
-                - build_variables.d_vv_bot,
+                2.0e0
+                * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
+                - build_variables.dz_vv_upper
+                - build_variables.dz_vv_lower,
                 fwbs_variables.whtshld,
                 fwbs_variables.r_cryostat_inboard,
                 heat_transport_variables.helpow,
@@ -301,7 +301,7 @@ class Buildings:
         )
 
         # Calculate effective floor area for ac power module
-        buildings_variables.efloor = (
+        buildings_variables.a_plant_floor_effective = (
             rbv
             + rmbv
             + wsv
@@ -338,8 +338,8 @@ class Buildings:
             po.ovarre(
                 self.outfile,
                 "Effective floor area (m2)",
-                "(efloor)",
-                buildings_variables.efloor,
+                "(a_plant_floor_effective)",
+                buildings_variables.a_plant_floor_effective,
             )
             po.ovarre(self.outfile, "Reactor building volume (m3)", "(rbv)", rbv)
             po.ovarre(
@@ -396,7 +396,9 @@ class Buildings:
         # Lateral size driven by radial width of largest component, from:
         #  PF coil max radius, cryostat radius, TF coil outer radius
         width_reactor_piece = max(
-            pfcoil_variables.pfrmax, fwbs_variables.r_cryostat_inboard, tf_radial_dim
+            pfcoil_variables.r_pf_coil_outer_max,
+            fwbs_variables.r_cryostat_inboard,
+            tf_radial_dim,
         )
         # Allow for biological shielding around reactor
         width_reactor_piece = width_reactor_piece + buildings_variables.bioshld_thk
@@ -438,8 +440,10 @@ class Buildings:
 
         # Heating and Current Drive facility
         # Dimensions based upon estimates from M. Henderson, HCD Development Group
-        # current_drive_variables.iefrf = switch for current drive model
-        if (current_drive_variables.iefrf == 5) or (current_drive_variables.iefrf == 8):
+        # current_drive_variables.i_hcd_primary = switch for current drive model
+        if (current_drive_variables.i_hcd_primary == 5) or (
+            current_drive_variables.i_hcd_primary == 8
+        ):
             # NBI technology will be situated within the reactor building
             buildings_variables.reactor_hall_l = (
                 buildings_variables.reactor_hall_l
@@ -536,12 +540,12 @@ class Buildings:
         # find height, maximum radial dimension, maximum toroidal dimension
         if cost_variables.tlife != 0.0e0:
             hcomp_height = 2 * (
-                build_variables.hmax
+                build_variables.z_tf_inside_half
                 - (
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_thermal
+                    + build_variables.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
@@ -581,12 +585,12 @@ class Buildings:
 
             # Outboard 'component': first wall, blanket, shield
             hcomp_height = 2 * (
-                build_variables.hmax
+                build_variables.z_tf_inside_half
                 - (
                     build_variables.dr_tf_inboard
                     + build_variables.dr_tf_shld_gap
-                    + build_variables.thshield_vb
-                    + build_variables.vgap_vv_thermalshield
+                    + build_variables.dz_shld_thermal
+                    + build_variables.dz_shld_vv_gap
                 )
             )
             hcomp_rad_thk = (
@@ -625,7 +629,7 @@ class Buildings:
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
         if cost_variables.divlife != 0.0e0:
-            hcomp_height = divertor_variables.divfix
+            hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
             hcomp_footprint = (hcomp_height + buildings_variables.hot_sepdist) * (
@@ -645,7 +649,7 @@ class Buildings:
 
         # Centre post
         if cost_variables.cplife != 0.0e0:
-            hcomp_height = 2 * build_variables.hmax
+            hcomp_height = 2 * build_variables.z_tf_inside_half
             if tfcoil_variables.i_tf_sup != 1:
                 hcomp_rad_thk = build_variables.r_cp_top
             else:
@@ -958,7 +962,7 @@ class Buildings:
         # Calculate 'effective floor area for AC power module'
         # This is the total floor area (m2) across the site, allowing for multiple floors
         # within buildings by assuming an average storey height of 6m:
-        buildings_variables.efloor = buildings_total_vol / 6.0e0
+        buildings_variables.a_plant_floor_effective = buildings_total_vol / 6.0e0
 
         # Total volume of nuclear buildings
         buildings_variables.volnucb = reactor_build_totvol + hotcell_vol_ext
@@ -996,8 +1000,8 @@ class Buildings:
                 "(reactor_hall_h)",
                 buildings_variables.reactor_hall_h,
             )
-            if (current_drive_variables.iefrf == 5) or (
-                current_drive_variables.iefrf == 8
+            if (current_drive_variables.i_hcd_primary == 5) or (
+                current_drive_variables.i_hcd_primary == 8
             ):
                 po.ocmmnt(
                     self.outfile,
@@ -1090,8 +1094,8 @@ class Buildings:
                 hotcell_vol_ext,
             )
             po.oblnkl(self.outfile)
-            if (current_drive_variables.iefrf != 5) and (
-                current_drive_variables.iefrf != 8
+            if (current_drive_variables.i_hcd_primary != 5) and (
+                current_drive_variables.i_hcd_primary != 8
             ):
                 po.ovarre(
                     self.outfile,
@@ -1161,8 +1165,8 @@ class Buildings:
             po.ovarre(
                 self.outfile,
                 "Effective floor area (m2)",
-                "(efloor)",
-                buildings_variables.efloor,
+                "(a_plant_floor_effective)",
+                buildings_variables.a_plant_floor_effective,
             )
             po.ovarre(
                 self.outfile,
@@ -1491,3 +1495,159 @@ class Buildings:
                     "(staff_buildings_vol)",
                     staff_buildings_vol,
                 )
+
+
+def init_buildings_variables():
+    buildings_variables.admv = 1.0e5
+    buildings_variables.admvol = 0.0
+    buildings_variables.aux_build_l = 60.0
+    buildings_variables.aux_build_w = 30.0
+    buildings_variables.aux_build_h = 5.0
+    buildings_variables.auxcool_l = 20.0
+    buildings_variables.auxcool_w = 20.0
+    buildings_variables.auxcool_h = 5.0
+    buildings_variables.bioshld_thk = 2.50
+    buildings_variables.chemlab_l = 50.0
+    buildings_variables.chemlab_w = 30.0
+    buildings_variables.chemlab_h = 6.0
+    buildings_variables.dz_tf_cryostat = 2.5
+    buildings_variables.clh2 = 15.0
+    buildings_variables.control_buildings_l = 80.0
+    buildings_variables.control_buildings_w = 60.0
+    buildings_variables.control_buildings_h = 6.0
+    buildings_variables.conv = 6.0e4
+    buildings_variables.convol = 0.0
+    buildings_variables.crane_arm_h = 10.0
+    buildings_variables.crane_clrnc_h = 4.0
+    buildings_variables.crane_clrnc_v = 3.0
+    buildings_variables.cryomag_l = 120.0
+    buildings_variables.cryomag_w = 90.0
+    buildings_variables.cryomag_h = 5.0
+    buildings_variables.cryostore_l = 160.0
+    buildings_variables.cryostore_w = 30.0
+    buildings_variables.cryostore_h = 20.0
+    buildings_variables.cryostat_clrnc = 2.5
+    buildings_variables.cryvol = 0.0
+    buildings_variables.a_plant_floor_effective = 0.0
+    buildings_variables.elecdist_l = 380.0
+    buildings_variables.elecdist_w = 350.0
+    buildings_variables.elecdist_h = 5.0
+    buildings_variables.elecload_l = 100.0
+    buildings_variables.elecload_w = 90.0
+    buildings_variables.elecload_h = 3.0
+    buildings_variables.elecstore_l = 100.0
+    buildings_variables.elecstore_w = 60.0
+    buildings_variables.elecstore_h = 12.0
+    buildings_variables.elevol = 0.0
+    buildings_variables.esbldgm3 = 1.0e3
+    buildings_variables.fc_building_l = 60.0
+    buildings_variables.fc_building_w = 60.0
+    buildings_variables.fndt = 2.0
+    buildings_variables.gas_buildings_l = 25.0
+    buildings_variables.gas_buildings_w = 15.0
+    buildings_variables.gas_buildings_h = 5.0
+    buildings_variables.ground_clrnc = 5.0
+    buildings_variables.hcd_building_l = 70.0
+    buildings_variables.hcd_building_w = 40.0
+    buildings_variables.hcd_building_h = 25.0
+    buildings_variables.hw_storage_l = 20.0
+    buildings_variables.hw_storage_w = 10.0
+    buildings_variables.hw_storage_h = 5.0
+    buildings_variables.heat_sink_l = 160.0
+    buildings_variables.heat_sink_w = 80.0
+    buildings_variables.heat_sink_h = 12.0
+    buildings_variables.hccl = 5.0
+    buildings_variables.hcwt = 1.5
+    buildings_variables.hot_sepdist = 2.0
+    buildings_variables.hotcell_h = 12.0
+    buildings_variables.i_bldgs_size = 0
+    buildings_variables.i_bldgs_v = 0
+    buildings_variables.ilw_smelter_l = 50.0
+    buildings_variables.ilw_smelter_w = 30.0
+    buildings_variables.ilw_smelter_h = 30.0
+    buildings_variables.ilw_storage_l = 120.0
+    buildings_variables.ilw_storage_w = 100.0
+    buildings_variables.ilw_storage_h = 8.0
+    buildings_variables.llw_storage_l = 45.0
+    buildings_variables.llw_storage_w = 20.0
+    buildings_variables.llw_storage_h = 5.0
+    buildings_variables.magnet_pulse_l = 105.0
+    buildings_variables.magnet_pulse_w = 40.0
+    buildings_variables.magnet_pulse_h = 5.0
+    buildings_variables.magnet_trains_l = 120.0
+    buildings_variables.magnet_trains_w = 90.0
+    buildings_variables.magnet_trains_h = 5.0
+    buildings_variables.maint_cont_l = 125.0
+    buildings_variables.maint_cont_w = 100.0
+    buildings_variables.maint_cont_h = 6.0
+    buildings_variables.mbvfac = 2.8
+    buildings_variables.nbi_sys_l = 225.0
+    buildings_variables.nbi_sys_w = 185.0
+    buildings_variables.pfbldgm3 = 2.0e4
+    buildings_variables.pibv = 2.0e4
+    buildings_variables.qnty_sfty_fac = 2.0
+    buildings_variables.rbvfac = 1.6
+    buildings_variables.rbrt = 1.0
+    buildings_variables.rbvol = 0.0
+    buildings_variables.rbwt = 2.0
+    buildings_variables.reactor_clrnc = 4.0
+    buildings_variables.reactor_fndtn_thk = 2.0
+    buildings_variables.reactor_hall_l = 0.0
+    buildings_variables.reactor_hall_w = 0.0
+    buildings_variables.reactor_hall_h = 0.0
+    buildings_variables.reactor_roof_thk = 1.0
+    buildings_variables.reactor_wall_thk = 2.0
+    buildings_variables.rmbvol = 0.0
+    buildings_variables.robotics_l = 50.0
+    buildings_variables.robotics_w = 30.0
+    buildings_variables.robotics_h = 30.0
+    buildings_variables.row = 4.0
+    buildings_variables.rxcl = 4.0
+    buildings_variables.sec_buildings_l = 30.0
+    buildings_variables.sec_buildings_w = 25.0
+    buildings_variables.sec_buildings_h = 6.0
+    buildings_variables.shmf = 0.5
+    buildings_variables.shov = 1.0e5
+    buildings_variables.shovol = 0.0
+    buildings_variables.staff_buildings_h = 5.0
+    buildings_variables.staff_buildings_area = 4.8e5
+    buildings_variables.stcl = 3.0
+    buildings_variables.tfcbv = 2.0e4
+    buildings_variables.transp_clrnc = 1.0
+    buildings_variables.trcl = 1.0
+    buildings_variables.triv = 4.0e4
+    buildings_variables.turbine_hall_l = 109.0
+    buildings_variables.turbine_hall_w = 62.0
+    buildings_variables.turbine_hall_h = 15.0
+    buildings_variables.tw_storage_l = 90.0
+    buildings_variables.tw_storage_w = 30.0
+    buildings_variables.tw_storage_h = 5.0
+    buildings_variables.volnucb = 0.0
+    buildings_variables.volrci = 0.0
+    buildings_variables.warm_shop_l = 100.0
+    buildings_variables.warm_shop_w = 50.0
+    buildings_variables.warm_shop_h = 10.0
+    buildings_variables.water_buildings_l = 110.0
+    buildings_variables.water_buildings_w = 10.0
+    buildings_variables.water_buildings_h = 5.0
+    buildings_variables.workshop_l = 150.0
+    buildings_variables.workshop_w = 125.0
+    buildings_variables.workshop_h = 10.0
+    buildings_variables.wgt = 5.0e5
+    buildings_variables.wgt2 = 1.0e5
+    buildings_variables.wrbi = 0.0
+    buildings_variables.wsvfac = 1.9
+    buildings_variables.wsvol = 0.0
+    buildings_variables.a_reactor_bldg = 8.32e3
+    buildings_variables.a_ee_ps_bldg = 2.133e4
+    buildings_variables.a_aux_services_bldg = 1.0e3
+    buildings_variables.a_hot_cell_bldg = 8.43e3
+    buildings_variables.a_reactor_service_bldg = 2.44e3
+    buildings_variables.a_service_water_bldg = 1.567e3
+    buildings_variables.a_fuel_handling_bldg = 1.67e3
+    buildings_variables.a_control_room_bldg = 2.88e3
+    buildings_variables.a_ac_ps_bldg = 6.423e3
+    buildings_variables.a_admin_bldg = 2.5674e4
+    buildings_variables.a_site_service_bldg = 8.3e3
+    buildings_variables.a_cryo_inert_gas_bldg = 1.838e4
+    buildings_variables.a_security_bldg = 4.552e3

@@ -15,13 +15,13 @@ module heat_transport_variables
 
     public
 
-    real(dp) :: baseel
+    real(dp) :: p_plant_electric_base
     !! base plant electric load (W)
 
-    real(dp) :: crypmw
+    real(dp) :: p_cryo_plant_electric_mw
     !! cryogenic plant power (MW)
 
-    real(dp) :: crypmw_max
+    real(dp) :: p_cryo_plant_electric_max_mw
     !! Maximum cryogenic plant power (MW)
     !! Constraint equation icc = 87
     !! Scan variable nwseep = 56
@@ -34,26 +34,26 @@ module heat_transport_variables
     real(dp) :: etatf
     !! AC to resistive power conversion for TF coils
 
-    real(dp) :: etath
-    !! thermal to electric conversion efficiency if `secondary_cycle=2`; otherwise calculated.
+    real(dp) :: eta_turbine
+    !! thermal to electric conversion efficiency if `i_thermal_electric_conversion=2`; otherwise calculated.
 
     real(dp) :: etath_liq
 
     real(dp) :: fachtmw
     !! facility heat removal (MW)
 
-    real(dp) :: fcsht
+    real(dp) :: p_plant_electric_base_total_mw
     !! total baseline power required at all times (MW)
 
     real(dp) :: fgrosbop
     !! scaled fraction of gross power to balance-of-plant
 
     real(dp) :: fmgdmw
-    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `iscenr=2`)
+    !! power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_energy_storage_source=2`)
 
     real(dp) :: fpumpblkt
     !! fraction of total blanket thermal power required to drive the blanket
-    !! coolant pumps (default assumes water coolant) (`secondary_cycle=0`)
+    !! coolant pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
     real(dp) :: fpumpdiv
     !! fraction of total divertor thermal power required to drive the divertor
@@ -61,43 +61,40 @@ module heat_transport_variables
 
     real(dp) :: fpumpfw
     !! fraction of total first wall thermal power required to drive the FW coolant
-    !! pumps (default assumes water coolant) (`secondary_cycle=0`)
+    !! pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
     real(dp) :: fpumpshld
     !! fraction of total shield thermal power required to drive the shield coolant
     !! pumps (default assumes water coolant)
 
-    real(dp) :: htpmw_min
-    !! Minimum total electrical power for primary coolant pumps (MW) (NOT RECOMMENDED)
-
     real(dp) :: helpow
-    !! Heat removal at cryogenic temperature tmpcry (W)
+    !! Heat removal at cryogenic temperature temp_tf_cryo (W)
 
     real(dp) :: helpow_cryal
     !! Heat removal at cryogenic temperature tcoolin (W)
 
-    real(dp) :: htpmw
+    real(dp) :: p_coolant_pump_elec_total_mw
     !! heat transport system electrical pump power (MW)
 
-    real(dp) :: htpmw_blkt
+    real(dp) :: p_blkt_coolant_pump_mw
     !! blanket primary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_blkt_liq
+    real(dp) :: p_blkt_breeder_pump_mw
     !! blanket secondary coolant mechanical pumping power (MW)
 
     real(dp) :: htpmw_blkt_tot
     !! blanket primary + secondary coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_div
+    real(dp) :: p_div_coolant_pump_mw
     !! divertor coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_fw
+    real(dp) :: p_fw_coolant_pump_mw
     !! first wall coolant mechanical pumping power (MW)
 
-    real(dp) :: htpmw_shld
+    real(dp) :: p_shld_coolant_pump_mw
     !! shield and vacuum vessel coolant mechanical pumping power (MW)
 
-    real(dp) :: htpsecmw
+    real(dp) :: p_coolant_pump_loss_total_mw
     !! Waste power lost from primary coolant pumps (MW)
 
     integer :: ipowerflow
@@ -106,13 +103,13 @@ module heat_transport_variables
     !! - =0 pre-2014 version
     !! - =1 comprehensive 2014 model
 
-    integer :: iprimshld
+    integer :: i_shld_primary_heat
     !! Switch for shield thermal power destiny:
     !!
     !! - =0 does not contribute to energy generation cycle
     !! - =1 contributes to energy generation cycle
 
-    integer :: nphx
+    integer :: n_primary_heat_exchangers
     !! number of primary heat exchangers
 
     real(dp) :: pacpmw
@@ -121,126 +118,66 @@ module heat_transport_variables
     real(dp) :: peakmva
     !! peak MVA requirement
 
-    real(dp) :: pfwdiv
+    real(dp) :: p_fw_div_heat_deposited_mw
     !! heat removal from first wall/divertor (MW)
 
-    real(dp) :: pgrossmw
+    real(dp) :: p_plant_electric_gross_mw
     !! gross electric power (MW)
 
-    real(dp) :: pinjht
+    real(dp) :: p_hcd_electric_loss_mw
     !! power dissipated in heating and current drive system (MW)
 
-    real(dp) :: pinjmax
-    !! maximum injector power during pulse (heating and ramp-up/down phase) (MW)
-
-    real(dp) :: pinjwp
+    real(dp) :: p_hcd_electric_total_mw
     !! injector wall plug power (MW)
 
-    real(dp) :: pinjwpfix
-    !! secondary injector wall plug power (MW)
+    real(dp) :: p_hcd_secondary_electric_mw
+    !! Secondary HCD system injector wall plug power (MW)
 
-    real(dp) :: pnetelmw
+    real(dp) :: p_hcd_primary_electric_mw
+    !! Primary HCD system injector wall plug power (MW)
+
+    real(dp) :: p_plant_electric_net_mw
     !! net electric power (MW)
 
-    real(dp) :: precircmw
+    real(dp) :: p_plant_electric_recirc_mw
     !! recirculating electric power (MW)
 
     real(dp) :: priheat
     !! total thermal power removed from fusion core (MW)
 
-    real(dp) :: psecdiv
+    real(dp) :: p_div_secondary_heat_mw
     !! Low-grade heat lost in divertor (MW)
 
-    real(dp) :: psechcd
+    real(dp) :: p_hcd_secondary_heat_mw
     !! Low-grade heat lost into HCD apparatus (MW)
 
-    real(dp) :: psechtmw
+    real(dp) :: p_plant_secondary_heat_mw
     !! Low-grade heat (MW)
 
-    real(dp) :: pseclossmw
-    !! Low-grade heat (VV + lost)(MW)
-
-    real(dp) :: psecshld
+    real(dp) :: p_shld_secondary_heat_mw
     !! Low-grade heat deposited in shield (MW)
 
-    real(dp) :: pthermmw
+    real(dp) :: p_plant_primary_heat_mw
     !! High-grade heat useful for electric production (MW)
 
-    real(dp) :: pwpm2
+    real(dp) :: pflux_plant_floor_electric
     !! base AC power requirement per unit floor area (W/m2)
 
-    real(dp) :: tfacpd
+    real(dp) :: p_tf_electric_supplies_mw
     !! total steady state TF coil AC power demand (MW)
 
     real(dp) :: tlvpmw
     !! estimate of total low voltage power (MW)
 
-    real(dp) :: trithtmw
+    real(dp) :: p_tritium_plant_electric_mw
     !! power required for tritium processing (MW)
 
-    real(dp) :: tturb
-    !! coolant temperature at turbine inlet (K) (`secondary_cycle = 3,4`)
+    real(dp) :: temp_turbine_coolant_in
+    !! coolant temperature at turbine inlet (K) (`i_thermal_electric_conversion = 3,4`)
 
     real(dp) :: vachtmw
     !! vacuum pump power (MW)
 
-    contains
-
-    subroutine init_heat_transport_variables
-      !! Initialise module variables
-      implicit none
-
-      baseel = 5.0D6
-      crypmw = 0.0D0
-      crypmw_max = 50.0D0
-      f_crypmw = 1.0D0
-      etatf = 0.9D0
-      etath = 0.35D0
-      etath_liq = 0.35D0
-      fachtmw = 0.0D0
-      fcsht = 0.0D0
-      fgrosbop = 0.0D0
-      fmgdmw = 0.0D0
-      fpumpblkt = 0.005D0
-      fpumpdiv = 0.005D0
-      fpumpfw = 0.005D0
-      fpumpshld = 0.005D0
-      htpmw_min = 0.0D0
-      helpow = 0.0D0
-      helpow_cryal = 0.0D0
-      htpmw = 0.0D0
-      htpmw_blkt = 0.0D0
-      htpmw_blkt_liq = 0.0D0
-      htpmw_blkt_tot = 0.0D0
-      htpmw_div = 0.0D0
-      htpmw_fw = 0.0D0
-      htpmw_shld = 0.0D0
-      htpsecmw = 0.0D0
-      ipowerflow = 1
-      iprimshld = 1
-      nphx = 0
-      pacpmw = 0.0D0
-      peakmva = 0.0D0
-      pfwdiv = 0.0D0
-      pgrossmw = 0.0D0
-      pinjht = 0.0D0
-      pinjmax = 120.0D0
-      pinjwp = 0.0D0
-      pinjwpfix = 0.0D0
-      pnetelmw = 0.0D0
-      precircmw = 0.0D0
-      priheat = 0.0D0
-      psecdiv = 0.0D0
-      psechcd = 0.0D0
-      psechtmw = 0.0D0
-      pseclossmw = 0.0D0
-      psecshld = 0.0D0
-      pthermmw = 0.0D0
-      pwpm2 = 150.0D0
-      tfacpd = 0.0D0
-      tlvpmw = 0.0D0
-      trithtmw = 15.0D0
-      tturb = 0.0D0
-      vachtmw = 0.5D0
-    end subroutine init_heat_transport_variables
+    real(dp) :: f_p_plant_electric_recirc
+    !! fraction of recirculating electric power to total electric power
   end module heat_transport_variables

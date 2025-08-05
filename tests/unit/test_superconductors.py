@@ -62,11 +62,11 @@ def test_itersc(iterscparam):
     """
 
     jcrit, bcrit, tcrit = superconductors.itersc(
-        temperature=iterscparam.thelium,
-        bmax=iterscparam.bmax,
+        temp_conductor=iterscparam.thelium,
+        b_conductor=iterscparam.bmax,
         strain=iterscparam.strain,
-        bc20max=iterscparam.bc20max,
-        tc0max=iterscparam.tc0max,
+        b_c20max=iterscparam.bc20max,
+        temp_c0max=iterscparam.tc0max,
     )
 
     assert jcrit == pytest.approx(iterscparam.expected_jcrit)
@@ -129,11 +129,11 @@ def test_jcrit_nbti(jcritnbtiparam):
     """
 
     jcrit, tcrit = superconductors.jcrit_nbti(
-        temperature=jcritnbtiparam.temperature,
-        bmax=jcritnbtiparam.bmax,
+        temp_conductor=jcritnbtiparam.temperature,
+        b_conductor=jcritnbtiparam.bmax,
         c0=jcritnbtiparam.c0,
-        bc20max=jcritnbtiparam.bc20max,
-        tc0max=jcritnbtiparam.tc0max,
+        b_c20max=jcritnbtiparam.bc20max,
+        temp_c0max=jcritnbtiparam.tc0max,
     )
 
     assert jcrit == pytest.approx(jcritnbtiparam.expected_jcrit)
@@ -170,7 +170,9 @@ def test_gl_nbti():
 
 
 def test_wstsc():
-    jcrit, bcrit, tcrit = superconductors.wstsc(4.75, 27.0, 0.001, 30.0, 25.0)
+    jcrit, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
+        4.75, 27.0, 0.001, 30.0, 25.0
+    )
 
     assert jcrit == pytest.approx(195513.0673058944)
     assert bcrit == pytest.approx(27.329369840368482)
@@ -186,7 +188,15 @@ def test_gl_rebco():
 
 
 def test_hijc_rebco():
-    jcrit, bcrit, tcrit = superconductors.hijc_rebco(4.75, 7.0, 2, 30.0, 25.0)
+    jcrit, bcrit, tcrit = superconductors.hijc_rebco(
+        temp_conductor=4.75,
+        b_conductor=7.0,
+        b_c20max=30.0,
+        t_c0=25.0,
+        tape_width=4.0e-3,
+        rebco_thickness=1.0e-6,
+        tape_thickness=6.5e-5,
+    )
 
     assert jcrit == pytest.approx(111046017.5)
     assert bcrit == pytest.approx(22.335736687814954)

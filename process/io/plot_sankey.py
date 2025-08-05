@@ -10,6 +10,7 @@ MFILE.DAT
 """
 
 import argparse
+import pathlib
 
 import matplotlib as mpl
 from pylab import savefig, show
@@ -40,7 +41,12 @@ def main(args=None):
     # main program
 
     plot_sankey(args.mfile)
-    savefig("SankeyPowerFlow." + args.end)
+
+    # Get directory of mfile
+    mfile_path = pathlib.Path(args.mfile).resolve()
+    mfile_dir = mfile_path.parent
+    output_path = mfile_dir / f"SankeyPowerFlow.{args.end}"
+    savefig(str(output_path))
 
     show()
 

@@ -7,9 +7,11 @@ from typing import TYPE_CHECKING
 import numpy as np
 from tabulate import tabulate
 
+import process.constraints as constraints
 from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
+from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -74,7 +76,7 @@ class Caller:
             self._call_models_once(xc)
             # Evaluate objective function and constraints
             objf = objective_function(ft.numerics.minmax)
-            conf, _, _, _, _ = ft.constraints.constraint_eqns(m, -1)
+            conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
 
             if objf_prev is None and conf_prev is None:
                 # First run: run again to check idempotence
@@ -229,7 +231,7 @@ class Caller:
         ft.numerics.ncalls = ft.numerics.ncalls + 1
 
         # Convert variables
-        ft.define_iteration_variables.convxc(xc, nvars)
+        set_scaled_iteration_variable(xc, nvars)
 
         # Perform the various function calls
         # Stellarator caller
@@ -249,28 +251,34 @@ class Caller:
 
         # Machine Build Model
         # Radial build
-        if ft.build_variables.tf_in_cs == 1:
+        if ft.build_variables.i_tf_inside_cs == 1:
             self.models.build.tf_in_cs_bore_calc()
-        self.models.build.calculate_radial_build(output=False)
 
-        # Vertical build
-        self.models.build.calculate_vertical_build(output=False)
+        self.models.build.run()
 
         self.models.physics.physics()
 
         # Toroidal field coil model
 
-        self.models.tfcoil.run()
+        # Toroidal field coil resistive model
+        if ft.tfcoil_variables.i_tf_sup == 0:
+            self.models.copper_tf_coil.run(output=False)
 
         # Toroidal field coil superconductor model
         if ft.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
+
+        if ft.tfcoil_variables.i_tf_sup == 2:
+            self.models.aluminium_tf_coil.run(output=False)
 
         # Poloidal field and central solenoid model
         self.models.pfcoil.run()
 
         # Pulsed reactor model
         self.models.pulse.run(output=False)
+
+        # First wall model
+        self.models.fw.run()
 
         # Blanket model
         """Blanket switch values
@@ -286,21 +294,15 @@ class Caller:
             # CCFE HCPB model
             self.models.ccfe_hcpb.run(output=False)
         # i_blanket_type = 2, KIT HCPB removed
-        elif ft.fwbs_variables.i_blanket_type == 3:
-            # CCFE HCPB model with Tritium Breeding Ratio calculation
-            self.models.ccfe_hcpb.run(output=False)
-            ft.fwbs_variables.tbr = self.models.ccfe_hcpb.tbr_shimwell(
-                ft.fwbs_variables.breeder_f,
-                ft.fwbs_variables.li6enrich,
-                ft.fwbs_variables.iblanket_thickness,
-                output=False,
-            )
+        # i_blanket_type = 3, CCFE HCPB with TBR calculation removed
         # i_blanket_type = 4, KIT HCLL removed
         elif ft.fwbs_variables.i_blanket_type == 5:
             # DCLL model
             self.models.dcll.run(output=False)
 
         self.models.divertor.run(output=False)
+
+        self.models.cryostat.run()
 
         # Structure Model
         self.models.structure.run(output=False)
@@ -316,7 +318,10 @@ class Caller:
         self.models.power.pfpwr(output=False)
 
         # Plant heat transport part 1
-        self.models.power.power1()
+        self.models.power.component_thermal_powers()
+
+        # Cryoplant loads
+        self.models.power.calculate_cryo_loads()
 
         # Vacuum model
         self.models.vacuum.run(output=False)
@@ -328,9 +333,7 @@ class Caller:
         self.models.power.acpow(output=False)
 
         # Plant heat transport pt 2 & 3
-        self.models.power.power2(output=False)
-
-        self.models.power.power3(output=False)
+        self.models.power.plant_electric_production()
 
         # Availability model
         self.models.availability.run(output=False)

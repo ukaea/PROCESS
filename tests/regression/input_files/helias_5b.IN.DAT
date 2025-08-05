@@ -39,8 +39,8 @@ ixc = 10                *hfact
 hfact = 1.2187          *H-factor on energy confinement times
 boundu(10) = 2.0
 
-ixc = 25                *fpnetel
-fpnetel = 1.0000        *f-value for net electric power
+ixc = 25                *fp_plant_electric_net_required_mw
+fp_plant_electric_net_required_mw = 1.0000        *f-value for net electric power
 boundl(25) = 0.98
 boundu(25) = 1.0
 
@@ -55,7 +55,7 @@ alphan   = 0.35         *Density profile index
 alphat   = 1.20         *Temperature profile index
 aspect   = 12.22        *Aspect ratio
 bt       = 5.5          *Toroidal field on axis (T)
-ignite   = 1            *Switch for ignition assumption (1: Ignited)
+i_plasma_ignited   = 1            *Switch for ignition assumption (1: Ignited)
 ipedestal = 0           *Switch for pedestal profiles (0: Parabolic Profiles)
 i_rad_loss = 1            *Switch for radiation loss term usage in power balance (1: Total power lost is scaling power plus core radiation only)
 i_confinement_time      = 38           *Switch for energy confinement time scaling law (38: ISS04)
@@ -85,41 +85,39 @@ dr_blkt_outboard  = 0.8          *Outboard blanket thickness (m)
 dr_cryostat    = 0.15         *Cryostat thickness (m)
 dr_vv_inboard  = 0.35         *Inboard vacuum vessel thickness (tf coil / shield) (m)
 dr_vv_outboard = 0.35         *Outboard vacuum vessel thickness (tf coil / shield) (m)
-d_vv_top = 0.35         *Topside vacuum vessel thickness (tf coil / shield) (m)
-d_vv_bot = 0.35         *Underside vacuum vessel thickness (tf coil / shield) (m)
+dz_vv_upper = 0.35         *Topside vacuum vessel thickness (tf coil / shield) (m)
+dz_vv_lower = 0.35         *Underside vacuum vessel thickness (tf coil / shield) (m)
 dr_shld_vv_gap_inboard    = 0.025        *Gap between inboard vacuum vessel and tf coil (m)
 gapomin  = 0.025        *Minimum gap between outboard vacuum vessel and TF coil (m)
 dr_fw_plasma_gap_inboard  = 0.15         *Gap between plasma and first wall; inboard side (m)
 dr_fw_plasma_gap_outboard  = 0.3          *Gap between plasma and first wall; outboard side (m)
 dr_shld_inboard  = 0.4          *Inboard shield thickness (m)
 dr_shld_outboard  = 0.7          *Outboard shield thickness (m)
-shldtth  = 0.7          *Upper/lower shield thickness (m)
-vgap_xpoint_divertor     = 0.0          *Vertical gap between x-point and divertor (m)
+dz_shld_upper  = 0.7          *Upper/lower shield thickness (m)
+dz_xpoint_divertor     = 0.0          *Vertical gap between x-point and divertor (m)
 
 *---------------Constraint Variables---------------*
 
-pnetelin = 1000         *Required net electric power (MW)
+p_plant_electric_net_required_mw = 1000         *Required net electric power (MW)
 beta_max = 0.05          *upper beta limit
 beta_min = 0.01    *lower beta limit
 
 *-------------Current Drive Variables--------------*
 
-etaech   = 0.7          *ECH wall plug to injector efficiency
-pheat    = 0.0          *Heating power not used for current drive (MW)
+eta_ecrh_injector_wall_plug   = 0.7          *ECH wall plug to injector efficiency
+p_hcd_primary_extra_heat_mw    = 0.0          *Heating power not used for current drive (MW)
 
 *----------------Divertor Variables----------------*
 
 anginc   = 0.035        *Angle of incidence of field line on plate (rad)
-divdum   = 1            *Switch for divertor zeff model (1: input)
 tdiv     = 3.0          *Temperature at divertor (eV)
 xpertin  = 1.5          *Perpendicular heat transport coefficient (m2/s)
-zeffdiv  = 3.0          *Zeff in the divertor region (if divdum /= 0)
 
 *------------------FWBs Variables------------------*
 
 denstl   = 7800.0       *Density of steel (kg/m3)
-emult    = 1.18         *Energy multiplication in blanket and shield
-etahtp   = 1.0          *Electrical efficiency of primary coolant pumps
+f_p_blkt_multiplication    = 1.18         *Energy multiplication in blanket and shield
+eta_coolant_pump_electric   = 1.0          *Electrical efficiency of primary coolant pumps
 fblbe    = 0.47         *Beryllium fraction of blanket by volume
 fblli2o  = 0.07         *Lithium oxide fraction of blanket by volume
 fbllipb  = 0.00         *Lithium lead fraction of blanket by volume
@@ -127,22 +125,23 @@ fblss    = 0.13         *Stainless steel fraction of blanket by volume
 fblvd    = 0.00         *Vanadium fraction of blanket by volume
 fhole    = 0.0          *Area fraction taken up by other holes (not used)
 fwclfr   = 0.1          *First wall coolant fraction
-htpmw_blkt = 120.0      *Blanket coolant mechanical pumping power (MW)
-htpmw_fw = 56.0         *First wall coolant mechanical pumping power (MW)
-htpmw_div = 24.0        *Divertor coolant mechanical pumping power (MW)
-primary_pumping = 0     *Switch for pumping power (0: User sets pump power directly)
-secondary_cycle = 2     *Switch for power conversion cycle (2: user input thermal-electric efficiency)
+p_blkt_coolant_pump_mw = 120.0      *Blanket coolant mechanical pumping power (MW)
+p_fw_coolant_pump_mw = 56.0         *First wall coolant mechanical pumping power (MW)
+p_div_coolant_pump_mw = 24.0        *Divertor coolant mechanical pumping power (MW)
+i_coolant_pumping = 0     *Switch for pumping power (0: User sets pump power directly)
+i_thermal_electric_conversion = 2     *Switch for power conversion cycle (2: user input thermal-electric efficiency)
 vfblkt   = 0.10         *Coolant void fraction in blanket (blktmodel=0)
 vfshld   = 0.60         *Coolant void fraction in shield
+radius_fw_channel = 0.008 *Inner radius of first wall coolant channel (m) is 0.008 for stellarator
 
 *-------------Heat Transport Variables-------------*
 
-etath    = 0.4          *Thermal to electric conversion efficiency; if seconday_cycle=2
+eta_turbine    = 0.4          *Thermal to electric conversion efficiency; if seconday_cycle=2
 
 *------------Impurity Radiation Module-------------*
 
 *imprad_model = 1        *Switch for impurity radiation model
-coreradius = 0.6        *Normalised radius defining the 'core' region
+radius_plasma_core_norm = 0.6        *Normalised radius defining the 'core' region
 
 fimp(1)  = 1.0          *Hydrogen (fraction calculated by code)
 fimp(2)  = 0.1          *Helium (fraction calculated by code)
@@ -171,12 +170,12 @@ runtitle = HELIAS-5B
 fcutfsu  = 0.69         *Copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1         *Switch for superconductor material in tf coils (1: ITER Nb3Sn)
 tftmp     = 4.2         *Peak helium coolant temperature in TF coils and PF coils (k)
-tmpcry    = 4.2         *Coil temperature for cryogenic plant power calculation (K)
+temp_tf_cryo    = 4.2         *Coil temperature for cryogenic plant power calculation (K)
 t_turn_tf = 0.056       *Dimension conductor area including steel and insulation.
-thicndut  = 0.002       *Conduit insulation thickness (m)
-thwcndut  = 0.0012      *TF coil conduit case thickness (m)
-vftf      = 0.3         *Coolant fraction of TF coil leg (i_tf_sup=0)
-thkcas    = 0.06        * Case thickness
+dx_tf_turn_insulation  = 0.002       *Conduit insulation thickness (m)
+dx_tf_turn_steel  = 0.0012      *TF coil conduit case thickness (m)
+f_a_tf_turn_cable_space_extra_void      = 0.3         *Coolant fraction of TF coil leg (i_tf_sup=0)
+dr_tf_nose_case    = 0.06        * Case thickness
 *-----------------Pfcoil Variables-----------------*
 
 *PF coil vertical positioning adjuster

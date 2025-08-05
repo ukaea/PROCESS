@@ -25,19 +25,19 @@ module dcll_module
     !!          i_blanket_type = 5 * DCLL
     !!
     !!      Liquid Metal Breeder Material = PbLi
-    !!          i_bb_liq = 0 * Liquid Metal Breeder Material = PbLi
+    !!          i_blkt_liquid_breeder_type = 0 * Liquid Metal Breeder Material = PbLi
     !!
     !!      Specify dual-coolant i.e., get mass flow required from heat extracted from liqid metal breeder
-    !!          icooldual = 2
+    !!          i_blkt_dual_coolant = 2
     !!
     !!      FIC switch: 0 = no FIC, Eurofer; 1 = FCIs, perfect electrical insulator, 2 = FCIs, with specified conductance
-    !!          ifci = 0, 1, or 2
+    !!          i_blkt_liquid_breeder_channel_type = 0, 1, or 2
     !!
-    !!      Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for ifci = 0 or 2
+    !!      Liquid metal duct wall conductance initilized at Eurofer value in fwbs_variables, or can input other value, used for i_blkt_liquid_breeder_channel_type = 0 or 2
     !!          (bz_channel_conduct_liq)
     !!
     !!      Choose if FW and BB structure are on the same pumping system (unless have diffent coolants), default is same coolant with flow IN->FW->BB->OUT
-    !!          (ipump)
+    !!          (i_fw_blkt_shared_coolant)
     !!
     !!      Can set inlet and oulet temperature for liquid metal breeder
     !!          (inlet_temp_liq)
@@ -115,53 +115,5 @@ module dcll_module
 
     !! Total mass for an inboard/outboard reactor segment [kg]
     real(dp) :: mass_segm_ib, mass_segm_ob
-
-contains
-
-    !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    subroutine init_dcll_module
-
-        !! Initialise module variables !!!
-
-        implicit none
-
-        r_fci = 0.0
-        r_backwall = 0.0
-        bz_r_ib = 0.0
-        bz_r_ob = 0.0
-        f_vol_stff_plates = 0.0
-        f_vol_stl_bz_struct = 0.0
-        f_vol_stl_back_wall = 0.0
-        f_vol_stl_fw = 0.0
-        f_vol_mfbss_stl = 0.0
-        f_vol_mfbss_he = 0.0
-        f_vol_mfbss_pbli = 0.0
-        vol_fci = 0.0
-        vol_bz_struct = 0.0
-        vol_bz_liq = 0.0
-        vol_bz_liq_ib = 0.0
-        vol_bz_liq_ob = 0.0
-        vol_bw = 0.0
-        vol_bss = 0.0
-        wht_cer = 0.0
-        wht_stl_struct = 0.0
-        wht_cool_struct = 0.0
-        wht_bw_stl = 0.0
-        wht_bw_cool = 0.0
-        wht_mfbss_stl = 0.0
-        wht_mfbss_cool = 0.0
-        wht_mfbss_pbli = 0.0
-        fwmass_stl = 0.0
-        fwmass_cool = 0.0
-        mass_cool_blanket = 0.0
-        mass_liq_blanket = 0.0
-        mass_stl_blanket = 0.0
-        mass_segm_ib = 0.0
-        mass_segm_ob = 0.0
-
-    end subroutine init_dcll_module
-
-    !! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 end module dcll_module

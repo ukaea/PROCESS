@@ -3,10 +3,9 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.build import Build
+from process.data_structure import divertor_variables
 from process.fortran import (
     build_variables,
-    current_drive_variables,
-    divertor_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -45,7 +44,7 @@ class DivgeomParam(NamedTuple):
 
     rminor: Any = None
 
-    idivrt: Any = None
+    n_divertors: Any = None
 
     kappa: Any = None
 
@@ -63,17 +62,17 @@ class RippleAmplitudeParam(NamedTuple):
 
     rmajor: Any = None
 
-    tinstf: Any = None
+    dx_tf_wp_insulation: Any = None
 
     n_tf_coils: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
-    casths: Any = None
+    dx_tf_side_case_min: Any = None
 
-    dr_tf_wp: Any = None
+    dr_tf_wp_with_insulation: Any = None
 
-    thkcas: Any = None
+    dr_tf_nose_case: Any = None
 
     casths_fraction: Any = None
 
@@ -81,7 +80,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     i_tf_wp_geom: Any = None
 
-    tfinsgap: Any = None
+    dx_tf_wp_insertion_gap: Any = None
 
     tfc_sidewall_is_fraction: Any = None
 
@@ -113,7 +112,7 @@ class RippleAmplitudeParam(NamedTuple):
             itart=0,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
-            idivrt=1,
+            n_divertors=1,
             kappa=1.8480000000000001,
             triang=0.5,
             iprint=0,
@@ -132,7 +131,7 @@ class RippleAmplitudeParam(NamedTuple):
             itart=0,
             rmajor=8.8901000000000003,
             rminor=2.8677741935483869,
-            idivrt=1,
+            n_divertors=1,
             kappa=1.8480000000000001,
             triang=0.5,
             iprint=0,
@@ -179,7 +178,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rminor", divgeomparam.rminor)
 
-    monkeypatch.setattr(physics_variables, "idivrt", divgeomparam.idivrt)
+    monkeypatch.setattr(physics_variables, "n_divertors", divgeomparam.n_divertors)
 
     monkeypatch.setattr(physics_variables, "kappa", divgeomparam.kappa)
 
@@ -196,16 +195,16 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         RippleAmplitudeParam(
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             n_tf_coils=16,
-            tftort=1,
-            casths=0.05000000000000001,
-            dr_tf_wp=0.54261087836601019,
-            thkcas=0.52465000000000006,
+            dx_tf_inboard_out_toroidal=1,
+            dx_tf_side_case_min=0.05000000000000001,
+            dr_tf_wp_with_insulation=0.54261087836601019,
+            dr_tf_nose_case=0.52465000000000006,
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
             ripmax=0.60000000000000009,
@@ -217,16 +216,16 @@ def test_divgeom(divgeomparam, monkeypatch, build):
         RippleAmplitudeParam(
             rminor=2.8677741935483869,
             rmajor=8.8901000000000003,
-            tinstf=0.0080000000000000019,
+            dx_tf_wp_insulation=0.0080000000000000019,
             n_tf_coils=16,
-            tftort=1,
-            casths=0.05000000000000001,
-            dr_tf_wp=0.54261087836601019,
-            thkcas=0.52465000000000006,
+            dx_tf_inboard_out_toroidal=1,
+            dx_tf_side_case_min=0.05000000000000001,
+            dr_tf_wp_with_insulation=0.54261087836601019,
+            dr_tf_nose_case=0.52465000000000006,
             casths_fraction=0.059999999999999998,
             i_tf_sup=1,
             i_tf_wp_geom=0,
-            tfinsgap=0.01,
+            dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
             ripmax=0.60000000000000009,
@@ -257,17 +256,35 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
 
     monkeypatch.setattr(physics_variables, "rmajor", rippleamplitudeparam.rmajor)
 
-    monkeypatch.setattr(tfcoil_variables, "tinstf", rippleamplitudeparam.tinstf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insulation",
+        rippleamplitudeparam.dx_tf_wp_insulation,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", rippleamplitudeparam.n_tf_coils)
 
-    monkeypatch.setattr(tfcoil_variables, "tftort", rippleamplitudeparam.tftort)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_inboard_out_toroidal",
+        rippleamplitudeparam.dx_tf_inboard_out_toroidal,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "casths", rippleamplitudeparam.casths)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_side_case_min",
+        rippleamplitudeparam.dx_tf_side_case_min,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "dr_tf_wp", rippleamplitudeparam.dr_tf_wp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dr_tf_wp_with_insulation",
+        rippleamplitudeparam.dr_tf_wp_with_insulation,
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "thkcas", rippleamplitudeparam.thkcas)
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", rippleamplitudeparam.dr_tf_nose_case
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "casths_fraction", rippleamplitudeparam.casths_fraction
@@ -279,7 +296,11 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
         tfcoil_variables, "i_tf_wp_geom", rippleamplitudeparam.i_tf_wp_geom
     )
 
-    monkeypatch.setattr(tfcoil_variables, "tfinsgap", rippleamplitudeparam.tfinsgap)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "dx_tf_wp_insertion_gap",
+        rippleamplitudeparam.dx_tf_wp_insertion_gap,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
@@ -310,25 +331,25 @@ class PortszParam(NamedTuple):
 
     dr_tf_outboard: Any = None
 
-    rtanbeam: Any = None
+    radius_beam_tangency: Any = None
 
-    rtanmax: Any = None
+    radius_beam_tangency_max: Any = None
 
-    nbshield: Any = None
+    dx_beam_shield: Any = None
 
-    beamwd: Any = None
+    dx_beam_duct: Any = None
 
-    frbeam: Any = None
+    f_radius_beam_tangency_rmajor: Any = None
 
     rmajor: Any = None
 
-    tftort: Any = None
+    dx_tf_inboard_out_toroidal: Any = None
 
     n_tf_coils: Any = None
 
-    expected_rtanbeam: Any = None
+    expected_radius_beam_tangency: Any = None
 
-    expected_rtanmax: Any = None
+    expected_radius_beam_tangency_max: Any = None
 
 
 @pytest.mark.parametrize(
@@ -337,77 +358,61 @@ class PortszParam(NamedTuple):
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
-            rtanbeam=0,
-            rtanmax=0,
-            nbshield=0.5,
-            beamwd=0.57999999999999996,
-            frbeam=1.05,
+            radius_beam_tangency=0,
+            radius_beam_tangency_max=0,
+            dx_beam_shield=0.5,
+            dx_beam_duct=0.57999999999999996,
+            f_radius_beam_tangency_rmajor=1.05,
             rmajor=8.8901000000000003,
-            tftort=1.6395161177915356,
+            dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
-            expected_rtanbeam=9.3346050000000016,
-            expected_rtanmax=14.735821603386416,
+            expected_radius_beam_tangency=9.3346050000000016,
+            expected_radius_beam_tangency_max=14.735821603386416,
         ),
         PortszParam(
             r_tf_outboard_mid=16.519405859443332,
             dr_tf_outboard=1.208,
-            rtanbeam=9.3346050000000016,
-            rtanmax=14.735821603386416,
-            nbshield=0.5,
-            beamwd=0.57999999999999996,
-            frbeam=1.05,
+            radius_beam_tangency=9.3346050000000016,
+            radius_beam_tangency_max=14.735821603386416,
+            dx_beam_shield=0.5,
+            dx_beam_duct=0.57999999999999996,
+            f_radius_beam_tangency_rmajor=1.05,
             rmajor=8.8901000000000003,
-            tftort=1.6395161177915356,
+            dx_tf_inboard_out_toroidal=1.6395161177915356,
             n_tf_coils=16,
-            expected_rtanbeam=9.3346050000000016,
-            expected_rtanmax=14.735821603386416,
+            expected_radius_beam_tangency=9.3346050000000016,
+            expected_radius_beam_tangency_max=14.735821603386416,
         ),
     ),
 )
-def test_portsz(portszparam, monkeypatch, build):
+def test_calculate_beam_port_size(portszparam, build):
     """
-    Automatically generated Regression Unit Test for portsz.
+    Regression Unit Test for calculate_beam_port_size with explicit inputs.
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
     :param portszparam: the data used to mock and assert in this test.
     :type portszparam: portszparam
 
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-
     :param build: fixture containing an initialised `Build` object
     :type build: tests.unit.test_build.build (functional fixture)
     """
 
-    monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", portszparam.r_tf_outboard_mid
+    radius_beam_tangency, radius_beam_tangency_max = build.calculate_beam_port_size(
+        r_tf_outboard_mid=portszparam.r_tf_outboard_mid,
+        dr_tf_outboard=portszparam.dr_tf_outboard,
+        dx_beam_shield=portszparam.dx_beam_shield,
+        dx_beam_duct=portszparam.dx_beam_duct,
+        f_radius_beam_tangency_rmajor=portszparam.f_radius_beam_tangency_rmajor,
+        rmajor=portszparam.rmajor,
+        dx_tf_inboard_out_toroidal=portszparam.dx_tf_inboard_out_toroidal,
+        n_tf_coils=portszparam.n_tf_coils,
     )
 
-    monkeypatch.setattr(build_variables, "dr_tf_outboard", portszparam.dr_tf_outboard)
-
-    monkeypatch.setattr(current_drive_variables, "rtanbeam", portszparam.rtanbeam)
-
-    monkeypatch.setattr(current_drive_variables, "rtanmax", portszparam.rtanmax)
-
-    monkeypatch.setattr(current_drive_variables, "nbshield", portszparam.nbshield)
-
-    monkeypatch.setattr(current_drive_variables, "beamwd", portszparam.beamwd)
-
-    monkeypatch.setattr(current_drive_variables, "frbeam", portszparam.frbeam)
-
-    monkeypatch.setattr(physics_variables, "rmajor", portszparam.rmajor)
-
-    monkeypatch.setattr(tfcoil_variables, "tftort", portszparam.tftort)
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", portszparam.n_tf_coils)
-
-    build.portsz()
-
-    assert current_drive_variables.rtanbeam == pytest.approx(
-        portszparam.expected_rtanbeam
+    assert radius_beam_tangency == pytest.approx(
+        portszparam.expected_radius_beam_tangency
     )
 
-    assert current_drive_variables.rtanmax == pytest.approx(
-        portszparam.expected_rtanmax
+    assert radius_beam_tangency_max == pytest.approx(
+        portszparam.expected_radius_beam_tangency_max
     )

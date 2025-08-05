@@ -173,7 +173,7 @@ Stellarators require no curren drive, although provision for auxiliary heating d
 
 `isthtr = 3` : neutral beam injection
 
-The value of variable `pheat` determines the actual amount of auxiliary heating power (in Watts) to be applied to the plasma. This variable may be used as an iteration variable (no. 11). Switch `ignite` may be used if necessary.
+The value of variable `p_hcd_primary_extra_heat_mw` determines the actual amount of auxiliary heating power (in  Mega Watts) to be applied to the plasma. This variable may be used as an iteration variable (no. 11). Switch `i_plasma_ignited` may be used if necessary.
 
 ### Divertor
 
@@ -200,7 +200,7 @@ This file needs to be prepared by hand or can be written automatically by the pr
 Alternatively `istell = 1,2,3,4,5` allow for pre-selected stellarator machines.
 
 ![alt text](../images/stellartor_windingpack.png "Thingy")
-*Figure 3: Differences of the stellarator coil cross section in PROCESS compared to the tokamak description. Note the identical `thkcas` around the cable area.*
+*Figure 3: Differences of the stellarator coil cross section in PROCESS compared to the tokamak description. Note the identical `dr_tf_nose_case` around the cable area.*
 
 The stellarator coil model[^6] uses scaling aspects based on a reference calculation of the stellarator configuration, using numerical calculations at a reference point.
 Examples for these calculations are inductances, peak field calculations or stellarator forces.
@@ -209,8 +209,8 @@ The fully three-dimensional shape of the coils is assumed to be fixed, but the s
 
 The stellarator coils are assumed to be superconducting - no resistive coil calculations are performed. The critical field at the superconductor is calculated using circular approximations for the coils in the inductance and field calculations, and the limit is enforced automatically. All superconductor materials that are available for tokamaks are also available for stellarators.
 
-The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `thkcas`, no. 57; `cpttf`, no. 60 and `tftort`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`thkcas` is required as input); the code will stop with an error message of this is attempted.
-The conduit insulation thickness (`thicndut`), as well as the steel thickness around each conductor (`thwcndut`) should be given as input parameters together with the dimension of the conductor area (`t_turn_tf`).
+The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `dr_tf_nose_case`, no. 57; `c_tf_turn`, no. 60 and `dx_tf_inboard_out_toroidal`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`dr_tf_nose_case` is required as input); the code will stop with an error message of this is attempted.
+The conduit insulation thickness (`dx_tf_turn_insulation`), as well as the steel thickness around each conductor (`dx_tf_turn_steel`) should be given as input parameters together with the dimension of the conductor area (`t_turn_tf`).
 
 
 stellarator-PROCESS returns a set of parameters for the coil force densities, which are scaled from the reference calculation.
@@ -224,16 +224,16 @@ i_tf_sc_mat = 8 * Switch for superconductor material in tf coils;
 sig_tf_wp_max = 4.e8 * Maximal allowable Stress level on Ground insulation for a simple stellarator coil stress module (Pa)
 fcutfsu = 0.7 *Copper fraction of cable conductor (TF coils), Schauer: 900 SCU strands, 522 Copper strands. Value for 0.4 Helium
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
-tmpcry = 4.75 * Temperature in TF coils, required for plant efficiency (K)
-vftf = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
+temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
+f_a_tf_turn_cable_space_extra_void = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 vdalw = 12.64 * Max voltage across tf coil during quench (kV)
 tdmptf = 20 * Dump time (should be iteration variable)
-thkcas = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)
+dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)
 t_turn_tf = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
-thicndut = 0.0015 * Conduit insulation thickness (one side) (m)
-thwcndut = 0.006 * thickness of steel around each conductor (one side) (m)
-tinstf = 0.1 * insulation on top of winding pack (one side) (m)
+dx_tf_turn_insulation = 0.0015 * Conduit insulation thickness (one side) (m)
+dx_tf_turn_steel = 0.006 * thickness of steel around each conductor (one side) (m)
+dx_tf_wp_insulation = 0.1 * insulation on top of winding pack (one side) (m)
 ```
 
 ### Machine build
@@ -256,20 +256,20 @@ There are two blanket modules implemented in stellarator-PROCESS at the moment,
 The KIT HCPB model is documented elsewhere, for the simple module the following set of input parameters should be provided:
 ```
 blkttype = 0,1,2 (only relevant for mass calculations)
-emult = 1.18 *Energy multiplication in blanket and shield
-etahtp = 1. *Electrical efficiency of primary coolant pumps
+f_p_blkt_multiplication = 1.18 *Energy multiplication in blanket and shield
+eta_coolant_pump_electric = 1. *Electrical efficiency of primary coolant pumps
 fblbe = 0.47 *Beryllium fraction of blanket by volume (only relevant for mass calculations)
 fblli2o = 0.07 *Lithium oxide fraction of blanket by volume (only relevant for mass calculations)
 fbllipb = 0. *Lithium lead fraction of blanket by volume (only relevant for mass calculations)
 fblss = 0.13 *Stainless steel fraction of blanket by volume (only relevant for mass calculations)
 fblvd = 0. *Vanadium fraction of blanket by volume (only relevant for mass calculations)
-fhole = 0. *Area fraction taken up by other holes (in addition to fdiv and fhcd when ipowerflow=1)
+fhole = 0. *Area fraction taken up by other holes (in addition to f_ster_div_single and f_a_fw_hcd when ipowerflow=1)
 fwclfr = 0.1 *First wall coolant fraction (only relevant for mass calculations)
-primary_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
-htpmw_blkt = 120. *Blanket coolant mechanical pumping power (MW)
-htpmw_fw = 56. *First wall coolant mechanical pumping power (MW)
-htpmw_div = 24. *Divertor coolant mechanical pumping power (MW)
-secondary_cycle = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
+i_coolant_pumping = 1 *Switch for pumping power (0: User sets pump power directly)
+p_blkt_coolant_pump_mw = 120. *Blanket coolant mechanical pumping power (MW)
+p_fw_coolant_pump_mw = 56. *First wall coolant mechanical pumping power (MW)
+p_div_coolant_pump_mw = 24. *Divertor coolant mechanical pumping power (MW)
+i_thermal_electric_conversion = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
 vfblkt = 0.1 *Coolant void fraction in blanket (blktmodel=0) (only relevant for mass calculations)
 vfshld = 0.6 *Coolant void fraction in shield
 declblkt = 0.075 *Neutron decay length in blanket area (m)
@@ -285,7 +285,7 @@ dr_fw_plasma_gap_inboard = 0.15 *Gap between plasma and first wall; inboard side
 dr_fw_plasma_gap_outboard = 0.2 *Gap between plasma and first wall; outboard side (m)
 dr_shld_inboard = 0.2 *Inboard shield thickness (m)
 dr_shld_outboard = 0.2 *Outboard shield thickness (m)
-shldtth = 0.2 *Upper/lower shield thickness (m)
+dz_shld_upper = 0.2 *Upper/lower shield thickness (m)
 vgap = 0. *Vertical gap between x-point and divertor (m)
 ```
 

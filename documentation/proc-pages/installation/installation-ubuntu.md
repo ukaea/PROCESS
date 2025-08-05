@@ -30,7 +30,7 @@ sudo apt install -y cmake gfortran python3-pip poppler-utils python3-venv
 ```
 
 !!! Note "CMake"
-    CMake can also be installed into your (virtual) Python environment by running `pip install cmake`.
+    CMake can also be installed into your (virtual) Python environment by running `pip install cmake`. This typically results in a more recent version than when installing via `apt`: PROCESS requires `cmake > 3.13.0`.
 
 
 Next, the code will need to be downloaded so you can work with it. The PROCESS code is stored in a 
@@ -189,6 +189,8 @@ that your environment produces different results to what is expected.
         CMake Error: The source directory "/home/process/build" does not appear to contain CMakeLists.txt.
         Specify --help for usage, or press the help button on the CMake GUI.
         ```
+
+        To install a more recent version of `cmake`, run `pip install cmake` (see earlier note on installing `cmake`.)
 
     === "Python dev version"
 
