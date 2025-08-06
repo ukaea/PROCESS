@@ -3,6 +3,8 @@
 author: G Graham, CCFE, Culham Science Centre
 """
 
+import logging
+
 import numpy as np
 
 from process import (
@@ -18,15 +20,13 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    error_handling,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
+
+logger = logging.getLogger(__name__)
 
 # Acronyms for this module:
 # BB          Breeding Blanket
@@ -703,7 +703,9 @@ class BlanketLibrary:
                     blanket_library.len_blkt_outboard_segment_poloidal
                     < (fwbs_variables.b_bz_liq * 3)
                 ):
-                    eh.report_error(278)
+                    logger.error(
+                        "Your blanket modules are too small for the Liquid Metal pipes"
+                    )
 
             # Unless there is no IB blanket...
             else:
@@ -721,7 +723,9 @@ class BlanketLibrary:
                 if blanket_library.len_blkt_outboard_segment_poloidal < (
                     fwbs_variables.b_bz_liq * 3
                 ):
-                    eh.report_error(278)
+                    logger.error(
+                        "Your blanket modules are too small for the Liquid Metal pipes"
+                    )
 
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
@@ -1437,7 +1441,9 @@ class BlanketLibrary:
             (t_ranges[:, 0] > mid_temp_liq).any()
             or (t_ranges[:, 1] < mid_temp_liq).any()
         ):
-            error_handling.report_error(280)
+            logger.error(
+                "Outside temperature limit for one or more liquid metal breeder properties"
+            )
 
             if output:
                 po.ocmmnt(

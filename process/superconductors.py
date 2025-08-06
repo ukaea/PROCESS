@@ -5,7 +5,6 @@ from scipy import optimize
 
 from process.data_structure import rebco_variables
 from process.exceptions import ProcessValueError
-from process.fortran import error_handling as eh
 
 logger = logging.getLogger(__name__)
 
@@ -788,9 +787,9 @@ def bottura_scaling(
 
     # If input temperature is over the strain adjusted critical temperature then report error
     if temp_conductor / temp_c0_eps >= 1.0:
-        eh.fdiags[0] = temp_conductor
-        eh.fdiags[1] = temp_c0_eps
-        eh.report_error(159)
+        logger.error(
+            f"Reduced temperature t artificially lowered {temp_conductor=} {temp_c0_eps=}"
+        )
 
     # Reduced temperature at zero field, corrected for strain
     # f_temp_conductor_critical > 1 is permitted, indicating the temperature is above the critical value at zero field.
@@ -799,7 +798,7 @@ def bottura_scaling(
     # If input field is over the strain adjusted critical field then report error
     if b_conductor / b_c20_eps >= 1.0:
         logger.error(
-            f"Reduced field bzero artificially lowered {b_conductor=} {b_c20_eps}"
+            f"Reduced field bzero artificially lowered {b_conductor=} {b_c20_eps=}"
         )
 
     # Reduced field at zero temperature, taking account of strain

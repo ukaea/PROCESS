@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from process import (
@@ -21,9 +23,8 @@ from process.fortran import (
     heat_transport_variables,
     physics_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
+
+logger = logging.getLogger(__name__)
 
 
 class CCFE_HCPB(BlanketLibrary):
@@ -639,11 +640,11 @@ class CCFE_HCPB(BlanketLibrary):
         p_blkt_nuclear_heat_total_mw = p_fusion_total_mw * a * exp_blanket
 
         if p_blkt_nuclear_heat_total_mw < 1:
-            eh.fdiags[0] = p_blkt_nuclear_heat_total_mw
-            eh.fdiags[1] = exp_blanket
-            eh.fdiags[2] = p_fusion_total_mw
-            eh.fdiags[3] = m_blkt_total_tonnes
-            eh.report_error(274)
+            logger.error(
+                "Blanket heating is <1 MW or NaN. Is something wrong?"
+                f"{p_blkt_nuclear_heat_total_mw=} {exp_blanket=}"
+                f" {p_fusion_total_mw=} {m_blkt_total_tonnes=}"
+            )
 
         return p_blkt_nuclear_heat_total_mw, exp_blanket
 
