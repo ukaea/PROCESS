@@ -2652,7 +2652,7 @@ i_hcd_calculations = 1
 * JUSTIFICATION: Turned off, not using icc = 40
 
 *ixc = 64
-*fauxmn =  
+*fp_hcd_injected_min_mw =  
 *boundl(64) = 
 *boundu(64) = 
 * DESCRIPTION:   f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)

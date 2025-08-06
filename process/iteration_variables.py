@@ -124,7 +124,9 @@ ITERATION_VARIABLES = {
     ),
     62: IterationVariable("fdtmp", fortran.constraint_variables, 0.001, 1.0),
     63: IterationVariable("ftemp_fw_max", fortran.constraint_variables, 0.001, 1.0),
-    64: IterationVariable("fauxmn", fortran.constraint_variables, 0.001, 1.0),
+    64: IterationVariable(
+        "fp_hcd_injected_min_mw", fortran.constraint_variables, 0.001, 1.0
+    ),
     65: IterationVariable(
         "t_current_ramp_up", data_structure.times_variables, 0.1, 1.0e3
     ),

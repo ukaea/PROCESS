@@ -1151,13 +1151,13 @@ def constraint_equation_40():
     """Equation for auxiliary power lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fauxmn: f-value for minimum auxiliary power
+    fp_hcd_injected_min_mw: f-value for minimum auxiliary power
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
     p_hcd_injected_min_mw: minimum auxiliary power (MW)
     """
     cc = (
         1.0
-        - fortran.constraint_variables.fauxmn
+        - fortran.constraint_variables.fp_hcd_injected_min_mw
         * fortran.current_drive_variables.p_hcd_injected_total_mw
         / fortran.constraint_variables.p_hcd_injected_min_mw
     )
@@ -2370,7 +2370,7 @@ def init_constraint_variables():
     fortran.constraint_variables.beta_poloidal_max = 0.19
     fortran.constraint_variables.big_q_plasma_min = 10.0
     fortran.constraint_variables.b_tf_inboard_max = 12.0
-    fortran.constraint_variables.fauxmn = 1.0
+    fortran.constraint_variables.fp_hcd_injected_min_mw = 1.0
     fortran.constraint_variables.fbeta_poloidal_eps = 1.0
     fortran.constraint_variables.fbeta_poloidal = 1.0
     fortran.constraint_variables.fbeta_max = 1.0

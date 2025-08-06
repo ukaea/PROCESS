@@ -27,7 +27,7 @@ module constraint_variables
   real(dp) :: b_tf_inboard_max
   !! maximum peak toroidal field (T) (`constraint equation 25`)
 
-  real(dp) :: fauxmn
+  real(dp) :: fp_hcd_injected_min_mw
   !! f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)
 
   real(dp) :: fbeta_poloidal_eps

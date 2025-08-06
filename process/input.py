@@ -623,7 +623,9 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fauxbop": InputVariable(fortran.ife_variables, float, range=(0.0, 1.0)),
-    "fauxmn": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fp_hcd_injected_min_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "favail": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fbeta_max": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
