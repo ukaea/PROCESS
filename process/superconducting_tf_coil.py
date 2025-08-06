@@ -462,7 +462,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             if tfcoil_variables.temp_margin <= 0.0e0:
-                logger.warning(
+                logger.error(
                     f"""Negative TFC temperature margin
                 temp_margin: {tfcoil_variables.temp_margin}
                 b_tf_inboard_peak: {b_tf_inboard_peak}"""
@@ -591,7 +591,7 @@ class SuperconductingTFCoil(TFCoil):
                 > 1e-6
             ):
                 po.ocmmnt(self.outfile, "ERROR: Areas in CroCo strand do not add up")
-                logger.warning("Areas in CroCo strand do not add up - see OUT.DAT")
+                logger.error("Areas in CroCo strand do not add up - see OUT.DAT")
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "Cable information")
@@ -686,7 +686,7 @@ class SuperconductingTFCoil(TFCoil):
                     total,
                     "OP ",
                 )
-                logger.warning(f"conductor areas do not add up. total: {total}")
+                logger.error(f"conductor areas do not add up. total: {total}")
 
             po.ovarre(
                 self.outfile,
@@ -1183,7 +1183,7 @@ class SuperconductingTFCoil(TFCoil):
         jsc = iooic * j_crit_sc
 
         if iooic <= 0e0:
-            logger.warning(
+            logger.error(
                 f"""Negative Iop/Icrit for TF coil
             jsc: {jsc}
             iooic: {iooic}
@@ -1269,7 +1269,7 @@ class SuperconductingTFCoil(TFCoil):
 
         if output:  # Output --------------------------
             if tmarg <= 0.0e0:
-                logger.warning(
+                logger.error(
                     """Negative TFC temperature margin
                 tmarg: {tmarg}
                 b_tf_inboard_peak: {b_tf_inboard_peak}
