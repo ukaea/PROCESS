@@ -9151,6 +9151,7 @@ def main_plot(
     fig13,
     fig14,
     fig15,
+    fig16,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -9290,35 +9291,38 @@ def main_plot(
     plot_21 = fig9.add_subplot(111, aspect="equal")
     plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
 
-    plot_22 = fig10.add_subplot(221)
-    plot_bootstrap_comparison(plot_22, m_file_data, scan)
+    axes = fig10.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    plot_tf_stress(axes)
 
-    plot_23 = fig10.add_subplot(224)
-    plot_h_threshold_comparison(plot_23, m_file_data, scan)
+    plot_23 = fig11.add_subplot(221)
+    plot_bootstrap_comparison(plot_23, m_file_data, scan)
 
-    plot_24 = fig11.add_subplot(221)
-    plot_density_limit_comparison(plot_24, m_file_data, scan)
+    plot_24 = fig11.add_subplot(224)
+    plot_h_threshold_comparison(plot_24, m_file_data, scan)
 
-    plot_25 = fig11.add_subplot(224)
-    plot_confinement_time_comparison(plot_25, m_file_data, scan)
+    plot_25 = fig12.add_subplot(221)
+    plot_density_limit_comparison(plot_25, m_file_data, scan)
 
-    plot_26 = fig12.add_subplot(111)
-    plot_current_profiles_over_time(plot_26, m_file_data, scan)
+    plot_26 = fig12.add_subplot(224)
+    plot_confinement_time_comparison(plot_26, m_file_data, scan)
 
-    plot_27 = fig13.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_27, fig13, m_file_data, scan)
+    plot_27 = fig13.add_subplot(111)
+    plot_current_profiles_over_time(plot_27, m_file_data, scan)
 
-    plot_28 = fig13.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_28, fig13, m_file_data, scan)
+    plot_28 = fig14.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_28, fig14, m_file_data, scan)
 
-    plot_29 = fig14.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_29, m_file_data, scan)
+    plot_29 = fig14.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_29, fig14, m_file_data, scan)
 
-    plot_30 = fig14.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
+    plot_30 = fig15.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_30, m_file_data, scan)
 
-    plot_31 = fig15.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_31, m_file_data, scan, fig15)
+    plot_31 = fig15.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
+
+    plot_32 = fig16.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_32, m_file_data, scan, fig16)
 
 
 def main(args=None):
@@ -9610,6 +9614,7 @@ def main(args=None):
     page13 = plt.figure(figsize=(12, 9), dpi=80)
     page14 = plt.figure(figsize=(12, 9), dpi=80)
     page15 = plt.figure(figsize=(12, 9), dpi=80)
+    page16 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -9628,6 +9633,7 @@ def main(args=None):
         page13,
         page14,
         page15,
+        page16,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -9651,6 +9657,7 @@ def main(args=None):
         pdf.savefig(page13)
         pdf.savefig(page14)
         pdf.savefig(page15)
+        pdf.savefig(page16)
 
     # show fig if option used
     if args.show:
@@ -9671,6 +9678,7 @@ def main(args=None):
     plt.close(page13)
     plt.close(page14)
     plt.close(page15)
+    plt.close(page16)
 
 
 if __name__ == "__main__":
