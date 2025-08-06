@@ -5113,12 +5113,15 @@ class Stellarator:
             )
             < 1e-6
         ):
-            current_drive_variables.bigq = 1e18
+            current_drive_variables.big_q_plasma = 1e18
         else:
-            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
-                current_drive_variables.p_hcd_injected_total_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
-                + physics_variables.p_plasma_ohmic_mw
+            current_drive_variables.big_q_plasma = (
+                physics_variables.p_fusion_total_mw
+                / (
+                    current_drive_variables.p_hcd_injected_total_mw
+                    + current_drive_variables.p_beam_orbit_loss_mw
+                    + physics_variables.p_plasma_ohmic_mw
+                )
             )
 
         if output:
@@ -5148,8 +5151,8 @@ class Stellarator:
             po.ovarre(
                 self.outfile,
                 "Fusion gain factor Q",
-                "(bigq)",
-                current_drive_variables.bigq,
+                "(big_q_plasma)",
+                current_drive_variables.big_q_plasma,
             )
 
             if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:

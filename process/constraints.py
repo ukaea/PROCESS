@@ -920,7 +920,7 @@ def constraint_equation_28():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fqval: pf-value for Q
-    bigq: Fusion gain; P_fusion / (P_injection + P_ohmic)
+    big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
     big_q_plasma_min: minimum fusion gain Q
     i_plasma_ignited : input integer : switch for ignition assumption:
     - 0 do not assume plasma ignition;
@@ -936,7 +936,7 @@ def constraint_equation_28():
     cc = (
         1.0
         - fortran.constraint_variables.fqval
-        * fortran.current_drive_variables.bigq
+        * fortran.current_drive_variables.big_q_plasma
         / fortran.constraint_variables.big_q_plasma_min
     )
     return ConstraintResult(

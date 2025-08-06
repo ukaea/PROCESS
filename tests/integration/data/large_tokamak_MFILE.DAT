@@ -670,7 +670,7 @@
  Fuel_burn-up_rate_(reactions/s)__________________________________________ (rndfuel)______________________ 5.87895218954449715e+20 OP
  Burn-up_fraction_________________________________________________________ (burnup)_______________________ 1.70942812188658172e-01 OP
  # Heating & Current Drive System #
- Fusion_gain_factor_Q_____________________________________________________ (bigq)_________________________ 1.94650013672385533e+01 OP
+ Fusion_gain_factor_Q_____________________________________________________ (big_q_plasma)_________________________ 1.94650013672385533e+01 OP
  Primary_current_drive_efficiency_model__________________________________ (i_hcd_primary)_______________             10    
  Absolute_current_drive_efficiency_of_primary_system_[A/W]________________ (eta_cd_hcd_primary)___________ 4.68293799122941057e-02 OP
  Normalised_current_drive_efficiency_of_primary_system_[10^20_A_/_Wm^2]___ (eta_cd_norm_hcd_primary)______ 2.99999999999999989e-01 OP

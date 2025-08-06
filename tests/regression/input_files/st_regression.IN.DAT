@@ -142,7 +142,7 @@ fp_plant_electric_net_required_mw = 1.0
 *icc = 28
 * DESCRIPTION:   Constraint equation for fusion gain (big Q) lower limit 
 * JUSTIFICATION: Turned off, dont care about Q lower limit  
-* VARIABLES:     i_plasma_ignited,  bigq calculated in-situ
+* VARIABLES:     i_plasma_ignited,  big_q_plasma calculated in-situ
 
 *big_q_plasma_min = 
 * DESCRIPTION:   Minimum fusion gain Q 

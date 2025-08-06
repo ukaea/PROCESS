@@ -389,7 +389,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -1384,7 +1384,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -2379,7 +2379,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -3374,7 +3374,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -4369,7 +4369,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -5364,7 +5364,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -6359,7 +6359,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -7354,7 +7354,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -8349,7 +8349,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
