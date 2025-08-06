@@ -648,7 +648,7 @@ module tfcoil_variables
   real(dp) :: tmaxpro
   !! maximum temp rise during a quench for protection (K)
 
-  real(dp) :: tmax_croco
+  real(dp) :: temp_croco_quench_max
   !! CroCo strand: maximum permitted temp during a quench (K)
 
   real(dp) :: temp_croco_quench

@@ -1821,17 +1821,17 @@ def constraint_equation_73():
 
 @ConstraintManager.register_constraint(74, "K", "<=")
 def constraint_equation_74():
-    """Upper limit to ensure TF coil quench temperature < tmax_croco
+    """Upper limit to ensure TF coil quench temperature < temp_croco_quench_max
     ONLY used for croco HTS coil
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fcqt: f-value: TF coil quench temparature remains below tmax_croco
+    fcqt: f-value: TF coil quench temparature remains below temp_croco_quench_max
     temp_croco_quench: CroCo strand: Actual temp reached during a quench (K)
-    tmax_croco: CroCo strand: maximum permitted temp during a quench (K)
+    temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
     """
     cc = (
         fortran.tfcoil_variables.temp_croco_quench
-        / fortran.tfcoil_variables.tmax_croco
+        / fortran.tfcoil_variables.temp_croco_quench_max
         - 1.0 * fortran.constraint_variables.fcqt
     )
     return ConstraintResult(

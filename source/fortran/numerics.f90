@@ -178,7 +178,7 @@ module numerics
   !!  <LI> (71) ensure that neomp = separatrix density (nesep) x neratio
   !!  <LI> (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)
   !!  <LI> (73) Psep >= Plh + Paux (itv 137 (fplhsep))
-  !!  <LI> (74) TFC quench < tmax_croco (itv 141 (fcqt))
+  !!  <LI> (74) TFC quench < temp_croco_quench_max (itv 141 (fcqt))
   !!  <LI> (75) TFC current/copper area < Maximum (itv 143 f_coppera_m2)
   !!  <LI> (76) Eich critical separatrix density
   !!  <LI> (77) TF coil current per turn upper limit
@@ -346,7 +346,7 @@ module numerics
   !! <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)
   !! <LI> (139) copper_thick : thickness of copper layer in tape (m)
   !! <LI> (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
-  !! <LI> (141) fcqt : TF coil quench temperature < tmax_croco (f-value for equation 74)
+  !! <LI> (141) fcqt : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)
   !! <LI> (142) nesep : electron density at separatrix [m-3]
   !! <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value
   !! <LI> (144) fnesep : Eich critical electron density at separatrix
@@ -543,7 +543,7 @@ contains
       'Separatrix density consistency   ', &
       'CS Tresca yield criterion        ', &
       'Psep >= Plh + Paux               ', &
-      'TFC quench < tmax_croco          ', &
+      'TFC quench < temp_croco_quench_max          ', &
       'TFC current/copper area < Max    ', &
       'Eich critical separatrix density ', &
       'TFC current per turn upper limit ', &

@@ -309,6 +309,6 @@ module constraint_variables
   !! (Not required as constraint 69 is an equality)
 
   real(dp) :: fcqt
-  !! TF coil quench temparature remains below tmax_croco
+  !! TF coil quench temparature remains below temp_croco_quench_max
   !! (`constraint equation 74`, `iteration variable 141`)
 end module constraint_variables

@@ -1449,11 +1449,11 @@ tftmp = 20.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *icc = 74
-* DESCRIPTION:   Ensure TF coil quench temperature < tmax_croco ONLY used for croco HTS coil
+* DESCRIPTION:   Ensure TF coil quench temperature < temp_croco_quench_max ONLY used for croco HTS coil
 * JUSTIFICATION: Turned off, do not care about quench scenario
-* VARIABLES:     tmax_croco : input real : CroCo strand: maximum permitted temp during a quench (K)). temp_croco_quench calculated in-situ
+* VARIABLES:     temp_croco_quench_max : input real : CroCo strand: maximum permitted temp during a quench (K)). temp_croco_quench calculated in-situ
 
-*tmax_croco
+*temp_croco_quench_max
 * DESCRIPTION:   CroCo strand: maximum permitted temp during a quench (K)
 * JUSTIFICATION: Not using icc=74
 
