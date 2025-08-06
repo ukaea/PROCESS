@@ -317,7 +317,7 @@ module numerics
   !! <LI> (109) f_nd_alpha_electron: thermal alpha density / electron density
   !! <LI> (110) falpha_energy_confinement: Lower limit on f_alpha_energy_confinement the ratio of alpha
   !! <LI> (111) fniterpump: f-value for constraint that number
-  !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
+  !! <LI> (112) fzeff_max: f-value for max Zeff (f-value for equation 64)
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
   !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of

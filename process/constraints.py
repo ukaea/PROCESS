@@ -1595,18 +1595,18 @@ def constraint_equation_64():
     """Upper limit on Zeff
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fzeffmax: f-value for maximum zeff
+    fzeff_max: f-value for maximum zeff
     zeff_max: maximum value for Zeff
     zeff: plasma effective charge
     """
     cc = (
-        fortran.physics_variables.zeff / fortran.constraint_variables.fzeffmax
-        - 1.0 * fortran.constraint_variables.fzeffmax
+        fortran.physics_variables.zeff / fortran.constraint_variables.fzeff_max
+        - 1.0 * fortran.constraint_variables.fzeff_max
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.fzeffmax,
-        fortran.constraint_variables.fzeffmax * cc,
+        fortran.constraint_variables.fzeff_max,
+        fortran.constraint_variables.fzeff_max * cc,
     )
 
 
@@ -2424,7 +2424,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fvs_plasma_total_required = 1.0
     fortran.constraint_variables.fvvhe = 1.0
     fortran.constraint_variables.fpflux_fw_neutron_max_mw = 1.0
-    fortran.constraint_variables.fzeffmax = 1.0
+    fortran.constraint_variables.fzeff_max = 1.0
     fortran.constraint_variables.eta_cd_norm_hcd_primary_max = 2.0
     fortran.constraint_variables.i_q95_fixed = 0
     fortran.constraint_variables.pflux_fw_rad_max = 1.0

@@ -216,7 +216,7 @@ module constraint_variables
   real(dp) :: fpflux_fw_neutron_max_mw
   !! f-value for maximum wall load (`constraint equation 8`, `iteration variable 14`)
 
-  real(dp) :: fzeffmax
+  real(dp) :: fzeff_max
   !! f-value for maximum zeff (`constraint equation 64`, `iteration variable 112`)
 
   real(dp) :: eta_cd_norm_hcd_primary_max

@@ -853,7 +853,7 @@ INPUT_VARIABLES = {
     "fwdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fwdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fzactual": InputVariable(data_structure.reinke_variables, float, range=(0.0, 1.0)),
-    "fzeffmax": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "fzeff_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "eta_cd_norm_ecrh": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),

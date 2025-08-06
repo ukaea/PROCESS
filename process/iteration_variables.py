@@ -180,7 +180,7 @@ ITERATION_VARIABLES = {
         "falpha_energy_confinement", fortran.constraint_variables, 0.001, 1.0
     ),
     111: IterationVariable("fniterpump", fortran.constraint_variables, 0.001, 1.0),
-    112: IterationVariable("fzeffmax", fortran.constraint_variables, 0.001, 1.0),
+    112: IterationVariable("fzeff_max", fortran.constraint_variables, 0.001, 1.0),
     113: IterationVariable("fmaxvvstress", fortran.constraint_variables, 0.001, 1.0),
     114: IterationVariable("len_fw_channel", fortran.fwbs_variables, 0.001, 1.0e3),
     115: IterationVariable("fpoloidalpower", fortran.constraint_variables, 0.001, 1.0),
