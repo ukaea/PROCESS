@@ -8,10 +8,6 @@ from process.data_structure import physics_variables
 from process.fortran import error_handling
 
 logger = logging.getLogger(__name__)
-# Logging handler for console output
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.ERROR)
-logger.addHandler(s_handler)
 
 
 class Profile(ABC):
