@@ -23,6 +23,9 @@ class ProcessLogHandler(Handler):
     def clear_logs(self):
         self._logs = []
 
+    def num_logs(self):
+        return len(self._logs)
+
     def render_warnings(self):
         return "\n\n".join([
             f"({w.pathname}:{w.lineno}) {w.getMessage()}" for w in self._logs
@@ -42,7 +45,7 @@ def show_errors(file_unit: int):
     process_output.ovarre(
         constants.mfile,
         "Error status",
-        "error_status",
-        0 if not warning_string else 2,
+        "(error_status)",
+        0 if logging_model_handler.num_logs() == 0 else 2,
         "OP",
     )
