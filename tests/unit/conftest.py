@@ -10,15 +10,14 @@ import pytest
 from process.init import init_all_module_vars
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def reinit_fix():
-    """Re-initialise Fortran module variables before each test module is run.
+    """Re-initialise the data structure before each test is run.
 
-    This is run once before each module's unit tests are run (module scope),
-    ensuring that all Fortran module variables are set to initial values. The
-    individual test functions in each module then use mocking to avoid changing
-    the module variable values. autouse ensures that this fixture is used
-    automatically by any test function in the unit directory.
+    This is run once before each unit test (function scope),
+    ensuring that all of the module variables are set to their initial values.
+    'autouse' ensures that this fixture is used automatically by any test
+    function in the unit directory.
     """
     init_all_module_vars()
 
