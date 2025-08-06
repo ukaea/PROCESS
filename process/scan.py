@@ -53,7 +53,7 @@ SCAN_VARIABLES = {
     5: ScanVariable("oacdcp", "TF_inboard_leg_J_(MA/m2)"),
     6: ScanVariable("pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)"),
     7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
-    8: ScanVariable("fqval", "Big_Q_f-value"),
+    8: ScanVariable("fbig_q_plasma_min", "Big_Q_f-value"),
     9: ScanVariable("te", "Electron_temperature_keV"),
     10: ScanVariable("boundu(15)", "Volt-second_upper_bound"),
     11: ScanVariable("beta_norm_max", "Beta_coefficient"),
@@ -953,7 +953,7 @@ class Scan:
             case 7:
                 physics_variables.beamfus0 = swp[iscn - 1]
             case 8:
-                constraint_variables.fqval = swp[iscn - 1]
+                constraint_variables.fbig_q_plasma_min = swp[iscn - 1]
             case 9:
                 physics_variables.te = swp[iscn - 1]
             case 10:

@@ -919,7 +919,7 @@ def constraint_equation_28():
     """Equation for fusion gain (big Q) lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fqval: pf-value for Q
+    fbig_q_plasma_min: pf-value for Q
     big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
     big_q_plasma_min: minimum fusion gain Q
     i_plasma_ignited : input integer : switch for ignition assumption:
@@ -935,7 +935,7 @@ def constraint_equation_28():
 
     cc = (
         1.0
-        - fortran.constraint_variables.fqval
+        - fortran.constraint_variables.fbig_q_plasma_min
         * fortran.current_drive_variables.big_q_plasma
         / fortran.constraint_variables.big_q_plasma_min
     )
@@ -2404,7 +2404,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fptemp = 1.0
     fortran.constraint_variables.fptfnuc = 1.0
     fortran.constraint_variables.fq = 1.0
-    fortran.constraint_variables.fqval = 1.0
+    fortran.constraint_variables.fbig_q_plasma_min = 1.0
     fortran.constraint_variables.fradpwr = 0.99
     fortran.constraint_variables.fpflux_fw_rad_max = 1.0
     fortran.constraint_variables.freinke = 1.0

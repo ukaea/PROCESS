@@ -769,7 +769,9 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "fq": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fqval": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fbig_q_plasma_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fr_conducting_wall": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),

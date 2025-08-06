@@ -250,7 +250,7 @@ module numerics
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
   !! <LI> (44) f_c_plasma_non_inductive
-  !! <LI> (45) fqval (f-value for equation 28)
+  !! <LI> (45) fbig_q_plasma_min (f-value for equation 28)
   !! <LI> (46) fp_hcd_injected_max (f-value for equation 30)
   !! <LI> (47) feffcd
   !! <LI> (48) fstrcase (f-value for equation 31)

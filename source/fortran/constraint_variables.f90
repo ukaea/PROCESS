@@ -149,7 +149,7 @@ module constraint_variables
   real(dp) :: fq
   !! f-value for edge safety factor (`constraint equation 45`, `iteration variable 71`)
 
-  real(dp) :: fqval
+  real(dp) :: fbig_q_plasma_min
   !! f-value for Q (`constraint equation 28`, `iteration variable 45`)
 
   real(dp) :: fradpwr
