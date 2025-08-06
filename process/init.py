@@ -41,6 +41,7 @@ from process.hcpb import init_ccfe_hcpb_module
 from process.ife import init_ife_variables
 from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
+from process.log import logging_model_handler
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import (
     init_physics_module,
@@ -255,6 +256,7 @@ def init_all_module_vars():
     run. This matters ever since Process is used as a shared library, rather
     than a 'run-once' executable.
     """
+    logging_model_handler.clear_logs()
     fortran.numerics.init_numerics()
     init_buildings_variables()
     init_cost_variables()
