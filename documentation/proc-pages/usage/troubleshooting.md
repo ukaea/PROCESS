@@ -10,25 +10,18 @@ it often requires a great deal of painstaking adjustment of the input file to ov
 In general, errors detected during a run are handled in a consistent manner, with the code 
 producing useful diagnostic messages to help the user understand what has happened.
 
-There are three levels of errors and warnings that may occur:
+In the case of an unrecoverable error, PROCESS will fail with a Python exception that will detail 
+the nature of the error and its location (line in the code).
 
-* **Level 1** -- An *informational* message is produced under certain conditions, for example if 
-  the code modified the user's input choice for some reason.
-* **Level 2** -- A *warning* message is produced if a non-fatal situation has occurred that may 
-  result in an output case that is inaccurate or unreliable in some way.
-* **Level 3** -- An *error* message will occur is a severe of fatal error has occurred and the program cannot continue.
-
-These messages are printed on the screen during the course of a run, and those still active at the 
-final (feasible or unfeasible) solution point are also written to the end of the output file 
-(messages encountered during the iteration process are not copied to the output file, as the 
-convergence to a valid solution might resolve some of the warnings produced earlier in the 
-solution process).
-
-The `error_status` variable returns the highest security level that has been encountered (or zero 
-if no abnormal conditions have been found); of a severe error (level 3) is flagged at any point the 
-program is terminated immediately. The final message number encountered during a run is returned via 
-output variable `error_id` . In addition, with certain messages, a number of diagnostic values may 
-also be given; these can be used to provide extra diagnostic information if the source code is available
+In addition, PROCESS will log recoverable errors and warnings (and other information) to the process.log 
+file and, for serious logs, the terminal. Logs (errors and warnings) that occur during the output phase are captured
+and written to the OUTFile and terminal in the run summary. The ouput phase is when the models are run to write the 
+results into the MFile, and occurs at the final iteration of an optimising run or when running an evaluation. These logs
+can be classified into two types:
+1. **Warning**: provides information that the user should be aware about but that is not an error. For example, if the users
+input is modified by the code or if an extrapolation is used. 
+2. **Errors**: provides information about an error that PROCESS is able to recover from, but which could impact the validity 
+of the results. For example, an input to a model is unphysical causing an unreliable output. 
 
 ### General problems
 
