@@ -1,3 +1,4 @@
+import logging
 from dataclasses import astuple, dataclass
 
 import numpy as np
@@ -35,6 +36,8 @@ from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
     string_to_f2py_compatible,
 )
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -226,8 +229,7 @@ class Scan:
             )
             process_output.oblnkl(constants.iotty)
 
-            error_handling.idiags[0] = ifail
-            error_handling.report_error(132)
+            logger.critical(f"Solver returns with ifail /= 1. {ifail=}")
 
             # Error code handler for VMCON
             if self.solver == "vmcon":
@@ -282,8 +284,7 @@ class Scan:
                 )
                 process_output.oblnkl(constants.iotty)
 
-                error_handling.fdiags[0] = numerics.sqsumsq
-                error_handling.report_error(134)
+                logger.warning(f"High final constraint residues. {numerics.sqsumsq=}")
 
         process_output.ovarin(
             constants.nout, "Number of iteration variables", "(nvar)", numerics.nvar
