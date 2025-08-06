@@ -7,7 +7,6 @@ from process.coolprop_interface import FluidProperties
 from process.data_structure import blanket_library, build_variables, fwbs_variables
 from process.fortran import constants
 
-
 logger = logging.getLogger(__name__)
 
 

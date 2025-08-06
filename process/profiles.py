@@ -6,7 +6,6 @@ import scipy as sp
 
 from process.data_structure import physics_variables
 
-
 logger = logging.getLogger(__name__)
 
 

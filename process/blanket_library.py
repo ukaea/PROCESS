@@ -19,7 +19,7 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.exceptions import ProcessValueError
-
+from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 

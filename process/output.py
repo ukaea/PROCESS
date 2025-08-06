@@ -1,5 +1,4 @@
 from process import data_structure
-from process import fortran as ft
 from process.log import logging_model_handler
 
 
@@ -14,14 +13,9 @@ def write(models, _outfile):
     :type outfile: int
     """
     # ensure we are capturing warnings that occur in the 'output' stage as these are warnings
-    # that occur at our solution point.
+    # that occur at our solution point. So we clear existing warnings
     logging_model_handler.start_capturing()
     logging_model_handler.clear_logs()
-
-    # Turn on error reporting
-    # (warnings etc. encountered in previous iterations may have cleared themselves
-    # during the solution process)
-    ft.error_handling.errors_on = True
 
     # Call stellarator output routine instead if relevant
     if data_structure.stellarator_variables.istell != 0:

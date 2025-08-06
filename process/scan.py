@@ -26,7 +26,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    error_handling,
     global_variables,
     numerics,
 )
@@ -173,15 +172,12 @@ class Scan:
         number of output variable values are written to the MFILE.DAT file at
         each scan point, for plotting or other post-processing purposes.
         """
-        # Turn off error reporting (until next output)
-        error_handling.errors_on = False
 
         if scan_variables.isweep == 0:
             # Solve single problem, rather than an array of problems (scan)
             # doopt() can also run just an evaluation
             ifail = self.doopt()
             write_output_files(models=self.models, ifail=ifail)
-            error_handling.show_errors()
             show_errors(constants.nout)
             return
 
@@ -210,8 +206,6 @@ class Scan:
         ifail   : input integer : error flag
         """
         numerics.sqsumsq = (numerics.rcm[: numerics.neqns] ** 2).sum() ** 0.5
-
-        error_handling.errors_on = True
 
         process_output.oheadr(constants.nout, "Numerics")
         if self.solver == "fsolve":
@@ -718,9 +712,7 @@ class Scan:
             scan_1d_ifail_dict[iscan] = ifail
             write_output_files(models=self.models, ifail=ifail)
 
-            error_handling.show_errors()
             show_errors(constants.nout)
-            error_handling.init_error_handling()
             logging_model_handler.clear_logs()
 
         # outvar now contains results
@@ -775,9 +767,7 @@ class Scan:
 
                 write_output_files(models=self.models, ifail=ifail)
 
-                error_handling.show_errors()
                 show_errors(constants.nout)
-                error_handling.init_error_handling()
                 logging_model_handler.clear_logs()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan = iscan + 1

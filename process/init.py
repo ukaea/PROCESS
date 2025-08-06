@@ -72,9 +72,6 @@ def init_process():
     the default values for the global variables, reads in data from
     the input file, and checks the run parameters for consistency.
     """
-    # Initialise error handling
-    fortran.error_handling.initialise_error_list()
-
     # Initialise the program variables
     iteration_variables.initialise_iteration_variables()
 
@@ -266,7 +263,6 @@ def init_all_module_vars():
     init_buildings_variables()
     init_cost_variables()
     init_divertor_variables()
-    fortran.error_handling.init_error_handling()
     init_fwbs_variables()
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
@@ -300,8 +296,6 @@ def init_all_module_vars():
     init_cost_2015_variables()
     init_power_variables()
     init_neoclassics_variables()
-
-    fortran.init_module.init_fortran_modules()
 
 
 def check_process(inputs):  # noqa: ARG001
