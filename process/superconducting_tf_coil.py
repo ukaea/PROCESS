@@ -12,7 +12,6 @@ from process.fortran import (
     build_variables,
     constants,
     constraint_variables,
-    error_handling,
     global_variables,
     pfcoil_variables,
     physics_variables,
@@ -2518,19 +2517,11 @@ class SuperconductingTFCoil(TFCoil):
 
             if a_tf_turn_cable_space_no_void <= 0.0e0:
                 if tfcoil_variables.t_conductor < 0.0e0:
-                    error_handling.fdiags[0] = a_tf_turn_cable_space_no_void
-                    error_handling.fdiags[1] = (
-                        sctfcoil_module.dx_tf_turn_cable_space_average
-                    )
                     logger.error(
                         f"Negative cable space dimension. {a_tf_turn_cable_space_no_void=} "
                         f"{sctfcoil_module.dx_tf_turn_cable_space_average=}"
                     )
                 else:
-                    error_handling.fdiags[0] = a_tf_turn_cable_space_no_void
-                    error_handling.fdiags[1] = (
-                        sctfcoil_module.dx_tf_turn_cable_space_average
-                    )
                     logger.error(
                         "Cable space area problem; artificially set rounded corner radius to 0. "
                         f"{a_tf_turn_cable_space_no_void=} {sctfcoil_module.dx_tf_turn_cable_space_average=}"

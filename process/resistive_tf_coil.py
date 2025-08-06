@@ -6,7 +6,6 @@ import numpy as np
 from process.fortran import (
     build_variables,
     constants,
-    error_handling,
     pfcoil_variables,
     physics_variables,
     sctfcoil_module,
@@ -411,8 +410,6 @@ class ResistiveTFCoil(TFCoil):
 
         # Reporting negative WP areas issues
         if sctfcoil_module.a_tf_wp_with_insulation < 0.0e0:
-            error_handling.fdiags[0] = sctfcoil_module.a_tf_wp_with_insulation
-            error_handling.fdiags[0] = tfcoil_variables.dr_tf_wp_with_insulation
             logger.error(
                 f"Winding pack cross-section problem... {sctfcoil_module.a_tf_wp_with_insulation=} "
                 f"{tfcoil_variables.dr_tf_wp_with_insulation=}"
