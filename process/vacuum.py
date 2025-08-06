@@ -74,11 +74,7 @@ class Vacuum:
         elif self.vacuum_model == "simple":
             vacv.niterpump = self.vacuum_simple(output=output)
         else:
-            logger.warning(f"vacuum_model seems to be invalid: {vacv.vacuum_model}")
-            po.ocmmnt(
-                self.outfile,
-                f'ERROR "vacuum_model" seems to be invalid: {vacv.vacuum_model}',
-            )
+            logger.error(f"vacuum_model is invalid: {vacv.vacuum_model}")
 
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system

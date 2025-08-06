@@ -229,7 +229,7 @@ class Vmcon(_Solver):
             else:
                 self.info = 2
 
-            logger.warning(str(e))
+            logger.critical(str(e))
 
             x = e.x
             res = e.result

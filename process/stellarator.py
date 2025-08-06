@@ -4206,7 +4206,7 @@ class Stellarator:
             # Parabolic profiles used, use analytical formula:
             dlimit_ecrh = ne0_max
         else:
-            logger.warning(
+            logger.error(
                 "It was used physics_variables.ipedestal = 1 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.ipedestal = 0)."
             )
             dlimit_ecrh = ne0_max

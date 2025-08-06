@@ -57,7 +57,7 @@ def jcrit_rebco(temp_conductor: float, b_conductor: float) -> tuple[float, bool]
             validity = False
 
     if not validity:
-        logger.warning(
+        logger.error(
             f"""jcrit_rebco: input out of range
             temperature: {temp_conductor}
             Field: {b_conductor}
@@ -798,9 +798,7 @@ def bottura_scaling(
 
     # If input field is over the strain adjusted critical field then report error
     if b_conductor / b_c20_eps >= 1.0:
-        eh.fdiags[0] = b_conductor
-        eh.fdiags[1] = b_c20_eps
-        logger.warning(
+        logger.error(
             f"Reduced field bzero artificially lowered {b_conductor=} {b_c20_eps}"
         )
 
@@ -863,7 +861,7 @@ def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
 
     croco_id = d - 2.0 * croco_thick  # scaling * 5.4d-3
     if croco_id <= 0.0:
-        logger.warning("Negitive inner croco diameter")
+        logger.error("Negitive inner croco diameter")
 
     # Define the scaling factor for the input REBCO variable
     # Ratio of new croco inner diameter and fixed base line value
