@@ -671,9 +671,9 @@ fimp(14) = 5e-05    *Tungsten
 *icc = 64
 * DESCRIPTION:   Upper limit on Zeff
 * JUSTIFICATION: Turned off, dont care about maximum effective charge
-* VARIABLES:     zeffmax (maximum value for Zeff), zeff calculated in-situ
+* VARIABLES:     zeff_max (maximum value for Zeff), zeff calculated in-situ
 
-*zeffmax = 
+*zeff_max = 
 * DESCRIPTION:   Maximum value for Zeff (`constraint equation 64`)
 * JUSTIFICATION: Not set, not using icc = 64
 

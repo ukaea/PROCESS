@@ -297,7 +297,7 @@ module constraint_variables
   !! f-value for constraint that number of pumps < tfno
   !! (`constraint equation 63`, `iteration variable 111`)
 
-  real(dp) :: zeffmax
+  real(dp) :: zeff_max
   !! maximum value for Zeff (`constraint equation 64`)
 
   real(dp) :: fpoloidalpower

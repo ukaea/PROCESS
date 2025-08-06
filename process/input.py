@@ -669,7 +669,9 @@ INPUT_VARIABLES = {
     ),
     "fcontng": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "ftemp_croco_quench_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "ftemp_croco_quench_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "fcr0": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcspc": InputVariable(fortran.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
@@ -1430,7 +1432,9 @@ INPUT_VARIABLES = {
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_cs": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
-    "temp_croco_quench_max": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 1000.0)),
+    "temp_croco_quench_max": InputVariable(
+        fortran.tfcoil_variables, float, range=(4.0, 1000.0)
+    ),
     "tmaxpro": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1000.0)),
     "temp_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
     "tn": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
@@ -1644,7 +1648,7 @@ INPUT_VARIABLES = {
     "xpertin": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
-    "zeffmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
+    "zeff_max": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
     "blktmodel": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "blkttype": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
     "breedmat": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),

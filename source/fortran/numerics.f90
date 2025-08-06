@@ -166,7 +166,7 @@ module numerics
   !!  <LI> (61) Minimum availability value (itv 107)
   !!  <LI> (62) f_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
   !!  <LI> (63) The number of ITER-like vacuum pumps niterpump < tfno (itv 111)
-  !!  <LI> (64) Zeff less than or equal to zeffmax (itv 112)
+  !!  <LI> (64) Zeff less than or equal to zeff_max (itv 112)
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
   !!  <LI> (66) Limit on rate of change of energy in poloidal field
   !!            (Use iteration variable 65(t_current_ramp_up), 115)

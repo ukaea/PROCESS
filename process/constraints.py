@@ -1596,7 +1596,7 @@ def constraint_equation_64():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fzeffmax: f-value for maximum zeff
-    zeffmax: maximum value for Zeff
+    zeff_max: maximum value for Zeff
     zeff: plasma effective charge
     """
     cc = (
@@ -2448,7 +2448,7 @@ def init_constraint_variables():
     fortran.constraint_variables.f_alpha_energy_confinement_min = 5.0
     fortran.constraint_variables.falpha_energy_confinement = 1.0
     fortran.constraint_variables.fniterpump = 1.0
-    fortran.constraint_variables.zeffmax = 3.6
+    fortran.constraint_variables.zeff_max = 3.6
     fortran.constraint_variables.fpoloidalpower = 1.0
     fortran.constraint_variables.ftemp_croco_quench_max = 1.0
     fortran.constraint_variables.fecrh_ignition = 1.0
