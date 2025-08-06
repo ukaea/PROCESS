@@ -43,10 +43,6 @@ from process.stellarator_config import load_stellarator_config
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
-# Logging handler for console output
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.ERROR)
-logger.addHandler(s_handler)
 
 # NOTE: a different value of electron_charge was used in the original implementation
 # making the post-Python results slightly different. As a result, there is a
