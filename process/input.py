@@ -669,7 +669,7 @@ INPUT_VARIABLES = {
     ),
     "fcontng": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "fcqt": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "ftemp_croco_quench_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fcr0": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcspc": InputVariable(fortran.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
