@@ -541,8 +541,12 @@ class SingleRun:
 
                 # Extract the variable name before the separator
                 raw_variable_name = line.split("=", 1)[0].strip()
-                variable_name = raw_variable_name.split("(", 1)[0] if "(" in raw_variable_name else raw_variable_name
-
+                # handle cases where the variable name might have parentheses
+                variable_name = (
+                    raw_variable_name.split("(", 1)[0]
+                    if "(" in raw_variable_name
+                    else raw_variable_name
+                )
 
                 # Check if the variable is obsolete and needs replacing
                 if variable_name in obsolete_variables:
@@ -565,8 +569,12 @@ class SingleRun:
                                 )
                             # Replace obsolete variable
                             modified_line = line.replace(variable_name, replacement, 1)
-                            modified_lines.append(f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}")
-                            changes_made.append(f"Replaced '{variable_name}' with '{replacement}'")
+                            modified_lines.append(
+                                f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
+                            )
+                            changes_made.append(
+                                f"Replaced '{variable_name}' with '{replacement}'"
+                            )
                             variables_in_in_dat.append(variable_name)
                     else:
                         # If replacement is False, add the line as-is
