@@ -12,9 +12,6 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import constants
-from process.fortran import (
-    error_handling as eh,
-)
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -813,7 +810,6 @@ class ElectronCyclotron:
         Abramowitz and Stegun, equation 8.12.1
         """
         if abs(arg) > (1.0e0 + 1.0e-10):
-            eh.fdiags[0] = arg
             raise ProcessValueError("Invalid argument", arg=arg)
 
         arg2 = min(arg, (1.0e0 - 1.0e-10))

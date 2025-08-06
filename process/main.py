@@ -474,7 +474,6 @@ class SingleRun:
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        fortran.error_handling.show_errors()
         show_errors(fortran.constants.nout)
 
     def finish(self):

@@ -73,7 +73,6 @@ LIST(APPEND PROCESS_SRCS
     constants.f90
     output.f90
     init_module.f90
-    error_handling.f90
     global_variables.f90
 )
 

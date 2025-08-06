@@ -10,7 +10,6 @@ import pytest
 from _pytest.fixtures import SubRequest
 from system_check import system_compatible
 
-from process.fortran import error_handling as eh
 from process.log import logging_model_handler
 
 
@@ -130,8 +129,6 @@ def initialise_error_module():
     occur when tested subroutines raise errors.
     """
     logging_model_handler.clear_logs()
-    eh.init_error_handling()
-    eh.initialise_error_list()
 
 
 @pytest.fixture
@@ -146,7 +143,6 @@ def reinitialise_error_module():
     # for now for known error-raisers
     yield
     logging_model_handler.clear_logs()
-    eh.init_error_handling()
 
 
 @pytest.fixture(autouse=True)

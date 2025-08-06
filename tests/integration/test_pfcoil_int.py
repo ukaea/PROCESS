@@ -21,7 +21,6 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.fortran import constants
-from process.fortran import error_handling as eh
 from process.init import init_all_module_vars
 from process.pfcoil import PFCoil, fixb, mtrx
 
@@ -55,7 +54,6 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(bv, "dr_tf_inboard", 1.4)
     monkeypatch.setattr(bv, "r_tf_outboard_mid", 1.66e1)
     monkeypatch.setattr(bv, "dr_bore", 2.15)
-    monkeypatch.setattr(eh, "idiags", np.full(8, -999999))
     monkeypatch.setattr(fwbsv, "den_steel", 7.8e3)
     monkeypatch.setattr(pfcoil_variables, "rpf1", 0.0)
     monkeypatch.setattr(pfcoil_variables, "m_pf_coil_structure_total", 0.0)
@@ -203,7 +201,6 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(bv, "z_tf_inside_half", 8.864)
     monkeypatch.setattr(bv, "dr_cs", 6.510e-1)
     monkeypatch.setattr(fwbsv, "den_steel", 7.8e3)
-    monkeypatch.setattr(eh, "idiags", np.full(8, 0))
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 5)
     monkeypatch.setattr(pfcoil_variables, "b_cs_peak_flat_top_end", 1.4e1)
     monkeypatch.setattr(pfcoil_variables, "i_cs_stress", 0)
@@ -285,7 +282,6 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(tfv, "poisson_steel", 3.0e-1)
 
     # Mocks for superconpf()
-    monkeypatch.setattr(eh, "fdiags", np.full(8, -9.99999e5))
     monkeypatch.setattr(tfv, "tmargmin_cs", 1.5)
     monkeypatch.setattr(tfv, "temp_margin", 0.0)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
@@ -2223,20 +2219,6 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(bv, "z_tf_inside_half", 9.0730900215620327)
     monkeypatch.setattr(bv, "dr_cs", 0.55242000000000002)
     monkeypatch.setattr(
-        eh,
-        "idiags",
-        np.array([
-            -999999,
-            -999999,
-            -999999,
-            -999999,
-            -999999,
-            -999999,
-            -999999,
-            -999999,
-        ]),
-    )
-    monkeypatch.setattr(
         pfcoil_variables,
         "r_pf_coil_inner",
         np.array([
@@ -2593,8 +2575,6 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """
     # TODO This test would benefit from parameterisation for different SC
     # materials (isumat)
-    monkeypatch.setattr(eh, "fdiags", np.zeros(8))
-    monkeypatch.setattr(eh, "idiags", np.zeros(8))
     monkeypatch.setattr(tfv, "tmargmin_cs", 0.0)
     monkeypatch.setattr(tfv, "temp_margin", 0.0)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 0.0)
