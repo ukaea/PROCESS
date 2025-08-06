@@ -29,7 +29,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    error_handling,
     fwbs_variables,
     numerics,
     physics_module,
@@ -5416,7 +5415,6 @@ class Physics:
         )
 
         if physics_variables.p_plasma_separatrix_mw <= 0.001e0:
-            error_handling.fdiags[0] = physics_variables.p_plasma_separatrix_mw
             logger.error(
                 "Possible problem with high radiation power, forcing p_plasma_separatrix_mw to odd values. "
                 f"{physics_variables.p_plasma_separatrix_mw=}"

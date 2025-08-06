@@ -23,7 +23,6 @@ from process.data_structure import (
     times_variables,
     vacuum_variables,
 )
-from process.fortran import error_handling as eh
 from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
@@ -41,24 +40,6 @@ def costs():
     :rtype: process.pulse.Pulse
     """
     return Costs()
-
-
-@pytest.fixture
-def initialise_error_module(monkeypatch):
-    """pytest fixture to initialise error module
-
-    Any routine which can raise an error should initialise
-    the error module otherwise segmentation faults can occur.
-
-    This fixture also resets the `fdiags` array to 0's.
-
-    :param monkeypatch: Mock fixture
-    :type monkeypatch: object
-    """
-    eh.init_error_handling()
-    eh.initialise_error_list()
-    # monkeypatch.setattr(eh, 'fdiags', np.zeros(8))
-    # monkeypatch.setattr(eh, 'errors_on', False)
 
 
 def acc2261_param(**kwargs):
@@ -5469,7 +5450,7 @@ class Acc2253Param(NamedTuple):
         ),
     ),
 )
-def test_acc2253_urt(acc2253param, monkeypatch, costs, initialise_error_module):
+def test_acc2253_urt(acc2253param, monkeypatch, costs):
     """
     Automatically generated Regression Unit Test for acc2253.
 
