@@ -1,5 +1,6 @@
 import copy
 import json
+import logging
 
 import numba
 import numpy as np
@@ -17,16 +18,12 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-    error_handling,
-    global_variables,
-    numerics,
-)
-from process.fortran import error_handling as eh
+from process.fortran import constants, global_variables, numerics
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
 )
+
+logger = logging.getLogger(__name__)
 
 RMU0 = constants.rmu0
 
@@ -250,7 +247,9 @@ class TFCoil:
 
         # Warn that the value has be forced to a minimum value at some point in
         # iteration
-        error_handling.report_error(290)
+        logger.error(
+            "dr_tf_plasma_case to small to accommodate the WP, forced to minimum value"
+        )
 
         # ======================================================================
 
@@ -1723,9 +1722,13 @@ class TFCoil:
         po.osubhd(self.outfile, "Ripple information:")
         if tfcoil_variables.i_tf_shape == 1:
             if peaktfflag == 1:
-                error_handling.report_error(144)
+                logger.warning(
+                    "(TF coil peak field calculation) Winding pack width out of fitted range"
+                )
             elif peaktfflag == 2:
-                error_handling.report_error(145)
+                logger.warning(
+                    "(TF coil peak field calculation) Winding pack radial thickness out of fitted range"
+                )
 
             po.ovarre(
                 self.outfile,
@@ -2319,12 +2322,12 @@ class TFCoil:
 
         # If the average conductor temperature difference is negative, set it to 0
         if dtcncpav < 0.0e0:
-            eh.report_error(249)
+            logger.error("Negative conductor average temperature difference, set to 0")
             dtcncpav = 0.0e0
 
         # If the average conductor temperature difference is negative, set it to 0
         if dtconcpmx < 0.0e0:
-            eh.report_error(250)
+            logger.error("Negative conductor peak temperature difference, set to 0")
             dtconcpmx = 0.0e0
 
         # Average conductor temperature
@@ -2737,8 +2740,9 @@ class TFCoil:
 
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            logger.error(
+                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+            )
 
         # Oder 3 polynomial fit
         if temp < 29.5e0:
@@ -2776,8 +2780,9 @@ class TFCoil:
 
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            logger.error(
+                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+            )
 
         # Order 3 polynomial fit in [4-30] K on the dimenion [K/(g.K)]
         if temp < 29.5e0:
@@ -2817,8 +2822,9 @@ class TFCoil:
         """
 
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            logger.error(
+                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+            )
 
         # Order 4 polynomial exponential fit in [4-25] K
         if temp < 22.5e0:
@@ -2856,8 +2862,9 @@ class TFCoil:
 
         # Fit range validation
         if temp < 4.0e0 or temp > 50.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(257)
+            logger.error(
+                f"Helium temperature out of helium property fiting range [4-50] K. {temp=}"
+            )
 
         # Order 4 polynomial fit
         if temp < 24.0e0:
@@ -2906,8 +2913,9 @@ class TFCoil:
 
         # Fiting range verification
         if temp < 15.0e0 or temp > 150.0e0:
-            eh.fdiags[0] = temp
-            eh.report_error(258)
+            logger.error(
+                f"Aluminium temperature out of the th conductivity fit range [15-60] K. {temp=}"
+            )
 
         # fit 15 < T < 60 K (order 3 poly)
         if temp < 60.0e0:
