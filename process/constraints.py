@@ -1153,18 +1153,18 @@ def constraint_equation_40():
 
     fauxmn: f-value for minimum auxiliary power
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    auxmin: minimum auxiliary power (MW)
+    p_hcd_injected_min_mw: minimum auxiliary power (MW)
     """
     cc = (
         1.0
         - fortran.constraint_variables.fauxmn
         * fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.constraint_variables.auxmin
+        / fortran.constraint_variables.p_hcd_injected_min_mw
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.auxmin * (1.0 - cc),
-        fortran.constraint_variables.auxmin * cc,
+        fortran.constraint_variables.p_hcd_injected_min_mw * (1.0 - cc),
+        fortran.constraint_variables.p_hcd_injected_min_mw * cc,
     )
 
 
@@ -2366,7 +2366,7 @@ def constraint_eqns(m: int, ieqn: int):
 
 def init_constraint_variables():
     """Initialise the constraint variables"""
-    fortran.constraint_variables.auxmin = 0.1
+    fortran.constraint_variables.p_hcd_injected_min_mw = 0.1
     fortran.constraint_variables.beta_poloidal_max = 0.19
     fortran.constraint_variables.bigqmin = 10.0
     fortran.constraint_variables.b_tf_inboard_max = 12.0
