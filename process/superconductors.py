@@ -800,7 +800,9 @@ def bottura_scaling(
     if b_conductor / b_c20_eps >= 1.0:
         eh.fdiags[0] = b_conductor
         eh.fdiags[1] = b_c20_eps
-        eh.report_error(160)
+        logger.warning(
+            f"Reduced field bzero artificially lowered {b_conductor=} {b_c20_eps}"
+        )
 
     # Reduced field at zero temperature, taking account of strain
     f_b_conductor_critical_no_temp = b_conductor / b_c20_eps

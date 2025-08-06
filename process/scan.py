@@ -29,6 +29,7 @@ from process.fortran import (
     global_variables,
     numerics,
 )
+from process.log import logging_model_handler, show_errors
 from process.solver_handler import SolverHandler
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
@@ -178,6 +179,7 @@ class Scan:
             ifail = self.doopt()
             write_output_files(models=self.models, ifail=ifail)
             error_handling.show_errors()
+            show_errors(constants.nout)
             return
 
         if scan_variables.isweep > scan_variables.IPNSCNS:
@@ -716,7 +718,9 @@ class Scan:
             write_output_files(models=self.models, ifail=ifail)
 
             error_handling.show_errors()
+            show_errors(constants.nout)
             error_handling.init_error_handling()
+            logging_model_handler.clear_logs()
 
         # outvar now contains results
         self.scan_1d_write_plot()
@@ -771,7 +775,9 @@ class Scan:
                 write_output_files(models=self.models, ifail=ifail)
 
                 error_handling.show_errors()
+                show_errors(constants.nout)
                 error_handling.init_error_handling()
+                logging_model_handler.clear_logs()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan = iscan + 1
 

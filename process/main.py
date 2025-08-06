@@ -87,6 +87,7 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
+from process.log import logging_model_handler, show_errors
 from process.pfcoil import PFCoil
 from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
@@ -474,6 +475,7 @@ class SingleRun:
     def show_errors(self):
         """Report all informational/error messages encountered."""
         fortran.error_handling.show_errors()
+        show_errors(fortran.constants.nout)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
@@ -717,6 +719,9 @@ logging_file_handler = logging.FileHandler("process.log", mode="w")
 logging_file_handler.setLevel(logging.INFO)
 logging_file_handler.setFormatter(logging_formatter)
 
+logging_model_handler.setLevel(logging.WARNING)
+logging_model_handler.setFormatter(logging_formatter)
+
 
 def main(args=None):
     """Run Process.
@@ -734,7 +739,9 @@ def main(args=None):
     # without creating a process.log file... people can then handle our logs as they wish.
     # If we did this on the 'process.main' logger then I don't think the handlers
     # would propogate up the heirachy properly.
-    logging.basicConfig(handlers=[logging_file_handler, logging_stream_handler])
+    logging.basicConfig(
+        handlers=[logging_file_handler, logging_stream_handler, logging_model_handler]
+    )
     Process(args)
 
 

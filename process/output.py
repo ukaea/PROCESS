@@ -1,5 +1,6 @@
 from process import data_structure
 from process import fortran as ft
+from process.log import logging_model_handler
 
 
 def write(models, _outfile):
@@ -12,6 +13,11 @@ def write(models, _outfile):
     :param outfile: Fortran output unit identifier
     :type outfile: int
     """
+    # ensure we are capturing warnings that occur in the 'output' stage as these are warnings
+    # that occur at our solution point.
+    logging_model_handler.start_capturing()
+    logging_model_handler.clear_logs()
+
     # Turn on error reporting
     # (warnings etc. encountered in previous iterations may have cleared themselves
     # during the solution process)
@@ -142,3 +148,7 @@ def write(models, _outfile):
 
     # Water usage in secondary cooling system
     models.water_use.run(output=True)
+
+    # stop capturing warnings so that Outfile does not end up with
+    # a lot of non-model logs
+    logging_model_handler.stop_capturing()
