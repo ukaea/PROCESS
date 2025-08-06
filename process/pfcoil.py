@@ -17,7 +17,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import build_variables as bv
 from process.fortran import constants, numerics
 from process.fortran import constraint_variables as ctv
-from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
@@ -517,7 +516,7 @@ class PFCoil:
         else:
             dics = 0.0e0
             pfv.f_j_cs_start_end_flat_top = 1.0e0
-            eh.report_error(71)
+            logger.error("OH coil not present; check volt-second calculations...")
 
         # Split groups of coils into one set containing ncl coils
         ncl = 0
@@ -1036,7 +1035,9 @@ class PFCoil:
                             pf_tf_collision += 1
 
                         if pf_tf_collision >= 1:
-                            eh.report_error(277)
+                            logger.error(
+                                "One or more collision between TF and PF coils. Check PF placement."
+                            )
 
     def solv(self, n_pf_groups_max, n_pf_coil_groups, nrws, gmat, bvec):
         """Solve a matrix using singular value decomposition.
@@ -1858,10 +1859,10 @@ class PFCoil:
         )
 
         if noh > nohmax:
-            eh.idiags[0] = noh
-            eh.idiags[1] = nohmax
-            eh.fdiags[0] = bv.dr_cs
-            eh.report_error(73)
+            logger.error(
+                "Max no. of segments noh for OH coil > nohmax; increase dr_cs lower bound"
+                f"{noh=} {nohmax=} {bv.dr_cs=}"
+            )
 
         noh = min(noh, nohmax)
 
@@ -1906,9 +1907,6 @@ class PFCoil:
             if bv.dr_cs >= delzoh:
                 deltar = math.sqrt((bv.dr_cs**2 - delzoh**2) / 12.0e0)
             else:
-                # eh.fdiags[0] = bv.dr_cs
-                # eh.fdiags[1] = delzoh
-                # eh.report_error(74)
                 # Set deltar to something small and +ve instead; allows solver
                 # to continue and hopefully be constrained away from this point
                 deltar = 1.0e-6
@@ -2496,13 +2494,19 @@ class PFCoil:
                 if pfv.temp_cs_margin < 1.01e0 * tfv.tmargmin_cs:
                     pf.cslimit = True
                 if not pf.cslimit:
-                    eh.report_error(135)
+                    logger.warning(
+                        "CS not using max current density: further optimisation may be possible"
+                    )
 
                 # Check whether CS coil currents are feasible from engineering POV
                 if ctv.fjohc > 0.7:
-                    eh.report_error(286)
+                    logger.error(
+                        "fjohc shouldn't be above 0.7 for engineering reliability"
+                    )
                 if ctv.fjohc0 > 0.7:
-                    eh.report_error(287)
+                    logger.error(
+                        "fjohc0 shouldn't be above 0.7 for engineering reliability"
+                    )
 
                 # REBCO fractures in strains above ~+/- 0.7%
                 if (
@@ -2510,14 +2514,18 @@ class PFCoil:
                     or pfv.i_cs_superconductor == 8
                     or pfv.i_cs_superconductor == 9
                 ) and abs(tfv.str_cs_con_res) > 0.7e-2:
-                    eh.report_error(262)
+                    logger.error(
+                        "Non physical strain used in CS. Use superconductor strain < +/- 0.7%"
+                    )
 
                 if (
                     pfv.i_pf_superconductor == 6
                     or pfv.i_pf_superconductor == 8
                     or pfv.i_pf_superconductor == 9
                 ) and abs(tfv.str_pf_con_res) > 0.7e-2:
-                    eh.report_error(263)
+                    logger.error(
+                        "Non physical strain used in PF. Use superconductor strain < +/- 0.7%"
+                    )
 
             else:
                 op.ocmmnt(self.outfile, "Resistive central solenoid")

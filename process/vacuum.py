@@ -8,7 +8,6 @@ from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
 from process.fortran import build_variables as buv
 from process.fortran import constants
-from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
 
@@ -440,9 +439,9 @@ class Vacuum:
                         break
 
                 else:
-                    eh.fdiags[0] = pv.p_fusion_total_mw
-                    eh.fdiags[1] = pv.te
-                    eh.report_error(124)
+                    logger.error(
+                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.te=}"
+                    )
 
                 theta = math.pi / ntf
 
