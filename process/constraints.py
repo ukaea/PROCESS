@@ -2450,6 +2450,5 @@ def init_constraint_variables():
     fortran.constraint_variables.fniterpump = 1.0
     fortran.constraint_variables.zeffmax = 3.6
     fortran.constraint_variables.fpoloidalpower = 1.0
-    fortran.constraint_variables.fpsep = 1.0
     fortran.constraint_variables.ftemp_croco_quench_max = 1.0
     fortran.constraint_variables.fecrh_ignition = 1.0

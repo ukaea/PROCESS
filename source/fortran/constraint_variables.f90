@@ -304,10 +304,6 @@ module constraint_variables
   !! f-value for constraint on rate of change of energy in poloidal field
   !! (`constraint equation 66`, `iteration variable 115`)
 
-  real(dp) :: fpsep
-  !! f-value to ensure separatrix power is less than value from Kallenbach divertor
-  !! (Not required as constraint 69 is an equality)
-
   real(dp) :: ftemp_croco_quench_max
   !! TF coil quench temparature remains below temp_croco_quench_max
   !! (`constraint equation 74`, `iteration variable 141`)

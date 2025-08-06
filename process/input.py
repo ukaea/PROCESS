@@ -753,7 +753,6 @@ INPUT_VARIABLES = {
     "fradius_beam_tangency": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "fpsep": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepbqar": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fptemp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
