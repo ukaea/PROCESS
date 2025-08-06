@@ -921,7 +921,7 @@ def constraint_equation_28():
 
     fqval: pf-value for Q
     bigq: Fusion gain; P_fusion / (P_injection + P_ohmic)
-    bigqmin: minimum fusion gain Q
+    big_q_plasma_min: minimum fusion gain Q
     i_plasma_ignited : input integer : switch for ignition assumption:
     - 0 do not assume plasma ignition;
     - 1 assume ignited (but include auxiliary power in costs)
@@ -937,12 +937,12 @@ def constraint_equation_28():
         1.0
         - fortran.constraint_variables.fqval
         * fortran.current_drive_variables.bigq
-        / fortran.constraint_variables.bigqmin
+        / fortran.constraint_variables.big_q_plasma_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.bigqmin * (1.0 - cc),
-        fortran.constraint_variables.bigqmin * cc,
+        fortran.constraint_variables.big_q_plasma_min * (1.0 - cc),
+        fortran.constraint_variables.big_q_plasma_min * cc,
     )
 
 
@@ -2368,7 +2368,7 @@ def init_constraint_variables():
     """Initialise the constraint variables"""
     fortran.constraint_variables.p_hcd_injected_min_mw = 0.1
     fortran.constraint_variables.beta_poloidal_max = 0.19
-    fortran.constraint_variables.bigqmin = 10.0
+    fortran.constraint_variables.big_q_plasma_min = 10.0
     fortran.constraint_variables.b_tf_inboard_max = 12.0
     fortran.constraint_variables.fauxmn = 1.0
     fortran.constraint_variables.fbeta_poloidal_eps = 1.0

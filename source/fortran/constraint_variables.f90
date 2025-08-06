@@ -21,7 +21,7 @@ module constraint_variables
   real(dp) :: beta_poloidal_max
   !! maximum poloidal beta (`constraint equation 48`)
 
-  real(dp) :: bigqmin
+  real(dp) :: big_q_plasma_min
   !! minimum fusion gain Q (`constraint equation 28`)
 
   real(dp) :: b_tf_inboard_max

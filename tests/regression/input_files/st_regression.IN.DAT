@@ -144,7 +144,7 @@ fp_plant_electric_net_required_mw = 1.0
 * JUSTIFICATION: Turned off, dont care about Q lower limit  
 * VARIABLES:     i_plasma_ignited,  bigq calculated in-situ
 
-*bigqmin = 
+*big_q_plasma_min = 
 * DESCRIPTION:   Minimum fusion gain Q 
 * JUSTIFICATION: Turned off, dont care about lower Q value
 

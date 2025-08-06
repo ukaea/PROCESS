@@ -80,7 +80,7 @@ dz_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0;
 
 *---------------Constraint Variables---------------*
 
-bigqmin  = 1 * minimum fusion gain Q (`constraint equation 28`)
+big_q_plasma_min  = 1 * minimum fusion gain Q (`constraint equation 28`)
 fbeta_max = 1. * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
 fecrh_ignition = 1.0 * f-value for ecrh ignition constraint
 fflutf   = 1 * f-value for neutron fluence on TF coil (`constraint equation 53`; `iteration variable 92`)

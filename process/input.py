@@ -217,7 +217,9 @@ INPUT_VARIABLES = {
     "betao": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
-    "bigqmin": InputVariable(fortran.constraint_variables, float, range=(0.01, 100.0)),
+    "big_q_plasma_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.01, 100.0)
+    ),
     "bioshld_thk": InputVariable(
         fortran.buildings_variables, float, range=(0.25, 25.0)
     ),
