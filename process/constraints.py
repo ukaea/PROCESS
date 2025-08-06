@@ -1826,18 +1826,18 @@ def constraint_equation_74():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fcqt: f-value: TF coil quench temparature remains below tmax_croco
-    croco_quench_temperature: CroCo strand: Actual temp reached during a quench (K)
+    temp_croco_quench: CroCo strand: Actual temp reached during a quench (K)
     tmax_croco: CroCo strand: maximum permitted temp during a quench (K)
     """
     cc = (
-        fortran.tfcoil_variables.croco_quench_temperature
+        fortran.tfcoil_variables.temp_croco_quench
         / fortran.tfcoil_variables.tmax_croco
         - 1.0 * fortran.constraint_variables.fcqt
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.croco_quench_temperature,
-        fortran.tfcoil_variables.croco_quench_temperature * cc,
+        fortran.tfcoil_variables.temp_croco_quench,
+        fortran.tfcoil_variables.temp_croco_quench * cc,
     )
 
 

@@ -651,7 +651,7 @@ module tfcoil_variables
   real(dp) :: tmax_croco
   !! CroCo strand: maximum permitted temp during a quench (K)
 
-  real(dp) :: croco_quench_temperature
+  real(dp) :: temp_croco_quench
   !! CroCo strand: Actual temp reached during a quench (K)
 
   real(dp) :: temp_tf_cryo

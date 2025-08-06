@@ -5442,7 +5442,7 @@ def init_tfcoil_variables():
     tfv.tmargtf = 0.0
     tfv.tmaxpro = 150.0
     tfv.tmax_croco = 200.0
-    tfv.croco_quench_temperature = 0.0
+    tfv.temp_croco_quench = 0.0
     tfv.temp_tf_cryo = 4.5
     tfv.n_tf_coil_turns = 0.0
     tfv.vdalw = 20.0
