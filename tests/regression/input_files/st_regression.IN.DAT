@@ -2380,18 +2380,6 @@ i_blkt_inboard = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*icc = 55
-* DESCRIPTION:   Constraint equation for helium concentration in vacuum vessel upper limit (iblnaket = 2 only (KIT HCPB))
-* JUSTIFICATION: Turned off, do not care He concentration.
-* VARIABLES:     i_blanket_type,vvhealw (allowed maximum helium concentration in vacuum vessel at end of plant life (appm) (i_blanket_type =2)),  vvhemax calculated in situ
-
-*vvhealw = 
-* DESCRIPTION:   Allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-*(`i_blanket_type =2`) (`constraint equation 55`)
-* JUSTIFICATION: Not using icc = 55
-
-*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 inuclear = 0
 * DESCRIPTION:   Switch for nuclear heating in the coils (default = 0)
 * =0 Frances Fox model (default)

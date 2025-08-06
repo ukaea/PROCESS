@@ -278,10 +278,6 @@ module constraint_variables
   real(dp) :: t_current_ramp_up_min
   !! minimum plasma current ramp-up time (s) (`constraint equation 41`)
 
-  real(dp) :: vvhealw
-  !! allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-  !! (`i_blanket_type =2`) (`constraint equation 55`)
-
   real(dp) :: pflux_fw_neutron_max_mw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 

@@ -1598,7 +1598,6 @@ INPUT_VARIABLES = {
     "dz_fw_plasma_gap": InputVariable(
         fortran.build_variables, float, range=(0.0, 10.0)
     ),
-    "vvhealw": InputVariable(fortran.constraint_variables, float, range=(0.01, 10.0)),
     "pflux_fw_neutron_max_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 50.0)
     ),
