@@ -34,7 +34,6 @@ class MFILEParser(abc.MutableMapping):
         self._input_file = input_mfile
         self._mfile_data: OrderedDict = OrderedDict()
         self._logger = logging.getLogger(self.__class__.__name__)
-        self._logger.setLevel(logging.INFO)
         if self._input_file:
             self.parse(self._input_file)
 

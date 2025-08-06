@@ -105,21 +105,7 @@ from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
-# Define parent logger
-logger = logging.getLogger("process")
-# Ensure every log goes through to a handler
-logger.setLevel(logging.DEBUG)
-# Handler for logging to stderr (and hence the terminal by default)
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.WARNING)
-# Handler for logging to file
-f_handler = logging.FileHandler("process.log", mode="w")
-f_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
-s_handler.setFormatter(formatter)
-f_handler.setFormatter(formatter)
-logger.addHandler(s_handler)
-logger.addHandler(f_handler)
+logger = logging.getLogger(__name__)
 
 
 class Process:
@@ -720,6 +706,18 @@ class Models:
         self._costs_custom = value
 
 
+# setup handlers for writing to terminal (on warnings+)
+# or writing to the log file (on info+)
+logging_formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+logging_stream_handler = logging.StreamHandler()
+logging_stream_handler.setLevel(logging.ERROR)
+logging_stream_handler.setFormatter(logging_formatter)
+
+logging_file_handler = logging.FileHandler("process.log", mode="w")
+logging_file_handler.setLevel(logging.INFO)
+logging_file_handler.setFormatter(logging_formatter)
+
+
 def main(args=None):
     """Run Process.
 
@@ -731,6 +729,12 @@ def main(args=None):
     :param args: Arguments to parse, defaults to None
     :type args: list, optional
     """
+    # Only add our handlers if PROCESS is being run as an application
+    # This should allow it to be used as a package (e.g. people import models that log)
+    # without creating a process.log file... people can then handle our logs as they wish.
+    # If we did this on the 'process.main' logger then I don't think the handlers
+    # would propogate up the heirachy properly.
+    logging.basicConfig(handlers=[logging_file_handler, logging_stream_handler])
     Process(args)
 
 
