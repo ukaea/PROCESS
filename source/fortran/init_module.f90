@@ -69,13 +69,8 @@ contains
       ! # TODO Move this output and file handling to Python
 
       use constants, only: iotty, mfile, nout, nplot, opt_file, vfile
-      use process_output_fortran, only: oheadr
       use global_variables, only: verbose
       implicit none
-
-      call oheadr(nout,'End of PROCESS Output')
-      call oheadr(iotty,'End of PROCESS Output')
-      call oheadr(nout,'Copy of PROCESS Input Follows')
 
       close(unit = nin)
       close(unit = nout)
