@@ -24,9 +24,7 @@ from process.fortran import (
 
 
 class CCFE_HCPB(BlanketLibrary):
-    """
-
-    This module contains the PROCESS CCFE HCPB blanket model
+    """This module contains the PROCESS CCFE HCPB blanket model
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)
 
