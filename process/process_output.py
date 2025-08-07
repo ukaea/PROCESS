@@ -4,7 +4,6 @@ from process.fortran import constants, process_output_fortran
 
 # necessary to avoid using process_output in the code through
 # two different interfaces
-osubhd = process_output_fortran.osubhd
 write = process_output_fortran.write
 dblcol = process_output_fortran.dblcol
 ovarin = process_output_fortran.ovarin
@@ -64,6 +63,17 @@ def oblnkl(file):
     :param file: the integer unit of the file
     """
     write(file, " ")
+
+
+def osubhd(file, string):
+    """Write a subheading between two blank lines
+
+    :param file: the integer unit of the file
+    :param string: the heading text
+    """
+    oblnkl(file)
+    write(file, string)
+    oblnkl(file)
 
 
 def ocmmnt(file, string: str):

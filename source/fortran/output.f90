@@ -22,32 +22,6 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine osubhd(file,string)
-
-    !! Routine to print a subheading between two blank lines
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! string : input character string : Character string to be used
-    !! This routine writes out a subheading between two blank lines.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-		use constants, only: iotty, nout
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-    character(len=*), intent(in) :: string
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    call oblnkl(file)
-    call ocmmnt(file,string)
-    call oblnkl(file)
-
-  end subroutine osubhd
-
   subroutine write(file, string)
     !! Write a string to file.
     !! file : input integer : Fortran output unit identifier
