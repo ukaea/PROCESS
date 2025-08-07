@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
+from process.data_structure import stellarator_configuration
 from process.exceptions import ProcessValueError
-from process.fortran import stellarator_configuration
 
 HELIAS5B = {
     "name": "Helias 5b",
@@ -12,8 +12,8 @@ HELIAS5B = {
     "coil_rmajor": 22.44,
     "coil_rminor": 4.76,
     "bt_ref": 5.6,
-    "WP_area": 0.8 * 0.6,
-    "WP_bmax": 11.44,
+    "wp_area": 0.8 * 0.6,
+    "wp_bmax": 11.44,
     "symmetry": 5,
     "coilspermodule": 10,
     "a1": 0.688,
@@ -29,14 +29,14 @@ HELIAS5B = {
     "inductance": 1655.76e-6,  # inductance in muH
     "WP_ratio": 1.2,  # The fit values in stellarator config class should be calculated using this value.
     "max_force_density": 120.0,  # [MN/m^3]
-    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_force_density_mnm": 98.0,  # [MN/m]
     "max_lateral_force_density": 92.4,  # [MN/m^3]
     "max_radial_force_density": 113.5,  # [MN/m^3]
-    "centering_force_max_MN": 189.5,
-    "centering_force_min_MN": -55.7,
-    "centering_force_avg_MN": 93.0,
+    "centering_force_max_mn": 189.5,
+    "centering_force_min_mn": -55.7,
+    "centering_force_avg_mn": 93.0,
     "min_plasma_coil_distance": 1.9,
-    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "derivative_min_lcfs_coils_dist": -1.0,  # this is approximated for now
     "min_bend_radius": 1.0,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
@@ -54,8 +54,8 @@ HELIAS4 = {
     "coil_rmajor": 18.39,
     "coil_rminor": 4.94,
     "bt_ref": 5.6,
-    "WP_area": 0.8 * 0.6,
-    "WP_bmax": 11.51,
+    "wp_area": 0.8 * 0.6,
+    "wp_bmax": 11.51,
     "symmetry": 4,
     "coilspermodule": 10,
     "a1": 0.676,
@@ -71,14 +71,14 @@ HELIAS4 = {
     "inductance": 1290.4e-6,  # inductance/R*A^2 in muH
     "WP_ratio": 1.3,
     "max_force_density": 120.0,  # [MN/m^3]
-    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_force_density_mnm": 98.0,  # [MN/m]
     "max_lateral_force_density": 87.9,  # [MN/m^3]
     "max_radial_force_density": 109.9,  # [MN/m^3]
-    "centering_force_max_MN": 226.0,
-    "centering_force_min_MN": -35.3,
-    "centering_force_avg_MN": 125.8,
+    "centering_force_max_mn": 226.0,
+    "centering_force_min_mn": -35.3,
+    "centering_force_avg_mn": 125.8,
     "min_plasma_coil_distance": 1.7,
-    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "derivative_min_lcfs_coils_dist": -1.0,  # this is approximated for now
     "min_bend_radius": 0.86,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
@@ -95,8 +95,8 @@ HELIAS3 = {
     "coil_rmajor": 14.53,
     "coil_rminor": 6.12,
     "bt_ref": 5.6,
-    "WP_bmax": 12.346,
-    "WP_area": 0.8 * 0.6,
+    "wp_bmax": 12.346,
+    "wp_area": 0.8 * 0.6,
     "symmetry": 3,
     "coilspermodule": 10,
     # Bmax fit parameters
@@ -113,14 +113,14 @@ HELIAS3 = {
     "inductance": 1250.7e-6,  # inductance in muH
     "WP_ratio": 1.3,
     "max_force_density": 120.0,  # [MN/m]
-    "max_force_density_MNm": 98.0,
+    "max_force_density_mnm": 98.0,
     "max_lateral_force_density": 96.6,  # [MN/m^3]
     "max_radial_force_density": 130.5,  # [MN/m^3]
-    "centering_force_max_MN": 428.1,
-    "centering_force_min_MN": -70.3,
-    "centering_force_avg_MN": 240.9,
+    "centering_force_max_mn": 428.1,
+    "centering_force_min_mn": -70.3,
+    "centering_force_avg_mn": 240.9,
     "min_plasma_coil_distance": 1.78,
-    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "derivative_min_lcfs_coils_dist": -1.0,  # this is approximated for now
     "min_bend_radius": 1.145,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
@@ -137,8 +137,8 @@ W7X30 = {
     "coil_rmajor": 5.62,
     "coil_rminor": 1.36,
     "bt_ref": 3.0,
-    "WP_area": 0.18 * 0.15,
-    "WP_bmax": 10.6,
+    "wp_area": 0.18 * 0.15,
+    "wp_bmax": 10.6,
     "symmetry": 5,
     "coilspermodule": 6,
     "a1": 0.98,
@@ -154,14 +154,14 @@ W7X30 = {
     "inductance": 252.7e-6,  # inductance/R*A^2 in muH
     "WP_ratio": 1.2,
     "max_force_density": 350.0,  # [MN/m^3]
-    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_force_density_mnm": 98.0,  # [MN/m]
     "max_lateral_force_density": 271.1,  # [MN/m^3]
     "max_radial_force_density": 305.2,  # [MN/m^3]
-    "centering_force_max_MN": 7.95,
-    "centering_force_min_MN": -2.15,
-    "centering_force_avg_MN": 3.46,
+    "centering_force_max_mn": 7.95,
+    "centering_force_min_mn": -2.15,
+    "centering_force_avg_mn": 3.46,
     "min_plasma_coil_distance": 0.45,
-    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "derivative_min_lcfs_coils_dist": -1.0,  # this is approximated for now
     "min_bend_radius": 0.186,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
@@ -178,8 +178,8 @@ W7X50 = {
     "coil_rmajor": 5.62,
     "coil_rminor": 1.18,
     "bt_ref": 3.0,
-    "WP_area": 0.18 * 0.15,
-    "WP_bmax": 6.3,
+    "wp_area": 0.18 * 0.15,
+    "wp_bmax": 6.3,
     "symmetry": 5,
     "coilspermodule": 10,
     "a1": 0.66,
@@ -195,14 +195,14 @@ W7X50 = {
     "inductance": 412.4e-6,  # inductance/R*A^2 in muH
     "WP_ratio": 1.2,
     "max_force_density": 250.0,  # [MN/m^3]
-    "max_force_density_MNm": 98.0,  # [MN/m]
+    "max_force_density_mnm": 98.0,  # [MN/m]
     "max_lateral_force_density": 116.4,  # [MN/m^3]
     "max_radial_force_density": 148.0,  # [MN/m^3]
-    "centering_force_max_MN": 2.99,
-    "centering_force_min_MN": -1.29,
-    "centering_force_avg_MN": 1.61,
+    "centering_force_max_mn": 2.99,
+    "centering_force_min_mn": -1.29,
+    "centering_force_avg_mn": 1.61,
     "min_plasma_coil_distance": 0.39,
-    "derivative_min_LCFS_coils_dist": -1.0,  # this is approximated for now
+    "derivative_min_lcfs_coils_dist": -1.0,  # this is approximated for now
     "min_bend_radius": 0.39,  # [m]
     "neutron_peakfactor": 1.6,
     "epseff": 0.015,
