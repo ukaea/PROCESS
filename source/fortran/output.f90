@@ -22,31 +22,6 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine oblnkl(file)
-
-    !! Routine to print a blank line
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! This routine writes out a simple blank line.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-		use constants, only: pi, nout
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    write(file,10)
-10  format(' ')
-
-  end subroutine oblnkl
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   subroutine osubhd(file,string)
 
     !! Routine to print a subheading between two blank lines
