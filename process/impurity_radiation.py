@@ -7,8 +7,9 @@ from pathlib import Path
 import numpy as np
 from scipy import integrate
 
+from process.data_structure import impurity_radiation_module
 from process.exceptions import ProcessError, ProcessValueError
-from process.fortran import constants, impurity_radiation_module
+from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -264,11 +265,10 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
             f"ERROR: len_tab is {len_tab} but has a maximum value of {impurity_radiation_module.all_array_hotfix_len}"
         )
 
-    impurity_label = label.decode("utf-8")
     impurity_dir = resources.files("process") / "data/lz_non_corona_14_elements/"
 
-    lz_file = impurity_dir / f"{impurity_label}_lz_tau.dat"
-    z_file = impurity_dir / f"{impurity_label}_z_tau.dat"
+    lz_file = impurity_dir / f"{label}_lz_tau.dat"
+    z_file = impurity_dir / f"{label}_z_tau.dat"
 
     if not lz_file.exists() or not z_file.exists():
         raise FileNotFoundError(
@@ -565,47 +565,3 @@ class ImpurityRadiation:
         self.map_imprad_profile()
         self.calculate_radiation_loss_profiles()
         self.integrate_radiation_loss_profiles()
-
-
-def init_impurity_radiation_module():
-    impurity_radiation_module.radius_plasma_core_norm = 0.6
-    impurity_radiation_module.coreradiationfraction = 1.0
-    impurity_radiation_module.fimp = [
-        1.0,
-        0.1,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-        0.0,
-    ]
-    impurity_radiation_module.imp_label = [
-        "H_",
-        "He",
-        "Be",
-        "C_",
-        "N_",
-        "O_",
-        "Ne",
-        "Si",
-        "Ar",
-        "Fe",
-        "Ni",
-        "Kr",
-        "Xe",
-        "W_",
-    ]
-    impurity_radiation_module.impurity_arr_label[:] = "  "
-    impurity_radiation_module.impurity_arr_z[:] = 0
-    impurity_radiation_module.impurity_arr_amass[:] = 0.0
-    impurity_radiation_module.impurity_arr_len_tab[:] = 0.0
-    impurity_radiation_module.impurity_arr_temp_kev[:] = 0.0
-    impurity_radiation_module.impurity_arr_lz_wm3[:] = 0.0
-    impurity_radiation_module.impurity_arr_zav[:] = 0.0

@@ -6,11 +6,12 @@ import numpy as np
 import pytest
 
 import process.impurity_radiation as impurity_radiation
+from process.data_structure import impurity_radiation_module
 
 
 @pytest.fixture(autouse=True)
 def initialise_impurity_radiation():
-    impurity_radiation.init_impurity_radiation_module()
+    impurity_radiation_module.init_impurity_radiation_module()
     impurity_radiation.initialise_imprad()
 
 

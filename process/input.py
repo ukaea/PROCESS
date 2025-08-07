@@ -123,10 +123,10 @@ INPUT_VARIABLES = {
     "bt": InputVariable(fortran.physics_variables, float, range=(0.0, 30.0)),
     "burnup_in": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "radius_plasma_core_norm": InputVariable(
-        fortran.impurity_radiation_module, float, range=(0.0, 1.0)
+        data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
     ),
     "coreradiationfraction": InputVariable(
-        fortran.impurity_radiation_module, float, range=(0.0, 1.0)
+        data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
     ),
     "c_beta": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "csawth": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
@@ -151,7 +151,7 @@ INPUT_VARIABLES = {
     "fgwsep": InputVariable(fortran.physics_variables, float, range=(-1.0, 5.0)),
     "f_helium3": InputVariable(fortran.physics_variables, float, range=(-1.0, 5.0)),
     # TODO: does fimp require an additional range?
-    "fimp": InputVariable(fortran.impurity_radiation_module, float, array=True),
+    "fimp": InputVariable(data_structure.impurity_radiation_module, float, array=True),
     "fkzohm": InputVariable(fortran.physics_variables, float, range=(0.5, 2.0)),
     "fnesep": InputVariable(fortran.constraint_variables, float, range=(0.1, 20.0)),
     "abktflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
@@ -1953,7 +1953,7 @@ INPUT_VARIABLES = {
     "impvardiv": InputVariable(
         data_structure.reinke_variables,
         int,
-        choices=range(3, fortran.impurity_radiation_module.n_impurities.item() + 1),
+        choices=range(3, data_structure.impurity_radiation_module.N_IMPURITIES + 1),
     ),
     "j_pf_coil_wp_peak": InputVariable(fortran.pfcoil_variables, float, array=True),
     "ixc": InputVariable(

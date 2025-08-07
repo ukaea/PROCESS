@@ -17,13 +17,13 @@ from process.current_drive import (
 from process.data_structure import (
     build_variables,
     cost_variables,
+    impurity_radiation_module,
     stellarator_configuration,
     structure_variables,
 )
 from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
-    impurity_radiation_module,
     physics_variables,
     stellarator_module,
     tfcoil_variables,
