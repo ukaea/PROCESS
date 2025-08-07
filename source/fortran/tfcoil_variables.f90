@@ -682,7 +682,7 @@ module tfcoil_variables
   real(dp) :: vtfkv
   !! TF coil voltage for resistive coil including bus (kV)
 
-  real(dp) :: vtfskv
+  real(dp) :: v_tf_coil_dump_quench_kv
   !! voltage across a TF coil during quench (kV)
 
   real(dp) :: whtcas

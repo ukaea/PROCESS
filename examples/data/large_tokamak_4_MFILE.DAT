@@ -747,7 +747,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.8429E+01 ITV
  Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.1442E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.5837E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.1862E+00 OP 
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.1862E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              1    
@@ -995,7 +995,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      8.9795E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.1862E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.1862E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      3.0165E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 

@@ -1890,12 +1890,12 @@ class Power:
             itfka,
             physics_variables.rmajor,
             tfcoil_variables.n_tf_coils,
-            tfcoil_variables.vtfskv,
+            tfcoil_variables.v_tf_coil_dump_quench_kv,
             ettfmj,
             tfcoil_variables.res_tf_leg,
         )
 
-    def tfcpwr(self, output: bool, itfka, rmajor, ntfc, vtfskv, ettfmj, rptfc):
+    def tfcpwr(self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc):
         """
         Calculates the TF coil power conversion system parameters
         for superconducting coils
@@ -1993,7 +1993,7 @@ class Power:
         tfackw = tfckw / 0.9e0
 
         #  Resistance of dump resistor, ohms
-        r1dump = nsptfc * vtfskv * ncpbkr / itfka
+        r1dump = nsptfc * v_tf_coil_dump_quench_kv * ncpbkr / itfka
 
         #  Time constant, s
         ttfsec = lptfcs * ncpbkr / (r1dump * nsptfc + rptfc * (1.0e0 - nsptfc))
@@ -2018,7 +2018,7 @@ class Power:
         part1 = fspc1 * ntfpm * tfpmkw**0.667e0
 
         #  Circuit breakers floor space, m2
-        part2 = fspc2 * ntfbkr * (vtfskv * itfka) ** 0.667e0
+        part2 = fspc2 * ntfbkr * (v_tf_coil_dump_quench_kv * itfka) ** 0.667e0
 
         #  Load centres floor space, m2
         part3 = (
@@ -2056,8 +2056,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Voltage across a TF coil during quench (kV)",
-                "(vtfskv)",
-                vtfskv,
+                "(v_tf_coil_dump_quench_kv)",
+                v_tf_coil_dump_quench_kv,
                 "OP ",
             )
             po.ovarre(self.outfile, "TF coil charge time (hours)", "(tchghr)", tchghr)

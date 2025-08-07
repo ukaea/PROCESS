@@ -1667,8 +1667,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Actual quench voltage (kV)",
-                "(vtfskv)",
-                tfcoil_variables.vtfskv,
+                "(v_tf_coil_dump_quench_kv)",
+                tfcoil_variables.v_tf_coil_dump_quench_kv,
                 "OP ",
             )
 
@@ -5455,7 +5455,7 @@ def init_tfcoil_variables():
     tfv.f_a_tf_turn_cable_space_extra_void = 0.4
     tfv.voltfleg = 0.0
     tfv.vtfkv = 0.0
-    tfv.vtfskv = 0.0
+    tfv.v_tf_coil_dump_quench_kv = 0.0
     tfv.whtcas = 0.0
     tfv.whtcon = 0.0
     tfv.whtconcu = 0.0

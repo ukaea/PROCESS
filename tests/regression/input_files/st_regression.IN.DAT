@@ -974,7 +974,7 @@ boundu(50) = 1.0
 *icc = 34 
 * DESCRIPTION:   Constraint equation for TF coil dump voltage upper limit (SCTF)
 * JUSTIFICATION: Turned off, do not care about dump voltage
-* VARIABLES:     vtfskv calculated in-situ
+* VARIABLES:     v_tf_coil_dump_quench_kv calculated in-situ
 
 *ixc = 52
 *vdalw =  

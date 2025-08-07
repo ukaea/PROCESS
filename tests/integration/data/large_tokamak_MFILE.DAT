@@ -991,7 +991,7 @@
  Actual_quench_time_(or_time_constant)_(s)________________________________ (tdmptf)_______________________ 2.01007186358202219e+01
  Vacuum_Vessel_stress_on_quench_(Pa)______________________________________ (vv_stress_quench)_____________ 5.05849462607899085e+07 OP
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)_____________ (vdalw)________________________ 1.00000000000000000e+01
- Actual_quench_voltage_(kV)_______________________________________________ (vtfskv)_______________________ 9.40493494569615684e+00 OP
+ Actual_quench_voltage_(kV)_______________________________________________ (v_tf_coil_dump_quench_kv)_______________________ 9.40493494569615684e+00 OP
  Maximum_allowed_temp_rise_during_a_quench_(K)____________________________ (tmaxpro)______________________ 1.50000000000000000e+02
  # Central Solenoid Structure #
  Poloidal_area_of_a_CS_turn_[m^2]_________________________________________ (a_cs_turn)____________________ 1.95408026693890671e-03 OP
@@ -1244,7 +1244,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)_____________________________________________________ (itfka)________________________ 8.73382507139995141e+01 OP
  Number_of_TF_coils_______________________________________________________ (ntfc)_________________________ 1.60000000000000000e+01
- Voltage_across_a_TF_coil_during_quench_(kV)______________________________ (vtfskv)_______________________ 9.40493494569615684e+00 OP
+ Voltage_across_a_TF_coil_during_quench_(kV)______________________________ (v_tf_coil_dump_quench_kv)_______________________ 9.40493494569615684e+00 OP
  TF_coil_charge_time_(hours)______________________________________________ (tchghr)_______________________ 4.00000000000000000e+00
  Total_inductance_of_TF_coils_(H)_________________________________________ (ltfth)________________________ 3.46324227171780095e+01 OP
  Total_resistance_of_TF_coils_(ohm)_______________________________________ (rcoils)_______________________ 0.00000000000000000e+00 OP

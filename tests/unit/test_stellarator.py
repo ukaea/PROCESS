@@ -723,7 +723,7 @@ class StstrcParam(NamedTuple):
 
     e_tf_magnetic_stored_total_gj: Any = None
 
-    vtfskv: Any = None
+    v_tf_coil_dump_quench_kv: Any = None
 
     dx_tf_inboard_out_toroidal: Any = None
 
@@ -762,7 +762,7 @@ class StstrcParam(NamedTuple):
             m_tf_coils_total=5204872.8206625767,
             tcritsc=16,
             e_tf_magnetic_stored_total_gj=132.55990646265246,
-            vtfskv=4.3242392290600487,
+            v_tf_coil_dump_quench_kv=4.3242392290600487,
             dx_tf_inboard_out_toroidal=0.67648706726464258,
             stella_config_coilsurface=4817.6999999999998,
             stella_config_coillength=1680,
@@ -786,7 +786,7 @@ class StstrcParam(NamedTuple):
             m_tf_coils_total=5204872.8206625767,
             tcritsc=16,
             e_tf_magnetic_stored_total_gj=132.55990646265246,
-            vtfskv=4.3242392290600487,
+            v_tf_coil_dump_quench_kv=4.3242392290600487,
             dx_tf_inboard_out_toroidal=0.67648706726464258,
             stella_config_coilsurface=4817.6999999999998,
             stella_config_coillength=1680,
@@ -840,7 +840,7 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
         ststrcparam.e_tf_magnetic_stored_total_gj,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "vtfskv", ststrcparam.vtfskv)
+    monkeypatch.setattr(tfcoil_variables, "v_tf_coil_dump_quench_kv", ststrcparam.v_tf_coil_dump_quench_kv)
 
     monkeypatch.setattr(
         tfcoil_variables,

@@ -3279,7 +3279,7 @@ class Acc2251Param(NamedTuple):
 
     uctfbus: Any = None
 
-    vtfskv: Any = None
+    v_tf_coil_dump_quench_kv: Any = None
 
     tfcmw: Any = None
 
@@ -3336,7 +3336,7 @@ class Acc2251Param(NamedTuple):
             uctfbr=1.22,
             uctfps=24,
             uctfbus=100,
-            vtfskv=9.9882637896807953,
+            v_tf_coil_dump_quench_kv=9.9882637896807953,
             tfcmw=0,
             len_tf_bus=3397.0129827974288,
             e_tf_magnetic_stored_total_gj=152.78343648685947,
@@ -3367,7 +3367,7 @@ class Acc2251Param(NamedTuple):
             uctfbr=1.22,
             uctfps=24,
             uctfbus=100,
-            vtfskv=10.001287165953382,
+            v_tf_coil_dump_quench_kv=10.001287165953382,
             tfcmw=0,
             len_tf_bus=3397.0129827974288,
             e_tf_magnetic_stored_total_gj=152.98264590137683,
@@ -3418,7 +3418,7 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "uctfbus", acc2251param.uctfbus)
 
-    monkeypatch.setattr(tfcoil_variables, "vtfskv", acc2251param.vtfskv)
+    monkeypatch.setattr(tfcoil_variables, "v_tf_coil_dump_quench_kv", acc2251param.v_tf_coil_dump_quench_kv)
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc2251param.tfcmw)
 
