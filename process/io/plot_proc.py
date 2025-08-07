@@ -3370,6 +3370,48 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
         y = ycorner + c * np.sin(beta) - dx_beam_shield * np.sin(beta)
         axis.plot([xouter, x], [youter, y], linestyle="dotted", color="black")
 
+    # Draw dividing lines in the blanket (inboard modules, toroidal direction)
+    n_blkt_inboard_modules_toroidal = mfile_data.data[
+        "n_blkt_inboard_modules_toroidal"
+    ].get_scan(scan)
+    if n_blkt_inboard_modules_toroidal > 1:
+        # Calculate the angular spacing for each module
+        spacing = rtangle / (n_blkt_inboard_modules_toroidal / 4)
+        r1, _ = cumulative_radial_build2("dr_shld_inboard", mfile_data, scan)
+        r2, _ = cumulative_radial_build2("dr_blkt_inboard", mfile_data, scan)
+        for i in range(1, int(n_blkt_inboard_modules_toroidal / 4)):
+            ang = i * spacing
+            # Draw a line from r1 to r2 at angle ang
+            axis.plot(
+                [r1 * np.cos(ang), r2 * np.cos(ang)],
+                [r1 * np.sin(ang), r2 * np.sin(ang)],
+                color="black",
+                linestyle="-",
+                linewidth=1.5,
+                zorder=100,
+            )
+
+    # Draw dividing lines in the blanket (outboard modules, toroidal direction)
+    n_blkt_outboard_modules_toroidal = mfile_data.data[
+        "n_blkt_outboard_modules_toroidal"
+    ].get_scan(scan)
+    if n_blkt_outboard_modules_toroidal > 1:
+        # Calculate the angular spacing for each module
+        spacing = rtangle / (n_blkt_outboard_modules_toroidal / 4)
+        r1, _ = cumulative_radial_build2("dr_fw_outboard", mfile_data, scan)
+        r2, _ = cumulative_radial_build2("dr_blkt_outboard", mfile_data, scan)
+        for i in range(1, int(n_blkt_outboard_modules_toroidal / 4)):
+            ang = i * spacing
+            # Draw a line from r1 to r2 at angle ang
+            axis.plot(
+                [r1 * np.cos(ang), r2 * np.cos(ang)],
+                [r1 * np.sin(ang), r2 * np.sin(ang)],
+                color="black",
+                linestyle="-",
+                linewidth=1.5,
+                zorder=100,
+            )
+
     # Ranges
     # ---
     # DEMO : Fixed ranges for comparison
