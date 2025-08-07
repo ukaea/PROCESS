@@ -226,8 +226,8 @@ class DCLL(BlanketLibrary):
             po.ovarre(
                 self.outfile,
                 "Fraction of outboard first wall area covered by HCD and diagnostics",
-                "(v_tf_coil_dump_quench_max_kv)",
-                fwbs_variables.v_tf_coil_dump_quench_max_kv,
+                "(f_a_fw_outboard_hcd)",
+                fwbs_variables.f_a_fw_outboard_hcd,
             )
             po.ovarre(self.outfile, "Blanket coverage factor", "(covf)", covf)
 

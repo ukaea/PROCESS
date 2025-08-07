@@ -393,6 +393,7 @@ OBS_VARS = {
     "vdalw": "v_tf_coil_dump_quench_max_kv",
     "vvhealw": None,
     "zeffmax": "zeff_max",
+    "f_a_fw_hcd": "f_a_fw_outboard_hcd",
 }
 
 OBS_VARS_HELP = {
