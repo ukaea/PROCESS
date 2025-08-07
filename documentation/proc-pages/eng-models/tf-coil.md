@@ -229,10 +229,33 @@ This function calculates the required currents in the TF coils given a required 
 
 --------------------
 
+### TF Forces | `tf_field_and_force()`
 
+This function calculates the centering and vertical forces on a TF coil
 
+1. The inner and outer radial positions of the winding packs are calculated depending on the coil type.
 
-### TF coil joints
+2. The centering force **per unit length** of the inboard is:
+
+  $$
+  F_{\text{centering}} = \frac{I_{\text{TF,coil}}\overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}}}{2}
+  $$
+
+  This assumes the average field in the TF coil is half the peak value, which is true for the infinitely long circular conductor approximation.
+
+The total vertical force is:
+
+$$
+F_{\text{Z}} = \frac{B_{\text{T}} R_0 I_{\text{TF,coil}}}{2 \times dR_{\text{TF,WP}}^2} \times \\
+ \left[R_{\text{TF-inner,WP-outer}}^2 \ln{\left(\frac{R_{\text{TF-inner,WP-outer}}}{R_{\text{TF-inner,WP-inner}}}\right)} \\ 
+ + R_{\text{TF-outer,WP-inner}}^2 \ln{\left(\frac{R_{\text{TF-outer,WP-inner}}+dR_{\text{TF,WP}}}{R_{\text{TF-outer,WP-inner}}}\right)} \\
+ + dR_{\text{TF,WP}}^2 \ln{\left(\frac{R_{\text{TF-outer,WP-inner}}+dR_{\text{TF,WP}}}{R_{\text{TF-inner,WP-inner}}}\right)} -dR_{\text{TF,WP}}\left(R_{\text{TF-inner,WP-outer}} + \right)
+ \right]
+$$
+
+-----------------------
+
+## TF coil joints
 
 <p style='text-align: justify;'>
   Another aspect of the TF coil design is the presence of demountable joints.

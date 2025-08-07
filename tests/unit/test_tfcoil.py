@@ -543,7 +543,7 @@ class TfFieldAndForceParam(NamedTuple):
         ),
     ),
 )
-def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
+def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     """
     Automatically generated Regression Unit Test for tf_field_and_force.
 
@@ -551,126 +551,42 @@ def test_tf_field_and_force(tffieldandforceparam, monkeypatch, tfcoil):
 
     :param tffieldandforceparam: the data used to mock and assert in this test.
     :type tffieldandforceparam: tffieldandforceparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "rminor", tffieldandforceparam.rminor)
-
-    monkeypatch.setattr(physics_variables, "rmajor", tffieldandforceparam.rmajor)
-
-    monkeypatch.setattr(physics_variables, "bt", tffieldandforceparam.bt)
-
-    monkeypatch.setattr(physics_variables, "itart", tffieldandforceparam.itart)
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_outboard_mid", tffieldandforceparam.r_tf_outboard_mid
+    cforce, vforce, vforce_outboard, vforce_inboard_tot, f_vforce_inboard = (
+        tfcoil.tf_field_and_force(
+            i_tf_sup=tffieldandforceparam.i_tf_sup,
+            r_tf_wp_inboard_outer=tffieldandforceparam.r_tf_wp_inboard_outer,
+            r_tf_wp_inboard_inner=tffieldandforceparam.r_tf_wp_inboard_inner,
+            r_tf_outboard_in=tffieldandforceparam.r_tf_outboard_in,
+            dx_tf_wp_insulation=tffieldandforceparam.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tffieldandforceparam.dx_tf_wp_insertion_gap,
+            b_tf_inboard_peak=tffieldandforceparam.b_tf_inboard_peak,
+            c_tf_total=tffieldandforceparam.c_tf_total,
+            n_tf_coils=tffieldandforceparam.n_tf_coils,
+            dr_tf_plasma_case=tffieldandforceparam.dr_tf_plasma_case,
+            rmajor=tffieldandforceparam.rmajor,
+            bt=tffieldandforceparam.bt,
+            r_cp_top=tffieldandforceparam.r_cp_top,
+            itart=tffieldandforceparam.itart,
+            i_cp_joints=tffieldandforceparam.i_cp_joints,
+            f_vforce_inboard=tffieldandforceparam.f_vforce_inboard,
+        )
     )
 
-    monkeypatch.setattr(
-        build_variables, "r_vv_inboard_out", tffieldandforceparam.r_vv_inboard_out
-    )
+    assert vforce == pytest.approx(tffieldandforceparam.expected_vforce)
 
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_mid", tffieldandforceparam.r_tf_inboard_mid
-    )
+    assert cforce == pytest.approx(tffieldandforceparam.expected_cforce)
 
-    monkeypatch.setattr(build_variables, "r_cp_top", tffieldandforceparam.r_cp_top)
-
-    monkeypatch.setattr(tfcoil_variables, "vforce", tffieldandforceparam.vforce)
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", tffieldandforceparam.n_tf_coils)
-
-    monkeypatch.setattr(tfcoil_variables, "cforce", tffieldandforceparam.cforce)
-
-    monkeypatch.setattr(tfcoil_variables, "c_tf_total", tffieldandforceparam.c_tf_total)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "b_tf_inboard_peak", tffieldandforceparam.b_tf_inboard_peak
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tffieldandforceparam.i_tf_sup)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "f_vforce_inboard", tffieldandforceparam.f_vforce_inboard
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "vforce_outboard", tffieldandforceparam.vforce_outboard
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_insulation",
-        tffieldandforceparam.dx_tf_wp_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_turn_insulation",
-        tffieldandforceparam.dx_tf_turn_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dr_tf_wp_with_insulation",
-        tffieldandforceparam.dr_tf_wp_with_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_insertion_gap",
-        tffieldandforceparam.dx_tf_wp_insertion_gap,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "i_cp_joints", tffieldandforceparam.i_cp_joints
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_plasma_case", tffieldandforceparam.dr_tf_plasma_case
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "r_tf_outboard_in", tffieldandforceparam.r_tf_outboard_in
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "r_tf_wp_inboard_inner",
-        tffieldandforceparam.r_tf_wp_inboard_inner,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "r_tf_wp_inboard_outer",
-        tffieldandforceparam.r_tf_wp_inboard_outer,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "vforce_inboard_tot", tffieldandforceparam.vforce_inboard_tot
-    )
-
-    tfcoil.tf_field_and_force()
-
-    assert tfcoil_variables.vforce == pytest.approx(
-        tffieldandforceparam.expected_vforce
-    )
-
-    assert tfcoil_variables.cforce == pytest.approx(
-        tffieldandforceparam.expected_cforce
-    )
-
-    assert tfcoil_variables.f_vforce_inboard == pytest.approx(
+    assert f_vforce_inboard == pytest.approx(
         tffieldandforceparam.expected_f_vforce_inboard
     )
 
-    assert tfcoil_variables.vforce_outboard == pytest.approx(
+    assert vforce_outboard == pytest.approx(
         tffieldandforceparam.expected_vforce_outboard
     )
 
-    assert sctfcoil_module.vforce_inboard_tot == pytest.approx(
+    assert vforce_inboard_tot == pytest.approx(
         tffieldandforceparam.expected_vforce_inboard_tot
     )
 
