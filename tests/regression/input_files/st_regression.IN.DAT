@@ -1500,9 +1500,9 @@ tftmp = 20.0
 * icc = 44
 * DESCRIPTION:   Peak Centrepost Temperature Upper Limit (TART)
 * JUSTIFICATION: Engineering requirement, not used
-* VARIABLES:     itart, ptempalw(max peak CP temperature). tcpmax calculated in-situ
+* VARIABLES:     itart, temp_cp_max(max peak CP temperature). tcpmax calculated in-situ
 
-* ptempalw = 30.
+* temp_cp_max = 30.
 * DESCRIPTION:   Maximum Peak Centrepost Temperature (K) (icc=44) 
 * JUSTIFICATION: Unknown, seems high compared to constrained average
 

@@ -543,7 +543,7 @@ contains
       'Separatrix density consistency   ', &
       'CS Tresca yield criterion        ', &
       'Psep >= Plh + Paux               ', &
-      'TFC quench < temp_croco_quench_max          ', &
+      'TFC quench <temp_croco_quench_max', &
       'TFC current/copper area < Max    ', &
       'Eich critical separatrix density ', &
       'TFC current per turn upper limit ', &

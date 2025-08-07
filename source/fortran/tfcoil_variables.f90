@@ -786,7 +786,7 @@ module tfcoil_variables
   real(dp) :: p_tf_leg_resistive
   !! Summed resistive power in the TF coil legs [W]. Remain 0 if `itart=0`.
 
-  real(dp) :: ptempalw
+  real(dp) :: temp_cp_max
   !! maximum peak centrepost temperature (K) (`constraint equation 44`)
 
   real(dp) :: rcool

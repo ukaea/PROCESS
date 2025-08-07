@@ -1150,7 +1150,7 @@ INPUT_VARIABLES = {
     ),
     "pseprmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 60.0)),
     "ptargf": InputVariable(fortran.ife_variables, float, range=(0.1, 100.0)),
-    "ptempalw": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 573.15)),
+    "temp_cp_max": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 573.15)),
     "ptfnucmax": InputVariable(fortran.constraint_variables, float, range=(1e-06, 1.0)),
     "pulsetimings": InputVariable(
         data_structure.times_variables, float, range=(0.0, 1.0)

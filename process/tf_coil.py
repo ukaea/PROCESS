@@ -5482,7 +5482,7 @@ def init_tfcoil_variables():
     tfv.p_cp_coolant_pump_elec = 0.0
     tfv.p_cp_resistive = 0.0
     tfv.p_tf_leg_resistive = 0.0
-    tfv.ptempalw = 473.15  # 200 C
+    tfv.temp_cp_max = 473.15  # 200 C
     tfv.rcool = 0.005
     tfv.tcoolin = 313.15  # 40 C
     tfv.dtiocool = 0.0

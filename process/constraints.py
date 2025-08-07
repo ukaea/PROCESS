@@ -1249,7 +1249,7 @@ def constraint_equation_44():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fptemp: f-value for peak centrepost temperature
-    ptempalw: maximum peak centrepost temperature (K)
+    temp_cp_max: maximum peak centrepost temperature (K)
     tcpmax: peak centrepost temperature (K)
     itart: switch for spherical tokamak (ST) models:
     - 0: use conventional aspect ratio models;
@@ -1259,14 +1259,14 @@ def constraint_equation_44():
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
     if fortran.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
-        ptempalw = fortran.tfcoil_variables.ptempalw - 273.15
+        temp_cp_max = fortran.tfcoil_variables.temp_cp_max - 273.15
         tcpmax = fortran.tfcoil_variables.tcpmax - 273.15
     else:
-        ptempalw = fortran.tfcoil_variables.ptempalw
+        temp_cp_max = fortran.tfcoil_variables.temp_cp_max
         tcpmax = fortran.tfcoil_variables.tcpmax
 
-    cc = tcpmax / ptempalw - 1.0 * fortran.constraint_variables.fptemp
-    return ConstraintResult(cc, ptempalw * (1.0 - cc), tcpmax * cc)
+    cc = tcpmax / temp_cp_max - 1.0 * fortran.constraint_variables.fptemp
+    return ConstraintResult(cc, temp_cp_max * (1.0 - cc), tcpmax * cc)
 
 
 @ConstraintManager.register_constraint(45, "", ">=")
