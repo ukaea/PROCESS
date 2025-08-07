@@ -93,6 +93,7 @@ from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
+from process.process_output import oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
@@ -482,6 +483,9 @@ class SingleRun:
         Files being handled by Fortran must be closed before attempting to
         write to them using Python, otherwise only parts are written.
         """
+        oheadr(fortran.constants.nout, "End of PROCESS Output")
+        oheadr(fortran.constants.iotty, "End of PROCESS Output")
+        oheadr(fortran.constants.nout, "Copy of PROCESS Input Follows")
         fortran.init_module.finish()
 
     def append_input(self):

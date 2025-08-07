@@ -1,21 +1,86 @@
+from contextlib import suppress
+
 import numpy as np
 
-from process.fortran import constants, process_output_fortran
+from process.fortran import constants, numerics, process_output_fortran
 
 # necessary to avoid using process_output in the code through
 # two different interfaces
-ocentr = process_output_fortran.ocentr
-ostars = process_output_fortran.ostars
-oheadr = process_output_fortran.oheadr
-oshead = process_output_fortran.oshead
-oblnkl = process_output_fortran.oblnkl
-osubhd = process_output_fortran.osubhd
-ocmmnt = process_output_fortran.ocmmnt
 write = process_output_fortran.write
-dblcol = process_output_fortran.dblcol
-ovarin = process_output_fortran.ovarin
-ovarst = process_output_fortran.ovarst
-obuild = process_output_fortran.obuild
+
+
+def ocentr(file, string: str, width: int, *, character="*"):
+    """Write a centred header within a line of characters to a file
+
+    :param file: the integer unit of the file
+    :param string: the heading text
+    :param width: the desired with of the header
+    :param character: the character to pad the heading with (*)
+    """
+    write(file, f"{f' {string} ':{character}^{width}}")
+    write(constants.mfile, f"# {string} #")
+
+
+def ostars(file, width: int, *, character="*"):
+    """Write a line of characters to a file
+
+    :param file: the integer unit of the file
+    :param width: the desired with of the line
+    :param character: the character to fill the line with (*)
+    """
+    write(file, character * width)
+
+
+def oheadr(file, string: str, *, width: int = 110, character="*"):
+    """Write a centred header within a line of characters between two blank lines
+
+    :param file: the integer unit of the file
+    :param string: the heading text
+    :param width: the desired with of the header
+    :param character: the character to pad the heading with (*)
+    """
+    oblnkl(file)
+    ocentr(file, string, width, character=character)
+    oblnkl(file)
+
+
+def oshead(file, string: str, *, width: int = 80, character="*"):
+    """Write a short centred header within a line of characters between two blank lines
+
+    :param file: the integer unit of the file
+    :param string: the heading text
+    :param width: the desired with of the header
+    :param character: the character to pad the heading with (*)
+    """
+    oheadr(file, string, width=width, character=character)
+
+
+def oblnkl(file):
+    """Write a blank line to a file
+
+    :param file: the integer unit of the file
+    """
+    write(file, " ")
+
+
+def osubhd(file, string):
+    """Write a subheading between two blank lines
+
+    :param file: the integer unit of the file
+    :param string: the heading text
+    """
+    oblnkl(file)
+    write(file, string)
+    oblnkl(file)
+
+
+def ocmmnt(file, string: str):
+    """Write a comment to a file
+
+    :param file: the integer unit of the file
+    :param string: the comment text
+    """
+    write(file, string)
 
 
 def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
@@ -28,10 +93,23 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
 
     if isinstance(value, np.ndarray):
         value = value.item()
-    elif isinstance(value, str):
-        value = float(value)
+    if isinstance(value, bytes):
+        # TODO: remove when Fortran is gone
+        value = value.decode().strip()
+    if isinstance(value, str):
+        # try and convert the value to a float
+        # if it fails, leave as a string
+        with suppress(ValueError):
+            value = float(value)
 
-    line = f"{description}{replacement_character} {varname}{replacement_character} {value:.17e} {output_flag}"
+    format_value = f"{value:.17e}" if isinstance(value, float) else f"{value: >12}"
+
+    if varnam.strip("()") in numerics.name_xc:
+        # MDK add ITV label if it is an iteration variable
+        # The ITV flag overwrites the output_flag
+        output_flag = "ITV"
+
+    line = f"{description}{replacement_character} {varname}{replacement_character} {format_value} {output_flag}"
     write(file, line)
     if file != constants.mfile:
         ovarre(constants.mfile, descr, varnam, value, output_flag)
@@ -43,3 +121,15 @@ def ocosts(file, varnam: str, descr: str, value):
 
 def ovarrf(file, descr: str, varnam: str, value, output_flag: str = ""):
     ovarre(file, descr, varnam, value, output_flag)
+
+
+def ovarin(file, descr: str, varnam: str, value, output_flag: str = ""):
+    ovarre(file, descr, varnam, value, output_flag)
+
+
+def ovarst(file, descr: str, varnam: str, value, output_flag: str = ""):
+    ovarre(file, descr, varnam, value, output_flag)
+
+
+def obuild(file, descr: str, thick: float, total: float, variable_name: str = ""):
+    write(file, f"{descr:<50}{thick:.3e}{' ':<10}{total:.3e}  {variable_name}")
