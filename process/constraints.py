@@ -1,3 +1,4 @@
+import logging
 from collections.abc import Callable, Hashable
 from dataclasses import dataclass
 from typing import ClassVar, Literal
@@ -9,6 +10,8 @@ import process.fortran as fortran
 from process.exceptions import ProcessError, ProcessValueError
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -1034,7 +1037,7 @@ def constraint_equation_33():
     j_tf_wp: winding pack current density (A/m2)
     """
     if fortran.constraint_variables.fiooic > 0.7:
-        fortran.error_handling.report_error(285)
+        logger.error("fiooic shouldn't be above 0.7 for engineering reliability")
 
     cc = (
         fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.j_tf_wp_critical

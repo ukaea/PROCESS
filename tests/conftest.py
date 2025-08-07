@@ -10,7 +10,7 @@ import pytest
 from _pytest.fixtures import SubRequest
 from system_check import system_compatible
 
-from process.fortran import error_handling as eh
+from process.log import logging_model_handler
 
 
 def pytest_addoption(parser):
@@ -128,8 +128,7 @@ def initialise_error_module():
     Initialise the error module initially otherwise segmentation faults can
     occur when tested subroutines raise errors.
     """
-    eh.init_error_handling()
-    eh.initialise_error_list()
+    logging_model_handler.clear_logs()
 
 
 @pytest.fixture
@@ -143,7 +142,7 @@ def reinitialise_error_module():
     # TODO Perhaps this should be autoused by all tests? Specify use explicitly
     # for now for known error-raisers
     yield
-    eh.init_error_handling()
+    logging_model_handler.clear_logs()
 
 
 @pytest.fixture(autouse=True)

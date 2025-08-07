@@ -41,6 +41,7 @@ from process.hcpb import init_ccfe_hcpb_module
 from process.ife import init_ife_variables
 from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
+from process.log import logging_model_handler
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import (
     init_physics_module,
@@ -66,9 +67,6 @@ def init_process():
     the default values for the global variables, reads in data from
     the input file, and checks the run parameters for consistency.
     """
-    # Initialise error handling
-    fortran.error_handling.initialise_error_list()
-
     # Initialise the program variables
     iteration_variables.initialise_iteration_variables()
 
@@ -255,11 +253,11 @@ def init_all_module_vars():
     run. This matters ever since Process is used as a shared library, rather
     than a 'run-once' executable.
     """
+    logging_model_handler.clear_logs()
     fortran.numerics.init_numerics()
     init_buildings_variables()
     init_cost_variables()
     init_divertor_variables()
-    fortran.error_handling.init_error_handling()
     init_fwbs_variables()
     fortran.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
@@ -295,8 +293,6 @@ def init_all_module_vars():
     init_power_variables()
     init_python_build_variables()
     init_neoclassics_variables()
-
-    fortran.init_module.init_fortran_modules()
 
 
 def check_process(inputs):  # noqa: ARG001
