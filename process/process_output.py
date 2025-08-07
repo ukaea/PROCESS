@@ -5,7 +5,6 @@ from process.fortran import constants, process_output_fortran
 # necessary to avoid using process_output in the code through
 # two different interfaces
 osubhd = process_output_fortran.osubhd
-ocmmnt = process_output_fortran.ocmmnt
 write = process_output_fortran.write
 dblcol = process_output_fortran.dblcol
 ovarin = process_output_fortran.ovarin
@@ -65,6 +64,15 @@ def oblnkl(file):
     :param file: the integer unit of the file
     """
     write(file, " ")
+
+
+def ocmmnt(file, string: str):
+    """Write a comment to a file
+
+    :param file: the integer unit of the file
+    :param string: the comment text
+    """
+    write(file, string)
 
 
 def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
