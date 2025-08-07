@@ -381,6 +381,7 @@ OBS_VARS = {
     "tcycmn": "t_cycle_min",
     "walalw": "pflux_fw_neutron_max_mw",
     "dx_tf_side_case": "dx_tf_side_case_min",
+    "f_a_fw_hcd": "f_a_fw_outboard_hcd",
 }
 
 OBS_VARS_HELP = {
