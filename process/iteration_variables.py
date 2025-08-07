@@ -190,7 +190,7 @@ ITERATION_VARIABLES = {
     123: IterationVariable("foh_stress", fortran.constraint_variables, 0.001, 1.0),
     125: IterationVariable(
         "fimp(03)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -198,7 +198,7 @@ ITERATION_VARIABLES = {
     ),
     126: IterationVariable(
         "fimp(04)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -206,7 +206,7 @@ ITERATION_VARIABLES = {
     ),
     127: IterationVariable(
         "fimp(05)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -214,7 +214,7 @@ ITERATION_VARIABLES = {
     ),
     128: IterationVariable(
         "fimp(06)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -222,7 +222,7 @@ ITERATION_VARIABLES = {
     ),
     129: IterationVariable(
         "fimp(07)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -230,7 +230,7 @@ ITERATION_VARIABLES = {
     ),
     130: IterationVariable(
         "fimp(08)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -238,7 +238,7 @@ ITERATION_VARIABLES = {
     ),
     131: IterationVariable(
         "fimp(09)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -246,7 +246,7 @@ ITERATION_VARIABLES = {
     ),
     132: IterationVariable(
         "fimp(10)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -254,7 +254,7 @@ ITERATION_VARIABLES = {
     ),
     133: IterationVariable(
         "fimp(11)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -262,7 +262,7 @@ ITERATION_VARIABLES = {
     ),
     134: IterationVariable(
         "fimp(12)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -270,7 +270,7 @@ ITERATION_VARIABLES = {
     ),
     135: IterationVariable(
         "fimp(13)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",
@@ -278,7 +278,7 @@ ITERATION_VARIABLES = {
     ),
     136: IterationVariable(
         "fimp(14)",
-        fortran.impurity_radiation_module,
+        data_structure.impurity_radiation_module,
         1e-8,
         0.01,
         target_name="impurity_arr_frac",

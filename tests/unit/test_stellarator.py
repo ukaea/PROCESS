@@ -14,12 +14,15 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import cost_variables, structure_variables
+from process.data_structure import (
+    cost_variables,
+    impurity_radiation_module,
+    structure_variables,
+)
 from process.fortran import (
     build_variables,
     fwbs_variables,
     heat_transport_variables,
-    impurity_radiation_module,
     physics_variables,
     stellarator_configuration,
     stellarator_module,
