@@ -4,7 +4,6 @@ from process.fortran import constants, process_output_fortran
 
 # necessary to avoid using process_output in the code through
 # two different interfaces
-oshead = process_output_fortran.oshead
 oblnkl = process_output_fortran.oblnkl
 osubhd = process_output_fortran.osubhd
 ocmmnt = process_output_fortran.ocmmnt
@@ -48,6 +47,17 @@ def oheadr(file, string: str, *, width: int = 110, character="*"):
     oblnkl(file)
     ocentr(file, string, width, character=character)
     oblnkl(file)
+
+
+def oshead(file, string: str, *, width: int = 80, character="*"):
+    """Write a short centred header within a line of characters between two blank lines
+
+    :param file: the integer unit of the file
+    :param string: the heading text
+    :param width: the desired with of the header
+    :param character: the character to pad the heading with (*)
+    """
+    oheadr(file, string, width=width, character=character)
 
 
 def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
