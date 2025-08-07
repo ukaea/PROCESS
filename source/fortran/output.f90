@@ -22,6 +22,256 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+subroutine ocentr(file,string,width)
+
+    !! Routine to print a centred header within a line of asterisks
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! string : input character string : Character string to be used
+    !! width : input integer : Total width of header
+    !! This routine writes out a centred header within a line of asterisks.
+    !! It cannot cope with a zero-length string; routine
+    !! <A HREF="ostars.html"><CODE>ostars</CODE></A> should be used instead.
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    use numerics, only: active_constraints, ncalls, ipnvars, ioptimz
+    use global_variables, only: run_tests, verbose, output_prefix
+		use constants, only: mfile
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file, width
+    character(len=*), intent(in) :: string
+
+    !  Local variables
+
+    integer :: lh, nstars, nstars2
+    integer, parameter :: maxwidth = 110
+    character(len=maxwidth) :: stars
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    stars = repeat('*',maxwidth)
+
+    lh = len(string)
+
+    if (lh == 0) then
+       call ostars(file,width)
+       return
+    end if
+
+    if (width > maxwidth) then
+       write(*,*) 'Error in routine OCENTR :'
+       write(*,*) 'Maximum width = ',maxwidth
+       write(*,*) 'Requested width = ',width
+       write(*,*) 'PROCESS stopping.'
+       stop 1
+    end if
+
+    if (lh >= width) then
+       write(*,*) 'Error in routine OCENTR :'
+       write(*,*) string
+       write(*,*) 'This is too long to fit into ',width,' columns.'
+       write(*,*) 'PROCESS stopping.'
+       stop 1
+    end if
+
+    !  Number of stars to be printed on the left
+
+    nstars = int( (width-lh)/2 ) - 1
+
+    !  Number of stars to be printed on the right
+
+    nstars2 = width - (nstars+lh+2)
+
+    !  Write the whole line
+
+    write(file,'(t2,a)') stars(1:nstars)//' '//string//' '//stars(1:nstars2)
+
+    write(mfile,'(t2,a)') '#'//' '//string//' '//'#'
+
+  end subroutine ocentr
+
+  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine ostars(file,width)
+
+    !! Routine to print a line of asterisks
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! width : input integer : Total width of header
+    !! This routine writes out a line of asterisks.
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    use global_variables, only: output_prefix, fileprefix
+		use constants, only: mfile
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file, width
+
+    !  Local variables
+
+    integer, parameter :: maxwidth = 110
+    character(len=maxwidth) :: stars
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    stars = repeat('*',maxwidth)
+
+    write(file,'(1x,a)') stars(1:min(width,maxwidth))
+
+  end subroutine ostars
+
+  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine oheadr(file,string)
+
+    !! Routine to print a centred header within a line of asterisks,
+    !! and between two blank lines
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! string : input character string : Character string to be used
+    !! This routine writes out a centred header within a line of
+    !! asterisks, and between two blank lines.
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    use numerics, only: active_constraints, sqsumsq, ioptimz
+    use global_variables, only: vlabel, run_tests, verbose
+		use constants, only: rmu0, pi
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file
+    character(len=*), intent(in) :: string
+
+    !  Local variables
+
+    integer, parameter :: width = 110
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    call oblnkl(file)
+    call ocentr(file,string,width)
+    call oblnkl(file)
+
+  end subroutine oheadr
+
+  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine oshead(file,string)
+
+    !! Routine to print a short, centred header within a line of asterisks,
+    !! and between two blank lines
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! string : input character string : Character string to be used
+    !! This routine writes out a short, centred header within a line of
+    !! asterisks, and between two blank lines.
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+		use global_variables, only: icase
+		use constants, only: pi
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file
+    character(len=*), intent(in) :: string
+
+    !  Local variables
+
+    integer, parameter :: width = 80
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    call oblnkl(file)
+    call ocentr(file,string,width)
+    call oblnkl(file)
+
+  end subroutine oshead
+
+  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine oblnkl(file)
+
+    !! Routine to print a blank line
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! This routine writes out a simple blank line.
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+		use constants, only: pi, nout
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    write(file,10)
+10  format(' ')
+
+  end subroutine oblnkl
+
+    subroutine ocmmnt(file,string)
+
+    !! Routine to print a comment
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! string : input character string : Character string to be used
+    !! This routine writes out a comment line.
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    use numerics, only: boundl, boundu, sqsumsq
+		use global_variables, only: icase, vlabel, iscan_global
+		use constants, only: rmu0
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file
+    character(len=*), intent(in) :: string
+
+    !  Local variables
+
+    integer, parameter :: maxwidth = 110
+    integer :: lh
+!    character(len = maxwidth) :: dummy
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    lh = len(trim(string))
+
+    if (lh == 0) then
+       write(*,*) 'Error in routine OCMMNT :'
+       write(*,*) 'A zero-length string is not permitted.'
+       write(*,*) 'PROCESS stopping.'
+       stop 1
+    end if
+
+    if (lh >= maxwidth) then
+       write(*, *) 'Warning in routine OCMMNT :'
+       write(*, '(A)') string
+!       write(*,*) 'This is too long to fit into ',maxwidth,' columns.'
+       write(*, '(A,i3,A)') 'This is longer than ',maxwidth,' columns.'  ! MK 28/10/2016 Modified previous output to reflect warning message
+       !write(*,*) 'PROCESS stopping.'
+       !stop 1
+    end if
+!    dummy = trim(string)
+    write(file,'(t2,a)') trim(string)
+    !write(file,'(t2,a)') dummy
+  end subroutine ocmmnt
+
   subroutine write(file, string)
     !! Write a string to file.
     !! file : input integer : Fortran output unit identifier
@@ -51,6 +301,87 @@ contains
     write(file,10) desc, val1, val2
     10 format(1x,a,t75,f10.2,t100,f10.2)
   end subroutine dblcol
+
+  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  subroutine ovarre(file,descr,varnam,value,output_flag)
+
+    !! Routine to print out the details of a floating-point
+    !! variable using 'E' format
+    !! author: P J Knight, CCFE, Culham Science Centre
+    !! file : input integer : Fortran output unit identifier
+    !! descr : input character string : Description of the variable
+    !! varnam : input character string : Name of the variable
+    !! value : input real : Value of the variable
+    !! output_flag : optional character
+    !! This routine writes out the description, name and value of a
+    !! double precision variable in E format (e.g.
+    !! <CODE>-1.234E+04</CODE>).
+    !!     !
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    use numerics, only: name_xc
+		use global_variables, only: icase, vlabel
+		use constants, only: mfile, nout
+    implicit none
+
+    !  Arguments
+
+    integer, intent(in) :: file
+    character(len=*), intent(in) :: descr, varnam
+    real(8), intent(in) :: value
+    character(len=3), intent(in), optional :: output_flag
+
+    !  Local variables
+
+    character(len=72) :: dum72
+    character(len=30) :: dum20
+    character(len=20) :: stripped
+    character(len=3) :: flag
+    integer :: dotindex
+
+    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !  Replace descr and varnam with dummy strings of the correct length.
+    !  This counters problems that would occur if the two original strings
+    !  were the wrong length.
+
+    dum72 = descr
+    dum20 = varnam
+    ! Remove the "(" and ")" from the varnam
+    stripped = varnam(2:len(varnam)-1)
+
+    ! May need to strip Python module name (e.g. the pfv. from pfv.j_cs_flat_top_end)
+    ! This ensures the ITV flag is still added when required in output files
+    dotindex = scan(stripped,".")
+    stripped = stripped(dotindex+1:)
+
+    if (present(output_flag)) then
+        flag = output_flag
+    else
+        flag = ''
+    end if
+
+    if (any(name_xc == stripped))  flag = 'ITV'
+
+    if (file /= mfile) then
+       ! MDK add ITV label if it is an iteration variable
+       ! The ITV flag overwrites the output_flag
+       write(file,20) dum72, dum20, value, flag
+    end if
+
+    call underscore(dum72)
+    call underscore(dum20)
+    write(mfile,10) dum72, dum20, value, flag
+
+  ! MFILE.DAT format
+  ! Machine epsilon for double ~2.22e-16, hence require 17 sig figs in significand
+  ! for full precision of a double float
+10  format(1x,a,t75,a,t110,ES23.16e2," ",a,t10)
+  ! OUT.DAT format
+20  format(1x,a,t75,a,t100,1pe10.3, t112, a)
+
+  end subroutine ovarre
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
