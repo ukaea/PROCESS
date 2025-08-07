@@ -540,13 +540,17 @@ class SingleRun:
                     continue
 
                 # Extract the variable name before the separator
-                variable_name = line.split("=", 1)[0].strip()
-                variables_in_in_dat.append(variable_name)
+                raw_variable_name = line.split("=", 1)[0].strip()
+                # handle cases where the variable name might have parentheses
+                variable_name = (
+                    raw_variable_name.split("(", 1)[0]
+                    if "(" in raw_variable_name
+                    else raw_variable_name
+                )
 
                 # Check if the variable is obsolete and needs replacing
                 if variable_name in obsolete_variables:
                     replacement = obsolete_variables.get(variable_name)
-
                     if replace_obsolete:
                         # Prepare replacement or removal
                         if replacement is None:
@@ -563,7 +567,7 @@ class SingleRun:
                                     f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
                                     "Please set their values accordingly."
                                 )
-                            # Replace obsolete variable with updated variable
+                            # Replace obsolete variable
                             modified_line = line.replace(variable_name, replacement, 1)
                             modified_lines.append(
                                 f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
@@ -571,6 +575,7 @@ class SingleRun:
                             changes_made.append(
                                 f"Replaced '{variable_name}' with '{replacement}'"
                             )
+                            variables_in_in_dat.append(variable_name)
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
