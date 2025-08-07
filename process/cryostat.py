@@ -1,10 +1,10 @@
 import numpy as np
 
 from process import process_output as po
+from process.data_structure import buildings_variables
 from process.fortran import (
     blanket_library,
     build_variables,
-    buildings_variables,
     constants,
     fwbs_variables,
     pfcoil_variables,

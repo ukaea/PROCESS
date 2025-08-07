@@ -12,12 +12,12 @@ import process.process_output as process_output
 from process import data_structure
 from process.blanket_library import init_blanket_library
 from process.build import init_build_variables
-from process.buildings import init_buildings_variables
 from process.constraints import ConstraintManager, init_constraint_variables
 from process.current_drive import init_current_drive_variables
 from process.data_structure.build_python_variables import (
     init_build_variables as init_python_build_variables,
 )
+from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
@@ -376,7 +376,7 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     if fortran.physics_variables.f_tritium < 1.0e-3:  # tritium fraction is negligible
-        fortran.buildings_variables.triv = 0.0
+        data_structure.buildings_variables.triv = 0.0
         fortran.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
     if fortran.impurity_radiation_module.fimp[1] != 0.1:
@@ -751,7 +751,7 @@ def check_process(inputs):  # noqa: ARG001
     if data_structure.pulse_variables.i_pulsed_plant == 1:
         fortran.global_variables.icase = "Pulsed tokamak model"
     else:
-        fortran.buildings_variables.esbldgm3 = 0.0
+        data_structure.buildings_variables.esbldgm3 = 0.0
 
     # TF coil
     # -------

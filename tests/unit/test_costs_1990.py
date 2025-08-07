@@ -6,9 +6,10 @@ import numpy as np
 import pytest
 from pytest import approx
 
-from process import fortran
+from process import data_structure, fortran
 from process.costs import Costs
 from process.data_structure import (
+    buildings_variables,
     cost_variables,
     divertor_variables,
     pulse_variables,
@@ -18,7 +19,6 @@ from process.data_structure import (
 )
 from process.fortran import (
     build_variables,
-    buildings_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -202,8 +202,8 @@ def acc2273_param(**kwargs):
     # Default parameters
     defaults = {
         "f_tritium": 0.0001,
-        "volrci": fortran.buildings_variables.volrci,
-        "wsvol": fortran.buildings_variables.wsvol,
+        "volrci": data_structure.buildings_variables.volrci,
+        "wsvol": data_structure.buildings_variables.wsvol,
         "expected": approx(0.0, abs=0.00001),
     }
 
@@ -246,8 +246,8 @@ def acc2273_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc2273()
     # Some may be parameterised
-    monkeypatch.setattr(fortran.buildings_variables, "wsvol", param["wsvol"])
-    monkeypatch.setattr(fortran.buildings_variables, "volrci", param["volrci"])
+    monkeypatch.setattr(data_structure.buildings_variables, "wsvol", param["wsvol"])
+    monkeypatch.setattr(data_structure.buildings_variables, "volrci", param["volrci"])
     monkeypatch.setattr(fortran.physics_variables, "f_tritium", param["f_tritium"])
 
     # Mock result var as negative, as an expected result is 0
@@ -276,8 +276,8 @@ def test_acc2274(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(fortran.buildings_variables, "wsvol", 132304.1)
-    monkeypatch.setattr(fortran.buildings_variables, "volrci", 1299783.4)
+    monkeypatch.setattr(data_structure.buildings_variables, "wsvol", 132304.1)
+    monkeypatch.setattr(data_structure.buildings_variables, "volrci", 1299783.4)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2274", 0)
 
