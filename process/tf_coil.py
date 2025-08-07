@@ -2196,7 +2196,7 @@ class TFCoil:
         tfv.tcpav2 = tfv.tcoolin + dtcncpav + dtfilmav + 0.5e0 * tfv.dtiocool
 
         # Peak wall temperature
-        tfv.tcpmax = tfv.tcoolin + tfv.dtiocool + dtfilmav + dtconcpmx
+        tfv.temp_cp_peak = tfv.tcoolin + tfv.dtiocool + dtfilmav + dtconcpmx
         tcoolmx = tfv.tcoolin + tfv.dtiocool + dtfilmav
         # -------------------------
 
@@ -2323,7 +2323,10 @@ class TFCoil:
                 tfv.tcpav2,
             )
             po.ovarre(
-                self.outfile, "Peak centrepost temperature (K)", "(tcpmax)", tfv.tcpmax
+                self.outfile,
+                "Peak centrepost temperature (K)",
+                "(temp_cp_peak)",
+                tfv.temp_cp_peak,
             )
 
             po.osubhd(self.outfile, "Pump Power :")
@@ -5489,7 +5492,7 @@ def init_tfcoil_variables():
     tfv.temp_cp_average = 373.15  # 100 C
     tfv.tcpav2 = 0.0
     tfv.temp_tf_legs_outboard = -1.0
-    tfv.tcpmax = 0.0
+    tfv.temp_cp_peak = 0.0
     tfv.vcool = 20.0
     tfv.vol_cond_cp = 0.0
     tfv.whtcp = 0.0

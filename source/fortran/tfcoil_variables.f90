@@ -810,7 +810,7 @@ module tfcoil_variables
   !! Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the ouboard
   !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
 
-  real(dp) :: tcpmax
+  real(dp) :: temp_cp_peak
   !! peak centrepost temperature (K)
 
   real(dp) :: vcool
