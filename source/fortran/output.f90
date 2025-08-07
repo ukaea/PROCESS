@@ -48,57 +48,6 @@ contains
 
   end subroutine osubhd
 
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine ocmmnt(file,string)
-
-    !! Routine to print a comment
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! string : input character string : Character string to be used
-    !! This routine writes out a comment line.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use numerics, only: boundl, boundu, sqsumsq
-		use global_variables, only: icase, vlabel, iscan_global
-		use constants, only: rmu0
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-    character(len=*), intent(in) :: string
-
-    !  Local variables
-
-    integer, parameter :: maxwidth = 110
-    integer :: lh
-!    character(len = maxwidth) :: dummy
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    lh = len(trim(string))
-
-    if (lh == 0) then
-       write(*,*) 'Error in routine OCMMNT :'
-       write(*,*) 'A zero-length string is not permitted.'
-       write(*,*) 'PROCESS stopping.'
-       stop 1
-    end if
-
-    if (lh >= maxwidth) then
-       write(*, *) 'Warning in routine OCMMNT :'
-       write(*, '(A)') string
-!       write(*,*) 'This is too long to fit into ',maxwidth,' columns.'
-       write(*, '(A,i3,A)') 'This is longer than ',maxwidth,' columns.'  ! MK 28/10/2016 Modified previous output to reflect warning message
-       !write(*,*) 'PROCESS stopping.'
-       !stop 1
-    end if
-!    dummy = trim(string)
-    write(file,'(t2,a)') trim(string)
-    !write(file,'(t2,a)') dummy
-  end subroutine ocmmnt
-
   subroutine write(file, string)
     !! Write a string to file.
     !! file : input integer : Fortran output unit identifier
