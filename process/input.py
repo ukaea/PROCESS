@@ -156,7 +156,9 @@ INPUT_VARIABLES = {
     "fnesep": InputVariable(fortran.constraint_variables, float, range=(0.1, 20.0)),
     "abktflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "adivflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
-    "admv": InputVariable(fortran.buildings_variables, float, range=(1.0e4, 1.0e6)),
+    "admv": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0e4, 1.0e6)
+    ),
     "airtemp": InputVariable(
         data_structure.water_usage_variables, float, range=(-15.0, 40.0)
     ),
@@ -172,20 +174,22 @@ INPUT_VARIABLES = {
     ),
     "aplasmin": InputVariable(fortran.build_variables, float, range=(0.01, 10.0)),
     "aux_build_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "aux_build_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "aux_build_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "auxcool_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "auxcool_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "auxcool_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "auxcool_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "p_hcd_injected_min_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.01, 100.0)
@@ -219,7 +223,7 @@ INPUT_VARIABLES = {
     ),
     "bigqmin": InputVariable(fortran.constraint_variables, float, range=(0.01, 100.0)),
     "bioshld_thk": InputVariable(
-        fortran.buildings_variables, float, range=(0.25, 25.0)
+        data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
     "bkt_life_csf": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.0, 1.0)
@@ -284,31 +288,33 @@ INPUT_VARIABLES = {
     "cfactr": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "chdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "chdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
-    "chemlab_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "chemlab_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "chemlab_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "chemlab_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "chrad": InputVariable(fortran.ife_variables, float, range=(0.1, 20.0)),
     "cland": InputVariable(data_structure.cost_variables, float, range=(10.0, 100.0)),
-    "clh2": InputVariable(fortran.buildings_variables, float, range=(0.0, 30.0)),
+    "clh2": InputVariable(data_structure.buildings_variables, float, range=(0.0, 30.0)),
     "j_cs_flat_top_end": InputVariable(
         fortran.pfcoil_variables, float, range=(10000.0, 500000000.0)
     ),
     "conf_mag": InputVariable(data_structure.cost_variables, float, range=(0.9, 1.0)),
     "control_buildings_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "control_buildings_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "control_buildings_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "conv": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "coolp": InputVariable(
         fortran.fwbs_variables, float, range=(100000.0, 100000000.0)
@@ -365,35 +371,37 @@ INPUT_VARIABLES = {
         fortran.tfcoil_variables, float, range=(1.0, 1000000.0)
     ),
     "crane_arm_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "crane_clrnc_h": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "crane_clrnc_v": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "croco_thick": InputVariable(
         data_structure.rebco_variables, float, range=(0.001, 0.1)
     ),
-    "cryomag_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "cryomag_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "cryomag_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "cryomag_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "cryostat_clrnc": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "cryostore_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "cryostore_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "cryostore_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "p_cryo_plant_electric_max_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.01, 200.0)
@@ -499,7 +507,7 @@ INPUT_VARIABLES = {
     "dtstor": InputVariable(data_structure.pulse_variables, float, range=(50.0, 500.0)),
     "dx_fw_module": InputVariable(fortran.fwbs_variables, float, range=(0.0005, 0.1)),
     "dz_tf_cryostat": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 20.0)
+        data_structure.buildings_variables, float, range=(0.0, 20.0)
     ),
     "dztop": InputVariable(fortran.tfcoil_variables, float, range=(-0.5, 0.5)),
     "edrive": InputVariable(
@@ -507,34 +515,38 @@ INPUT_VARIABLES = {
     ),
     "eff_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "ejima_coeff": InputVariable(fortran.physics_variables, float, range=(0.1, 1.0)),
-    "elecdist_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "elecdist_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "elecdist_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "elecdist_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "elecload_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "elecload_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "elecload_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "elecload_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "elecstore_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "elecstore_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "elecstore_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "f_p_blkt_multiplication": InputVariable(
         fortran.fwbs_variables, float, range=(1.0, 2.0)
     ),
     "esbldgm3": InputVariable(
-        fortran.buildings_variables, float, range=(1000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
     "eta_ecrh_injector_wall_plug": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
@@ -652,10 +664,10 @@ INPUT_VARIABLES = {
     "fbreed": InputVariable(fortran.ife_variables, float, range=(0.0, 0.999)),
     "fburn": InputVariable(fortran.ife_variables, float, range=(0.01, 1.0)),
     "fc_building_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "fc_building_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "fcap0": InputVariable(data_structure.cost_variables, float, range=(1.0, 1.5)),
     "fcap0cp": InputVariable(data_structure.cost_variables, float, range=(1.0, 1.5)),
@@ -720,7 +732,7 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fncycle": InputVariable(fortran.constraint_variables, float, range=(1e-08, 1.0)),
-    "fndt": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "fndt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "fne0": InputVariable(fortran.physics_variables, float, range=(0.001, 1.0)),
     "fniterpump": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
@@ -858,16 +870,16 @@ INPUT_VARIABLES = {
     ),
     "gapomin": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "gas_buildings_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "gas_buildings_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "gas_buildings_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ground_clrnc": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "n_ecrh_harmonic": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 10.0)
@@ -875,25 +887,25 @@ INPUT_VARIABLES = {
     "hastelloy_thickness": InputVariable(
         data_structure.rebco_variables, float, range=(1e-08, 0.001)
     ),
-    "hccl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "hccl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "hcd_building_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "hcd_building_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "hcd_building_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "hcwt": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "hcwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "heat_sink_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "heat_sink_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "heat_sink_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "hfact": InputVariable(fortran.physics_variables, float, range=(0.01, 10.0)),
     "pflux_div_heat_load_mw": InputVariable(
@@ -902,8 +914,12 @@ INPUT_VARIABLES = {
     "pflux_div_heat_load_max_mw": InputVariable(
         data_structure.divertor_variables, float, range=(0.1, 20.0)
     ),
-    "hot_sepdist": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
-    "hotcell_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "hot_sepdist": InputVariable(
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
+    ),
+    "hotcell_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "p_blkt_coolant_pump_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -918,31 +934,31 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "hw_storage_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "hw_storage_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "hw_storage_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ilw_smelter_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "ilw_smelter_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ilw_smelter_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ilw_storage_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "ilw_storage_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ilw_storage_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ind_plasma_internal_norm": InputVariable(
         fortran.physics_variables, float, range=(0.0, 10.0)
@@ -976,41 +992,41 @@ INPUT_VARIABLES = {
         data_structure.cost_variables, float, range=(10.0, 100.0)
     ),
     "llw_storage_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "llw_storage_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "llw_storage_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "m_s_limit": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "magnet_pulse_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "magnet_pulse_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "magnet_pulse_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "magnet_trains_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "magnet_trains_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "magnet_trains_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "maint_cont_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "maint_cont_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "maint_cont_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "maintenance_fwbs": InputVariable(
         data_structure.cost_variables, float, range=(0.0, 1.0)
@@ -1030,7 +1046,9 @@ INPUT_VARIABLES = {
     "pflux_fw_rad_max": InputVariable(
         fortran.constraint_variables, float, range=(0.1, 10.0)
     ),
-    "mbvfac": InputVariable(fortran.buildings_variables, float, range=(0.9, 3.0)),
+    "mbvfac": InputVariable(
+        data_structure.buildings_variables, float, range=(0.9, 3.0)
+    ),
     "mcdriv": InputVariable(fortran.ife_variables, float, range=(0.1, 10.0)),
     "mvalim": InputVariable(fortran.constraint_variables, float, range=(0.0, 1000.0)),
     "n_cycle_min": InputVariable(
@@ -1041,10 +1059,10 @@ INPUT_VARIABLES = {
         fortran.tfcoil_variables, float, range=(0.0, 100.0)
     ),
     "nbi_sys_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "nbi_sys_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "dx_beam_shield": InputVariable(
         fortran.current_drive_variables, float, range=(0.01, 0.5)
@@ -1095,7 +1113,7 @@ INPUT_VARIABLES = {
         fortran.ife_variables, float, range=(1000000.0, 200000000.0)
     ),
     "pfbldgm3": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "rho_pf_coil": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 0.0001)),
     "pfusife": InputVariable(fortran.ife_variables, float, range=(0.0, 10000.0)),
@@ -1105,7 +1123,9 @@ INPUT_VARIABLES = {
     "p_hcd_secondary_extra_heat_mw": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
     ),
-    "pibv": InputVariable(fortran.buildings_variables, float, range=(1000.0, 100000.0)),
+    "pibv": InputVariable(
+        data_structure.buildings_variables, float, range=(1000.0, 100000.0)
+    ),
     "pifecr": InputVariable(fortran.ife_variables, float, range=(0.0, 100.0)),
     "p_hcd_injected_max": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1000.0)
@@ -1165,7 +1185,7 @@ INPUT_VARIABLES = {
     "q95": InputVariable(fortran.physics_variables, float, range=(1.0, 50.0)),
     "q95_fixed": InputVariable(fortran.constraint_variables, float, range=(1.0, 50.0)),
     "qnty_sfty_fac": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "qnuc": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1000000.0)),
     "r_cp_top": InputVariable(fortran.build_variables, float, range=(0.001, 10.0)),
@@ -1176,30 +1196,32 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, float, range=(0.001, 0.5)
     ),
     "rat": InputVariable(data_structure.vacuum_variables, float, range=(1e-10, 1e-06)),
-    "rbrt": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
-    "rbvfac": InputVariable(fortran.buildings_variables, float, range=(0.9, 3.0)),
-    "rbwt": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
+    "rbvfac": InputVariable(
+        data_structure.buildings_variables, float, range=(0.9, 3.0)
+    ),
+    "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rcool": InputVariable(fortran.tfcoil_variables, float, range=(1e-06, 1.0)),
     "reactor_clrnc": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "reactor_fndtn_thk": InputVariable(
-        fortran.buildings_variables, float, range=(0.25, 25.0)
+        data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
     "reactor_hall_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "reactor_hall_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "reactor_hall_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "reactor_roof_thk": InputVariable(
-        fortran.buildings_variables, float, range=(0.25, 25.0)
+        data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
     "reactor_wall_thk": InputVariable(
-        fortran.buildings_variables, float, range=(0.25, 25.0)
+        data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
     "rebco_thickness": InputVariable(
         data_structure.rebco_variables,
@@ -1229,32 +1251,34 @@ INPUT_VARIABLES = {
     "rinboard": InputVariable(fortran.build_variables, float, range=(0.1, 10.0)),
     "ripmax": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
     "rmajor": InputVariable(fortran.physics_variables, float, range=(0.1, 50.0)),
-    "robotics_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "robotics_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "robotics_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "robotics_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "roughness_fw_channel": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 0.01)
     ),
     "routr": InputVariable(fortran.pfcoil_variables, float, range=(-3.0, 3.0)),
-    "row": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "row": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rpf1": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 3.0)),
     "rpf2": InputVariable(fortran.pfcoil_variables, float, range=(-3.0, 3.0)),
     "rrin": InputVariable(fortran.ife_variables, float, range=(0.1, 50.0)),
     "rrmax": InputVariable(fortran.ife_variables, float, range=(1.0, 50.0)),
     "rrr_tf_cu": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 1000.0)),
-    "rxcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "rxcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "sec_buildings_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "sec_buildings_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "sec_buildings_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "sf_fast_fracture": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(1.0, 10.0)
@@ -1271,9 +1295,9 @@ INPUT_VARIABLES = {
     "shear": InputVariable(fortran.stellarator_variables, float, range=(0.1, 10.0)),
     "dz_shld_lower": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
     "dz_shld_upper": InputVariable(fortran.build_variables, float, range=(0.0, 10.0)),
-    "shmf": InputVariable(fortran.buildings_variables, float, range=(0.0, 1.0)),
+    "shmf": InputVariable(data_structure.buildings_variables, float, range=(0.0, 1.0)),
     "shov": InputVariable(
-        fortran.buildings_variables, float, range=(1000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
     "sig_tf_case_max": InputVariable(
         fortran.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
@@ -1289,15 +1313,15 @@ INPUT_VARIABLES = {
     "sombdr": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "somtdr": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "staff_buildings_area": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "staff_buildings_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "startupratio": InputVariable(
         data_structure.cost_variables, float, range=(0.0, 10.0)
     ),
-    "stcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "stcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "str_cs_con_res": InputVariable(
         fortran.tfcoil_variables, float, range=(-0.02, 0.02)
     ),
@@ -1395,7 +1419,7 @@ INPUT_VARIABLES = {
     "teped": InputVariable(fortran.physics_variables, float, range=(0.0, 20.0)),
     "tesep": InputVariable(fortran.physics_variables, float, range=(0.0, 20.0)),
     "tfcbv": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "dx_tf_wp_insertion_gap": InputVariable(
         fortran.tfcoil_variables, float, range=(1e-10, 0.1)
@@ -1433,35 +1457,35 @@ INPUT_VARIABLES = {
         data_structure.times_variables, int, choices=[0, 1]
     ),
     "transp_clrnc": InputVariable(
-        fortran.buildings_variables, float, range=(0.0, 10.0)
+        data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "tratio": InputVariable(fortran.physics_variables, float, range=(0.0, 2.0)),
-    "trcl": InputVariable(fortran.buildings_variables, float, range=(0.0, 10.0)),
+    "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "triang": InputVariable(fortran.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "triv": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "turbine_hall_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "turbine_hall_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "turbine_hall_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "tw_storage_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "tw_storage_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "tw_storage_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "u_unplanned_cp": InputVariable(
         data_structure.cost_variables, float, range=(0.0, 1.0)
@@ -1598,43 +1622,47 @@ INPUT_VARIABLES = {
     ),
     "wallpf": InputVariable(fortran.fwbs_variables, float, range=(1.0, 2.0)),
     "warm_shop_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "warm_shop_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "warm_shop_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "water_buildings_h": InputVariable(
-        fortran.buildings_variables, float, range=(1.0, 100.0)
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "water_buildings_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "water_buildings_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "watertemp": InputVariable(
         data_structure.water_usage_variables, float, range=(0.0, 25.0)
     ),
     "wgt": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "wgt2": InputVariable(
-        fortran.buildings_variables, float, range=(10000.0, 1000000.0)
+        data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "windspeed": InputVariable(
         data_structure.water_usage_variables, float, range=(0.0, 10.0)
     ),
-    "workshop_h": InputVariable(fortran.buildings_variables, float, range=(1.0, 100.0)),
+    "workshop_h": InputVariable(
+        data_structure.buildings_variables, float, range=(1.0, 100.0)
+    ),
     "workshop_l": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "workshop_w": InputVariable(
-        fortran.buildings_variables, float, range=(10.0, 1000.0)
+        data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "wsvfac": InputVariable(fortran.buildings_variables, float, range=(0.9, 3.0)),
+    "wsvfac": InputVariable(
+        data_structure.buildings_variables, float, range=(0.9, 3.0)
+    ),
     "xi_ebw": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
     "xpertin": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
@@ -1662,8 +1690,10 @@ INPUT_VARIABLES = {
     "i_beta_component": InputVariable(fortran.physics_variables, int, range=(0, 3)),
     "i_beta_fast_alpha": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
     "i_blanket_type": InputVariable(fortran.fwbs_variables, int, choices=[1, 3, 5]),
-    "i_bldgs_size": InputVariable(fortran.buildings_variables, int, choices=[0, 1]),
-    "i_bldgs_v": InputVariable(fortran.buildings_variables, int, choices=[0, 1]),
+    "i_bldgs_size": InputVariable(
+        data_structure.buildings_variables, int, choices=[0, 1]
+    ),
+    "i_bldgs_v": InputVariable(data_structure.buildings_variables, int, choices=[0, 1]),
     "i_blkt_inboard": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "i_bootstrap_current": InputVariable(fortran.physics_variables, int, range=(0, 13)),
     "i_cp_joints": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),

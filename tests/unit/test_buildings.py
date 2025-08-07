@@ -3,10 +3,13 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.buildings import Buildings
-from process.data_structure import cost_variables, divertor_variables
+from process.data_structure import (
+    buildings_variables,
+    cost_variables,
+    divertor_variables,
+)
 from process.fortran import (
     build_variables,
-    buildings_variables,
     current_drive_variables,
     fwbs_variables,
     pfcoil_variables,
