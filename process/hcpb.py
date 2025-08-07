@@ -1549,25 +1549,25 @@ class CCFE_HCPB(BlanketLibrary):
             "(abktflnc)",
             cost_variables.abktflnc,
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "No of inboard blanket modules poloidally",
             "(n_blkt_inboard_modules_poloidal)",
             fwbs_variables.n_blkt_inboard_modules_poloidal,
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "No of inboard blanket modules toroidally",
             "(n_blkt_inboard_modules_toroidal)",
             fwbs_variables.n_blkt_inboard_modules_toroidal,
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "No of outboard blanket modules poloidally",
             "(n_blkt_outboard_modules_poloidal)",
             fwbs_variables.n_blkt_outboard_modules_poloidal,
         )
-        po.ovarin(
+        po.ovarre(
             self.outfile,
             "No of outboard blanket modules toroidally",
             "(n_blkt_outboard_modules_toroidal)",
