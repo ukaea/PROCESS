@@ -139,7 +139,7 @@ ITERATION_VARIABLES = {
     68: IterationVariable("fptemp", fortran.constraint_variables, 0.001, 1.0),
     69: IterationVariable("rcool", fortran.tfcoil_variables, 0.001, 0.010),
     70: IterationVariable("vcool", fortran.tfcoil_variables, 1.0, 1.0e2),
-    71: IterationVariable("fq", fortran.constraint_variables, 0.001, 1.0),
+    71: IterationVariable("fq95_min", fortran.constraint_variables, 0.001, 1.0),
     72: IterationVariable("fipir", fortran.constraint_variables, 0.001, 1.0),
     73: IterationVariable(
         "dr_fw_plasma_gap_inboard", fortran.build_variables, 0.001, 10.00

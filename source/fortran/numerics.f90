@@ -276,7 +276,7 @@ module numerics
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool
   !! <LI> (70) vcool
-  !! <LI> (71) fq (f-value for equation 45)
+  !! <LI> (71) fq95_min (f-value for equation 45)
   !! <LI> (72) fipir (f-value for equation 46)
   !! <LI> (73) dr_fw_plasma_gap_inboard
   !! <LI> (74) dr_fw_plasma_gap_outboard

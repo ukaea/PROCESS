@@ -1274,7 +1274,7 @@ def constraint_manager_45():
     """Equation for edge safety factor lower limit (TART)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fq: f-value for edge safety factor
+    fq95_min: f-value for edge safety factor
     q95 : safety factor 'near' plasma edge
     (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
     q95_min: lower limit for edge safety factor
@@ -1286,7 +1286,7 @@ def constraint_manager_45():
 
     cc = (
         1.0
-        - fortran.constraint_variables.fq
+        - fortran.constraint_variables.fq95_min
         * fortran.physics_variables.q95
         / fortran.physics_variables.q95_min
     )
@@ -2403,7 +2403,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fpsepr = 1.0
     fortran.constraint_variables.fptemp = 1.0
     fortran.constraint_variables.fptfnuc = 1.0
-    fortran.constraint_variables.fq = 1.0
+    fortran.constraint_variables.fq95_min = 1.0
     fortran.constraint_variables.fbig_q_plasma_min = 1.0
     fortran.constraint_variables.fradpwr = 0.99
     fortran.constraint_variables.fpflux_fw_rad_max = 1.0

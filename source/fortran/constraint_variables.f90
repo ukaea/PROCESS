@@ -146,7 +146,7 @@ module constraint_variables
   real(dp) :: fptfnuc
   !! f-value for maximum TF coil nuclear heating (`constraint equation 54`, `iteration variable 95`)
 
-  real(dp) :: fq
+  real(dp) :: fq95_min
   !! f-value for edge safety factor (`constraint equation 45`, `iteration variable 71`)
 
   real(dp) :: fbig_q_plasma_min
