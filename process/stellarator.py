@@ -17,6 +17,7 @@ from process.data_structure import (
     divertor_variables,
     neoclassics_variables,
     rebco_variables,
+    stellarator_configuration,
     structure_variables,
     times_variables,
 )
@@ -35,7 +36,6 @@ from process.fortran import (
     physics_module,
     physics_variables,
     sctfcoil_module,
-    stellarator_configuration,
     stellarator_variables,
     tfcoil_variables,
 )
