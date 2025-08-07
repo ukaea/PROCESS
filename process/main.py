@@ -103,6 +103,7 @@ from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
+from process.process_output import oheadr
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
@@ -482,6 +483,9 @@ class SingleRun:
         Files being handled by Fortran must be closed before attempting to
         write to them using Python, otherwise only parts are written.
         """
+        oheadr(fortran.constants.nout, "End of PROCESS Output")
+        oheadr(fortran.constants.iotty, "End of PROCESS Output")
+        oheadr(fortran.constants.nout, "Copy of PROCESS Input Follows")
         fortran.init_module.finish()
 
     def append_input(self):

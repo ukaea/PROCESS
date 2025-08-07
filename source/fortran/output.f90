@@ -22,42 +22,6 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine oheadr(file,string)
-
-    !! Routine to print a centred header within a line of asterisks,
-    !! and between two blank lines
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! string : input character string : Character string to be used
-    !! This routine writes out a centred header within a line of
-    !! asterisks, and between two blank lines.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use numerics, only: active_constraints, sqsumsq, ioptimz
-    use global_variables, only: vlabel, run_tests, verbose
-		use constants, only: rmu0, pi
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-    character(len=*), intent(in) :: string
-
-    !  Local variables
-
-    integer, parameter :: width = 110
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    call oblnkl(file)
-    call ocentr(file,string,width)
-    call oblnkl(file)
-
-  end subroutine oheadr
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   subroutine oshead(file,string)
 
     !! Routine to print a short, centred header within a line of asterisks,
