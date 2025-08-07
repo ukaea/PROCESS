@@ -106,8 +106,8 @@ def objective_function(minmax: int) -> float:
         case 18:
             objective_metric = 1.0
         case 19:
-            objective_metric = -0.5 * (current_drive_variables.bigq / 20.0) - 0.5 * (
-                times_variables.t_burn / 7200.0
-            )
+            objective_metric = -0.5 * (
+                current_drive_variables.big_q_plasma / 20.0
+            ) - 0.5 * (times_variables.t_burn / 7200.0)
 
     return objective_sign * objective_metric

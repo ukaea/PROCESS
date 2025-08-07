@@ -429,7 +429,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)________________________ (pheat)________________________ 7.50000000000000000e+01
  Power_injected_for_current_drive_(MW)____________________________________ (pcurrentdrivemw)______________ 2.52780557223395874e+00
  Maximum_Allowed_Bootstrap_current_fraction_______________________________ (bootstrap_current_fraction_max)_ 9.50000000000000067e-01
- Fusion_gain_factor_Q_____________________________________________________ (bigq)_________________________ 2.05782165194628881e+01 OP
+ Fusion_gain_factor_Q_____________________________________________________ (big_q_plasma)_________________________ 2.05782165194628881e+01 OP
  Auxiliary_current_drive_(A)______________________________________________ (auxiliary_cd)_________________ 1.21587976659329230e+05 OP
  Current_drive_efficiency_(A/W)___________________________________________ (effcd)________________________ 4.81002091279811583e-02 OP
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)________________ (gamcd)________________________ 3.00000000000000044e-01 OP
@@ -708,8 +708,8 @@
  Ripple_amplitude_at_plasma_outboard_midplane_(%)_________________________ (ripple)_______________________ 6.00000000000000533e-01 OP
  Actual_quench_time_(or_time_constant)_(s)________________________________ (tdmptf)_______________________ 1.79728258934420602e+01
  Vacuum_Vessel_stress_on_quench_(Pa)______________________________________ (vv_stress_quench)_____________ 6.29314975367861539e+07 OP
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)_____________ (vdalw)________________________ 1.00000000000000000e+01
- Actual_quench_voltage_(kV)_______________________________________________ (vtfskv)_______________________ 9.99244747689453128e+00 OP
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)_____________ (v_tf_coil_dump_quench_max_kv)________________________ 1.00000000000000000e+01
+ Actual_quench_voltage_(kV)_______________________________________________ (v_tf_coil_dump_quench_kv)_______________________ 9.99244747689453128e+00 OP
  Maximum_allowed_temp_rise_during_a_quench_(K)____________________________ (tmaxpro)______________________ 1.50000000000000000e+02
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              1    
@@ -951,7 +951,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)_____________________________________________________ (itfka)________________________ 8.54626750025380204e+01 OP
  Number_of_TF_coils_______________________________________________________ (ntfc)_________________________ 1.60000000000000000e+01
- Voltage_across_a_TF_coil_during_quench_(kV)______________________________ (vtfskv)_______________________ 9.99244747689453128e+00 OP
+ Voltage_across_a_TF_coil_during_quench_(kV)______________________________ (v_tf_coil_dump_quench_kv)_______________________ 9.99244747689453128e+00 OP
  TF_coil_charge_time_(hours)______________________________________________ (tchghr)_______________________ 4.00000000000000000e+00
  Total_inductance_of_TF_coils_(H)_________________________________________ (ltfth)________________________ 3.36226346757821659e+01 OP
  Total_resistance_of_TF_coils_(ohm)_______________________________________ (rcoils)_______________________ 0.00000000000000000e+00 OP
@@ -1566,7 +1566,7 @@ dx_tf_turn_steel = 0.008012110032981922 * TF coil conduit case thickness (m) (`i
 dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surrounding (m)
 tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
-vdalw    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
+v_tf_coil_dump_quench_max_kv    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 
 *-----------------Times Variables------------------*

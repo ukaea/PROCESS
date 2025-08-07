@@ -148,7 +148,7 @@ def main(args=None):
         "oacdcp",
         "pflux_fw_neutron_max_mw",
         "beamfus0",
-        "fqval",
+        "fbig_q_plasma_min",
         "te",
         "boundu(15)",
         "beta_norm_max",

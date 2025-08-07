@@ -648,10 +648,10 @@ module tfcoil_variables
   real(dp) :: tmaxpro
   !! maximum temp rise during a quench for protection (K)
 
-  real(dp) :: tmax_croco
+  real(dp) :: temp_croco_quench_max
   !! CroCo strand: maximum permitted temp during a quench (K)
 
-  real(dp) :: croco_quench_temperature
+  real(dp) :: temp_croco_quench
   !! CroCo strand: Actual temp reached during a quench (K)
 
   real(dp) :: temp_tf_cryo
@@ -660,7 +660,7 @@ module tfcoil_variables
   real(dp) :: n_tf_coil_turns
   !! number of turns per TF coil
 
-  real(dp) :: vdalw
+  real(dp) :: v_tf_coil_dump_quench_max_kv
   !! max voltage across TF coil during quench (kV) (`iteration variable 52`)
 
   real(dp) :: vforce
@@ -682,7 +682,7 @@ module tfcoil_variables
   real(dp) :: vtfkv
   !! TF coil voltage for resistive coil including bus (kV)
 
-  real(dp) :: vtfskv
+  real(dp) :: v_tf_coil_dump_quench_kv
   !! voltage across a TF coil during quench (kV)
 
   real(dp) :: whtcas
@@ -786,7 +786,7 @@ module tfcoil_variables
   real(dp) :: p_tf_leg_resistive
   !! Summed resistive power in the TF coil legs [W]. Remain 0 if `itart=0`.
 
-  real(dp) :: ptempalw
+  real(dp) :: temp_cp_max
   !! maximum peak centrepost temperature (K) (`constraint equation 44`)
 
   real(dp) :: rcool
@@ -810,7 +810,7 @@ module tfcoil_variables
   !! Average temperature of the TF outboard legs [K]. If `temp_tf_legs_outboard=-1.0`, the ouboard
   !! legs and CP temperatures are the same. Fixed for now, should use a contraints eq like temp_cp_average
 
-  real(dp) :: tcpmax
+  real(dp) :: temp_cp_peak
   !! peak centrepost temperature (K)
 
   real(dp) :: vcool

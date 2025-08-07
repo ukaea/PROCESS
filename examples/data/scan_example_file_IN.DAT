@@ -130,7 +130,7 @@ fiooic = 0.65
 icc = 34
 ixc = 51 * fvdump
 fvdump = 1.0
-vdalw = 10.0
+v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*

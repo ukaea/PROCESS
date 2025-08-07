@@ -313,7 +313,7 @@ dr_tf_nose_case   = 0.495 * Inboard tf coil case outer (non-plasma side) thickne
 dx_tf_turn_steel = 0.008 * Tf coil conduit case thickness (m)
 dx_tf_wp_insulation   = 0.008 * Ground insulation thickness surrounding winding pack (m)
 tmargmin = 1.500 * Minimum allowable temperature margin (cs and tf coils) (k)
-vdalw    = 10.00 * Max voltage across tf coil during quench (kv)
+v_tf_coil_dump_quench_max_kv    = 10.00 * Max voltage across tf coil during quench (kv)
 f_a_tf_turn_cable_space_extra_void     = 0.300 * Coolant fraction of tfc 'cable' (i_tf_sup=1); or of tfc leg (i_tf_sup=0)
 i_tf_sc_mat = 5
 *strncon = -0.0066
@@ -355,7 +355,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fstrcond       =  9.2007E-01
                      fiooic         =  6.3437E-01
                      fvdump         =  1.0000E+00
-                     vdalw          =  1.0000E+01
+                     v_tf_coil_dump_quench_max_kv          =  1.0000E+01
                      fjprot         =  1.0000E+00
                      tdmptf         =  2.5829E+01
                      dr_tf_nose_case         =  5.2465E-01

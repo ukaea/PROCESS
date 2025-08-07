@@ -12,7 +12,7 @@ cases, as even a steady-state reactor has to be started up.
 ## Start-up power requirements
 
 The auxiliary power reaching the plasma can be constrained to be more than the minimum allowable 
-value `p_hcd_injected_min_mw` by turning on constraint equation no. 40 with iteration variable no. 64 (`fauxmn`). 
+value `p_hcd_injected_min_mw` by turning on constraint equation no. 40 with iteration variable no. 64 (`fp_hcd_injected_min_mw`). 
 The value of `p_hcd_injected_min_mw` is set in the input file.
 
 The auxiliary power required during the start-up and ramp-up phase is not calculated.  (The code 

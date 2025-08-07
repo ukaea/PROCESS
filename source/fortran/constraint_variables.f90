@@ -21,13 +21,13 @@ module constraint_variables
   real(dp) :: beta_poloidal_max
   !! maximum poloidal beta (`constraint equation 48`)
 
-  real(dp) :: bigqmin
+  real(dp) :: big_q_plasma_min
   !! minimum fusion gain Q (`constraint equation 28`)
 
   real(dp) :: b_tf_inboard_max
   !! maximum peak toroidal field (T) (`constraint equation 25`)
 
-  real(dp) :: fauxmn
+  real(dp) :: fp_hcd_injected_min_mw
   !! f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)
 
   real(dp) :: fbeta_poloidal_eps
@@ -146,10 +146,10 @@ module constraint_variables
   real(dp) :: fptfnuc
   !! f-value for maximum TF coil nuclear heating (`constraint equation 54`, `iteration variable 95`)
 
-  real(dp) :: fq
+  real(dp) :: fq95_min
   !! f-value for edge safety factor (`constraint equation 45`, `iteration variable 71`)
 
-  real(dp) :: fqval
+  real(dp) :: fbig_q_plasma_min
   !! f-value for Q (`constraint equation 28`, `iteration variable 45`)
 
   real(dp) :: fradpwr
@@ -216,7 +216,7 @@ module constraint_variables
   real(dp) :: fpflux_fw_neutron_max_mw
   !! f-value for maximum wall load (`constraint equation 8`, `iteration variable 14`)
 
-  real(dp) :: fzeffmax
+  real(dp) :: fzeff_max
   !! f-value for maximum zeff (`constraint equation 64`, `iteration variable 112`)
 
   real(dp) :: eta_cd_norm_hcd_primary_max
@@ -278,10 +278,6 @@ module constraint_variables
   real(dp) :: t_current_ramp_up_min
   !! minimum plasma current ramp-up time (s) (`constraint equation 41`)
 
-  real(dp) :: vvhealw
-  !! allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-  !! (`i_blanket_type =2`) (`constraint equation 55`)
-
   real(dp) :: pflux_fw_neutron_max_mw
   !! allowable neutron wall-load (MW/m2) (`constraint equation 8`)
 
@@ -297,18 +293,14 @@ module constraint_variables
   !! f-value for constraint that number of pumps < tfno
   !! (`constraint equation 63`, `iteration variable 111`)
 
-  real(dp) :: zeffmax
+  real(dp) :: zeff_max
   !! maximum value for Zeff (`constraint equation 64`)
 
   real(dp) :: fpoloidalpower
   !! f-value for constraint on rate of change of energy in poloidal field
   !! (`constraint equation 66`, `iteration variable 115`)
 
-  real(dp) :: fpsep
-  !! f-value to ensure separatrix power is less than value from Kallenbach divertor
-  !! (Not required as constraint 69 is an equality)
-
-  real(dp) :: fcqt
-  !! TF coil quench temparature remains below tmax_croco
+  real(dp) :: ftemp_croco_quench_max
+  !! TF coil quench temparature remains below temp_croco_quench_max
   !! (`constraint equation 74`, `iteration variable 141`)
 end module constraint_variables

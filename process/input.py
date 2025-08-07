@@ -221,7 +221,9 @@ INPUT_VARIABLES = {
     "betao": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
-    "bigqmin": InputVariable(fortran.constraint_variables, float, range=(0.01, 100.0)),
+    "big_q_plasma_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.01, 100.0)
+    ),
     "bioshld_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
@@ -633,7 +635,9 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fauxbop": InputVariable(fortran.ife_variables, float, range=(0.0, 1.0)),
-    "fauxmn": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fp_hcd_injected_min_mw": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "favail": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fbeta_max": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
@@ -677,7 +681,9 @@ INPUT_VARIABLES = {
     ),
     "fcontng": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "fcqt": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "ftemp_croco_quench_max": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "fcr0": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcspc": InputVariable(fortran.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
@@ -761,7 +767,6 @@ INPUT_VARIABLES = {
     "fradius_beam_tangency": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "fpsep": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepbqar": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fptemp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -776,8 +781,10 @@ INPUT_VARIABLES = {
     "fpumpshld": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "fq": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fqval": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fq95_min": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fbig_q_plasma_min": InputVariable(
+        fortran.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fr_conducting_wall": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
@@ -858,7 +865,7 @@ INPUT_VARIABLES = {
     "fwdzl": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fwdzu": InputVariable(fortran.ife_variables, float, range=(0.0, 10.0)),
     "fzactual": InputVariable(data_structure.reinke_variables, float, range=(0.0, 1.0)),
-    "fzeffmax": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "fzeff_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
     "eta_cd_norm_ecrh": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -1163,7 +1170,7 @@ INPUT_VARIABLES = {
     ),
     "pseprmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 60.0)),
     "ptargf": InputVariable(fortran.ife_variables, float, range=(0.1, 100.0)),
-    "ptempalw": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 573.15)),
+    "temp_cp_max": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 573.15)),
     "ptfnucmax": InputVariable(fortran.constraint_variables, float, range=(1e-06, 1.0)),
     "pulsetimings": InputVariable(
         data_structure.times_variables, float, range=(0.0, 1.0)
@@ -1449,7 +1456,9 @@ INPUT_VARIABLES = {
     "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_cs": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
     "tmargmin_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
-    "tmax_croco": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 1000.0)),
+    "temp_croco_quench_max": InputVariable(
+        fortran.tfcoil_variables, float, range=(4.0, 1000.0)
+    ),
     "tmaxpro": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1000.0)),
     "temp_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
     "tn": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
@@ -1597,7 +1606,9 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "vcool": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 100.0)),
-    "vdalw": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
+    "v_tf_coil_dump_quench_max_kv": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+    ),
     "vfblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "vfcblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "f_a_cs_void": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),
@@ -1613,7 +1624,6 @@ INPUT_VARIABLES = {
     "dz_fw_plasma_gap": InputVariable(
         fortran.build_variables, float, range=(0.0, 10.0)
     ),
-    "vvhealw": InputVariable(fortran.constraint_variables, float, range=(0.01, 10.0)),
     "pflux_fw_neutron_max_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 50.0)
     ),
@@ -1667,7 +1677,7 @@ INPUT_VARIABLES = {
     "xpertin": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
-    "zeffmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
+    "zeff_max": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
     "blktmodel": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "blkttype": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
     "breedmat": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),

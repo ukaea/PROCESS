@@ -20,7 +20,7 @@ module current_drive_variables
   !! <A HREF=http://dx.doi.org/10.1016/S0920-3796(01)00339-8>
   !! Fusion Engineering and Design, Volumes 56-57, October 2001, Pages 517-521</A>)
 
-  real(dp) :: bigq
+  real(dp) :: big_q_plasma
   !! Fusion gain; P_fusion / (P_injection + P_ohmic)
 
   real(dp) :: f_c_plasma_bootstrap

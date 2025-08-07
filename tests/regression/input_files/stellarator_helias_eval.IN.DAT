@@ -80,7 +80,7 @@ dz_xpoint_divertor = 0. * vertical gap between x-point and divertor (m) (if = 0;
 
 *---------------Constraint Variables---------------*
 
-bigqmin  = 1 * minimum fusion gain Q (`constraint equation 28`)
+big_q_plasma_min  = 1 * minimum fusion gain Q (`constraint equation 28`)
 fbeta_max = 1. * f-value for beta limit (`constraint equation 24`; `iteration variable 36`)
 fecrh_ignition = 1.0 * f-value for ecrh ignition constraint
 fflutf   = 1 * f-value for neutron fluence on TF coil (`constraint equation 53`; `iteration variable 92`)
@@ -347,7 +347,7 @@ dr_tf_nose_case   = 0.05 * inboard TF coil case outer (non-plasma side) thicknes
 dx_tf_turn_steel = 0.006 * TF coil conduit case thickness (m) (`iteration variable 58`)
 dx_tf_wp_insulation   = 0.01 * Thickness of the ground insulation layer surrounding (m)
 temp_tf_cryo   = 4.5 * coil temperature for cryogenic plant power calculation (K)
-vdalw    = 12.5 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
+v_tf_coil_dump_quench_max_kv    = 12.5 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 
 *-----------------Times Variables------------------*

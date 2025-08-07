@@ -297,7 +297,7 @@ def main(args=None):
         5: "oacdcp",
         6: "pflux_fw_neutron_max_mw",
         7: "beamfus0",
-        8: "fqval",
+        8: "fbig_q_plasma_min",
         9: "te",
         10: "boundu(15)",
         11: "beta_norm_max",

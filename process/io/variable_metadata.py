@@ -231,7 +231,9 @@ var_dicts = {
     "eta_cd_hcd_primary": VariableMetadata(
         latex=r"$\eta_{\mathrm{CD}}$[$A/W$]", description="CD efficiency", units="A/W"
     ),
-    "bigq": VariableMetadata(latex=r"$Q$", description="Plasma Q value", units=""),
+    "big_q_plasma": VariableMetadata(
+        latex=r"$Q$", description="Plasma Q value", units=""
+    ),
     "f_c_plasma_auxiliary": VariableMetadata(
         latex=r"$f_{\mathrm{CD}}$", description="CD factor", units=""
     ),
