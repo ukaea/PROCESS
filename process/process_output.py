@@ -4,7 +4,6 @@ from process.fortran import constants, process_output_fortran
 
 # necessary to avoid using process_output in the code through
 # two different interfaces
-ostars = process_output_fortran.ostars
 oheadr = process_output_fortran.oheadr
 oshead = process_output_fortran.oshead
 oblnkl = process_output_fortran.oblnkl
@@ -27,6 +26,16 @@ def ocentr(file, string: str, width: int, *, character="*"):
     """
     write(file, f"{f' {string} ':{character}^{width}}")
     write(constants.mfile, f"# {string} #")
+
+
+def ostars(file, width: int, *, character="*"):
+    """Write a centred header within a line of characters to a file
+
+    :param file: the integer unit of the file
+    :param width: the desired with of the line
+    :param character: the character to fill the line with (*)
+    """
+    write(file, character * width)
 
 
 def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):

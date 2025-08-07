@@ -22,39 +22,6 @@ contains
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  subroutine ostars(file,width)
-
-    !! Routine to print a line of asterisks
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! width : input integer : Total width of header
-    !! This routine writes out a line of asterisks.
-    !!     !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    use global_variables, only: output_prefix, fileprefix
-		use constants, only: mfile
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file, width
-
-    !  Local variables
-
-    integer, parameter :: maxwidth = 110
-    character(len=maxwidth) :: stars
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    stars = repeat('*',maxwidth)
-
-    write(file,'(1x,a)') stars(1:min(width,maxwidth))
-
-  end subroutine ostars
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   subroutine oheadr(file,string)
 
     !! Routine to print a centred header within a line of asterisks,
