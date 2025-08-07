@@ -27,14 +27,14 @@ from process.fortran import (
 
 
 class CCFE_HCPB(BlanketLibrary):
-    """author: J Morris (UKAEA)
-
-    This module contains the PROCESS CCFE HCPB blanket model
+    """This module contains the PROCESS CCFE HCPB blanket model
     based on CCFE HCPB model from the PROCESS engineering paper
     PROCESS Engineering paper (M. Kovari et al.)
 
-    ### References
-    - Kovari et al., Fusion Engineering and Design 104 (2016) 9-20
+    :References:
+        - M. Kovari et al., “PROCESS: A systems code for fusion power plants - Part 2: Engineering,”
+        Fusion Engineering and Design, vol. 104, pp. 9-20, Mar. 2016,
+        doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
     def __init__(self) -> None:
@@ -102,10 +102,39 @@ class CCFE_HCPB(BlanketLibrary):
         # Rem : The heating power will be normalized to the neutron power using
         #       the divertor and the centrepost (for itart == 1),
         self.nuclear_heating_magnets(output=output)
-        self.nuclear_heating_fw()
-        self.nuclear_heating_blanket()
-        self.nuclear_heating_shield()
-        self.nuclear_heating_divertor()
+
+        fwbs_variables.p_fw_nuclear_heat_total_mw = self.nuclear_heating_fw(
+            m_fw_total=fwbs_variables.m_fw_total,
+            fw_armour_u_nuc_heating=ccfe_hcpb_module.fw_armour_u_nuc_heating,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+        )
+
+        fwbs_variables.p_blkt_nuclear_heat_total_mw, ccfe_hcpb_module.exp_blanket = (
+            self.nuclear_heating_blanket(
+                m_blkt_total=fwbs_variables.m_blkt_total,
+                p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            )
+        )
+        (
+            fwbs_variables.p_shld_nuclear_heat_mw,
+            ccfe_hcpb_module.exp_shield1,
+            ccfe_hcpb_module.exp_shield2,
+            ccfe_hcpb_module.shld_u_nuc_heating,
+        ) = self.nuclear_heating_shield(
+            itart=physics_variables.itart,
+            dr_shld_outboard=build_variables.dr_shld_outboard,
+            dr_shld_inboard=build_variables.dr_shld_inboard,
+            shield_density=ccfe_hcpb_module.shield_density,
+            whtshld=fwbs_variables.whtshld,
+            x_blanket=ccfe_hcpb_module.x_blanket,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+        )
+
+        fwbs_variables.p_div_nuclear_heat_total_mw = self.nuclear_heating_divertor(
+            n_divertors=physics_variables.n_divertors,
+            p_neutron_total_mw=physics_variables.p_neutron_total_mw,
+            f_ster_div_single=fwbs_variables.f_ster_div_single,
+        )
 
         # Normalisation of the nuclear heating
         # The nuclear heating are noramalized assuming no energy multiplication
@@ -534,126 +563,187 @@ class CCFE_HCPB(BlanketLibrary):
                 tfcoil_variables.m_tf_coils_total,
             )
 
-    def nuclear_heating_fw(self):
-        """Nuclear heating in the FW for CCFE HCPB model
-        author: J. Morris, CCFE, Culham Science Centre
-
-        This subroutine calculates the nuclear heating in the FW
+    def nuclear_heating_fw(
+        self,
+        m_fw_total: float,
+        fw_armour_u_nuc_heating: float,
+        p_fusion_total_mw: float,
+    ) -> float:
         """
-        # Unit heating of FW and armour (W/kg per W of fusion power)
-        ccfe_hcpb_module.fw_armour_u_nuc_heating = 6.25e-7
+        Calculate the nuclear heating in the first wall (FW) for the CCFE HCPB model.
+
+        :param m_fw_total: Total mass of the first wall (kg).
+        :type m_fw_total: float
+        :param fw_armour_u_nuc_heating: Unit nuclear heating of the FW and armour (W/kg per W of fusion power).
+        :type fw_armour_u_nuc_heating: float
+        :param p_fusion_total_mw: Total fusion power (MW).
+        :type p_fusion_total_mw: float
+
+        :returns: Total nuclear heating in the first wall (MW).
+        :rtype: float
+
+        :raises ProcessValueError: If the calculated nuclear heating is negative.
+
+
+        This subroutine calculates the nuclear heating in the FW.
+        """
 
         # Total nuclear heating in FW (MW)
-        fwbs_variables.p_fw_nuclear_heat_total_mw = (
-            fwbs_variables.m_fw_total
-            * ccfe_hcpb_module.fw_armour_u_nuc_heating
-            * physics_variables.p_fusion_total_mw
+        p_fw_nuclear_heat_total_mw = (
+            m_fw_total
+            # Unit heating of FW and armour (W/kg per W of fusion power)
+            * fw_armour_u_nuc_heating
+            * p_fusion_total_mw
         )
 
-        if fwbs_variables.p_fw_nuclear_heat_total_mw < 0:
+        if p_fw_nuclear_heat_total_mw < 0:
             raise ProcessValueError(
-                f"""Error in nuclear_heating_fw. {fwbs_variables.p_fw_nuclear_heat_total_mw = },
-                {physics_variables.p_fusion_total_mw = }, {fwbs_variables.m_fw_total = }"""
+                f"""Error in nuclear_heating_fw. {p_fw_nuclear_heat_total_mw = },
+                {p_fusion_total_mw = }, {m_fw_total = }"""
             )
+        return p_fw_nuclear_heat_total_mw
 
-    def nuclear_heating_blanket(self):
-        """Nuclear heating in the blanket for CCFE HCPB model
-        author: J. Morris, CCFE, Culham Science Centre
-        This subroutine calculates the nuclear heating in the blanket
+    def nuclear_heating_blanket(
+        self, m_blkt_total: float, p_fusion_total_mw: float
+    ) -> tuple[float, float]:
+        """
+        Calculates the nuclear heating in the blanket for the CCFE HCPB model.
+
+        :param m_blkt_total: Total mass of the blanket in kilograms.
+        :type m_blkt_total: float
+        :param p_fusion_total_mw: Total fusion power in megawatts.
+        :type p_fusion_total_mw: float
+
+        :returns:
+            - p_blkt_nuclear_heat_total_mw (float): Total nuclear heating in the blanket (MW).
+            - exp_blanket (float): Exponential blanket factor (dimensionless).
+        :rtype: tuple[float, float]
+
+        :raises ProcessValueError: If the calculated nuclear heating is less than 1 MW.
+
         """
         # Blanket nuclear heating coefficient and exponent
         a = 0.764
         b = 2.476e-3  # 1/tonne
 
         # Mass of the blanket in tonnes
-        mass = fwbs_variables.m_blkt_total / 1000
+        m_blkt_total_tonnes = m_blkt_total / 1000
 
         # Total blanket nuclear heating (MW)
-        ccfe_hcpb_module.exp_blanket = 1 - np.exp(-b * mass)
-        fwbs_variables.p_blkt_nuclear_heat_total_mw = (
-            physics_variables.p_fusion_total_mw * a * ccfe_hcpb_module.exp_blanket
-        )
+        exp_blanket = 1 - np.exp(-b * m_blkt_total_tonnes)
+        p_blkt_nuclear_heat_total_mw = p_fusion_total_mw * a * exp_blanket
 
-        if fwbs_variables.p_blkt_nuclear_heat_total_mw < 1:
-            eh.fdiags[0] = fwbs_variables.p_blkt_nuclear_heat_total_mw
-            eh.fdiags[1] = ccfe_hcpb_module.exp_blanket
-            eh.fdiags[2] = physics_variables.p_fusion_total_mw
-            eh.fdiags[3] = mass
+        if p_blkt_nuclear_heat_total_mw < 1:
+            eh.fdiags[0] = p_blkt_nuclear_heat_total_mw
+            eh.fdiags[1] = exp_blanket
+            eh.fdiags[2] = p_fusion_total_mw
+            eh.fdiags[3] = m_blkt_total_tonnes
             eh.report_error(274)
 
-    def nuclear_heating_shield(self):
-        """Nuclear heating in the shield for CCFE HCPB model
-        author: J. Morris, CCFE, Culham Science Centre
-        This subroutine calculates the nuclear heating in the shield
+        return p_blkt_nuclear_heat_total_mw, exp_blanket
+
+    def nuclear_heating_shield(
+        self,
+        itart: int,
+        dr_shld_outboard: float,
+        dr_shld_inboard: float,
+        shield_density: float,
+        whtshld: float,
+        x_blanket: float,
+        p_fusion_total_mw: float,
+    ) -> tuple[float, float, float, float]:
+        """
+        Calculate the nuclear heating in the shield for the CCFE HCPB model.
+
+        :param itart: Indicator for spherical tokamak (1 if ST, else 0).
+        :type itart: int
+        :param dr_shld_outboard: Outboard shield thickness (m).
+        :type dr_shld_outboard: float
+        :param dr_shld_inboard: Inboard shield thickness (m).
+        :type dr_shld_inboard: float
+        :param shield_density: Shield smeared density (kg/m^3).
+        :type shield_density: float
+        :param whtshld: Shield mass (kg).
+        :type whtshld: float
+        :param x_blanket: Blanket line density (tonne/m^2).
+        :type x_blanket: float
+        :param p_fusion_total_mw: Total fusion power (MW).
+        :type p_fusion_total_mw: float
+
+        :returns:
+            - p_shld_nuclear_heat_mw (float): Total nuclear heating in shield (MW).
+            - exp_shield1 (float): First exponential factor for shield heating.
+            - exp_shield2 (float): Second exponential factor for shield heating.
+            - shld_u_nuc_heating (float): Unit nuclear heating of shield (W/kg/GW of fusion power) x mass.
+        :rtype: tuple[float, float, float, float]
+
+        This method calculates the nuclear heating in the shield using empirical coefficients and exponents,
+        based on the shield's geometry, density, and the total fusion power. The calculation distinguishes
+        between spherical tokamak and conventional configurations for the average shield thickness.
         """
 
         # Shield nuclear heating coefficients and exponents
         f = 6.88e2  # Shield nuclear heating coefficient (W/kg/W)
-        g = 2.723  # Shield nuclear heating exponent m2/tonne
-        h = 0.798  # Shield nuclear heating exponent m2/tonne
+        g = 2.723  # Shield nuclear heating exponent m²/tonne
+        h = 0.798  # Shield nuclear heating exponent m²/tonne
 
         # Calculation of average blanket/shield thickness [m]
-        if physics_variables.itart == 1:
+        if itart == 1:
             # The CP shield in considered in a separate calcualtion
-            th_shield_av = build_variables.dr_shld_outboard
+            dr_shld_average = dr_shld_outboard
         else:
             # Average neutronic shield thickness [m]
-            th_shield_av = 0.5 * (
-                build_variables.dr_shld_outboard + build_variables.dr_shld_inboard
-            )
+            dr_shld_average = 0.5 * (dr_shld_outboard + dr_shld_inboard)
 
         # Decay length [m-2]
-        y = (ccfe_hcpb_module.shield_density / 1000) * th_shield_av
+        y = (shield_density / 1000) * dr_shld_average
 
         # Unit nuclear heating of shield (W/kg/GW of fusion power) x mass
-        ccfe_hcpb_module.exp_shield1 = np.exp(-g * ccfe_hcpb_module.x_blanket)
-        ccfe_hcpb_module.exp_shield2 = np.exp(-h * y)
-        ccfe_hcpb_module.shld_u_nuc_heating = (
-            fwbs_variables.whtshld
-            * f
-            * ccfe_hcpb_module.exp_shield1
-            * ccfe_hcpb_module.exp_shield2
-        )
+        exp_shield1 = np.exp(-g * x_blanket)
+        exp_shield2 = np.exp(-h * y)
+        shld_u_nuc_heating = whtshld * f * exp_shield1 * exp_shield2
 
         # Total nuclear heating in shield (MW)
-        fwbs_variables.p_shld_nuclear_heat_mw = (
-            ccfe_hcpb_module.shld_u_nuc_heating
-            * (physics_variables.p_fusion_total_mw / 1000)
-            / 1.0e6
-        )
+        p_shld_nuclear_heat_mw = shld_u_nuc_heating * (p_fusion_total_mw / 1000) / 1.0e6
 
-    def nuclear_heating_divertor(self):
-        """Nuclear heating in the divertor for CCFE HCPB model
-        author: J. Morris, CCFE, Culham Science Centre
-        This subroutine calculates the nuclear heating in the divertor
+        return p_shld_nuclear_heat_mw, exp_shield1, exp_shield2, shld_u_nuc_heating
+
+    def nuclear_heating_divertor(
+        self,
+        n_divertors: int,
+        p_neutron_total_mw: float,
+        f_ster_div_single: float,
+    ) -> float:
         """
-        # Unfortunately the divertor heating was not tallied in the neutronics calcs
-        # Assume that all the neutron energy + energy multiplication is absorbed in the reactor +
-        # coils. It turns out that f_p_blkt_multiplication is also approx constant, but this is not used. No energy
-        # multiplication in the divertor
+        Calculate the nuclear heating in the divertor for the CCFE HCPB model.
 
-        # Overwrite global variable for f_ster_div_single 07/11/18 SIM: Removed having spoken to JM
-        # f_ster_div_single = 0.115D0
+        This method computes the total nuclear heating deposited in the divertor,
+        based on the number of divertors, the total neutron power, and the solid angle
+        fraction taken by a single divertor.
+
+        :param n_divertors: Number of divertors (1 for single null, 2 for double null configuration).
+        :type n_divertors: int
+        :param p_neutron_total_mw: Total neutron power generated by the plasma (MW).
+        :type p_neutron_total_mw: float
+        :param f_ster_div_single: Solid angle fraction taken by a single divertor (dimensionless).
+        :type f_ster_div_single: float
+
+        :returns: Total nuclear heating in the divertor (MW).
+        :rtype: float
+
+        The calculation multiplies the neutron power by the solid angle fraction for a single divertor,
+        and doubles the result if there are two divertors (double null configuration).
+        """
 
         # Nuclear heating in the divertor just the neutron power times f_ster_div_single
-        if physics_variables.n_divertors == 2:
+        if n_divertors == 2:
             # Double null configuration
-            fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8
-                * physics_variables.p_fusion_total_mw
-                * 2
-                * fwbs_variables.f_ster_div_single
-            )
+            p_div_nuclear_heat_total_mw = p_neutron_total_mw * 2 * f_ster_div_single
         else:
             # single null configuration
-            fwbs_variables.p_div_nuclear_heat_total_mw = (
-                0.8
-                * physics_variables.p_fusion_total_mw
-                * fwbs_variables.f_ster_div_single
-            )
+            p_div_nuclear_heat_total_mw = p_neutron_total_mw * f_ster_div_single
 
-        # No heating of the H & CD
-        fwbs_variables.p_fw_hcd_nuclear_heat_mw = 0.0
+        return p_div_nuclear_heat_total_mw
 
     def powerflow_calc(self, output: bool):
         """Calculations for powerflow
@@ -1518,7 +1608,7 @@ def init_ccfe_hcpb_module():
     ccfe_hcpb_module.x_blanket = 0.0
     ccfe_hcpb_module.x_shield = 0.0
     ccfe_hcpb_module.tfc_nuc_heating = 0.0
-    ccfe_hcpb_module.fw_armour_u_nuc_heating = 0.0
+    ccfe_hcpb_module.fw_armour_u_nuc_heating = 6.25e-7
     ccfe_hcpb_module.shld_u_nuc_heating = 0.0
     ccfe_hcpb_module.exp_blanket = 0.0
     ccfe_hcpb_module.exp_shield1 = 0.0
