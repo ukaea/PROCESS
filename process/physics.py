@@ -15,6 +15,7 @@ from process import (
     process_output as po,
 )
 from process.data_structure import (
+    build_variables,
     divertor_variables,
     pulse_variables,
     reinke_variables,
@@ -22,7 +23,6 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    build_variables,
     constants,
     constraint_variables,
     current_drive_variables,

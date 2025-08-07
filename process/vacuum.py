@@ -4,9 +4,9 @@ import math
 import numpy as np
 
 from process import process_output as po
+from process.data_structure import build_variables as buv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
-from process.fortran import build_variables as buv
 from process.fortran import constants
 from process.fortran import error_handling as eh
 from process.fortran import physics_variables as pv

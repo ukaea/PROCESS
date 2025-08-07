@@ -4,9 +4,9 @@ import math
 import numpy as np
 
 from process import process_output as po
+from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
 from process.data_structure import structure_variables as stv
-from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import pfcoil_variables as pfv

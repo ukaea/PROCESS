@@ -4,10 +4,9 @@ import numpy as np
 import pytest
 
 from process.blanket_library import BlanketLibrary
-from process.data_structure import divertor_variables
+from process.data_structure import build_variables, divertor_variables
 from process.fortran import (
     blanket_library,
-    build_variables,
     fwbs_variables,
     physics_variables,
 )

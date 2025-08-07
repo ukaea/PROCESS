@@ -2,9 +2,9 @@ from typing import Any, NamedTuple
 
 import pytest
 
+from process.data_structure import build_variables
 from process.dcll import DCLL
 from process.fortran import (
-    build_variables,
     current_drive_variables,
     dcll_module,
     fwbs_variables,

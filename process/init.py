@@ -11,12 +11,9 @@ import process.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import data_structure
 from process.blanket_library import init_blanket_library
-from process.build import init_build_variables
 from process.constraints import ConstraintManager, init_constraint_variables
 from process.current_drive import init_current_drive_variables
-from process.data_structure.build_python_variables import (
-    init_build_variables as init_python_build_variables,
-)
+from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
@@ -293,7 +290,6 @@ def init_all_module_vars():
     init_dcll_module()
     init_cost_2015_variables()
     init_power_variables()
-    init_python_build_variables()
     init_neoclassics_variables()
 
     fortran.init_module.init_fortran_modules()
@@ -547,11 +543,15 @@ def check_process(inputs):  # noqa: ARG001
 
     if fortran.physics_variables.i_single_null == 0:
         fortran.physics_variables.n_divertors = 2
-        fortran.build_variables.dz_fw_plasma_gap = (
-            fortran.build_variables.dz_xpoint_divertor
+        data_structure.build_variables.dz_fw_plasma_gap = (
+            data_structure.build_variables.dz_xpoint_divertor
         )
-        fortran.build_variables.dz_shld_upper = fortran.build_variables.dz_shld_lower
-        fortran.build_variables.dz_vv_upper = fortran.build_variables.dz_vv_lower
+        data_structure.build_variables.dz_shld_upper = (
+            data_structure.build_variables.dz_shld_lower
+        )
+        data_structure.build_variables.dz_vv_upper = (
+            data_structure.build_variables.dz_vv_lower
+        )
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
         fortran.physics_variables.n_divertors = 1
@@ -688,9 +688,9 @@ def check_process(inputs):  # noqa: ARG001
 
         # Checking the CP TF top radius
         if (
-            abs(fortran.build_variables.r_cp_top) > 0
+            abs(data_structure.build_variables.r_cp_top) > 0
             or (fortran.numerics.ixc[: fortran.numerics.nvar] == 174).any()
-        ) and fortran.build_variables.i_r_cp_top != 1:
+        ) and data_structure.build_variables.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
             )
@@ -769,10 +769,10 @@ def check_process(inputs):  # noqa: ARG001
         )  # No dr_bore,dr_cs_tf_gap, dr_cs iteration
         and (
             abs(
-                fortran.build_variables.dr_bore
-                + fortran.build_variables.dr_cs_tf_gap
-                + fortran.build_variables.dr_cs
-                + fortran.build_variables.dr_cs_precomp
+                data_structure.build_variables.dr_bore
+                + data_structure.build_variables.dr_cs_tf_gap
+                + data_structure.build_variables.dr_cs
+                + data_structure.build_variables.dr_cs_precomp
             )
             <= 0
         )  # dr_bore + dr_cs_tf_gap + dr_cs = 0
@@ -821,7 +821,7 @@ def check_process(inputs):  # noqa: ARG001
     # CS which is now outside it
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.i_tf_inside_cs == 1
+        and data_structure.build_variables.i_tf_inside_cs == 1
     ):
         raise ProcessValidationError(
             "Cannot have i_tf_bucking >= 2 when i_tf_inside_cs = 1"
@@ -831,7 +831,7 @@ def check_process(inputs):  # noqa: ARG001
     # is used for bucked and wedged design
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.i_cs_precomp == 1
+        and data_structure.build_variables.i_cs_precomp == 1
     ):
         raise ProcessValidationError(
             "No CS precompression structure for bucked and wedged, use i_cs_precomp = 0"
@@ -1057,7 +1057,7 @@ def check_process(inputs):  # noqa: ARG001
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
     if fortran.fwbs_variables.i_blkt_inboard == 0:
-        fortran.build_variables.dr_blkt_inboard = 0.0
+        data_structure.build_variables.dr_blkt_inboard = 0.0
 
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model

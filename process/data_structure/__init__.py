@@ -1,5 +1,5 @@
 from . import (
-    build_python_variables,
+    build_variables,
     buildings_variables,
     cost_2015_variables,
     cost_variables,
@@ -18,7 +18,7 @@ from . import (
 )
 
 __all__ = [
-    "build_python_variables",
+    "build_variables",
     "buildings_variables",
     "cost_2015_variables",
     "cost_variables",
