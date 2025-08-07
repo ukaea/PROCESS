@@ -1661,8 +1661,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Maximum allowed voltage during quench due to insulation (kV)",
-                "(vdalw)",
-                tfcoil_variables.vdalw,
+                "(v_tf_coil_dump_quench_max_kv)",
+                tfcoil_variables.v_tf_coil_dump_quench_max_kv,
             )
             po.ovarre(
                 self.outfile,
@@ -5448,7 +5448,7 @@ def init_tfcoil_variables():
     tfv.temp_croco_quench = 0.0
     tfv.temp_tf_cryo = 4.5
     tfv.n_tf_coil_turns = 0.0
-    tfv.vdalw = 20.0
+    tfv.v_tf_coil_dump_quench_max_kv = 20.0
     tfv.vforce = 0.0
     tfv.f_vforce_inboard = 0.5
     tfv.vforce_outboard = 0.0

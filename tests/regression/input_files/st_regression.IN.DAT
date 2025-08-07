@@ -977,7 +977,7 @@ boundu(50) = 1.0
 * VARIABLES:     v_tf_coil_dump_quench_kv calculated in-situ
 
 *ixc = 52
-*vdalw =  
+*v_tf_coil_dump_quench_max_kv =  
 *boundl(52) = 
 *boundu(52) = 
 * DESCRIPTION:   Max voltage across TF coil during quench (kV) (icc=34)

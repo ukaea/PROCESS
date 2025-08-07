@@ -1582,7 +1582,9 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "vcool": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 100.0)),
-    "vdalw": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
+    "v_tf_coil_dump_quench_max_kv": InputVariable(
+        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+    ),
     "vfblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "vfcblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "f_a_cs_void": InputVariable(fortran.pfcoil_variables, float, range=(0.0, 1.0)),

@@ -2151,7 +2151,11 @@ class Costs:
             cost_variables.c22512 = 1.0e-6 * (
                 cost_variables.uctfbr
                 * tfcoil_variables.n_tf_coils
-                * (tfcoil_variables.c_tf_turn * tfcoil_variables.v_tf_coil_dump_quench_kv * 1.0e3)
+                * (
+                    tfcoil_variables.c_tf_turn
+                    * tfcoil_variables.v_tf_coil_dump_quench_kv
+                    * 1.0e3
+                )
                 ** expel
                 + cost_variables.uctfsw * tfcoil_variables.c_tf_turn
             )

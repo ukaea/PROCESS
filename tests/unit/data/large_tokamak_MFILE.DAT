@@ -749,7 +749,7 @@
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.8247E+01 ITV
  Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2734E+07 OP 
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      1.0000E+01    
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      1.0000E+01    
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.6678E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
@@ -1321,7 +1321,7 @@ fiooic = 0.65
 icc = 34
 ixc = 51 * fvdump
 fvdump = 1.0
-vdalw = 10.0
+v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*

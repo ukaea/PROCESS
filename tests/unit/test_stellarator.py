@@ -840,7 +840,11 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
         ststrcparam.e_tf_magnetic_stored_total_gj,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "v_tf_coil_dump_quench_kv", ststrcparam.v_tf_coil_dump_quench_kv)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "v_tf_coil_dump_quench_kv",
+        ststrcparam.v_tf_coil_dump_quench_kv,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,

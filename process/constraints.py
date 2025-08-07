@@ -1053,14 +1053,16 @@ def constraint_equation_34():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fvdump: f-value for dump voltage
-    vdalw: max voltage across TF coil during quench (kV)
+    v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
     v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.v_tf_coil_dump_quench_kv / fortran.tfcoil_variables.vdalw
+        fortran.tfcoil_variables.v_tf_coil_dump_quench_kv
+        / fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv
         - 1.0 * fortran.constraint_variables.fvdump,
-        fortran.tfcoil_variables.vdalw,
-        fortran.tfcoil_variables.vdalw - fortran.tfcoil_variables.v_tf_coil_dump_quench_kv,
+        fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv
+        - fortran.tfcoil_variables.v_tf_coil_dump_quench_kv,
     )
 
 

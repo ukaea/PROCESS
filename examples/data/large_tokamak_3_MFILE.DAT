@@ -71,9 +71,9 @@
  fvdump__________________________________________________________________ (itvar016)____________________      9.5837E-01    
  fvdump_(final_value/initial_value)______________________________________ (xcm016)______________________      9.5837E-01    
  fvdump_(range_normalised)_______________________________________________ (nitvar016)___________________      9.5833E-01    
- vdalw___________________________________________________________________ (itvar017)____________________      9.4837E+00    
- vdalw_(final_value/initial_value)_______________________________________ (xcm017)______________________      9.5837E-01    
- vdalw_(range_normalised)________________________________________________ (nitvar017)___________________      7.5837E-01    
+ v_tf_coil_dump_quench_max_kv___________________________________________________________________ (itvar017)____________________      9.4837E+00    
+ v_tf_coil_dump_quench_max_kv_(final_value/initial_value)_______________________________________ (xcm017)______________________      9.5837E-01    
+ v_tf_coil_dump_quench_max_kv_(range_normalised)________________________________________________ (nitvar017)___________________      7.5837E-01    
  fjprot__________________________________________________________________ (itvar018)____________________      9.2639E-01    
  fjprot_(final_value/initial_value)______________________________________ (xcm018)______________________      9.9639E-01    
  fjprot_(range_normalised)_______________________________________________ (nitvar018)___________________      9.7639E-01    
@@ -746,7 +746,7 @@
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.8429E+01 ITV
  Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.1442E+07 OP 
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.5837E+00 ITV
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.5837E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.1862E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
@@ -1317,10 +1317,10 @@ fiooic = 0.65
 *--------------------------*
 icc = 34
 ixc = 51 * fvdump
-ixc = 52 * vdalw [kV]
+ixc = 52 * v_tf_coil_dump_quench_max_kv [kV]
 boundu(52) = 10.0
 fvdump = 1.0
-vdalw = 10.0
+v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*

@@ -1895,7 +1895,9 @@ class Power:
             tfcoil_variables.res_tf_leg,
         )
 
-    def tfcpwr(self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc):
+    def tfcpwr(
+        self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
+    ):
         """
         Calculates the TF coil power conversion system parameters
         for superconducting coils

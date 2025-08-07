@@ -3418,7 +3418,11 @@ def test_acc2251(acc2251param, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "uctfbus", acc2251param.uctfbus)
 
-    monkeypatch.setattr(tfcoil_variables, "v_tf_coil_dump_quench_kv", acc2251param.v_tf_coil_dump_quench_kv)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "v_tf_coil_dump_quench_kv",
+        acc2251param.v_tf_coil_dump_quench_kv,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc2251param.tfcmw)
 

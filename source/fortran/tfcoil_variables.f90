@@ -660,7 +660,7 @@ module tfcoil_variables
   real(dp) :: n_tf_coil_turns
   !! number of turns per TF coil
 
-  real(dp) :: vdalw
+  real(dp) :: v_tf_coil_dump_quench_max_kv
   !! max voltage across TF coil during quench (kV) (`iteration variable 52`)
 
   real(dp) :: vforce

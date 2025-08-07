@@ -3193,7 +3193,7 @@ class Stellarator:
                 tf_total_h_width,
                 tfborev,
                 tfcoil_variables.toroidalgap,
-                tfcoil_variables.vdalw,
+                tfcoil_variables.v_tf_coil_dump_quench_max_kv,
                 tfcoil_variables.v_tf_coil_dump_quench_kv,
             )
 
@@ -3684,7 +3684,7 @@ class Stellarator:
         tf_total_h_width,
         tfborev,
         toroidalgap,
-        vdalw,
+        v_tf_coil_dump_quench_max_kv,
         v_tf_coil_dump_quench_kv,
     ):
         """Writes stellarator modular coil output to file
@@ -4058,10 +4058,16 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Maximum allowed voltage during quench due to insulation (kV)",
-            "(vdalw)",
-            vdalw,
+            "(v_tf_coil_dump_quench_max_kv)",
+            v_tf_coil_dump_quench_max_kv,
         )
-        po.ovarre(self.outfile, "Actual quench voltage (kV)", "(v_tf_coil_dump_quench_kv)", v_tf_coil_dump_quench_kv, "OP ")
+        po.ovarre(
+            self.outfile,
+            "Actual quench voltage (kV)",
+            "(v_tf_coil_dump_quench_kv)",
+            v_tf_coil_dump_quench_kv,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Current (A) per mm^2 copper (A/mm2)",
