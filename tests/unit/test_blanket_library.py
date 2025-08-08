@@ -1540,7 +1540,7 @@ def test_blanket_mod_pol_height(
         blanket_library, "dz_blkt_half", blanketmodpolheightparam.dz_blkt_half
     )
 
-    blanket_library_fixture.blanket_mod_pol_height()
+    blanket_library_fixture.blanket_module_poloidal_height()
 
     assert blanket_library.len_blkt_inboard_segment_poloidal == pytest.approx(
         blanketmodpolheightparam.expected_len_blkt_inboard_segment_poloidal

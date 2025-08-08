@@ -660,7 +660,7 @@ class BlanketLibrary:
         ) / fwbs_variables.n_blkt_outboard_modules_toroidal
 
         # Calculate poloidal height of blanket modules
-        self.blanket_mod_pol_height()
+        self.blanket_module_poloidal_height()
 
         if fwbs_variables.i_blkt_dual_coolant > 0:
             # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
@@ -1136,7 +1136,7 @@ class BlanketLibrary:
             return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
         return [deltap_fwi, deltap_fwo, deltap_blo]
 
-    def blanket_mod_pol_height(self):
+    def blanket_module_poloidal_height(self):
         """Calculations for blanket module poloidal height
         author: J. Morris, CCFE, Culham Science Centre
         Calculations for blanket module poloidal height for D shaped and elliptical machines
