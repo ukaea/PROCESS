@@ -810,7 +810,7 @@ def init_fwbs_variables():
     fwbs_variables.n_blkt_inboard_module_coolant_sections_radial = 4
     fwbs_variables.n_blkt_inboard_module_coolant_sections_poloidal = 2
     fwbs_variables.n_blkt_outboard_module_coolant_sections_radial = 4
-    fwbs_variables.bzfllengo_n_pol = 2
+    fwbs_variables.n_blkt_outboard_module_coolant_sections_poloidal = 2
     fwbs_variables.bzfllengi_n_rad_liq = 2
     fwbs_variables.bzfllengi_n_pol_liq = 2
     fwbs_variables.bzfllengo_n_rad_liq = 2
