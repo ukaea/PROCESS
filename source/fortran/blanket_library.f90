@@ -36,7 +36,7 @@ module blanket_library
 
     implicit none
 
-    real(dp) :: volshldi, volshldo
+    real(dp) :: vol_shld_inboard, vol_shld_outboard
     !! Volume of inboard and outboard shield (m3)
 
     real(dp) :: vol_vv_inboard, vol_vv_outboard
@@ -48,7 +48,7 @@ module blanket_library
     real(dp) :: vfblkti, vfblkto
     !! Inboard/outboard void fraction of blanket
 
-    real(dp) :: bldepti, bldepto
+    real(dp) :: len_blkt_inboard_coolant_channel_radial, len_blkt_outboard_coolant_channel_radial
     !! Inboard/outboard blanket coolant channel length (radial direction) (m)
 
     real(dp) :: blwidti, blwidto
@@ -108,13 +108,13 @@ module blanket_library
     real(dp) :: htpmw_fw_blkti, htpmw_fw_blkto
     !! Inboard/outboard fw and blanket pumping power (MW)
 
-    real(dp) :: hblnkt
+    real(dp) :: dz_blkt_half
     !! Blanket internal half-height (m)
 
-    real(dp) :: hshld
+    real(dp) :: dz_shld_half
     !! Shield internal half-height (m)
 
-    real(dp) :: hvv
+    real(dp) :: dz_vv_half
     !! Vacuum vessel internal half-height (m)
 
     integer :: icomponent

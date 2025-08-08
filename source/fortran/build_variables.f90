@@ -20,13 +20,13 @@ module build_variables
   real(dp) :: available_radial_space
   !! Minimal radial space between plasma and coils (m)
 
-  real(dp) :: blarea
+  real(dp) :: a_blkt_total_surface
   !! blanket total surface area (m2)
 
-  real(dp) :: blareaib
+  real(dp) :: a_blkt_inboard_surface
   !! inboard blanket surface area (m2)
 
-  real(dp) :: blareaob
+  real(dp) :: a_blkt_outboard_surface
   !! outboard blanket surface area (m2)
 
   real(dp) :: blbmith
@@ -222,13 +222,13 @@ module build_variables
   !! Iteration variable: ixc = 74
   !! Scan variable: nsweep = 59
 
-  real(dp) :: sharea
+  real(dp) :: a_shld_total_surface
   !! shield total surface area (m2)
 
-  real(dp) :: shareaib
+  real(dp) :: a_shld_inboard_surface
   !! inboard shield surface area (m2)
 
-  real(dp) :: shareaob
+  real(dp) :: a_shld_outboard_surface
   !! outboard shield surface area (m2)
 
   real(dp) :: dr_shld_inboard

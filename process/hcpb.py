@@ -260,7 +260,7 @@ class CCFE_HCPB(BlanketLibrary):
         coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
 
         # Shield coolant volume (m3)
-        coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
+        coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld
 
         # First wall coolant volume (m3)
         coolvol = (
@@ -319,7 +319,7 @@ class CCFE_HCPB(BlanketLibrary):
 
         # Shield mass (kg)
         fwbs_variables.whtshld = (
-            fwbs_variables.volshld
+            fwbs_variables.vol_shld_total
             * fwbs_variables.denstl
             * (1.0 - fwbs_variables.vfshld)
         )
@@ -448,7 +448,7 @@ class CCFE_HCPB(BlanketLibrary):
             fwbs_variables.m_blkt_total / fwbs_variables.vol_blkt_total
         )
         ccfe_hcpb_module.shield_density = (
-            fwbs_variables.whtshld / fwbs_variables.volshld
+            fwbs_variables.whtshld / fwbs_variables.vol_shld_total
         )
         # Picking the largest value for VV thickness
         d_vv_all = build_variables.dr_vv_inboard
@@ -1299,8 +1299,8 @@ class CCFE_HCPB(BlanketLibrary):
         po.ovarrf(
             self.outfile,
             "Shield Volume (m3)",
-            "(volshld)",
-            fwbs_variables.volshld,
+            "(vol_shld_total)",
+            fwbs_variables.vol_shld_total,
             "OP ",
         )
         po.ovarrf(
