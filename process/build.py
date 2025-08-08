@@ -5,13 +5,12 @@ import numpy as np
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
 from process.data_structure import (
-    build_python_variables,
+    build_variables,
     buildings_variables,
     divertor_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    build_variables,
     constants,
     current_drive_variables,
     error_handling,
@@ -1938,7 +1937,7 @@ class Build:
         (
             tfcoil_variables.ripple,
             r_tf_outboard_midl,
-            build_python_variables.ripflag,
+            build_variables.ripflag,
         ) = self.ripple_amplitude(
             tfcoil_variables.ripmax,
             build_variables.r_tf_outboard_mid,
@@ -1970,7 +1969,7 @@ class Build:
         (
             tfcoil_variables.ripple,
             r_tf_outboard_midl,
-            build_python_variables.ripflag,
+            build_variables.ripflag,
         ) = self.ripple_amplitude(
             tfcoil_variables.ripmax,
             build_variables.r_tf_outboard_mid,
@@ -2095,7 +2094,7 @@ class Build:
 
             po.oheadr(self.outfile, "Radial Build")
 
-            if build_python_variables.ripflag != 0:
+            if build_variables.ripflag != 0:
                 po.ocmmnt(
                     self.outfile,
                     "(Ripple result may not be accurate, as the fit was outside",
@@ -2104,14 +2103,14 @@ class Build:
                 po.oblnkl(self.outfile)
                 error_handling.report_error(62)
 
-                if build_python_variables.ripflag == 1:
+                if build_variables.ripflag == 1:
                     error_handling.fdiags[0] = (
                         tfcoil_variables.dx_tf_wp_primary_toroidal
                         * tfcoil_variables.n_tf_coils
                         / physics_variables.rmajor
                     )
                     error_handling.report_error(141)
-                elif build_python_variables.ripflag == 2:
+                elif build_variables.ripflag == 2:
                     # Convert to integer as idiags is integer array
                     error_handling.idiags[0] = int(tfcoil_variables.n_tf_coils)
                     error_handling.report_error(142)
@@ -2472,96 +2471,3 @@ class Build:
                     "(dx_beam_duct)",
                     current_drive_variables.dx_beam_duct,
                 )
-
-
-def init_build_variables():
-    build_variables.aplasmin = 0.25
-    build_variables.available_radial_space = 0.0
-    build_variables.blarea = 0.0
-    build_variables.blareaib = 0.0
-    build_variables.blareaob = 0.0
-    build_variables.blbmith = 0.17
-    build_variables.blbmoth = 0.27
-    build_variables.blbpith = 0.30
-    build_variables.blbpoth = 0.35
-    build_variables.blbuith = 0.365
-    build_variables.blbuoth = 0.465
-    build_variables.dr_blkt_inboard = 0.115
-    build_variables.dr_blkt_outboard = 0.235
-    build_variables.dz_blkt_upper = 0.0
-    build_python_variables.dz_fw_upper = 0.0
-    build_variables.dr_bore = 1.42
-    build_variables.f_z_cryostat = 4.268
-    build_variables.dr_cryostat = 0.07
-    build_variables.dr_vv_inboard = 0.07
-    build_variables.dr_vv_outboard = 0.07
-    build_variables.dz_vv_upper = 0.07
-    build_variables.dz_vv_lower = 0.07
-    build_variables.dr_vv_shells = 0.12
-    build_variables.f_avspace = 1.0
-    build_variables.fcspc = 0.6
-    build_variables.fseppc = 3.5e8
-    build_variables.a_fw_total = 0.0
-    build_variables.a_fw_inboard = 0.0
-    build_variables.a_fw_outboard = 0.0
-    build_variables.dr_fw_inboard = 0.0
-    build_variables.dr_fw_outboard = 0.0
-    build_variables.dr_shld_vv_gap_inboard = 0.155
-    build_variables.dr_cs_tf_gap = 0.08
-    build_variables.gapomin = 0.234
-    build_variables.dr_shld_vv_gap_outboard = 0.0
-    build_variables.z_tf_inside_half = 0.0
-    build_variables.hpfdif = 0.0
-    build_variables.z_tf_top = 0.0
-    build_variables.hr1 = 0.0
-    build_variables.iohcl = 1
-    build_variables.i_cs_precomp = 1
-    build_variables.i_tf_inside_cs = 0
-    build_variables.dr_cs = 0.811
-    build_variables.dr_cs_precomp = 0.0
-    build_variables.rbld = 0.0
-    build_variables.required_radial_space = 0.0
-    build_variables.rinboard = 0.651
-    build_variables.rsldi = 0.0
-    build_variables.rsldo = 0.0
-    build_variables.r_vv_inboard_out = 0.0
-    build_variables.r_sh_inboard_out = 0.0
-    build_variables.r_tf_inboard_in = 0.0
-    build_variables.r_tf_inboard_mid = 0.0
-    build_variables.r_tf_inboard_out = 0.0
-    build_variables.r_tf_outboard_mid = 0.0
-    build_variables.i_r_cp_top = 0
-    build_variables.r_cp_top = 0.0
-    build_variables.f_r_cp = 1.4
-    build_variables.dr_tf_inner_bore = 0.0
-    build_variables.dh_tf_inner_bore = 0.0
-    build_variables.dr_fw_plasma_gap_inboard = 0.14
-    build_variables.dr_fw_plasma_gap_outboard = 0.15
-    build_variables.sharea = 0.0
-    build_variables.shareaib = 0.0
-    build_variables.shareaob = 0.0
-    build_variables.dr_shld_inboard = 0.69
-    build_variables.dz_shld_lower = 0.7
-    build_variables.dr_shld_outboard = 1.05
-    build_variables.dz_shld_upper = 0.6
-    build_variables.sigallpc = 3.0e8
-    build_variables.dr_tf_inboard = 0.0
-    build_variables.tfoffset = 0.0
-    build_variables.tfootfi = 1.19
-    build_variables.dr_tf_outboard = 0.0
-    build_variables.dr_tf_shld_gap = 0.05
-    build_variables.dr_shld_thermal_inboard = 0.05
-    build_variables.dr_shld_thermal_outboard = 0.05
-    build_variables.dz_shld_thermal = 0.05
-    build_variables.dz_shld_vv_gap = 0.163
-    build_variables.dz_xpoint_divertor = 0.0
-    build_variables.dz_fw_plasma_gap = 0.60
-    build_variables.dr_shld_blkt_gap = 0.05
-    build_variables.plleni = 1.0
-    build_variables.plleno = 1.0
-    build_variables.plsepi = 1.0
-    build_variables.plsepo = 1.5
-    build_variables.rspo = 0.0
-    build_variables.r_sh_inboard_in = 0.0
-    build_variables.z_plasma_xpoint_upper = 0.0
-    build_variables.z_plasma_xpoint_lower = 0.0

@@ -9,6 +9,7 @@ import numpy as np
 
 from process import process_output
 from process.data_structure import (
+    build_variables,
     buildings_variables,
     cost_variables,
     structure_variables,
@@ -16,7 +17,6 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    build_variables,
     constants,
     fwbs_variables,
     heat_transport_variables,

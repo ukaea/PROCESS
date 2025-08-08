@@ -3,8 +3,8 @@ import logging
 import numba
 import numpy as np
 
+from process.data_structure import build_variables
 from process.fortran import (
-    build_variables,
     constants,
     error_handling,
     pfcoil_variables,

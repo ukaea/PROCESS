@@ -6,13 +6,13 @@ from process import (
 from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
+    build_variables,
     cost_variables,
     divertor_variables,
     primary_pumping_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    build_variables,
     ccfe_hcpb_module,
     constants,
     current_drive_variables,

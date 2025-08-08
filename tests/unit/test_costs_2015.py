@@ -6,9 +6,8 @@ import numpy as np
 import pytest
 
 from process.costs_2015 import Costs2015
-from process.data_structure import cost_2015_variables, cost_variables
+from process.data_structure import build_variables, cost_2015_variables, cost_variables
 from process.fortran import (
-    build_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,

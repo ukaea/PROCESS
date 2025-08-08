@@ -2,12 +2,8 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.fortran import (
-    build_variables,
-    physics_variables,
-    sctfcoil_module,
-    tfcoil_variables,
-)
+from process.data_structure import build_variables
+from process.fortran import physics_variables, sctfcoil_module, tfcoil_variables
 from process.resistive_tf_coil import ResistiveTFCoil
 
 

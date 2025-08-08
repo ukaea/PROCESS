@@ -7,6 +7,7 @@ import process.constraints as constraints
 import process.process_output as process_output
 from process.caller import write_output_files
 from process.data_structure import (
+    build_variables,
     cost_variables,
     cs_fatigue_variables,
     divertor_variables,
@@ -14,7 +15,6 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    build_variables,
     constants,
     constraint_variables,
     current_drive_variables,

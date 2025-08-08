@@ -1,9 +1,9 @@
 import math
 
 from process import process_output as po
+from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
 from process.exceptions import ProcessValueError
-from process.fortran import build_variables as bv
 from process.fortran import constants
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv

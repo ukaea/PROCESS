@@ -2,7 +2,8 @@ import logging
 
 import numpy as np
 
-from process.fortran import build_variables, constants, physics_variables
+from process.data_structure import build_variables
+from process.fortran import constants, physics_variables
 
 logger = logging.getLogger(__name__)
 

@@ -2,9 +2,11 @@ from process import (
     process_output as po,
 )
 from process.blanket_library import BlanketLibrary
-from process.data_structure import primary_pumping_variables
-from process.fortran import (
+from process.data_structure import (
     build_variables,
+    primary_pumping_variables,
+)
+from process.fortran import (
     constants,
     current_drive_variables,
     dcll_module,

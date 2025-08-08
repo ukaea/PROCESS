@@ -3,9 +3,8 @@ import logging
 import numpy as np
 
 from process import process_output as po
-from process.data_structure import cost_2015_variables, cost_variables
+from process.data_structure import build_variables, cost_2015_variables, cost_variables
 from process.fortran import (
-    build_variables,
     constants,
     current_drive_variables,
     fwbs_variables,

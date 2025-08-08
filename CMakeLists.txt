@@ -81,7 +81,6 @@ LIST(APPEND PROCESS_SRCS
     ife_variables.f90
     heat_transport_variables.f90
     constants.f90
-    build_variables.f90
     current_drive_variables.f90
     pfcoil_variables.f90
     output.f90
