@@ -51,7 +51,7 @@ module blanket_library
     real(dp) :: len_blkt_inboard_coolant_channel_radial, len_blkt_outboard_coolant_channel_radial
     !! Inboard/outboard blanket coolant channel length (radial direction) (m)
 
-    real(dp) :: circ_blkt_inboard_segment_toroidal, circ_blkt_outboard_segment_toroidal
+    real(dp) :: len_blkt_inboard_segment_toroidal, len_blkt_outboard_segment_toroidal
     !! Inboard/outboard blanket mid-plane toroidal circumference for segment (m)
 
     real(dp) :: len_blkt_inboard_segment_poloidal, len_blkt_outboard_segment_poloidal
