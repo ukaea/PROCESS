@@ -14,6 +14,7 @@ from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     cost_variables,
     divertor_variables,
+    impurity_radiation_module,
     neoclassics_variables,
     rebco_variables,
     structure_variables,
@@ -29,7 +30,6 @@ from process.fortran import (
     fwbs_variables,
     global_variables,
     heat_transport_variables,
-    impurity_radiation_module,
     numerics,
     pfcoil_variables,
     physics_module,
