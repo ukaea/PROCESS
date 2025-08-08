@@ -715,7 +715,9 @@ class ImpurityRadiation:
         values.
         """
         # Core region radiation profile
-        # Should this be multiplied by profile_x? Causes 0 power density at rho = 0
+        # Multiplication by "profile_x" (formerly rho, normalised minor radius)
+        # wrong here: causes 0 power density at rho = 0. Should be performed in
+        # power integral instead
         if rho_fix:
             pden_impurity_core_rad_total = self.pden_impurity_radiation_profile * (
                 create_f_rad_core_profile(
@@ -755,11 +757,15 @@ class ImpurityRadiation:
                 self.pden_impurity_rad_edge_profile, pden_impurity_rad_edge_total
             )
         else:
-            # Old case
-            pden_impurity_rad_total = (
-                self.pden_impurity_radiation_profile
-                * self.plasma_profile.neprofile.profile_x
-            )
+            # Old case: don't explicitly calculate edge radiation density
+            if rho_fix:
+                pden_impurity_rad_total = self.pden_impurity_radiation_profile
+
+            else:
+                pden_impurity_rad_total = (
+                    self.pden_impurity_radiation_profile
+                    * self.plasma_profile.neprofile.profile_x
+                )
 
         self.pden_impurity_rad_profile = np.add(
             self.pden_impurity_rad_profile, pden_impurity_rad_total
@@ -785,13 +791,21 @@ class ImpurityRadiation:
         # but are correct:
         # see github.com/ukaea/PROCESS/issues/3968#issuecomment-3491154712
         # and github.com/ukaea/PROCESS/issues/3968#issuecomment-4935567006
+
+        # Old case: rho multiplication already performed incorrectly in power
+        # density calculation: don't multiply again here
+        # New case (rho_fix): multiply correct power density here by rho
+        # for integration
+        rho = 1.0
+        if rho_fix:
+            rho = self.plasma_profile.neprofile.profile_x
         self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_rad_profile,
+            self.pden_impurity_rad_profile * rho,
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
         self.pden_impurity_core_rad_total_mw = 2.0e-6 * integrate.simpson(
-            self.pden_impurity_core_rad_profile,
+            self.pden_impurity_core_rad_profile * rho,
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
@@ -799,7 +813,7 @@ class ImpurityRadiation:
         if include_edge_radiation:
             # Integrate edge explicitly
             self.pden_impurity_rad_edge_total_mw = 2.0e-6 * integrate.simpson(
-                self.pden_impurity_rad_edge_profile,
+                self.pden_impurity_rad_edge_profile * rho,
                 x=self.plasma_profile.neprofile.profile_x,
                 dx=self.plasma_profile.neprofile.profile_dx,
             )
