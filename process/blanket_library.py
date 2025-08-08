@@ -727,7 +727,7 @@ class BlanketLibrary:
         blanket_library.len_blkt_inboard_channel_total = (
             fwbs_variables.n_blkt_inboard_module_coolant_sections_radial
             * blanket_library.len_blkt_inboard_coolant_channel_radial
-            + fwbs_variables.bzfllengi_n_pol
+            + fwbs_variables.n_blkt_inboard_module_coolant_sections_poloidal
             * blanket_library.len_blkt_inboard_segment_poloidal
         )
         blanket_library.len_blkt_outboard_channel_total = (

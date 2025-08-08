@@ -631,7 +631,7 @@ module fwbs_variables
   real(dp) :: pnuc_fw_ratio_dcll, pnuc_blkt_ratio_dcll
   !! For a dual-coolant blanket, ratio of FW/Blanket nuclear power as fraction of total
 
-  integer :: n_blkt_inboard_module_coolant_sections_radial, bzfllengi_n_pol, bzfllengo_n_rad, bzfllengo_n_pol
+  integer :: n_blkt_inboard_module_coolant_sections_radial, n_blkt_inboard_module_coolant_sections_poloidal, bzfllengo_n_rad, bzfllengo_n_pol
   !! Number of radial and poloidal sections that make up the total primary coolant flow
   !! length in a blanket module (IB and OB)
 
