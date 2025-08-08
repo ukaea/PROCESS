@@ -390,7 +390,7 @@ class DcllMassesParam(NamedTuple):
 
     w_f_liq_ob: Any = None
 
-    vfblkt: Any = None
+    f_a_blkt_cooling_channels: Any = None
 
     i_blkt_dual_coolant: Any = None
 
@@ -490,7 +490,7 @@ class DcllMassesParam(NamedTuple):
 
     expected_w_f_liq_ob: Any = None
 
-    expected_vfblkt: Any = None
+    expected_f_a_blkt_cooling_channels: Any = None
 
     expected_r_fci: Any = None
 
@@ -596,7 +596,7 @@ class DcllMassesParam(NamedTuple):
             r_f_liq_ob=0.5,
             w_f_liq_ib=0.5,
             w_f_liq_ob=0.5,
-            vfblkt=0.25,
+            f_a_blkt_cooling_channels=0.25,
             i_blkt_dual_coolant=2,
             den_fw_coolant=5.6389735407435868,
             den_blkt_coolant=5.6389735407435868,
@@ -646,7 +646,7 @@ class DcllMassesParam(NamedTuple):
             expected_r_f_liq_ib=0.79000002145767212,
             expected_w_f_liq_ib=0.79000002145767212,
             expected_w_f_liq_ob=0.79000002145767212,
-            expected_vfblkt=0.082598954955828252,
+            expected_f_a_blkt_cooling_channels=0.082598954955828252,
             expected_r_fci=0.050000000000000003,
             expected_r_backwall=0.02,
             expected_bz_r_ib=0.315,
@@ -715,7 +715,7 @@ class DcllMassesParam(NamedTuple):
             r_f_liq_ob=0.5,
             w_f_liq_ib=0.79000002145767212,
             w_f_liq_ob=0.79000002145767212,
-            vfblkt=0.082598954955828252,
+            f_a_blkt_cooling_channels=0.082598954955828252,
             i_blkt_dual_coolant=2,
             den_fw_coolant=5.6389735407435868,
             den_blkt_coolant=5.6389735407435868,
@@ -765,7 +765,7 @@ class DcllMassesParam(NamedTuple):
             expected_r_f_liq_ib=0.79000002145767212,
             expected_w_f_liq_ib=0.79000002145767212,
             expected_w_f_liq_ob=0.79000002145767212,
-            expected_vfblkt=0.082624998748551323,
+            expected_f_a_blkt_cooling_channels=0.082624998748551323,
             expected_r_fci=0.050000000000000003,
             expected_r_backwall=0.02,
             expected_bz_r_ib=0.315,
@@ -913,7 +913,11 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
 
     monkeypatch.setattr(fwbs_variables, "w_f_liq_ob", dcllmassesparam.w_f_liq_ob)
 
-    monkeypatch.setattr(fwbs_variables, "vfblkt", dcllmassesparam.vfblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_blkt_cooling_channels",
+        dcllmassesparam.f_a_blkt_cooling_channels,
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "i_blkt_dual_coolant", dcllmassesparam.i_blkt_dual_coolant
@@ -1061,7 +1065,9 @@ def test_dcll_masses(dcllmassesparam, monkeypatch, dcll):
         dcllmassesparam.expected_w_f_liq_ob
     )
 
-    assert fwbs_variables.vfblkt == pytest.approx(dcllmassesparam.expected_vfblkt)
+    assert fwbs_variables.f_a_blkt_cooling_channels == pytest.approx(
+        dcllmassesparam.expected_f_a_blkt_cooling_channels
+    )
 
     assert dcll_module.r_fci == pytest.approx(dcllmassesparam.expected_r_fci)
 

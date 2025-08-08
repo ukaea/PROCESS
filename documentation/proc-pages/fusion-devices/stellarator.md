@@ -270,7 +270,7 @@ p_blkt_coolant_pump_mw = 120. *Blanket coolant mechanical pumping power (MW)
 p_fw_coolant_pump_mw = 56. *First wall coolant mechanical pumping power (MW)
 p_div_coolant_pump_mw = 24. *Divertor coolant mechanical pumping power (MW)
 i_thermal_electric_conversion = 2 *Switch for power conversion cycle (2: user input thermal-electric efficiency)
-vfblkt = 0.1 *Coolant void fraction in blanket (blktmodel=0) (only relevant for mass calculations)
+f_a_blkt_cooling_channels = 0.1 *Coolant void fraction in blanket (blktmodel=0) (only relevant for mass calculations)
 vfshld = 0.6 *Coolant void fraction in shield
 declblkt = 0.075 *Neutron decay length in blanket area (m)
 declfw = 0.075 *Neutron decay length in first wall (m)

@@ -651,6 +651,7 @@ class BlanketLibrary:
         # Calculate poloidal height of blanket modules
         self.blanket_module_poloidal_height()
 
+        # If liquid breeder or dual coolant blanket then calculate
         if fwbs_variables.i_blkt_dual_coolant > 0:
             # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
             if fwbs_variables.i_blkt_inboard == 1:
@@ -792,7 +793,8 @@ class BlanketLibrary:
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
             blanket_library.n_blkt_outboard_channels = (
-                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
+                fwbs_variables.f_a_blkt_cooling_channels
+                * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -829,7 +831,8 @@ class BlanketLibrary:
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
                 blanket_library.n_blkt_inboard_channels = (
-                    fwbs_variables.vfblkt * fwbs_variables.vol_blkt_inboard
+                    fwbs_variables.f_a_blkt_cooling_channels
+                    * fwbs_variables.vol_blkt_inboard
                 ) / (
                     np.pi
                     * fwbs_variables.radius_fw_channel
@@ -869,7 +872,8 @@ class BlanketLibrary:
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
             blanket_library.n_blkt_outboard_channels = (
-                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
+                fwbs_variables.f_a_blkt_cooling_channels
+                * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -914,7 +918,8 @@ class BlanketLibrary:
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
                 blanket_library.n_blkt_inboard_channels = (
-                    fwbs_variables.vfblkt * fwbs_variables.vol_blkt_inboard
+                    fwbs_variables.f_a_blkt_cooling_channels
+                    * fwbs_variables.vol_blkt_inboard
                 ) / (
                     np.pi
                     * fwbs_variables.radius_fw_channel
@@ -960,7 +965,8 @@ class BlanketLibrary:
             # Calculate total number of pipes (in all outboard modules) from coolant fraction and
             # channel dimensions (assumes up/down flow, two 90 deg bends per length)
             blanket_library.n_blkt_outboard_channels = (
-                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
+                fwbs_variables.f_a_blkt_cooling_channels
+                * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -987,7 +993,8 @@ class BlanketLibrary:
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
                 blanket_library.n_blkt_inboard_channels = (
-                    fwbs_variables.vfblkt * fwbs_variables.vol_blkt_inboard
+                    fwbs_variables.f_a_blkt_cooling_channels
+                    * fwbs_variables.vol_blkt_inboard
                 ) / (
                     np.pi
                     * fwbs_variables.radius_fw_channel
