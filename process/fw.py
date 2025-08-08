@@ -807,7 +807,7 @@ def init_fwbs_variables():
     fwbs_variables.f_nuc_pow_bz_liq = 0.66
     fwbs_variables.pnuc_fw_ratio_dcll = 0.14
     fwbs_variables.pnuc_blkt_ratio_dcll = 0.86
-    fwbs_variables.bzfllengi_n_rad = 4
+    fwbs_variables.n_blkt_inboard_module_coolant_sections_radial = 4
     fwbs_variables.bzfllengi_n_pol = 2
     fwbs_variables.bzfllengo_n_rad = 4
     fwbs_variables.bzfllengo_n_pol = 2

@@ -725,7 +725,7 @@ class BlanketLibrary:
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
         blanket_library.len_blkt_inboard_channel_total = (
-            fwbs_variables.bzfllengi_n_rad
+            fwbs_variables.n_blkt_inboard_module_coolant_sections_radial
             * blanket_library.len_blkt_inboard_coolant_channel_radial
             + fwbs_variables.bzfllengi_n_pol
             * blanket_library.len_blkt_inboard_segment_poloidal
