@@ -2016,9 +2016,9 @@ class Build:
             #  Calculate surface area, assuming 100% coverage
 
             (
-                build_variables.a_fw_inboard,
-                build_variables.a_fw_outboard,
-                build_variables.a_fw_total,
+                build_variables.a_fw_inboard_full_coverage,
+                build_variables.a_fw_outboard_full_coverage,
+                build_variables.a_fw_total_full_coverage,
             ) = dshellarea(r1, r2, hfw)
 
         else:  # Cross-section is assumed to be defined by two ellipses
@@ -2049,32 +2049,40 @@ class Build:
             #  Calculate surface area, assuming 100% coverage
 
             (
-                build_variables.a_fw_inboard,
-                build_variables.a_fw_outboard,
-                build_variables.a_fw_total,
+                build_variables.a_fw_inboard_full_coverage,
+                build_variables.a_fw_outboard_full_coverage,
+                build_variables.a_fw_total_full_coverage,
             ) = eshellarea(r1, r2, r3, hfw)
 
         #  Apply area coverage factor
 
         if physics_variables.n_divertors == 2:
             # Double null configuration
-            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_outboard = (
+                build_variables.a_fw_outboard_full_coverage
+                * (
+                    1.0e0
+                    - 2.0e0 * fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
-                1.0e0
-                - 2.0e0 * fwbs_variables.f_ster_div_single
-                - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_inboard = (
+                build_variables.a_fw_inboard_full_coverage
+                * (1.0e0 - 2.0e0 * fwbs_variables.f_ster_div_single)
             )
         else:
             # Single null configuration
-            build_variables.a_fw_outboard = build_variables.a_fw_outboard * (
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_outboard = (
+                build_variables.a_fw_outboard_full_coverage
+                * (
+                    1.0e0
+                    - fwbs_variables.f_ster_div_single
+                    - fwbs_variables.f_a_fw_outboard_hcd
+                )
             )
-            build_variables.a_fw_inboard = build_variables.a_fw_inboard * (
-                1.0e0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd
+            build_variables.a_fw_inboard = (
+                build_variables.a_fw_inboard_full_coverage
+                * (1.0e0 - fwbs_variables.f_ster_div_single)
             )
 
         build_variables.a_fw_total = (
@@ -2083,9 +2091,9 @@ class Build:
 
         if build_variables.a_fw_outboard <= 0.0e0:
             raise ProcessValueError(
-                "fhole+f_ster_div_single+f_a_fw_hcd is too high for a credible outboard wall area",
+                "fhole+f_ster_div_single+f_a_fw_outboard_hcd is too high for a credible outboard wall area",
                 f_ster_div_single=fwbs_variables.f_ster_div_single,
-                f_a_fw_hcd=fwbs_variables.f_a_fw_hcd,
+                f_a_fw_outboard_hcd=fwbs_variables.f_a_fw_outboard_hcd,
             )
 
         #
@@ -2502,7 +2510,10 @@ def init_build_variables():
     build_variables.fcspc = 0.6
     build_variables.fseppc = 3.5e8
     build_variables.a_fw_total = 0.0
+    build_variables.a_fw_total_full_coverage = 0.0
     build_variables.a_fw_inboard = 0.0
+    build_variables.a_fw_inboard_full_coverage = 0.0
+    build_variables.a_fw_outboard_full_coverage = 0.0
     build_variables.a_fw_outboard = 0.0
     build_variables.dr_fw_inboard = 0.0
     build_variables.dr_fw_outboard = 0.0
