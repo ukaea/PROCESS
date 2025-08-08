@@ -541,7 +541,7 @@ class DCLL(BlanketLibrary):
                 / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.i_blkt_dual_coolant > 0:
-                fwbs_variables.vfblkt = (
+                fwbs_variables.f_a_blkt_cooling_channels = (
                     (1 - dcll_variables.f_vol_stl_bz_struct)
                     * dcll_variables.vol_bz_struct
                 ) / fwbs_variables.vol_blkt_total
@@ -614,7 +614,7 @@ class DCLL(BlanketLibrary):
                 / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.i_blkt_dual_coolant > 0:
-                fwbs_variables.vfblkt = (
+                fwbs_variables.f_a_blkt_cooling_channels = (
                     (1 - dcll_variables.f_vol_stl_bz_struct)
                     * dcll_variables.vol_bz_struct
                 ) / fwbs_variables.vol_blkt_total

@@ -469,7 +469,7 @@ module fwbs_variables
   real(dp) :: m_blkt_lithium
   !! mass of blanket - lithium part [kg]
 
-  real(dp) :: vfblkt
+  real(dp) :: f_a_blkt_cooling_channels
   !! coolant void fraction in blanket.
 
   integer :: blktmodel

@@ -1325,7 +1325,7 @@ class ComponentMassesParam(NamedTuple):
     dr_fw_outboard: Any = None
     a_fw_total: Any = None
     vol_blkt_total: Any = None
-    vfblkt: Any = None
+    f_a_blkt_cooling_channels: Any = None
     m_blkt_beryllium: Any = None
     m_blkt_steel_total: Any = None
     denstl: Any = None
@@ -1416,7 +1416,7 @@ class ComponentMassesParam(NamedTuple):
             dr_fw_outboard=0.018000000000000002,
             a_fw_total=1343.9683762356615,
             vol_blkt_total=1182.5433772195902,
-            vfblkt=0.25,
+            f_a_blkt_cooling_channels=0.25,
             m_blkt_beryllium=0,
             m_blkt_steel_total=0,
             denstl=7800,
@@ -1546,7 +1546,11 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", componentmassesparam.vol_blkt_total
     )
-    monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_blkt_cooling_channels",
+        componentmassesparam.f_a_blkt_cooling_channels,
+    )
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_beryllium", componentmassesparam.m_blkt_beryllium
     )

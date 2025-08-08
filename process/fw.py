@@ -752,7 +752,7 @@ def init_fwbs_variables():
     fwbs_variables.wtbllipb = 0.0
     fwbs_variables.m_blkt_vanadium = 0.0
     fwbs_variables.m_blkt_lithium = 0.0
-    fwbs_variables.vfblkt = 0.25
+    fwbs_variables.f_a_blkt_cooling_channels = 0.25
     fwbs_variables.blktmodel = 0
     fwbs_variables.declblkt = 0.075
     fwbs_variables.declfw = 0.075

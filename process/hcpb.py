@@ -257,7 +257,10 @@ class CCFE_HCPB(BlanketLibrary):
         )
 
         # Blanket coolant volume (m3)
-        coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
+        coolvol = (
+            coolvol
+            + fwbs_variables.vol_blkt_total * fwbs_variables.f_a_blkt_cooling_channels
+        )
 
         # Shield coolant volume (m3)
         coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld

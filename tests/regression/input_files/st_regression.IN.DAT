@@ -2419,7 +2419,7 @@ inuclear = 0
 * DESCRIPTION:   Coolant void fraction in shield (HCPB only)
 * JUSTIFICATION: Not set as not using i_blanket_type =1/3
 
-*vfblkt = 
+*f_a_blkt_cooling_channels = 
 * DESCRIPTION:   Coolant void fraction in blanket (i_blanket_type = 1), (default = 0.25)
 * JUSTIFICATION: Not yet set
 
