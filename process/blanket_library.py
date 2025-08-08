@@ -2304,7 +2304,7 @@ class BlanketLibrary:
         :param no180: Number of 180 degree bends in pipe
         """
         # Friction - for all coolants
-        frict_drop = self.coolant_pressure_drop(
+        frict_drop = self.coolant_friction_pressure_drop(
             i_ps=icoolpump,
             n_pipe_90_deg_bends=no90,
             n_pipe_180_deg_bends=no180,
@@ -2492,7 +2492,7 @@ class BlanketLibrary:
 
         return liquid_breeder_pressure_drop_mhd
 
-    def coolant_pressure_drop(
+    def coolant_friction_pressure_drop(
         self,
         i_ps: int,
         n_pipe_90_deg_bends: float,

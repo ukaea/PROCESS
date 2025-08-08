@@ -185,7 +185,7 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs, "roughness_fw_channel", 1.0e-6)
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
-    assert blanket_library_fixture.coolant_pressure_drop(
+    assert blanket_library_fixture.coolant_friction_pressure_drop(
         2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, "label"
     ) == pytest.approx(1.4363243643098162, rel=1e-3)
 
