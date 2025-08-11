@@ -6,15 +6,15 @@ available_radial_space: float = None
 """Minimal radial space between plasma and coils (m)"""
 
 
-blarea: float = None
+a_blkt_total_surface: float = None
 """blanket total surface area (m2)"""
 
 
-blareaib: float = None
+a_blkt_inboard_surface: float = None
 """inboard blanket surface area (m2)"""
 
 
-blareaob: float = None
+a_blkt_outboard_surface: float = None
 """outboard blanket surface area (m2)"""
 
 
@@ -273,15 +273,15 @@ Scan variable: nsweep = 59
 """
 
 
-sharea: float = None
+a_shld_total_surface: float = None
 """shield total surface area (m2)"""
 
 
-shareaib: float = None
+a_shld_inboard_surface: float = None
 """inboard shield surface area (m2)"""
 
 
-shareaob: float = None
+a_shld_outboard_surface: float = None
 """outboard shield surface area (m2)"""
 
 
@@ -395,9 +395,9 @@ def init_build_variables():
     global ripflag
     global aplasmin
     global available_radial_space
-    global blarea
-    global blareaib
-    global blareaob
+    global a_blkt_total_surface
+    global a_blkt_inboard_surface
+    global a_blkt_outboard_surface
     global blbmith
     global blbmoth
     global blbpith
@@ -456,9 +456,9 @@ def init_build_variables():
     global dh_tf_inner_bore
     global dr_fw_plasma_gap_inboard
     global dr_fw_plasma_gap_outboard
-    global sharea
-    global shareaib
-    global shareaob
+    global a_shld_total_surface
+    global a_shld_inboard_surface
+    global a_shld_outboard_surface
     global dr_shld_inboard
     global dz_shld_lower
     global dr_shld_outboard
@@ -487,9 +487,9 @@ def init_build_variables():
     ripflag = 0
     aplasmin = 0.25
     available_radial_space = 0.0
-    blarea = 0.0
-    blareaib = 0.0
-    blareaob = 0.0
+    a_blkt_total_surface = 0.0
+    a_blkt_inboard_surface = 0.0
+    a_blkt_outboard_surface = 0.0
     blbmith = 0.17
     blbmoth = 0.27
     blbpith = 0.30
@@ -547,9 +547,9 @@ def init_build_variables():
     dh_tf_inner_bore = 0.0
     dr_fw_plasma_gap_inboard = 0.14
     dr_fw_plasma_gap_outboard = 0.15
-    sharea = 0.0
-    shareaib = 0.0
-    shareaob = 0.0
+    a_shld_total_surface = 0.0
+    a_shld_inboard_surface = 0.0
+    a_shld_outboard_surface = 0.0
     dr_shld_inboard = 0.69
     dz_shld_lower = 0.7
     dr_shld_outboard = 1.05
