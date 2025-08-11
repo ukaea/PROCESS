@@ -389,7 +389,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -595,8 +595,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7001E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      1.0000E+01 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      1.0000E+01 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      1.0000E+01 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      1.0000E+01 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -824,7 +824,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      1.0000E+01 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      1.0000E+01 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -1384,7 +1384,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -1590,8 +1590,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7003E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9996E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9992E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9996E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9992E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -1819,7 +1819,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9992E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9992E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -2379,7 +2379,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -2585,8 +2585,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7005E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9992E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9984E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9992E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9984E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -2814,7 +2814,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9984E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9984E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -3374,7 +3374,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -3580,8 +3580,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7007E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9988E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9976E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9988E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9976E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -3809,7 +3809,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9976E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9976E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -4369,7 +4369,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -4575,8 +4575,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7009E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9984E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9969E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9984E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9969E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -4804,7 +4804,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9969E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9969E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -5364,7 +5364,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -5570,8 +5570,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7011E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9981E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9962E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9981E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9962E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -5799,7 +5799,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9962E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9962E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -6359,7 +6359,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -6565,8 +6565,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7013E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9978E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9956E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9978E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9956E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -6794,7 +6794,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9956E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9956E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -7354,7 +7354,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -7560,8 +7560,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7015E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9975E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9950E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9975E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9950E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -7789,7 +7789,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9950E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9950E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -8349,7 +8349,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      5.0000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      1.0000E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.9000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      3.9003E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      3.9003E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      4.5950E+04 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.5950E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -8555,8 +8555,8 @@
  Allowable_stress_in_vacuum_vessel_(VV)_due_to_quench_(Pa)_______________ (sigvvall)____________________      9.3000E+07    
  Minimum_allowed_quench_time_due_to_stress_in_VV_(s)_____________________ (taucq)_______________________      2.4480E+01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7016E+01 ITV
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.9972E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.9944E+00 OP 
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9972E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9944E+00 OP 
  Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
@@ -8784,7 +8784,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      7.5516E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.9944E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.9944E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      5.7208E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -9039,7 +9039,7 @@ ixc = 49 * fstrcond
 ixc = 50 * fiooic
 boundu(50) = 1.0
 ixc = 51 * fvdump
-ixc = 52 * vdalw
+ixc = 52 * v_tf_coil_dump_quench_max_kv
 boundu(52) = 10.0
 ixc = 53 * fjprot
 ixc = 56 * tdmptf
@@ -9293,7 +9293,7 @@ dr_tf_nose_case   = 0.495 * Inboard tf coil case outer (non-plasma side) thickne
 dx_tf_turn_steel = 0.008 * Tf coil conduit case thickness (m)
 dx_tf_wp_insulation   = 0.008 * Ground insulation thickness surrounding winding pack (m)
 tmargmin = 1.500 * Minimum allowable temperature margin (cs and tf coils) (k)
-vdalw    = 10.00 * Max voltage across tf coil during quench (kv)
+v_tf_coil_dump_quench_max_kv    = 10.00 * Max voltage across tf coil during quench (kv)
 f_a_tf_turn_cable_space_extra_void     = 0.300 * Coolant fraction of tfc 'cable' (i_tf_sup=1); or of tfc leg (i_tf_sup=0)
 i_tf_sc_mat = 5
 *strncon = -0.0066
@@ -9335,7 +9335,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      fstrcond       =  9.2007E-01
                      fiooic         =  6.3437E-01
                      fvdump         =  1.0000E+00
-                     vdalw          =  1.0000E+01
+                     v_tf_coil_dump_quench_max_kv          =  1.0000E+01
                      fjprot         =  1.0000E+00
                      tdmptf         =  2.5829E+01
                      dr_tf_nose_case         =  5.2465E-01

@@ -142,9 +142,9 @@ fp_plant_electric_net_required_mw = 1.0
 *icc = 28
 * DESCRIPTION:   Constraint equation for fusion gain (big Q) lower limit 
 * JUSTIFICATION: Turned off, dont care about Q lower limit  
-* VARIABLES:     i_plasma_ignited,  bigq calculated in-situ
+* VARIABLES:     i_plasma_ignited,  big_q_plasma calculated in-situ
 
-*bigqmin = 
+*big_q_plasma_min = 
 * DESCRIPTION:   Minimum fusion gain Q 
 * JUSTIFICATION: Turned off, dont care about lower Q value
 
@@ -671,9 +671,9 @@ fimp(14) = 5e-05    *Tungsten
 *icc = 64
 * DESCRIPTION:   Upper limit on Zeff
 * JUSTIFICATION: Turned off, dont care about maximum effective charge
-* VARIABLES:     zeffmax (maximum value for Zeff), zeff calculated in-situ
+* VARIABLES:     zeff_max (maximum value for Zeff), zeff calculated in-situ
 
-*zeffmax = 
+*zeff_max = 
 * DESCRIPTION:   Maximum value for Zeff (`constraint equation 64`)
 * JUSTIFICATION: Not set, not using icc = 64
 
@@ -974,10 +974,10 @@ boundu(50) = 1.0
 *icc = 34 
 * DESCRIPTION:   Constraint equation for TF coil dump voltage upper limit (SCTF)
 * JUSTIFICATION: Turned off, do not care about dump voltage
-* VARIABLES:     vtfskv calculated in-situ
+* VARIABLES:     v_tf_coil_dump_quench_kv calculated in-situ
 
 *ixc = 52
-*vdalw =  
+*v_tf_coil_dump_quench_max_kv =  
 *boundl(52) = 
 *boundu(52) = 
 * DESCRIPTION:   Max voltage across TF coil during quench (kV) (icc=34)
@@ -1449,11 +1449,11 @@ tftmp = 20.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *icc = 74
-* DESCRIPTION:   Ensure TF coil quench temperature < tmax_croco ONLY used for croco HTS coil
+* DESCRIPTION:   Ensure TF coil quench temperature < temp_croco_quench_max ONLY used for croco HTS coil
 * JUSTIFICATION: Turned off, do not care about quench scenario
-* VARIABLES:     tmax_croco : input real : CroCo strand: maximum permitted temp during a quench (K)). croco_quench_temperature calculated in-situ
+* VARIABLES:     temp_croco_quench_max : input real : CroCo strand: maximum permitted temp during a quench (K)). temp_croco_quench calculated in-situ
 
-*tmax_croco
+*temp_croco_quench_max
 * DESCRIPTION:   CroCo strand: maximum permitted temp during a quench (K)
 * JUSTIFICATION: Not using icc=74
 
@@ -1500,9 +1500,9 @@ tftmp = 20.0
 * icc = 44
 * DESCRIPTION:   Peak Centrepost Temperature Upper Limit (TART)
 * JUSTIFICATION: Engineering requirement, not used
-* VARIABLES:     itart, ptempalw(max peak CP temperature). tcpmax calculated in-situ
+* VARIABLES:     itart, temp_cp_max(max peak CP temperature). temp_cp_peak calculated in-situ
 
-* ptempalw = 30.
+* temp_cp_max = 30.
 * DESCRIPTION:   Maximum Peak Centrepost Temperature (K) (icc=44) 
 * JUSTIFICATION: Unknown, seems high compared to constrained average
 
@@ -2380,18 +2380,6 @@ i_blkt_inboard = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*icc = 55
-* DESCRIPTION:   Constraint equation for helium concentration in vacuum vessel upper limit (iblnaket = 2 only (KIT HCPB))
-* JUSTIFICATION: Turned off, do not care He concentration.
-* VARIABLES:     i_blanket_type,vvhealw (allowed maximum helium concentration in vacuum vessel at end of plant life (appm) (i_blanket_type =2)),  vvhemax calculated in situ
-
-*vvhealw = 
-* DESCRIPTION:   Allowed maximum helium concentration in vacuum vessel at end of plant life (appm)
-*(`i_blanket_type =2`) (`constraint equation 55`)
-* JUSTIFICATION: Not using icc = 55
-
-*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 inuclear = 0
 * DESCRIPTION:   Switch for nuclear heating in the coils (default = 0)
 * =0 Frances Fox model (default)
@@ -2652,7 +2640,7 @@ i_hcd_calculations = 1
 * JUSTIFICATION: Turned off, not using icc = 40
 
 *ixc = 64
-*fauxmn =  
+*fp_hcd_injected_min_mw =  
 *boundl(64) = 
 *boundu(64) = 
 * DESCRIPTION:   f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)

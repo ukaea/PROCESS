@@ -1849,10 +1849,13 @@ class CurrentDrive:
                 heat_transport_variables.p_hcd_electric_total_mw = 0.0e0
 
             # Ratio of fusion to input (injection+ohmic) power
-            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
-                current_drive_variables.p_hcd_injected_total_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
-                + physics_variables.p_plasma_ohmic_mw
+            current_drive_variables.big_q_plasma = (
+                physics_variables.p_fusion_total_mw
+                / (
+                    current_drive_variables.p_hcd_injected_total_mw
+                    + current_drive_variables.p_beam_orbit_loss_mw
+                    + physics_variables.p_plasma_ohmic_mw
+                )
             )
 
     def output_current_drive(self):
@@ -1879,8 +1882,8 @@ class CurrentDrive:
         po.ovarre(
             self.outfile,
             "Fusion gain factor Q",
-            "(bigq)",
-            current_drive_variables.bigq,
+            "(big_q_plasma)",
+            current_drive_variables.big_q_plasma,
             "OP ",
         )
         po.oblnkl(self.outfile)
@@ -2455,7 +2458,7 @@ class CurrentDrive:
 def init_current_drive_variables():
     """Initialise current drive variables"""
     current_drive_variables.dx_beam_duct = 0.58
-    current_drive_variables.bigq = 0.0
+    current_drive_variables.big_q_plasma = 0.0
     current_drive_variables.f_c_plasma_bootstrap = 0.0
     current_drive_variables.f_c_plasma_bootstrap_max = 0.9
     current_drive_variables.f_c_plasma_bootstrap_iter89 = 0.0

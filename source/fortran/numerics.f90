@@ -166,7 +166,7 @@ module numerics
   !!  <LI> (61) Minimum availability value (itv 107)
   !!  <LI> (62) f_alpha_energy_confinement the ratio of particle to energy confinement times (itv 110)
   !!  <LI> (63) The number of ITER-like vacuum pumps niterpump < tfno (itv 111)
-  !!  <LI> (64) Zeff less than or equal to zeffmax (itv 112)
+  !!  <LI> (64) Zeff less than or equal to zeff_max (itv 112)
   !!  <LI> (65) Dump time set by VV loads (itv 56, 113)
   !!  <LI> (66) Limit on rate of change of energy in poloidal field
   !!            (Use iteration variable 65(t_current_ramp_up), 115)
@@ -178,7 +178,7 @@ module numerics
   !!  <LI> (71) ensure that neomp = separatrix density (nesep) x neratio
   !!  <LI> (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)
   !!  <LI> (73) Psep >= Plh + Paux (itv 137 (fplhsep))
-  !!  <LI> (74) TFC quench < tmax_croco (itv 141 (fcqt))
+  !!  <LI> (74) TFC quench < temp_croco_quench_max (itv 141 (ftemp_croco_quench_max))
   !!  <LI> (75) TFC current/copper area < Maximum (itv 143 f_coppera_m2)
   !!  <LI> (76) Eich critical separatrix density
   !!  <LI> (77) TF coil current per turn upper limit
@@ -250,7 +250,7 @@ module numerics
   !! <LI> (42) dr_cs_tf_gap
   !! <LI> (43) NOT USED
   !! <LI> (44) f_c_plasma_non_inductive
-  !! <LI> (45) fqval (f-value for equation 28)
+  !! <LI> (45) fbig_q_plasma_min (f-value for equation 28)
   !! <LI> (46) fp_hcd_injected_max (f-value for equation 30)
   !! <LI> (47) feffcd
   !! <LI> (48) fstrcase (f-value for equation 31)
@@ -269,14 +269,14 @@ module numerics
   !! <LI> (61) dr_shld_vv_gap_inboard
   !! <LI> (62) fdtmp (f-value for equation 38)
   !! <LI> (63) ftemp_fw_max (f-value for equation 39)
-  !! <LI> (64) fauxmn (f-value for equation 40)
+  !! <LI> (64) fp_hcd_injected_min_mw (f-value for equation 40)
   !! <LI> (65) t_current_ramp_up
   !! <LI> (66) ft_current_ramp_up (f-value for equation 41)
   !! <LI> (67) ft_cycle_min (f-value for equation 42)
   !! <LI> (68) fptemp (f-value for equation 44)
   !! <LI> (69) rcool
   !! <LI> (70) vcool
-  !! <LI> (71) fq (f-value for equation 45)
+  !! <LI> (71) fq95_min (f-value for equation 45)
   !! <LI> (72) fipir (f-value for equation 46)
   !! <LI> (73) dr_fw_plasma_gap_inboard
   !! <LI> (74) dr_fw_plasma_gap_outboard
@@ -317,13 +317,12 @@ module numerics
   !! <LI> (109) f_nd_alpha_electron: thermal alpha density / electron density
   !! <LI> (110) falpha_energy_confinement: Lower limit on f_alpha_energy_confinement the ratio of alpha
   !! <LI> (111) fniterpump: f-value for constraint that number
-  !! <LI> (112) fzeffmax: f-value for max Zeff (f-value for equation 64)
+  !! <LI> (112) fzeff_max: f-value for max Zeff (f-value for equation 64)
   !! <LI> (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
   !! <LI> (114) len_fw_channel: Length of a single first wall channel
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
   !! <LI> (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
-  !! <LI> (118) fpsep: f-value to ensure separatrix power is less than
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
   !! <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
   !! <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
@@ -346,7 +345,7 @@ module numerics
   !! <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)
   !! <LI> (139) copper_thick : thickness of copper layer in tape (m)
   !! <LI> (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
-  !! <LI> (141) fcqt : TF coil quench temperature < tmax_croco (f-value for equation 74)
+  !! <LI> (141) ftemp_croco_quench_max : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)
   !! <LI> (142) nesep : electron density at separatrix [m-3]
   !! <LI> (143) f_copperA_m2 : TF coil current / copper area < Maximum value
   !! <LI> (144) fnesep : Eich critical electron density at separatrix
@@ -543,7 +542,7 @@ contains
       'Separatrix density consistency   ', &
       'CS Tresca yield criterion        ', &
       'Psep >= Plh + Paux               ', &
-      'TFC quench < tmax_croco          ', &
+      'TFC quench <temp_croco_quench_max', &
       'TFC current/copper area < Max    ', &
       'Eich critical separatrix density ', &
       'TFC current per turn upper limit ', &

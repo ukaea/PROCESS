@@ -299,7 +299,7 @@ class SuperconductingTFCoil(TFCoil):
                 )
             )
 
-            tfcoil_variables.vtfskv = (
+            tfcoil_variables.v_tf_coil_dump_quench_kv = (
                 self.croco_voltage() / 1.0e3
             )  # TFC Quench voltage in kV
 
@@ -327,7 +327,9 @@ class SuperconductingTFCoil(TFCoil):
                 output=output,
             )
 
-            tfcoil_variables.vtfskv = vdump / 1.0e3  # TFC Quench voltage in kV
+            tfcoil_variables.v_tf_coil_dump_quench_kv = (
+                vdump / 1.0e3
+            )  # TFC Quench voltage in kV
 
             if output:
                 self.outtf(peaktfflag)

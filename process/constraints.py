@@ -919,9 +919,9 @@ def constraint_equation_28():
     """Equation for fusion gain (big Q) lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fqval: pf-value for Q
-    bigq: Fusion gain; P_fusion / (P_injection + P_ohmic)
-    bigqmin: minimum fusion gain Q
+    fbig_q_plasma_min: pf-value for Q
+    big_q_plasma: Fusion gain; P_fusion / (P_injection + P_ohmic)
+    big_q_plasma_min: minimum fusion gain Q
     i_plasma_ignited : input integer : switch for ignition assumption:
     - 0 do not assume plasma ignition;
     - 1 assume ignited (but include auxiliary power in costs)
@@ -935,14 +935,14 @@ def constraint_equation_28():
 
     cc = (
         1.0
-        - fortran.constraint_variables.fqval
-        * fortran.current_drive_variables.bigq
-        / fortran.constraint_variables.bigqmin
+        - fortran.constraint_variables.fbig_q_plasma_min
+        * fortran.current_drive_variables.big_q_plasma
+        / fortran.constraint_variables.big_q_plasma_min
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.bigqmin * (1.0 - cc),
-        fortran.constraint_variables.bigqmin * cc,
+        fortran.constraint_variables.big_q_plasma_min * (1.0 - cc),
+        fortran.constraint_variables.big_q_plasma_min * cc,
     )
 
 
@@ -1053,14 +1053,16 @@ def constraint_equation_34():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fvdump: f-value for dump voltage
-    vdalw: max voltage across TF coil during quench (kV)
-    vtfskv: voltage across a TF coil during quench (kV)
+    v_tf_coil_dump_quench_max_kv: max voltage across TF coil during quench (kV)
+    v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.vtfskv / fortran.tfcoil_variables.vdalw
+        fortran.tfcoil_variables.v_tf_coil_dump_quench_kv
+        / fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv
         - 1.0 * fortran.constraint_variables.fvdump,
-        fortran.tfcoil_variables.vdalw,
-        fortran.tfcoil_variables.vdalw - fortran.tfcoil_variables.vtfskv,
+        fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv
+        - fortran.tfcoil_variables.v_tf_coil_dump_quench_kv,
     )
 
 
@@ -1151,20 +1153,20 @@ def constraint_equation_40():
     """Equation for auxiliary power lower limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fauxmn: f-value for minimum auxiliary power
+    fp_hcd_injected_min_mw: f-value for minimum auxiliary power
     p_hcd_injected_total_mw: total auxiliary injected power (MW)
-    auxmin: minimum auxiliary power (MW)
+    p_hcd_injected_min_mw: minimum auxiliary power (MW)
     """
     cc = (
         1.0
-        - fortran.constraint_variables.fauxmn
+        - fortran.constraint_variables.fp_hcd_injected_min_mw
         * fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.constraint_variables.auxmin
+        / fortran.constraint_variables.p_hcd_injected_min_mw
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.auxmin * (1.0 - cc),
-        fortran.constraint_variables.auxmin * cc,
+        fortran.constraint_variables.p_hcd_injected_min_mw * (1.0 - cc),
+        fortran.constraint_variables.p_hcd_injected_min_mw * cc,
     )
 
 
@@ -1249,8 +1251,8 @@ def constraint_equation_44():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fptemp: f-value for peak centrepost temperature
-    ptempalw: maximum peak centrepost temperature (K)
-    tcpmax: peak centrepost temperature (K)
+    temp_cp_max: maximum peak centrepost temperature (K)
+    temp_cp_peak: peak centrepost temperature (K)
     itart: switch for spherical tokamak (ST) models:
     - 0: use conventional aspect ratio models;
     - 1: use spherical tokamak models
@@ -1259,14 +1261,14 @@ def constraint_equation_44():
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
     if fortran.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
-        ptempalw = fortran.tfcoil_variables.ptempalw - 273.15
-        tcpmax = fortran.tfcoil_variables.tcpmax - 273.15
+        temp_cp_max = fortran.tfcoil_variables.temp_cp_max - 273.15
+        temp_cp_peak = fortran.tfcoil_variables.temp_cp_peak - 273.15
     else:
-        ptempalw = fortran.tfcoil_variables.ptempalw
-        tcpmax = fortran.tfcoil_variables.tcpmax
+        temp_cp_max = fortran.tfcoil_variables.temp_cp_max
+        temp_cp_peak = fortran.tfcoil_variables.temp_cp_peak
 
-    cc = tcpmax / ptempalw - 1.0 * fortran.constraint_variables.fptemp
-    return ConstraintResult(cc, ptempalw * (1.0 - cc), tcpmax * cc)
+    cc = temp_cp_peak / temp_cp_max - 1.0 * fortran.constraint_variables.fptemp
+    return ConstraintResult(cc, temp_cp_max * (1.0 - cc), temp_cp_peak * cc)
 
 
 @ConstraintManager.register_constraint(45, "", ">=")
@@ -1274,7 +1276,7 @@ def constraint_manager_45():
     """Equation for edge safety factor lower limit (TART)
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fq: f-value for edge safety factor
+    fq95_min: f-value for edge safety factor
     q95 : safety factor 'near' plasma edge
     (unless i_plasma_current = 2 (ST current scaling), in which case q = mean edge safety factor qbar)
     q95_min: lower limit for edge safety factor
@@ -1286,7 +1288,7 @@ def constraint_manager_45():
 
     cc = (
         1.0
-        - fortran.constraint_variables.fq
+        - fortran.constraint_variables.fq95_min
         * fortran.physics_variables.q95
         / fortran.physics_variables.q95_min
     )
@@ -1595,18 +1597,18 @@ def constraint_equation_64():
     """Upper limit on Zeff
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fzeffmax: f-value for maximum zeff
-    zeffmax: maximum value for Zeff
+    fzeff_max: f-value for maximum zeff
+    zeff_max: maximum value for Zeff
     zeff: plasma effective charge
     """
     cc = (
-        fortran.physics_variables.zeff / fortran.constraint_variables.fzeffmax
-        - 1.0 * fortran.constraint_variables.fzeffmax
+        fortran.physics_variables.zeff / fortran.constraint_variables.fzeff_max
+        - 1.0 * fortran.constraint_variables.fzeff_max
     )
     return ConstraintResult(
         cc,
-        fortran.constraint_variables.fzeffmax,
-        fortran.constraint_variables.fzeffmax * cc,
+        fortran.constraint_variables.fzeff_max,
+        fortran.constraint_variables.fzeff_max * cc,
     )
 
 
@@ -1821,23 +1823,23 @@ def constraint_equation_73():
 
 @ConstraintManager.register_constraint(74, "K", "<=")
 def constraint_equation_74():
-    """Upper limit to ensure TF coil quench temperature < tmax_croco
+    """Upper limit to ensure TF coil quench temperature < temp_croco_quench_max
     ONLY used for croco HTS coil
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fcqt: f-value: TF coil quench temparature remains below tmax_croco
-    croco_quench_temperature: CroCo strand: Actual temp reached during a quench (K)
-    tmax_croco: CroCo strand: maximum permitted temp during a quench (K)
+    ftemp_croco_quench_max: f-value: TF coil quench temparature remains below temp_croco_quench_max
+    temp_croco_quench: CroCo strand: Actual temp reached during a quench (K)
+    temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
     """
     cc = (
-        fortran.tfcoil_variables.croco_quench_temperature
-        / fortran.tfcoil_variables.tmax_croco
-        - 1.0 * fortran.constraint_variables.fcqt
+        fortran.tfcoil_variables.temp_croco_quench
+        / fortran.tfcoil_variables.temp_croco_quench_max
+        - 1.0 * fortran.constraint_variables.ftemp_croco_quench_max
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.croco_quench_temperature,
-        fortran.tfcoil_variables.croco_quench_temperature * cc,
+        fortran.tfcoil_variables.temp_croco_quench,
+        fortran.tfcoil_variables.temp_croco_quench * cc,
     )
 
 
@@ -2366,11 +2368,11 @@ def constraint_eqns(m: int, ieqn: int):
 
 def init_constraint_variables():
     """Initialise the constraint variables"""
-    fortran.constraint_variables.auxmin = 0.1
+    fortran.constraint_variables.p_hcd_injected_min_mw = 0.1
     fortran.constraint_variables.beta_poloidal_max = 0.19
-    fortran.constraint_variables.bigqmin = 10.0
+    fortran.constraint_variables.big_q_plasma_min = 10.0
     fortran.constraint_variables.b_tf_inboard_max = 12.0
-    fortran.constraint_variables.fauxmn = 1.0
+    fortran.constraint_variables.fp_hcd_injected_min_mw = 1.0
     fortran.constraint_variables.fbeta_poloidal_eps = 1.0
     fortran.constraint_variables.fbeta_poloidal = 1.0
     fortran.constraint_variables.fbeta_max = 1.0
@@ -2403,8 +2405,8 @@ def init_constraint_variables():
     fortran.constraint_variables.fpsepr = 1.0
     fortran.constraint_variables.fptemp = 1.0
     fortran.constraint_variables.fptfnuc = 1.0
-    fortran.constraint_variables.fq = 1.0
-    fortran.constraint_variables.fqval = 1.0
+    fortran.constraint_variables.fq95_min = 1.0
+    fortran.constraint_variables.fbig_q_plasma_min = 1.0
     fortran.constraint_variables.fradpwr = 0.99
     fortran.constraint_variables.fpflux_fw_rad_max = 1.0
     fortran.constraint_variables.freinke = 1.0
@@ -2424,7 +2426,7 @@ def init_constraint_variables():
     fortran.constraint_variables.fvs_plasma_total_required = 1.0
     fortran.constraint_variables.fvvhe = 1.0
     fortran.constraint_variables.fpflux_fw_neutron_max_mw = 1.0
-    fortran.constraint_variables.fzeffmax = 1.0
+    fortran.constraint_variables.fzeff_max = 1.0
     fortran.constraint_variables.eta_cd_norm_hcd_primary_max = 2.0
     fortran.constraint_variables.i_q95_fixed = 0
     fortran.constraint_variables.pflux_fw_rad_max = 1.0
@@ -2443,13 +2445,11 @@ def init_constraint_variables():
     fortran.constraint_variables.t_burn_min = 1.0
     fortran.constraint_variables.t_cycle_min = 0.0
     fortran.constraint_variables.t_current_ramp_up_min = 1.0
-    fortran.constraint_variables.vvhealw = 1.0
     fortran.constraint_variables.pflux_fw_neutron_max_mw = 1.0
     fortran.constraint_variables.f_alpha_energy_confinement_min = 5.0
     fortran.constraint_variables.falpha_energy_confinement = 1.0
     fortran.constraint_variables.fniterpump = 1.0
-    fortran.constraint_variables.zeffmax = 3.6
+    fortran.constraint_variables.zeff_max = 3.6
     fortran.constraint_variables.fpoloidalpower = 1.0
-    fortran.constraint_variables.fpsep = 1.0
-    fortran.constraint_variables.fcqt = 1.0
+    fortran.constraint_variables.ftemp_croco_quench_max = 1.0
     fortran.constraint_variables.fecrh_ignition = 1.0

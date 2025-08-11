@@ -6333,7 +6333,7 @@ def plot_physics_info(axis, mfile_data, scan):
 
     data = [
         ("p_fusion_total_mw", "Fusion power", "MW"),
-        ("bigq", "$Q_{p}$", ""),
+        ("big_q_plasma", "$Q_{p}$", ""),
         ("plasma_current_ma", "$I_p$", "MA"),
         ("bt", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),

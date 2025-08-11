@@ -1660,14 +1660,14 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Maximum allowed voltage during quench due to insulation (kV)",
-                "(vdalw)",
-                tfcoil_variables.vdalw,
+                "(v_tf_coil_dump_quench_max_kv)",
+                tfcoil_variables.v_tf_coil_dump_quench_max_kv,
             )
             po.ovarre(
                 self.outfile,
                 "Actual quench voltage (kV)",
-                "(vtfskv)",
-                tfcoil_variables.vtfskv,
+                "(v_tf_coil_dump_quench_kv)",
+                tfcoil_variables.v_tf_coil_dump_quench_kv,
                 "OP ",
             )
 
@@ -2195,7 +2195,7 @@ class TFCoil:
         tfv.tcpav2 = tfv.tcoolin + dtcncpav + dtfilmav + 0.5e0 * tfv.dtiocool
 
         # Peak wall temperature
-        tfv.tcpmax = tfv.tcoolin + tfv.dtiocool + dtfilmav + dtconcpmx
+        tfv.temp_cp_peak = tfv.tcoolin + tfv.dtiocool + dtfilmav + dtconcpmx
         tcoolmx = tfv.tcoolin + tfv.dtiocool + dtfilmav
         # -------------------------
 
@@ -2322,7 +2322,10 @@ class TFCoil:
                 tfv.tcpav2,
             )
             po.ovarre(
-                self.outfile, "Peak centrepost temperature (K)", "(tcpmax)", tfv.tcpmax
+                self.outfile,
+                "Peak centrepost temperature (K)",
+                "(temp_cp_peak)",
+                tfv.temp_cp_peak,
             )
 
             po.osubhd(self.outfile, "Pump Power :")
@@ -5440,18 +5443,18 @@ def init_tfcoil_variables():
     tfv.temp_margin = 0.0
     tfv.tmargtf = 0.0
     tfv.tmaxpro = 150.0
-    tfv.tmax_croco = 200.0
-    tfv.croco_quench_temperature = 0.0
+    tfv.temp_croco_quench_max = 200.0
+    tfv.temp_croco_quench = 0.0
     tfv.temp_tf_cryo = 4.5
     tfv.n_tf_coil_turns = 0.0
-    tfv.vdalw = 20.0
+    tfv.v_tf_coil_dump_quench_max_kv = 20.0
     tfv.vforce = 0.0
     tfv.f_vforce_inboard = 0.5
     tfv.vforce_outboard = 0.0
     tfv.f_a_tf_turn_cable_space_extra_void = 0.4
     tfv.voltfleg = 0.0
     tfv.vtfkv = 0.0
-    tfv.vtfskv = 0.0
+    tfv.v_tf_coil_dump_quench_kv = 0.0
     tfv.whtcas = 0.0
     tfv.whtcon = 0.0
     tfv.whtconcu = 0.0
@@ -5481,14 +5484,14 @@ def init_tfcoil_variables():
     tfv.p_cp_coolant_pump_elec = 0.0
     tfv.p_cp_resistive = 0.0
     tfv.p_tf_leg_resistive = 0.0
-    tfv.ptempalw = 473.15  # 200 C
+    tfv.temp_cp_max = 473.15  # 200 C
     tfv.rcool = 0.005
     tfv.tcoolin = 313.15  # 40 C
     tfv.dtiocool = 0.0
     tfv.temp_cp_average = 373.15  # 100 C
     tfv.tcpav2 = 0.0
     tfv.temp_tf_legs_outboard = -1.0
-    tfv.tcpmax = 0.0
+    tfv.temp_cp_peak = 0.0
     tfv.vcool = 20.0
     tfv.vol_cond_cp = 0.0
     tfv.whtcp = 0.0

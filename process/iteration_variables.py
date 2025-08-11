@@ -103,7 +103,9 @@ ITERATION_VARIABLES = {
     44: IterationVariable(
         "f_c_plasma_non_inductive", fortran.physics_variables, 0.001, 1.0
     ),
-    45: IterationVariable("fqval", fortran.constraint_variables, 0.001, 1.0),
+    45: IterationVariable(
+        "fbig_q_plasma_min", fortran.constraint_variables, 0.001, 1.0
+    ),
     46: IterationVariable(
         "fp_hcd_injected_max", fortran.constraint_variables, 0.001, 1.0
     ),
@@ -124,7 +126,9 @@ ITERATION_VARIABLES = {
     ),
     62: IterationVariable("fdtmp", fortran.constraint_variables, 0.001, 1.0),
     63: IterationVariable("ftemp_fw_max", fortran.constraint_variables, 0.001, 1.0),
-    64: IterationVariable("fauxmn", fortran.constraint_variables, 0.001, 1.0),
+    64: IterationVariable(
+        "fp_hcd_injected_min_mw", fortran.constraint_variables, 0.001, 1.0
+    ),
     65: IterationVariable(
         "t_current_ramp_up", data_structure.times_variables, 0.1, 1.0e3
     ),
@@ -135,7 +139,7 @@ ITERATION_VARIABLES = {
     68: IterationVariable("fptemp", fortran.constraint_variables, 0.001, 1.0),
     69: IterationVariable("rcool", fortran.tfcoil_variables, 0.001, 0.010),
     70: IterationVariable("vcool", fortran.tfcoil_variables, 1.0, 1.0e2),
-    71: IterationVariable("fq", fortran.constraint_variables, 0.001, 1.0),
+    71: IterationVariable("fq95_min", fortran.constraint_variables, 0.001, 1.0),
     72: IterationVariable("fipir", fortran.constraint_variables, 0.001, 1.0),
     73: IterationVariable(
         "dr_fw_plasma_gap_inboard", data_structure.build_variables, 0.001, 10.00
@@ -180,7 +184,7 @@ ITERATION_VARIABLES = {
         "falpha_energy_confinement", fortran.constraint_variables, 0.001, 1.0
     ),
     111: IterationVariable("fniterpump", fortran.constraint_variables, 0.001, 1.0),
-    112: IterationVariable("fzeffmax", fortran.constraint_variables, 0.001, 1.0),
+    112: IterationVariable("fzeff_max", fortran.constraint_variables, 0.001, 1.0),
     113: IterationVariable("fmaxvvstress", fortran.constraint_variables, 0.001, 1.0),
     114: IterationVariable("len_fw_channel", fortran.fwbs_variables, 0.001, 1.0e3),
     115: IterationVariable("fpoloidalpower", fortran.constraint_variables, 0.001, 1.0),
@@ -188,7 +192,6 @@ ITERATION_VARIABLES = {
         "fpflux_fw_rad_max", fortran.constraint_variables, 0.001, 1.0
     ),
     117: IterationVariable("fpsepbqar", fortran.constraint_variables, 0.001, 1.0),
-    118: IterationVariable("fpsep", fortran.constraint_variables, 0.001, 1.0),
     119: IterationVariable("tesep", fortran.physics_variables, 0.0, 1.0e1),
     122: IterationVariable("f_a_cs_steel", fortran.pfcoil_variables, 0.001, 0.950),
     123: IterationVariable("foh_stress", fortran.constraint_variables, 0.001, 1.0),
@@ -298,7 +301,9 @@ ITERATION_VARIABLES = {
     140: IterationVariable(
         "dr_tf_wp_with_insulation", fortran.tfcoil_variables, 0.001, 2.0
     ),
-    141: IterationVariable("fcqt", fortran.constraint_variables, 0.001, 1.0),
+    141: IterationVariable(
+        "ftemp_croco_quench_max", fortran.constraint_variables, 0.001, 1.0
+    ),
     142: IterationVariable("nesep", fortran.physics_variables, 1.0e17, 1.0e20),
     143: IterationVariable("f_coppera_m2", data_structure.rebco_variables, 0.001, 1.0),
     144: IterationVariable("fnesep", fortran.constraint_variables, 0.001, 1.0),
