@@ -12,6 +12,7 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    ife_variables,
     structure_variables,
     vacuum_variables,
 )
@@ -20,7 +21,6 @@ from process.fortran import (
     constants,
     fwbs_variables,
     heat_transport_variables,
-    ife_variables,
     physics_variables,
 )
 
@@ -586,7 +586,7 @@ class IFE:
         )
 
         # Material volumes
-        for i in range(ife_variables.maxmat):
+        for i in range(ife_variables.MAXMAT):
             ife_variables.chmatv[i] = max(
                 0.0, ife_variables.chvol * ife_variables.chmatf[i]
             )
@@ -817,7 +817,7 @@ class IFE:
         )
 
         # Material volumes
-        for i in range(ife_variables.maxmat + 1):
+        for i in range(ife_variables.MAXMAT + 1):
             ife_variables.chmatv[i] = max(
                 0.0, ife_variables.chvol * ife_variables.chmatf[i]
             )
@@ -1175,7 +1175,7 @@ class IFE:
 
         # Material volumes
 
-        for i in range(ife_variables.maxmat + 1):
+        for i in range(ife_variables.MAXMAT + 1):
             ife_variables.chmatv[i] = max(0.0, chvol * ife_variables.chmatf[i])
             for j in range(3):
                 ife_variables.fwmatv[j, i] = max(
@@ -1403,7 +1403,7 @@ class IFE:
 
         # Material volumes
 
-        for i in range(ife_variables.maxmat + 1):
+        for i in range(ife_variables.MAXMAT + 1):
             ife_variables.chmatv[i] = max(0.0, chvol * ife_variables.chmatf[i])
             for j in range(3):
                 ife_variables.fwmatv[j, i] = max(
@@ -1776,7 +1776,7 @@ class IFE:
         ]
 
         # Material masses
-        for i in range(ife_variables.maxmat + 1):
+        for i in range(ife_variables.MAXMAT + 1):
             den = matden[i]
             ife_variables.chmatm[i] = ife_variables.chmatv[i] * den
             for j in range(3):
@@ -2548,329 +2548,3 @@ def _material_string_generator(chmatv, fwmatv, v1matv, blmatv, v2matv, shmatv, v
         )
 
     return _material_string
-
-
-def init_ife_variables():
-    """Initialise IFE variables"""
-    ife_variables.bldr = 1.0
-    ife_variables.bldrc = 1.0
-    ife_variables.bldzl = 4.0
-    ife_variables.bldzu = 4.0
-    ife_variables.blmatf = np.reshape(
-        [
-            0.05,
-            0.05,
-            0.05,
-            0.0,
-            0.0,
-            0.0,
-            0.45,
-            0.45,
-            0.45,
-            0.0,
-            0.0,
-            0.0,
-            0.20,
-            0.20,
-            0.20,
-            0.0,
-            0.0,
-            0.0,
-            0.30,
-            0.30,
-            0.30,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ],
-        ife_variables.blmatf.shape,
-    )
-    ife_variables.blmatm[:] = 0.0
-    ife_variables.blmatv[:] = 0.0
-    ife_variables.blvol[:] = 0.0
-    ife_variables.cdriv0 = 154.3
-    ife_variables.cdriv1 = 163.2
-    ife_variables.cdriv2 = 244.9
-    ife_variables.cdriv3 = 1.463
-    ife_variables.chdzl = 9.0
-    ife_variables.chdzu = 9.0
-    ife_variables.chmatf = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    ife_variables.chmatm[:] = 0.0
-    ife_variables.chmatv[:] = 0.0
-    ife_variables.chrad = 6.5
-    ife_variables.chvol = 0.0
-    ife_variables.dcdrv0 = 111.4
-    ife_variables.dcdrv1 = 78.0
-    ife_variables.dcdrv2 = 59.9
-    ife_variables.drveff = 0.28
-    ife_variables.edrive = 5.0e6
-    ife_variables.etadrv = 0.0
-    ife_variables.etali = 0.4
-    ife_variables.etave = [
-        0.082,
-        0.079,
-        0.076,
-        0.073,
-        0.069,
-        0.066,
-        0.062,
-        0.059,
-        0.055,
-        0.051,
-    ]
-    ife_variables.fauxbop = 0.06
-    ife_variables.fbreed = 0.51
-    ife_variables.fburn = 0.3333
-    ife_variables.flirad = 0.78
-    ife_variables.frrmax = 1.0
-    ife_variables.fwdr = 0.01
-    ife_variables.fwdzl = 0.01
-    ife_variables.fwdzu = 0.01
-    ife_variables.fwmatf = np.reshape(
-        [
-            0.05,
-            0.05,
-            0.05,
-            0.0,
-            0.0,
-            0.0,
-            0.95,
-            0.95,
-            0.95,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ],
-        ife_variables.fwmatf.shape,
-    )
-    ife_variables.fwmatm[:] = 0.0
-    ife_variables.fwmatv[:] = 0.0
-    ife_variables.fwvol[:] = 0.0
-    ife_variables.gain = 0.0
-    ife_variables.gainve = [
-        60.0,
-        95.0,
-        115.0,
-        125.0,
-        133.0,
-        141.0,
-        152.0,
-        160.0,
-        165.0,
-        170.0,
-    ]
-    ife_variables.htpmw_ife = 0.0
-    ife_variables.ife = 0
-    ife_variables.ifedrv = 2
-    ife_variables.ifetyp = 0
-    ife_variables.lipmw = 0.0
-    ife_variables.mcdriv = 1.0
-    ife_variables.mflibe = 0.0
-    ife_variables.pdrive = 23.0e6
-    ife_variables.pfusife = 1000.0
-    ife_variables.pifecr = 10.0
-    ife_variables.ptargf = 2.0
-    ife_variables.r1 = 0.0
-    ife_variables.r2 = 0.0
-    ife_variables.r3 = 0.0
-    ife_variables.r4 = 0.0
-    ife_variables.r5 = 0.0
-    ife_variables.r6 = 0.0
-    ife_variables.r7 = 0.0
-    ife_variables.reprat = 0.0
-    ife_variables.rrin = 6.0
-    ife_variables.rrmax = 20.0
-    ife_variables.shdr = 1.7
-    ife_variables.shdzl = 5.0
-    ife_variables.shdzu = 5.0
-    ife_variables.shmatf = np.reshape(
-        [
-            0.05,
-            0.05,
-            0.05,
-            0.19,
-            0.19,
-            0.19,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.665,
-            0.665,
-            0.665,
-            0.095,
-            0.095,
-            0.095,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ],
-        ife_variables.shmatf.shape,
-    )
-    ife_variables.shmatm[:] = 0.0
-    ife_variables.shmatv[:] = 0.0
-    ife_variables.shvol[:] = 0.0
-    ife_variables.sombdr = 2.7
-    ife_variables.somtdr = 2.7
-    ife_variables.taufall = 0.0
-    ife_variables.tdspmw = 0.01
-    ife_variables.tfacmw = 0.0
-    ife_variables.tgain = 85.0
-    ife_variables.uccarb = 50.0
-    ife_variables.ucconc = 0.1
-    ife_variables.ucflib = 84.0
-    ife_variables.uctarg = 0.3
-    ife_variables.v1dr = 0.0
-    ife_variables.v1dzl = 0.0
-    ife_variables.v1dzu = 0.0
-    ife_variables.v1matf = np.reshape(
-        [
-            1.0,
-            1.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ],
-        ife_variables.v1matf.shape,
-    )
-    ife_variables.v1matm[:] = 0.0
-    ife_variables.v1matv[:] = 0.0
-    ife_variables.v1vol[:] = 0.0
-    ife_variables.v2dr = 2.0
-    ife_variables.v2dzl = 7.0
-    ife_variables.v2dzu = 7.0
-    ife_variables.v2matf = np.reshape(
-        [
-            1.0,
-            1.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ],
-        ife_variables.v2matf.shape,
-    )
-    ife_variables.v2matm[:] = 0.0
-    ife_variables.v2matv[:] = 0.0
-    ife_variables.v2vol[:] = 0.0
-    ife_variables.v3dr = 43.3
-    ife_variables.v3dzl = 30.0
-    ife_variables.v3dzu = 20.0
-    ife_variables.v3matf = np.reshape(
-        [
-            1.0,
-            1.0,
-            1.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-        ],
-        ife_variables.v3matf.shape,
-    )
-    ife_variables.v3matm[:] = 0.0
-    ife_variables.v3matv[:] = 0.0
-    ife_variables.v3vol[:] = 0.0
-    ife_variables.zl1 = 0.0
-    ife_variables.zl2 = 0.0
-    ife_variables.zl3 = 0.0
-    ife_variables.zl4 = 0.0
-    ife_variables.zl5 = 0.0
-    ife_variables.zl6 = 0.0
-    ife_variables.zl7 = 0.0
-    ife_variables.zu1 = 0.0
-    ife_variables.zu2 = 0.0
-    ife_variables.zu3 = 0.0
-    ife_variables.zu4 = 0.0
-    ife_variables.zu5 = 0.0
-    ife_variables.zu6 = 0.0
-    ife_variables.zu7 = 0.0
