@@ -487,7 +487,7 @@ def constraint_equation_11():
     rbld: sum of thicknesses to the major radius (m)
     rmajor: plasma major radius (m)
     """
-    cc = 1.0 - fortran.build_variables.rbld / fortran.physics_variables.rmajor
+    cc = 1.0 - data_structure.build_variables.rbld / fortran.physics_variables.rmajor
     return ConstraintResult(
         cc,
         fortran.physics_variables.rmajor * (1.0 - cc),
@@ -717,12 +717,12 @@ def constraint_equation_21():
         1.0
         - fortran.constraint_variables.frminor
         * fortran.physics_variables.rminor
-        / fortran.build_variables.aplasmin
+        / data_structure.build_variables.aplasmin
     )
     return ConstraintResult(
         cc,
-        fortran.build_variables.aplasmin * (1.0 - cc),
-        fortran.build_variables.aplasmin * cc,
+        data_structure.build_variables.aplasmin * (1.0 - cc),
+        data_structure.build_variables.aplasmin * cc,
     )
 
 
@@ -741,9 +741,9 @@ def constraint_equation_23():
     # conducting shell radius (m)
     rcw = (
         fortran.physics_variables.rminor
-        + fortran.build_variables.dr_fw_plasma_gap_outboard
-        + fortran.build_variables.dr_fw_outboard
-        + fortran.build_variables.dr_blkt_outboard
+        + data_structure.build_variables.dr_fw_plasma_gap_outboard
+        + data_structure.build_variables.dr_fw_outboard
+        + data_structure.build_variables.dr_blkt_outboard
     )
 
     cc = (
@@ -958,12 +958,12 @@ def constraint_equation_29():
     cc = (
         1.0
         - (fortran.physics_variables.rmajor - fortran.physics_variables.rminor)
-        / fortran.build_variables.rinboard
+        / data_structure.build_variables.rinboard
     )
     return ConstraintResult(
         cc,
-        fortran.build_variables.rinboard * (1.0 - cc),
-        fortran.build_variables.rinboard * cc,
+        data_structure.build_variables.rinboard * (1.0 - cc),
+        data_structure.build_variables.rinboard * cc,
     )
 
 
@@ -1765,7 +1765,7 @@ def constraint_equation_72():
     # bucked and wedged desing
     if (
         fortran.tfcoil_variables.i_tf_bucking >= 2
-        and fortran.build_variables.i_tf_inside_cs == 0
+        and data_structure.build_variables.i_tf_inside_cs == 0
     ):
         cc = (
             max(
@@ -2059,14 +2059,14 @@ def constraint_equation_83():
     """
     cc = (
         1.0
-        - fortran.build_variables.f_avspace
-        * fortran.build_variables.available_radial_space
-        / fortran.build_variables.required_radial_space
+        - data_structure.build_variables.f_avspace
+        * data_structure.build_variables.available_radial_space
+        / data_structure.build_variables.required_radial_space
     )
     return ConstraintResult(
         cc,
-        fortran.build_variables.available_radial_space * (1.0 - cc),
-        fortran.build_variables.required_radial_space * cc,
+        data_structure.build_variables.available_radial_space * (1.0 - cc),
+        data_structure.build_variables.required_radial_space * cc,
     )
 
 

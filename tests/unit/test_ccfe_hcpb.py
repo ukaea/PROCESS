@@ -2,9 +2,12 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import divertor_variables, primary_pumping_variables
-from process.fortran import (
+from process.data_structure import (
     build_variables,
+    divertor_variables,
+    primary_pumping_variables,
+)
+from process.fortran import (
     ccfe_hcpb_module,
     current_drive_variables,
     fwbs_variables,

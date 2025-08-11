@@ -4,10 +4,9 @@ import numpy as np
 import pytest
 
 from process.cryostat import Cryostat
-from process.data_structure import buildings_variables
+from process.data_structure import build_variables, buildings_variables
 from process.fortran import (
     blanket_library,
-    build_variables,
     fwbs_variables,
     pfcoil_variables,
 )

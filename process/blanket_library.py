@@ -9,11 +9,14 @@ from process import (
     process_output as po,
 )
 from process.coolprop_interface import FluidProperties
-from process.data_structure import divertor_variables, primary_pumping_variables
+from process.data_structure import (
+    build_variables,
+    divertor_variables,
+    primary_pumping_variables,
+)
 from process.exceptions import ProcessValueError
 from process.fortran import (
     blanket_library,
-    build_variables,
     constants,
     error_handling,
     fwbs_variables,

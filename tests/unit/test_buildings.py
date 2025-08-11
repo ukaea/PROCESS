@@ -4,12 +4,12 @@ import pytest
 
 from process.buildings import Buildings
 from process.data_structure import (
+    build_variables,
     buildings_variables,
     cost_variables,
     divertor_variables,
 )
 from process.fortran import (
-    build_variables,
     current_drive_variables,
     fwbs_variables,
     pfcoil_variables,

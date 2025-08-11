@@ -7,10 +7,10 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
-from process.data_structure import rebco_variables
+from process.data_structure import build_variables, rebco_variables
+from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    build_variables,
     constants,
     error_handling,
     fwbs_variables,
@@ -20,7 +20,6 @@ from process.fortran import (
     sctfcoil_module,
     tfcoil_variables,
 )
-from process.fortran import build_variables as bv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import tfcoil_variables as tfv

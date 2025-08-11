@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from process.data_structure import (
+    build_variables,
     buildings_variables,
     cost_variables,
     power_variables,
@@ -11,7 +12,6 @@ from process.data_structure import (
 )
 from process.data_structure import primary_pumping_variables as ppv
 from process.fortran import (
-    build_variables,
     constraint_variables,
     current_drive_variables,
     fwbs_variables,

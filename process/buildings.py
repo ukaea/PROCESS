@@ -4,12 +4,12 @@ import numpy as np
 
 from process import process_output as po
 from process.data_structure import (
+    build_variables,
     buildings_variables,
     cost_variables,
     divertor_variables,
 )
 from process.fortran import (
-    build_variables,
     constants,
     current_drive_variables,
     fwbs_variables,
