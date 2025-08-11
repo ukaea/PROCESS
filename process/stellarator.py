@@ -253,7 +253,7 @@ class Stellarator:
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
-        st.f_coil_aspect = 1.0
+        st.f_coil_aspect = stellarator_variables.f_st_coil_aspect
 
         # Coil aspect ration factor can be described with the reversed equation (so if we would know r_coil_minor)
         # st.f_coil_aspect = (
@@ -3029,17 +3029,23 @@ class Stellarator:
         #######################################################################################
         # Quench protection:
         #
-        # This copied from the tokamak module:
-        # Radial position of vacuum vessel [m]
-        radvv = (
-            physics_variables.rmajor
-            - physics_variables.rminor
-            - build_variables.dr_fw_plasma_gap_inboard
-            - build_variables.dr_fw_inboard
-            - build_variables.dr_blkt_inboard
-            - build_variables.dr_shld_blkt_gap
-            - build_variables.dr_shld_inboard
-        )
+        # This is incorrect for stellartors...
+        # # This copied from the tokamak module:
+        # # Radial position of vacuum vessel [m]
+        # radvv = (
+        #     physics_variables.rmajor
+        #     - physics_variables.rminor
+        #     - build_variables.dr_fw_plasma_gap_inboard
+        #     - build_variables.dr_fw_inboard
+        #     - build_variables.dr_blkt_inboard
+        #     - build_variables.dr_shld_blkt_gap
+        #     - build_variables.dr_shld_inboard
+        # )
+
+        # Stellarator version is working on the W7-X scaling, so we should use actual vv r_major
+        # plasma r_major is just an approximation, but exact calculations require 3D geometry
+        # Maybe it can be added to the stella_config file in the future
+        radvv = physics_variables.rmajor
 
         # Actual VV force density
         # Based on reference values from W-7X:
@@ -5835,6 +5841,7 @@ def init_stellarator_variables():
     stellarator_variables.vporttmax = 0.0
     stellarator_variables.max_gyrotron_frequency = 1.0e9
     stellarator_variables.te0_ecrh_achievable = 1.0e2
+    stellarator_variables.f_st_coil_aspect = 1.0
 
 
 def init_stellarator_module():
@@ -5845,6 +5852,10 @@ def init_stellarator_module():
     st.f_a = 0.0
     st.f_b = 0.0
     st.f_i = 0.0
+    st.f_coil_aspect = 0.0
+    st.r_coil_major = 0.0
+    st.r_coil_minor = 0.0
+    st.f_coil_shape = 0.0
 
 
 def stinit():

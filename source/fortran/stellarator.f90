@@ -17,6 +17,7 @@ module stellarator_module
 
   ! scaling parameters to reference point.
   real(dp) :: f_n, f_r, f_aspect, f_b, f_i, f_a
+  real(dp) :: f_coil_aspect, r_coil_major, r_coil_minor, f_coil_shape
 
 
   logical :: first_call = .true.

@@ -91,4 +91,7 @@ module stellarator_variables
   real(dp) :: powerht_constraint
   real(dp) :: powerscaling_constraint
 
+  real(dp) :: f_st_coil_aspect
+  !! aspect ratio for coils
+
 end module stellarator_variables

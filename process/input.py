@@ -616,6 +616,7 @@ INPUT_VARIABLES = {
         fortran.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_w": InputVariable(fortran.stellarator_variables, float, range=(0.1, 1.0)),
+    "f_st_coil_aspect": InputVariable(fortran.stellarator_variables, float, range=(0.1, 10.0)),
     "f_z_cryostat": InputVariable(fortran.build_variables, float, range=(2.0, 10.0)),
     "falpha_energy_confinement": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)

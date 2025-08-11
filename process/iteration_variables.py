@@ -336,6 +336,7 @@ ITERATION_VARIABLES = {
     173: IterationVariable("f_tritium", fortran.physics_variables, 0.000, 1.000),
     174: IterationVariable("triang", fortran.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", fortran.physics_variables, 0.00, 10.00),
+    176: IterationVariable("f_st_coil_aspect", fortran.stellarator_variables, 0.80, 1.20),
 }
 
 
