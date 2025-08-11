@@ -2414,18 +2414,24 @@ class TFCoil:
 
         # Outer/inner WP radius removing the ground insulation layer and the insertion gap [m]
         if i_tf_sup == 1:
-            r_out_wp = (
+            r_tf_wp_inboard_outer_conductor = (
                 r_tf_wp_inboard_outer - dx_tf_wp_insulation - dx_tf_wp_insertion_gap
             )
-            r_in_wp = (
+            r_tf_wp_inboard_inner_conductor = (
                 r_tf_wp_inboard_inner + dx_tf_wp_insulation + dx_tf_wp_insertion_gap
             )
         else:
-            r_out_wp = r_tf_wp_inboard_outer - dx_tf_wp_insulation
-            r_in_wp = r_tf_wp_inboard_inner + dx_tf_wp_insulation
+            r_tf_wp_inboard_outer_conductor = (
+                r_tf_wp_inboard_outer - dx_tf_wp_insulation
+            )
+            r_tf_wp_inboard_inner_conductor = (
+                r_tf_wp_inboard_inner + dx_tf_wp_insulation
+            )
 
         # Associated WP thickness
-        dr_wp = r_out_wp - r_in_wp
+        dr_tf_wp_inboard_conductor = (
+            r_tf_wp_inboard_outer_conductor - r_tf_wp_inboard_inner_conductor
+        )
 
         # In plane forces
         # ---
@@ -2439,35 +2445,58 @@ class TFCoil:
         # -#
         # Ouboard leg WP plasma side radius without ground insulation/insertion gat [m]
         if i_tf_sup == 1:
-            r_in_outwp = (
+            r_tf_wp_outboard_inner_conductor = (
                 r_tf_outboard_in
                 + dr_tf_plasma_case
                 + dx_tf_wp_insulation
                 + dx_tf_wp_insertion_gap
             )
         else:
-            r_in_outwp = r_tf_outboard_in + dx_tf_wp_insulation
+            r_tf_wp_outboard_inner_conductor = r_tf_outboard_in + dx_tf_wp_insulation
 
         # If the TF coil has no dr_bore it would induce division by 0.
         # In this situation, the dr_bore radius is set to a very small value : 1.0e-9 m
-        if abs(r_in_wp) < np.finfo(float(r_in_wp)).eps:
-            r_in_wp = 1.0e-9
+        if (
+            abs(r_tf_wp_inboard_inner_conductor)
+            < np.finfo(float(r_tf_wp_inboard_inner_conductor)).eps
+        ):
+            r_tf_wp_inboard_inner_conductor = 1.0e-9
 
         # May the force be with you
         vforce_tot = (
             0.5e0
             * (bt * rmajor * c_tf_total)
-            / (n_tf_coils * dr_wp**2)
+            / (n_tf_coils * dr_tf_wp_inboard_conductor**2)
             * (
-                r_out_wp**2 * np.log(r_out_wp / r_in_wp)
-                + r_in_outwp**2 * np.log((r_in_outwp + dr_wp) / r_in_outwp)
-                + dr_wp**2 * np.log((r_in_outwp + dr_wp) / r_in_wp)
-                - dr_wp * (r_out_wp + r_in_outwp)
+                r_tf_wp_inboard_outer_conductor**2
+                * np.log(
+                    r_tf_wp_inboard_outer_conductor / r_tf_wp_inboard_inner_conductor
+                )
+                + r_tf_wp_outboard_inner_conductor**2
+                * np.log(
+                    (r_tf_wp_outboard_inner_conductor + dr_tf_wp_inboard_conductor)
+                    / r_tf_wp_outboard_inner_conductor
+                )
+                + dr_tf_wp_inboard_conductor**2
+                * np.log(
+                    (r_tf_wp_outboard_inner_conductor + dr_tf_wp_inboard_conductor)
+                    / r_tf_wp_inboard_inner_conductor
+                )
+                - dr_tf_wp_inboard_conductor
+                * (r_tf_wp_inboard_outer_conductor + r_tf_wp_outboard_inner_conductor)
                 + 2.0e0
-                * dr_wp
+                * dr_tf_wp_inboard_conductor
                 * (
-                    r_out_wp * np.log(r_in_wp / r_out_wp)
-                    + r_in_outwp * np.log((r_in_outwp + dr_wp) / r_in_outwp)
+                    r_tf_wp_inboard_outer_conductor
+                    * np.log(
+                        r_tf_wp_inboard_inner_conductor
+                        / r_tf_wp_inboard_outer_conductor
+                    )
+                    + r_tf_wp_outboard_inner_conductor
+                    * np.log(
+                        (r_tf_wp_outboard_inner_conductor + dr_tf_wp_inboard_conductor)
+                        / r_tf_wp_outboard_inner_conductor
+                    )
                 )
             )
         )
@@ -2479,13 +2508,28 @@ class TFCoil:
             vforce = (
                 0.25e0
                 * (bt * rmajor * c_tf_total)
-                / (n_tf_coils * dr_wp**2)
+                / (n_tf_coils * dr_tf_wp_inboard_conductor**2)
                 * (
-                    2.0e0 * r_out_wp**2 * np.log(r_out_wp / r_in_wp)
-                    + 2.0e0 * dr_wp**2 * np.log(r_cp_top / r_in_wp)
-                    + 3.0e0 * dr_wp**2
-                    - 2.0e0 * dr_wp * r_out_wp
-                    + 4.0e0 * dr_wp * r_out_wp * np.log(r_in_wp / r_out_wp)
+                    2.0e0
+                    * r_tf_wp_inboard_outer_conductor**2
+                    * np.log(
+                        r_tf_wp_inboard_outer_conductor
+                        / r_tf_wp_inboard_inner_conductor
+                    )
+                    + 2.0e0
+                    * dr_tf_wp_inboard_conductor**2
+                    * np.log(r_cp_top / r_tf_wp_inboard_inner_conductor)
+                    + 3.0e0 * dr_tf_wp_inboard_conductor**2
+                    - 2.0e0
+                    * dr_tf_wp_inboard_conductor
+                    * r_tf_wp_inboard_outer_conductor
+                    + 4.0e0
+                    * dr_tf_wp_inboard_conductor
+                    * r_tf_wp_inboard_outer_conductor
+                    * np.log(
+                        r_tf_wp_inboard_inner_conductor
+                        / r_tf_wp_inboard_outer_conductor
+                    )
                 )
             )
 

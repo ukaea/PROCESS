@@ -249,7 +249,8 @@ $$
 F_{\text{Z}} = \frac{B_{\text{T}} R_0 I_{\text{TF,coil}}}{2 \times dR_{\text{TF,WP}}^2} \times \\
  \left[R_{\text{TF-inner,WP-outer}}^2 \ln{\left(\frac{R_{\text{TF-inner,WP-outer}}}{R_{\text{TF-inner,WP-inner}}}\right)} \\ 
  + R_{\text{TF-outer,WP-inner}}^2 \ln{\left(\frac{R_{\text{TF-outer,WP-inner}}+dR_{\text{TF,WP}}}{R_{\text{TF-outer,WP-inner}}}\right)} \\
- + dR_{\text{TF,WP}}^2 \ln{\left(\frac{R_{\text{TF-outer,WP-inner}}+dR_{\text{TF,WP}}}{R_{\text{TF-inner,WP-inner}}}\right)} -dR_{\text{TF,WP}}\left(R_{\text{TF-inner,WP-outer}} + \right)
+ + dR_{\text{TF,WP}}^2 \ln{\left(\frac{R_{\text{TF-outer,WP-inner}}+dR_{\text{TF,WP}}}{R_{\text{TF-inner,WP-inner}}}\right)} -dR_{\text{TF,WP}}\left(R_{\text{TF-inner,WP-outer}} + R_{\text{TF-outer,WP-inner}} \right) \\
+ + 2\times dR_{\text{TF,WP}} \left(R_{\text{TF-inner,WP-outer}} \ln{\left(\frac{R_{\text{TF-inner,WP-inner}}}{R_{\text{TF-inner,WP-outer}}}\right)} + \\ R_{\text{TF-outboard,WP-inner}} \ln{\left(\frac{R_{\text{TF-outboard,WP-inner}}+dR_{\text{TF,WP}}}{R_{\text{TF-outboard,WP-inner}}}\right)}\right)
  \right]
 $$
 
