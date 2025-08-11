@@ -1667,10 +1667,6 @@ class Build:
 
         return ripple, r_tf_outboard_midmin, flag
 
-    def tf_in_cs_bore_calc(self):
-        build_variables.dr_bore += (
-            build_variables.dr_tf_inboard + build_variables.dr_cs_tf_gap
-        )
 
     def calculate_radial_build(self, output: bool) -> None:
         """
@@ -1734,21 +1730,6 @@ class Build:
         else:
             build_variables.dr_cs_precomp = 0.0e0
 
-        if build_variables.i_tf_inside_cs == 1:
-            build_variables.r_tf_inboard_in = (
-                build_variables.dr_bore
-                - build_variables.dr_tf_inboard
-                - build_variables.dr_cs_tf_gap
-            )
-        else:
-            # Inboard side inner radius [m]
-            build_variables.r_tf_inboard_in = (
-                build_variables.dr_bore
-                + build_variables.dr_cs
-                + build_variables.dr_cs_precomp
-                + build_variables.dr_cs_tf_gap
-            )
-
         # Issue #514 Radial dimensions of inboard leg
         # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
         if any(numerics.ixc[0 : numerics.nvar] == 140):
@@ -1756,6 +1737,23 @@ class Build:
                 tfcoil_variables.dr_tf_wp_with_insulation
                 + tfcoil_variables.dr_tf_plasma_case
                 + tfcoil_variables.dr_tf_nose_case
+            )
+
+        if build_variables.i_tf_inside_cs == 1:
+            
+            build_variables.r_tf_inboard_in = (
+                build_variables.dr_bore
+                # NOTE: dr_bore is just the hollow space, the
+                # true dr_bore size used for flux calculations 
+                # is dr_bore + dr_tf_inboard + dr_cs_tf_gap
+            ) 
+        else:
+            # Inboard side inner radius [m]
+            build_variables.r_tf_inboard_in = (
+                build_variables.dr_bore
+                + build_variables.dr_cs
+                + build_variables.dr_cs_precomp
+                + build_variables.dr_cs_tf_gap
             )
 
         # Radial build to tfcoil middle [m]

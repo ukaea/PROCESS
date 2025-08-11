@@ -252,9 +252,6 @@ class Caller:
 
         # Machine Build Model
         # Radial build
-        if data_structure.build_variables.i_tf_inside_cs == 1:
-            self.models.build.tf_in_cs_bore_calc()
-
         self.models.build.run()
 
         self.models.physics.physics()
