@@ -381,6 +381,18 @@ OBS_VARS = {
     "tcycmn": "t_cycle_min",
     "walalw": "pflux_fw_neutron_max_mw",
     "dx_tf_side_case": "dx_tf_side_case_min",
+    "bigqmin": "big_q_plasma_min",
+    "fauxmn": "fp_hcd_injected_min_mw",
+    "fcqt": "ftemp_croco_quench_max",
+    "fpsep": None,
+    "fq": "fq95_min",
+    "fqval": "fbig_q_plasma_min",
+    "fzeffmax": "fzeff_max",
+    "ptempalw": "temp_cp_max",
+    "tmax_croco": "temp_croco_quench_max",
+    "vdalw": "v_tf_coil_dump_quench_max_kv",
+    "vvhealw": None,
+    "zeffmax": "zeff_max",
 }
 
 OBS_VARS_HELP = {
