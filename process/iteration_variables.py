@@ -188,7 +188,6 @@ ITERATION_VARIABLES = {
         "fpflux_fw_rad_max", fortran.constraint_variables, 0.001, 1.0
     ),
     117: IterationVariable("fpsepbqar", fortran.constraint_variables, 0.001, 1.0),
-    118: IterationVariable("fpsep", fortran.constraint_variables, 0.001, 1.0),
     119: IterationVariable("tesep", fortran.physics_variables, 0.0, 1.0e1),
     122: IterationVariable("f_a_cs_steel", fortran.pfcoil_variables, 0.001, 0.950),
     123: IterationVariable("foh_stress", fortran.constraint_variables, 0.001, 1.0),

@@ -323,7 +323,6 @@ module numerics
   !! <LI> (115) fpoloidalpower: f-value for max rate of change of
   !! <LI> (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
   !! <LI> (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
-  !! <LI> (118) fpsep: f-value to ensure separatrix power is less than
   !! <LI> (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
   !! <LI> (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
   !! <LI> (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
