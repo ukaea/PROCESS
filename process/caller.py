@@ -8,6 +8,7 @@ import numpy as np
 from tabulate import tabulate
 
 import process.constraints as constraints
+from process import data_structure
 from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
