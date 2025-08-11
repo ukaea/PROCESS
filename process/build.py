@@ -1667,7 +1667,6 @@ class Build:
 
         return ripple, r_tf_outboard_midmin, flag
 
-
     def calculate_radial_build(self, output: bool) -> None:
         """
         This method determines the radial build of the machine.
@@ -1740,13 +1739,12 @@ class Build:
             )
 
         if build_variables.i_tf_inside_cs == 1:
-            
             build_variables.r_tf_inboard_in = (
                 build_variables.dr_bore
                 # NOTE: dr_bore is just the hollow space, the
-                # true dr_bore size used for flux calculations 
+                # true dr_bore size used for flux calculations
                 # is dr_bore + dr_tf_inboard + dr_cs_tf_gap
-            ) 
+            )
         else:
             # Inboard side inner radius [m]
             build_variables.r_tf_inboard_in = (
