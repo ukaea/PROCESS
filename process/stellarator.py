@@ -22,6 +22,7 @@ from process.data_structure import (
     structure_variables,
     times_variables,
 )
+from process.data_structure import stellarator_variables as st
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
@@ -38,9 +39,6 @@ from process.fortran import (
     sctfcoil_module,
     stellarator_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    stellarator_module as st,
 )
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
@@ -5820,16 +5818,6 @@ def init_stellarator_variables():
     stellarator_variables.vporttmax = 0.0
     stellarator_variables.max_gyrotron_frequency = 1.0e9
     stellarator_variables.te0_ecrh_achievable = 1.0e2
-
-
-def init_stellarator_module():
-    st.first_call = True
-    st.first_call_stfwbs = True
-    st.f_n = 0.0
-    st.f_r = 0.0
-    st.f_a = 0.0
-    st.f_b = 0.0
-    st.f_i = 0.0
 
 
 def stinit():

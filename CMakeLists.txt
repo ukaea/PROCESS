@@ -91,7 +91,6 @@ LIST(APPEND PROCESS_SRCS
     dcll.f90
     blanket_library.f90
     stellarator_variables.f90
-    stellarator.f90
 )
 
 PREPROCESS()

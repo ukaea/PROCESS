@@ -31,6 +31,7 @@ from process.data_structure.primary_pumping_variables import (
 from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
+from process.data_structure.stellarator_variables import init_stellarator_module
 from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
@@ -48,7 +49,6 @@ from process.physics import (
 from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.scan import init_scan_module
 from process.stellarator import (
-    init_stellarator_module,
     init_stellarator_variables,
     stinit,
 )
