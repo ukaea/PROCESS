@@ -251,7 +251,9 @@ INPUT_VARIABLES = {
     "b_cs_limit_max": InputVariable(
         fortran.pfcoil_variables, float, range=(0.01, 100.0)
     ),
-    "bmn": InputVariable(fortran.stellarator_variables, float, range=(0.0001, 0.01)),
+    "bmn": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.0001, 0.01)
+    ),
     "b_tf_inboard_max": InputVariable(
         fortran.constraint_variables, float, range=(0.1, 50.0)
     ),
@@ -616,7 +618,9 @@ INPUT_VARIABLES = {
     "f_alpha_energy_confinement_min": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 100.0)
     ),
-    "f_asym": InputVariable(fortran.stellarator_variables, float, range=(0.9, 2.0)),
+    "f_asym": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.9, 2.0)
+    ),
     "f_avspace": InputVariable(
         data_structure.build_variables, float, range=(0.001, 10.0)
     ),
@@ -645,7 +649,9 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, float, range=(0.0, 1.0)
     ),
     "f_r_cp": InputVariable(data_structure.build_variables, float, range=(1.0, 100.0)),
-    "f_rad": InputVariable(fortran.stellarator_variables, float, range=(0.0, 1.0)),
+    "f_rad": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.0, 1.0)
+    ),
     "f_sync_reflect": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
     "f_tritium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
@@ -655,7 +661,7 @@ INPUT_VARIABLES = {
     "f_vforce_inboard": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "f_w": InputVariable(fortran.stellarator_variables, float, range=(0.1, 1.0)),
+    "f_w": InputVariable(data_structure.stellarator_variables, float, range=(0.1, 1.0)),
     "f_z_cryostat": InputVariable(
         data_structure.build_variables, float, range=(2.0, 10.0)
     ),
@@ -720,7 +726,9 @@ INPUT_VARIABLES = {
     "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
-    "fdivwet": InputVariable(fortran.stellarator_variables, float, range=(0.01, 1.0)),
+    "fdivwet": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.01, 1.0)
+    ),
     "fdtmp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fecrh_ignition": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
@@ -750,7 +758,7 @@ INPUT_VARIABLES = {
     ),
     "flirad": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "flpitch": InputVariable(
-        fortran.stellarator_variables, float, range=(0.0001, 0.01)
+        data_structure.stellarator_variables, float, range=(0.0001, 0.01)
     ),
     "f_div_flux_expansion": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
@@ -1009,7 +1017,9 @@ INPUT_VARIABLES = {
     "inlet_temp_liq": InputVariable(
         fortran.fwbs_variables, float, range=(508.0, 1500.0)
     ),
-    "iotabar": InputVariable(fortran.stellarator_variables, float, range=(0.1, 10.0)),
+    "iotabar": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.1, 10.0)
+    ),
     "j_tf_bus": InputVariable(
         fortran.tfcoil_variables, float, range=(10000.0, 100000000.0)
     ),
@@ -1072,7 +1082,9 @@ INPUT_VARIABLES = {
         data_structure.cost_variables, float, range=(0.0, 1.0)
     ),
     "max_gyrotron_frequency": InputVariable(
-        fortran.stellarator_variables, float, range=(1000000000.0, 100000000000000.0)
+        data_structure.stellarator_variables,
+        float,
+        range=(1000000000.0, 100000000000000.0),
     ),
     "max_vv_stress": InputVariable(
         fortran.tfcoil_variables, float, range=(100000.0, 500000000.0)
@@ -1331,7 +1343,9 @@ INPUT_VARIABLES = {
     "shdr": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "shdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "shdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
-    "shear": InputVariable(fortran.stellarator_variables, float, range=(0.1, 10.0)),
+    "shear": InputVariable(
+        data_structure.stellarator_variables, float, range=(0.1, 10.0)
+    ),
     "dz_shld_lower": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
@@ -1447,7 +1461,7 @@ INPUT_VARIABLES = {
     "tdmptf": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
     "te": InputVariable(fortran.physics_variables, float, range=(1.0, 200.0)),
     "te0_ecrh_achievable": InputVariable(
-        fortran.stellarator_variables, float, range=(1.0, 1000.0)
+        data_structure.stellarator_variables, float, range=(1.0, 1000.0)
     ),
     "temp_cp_average": InputVariable(
         fortran.tfcoil_variables, float, range=(4.0, 573.15)
@@ -1836,8 +1850,8 @@ INPUT_VARIABLES = {
     "i_pf_energy_storage_source": InputVariable(
         fortran.pf_power_variables, int, range=(1, 3)
     ),
-    "istell": InputVariable(fortran.stellarator_variables, int, range=(0, 6)),
-    "isthtr": InputVariable(fortran.stellarator_variables, int, range=(1, 3)),
+    "istell": InputVariable(data_structure.stellarator_variables, int, range=(0, 6)),
+    "isthtr": InputVariable(data_structure.stellarator_variables, int, range=(1, 3)),
     "istore": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
     "i_cs_superconductor": InputVariable(fortran.pfcoil_variables, int, range=(1, 9)),
     "i_pf_superconductor": InputVariable(fortran.pfcoil_variables, int, range=(1, 9)),
@@ -1846,12 +1860,12 @@ INPUT_VARIABLES = {
     "itcycl": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
     "iwalld": InputVariable(fortran.physics_variables, int, range=(1, 2)),
     "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
-    "m_res": InputVariable(fortran.stellarator_variables, int, range=(1, 10)),
+    "m_res": InputVariable(data_structure.stellarator_variables, int, range=(1, 10)),
     "n_layer": InputVariable(fortran.tfcoil_variables, int, range=(1, 100)),
     "n_liq_recirc": InputVariable(fortran.fwbs_variables, int, range=(1, 50)),
     "n_pancake": InputVariable(fortran.tfcoil_variables, int, range=(1, 100)),
     "n_rad_per_layer": InputVariable(fortran.tfcoil_variables, int, range=(1, 500)),
-    "n_res": InputVariable(fortran.stellarator_variables, int, range=(3, 6)),
+    "n_res": InputVariable(data_structure.stellarator_variables, int, range=(3, 6)),
     "n_tf_graded_layers": InputVariable(fortran.tfcoil_variables, int, range=(1, 20)),
     "n_tf_joints": InputVariable(fortran.tfcoil_variables, int, range=(1, 50)),
     "n_tf_joints_contact": InputVariable(fortran.tfcoil_variables, int, range=(1, 50)),

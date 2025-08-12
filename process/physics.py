@@ -20,6 +20,7 @@ from process.data_structure import (
     impurity_radiation_module,
     pulse_variables,
     reinke_variables,
+    stellarator_variables,
     times_variables,
 )
 from process.exceptions import ProcessValueError
@@ -32,7 +33,6 @@ from process.fortran import (
     numerics,
     physics_module,
     physics_variables,
-    stellarator_variables,
 )
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
