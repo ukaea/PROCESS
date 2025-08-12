@@ -102,6 +102,17 @@ fseppc: float = None
 """Separation force in CS coil pre-compression structure"""
 
 
+a_fw_total_full_coverage: float = None
+"""First wall total surface area with no holes or ports [m^2]"""
+
+
+a_fw_inboard_full_coverage: float = None
+"""Inboard first wall surface area with no holes or ports [m^2]"""
+
+
+a_fw_outboard_full_coverage: float = None
+"""Outboard first wall surface area with no holes or ports [m^2]"""
+
 a_fw_total: float = None
 """First wall total surface area [m^2]"""
 
@@ -419,6 +430,9 @@ def init_build_variables():
     global f_avspace
     global fcspc
     global fseppc
+    global a_fw_total_full_coverage
+    global a_fw_inboard_full_coverage
+    global a_fw_outboard_full_coverage
     global a_fw_total
     global a_fw_inboard
     global a_fw_outboard
@@ -511,6 +525,9 @@ def init_build_variables():
     f_avspace = 1.0
     fcspc = 0.6
     fseppc = 3.5e8
+    a_fw_total_full_coverage = 0.0
+    a_fw_inboard_full_coverage = 0.0
+    a_fw_outboard_full_coverage = 0.0
     a_fw_total = 0.0
     a_fw_inboard = 0.0
     a_fw_outboard = 0.0
