@@ -4031,6 +4031,40 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             lw=0.01,
         )
 
+        dz_divertor = mfile_data.data["dz_divertor"].get_scan(scan)
+        dz_xpoint_divertor = mfile_data.data["dz_xpoint_divertor"].get_scan(scan)
+        kappa = mfile_data.data["kappa"].get_scan(scan)
+        rminor = mfile_data.data["rminor"].get_scan(scan)
+        dr_vv_inboard = mfile_data.data["dr_vv_inboard"].get_scan(scan)
+        dr_vv_outboard = mfile_data.data["dr_vv_outboard"].get_scan(scan)
+        dr_shld_inboard = mfile_data.data["dr_shld_inboard"].get_scan(scan)
+        dr_shld_outboard = mfile_data.data["dr_shld_outboard"].get_scan(scan)
+        dr_blkt_inboard = mfile_data.data["dr_blkt_inboard"].get_scan(scan)
+        dr_blkt_outboard = mfile_data.data["dr_blkt_outboard"].get_scan(scan)
+
+        z_divertor_top = (-kappa * rminor) - dz_xpoint_divertor
+        z_divertor_bottom = z_divertor_top - dz_divertor
+
+        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+        # Find the min and max R values of the vessel boundary between the divertor lines
+        mask = (vvg_single_null.zs >= z_divertor_bottom) & (
+            vvg_single_null.zs <= z_divertor_top
+        )
+        # Get the min/max R for the region between the divertor lines
+        r_min = np.min(vvg_single_null.rs[mask]) + dr_vv_inboard + dr_shld_inboard+ dr_blkt_inboard
+        r_max = np.max(vvg_single_null.rs[mask]) - dr_vv_outboard - dr_shld_outboard - dr_blkt_outboard
+        # Draw a rectangle (box) between the two lines and inside the vessel
+        axis.add_patch(
+            patches.Rectangle(
+                (r_min, z_divertor_bottom),
+                r_max - r_min,
+                z_divertor_top - z_divertor_bottom,
+                facecolor="black",
+                alpha=0.8,
+                zorder=5,
+            )
+        )
+
     if i_single_null == 0:
         vvg_double_null = vacuum_vessel_geometry_double_null(
             cumulative_lower=cumulative_lower,
