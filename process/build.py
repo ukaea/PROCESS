@@ -1714,7 +1714,7 @@ class Build:
             )
 
         # Calculate pre-compression structure thickness is build_variables.i_cs_precomp=1
-        if build_variables.i_cs_precomp == 1:
+        if build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 0:
             build_variables.dr_cs_precomp = build_variables.fseppc / (
                 2.0e0
                 * np.pi
@@ -1723,6 +1723,19 @@ class Build:
                 * (
                     build_variables.dr_bore
                     + build_variables.dr_bore
+                    + build_variables.dr_cs
+                )
+            )
+        elif build_variables.i_cs_precomp == 1 and build_variables.i_tf_inside_cs == 1:
+            build_variables.dr_cs_precomp = build_variables.fseppc / (
+                2.0e0
+                * np.pi
+                * build_variables.fcspc
+                * build_variables.sigallpc
+                * (
+                    2.0 * build_variables.dr_bore
+                    + 2.0 * build_variables.dr_tf_inboard
+                    + 2.0 * build_variables.dr_cs_tf_gap
                     + build_variables.dr_cs
                 )
             )
@@ -2162,37 +2175,23 @@ class Build:
                 build_variables.i_tf_inside_cs == 1
                 and tfcoil_variables.i_tf_bucking >= 2
             ):
-                radius = (
-                    radius
-                    + build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap
-                )
+                radius = radius + build_variables.dr_bore
 
                 radial_build_data.append([
                     "Machine dr_bore wedge support cylinder",
                     "dr_bore",
-                    build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap,
+                    build_variables.dr_bore,
                     radius,
                 ])
             elif (
                 build_variables.i_tf_inside_cs == 1
                 and tfcoil_variables.i_tf_bucking < 2
             ):
-                radius = (
-                    radius
-                    + build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap
-                )
+                radius = radius + build_variables.dr_bore
                 radial_build_data.append([
                     "Machine dr_bore hole",
                     "dr_bore",
-                    build_variables.dr_bore
-                    - build_variables.dr_tf_inboard
-                    - build_variables.dr_cs_tf_gap,
+                    build_variables.dr_bore,
                     radius,
                 ])
             else:
