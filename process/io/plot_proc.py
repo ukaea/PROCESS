@@ -3200,6 +3200,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
         ("First wall", FIRSTWALL_COLOUR[colour_scheme - 1]),
         ("Plasma", PLASMA_COLOUR[colour_scheme - 1]),
         ("PF coils", "none"),
+        ("Divertor", "black"),
     ]
 
     if (mfile_data.data["i_hcd_primary"].get_scan(scan) in [5, 8]) or (
@@ -4051,8 +4052,18 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_single_null.zs <= z_divertor_top
         )
         # Get the min/max R for the region between the divertor lines
-        r_min = np.min(vvg_single_null.rs[mask]) + dr_vv_inboard + dr_shld_inboard+ dr_blkt_inboard
-        r_max = np.max(vvg_single_null.rs[mask]) - dr_vv_outboard - dr_shld_outboard - dr_blkt_outboard
+        r_min = (
+            np.min(vvg_single_null.rs[mask])
+            + dr_vv_inboard
+            + dr_shld_inboard
+            + (dr_blkt_inboard * 0.5)
+        )
+        r_max = (
+            np.max(vvg_single_null.rs[mask])
+            - dr_vv_outboard
+            - dr_shld_outboard
+            - (dr_blkt_outboard * 0.5)
+        )
         # Draw a rectangle (box) between the two lines and inside the vessel
         axis.add_patch(
             patches.Rectangle(
@@ -4060,7 +4071,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
                 r_max - r_min,
                 z_divertor_top - z_divertor_bottom,
                 facecolor="black",
-                alpha=0.8,
+                alpha=0.9,
                 zorder=5,
             )
         )
