@@ -59,11 +59,11 @@ class BlanketLibrary:
 
         # Calculate half-height
         # Blanket
-        blanket_library.hblnkt = self.component_half_height(icomponent=0)
+        blanket_library.dz_blkt_half = self.component_half_height(icomponent=0)
         # Shield
-        blanket_library.hshld = self.component_half_height(icomponent=1)
+        blanket_library.dz_shld_half = self.component_half_height(icomponent=1)
         # Vacuum Vessel
-        blanket_library.hvv = self.component_half_height(icomponent=2)
+        blanket_library.dz_vv_half = self.component_half_height(icomponent=2)
 
         # D-shaped blanket and shield
         if physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1:
@@ -178,16 +178,16 @@ class BlanketLibrary:
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
             (
-                build_variables.blareaib,
-                build_variables.blareaob,
-                build_variables.blarea,
-            ) = dshellarea(r1, r2, blanket_library.hblnkt)
+                build_variables.a_blkt_inboard_surface,
+                build_variables.a_blkt_outboard_surface,
+                build_variables.a_blkt_total_surface,
+            ) = dshellarea(r1, r2, blanket_library.dz_blkt_half)
         if icomponent == 1:
             (
-                build_variables.shareaib,
-                build_variables.shareaob,
-                build_variables.sharea,
-            ) = dshellarea(r1, r2, blanket_library.hshld)
+                build_variables.a_shld_inboard_surface,
+                build_variables.a_shld_outboard_surface,
+                build_variables.a_shld_total_surface,
+            ) = dshellarea(r1, r2, blanket_library.dz_shld_half)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -198,20 +198,20 @@ class BlanketLibrary:
             ) = dshellvol(
                 r1,
                 r2,
-                blanket_library.hblnkt,
+                blanket_library.dz_blkt_half,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
                 build_variables.dz_blkt_upper,
             )
         elif icomponent == 1:
             (
-                blanket_library.volshldi,
-                blanket_library.volshldo,
-                fwbs_variables.volshld,
+                blanket_library.vol_shld_inboard,
+                blanket_library.vol_shld_outboard,
+                fwbs_variables.vol_shld_total,
             ) = dshellvol(
                 r1,
                 r2,
-                blanket_library.hshld,
+                blanket_library.dz_shld_half,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
                 build_variables.dz_shld_upper,
@@ -224,7 +224,7 @@ class BlanketLibrary:
             ) = dshellvol(
                 r1,
                 r2,
-                blanket_library.hvv,
+                blanket_library.dz_vv_half,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
                 (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
@@ -268,16 +268,16 @@ class BlanketLibrary:
         # Calculate surface area, assuming 100% coverage
         if icomponent == 0:
             (
-                build_variables.blareaib,
-                build_variables.blareaob,
-                build_variables.blarea,
-            ) = eshellarea(r1, r2, r3, blanket_library.hblnkt)
+                build_variables.a_blkt_inboard_surface,
+                build_variables.a_blkt_outboard_surface,
+                build_variables.a_blkt_total_surface,
+            ) = eshellarea(r1, r2, r3, blanket_library.dz_blkt_half)
         if icomponent == 1:
             (
-                build_variables.shareaib,
-                build_variables.shareaob,
-                build_variables.sharea,
-            ) = eshellarea(r1, r2, r3, blanket_library.hshld)
+                build_variables.a_shld_inboard_surface,
+                build_variables.a_shld_outboard_surface,
+                build_variables.a_shld_total_surface,
+            ) = eshellarea(r1, r2, r3, blanket_library.dz_shld_half)
 
         # Calculate volumes, assuming 100% coverage
         if icomponent == 0:
@@ -289,21 +289,21 @@ class BlanketLibrary:
                 r1,
                 r2,
                 r3,
-                blanket_library.hblnkt,
+                blanket_library.dz_blkt_half,
                 build_variables.dr_blkt_inboard,
                 build_variables.dr_blkt_outboard,
                 build_variables.dz_blkt_upper,
             )
         if icomponent == 1:
             (
-                blanket_library.volshldi,
-                blanket_library.volshldo,
-                fwbs_variables.volshld,
+                blanket_library.vol_shld_inboard,
+                blanket_library.vol_shld_outboard,
+                fwbs_variables.vol_shld_total,
             ) = eshellvol(
                 r1,
                 r2,
                 r3,
-                blanket_library.hshld,
+                blanket_library.dz_shld_half,
                 build_variables.dr_shld_inboard,
                 build_variables.dr_shld_outboard,
                 build_variables.dz_shld_upper,
@@ -317,7 +317,7 @@ class BlanketLibrary:
                 r1,
                 r2,
                 r3,
-                blanket_library.hvv,
+                blanket_library.dz_vv_half,
                 build_variables.dr_vv_inboard,
                 build_variables.dr_vv_outboard,
                 (build_variables.dz_vv_upper + build_variables.dz_vv_lower) / 2,
@@ -331,24 +331,27 @@ class BlanketLibrary:
         # Apply blanket coverage factors
         if physics_variables.n_divertors == 2:
             # double null configuration
-            build_variables.blareaob = (
-                build_variables.blarea
+            build_variables.a_blkt_outboard_surface = (
+                build_variables.a_blkt_total_surface
                 * (
                     1.0
                     - 2.0 * fwbs_variables.f_ster_div_single
                     - fwbs_variables.f_a_fw_hcd
                 )
-                - build_variables.blareaib
+                - build_variables.a_blkt_inboard_surface
             )
         else:
             # single null configuration
-            build_variables.blareaob = (
-                build_variables.blarea
+            build_variables.a_blkt_outboard_surface = (
+                build_variables.a_blkt_total_surface
                 * (1.0 - fwbs_variables.f_ster_div_single - fwbs_variables.f_a_fw_hcd)
-                - build_variables.blareaib
+                - build_variables.a_blkt_inboard_surface
             )
 
-        build_variables.blarea = build_variables.blareaib + build_variables.blareaob
+        build_variables.a_blkt_total_surface = (
+            build_variables.a_blkt_inboard_surface
+            + build_variables.a_blkt_outboard_surface
+        )
 
         fwbs_variables.vol_blkt_outboard = (
             fwbs_variables.vol_blkt_total
@@ -360,13 +363,26 @@ class BlanketLibrary:
         )
 
         # Apply shield coverage factors
-        build_variables.shareaib = fwbs_variables.fvolsi * build_variables.shareaib
-        build_variables.shareaob = fwbs_variables.fvolso * build_variables.shareaob
-        build_variables.sharea = build_variables.shareaib + build_variables.shareaob
+        build_variables.a_shld_inboard_surface = (
+            fwbs_variables.fvolsi * build_variables.a_shld_inboard_surface
+        )
+        build_variables.a_shld_outboard_surface = (
+            fwbs_variables.fvolso * build_variables.a_shld_outboard_surface
+        )
+        build_variables.a_shld_total_surface = (
+            build_variables.a_shld_inboard_surface
+            + build_variables.a_shld_outboard_surface
+        )
 
-        blanket_library.volshldi = fwbs_variables.fvolsi * blanket_library.volshldi
-        blanket_library.volshldo = fwbs_variables.fvolso * blanket_library.volshldo
-        fwbs_variables.volshld = blanket_library.volshldi + blanket_library.volshldo
+        blanket_library.vol_shld_inboard = (
+            fwbs_variables.fvolsi * blanket_library.vol_shld_inboard
+        )
+        blanket_library.vol_shld_outboard = (
+            fwbs_variables.fvolso * blanket_library.vol_shld_outboard
+        )
+        fwbs_variables.vol_shld_total = (
+            blanket_library.vol_shld_inboard + blanket_library.vol_shld_outboard
+        )
 
         # Apply vacuum vessel coverage factor
         # moved from dshaped_* and elliptical_* to keep coverage factor
@@ -588,11 +604,19 @@ class BlanketLibrary:
 
         if fwbs_variables.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
-            blanket_library.bldepti = build_variables.blbuith
-            blanket_library.bldepto = build_variables.blbuoth
+            blanket_library.len_blkt_inboard_coolant_channel_radial = (
+                build_variables.blbuith
+            )
+            blanket_library.len_blkt_outboard_coolant_channel_radial = (
+                build_variables.blbuoth
+            )
         else:
-            blanket_library.bldepti = 0.8e0 * build_variables.dr_blkt_inboard
-            blanket_library.bldepto = 0.8e0 * build_variables.dr_blkt_outboard
+            blanket_library.len_blkt_inboard_coolant_channel_radial = (
+                0.8e0 * build_variables.dr_blkt_inboard
+            )
+            blanket_library.len_blkt_outboard_coolant_channel_radial = (
+                0.8e0 * build_variables.dr_blkt_outboard
+            )
 
         # Using the total perimeter of the machine, segment the outboard
         # blanket into nblktmodp*nblktmodt modules, all assumed to be the same size
@@ -632,8 +656,14 @@ class BlanketLibrary:
                 # Radial direction
                 fwbs_variables.b_bz_liq = (
                     min(
-                        (blanket_library.bldepti * fwbs_variables.r_f_liq_ib),
-                        (blanket_library.bldepto * fwbs_variables.r_f_liq_ob),
+                        (
+                            blanket_library.len_blkt_inboard_coolant_channel_radial
+                            * fwbs_variables.r_f_liq_ib
+                        ),
+                        (
+                            blanket_library.len_blkt_outboard_coolant_channel_radial
+                            * fwbs_variables.r_f_liq_ob
+                        ),
                     )
                     / fwbs_variables.nopol
                 )
@@ -655,7 +685,8 @@ class BlanketLibrary:
             else:
                 # Radial direction
                 fwbs_variables.b_bz_liq = (
-                    blanket_library.bldepto * fwbs_variables.r_f_liq_ob
+                    blanket_library.len_blkt_outboard_coolant_channel_radial
+                    * fwbs_variables.r_f_liq_ob
                 ) / fwbs_variables.nopol
                 # Toroidal direction
                 fwbs_variables.a_bz_liq = (
@@ -668,11 +699,13 @@ class BlanketLibrary:
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
         blanket_library.len_blkt_inboard_channel_total = (
-            fwbs_variables.bzfllengi_n_rad * blanket_library.bldepti
+            fwbs_variables.bzfllengi_n_rad
+            * blanket_library.len_blkt_inboard_coolant_channel_radial
             + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
         )
         blanket_library.len_blkt_outboard_channel_total = (
-            fwbs_variables.bzfllengo_n_rad * blanket_library.bldepto
+            fwbs_variables.bzfllengo_n_rad
+            * blanket_library.len_blkt_outboard_coolant_channel_radial
             + fwbs_variables.bzfllengo_n_pol * blanket_library.bllengo
         )
         # Blanket secondary coolant/breeder flow
@@ -681,11 +714,13 @@ class BlanketLibrary:
         fwbs_variables.nopol = 2
         fwbs_variables.nopipes = 4
         bzfllengi_liq = (
-            fwbs_variables.bzfllengi_n_rad_liq * blanket_library.bldepti
+            fwbs_variables.bzfllengi_n_rad_liq
+            * blanket_library.len_blkt_inboard_coolant_channel_radial
             + fwbs_variables.bzfllengi_n_pol_liq * blanket_library.bllengi
         )
         bzfllengo_liq = (
-            fwbs_variables.bzfllengo_n_rad_liq * blanket_library.bldepto
+            fwbs_variables.bzfllengo_n_rad_liq
+            * blanket_library.len_blkt_outboard_coolant_channel_radial
             + fwbs_variables.bzfllengo_n_pol_liq * blanket_library.bllengo
         )
 
@@ -1082,7 +1117,7 @@ class BlanketLibrary:
         ):  # D-shaped machine
             # Segment vertical inboard surface (m)
             blanket_library.bllengi = (
-                2.0 * blanket_library.hblnkt
+                2.0 * blanket_library.dz_blkt_half
             ) / fwbs_variables.n_blkt_inboard_modules_poloidal
 
             # Calculate perimeter of ellipse that defines the internal
@@ -1096,7 +1131,7 @@ class BlanketLibrary:
             )
 
             # Internal half-height of blanket (m)
-            b = blanket_library.hblnkt
+            b = blanket_library.dz_blkt_half
 
             # Calculate ellipse circumference using Ramanujan approximation (m)
             ptor = np.pi * (3.0 * (a + b) - np.sqrt((3.0 * a + b) * (a + 3.0 * b)))
@@ -1129,7 +1164,7 @@ class BlanketLibrary:
             )
 
             # Internal half-height of blanket (m)
-            b = blanket_library.hblnkt
+            b = blanket_library.dz_blkt_half
 
             # Distance between r1 and nearest edge of inboard first wall / blanket (m)
             a = r1 - (
@@ -1868,19 +1903,21 @@ class BlanketLibrary:
             )
 
             # Total mechanical pumping power (MW)
-            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = self.pumppower(
-                output=output,
-                icoolpump=1,
-                temp_in=fwbs_variables.temp_fw_coolant_in.item(),
-                temp_out=fwbs_variables.temp_blkt_coolant_out.item(),
-                pressure=fwbs_variables.pres_fw_coolant.item(),
-                pdrop=deltap_fw_blkt,
-                mf=blanket_library.mftotal,
-                primary_coolant_switch=f2py_compatible_to_string(
-                    fwbs_variables.i_fw_coolant_type
-                ),
-                coolant_density=fwbs_variables.den_fw_coolant,
-                label="First Wall and Blanket",
+            primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
+                self.coolant_pumping_power(
+                    output=output,
+                    i_liquid_breeder=1,
+                    temp_coolant_pump_outlet=fwbs_variables.temp_fw_coolant_in.item(),
+                    temp_coolant_pump_inlet=fwbs_variables.temp_blkt_coolant_out.item(),
+                    pres_coolant_pump_inlet=fwbs_variables.pres_fw_coolant.item(),
+                    dpres_coolant=deltap_fw_blkt,
+                    mflow_coolant_total=blanket_library.mftotal,
+                    primary_coolant_switch=f2py_compatible_to_string(
+                        fwbs_variables.i_fw_coolant_type
+                    ),
+                    den_coolant=fwbs_variables.den_fw_coolant,
+                    label="First Wall and Blanket",
+                )
             )
 
         # If FW and BB have different coolants...
@@ -1910,35 +1947,37 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the first wall (MW)
-            heat_transport_variables.p_fw_coolant_pump_mw = self.pumppower(
+            heat_transport_variables.p_fw_coolant_pump_mw = self.coolant_pumping_power(
                 output=output,
-                icoolpump=1,
-                temp_in=fwbs_variables.temp_fw_coolant_in.item(),
-                temp_out=fwbs_variables.temp_fw_coolant_out.item(),
-                pressure=fwbs_variables.pres_fw_coolant.item(),
-                pdrop=deltap_fw.item(),
-                mf=blanket_library.mflow_fw_coolant_total,
+                i_liquid_breeder=1,
+                temp_coolant_pump_outlet=fwbs_variables.temp_fw_coolant_in.item(),
+                temp_coolant_pump_inlet=fwbs_variables.temp_fw_coolant_out.item(),
+                pres_coolant_pump_inlet=fwbs_variables.pres_fw_coolant.item(),
+                dpres_coolant=deltap_fw.item(),
+                mflow_coolant_total=blanket_library.mflow_fw_coolant_total,
                 primary_coolant_switch=f2py_compatible_to_string(
                     fwbs_variables.i_fw_coolant_type
                 ),
-                coolant_density=fwbs_variables.den_fw_coolant,
+                den_coolant=fwbs_variables.den_fw_coolant,
                 label="First Wall",
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_coolant_pump_mw = self.pumppower(
-                output=output,
-                icoolpump=1,
-                temp_in=fwbs_variables.temp_blkt_coolant_in.item(),
-                temp_out=fwbs_variables.temp_blkt_coolant_out.item(),
-                pressure=fwbs_variables.pres_blkt_coolant.item(),
-                pdrop=deltap_blkt.item(),
-                mf=blanket_library.mflow_blkt_coolant_total,
-                primary_coolant_switch=(
-                    "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
-                ),
-                coolant_density=blanket_library.den_blkt_coolant,
-                label="Blanket",
+            heat_transport_variables.p_blkt_coolant_pump_mw = (
+                self.coolant_pumping_power(
+                    output=output,
+                    i_liquid_breeder=1,
+                    temp_coolant_pump_outlet=fwbs_variables.temp_blkt_coolant_in.item(),
+                    temp_coolant_pump_inlet=fwbs_variables.temp_blkt_coolant_out.item(),
+                    pres_coolant_pump_inlet=fwbs_variables.pres_blkt_coolant.item(),
+                    dpres_coolant=deltap_blkt.item(),
+                    mflow_coolant_total=blanket_library.mflow_blkt_coolant_total,
+                    primary_coolant_switch=(
+                        "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
+                    ),
+                    den_coolant=blanket_library.den_blkt_coolant,
+                    label="Blanket",
+                )
             )
 
             # Total mechanical pumping power (MW)
@@ -1963,19 +2002,21 @@ class BlanketLibrary:
             )
 
             # Mechanical pumping power for the blanket (MW)
-            heat_transport_variables.p_blkt_breeder_pump_mw = self.pumppower(
-                output=output,
-                icoolpump=2,
-                temp_in=fwbs_variables.inlet_temp_liq.item(),
-                temp_out=fwbs_variables.outlet_temp_liq.item(),
-                pressure=fwbs_variables.blpressure_liq.item(),
-                pdrop=deltap_bl_liq,
-                mf=fwbs_variables.mfblkt_liq,
-                primary_coolant_switch=(
-                    "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
-                ),
-                coolant_density=fwbs_variables.den_liq,
-                label="Liquid Metal Breeder/Coolant",
+            heat_transport_variables.p_blkt_breeder_pump_mw = (
+                self.coolant_pumping_power(
+                    output=output,
+                    i_liquid_breeder=2,
+                    temp_coolant_pump_outlet=fwbs_variables.inlet_temp_liq.item(),
+                    temp_coolant_pump_inlet=fwbs_variables.outlet_temp_liq.item(),
+                    pres_coolant_pump_inlet=fwbs_variables.blpressure_liq.item(),
+                    dpres_coolant=deltap_bl_liq,
+                    mflow_coolant_total=fwbs_variables.mfblkt_liq,
+                    primary_coolant_switch=(
+                        "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
+                    ),
+                    den_coolant=fwbs_variables.den_liq,
+                    label="Liquid Metal Breeder/Coolant",
+                )
             )
 
             heat_transport_variables.htpmw_blkt_tot = (
@@ -2234,15 +2275,15 @@ class BlanketLibrary:
         :param no180: Number of 180 degree bends in pipe
         """
         # Friction - for all coolants
-        frict_drop = self.pressure_drop(
-            icoolpump,
-            no90,
-            no180,
-            flleng,
-            coolant_density,
-            coolant_dynamic_viscosity,
-            flow_velocity,
-            label,
+        frict_drop = self.coolant_pressure_drop(
+            i_ps=icoolpump,
+            n_pipe_90_deg_bends=no90,
+            n_pipe_180_deg_bends=no180,
+            len_pipe=flleng,
+            den_coolant=coolant_density,
+            visc_coolant=coolant_dynamic_viscosity,
+            vel_coolant=flow_velocity,
+            label=label,
             output=output,
         )
 
@@ -2422,107 +2463,121 @@ class BlanketLibrary:
 
         return liquid_breeder_pressure_drop_mhd
 
-    def pressure_drop(
+    def coolant_pressure_drop(
         self,
         i_ps: int,
-        num_90: float,
-        num_180: float,
-        l_pipe: float,
-        den: float,
-        vsc: float,
-        vv: float,
+        n_pipe_90_deg_bends: float,
+        n_pipe_180_deg_bends: float,
+        len_pipe: float,
+        den_coolant: float,
+        visc_coolant: float,
+        vel_coolant: float,
         label: str,
         output: bool = False,
     ):
-        """Pressure drops are calculated for a pipe with a number of 90
+        """
+        Pressure drops are calculated for a pipe with a number of 90
         and 180 degree bends. The pressure drop due to frictional forces along
         the total straight length of the pipe is calculated, then the pressure
         drop due to the bends is calculated. The total pressure drop is the sum
         of all contributions.
 
-        original author: P. J. Knight, CCFE
-        moved from previous version of pumppower function by: G Graham, CCFE
-
         :param i_ps: switch for primary or secondary coolant
-        :param num_90: number of 90 degree bends in the pipe
-        :param num_180: number of 180 degree bends in the pipe
-        :param l_pipe: total flow length along pipe (m)
-        :param den: coolant density (kg/m3)
-        :param vsc: coolant viscosity (Pa s)
-        :param vv: coolant flow velocity (m/s)
+        :param n_pipe_90_deg_bends: number of 90 degree bends in the pipe
+        :param n_pipe_180_deg_bends: number of 180 degree bends in the pipe
+        :param len_pipe: total flow length along pipe (m)
+        :param den_coolant: coolant density (kg/m³)
+        :param visc_coolant: coolant viscosity (Pa s)
+        :param vel_coolant: coolant flow velocity (m/s)
         :param label: component name
         :param output: boolean of whether to write data to output file
 
-        N.B Darcy-Weisbach Equation (straight pipe):
+        :Notes:
+            Darcy-Weisbach Equation (straight pipe):
 
-         kstrght = lambda * L/D
+            ΔP = λ * L/D * (p 〈v〉²) / 2
 
-         pressure drop = kstrght * (rho*V^2)/2
+            λ - Darcy friction factor, L - pipe length, D - hydraulic diameter,
+            p - fluid density, 〈v〉 - fluid flow average velocity
 
-         lambda - Darcy friction factor, L - pipe length, D - hydraulic diameter,
-         rho - fluid density, V - fluid flow average velocity
+            This function also calculates pressure drop equations for elbow bends,
+            with modified coefficients.
 
-        This function also calculates pressure drop equations for elbow bends,
-        with modified coefficients.
-
-        N.B. Darcy friction factor is estimated from the Haaland approximation.
+            N.B. Darcy friction factor is estimated from the Haaland approximation.
         """
 
         # Calculate hydraulic dimater for round or retancular pipe (m)
-        dh = self.hydraulic_diameter(i_ps)
+        dia_pipe = self.hydraulic_diameter(i_ps)
 
         # Reynolds number
-        reyn = den * vv * dh / vsc
+        reynolds_number = den_coolant * vel_coolant * dia_pipe / visc_coolant
 
         # Calculate Darcy friction factor
         # N.B. friction function Uses Haaland approx. which assumes a filled circular pipe.
         # Use dh which allows us to do fluid calculations for non-cicular tubes
         # (dh is estimate appropriate for fully developed flow).
-        lamda = self.fw.darcy_friction_haaland(
-            reyn, fwbs_variables.roughness_fw_channel, fwbs_variables.radius_fw_channel
+
+        darcy_friction_factor = self.fw.darcy_friction_haaland(
+            reynolds_number,
+            fwbs_variables.roughness_fw_channel,
+            fwbs_variables.radius_fw_channel,
         )
 
         # Pressure drop coefficient
 
         # Straight section
-        kstrght = lamda * l_pipe / dh
-
-        # In preveious version of pumppower:
-        # - elbow radius assumed = 0.018m for 90 degree elbow, from WCLL
-        # - elbow radius assumed half that of 90 deg case for 180 deg elbow
-        # Intialised value for radius_fw_channel is 0.006m, so elbow radius = 3 * radius_fw_channel,
-        # aka 1.5 * pipe diameter, which seems to be engineering standard for
-        # a steel pipe long-radius elbow (short-radius elbow = 2 * radius_fw_channel).
+        f_straight = darcy_friction_factor * len_pipe / dia_pipe
 
         # If primary coolant or secondary coolant (See DCLL)
-        elbow_radius = (
+        radius_pipe_elbow = (
             (3 * fwbs_variables.radius_fw_channel)
             if (i_ps == 1)
             else fwbs_variables.b_bz_liq
         )
 
         # 90 degree elbow pressure drop coefficient
-        kelbwn = self.elbow_coeff(elbow_radius, 90.0, lamda, dh)
+        f_elbow_90 = self.elbow_coeff(
+            radius_pipe_elbow=radius_pipe_elbow,
+            deg_pipe_elbow=90.0,
+            darcy_friction=darcy_friction_factor,
+            dia_pipe=dia_pipe,
+        )
 
         # 180 degree elbow pressure drop coefficient
-        kelbwt = self.elbow_coeff(elbow_radius / 2, 180.0, lamda, dh)
+        f_elbow_180 = self.elbow_coeff(
+            radius_pipe_elbow=radius_pipe_elbow / 2,
+            deg_pipe_elbow=180.0,
+            darcy_friction=darcy_friction_factor,
+            dia_pipe=dia_pipe,
+        )
 
-        # Total (Pa)
-        pdropstraight = kstrght * 0.5 * den * vv * vv
-        pdrop90 = num_90 * kelbwn * 0.5 * den * vv * vv
-        pdrop180 = num_180 * kelbwt * 0.5 * den * vv * vv
+        # Pressure drop due to friction in straight sections
+        dpres_straight = f_straight * 0.5 * den_coolant * vel_coolant**2
 
-        pressure_drop = pdropstraight + pdrop90 + pdrop180
+        # Pressure drop due to 90 and 180 degree bends
+        dpres_90 = n_pipe_90_deg_bends * f_elbow_90 * 0.5 * den_coolant * vel_coolant**2
+        dpres_180 = (
+            n_pipe_180_deg_bends * f_elbow_180 * 0.5 * den_coolant * vel_coolant**2
+        )
+
+        # Total pressure drop (Pa)
+        dpres_total = dpres_straight + dpres_90 + dpres_180
 
         if output:
             po.osubhd(self.outfile, f"Pressure drop (friction) for {label}")
-            po.ovarre(self.outfile, "Reynolds number", "(reyn)", reyn, "OP ")
-            po.ovarre(self.outfile, "Darcy friction factor", "(lambda)", lamda, "OP ")
+            po.ovarre(self.outfile, "Reynolds number", "(reyn)", reynolds_number, "OP ")
+            po.ovarre(
+                self.outfile,
+                "Darcy friction factor",
+                "(lambda)",
+                darcy_friction_factor,
+                "OP ",
+            )
             po.ovarre(
                 self.outfile,
                 "Pressure drop (Pa)",
                 "(pressure_drop)",
-                pressure_drop,
+                dpres_total,
                 "OP ",
             )
             po.ocmmnt(self.outfile, "This is the sum of the following:")
@@ -2530,21 +2585,21 @@ class BlanketLibrary:
                 self.outfile,
                 "            Straight sections (Pa)",
                 "(pdropstraight)",
-                pdropstraight,
+                dpres_straight,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "            90 degree bends (Pa)",
                 "(pdrop90)",
-                pdrop90,
+                dpres_90,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "            180 degree bends (Pa)",
                 "(pdrop180)",
-                pdrop180,
+                dpres_180,
                 "OP ",
             )
 
@@ -2553,21 +2608,25 @@ class BlanketLibrary:
                 self.outfile,
                 "Straight section pressure drop coefficient",
                 "(kstrght)",
-                kstrght,
+                f_straight,
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "90 degree elbow coefficient", "(kelbwn)", kelbwn, "OP "
+                self.outfile,
+                "90 degree elbow coefficient",
+                "(kelbwn)",
+                f_elbow_90,
+                "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "180 degree elbow coefficient coefficient",
                 "(kelbwt)",
-                kelbwt,
+                f_elbow_180,
                 "OP ",
             )
 
-        return pressure_drop
+        return dpres_total
 
     def hydraulic_diameter(self, i_channel_shape):
         """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
@@ -2593,35 +2652,46 @@ class BlanketLibrary:
             f"i_channel_shape ={i_channel_shape} is an invalid option."
         )
 
-    def elbow_coeff(self, r_elbow, ang_elbow, lamda, dh):
-        """Function calculates elbow bends coefficients for pressure drop
-        calculations.
+    def elbow_coeff(
+        self,
+        radius_pipe_elbow: float,
+        deg_pipe_elbow: float,
+        darcy_friction: float,
+        dia_pipe: float,
+    ) -> float:
+        """
+        Calculates elbow bend coefficients for pressure drop calculations.
 
-        author: G. Graham, CCFE
+        :param radius_pipe_elbow: Pipe elbow radius (m)
+        :type radius_pipe_elbow: float
+        :param deg_pipe_elbow: Pipe elbow angle (degrees)
+        :type deg_pipe_elbow: float
+        :param darcy_friction: Darcy friction factor
+        :type darcy_friction: float
+        :param dia_pipe: Pipe diameter (m)
+        :type dia_pipe: float
+        :return: Elbow coefficient for pressure drop calculation
+        :rtype: float
 
-        :param r_elbow: pipe elbow radius (m)
-        :param ang_elbow: pipe elbow angle (degrees)
-        :param lamda: darcy Friction Factor
-        :param dh: hydraulic diameter (m)
+        :References:
+        - [Ide1969] Idel'Cik, I. E. (1969), Memento des pertes de charge,
+          Collection de la Direction des Etudes et Recherches d'Electricité de France.
 
-        References:
-
-             [Ide1969]   Idel'Cik, I. E. (1969), Memento des pertes de charge,
-                         Collection de la Direction des Etudes et Recherches d'Electricité de France.
         """
 
-        if ang_elbow == 90:
+        if deg_pipe_elbow == 90:
             a = 1.0
-        elif ang_elbow < 70:
-            a = 0.9 * np.sin(ang_elbow * np.pi / 180.0)
-        elif ang_elbow > 100:
-            a = 0.7 + (0.35 * np.sin((ang_elbow / 90.0) * (np.pi / 180.0)))
+        elif deg_pipe_elbow < 70:
+            a = 0.9 * np.sin(deg_pipe_elbow * np.pi / 180.0)
+        elif deg_pipe_elbow > 100:
+            a = 0.7 + (0.35 * np.sin((deg_pipe_elbow / 90.0) * (np.pi / 180.0)))
         else:
             raise ProcessValueError(
                 "No formula for 70 <= elbow angle(deg) <= 100, only 90 deg option available in this range."
             )
 
-        r_ratio = r_elbow / dh
+        r_ratio = radius_pipe_elbow / dia_pipe
+
         if r_ratio > 1:
             b = 0.21 / r_ratio**0.5
         elif r_ratio < 1:
@@ -2633,104 +2703,140 @@ class BlanketLibrary:
         ximt = a * b
 
         # Friction
-        xift = 0.0175 * lamda * (r_elbow / dh) * ang_elbow
+        xift = (
+            (np.pi / 180.0)
+            * darcy_friction
+            * (radius_pipe_elbow / dia_pipe)
+            * deg_pipe_elbow
+        )
 
         # Elbow Coefficient
         return ximt + xift
 
-    def pumppower(
+    def coolant_pumping_power(
         self,
-        output,
-        icoolpump,
-        temp_in,
-        temp_out,
-        pressure,
-        pdrop,
-        mf,
-        primary_coolant_switch,
-        coolant_density,
-        label,
-    ):
-        """Routine to calculate the coolant pumping power in MW in the FW and BZ.
-        Adapted from previous pumppower function.
-
-        original author: P. J. Knight, CCFE
-        original references: Idel'Cik, I. E. (1969), Memento des pertes de charge;
-        A Textbook on Heat Transfer, S.P. Sukhatme, 2005
-
-        author: G. Graham
-
-        :param icoolpump: Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li)
-        :param temp_in: Inlet (pump oulet) temperature (K)
-        :param temp_out: Oulet (pump inlet) temperature (K)
-        :param pressure: Outlet (pump inlet) coolant pressure (Pa)
-        :param pdrop: Pressure drop (Pa)
-        :param mf: Total coolant mass flow rate in (kg/s)
-        :param primary_coolant_switch: Switch for FW/blanket coolant, (1=He or 2=H2O) if icoolpump=1
-        :param coolant_density: Density of coolant or liquid breeder
+        output: bool,
+        i_liquid_breeder: int,
+        temp_coolant_pump_outlet: float,
+        temp_coolant_pump_inlet: float,
+        pres_coolant_pump_inlet: float,
+        dpres_coolant: float,
+        mflow_coolant_total: float,
+        primary_coolant_switch: str,
+        den_coolant: float,
+        label: str,
+    ) -> float:
         """
-        # Pumping power !
+        Calculate the coolant pumping power in MW for the first wall (FW) or breeding blanket (BZ) coolant.
 
-        # Outlet pressure is 'pressure'
-        # Inlet pressure (Pa)
-        coolpin = pressure + pdrop
+        :param output: Whether to write data to output file.
+        :type output: bool
+        :param i_liquid_breeder: Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li).
+        :type i_liquid_breeder: int
+        :param temp_coolant_pump_outlet: Pump outlet temperature (K).
+        :type temp_coolant_pump_outlet: float
+        :param temp_coolant_pump_inlet: Pump inlet temperature (K).
+        :type temp_coolant_pump_inlet: float
+        :param pressure: Outlet (pump inlet) coolant pressure (Pa).
+        :type pressure: float
+        :param dpres_coolant: Coolant pressure drop (Pa).
+        :type dpres_coolant: float
+        :param mflow_coolant_total: Total coolant mass flow rate in (kg/s).
+        :type mflow_coolant_total: float
+        :param primary_coolant_switch: Name of FW/blanket coolant (e.g., "Helium" or "Water") if icoolpump=1.
+        :type primary_coolant_switch: str
+        :param den_coolant: Density of coolant or liquid breeder (kg/m³).
+        :type den_coolant: float
+        :param label: Description label for output.
+        :type label: str
+        :return: Pumping power in MW.
+        :rtype: float
+
+        :references:
+            - Idel'Cik, I. E. (1969), Memento des pertes de charge
+            - S.P. Sukhatme (2005), A Textbook on Heat Transfer
+        """
+
+        # Pump outlet pressure (Pa)
+        # The pump adds the pressure lost going through the coolant channels back
+        pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
 
         # Adiabatic index for helium or water
         gamma = (5 / 3) if fwbs_variables.i_blkt_coolant_type == 1 else (4 / 3)
 
-        # If caculating for primary coolant...
-        if icoolpump == 1:
-            # Comments from original pumppower function:
+        # If calculating for primary coolant
+        if i_liquid_breeder == 1:
             # The pumping power is be calculated in the most general way,
             # using enthalpies before and after the pump.
 
-            fluid_properties = FluidProperties.of(
+            pump_outlet_fluid_properties = FluidProperties.of(
                 fluid_name=primary_coolant_switch,
-                temperature=temp_in,
-                pressure=coolpin,
+                temperature=temp_coolant_pump_outlet,
+                pressure=pres_coolant_pump_outlet,
             )
 
             # Assume isentropic pump so that s1 = s2
-            s1 = fluid_properties.entropy
+            s1 = pump_outlet_fluid_properties.entropy
 
             # Get specific enthalpy at the outlet (J/kg) before pump using pressure and entropy s1
-            outlet_fluid_properties = FluidProperties.of(
+            pump_inlet_fluid_properties = FluidProperties.of(
                 fluid_name=primary_coolant_switch,
-                pressure=pressure,
+                pressure=pres_coolant_pump_inlet,
                 entropy=s1,
             )
 
             # Pumping power (MW) is given by enthalpy change, with a correction for
             # the isentropic efficiency of the pump.
             fp = (
-                temp_in
-                * (1 - (coolpin / pressure) ** -((gamma - 1) / gamma))
-                / (fwbs_variables.etaiso * (temp_out - temp_in))
+                temp_coolant_pump_outlet
+                * (
+                    1
+                    - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
+                    ** -((gamma - 1) / gamma)
+                )
+                / (
+                    fwbs_variables.etaiso
+                    * (temp_coolant_pump_inlet - temp_coolant_pump_outlet)
+                )
             )
             pumppower = (
                 1e-6
-                * mf
-                * (fluid_properties.enthalpy - outlet_fluid_properties.enthalpy)
+                * mflow_coolant_total
+                * (
+                    pump_outlet_fluid_properties.enthalpy
+                    - pump_inlet_fluid_properties.enthalpy
+                )
                 / fwbs_variables.etaiso
             ) / (1 - fp)
 
         # If calculating for secondary coolant/breeder...
         else:
             # Calculate specific volume
-            spec_vol = 1 / coolant_density
+            spec_vol = 1 / den_coolant
 
             # Pumping power (MW) is given by pressure change, with a correction for
             # the isentropic efficiency of the pump.
             fp = (
-                temp_in
-                * (1 - (coolpin / pressure) ** -((gamma - 1) / gamma))
-                / (fwbs_variables.etaiso_liq * (temp_out - temp_in))
+                temp_coolant_pump_outlet
+                * (
+                    1
+                    - (pres_coolant_pump_outlet / pres_coolant_pump_inlet)
+                    ** -((gamma - 1) / gamma)
+                )
+                / (
+                    fwbs_variables.etaiso_liq
+                    * (temp_coolant_pump_inlet - temp_coolant_pump_outlet)
+                )
             )
-            pumppower = (1e-6 * mf * spec_vol * pdrop / fwbs_variables.etaiso_liq) / (
-                1 - fp
-            )
+            pumppower = (
+                1e-6
+                * mflow_coolant_total
+                * spec_vol
+                * dpres_coolant
+                / fwbs_variables.etaiso_liq
+            ) / (1 - fp)
 
-        # Error for pdrop too large
+        # Error for dpres_coolant too large
         if fp >= 1:
             raise ProcessValueError(
                 "Pressure drops in coolant are too large to be feasible"
@@ -2747,24 +2853,30 @@ class BlanketLibrary:
                 self.outfile,
                 "FW or Blanket inlet (pump oulet) pressure (Pa)",
                 "(coolpin)",
-                coolpin,
+                pres_coolant_pump_outlet,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "FW or Blanket oulet (pump inlet) pressure (Pa)",
-                "(pressure)",
-                pressure,
+                "(pres_coolant_pump_inlet)",
+                pres_coolant_pump_inlet,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "FW or Blanket total pressure drop (Pa)",
-                "(pdrop)",
-                pdrop,
+                "(dpres_coolant)",
+                dpres_coolant,
                 "OP ",
             )
-            po.ovarre(self.outfile, "Mass flow rate in (kg/s) = ", "(mf)", mf, "OP ")
+            po.ovarre(
+                self.outfile,
+                "Mass flow rate in (kg/s) = ",
+                "(mf)",
+                mflow_coolant_total,
+                "OP ",
+            )
 
         return pumppower
 
@@ -2939,16 +3051,16 @@ def dshellvol(rmajor, rminor, zminor, drin, drout, dz):
 
 
 def init_blanket_library():
-    blanket_library.hblnkt = 0.0
-    blanket_library.hshld = 0.0
+    blanket_library.dz_blkt_half = 0.0
+    blanket_library.dz_shld_half = 0.0
     blanket_library.dz_pf_cryostat = 0.0
-    blanket_library.hvv = 0.0
-    blanket_library.volshldi = 0.0
-    blanket_library.volshldo = 0.0
+    blanket_library.dz_vv_half = 0.0
+    blanket_library.vol_shld_inboard = 0.0
+    blanket_library.vol_shld_outboard = 0.0
     blanket_library.vol_vv_inboard = 0.0
     blanket_library.vol_vv_outboard = 0.0
-    blanket_library.bldepti = 0.0
-    blanket_library.bldepto = 0.0
+    blanket_library.len_blkt_inboard_coolant_channel_radial = 0.0
+    blanket_library.len_blkt_outboard_coolant_channel_radial = 0.0
     blanket_library.blwidti = 0.0
     blanket_library.blwidto = 0.0
     blanket_library.bllengi = 0.0

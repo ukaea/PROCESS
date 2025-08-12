@@ -44,19 +44,19 @@ def test_elbow_coeff(blanket_library_fixture):
         0.0, rel=1e-3
     )
     assert blanket_library_fixture.elbow_coeff(1, 90, 1, 1) == pytest.approx(
-        1.785, rel=1e-3
+        1.7807963267948965, rel=1e-3
     )
     assert blanket_library_fixture.elbow_coeff(1, 180, 1, 1) == pytest.approx(
-        3.3, rel=1e-3
+        3.291157766597427, rel=1e-3
     )
     assert blanket_library_fixture.elbow_coeff(1, 90, 1, 0.1) == pytest.approx(
-        15.816, rel=1e-3
+        15.774371098812502, rel=1e-3
     )
     assert blanket_library_fixture.elbow_coeff(0.1, 90, 1, 1) == pytest.approx(
         66.57, rel=1e-3
     )
     assert blanket_library_fixture.elbow_coeff(1, 90, 0.1, 1) == pytest.approx(
-        0.3675, rel=1e-3
+        0.3670796326794896, rel=1e-3
     )
 
 
@@ -185,9 +185,9 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
     monkeypatch.setattr(fwbs, "roughness_fw_channel", 1.0e-6)
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
-    assert blanket_library_fixture.pressure_drop(
+    assert blanket_library_fixture.coolant_pressure_drop(
         2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, "label"
-    ) == pytest.approx(1.438, rel=1e-3)
+    ) == pytest.approx(1.4363243643098162, rel=1e-3)
 
 
 # Should add test_liquid_breeder_pressure_drop_mhd
