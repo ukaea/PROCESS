@@ -905,8 +905,8 @@ class Scan:
         process_output.write(
             constants.nout,
             f"***** 2D Scan point {iscan} of {scan_module.isweep * scan_module.isweep_2} : "
-            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan - 1]} and"
-            f" {f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r]} "
+            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan_1 - 1]} and"
+            f" {f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r - 1]} "
             "*****",
         )
         process_output.ostars(constants.nout, 110)
@@ -915,9 +915,9 @@ class Scan:
 
         print(
             f"Starting scan point {iscan}:  {f2py_compatible_to_string(global_variables.xlabel)}, "
-            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan - 1]}"
+            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan_1 - 1]}"
             f" and {f2py_compatible_to_string(global_variables.xlabel_2)}, "
-            f"{f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r]} "
+            f"{f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r - 1]} "
         )
 
         return iscan_r
