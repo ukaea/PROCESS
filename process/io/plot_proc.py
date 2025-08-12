@@ -14,6 +14,7 @@ Revised by Michael Kovari, 7/1/2016
 """
 
 import argparse
+import json
 import os
 from argparse import RawTextHelpFormatter
 from importlib import resources
@@ -8673,6 +8674,509 @@ def plot_iteration_variables(axis, m_file_data, scan):
     axis.set_title("Iteration Variables Final Values and Bounds")
 
 
+def plot_tf_stress(axis):
+    """
+    Function to plot the TF coil stress from the SIG_TF.json file.
+
+    Input file:
+    SIG_TF.json
+    """
+
+    # Step 1 : Data extraction
+    # ----------------------------------------------------------------------------------------------
+    # Number of physical quantity value per coil layer
+    n_radial_array_layer = 0
+
+    # Physical quantities : full vectors
+    radius = []
+    radial_smeared_stress = []
+    toroidal_smeared_stress = []
+    vertical_smeared_stress = []
+    tresca_smeared_stress = []
+    radial_stress = []
+    toroidal_stress = []
+    vertical_stress = []
+    vm_stress = []
+    tresca_stress = []
+    cea_tresca_stress = []
+    radial_strain = []
+    toroidal_strain = []
+    vertical_strain = []
+    radial_displacement = []
+
+    # Physical quantity : WP stress
+    wp_vertical_stress = []
+
+    # Physical quantity : values at layer border
+    bound_radius = []
+    bound_radial_smeared_stress = []
+    bound_toroidal_smeared_stress = []
+    bound_vertical_smeared_stress = []
+    bound_tresca_smeared_stress = []
+    bound_radial_stress = []
+    bound_toroidal_stress = []
+    bound_vertical_stress = []
+    bound_vm_stress = []
+    bound_tresca_stress = []
+    bound_cea_tresca_stress = []
+    bound_radial_strain = []
+    bound_toroidal_strain = []
+    bound_vertical_strain = []
+    bound_radial_displacement = []
+
+    input_mfile = m_file_name
+    input_json = input_mfile.replace("MFILE.DAT", "SIG_TF.json")
+    with open(input_json) as f:
+        sig_file_data = json.load(f)
+
+    # Getting the data to be plotted
+    n_radial_array_layer = sig_file_data["Points per layers"]
+    n_points = len(sig_file_data["Radius (m)"])
+    n_layers = int(n_points / n_radial_array_layer)
+    for ii in range(n_layers):
+        # Full vector
+        radius.append([])
+        radial_stress.append([])
+        toroidal_stress.append([])
+        vertical_stress.append([])
+        radial_smeared_stress.append([])
+        toroidal_smeared_stress.append([])
+        vertical_smeared_stress.append([])
+        vm_stress.append([])
+        tresca_stress.append([])
+        cea_tresca_stress.append([])
+        radial_displacement.append([])
+
+        for jj in range(n_radial_array_layer):
+            radius[ii].append(
+                sig_file_data["Radius (m)"][ii * n_radial_array_layer + jj]
+            )
+            radial_stress[ii].append(
+                sig_file_data["Radial stress (MPa)"][ii * n_radial_array_layer + jj]
+            )
+            toroidal_stress[ii].append(
+                sig_file_data["Toroidal stress (MPa)"][ii * n_radial_array_layer + jj]
+            )
+            if len(sig_file_data["Vertical stress (MPa)"]) == 1:
+                vertical_stress[ii].append(sig_file_data["Vertical stress (MPa)"][0])
+            else:
+                vertical_stress[ii].append(
+                    sig_file_data["Vertical stress (MPa)"][
+                        ii * n_radial_array_layer + jj
+                    ]
+                )
+            radial_smeared_stress[ii].append(
+                sig_file_data["Radial smear stress (MPa)"][
+                    ii * n_radial_array_layer + jj
+                ]
+            )
+            toroidal_smeared_stress[ii].append(
+                sig_file_data["Toroidal smear stress (MPa)"][
+                    ii * n_radial_array_layer + jj
+                ]
+            )
+            vertical_smeared_stress[ii].append(
+                sig_file_data["Vertical smear stress (MPa)"][
+                    ii * n_radial_array_layer + jj
+                ]
+            )
+            vm_stress[ii].append(
+                sig_file_data["Von-Mises stress (MPa)"][ii * n_radial_array_layer + jj]
+            )
+            tresca_stress[ii].append(
+                sig_file_data["CEA Tresca stress (MPa)"][ii * n_radial_array_layer + jj]
+            )
+            cea_tresca_stress[ii].append(
+                sig_file_data["CEA Tresca stress (MPa)"][ii * n_radial_array_layer + jj]
+            )
+            radial_displacement[ii].append(
+                sig_file_data["rad. displacement (mm)"][ii * n_radial_array_layer + jj]
+            )
+
+        # Layer lower boundaries values
+        bound_radius.append(sig_file_data["Radius (m)"][ii * n_radial_array_layer])
+        bound_radial_stress.append(
+            sig_file_data["Radial stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_toroidal_stress.append(
+            sig_file_data["Toroidal stress (MPa)"][ii * n_radial_array_layer]
+        )
+        if len(sig_file_data["Vertical stress (MPa)"]) == 1:
+            bound_vertical_stress.append(sig_file_data["Vertical stress (MPa)"][0])
+        else:
+            bound_vertical_stress.append(
+                sig_file_data["Vertical stress (MPa)"][ii * n_radial_array_layer]
+            )
+        bound_radial_smeared_stress.append(
+            sig_file_data["Radial smear stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_toroidal_smeared_stress.append(
+            sig_file_data["Toroidal smear stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_vertical_smeared_stress.append(
+            sig_file_data["Vertical smear stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_vm_stress.append(
+            sig_file_data["Von-Mises stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_tresca_stress.append(
+            sig_file_data["CEA Tresca stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_cea_tresca_stress.append(
+            sig_file_data["CEA Tresca stress (MPa)"][ii * n_radial_array_layer]
+        )
+        bound_radial_displacement.append(
+            sig_file_data["rad. displacement (mm)"][ii * n_radial_array_layer]
+        )
+
+        # Layer upper boundaries values
+        bound_radius.append(
+            sig_file_data["Radius (m)"][(ii + 1) * n_radial_array_layer - 1]
+        )
+        bound_radial_stress.append(
+            sig_file_data["Radial stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
+        )
+        bound_toroidal_stress.append(
+            sig_file_data["Toroidal stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
+        )
+        if len(sig_file_data["Vertical stress (MPa)"]) == 1:
+            bound_vertical_stress.append(sig_file_data["Vertical stress (MPa)"][0])
+        else:
+            bound_vertical_stress.append(
+                sig_file_data["Vertical stress (MPa)"][
+                    (ii + 1) * n_radial_array_layer - 1
+                ]
+            )
+        bound_radial_smeared_stress.append(
+            sig_file_data["Radial smear stress (MPa)"][
+                (ii + 1) * n_radial_array_layer - 1
+            ]
+        )
+        bound_toroidal_smeared_stress.append(
+            sig_file_data["Toroidal smear stress (MPa)"][
+                (ii + 1) * n_radial_array_layer - 1
+            ]
+        )
+        bound_vertical_smeared_stress.append(
+            sig_file_data["Vertical smear stress (MPa)"][
+                (ii + 1) * n_radial_array_layer - 1
+            ]
+        )
+        bound_vm_stress.append(
+            sig_file_data["Von-Mises stress (MPa)"][(ii + 1) * n_radial_array_layer - 1]
+        )
+        bound_tresca_stress.append(
+            sig_file_data["CEA Tresca stress (MPa)"][
+                (ii + 1) * n_radial_array_layer - 1
+            ]
+        )
+        bound_cea_tresca_stress.append(
+            sig_file_data["CEA Tresca stress (MPa)"][
+                (ii + 1) * n_radial_array_layer - 1
+            ]
+        )
+        bound_radial_displacement.append(
+            sig_file_data["rad. displacement (mm)"][(ii + 1) * n_radial_array_layer - 1]
+        )
+
+    # TRESCA smeared stress [MPa]
+    for ii in range(n_layers):
+        tresca_smeared_stress.append([])
+
+        bound_tresca_smeared_stress.append(
+            max(abs(radial_smeared_stress[ii][0]), abs(toroidal_smeared_stress[ii][0]))
+            + vertical_smeared_stress[ii][0]
+        )
+        bound_tresca_smeared_stress.append(
+            max(
+                abs(radial_smeared_stress[ii][n_radial_array_layer - 1]),
+                abs(toroidal_smeared_stress[ii][n_radial_array_layer - 1]),
+            )
+            + vertical_smeared_stress[ii][n_radial_array_layer - 1]
+        )
+        for jj in range(n_radial_array_layer):
+            tresca_smeared_stress[ii].append(
+                max(
+                    abs(radial_smeared_stress[ii][jj]),
+                    abs(toroidal_smeared_stress[ii][jj]),
+                )
+                + vertical_smeared_stress[ii][jj]
+            )
+
+    # Strains
+    if len(sig_file_data) > 16:
+        for ii in range(n_layers):
+            radial_strain.append([])
+            toroidal_strain.append([])
+            vertical_strain.append([])
+
+            bound_radial_strain.append(
+                sig_file_data["Radial strain"][ii * n_radial_array_layer]
+            )
+            bound_toroidal_strain.append(
+                sig_file_data["Toroidal strain"][ii * n_radial_array_layer]
+            )
+            bound_vertical_strain.append(
+                sig_file_data["Vertical strain"][ii * n_radial_array_layer]
+            )
+            bound_radial_strain.append(
+                sig_file_data["Radial strain"][(ii + 1) * n_radial_array_layer - 1]
+            )
+            bound_toroidal_strain.append(
+                sig_file_data["Toroidal strain"][(ii + 1) * n_radial_array_layer - 1]
+            )
+            bound_vertical_strain.append(
+                sig_file_data["Vertical strain"][(ii + 1) * n_radial_array_layer - 1]
+            )
+            for jj in range(n_radial_array_layer):
+                radial_strain[ii].append(
+                    sig_file_data["Radial strain"][ii * n_radial_array_layer + jj]
+                )
+                toroidal_strain[ii].append(
+                    sig_file_data["Toroidal strain"][ii * n_radial_array_layer + jj]
+                )
+                vertical_strain[ii].append(
+                    sig_file_data["Vertical strain"][ii * n_radial_array_layer + jj]
+                )
+
+                if "WP smeared stress (MPa)" in sig_file_data:
+                    wp_vertical_stress.append(
+                        sig_file_data["WP smeared stress (MPa)"][jj]
+                    )
+
+    axis_tick_size = 12
+    legend_size = 10
+    mark_size = 10
+    line_width = 3.5
+
+    # PLOT 1 : Stress summary
+    # ------------------------
+
+    ax = axis[0]
+    for ii in range(n_layers):
+        ax.plot(
+            radius[ii],
+            radial_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="lightblue",
+        )
+        ax.plot(
+            radius[ii],
+            toroidal_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="wheat",
+        )
+        ax.plot(
+            radius[ii],
+            vertical_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="lightgrey",
+        )
+        ax.plot(radius[ii], tresca_stress[ii], "-", linewidth=line_width, color="pink")
+        ax.plot(radius[ii], vm_stress[ii], "-", linewidth=line_width, color="violet")
+    ax.plot(
+        radius[0],
+        radial_stress[0],
+        "--",
+        color="dodgerblue",
+        label=r"$\sigma_{rr}$",
+    )
+    ax.plot(
+        radius[0],
+        toroidal_stress[0],
+        "--",
+        color="orange",
+        label=r"$\sigma_{\theta\theta}$",
+    )
+    ax.plot(
+        radius[0],
+        vertical_stress[0],
+        "--",
+        color="mediumseagreen",
+        label=r"$\sigma_{zz}$",
+    )
+    ax.plot(
+        radius[0],
+        tresca_stress[0],
+        "-",
+        color="crimson",
+        label=r"$\sigma_{TRESCA}$",
+    )
+    ax.plot(
+        radius[0],
+        vm_stress[0],
+        "-",
+        color="darkviolet",
+        label=r"$\sigma_{Von\ mises}$",
+    )
+    for ii in range(1, n_layers):
+        ax.plot(radius[ii], radial_stress[ii], "--", color="dodgerblue")
+        ax.plot(radius[ii], toroidal_stress[ii], "--", color="orange")
+        ax.plot(radius[ii], vertical_stress[ii], "--", color="mediumseagreen")
+        ax.plot(radius[ii], tresca_stress[ii], "-", color="crimson")
+        ax.plot(radius[ii], vm_stress[ii], "-", color="darkviolet")
+    ax.plot(
+        bound_radius,
+        bound_radial_stress,
+        "|",
+        markersize=mark_size,
+        color="dodgerblue",
+    )
+    ax.plot(
+        bound_radius,
+        bound_toroidal_stress,
+        "|",
+        markersize=mark_size,
+        color="orange",
+    )
+    ax.plot(
+        bound_radius,
+        bound_vertical_stress,
+        "|",
+        markersize=mark_size,
+        color="mediumseagreen",
+    )
+    ax.plot(
+        bound_radius,
+        bound_tresca_stress,
+        "|",
+        markersize=mark_size,
+        color="crimson",
+    )
+    ax.plot(
+        bound_radius, bound_vm_stress, "|", markersize=mark_size, color="darkviolet"
+    )
+    ax.grid(True)
+    ax.set_ylabel(r"$\sigma$ [$MPa$]", fontsize=axis_tick_size)
+    ax.set_title("Structure Stress Summary")
+    ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize=legend_size)
+
+    # PLOT 2 : Smeared stress summary
+    # ------------------------
+    ax = axis[1]
+    for ii in range(n_layers):
+        ax.plot(
+            radius[ii],
+            radial_smeared_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="lightblue",
+        )
+        ax.plot(
+            radius[ii],
+            toroidal_smeared_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="wheat",
+        )
+        ax.plot(
+            radius[ii],
+            vertical_smeared_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="lightgrey",
+        )
+        ax.plot(
+            radius[ii],
+            tresca_smeared_stress[ii],
+            "-",
+            linewidth=line_width,
+            color="pink",
+        )
+    ax.plot(
+        radius[0],
+        radial_smeared_stress[0],
+        "--",
+        color="dodgerblue",
+        label=r"$\sigma_{rr}^\mathrm{smeared}$",
+    )
+    ax.plot(
+        radius[0],
+        toroidal_smeared_stress[0],
+        "--",
+        color="orange",
+        label=r"$\sigma_{\theta\theta}^\mathrm{smeared}$",
+    )
+    ax.plot(
+        radius[0],
+        vertical_smeared_stress[0],
+        "--",
+        color="mediumseagreen",
+        label=r"$\sigma_{zz}^\mathrm{smeared}$",
+    )
+    ax.plot(
+        radius[0],
+        tresca_smeared_stress[0],
+        "-",
+        color="crimson",
+        label=r"$\sigma_{TRESCA}^\mathrm{smeared}$",
+    )
+    for ii in range(1, n_layers):
+        ax.plot(radius[ii], radial_smeared_stress[ii], "--", color="dodgerblue")
+        ax.plot(radius[ii], toroidal_smeared_stress[ii], "--", color="orange")
+        ax.plot(radius[ii], vertical_smeared_stress[ii], "--", color="mediumseagreen")
+        ax.plot(radius[ii], tresca_smeared_stress[ii], "-", color="crimson")
+    ax.plot(
+        bound_radius,
+        bound_radial_smeared_stress,
+        "|",
+        markersize=mark_size,
+        color="dodgerblue",
+    )
+    ax.plot(
+        bound_radius,
+        bound_toroidal_smeared_stress,
+        "|",
+        markersize=mark_size,
+        color="orange",
+    )
+    ax.plot(
+        bound_radius,
+        bound_vertical_smeared_stress,
+        "|",
+        markersize=mark_size,
+        color="mediumseagreen",
+    )
+    ax.plot(
+        bound_radius,
+        bound_tresca_smeared_stress,
+        "|",
+        markersize=mark_size,
+        color="crimson",
+    )
+    ax.grid(True)
+    ax.set_ylabel(r"$\sigma$ [$MPa$]", fontsize=axis_tick_size)
+    ax.set_title("Smeared Stress Summary")
+    ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize=legend_size)
+
+    # PLOT 4 : Displacement
+    # ----------------------
+    ax = axis[2]
+    ax.plot(radius[0], radial_displacement[0], color="dodgerblue")
+    for ii in range(1, n_layers):
+        ax.plot(radius[ii], radial_displacement[ii], color="dodgerblue")
+    ax.grid(True)
+    ax.set_ylabel(r"$u_{r}$ [mm]", fontsize=axis_tick_size)
+    ax.set_xlabel(r"$R$ [$m$]", fontsize=axis_tick_size)
+    ax.set_title("Radial Displacement")
+    # Only set legend for the last plot if needed
+
+    # Set x-label only on the last axis
+    axis[2].set_xlabel(r"$R$ [$m$]", fontsize=axis_tick_size)
+
+    # Set minor ticks on for all axes
+    for ax in axis:
+        ax.minorticks_on()
+    # Set x-ticks and y-ticks font size for all axes
+    for ax in axis:
+        ax.tick_params(axis="x", labelsize=axis_tick_size)
+        ax.tick_params(axis="y", labelsize=axis_tick_size)
+    plt.tight_layout()
+
+
 def main_plot(
     fig1,
     fig2,
@@ -8689,6 +9193,7 @@ def main_plot(
     fig13,
     fig14,
     fig15,
+    fig16,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -8828,35 +9333,38 @@ def main_plot(
     plot_21 = fig9.add_subplot(111, aspect="equal")
     plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
 
-    plot_22 = fig10.add_subplot(221)
-    plot_bootstrap_comparison(plot_22, m_file_data, scan)
+    axes = fig10.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    plot_tf_stress(axes)
 
-    plot_23 = fig10.add_subplot(224)
-    plot_h_threshold_comparison(plot_23, m_file_data, scan)
+    plot_23 = fig11.add_subplot(221)
+    plot_bootstrap_comparison(plot_23, m_file_data, scan)
 
-    plot_24 = fig11.add_subplot(221)
-    plot_density_limit_comparison(plot_24, m_file_data, scan)
+    plot_24 = fig11.add_subplot(224)
+    plot_h_threshold_comparison(plot_24, m_file_data, scan)
 
-    plot_25 = fig11.add_subplot(224)
-    plot_confinement_time_comparison(plot_25, m_file_data, scan)
+    plot_25 = fig12.add_subplot(221)
+    plot_density_limit_comparison(plot_25, m_file_data, scan)
 
-    plot_26 = fig12.add_subplot(111)
-    plot_current_profiles_over_time(plot_26, m_file_data, scan)
+    plot_26 = fig12.add_subplot(224)
+    plot_confinement_time_comparison(plot_26, m_file_data, scan)
 
-    plot_27 = fig13.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_27, fig13, m_file_data, scan)
+    plot_27 = fig13.add_subplot(111)
+    plot_current_profiles_over_time(plot_27, m_file_data, scan)
 
-    plot_28 = fig13.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_28, fig13, m_file_data, scan)
+    plot_28 = fig14.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_28, fig14, m_file_data, scan)
 
-    plot_29 = fig14.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_29, m_file_data, scan)
+    plot_29 = fig14.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_29, fig14, m_file_data, scan)
 
-    plot_30 = fig14.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_30, m_file_data, scan)
+    plot_30 = fig15.add_subplot(221, aspect="equal")
+    plot_first_wall_top_down_cross_section(plot_30, m_file_data, scan)
 
-    plot_31 = fig15.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_31, m_file_data, scan, fig15)
+    plot_31 = fig15.add_subplot(122)
+    plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
+
+    plot_32 = fig16.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_32, m_file_data, scan, fig16)
 
 
 def main(args=None):
@@ -8866,6 +9374,9 @@ def main(args=None):
     colour_scheme = int(args.colour)
     # read MFILE
     m_file = mf.MFile(args.f) if args.f != "" else mf.MFile("MFILE.DAT")
+
+    global m_file_name
+    m_file_name = args.f if args.f != "" else "MFILE.DAT"
 
     scan = args.n if args.n else -1
 
@@ -9145,6 +9656,7 @@ def main(args=None):
     page13 = plt.figure(figsize=(12, 9), dpi=80)
     page14 = plt.figure(figsize=(12, 9), dpi=80)
     page15 = plt.figure(figsize=(12, 9), dpi=80)
+    page16 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -9163,6 +9675,7 @@ def main(args=None):
         page13,
         page14,
         page15,
+        page16,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -9186,6 +9699,7 @@ def main(args=None):
         pdf.savefig(page13)
         pdf.savefig(page14)
         pdf.savefig(page15)
+        pdf.savefig(page16)
 
     # show fig if option used
     if args.show:
@@ -9206,6 +9720,7 @@ def main(args=None):
     plt.close(page13)
     plt.close(page14)
     plt.close(page15)
+    plt.close(page16)
 
 
 if __name__ == "__main__":

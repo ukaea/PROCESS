@@ -62,38 +62,45 @@ process -i path/to/IN.DAT --plot --mfile path/to/MFILE.DAT
 
 <figure markdown>
 ![plot_proc_9](../images/plot_proc_9.PNG){ width="100%"}
-<figcaption>Figure 9: plot_proc TF coil structure  </figcaption>
+<figcaption>Figure 9: plot_proc TF poloidal cross-section page  </figcaption>
 </figure>
 
 <figure markdown>
 ![plot_proc_10](../images/plot_proc_10.PNG){ width="100%"}
-<figcaption>Figure 10: plot_proc bootstrap current model and L-H threshold comparison page  </figcaption>
+<figcaption>Figure 10: plot_proc TF stress comparison page   </figcaption>
 </figure>
 
 <figure markdown>
 ![plot_proc_11](../images/plot_proc_11.PNG){ width="100%"}
-<figcaption>Figure 11: plot_proc density limit and confinement time comparison page  </figcaption>
+<figcaption>Figure 11: plot_proc bootstrap current model and L-H threshold comparison page   </figcaption>
 </figure>
 
 <figure markdown>
 ![plot_proc_12](../images/plot_proc_12.PNG){ width="100%"}
-<figcaption>Figure 12: plot_proc current profiles comparison page  </figcaption>
+<figcaption>Figure 12: plot_proc density limit and confinement time comparison page   </figcaption>
 </figure>
 
 <figure markdown>
 ![plot_proc_13](../images/plot_proc_13.PNG){ width="100%"}
-<figcaption>Figure 13: plot_proc central solenoid and turn cross-section page  </figcaption>
+<figcaption>Figure 13: plot_proc current profiles comparison page  </figcaption>
 </figure>
 
 <figure markdown>
 ![plot_proc_14](../images/plot_proc_14.PNG){ width="100%"}
-<figcaption>Figure 14: plot_proc first wall comparison page  </figcaption>
+<figcaption>Figure 14: plot_proc central solenoid and turn cross-section page   </figcaption>
 </figure>
 
 <figure markdown>
 ![plot_proc_15](../images/plot_proc_15.PNG){ width="100%"}
-<figcaption>Figure 14: plot_proc power flow page  </figcaption>
+<figcaption>Figure 15: plot_proc first wall comparison page  </figcaption>
 </figure>
+
+<figure markdown>
+![plot_proc_16](../images/plot_proc_16.png){ width="100%"}
+<figcaption>Figure 16: plot_proc power flow page  </figcaption>
+</figure>
+
+
 
 ----------------
 

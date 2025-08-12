@@ -62,3 +62,4 @@ python_modules.txt
 quench_data.DAT
 env-fork
 *SIG_TF.json
+!tests/integration/data/large_tokamak_SIG_TF.json
