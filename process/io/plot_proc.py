@@ -8683,7 +8683,7 @@ def plot_tf_stress(axis):
     bound_radial_displacement = []
 
     input_mfile = m_file_name
-    input_json = input_mfile.replace(".MFILE.DAT", ".SIG_TF.json")
+    input_json = input_mfile.replace("MFILE.DAT", "SIG_TF.json")
     with open(input_json) as f:
         sig_file_data = json.load(f)
 
