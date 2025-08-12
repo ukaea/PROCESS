@@ -87,7 +87,6 @@ LIST(APPEND PROCESS_SRCS
     error_handling.f90
     global_variables.f90
     constraint_variables.f90
-    impurity_radiation.f90
     pf_power_variables.f90
     dcll.f90
     blanket_library.f90

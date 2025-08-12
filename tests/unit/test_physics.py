@@ -13,14 +13,14 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
+from process.data_structure import impurity_radiation_module
 from process.fortran import (
     constants,
     current_drive_variables,
-    impurity_radiation_module,
     physics_module,
     physics_variables,
 )
-from process.impurity_radiation import init_impurity_radiation_module, initialise_imprad
+from process.impurity_radiation import initialise_imprad
 from process.physics import (
     Physics,
     calculate_beta_limit,
@@ -1423,7 +1423,7 @@ class PlasmaCompositionParam(NamedTuple):
     (
         PlasmaCompositionParam(
             f_beam_tritium=9.9999999999999995e-07,
-            impurity_arr_frac=[
+            impurity_arr_frac=np.array([
                 0.90000000000000002,
                 0.10000000000000001,
                 0,
@@ -1438,9 +1438,24 @@ class PlasmaCompositionParam(NamedTuple):
                 0,
                 0.00038000000000000008,
                 5.0000000000000021e-06,
-            ],
-            impurity_arr_z=[1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74],
-            impurity_arr_amass=[
+            ]),
+            impurity_arr_z=np.array([
+                1.0,
+                2.0,
+                4.0,
+                6.0,
+                7.0,
+                8.0,
+                10.0,
+                14.0,
+                18.0,
+                26.0,
+                28.0,
+                36.0,
+                54.0,
+                74.0,
+            ]),
+            impurity_arr_amass=np.array([
                 1.01,
                 4.0030000000000001,
                 9.0099999999999998,
@@ -1455,7 +1470,7 @@ class PlasmaCompositionParam(NamedTuple):
                 83.799999999999997,
                 131.30000000000001,
                 183.84999999999999,
-            ],
+            ]),
             alphat=1.45,
             i_plasma_ignited=0,
             f_alpha_electron=0,
@@ -1499,7 +1514,7 @@ class PlasmaCompositionParam(NamedTuple):
             beta_mcdonald=0,
             itart_r=0,
             first_call=1,
-            expected_impurity_arr_frac=[
+            expected_impurity_arr_frac=np.array([
                 0.78128900936605694,
                 0.10000000000000001,
                 0,
@@ -1514,7 +1529,7 @@ class PlasmaCompositionParam(NamedTuple):
                 0,
                 0.00038000000000000008,
                 5.0000000000000021e-06,
-            ],
+            ]),
             expected_f_alpha_electron=0.6845930883190634,
             expected_m_fuel_amu=2.5145269632339478,
             expected_nd_fuel_ions=5.8589175702454272e19,
@@ -1532,7 +1547,7 @@ class PlasmaCompositionParam(NamedTuple):
         ),
         PlasmaCompositionParam(
             f_beam_tritium=9.9999999999999995e-07,
-            impurity_arr_frac=(
+            impurity_arr_frac=np.array([
                 0.78128900936605694,
                 0.10000000000000001,
                 0,
@@ -1547,7 +1562,7 @@ class PlasmaCompositionParam(NamedTuple):
                 0,
                 0.00038000000000000008,
                 5.0000000000000021e-06,
-            ),
+            ]),
             impurity_arr_z=np.array(
                 np.array((1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"),
                 order="F",
@@ -1617,7 +1632,7 @@ class PlasmaCompositionParam(NamedTuple):
             beta_mcdonald=0,
             itart_r=0,
             first_call=0,
-            expected_impurity_arr_frac=(
+            expected_impurity_arr_frac=np.array([
                 0.78128900936605694,
                 0.10000000000000001,
                 0,
@@ -1632,7 +1647,7 @@ class PlasmaCompositionParam(NamedTuple):
                 0,
                 0.00038000000000000008,
                 5.0000000000000021e-06,
-            ),
+            ]),
             expected_f_alpha_electron=0.73096121787894142,
             expected_m_fuel_amu=2.5145269632339478,
             expected_nd_fuel_ions=5.8576156204039725e19,
@@ -1662,7 +1677,6 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    init_impurity_radiation_module()
     initialise_imprad()
 
     monkeypatch.setattr(

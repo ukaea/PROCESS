@@ -20,6 +20,9 @@ from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.ife_variables import init_ife_variables
+from process.data_structure.impurity_radiation_module import (
+    init_impurity_radiation_module,
+)
 from process.data_structure.neoclassics_variables import init_neoclassics_variables
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.primary_pumping_variables import (
@@ -36,7 +39,6 @@ from process.dcll import init_dcll_module
 from process.exceptions import ProcessValidationError
 from process.fw import init_fwbs_variables
 from process.hcpb import init_ccfe_hcpb_module
-from process.impurity_radiation import init_impurity_radiation_module
 from process.input import parse_input_file
 from process.pfcoil import init_pfcoil_module, init_pfcoil_variables
 from process.physics import (
@@ -375,16 +377,16 @@ def check_process(inputs):  # noqa: ARG001
         data_structure.buildings_variables.triv = 0.0
         fortran.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
-    if fortran.impurity_radiation_module.fimp[1] != 0.1:
+    if data_structure.impurity_radiation_module.fimp[1] != 0.1:
         raise ProcessValidationError(
             "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not fimp(2)."
             "fimp(2) should be removed from the input file, or set to the default value 0.1D0."
         )
 
     # Impurity fractions
-    for imp in range(fortran.impurity_radiation_module.n_impurities):
-        fortran.impurity_radiation_module.impurity_arr_frac[imp] = (
-            fortran.impurity_radiation_module.fimp[imp]
+    for imp in range(data_structure.impurity_radiation_module.N_IMPURITIES):
+        data_structure.impurity_radiation_module.impurity_arr_frac[imp] = (
+            data_structure.impurity_radiation_module.fimp[imp]
         )
 
     # Stop the run if oacdcp is used as an optimisation variable
