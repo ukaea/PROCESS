@@ -2547,8 +2547,6 @@ class TFCoil:
             # Ouboard vertical tension [N]
             vforce_outboard = vforce * ((1.0e0 / f_vforce_inboard) - 1.0e0)
 
-        # ***
-
         # Total vertical force
         vforce_inboard_tot = vforce * n_tf_coils
 
