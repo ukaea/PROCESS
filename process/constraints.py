@@ -787,7 +787,7 @@ def constraint_equation_24():
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
         fortran.physics_variables.i_beta_component == 0
-        or fortran.stellarator_variables.istell != 0
+        or data_structure.stellarator_variables.istell != 0
     ):
         cc = (
             fortran.physics_variables.beta / fortran.physics_variables.beta_max
@@ -2274,23 +2274,23 @@ def constraint_equation_91():
             1.0
             - fortran.constraint_variables.fecrh_ignition
             * (
-                fortran.stellarator_variables.powerht_constraint
+                data_structure.stellarator_variables.powerht_constraint
                 + fortran.current_drive_variables.p_hcd_primary_extra_heat_mw
             )
-            / fortran.stellarator_variables.powerscaling_constraint
+            / data_structure.stellarator_variables.powerscaling_constraint
         )
     else:
         cc = (
             1.0
             - fortran.constraint_variables.fecrh_ignition
-            * fortran.stellarator_variables.powerht_constraint
-            / fortran.stellarator_variables.powerscaling_constraint
+            * data_structure.stellarator_variables.powerht_constraint
+            / data_structure.stellarator_variables.powerscaling_constraint
         )
 
     return ConstraintResult(
         cc,
-        fortran.stellarator_variables.powerscaling_constraint * (1.0 - cc),
-        fortran.stellarator_variables.powerht_constraint * cc,
+        data_structure.stellarator_variables.powerscaling_constraint * (1.0 - cc),
+        data_structure.stellarator_variables.powerht_constraint * cc,
     )
 
 

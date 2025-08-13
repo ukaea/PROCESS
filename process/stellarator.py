@@ -19,6 +19,7 @@ from process.data_structure import (
     neoclassics_variables,
     rebco_variables,
     stellarator_configuration,
+    stellarator_variables,
     structure_variables,
     times_variables,
 )
@@ -36,11 +37,7 @@ from process.fortran import (
     physics_module,
     physics_variables,
     sctfcoil_module,
-    stellarator_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    stellarator_module as st,
 )
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
@@ -191,7 +188,7 @@ class Stellarator:
                 stellarator_variables.te0_ecrh_achievable,
             )
 
-        st.first_call = False
+        stellarator_variables.first_call = False
 
     def stnewconfig(self):
         """author: J Lion, IPP Greifswald
@@ -227,24 +224,24 @@ class Stellarator:
         )  # This overwrites tfcoil_variables.n_tf_coils in input file.
 
         #  Factors used to scale the reference point.
-        st.f_r = (
+        stellarator_variables.f_r = (
             physics_variables.rmajor
             / stellarator_configuration.stella_config_rmajor_ref
         )  # Size scaling factor with respect to the reference calculation
-        st.f_a = (
+        stellarator_variables.f_a = (
             physics_variables.rminor
             / stellarator_configuration.stella_config_rminor_ref
         )  # Size scaling factor with respect to the reference calculation
 
-        st.f_aspect = (
+        stellarator_variables.f_aspect = (
             physics_variables.aspect
             / stellarator_configuration.stella_config_aspect_ref
         )
-        st.f_n = tfcoil_variables.n_tf_coils / (
+        stellarator_variables.f_n = tfcoil_variables.n_tf_coils / (
             stellarator_configuration.stella_config_coilspermodule
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
-        st.f_b = (
+        stellarator_variables.f_b = (
             physics_variables.bt / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
@@ -265,12 +262,16 @@ class Stellarator:
         surfaces with Fourier coefficients')
         """
         physics_variables.vol_plasma = (
-            st.f_r * st.f_a**2 * stellarator_configuration.stella_config_vol_plasma
+            stellarator_variables.f_r
+            * stellarator_variables.f_a**2
+            * stellarator_configuration.stella_config_vol_plasma
         )
 
         # Plasma surface scaled from effective parameter:
         physics_variables.a_plasma_surface = (
-            st.f_r * st.f_a * stellarator_configuration.stella_config_plasma_surface
+            stellarator_variables.f_r
+            * stellarator_variables.f_a
+            * stellarator_configuration.stella_config_plasma_surface
         )
 
         # Plasma cross section area. Approximated
@@ -397,10 +398,10 @@ class Stellarator:
         )
 
         # derivative_min_LCFS_coils_dist  for how strong the stellarator shape changes wrt to aspect ratio
-        build_variables.available_radial_space = st.f_r * (
+        build_variables.available_radial_space = stellarator_variables.f_r * (
             stellarator_configuration.stella_config_derivative_min_lcfs_coils_dist
             * stellarator_configuration.stella_config_rminor_ref
-            * (1 / st.f_aspect - 1)
+            * (1 / stellarator_variables.f_aspect - 1)
             + stellarator_configuration.stella_config_min_plasma_coil_distance
         )
 
@@ -790,17 +791,21 @@ class Stellarator:
 
         # The following line is correct AS LONG AS we do not scale the coil sizes
         intercoil_surface = (
-            stellarator_configuration.stella_config_coilsurface * st.f_r**2
+            stellarator_configuration.stella_config_coilsurface
+            * stellarator_variables.f_r**2
             - tfcoil_variables.dx_tf_inboard_out_toroidal
             * stellarator_configuration.stella_config_coillength
-            * st.f_r
-            * st.f_n
+            * stellarator_variables.f_r
+            * stellarator_variables.f_n
         )
 
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
         # The thickness 0.18m was obtained as a measured value from Schauer, F. and Bykov, V. design of Helias 5-B. (Nucl Fus. 2013)
         structure_variables.aintmass = (
-            0.18e0 * st.f_b**2 * intercoil_surface * fwbs_variables.denstl
+            0.18e0
+            * stellarator_variables.f_b**2
+            * intercoil_surface
+            * fwbs_variables.denstl
         )
 
         structure_variables.clgsmass = (
@@ -2546,8 +2551,14 @@ class Stellarator:
         are assumed to be a fixed shape, but are scaled in size
         appropriately for the machine being modelled.
         """
-        r_coil_major = stellarator_configuration.stella_config_coil_rmajor * st.f_r
-        r_coil_minor = stellarator_configuration.stella_config_coil_rminor * st.f_r
+        r_coil_major = (
+            stellarator_configuration.stella_config_coil_rmajor
+            * stellarator_variables.f_r
+        )
+        r_coil_minor = (
+            stellarator_configuration.stella_config_coil_rminor
+            * stellarator_variables.f_r
+        )
 
         ########################################################################################
         # Winding Pack Geometry: for one conductor
@@ -2578,9 +2589,14 @@ class Stellarator:
         #
         # Total coil current (MA)
         coilcurrent = (
-            st.f_b * stellarator_configuration.stella_config_i0 * st.f_r / st.f_n
+            stellarator_variables.f_b
+            * stellarator_configuration.stella_config_i0
+            * stellarator_variables.f_r
+            / stellarator_variables.f_n
         )
-        st.f_i = coilcurrent / stellarator_configuration.stella_config_i0
+        stellarator_variables.f_i = (
+            coilcurrent / stellarator_configuration.stella_config_i0
+        )
 
         n_it = 200  # number of iterations
 
@@ -2760,8 +2776,8 @@ class Stellarator:
         stellarator_variables.vporttmax = (
             0.4e0
             * stellarator_configuration.stella_config_max_portsize_width
-            * st.f_r
-            / st.f_n
+            * stellarator_variables.f_r
+            / stellarator_variables.f_n
         )  # This is not accurate yet. Needs more insight#
 
         #  Maximal poloidal port size (vertical ports) (m)
@@ -2779,8 +2795,8 @@ class Stellarator:
         stellarator_variables.hporttmax = (
             0.8e0
             * stellarator_configuration.stella_config_max_portsize_width
-            * st.f_r
-            / st.f_n
+            * stellarator_variables.f_r
+            / stellarator_variables.f_n
         )  # Factor 0.8 to take the variation with height into account
 
         #  Maximal poloidal port size (horizontal ports) (m)
@@ -2877,18 +2893,18 @@ class Stellarator:
         # This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling)
         inductance = (
             stellarator_configuration.stella_config_inductance
-            / st.f_r
+            / stellarator_variables.f_r
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
-            * st.f_n**2
+            * stellarator_variables.f_n**2
         )
         tfcoil_variables.e_tf_magnetic_stored_total_gj = (
             0.5e0
             * (
                 stellarator_configuration.stella_config_inductance
-                / st.f_r
+                / stellarator_variables.f_r
                 * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
                 ** 2
-                * st.f_n**2
+                * stellarator_variables.f_n**2
             )
             * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
             * 1.0e-9
@@ -2929,7 +2945,7 @@ class Stellarator:
         # Minimal bending radius:
         min_bending_radius = (
             stellarator_configuration.stella_config_min_bend_radius
-            * st.f_r
+            * stellarator_variables.f_r
             * 1.0
             / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
         )
@@ -3101,8 +3117,8 @@ class Stellarator:
         # Forces scaling #
         tfcoil_variables.max_force_density = (
             stellarator_configuration.stella_config_max_force_density
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
@@ -3119,16 +3135,16 @@ class Stellarator:
         # Units: MN/m
         max_force_density_mnm = (
             stellarator_configuration.stella_config_max_force_density_mnm
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
         )
         #
         max_lateral_force_density = (
             stellarator_configuration.stella_config_max_lateral_force_density
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
@@ -3136,8 +3152,8 @@ class Stellarator:
         )
         max_radial_force_density = (
             stellarator_configuration.stella_config_max_radial_force_density
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
@@ -3147,8 +3163,8 @@ class Stellarator:
         # F = f*V = B*j*V \propto B/B0 * I/I0 * A0/A * A/A0 * len/len0
         centering_force_max_mn = (
             stellarator_configuration.stella_config_centering_force_max_mn
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
@@ -3157,8 +3173,8 @@ class Stellarator:
         )
         centering_force_min_mn = (
             stellarator_configuration.stella_config_centering_force_min_mn
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
@@ -3167,8 +3183,8 @@ class Stellarator:
         )
         centering_force_avg_mn = (
             stellarator_configuration.stella_config_centering_force_avg_mn
-            * st.f_i
-            / st.f_n
+            * stellarator_variables.f_i
+            / stellarator_variables.f_n
             * tfcoil_variables.b_tf_inboard_peak
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
@@ -4983,7 +4999,7 @@ class Stellarator:
     def st_calc_eff_chi(self):
         volscaling = (
             physics_variables.vol_plasma
-            * st.f_r
+            * stellarator_variables.f_r
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
@@ -4993,7 +5009,7 @@ class Stellarator:
         )
         surfacescaling = (
             physics_variables.a_plasma_surface
-            * st.f_r
+            * stellarator_variables.f_r
             * (
                 impurity_radiation_module.radius_plasma_core_norm
                 * physics_variables.rminor
@@ -5801,39 +5817,6 @@ class Neoclassics:
                 / neoclassics_variables.temperatures
             )
         )
-
-
-def init_stellarator_variables():
-    stellarator_variables.istell = 0
-    stellarator_variables.bmn = 1e-3
-    stellarator_variables.f_asym = 1.0
-    stellarator_variables.f_rad = 0.85
-    stellarator_variables.f_w = 0.5
-    stellarator_variables.fdivwet = 0.333333333333333
-    stellarator_variables.flpitch = 1e-3
-    stellarator_variables.hportamax = 0.0
-    stellarator_variables.hportpmax = 0.0
-    stellarator_variables.hporttmax = 0.0
-    stellarator_variables.iotabar = 1.0
-    stellarator_variables.isthtr = 3
-    stellarator_variables.m_res = 5
-    stellarator_variables.n_res = 5
-    stellarator_variables.shear = 0.5
-    stellarator_variables.vportamax = 0.0
-    stellarator_variables.vportpmax = 0.0
-    stellarator_variables.vporttmax = 0.0
-    stellarator_variables.max_gyrotron_frequency = 1.0e9
-    stellarator_variables.te0_ecrh_achievable = 1.0e2
-
-
-def init_stellarator_module():
-    st.first_call = True
-    st.first_call_stfwbs = True
-    st.f_n = 0.0
-    st.f_r = 0.0
-    st.f_a = 0.0
-    st.f_b = 0.0
-    st.f_i = 0.0
 
 
 def stinit():

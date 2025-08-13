@@ -19,13 +19,13 @@ from process.data_structure import (
     cost_variables,
     impurity_radiation_module,
     stellarator_configuration,
+    stellarator_variables,
     structure_variables,
 )
 from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
-    stellarator_module,
     tfcoil_variables,
 )
 from process.hcpb import CCFE_HCPB
@@ -198,9 +198,9 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
         stgeomparam.stella_config_plasma_surface,
     )
 
-    monkeypatch.setattr(stellarator_module, "f_r", stgeomparam.f_r)
+    monkeypatch.setattr(stellarator_variables, "f_r", stgeomparam.f_r)
 
-    monkeypatch.setattr(stellarator_module, "f_a", stgeomparam.f_a)
+    monkeypatch.setattr(stellarator_variables, "f_a", stgeomparam.f_a)
 
     stellarator.stgeom()
 
@@ -657,11 +657,11 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
         stbildparam.stella_config_min_plasma_coil_distance,
     )
 
-    monkeypatch.setattr(stellarator_module, "f_r", stbildparam.f_r)
+    monkeypatch.setattr(stellarator_variables, "f_r", stbildparam.f_r)
 
-    monkeypatch.setattr(stellarator_module, "f_aspect", stbildparam.f_aspect)
+    monkeypatch.setattr(stellarator_variables, "f_aspect", stbildparam.f_aspect)
 
-    monkeypatch.setattr(stellarator_module, "f_a", stbildparam.f_a)
+    monkeypatch.setattr(stellarator_variables, "f_a", stbildparam.f_a)
 
     stellarator.stbild(False)
     assert build_variables.dz_blkt_upper == pytest.approx(
@@ -869,11 +869,11 @@ def test_ststrc(ststrcparam, monkeypatch, stellarator):
         ststrcparam.stella_config_coillength,
     )
 
-    monkeypatch.setattr(stellarator_module, "f_n", ststrcparam.f_n)
+    monkeypatch.setattr(stellarator_variables, "f_n", ststrcparam.f_n)
 
-    monkeypatch.setattr(stellarator_module, "f_r", ststrcparam.f_r)
+    monkeypatch.setattr(stellarator_variables, "f_r", ststrcparam.f_r)
 
-    monkeypatch.setattr(stellarator_module, "f_b", ststrcparam.f_b)
+    monkeypatch.setattr(stellarator_variables, "f_b", ststrcparam.f_b)
 
     stellarator.ststrc(False)
 
@@ -2871,7 +2871,7 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         stcalceffchiparam.stella_config_rminor_ref,
     )
 
-    monkeypatch.setattr(stellarator_module, "f_r", stcalceffchiparam.f_r)
+    monkeypatch.setattr(stellarator_variables, "f_r", stcalceffchiparam.f_r)
 
     output = stellarator.st_calc_eff_chi()
 

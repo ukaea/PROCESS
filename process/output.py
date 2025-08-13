@@ -18,7 +18,7 @@ def write(models, _outfile):
     ft.error_handling.errors_on = True
 
     # Call stellarator output routine instead if relevant
-    if ft.stellarator_variables.istell != 0:
+    if data_structure.stellarator_variables.istell != 0:
         models.stellarator.run(output=True)
         return
 

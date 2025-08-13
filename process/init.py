@@ -31,6 +31,7 @@ from process.data_structure.primary_pumping_variables import (
 from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
+from process.data_structure.stellarator_variables import init_stellarator_variables
 from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
@@ -47,11 +48,7 @@ from process.physics import (
 )
 from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.scan import init_scan_module
-from process.stellarator import (
-    init_stellarator_module,
-    init_stellarator_variables,
-    stinit,
-)
+from process.stellarator import stinit
 from process.superconducting_tf_coil import init_sctfcoil_module
 from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -270,7 +267,6 @@ def init_all_module_vars():
     init_physics_variables()
     init_scan_module()
     init_sctfcoil_module()
-    init_stellarator_module()
     init_stellarator_variables()
     init_tfcoil_variables()
     init_times_variables()
@@ -1067,7 +1063,7 @@ def check_process(inputs):  # noqa: ARG001
     # Ensure that blanket material fractions allow non-zero space for steel
     # CCFE HCPB Model
 
-    if fortran.stellarator_variables.istell == 0 and (
+    if data_structure.stellarator_variables.istell == 0 and (
         fortran.fwbs_variables.i_blanket_type == 1
     ):
         fsum = (
@@ -1175,5 +1171,5 @@ def set_active_constraints():
 def set_device_type():
     if data_structure.ife_variables.ife == 1:
         fortran.global_variables.icase = "Inertial Fusion model"
-    elif fortran.stellarator_variables.istell != 0:
+    elif data_structure.stellarator_variables.istell != 0:
         fortran.global_variables.icase = "Stellarator model"

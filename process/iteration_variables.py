@@ -335,7 +335,7 @@ ITERATION_VARIABLES = {
     167: IterationVariable("fncycle", fortran.constraint_variables, 1.0e-8, 1.0),
     168: IterationVariable("fecrh_ignition", fortran.constraint_variables, 0.010, 2.0),
     169: IterationVariable(
-        "te0_ecrh_achievable", fortran.stellarator_variables, 1.0, 1.0e3
+        "te0_ecrh_achievable", data_structure.stellarator_variables, 1.0, 1.0e3
     ),
     170: IterationVariable(
         "deg_div_field_plate", data_structure.divertor_variables, 0.49, 5.01
