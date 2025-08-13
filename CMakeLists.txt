@@ -88,7 +88,6 @@ LIST(APPEND PROCESS_SRCS
     global_variables.f90
     constraint_variables.f90
     pf_power_variables.f90
-    dcll.f90
     blanket_library.f90
     stellarator_variables.f90
     stellarator.f90

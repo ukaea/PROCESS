@@ -18,6 +18,7 @@ from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
+from process.data_structure.dcll_variables import init_dcll_module
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.ife_variables import init_ife_variables
 from process.data_structure.impurity_radiation_module import (
@@ -35,7 +36,6 @@ from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
-from process.dcll import init_dcll_module
 from process.exceptions import ProcessValidationError
 from process.fw import init_fwbs_variables
 from process.hcpb import init_ccfe_hcpb_module
