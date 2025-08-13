@@ -82,7 +82,30 @@ class SuperconductingTFCoil(TFCoil):
             1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
         )
 
-        self.tf_field_and_force()
+        (
+            tfcoil_variables.cforce,
+            tfcoil_variables.vforce,
+            tfcoil_variables.vforce_outboard,
+            sctfcoil_module.vforce_inboard_tot,
+            tfcoil_variables.f_vforce_inboard,
+        ) = super().tf_field_and_force(
+            i_tf_sup=tfcoil_variables.i_tf_sup,
+            r_tf_wp_inboard_outer=sctfcoil_module.r_tf_wp_inboard_outer,
+            r_tf_wp_inboard_inner=sctfcoil_module.r_tf_wp_inboard_inner,
+            r_tf_outboard_in=sctfcoil_module.r_tf_outboard_in,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
+            b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak,
+            c_tf_total=tfcoil_variables.c_tf_total,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
+            rmajor=physics_variables.rmajor,
+            bt=physics_variables.bt,
+            r_cp_top=build_variables.r_cp_top,
+            itart=physics_variables.itart,
+            i_cp_joints=tfcoil_variables.i_cp_joints,
+            f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
+        )
 
         # Calculate TF coil areas and masses
         self.tf_coil_area_and_masses()
