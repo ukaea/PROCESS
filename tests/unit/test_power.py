@@ -7,6 +7,7 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    pfcoil_variables,
     power_variables,
     times_variables,
 )
@@ -18,7 +19,6 @@ from process.fortran import (
     heat_transport_variables,
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )

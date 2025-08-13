@@ -6,13 +6,17 @@ import numpy as np
 import pytest
 
 from process.costs_2015 import Costs2015
-from process.data_structure import build_variables, cost_2015_variables, cost_variables
+from process.data_structure import (
+    build_variables,
+    cost_2015_variables,
+    cost_variables,
+    pfcoil_variables,
+)
 from process.fortran import (
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )

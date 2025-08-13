@@ -90,14 +90,16 @@ ITERATION_VARIABLES = {
         "fb_tf_inboard_max", fortran.constraint_variables, 0.001, 1.0
     ),
     36: IterationVariable("fbeta_max", fortran.constraint_variables, 0.001, 1.0),
-    37: IterationVariable("j_cs_flat_top_end", fortran.pfcoil_variables, 1.0e5, 1.0e8),
+    37: IterationVariable(
+        "j_cs_flat_top_end", data_structure.pfcoil_variables, 1.0e5, 1.0e8
+    ),
     38: IterationVariable("fjohc", fortran.constraint_variables, 0.010, 1.0),
     39: IterationVariable("fjohc0", fortran.constraint_variables, 0.001, 1.0),
     40: IterationVariable(
         "feta_cd_norm_hcd_primary_max", fortran.constraint_variables, 0.001, 1.0
     ),
     41: IterationVariable(
-        "f_j_cs_start_pulse_end_flat_top", fortran.pfcoil_variables, 0.001, 1.0
+        "f_j_cs_start_pulse_end_flat_top", data_structure.pfcoil_variables, 0.001, 1.0
     ),
     42: IterationVariable("dr_cs_tf_gap", data_structure.build_variables, 0.001, 10.00),
     44: IterationVariable(
@@ -193,7 +195,9 @@ ITERATION_VARIABLES = {
     ),
     117: IterationVariable("fpsepbqar", fortran.constraint_variables, 0.001, 1.0),
     119: IterationVariable("tesep", fortran.physics_variables, 0.0, 1.0e1),
-    122: IterationVariable("f_a_cs_steel", fortran.pfcoil_variables, 0.001, 0.950),
+    122: IterationVariable(
+        "f_a_cs_steel", data_structure.pfcoil_variables, 0.001, 0.950
+    ),
     123: IterationVariable("foh_stress", fortran.constraint_variables, 0.001, 1.0),
     125: IterationVariable(
         "fimp(03)",
@@ -310,14 +314,16 @@ ITERATION_VARIABLES = {
     145: IterationVariable("fgwped", fortran.physics_variables, 0.1, 0.9),
     146: IterationVariable("fc_tf_turn_max", fortran.constraint_variables, 0.001, 1.0),
     147: IterationVariable("freinke", fortran.constraint_variables, 0.001, 1.0),
-    149: IterationVariable("fb_cs_limit_max", fortran.pfcoil_variables, 0.001, 1.0),
+    149: IterationVariable(
+        "fb_cs_limit_max", data_structure.pfcoil_variables, 0.001, 1.0
+    ),
     152: IterationVariable("fgwsep", fortran.physics_variables, 0.001, 0.5),
     153: IterationVariable("fpdivlim", fortran.physics_variables, 0.001, 1.0),
     154: IterationVariable("fne0", fortran.physics_variables, 0.001, 1.0),
     155: IterationVariable("pfusife", data_structure.ife_variables, 5.0e2, 3.0e3),
     156: IterationVariable("rrin", data_structure.ife_variables, 1.0, 1.0e1),
     157: IterationVariable(
-        "fvs_cs_pf_total_ramp", fortran.pfcoil_variables, 1.0e-3, 1.0e1
+        "fvs_cs_pf_total_ramp", data_structure.pfcoil_variables, 1.0e-3, 1.0e1
     ),
     158: IterationVariable(
         "croco_thick", data_structure.rebco_variables, 1.0e-3, 1.0e-1

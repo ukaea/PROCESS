@@ -3,7 +3,12 @@ import logging
 import numpy as np
 
 from process import process_output as po
-from process.data_structure import build_variables, cost_2015_variables, cost_variables
+from process.data_structure import (
+    build_variables,
+    cost_2015_variables,
+    cost_variables,
+    pfcoil_variables,
+)
 from process.fortran import (
     constants,
     current_drive_variables,
@@ -11,7 +16,6 @@ from process.fortran import (
     global_variables,
     heat_transport_variables,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )

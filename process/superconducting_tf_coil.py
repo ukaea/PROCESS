@@ -6,14 +6,18 @@ from scipy import optimize
 
 import process.superconductors as superconductors
 from process import process_output as po
-from process.data_structure import build_variables, divertor_variables, rebco_variables
+from process.data_structure import (
+    build_variables,
+    divertor_variables,
+    pfcoil_variables,
+    rebco_variables,
+)
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     constraint_variables,
     error_handling,
     global_variables,
-    pfcoil_variables,
     physics_variables,
     sctfcoil_module,
     tfcoil_variables,
