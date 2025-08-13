@@ -815,24 +815,19 @@ class Stellarator:
         ################################################################
         # Intercoil support structure calculation:
         # Calculate the intercoil bolted plates structure from the coil surface
-        # which needs to be precalculated (or calculated in PROCESS but this not done here)
-        # The coil width is subtracted from that:
-        # total_coil_width = b + 2* d_ic + 2* case_thickness_constant
-        # total_coil_thickness = h + 2* d_ic + 2* case_thickness_constant
 
-        # The following line is correct AS LONG AS we do not scale the coil sizes
         intercoil_surface = (
-            stellarator_configuration.stella_config_coilsurface * st.f_r**2
+            stellarator_configuration.stella_config_coilsurface * st.f_r
+            * (st.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
             - tfcoil_variables.dx_tf_inboard_out_toroidal
-            * stellarator_configuration.stella_config_coillength
-            * st.f_r
-            * st.f_n
+            * tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_coils
         )
 
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
         # The thickness 0.18m was obtained as a measured value from Schauer, F. and Bykov, V. design of Helias 5-B. (Nucl Fus. 2013)
         structure_variables.aintmass = (
-            0.18e0 * st.f_b**2 * intercoil_surface * fwbs_variables.denstl
+            0.18e0 * (physics_variables.bt/5.6)**2 * intercoil_surface * fwbs_variables.denstl
         )
 
         structure_variables.clgsmass = (
@@ -2941,10 +2936,12 @@ class Stellarator:
 
         # [m^2] Total surface area of toroidal shells covering coils
         tfcoil_variables.tfcryoarea = (
-            stellarator_configuration.stella_config_coilsurface
-            * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
+            stellarator_configuration.stella_config_coilsurface * st.f_r
+            * (st.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
             * 1.1e0
-        )  # 1.1 to scale it out a bit. Should be coupled to winding pack maybe.
+        ) 
+        # 1.1 to scale it out a bit, as the shell must be bigger than WP
+
 
         # Minimal bending radius:
         min_bending_radius = (
