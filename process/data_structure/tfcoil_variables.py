@@ -1397,13 +1397,13 @@ def init_tfcoil_variables():
     ripmax = 1.0
     ripple = 0.0
     c_tf_total = 0.0
-    radial_array = np.zeros(N_RADIAL_ARRAY, dtype=np.float64)
-    sig_tf_r = np.zeros(N_RADIAL_ARRAY, dtype=np.float64)
-    sig_tf_t = np.zeros(N_RADIAL_ARRAY, dtype=np.float64)
-    deflect = np.zeros(N_RADIAL_ARRAY, dtype=np.float64)
+    radial_array = np.zeros(N_RADIAL_ARRAY)
+    sig_tf_r = np.zeros(N_RADIAL_ARRAY)
+    sig_tf_t = np.zeros(N_RADIAL_ARRAY)
+    deflect = np.zeros(N_RADIAL_ARRAY)
     sig_tf_z = 0.0
-    sig_tf_vmises = np.zeros(N_RADIAL_ARRAY, dtype=np.float64)
-    s_shear_tf = np.zeros(N_RADIAL_ARRAY, dtype=np.float64)
+    sig_tf_vmises = np.zeros(N_RADIAL_ARRAY)
+    s_shear_tf = np.zeros(N_RADIAL_ARRAY)
     sig_tf_cs_bucked = 0.0
     sig_tf_case = 0.0
     sig_tf_wp = 0.0
