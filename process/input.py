@@ -733,7 +733,9 @@ INPUT_VARIABLES = {
     "feta_cd_norm_hcd_primary_max": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "f_a_fw_hcd": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
+    "f_a_fw_outboard_hcd": InputVariable(
+        fortran.fwbs_variables, float, range=(0.0, 1.0)
+    ),
     "fpflux_div_heat_load_mw": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),

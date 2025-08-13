@@ -2306,7 +2306,7 @@ i_fw_coolant_type = helium
 * DESCRIPTION:   First wall coolant fraction (calculated if `i_pulsed_plant=1` or `ipowerflow=1`)
 * JUSTIFICATION: Not using ipowerflow = 1
 
-*f_a_fw_hcd = 
+*f_a_fw_outboard_hcd = 
 * DESCRIPTION:   Area fraction covered by heating/current drive apparatus plus diagnostics
 * JUSTIFICATION: Not yet set
 

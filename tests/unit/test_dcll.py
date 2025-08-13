@@ -35,7 +35,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
 
     p_div_nuclear_heat_total_mw: Any = None
 
-    f_a_fw_hcd: Any = None
+    f_a_fw_outboard_hcd: Any = None
 
     p_fw_hcd_rad_total_mw: Any = None
 
@@ -94,7 +94,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             f_ster_div_single=0.115,
             p_div_rad_total_mw=0,
             p_div_nuclear_heat_total_mw=0,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             p_fw_hcd_rad_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=0,
@@ -126,7 +126,7 @@ class DcllNeutronicsAndPowerParam(NamedTuple):
             f_ster_div_single=0.115,
             p_div_rad_total_mw=33.056596978820579,
             p_div_nuclear_heat_total_mw=182.58994516305046,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             p_fw_hcd_rad_total_mw=0,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=0,
@@ -199,7 +199,9 @@ def test_dcll_neutronics_and_power(dcllneutronicsandpowerparam, monkeypatch, dcl
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "f_a_fw_hcd", dcllneutronicsandpowerparam.f_a_fw_hcd
+        fwbs_variables,
+        "f_a_fw_outboard_hcd",
+        dcllneutronicsandpowerparam.f_a_fw_outboard_hcd,
     )
 
     monkeypatch.setattr(
