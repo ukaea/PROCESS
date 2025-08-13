@@ -12,6 +12,7 @@ from process import fortran as ft
 from process import process_output as op
 from process.data_structure import build_variables as bv
 from process.data_structure import cs_fatigue_variables as csfv
+from process.data_structure import pfcoil_variables as pf
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import times_variables as tv
 from process.exceptions import ProcessValueError
@@ -19,7 +20,6 @@ from process.fortran import constants, numerics
 from process.fortran import constraint_variables as ctv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
-from process.fortran import pfcoil_module as pf
 from process.fortran import pfcoil_variables as pfv
 from process.fortran import physics_variables as pv
 from process.fortran import tfcoil_variables as tfv
@@ -36,7 +36,7 @@ class PFCoil:
         """Initialise Fortran module variables."""
         self.outfile = ft.constants.nout  # output file unit
         self.mfile = ft.constants.mfile  # mfile file unit
-        init_pfcoil_module()
+        pf.init_pfcoil_module()
         self.cs_fatigue = cs_fatigue
 
     def run(self):
@@ -3582,28 +3582,6 @@ def mtrx(
     gmat = np.asfortranarray(gmat)
 
     return nrws, gmat, bvec
-
-
-def init_pfcoil_module():
-    pf.first_call = True
-    pf.cslimit = False
-    pf.nef = 0.0
-    pf.nfxf = 0.0
-    pf.ricpf = 0.0
-    pf.ssq0 = 0.0
-    pf.sig_axial = 0.0
-    pf.sig_hoop = 0.0
-    pf.axial_force = 0
-    pf.rfxf[:] = 0.0
-    pf.zfxf[:] = 0.0
-    pf.cfxf[:] = 0.0
-    pf.xind[:] = 0.0
-    pf.rcls[:] = 0.0
-    pf.zcls[:] = 0.0
-    pf.ccls[:] = 0.0
-    pf.ccl0[:] = 0.0
-    pf.bpf2[:] = 0.0
-    pf.vsdum[:] = 0.0
 
 
 def init_pfcoil_variables():
