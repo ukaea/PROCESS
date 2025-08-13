@@ -337,7 +337,7 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     axis.set_title("Poloidal cross-section")
     axis.minorticks_on()
 
-    plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme)
+    plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme)
     plot_shield(axis, mfile_data, scan, colour_scheme)
     plot_blanket(axis, mfile_data, scan, colour_scheme)
     plot_firstwall(axis, mfile_data, scan, colour_scheme)
@@ -3201,6 +3201,7 @@ def color_key(axis, mfile_data, scan, colour_scheme):
         ("First wall", FIRSTWALL_COLOUR[colour_scheme - 1]),
         ("Plasma", PLASMA_COLOUR[colour_scheme - 1]),
         ("PF coils", "none"),
+        ("Divertor", "black"),
     ]
 
     if (mfile_data.data["i_hcd_primary"].get_scan(scan) in [5, 8]) or (
@@ -3972,8 +3973,8 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
     # ---
 
 
-def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
-    """Function to plot vacuum vessel
+def plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme):
+    """Function to plot vacuum vessel and divertor boxes
 
     Arguments:
         axis --> axis object to plot to
@@ -3984,6 +3985,16 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
 
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
     triang_95 = mfile_data.data["triang95"].get_scan(scan)
+    dz_divertor = mfile_data.data["dz_divertor"].get_scan(scan)
+    dz_xpoint_divertor = mfile_data.data["dz_xpoint_divertor"].get_scan(scan)
+    kappa = mfile_data.data["kappa"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+    dr_vv_inboard = mfile_data.data["dr_vv_inboard"].get_scan(scan)
+    dr_vv_outboard = mfile_data.data["dr_vv_outboard"].get_scan(scan)
+    dr_shld_inboard = mfile_data.data["dr_shld_inboard"].get_scan(scan)
+    dr_shld_outboard = mfile_data.data["dr_shld_outboard"].get_scan(scan)
+    dr_blkt_inboard = mfile_data.data["dr_blkt_inboard"].get_scan(scan)
+    dr_blkt_outboard = mfile_data.data["dr_blkt_outboard"].get_scan(scan)
 
     # Outer side (furthest from plasma)
     radx_outer = (
@@ -4005,6 +4016,13 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
         - cumulative_radial_build("dr_vv_inboard", mfile_data, scan)
     ) / 2.0
 
+    z_divertor_lower_top = (-kappa * rminor) - dz_xpoint_divertor
+    z_divertor_lower_bottom = z_divertor_lower_top - dz_divertor
+
+    if i_single_null == 0:
+        z_divertor_upper_bottom = (kappa * rminor) + dz_xpoint_divertor
+        z_divertor_upper_top = z_divertor_upper_bottom + dz_divertor
+
     if i_single_null == 1:
         vvg_single_null = vacuum_vessel_geometry_single_null(
             cumulative_upper=cumulative_upper,
@@ -4023,6 +4041,7 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_single_null.zs,
             color="black",
             lw=thin,
+            zorder=5,
         )
 
         axis.fill(
@@ -4030,6 +4049,37 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             vvg_single_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
             lw=0.01,
+            zorder=5,
+        )
+
+        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+        # Find the min and max R values of the vessel boundary between the divertor lines
+        mask = (vvg_single_null.zs >= z_divertor_lower_bottom) & (
+            vvg_single_null.zs <= z_divertor_lower_top
+        )
+        # Get the min/max R for the region between the divertor lines
+        r_min = (
+            np.min(vvg_single_null.rs[mask])
+            + dr_vv_inboard
+            + dr_shld_inboard
+            + (dr_blkt_inboard * 0.5)
+        )
+        r_max = (
+            np.max(vvg_single_null.rs[mask])
+            - dr_vv_outboard
+            - dr_shld_outboard
+            - (dr_blkt_outboard * 0.5)
+        )
+        # Draw a rectangle (box) between the two lines and inside the vessel
+        axis.add_patch(
+            patches.Rectangle(
+                (r_min, z_divertor_lower_bottom),
+                r_max - r_min,
+                z_divertor_lower_top - z_divertor_lower_bottom,
+                facecolor="black",
+                alpha=0.8,
+                zorder=1,
+            )
         )
 
     if i_single_null == 0:
@@ -4042,13 +4092,77 @@ def plot_vacuum_vessel(axis, mfile_data, scan, colour_scheme):
             rminx_outer=rminx_outer,
             triang=triang_95,
         )
-        axis.plot(vvg_double_null.rs, vvg_double_null.zs, color="black", lw=thin)
+        axis.plot(
+            vvg_double_null.rs, vvg_double_null.zs, color="black", lw=thin, zorder=5
+        )
 
         axis.fill(
             vvg_double_null.rs,
             vvg_double_null.zs,
             color=VESSEL_COLOUR[colour_scheme - 1],
             lw=0.01,
+            zorder=5,
+        )
+
+        # Plot lower divertor
+        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+        # Find the min and max R values of the vessel boundary between the divertor lines
+        mask = (vvg_double_null.zs >= z_divertor_lower_bottom) & (
+            vvg_double_null.zs <= z_divertor_lower_top
+        )
+        # Get the min/max R for the region between the divertor lines
+        r_min = (
+            np.min(vvg_double_null.rs[mask])
+            + dr_vv_inboard
+            + dr_shld_inboard
+            + (dr_blkt_inboard * 0.5)
+        )
+        r_max = (
+            np.max(vvg_double_null.rs[mask])
+            - dr_vv_outboard
+            - dr_shld_outboard
+            - (dr_blkt_outboard * 0.5)
+        )
+        # Draw a rectangle (box) between the two lines and inside the vessel
+        axis.add_patch(
+            patches.Rectangle(
+                (r_min, z_divertor_lower_bottom),
+                r_max - r_min,
+                z_divertor_lower_top - z_divertor_lower_bottom,
+                facecolor="black",
+                alpha=0.8,
+                zorder=1,
+            )
+        )
+        # Plot upper divertor
+        # Find indices where vessel boundary is between z_divertor_bottom and z_divertor_top
+        # Find the min and max R values of the vessel boundary between the divertor lines
+        mask = (vvg_double_null.zs >= z_divertor_upper_bottom) & (
+            vvg_double_null.zs <= z_divertor_upper_top
+        )
+        # Get the min/max R for the region between the divertor lines
+        r_min = (
+            np.min(vvg_double_null.rs[mask])
+            + dr_vv_inboard
+            + dr_shld_inboard
+            + (dr_blkt_inboard * 0.5)
+        )
+        r_max = (
+            np.max(vvg_double_null.rs[mask])
+            - dr_vv_outboard
+            - dr_shld_outboard
+            - (dr_blkt_outboard * 0.5)
+        )
+        # Draw a rectangle (box) between the two lines and inside the vessel
+        axis.add_patch(
+            patches.Rectangle(
+                (r_min, z_divertor_upper_bottom),
+                r_max - r_min,
+                z_divertor_upper_top - z_divertor_upper_bottom,
+                facecolor="black",
+                alpha=0.8,
+                zorder=1,
+            )
         )
 
 
@@ -4178,6 +4292,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_single_null.zs,
             color="black",
             lw=thin,
+            zorder=5,
         )
 
         axis.fill(
@@ -4185,6 +4300,7 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_single_null.zs,
             color=BLANKET_COLOUR[colour_scheme - 1],
             lw=0.01,
+            zorder=5,
         )
 
     if i_single_null == 0:
@@ -4204,17 +4320,23 @@ def plot_blanket(axis, mfile_data, scan, colour_scheme) -> None:
             bg_double_null.zs[0],
             color=BLANKET_COLOUR[colour_scheme - 1],
             lw=0.01,
+            zorder=5,
         )
         if dr_blkt_inboard > 0.0:
             # only plot inboard blanket if inboard blanket thickness > 0
             axis.plot(
-                bg_double_null.rs[1], bg_double_null.zs[1], color="black", lw=thin
+                bg_double_null.rs[1],
+                bg_double_null.zs[1],
+                color="black",
+                lw=thin,
+                zorder=5,
             )
             axis.fill(
                 bg_double_null.rs[1],
                 bg_double_null.zs[1],
                 color=BLANKET_COLOUR[colour_scheme - 1],
                 lw=0.01,
+                zorder=5,
             )
 
 
