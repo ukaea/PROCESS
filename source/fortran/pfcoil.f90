@@ -1,6 +1,6 @@
 ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-module pfcoil_module
+module pfcoil_module_fortran
   !! Module containing PF coil routines
   !! author: P J Knight, CCFE, Culham Science Centre
   !! author: R Kemp, CCFE, Culham Science Centre
@@ -41,4 +41,4 @@ module pfcoil_module
    ! outpf subroutine var requiring re-initialisation before each new run
    logical :: CSlimit
 
- end module pfcoil_module
+ end module pfcoil_module_fortran
