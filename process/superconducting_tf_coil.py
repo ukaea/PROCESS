@@ -11,6 +11,7 @@ from process.data_structure import (
     divertor_variables,
     pfcoil_variables,
     rebco_variables,
+    tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -20,7 +21,6 @@ from process.fortran import (
     global_variables,
     physics_variables,
     sctfcoil_module,
-    tfcoil_variables,
 )
 from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil

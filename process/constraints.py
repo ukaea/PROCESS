@@ -670,8 +670,8 @@ def constraint_equation_19():
     mvalim: MVA limit for resistive TF coil set (total) (MW)
     """
     totmva = (
-        fortran.tfcoil_variables.p_cp_resistive_mw
-        + fortran.tfcoil_variables.p_tf_leg_resistive_mw
+        data_structure.tfcoil_variables.p_cp_resistive_mw
+        + data_structure.tfcoil_variables.p_tf_leg_resistive_mw
     )
 
     cc = (
@@ -863,14 +863,14 @@ def constraint_equation_25():
     b_tf_inboard_peak: mean peak field at TF coil (T)
     """
     cc = (
-        fortran.tfcoil_variables.b_tf_inboard_peak
+        data_structure.tfcoil_variables.b_tf_inboard_peak
         / fortran.constraint_variables.b_tf_inboard_max
         - 1.0 * fortran.constraint_variables.fb_tf_inboard_max
     )
     return ConstraintResult(
         cc,
         fortran.constraint_variables.b_tf_inboard_max * (1.0 - cc),
-        fortran.tfcoil_variables.b_tf_inboard_peak * cc,
+        data_structure.tfcoil_variables.b_tf_inboard_peak * cc,
     )
 
 
@@ -997,11 +997,13 @@ def constraint_equation_31():
     sig_tf_case: Constrained stress in TF coil case (Pa)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.sig_tf_case / fortran.tfcoil_variables.sig_tf_case_max
+        data_structure.tfcoil_variables.sig_tf_case
+        / data_structure.tfcoil_variables.sig_tf_case_max
         - 1.0 * fortran.constraint_variables.fstrcase,
-        fortran.tfcoil_variables.sig_tf_case_max,
-        fortran.tfcoil_variables.sig_tf_case_max
-        - fortran.tfcoil_variables.sig_tf_case / fortran.constraint_variables.fstrcase,
+        data_structure.tfcoil_variables.sig_tf_case_max,
+        data_structure.tfcoil_variables.sig_tf_case_max
+        - data_structure.tfcoil_variables.sig_tf_case
+        / fortran.constraint_variables.fstrcase,
     )
 
 
@@ -1015,11 +1017,13 @@ def constraint_equation_32():
     sig_tf_wp: Constrained stress in TF conductor conduit (Pa)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.sig_tf_wp / fortran.tfcoil_variables.sig_tf_wp_max
+        data_structure.tfcoil_variables.sig_tf_wp
+        / data_structure.tfcoil_variables.sig_tf_wp_max
         - 1.0 * fortran.constraint_variables.fstrcond,
-        fortran.tfcoil_variables.sig_tf_wp_max,
-        fortran.tfcoil_variables.sig_tf_wp_max
-        - fortran.tfcoil_variables.sig_tf_wp / fortran.constraint_variables.fstrcond,
+        data_structure.tfcoil_variables.sig_tf_wp_max,
+        data_structure.tfcoil_variables.sig_tf_wp_max
+        - data_structure.tfcoil_variables.sig_tf_wp
+        / fortran.constraint_variables.fstrcond,
     )
 
 
@@ -1037,13 +1041,14 @@ def constraint_equation_33():
         fortran.error_handling.report_error(285)
 
     cc = (
-        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.j_tf_wp_critical
+        data_structure.tfcoil_variables.j_tf_wp
+        / data_structure.tfcoil_variables.j_tf_wp_critical
         - 1.0 * fortran.constraint_variables.fiooic
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.j_tf_wp_critical * (1.0 - cc),
-        fortran.tfcoil_variables.j_tf_wp * cc,
+        data_structure.tfcoil_variables.j_tf_wp_critical * (1.0 - cc),
+        data_structure.tfcoil_variables.j_tf_wp * cc,
     )
 
 
@@ -1057,12 +1062,12 @@ def constraint_equation_34():
     v_tf_coil_dump_quench_kv: voltage across a TF coil during quench (kV)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.v_tf_coil_dump_quench_kv
-        / fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv
+        data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv
+        / data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv
         - 1.0 * fortran.constraint_variables.fvdump,
-        fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
-        fortran.tfcoil_variables.v_tf_coil_dump_quench_max_kv
-        - fortran.tfcoil_variables.v_tf_coil_dump_quench_kv,
+        data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+        data_structure.tfcoil_variables.v_tf_coil_dump_quench_max_kv
+        - data_structure.tfcoil_variables.v_tf_coil_dump_quench_kv,
     )
 
 
@@ -1077,10 +1082,12 @@ def constraint_equation_35():
     j_tf_wp: winding pack current density (A/m2)
     """
     return ConstraintResult(
-        fortran.tfcoil_variables.j_tf_wp / fortran.tfcoil_variables.jwdgpro
+        data_structure.tfcoil_variables.j_tf_wp
+        / data_structure.tfcoil_variables.jwdgpro
         - 1.0 * fortran.constraint_variables.fjprot,
-        fortran.tfcoil_variables.jwdgpro,
-        fortran.tfcoil_variables.j_tf_wp - fortran.tfcoil_variables.jwdgpro,
+        data_structure.tfcoil_variables.jwdgpro,
+        data_structure.tfcoil_variables.j_tf_wp
+        - data_structure.tfcoil_variables.jwdgpro,
     )
 
 
@@ -1096,10 +1103,11 @@ def constraint_equation_36():
     return ConstraintResult(
         1.0
         - fortran.constraint_variables.ftmargtf
-        * fortran.tfcoil_variables.tmargtf
-        / fortran.tfcoil_variables.tmargmin_tf,
-        fortran.tfcoil_variables.tmargmin_tf,
-        fortran.tfcoil_variables.tmargmin_tf - fortran.tfcoil_variables.tmargtf,
+        * data_structure.tfcoil_variables.tmargtf
+        / data_structure.tfcoil_variables.tmargmin_tf,
+        data_structure.tfcoil_variables.tmargmin_tf,
+        data_structure.tfcoil_variables.tmargmin_tf
+        - data_structure.tfcoil_variables.tmargtf,
     )
 
 
@@ -1233,12 +1241,12 @@ def constraint_equation_43():
     if fortran.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 43 if itart=0")
 
-    if fortran.tfcoil_variables.i_tf_sup == 0:
-        temp_cp_average = fortran.tfcoil_variables.temp_cp_average - 273.15
-        tcpav2 = fortran.tfcoil_variables.tcpav2 - 273.15
+    if data_structure.tfcoil_variables.i_tf_sup == 0:
+        temp_cp_average = data_structure.tfcoil_variables.temp_cp_average - 273.15
+        tcpav2 = data_structure.tfcoil_variables.tcpav2 - 273.15
     else:
-        temp_cp_average = fortran.tfcoil_variables.temp_cp_average
-        tcpav2 = fortran.tfcoil_variables.tcpav2
+        temp_cp_average = data_structure.tfcoil_variables.temp_cp_average
+        tcpav2 = data_structure.tfcoil_variables.tcpav2
 
     cc = 1.0 - temp_cp_average / tcpav2
 
@@ -1260,12 +1268,12 @@ def constraint_equation_44():
     if fortran.physics_variables.itart == 0:
         raise ProcessValueError("Do not use constraint 44 if itart=0")
 
-    if fortran.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
-        temp_cp_max = fortran.tfcoil_variables.temp_cp_max - 273.15
-        temp_cp_peak = fortran.tfcoil_variables.temp_cp_peak - 273.15
+    if data_structure.tfcoil_variables.i_tf_sup == 0:  # ! Copper case
+        temp_cp_max = data_structure.tfcoil_variables.temp_cp_max - 273.15
+        temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak - 273.15
     else:
-        temp_cp_max = fortran.tfcoil_variables.temp_cp_max
-        temp_cp_peak = fortran.tfcoil_variables.temp_cp_peak
+        temp_cp_max = data_structure.tfcoil_variables.temp_cp_max
+        temp_cp_peak = data_structure.tfcoil_variables.temp_cp_peak
 
     cc = temp_cp_peak / temp_cp_max - 1.0 * fortran.constraint_variables.fptemp
     return ConstraintResult(cc, temp_cp_max * (1.0 - cc), temp_cp_peak * cc)
@@ -1318,14 +1326,15 @@ def constraint_equation_46():
     # maximum ratio of plasma current to centrepost current
     cratmx = 1.0 + 4.91 * (fortran.physics_variables.eps - 0.62)
     cc = (
-        fortran.physics_variables.plasma_current / fortran.tfcoil_variables.c_tf_total
+        fortran.physics_variables.plasma_current
+        / data_structure.tfcoil_variables.c_tf_total
     ) / cratmx - 1.0 * fortran.constraint_variables.fipir
 
     return ConstraintResult(
         cc,
         cratmx * (1.0 - cc),
         fortran.physics_variables.plasma_current
-        / fortran.tfcoil_variables.c_tf_total
+        / data_structure.tfcoil_variables.c_tf_total
         * cc,
     )
 
@@ -1514,9 +1523,9 @@ def constraint_equation_60():
         1.0
         - fortran.constraint_variables.ftmargoh
         * data_structure.pfcoil_variables.temp_cs_margin
-        / fortran.tfcoil_variables.tmargmin_cs,
-        fortran.tfcoil_variables.tmargmin_cs,
-        fortran.tfcoil_variables.tmargmin_cs
+        / data_structure.tfcoil_variables.tmargmin_cs,
+        data_structure.tfcoil_variables.tmargmin_cs,
+        data_structure.tfcoil_variables.tmargmin_cs
         - data_structure.pfcoil_variables.temp_cs_margin,
     )
 
@@ -1583,13 +1592,14 @@ def constraint_equation_63():
     niterpump: number of high vacuum pumps (real number), each with the throughput
     """
     cc = (
-        data_structure.vacuum_variables.niterpump / fortran.tfcoil_variables.n_tf_coils
+        data_structure.vacuum_variables.niterpump
+        / data_structure.tfcoil_variables.n_tf_coils
         - 1.0 * fortran.constraint_variables.fniterpump
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.n_tf_coils,
-        fortran.tfcoil_variables.n_tf_coils * cc,
+        data_structure.tfcoil_variables.n_tf_coils,
+        data_structure.tfcoil_variables.n_tf_coils * cc,
     )
 
 
@@ -1624,13 +1634,13 @@ def constraint_equation_65():
     """
     cc = (
         fortran.sctfcoil_module.vv_stress_quench
-        / fortran.tfcoil_variables.max_vv_stress
+        / data_structure.tfcoil_variables.max_vv_stress
         - 1.0 * fortran.constraint_variables.fmaxvvstress
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.max_vv_stress,
-        fortran.tfcoil_variables.max_vv_stress * cc,
+        data_structure.tfcoil_variables.max_vv_stress,
+        data_structure.tfcoil_variables.max_vv_stress * cc,
     )
 
 
@@ -1767,20 +1777,20 @@ def constraint_equation_72():
     """
     # bucked and wedged desing
     if (
-        fortran.tfcoil_variables.i_tf_bucking >= 2
+        data_structure.tfcoil_variables.i_tf_bucking >= 2
         and data_structure.build_variables.i_tf_inside_cs == 0
     ):
         cc = (
             max(
                 data_structure.pfcoil_variables.s_shear_cs_peak,
-                fortran.tfcoil_variables.sig_tf_cs_bucked,
+                data_structure.tfcoil_variables.sig_tf_cs_bucked,
             )
             / data_structure.pfcoil_variables.alstroh
             - 1.0 * fortran.constraint_variables.foh_stress
         )
         err = data_structure.pfcoil_variables.alstroh - max(
             data_structure.pfcoil_variables.s_shear_cs_peak,
-            fortran.tfcoil_variables.sig_tf_cs_bucked,
+            data_structure.tfcoil_variables.sig_tf_cs_bucked,
         )
     # Free standing CS
     else:
@@ -1835,14 +1845,14 @@ def constraint_equation_74():
     temp_croco_quench_max: CroCo strand: maximum permitted temp during a quench (K)
     """
     cc = (
-        fortran.tfcoil_variables.temp_croco_quench
-        / fortran.tfcoil_variables.temp_croco_quench_max
+        data_structure.tfcoil_variables.temp_croco_quench
+        / data_structure.tfcoil_variables.temp_croco_quench_max
         - 1.0 * fortran.constraint_variables.ftemp_croco_quench_max
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.temp_croco_quench,
-        fortran.tfcoil_variables.temp_croco_quench * cc,
+        data_structure.tfcoil_variables.temp_croco_quench,
+        data_structure.tfcoil_variables.temp_croco_quench * cc,
     )
 
 
@@ -1917,13 +1927,14 @@ def constraint_equation_77():
     c_tf_turn : TF coil current per turn [A/turn]
     """
     cc = (
-        fortran.tfcoil_variables.c_tf_turn / fortran.tfcoil_variables.c_tf_turn_max
+        data_structure.tfcoil_variables.c_tf_turn
+        / data_structure.tfcoil_variables.c_tf_turn_max
         - 1.0 * fortran.constraint_variables.fc_tf_turn_max
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.c_tf_turn_max,
-        fortran.tfcoil_variables.c_tf_turn_max * cc,
+        data_structure.tfcoil_variables.c_tf_turn_max,
+        data_structure.tfcoil_variables.c_tf_turn_max * cc,
     )
 
 
@@ -2043,13 +2054,13 @@ def constraint_equation_82():
     """
     return ConstraintResult(
         1.0
-        - fortran.tfcoil_variables.ftoroidalgap
-        * fortran.tfcoil_variables.toroidalgap
-        / fortran.tfcoil_variables.dx_tf_inboard_out_toroidal,
-        fortran.tfcoil_variables.toroidalgap,
-        fortran.tfcoil_variables.toroidalgap
-        - fortran.tfcoil_variables.dx_tf_inboard_out_toroidal
-        / fortran.tfcoil_variables.ftoroidalgap,
+        - data_structure.tfcoil_variables.ftoroidalgap
+        * data_structure.tfcoil_variables.toroidalgap
+        / data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal,
+        data_structure.tfcoil_variables.toroidalgap,
+        data_structure.tfcoil_variables.toroidalgap
+        - data_structure.tfcoil_variables.dx_tf_inboard_out_toroidal
+        / data_structure.tfcoil_variables.ftoroidalgap,
     )
 
 
@@ -2160,13 +2171,14 @@ def constraint_equation_86():
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
     """
     cc = (
-        fortran.tfcoil_variables.t_turn_tf / fortran.tfcoil_variables.t_turn_tf_max
-        - 1.0 * fortran.tfcoil_variables.f_t_turn_tf
+        data_structure.tfcoil_variables.t_turn_tf
+        / data_structure.tfcoil_variables.t_turn_tf_max
+        - 1.0 * data_structure.tfcoil_variables.f_t_turn_tf
     )
     return ConstraintResult(
         cc,
-        fortran.tfcoil_variables.t_turn_tf_max * (1.0 - cc),
-        fortran.tfcoil_variables.t_turn_tf_max * cc,
+        data_structure.tfcoil_variables.t_turn_tf_max * (1.0 - cc),
+        data_structure.tfcoil_variables.t_turn_tf_max * cc,
     )
 
 
@@ -2201,11 +2213,13 @@ def constraint_equation_88():
     str_wp: Constrained TF coil vertical strain
     """
     return ConstraintResult(
-        abs(fortran.tfcoil_variables.str_wp) / fortran.tfcoil_variables.str_wp_max
+        abs(data_structure.tfcoil_variables.str_wp)
+        / data_structure.tfcoil_variables.str_wp_max
         - 1.0 * fortran.constraint_variables.fstr_wp,
-        fortran.tfcoil_variables.str_wp_max,
-        fortran.tfcoil_variables.str_wp_max
-        - abs(fortran.tfcoil_variables.str_wp) / fortran.constraint_variables.fstr_wp,
+        data_structure.tfcoil_variables.str_wp_max,
+        data_structure.tfcoil_variables.str_wp_max
+        - abs(data_structure.tfcoil_variables.str_wp)
+        / fortran.constraint_variables.fstr_wp,
     )
 
 

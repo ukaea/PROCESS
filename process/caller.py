@@ -259,14 +259,14 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if ft.tfcoil_variables.i_tf_sup == 0:
+        if data_structure.tfcoil_variables.i_tf_sup == 0:
             self.models.copper_tf_coil.run(output=False)
 
         # Toroidal field coil superconductor model
-        if ft.tfcoil_variables.i_tf_sup == 1:
+        if data_structure.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
 
-        if ft.tfcoil_variables.i_tf_sup == 2:
+        if data_structure.tfcoil_variables.i_tf_sup == 2:
             self.models.aluminium_tf_coil.run(output=False)
 
         # Poloidal field and central solenoid model
@@ -306,7 +306,10 @@ class Caller:
         self.models.structure.run(output=False)
 
         # Tight aspect ratio machine model
-        if ft.physics_variables.itart == 1 and ft.tfcoil_variables.i_tf_sup != 1:
+        if (
+            ft.physics_variables.itart == 1
+            and data_structure.tfcoil_variables.i_tf_sup != 1
+        ):
             self.models.tfcoil.cntrpst()
 
         # Toroidal field coil power model

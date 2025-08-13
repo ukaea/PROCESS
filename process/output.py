@@ -63,19 +63,22 @@ def write(models, _outfile):
     models.cryostat.cryostat_output()
 
     # Toroidal field coil copper model
-    if ft.tfcoil_variables.i_tf_sup == 0:
+    if data_structure.tfcoil_variables.i_tf_sup == 0:
         models.copper_tf_coil.run(output=True)
 
     # Toroidal field coil superconductor model
-    if ft.tfcoil_variables.i_tf_sup == 1:
+    if data_structure.tfcoil_variables.i_tf_sup == 1:
         models.sctfcoil.run(output=True)
 
     # Toroidal field coil aluminium model
-    if ft.tfcoil_variables.i_tf_sup == 2:
+    if data_structure.tfcoil_variables.i_tf_sup == 2:
         models.aluminium_tf_coil.run(output=True)
 
     # Tight aspect ratio machine model
-    if ft.physics_variables.itart == 1 and ft.tfcoil_variables.i_tf_sup != 1:
+    if (
+        ft.physics_variables.itart == 1
+        and data_structure.tfcoil_variables.i_tf_sup != 1
+    ):
         models.tfcoil.iprint = 1
         models.tfcoil.cntrpst()
         models.tfcoil.iprint = 0

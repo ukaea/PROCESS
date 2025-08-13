@@ -38,6 +38,7 @@ from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
 from process.data_structure.structure_variables import init_structure_variables
+from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
@@ -53,7 +54,6 @@ from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.scan import init_scan_module
 from process.stellarator import stinit
 from process.superconducting_tf_coil import init_sctfcoil_module
-from process.tf_coil import init_tfcoil_variables
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -589,18 +589,18 @@ def check_process(inputs):  # noqa: ARG001
             data_structure.pfcoil_variables.i_pf_location[2] = 3
 
         # Water cooled copper magnets initalisation / checks
-        if fortran.tfcoil_variables.i_tf_sup == 0:
+        if data_structure.tfcoil_variables.i_tf_sup == 0:
             # Check if the initial centrepost coolant loop adapted to the magnet technology
             # Ice cannot flow so tcoolin > 273.15 K
-            if fortran.tfcoil_variables.tcoolin < 273.15:
+            if data_structure.tfcoil_variables.tcoolin < 273.15:
                 raise ProcessValidationError(
                     "Coolant temperature (tcoolin) cannot be < 0 C (273.15 K) for water cooled copper magents"
                 )
 
             # Temperature of the TF legs cannot be cooled down
             if (
-                fortran.tfcoil_variables.temp_tf_legs_outboard > 0
-                and fortran.tfcoil_variables.temp_tf_legs_outboard < 273.15
+                data_structure.tfcoil_variables.temp_tf_legs_outboard > 0
+                and data_structure.tfcoil_variables.temp_tf_legs_outboard < 273.15
             ):
                 raise ProcessValidationError(
                     "TF legs conductor temperature (temp_tf_legs_outboard) cannot be < 0 C (273.15 K) for water cooled magents"
@@ -615,24 +615,24 @@ def check_process(inputs):  # noqa: ARG001
                 )
 
         # Call a lvl 3 error if superconductor magnets are used
-        elif fortran.tfcoil_variables.i_tf_sup == 1:
+        elif data_structure.tfcoil_variables.i_tf_sup == 1:
             warn(
-                "Joints res not cal. for SC (itart = 1) TF (fortran.tfcoil_variables.i_tf_sup = 1)",
+                "Joints res not cal. for SC (itart = 1) TF (data_structure.tfcoil_variables.i_tf_sup = 1)",
                 stacklevel=2,
             )
 
         # Aluminium magnets initalisation / checks
         # Initialize the CP conductor temperature to cryogenic temperature for cryo-al magnets (20 K)
-        elif fortran.tfcoil_variables.i_tf_sup == 2:
+        elif data_structure.tfcoil_variables.i_tf_sup == 2:
             # Call a lvl 3 error if the inlet coolant temperature is too large
             # Motivation : ill-defined aluminium resistivity fit for T > 40-50 K
-            if fortran.tfcoil_variables.tcoolin > 40.0:
+            if data_structure.tfcoil_variables.tcoolin > 40.0:
                 raise ProcessValidationError(
                     "Coolant temperature (tcoolin) should be < 40 K for the cryo-al resistivity to be defined"
                 )
 
             # Check if the leg average temperature is low enough for the resisitivity fit
-            if fortran.tfcoil_variables.temp_tf_legs_outboard > 50.0:
+            if data_structure.tfcoil_variables.temp_tf_legs_outboard > 50.0:
                 raise ProcessValidationError(
                     "TF legs conductor temperature (temp_tf_legs_outboard) should be < 40 K for the cryo-al resistivity to be defined"
                 )
@@ -646,7 +646,9 @@ def check_process(inputs):  # noqa: ARG001
                 )
 
             # Otherwise intitialise the average conductor temperature at
-            fortran.tfcoil_variables.temp_cp_average = fortran.tfcoil_variables.tcoolin
+            data_structure.tfcoil_variables.temp_cp_average = (
+                data_structure.tfcoil_variables.tcoolin
+            )
 
         # Check if the boostrap current selection is addapted to ST
         if fortran.physics_variables.i_bootstrap_current == 1:
@@ -662,13 +664,13 @@ def check_process(inputs):  # noqa: ARG001
             warn("Operating with a single null in a double null machine", stacklevel=2)
 
         # Set the TF coil shape to picture frame (if default value)
-        if fortran.tfcoil_variables.i_tf_shape == 0:
-            fortran.tfcoil_variables.i_tf_shape = 2
+        if data_structure.tfcoil_variables.i_tf_shape == 0:
+            data_structure.tfcoil_variables.i_tf_shape = 2
 
         # Warning stating that the CP fast neutron fluence calculation
         # is not addapted for cryoaluminium calculations yet
         if (
-            fortran.tfcoil_variables.i_tf_sup == 2
+            data_structure.tfcoil_variables.i_tf_sup == 2
             and (
                 fortran.numerics.icc[
                     : fortran.numerics.neqns + fortran.numerics.nineqns
@@ -682,13 +684,13 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Setting the CP joints default options :
-        #  0 : No joints for superconducting magents (fortran.tfcoil_variables.i_tf_sup = 1)
-        #  1 : Sliding joints for resistive magnets (fortran.tfcoil_variables.i_tf_sup = 0, 2)
-        if fortran.tfcoil_variables.i_cp_joints == -1:
-            if fortran.tfcoil_variables.i_tf_sup == 1:
-                fortran.tfcoil_variables.i_cp_joints = 0
+        #  0 : No joints for superconducting magents (data_structure.tfcoil_variables.i_tf_sup = 1)
+        #  1 : Sliding joints for resistive magnets (data_structure.tfcoil_variables.i_tf_sup = 0, 2)
+        if data_structure.tfcoil_variables.i_cp_joints == -1:
+            if data_structure.tfcoil_variables.i_tf_sup == 1:
+                data_structure.tfcoil_variables.i_cp_joints = 0
             else:
-                fortran.tfcoil_variables.i_cp_joints = 1
+                data_structure.tfcoil_variables.i_cp_joints = 1
 
         # Checking the CP TF top radius
         if (
@@ -710,8 +712,8 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Set the TF coil shape to PROCESS D-shape (if default value)
-        if fortran.tfcoil_variables.i_tf_shape == 0:
-            fortran.tfcoil_variables.i_tf_shape = 1
+        if data_structure.tfcoil_variables.i_tf_shape == 0:
+            data_structure.tfcoil_variables.i_tf_shape = 1
 
         # Check PF coil configurations
         j = 0
@@ -795,7 +797,7 @@ def check_process(inputs):  # noqa: ARG001
             ).any()
         )  # Stress constraints (31 or 32) is used
         and (
-            fortran.tfcoil_variables.i_tf_stress_model != 2
+            data_structure.tfcoil_variables.i_tf_stress_model != 2
         )  # TF stress model can't handle no dr_bore
     ):
         raise ProcessValidationError(
@@ -804,8 +806,8 @@ def check_process(inputs):  # noqa: ARG001
 
     # Make sure that plane stress model is not used for resistive magnets
     if (
-        fortran.tfcoil_variables.i_tf_stress_model == 1
-        and fortran.tfcoil_variables.i_tf_sup != 1
+        data_structure.tfcoil_variables.i_tf_stress_model == 1
+        and data_structure.tfcoil_variables.i_tf_sup != 1
     ):
         raise ProcessValidationError(
             "Use generalized plane strain for resistive magnets (i_tf_stress_model = 0 or 2)"
@@ -815,16 +817,16 @@ def check_process(inputs):  # noqa: ARG001
     # - bucking (casing) for SC i_tf_bucking ( i_tf_bucking = 1 )
     # - No bucking for copper magnets ( i_tf_bucking = 0 )
     # - Bucking for aluminium magnets ( i_tf_bucking = 1 )
-    if fortran.tfcoil_variables.i_tf_bucking == -1:
-        if fortran.tfcoil_variables.i_tf_sup == 0:
-            fortran.tfcoil_variables.i_tf_bucking = 0
+    if data_structure.tfcoil_variables.i_tf_bucking == -1:
+        if data_structure.tfcoil_variables.i_tf_sup == 0:
+            data_structure.tfcoil_variables.i_tf_bucking = 0
         else:
-            fortran.tfcoil_variables.i_tf_bucking = 1
+            data_structure.tfcoil_variables.i_tf_bucking = 1
 
     # Ensure that the TF isnt placed against the
     # CS which is now outside it
     if (
-        fortran.tfcoil_variables.i_tf_bucking >= 2
+        data_structure.tfcoil_variables.i_tf_bucking >= 2
         and data_structure.build_variables.i_tf_inside_cs == 1
     ):
         raise ProcessValidationError(
@@ -834,7 +836,7 @@ def check_process(inputs):  # noqa: ARG001
     # Ensure that no pre-compression structure
     # is used for bucked and wedged design
     if (
-        fortran.tfcoil_variables.i_tf_bucking >= 2
+        data_structure.tfcoil_variables.i_tf_bucking >= 2
         and data_structure.build_variables.i_cs_precomp == 1
     ):
         raise ProcessValidationError(
@@ -843,34 +845,34 @@ def check_process(inputs):  # noqa: ARG001
 
     # Number of stress calculation layers
     # +1 to add in the inboard TF coil case on the plasma side, per Issue #1509
-    fortran.tfcoil_variables.n_tf_stress_layers = (
-        fortran.tfcoil_variables.i_tf_bucking
-        + fortran.tfcoil_variables.n_tf_graded_layers
+    data_structure.tfcoil_variables.n_tf_stress_layers = (
+        data_structure.tfcoil_variables.i_tf_bucking
+        + data_structure.tfcoil_variables.n_tf_graded_layers
         + 1
     )
 
     # If TFC sidewall has not been set by user
-    if fortran.tfcoil_variables.dx_tf_side_case_min < 0.1e-10:
-        fortran.tfcoil_variables.tfc_sidewall_is_fraction = True
+    if data_structure.tfcoil_variables.dx_tf_side_case_min < 0.1e-10:
+        data_structure.tfcoil_variables.tfc_sidewall_is_fraction = True
 
     # If inboard TF coil case plasma side thickness has not been set by user
-    if fortran.tfcoil_variables.dr_tf_plasma_case < 0.1e-10:
-        fortran.tfcoil_variables.i_f_dr_tf_plasma_case = True
+    if data_structure.tfcoil_variables.dr_tf_plasma_case < 0.1e-10:
+        data_structure.tfcoil_variables.i_f_dr_tf_plasma_case = True
 
     # Setting the default cryo-plants efficiencies
-    if abs(fortran.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
+    if abs(data_structure.tfcoil_variables.eff_tf_cryo + 1) < 1e-6:
         # The ITER cyoplant efficiency is used for SC
-        if fortran.tfcoil_variables.i_tf_sup == 1:
-            fortran.tfcoil_variables.eff_tf_cryo = 0.13
+        if data_structure.tfcoil_variables.i_tf_sup == 1:
+            data_structure.tfcoil_variables.eff_tf_cryo = 0.13
 
         # Strawbrige plot extrapolation is used for Cryo-Al
-        elif fortran.tfcoil_variables.i_tf_sup == 2:
-            fortran.tfcoil_variables.eff_tf_cryo = 0.40
+        elif data_structure.tfcoil_variables.i_tf_sup == 2:
+            data_structure.tfcoil_variables.eff_tf_cryo = 0.40
 
     # Cryo-plane efficiency must be in [0-1.0]
     elif (
-        fortran.tfcoil_variables.eff_tf_cryo > 1.0
-        or fortran.tfcoil_variables.eff_tf_cryo < 0.0
+        data_structure.tfcoil_variables.eff_tf_cryo > 1.0
+        or data_structure.tfcoil_variables.eff_tf_cryo < 0.0
     ):
         raise ProcessValidationError(
             "TF cryo-plant efficiency `eff_tf_cryo` must be within [0-1]"
@@ -879,8 +881,8 @@ def check_process(inputs):  # noqa: ARG001
     # Integer turns option not yet available for REBCO taped turns
 
     if (
-        fortran.tfcoil_variables.i_tf_sc_mat == 6
-        and fortran.tfcoil_variables.i_tf_turns_integer == 1
+        data_structure.tfcoil_variables.i_tf_sc_mat == 6
+        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Integer turns (i_tf_turns_integer = 1) not supported for REBCO (i_tf_sc_mat = 6)"
@@ -888,57 +890,57 @@ def check_process(inputs):  # noqa: ARG001
 
     # Setting up insulation layer young modulae default values [Pa]
 
-    if fortran.tfcoil_variables.eyoung_ins <= 1.0e8:
+    if data_structure.tfcoil_variables.eyoung_ins <= 1.0e8:
         # Copper magnets, no insulation material defined
         # But use the ITER design by default
         if (
-            fortran.tfcoil_variables.i_tf_sup == 0
-            or fortran.tfcoil_variables.i_tf_sup == 1
+            data_structure.tfcoil_variables.i_tf_sup == 0
+            or data_structure.tfcoil_variables.i_tf_sup == 1
         ):
             # SC magnets
             # Value from DDD11-2 v2 2 (2009)
-            fortran.tfcoil_variables.eyoung_ins = 20.0e9
+            data_structure.tfcoil_variables.eyoung_ins = 20.0e9
 
         # Cryo-aluminum magnets (Kapton polymer)
-        elif fortran.tfcoil_variables.i_tf_sup == 2:
-            fortran.tfcoil_variables.eyoung_ins = 2.5e9
+        elif data_structure.tfcoil_variables.i_tf_sup == 2:
+            data_structure.tfcoil_variables.eyoung_ins = 2.5e9
 
     # Setting the default WP geometry
 
-    if fortran.tfcoil_variables.i_tf_wp_geom == -1:
-        if fortran.tfcoil_variables.i_tf_turns_integer == 0:
-            fortran.tfcoil_variables.i_tf_wp_geom = 1
-        if fortran.tfcoil_variables.i_tf_turns_integer == 1:
-            fortran.tfcoil_variables.i_tf_wp_geom = 0
+    if data_structure.tfcoil_variables.i_tf_wp_geom == -1:
+        if data_structure.tfcoil_variables.i_tf_turns_integer == 0:
+            data_structure.tfcoil_variables.i_tf_wp_geom = 1
+        if data_structure.tfcoil_variables.i_tf_turns_integer == 1:
+            data_structure.tfcoil_variables.i_tf_wp_geom = 0
 
     # Setting the TF coil conductor elastic properties
 
-    if fortran.tfcoil_variables.i_tf_cond_eyoung_axial == 0:
+    if data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 0:
         # Conductor stiffness is not considered
-        fortran.tfcoil_variables.eyoung_cond_axial = 0
-        fortran.tfcoil_variables.eyoung_cond_trans = 0
-    elif fortran.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
+        data_structure.tfcoil_variables.eyoung_cond_axial = 0
+        data_structure.tfcoil_variables.eyoung_cond_trans = 0
+    elif data_structure.tfcoil_variables.i_tf_cond_eyoung_axial == 2:
         # Select sensible defaults from the literature
-        if fortran.tfcoil_variables.i_tf_sc_mat in [1, 4, 5]:
+        if data_structure.tfcoil_variables.i_tf_sc_mat in [1, 4, 5]:
             # Nb3Sn: Nyilas, A et. al, Superconductor Science and Technology 16, no. 9 (2003): 1036-42. https://doi.org/10.1088/0953-2048/16/9/313.
-            fortran.tfcoil_variables.eyoung_cond_axial = 32e9
-        elif fortran.tfcoil_variables.i_tf_sc_mat == 2:
+            data_structure.tfcoil_variables.eyoung_cond_axial = 32e9
+        elif data_structure.tfcoil_variables.i_tf_sc_mat == 2:
             # Bi-2212: Brown, M. et al, IOP Conference Series: Materials Science and Engineering 279 (2017): 012022. https://doi.org/10.1088/1757-899X/279/1/012022.
-            fortran.tfcoil_variables.eyoung_cond_axial = 80e9
-        elif fortran.tfcoil_variables.i_tf_sc_mat in [3, 7]:
+            data_structure.tfcoil_variables.eyoung_cond_axial = 80e9
+        elif data_structure.tfcoil_variables.i_tf_sc_mat in [3, 7]:
             # NbTi: Vedrine, P. et. al, IEEE Transactions on Applied Superconductivity 9, no. 2 (1999): 236-39. https://doi.org/10.1109/77.783280.
-            fortran.tfcoil_variables.eyoung_cond_axial = 6.8e9
-        elif fortran.tfcoil_variables.i_tf_sc_mat in [6, 8, 9]:
+            data_structure.tfcoil_variables.eyoung_cond_axial = 6.8e9
+        elif data_structure.tfcoil_variables.i_tf_sc_mat in [6, 8, 9]:
             # REBCO: Fujishiro, H. et. al, Physica C: Superconductivity, 426-431 (2005): 699-704. https://doi.org/10.1016/j.physc.2005.01.045.
-            fortran.tfcoil_variables.eyoung_cond_axial = 145e9
+            data_structure.tfcoil_variables.eyoung_cond_axial = 145e9
 
-        if fortran.tfcoil_variables.i_tf_cond_eyoung_trans == 0:
+        if data_structure.tfcoil_variables.i_tf_cond_eyoung_trans == 0:
             # Transverse stiffness is not considered
-            fortran.tfcoil_variables.eyoung_cond_trans = 0
+            data_structure.tfcoil_variables.eyoung_cond_trans = 0
         else:
             # Transverse stiffness is significant
-            fortran.tfcoil_variables.eyoung_cond_trans = (
-                fortran.tfcoil_variables.eyoung_cond_axial
+            data_structure.tfcoil_variables.eyoung_cond_trans = (
+                data_structure.tfcoil_variables.eyoung_cond_axial
             )
 
     # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
@@ -946,12 +948,12 @@ def check_process(inputs):  # noqa: ARG001
     # Rem : Only verified if the WP thickness is used
     if (fortran.numerics.ixc[: fortran.numerics.nvar] == 140).any():
         # Minimal WP thickness
-        if fortran.tfcoil_variables.i_tf_sup == 1:
+        if data_structure.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (
-                fortran.tfcoil_variables.dx_tf_wp_insulation
-                + fortran.tfcoil_variables.dx_tf_wp_insertion_gap
-                + fortran.tfcoil_variables.dx_tf_turn_insulation
-                + fortran.tfcoil_variables.dia_tf_turn_coolant_channel
+                data_structure.tfcoil_variables.dx_tf_wp_insulation
+                + data_structure.tfcoil_variables.dx_tf_wp_insertion_gap
+                + data_structure.tfcoil_variables.dx_tf_turn_insulation
+                + data_structure.tfcoil_variables.dia_tf_turn_coolant_channel
             )
 
             # Steel conduit thickness (can be an iteration variable)
@@ -959,21 +961,22 @@ def check_process(inputs):  # noqa: ARG001
                 dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.numerics.boundl[57]
             else:
                 dr_tf_wp_min = (
-                    dr_tf_wp_min + 2.0 * fortran.tfcoil_variables.dx_tf_turn_steel
+                    dr_tf_wp_min
+                    + 2.0 * data_structure.tfcoil_variables.dx_tf_turn_steel
                 )
 
         # Minimal conductor layer thickness
         elif (
-            fortran.tfcoil_variables.i_tf_sup == 0
-            or fortran.tfcoil_variables.i_tf_sup == 2
+            data_structure.tfcoil_variables.i_tf_sup == 0
+            or data_structure.tfcoil_variables.i_tf_sup == 2
         ):
             dr_tf_wp_min = (
                 2.0
                 * (
-                    fortran.tfcoil_variables.dx_tf_turn_insulation
-                    + fortran.tfcoil_variables.dx_tf_wp_insulation
+                    data_structure.tfcoil_variables.dx_tf_turn_insulation
+                    + data_structure.tfcoil_variables.dx_tf_wp_insulation
                 )
-                + 4.0 * fortran.tfcoil_variables.rcool
+                + 4.0 * data_structure.tfcoil_variables.rcool
             )
 
         if fortran.numerics.boundl[139] < dr_tf_wp_min:
@@ -983,22 +986,22 @@ def check_process(inputs):  # noqa: ARG001
             )
 
     # Setting t_turn_tf_is_input to true if t_turn_tf is an input
-    fortran.tfcoil_variables.t_turn_tf_is_input = (
-        abs(fortran.tfcoil_variables.t_turn_tf) > 0
+    data_structure.tfcoil_variables.t_turn_tf_is_input = (
+        abs(data_structure.tfcoil_variables.t_turn_tf) > 0
     )
 
     # Impossible to set the turn size of integer turn option
     if (
-        fortran.tfcoil_variables.t_turn_tf_is_input
-        and fortran.tfcoil_variables.i_tf_turns_integer == 1
+        data_structure.tfcoil_variables.t_turn_tf_is_input
+        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
         )
 
     if (
-        fortran.tfcoil_variables.i_tf_wp_geom != 0
-        and fortran.tfcoil_variables.i_tf_turns_integer == 1
+        data_structure.tfcoil_variables.i_tf_wp_geom != 0
+        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Can only have i_tf_turns_integer = 1 with i_tf_wp_geom = 0"
@@ -1013,14 +1016,14 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     # Setting t_cable_tf_is_input to true if t_cable_tf is an input
-    fortran.tfcoil_variables.t_cable_tf_is_input = (
-        abs(fortran.tfcoil_variables.t_cable_tf) > 0
+    data_structure.tfcoil_variables.t_cable_tf_is_input = (
+        abs(data_structure.tfcoil_variables.t_cable_tf) > 0
     )
 
     # Impossible to set the cable size of integer turn option
     if (
-        fortran.tfcoil_variables.t_cable_tf_is_input
-        and fortran.tfcoil_variables.i_tf_turns_integer == 1
+        data_structure.tfcoil_variables.t_cable_tf_is_input
+        and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
             "Impossible to set the TF turn/cable size with the integer turn option (i_tf_turns_integer: 1)"
@@ -1028,8 +1031,8 @@ def check_process(inputs):  # noqa: ARG001
 
     # Impossible to set both the TF coil turn and the cable dimension
     if (
-        fortran.tfcoil_variables.t_turn_tf_is_input
-        and fortran.tfcoil_variables.t_cable_tf_is_input
+        data_structure.tfcoil_variables.t_turn_tf_is_input
+        and data_structure.tfcoil_variables.t_cable_tf_is_input
     ):
         raise ProcessValidationError(
             "Impossible to set the TF coil turn and cable size simultaneously"
@@ -1037,8 +1040,8 @@ def check_process(inputs):  # noqa: ARG001
 
     # Checking the SC temperature for LTS
     if (
-        fortran.tfcoil_variables.i_tf_sc_mat in [1, 3, 4, 5]
-        and fortran.tfcoil_variables.tftmp > 10.0
+        data_structure.tfcoil_variables.i_tf_sc_mat in [1, 3, 4, 5]
+        and data_structure.tfcoil_variables.tftmp > 10.0
     ):
         raise ProcessValidationError(
             "The LTS conductor temperature (tftmp) has to be lower than 10"
@@ -1085,23 +1088,27 @@ def check_process(inputs):  # noqa: ARG001
             )
 
     # Check that the temperature margins are not overdetermined
-    if fortran.tfcoil_variables.tmargmin > 0.0001:
+    if data_structure.tfcoil_variables.tmargmin > 0.0001:
         # This limit has been input and will be applied to both TFC and CS
-        if fortran.tfcoil_variables.tmargmin_tf > 0.0001:
+        if data_structure.tfcoil_variables.tmargmin_tf > 0.0001:
             warn(
                 "tmargmin_tf and tmargmin should not both be specified in IN.DAT "
                 "tmargmin_tf has been ignored",
                 stacklevel=2,
             )
-        if fortran.tfcoil_variables.tmargmin_cs > 0.0001:
+        if data_structure.tfcoil_variables.tmargmin_cs > 0.0001:
             warn(
                 "tmargmin_cs and tmargmin should not both be specified in IN.DAT "
                 "tmargmin_cs has been ignored",
                 stacklevel=2,
             )
 
-        fortran.tfcoil_variables.tmargmin_tf = fortran.tfcoil_variables.tmargmin
-        fortran.tfcoil_variables.tmargmin_cs = fortran.tfcoil_variables.tmargmin
+        data_structure.tfcoil_variables.tmargmin_tf = (
+            data_structure.tfcoil_variables.tmargmin
+        )
+        data_structure.tfcoil_variables.tmargmin_cs = (
+            data_structure.tfcoil_variables.tmargmin
+        )
 
     if (
         fortran.physics_variables.tauee_in > 1e-10
@@ -1130,8 +1137,8 @@ def check_process(inputs):  # noqa: ARG001
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 36
     ).any() and (
-        fortran.tfcoil_variables.i_tf_sc_mat == 8
-        or fortran.tfcoil_variables.i_tf_sc_mat == 9
+        data_structure.tfcoil_variables.i_tf_sc_mat == 8
+        or data_structure.tfcoil_variables.i_tf_sc_mat == 9
     ):
         raise ProcessValidationError(
             "turn off TF temperature margin constraint icc = 36 when using REBCO"
@@ -1146,13 +1153,16 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     # Cold end of the cryocooler should be colder than the TF
-    if fortran.tfcoil_variables.temp_tf_cryo > fortran.tfcoil_variables.tftmp:
+    if (
+        data_structure.tfcoil_variables.temp_tf_cryo
+        > data_structure.tfcoil_variables.tftmp
+    ):
         raise ProcessValidationError("temp_tf_cryo should be lower than tftmp")
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 88
-    ).any() and fortran.tfcoil_variables.i_str_wp == 0:
+    ).any() and data_structure.tfcoil_variables.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
 

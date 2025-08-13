@@ -3,13 +3,12 @@ import logging
 import numba
 import numpy as np
 
-from process.data_structure import build_variables, pfcoil_variables
+from process.data_structure import build_variables, pfcoil_variables, tfcoil_variables
 from process.fortran import (
     constants,
     error_handling,
     physics_variables,
     sctfcoil_module,
-    tfcoil_variables,
 )
 from process.tf_coil import TFCoil
 

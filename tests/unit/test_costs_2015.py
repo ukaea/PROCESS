@@ -11,6 +11,7 @@ from process.data_structure import (
     cost_2015_variables,
     cost_variables,
     pfcoil_variables,
+    tfcoil_variables,
 )
 from process.fortran import (
     current_drive_variables,
@@ -18,7 +19,6 @@ from process.fortran import (
     heat_transport_variables,
     pf_power_variables,
     physics_variables,
-    tfcoil_variables,
 )
 
 

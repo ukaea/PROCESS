@@ -9,6 +9,7 @@ from process.data_structure import (
     cost_variables,
     pfcoil_variables,
     power_variables,
+    tfcoil_variables,
     times_variables,
 )
 from process.data_structure import primary_pumping_variables as ppv
@@ -20,7 +21,6 @@ from process.fortran import (
     numerics,
     pf_power_variables,
     physics_variables,
-    tfcoil_variables,
 )
 from process.power import Power
 

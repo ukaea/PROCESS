@@ -7,7 +7,7 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
-from process.data_structure import build_variables, rebco_variables
+from process.data_structure import build_variables, rebco_variables, tfcoil_variables
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -18,14 +18,11 @@ from process.fortran import (
     numerics,
     physics_variables,
     sctfcoil_module,
-    tfcoil_variables,
 )
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
-from process.fortran import tfcoil_variables as tfv
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
-    string_to_f2py_compatible,
 )
 
 RMU0 = constants.rmu0
@@ -2048,19 +2045,26 @@ class TFCoil:
         n_tcool_it = 20
 
         # Coolant channels:
-        acool = tfv.a_cp_cool * tfv.n_tf_coils  # Cooling cross-sectional area
-        dcool = 2.0e0 * tfv.rcool  # Diameter
+        acool = (
+            tfcoil_variables.a_cp_cool * tfcoil_variables.n_tf_coils
+        )  # Cooling cross-sectional area
+        dcool = 2.0e0 * tfcoil_variables.rcool  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
-        tfv.ncool = acool / (constants.pi * tfv.rcool**2)  # Number
+        tfcoil_variables.ncool = acool / (
+            constants.pi * tfcoil_variables.rcool**2
+        )  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
         acpav = (
-            0.5e0 * tfv.vol_cond_cp / (bv.z_tf_inside_half + bv.dr_tf_outboard) + acool
+            0.5e0
+            * tfcoil_variables.vol_cond_cp
+            / (bv.z_tf_inside_half + bv.dr_tf_outboard)
+            + acool
         )
-        ro = (acpav / (constants.pi * tfv.ncool)) ** 0.5
+        ro = (acpav / (constants.pi * tfcoil_variables.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
-        ptot = tfv.p_cp_resistive + fwbsv.pnuc_cp_tf * 1.0e6
+        ptot = tfcoil_variables.p_cp_resistive + fwbsv.pnuc_cp_tf * 1.0e6
 
         # Temperature calculations
         # -------------------------
@@ -2068,7 +2072,7 @@ class TFCoil:
         # **********************************************
         # Water coollant
         # --------------
-        if tfv.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == 0:
             # Water coolant physical properties
             coolant_density = constants.denh2o
             coolant_cp = constants.cph2o
@@ -2076,28 +2080,28 @@ class TFCoil:
             coolant_th_cond = constants.kh2o
 
             # Mass flow rate [kg/s]
-            cool_mass_flow = acool * coolant_density * tfv.vcool
+            cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
 
             # Water temperature rise
-            tfv.dtiocool = ptot / (cool_mass_flow * coolant_cp)
+            tfcoil_variables.dtiocool = ptot / (cool_mass_flow * coolant_cp)
 
             # Constant coolant velocity
-            vcool_max = tfv.vcool
+            vcool_max = tfcoil_variables.vcool
             # --------------
 
         # Helium coolant
         # --------------
-        elif tfv.i_tf_sup == 2:
+        elif tfcoil_variables.i_tf_sup == 2:
             # Inlet coolant density [kg/m3]
-            coolant_density = self.he_density(tfv.tcoolin)
+            coolant_density = self.he_density(tfcoil_variables.tcoolin)
 
             # Mass flow rate [kg/s]
-            cool_mass_flow = acool * coolant_density * tfv.vcool
+            cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
 
             # Infinitesimal power deposition used in the integral
             dptot = ptot / n_tcool_it
 
-            tcool_calc = copy.copy(tfv.tcoolin)  # K
+            tcool_calc = copy.copy(tfcoil_variables.tcoolin)  # K
             for _i in range(n_tcool_it):
                 # Thermal capacity Cp
                 coolant_cp = self.he_cp(tcool_calc)
@@ -2112,11 +2116,11 @@ class TFCoil:
             vcool_max = cool_mass_flow / (acool * coolant_density)
 
             # Getting the global in-outlet temperature increase
-            tfv.dtiocool = tcool_calc - tfv.tcoolin
+            tfcoil_variables.dtiocool = tcool_calc - tfcoil_variables.tcoolin
         # --------------
 
         # Average coolant temperature
-        tcool_av = tfv.tcoolin + 0.5e0 * tfv.dtiocool
+        tcool_av = tfcoil_variables.tcoolin + 0.5e0 * tfcoil_variables.dtiocool
         # **********************************************
 
         # Film temperature rise
@@ -2125,14 +2129,14 @@ class TFCoil:
         # this is not an exact approximation for average temperature rise
 
         # Helium viscosity
-        if tfv.i_tf_sup == 2:
+        if tfcoil_variables.i_tf_sup == 2:
             coolant_visco = self.he_visco(tcool_av)
 
         # Reynolds number
-        reyn = coolant_density * tfv.vcool * dcool / coolant_visco
+        reyn = coolant_density * tfcoil_variables.vcool * dcool / coolant_visco
 
         # Helium thermal conductivity [W/(m.K)]
-        if tfv.i_tf_sup == 2:
+        if tfcoil_variables.i_tf_sup == 2:
             coolant_th_cond = self.he_th_cond(tcool_av)
 
         # Prandlt number
@@ -2143,7 +2147,14 @@ class TFCoil:
         # Dittus-Boelter correlation where the fluid is being heated it should be as below
         nuselt = 0.023e0 * reyn**0.8e0 * prndtl**0.4e0
         h = nuselt * coolant_th_cond / dcool
-        dtfilmav = ptot / (h * 2.0e0 * constants.pi * tfv.rcool * tfv.ncool * lcool)
+        dtfilmav = ptot / (
+            h
+            * 2.0e0
+            * constants.pi
+            * tfcoil_variables.rcool
+            * tfcoil_variables.ncool
+            * lcool
+        )
 
         # Average film temperature (in contact with te conductor)
         tcool_film = tcool_av + dtfilmav
@@ -2154,31 +2165,34 @@ class TFCoil:
         # Conductor thermal conductivity
         # ******
         # Copper conductor
-        if tfv.i_tf_sup == 0:
+        if tfcoil_variables.i_tf_sup == 0:
             conductor_th_cond = constants.k_copper
 
         # Aluminium
-        elif tfv.i_tf_sup == 2:
+        elif tfcoil_variables.i_tf_sup == 2:
             conductor_th_cond = self.al_th_cond(tcool_film)
         # ******
 
         # Average temperature rise : To be changed with Garry Voss' better documented formula ?
         dtcncpav = (
-            (ptot / tfv.vol_cond_cp)
-            / (2.0e0 * conductor_th_cond * (ro**2 - tfv.rcool**2))
+            (ptot / tfcoil_variables.vol_cond_cp)
+            / (2.0e0 * conductor_th_cond * (ro**2 - tfcoil_variables.rcool**2))
             * (
-                ro**2 * tfv.rcool**2
-                - 0.25e0 * tfv.rcool**4
+                ro**2 * tfcoil_variables.rcool**2
+                - 0.25e0 * tfcoil_variables.rcool**4
                 - 0.75e0 * ro**4
-                + ro**4 * np.log(ro / tfv.rcool)
+                + ro**4 * np.log(ro / tfcoil_variables.rcool)
             )
         )
 
         # Peak temperature rise : To be changed with Garry Voss' better documented formula ?
         dtconcpmx = (
-            (ptot / tfv.vol_cond_cp)
+            (ptot / tfcoil_variables.vol_cond_cp)
             / (2.0e0 * conductor_th_cond)
-            * ((tfv.rcool**2 - ro**2) / 2.0e0 + ro**2 * np.log(ro / tfv.rcool))
+            * (
+                (tfcoil_variables.rcool**2 - ro**2) / 2.0e0
+                + ro**2 * np.log(ro / tfcoil_variables.rcool)
+            )
         )
 
         # If the average conductor temperature difference is negative, set it to 0
@@ -2192,11 +2206,18 @@ class TFCoil:
             dtconcpmx = 0.0e0
 
         # Average conductor temperature
-        tfv.tcpav2 = tfv.tcoolin + dtcncpav + dtfilmav + 0.5e0 * tfv.dtiocool
+        tfcoil_variables.tcpav2 = (
+            tfcoil_variables.tcoolin
+            + dtcncpav
+            + dtfilmav
+            + 0.5e0 * tfcoil_variables.dtiocool
+        )
 
         # Peak wall temperature
-        tfv.temp_cp_peak = tfv.tcoolin + tfv.dtiocool + dtfilmav + dtconcpmx
-        tcoolmx = tfv.tcoolin + tfv.dtiocool + dtfilmav
+        tfcoil_variables.temp_cp_peak = (
+            tfcoil_variables.tcoolin + tfcoil_variables.dtiocool + dtfilmav + dtconcpmx
+        )
+        tcoolmx = tfcoil_variables.tcoolin + tfcoil_variables.dtiocool + dtfilmav
         # -------------------------
 
         # Thermal hydraulics: friction factor from Z. Olujic, Chemical
@@ -2215,14 +2236,22 @@ class TFCoil:
         )
 
         # Pumping efficiency
-        if tfv.i_tf_sup == 0:  # Water cooled
-            tfv.etapump = 0.8e0
-        elif tfv.i_tf_sup == 2:  # Cryogenic helium
-            tfv.etapump = 0.6e0
+        if tfcoil_variables.i_tf_sup == 0:  # Water cooled
+            tfcoil_variables.etapump = 0.8e0
+        elif tfcoil_variables.i_tf_sup == 2:  # Cryogenic helium
+            tfcoil_variables.etapump = 0.6e0
 
         # Pressure drop calculation
-        dpres = fricfac * (lcool / dcool) * coolant_density * 0.5e0 * tfv.vcool**2
-        tfv.p_cp_coolant_pump_elec = dpres * acool * tfv.vcool / tfv.etapump
+        dpres = (
+            fricfac
+            * (lcool / dcool)
+            * coolant_density
+            * 0.5e0
+            * tfcoil_variables.vcool**2
+        )
+        tfcoil_variables.p_cp_coolant_pump_elec = (
+            dpres * acool * tfcoil_variables.vcool / tfcoil_variables.etapump
+        )
 
         # Critical pressure in saturation pressure calculations (Pa)
         pcrt = 2.24e7
@@ -2251,14 +2280,20 @@ class TFCoil:
         if self.iprint == 1:
             po.oheadr(self.outfile, "Centrepost Coolant Parameters")
             po.ovarre(
-                self.outfile, "Centrepost coolant fraction", "(fcoolcp)", tfv.fcoolcp
+                self.outfile,
+                "Centrepost coolant fraction",
+                "(fcoolcp)",
+                tfcoil_variables.fcoolcp,
             )
             po.ovarre(
                 self.outfile, "Average coolant channel diameter (m)", "(dcool)", dcool
             )
             po.ovarre(self.outfile, "Coolant channel length (m)", "(lcool)", lcool)
             po.ovarre(
-                self.outfile, "Inlet coolant flow speed (m/s)", "(vcool)", tfv.vcool
+                self.outfile,
+                "Inlet coolant flow speed (m/s)",
+                "(vcool)",
+                tfcoil_variables.vcool,
             )
             po.ovarre(
                 self.outfile,
@@ -2272,7 +2307,12 @@ class TFCoil:
                 "(cool_mass_flow)",
                 cool_mass_flow,
             )
-            po.ovarre(self.outfile, "Number of coolant tubes", "(ncool)", tfv.ncool)
+            po.ovarre(
+                self.outfile,
+                "Number of coolant tubes",
+                "(ncool)",
+                tfcoil_variables.ncool,
+            )
             po.ovarre(self.outfile, "Reynolds number", "(reyn)", reyn)
             po.ovarre(self.outfile, "Prandtl number", "(prndtl)", prndtl)
             po.ovarre(self.outfile, "Nusselt number", "(nuselt)", nuselt)
@@ -2282,13 +2322,13 @@ class TFCoil:
                 self.outfile,
                 "Average conductor resistivity (ohm.m)",
                 "(rho_cp)",
-                tfv.rho_cp,
+                tfcoil_variables.rho_cp,
             )
             po.ovarre(
                 self.outfile,
                 "Resistive heating (MW)",
                 "(p_cp_resistive/1.0e6)",
-                tfv.p_cp_resistive / 1.0e6,
+                tfcoil_variables.p_cp_resistive / 1.0e6,
             )
             po.ovarre(
                 self.outfile, "Nuclear heating (MW)", "(pnuc_cp_tf)", fwbsv.pnuc_cp_tf
@@ -2299,14 +2339,14 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Input coolant temperature (K)",
-                "(tfv.tcoolin)",
-                tfv.tcoolin,
+                "(tfcoil_variables.tcoolin)",
+                tfcoil_variables.tcoolin,
             )
             po.ovarre(
                 self.outfile,
                 "Input-output coolant temperature rise (K)",
                 "(dtiocool)",
-                tfv.dtiocool,
+                tfcoil_variables.dtiocool,
             )
             po.ovarre(self.outfile, "Film temperature rise (K)", "(dtfilmav)", dtfilmav)
             po.ovarre(
@@ -2319,18 +2359,20 @@ class TFCoil:
                 self.outfile,
                 "Average centrepost temperature (K)",
                 "(tcpav2)",
-                tfv.tcpav2,
+                tfcoil_variables.tcpav2,
             )
             po.ovarre(
                 self.outfile,
                 "Peak centrepost temperature (K)",
                 "(temp_cp_peak)",
-                tfv.temp_cp_peak,
+                tfcoil_variables.temp_cp_peak,
             )
 
             po.osubhd(self.outfile, "Pump Power :")
             po.ovarre(self.outfile, "Coolant pressure drop (Pa)", "(dpres)", dpres)
-            if tfv.i_tf_sup == 0:  # Saturation pressure calculated with Water data ...
+            if (
+                tfcoil_variables.i_tf_sup == 0
+            ):  # Saturation pressure calculated with Water data ...
                 po.ovarre(
                     self.outfile, "Coolant inlet pressure (Pa)", "(presin)", presin
                 )
@@ -2339,7 +2381,7 @@ class TFCoil:
                 self.outfile,
                 "Pump power (W)",
                 "(p_cp_coolant_pump_elec)",
-                tfv.p_cp_coolant_pump_elec,
+                tfcoil_variables.p_cp_coolant_pump_elec,
             )
 
     def tf_field_and_force(
@@ -5359,230 +5401,3 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
     poisson_j_perp_3 = np.array(poisson_j_perp_3)
 
     return eyoung_j_3, l_3, poisson_j_perp_3
-
-
-def init_tfcoil_variables():
-    tfv.a_tf_coil_inboard_case = 0.0
-    tfv.a_tf_coil_outboard_case = 0.0
-    tfv.a_tf_turn_steel = 0.0
-    tfv.a_tf_wp_conductor = 0.0
-    tfv.a_res_tf_coil_conductor = 0.0
-    tfv.a_tf_turn_cable_space_no_void = 0.0
-    tfv.a_tf_turn_insulation = 0.0
-    tfv.a_tf_coil_wp_turn_insulation = 0.0
-    tfv.sig_tf_case_max = 6.0e8
-    tfv.sig_tf_wp_max = 6.0e8
-    tfv.a_tf_leg_outboard = 0.0
-    tfv.a_tf_wp_steel = 0.0
-    tfv.a_tf_wp_extra_void = 0.0
-    tfv.a_tf_wp_coolant_channels = 0.0
-    tfv.bcritsc = 24.0
-    tfv.b_tf_inboard_peak = 0.0
-    tfv.bmaxtfrp = 0.0
-    tfv.casestr = 0.0
-    tfv.dr_tf_plasma_case = 0.0
-    tfv.f_dr_tf_plasma_case = 0.05
-    tfv.i_f_dr_tf_plasma_case = False
-    tfv.dx_tf_side_case_min = 0.0
-    tfv.casths_fraction = 0.06
-    tfv.t_conductor = 0.0
-    tfv.t_cable_tf = 0.0
-    tfv.t_cable_tf_is_input = False
-    tfv.t_turn_tf = 0.0
-    tfv.t_turn_tf_is_input = False
-    tfv.f_t_turn_tf = 1.0
-    tfv.t_turn_tf_max = 0.05
-    tfv.acs = 0.0
-    tfv.cdtfleg = 0.0
-    tfv.cforce = 0.0
-    tfv.cplen = 0.0
-    tfv.c_tf_turn = 7.0e4
-    tfv.c_tf_turn_max = 9.0e4
-    tfv.dcase = 8000.0
-    tfv.dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
-    tfv.dcondins = 1800.0
-    tfv.dia_tf_turn_coolant_channel = 0.005
-    tfv.e_tf_magnetic_stored_total_gj = 0.0
-    tfv.b_crit_upper_nbti = 14.86
-    tfv.t_crit_nbti = 9.04
-    tfv.max_force_density = 0.0
-    tfv.fcutfsu = 0.69
-    tfv.fhts = 0.5
-    tfv.insstrain = 0.0
-    tfv.i_tf_stress_model = 1
-    tfv.i_tf_tresca = 0
-    tfv.i_tf_wp_geom = -1
-    tfv.i_tf_case_geom = 0
-    tfv.i_tf_turns_integer = 0
-    tfv.i_tf_sc_mat = 1
-    tfv.i_tf_sup = 1
-    tfv.i_tf_shape = 0
-    tfv.i_tf_cond_eyoung_axial = 0
-    tfv.i_tf_cond_eyoung_trans = 1
-    tfv.n_pancake = 10
-    tfv.n_layer = 20
-    tfv.n_rad_per_layer = 100
-    tfv.i_tf_bucking = -1
-    tfv.n_tf_graded_layers = 1
-    tfv.n_tf_stress_layers = 0
-    tfv.n_tf_wp_layers = 5
-    tfv.j_tf_bus = 1.25e6
-    tfv.j_crit_str_tf = 0.0
-    tfv.j_crit_str_0 = [
-        596905475.80390120,
-        1925501534.8512938,
-        724544682.96063495,
-        549858624.45072436,
-        669284509.85818779,
-        0.0,
-        898964415.36996782,
-        1158752995.2559297,
-        865652122.9071957,
-    ]
-    tfv.j_tf_wp_critical = 0.0
-    tfv.jwdgpro = 0.0
-    tfv.j_tf_wp = 0.0
-    tfv.oacdcp = 0.0
-    tfv.eyoung_ins = 1.0e8
-    tfv.eyoung_steel = 2.05e11
-    tfv.eyoung_cond_axial = 6.6e8
-    tfv.eyoung_cond_trans = 0.0
-    tfv.eyoung_res_tf_buck = 150.0e9
-    tfv.eyoung_copper = 117.0e9
-    tfv.eyoung_al = 69.0e9
-    tfv.poisson_steel = 0.3
-    tfv.poisson_copper = 0.35
-    tfv.poisson_al = 0.35
-    tfv.poisson_ins = 0.34
-    tfv.poisson_cond_axial = 0.3
-    tfv.poisson_cond_trans = 0.3
-    tfv.r_b_tf_inboard_peak = 0.0
-    tfv.res_tf_leg = 0.0
-    tfv.toroidalgap = 1.0  # [m]
-    tfv.ftoroidalgap = 1.0
-    tfv.ripmax = 1.0
-    tfv.ripple = 0.0
-    tfv.c_tf_total = 0.0
-    tfv.radial_array[:] = 0.0
-    tfv.sig_tf_r[:] = 0.0
-    tfv.sig_tf_t[:] = 0.0
-    tfv.deflect[:] = 0.0
-    tfv.sig_tf_z = 0.0
-    tfv.sig_tf_vmises[:] = 0.0
-    tfv.s_shear_tf[:] = 0.0
-    tfv.sig_tf_cs_bucked = 0.0
-    tfv.sig_tf_case = 0.0
-    tfv.sig_tf_wp = 0.0
-    tfv.str_cs_con_res = -0.005
-    tfv.str_pf_con_res = -0.005
-    tfv.str_tf_con_res = -0.005
-    tfv.str_wp = 0.0
-    tfv.str_wp_max = 0.7e-2
-    tfv.i_str_wp = 1
-    tfv.quench_model = string_to_f2py_compatible(tfv.quench_model, "exponential")
-    tfv.time1 = 0
-    tfv.tcritsc = 16.0
-    tfv.tdmptf = 10.0
-    tfv.a_tf_inboard_total = 0.0
-    tfv.len_tf_bus = 300.0
-    tfv.m_tf_bus = 0.0
-    tfv.tfckw = 0.0
-    tfv.tfcmw = 0.0
-    tfv.p_cp_resistive_mw = 0.0
-    tfv.p_tf_joints_resistive_mw = 0.0
-    tfv.tfcryoarea = 0.0
-    tfv.tficrn = 0.0
-    tfv.ind_tf_coil = 0.0
-    tfv.dx_tf_wp_insertion_gap = 0.01
-    tfv.p_tf_leg_resistive_mw = 0.0
-    tfv.rho_cp = 0.0
-    tfv.rho_tf_leg = 0.0
-    tfv.rho_tf_bus = 1.86e-8
-    tfv.frhocp = 1.0
-    tfv.frholeg = 1.0
-    tfv.rho_tf_joints = 2.5e-10
-    tfv.n_tf_joints_contact = 6
-    tfv.n_tf_joints = 4
-    tfv.th_joint_contact = 0.03
-    tfv.p_tf_joints_resistive = 0.0
-    tfv.len_tf_coil = 0.0
-    tfv.eff_tf_cryo = -1.0
-    tfv.n_tf_coils = 16.0
-    tfv.tfocrn = 0.0
-    tfv.tfsai = 0.0
-    tfv.tfsao = 0.0
-    tfv.tftmp = 4.5
-    tfv.dx_tf_inboard_out_toroidal = 1.0
-    tfv.dx_tf_turn_insulation = 8e-4
-    tfv.layer_ins = 0.0
-    tfv.dr_tf_nose_case = 0.3
-    tfv.dr_tf_wp_with_insulation = 0.0
-    tfv.dx_tf_turn_steel = 8e-3
-    tfv.dx_tf_wp_insulation = 0.018
-    tfv.tmargmin_tf = 0.0
-    tfv.tmargmin_cs = 0.0
-    tfv.tmargmin = 0.0
-    tfv.temp_margin = 0.0
-    tfv.tmargtf = 0.0
-    tfv.tmaxpro = 150.0
-    tfv.temp_croco_quench_max = 200.0
-    tfv.temp_croco_quench = 0.0
-    tfv.temp_tf_cryo = 4.5
-    tfv.n_tf_coil_turns = 0.0
-    tfv.v_tf_coil_dump_quench_max_kv = 20.0
-    tfv.vforce = 0.0
-    tfv.f_vforce_inboard = 0.5
-    tfv.vforce_outboard = 0.0
-    tfv.f_a_tf_turn_cable_space_extra_void = 0.4
-    tfv.voltfleg = 0.0
-    tfv.vtfkv = 0.0
-    tfv.v_tf_coil_dump_quench_kv = 0.0
-    tfv.whtcas = 0.0
-    tfv.whtcon = 0.0
-    tfv.whtconcu = 0.0
-    tfv.whtconal = 0.0
-    tfv.whtconin = 0.0
-    tfv.whtconsc = 0.0
-    tfv.m_tf_turn_steel = 0.0
-    tfv.whtgw = 0.0
-    tfv.m_tf_coils_total = 0.0
-    tfv.dx_tf_wp_primary_toroidal = 0.0
-    tfv.dx_tf_wp_secondary_toroidal = 0.0
-    tfv.dthet[:] = 0.0
-    tfv.radctf[:] = 0.0
-    tfv.r_tf_arc[:] = 0.0
-    tfv.xctfc[:] = 0.0
-    tfv.z_tf_arc[:] = 0.0
-    tfv.yctfc[:] = 0.0
-    tfv.tfa[:] = 0.0
-    tfv.tfb[:] = 0.0
-    tfv.drtop = 0.0
-    tfv.dztop = 0.0
-    tfv.etapump = 0.8
-    tfv.fcoolcp = 0.3
-    tfv.f_a_tf_cool_outboard = 0.2
-    tfv.a_cp_cool = 0.0
-    tfv.ncool = 0.0
-    tfv.p_cp_coolant_pump_elec = 0.0
-    tfv.p_cp_resistive = 0.0
-    tfv.p_tf_leg_resistive = 0.0
-    tfv.temp_cp_max = 473.15  # 200 C
-    tfv.rcool = 0.005
-    tfv.tcoolin = 313.15  # 40 C
-    tfv.dtiocool = 0.0
-    tfv.temp_cp_average = 373.15  # 100 C
-    tfv.tcpav2 = 0.0
-    tfv.temp_tf_legs_outboard = -1.0
-    tfv.temp_cp_peak = 0.0
-    tfv.vcool = 20.0
-    tfv.vol_cond_cp = 0.0
-    tfv.whtcp = 0.0
-    tfv.whttflgs = 0.0
-    tfv.tfc_sidewall_is_fraction = False
-    tfv.i_cp_joints = -1
-    tfv.cryo_cool_req = 0.0
-    tfv.theta1_coil = 45.0
-    tfv.theta1_vv = 1.0  # 1 Deg
-    tfv.max_vv_stress = 143.0e6
-    tfv.rrr_tf_cu = 100.0
-    tfv.t_tf_quench_detection = 3.0

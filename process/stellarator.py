@@ -22,6 +22,7 @@ from process.data_structure import (
     stellarator_configuration,
     stellarator_variables,
     structure_variables,
+    tfcoil_variables,
     times_variables,
 )
 from process.exceptions import ProcessValueError
@@ -37,7 +38,6 @@ from process.fortran import (
     physics_module,
     physics_variables,
     sctfcoil_module,
-    tfcoil_variables,
 )
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config

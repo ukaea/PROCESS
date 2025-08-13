@@ -12,6 +12,7 @@ from process.data_structure import (
     power_variables,
     primary_pumping_variables,
     structure_variables,
+    tfcoil_variables,
     times_variables,
 )
 from process.exceptions import ProcessValueError
@@ -24,7 +25,6 @@ from process.fortran import (
     numerics,
     pf_power_variables,
     physics_variables,
-    tfcoil_variables,
 )
 
 logger = logging.getLogger(__name__)

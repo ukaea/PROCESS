@@ -3,8 +3,8 @@ from typing import Any, NamedTuple
 import pytest
 
 from process.build import Build
-from process.data_structure import build_variables, divertor_variables
-from process.fortran import physics_variables, tfcoil_variables
+from process.data_structure import build_variables, divertor_variables, tfcoil_variables
+from process.fortran import physics_variables
 
 
 @pytest.fixture

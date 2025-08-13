@@ -198,12 +198,14 @@ INPUT_VARIABLES = {
     ),
     "avail_min": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "b_crit_upper_nbti": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 30.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 30.0)
     ),
     "p_plant_electric_base": InputVariable(
         fortran.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
-    "bcritsc": InputVariable(fortran.tfcoil_variables, float, range=(10.0, 50.0)),
+    "bcritsc": InputVariable(
+        data_structure.tfcoil_variables, float, range=(10.0, 50.0)
+    ),
     "bctmp": InputVariable(data_structure.pulse_variables, float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable(
         fortran.current_drive_variables, float, range=(1.0, 1000000.0)
@@ -271,15 +273,17 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, float, range=(1e-06, 1000000.0)
     ),
     "dr_tf_plasma_case": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_dr_tf_plasma_case": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "dx_tf_side_case_min": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "casths_fraction": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "casths_fraction": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "cboot": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
     "cconfix": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),
     "cconshpf": InputVariable(
@@ -371,10 +375,10 @@ INPUT_VARIABLES = {
     ),
     "cpstflnc": InputVariable(data_structure.cost_variables, float, range=(0.01, 30.0)),
     "c_tf_turn": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.001, 1000000.0)
+        data_structure.tfcoil_variables, float, range=(0.001, 1000000.0)
     ),
     "c_tf_turn_max": InputVariable(
-        fortran.tfcoil_variables, float, range=(1.0, 1000000.0)
+        data_structure.tfcoil_variables, float, range=(1.0, 1000000.0)
     ),
     "crane_arm_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
@@ -423,11 +427,15 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
     "dalu": InputVariable(fortran.constants, float, range=(2500.0, 30000.0)),
-    "dcase": InputVariable(fortran.tfcoil_variables, float, range=(1000.0, 100000.0)),
+    "dcase": InputVariable(
+        data_structure.tfcoil_variables, float, range=(1000.0, 100000.0)
+    ),
     "dcdrv0": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),
     "dcdrv1": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),
     "dcdrv2": InputVariable(data_structure.ife_variables, float, range=(0.0, 200.0)),
-    "dcondins": InputVariable(fortran.tfcoil_variables, float, range=(500.0, 10000.0)),
+    "dcondins": InputVariable(
+        data_structure.tfcoil_variables, float, range=(500.0, 10000.0)
+    ),
     "dcopper": InputVariable(fortran.constants, float, range=(8000.0, 10000.0)),
     "declblkt": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
     "declfw": InputVariable(fortran.fwbs_variables, float, range=(0.01, 0.2)),
@@ -435,7 +443,7 @@ INPUT_VARIABLES = {
     "decomf": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "denstl": InputVariable(fortran.fwbs_variables, float, range=(5000.0, 10000.0)),
     "dia_tf_turn_coolant_channel": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "dintrt": InputVariable(data_structure.cost_variables, float, range=(0.0, 0.1)),
     "discount_rate": InputVariable(
@@ -521,7 +529,7 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(0.0, 5.0)
     ),
     "dr_tf_wp_with_insulation": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 10.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 10.0)
     ),
     "dr_vv_inboard": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
@@ -529,7 +537,7 @@ INPUT_VARIABLES = {
     "dr_vv_outboard": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
-    "drtop": InputVariable(fortran.tfcoil_variables, float, range=(-1.5, 1.5)),
+    "drtop": InputVariable(data_structure.tfcoil_variables, float, range=(-1.5, 1.5)),
     "drveff": InputVariable(data_structure.ife_variables, float, range=(0.01, 1.0)),
     "dtlife": InputVariable(data_structure.cost_variables, float, range=(0.0, 15.0)),
     "dtstor": InputVariable(data_structure.pulse_variables, float, range=(50.0, 500.0)),
@@ -537,11 +545,13 @@ INPUT_VARIABLES = {
     "dz_tf_cryostat": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 20.0)
     ),
-    "dztop": InputVariable(fortran.tfcoil_variables, float, range=(-0.5, 0.5)),
+    "dztop": InputVariable(data_structure.tfcoil_variables, float, range=(-0.5, 0.5)),
     "edrive": InputVariable(
         data_structure.ife_variables, float, range=(100000.0, 5000000000.0)
     ),
-    "eff_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "eff_tf_cryo": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "ejima_coeff": InputVariable(fortran.physics_variables, float, range=(0.1, 1.0)),
     "elecdist_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
@@ -591,29 +601,31 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "etapsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
-    "etapump": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "etapump": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "etatf": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
     "eta_turbine": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 1.0)
     ),
-    "eyoung_al": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "eyoung_al": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "eyoung_cond_axial": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 10000000000000.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 10000000000000.0)
     ),
     "eyoung_cond_trans": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 10000000000000.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 10000000000000.0)
     ),
     "eyoung_ins": InputVariable(
-        fortran.tfcoil_variables, float, range=(100000000.0, 10000000000000.0)
+        data_structure.tfcoil_variables, float, range=(100000000.0, 10000000000000.0)
     ),
     "eyoung_res_tf_buck": InputVariable(
-        fortran.tfcoil_variables, float, range=(1e-10, 1000000000000.0)
+        data_structure.tfcoil_variables, float, range=(1e-10, 1000000000000.0)
     ),
     "eyoung_steel": InputVariable(
-        fortran.tfcoil_variables, float, range=(100000000.0, 10000000000000.0)
+        data_structure.tfcoil_variables, float, range=(100000000.0, 10000000000000.0)
     ),
     "f_a_tf_cool_outboard": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_alpha_energy_confinement_min": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 100.0)
@@ -653,13 +665,15 @@ INPUT_VARIABLES = {
         data_structure.stellarator_variables, float, range=(0.0, 1.0)
     ),
     "f_sync_reflect": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "f_t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "f_t_turn_tf": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "f_tritium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_beam_tritium": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "f_vforce_inboard": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_w": InputVariable(data_structure.stellarator_variables, float, range=(0.1, 1.0)),
     "f_z_cryostat": InputVariable(
@@ -714,7 +728,7 @@ INPUT_VARIABLES = {
         data_structure.pfcoil_variables, float, range=(0.0, 1.0)
     ),
     "fcontng": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
-    "fcoolcp": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "fcoolcp": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "ftemp_croco_quench_max": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1.0)
     ),
@@ -722,7 +736,7 @@ INPUT_VARIABLES = {
     "fcspc": InputVariable(data_structure.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
-    "fcutfsu": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "fcutfsu": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
@@ -748,7 +762,7 @@ INPUT_VARIABLES = {
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fhole": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
-    "fhts": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1.0)),
+    "fhts": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 1.0)),
     "fiooic": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fipir": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fjohc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -837,8 +851,8 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(0.5, 2.0)
     ),
     "freinke": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "frhocp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
-    "frholeg": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 5.0)),
+    "frhocp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
+    "frholeg": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
     "frminor": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "frrmax": InputVariable(data_structure.ife_variables, float, range=(1e-06, 1.0)),
     "fseppc": InputVariable(
@@ -859,7 +873,9 @@ INPUT_VARIABLES = {
     ),
     "ftmargoh": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "ftmargtf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ftoroidalgap": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 10.0)),
+    "ftoroidalgap": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.001, 10.0)
+    ),
     "ftemp_fw_max": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 10.0)
     ),
@@ -1023,18 +1039,22 @@ INPUT_VARIABLES = {
         data_structure.stellarator_variables, float, range=(0.1, 10.0)
     ),
     "j_tf_bus": InputVariable(
-        fortran.tfcoil_variables, float, range=(10000.0, 100000000.0)
+        data_structure.tfcoil_variables, float, range=(10000.0, 100000000.0)
     ),
     "kappa": InputVariable(fortran.physics_variables, float, range=(0.99, 5.0)),
     "kappa95": InputVariable(fortran.physics_variables, float, range=(0.99, 5.0)),
-    "layer_ins": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "layer_ins": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "ld_ratio_cst": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 5.0)
     ),
     "len_fw_channel": InputVariable(
         fortran.fwbs_variables, float, range=(0.001, 1000.0)
     ),
-    "len_tf_bus": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 1000.0)),
+    "len_tf_bus": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.01, 1000.0)
+    ),
     "lhat": InputVariable(data_structure.reinke_variables, float, range=(1.0, 15.0)),
     "f_blkt_li6_enrichment": InputVariable(
         fortran.fwbs_variables, float, range=(7.4, 100.0)
@@ -1091,7 +1111,7 @@ INPUT_VARIABLES = {
         range=(1000000000.0, 100000000000000.0),
     ),
     "max_vv_stress": InputVariable(
-        fortran.tfcoil_variables, float, range=(100000.0, 500000000.0)
+        data_structure.tfcoil_variables, float, range=(100000.0, 500000000.0)
     ),
     "maxpoloidalpower": InputVariable(
         fortran.pf_power_variables, float, range=(0.0, 2000.0)
@@ -1107,9 +1127,11 @@ INPUT_VARIABLES = {
     "n_cycle_min": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.0, 100000000.0)
     ),
-    "n_tf_coils": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 100.0)),
+    "n_tf_coils": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
+    ),
     "n_tf_coil_turns": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
     "nbi_sys_l": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
@@ -1127,7 +1149,7 @@ INPUT_VARIABLES = {
     "nesep": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
     "nflutfmax": InputVariable(fortran.constraint_variables, float, range=(1e20, 1e24)),
     "oacdcp": InputVariable(
-        fortran.tfcoil_variables, float, range=(10000.0, 1000000000.0)
+        data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
     ),
     "f_a_cs_steel": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.001, 0.999)
@@ -1202,9 +1224,15 @@ INPUT_VARIABLES = {
     "pnuc_fw_ratio_dcll": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 1.0)
     ),
-    "poisson_al": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "poisson_copper": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
-    "poisson_steel": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "poisson_al": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
+    "poisson_copper": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
+    "poisson_steel": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "p_fusion_total_max_mw": InputVariable(
         fortran.constraint_variables, float, range=(1.0, 10000.0)
     ),
@@ -1218,7 +1246,9 @@ INPUT_VARIABLES = {
     ),
     "pseprmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 60.0)),
     "ptargf": InputVariable(data_structure.ife_variables, float, range=(0.1, 100.0)),
-    "temp_cp_max": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 573.15)),
+    "temp_cp_max": InputVariable(
+        data_structure.tfcoil_variables, float, range=(4.0, 573.15)
+    ),
     "ptfnucmax": InputVariable(fortran.constraint_variables, float, range=(1e-06, 1.0)),
     "pulsetimings": InputVariable(
         data_structure.times_variables, float, range=(0.0, 1.0)
@@ -1258,7 +1288,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(0.9, 3.0)
     ),
     "rbwt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "rcool": InputVariable(fortran.tfcoil_variables, float, range=(1e-06, 1.0)),
+    "rcool": InputVariable(data_structure.tfcoil_variables, float, range=(1e-06, 1.0)),
     "reactor_clrnc": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
@@ -1300,15 +1330,19 @@ INPUT_VARIABLES = {
     "residual_sig_hoop": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.0, 1000000000.0)
     ),
-    "rho_tf_bus": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1e-05)),
-    "rho_tf_joints": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.01)),
+    "rho_tf_bus": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1e-05)
+    ),
+    "rho_tf_joints": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 0.01)
+    ),
     "rhopedn": InputVariable(fortran.physics_variables, float, range=(0.01, 1.0)),
     "rhopedt": InputVariable(fortran.physics_variables, float, range=(0.01, 1.0)),
     "rhopfbus": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
     ),
     "rinboard": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
-    "ripmax": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
+    "ripmax": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
     "rmajor": InputVariable(fortran.physics_variables, float, range=(0.1, 50.0)),
     "robotics_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
@@ -1328,7 +1362,9 @@ INPUT_VARIABLES = {
     "rpf2": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
     "rrin": InputVariable(data_structure.ife_variables, float, range=(0.1, 50.0)),
     "rrmax": InputVariable(data_structure.ife_variables, float, range=(1.0, 50.0)),
-    "rrr_tf_cu": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 1000.0)),
+    "rrr_tf_cu": InputVariable(
+        data_structure.tfcoil_variables, float, range=(1.0, 1000.0)
+    ),
     "rxcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "sec_buildings_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
@@ -1365,10 +1401,10 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
     "sig_tf_case_max": InputVariable(
-        fortran.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
+        data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
     "sig_tf_wp_max": InputVariable(
-        fortran.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
+        data_structure.tfcoil_variables, float, range=(1000000.0, 100000000000.0)
     ),
     "sigallpc": InputVariable(
         data_structure.build_variables, float, range=(0.0, 1000000000.0)
@@ -1390,15 +1426,17 @@ INPUT_VARIABLES = {
     ),
     "stcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "str_cs_con_res": InputVariable(
-        fortran.tfcoil_variables, float, range=(-0.02, 0.02)
+        data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
     ),
     "str_pf_con_res": InputVariable(
-        fortran.tfcoil_variables, float, range=(-0.02, 0.02)
+        data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
     ),
     "str_tf_con_res": InputVariable(
-        fortran.tfcoil_variables, float, range=(-0.02, 0.02)
+        data_structure.tfcoil_variables, float, range=(-0.02, 0.02)
     ),
-    "str_wp_max": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.3)),
+    "str_wp_max": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 0.3)
+    ),
     "t_between_pulse": InputVariable(
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
@@ -1408,14 +1446,18 @@ INPUT_VARIABLES = {
     "t_burn_min": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 1000000.0)
     ),
-    "t_cable_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
+    "t_cable_tf": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
     "t_crack_radial": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(1e-05, 1.0)
     ),
     "t_crack_vertical": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(1e-05, 1.0)
     ),
-    "t_crit_nbti": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 15.0)),
+    "t_crit_nbti": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 15.0)
+    ),
     "t_current_ramp_up": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
@@ -1426,7 +1468,7 @@ INPUT_VARIABLES = {
         data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
     "t_tf_quench_detection": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
     "t_out_bb": InputVariable(
         data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
@@ -1443,8 +1485,12 @@ INPUT_VARIABLES = {
     "t_structural_vertical": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
-    "t_turn_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.1)),
-    "t_turn_tf_max": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "t_turn_tf": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
+    ),
+    "t_turn_tf_max": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "tape_thickness": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
@@ -1461,20 +1507,24 @@ INPUT_VARIABLES = {
     "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),
     "tcomrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
-    "tcoolin": InputVariable(fortran.tfcoil_variables, float, range=(4.0, 373.15)),
-    "tcritsc": InputVariable(fortran.tfcoil_variables, float, range=(1.0, 300.0)),
+    "tcoolin": InputVariable(
+        data_structure.tfcoil_variables, float, range=(4.0, 373.15)
+    ),
+    "tcritsc": InputVariable(
+        data_structure.tfcoil_variables, float, range=(1.0, 300.0)
+    ),
     "t_cycle_min": InputVariable(
         fortran.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
     "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
-    "tdmptf": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 100.0)),
+    "tdmptf": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
     "te": InputVariable(fortran.physics_variables, float, range=(1.0, 200.0)),
     "te0_ecrh_achievable": InputVariable(
         data_structure.stellarator_variables, float, range=(1.0, 1000.0)
     ),
     "temp_cp_average": InputVariable(
-        fortran.tfcoil_variables, float, range=(4.0, 573.15)
+        data_structure.tfcoil_variables, float, range=(4.0, 573.15)
     ),
     "temp_fw_coolant_in": InputVariable(
         fortran.fwbs_variables, float, range=(300.0, 1500.0)
@@ -1489,40 +1539,56 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
     "dx_tf_wp_insertion_gap": InputVariable(
-        fortran.tfcoil_variables, float, range=(1e-10, 0.1)
+        data_structure.tfcoil_variables, float, range=(1e-10, 0.1)
     ),
     "tfootfi": InputVariable(data_structure.build_variables, float, range=(0.2, 5.0)),
-    "tftmp": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
+    "tftmp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 293.0)),
     "tgain": InputVariable(data_structure.ife_variables, float, range=(1.0, 500.0)),
     "th_joint_contact": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "theta1_coil": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 60.0)),
-    "theta1_vv": InputVariable(fortran.tfcoil_variables, float, range=(0.1, 60.0)),
+    "theta1_coil": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.1, 60.0)
+    ),
+    "theta1_vv": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.1, 60.0)
+    ),
     "dx_tf_turn_insulation": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "dr_tf_nose_case": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1.0)),
+    "dr_tf_nose_case": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "dz_shld_thermal": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
     "dx_tf_turn_steel": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "ti": InputVariable(fortran.physics_variables, float, range=(5.0, 50.0)),
     "dx_tf_wp_insulation": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 0.1)
+        data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "tlife": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
     "tmain": InputVariable(data_structure.cost_variables, float, range=(0.0, 100.0)),
-    "tmargmin": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
-    "tmargmin_cs": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
-    "tmargmin_tf": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 20.0)),
-    "temp_croco_quench_max": InputVariable(
-        fortran.tfcoil_variables, float, range=(4.0, 1000.0)
+    "tmargmin": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 20.0)
     ),
-    "tmaxpro": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 1000.0)),
-    "temp_tf_cryo": InputVariable(fortran.tfcoil_variables, float, range=(0.01, 293.0)),
+    "tmargmin_cs": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 20.0)
+    ),
+    "tmargmin_tf": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 20.0)
+    ),
+    "temp_croco_quench_max": InputVariable(
+        data_structure.tfcoil_variables, float, range=(4.0, 1000.0)
+    ),
+    "tmaxpro": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1000.0)
+    ),
+    "temp_tf_cryo": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.01, 293.0)
+    ),
     "tn": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable(
         data_structure.times_variables, int, choices=[0, 1]
@@ -1667,9 +1733,11 @@ INPUT_VARIABLES = {
     "vachtmw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "vcool": InputVariable(fortran.tfcoil_variables, float, range=(0.001, 100.0)),
+    "vcool": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.001, 100.0)
+    ),
     "v_tf_coil_dump_quench_max_kv": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 100.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 100.0)
     ),
     "vfblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "vfcblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
@@ -1679,7 +1747,7 @@ INPUT_VARIABLES = {
     "vfpblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "vfshld": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "f_a_tf_turn_cable_space_extra_void": InputVariable(
-        fortran.tfcoil_variables, float, range=(0.0, 1.0)
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "dz_shld_vv_gap": InputVariable(
         data_structure.build_variables, float, range=(0.0, 10.0)
@@ -1772,7 +1840,7 @@ INPUT_VARIABLES = {
     "i_bldgs_v": InputVariable(data_structure.buildings_variables, int, choices=[0, 1]),
     "i_blkt_inboard": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "i_bootstrap_current": InputVariable(fortran.physics_variables, int, range=(0, 13)),
-    "i_cp_joints": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
+    "i_cp_joints": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
     "i_cs_precomp": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
     "i_cs_stress": InputVariable(data_structure.pfcoil_variables, int, choices=[0, 1]),
@@ -1802,27 +1870,35 @@ INPUT_VARIABLES = {
     "i_rad_loss": InputVariable(fortran.physics_variables, int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "i_single_null": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "i_str_wp": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
+    "i_str_wp": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
     "i_sup_pf_shape": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1]
     ),
-    "i_tf_bucking": InputVariable(fortran.tfcoil_variables, int, range=(0, 3)),
-    "i_tf_case_geom": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
+    "i_tf_bucking": InputVariable(data_structure.tfcoil_variables, int, range=(0, 3)),
+    "i_tf_case_geom": InputVariable(
+        data_structure.tfcoil_variables, int, choices=[0, 1]
+    ),
     "i_tf_cond_eyoung_axial": InputVariable(
-        fortran.tfcoil_variables, int, choices=[0, 1, 2]
+        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
     ),
     "i_tf_cond_eyoung_trans": InputVariable(
-        fortran.tfcoil_variables, int, choices=[0, 1]
+        data_structure.tfcoil_variables, int, choices=[0, 1]
     ),
-    "i_tf_sc_mat": InputVariable(fortran.tfcoil_variables, int, range=(1, 9)),
-    "i_tf_shape": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1, 2]),
+    "i_tf_sc_mat": InputVariable(data_structure.tfcoil_variables, int, range=(1, 9)),
+    "i_tf_shape": InputVariable(
+        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
+    ),
     "i_tf_stress_model": InputVariable(
-        fortran.tfcoil_variables, int, choices=[0, 1, 2]
+        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
     ),
-    "i_tf_sup": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1, 2]),
-    "i_tf_tresca": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
-    "i_tf_turns_integer": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1]),
-    "i_tf_wp_geom": InputVariable(fortran.tfcoil_variables, int, choices=[0, 1, 2]),
+    "i_tf_sup": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1, 2]),
+    "i_tf_tresca": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
+    "i_tf_turns_integer": InputVariable(
+        data_structure.tfcoil_variables, int, choices=[0, 1]
+    ),
+    "i_tf_wp_geom": InputVariable(
+        data_structure.tfcoil_variables, int, choices=[0, 1, 2]
+    ),
     "iavail": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
     "ibkt_life": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_blkt_dual_coolant": InputVariable(
@@ -1883,14 +1959,20 @@ INPUT_VARIABLES = {
     "iwalld": InputVariable(fortran.physics_variables, int, range=(1, 2)),
     "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
     "m_res": InputVariable(data_structure.stellarator_variables, int, range=(1, 10)),
-    "n_layer": InputVariable(fortran.tfcoil_variables, int, range=(1, 100)),
+    "n_layer": InputVariable(data_structure.tfcoil_variables, int, range=(1, 100)),
     "n_liq_recirc": InputVariable(fortran.fwbs_variables, int, range=(1, 50)),
-    "n_pancake": InputVariable(fortran.tfcoil_variables, int, range=(1, 100)),
-    "n_rad_per_layer": InputVariable(fortran.tfcoil_variables, int, range=(1, 500)),
+    "n_pancake": InputVariable(data_structure.tfcoil_variables, int, range=(1, 100)),
+    "n_rad_per_layer": InputVariable(
+        data_structure.tfcoil_variables, int, range=(1, 500)
+    ),
     "n_res": InputVariable(data_structure.stellarator_variables, int, range=(3, 6)),
-    "n_tf_graded_layers": InputVariable(fortran.tfcoil_variables, int, range=(1, 20)),
-    "n_tf_joints": InputVariable(fortran.tfcoil_variables, int, range=(1, 50)),
-    "n_tf_joints_contact": InputVariable(fortran.tfcoil_variables, int, range=(1, 50)),
+    "n_tf_graded_layers": InputVariable(
+        data_structure.tfcoil_variables, int, range=(1, 20)
+    ),
+    "n_tf_joints": InputVariable(data_structure.tfcoil_variables, int, range=(1, 50)),
+    "n_tf_joints_contact": InputVariable(
+        data_structure.tfcoil_variables, int, range=(1, 50)
+    ),
     "n_blkt_inboard_modules_poloidal": InputVariable(
         fortran.fwbs_variables, int, range=(1, 16)
     ),
@@ -1931,7 +2013,7 @@ INPUT_VARIABLES = {
         choices=list(range(fortran.physics_variables.n_confinement_scalings)),
     ),
     "quench_model": InputVariable(
-        fortran.tfcoil_variables, str, choices=["exponential", "linear"]
+        data_structure.tfcoil_variables, str, choices=["exponential", "linear"]
     ),
     "i_fw_coolant_type": InputVariable(
         fortran.fwbs_variables, str, choices=["helium", "water"]
@@ -1939,7 +2021,7 @@ INPUT_VARIABLES = {
     "vacuum_model": InputVariable(
         data_structure.vacuum_variables, str, choices=["old", "simple"]
     ),
-    "dcond": InputVariable(fortran.tfcoil_variables, float, array=True),
+    "dcond": InputVariable(data_structure.tfcoil_variables, float, array=True),
     "c_pf_coil_turn_peak_input": InputVariable(
         data_structure.pfcoil_variables, float, array=True
     ),
