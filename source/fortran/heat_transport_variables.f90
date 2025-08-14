@@ -63,7 +63,7 @@ module heat_transport_variables
     !! fraction of total first wall thermal power required to drive the FW coolant
     !! pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
-    real(dp) :: fpumpshld
+    real(dp) :: f_p_shld_coolant_pump_total_heat
     !! fraction of total shield thermal power required to drive the shield coolant
     !! pumps (default assumes water coolant)
 

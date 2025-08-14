@@ -319,11 +319,11 @@ class DCLL(BlanketLibrary):
                 heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
-            # For CCFE HCPB: p_shld_coolant_pump_mw = fpumpshld * ( p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
+            # For CCFE HCPB: p_shld_coolant_pump_mw = f_p_shld_coolant_pump_total_heat * ( p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
             # Use same as KIT HCLL for now "p_shld_nuclear_heat_mw is not available and is very small
             # compared to other powers so set to zero."
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld * 0.0
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat * 0.0
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.fpumpdiv
@@ -349,7 +349,7 @@ class DCLL(BlanketLibrary):
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld * 0.0
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat * 0.0
             )
 
         if output:

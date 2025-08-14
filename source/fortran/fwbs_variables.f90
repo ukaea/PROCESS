@@ -258,7 +258,7 @@ module fwbs_variables
   !! temperature is only calculated if `i_coolant_pumping=2`):
   !!
   !! - =0 User sets pump power directly (p_blkt_coolant_pump_mw, p_fw_coolant_pump_mw, p_div_coolant_pump_mw, p_shld_coolant_pump_mw)
-  !! - =1 User sets pump power as a fraction of thermal power (f_p_blkt_coolant_pump_total_heat, f_p_fw_coolant_pump_total_heat, fpumpdiv, fpumpshld)
+  !! - =1 User sets pump power as a fraction of thermal power (f_p_blkt_coolant_pump_total_heat, f_p_fw_coolant_pump_total_heat, fpumpdiv, f_p_shld_coolant_pump_total_heat)
   !! - =2 Mechanical pumping power is calculated
   !! - =3 Mechanical pumping power is calculated using specified pressure drop
 

@@ -2222,7 +2222,7 @@ def init_heat_transport_variables():
     heat_transport_variables.f_p_blkt_coolant_pump_total_heat = 0.005
     heat_transport_variables.fpumpdiv = 0.005
     heat_transport_variables.f_p_fw_coolant_pump_total_heat = 0.005
-    heat_transport_variables.fpumpshld = 0.005
+    heat_transport_variables.f_p_shld_coolant_pump_total_heat = 0.005
     heat_transport_variables.helpow = 0.0
     heat_transport_variables.helpow_cryal = 0.0
     heat_transport_variables.p_coolant_pump_elec_total_mw = 0.0

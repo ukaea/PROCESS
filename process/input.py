@@ -816,7 +816,7 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "f_p_fw_coolant_pump_total_heat": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 0.2)),
-    "fpumpshld": InputVariable(
+    "f_p_shld_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "fq95_min": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),

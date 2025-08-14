@@ -823,7 +823,7 @@ class CCFE_HCPB(BlanketLibrary):
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat
                 * (
                     fwbs_variables.p_shld_nuclear_heat_mw
                     + fwbs_variables.p_cp_shield_nuclear_heat_mw
@@ -847,7 +847,7 @@ class CCFE_HCPB(BlanketLibrary):
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat
                 * (
                     fwbs_variables.p_shld_nuclear_heat_mw
                     + fwbs_variables.p_cp_shield_nuclear_heat_mw
@@ -902,7 +902,7 @@ class CCFE_HCPB(BlanketLibrary):
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat
                 * (
                     fwbs_variables.p_shld_nuclear_heat_mw
                     + fwbs_variables.p_cp_shield_nuclear_heat_mw
