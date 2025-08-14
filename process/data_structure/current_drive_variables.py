@@ -60,11 +60,11 @@ f_c_plasma_bootstrap_wong: float = None
 """Bootstrap current fraction, Wong et al model"""
 
 
-bscf_gi_I: float = None  # noqa: N816
+bscf_gi_i: float = None
 """Bootstrap current fraction, first Gi et al model"""
 
 
-bscf_gi_II: float = None  # noqa: N816
+bscf_gi_ii: float = None
 """Bootstrap current fraction, second Gi et al model"""
 
 
@@ -386,8 +386,8 @@ def init_current_drive_variables():
     global f_c_plasma_bootstrap_andrade
     global f_c_plasma_bootstrap_hoang
     global f_c_plasma_bootstrap_wong
-    global bscf_gi_I
-    global bscf_gi_II
+    global bscf_gi_i
+    global bscf_gi_ii
     global f_c_plasma_bootstrap_sugiyama_l
     global f_c_plasma_bootstrap_sugiyama_h
     global cboot
