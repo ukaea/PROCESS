@@ -263,7 +263,7 @@ OBS_VARS = {
     "inlet_temp": "temp_blkt_coolant_in",
     "outlet_temp": "temp_blkt_coolant_out",
     "blpressure": "pres_blkt_coolant",
-    "primary_pumping": "i_coolant_pumping",
+    "primary_pumping": "i_p_coolant_pumping",
     "secondary_cycle": "i_thermal_electric_conversion",
     "fwbsshape": "i_fw_blkt_vv_shape",
     "li6enrich": "f_blkt_li6_enrichment",

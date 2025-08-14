@@ -86,7 +86,7 @@ module fwbs_variables
   !! - =4 KIT HCLL model  # REMOVED, no longer usable
   !! - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
   !!                      'dual-coolant blanket' fractions (provided in this file).
-  !!                 -  please use i_coolant_pumping = 0 or 1.
+  !!                 -  please use i_p_coolant_pumping = 0 or 1.
 
   integer :: i_blkt_inboard
   !! switch for inboard blanket:
@@ -253,9 +253,9 @@ module fwbs_variables
   real(dp) :: m_blkt_beryllium
   !! mass of blanket - beryllium part [kg]
 
-  integer :: i_coolant_pumping
+  integer :: i_p_coolant_pumping
   !! Switch for pumping power for primary coolant (mechanical power only and peak first wall
-  !! temperature is only calculated if `i_coolant_pumping=2`):
+  !! temperature is only calculated if `i_p_coolant_pumping=2`):
   !!
   !! - =0 User sets pump power directly (p_blkt_coolant_pump_mw, p_fw_coolant_pump_mw, p_div_coolant_pump_mw, p_shld_coolant_pump_mw)
   !! - =1 User sets pump power as a fraction of thermal power (f_p_blkt_coolant_pump_total_heat, f_p_fw_coolant_pump_total_heat, f_p_div_coolant_pump_total_heat, f_p_shld_coolant_pump_total_heat)
@@ -511,7 +511,7 @@ module fwbs_variables
   !! -----------------------------------------------------
   !! BLANKET REFACTOR
   !! For DCLL, but to be used by all mods that share blanket library after testing.
-  !! Thermodynamic Model for i_coolant_pumping == 2
+  !! Thermodynamic Model for i_p_coolant_pumping == 2
   !! -----------------------------------------------------
 
   integer :: i_fw_blkt_shared_coolant

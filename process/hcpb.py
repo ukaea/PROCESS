@@ -804,10 +804,10 @@ class CCFE_HCPB(BlanketLibrary):
             1 - build_variables.a_fw_outboard / build_variables.a_fw_total
         )
 
-        # i_coolant_pumping == 0
+        # i_p_coolant_pumping == 0
         # User sets mechanical pumping power directly (primary_pumping_power)
         # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
-        if fwbs_variables.i_coolant_pumping == 1:
+        if fwbs_variables.i_p_coolant_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
             heat_transport_variables.p_fw_coolant_pump_mw = (
@@ -838,7 +838,7 @@ class CCFE_HCPB(BlanketLibrary):
                 )
             )
 
-        elif fwbs_variables.i_coolant_pumping == 2:
+        elif fwbs_variables.i_p_coolant_pumping == 2:
             # Calculate the required material properties of the FW and BB coolant.
             super().primary_coolant_properties(output=output)
             # Mechanical pumping power is calculated for first wall and blanket
@@ -862,7 +862,7 @@ class CCFE_HCPB(BlanketLibrary):
                 )
             )
 
-        elif fwbs_variables.i_coolant_pumping == 3:
+        elif fwbs_variables.i_p_coolant_pumping == 3:
             # Issue #503
             # Mechanical pumping power is calculated using specified pressure drop for
             # first wall and blanket circuit, including heat exchanger and pipes
@@ -873,13 +873,13 @@ class CCFE_HCPB(BlanketLibrary):
                 (primary_pumping_variables.gamma_he - 1)
                 / primary_pumping_variables.gamma_he
             )
-            # N.B. Currenlty i_coolant_pumping==3 uses seperate variables found in
+            # N.B. Currenlty i_p_coolant_pumping==3 uses seperate variables found in
             # primary_pumping_variables rather than fwbs_variables.
             # The pressure (p_he) is assumed to be the pressure at the
             # blanket inlet/pump oulet.
             # The pressures (found in fwbs_variables) for coolants using
-            # i_coolant_pumping==2 are assumed to be the pressure at the
-            # blanket oulet/pump inlet. The equation below is used for i_coolant_pumping==2:
+            # i_p_coolant_pumping==2 are assumed to be the pressure at the
+            # blanket oulet/pump inlet. The equation below is used for i_p_coolant_pumping==2:
             # pfactor = ((pressure+deltap)/pressure)**((gamma-1.0d0)/gamma)
             t_in_compressor = primary_pumping_variables.t_in_bb / pfactor
             dt_he = (
@@ -1509,7 +1509,7 @@ class CCFE_HCPB(BlanketLibrary):
             fwbs_variables.pres_blkt_coolant,
         )
 
-        if fwbs_variables.i_coolant_pumping != 3:
+        if fwbs_variables.i_p_coolant_pumping != 3:
             po.ovarre(
                 self.outfile,
                 "Mechanical pumping power for first wall (MW)",

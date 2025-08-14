@@ -741,7 +741,7 @@ class BlanketLibrary:
     def thermo_hydraulic_model_pressure_drop_calculations(self, output: bool):
         """
         Function that calculates the pressure drops for the thermo-hydraulic model
-        when i_coolant_pumping = 2.
+        when i_p_coolant_pumping = 2.
 
         Within are calculations necessary for the deltap_tot function but not required
         for other calculations within the thermo-hydraulic model as then they are just
@@ -1568,7 +1568,7 @@ class BlanketLibrary:
     def thermo_hydraulic_model(self, output: bool):
         """
         Thermo-hydraulic model for first wall and blanket
-        ONLY CALLED if i_coolant_pumping = 2 or 3
+        ONLY CALLED if i_p_coolant_pumping = 2 or 3
 
         Calculations for detailed powerflow model i_thermal_electric_conversion > 1
 
@@ -1922,7 +1922,7 @@ class BlanketLibrary:
         ########################################################
 
         # load in pressures if primary pumping == 2
-        if fwbs_variables.i_coolant_pumping == 2:
+        if fwbs_variables.i_p_coolant_pumping == 2:
             self.set_blanket_module_geometry()
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
@@ -1945,12 +1945,12 @@ class BlanketLibrary:
         # If FW and BB have the same coolant...
         if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Total pressure drop in the first wall/blanket  (Pa)
-            if fwbs_variables.i_coolant_pumping == 2:
+            if fwbs_variables.i_p_coolant_pumping == 2:
                 if fwbs_variables.i_blkt_inboard == 1:
                     deltap_fw_blkt = deltap_fwi + deltap_bli + deltap_fwo + deltap_blo
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_fw_blkt = deltap_fwi + deltap_fwo + deltap_blo
-            elif fwbs_variables.i_coolant_pumping == 3:
+            elif fwbs_variables.i_p_coolant_pumping == 3:
                 deltap_fw_blkt = primary_pumping_variables.dp_fw_blkt
             # Total coolant mass flow rate in the first wall/blanket (kg/s)
             blanket_library.mftotal = (
@@ -1978,7 +1978,7 @@ class BlanketLibrary:
 
         # If FW and BB have different coolants...
         elif fwbs_variables.i_fw_blkt_shared_coolant == 1:
-            if fwbs_variables.i_coolant_pumping == 2:
+            if fwbs_variables.i_p_coolant_pumping == 2:
                 # Total pressure drop in the first wall (Pa)
                 deltap_fw = deltap_fwi + deltap_fwo
 
@@ -1987,7 +1987,7 @@ class BlanketLibrary:
                     deltap_blkt = deltap_bli + deltap_blo
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_blkt = deltap_blo
-            elif fwbs_variables.i_coolant_pumping == 3:
+            elif fwbs_variables.i_p_coolant_pumping == 3:
                 deltap_fw = primary_pumping_variables.dp_fw
                 deltap_blkt = primary_pumping_variables.dp_blkt
 
@@ -2045,12 +2045,12 @@ class BlanketLibrary:
         # If the blanket has a liquid metal breeder...
         if fwbs_variables.i_blkt_dual_coolant > 0:
             # Total pressure drop in the blanket (Pa)
-            if fwbs_variables.i_coolant_pumping == 2:
+            if fwbs_variables.i_p_coolant_pumping == 2:
                 if fwbs_variables.i_blkt_inboard == 1:
                     deltap_bl_liq = deltap_bli_liq + deltap_blo_liq
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_bl_liq = deltap_blo_liq
-            elif fwbs_variables.i_coolant_pumping == 3:
+            elif fwbs_variables.i_p_coolant_pumping == 3:
                 deltap_bl_liq = primary_pumping_variables.dp_liq
             # Total liquid metal breeder/coolant mass flow rate in the blanket (kg/s)
             fwbs_variables.mfblkt_liq = (

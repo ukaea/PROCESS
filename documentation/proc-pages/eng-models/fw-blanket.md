@@ -53,7 +53,7 @@ efficiency) proceeds.
 ## Thermo-hydraulic model for first wall and blanket
 
 !!! Note "Note" 
-    This is called for i_coolant_pumping = 2 and 3
+    This is called for i_p_coolant_pumping = 2 and 3
 
 Summary of key variables and switches:  
 

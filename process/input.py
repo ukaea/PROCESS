@@ -1895,7 +1895,7 @@ INPUT_VARIABLES = {
     "ntype": InputVariable(data_structure.vacuum_variables, int, choices=[0, 1]),
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
-    "i_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
+    "i_p_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
     "reinke_mode": InputVariable(data_structure.reinke_variables, int, choices=[0, 1]),
     "scan_dim": InputVariable(fortran.scan_module, int, range=(1, 2)),
     "i_thermal_electric_conversion": InputVariable(

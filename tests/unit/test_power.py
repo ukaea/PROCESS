@@ -2114,7 +2114,7 @@ class Power2Param(NamedTuple):
 
     p_div_nuclear_heat_total_mw: Any = None
 
-    i_coolant_pumping: Any = None
+    i_p_coolant_pumping: Any = None
 
     p_tf_nuclear_heat_mw: Any = None
 
@@ -2302,7 +2302,7 @@ class Power2Param(NamedTuple):
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.69222981118057,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_tf_nuclear_heat_mw=0.044178296011112193,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.3609360176065353,
@@ -2404,7 +2404,7 @@ class Power2Param(NamedTuple):
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.6352084763719,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_tf_nuclear_heat_mw=0.045535131445547841,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.4036212304705389,
@@ -2574,7 +2574,7 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping
+        fwbs_variables, "i_p_coolant_pumping", power2param.i_p_coolant_pumping
     )
 
     monkeypatch.setattr(

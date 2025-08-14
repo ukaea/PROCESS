@@ -497,7 +497,7 @@ fimp(14) = 0.000005
 ipowerflow = 0
 
 * Switch for pumping power for primary coolant
-i_coolant_pumping = 3
+i_p_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
 eta_coolant_pump_electric = 0.87

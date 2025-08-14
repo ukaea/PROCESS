@@ -1,33 +1,33 @@
 gamma_he: float = None
-"""ratio of specific heats for helium (`i_coolant_pumping=3`)"""
+"""ratio of specific heats for helium (`i_p_coolant_pumping=3`)"""
 
 t_in_bb: float = None
-"""temperature in FW and blanket coolant at blanket entrance (`i_coolant_pumping=3`) [K]"""
+"""temperature in FW and blanket coolant at blanket entrance (`i_p_coolant_pumping=3`) [K]"""
 
 t_out_bb: float = None
-"""temperature in FW and blanket coolant at blanket exit (`i_coolant_pumping=3`) [K]"""
+"""temperature in FW and blanket coolant at blanket exit (`i_p_coolant_pumping=3`) [K]"""
 
 p_he: float = None
-"""pressure in FW and blanket coolant at pump exit (`i_coolant_pumping=3`) [Pa]"""
+"""pressure in FW and blanket coolant at pump exit (`i_p_coolant_pumping=3`) [Pa]"""
 
 dp_he: float = None
-"""pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]"""
+"""pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_p_coolant_pumping=3`) [Pa]"""
 
 dp_fw_blkt: float = None
-"""pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]"""
+"""pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_p_coolant_pumping=3`) [Pa]"""
 
 dp_fw: float = None
-"""pressure drop in FW coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]"""
+"""pressure drop in FW coolant including heat exchanger and pipes (`i_p_coolant_pumping=3`) [Pa]"""
 
 dp_blkt: float = None
-"""pressure drop in blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]"""
+"""pressure drop in blanket coolant including heat exchanger and pipes (`i_p_coolant_pumping=3`) [Pa]"""
 
 dp_liq: float = None
-"""pressure drop in liquid metal blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa]"""
+"""pressure drop in liquid metal blanket coolant including heat exchanger and pipes (`i_p_coolant_pumping=3`) [Pa]"""
 
 p_fw_blkt_coolant_pump_mw: float = None
 """mechanical pumping power for FW and blanket including heat exchanger and
-pipes (`i_coolant_pumping=3`) [MW]
+pipes (`i_p_coolant_pumping=3`) [MW]
 """
 
 f_p_fw_blkt_pump: float = None

@@ -2183,9 +2183,9 @@ i_fw_blkt_vv_shape = 1
 * DESCRIPTION:   FW, Blanket, Shield & VV Shape (1: D-shaped (Cylinder Inboard & Ellipse Outboard))
 * JUSTIFICATION: Unknown, tapered centrepost may justify ellises (option 2)
 
-i_coolant_pumping = 3
+i_p_coolant_pumping = 3
 * DESCRIPTION:   Switch for Pumping Power for Primary Coolant (mechanical power only and peak first wall
-*   temperature is only calculated if i_coolant_pumping=2):
+*   temperature is only calculated if i_p_coolant_pumping=2):
 *    =0 User sets pump power directly (p_blkt_coolant_pump_mw, p_fw_coolant_pump_mw, p_div_coolant_pump_mw, p_shld_coolant_pump_mw)
 *    =1 User sets pump power as a fraction of thermal power (f_p_blkt_coolant_pump_total_heat, f_p_fw_coolant_pump_total_heat, f_p_div_coolant_pump_total_heat, f_p_shld_coolant_pump_total_heat)
 *    =2 Mechanical pumping power is calculated
@@ -2203,37 +2203,37 @@ i_fw_blkt_shared_coolant = 0
 
 *p_blkt_coolant_pump_mw =  
 * DESCRIPTION:   Blanket coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
+* JUSTIFICATION: Not used as, i_p_coolant_pumping is not = 0
 
 *p_div_coolant_pump_mw = 
 * DESCRIPTION:   Divertor coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
+* JUSTIFICATION: Not used as, i_p_coolant_pumping is not = 0
 
 *p_fw_coolant_pump_mw = 
 * DESCRIPTION:   First wall coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
+* JUSTIFICATION: Not used as, i_p_coolant_pumping is not = 0
 
 *p_shld_coolant_pump_mw = 
 * DESCRIPTION:   Shield and vacuum vessel coolant mechanical pumping power (MW)
-* JUSTIFICATION: Not used as, i_coolant_pumping is not = 0
+* JUSTIFICATION: Not used as, i_p_coolant_pumping is not = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *f_p_fw_coolant_pump_total_heat = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total first wall thermal power required to drive the FW coolant
-* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_p_coolant_pumping == 1)
 
 *f_p_shld_coolant_pump_total_heat = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total shield thermal power required to drive the shield coolant
-* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_p_coolant_pumping == 1)
 
 *f_p_blkt_coolant_pump_total_heat = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total blanket thermal power required to drive the blanket
-* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_p_coolant_pumping == 1)
 
 *f_p_div_coolant_pump_total_heat = 0.025 * 0.01 * 0.005
 * DESCRIPTION:   fraction of total divertor thermal power required to drive the divertor
-* JUSTIFICATION: Liquid metal pumping power (if i_coolant_pumping == 1)
+* JUSTIFICATION: Liquid metal pumping power (if i_p_coolant_pumping == 1)
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2321,7 +2321,7 @@ i_blanket_type = 1
 * =4 KIT HCLL model
 * =5 DCLL model -  no nutronics model included (in development) please check/choose values for
 *                  'dual-coolant blanket' fractions (provided in this file).
-*                  please use i_coolant_pumping = 0 or 1.
+*                  please use i_p_coolant_pumping = 0 or 1.
 * JUSTIFICATION: Assuming DCLL blanket
 
 i_blkt_inboard = 0
@@ -2424,15 +2424,15 @@ inuclear = 0
 * JUSTIFICATION: Not yet set
 
 *t_in_bb = 
-* DESCRIPTION:   Temperature in FW and blanket coolant at blanket entrance (`i_coolant_pumping=3`) [K] (Default value in code 573.13D0)
+* DESCRIPTION:   Temperature in FW and blanket coolant at blanket entrance (`i_p_coolant_pumping=3`) [K] (Default value in code 573.13D0)
 * JUSTIFICATION: Design Spec
 
 *t_out_bb = 
-* DESCRIPTION:   Temperature in FW and blanket coolant at blanket exit (`i_coolant_pumping=3`) [K] (Default value in code 773.13D0)
+* DESCRIPTION:   Temperature in FW and blanket coolant at blanket exit (`i_p_coolant_pumping=3`) [K] (Default value in code 773.13D0)
 * JUSTIFICATION: Design Spec
 
 *dp_he = 
-* DESCRIPTION:   Pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_coolant_pumping=3`) [Pa] (Default value in code 5.5D5)
+* DESCRIPTION:   Pressure drop in FW and blanket coolant including heat exchanger and pipes (`i_p_coolant_pumping=3`) [Pa] (Default value in code 5.5D5)
 * JUSTIFICATION: Design Spec
 
 *p_he = 

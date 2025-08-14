@@ -300,11 +300,11 @@ class DCLL(BlanketLibrary):
     def dcll_power_and_heating(self, output: bool):
         # Mechanical Pumping
 
-        # For i_coolant_pumping == 0:
+        # For i_p_coolant_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
         # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
 
-        if fwbs_variables.i_coolant_pumping == 1:
+        if fwbs_variables.i_p_coolant_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
             heat_transport_variables.p_fw_coolant_pump_mw = (
@@ -334,7 +334,7 @@ class DCLL(BlanketLibrary):
                 )
             )
 
-        elif fwbs_variables.i_coolant_pumping in [2, 3]:
+        elif fwbs_variables.i_p_coolant_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
             super().thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
@@ -355,8 +355,8 @@ class DCLL(BlanketLibrary):
         if output:
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
 
-            if (fwbs_variables.i_coolant_pumping != 2) and (
-                fwbs_variables.i_coolant_pumping != 3
+            if (fwbs_variables.i_p_coolant_pumping != 2) and (
+                fwbs_variables.i_p_coolant_pumping != 3
             ):
                 po.ovarre(
                     self.outfile,

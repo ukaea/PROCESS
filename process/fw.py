@@ -692,7 +692,7 @@ def init_fwbs_variables():
     fwbs_variables.wallpf = 1.21
     fwbs_variables.whtblbreed = 0.0
     fwbs_variables.m_blkt_beryllium = 0.0
-    fwbs_variables.i_coolant_pumping = 2
+    fwbs_variables.i_p_coolant_pumping = 2
     fwbs_variables.i_shield_mat = 0
     fwbs_variables.i_thermal_electric_conversion = 0
     fwbs_variables.secondary_cycle_liq = 4

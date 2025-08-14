@@ -1460,7 +1460,7 @@ class Stellarator:
                     / build_variables.a_fw_total
                 )
 
-                #  Simple blanket model (fwbs_variables.i_coolant_pumping = 0 or 1) is assumed for stellarators
+                #  Simple blanket model (fwbs_variables.i_p_coolant_pumping = 0 or 1) is assumed for stellarators
 
                 #  The power deposited in the first wall, breeder zone and shield is
                 #  calculated according to their dimensions and materials assuming
@@ -1503,10 +1503,10 @@ class Stellarator:
 
                 #  First wall and Blanket pumping power (MW)
 
-                if fwbs_variables.i_coolant_pumping == 0:
+                if fwbs_variables.i_p_coolant_pumping == 0:
                     #    Use input
                     pass
-                elif fwbs_variables.i_coolant_pumping == 1:
+                elif fwbs_variables.i_p_coolant_pumping == 1:
                     heat_transport_variables.p_fw_coolant_pump_mw = (
                         heat_transport_variables.f_p_fw_coolant_pump_total_heat
                         * (
@@ -1526,7 +1526,7 @@ class Stellarator:
                     )
                 else:
                     raise ProcessValueError(
-                        "i_coolant_pumping = 0 or 1 only for stellarator"
+                        "i_p_coolant_pumping = 0 or 1 only for stellarator"
                     )
 
                 fwbs_variables.p_blkt_multiplication_mw = (
@@ -1555,7 +1555,7 @@ class Stellarator:
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
-                #  simplified method as the first wall and breeder zone when fwbs_variables.i_coolant_pumping = 1.
+                #  simplified method as the first wall and breeder zone when fwbs_variables.i_p_coolant_pumping = 1.
                 #  i.e. the pumping power is a fraction of the total thermal power deposited in the
                 #  coolant.
 
@@ -1599,7 +1599,7 @@ class Stellarator:
                 #     htpmw_i = fpump_i*C
                 #  where C is the non-pumping thermal power deposited in the coolant
 
-                if fwbs_variables.i_coolant_pumping == 1:
+                if fwbs_variables.i_p_coolant_pumping == 1:
                     #  Shield pumping power (MW)
                     heat_transport_variables.p_shld_coolant_pump_mw = (
                         heat_transport_variables.f_p_shld_coolant_pump_total_heat
