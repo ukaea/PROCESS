@@ -1361,9 +1361,9 @@ class CurrentDrive:
                 current_drive_variables.f_p_beam_shine_through = f_p_beam_shine_through
 
             # Calculate eta_cd_hcd_secondary based on the selected model
-            if current_drive_variables.i_hcd_secondary.item() in hcd_models:
+            if current_drive_variables.i_hcd_secondary in hcd_models:
                 current_drive_variables.eta_cd_hcd_secondary = hcd_models[
-                    current_drive_variables.i_hcd_secondary.item()
+                    current_drive_variables.i_hcd_secondary
                 ]()
             elif current_drive_variables.i_hcd_secondary != 0:
                 raise ProcessValueError(
@@ -1371,9 +1371,9 @@ class CurrentDrive:
                 )
 
             # Calculate eta_cd_hcd_primary based on the selected model
-            if current_drive_variables.i_hcd_primary.item() in hcd_models:
+            if current_drive_variables.i_hcd_primary in hcd_models:
                 current_drive_variables.eta_cd_hcd_primary = hcd_models[
-                    current_drive_variables.i_hcd_primary.item()
+                    current_drive_variables.i_hcd_primary
                 ]()
             else:
                 raise ProcessValueError(
