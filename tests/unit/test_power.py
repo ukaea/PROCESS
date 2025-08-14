@@ -6,6 +6,7 @@ import pytest
 from process.data_structure import (
     build_variables,
     buildings_variables,
+    constraint_variables,
     cost_variables,
     pf_power_variables,
     pfcoil_variables,
@@ -15,7 +16,6 @@ from process.data_structure import (
 )
 from process.data_structure import primary_pumping_variables as ppv
 from process.fortran import (
-    constraint_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
