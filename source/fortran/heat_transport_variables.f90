@@ -59,7 +59,7 @@ module heat_transport_variables
     !! fraction of total divertor thermal power required to drive the divertor
     !! coolant pumps (default assumes water coolant)
 
-    real(dp) :: fpumpfw
+    real(dp) :: f_p_fw_coolant_pump_total_heat
     !! fraction of total first wall thermal power required to drive the FW coolant
     !! pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 

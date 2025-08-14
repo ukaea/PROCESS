@@ -2156,7 +2156,7 @@ class Power2Param(NamedTuple):
 
     p_plant_primary_heat_mw: Any = None
 
-    fpumpfw: Any = None
+    f_p_fw_coolant_pump_total_heat: Any = None
 
     p_plant_electric_base_total_mw: Any = None
 
@@ -2323,7 +2323,7 @@ class Power2Param(NamedTuple):
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=0,
             p_plant_primary_heat_mw=2620.2218111502593,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_plant_electric_base_total_mw=62.23714391536082,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
@@ -2425,7 +2425,7 @@ class Power2Param(NamedTuple):
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=489.9198817019128,
             p_plant_primary_heat_mw=2619.4223856129224,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_plant_electric_base_total_mw=62.237143915360818,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
@@ -2669,7 +2669,7 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_plant_primary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
+    monkeypatch.setattr(heat_transport_variables, "f_p_fw_coolant_pump_total_heat", power2param.f_p_fw_coolant_pump_total_heat)
 
     monkeypatch.setattr(
         heat_transport_variables,

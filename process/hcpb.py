@@ -811,7 +811,7 @@ class CCFE_HCPB(BlanketLibrary):
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
             heat_transport_variables.p_fw_coolant_pump_mw = (
-                heat_transport_variables.fpumpfw
+                heat_transport_variables.f_p_fw_coolant_pump_total_heat
                 * (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.psurffwi

@@ -1251,7 +1251,7 @@ class Stellarator:
                 )
 
                 heat_transport_variables.p_fw_coolant_pump_mw = (
-                    heat_transport_variables.fpumpfw
+                    heat_transport_variables.f_p_fw_coolant_pump_total_heat
                     * (
                         fwbs_variables.p_fw_nuclear_heat_total_mw
                         + fwbs_variables.p_fw_rad_total_mw
@@ -1508,7 +1508,7 @@ class Stellarator:
                     pass
                 elif fwbs_variables.i_coolant_pumping == 1:
                     heat_transport_variables.p_fw_coolant_pump_mw = (
-                        heat_transport_variables.fpumpfw
+                        heat_transport_variables.f_p_fw_coolant_pump_total_heat
                         * (
                             p_fw_inboard_nuclear_heat_mw
                             + p_fw_outboard_nuclear_heat_mw
