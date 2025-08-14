@@ -469,6 +469,8 @@ def init_current_drive_variables():
     f_c_plasma_bootstrap_andrade = 0.0
     f_c_plasma_bootstrap_hoang = 0.0
     f_c_plasma_bootstrap_wong = 0.0
+    bscf_gi_i = 0.0
+    bscf_gi_ii = 0.0
     f_c_plasma_bootstrap_sugiyama_l = 0.0
     f_c_plasma_bootstrap_sugiyama_h = 0.0
     cboot = 1.0
