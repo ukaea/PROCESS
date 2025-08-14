@@ -1,4 +1,5 @@
 from . import (
+    blanket_library,
     build_variables,
     buildings_variables,
     constraint_variables,
@@ -28,6 +29,7 @@ from . import (
 )
 
 __all__ = [
+    "blanket_library",
     "build_variables",
     "buildings_variables",
     "constraint_variables",
