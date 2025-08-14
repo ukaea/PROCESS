@@ -25,6 +25,7 @@ from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
 )
 from process.data_structure.neoclassics_variables import init_neoclassics_variables
+from process.data_structure.pf_power_variables import init_pf_power_variables
 from process.data_structure.pfcoil_variables import (
     init_pfcoil_module,
     init_pfcoil_variables,
@@ -50,7 +51,7 @@ from process.physics import (
     init_physics_module,
     init_physics_variables,
 )
-from process.power import init_heat_transport_variables, init_pf_power_variables
+from process.power import init_heat_transport_variables
 from process.scan import init_scan_module
 from process.stellarator import stinit
 from process.superconducting_tf_coil import init_sctfcoil_module

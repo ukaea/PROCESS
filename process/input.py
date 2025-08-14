@@ -1116,7 +1116,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(100000.0, 500000000.0)
     ),
     "maxpoloidalpower": InputVariable(
-        fortran.pf_power_variables, float, range=(0.0, 2000.0)
+        data_structure.pf_power_variables, float, range=(0.0, 2000.0)
     ),
     "pflux_fw_rad_max": InputVariable(
         fortran.constraint_variables, float, range=(0.1, 10.0)
@@ -1948,7 +1948,7 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, int, choices=[0, 1]
     ),
     "i_pf_energy_storage_source": InputVariable(
-        fortran.pf_power_variables, int, range=(1, 3)
+        data_structure.pf_power_variables, int, range=(1, 3)
     ),
     "istell": InputVariable(data_structure.stellarator_variables, int, range=(0, 6)),
     "isthtr": InputVariable(data_structure.stellarator_variables, int, range=(1, 3)),

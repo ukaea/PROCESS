@@ -1654,14 +1654,14 @@ def constrain_equation_66():
     peakpoloidalpower: Peak absolute rate of change of stored energy in poloidal field (MW) (11/01/16)
     """
     cc = (
-        fortran.pf_power_variables.peakpoloidalpower
-        / fortran.pf_power_variables.maxpoloidalpower
+        data_structure.pf_power_variables.peakpoloidalpower
+        / data_structure.pf_power_variables.maxpoloidalpower
         - 1.0 * fortran.constraint_variables.fpoloidalpower
     )
     return ConstraintResult(
         cc,
-        fortran.pf_power_variables.maxpoloidalpower,
-        fortran.pf_power_variables.maxpoloidalpower * cc,
+        data_structure.pf_power_variables.maxpoloidalpower,
+        data_structure.pf_power_variables.maxpoloidalpower * cc,
     )
 
 
