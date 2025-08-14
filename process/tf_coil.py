@@ -5397,7 +5397,7 @@ def eyoung_series(eyoung_j_1, l_1, poisson_j_perp_1, eyoung_j_2, l_2, poisson_j_
         eyoung_j_3 = (l_1 + l_2) / (l_1 / eyoung_j_1 + l_2 / eyoung_j_2)
         l_3 = l_1 + l_2
 
-    eyoung_j_3 = np.array(eyoung_j_3)
+    eyoung_j_3 = eyoung_j_3
     poisson_j_perp_3 = np.array(poisson_j_perp_3)
 
     return eyoung_j_3, l_3, poisson_j_perp_3
