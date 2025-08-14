@@ -78,7 +78,6 @@ LIST(APPEND PROCESS_SRCS
     physics_variables.f90
     heat_transport_variables.f90
     constants.f90
-    current_drive_variables.f90
     output.f90
     init_module.f90
     error_handling.f90

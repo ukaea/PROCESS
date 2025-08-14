@@ -12,13 +12,13 @@ import process.process_output as process_output
 from process import data_structure
 from process.blanket_library import init_blanket_library
 from process.constraints import ConstraintManager
-from process.current_drive import init_current_drive_variables
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
+from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.dcll_variables import init_dcll_module
 from process.data_structure.divertor_variables import init_divertor_variables
 from process.data_structure.ife_variables import init_ife_variables
@@ -1054,10 +1054,10 @@ def check_process(inputs):  # noqa: ARG001
         data_structure.pfcoil_variables.rho_pf_coil = 0.0
 
     # If there is no NBI, then hot beam density should be zero
-    if fortran.current_drive_variables.i_hcd_calculations == 1:
+    if data_structure.current_drive_variables.i_hcd_calculations == 1:
         if (
-            fortran.current_drive_variables.i_hcd_primary != 5
-            and fortran.current_drive_variables.i_hcd_primary != 8
+            data_structure.current_drive_variables.i_hcd_primary != 5
+            and data_structure.current_drive_variables.i_hcd_primary != 8
         ):
             fortran.physics_variables.f_nd_beam_electron = 0.0
     else:

@@ -11,6 +11,7 @@ from process.data_structure import (
     constraint_variables,
     cost_variables,
     cs_fatigue_variables,
+    current_drive_variables,
     divertor_variables,
     impurity_radiation_module,
     pfcoil_variables,
@@ -20,7 +21,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    current_drive_variables,
     error_handling,
     fwbs_variables,
     global_variables,

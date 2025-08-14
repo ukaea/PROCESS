@@ -13,10 +13,9 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import impurity_radiation_module
+from process.data_structure import current_drive_variables, impurity_radiation_module
 from process.fortran import (
     constants,
-    current_drive_variables,
     physics_module,
     physics_variables,
 )

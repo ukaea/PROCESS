@@ -2,10 +2,13 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.data_structure import build_variables, dcll_variables
+from process.data_structure import (
+    build_variables,
+    current_drive_variables,
+    dcll_variables,
+)
 from process.dcll import DCLL
 from process.fortran import (
-    current_drive_variables,
     fwbs_variables,
     physics_variables,
 )

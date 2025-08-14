@@ -17,6 +17,7 @@ from process import (
 from process.data_structure import (
     build_variables,
     constraint_variables,
+    current_drive_variables,
     divertor_variables,
     impurity_radiation_module,
     pulse_variables,
@@ -27,7 +28,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    current_drive_variables,
     error_handling,
     fwbs_variables,
     numerics,
@@ -1982,7 +1982,7 @@ class Physics:
                 elongation=physics_variables.kappa,
             )
         )
-        current_drive_variables.bscf_gi_I = (
+        current_drive_variables.bscf_gi_i = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_I(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -1995,7 +1995,7 @@ class Physics:
             )
         )
 
-        current_drive_variables.bscf_gi_II = (
+        current_drive_variables.bscf_gi_ii = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_II(
                 beta_poloidal=physics_variables.beta_poloidal,
@@ -2046,8 +2046,8 @@ class Physics:
             7: current_drive_variables.f_c_plasma_bootstrap_andrade,
             8: current_drive_variables.f_c_plasma_bootstrap_hoang,
             9: current_drive_variables.f_c_plasma_bootstrap_wong,
-            10: current_drive_variables.bscf_gi_I,
-            11: current_drive_variables.bscf_gi_II,
+            10: current_drive_variables.bscf_gi_i,
+            11: current_drive_variables.bscf_gi_ii,
             12: current_drive_variables.f_c_plasma_bootstrap_sugiyama_l,
             13: current_drive_variables.f_c_plasma_bootstrap_sugiyama_h,
         }
@@ -6111,15 +6111,15 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Gi I)",
-                "(bscf_gi_I)",
-                current_drive_variables.bscf_gi_I,
+                "(bscf_gi_i)",
+                current_drive_variables.bscf_gi_i,
                 "OP ",
             )
             po.ovarrf(
                 self.outfile,
                 "Bootstrap fraction (Gi II)",
-                "(bscf_gi_II)",
-                current_drive_variables.bscf_gi_II,
+                "(bscf_gi_ii)",
+                current_drive_variables.bscf_gi_ii,
                 "OP ",
             )
             po.ovarrf(

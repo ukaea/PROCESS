@@ -8,6 +8,7 @@ from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
     cost_variables,
+    current_drive_variables,
     divertor_variables,
     primary_pumping_variables,
     tfcoil_variables,
@@ -16,7 +17,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     ccfe_hcpb_module,
     constants,
-    current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
