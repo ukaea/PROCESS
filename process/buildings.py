@@ -7,13 +7,13 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    current_drive_variables,
     divertor_variables,
     pfcoil_variables,
     tfcoil_variables,
 )
 from process.fortran import (
     constants,
-    current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,

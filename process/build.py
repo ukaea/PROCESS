@@ -7,6 +7,7 @@ from process.blanket_library import dshellarea, eshellarea
 from process.data_structure import (
     build_variables,
     buildings_variables,
+    current_drive_variables,
     divertor_variables,
     pfcoil_variables,
     tfcoil_variables,
@@ -14,7 +15,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    current_drive_variables,
     error_handling,
     fwbs_variables,
     numerics,

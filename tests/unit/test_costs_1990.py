@@ -12,6 +12,7 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    current_drive_variables,
     divertor_variables,
     ife_variables,
     pf_power_variables,
@@ -22,13 +23,12 @@ from process.data_structure import (
     times_variables,
     vacuum_variables,
 )
+from process.fortran import error_handling as eh
 from process.fortran import (
-    current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
 )
-from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fv
 from process.fortran import heat_transport_variables as htv
 

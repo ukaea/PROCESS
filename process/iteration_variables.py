@@ -50,7 +50,10 @@ ITERATION_VARIABLES = {
     9: IterationVariable("fdene", data_structure.constraint_variables, 0.001, 1.0),
     10: IterationVariable("hfact", fortran.physics_variables, 0.1, 3.0),
     11: IterationVariable(
-        "p_hcd_primary_extra_heat_mw", fortran.current_drive_variables, 1.0e-3, 1.0e3
+        "p_hcd_primary_extra_heat_mw",
+        data_structure.current_drive_variables,
+        1.0e-3,
+        1.0e3,
     ),
     12: IterationVariable("oacdcp", data_structure.tfcoil_variables, 1.0e5, 1.50e8),
     13: IterationVariable("dr_tf_inboard", data_structure.build_variables, 0.1, 5.0),
@@ -65,7 +68,9 @@ ITERATION_VARIABLES = {
         "t_between_pulse", data_structure.times_variables, 0.1, 1.0e8
     ),
     18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
-    19: IterationVariable("e_beam_kev", fortran.current_drive_variables, 1.0, 1.0e6),
+    19: IterationVariable(
+        "e_beam_kev", data_structure.current_drive_variables, 1.0, 1.0e6
+    ),
     20: IterationVariable(
         "temp_cp_average", data_structure.tfcoil_variables, 40.00, 3.0e2
     ),
@@ -118,7 +123,7 @@ ITERATION_VARIABLES = {
     46: IterationVariable(
         "fp_hcd_injected_max", data_structure.constraint_variables, 0.001, 1.0
     ),
-    47: IterationVariable("feffcd", fortran.current_drive_variables, 0.001, 1.0),
+    47: IterationVariable("feffcd", data_structure.current_drive_variables, 0.001, 1.0),
     48: IterationVariable("fstrcase", data_structure.constraint_variables, 0.001, 1.0),
     49: IterationVariable("fstrcond", data_structure.constraint_variables, 0.001, 1.0),
     50: IterationVariable("fiooic", data_structure.constraint_variables, 0.001, 1.0),

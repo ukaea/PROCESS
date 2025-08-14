@@ -203,7 +203,7 @@ def constraint_equation_2():
             * fortran.physics_variables.pden_alpha_total_mw
             + fortran.physics_variables.pden_non_alpha_charged_mw
             + fortran.physics_variables.pden_plasma_ohmic_mw
-            + fortran.current_drive_variables.p_hcd_injected_total_mw
+            + data_structure.current_drive_variables.p_hcd_injected_total_mw
             / fortran.physics_variables.vol_plasma
         )
     else:
@@ -242,7 +242,7 @@ def constraint_equation_3():
         ) / (
             fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_ions_mw
-            + fortran.current_drive_variables.p_hcd_injected_ions_mw
+            + data_structure.current_drive_variables.p_hcd_injected_ions_mw
             / fortran.physics_variables.vol_plasma
         )
         return ConstraintResult(
@@ -250,14 +250,14 @@ def constraint_equation_3():
             (
                 fortran.physics_variables.f_p_alpha_plasma_deposited
                 * fortran.physics_variables.f_pden_alpha_ions_mw
-                + fortran.current_drive_variables.p_hcd_injected_ions_mw
+                + data_structure.current_drive_variables.p_hcd_injected_ions_mw
                 / fortran.physics_variables.vol_plasma
             )
             * (1.0 - cc),
             (
                 fortran.physics_variables.f_p_alpha_plasma_deposited
                 * fortran.physics_variables.f_pden_alpha_ions_mw
-                + fortran.current_drive_variables.p_hcd_injected_ions_mw
+                + data_structure.current_drive_variables.p_hcd_injected_ions_mw
                 / fortran.physics_variables.vol_plasma
             )
             * cc,
@@ -327,7 +327,7 @@ def constraint_equation_4():
             fortran.physics_variables.f_p_alpha_plasma_deposited
             * fortran.physics_variables.f_pden_alpha_electron_mw
             + fortran.physics_variables.pden_ion_electron_equilibration_mw
-            + fortran.current_drive_variables.p_hcd_injected_electrons_mw
+            + data_structure.current_drive_variables.p_hcd_injected_electrons_mw
             / fortran.physics_variables.vol_plasma
         )
     else:
@@ -597,13 +597,14 @@ def constraint_equation_14():
     """
     cc = (
         1.0
-        - fortran.current_drive_variables.n_beam_decay_lengths_core
-        / fortran.current_drive_variables.n_beam_decay_lengths_core_required
+        - data_structure.current_drive_variables.n_beam_decay_lengths_core
+        / data_structure.current_drive_variables.n_beam_decay_lengths_core_required
     )
     return ConstraintResult(
         cc,
-        fortran.current_drive_variables.n_beam_decay_lengths_core_required * (1.0 - cc),
-        fortran.current_drive_variables.n_beam_decay_lengths_core_required * cc,
+        data_structure.current_drive_variables.n_beam_decay_lengths_core_required
+        * (1.0 - cc),
+        data_structure.current_drive_variables.n_beam_decay_lengths_core_required * cc,
     )
 
 
@@ -623,7 +624,7 @@ def constraint_equation_17():
     """
     # Maximum possible power/vol_plasma that can be radiated (local)
     pradmaxpv = (
-        fortran.current_drive_variables.p_hcd_injected_total_mw
+        data_structure.current_drive_variables.p_hcd_injected_total_mw
         / fortran.physics_variables.vol_plasma
         + fortran.physics_variables.pden_alpha_total_mw
         * fortran.physics_variables.f_p_alpha_plasma_deposited
@@ -695,14 +696,14 @@ def constraint_equation_20():
     radius_beam_tangency: neutral beam centreline tangency radius (m)
     """
     cc = (
-        fortran.current_drive_variables.radius_beam_tangency
-        / fortran.current_drive_variables.radius_beam_tangency_max
+        data_structure.current_drive_variables.radius_beam_tangency
+        / data_structure.current_drive_variables.radius_beam_tangency_max
         - 1.0 * data_structure.constraint_variables.fradius_beam_tangency
     )
     return ConstraintResult(
         cc,
-        fortran.current_drive_variables.radius_beam_tangency_max * (1.0 - cc),
-        fortran.current_drive_variables.radius_beam_tangency * cc,
+        data_structure.current_drive_variables.radius_beam_tangency_max * (1.0 - cc),
+        data_structure.current_drive_variables.radius_beam_tangency * cc,
     )
 
 
@@ -939,7 +940,7 @@ def constraint_equation_28():
     cc = (
         1.0
         - data_structure.constraint_variables.fbig_q_plasma_min
-        * fortran.current_drive_variables.big_q_plasma
+        * data_structure.current_drive_variables.big_q_plasma
         / data_structure.constraint_variables.big_q_plasma_min
     )
     return ConstraintResult(
@@ -980,12 +981,12 @@ def constraint_equation_30():
     p_hcd_injected_max: Maximum allowable value for injected power (MW)
     """
     return ConstraintResult(
-        fortran.current_drive_variables.p_hcd_injected_total_mw
-        / fortran.current_drive_variables.p_hcd_injected_max
+        data_structure.current_drive_variables.p_hcd_injected_total_mw
+        / data_structure.current_drive_variables.p_hcd_injected_max
         - 1.0 * data_structure.constraint_variables.fp_hcd_injected_max,
-        fortran.current_drive_variables.p_hcd_injected_max,
-        fortran.current_drive_variables.p_hcd_injected_max
-        - fortran.current_drive_variables.p_hcd_injected_total_mw
+        data_structure.current_drive_variables.p_hcd_injected_max,
+        data_structure.current_drive_variables.p_hcd_injected_max
+        - data_structure.current_drive_variables.p_hcd_injected_total_mw
         / data_structure.constraint_variables.fp_hcd_injected_max,
     )
 
@@ -1124,14 +1125,14 @@ def constraint_equation_37():
     eta_cd_norm_hcd_primary: normalised current drive efficiency (1.0e20 A/W-m2)
     """
     cc = (
-        fortran.current_drive_variables.eta_cd_norm_hcd_primary
+        data_structure.current_drive_variables.eta_cd_norm_hcd_primary
         / data_structure.constraint_variables.eta_cd_norm_hcd_primary_max
         - 1.0 * data_structure.constraint_variables.feta_cd_norm_hcd_primary_max
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.eta_cd_norm_hcd_primary_max * (1.0 - cc),
-        fortran.current_drive_variables.eta_cd_norm_hcd_primary * cc,
+        data_structure.current_drive_variables.eta_cd_norm_hcd_primary * cc,
     )
 
 
@@ -1171,7 +1172,7 @@ def constraint_equation_40():
     cc = (
         1.0
         - data_structure.constraint_variables.fp_hcd_injected_min_mw
-        * fortran.current_drive_variables.p_hcd_injected_total_mw
+        * data_structure.current_drive_variables.p_hcd_injected_total_mw
         / data_structure.constraint_variables.p_hcd_injected_min_mw
     )
     return ConstraintResult(
@@ -1502,14 +1503,14 @@ def constraint_equation_59():
     f_p_beam_shine_through: neutral beam shine-through fraction
     """
     cc = (
-        fortran.current_drive_variables.f_p_beam_shine_through
+        data_structure.current_drive_variables.f_p_beam_shine_through
         / data_structure.constraint_variables.f_p_beam_shine_through_max
         - 1.0 * data_structure.constraint_variables.fnbshinef
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.f_p_beam_shine_through_max * (1.0 - cc),
-        fortran.current_drive_variables.f_p_beam_shine_through * cc,
+        data_structure.current_drive_variables.f_p_beam_shine_through * cc,
     )
 
 
@@ -1827,7 +1828,7 @@ def constraint_equation_73():
         * fortran.physics_variables.p_plasma_separatrix_mw
         / (
             fortran.physics_variables.p_l_h_threshold_mw
-            + fortran.current_drive_variables.p_hcd_injected_total_mw
+            + data_structure.current_drive_variables.p_hcd_injected_total_mw
         )
     )
     return ConstraintResult(
@@ -2295,7 +2296,7 @@ def constraint_equation_91():
             - data_structure.constraint_variables.fecrh_ignition
             * (
                 data_structure.stellarator_variables.powerht_constraint
-                + fortran.current_drive_variables.p_hcd_primary_extra_heat_mw
+                + data_structure.current_drive_variables.p_hcd_primary_extra_heat_mw
             )
             / data_structure.stellarator_variables.powerscaling_constraint
         )

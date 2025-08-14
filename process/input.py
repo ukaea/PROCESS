@@ -210,10 +210,10 @@ INPUT_VARIABLES = {
     ),
     "bctmp": InputVariable(data_structure.pulse_variables, float, range=(1.0, 800.0)),
     "e_beam_kev": InputVariable(
-        fortran.current_drive_variables, float, range=(1.0, 1000000.0)
+        data_structure.current_drive_variables, float, range=(1.0, 1000000.0)
     ),
     "dx_beam_duct": InputVariable(
-        fortran.current_drive_variables, float, range=(0.001, 5.0)
+        data_structure.current_drive_variables, float, range=(0.001, 5.0)
     ),
     "deg_div_field_plate": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 360.0)
@@ -262,10 +262,10 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.1, 50.0)
     ),
     "f_c_plasma_bootstrap_max": InputVariable(
-        fortran.current_drive_variables, float, range=(-0.999, 0.999)
+        data_structure.current_drive_variables, float, range=(-0.999, 0.999)
     ),
     "f_c_plasma_bootstrap": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "breeder_f": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "breeder_multiplier": InputVariable(
@@ -286,7 +286,9 @@ INPUT_VARIABLES = {
     "casths_fraction": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "cboot": InputVariable(fortran.current_drive_variables, float, range=(0.0, 10.0)),
+    "cboot": InputVariable(
+        data_structure.current_drive_variables, float, range=(0.0, 10.0)
+    ),
     "cconfix": InputVariable(data_structure.cost_variables, float, range=(50.0, 200.0)),
     "cconshpf": InputVariable(
         data_structure.cost_variables, float, range=(50.0, 200.0)
@@ -589,18 +591,18 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(1000.0, 1000000.0)
     ),
     "eta_ecrh_injector_wall_plug": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "eta_coolant_pump_electric": InputVariable(
         fortran.fwbs_variables, float, range=(0.1, 1.0)
     ),
     "etaiso": InputVariable(fortran.fwbs_variables, float, range=(0.1, 1.0)),
     "eta_lowhyb_injector_wall_plug": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "etali": InputVariable(data_structure.ife_variables, float, range=(0.0, 1.0)),
     "eta_beam_injector_wall_plug": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "etapsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "etapump": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
@@ -674,7 +676,7 @@ INPUT_VARIABLES = {
     ),
     "f_tritium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "f_beam_tritium": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "f_vforce_inboard": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
@@ -755,7 +757,9 @@ INPUT_VARIABLES = {
     "fecrh_ignition": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "feffcd": InputVariable(fortran.current_drive_variables, float, range=(0.0, 20.0)),
+    "feffcd": InputVariable(
+        data_structure.current_drive_variables, float, range=(0.0, 20.0)
+    ),
     "fflutf": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
@@ -823,7 +827,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "f_p_beam_orbit_loss": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 0.999)
+        data_structure.current_drive_variables, float, range=(0.0, 0.999)
     ),
     "fp_plasma_separatrix_min_mw": InputVariable(
         fortran.physics_variables, float, range=(0.001, 1.0)
@@ -886,7 +890,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "f_radius_beam_tangency_rmajor": InputVariable(
-        fortran.current_drive_variables, float, range=(0.5, 2.0)
+        data_structure.current_drive_variables, float, range=(0.5, 2.0)
     ),
     "freinke": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1.0)
@@ -981,7 +985,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "eta_cd_norm_ecrh": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
     "gamma_he": InputVariable(
         data_structure.primary_pumping_variables, float, range=(1.0, 2.0)
@@ -1003,7 +1007,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
     "n_ecrh_harmonic": InputVariable(
-        fortran.current_drive_variables, float, range=(1.0, 10.0)
+        data_structure.current_drive_variables, float, range=(1.0, 10.0)
     ),
     "hastelloy_thickness": InputVariable(
         data_structure.rebco_variables, float, range=(1e-08, 0.001)
@@ -1202,7 +1206,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "dx_beam_shield": InputVariable(
-        fortran.current_drive_variables, float, range=(0.01, 0.5)
+        data_structure.current_drive_variables, float, range=(0.01, 0.5)
     ),
     "f_p_beam_shine_through_max": InputVariable(
         data_structure.constraint_variables, float, range=(1e-20, 0.1)
@@ -1259,20 +1263,20 @@ INPUT_VARIABLES = {
     ),
     "pfusife": InputVariable(data_structure.ife_variables, float, range=(0.0, 10000.0)),
     "p_hcd_primary_extra_heat_mw": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1000.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "p_hcd_secondary_extra_heat_mw": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1000.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "pibv": InputVariable(
         data_structure.buildings_variables, float, range=(1000.0, 100000.0)
     ),
     "pifecr": InputVariable(data_structure.ife_variables, float, range=(0.0, 100.0)),
     "p_hcd_injected_max": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1000.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "p_hcd_secondary_injected_mw": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 1000.0)
+        data_structure.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "plasma_res_factor": InputVariable(
         fortran.physics_variables, float, range=(0.0, 1.0)
@@ -1571,7 +1575,7 @@ INPUT_VARIABLES = {
     "taumax": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
     "tauratio": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
     "n_beam_decay_lengths_core_required": InputVariable(
-        fortran.current_drive_variables, float, range=(0.0, 10.0)
+        data_structure.current_drive_variables, float, range=(0.0, 10.0)
     ),
     "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
     "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
@@ -1881,7 +1885,9 @@ INPUT_VARIABLES = {
     "wsvfac": InputVariable(
         data_structure.buildings_variables, float, range=(0.9, 3.0)
     ),
-    "xi_ebw": InputVariable(fortran.current_drive_variables, float, range=(0.0, 1.0)),
+    "xi_ebw": InputVariable(
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "xpertin": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
@@ -1982,9 +1988,11 @@ INPUT_VARIABLES = {
     "i_blkt_dual_coolant": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
     ),
-    "i_hcd_primary": InputVariable(fortran.current_drive_variables, int, range=(1, 13)),
+    "i_hcd_primary": InputVariable(
+        data_structure.current_drive_variables, int, range=(1, 13)
+    ),
     "i_hcd_secondary": InputVariable(
-        fortran.current_drive_variables, int, range=(0, 13)
+        data_structure.current_drive_variables, int, range=(0, 13)
     ),
     "i_blkt_liquid_breeder_channel_type": InputVariable(
         fortran.fwbs_variables, int, choices=[0, 1, 2]
@@ -2019,7 +2027,7 @@ INPUT_VARIABLES = {
     "ireactor": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "irefprop": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "i_hcd_calculations": InputVariable(
-        fortran.current_drive_variables, int, choices=[0, 1]
+        data_structure.current_drive_variables, int, choices=[0, 1]
     ),
     "i_pf_energy_storage_source": InputVariable(
         data_structure.pf_power_variables, int, range=(1, 3)
@@ -2085,7 +2093,7 @@ INPUT_VARIABLES = {
         data_structure.build_variables, int, choices=[0, 1]
     ),
     "i_ecrh_wave_mode": InputVariable(
-        fortran.current_drive_variables, int, choices=[0, 1]
+        data_structure.current_drive_variables, int, choices=[0, 1]
     ),
     "i_confinement_time": InputVariable(
         fortran.physics_variables,

@@ -3,10 +3,10 @@ import numpy as np
 from process import (
     process_output as po,
 )
+from process.data_structure import current_drive_variables
 from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import (
     constants,
-    current_drive_variables,
     heat_transport_variables,
     physics_variables,
 )
@@ -2453,77 +2453,3 @@ class CurrentDrive:
             po.ocmmnt(self.outfile, "          its prescribed maximum.")
 
         po.oblnkl(self.outfile)
-
-
-def init_current_drive_variables():
-    """Initialise current drive variables"""
-    current_drive_variables.dx_beam_duct = 0.58
-    current_drive_variables.big_q_plasma = 0.0
-    current_drive_variables.f_c_plasma_bootstrap = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_max = 0.9
-    current_drive_variables.f_c_plasma_bootstrap_iter89 = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_nevins = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_sauter = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_wilson = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_sakai = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_aries = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_andrade = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_hoang = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_wong = 0.0
-    current_drive_variables.bscf_gi_i = 0.0
-    current_drive_variables.bscf_gi_ii = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = 0.0
-    current_drive_variables.f_c_plasma_bootstrap_sugiyama_h = 0.0
-    current_drive_variables.cboot = 1.0
-    current_drive_variables.c_beam_total = 0.0
-    current_drive_variables.f_c_plasma_diamagnetic_hender = 0.0
-    current_drive_variables.f_c_plasma_diamagnetic_scene = 0.0
-    current_drive_variables.f_c_plasma_diamagnetic = 0.0
-    current_drive_variables.p_hcd_ecrh_injected_total_mw = 0.0
-    current_drive_variables.echwpow = 0.0
-    current_drive_variables.eta_cd_hcd_primary = 0.0
-    current_drive_variables.n_ecrh_harmonic = 2.0
-    current_drive_variables.i_ecrh_wave_mode = 0
-    current_drive_variables.e_beam_kev = 1.0e3
-    current_drive_variables.eta_hcd_primary_injector_wall_plug = 0.0
-    current_drive_variables.eta_hcd_secondary_injector_wall_plug = 0.0
-    current_drive_variables.eta_ecrh_injector_wall_plug = 0.3
-    current_drive_variables.eta_lowhyb_injector_wall_plug = 0.3
-    current_drive_variables.eta_beam_injector_wall_plug = 0.3
-    current_drive_variables.f_p_beam_injected_ions = 0.5
-    current_drive_variables.p_beam_injected_mw = 0.0
-    current_drive_variables.f_c_plasma_pfirsch_schluter_scene = 0.0
-    current_drive_variables.p_beam_shine_through_mw = 0.0
-    current_drive_variables.feffcd = 1.0
-    current_drive_variables.f_p_beam_orbit_loss = 0.0
-    current_drive_variables.f_radius_beam_tangency_rmajor = 1.05
-    current_drive_variables.f_beam_tritium = 1e-6
-    current_drive_variables.eta_cd_norm_hcd_primary = 0.0
-    current_drive_variables.eta_cd_norm_ecrh = 0.35
-    current_drive_variables.xi_ebw = 0.8
-    current_drive_variables.i_hcd_primary = 5
-    current_drive_variables.i_hcd_secondary = 0
-    current_drive_variables.i_hcd_calculations = 1
-    current_drive_variables.f_p_beam_shine_through = 0.0
-    current_drive_variables.dx_beam_shield = 0.5
-    current_drive_variables.p_hcd_primary_extra_heat_mw = 0.0
-    current_drive_variables.p_hcd_secondary_extra_heat_mw = 0.0
-    current_drive_variables.p_hcd_injected_max = 150.0
-    current_drive_variables.p_hcd_injected_electrons_mw = 0.0
-    current_drive_variables.p_hcd_injected_ions_mw = 0.0
-    current_drive_variables.p_hcd_injected_total_mw = 0.0
-    current_drive_variables.p_hcd_injected_current_total_mw = 0.0
-    current_drive_variables.p_hcd_secondary_injected_mw = 0.0
-    current_drive_variables.f_c_plasma_internal = 0.0
-    current_drive_variables.p_hcs_lowhyb_injected_total_mw = 0.0
-    current_drive_variables.p_hcd_beam_injected_mw = 0.0
-    current_drive_variables.p_beam_orbit_loss_mw = 0.0
-    current_drive_variables.f_c_plasma_pfirsch_schluter = 0.0
-    current_drive_variables.pwplh = 0.0
-    current_drive_variables.pwpnb = 0.0
-    current_drive_variables.radius_beam_tangency = 0.0
-    current_drive_variables.radius_beam_tangency_max = 0.0
-    current_drive_variables.n_beam_decay_lengths_core = 0.0
-    current_drive_variables.n_beam_decay_lengths_core_required = 3.0
-    current_drive_variables.eta_cd_norm_hcd_secondary = 0.0
-    current_drive_variables.eta_cd_hcd_secondary = 0.0
