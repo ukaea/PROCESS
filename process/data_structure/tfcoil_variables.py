@@ -6,6 +6,12 @@ Module containing global variables relating to the toroidal field coil systems
 
 import numpy as np
 
+N_RADIAL_ARRAY = 50
+"""Size of the radial distribution arrays per layers
+used for stress, strain and displacement distibution
+"""
+
+
 a_tf_coil_inboard_case: float = None
 """external case area per coil (inboard leg) (m2)"""
 
@@ -513,12 +519,6 @@ ripple: float = None
 
 c_tf_total: float = None
 """total (summed) current in TF coils (A)"""
-
-
-N_RADIAL_ARRAY = 50
-"""Size of the radial distribution arrays per layers
-used for stress, strain and displacement distibution
-"""
 
 
 radial_array: list[float] = None
@@ -1333,7 +1333,17 @@ def init_tfcoil_variables():
     c_tf_turn = 7.0e4
     c_tf_turn_max = 9.0e4
     dcase = 8000.0
-    dcond = [6080.0, 6080.0, 6070.0, 6080.0, 6080.0, 8500.0, 6070.0, 8500.0, 8500.0]
+    dcond = np.array([
+        6080.0,
+        6080.0,
+        6070.0,
+        6080.0,
+        6080.0,
+        8500.0,
+        6070.0,
+        8500.0,
+        8500.0,
+    ])
     dcondins = 1800.0
     dia_tf_turn_coolant_channel = 0.005
     e_tf_magnetic_stored_total_gj = 0.0
@@ -1362,7 +1372,7 @@ def init_tfcoil_variables():
     n_tf_wp_layers = 5
     j_tf_bus = 1.25e6
     j_crit_str_tf = 0.0
-    j_crit_str_0 = [
+    j_crit_str_0 = np.array([
         596905475.80390120,
         1925501534.8512938,
         724544682.96063495,
@@ -1372,7 +1382,7 @@ def init_tfcoil_variables():
         898964415.36996782,
         1158752995.2559297,
         865652122.9071957,
-    ]
+    ])
     j_tf_wp_critical = 0.0
     jwdgpro = 0.0
     j_tf_wp = 0.0
