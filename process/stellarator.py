@@ -1259,7 +1259,7 @@ class Stellarator:
                     )
                 )
                 heat_transport_variables.p_blkt_coolant_pump_mw = (
-                    heat_transport_variables.fpumpblkt
+                    heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                     * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
                 heat_transport_variables.p_shld_coolant_pump_mw = (
@@ -1518,7 +1518,7 @@ class Stellarator:
                         )
                     )
                     heat_transport_variables.p_blkt_coolant_pump_mw = (
-                        heat_transport_variables.fpumpblkt
+                        heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                         * (
                             pnucbzi * fwbs_variables.f_p_blkt_multiplication
                             + pnucbzo * fwbs_variables.f_p_blkt_multiplication
@@ -1530,7 +1530,7 @@ class Stellarator:
                     )
 
                 fwbs_variables.p_blkt_multiplication_mw = (
-                    heat_transport_variables.fpumpblkt
+                    heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                     * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
                     * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
                 )

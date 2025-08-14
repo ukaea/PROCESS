@@ -51,7 +51,7 @@ module heat_transport_variables
     real(dp) :: fmgdmw
     !! power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_energy_storage_source=2`)
 
-    real(dp) :: fpumpblkt
+    real(dp) :: f_p_blkt_coolant_pump_total_heat
     !! fraction of total blanket thermal power required to drive the blanket
     !! coolant pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 

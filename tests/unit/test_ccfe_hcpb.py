@@ -754,7 +754,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_blkt_coolant_pump_mw: Any = None
 
-    fpumpblkt: Any = None
+    f_p_blkt_coolant_pump_total_heat: Any = None
 
     p_shld_coolant_pump_mw: Any = None
 
@@ -826,7 +826,7 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_coolant_pump_mw=0,
             f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
-            fpumpblkt=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             p_shld_coolant_pump_mw=0,
             fpumpshld=0.0050000000000000001,
             p_div_coolant_pump_mw=0,
@@ -873,7 +873,7 @@ class PowerflowCalcParam(NamedTuple):
             p_fw_coolant_pump_mw=0,
             f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
-            fpumpblkt=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             p_shld_coolant_pump_mw=0.0068056297940224456,
             fpumpshld=0.0050000000000000001,
             p_div_coolant_pump_mw=1.7970292653352464,
@@ -1014,7 +1014,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpblkt", powerflowcalcparam.fpumpblkt
+        heat_transport_variables, "f_p_blkt_coolant_pump_total_heat", powerflowcalcparam.f_p_blkt_coolant_pump_total_heat
     )
 
     monkeypatch.setattr(

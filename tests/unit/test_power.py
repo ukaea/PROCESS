@@ -2140,7 +2140,7 @@ class Power2Param(NamedTuple):
 
     fpumpdiv: Any = None
 
-    fpumpblkt: Any = None
+    f_p_blkt_coolant_pump_total_heat: Any = None
 
     vachtmw: Any = None
 
@@ -2315,7 +2315,7 @@ class Power2Param(NamedTuple):
             temp_turbine_coolant_in=0,
             p_plant_electric_net_mw=0,
             fpumpdiv=0.0050000000000000001,
-            fpumpblkt=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7942175899286208,
             n_primary_heat_exchangers=3,
@@ -2417,7 +2417,7 @@ class Power2Param(NamedTuple):
             temp_turbine_coolant_in=0,
             p_plant_electric_net_mw=493.01760776192009,
             fpumpdiv=0.0050000000000000001,
-            fpumpblkt=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7933419035282543,
             n_primary_heat_exchangers=3,
@@ -2633,7 +2633,7 @@ def test_power2(power2param, monkeypatch, power):
 
     monkeypatch.setattr(heat_transport_variables, "fpumpdiv", power2param.fpumpdiv)
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpblkt", power2param.fpumpblkt)
+    monkeypatch.setattr(heat_transport_variables, "f_p_blkt_coolant_pump_total_heat", power2param.f_p_blkt_coolant_pump_total_heat)
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power2param.vachtmw)
 

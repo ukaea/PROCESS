@@ -809,7 +809,7 @@ INPUT_VARIABLES = {
     "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fptemp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fptfnuc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fpumpblkt": InputVariable(
+    "f_p_blkt_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "fpumpdiv": InputVariable(

@@ -316,7 +316,7 @@ class DCLL(BlanketLibrary):
                 )
             )
             primary_pumping_variables.p_blkt_coolant_pump_mw = (
-                heat_transport_variables.fpumpblkt
+                heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
             # For CCFE HCPB: p_shld_coolant_pump_mw = fpumpshld * ( p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )

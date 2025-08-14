@@ -2219,7 +2219,7 @@ def init_heat_transport_variables():
     heat_transport_variables.p_plant_electric_base_total_mw = 0.0
     heat_transport_variables.fgrosbop = 0.0
     heat_transport_variables.fmgdmw = 0.0
-    heat_transport_variables.fpumpblkt = 0.005
+    heat_transport_variables.f_p_blkt_coolant_pump_total_heat = 0.005
     heat_transport_variables.fpumpdiv = 0.005
     heat_transport_variables.f_p_fw_coolant_pump_total_heat = 0.005
     heat_transport_variables.fpumpshld = 0.005
