@@ -55,7 +55,7 @@ module heat_transport_variables
     !! fraction of total blanket thermal power required to drive the blanket
     !! coolant pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
-    real(dp) :: fpumpdiv
+    real(dp) :: f_p_div_coolant_pump_total_heat
     !! fraction of total divertor thermal power required to drive the divertor
     !! coolant pumps (default assumes water coolant)
 

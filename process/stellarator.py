@@ -1267,7 +1267,7 @@ class Stellarator:
                     * fwbs_variables.p_shld_nuclear_heat_mw
                 )
                 heat_transport_variables.p_div_coolant_pump_mw = (
-                    heat_transport_variables.fpumpdiv
+                    heat_transport_variables.f_p_div_coolant_pump_total_heat
                     * (
                         physics_variables.p_plasma_separatrix_mw
                         + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -1602,12 +1602,13 @@ class Stellarator:
                 if fwbs_variables.i_coolant_pumping == 1:
                     #  Shield pumping power (MW)
                     heat_transport_variables.p_shld_coolant_pump_mw = (
-                        heat_transport_variables.f_p_shld_coolant_pump_total_heat * (pnucshldi + pnucshldo)
+                        heat_transport_variables.f_p_shld_coolant_pump_total_heat
+                        * (pnucshldi + pnucshldo)
                     )
 
                     #  Divertor pumping power (MW)
                     heat_transport_variables.p_div_coolant_pump_mw = (
-                        heat_transport_variables.fpumpdiv
+                        heat_transport_variables.f_p_div_coolant_pump_total_heat
                         * (
                             physics_variables.p_plasma_separatrix_mw
                             + fwbs_variables.p_div_nuclear_heat_total_mw

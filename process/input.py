@@ -812,10 +812,12 @@ INPUT_VARIABLES = {
     "f_p_blkt_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "fpumpdiv": InputVariable(
+    "f_p_div_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "f_p_fw_coolant_pump_total_heat": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 0.2)),
+    "f_p_fw_coolant_pump_total_heat": InputVariable(
+        fortran.heat_transport_variables, float, range=(0.0, 0.2)
+    ),
     "f_p_shld_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),

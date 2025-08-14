@@ -762,7 +762,7 @@ class PowerflowCalcParam(NamedTuple):
 
     p_div_coolant_pump_mw: Any = None
 
-    fpumpdiv: Any = None
+    f_p_div_coolant_pump_total_heat: Any = None
 
     n_divertors: Any = None
 
@@ -830,7 +830,7 @@ class PowerflowCalcParam(NamedTuple):
             p_shld_coolant_pump_mw=0,
             f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             p_div_coolant_pump_mw=0,
-            fpumpdiv=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
@@ -877,7 +877,7 @@ class PowerflowCalcParam(NamedTuple):
             p_shld_coolant_pump_mw=0.0068056297940224456,
             f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             p_div_coolant_pump_mw=1.7970292653352464,
-            fpumpdiv=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
@@ -1005,7 +1005,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_fw_coolant_pump_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "f_p_fw_coolant_pump_total_heat", powerflowcalcparam.f_p_fw_coolant_pump_total_heat)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_fw_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_fw_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -1014,7 +1018,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "f_p_blkt_coolant_pump_total_heat", powerflowcalcparam.f_p_blkt_coolant_pump_total_heat
+        heat_transport_variables,
+        "f_p_blkt_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_blkt_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
@@ -1024,7 +1030,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "f_p_shld_coolant_pump_total_heat", powerflowcalcparam.f_p_shld_coolant_pump_total_heat
+        heat_transport_variables,
+        "f_p_shld_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_shld_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
@@ -1034,7 +1042,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpdiv", powerflowcalcparam.fpumpdiv
+        heat_transport_variables,
+        "f_p_div_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_div_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(

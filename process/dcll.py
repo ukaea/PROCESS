@@ -326,7 +326,7 @@ class DCLL(BlanketLibrary):
                 heat_transport_variables.f_p_shld_coolant_pump_total_heat * 0.0
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -339,7 +339,7 @@ class DCLL(BlanketLibrary):
             super().thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw

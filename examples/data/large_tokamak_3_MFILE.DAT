@@ -1116,7 +1116,7 @@
  Electrical_pumping_power_for_divertor_(MW)______________________________ (p_div_coolant_pump_elec_mw)__________________      1.9433E+00 OP 
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (p_coolant_pump_elec_total_mw)_______________________      1.9053E+02 OP 
  Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (f_p_shld_coolant_pump_total_heat)___________________      5.0000E-03    
- Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
+ Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (f_p_div_coolant_pump_total_heat)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_coolant_pump_electric)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      4.0000E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.5623E-01    

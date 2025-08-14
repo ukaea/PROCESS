@@ -830,7 +830,7 @@ class CCFE_HCPB(BlanketLibrary):
                 )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -854,7 +854,7 @@ class CCFE_HCPB(BlanketLibrary):
                 )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -909,7 +909,7 @@ class CCFE_HCPB(BlanketLibrary):
                 )
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw
