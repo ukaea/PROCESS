@@ -3,11 +3,10 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import pfcoil_variables, pulse_variables
+from process.data_structure import pf_power_variables, pfcoil_variables, pulse_variables
 from process.fortran import (
     constraint_variables,
     numerics,
-    pf_power_variables,
     physics_variables,
 )
 from process.pulse import Pulse

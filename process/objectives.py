@@ -3,6 +3,7 @@ import numpy as np
 from process.data_structure import (
     cost_variables,
     divertor_variables,
+    pf_power_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -10,7 +11,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     current_drive_variables,
     heat_transport_variables,
-    pf_power_variables,
     physics_variables,
 )
 

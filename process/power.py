@@ -8,6 +8,7 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    pf_power_variables,
     pfcoil_variables,
     power_variables,
     primary_pumping_variables,
@@ -23,7 +24,6 @@ from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     numerics,
-    pf_power_variables,
     physics_variables,
 )
 
@@ -2189,21 +2189,6 @@ class Power:
             )
 
         return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
-
-
-def init_pf_power_variables():
-    """Initialise PF coil power variables"""
-    pf_power_variables.acptmax = 0.0
-    pf_power_variables.ensxpfm = 0.0
-    pf_power_variables.i_pf_energy_storage_source = 2
-    pf_power_variables.pfckts = 0.0
-    pf_power_variables.spfbusl = 0.0
-    pf_power_variables.spsmva = 0.0
-    pf_power_variables.srcktpm = 0.0
-    pf_power_variables.vpfskv = 0.0
-    pf_power_variables.peakpoloidalpower = 0.0
-    pf_power_variables.maxpoloidalpower = 1000.0
-    pf_power_variables.poloidalpower[:] = 0.0
 
 
 def init_heat_transport_variables():
