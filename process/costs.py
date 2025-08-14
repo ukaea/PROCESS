@@ -10,6 +10,7 @@ from process.data_structure import (
     pfcoil_variables,
     pulse_variables,
     structure_variables,
+    tfcoil_variables,
     times_variables,
     vacuum_variables,
 )
@@ -21,7 +22,6 @@ from process.fortran import (
     heat_transport_variables,
     pf_power_variables,
     physics_variables,
-    tfcoil_variables,
 )
 
 

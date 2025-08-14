@@ -17,6 +17,7 @@ from process.data_structure import (
     pfcoil_variables,
     pulse_variables,
     structure_variables,
+    tfcoil_variables,
     times_variables,
     vacuum_variables,
 )
@@ -26,7 +27,6 @@ from process.fortran import (
     heat_transport_variables,
     pf_power_variables,
     physics_variables,
-    tfcoil_variables,
 )
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fv
@@ -156,7 +156,7 @@ def test_acc2263(monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "uccry", 9.3e4)
-    monkeypatch.setattr(fortran.tfcoil_variables, "tftmp", 4.5)
+    monkeypatch.setattr(data_structure.tfcoil_variables, "tftmp", 4.5)
     monkeypatch.setattr(htv, "helpow", 80.980e3)
     monkeypatch.setattr(cost_variables, "c2263", 0)
 
@@ -630,7 +630,7 @@ def acc26_params():
             ireactor=1,
             p_fusion_total_mw=fortran.physics_variables.p_fusion_total_mw,
             p_hcd_electric_total_mw=htv.p_hcd_electric_total_mw,
-            tfcmw=fortran.tfcoil_variables.tfcmw,
+            tfcmw=data_structure.tfcoil_variables.tfcmw,
             p_plant_primary_heat_mw=3000.0,
             p_plant_electric_gross_mw=700.0,
         ),
@@ -660,7 +660,7 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(
         htv, "p_hcd_electric_total_mw", param["p_hcd_electric_total_mw"]
     )
-    monkeypatch.setattr(fortran.tfcoil_variables, "tfcmw", param["tfcmw"])
+    monkeypatch.setattr(data_structure.tfcoil_variables, "tfcmw", param["tfcmw"])
     monkeypatch.setattr(
         htv, "p_plant_primary_heat_mw", param["p_plant_primary_heat_mw"]
     )

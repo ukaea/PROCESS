@@ -52,7 +52,7 @@ ITERATION_VARIABLES = {
     11: IterationVariable(
         "p_hcd_primary_extra_heat_mw", fortran.current_drive_variables, 1.0e-3, 1.0e3
     ),
-    12: IterationVariable("oacdcp", fortran.tfcoil_variables, 1.0e5, 1.50e8),
+    12: IterationVariable("oacdcp", data_structure.tfcoil_variables, 1.0e5, 1.50e8),
     13: IterationVariable("dr_tf_inboard", data_structure.build_variables, 0.1, 5.0),
     14: IterationVariable(
         "fpflux_fw_neutron_max_mw", fortran.constraint_variables, 0.001, 1.0
@@ -66,9 +66,11 @@ ITERATION_VARIABLES = {
     ),
     18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
     19: IterationVariable("e_beam_kev", fortran.current_drive_variables, 1.0, 1.0e6),
-    20: IterationVariable("temp_cp_average", fortran.tfcoil_variables, 40.00, 3.0e2),
+    20: IterationVariable(
+        "temp_cp_average", data_structure.tfcoil_variables, 40.00, 3.0e2
+    ),
     21: IterationVariable("ft_burn_min", fortran.constraint_variables, 0.001, 1.0),
-    23: IterationVariable("fcoolcp", fortran.tfcoil_variables, 0.1, 0.50),
+    23: IterationVariable("fcoolcp", data_structure.tfcoil_variables, 0.1, 0.50),
     25: IterationVariable(
         "fp_plant_electric_net_required_mw", fortran.constraint_variables, 0.001, 1.0
     ),
@@ -118,11 +120,15 @@ ITERATION_VARIABLES = {
     51: IterationVariable("fvdump", fortran.constraint_variables, 0.001, 1.0),
     53: IterationVariable("fjprot", fortran.constraint_variables, 0.001, 1.0),
     54: IterationVariable("ftmargtf", fortran.constraint_variables, 0.001, 1.0),
-    56: IterationVariable("tdmptf", fortran.tfcoil_variables, 0.1, 100.0),
-    57: IterationVariable("dr_tf_nose_case", fortran.tfcoil_variables, 0.05, 1.0),
-    58: IterationVariable("dx_tf_turn_steel", fortran.tfcoil_variables, 0.001, 0.1),
-    59: IterationVariable("fcutfsu", fortran.tfcoil_variables, 0.001, 1.0),
-    60: IterationVariable("c_tf_turn", fortran.tfcoil_variables, 0.001, 4.0e4),
+    56: IterationVariable("tdmptf", data_structure.tfcoil_variables, 0.1, 100.0),
+    57: IterationVariable(
+        "dr_tf_nose_case", data_structure.tfcoil_variables, 0.05, 1.0
+    ),
+    58: IterationVariable(
+        "dx_tf_turn_steel", data_structure.tfcoil_variables, 0.001, 0.1
+    ),
+    59: IterationVariable("fcutfsu", data_structure.tfcoil_variables, 0.001, 1.0),
+    60: IterationVariable("c_tf_turn", data_structure.tfcoil_variables, 0.001, 4.0e4),
     61: IterationVariable(
         "dr_shld_vv_gap_inboard", data_structure.build_variables, 0.001, 10.00
     ),
@@ -139,8 +145,8 @@ ITERATION_VARIABLES = {
     ),
     67: IterationVariable("ft_cycle_min", fortran.constraint_variables, 0.001, 1.0),
     68: IterationVariable("fptemp", fortran.constraint_variables, 0.001, 1.0),
-    69: IterationVariable("rcool", fortran.tfcoil_variables, 0.001, 0.010),
-    70: IterationVariable("vcool", fortran.tfcoil_variables, 1.0, 1.0e2),
+    69: IterationVariable("rcool", data_structure.tfcoil_variables, 0.001, 0.010),
+    70: IterationVariable("vcool", data_structure.tfcoil_variables, 1.0, 1.0e2),
     71: IterationVariable("fq95_min", fortran.constraint_variables, 0.001, 1.0),
     72: IterationVariable("fipir", fortran.constraint_variables, 0.001, 1.0),
     73: IterationVariable(
@@ -303,7 +309,7 @@ ITERATION_VARIABLES = {
         "copper_thick", data_structure.rebco_variables, 1.0e-6, 1.0e-3
     ),
     140: IterationVariable(
-        "dr_tf_wp_with_insulation", fortran.tfcoil_variables, 0.001, 2.0
+        "dr_tf_wp_with_insulation", data_structure.tfcoil_variables, 0.001, 2.0
     ),
     141: IterationVariable(
         "ftemp_croco_quench_max", fortran.constraint_variables, 0.001, 1.0
@@ -328,11 +334,15 @@ ITERATION_VARIABLES = {
     158: IterationVariable(
         "croco_thick", data_structure.rebco_variables, 1.0e-3, 1.0e-1
     ),
-    159: IterationVariable("ftoroidalgap", fortran.tfcoil_variables, 1.0e-4, 1.0),
+    159: IterationVariable(
+        "ftoroidalgap", data_structure.tfcoil_variables, 1.0e-4, 1.0
+    ),
     160: IterationVariable("f_avspace", data_structure.build_variables, 0.010, 1.0),
     161: IterationVariable("fbeta_min", fortran.constraint_variables, 0.010, 1.0),
     162: IterationVariable("r_cp_top", data_structure.build_variables, 0.0010, 10.0),
-    163: IterationVariable("f_t_turn_tf", fortran.tfcoil_variables, 0.0010, 1000.0),
+    163: IterationVariable(
+        "f_t_turn_tf", data_structure.tfcoil_variables, 0.0010, 1000.0
+    ),
     164: IterationVariable("f_crypmw", fortran.heat_transport_variables, 0.001, 1.0),
     165: IterationVariable("fstr_wp", fortran.constraint_variables, 1.0e-9, 1.0),
     166: IterationVariable(
@@ -346,8 +356,12 @@ ITERATION_VARIABLES = {
     170: IterationVariable(
         "deg_div_field_plate", data_structure.divertor_variables, 0.49, 5.01
     ),
-    171: IterationVariable("casths_fraction", fortran.tfcoil_variables, 0.01, 0.99),
-    172: IterationVariable("dx_tf_side_case_min", fortran.tfcoil_variables, 0.001, 1.0),
+    171: IterationVariable(
+        "casths_fraction", data_structure.tfcoil_variables, 0.01, 0.99
+    ),
+    172: IterationVariable(
+        "dx_tf_side_case_min", data_structure.tfcoil_variables, 0.001, 1.0
+    ),
     173: IterationVariable("f_tritium", fortran.physics_variables, 0.000, 1.000),
     174: IterationVariable("triang", fortran.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", fortran.physics_variables, 0.00, 10.00),

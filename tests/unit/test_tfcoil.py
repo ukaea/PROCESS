@@ -7,16 +7,14 @@ import pytest
 
 import process.tf_coil as tfcoil_module
 from process.build import Build
-from process.data_structure import build_variables
+from process.data_structure import build_variables, tfcoil_variables
 from process.data_structure import build_variables as bv
 from process.fortran import (
     fwbs_variables,
     physics_variables,
     sctfcoil_module,
-    tfcoil_variables,
 )
 from process.fortran import fwbs_variables as fwbsv
-from process.fortran import tfcoil_variables as tfv
 from process.tf_coil import TFCoil
 
 
@@ -217,14 +215,14 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     :param tfcoil: fixture containing an initialised `TFCoil` object
     :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
     """
-    monkeypatch.setattr(tfv, "a_cp_cool", 1)
-    monkeypatch.setattr(tfv, "n_tf_coils", 16)
-    monkeypatch.setattr(tfv, "rcool", 0.005)
-    monkeypatch.setattr(tfv, "vcool", 20.0)
-    monkeypatch.setattr(tfv, "vol_cond_cp", 2)
-    monkeypatch.setattr(tfv, "p_cp_resistive", 1)
-    monkeypatch.setattr(tfv, "i_tf_sup", cntrpst_asset.i_tf_sup)
-    monkeypatch.setattr(tfv, "tcoolin", cntrpst_asset.tcoolin)
+    monkeypatch.setattr(tfcoil_variables, "a_cp_cool", 1)
+    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 16)
+    monkeypatch.setattr(tfcoil_variables, "rcool", 0.005)
+    monkeypatch.setattr(tfcoil_variables, "vcool", 20.0)
+    monkeypatch.setattr(tfcoil_variables, "vol_cond_cp", 2)
+    monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
+    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
+    monkeypatch.setattr(tfcoil_variables, "tcoolin", cntrpst_asset.tcoolin)
     monkeypatch.setattr(fwbsv, "pnuc_cp_tf", 1)
     monkeypatch.setattr(bv, "z_tf_inside_half", 1)
     monkeypatch.setattr(bv, "dr_tf_outboard", 0.5)
@@ -232,12 +230,21 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     tfcoil.cntrpst()
 
     # appears to be the same for all cases?
-    assert pytest.approx(tfv.ncool) == 203718.3271576
+    assert pytest.approx(tfcoil_variables.ncool) == 203718.3271576
 
-    assert pytest.approx(tfv.dtiocool, abs=1e-8) == cntrpst_asset.expected_dtiocool
-    assert pytest.approx(tfv.tcpav2) == cntrpst_asset.expected_tcpav2
-    assert pytest.approx(tfv.temp_cp_peak) == cntrpst_asset.expected_temp_cp_peak
-    assert pytest.approx(tfv.p_cp_coolant_pump_elec) == cntrpst_asset.expected_ppump
+    assert (
+        pytest.approx(tfcoil_variables.dtiocool, abs=1e-8)
+        == cntrpst_asset.expected_dtiocool
+    )
+    assert pytest.approx(tfcoil_variables.tcpav2) == cntrpst_asset.expected_tcpav2
+    assert (
+        pytest.approx(tfcoil_variables.temp_cp_peak)
+        == cntrpst_asset.expected_temp_cp_peak
+    )
+    assert (
+        pytest.approx(tfcoil_variables.p_cp_coolant_pump_elec)
+        == cntrpst_asset.expected_ppump
+    )
 
 
 @pytest.mark.parametrize(
@@ -1481,8 +1488,8 @@ class StressclParam(NamedTuple):
             eyoung_steel=205000000000,
             eyoung_res_tf_buck=150000000000,
             eyoung_ins=20000000000,
-            eyoung_al=np.array(69000000000.0),
-            eyoung_copper=np.array(117000000000.0),
+            eyoung_al=69000000000.0,
+            eyoung_copper=117000000000.0,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             a_tf_wp_steel=0.29370123076207649,
             c_tf_turn=74026.751437500003,
@@ -1604,8 +1611,8 @@ class StressclParam(NamedTuple):
             eyoung_steel=205000000000,
             eyoung_res_tf_buck=150000000000,
             eyoung_ins=20000000000,
-            eyoung_al=np.array(69000000000.0),
-            eyoung_copper=np.array(117000000000.0),
+            eyoung_al=69000000000.0,
+            eyoung_copper=117000000000.0,
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             a_tf_wp_steel=0.29370123076207649,
             c_tf_turn=74026.751437500003,

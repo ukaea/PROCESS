@@ -8,10 +8,10 @@ from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
 from process.data_structure import pfcoil_variables as pfv
 from process.data_structure import structure_variables as stv
+from process.data_structure import tfcoil_variables as tfv
 from process.fortran import constants
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
 

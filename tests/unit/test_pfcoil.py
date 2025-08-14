@@ -9,7 +9,7 @@ from numpy.testing import assert_array_almost_equal
 from process.cs_fatigue import CsFatigue
 from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables
-from process.fortran import tfcoil_variables as tfv
+from process.data_structure import tfcoil_variables as tfv
 from process.pfcoil import PFCoil, bfield, rsid
 
 

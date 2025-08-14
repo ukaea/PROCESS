@@ -9,6 +9,7 @@ from process.data_structure import (
     buildings_variables,
     divertor_variables,
     pfcoil_variables,
+    tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -18,7 +19,6 @@ from process.fortran import (
     fwbs_variables,
     numerics,
     physics_variables,
-    tfcoil_variables,
 )
 
 logger = logging.getLogger(__name__)

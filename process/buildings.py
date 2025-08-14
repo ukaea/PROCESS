@@ -9,6 +9,7 @@ from process.data_structure import (
     cost_variables,
     divertor_variables,
     pfcoil_variables,
+    tfcoil_variables,
 )
 from process.fortran import (
     constants,
@@ -16,7 +17,6 @@ from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
-    tfcoil_variables,
 )
 
 logger = logging.getLogger(__name__)

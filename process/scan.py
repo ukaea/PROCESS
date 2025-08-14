@@ -14,6 +14,7 @@ from process.data_structure import (
     impurity_radiation_module,
     pfcoil_variables,
     rebco_variables,
+    tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -27,7 +28,6 @@ from process.fortran import (
     numerics,
     physics_variables,
     scan_module,
-    tfcoil_variables,
 )
 from process.solver_handler import SolverHandler
 from process.utilities.f2py_string_patch import (

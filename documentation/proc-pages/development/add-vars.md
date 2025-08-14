@@ -45,7 +45,7 @@ Code example in the `input.py` file:
 ```python
   INPUT_VARIABLES = {
   ...
-    "rho_tf_joints": InputVariable(fortran.tfcoil_variables, float, range=(0.0, 0.01)),
+    "rho_tf_joints": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 0.01)),
 ```
 
 -----------------

@@ -8,11 +8,11 @@ from process.availability import Availability
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import ife_variables as ifev
+from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.fortran import constraint_variables as ctv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
 from process.init import init_all_module_vars
 
 

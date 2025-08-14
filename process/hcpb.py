@@ -10,6 +10,7 @@ from process.data_structure import (
     cost_variables,
     divertor_variables,
     primary_pumping_variables,
+    tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -19,7 +20,6 @@ from process.fortran import (
     fwbs_variables,
     heat_transport_variables,
     physics_variables,
-    tfcoil_variables,
 )
 from process.fortran import (
     error_handling as eh,

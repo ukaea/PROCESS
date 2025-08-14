@@ -9,12 +9,12 @@ from process.data_structure import (
     cost_variables,
     divertor_variables,
     pfcoil_variables,
+    tfcoil_variables,
 )
 from process.fortran import (
     current_drive_variables,
     fwbs_variables,
     physics_variables,
-    tfcoil_variables,
 )
 
 
