@@ -593,22 +593,23 @@ class BlanketLibrary:
                     "OP ",
                 )
 
-    def thermo_hydraulic_model_pressure_drop_calculations(self, output: bool):
+    def set_blanket_module_geometry(self):
         """
-        Function that calculates the pressure drops for the thermo-hydraulic model
-        when i_coolant_pumping = 2.
+        Sets the geometry parameters for blanket modules, including coolant channel dimensions,
+        module segmentation, and flow lengths, based on the current configuration and input variables.
 
-        Within are calculations necessary for the deltap_tot function but not required
-        for other calculations within the thermo-hydraulic model as then they are just
-        included there.
+        The method performs the following steps:
+        - Determines inboard and outboard coolant channel radial lengths based on blanket type.
+        - Segments the blanket modules poloidally and toroidally according to input segmentation settings.
+        - Calculates the toroidal segment lengths for inboard and outboard blanket modules.
+        - Computes the poloidal height of blanket modules.
+        - For dual coolant blankets, calculates the minimum available space for liquid breeder pipes
+          in radial, toroidal, and poloidal directions, and checks for geometric constraints.
+        - Calculates total flow lengths for primary coolant channels, used in pressure drop calculations.
 
-        Returns the pressure drops as a list with the number of entries dependent upon
-        the switches i_blkt_dual_coolant and i_blkt_inboard.
+        Raises:
+            Error: If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-        npoltoti = 0
-        npoltoto = 0
-        npblkti_liq = 0
-        npblkto_liq = 0
 
         if fwbs_variables.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
@@ -736,6 +737,24 @@ class BlanketLibrary:
             + fwbs_variables.n_blkt_outboard_module_coolant_sections_poloidal
             * blanket_library.len_blkt_outboard_segment_poloidal
         )
+
+    def thermo_hydraulic_model_pressure_drop_calculations(self, output: bool):
+        """
+        Function that calculates the pressure drops for the thermo-hydraulic model
+        when i_coolant_pumping = 2.
+
+        Within are calculations necessary for the deltap_tot function but not required
+        for other calculations within the thermo-hydraulic model as then they are just
+        included there.
+
+        Returns the pressure drops as a list with the number of entries dependent upon
+        the switches i_blkt_dual_coolant and i_blkt_inboard.
+        """
+        npoltoti = 0
+        npoltoto = 0
+        npblkti_liq = 0
+        npblkto_liq = 0
+
         # Blanket secondary coolant/breeder flow
         pollengi = blanket_library.len_blkt_inboard_segment_poloidal
         pollengo = blanket_library.len_blkt_outboard_segment_poloidal
@@ -1904,6 +1923,7 @@ class BlanketLibrary:
 
         # load in pressures if primary pumping == 2
         if fwbs_variables.i_coolant_pumping == 2:
+            self.set_blanket_module_geometry()
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
