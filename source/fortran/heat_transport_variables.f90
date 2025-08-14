@@ -51,19 +51,19 @@ module heat_transport_variables
     real(dp) :: fmgdmw
     !! power to mgf (motor-generator flywheel) units (MW) (ignored if `i_pf_energy_storage_source=2`)
 
-    real(dp) :: fpumpblkt
+    real(dp) :: f_p_blkt_coolant_pump_total_heat
     !! fraction of total blanket thermal power required to drive the blanket
     !! coolant pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
-    real(dp) :: fpumpdiv
+    real(dp) :: f_p_div_coolant_pump_total_heat
     !! fraction of total divertor thermal power required to drive the divertor
     !! coolant pumps (default assumes water coolant)
 
-    real(dp) :: fpumpfw
+    real(dp) :: f_p_fw_coolant_pump_total_heat
     !! fraction of total first wall thermal power required to drive the FW coolant
     !! pumps (default assumes water coolant) (`i_thermal_electric_conversion=0`)
 
-    real(dp) :: fpumpshld
+    real(dp) :: f_p_shld_coolant_pump_total_heat
     !! fraction of total shield thermal power required to drive the shield coolant
     !! pumps (default assumes water coolant)
 

@@ -593,22 +593,23 @@ class BlanketLibrary:
                     "OP ",
                 )
 
-    def thermo_hydraulic_model_pressure_drop_calculations(self, output: bool):
+    def set_blanket_module_geometry(self):
         """
-        Function that calculates the pressure drops for the thermo-hydraulic model
-        when i_coolant_pumping = 2.
+        Sets the geometry parameters for blanket modules, including coolant channel dimensions,
+        module segmentation, and flow lengths, based on the current configuration and input variables.
 
-        Within are calculations necessary for the deltap_tot function but not required
-        for other calculations within the thermo-hydraulic model as then they are just
-        included there.
+        The method performs the following steps:
+        - Determines inboard and outboard coolant channel radial lengths based on blanket type.
+        - Segments the blanket modules poloidally and toroidally according to input segmentation settings.
+        - Calculates the toroidal segment lengths for inboard and outboard blanket modules.
+        - Computes the poloidal height of blanket modules.
+        - For dual coolant blankets, calculates the minimum available space for liquid breeder pipes
+          in radial, toroidal, and poloidal directions, and checks for geometric constraints.
+        - Calculates total flow lengths for primary coolant channels, used in pressure drop calculations.
 
-        Returns the pressure drops as a list with the number of entries dependent upon
-        the switches i_blkt_dual_coolant and i_blkt_inboard.
+        Raises:
+            Error: If the poloidal segment length is less than three times the minimum liquid breeder pipe width.
         """
-        npoltoti = 0
-        npoltoto = 0
-        npblkti_liq = 0
-        npblkto_liq = 0
 
         if fwbs_variables.i_blanket_type == 5:
             # Unless DCLL then we will use BZ
@@ -631,12 +632,13 @@ class BlanketLibrary:
 
         # If SMS blanket then do not have seperate poloidal modules....
         # Should not need this as n_blkt_inboard_modules_poloidal is input but make sure here.
-        if fwbs_variables.ims == 1:
+        if fwbs_variables.i_blkt_module_segmentation == 1:
             fwbs_variables.n_blkt_inboard_modules_poloidal = 1
             fwbs_variables.n_blkt_outboard_modules_poloidal = 1
 
         # Calculate mid-plane toroidal circumference and segment
-        blanket_library.blwidti = (
+        # of inboard blanket
+        blanket_library.len_blkt_inboard_segment_toroidal = (
             2.0e0
             * np.pi
             * (
@@ -645,7 +647,10 @@ class BlanketLibrary:
                 - build_variables.dr_fw_plasma_gap_inboard
             )
         ) / fwbs_variables.n_blkt_inboard_modules_toroidal
-        blanket_library.blwidto = (
+
+        # Calculate mid-plane toroidal circumference and segment
+        # of outboard blanke
+        blanket_library.len_blkt_outboard_segment_toroidal = (
             2.0e0
             * np.pi
             * (
@@ -656,8 +661,9 @@ class BlanketLibrary:
         ) / fwbs_variables.n_blkt_outboard_modules_toroidal
 
         # Calculate poloidal height of blanket modules
-        self.blanket_mod_pol_height()
+        self.blanket_module_poloidal_height()
 
+        # If liquid breeder or dual coolant blanket then calculate
         if fwbs_variables.i_blkt_dual_coolant > 0:
             # Use smallest space available to pipes for pipe sizes in pumping calculations (worst case)
             if fwbs_variables.i_blkt_inboard == 1:
@@ -678,14 +684,24 @@ class BlanketLibrary:
                 # Toroidal direction
                 fwbs_variables.a_bz_liq = (
                     min(
-                        (blanket_library.blwidti * fwbs_variables.w_f_liq_ib),
-                        (blanket_library.blwidto * fwbs_variables.w_f_liq_ob),
+                        (
+                            blanket_library.len_blkt_inboard_segment_toroidal
+                            * fwbs_variables.w_f_liq_ib
+                        ),
+                        (
+                            blanket_library.len_blkt_outboard_segment_toroidal
+                            * fwbs_variables.w_f_liq_ob
+                        ),
                     )
                     / fwbs_variables.nopipes
                 )
                 # Poloidal
-                if (blanket_library.bllengi < (fwbs_variables.b_bz_liq * 3)) or (
-                    blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3)
+                if (
+                    blanket_library.len_blkt_inboard_segment_poloidal
+                    < (fwbs_variables.b_bz_liq * 3)
+                ) or (
+                    blanket_library.len_blkt_outboard_segment_poloidal
+                    < (fwbs_variables.b_bz_liq * 3)
                 ):
                     eh.report_error(278)
 
@@ -698,38 +714,63 @@ class BlanketLibrary:
                 ) / fwbs_variables.nopol
                 # Toroidal direction
                 fwbs_variables.a_bz_liq = (
-                    blanket_library.blwidto * fwbs_variables.w_f_liq_ob
+                    blanket_library.len_blkt_outboard_segment_toroidal
+                    * fwbs_variables.w_f_liq_ob
                 ) / fwbs_variables.nopipes
                 # Poloidal
-                if blanket_library.bllengo < (fwbs_variables.b_bz_liq * 3):
+                if blanket_library.len_blkt_outboard_segment_poloidal < (
+                    fwbs_variables.b_bz_liq * 3
+                ):
                     eh.report_error(278)
 
         # Calculate total flow lengths, used for pressure drop calculation
         # Blanket primary coolant flow
         blanket_library.len_blkt_inboard_channel_total = (
-            fwbs_variables.bzfllengi_n_rad
+            fwbs_variables.n_blkt_inboard_module_coolant_sections_radial
             * blanket_library.len_blkt_inboard_coolant_channel_radial
-            + fwbs_variables.bzfllengi_n_pol * blanket_library.bllengi
+            + fwbs_variables.n_blkt_inboard_module_coolant_sections_poloidal
+            * blanket_library.len_blkt_inboard_segment_poloidal
         )
         blanket_library.len_blkt_outboard_channel_total = (
-            fwbs_variables.bzfllengo_n_rad
+            fwbs_variables.n_blkt_outboard_module_coolant_sections_radial
             * blanket_library.len_blkt_outboard_coolant_channel_radial
-            + fwbs_variables.bzfllengo_n_pol * blanket_library.bllengo
+            + fwbs_variables.n_blkt_outboard_module_coolant_sections_poloidal
+            * blanket_library.len_blkt_outboard_segment_poloidal
         )
+
+    def thermo_hydraulic_model_pressure_drop_calculations(self, output: bool):
+        """
+        Function that calculates the pressure drops for the thermo-hydraulic model
+        when i_p_coolant_pumping = 2.
+
+        Within are calculations necessary for the deltap_tot function but not required
+        for other calculations within the thermo-hydraulic model as then they are just
+        included there.
+
+        Returns the pressure drops as a list with the number of entries dependent upon
+        the switches i_blkt_dual_coolant and i_blkt_inboard.
+        """
+        npoltoti = 0
+        npoltoto = 0
+        npblkti_liq = 0
+        npblkto_liq = 0
+
         # Blanket secondary coolant/breeder flow
-        pollengi = blanket_library.bllengi
-        pollengo = blanket_library.bllengo
+        pollengi = blanket_library.len_blkt_inboard_segment_poloidal
+        pollengo = blanket_library.len_blkt_outboard_segment_poloidal
         fwbs_variables.nopol = 2
         fwbs_variables.nopipes = 4
         bzfllengi_liq = (
             fwbs_variables.bzfllengi_n_rad_liq
             * blanket_library.len_blkt_inboard_coolant_channel_radial
-            + fwbs_variables.bzfllengi_n_pol_liq * blanket_library.bllengi
+            + fwbs_variables.bzfllengi_n_pol_liq
+            * blanket_library.len_blkt_inboard_segment_poloidal
         )
         bzfllengo_liq = (
             fwbs_variables.bzfllengo_n_rad_liq
             * blanket_library.len_blkt_outboard_coolant_channel_radial
-            + fwbs_variables.bzfllengo_n_pol_liq * blanket_library.bllengo
+            + fwbs_variables.bzfllengo_n_pol_liq
+            * blanket_library.len_blkt_outboard_segment_poloidal
         )
 
         # Coolant channel bends #########
@@ -782,7 +823,8 @@ class BlanketLibrary:
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
             blanket_library.n_blkt_outboard_channels = (
-                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
+                fwbs_variables.f_a_blkt_cooling_channels
+                * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -819,7 +861,8 @@ class BlanketLibrary:
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
                 blanket_library.n_blkt_inboard_channels = (
-                    fwbs_variables.vfblkt * fwbs_variables.vol_blkt_inboard
+                    fwbs_variables.f_a_blkt_cooling_channels
+                    * fwbs_variables.vol_blkt_inboard
                 ) / (
                     np.pi
                     * fwbs_variables.radius_fw_channel
@@ -859,7 +902,8 @@ class BlanketLibrary:
             # coolant frac and channel dimensions
             # Assumes up/down flow, two 90 deg bends per length
             blanket_library.n_blkt_outboard_channels = (
-                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
+                fwbs_variables.f_a_blkt_cooling_channels
+                * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -904,7 +948,8 @@ class BlanketLibrary:
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
                 blanket_library.n_blkt_inboard_channels = (
-                    fwbs_variables.vfblkt * fwbs_variables.vol_blkt_inboard
+                    fwbs_variables.f_a_blkt_cooling_channels
+                    * fwbs_variables.vol_blkt_inboard
                 ) / (
                     np.pi
                     * fwbs_variables.radius_fw_channel
@@ -950,7 +995,8 @@ class BlanketLibrary:
             # Calculate total number of pipes (in all outboard modules) from coolant fraction and
             # channel dimensions (assumes up/down flow, two 90 deg bends per length)
             blanket_library.n_blkt_outboard_channels = (
-                fwbs_variables.vfblkt * fwbs_variables.vol_blkt_outboard
+                fwbs_variables.f_a_blkt_cooling_channels
+                * fwbs_variables.vol_blkt_outboard
             ) / (
                 np.pi
                 * fwbs_variables.radius_fw_channel
@@ -977,7 +1023,8 @@ class BlanketLibrary:
                 # coolant frac and channel dimensions
                 # Assumes up/down flow, two 90 deg bends per length
                 blanket_library.n_blkt_inboard_channels = (
-                    fwbs_variables.vfblkt * fwbs_variables.vol_blkt_inboard
+                    fwbs_variables.f_a_blkt_cooling_channels
+                    * fwbs_variables.vol_blkt_inboard
                 ) / (
                     np.pi
                     * fwbs_variables.radius_fw_channel
@@ -1115,7 +1162,7 @@ class BlanketLibrary:
             return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
         return [deltap_fwi, deltap_fwo, deltap_blo]
 
-    def blanket_mod_pol_height(self):
+    def blanket_module_poloidal_height(self):
         """Calculations for blanket module poloidal height
         author: J. Morris, CCFE, Culham Science Centre
         Calculations for blanket module poloidal height for D shaped and elliptical machines
@@ -1124,7 +1171,7 @@ class BlanketLibrary:
             physics_variables.itart == 1 or fwbs_variables.i_fw_blkt_vv_shape == 1
         ):  # D-shaped machine
             # Segment vertical inboard surface (m)
-            blanket_library.bllengi = (
+            blanket_library.len_blkt_inboard_segment_poloidal = (
                 2.0 * blanket_library.dz_blkt_half
             ) / fwbs_variables.n_blkt_inboard_modules_poloidal
 
@@ -1148,7 +1195,7 @@ class BlanketLibrary:
             # kit hcll version only had the single null option
             if physics_variables.n_divertors == 2:
                 # Double null configuration
-                blanket_library.bllengo = (
+                blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
@@ -1156,7 +1203,7 @@ class BlanketLibrary:
                 )
             else:
                 # single null configuration
-                blanket_library.bllengo = (
+                blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - fwbs_variables.f_ster_div_single)
@@ -1190,7 +1237,7 @@ class BlanketLibrary:
             # kit hcll version only had the single null option
             if physics_variables.n_divertors == 2:
                 # Double null configuration
-                blanket_library.bllengi = (
+                blanket_library.len_blkt_inboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
@@ -1198,7 +1245,7 @@ class BlanketLibrary:
                 )
             else:
                 # single null configuration
-                blanket_library.bllengi = (
+                blanket_library.len_blkt_inboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - fwbs_variables.f_ster_div_single)
@@ -1220,7 +1267,7 @@ class BlanketLibrary:
             # Calculate outboard blanket poloidal length and segment, subtracting divertor length (m)
             if physics_variables.n_divertors == 2:
                 # Double null configuration
-                blanket_library.bllengo = (
+                blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - 2.0 * fwbs_variables.f_ster_div_single)
@@ -1228,7 +1275,7 @@ class BlanketLibrary:
                 )
             else:
                 # single null configuration
-                blanket_library.bllengo = (
+                blanket_library.len_blkt_outboard_segment_poloidal = (
                     0.5
                     * ptor
                     * (1.0 - fwbs_variables.f_ster_div_single)
@@ -1521,7 +1568,7 @@ class BlanketLibrary:
     def thermo_hydraulic_model(self, output: bool):
         """
         Thermo-hydraulic model for first wall and blanket
-        ONLY CALLED if i_coolant_pumping = 2 or 3
+        ONLY CALLED if i_p_coolant_pumping = 2 or 3
 
         Calculations for detailed powerflow model i_thermal_electric_conversion > 1
 
@@ -1875,7 +1922,8 @@ class BlanketLibrary:
         ########################################################
 
         # load in pressures if primary pumping == 2
-        if fwbs_variables.i_coolant_pumping == 2:
+        if fwbs_variables.i_p_coolant_pumping == 2:
+            self.set_blanket_module_geometry()
             deltap = self.thermo_hydraulic_model_pressure_drop_calculations(
                 output=output
             )
@@ -1897,12 +1945,12 @@ class BlanketLibrary:
         # If FW and BB have the same coolant...
         if fwbs_variables.i_fw_blkt_shared_coolant == 0:
             # Total pressure drop in the first wall/blanket  (Pa)
-            if fwbs_variables.i_coolant_pumping == 2:
+            if fwbs_variables.i_p_coolant_pumping == 2:
                 if fwbs_variables.i_blkt_inboard == 1:
                     deltap_fw_blkt = deltap_fwi + deltap_bli + deltap_fwo + deltap_blo
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_fw_blkt = deltap_fwi + deltap_fwo + deltap_blo
-            elif fwbs_variables.i_coolant_pumping == 3:
+            elif fwbs_variables.i_p_coolant_pumping == 3:
                 deltap_fw_blkt = primary_pumping_variables.dp_fw_blkt
             # Total coolant mass flow rate in the first wall/blanket (kg/s)
             blanket_library.mftotal = (
@@ -1930,7 +1978,7 @@ class BlanketLibrary:
 
         # If FW and BB have different coolants...
         elif fwbs_variables.i_fw_blkt_shared_coolant == 1:
-            if fwbs_variables.i_coolant_pumping == 2:
+            if fwbs_variables.i_p_coolant_pumping == 2:
                 # Total pressure drop in the first wall (Pa)
                 deltap_fw = deltap_fwi + deltap_fwo
 
@@ -1939,7 +1987,7 @@ class BlanketLibrary:
                     deltap_blkt = deltap_bli + deltap_blo
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_blkt = deltap_blo
-            elif fwbs_variables.i_coolant_pumping == 3:
+            elif fwbs_variables.i_p_coolant_pumping == 3:
                 deltap_fw = primary_pumping_variables.dp_fw
                 deltap_blkt = primary_pumping_variables.dp_blkt
 
@@ -1997,12 +2045,12 @@ class BlanketLibrary:
         # If the blanket has a liquid metal breeder...
         if fwbs_variables.i_blkt_dual_coolant > 0:
             # Total pressure drop in the blanket (Pa)
-            if fwbs_variables.i_coolant_pumping == 2:
+            if fwbs_variables.i_p_coolant_pumping == 2:
                 if fwbs_variables.i_blkt_inboard == 1:
                     deltap_bl_liq = deltap_bli_liq + deltap_blo_liq
                 if fwbs_variables.i_blkt_inboard == 0:
                     deltap_bl_liq = deltap_blo_liq
-            elif fwbs_variables.i_coolant_pumping == 3:
+            elif fwbs_variables.i_p_coolant_pumping == 3:
                 deltap_bl_liq = primary_pumping_variables.dp_liq
             # Total liquid metal breeder/coolant mass flow rate in the blanket (kg/s)
             fwbs_variables.mfblkt_liq = (
@@ -2283,7 +2331,7 @@ class BlanketLibrary:
         :param no180: Number of 180 degree bends in pipe
         """
         # Friction - for all coolants
-        frict_drop = self.coolant_pressure_drop(
+        frict_drop = self.coolant_friction_pressure_drop(
             i_ps=icoolpump,
             n_pipe_90_deg_bends=no90,
             n_pipe_180_deg_bends=no180,
@@ -2471,7 +2519,7 @@ class BlanketLibrary:
 
         return liquid_breeder_pressure_drop_mhd
 
-    def coolant_pressure_drop(
+    def coolant_friction_pressure_drop(
         self,
         i_ps: int,
         n_pipe_90_deg_bends: float,
@@ -3069,10 +3117,10 @@ def init_blanket_library():
     blanket_library.vol_vv_outboard = 0.0
     blanket_library.len_blkt_inboard_coolant_channel_radial = 0.0
     blanket_library.len_blkt_outboard_coolant_channel_radial = 0.0
-    blanket_library.blwidti = 0.0
-    blanket_library.blwidto = 0.0
-    blanket_library.bllengi = 0.0
-    blanket_library.bllengo = 0.0
+    blanket_library.len_blkt_inboard_segment_toroidal = 0.0
+    blanket_library.len_blkt_outboard_segment_toroidal = 0.0
+    blanket_library.len_blkt_inboard_segment_poloidal = 0.0
+    blanket_library.len_blkt_outboard_segment_poloidal = 0.0
     blanket_library.len_blkt_inboard_channel_total = 0.0
     blanket_library.bzfllengi_liq = 0.0
     blanket_library.bzfllengo_liq = 0.0

@@ -300,15 +300,15 @@ class DCLL(BlanketLibrary):
     def dcll_power_and_heating(self, output: bool):
         # Mechanical Pumping
 
-        # For i_coolant_pumping == 0:
+        # For i_p_coolant_pumping == 0:
         # User sets mechanical pumping power directly (primary_pumping_power)
         # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
 
-        if fwbs_variables.i_coolant_pumping == 1:
+        if fwbs_variables.i_p_coolant_pumping == 1:
             # User sets mechanical pumping power as a fraction of thermal power
             # removed by coolant
             heat_transport_variables.p_fw_coolant_pump_mw = (
-                heat_transport_variables.fpumpfw
+                heat_transport_variables.f_p_fw_coolant_pump_total_heat
                 * (
                     fwbs_variables.p_fw_nuclear_heat_total_mw
                     + fwbs_variables.psurffwi
@@ -316,17 +316,17 @@ class DCLL(BlanketLibrary):
                 )
             )
             primary_pumping_variables.p_blkt_coolant_pump_mw = (
-                heat_transport_variables.fpumpblkt
+                heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                 * fwbs_variables.p_blkt_nuclear_heat_total_mw
             )
-            # For CCFE HCPB: p_shld_coolant_pump_mw = fpumpshld * ( p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
+            # For CCFE HCPB: p_shld_coolant_pump_mw = f_p_shld_coolant_pump_total_heat * ( p_shld_nuclear_heat_mw + p_cp_shield_nuclear_heat_mw )
             # Use same as KIT HCLL for now "p_shld_nuclear_heat_mw is not available and is very small
             # compared to other powers so set to zero."
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld * 0.0
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat * 0.0
             )
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -334,12 +334,12 @@ class DCLL(BlanketLibrary):
                 )
             )
 
-        elif fwbs_variables.i_coolant_pumping in [2, 3]:
+        elif fwbs_variables.i_p_coolant_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
             super().thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.fpumpdiv
+                heat_transport_variables.f_p_div_coolant_pump_total_heat
                 * (
                     physics_variables.p_plasma_separatrix_mw
                     + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -349,14 +349,14 @@ class DCLL(BlanketLibrary):
 
             # Shield power is negligible and this model doesn't have nuclear heating to the shield
             heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.fpumpshld * 0.0
+                heat_transport_variables.f_p_shld_coolant_pump_total_heat * 0.0
             )
 
         if output:
             po.osubhd(self.outfile, "DCLL model: Thermal-hydraulics Component Totals")
 
-            if (fwbs_variables.i_coolant_pumping != 2) and (
-                fwbs_variables.i_coolant_pumping != 3
+            if (fwbs_variables.i_p_coolant_pumping != 2) and (
+                fwbs_variables.i_p_coolant_pumping != 3
             ):
                 po.ovarre(
                     self.outfile,
@@ -541,7 +541,7 @@ class DCLL(BlanketLibrary):
                 / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.i_blkt_dual_coolant > 0:
-                fwbs_variables.vfblkt = (
+                fwbs_variables.f_a_blkt_cooling_channels = (
                     (1 - dcll_variables.f_vol_stl_bz_struct)
                     * dcll_variables.vol_bz_struct
                 ) / fwbs_variables.vol_blkt_total
@@ -614,7 +614,7 @@ class DCLL(BlanketLibrary):
                 / build_variables.dr_blkt_outboard
             )
             if fwbs_variables.i_blkt_dual_coolant > 0:
-                fwbs_variables.vfblkt = (
+                fwbs_variables.f_a_blkt_cooling_channels = (
                     (1 - dcll_variables.f_vol_stl_bz_struct)
                     * dcll_variables.vol_bz_struct
                 ) / fwbs_variables.vol_blkt_total

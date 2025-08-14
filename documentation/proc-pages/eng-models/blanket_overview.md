@@ -24,7 +24,7 @@ $$
 
 ------------------
 
-### Coolant pressure drop | `coolant_pressure_drop()`
+### Coolant pressure drop | `coolant_friction_pressure_drop()`
 
 The pressure drop in the coolant is given by the [Darcy-Weisbach Equation](https://en.wikipedia.org/wiki/Darcy%E2%80%93Weisbach_equation)
 

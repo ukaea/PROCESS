@@ -692,7 +692,7 @@ def init_fwbs_variables():
     fwbs_variables.wallpf = 1.21
     fwbs_variables.whtblbreed = 0.0
     fwbs_variables.m_blkt_beryllium = 0.0
-    fwbs_variables.i_coolant_pumping = 2
+    fwbs_variables.i_p_coolant_pumping = 2
     fwbs_variables.i_shield_mat = 0
     fwbs_variables.i_thermal_electric_conversion = 0
     fwbs_variables.secondary_cycle_liq = 4
@@ -752,7 +752,7 @@ def init_fwbs_variables():
     fwbs_variables.wtbllipb = 0.0
     fwbs_variables.m_blkt_vanadium = 0.0
     fwbs_variables.m_blkt_lithium = 0.0
-    fwbs_variables.vfblkt = 0.25
+    fwbs_variables.f_a_blkt_cooling_channels = 0.25
     fwbs_variables.blktmodel = 0
     fwbs_variables.declblkt = 0.075
     fwbs_variables.declfw = 0.075
@@ -768,7 +768,7 @@ def init_fwbs_variables():
     fwbs_variables.i_blkt_liquid_breeder_type = 0
     fwbs_variables.i_blkt_dual_coolant = 0
     fwbs_variables.i_blkt_liquid_breeder_channel_type = 0
-    fwbs_variables.ims = 0
+    fwbs_variables.i_blkt_module_segmentation = 0
     fwbs_variables.n_liq_recirc = 10
     fwbs_variables.r_f_liq_ib = 0.5
     fwbs_variables.r_f_liq_ob = 0.5
@@ -807,10 +807,10 @@ def init_fwbs_variables():
     fwbs_variables.f_nuc_pow_bz_liq = 0.66
     fwbs_variables.pnuc_fw_ratio_dcll = 0.14
     fwbs_variables.pnuc_blkt_ratio_dcll = 0.86
-    fwbs_variables.bzfllengi_n_rad = 4
-    fwbs_variables.bzfllengi_n_pol = 2
-    fwbs_variables.bzfllengo_n_rad = 4
-    fwbs_variables.bzfllengo_n_pol = 2
+    fwbs_variables.n_blkt_inboard_module_coolant_sections_radial = 4
+    fwbs_variables.n_blkt_inboard_module_coolant_sections_poloidal = 2
+    fwbs_variables.n_blkt_outboard_module_coolant_sections_radial = 4
+    fwbs_variables.n_blkt_outboard_module_coolant_sections_poloidal = 2
     fwbs_variables.bzfllengi_n_rad_liq = 2
     fwbs_variables.bzfllengi_n_pol_liq = 2
     fwbs_variables.bzfllengo_n_rad_liq = 2

@@ -53,7 +53,7 @@ efficiency) proceeds.
 ## Thermo-hydraulic model for first wall and blanket
 
 !!! Note "Note" 
-    This is called for i_coolant_pumping = 2 and 3
+    This is called for i_p_coolant_pumping = 2 and 3
 
 Summary of key variables and switches:  
 
@@ -286,7 +286,7 @@ The model has three mechanical pumping power options, chosen by the user to matc
 !!! Note "Note" 
     For the dual-coolant blanket the 'i_fw_blkt_shared_coolant' switch is relavent for the blanket structure coolant and not the liquid metal breeder/coolant choice.  
 
-The user can select the number poloidal and toroidal modules for the IB and OB BB. The 'ims' switch can be set to 1 for a single-module-segment blanket (default=0):
+The user can select the number poloidal and toroidal modules for the IB and OB BB. The 'i_blkt_module_segmentation' switch can be set to 1 for a single-module-segment blanket (default=0):
     0. Multi-module segment 
     1. Single-module-segment
 

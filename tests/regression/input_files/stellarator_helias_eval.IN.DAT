@@ -167,14 +167,14 @@ f_p_blkt_multiplication    = 1.3 * energy multiplication in blanket and shield
 fblss    = 0.13 * KIT blanket model; steel fraction of breeding zone
 fhole    = 0. * area fraction taken up by other holes (IFE)
 fblbe    = 0.47 * beryllium fraction of blanket by volume (if `iblanket=2`; is Be fraction of breeding zone)
-i_coolant_pumping = 0 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
+i_p_coolant_pumping = 0 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
 fwclfr   = 0.1 * first wall coolant fraction (calculated if `lpulse=1` or `ipowerflow=1`)
 vfshld   = 0.6 * coolant void fraction in shield
 fblli2o  = 0.07 * lithium oxide fraction of blanket by volume (stellarator only)
 fbllipb  = 0. * lithium lead fraction of blanket by volume (stellarator only)
 fblvd    = 0. * vanadium fraction of blanket by volume (stellarator only)
-vfblkt   = 0.1 * coolant void fraction in blanket;
+f_a_blkt_cooling_channels   = 0.1 * coolant void fraction in blanket;
 blktmodel = 0 * switch for blanket/tritium breeding model (see iblanket);
 declblkt = 0.075 * neutron power deposition decay length of blanket structural material [m] (stellarators only)
 declfw   = 0.075 * neutron power deposition decay length of first wall structural material [m] (stellarators only)

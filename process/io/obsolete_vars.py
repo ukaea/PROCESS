@@ -263,7 +263,7 @@ OBS_VARS = {
     "inlet_temp": "temp_blkt_coolant_in",
     "outlet_temp": "temp_blkt_coolant_out",
     "blpressure": "pres_blkt_coolant",
-    "primary_pumping": "i_coolant_pumping",
+    "primary_pumping": "i_p_coolant_pumping",
     "secondary_cycle": "i_thermal_electric_conversion",
     "fwbsshape": "i_fw_blkt_vv_shape",
     "li6enrich": "f_blkt_li6_enrichment",
@@ -394,6 +394,13 @@ OBS_VARS = {
     "vvhealw": None,
     "zeffmax": "zeff_max",
     "f_a_fw_hcd": "f_a_fw_outboard_hcd",
+    "fpumpblkt": "f_p_blkt_coolant_pump_total_heat",
+    "fpumpshld": "f_p_shld_coolant_pump_total_heat",
+    "fpumpfw": "f_p_fw_coolant_pump_total_heat",
+    "fpumpdiv": "f_p_div_coolant_pump_total_heat",
+    "ims": "i_blkt_module_segmentation",
+    "i_coolant_pumping": "i_p_coolant_pumping",
+    "vfblkt": "f_a_blkt_cooling_channels",
 }
 
 OBS_VARS_HELP = {

@@ -730,7 +730,7 @@ class PowerflowCalcParam(NamedTuple):
 
     pres_blkt_coolant: Any = None
 
-    i_coolant_pumping: Any = None
+    i_p_coolant_pumping: Any = None
 
     p_fw_nuclear_heat_total_mw: Any = None
 
@@ -750,19 +750,19 @@ class PowerflowCalcParam(NamedTuple):
 
     p_fw_coolant_pump_mw: Any = None
 
-    fpumpfw: Any = None
+    f_p_fw_coolant_pump_total_heat: Any = None
 
     p_blkt_coolant_pump_mw: Any = None
 
-    fpumpblkt: Any = None
+    f_p_blkt_coolant_pump_total_heat: Any = None
 
     p_shld_coolant_pump_mw: Any = None
 
-    fpumpshld: Any = None
+    f_p_shld_coolant_pump_total_heat: Any = None
 
     p_div_coolant_pump_mw: Any = None
 
-    fpumpdiv: Any = None
+    f_p_div_coolant_pump_total_heat: Any = None
 
     n_divertors: Any = None
 
@@ -814,7 +814,7 @@ class PowerflowCalcParam(NamedTuple):
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=276.80690153753221,
             p_blkt_nuclear_heat_total_mw=1504.9215740808861,
             p_div_nuclear_heat_total_mw=182.71773382328519,
@@ -824,13 +824,13 @@ class PowerflowCalcParam(NamedTuple):
             psurffwi=0,
             psurffwo=0,
             p_fw_coolant_pump_mw=0,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
-            fpumpblkt=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             p_shld_coolant_pump_mw=0,
-            fpumpshld=0.0050000000000000001,
+            f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             p_div_coolant_pump_mw=0,
-            fpumpdiv=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.835845058655043,
@@ -861,7 +861,7 @@ class PowerflowCalcParam(NamedTuple):
             i_blkt_coolant_type=1,
             temp_blkt_coolant_out=823,
             pres_blkt_coolant=15500000,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_fw_nuclear_heat_total_mw=230.98304919926957,
             p_blkt_nuclear_heat_total_mw=1550.1447895848396,
             p_div_nuclear_heat_total_mw=182.66070017727785,
@@ -871,13 +871,13 @@ class PowerflowCalcParam(NamedTuple):
             psurffwi=97.271629070225231,
             psurffwo=176.95628839065773,
             p_fw_coolant_pump_mw=0,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_blkt_coolant_pump_mw=0,
-            fpumpblkt=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             p_shld_coolant_pump_mw=0.0068056297940224456,
-            fpumpshld=0.0050000000000000001,
+            f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             p_div_coolant_pump_mw=1.7970292653352464,
-            fpumpdiv=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
             n_divertors=1,
             p_plasma_rad_mw=287.44866938104849,
             p_fw_alpha_mw=19.829653483586444,
@@ -960,7 +960,7 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_coolant_pumping", powerflowcalcparam.i_coolant_pumping
+        fwbs_variables, "i_p_coolant_pumping", powerflowcalcparam.i_p_coolant_pumping
     )
 
     monkeypatch.setattr(
@@ -1005,7 +1005,11 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
         powerflowcalcparam.p_fw_coolant_pump_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpfw", powerflowcalcparam.fpumpfw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_fw_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_fw_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -1014,7 +1018,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpblkt", powerflowcalcparam.fpumpblkt
+        heat_transport_variables,
+        "f_p_blkt_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_blkt_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
@@ -1024,7 +1030,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpshld", powerflowcalcparam.fpumpshld
+        heat_transport_variables,
+        "f_p_shld_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_shld_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
@@ -1034,7 +1042,9 @@ def test_powerflow_calc(powerflowcalcparam, monkeypatch, ccfe_hcpb):
     )
 
     monkeypatch.setattr(
-        heat_transport_variables, "fpumpdiv", powerflowcalcparam.fpumpdiv
+        heat_transport_variables,
+        "f_p_div_coolant_pump_total_heat",
+        powerflowcalcparam.f_p_div_coolant_pump_total_heat,
     )
 
     monkeypatch.setattr(
@@ -1325,7 +1335,7 @@ class ComponentMassesParam(NamedTuple):
     dr_fw_outboard: Any = None
     a_fw_total: Any = None
     vol_blkt_total: Any = None
-    vfblkt: Any = None
+    f_a_blkt_cooling_channels: Any = None
     m_blkt_beryllium: Any = None
     m_blkt_steel_total: Any = None
     denstl: Any = None
@@ -1416,7 +1426,7 @@ class ComponentMassesParam(NamedTuple):
             dr_fw_outboard=0.018000000000000002,
             a_fw_total=1343.9683762356615,
             vol_blkt_total=1182.5433772195902,
-            vfblkt=0.25,
+            f_a_blkt_cooling_channels=0.25,
             m_blkt_beryllium=0,
             m_blkt_steel_total=0,
             denstl=7800,
@@ -1546,7 +1556,11 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "vol_blkt_total", componentmassesparam.vol_blkt_total
     )
-    monkeypatch.setattr(fwbs_variables, "vfblkt", componentmassesparam.vfblkt)
+    monkeypatch.setattr(
+        fwbs_variables,
+        "f_a_blkt_cooling_channels",
+        componentmassesparam.f_a_blkt_cooling_channels,
+    )
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_beryllium", componentmassesparam.m_blkt_beryllium
     )

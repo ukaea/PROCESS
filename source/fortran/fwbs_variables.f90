@@ -86,7 +86,7 @@ module fwbs_variables
   !! - =4 KIT HCLL model  # REMOVED, no longer usable
   !! - =5 DCLL model -  no nutronics model included (in development) please check/choose values for
   !!                      'dual-coolant blanket' fractions (provided in this file).
-  !!                 -  please use i_coolant_pumping = 0 or 1.
+  !!                 -  please use i_p_coolant_pumping = 0 or 1.
 
   integer :: i_blkt_inboard
   !! switch for inboard blanket:
@@ -253,12 +253,12 @@ module fwbs_variables
   real(dp) :: m_blkt_beryllium
   !! mass of blanket - beryllium part [kg]
 
-  integer :: i_coolant_pumping
+  integer :: i_p_coolant_pumping
   !! Switch for pumping power for primary coolant (mechanical power only and peak first wall
-  !! temperature is only calculated if `i_coolant_pumping=2`):
+  !! temperature is only calculated if `i_p_coolant_pumping=2`):
   !!
   !! - =0 User sets pump power directly (p_blkt_coolant_pump_mw, p_fw_coolant_pump_mw, p_div_coolant_pump_mw, p_shld_coolant_pump_mw)
-  !! - =1 User sets pump power as a fraction of thermal power (fpumpblkt, fpumpfw, fpumpdiv, fpumpshld)
+  !! - =1 User sets pump power as a fraction of thermal power (f_p_blkt_coolant_pump_total_heat, f_p_fw_coolant_pump_total_heat, f_p_div_coolant_pump_total_heat, f_p_shld_coolant_pump_total_heat)
   !! - =2 Mechanical pumping power is calculated
   !! - =3 Mechanical pumping power is calculated using specified pressure drop
 
@@ -469,7 +469,7 @@ module fwbs_variables
   real(dp) :: m_blkt_lithium
   !! mass of blanket - lithium part [kg]
 
-  real(dp) :: vfblkt
+  real(dp) :: f_a_blkt_cooling_channels
   !! coolant void fraction in blanket.
 
   integer :: blktmodel
@@ -511,7 +511,7 @@ module fwbs_variables
   !! -----------------------------------------------------
   !! BLANKET REFACTOR
   !! For DCLL, but to be used by all mods that share blanket library after testing.
-  !! Thermodynamic Model for i_coolant_pumping == 2
+  !! Thermodynamic Model for i_p_coolant_pumping == 2
   !! -----------------------------------------------------
 
   integer :: i_fw_blkt_shared_coolant
@@ -539,7 +539,7 @@ module fwbs_variables
   !!  - =1    Insulating Material, assumed perfect electrical insulator, default density (den_ceramic) is for SiC
   !!  - =2    Insulating Material, electrical conductivity (bz_channel_conduct_liq) is input (default Eurofer), default density (den_ceramic) is for SiC
 
-  integer :: ims
+  integer :: i_blkt_module_segmentation
   !! Switch for Multi Module Segment (MMS) or Single Modle Segment (SMS)
   !!  - =0    MMS
   !!  - =1    SMS
@@ -631,7 +631,7 @@ module fwbs_variables
   real(dp) :: pnuc_fw_ratio_dcll, pnuc_blkt_ratio_dcll
   !! For a dual-coolant blanket, ratio of FW/Blanket nuclear power as fraction of total
 
-  integer :: bzfllengi_n_rad, bzfllengi_n_pol, bzfllengo_n_rad, bzfllengo_n_pol
+  integer :: n_blkt_inboard_module_coolant_sections_radial, n_blkt_inboard_module_coolant_sections_poloidal, n_blkt_outboard_module_coolant_sections_radial, n_blkt_outboard_module_coolant_sections_poloidal
   !! Number of radial and poloidal sections that make up the total primary coolant flow
   !! length in a blanket module (IB and OB)
 

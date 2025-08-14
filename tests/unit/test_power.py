@@ -2114,7 +2114,7 @@ class Power2Param(NamedTuple):
 
     p_div_nuclear_heat_total_mw: Any = None
 
-    i_coolant_pumping: Any = None
+    i_p_coolant_pumping: Any = None
 
     p_tf_nuclear_heat_mw: Any = None
 
@@ -2132,15 +2132,15 @@ class Power2Param(NamedTuple):
 
     p_shld_secondary_heat_mw: Any = None
 
-    fpumpshld: Any = None
+    f_p_shld_coolant_pump_total_heat: Any = None
 
     temp_turbine_coolant_in: Any = None
 
     p_plant_electric_net_mw: Any = None
 
-    fpumpdiv: Any = None
+    f_p_div_coolant_pump_total_heat: Any = None
 
-    fpumpblkt: Any = None
+    f_p_blkt_coolant_pump_total_heat: Any = None
 
     vachtmw: Any = None
 
@@ -2156,7 +2156,7 @@ class Power2Param(NamedTuple):
 
     p_plant_primary_heat_mw: Any = None
 
-    fpumpfw: Any = None
+    f_p_fw_coolant_pump_total_heat: Any = None
 
     p_plant_electric_base_total_mw: Any = None
 
@@ -2302,7 +2302,7 @@ class Power2Param(NamedTuple):
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.69222981118057,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_tf_nuclear_heat_mw=0.044178296011112193,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.3609360176065353,
@@ -2311,11 +2311,11 @@ class Power2Param(NamedTuple):
             p_shld_coolant_pump_mw=0.0068046800880326762,
             p_blkt_coolant_pump_mw=0,
             p_shld_secondary_heat_mw=0,
-            fpumpshld=0.0050000000000000001,
+            f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             temp_turbine_coolant_in=0,
             p_plant_electric_net_mw=0,
-            fpumpdiv=0.0050000000000000001,
-            fpumpblkt=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7942175899286208,
             n_primary_heat_exchangers=3,
@@ -2323,7 +2323,7 @@ class Power2Param(NamedTuple):
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=0,
             p_plant_primary_heat_mw=2620.2218111502593,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_plant_electric_base_total_mw=62.23714391536082,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
@@ -2404,7 +2404,7 @@ class Power2Param(NamedTuple):
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.6352084763719,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_tf_nuclear_heat_mw=0.045535131445547841,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.4036212304705389,
@@ -2413,11 +2413,11 @@ class Power2Param(NamedTuple):
             p_shld_coolant_pump_mw=0.0070181061523526943,
             p_blkt_coolant_pump_mw=0,
             p_shld_secondary_heat_mw=0,
-            fpumpshld=0.0050000000000000001,
+            f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             temp_turbine_coolant_in=0,
             p_plant_electric_net_mw=493.01760776192009,
-            fpumpdiv=0.0050000000000000001,
-            fpumpblkt=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7933419035282543,
             n_primary_heat_exchangers=3,
@@ -2425,7 +2425,7 @@ class Power2Param(NamedTuple):
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=489.9198817019128,
             p_plant_primary_heat_mw=2619.4223856129224,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_plant_electric_base_total_mw=62.237143915360818,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
@@ -2574,7 +2574,7 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping
+        fwbs_variables, "i_p_coolant_pumping", power2param.i_p_coolant_pumping
     )
 
     monkeypatch.setattr(
@@ -2617,7 +2617,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_shld_secondary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpshld", power2param.fpumpshld)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_shld_coolant_pump_total_heat",
+        power2param.f_p_shld_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2631,9 +2635,17 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_plant_electric_net_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpdiv", power2param.fpumpdiv)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_div_coolant_pump_total_heat",
+        power2param.f_p_div_coolant_pump_total_heat,
+    )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpblkt", power2param.fpumpblkt)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_blkt_coolant_pump_total_heat",
+        power2param.f_p_blkt_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power2param.vachtmw)
 
@@ -2669,7 +2681,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_plant_primary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_fw_coolant_pump_total_heat",
+        power2param.f_p_fw_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,

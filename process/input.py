@@ -809,14 +809,16 @@ INPUT_VARIABLES = {
     "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fptemp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
     "fptfnuc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fpumpblkt": InputVariable(
+    "f_p_blkt_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "fpumpdiv": InputVariable(
+    "f_p_div_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "fpumpfw": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 0.2)),
-    "fpumpshld": InputVariable(
+    "f_p_fw_coolant_pump_total_heat": InputVariable(
+        fortran.heat_transport_variables, float, range=(0.0, 0.2)
+    ),
+    "f_p_shld_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "fq95_min": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
@@ -1671,7 +1673,9 @@ INPUT_VARIABLES = {
     "v_tf_coil_dump_quench_max_kv": InputVariable(
         fortran.tfcoil_variables, float, range=(0.0, 100.0)
     ),
-    "vfblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
+    "f_a_blkt_cooling_channels": InputVariable(
+        fortran.fwbs_variables, float, range=(0.0, 1.0)
+    ),
     "vfcblkt": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "f_a_cs_void": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 1.0)
@@ -1840,7 +1844,9 @@ INPUT_VARIABLES = {
     "ifetyp": InputVariable(data_structure.ife_variables, int, range=(0, 4)),
     "ifueltyp": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_plasma_ignited": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "ims": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
+    "i_blkt_module_segmentation": InputVariable(
+        fortran.fwbs_variables, int, choices=[0, 1]
+    ),
     "inuclear": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "iohcl": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
     "ipedestal": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
@@ -1909,7 +1915,7 @@ INPUT_VARIABLES = {
     "ntype": InputVariable(data_structure.vacuum_variables, int, choices=[0, 1]),
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
-    "i_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
+    "i_p_coolant_pumping": InputVariable(fortran.fwbs_variables, int, range=(0, 3)),
     "reinke_mode": InputVariable(data_structure.reinke_variables, int, choices=[0, 1]),
     "scan_dim": InputVariable(fortran.scan_module, int, range=(1, 2)),
     "i_thermal_electric_conversion": InputVariable(

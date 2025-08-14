@@ -515,7 +515,7 @@ class Power:
         and plant power balance constituents.
         None
         """
-        if int(fwbs_variables.i_coolant_pumping) not in (2, 3):
+        if int(fwbs_variables.i_p_coolant_pumping) not in (2, 3):
             primary_pumping_variables.p_fw_blkt_coolant_pump_mw = (
                 heat_transport_variables.p_fw_coolant_pump_mw
                 + heat_transport_variables.p_blkt_coolant_pump_mw
@@ -644,7 +644,7 @@ class Power:
         )
 
         #  Heat removal from first wall and divertor (MW) (only used in costs.f90)
-        if fwbs_variables.i_coolant_pumping != 3:
+        if fwbs_variables.i_p_coolant_pumping != 3:
             heat_transport_variables.p_fw_div_heat_deposited_mw = (
                 power_variables.p_fw_heat_deposited_mw
                 + power_variables.p_div_heat_deposited_mw
@@ -1355,7 +1355,7 @@ class Power:
             # p_plant_electric_gross_mw = (heat_transport_variables.p_plant_primary_heat_mw-hthermmw) * heat_transport_variables.eta_turbine
             if (
                 fwbs_variables.i_blkt_dual_coolant > 0
-                and fwbs_variables.i_coolant_pumping == 2
+                and fwbs_variables.i_p_coolant_pumping == 2
             ):
                 heat_transport_variables.p_plant_electric_gross_mw = (
                     (
@@ -2219,10 +2219,10 @@ def init_heat_transport_variables():
     heat_transport_variables.p_plant_electric_base_total_mw = 0.0
     heat_transport_variables.fgrosbop = 0.0
     heat_transport_variables.fmgdmw = 0.0
-    heat_transport_variables.fpumpblkt = 0.005
-    heat_transport_variables.fpumpdiv = 0.005
-    heat_transport_variables.fpumpfw = 0.005
-    heat_transport_variables.fpumpshld = 0.005
+    heat_transport_variables.f_p_blkt_coolant_pump_total_heat = 0.005
+    heat_transport_variables.f_p_div_coolant_pump_total_heat = 0.005
+    heat_transport_variables.f_p_fw_coolant_pump_total_heat = 0.005
+    heat_transport_variables.f_p_shld_coolant_pump_total_heat = 0.005
     heat_transport_variables.helpow = 0.0
     heat_transport_variables.helpow_cryal = 0.0
     heat_transport_variables.p_coolant_pump_elec_total_mw = 0.0
