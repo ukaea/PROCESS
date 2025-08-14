@@ -11,6 +11,7 @@ import process.superconductors as superconductors
 from process import fortran as ft
 from process import process_output as op
 from process.data_structure import build_variables as bv
+from process.data_structure import constraint_variables as ctv
 from process.data_structure import cs_fatigue_variables as csfv
 from process.data_structure import pfcoil_variables
 from process.data_structure import rebco_variables as rcv
@@ -18,7 +19,6 @@ from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.exceptions import ProcessValueError
 from process.fortran import constants, numerics
-from process.fortran import constraint_variables as ctv
 from process.fortran import error_handling as eh
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import physics_variables as pv

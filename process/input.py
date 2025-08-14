@@ -153,7 +153,9 @@ INPUT_VARIABLES = {
     # TODO: does fimp require an additional range?
     "fimp": InputVariable(data_structure.impurity_radiation_module, float, array=True),
     "fkzohm": InputVariable(fortran.physics_variables, float, range=(0.5, 2.0)),
-    "fnesep": InputVariable(fortran.constraint_variables, float, range=(0.1, 20.0)),
+    "fnesep": InputVariable(
+        data_structure.constraint_variables, float, range=(0.1, 20.0)
+    ),
     "abktflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "adivflnc": InputVariable(data_structure.cost_variables, float, range=(0.1, 100.0)),
     "admv": InputVariable(
@@ -194,7 +196,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "p_hcd_injected_min_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.01, 100.0)
+        data_structure.constraint_variables, float, range=(0.01, 100.0)
     ),
     "avail_min": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "b_crit_upper_nbti": InputVariable(
@@ -217,7 +219,7 @@ INPUT_VARIABLES = {
         data_structure.divertor_variables, float, range=(0.0, 360.0)
     ),
     "beta_poloidal_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.01, 2.0)
+        data_structure.constraint_variables, float, range=(0.01, 2.0)
     ),
     "betai": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
@@ -226,7 +228,7 @@ INPUT_VARIABLES = {
         data_structure.divertor_variables, float, range=(0.0, 1.5707)
     ),
     "big_q_plasma_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.01, 100.0)
+        data_structure.constraint_variables, float, range=(0.01, 100.0)
     ),
     "bioshld_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
@@ -257,7 +259,7 @@ INPUT_VARIABLES = {
         data_structure.stellarator_variables, float, range=(0.0001, 0.01)
     ),
     "b_tf_inboard_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.1, 50.0)
+        data_structure.constraint_variables, float, range=(0.1, 50.0)
     ),
     "f_c_plasma_bootstrap_max": InputVariable(
         fortran.current_drive_variables, float, range=(-0.999, 0.999)
@@ -628,7 +630,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_alpha_energy_confinement_min": InputVariable(
-        fortran.constraint_variables, float, range=(1.0, 100.0)
+        data_structure.constraint_variables, float, range=(1.0, 100.0)
     ),
     "f_asym": InputVariable(
         data_structure.stellarator_variables, float, range=(0.9, 2.0)
@@ -646,7 +648,9 @@ INPUT_VARIABLES = {
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "f_fw_peak": InputVariable(fortran.fwbs_variables, float, range=(1.0, 100.0)),
-    "f_fw_rad_max": InputVariable(fortran.constraint_variables, float, range=(0.1, 10)),
+    "f_fw_rad_max": InputVariable(
+        data_structure.constraint_variables, float, range=(0.1, 10)
+    ),
     "f_nd_alpha_electron": InputVariable(
         fortran.physics_variables, float, range=(1e-12, 1.0)
     ),
@@ -680,24 +684,24 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(2.0, 10.0)
     ),
     "falpha_energy_confinement": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fauxbop": InputVariable(data_structure.ife_variables, float, range=(0.0, 1.0)),
     "fp_hcd_injected_min_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "favail": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fbeta_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fbeta_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fbeta_poloidal": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fbeta_poloidal_eps": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fblbe": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fblbreed": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
@@ -730,47 +734,63 @@ INPUT_VARIABLES = {
     "fcontng": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcoolcp": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
     "ftemp_croco_quench_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fcr0": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
     "fcspc": InputVariable(data_structure.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcutfsu": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
-    "fdene": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fdene": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "f_ster_div_single": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fdiva": InputVariable(data_structure.divertor_variables, float, range=(0.1, 2.0)),
     "fdivwet": InputVariable(
         data_structure.stellarator_variables, float, range=(0.01, 1.0)
     ),
-    "fdtmp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fdtmp": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fecrh_ignition": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "feffcd": InputVariable(fortran.current_drive_variables, float, range=(0.0, 20.0)),
-    "fflutf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fflutf": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fp_fusion_total_max_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "feta_cd_norm_hcd_primary_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "f_a_fw_outboard_hcd": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 1.0)
     ),
     "fpflux_div_heat_load_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fhole": InputVariable(fortran.fwbs_variables, float, range=(0.0, 1.0)),
     "fhts": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 1.0)),
-    "fiooic": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fipir": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fjohc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fjohc0": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fjprot": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fiooic": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fipir": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fjohc": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fjohc0": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fjprot": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fkind": InputVariable(data_structure.cost_variables, float, range=(0.5, 1.0)),
     "fl_h_threshold": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1000000.0)
+        data_structure.constraint_variables, float, range=(0.001, 1000000.0)
     ),
     "flirad": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "flpitch": InputVariable(
@@ -780,23 +800,27 @@ INPUT_VARIABLES = {
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
     "fmaxvvstress": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fmgdmw": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 100.0)
     ),
-    "fmva": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fnbshinef": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+    "fmva": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "fncycle": InputVariable(fortran.constraint_variables, float, range=(1e-08, 1.0)),
+    "fnbshinef": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fncycle": InputVariable(
+        data_structure.constraint_variables, float, range=(1e-08, 1.0)
+    ),
     "fndt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "fne0": InputVariable(fortran.physics_variables, float, range=(0.001, 1.0)),
     "fniterpump": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "foh_stress": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "f_p_beam_orbit_loss": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 0.999)
@@ -805,24 +829,32 @@ INPUT_VARIABLES = {
         fortran.physics_variables, float, range=(0.001, 1.0)
     ),
     "fb_tf_inboard_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fp_hcd_injected_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fp_plant_electric_net_required_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fpoloidalpower": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fradius_beam_tangency": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "fpsepbqar": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
-    "fpsepr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fptemp": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fptfnuc": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fpsepbqar": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
+    ),
+    "fpsepr": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fptemp": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fptfnuc": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "f_p_blkt_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
@@ -835,58 +867,80 @@ INPUT_VARIABLES = {
     "f_p_shld_coolant_pump_total_heat": InputVariable(
         fortran.heat_transport_variables, float, range=(0.0, 0.2)
     ),
-    "fq95_min": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fq95_min": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fbig_q_plasma_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fr_conducting_wall": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fracture_toughness": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.1, 100000000.0)
     ),
-    "fradpwr": InputVariable(fortran.constraint_variables, float, range=(0.0, 1.0)),
+    "fradpwr": InputVariable(
+        data_structure.constraint_variables, float, range=(0.0, 1.0)
+    ),
     "fpflux_fw_rad_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1.0)
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "f_radius_beam_tangency_rmajor": InputVariable(
         fortran.current_drive_variables, float, range=(0.5, 2.0)
     ),
-    "freinke": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "freinke": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "frhocp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
     "frholeg": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 5.0)),
-    "frminor": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "frminor": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "frrmax": InputVariable(data_structure.ife_variables, float, range=(1e-06, 1.0)),
     "fseppc": InputVariable(
         data_structure.build_variables, float, range=(1000000.0, 1000000000.0)
     ),
-    "fstr_wp": InputVariable(fortran.constraint_variables, float, range=(1e-09, 10.0)),
-    "fstrcase": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "fstrcond": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fstr_wp": InputVariable(
+        data_structure.constraint_variables, float, range=(1e-09, 10.0)
+    ),
+    "fstrcase": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "fstrcond": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ft_burn_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "ft_current_ramp_up": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "ftbr": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ftbr": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ft_cycle_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "ftmargoh": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
-    "ftmargtf": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "ftmargoh": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
+    "ftmargtf": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "ftoroidalgap": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.001, 10.0)
     ),
     "ftemp_fw_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
-    "fvdump": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fvdump": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fvoldw": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvolsi": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvolso": InputVariable(fortran.fwbs_variables, float, range=(0.0, 10.0)),
     "fvs_plasma_total_required": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "f_c_plasma_non_inductive": InputVariable(
         fortran.physics_variables, float, range=(0.0, 1.0)
@@ -894,7 +948,9 @@ INPUT_VARIABLES = {
     "fvs_cs_pf_total_ramp": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.001, 10.0)
     ),
-    "fvvhe": InputVariable(fortran.constraint_variables, float, range=(0.001, 10.0)),
+    "fvvhe": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "fw_armour_thickness": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 1.0)
     ),
@@ -902,7 +958,7 @@ INPUT_VARIABLES = {
         fortran.fwbs_variables, float, range=(1.0, 100.0)
     ),
     "fpflux_fw_neutron_max_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 10.0)
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "fwbs_nref": InputVariable(
         data_structure.cost_variables, float, range=(1000.0, 100000000.0)
@@ -921,7 +977,9 @@ INPUT_VARIABLES = {
     "fwdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "fwdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "fzactual": InputVariable(data_structure.reinke_variables, float, range=(0.0, 1.0)),
-    "fzeff_max": InputVariable(fortran.constraint_variables, float, range=(0.001, 1.0)),
+    "fzeff_max": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "eta_cd_norm_ecrh": InputVariable(
         fortran.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -929,7 +987,7 @@ INPUT_VARIABLES = {
         data_structure.primary_pumping_variables, float, range=(1.0, 2.0)
     ),
     "eta_cd_norm_hcd_primary_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.01, 10.0)
+        data_structure.constraint_variables, float, range=(0.01, 10.0)
     ),
     "gapomin": InputVariable(data_structure.build_variables, float, range=(0.0, 10.0)),
     "gas_buildings_h": InputVariable(
@@ -1119,13 +1177,15 @@ INPUT_VARIABLES = {
         data_structure.pf_power_variables, float, range=(0.0, 2000.0)
     ),
     "pflux_fw_rad_max": InputVariable(
-        fortran.constraint_variables, float, range=(0.1, 10.0)
+        data_structure.constraint_variables, float, range=(0.1, 10.0)
     ),
     "mbvfac": InputVariable(
         data_structure.buildings_variables, float, range=(0.9, 3.0)
     ),
     "mcdriv": InputVariable(data_structure.ife_variables, float, range=(0.1, 10.0)),
-    "mvalim": InputVariable(fortran.constraint_variables, float, range=(0.0, 1000.0)),
+    "mvalim": InputVariable(
+        data_structure.constraint_variables, float, range=(0.0, 1000.0)
+    ),
     "n_cycle_min": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.0, 100000000.0)
     ),
@@ -1145,11 +1205,13 @@ INPUT_VARIABLES = {
         fortran.current_drive_variables, float, range=(0.01, 0.5)
     ),
     "f_p_beam_shine_through_max": InputVariable(
-        fortran.constraint_variables, float, range=(1e-20, 0.1)
+        data_structure.constraint_variables, float, range=(1e-20, 0.1)
     ),
     "neped": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
     "nesep": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
-    "nflutfmax": InputVariable(fortran.constraint_variables, float, range=(1e20, 1e24)),
+    "nflutfmax": InputVariable(
+        data_structure.constraint_variables, float, range=(1e20, 1e24)
+    ),
     "oacdcp": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
     ),
@@ -1184,7 +1246,7 @@ INPUT_VARIABLES = {
         data_structure.vacuum_variables, float, range=(1e-08, 0.001)
     ),
     "p_plasma_separatrix_min_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.1, 1000.0)
+        data_structure.constraint_variables, float, range=(0.1, 1000.0)
     ),
     "pdrive": InputVariable(
         data_structure.ife_variables, float, range=(1000000.0, 200000000.0)
@@ -1221,7 +1283,7 @@ INPUT_VARIABLES = {
     "plsepi": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "plsepo": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "p_plant_electric_net_required_mw": InputVariable(
-        fortran.constraint_variables, float, range=(1.0, 10000.0)
+        data_structure.constraint_variables, float, range=(1.0, 10000.0)
     ),
     "pnuc_fw_ratio_dcll": InputVariable(
         fortran.fwbs_variables, float, range=(0.0, 1.0)
@@ -1236,7 +1298,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "p_fusion_total_max_mw": InputVariable(
-        fortran.constraint_variables, float, range=(1.0, 10000.0)
+        data_structure.constraint_variables, float, range=(1.0, 10000.0)
     ),
     "prdiv": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable(
@@ -1244,14 +1306,18 @@ INPUT_VARIABLES = {
     ),
     "prn1": InputVariable(data_structure.divertor_variables, float, range=(0.0, 1.0)),
     "psepbqarmax": InputVariable(
-        fortran.constraint_variables, float, range=(1.0, 50.0)
+        data_structure.constraint_variables, float, range=(1.0, 50.0)
     ),
-    "pseprmax": InputVariable(fortran.constraint_variables, float, range=(1.0, 60.0)),
+    "pseprmax": InputVariable(
+        data_structure.constraint_variables, float, range=(1.0, 60.0)
+    ),
     "ptargf": InputVariable(data_structure.ife_variables, float, range=(0.1, 100.0)),
     "temp_cp_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 573.15)
     ),
-    "ptfnucmax": InputVariable(fortran.constraint_variables, float, range=(1e-06, 1.0)),
+    "ptfnucmax": InputVariable(
+        data_structure.constraint_variables, float, range=(1e-06, 1.0)
+    ),
     "pulsetimings": InputVariable(
         data_structure.times_variables, float, range=(0.0, 1.0)
     ),
@@ -1270,7 +1336,9 @@ INPUT_VARIABLES = {
     ),
     "q0": InputVariable(fortran.physics_variables, float, range=(0.01, 20.0)),
     "q95": InputVariable(fortran.physics_variables, float, range=(1.0, 50.0)),
-    "q95_fixed": InputVariable(fortran.constraint_variables, float, range=(1.0, 50.0)),
+    "q95_fixed": InputVariable(
+        data_structure.constraint_variables, float, range=(1.0, 50.0)
+    ),
     "qnty_sfty_fac": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
@@ -1446,7 +1514,7 @@ INPUT_VARIABLES = {
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
     "t_burn_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 1000000.0)
+        data_structure.constraint_variables, float, range=(0.001, 1000000.0)
     ),
     "t_cable_tf": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
@@ -1507,7 +1575,9 @@ INPUT_VARIABLES = {
     ),
     "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
     "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
-    "tbrmin": InputVariable(fortran.constraint_variables, float, range=(0.001, 2.0)),
+    "tbrmin": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 2.0)
+    ),
     "tcomrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tcoolin": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 373.15)
@@ -1516,7 +1586,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(1.0, 300.0)
     ),
     "t_cycle_min": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 2000000.0)
+        data_structure.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
     "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
@@ -1763,7 +1833,7 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(0.0, 10.0)
     ),
     "pflux_fw_neutron_max_mw": InputVariable(
-        fortran.constraint_variables, float, range=(0.001, 50.0)
+        data_structure.constraint_variables, float, range=(0.001, 50.0)
     ),
     "walker_coefficient": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.1, 10.0)
@@ -1815,7 +1885,9 @@ INPUT_VARIABLES = {
     "xpertin": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
-    "zeff_max": InputVariable(fortran.constraint_variables, float, range=(1.0, 10.0)),
+    "zeff_max": InputVariable(
+        data_structure.constraint_variables, float, range=(1.0, 10.0)
+    ),
     "blktmodel": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),
     "blkttype": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
     "breedmat": InputVariable(fortran.fwbs_variables, int, choices=[1, 2, 3]),
@@ -1869,7 +1941,9 @@ INPUT_VARIABLES = {
     "i_pulsed_plant": InputVariable(
         data_structure.pulse_variables, int, choices=[0, 1]
     ),
-    "i_q95_fixed": InputVariable(fortran.constraint_variables, int, choices=[0, 1]),
+    "i_q95_fixed": InputVariable(
+        data_structure.constraint_variables, int, choices=[0, 1]
+    ),
     "i_r_cp_top": InputVariable(data_structure.build_variables, int, choices=[0, 1, 2]),
     "i_rad_loss": InputVariable(fortran.physics_variables, int, choices=[0, 1, 2]),
     "i_shield_mat": InputVariable(fortran.fwbs_variables, int, choices=[0, 1]),

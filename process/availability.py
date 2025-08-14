@@ -5,6 +5,7 @@ from scipy.special import comb as combinations
 
 from process import fortran as ft
 from process import process_output as po
+from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import ife_variables as ifev
@@ -12,7 +13,6 @@ from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
 from process.exceptions import ProcessValueError
-from process.fortran import constraint_variables as ctv
 from process.fortran import fwbs_variables as fwbsv
 from process.fortran import physics_variables as pv
 

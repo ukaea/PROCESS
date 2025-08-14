@@ -13,6 +13,7 @@ from process import (
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
+    constraint_variables,
     cost_variables,
     divertor_variables,
     impurity_radiation_module,
@@ -28,7 +29,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    constraint_variables,
     current_drive_variables,
     error_handling,
     fwbs_variables,

@@ -1,6 +1,7 @@
 from . import (
     build_variables,
     buildings_variables,
+    constraint_variables,
     cost_2015_variables,
     cost_variables,
     cs_fatigue_variables,
@@ -28,6 +29,7 @@ from . import (
 __all__ = [
     "build_variables",
     "buildings_variables",
+    "constraint_variables",
     "cost_2015_variables",
     "cost_variables",
     "cs_fatigue_variables",

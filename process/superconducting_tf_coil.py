@@ -8,6 +8,7 @@ import process.superconductors as superconductors
 from process import process_output as po
 from process.data_structure import (
     build_variables,
+    constraint_variables,
     divertor_variables,
     pfcoil_variables,
     rebco_variables,
@@ -16,7 +17,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    constraint_variables,
     error_handling,
     global_variables,
     physics_variables,

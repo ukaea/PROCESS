@@ -11,10 +11,11 @@ import process.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import data_structure
 from process.blanket_library import init_blanket_library
-from process.constraints import ConstraintManager, init_constraint_variables
+from process.constraints import ConstraintManager
 from process.current_drive import init_current_drive_variables
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
+from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
 from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variables
