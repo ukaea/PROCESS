@@ -509,14 +509,14 @@ def constraint_equation_12():
     cc = (
         1.0
         - fortran.constraint_variables.fvs_plasma_total_required
-        * (-fortran.pfcoil_variables.vs_cs_pf_total_pulse)
+        * (-data_structure.pfcoil_variables.vs_cs_pf_total_pulse)
         / fortran.physics_variables.vs_plasma_total_required
     )
 
     return ConstraintResult(
         cc,
-        fortran.pfcoil_variables.vs_plasma_total_required * (1.0 - cc),
-        fortran.pfcoil_variables.vs_plasma_total_required * cc,
+        data_structure.pfcoil_variables.vs_plasma_total_required * (1.0 - cc),
+        data_structure.pfcoil_variables.vs_plasma_total_required * cc,
     )
 
 
@@ -884,12 +884,12 @@ def constraint_equation_26():
     j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m2)
     """
     return ConstraintResult(
-        fortran.pfcoil_variables.j_cs_flat_top_end
-        / fortran.pfcoil_variables.j_cs_critical_flat_top_end
+        data_structure.pfcoil_variables.j_cs_flat_top_end
+        / data_structure.pfcoil_variables.j_cs_critical_flat_top_end
         - 1.0 * fortran.constraint_variables.fjohc,
-        fortran.pfcoil_variables.j_cs_critical_flat_top_end,
-        fortran.pfcoil_variables.j_cs_critical_flat_top_end
-        - fortran.pfcoil_variables.j_cs_flat_top_end
+        data_structure.pfcoil_variables.j_cs_critical_flat_top_end,
+        data_structure.pfcoil_variables.j_cs_critical_flat_top_end
+        - data_structure.pfcoil_variables.j_cs_flat_top_end
         / fortran.constraint_variables.fjohc,
     )
 
@@ -904,12 +904,12 @@ def constraint_equation_27():
     j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m2)
     """
     return ConstraintResult(
-        fortran.pfcoil_variables.j_cs_pulse_start
-        / fortran.pfcoil_variables.j_cs_critical_pulse_start
+        data_structure.pfcoil_variables.j_cs_pulse_start
+        / data_structure.pfcoil_variables.j_cs_critical_pulse_start
         - 1.0 * fortran.constraint_variables.fjohc0,
-        fortran.pfcoil_variables.j_cs_critical_pulse_start,
-        fortran.pfcoil_variables.j_cs_critical_pulse_start
-        - fortran.pfcoil_variables.j_cs_pulse_start
+        data_structure.pfcoil_variables.j_cs_critical_pulse_start,
+        data_structure.pfcoil_variables.j_cs_critical_pulse_start
+        - data_structure.pfcoil_variables.j_cs_pulse_start
         / fortran.constraint_variables.fjohc0,
     )
 
@@ -1375,17 +1375,17 @@ def constraint_equation_51():
     vs_plasma_ind_ramp: internal and external plasma inductance V-s (Wb))
     vs_cs_pf_total_ramp: total flux swing for startup (Wb)
     """
-    cc = 1.0 - fortran.pfcoil_variables.fvs_cs_pf_total_ramp * abs(
+    cc = 1.0 - data_structure.pfcoil_variables.fvs_cs_pf_total_ramp * abs(
         (
             fortran.physics_variables.vs_plasma_res_ramp
             + fortran.physics_variables.vs_plasma_ind_ramp
         )
-        / fortran.pfcoil_variables.vs_cs_pf_total_ramp
+        / data_structure.pfcoil_variables.vs_cs_pf_total_ramp
     )
     return ConstraintResult(
         cc,
-        fortran.pfcoil_variables.vs_cs_pf_total_ramp * (1.0 - cc),
-        fortran.pfcoil_variables.vs_cs_pf_total_ramp * cc,
+        data_structure.pfcoil_variables.vs_cs_pf_total_ramp * (1.0 - cc),
+        data_structure.pfcoil_variables.vs_cs_pf_total_ramp * cc,
     )
 
 
@@ -1513,10 +1513,11 @@ def constraint_equation_60():
     return ConstraintResult(
         1.0
         - fortran.constraint_variables.ftmargoh
-        * fortran.pfcoil_variables.temp_cs_margin
+        * data_structure.pfcoil_variables.temp_cs_margin
         / fortran.tfcoil_variables.tmargmin_cs,
         fortran.tfcoil_variables.tmargmin_cs,
-        fortran.tfcoil_variables.tmargmin_cs - fortran.pfcoil_variables.temp_cs_margin,
+        fortran.tfcoil_variables.tmargmin_cs
+        - data_structure.pfcoil_variables.temp_cs_margin,
     )
 
 
@@ -1771,27 +1772,29 @@ def constraint_equation_72():
     ):
         cc = (
             max(
-                fortran.pfcoil_variables.s_shear_cs_peak,
+                data_structure.pfcoil_variables.s_shear_cs_peak,
                 fortran.tfcoil_variables.sig_tf_cs_bucked,
             )
-            / fortran.pfcoil_variables.alstroh
+            / data_structure.pfcoil_variables.alstroh
             - 1.0 * fortran.constraint_variables.foh_stress
         )
-        err = fortran.pfcoil_variables.alstroh - max(
-            fortran.pfcoil_variables.s_shear_cs_peak,
+        err = data_structure.pfcoil_variables.alstroh - max(
+            data_structure.pfcoil_variables.s_shear_cs_peak,
             fortran.tfcoil_variables.sig_tf_cs_bucked,
         )
     # Free standing CS
     else:
         cc = (
-            fortran.pfcoil_variables.s_shear_cs_peak / fortran.pfcoil_variables.alstroh
+            data_structure.pfcoil_variables.s_shear_cs_peak
+            / data_structure.pfcoil_variables.alstroh
             - 1.0 * fortran.constraint_variables.foh_stress
         )
         err = (
-            fortran.pfcoil_variables.alstroh - fortran.pfcoil_variables.s_shear_cs_peak
+            data_structure.pfcoil_variables.alstroh
+            - data_structure.pfcoil_variables.s_shear_cs_peak
         )
 
-    return ConstraintResult(cc, fortran.pfcoil_variables.alstroh, err)
+    return ConstraintResult(cc, data_structure.pfcoil_variables.alstroh, err)
 
 
 @ConstraintManager.register_constraint(73, "MW", ">=")
@@ -1959,18 +1962,18 @@ def constraint_equation_79():
     """
     cc = (
         max(
-            fortran.pfcoil_variables.b_cs_peak_flat_top_end,
-            fortran.pfcoil_variables.b_cs_peak_pulse_start,
+            data_structure.pfcoil_variables.b_cs_peak_flat_top_end,
+            data_structure.pfcoil_variables.b_cs_peak_pulse_start,
         )
-        / fortran.pfcoil_variables.b_cs_limit_max
-        - 1.0 * fortran.pfcoil_variables.fb_cs_limit_max
+        / data_structure.pfcoil_variables.b_cs_limit_max
+        - 1.0 * data_structure.pfcoil_variables.fb_cs_limit_max
     )
     return ConstraintResult(
         cc,
-        fortran.pfcoil_variables.b_cs_limit_max,
+        data_structure.pfcoil_variables.b_cs_limit_max,
         max(
-            fortran.pfcoil_variables.b_cs_peak_flat_top_end,
-            fortran.pfcoil_variables.b_cs_peak_pulse_start,
+            data_structure.pfcoil_variables.b_cs_peak_flat_top_end,
+            data_structure.pfcoil_variables.b_cs_peak_pulse_start,
         )
         * cc,
     )

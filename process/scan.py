@@ -12,6 +12,7 @@ from process.data_structure import (
     cs_fatigue_variables,
     divertor_variables,
     impurity_radiation_module,
+    pfcoil_variables,
     rebco_variables,
 )
 from process.exceptions import ProcessValueError
@@ -24,7 +25,6 @@ from process.fortran import (
     global_variables,
     heat_transport_variables,
     numerics,
-    pfcoil_variables,
     physics_variables,
     scan_module,
     tfcoil_variables,

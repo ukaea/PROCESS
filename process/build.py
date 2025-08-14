@@ -8,6 +8,7 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     divertor_variables,
+    pfcoil_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -16,7 +17,6 @@ from process.fortran import (
     error_handling,
     fwbs_variables,
     numerics,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )

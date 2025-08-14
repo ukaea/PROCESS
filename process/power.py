@@ -8,6 +8,7 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    pfcoil_variables,
     power_variables,
     primary_pumping_variables,
     structure_variables,
@@ -22,7 +23,6 @@ from process.fortran import (
     heat_transport_variables,
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
@@ -48,17 +48,17 @@ class Power:
         <I>dI/dt</I> at the time periods.
         None
         """
-        powpfii = np.zeros((pfcoil_variables.ngc2,))
-        cktr = np.zeros((pfcoil_variables.ngc2,))
-        pfcr = np.zeros((pfcoil_variables.ngc2,))
-        albusa = np.zeros((pfcoil_variables.ngc2,))
-        pfbusr = np.zeros((pfcoil_variables.ngc2,))
-        pfcr = np.zeros((pfcoil_variables.ngc2,))
-        cktr = np.zeros((pfcoil_variables.ngc2,))
-        rcktvm = np.zeros((pfcoil_variables.ngc2,))
-        rcktpm = np.zeros((pfcoil_variables.ngc2,))
-        vpfi = np.zeros((pfcoil_variables.ngc2,))
-        psmva = np.zeros((pfcoil_variables.ngc2,))
+        powpfii = np.zeros((pfcoil_variables.NGC2,))
+        cktr = np.zeros((pfcoil_variables.NGC2,))
+        pfcr = np.zeros((pfcoil_variables.NGC2,))
+        albusa = np.zeros((pfcoil_variables.NGC2,))
+        pfbusr = np.zeros((pfcoil_variables.NGC2,))
+        pfcr = np.zeros((pfcoil_variables.NGC2,))
+        cktr = np.zeros((pfcoil_variables.NGC2,))
+        rcktvm = np.zeros((pfcoil_variables.NGC2,))
+        rcktpm = np.zeros((pfcoil_variables.NGC2,))
+        vpfi = np.zeros((pfcoil_variables.NGC2,))
+        psmva = np.zeros((pfcoil_variables.NGC2,))
         poloidalenergy = np.zeros((6,))
         inductxcurrent = np.zeros((6,))
         pfdissipation = np.zeros((5,))

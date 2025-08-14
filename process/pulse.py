@@ -1,12 +1,11 @@
 from process import process_output as po
-from process.data_structure import pulse_variables, times_variables
+from process.data_structure import pfcoil_variables, pulse_variables, times_variables
 from process.fortran import (
     constants,
     constraint_variables,
     error_handling,
     numerics,
     pf_power_variables,
-    pfcoil_variables,
     physics_variables,
 )
 

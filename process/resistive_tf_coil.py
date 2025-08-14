@@ -3,11 +3,10 @@ import logging
 import numba
 import numpy as np
 
-from process.data_structure import build_variables
+from process.data_structure import build_variables, pfcoil_variables
 from process.fortran import (
     constants,
     error_handling,
-    pfcoil_variables,
     physics_variables,
     sctfcoil_module,
     tfcoil_variables,
