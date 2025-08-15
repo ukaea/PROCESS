@@ -26,6 +26,7 @@ from process.utilities.f2py_string_patch import (
 )
 
 RMU0 = constants.rmu0
+PI = constants.pi
 
 
 class TFCoil:
@@ -2808,6 +2809,7 @@ class TFCoil:
         return th_cond
 
     @staticmethod
+    @numba.njit(cache=True)
     def tf_coil_self_inductance(
         dr_tf_inboard: float,
         r_tf_arc: np.ndarray,
@@ -2882,7 +2884,7 @@ class TFCoil:
 
             for _ in range(NINTERVALS):
                 # Field in the dr_bore for unit current
-                b = RMU0 / (2.0e0 * np.pi * r)
+                b = RMU0 / (2.0e0 * PI * r)
                 # Find out if there is a dr_bore
                 if x0 - r < ai:
                     h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
@@ -2926,7 +2928,7 @@ class TFCoil:
             ind_tf_coil = (
                 (z_tf_inside_half + dr_tf_outboard)
                 * RMU0
-                / constants.pi
+                / PI
                 * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
             )
 
