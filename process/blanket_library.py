@@ -2092,6 +2092,12 @@ class BlanketLibrary:
             )
             po.ovarre(
                 self.outfile,
+                "Radius of blanket cooling channels (m)",
+                "(radius_blkt_channel)",
+                fwbs_variables.radius_blkt_channel,
+            )
+            po.ovarre(
+                self.outfile,
                 "Roughness of first wall cooling channels (m)",
                 "(roughness_fw_channel)",
                 fwbs_variables.roughness_fw_channel,
