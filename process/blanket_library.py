@@ -2564,7 +2564,7 @@ class BlanketLibrary:
         """
 
         # Calculate hydraulic dimater for round or retancular pipe (m)
-        dia_pipe = self.hydraulic_diameter(i_ps)
+        dia_pipe = self.pipe_hydraulic_diameter(i_ps)
 
         # Reynolds number
         reynolds_number = den_coolant * vel_coolant * dia_pipe / visc_coolant
@@ -2685,7 +2685,7 @@ class BlanketLibrary:
 
         return dpres_total
 
-    def hydraulic_diameter(self, i_channel_shape):
+    def pipe_hydraulic_diameter(self, i_channel_shape):
         """Caculate the hydraulic diameter (m) for a given coolant pipe size/shape.
         author: G. Graham
 
