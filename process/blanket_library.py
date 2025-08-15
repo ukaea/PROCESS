@@ -2337,9 +2337,16 @@ class BlanketLibrary:
         :return: Total pressure drop (Pa).
         :rtype: float
         """
+
+        radius_pipe_90_deg_bend, radius_pipe_180_deg_bend = self.set_pipe_bend_radius(
+            i_ps=icoolpump
+        )
+
         # Friction - for all coolants
         dpres_friction = self.coolant_friction_pressure_drop(
             i_ps=icoolpump,
+            radius_pipe_90_deg_bend=radius_pipe_90_deg_bend,
+            radius_pipe_180_deg_bend=radius_pipe_180_deg_bend,
             n_pipe_90_deg_bends=n_pipe_90_deg_bends,
             n_pipe_180_deg_bends=n_pipe_180_deg_bends,
             len_pipe=len_pipe,
@@ -2526,9 +2533,26 @@ class BlanketLibrary:
 
         return liquid_breeder_pressure_drop_mhd
 
+    def set_pipe_bend_radius(self, i_ps: int):
+        """Set the pipe bend radius based on the coolant type.
+
+        :param i_ps: switch for primary or secondary coolant
+        """
+        # If primary coolant or secondary coolant (See DCLL)
+        radius_pipe_90_deg_bend = (
+            (3 * fwbs_variables.radius_fw_channel)
+            if (i_ps == 1)
+            else fwbs_variables.b_bz_liq
+        )
+        radius_pipe_180_deg_bend = radius_pipe_90_deg_bend / 2
+
+        return radius_pipe_90_deg_bend, radius_pipe_180_deg_bend
+
     def coolant_friction_pressure_drop(
         self,
         i_ps: int,
+        radius_pipe_90_deg_bend: float,
+        radius_pipe_180_deg_bend: float,
         n_pipe_90_deg_bends: float,
         n_pipe_180_deg_bends: float,
         len_pipe: float,
@@ -2546,6 +2570,8 @@ class BlanketLibrary:
         of all contributions.
 
         :param i_ps: switch for primary or secondary coolant
+        :param radius_pipe_90_deg_bend: radius of 90 degree bend in pipe (m)
+        :param radius_pipe_180_deg_bend: radius of 180 degree bend in pipe (m)
         :param n_pipe_90_deg_bends: number of 90 degree bends in the pipe
         :param n_pipe_180_deg_bends: number of 180 degree bends in the pipe
         :param len_pipe: total flow length along pipe (m)
@@ -2591,16 +2617,9 @@ class BlanketLibrary:
         # Straight section
         f_straight = darcy_friction_factor * len_pipe / dia_pipe
 
-        # If primary coolant or secondary coolant (See DCLL)
-        radius_pipe_elbow = (
-            (3 * fwbs_variables.radius_fw_channel)
-            if (i_ps == 1)
-            else fwbs_variables.b_bz_liq
-        )
-
         # 90 degree elbow pressure drop coefficient
         f_elbow_90 = self.elbow_coeff(
-            radius_pipe_elbow=radius_pipe_elbow,
+            radius_pipe_elbow=radius_pipe_90_deg_bend,
             deg_pipe_elbow=90.0,
             darcy_friction=darcy_friction_factor,
             dia_pipe=dia_pipe,
@@ -2608,7 +2627,7 @@ class BlanketLibrary:
 
         # 180 degree elbow pressure drop coefficient
         f_elbow_180 = self.elbow_coeff(
-            radius_pipe_elbow=radius_pipe_elbow / 2,
+            radius_pipe_elbow=radius_pipe_180_deg_bend,
             deg_pipe_elbow=180.0,
             darcy_friction=darcy_friction_factor,
             dia_pipe=dia_pipe,
