@@ -770,27 +770,29 @@ class BlanketLibrary:
             * blanket_library.len_blkt_outboard_segment_poloidal
         )
 
-        # Coolant channel bends #########
+        # ======================================================================
+
+        # Coolant channel bends
 
         # Number of angle turns in FW and blanket flow channels, n.b. these are the
-        # same for ccfe hcpb and kit hcll. FW is also be the same for DCLL MMS ans SMS.
-        no90fw = 2
-        no180fw = 0
+        # same for CCFE HCPB and KIT DCLL. FW is also be the same for DCLL MMS ans SMS.
+
+        N_FW_PIPE_90_DEG_BENDS = 2
+        N_FW_PIPE_180_DEG_BENDS = 0
 
         # N.B. This is for BZ only, does not include MF/BSS.
-        if (
-            fwbs_variables.i_blkt_dual_coolant == 2
-            or fwbs_variables.i_blkt_dual_coolant == 1
-        ):
-            no90bz = 4
-            no180bz = 1
+        if fwbs_variables.i_blkt_dual_coolant in (1, 2):
+            N_BLKT_PIPE_90_DEG_BENDS = 4
+            N_BLKT_PIPE_180_DEG_BENDS = 1
             no90bz_liq = 2
             no180bz_liq = 1
         else:
-            no90bz = 4
-            no180bz = 1
+            N_BLKT_PIPE_90_DEG_BENDS = 4
+            N_BLKT_PIPE_180_DEG_BENDS = 1
 
-        # FW Pipe Flow and Velocity ######
+        # ======================================================================
+
+        # FW Pipe Flow and Velocity
 
         # Mass flow rate per FW coolant pipe (kg/s):
         blanket_library.mflow_fw_inboard_coolant_channel = (
@@ -802,13 +804,13 @@ class BlanketLibrary:
             / blanket_library.n_fw_outboard_channels
         )
 
-        # Coolant velocite in FW (m/s)
-        velfwi = self.flow_velocity(
+        # Coolant velocity in FW (m/s)
+        vel_fw_inboard_coolant = self.flow_velocity(
             i_channel_shape=1,
             mass_flow_rate=blanket_library.mflow_fw_inboard_coolant_channel,
             flow_density=fwbs_variables.den_fw_coolant,
         )
-        velfwo = self.flow_velocity(
+        vel_fw_outboard_coolant = self.flow_velocity(
             i_channel_shape=1,
             mass_flow_rate=blanket_library.mflow_fw_outboard_coolant_channel,
             flow_density=fwbs_variables.den_fw_coolant,
@@ -1045,30 +1047,30 @@ class BlanketLibrary:
 
         # FW Presure Drops ###############
 
-        deltap_fwi = self.deltap_tot(
+        dpres_fw_inboard_coolant = self.deltap_tot(
             output,
             icoolpump=1,
-            flow_velocity=velfwi,
-            flleng=fwbs_variables.len_fw_channel,
-            no90=no90fw,
-            no180=no180fw,
-            coolant_density=fwbs_variables.den_fw_coolant,
-            coolant_dynamic_viscosity=fwbs_variables.visc_fw_coolant,
+            vel_coolant=vel_fw_inboard_coolant,
+            len_pipe=fwbs_variables.len_fw_channel,
+            n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
+            n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
+            den_coolant=fwbs_variables.den_fw_coolant,
+            visc_coolant=fwbs_variables.visc_fw_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengi,
             nopolchan=npoltoti,
             label="Inboard first wall",
         )
 
-        deltap_fwo = self.deltap_tot(
+        dpres_fw_outboard_coolant = self.deltap_tot(
             output,
             icoolpump=1,
-            flow_velocity=velfwo,
-            flleng=fwbs_variables.len_fw_channel,
-            no90=no90fw,
-            no180=no180fw,
-            coolant_density=fwbs_variables.den_fw_coolant,
-            coolant_dynamic_viscosity=fwbs_variables.visc_fw_coolant,
+            vel_coolant=vel_fw_outboard_coolant,
+            len_pipe=fwbs_variables.len_fw_channel,
+            n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
+            n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
+            den_coolant=fwbs_variables.den_fw_coolant,
+            visc_coolant=fwbs_variables.visc_fw_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -1082,15 +1084,15 @@ class BlanketLibrary:
             npoltoti = fwbs_variables.nopol * npblkti_liq
         npoltoto = fwbs_variables.nopol * npblkto_liq
 
-        deltap_blo = self.deltap_tot(
+        dpres_blkt_outboard_coolant = self.deltap_tot(
             output,
             icoolpump=1,
-            flow_velocity=blanket_library.vel_blkt_outboard_coolant,
-            flleng=blanket_library.len_blkt_outboard_channel_total,
-            no90=no90bz,
-            no180=no180bz,
-            coolant_density=fwbs_variables.den_blkt_coolant,
-            coolant_dynamic_viscosity=fwbs_variables.visc_blkt_coolant,
+            vel_coolant=blanket_library.vel_blkt_outboard_coolant,
+            len_pipe=blanket_library.len_blkt_outboard_channel_total,
+            n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
+            n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
+            den_coolant=fwbs_variables.den_blkt_coolant,
+            visc_coolant=fwbs_variables.visc_blkt_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -1098,15 +1100,15 @@ class BlanketLibrary:
         )
 
         if fwbs_variables.i_blkt_inboard == 1:
-            deltap_bli = self.deltap_tot(
+            dpres_blkt_inboard_coolant = self.deltap_tot(
                 output,
                 icoolpump=1,
-                flow_velocity=blanket_library.vel_blkt_inboard_coolant,
-                flleng=blanket_library.len_blkt_inboard_channel_total,
-                no90=no90bz,
-                no180=no180bz,
-                coolant_density=fwbs_variables.den_blkt_coolant,
-                coolant_dynamic_viscosity=fwbs_variables.visc_blkt_coolant,
+                vel_coolant=blanket_library.vel_blkt_inboard_coolant,
+                len_pipe=blanket_library.len_blkt_inboard_channel_total,
+                n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
+                n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
+                den_coolant=fwbs_variables.den_blkt_coolant,
+                visc_coolant=fwbs_variables.visc_blkt_coolant,
                 coolant_electrical_conductivity=0.0e0,
                 pol_channel_length=pollengi,
                 nopolchan=npoltoti,
@@ -1118,12 +1120,12 @@ class BlanketLibrary:
             deltap_blo_liq = self.deltap_tot(
                 output,
                 icoolpump=2,
-                flow_velocity=velblkto_liq,
-                flleng=bzfllengo_liq,
-                no90=no90bz_liq,
-                no180=no180bz_liq,
-                coolant_density=fwbs_variables.den_liq,
-                coolant_dynamic_viscosity=fwbs_variables.dynamic_viscosity_liq,
+                vel_coolant=velblkto_liq,
+                len_pipe=bzfllengo_liq,
+                n_pipe_90_deg_bends=no90bz_liq,
+                n_pipe_180_deg_bends=no180bz_liq,
+                den_coolant=fwbs_variables.den_liq,
+                visc_coolant=fwbs_variables.dynamic_viscosity_liq,
                 coolant_electrical_conductivity=fwbs_variables.electrical_conductivity_liq,
                 pol_channel_length=pollengo,
                 nopolchan=npoltoto,
@@ -1133,12 +1135,12 @@ class BlanketLibrary:
                 deltap_bli_liq = self.deltap_tot(
                     output,
                     icoolpump=2,
-                    flow_velocity=velblkti_liq,
-                    flleng=bzfllengi_liq,
-                    no90=no90bz_liq,
-                    no180=no180bz_liq,
-                    coolant_density=fwbs_variables.den_liq,
-                    coolant_dynamic_viscosity=fwbs_variables.dynamic_viscosity_liq,
+                    vel_coolant=velblkti_liq,
+                    len_pipe=bzfllengi_liq,
+                    n_pipe_90_deg_bends=no90bz_liq,
+                    n_pipe_180_deg_bends=no180bz_liq,
+                    den_coolant=fwbs_variables.den_liq,
+                    visc_coolant=fwbs_variables.dynamic_viscosity_liq,
                     coolant_electrical_conductivity=fwbs_variables.electrical_conductivity_liq,
                     pol_channel_length=pollengi,
                     nopolchan=npoltoti,
@@ -1146,18 +1148,32 @@ class BlanketLibrary:
                 )
 
                 return [
-                    deltap_fwi,
-                    deltap_fwo,
-                    deltap_blo,
-                    deltap_bli,
+                    dpres_fw_inboard_coolant,
+                    dpres_fw_outboard_coolant,
+                    dpres_blkt_outboard_coolant,
+                    dpres_blkt_inboard_coolant,
                     deltap_blo_liq,
                     deltap_bli_liq,
                 ]
-            return [deltap_fwi, deltap_fwo, deltap_blo, deltap_blo_liq]
+            return [
+                dpres_fw_inboard_coolant,
+                dpres_fw_outboard_coolant,
+                dpres_blkt_outboard_coolant,
+                deltap_blo_liq,
+            ]
 
         if fwbs_variables.i_blkt_inboard == 1:
-            return [deltap_fwi, deltap_fwo, deltap_blo, deltap_bli]
-        return [deltap_fwi, deltap_fwo, deltap_blo]
+            return [
+                dpres_fw_inboard_coolant,
+                dpres_fw_outboard_coolant,
+                dpres_blkt_outboard_coolant,
+                dpres_blkt_inboard_coolant,
+            ]
+        return [
+            dpres_fw_inboard_coolant,
+            dpres_fw_outboard_coolant,
+            dpres_blkt_outboard_coolant,
+        ]
 
     def blanket_module_poloidal_height(self):
         """Calculations for blanket module poloidal height
@@ -1754,21 +1770,6 @@ class BlanketLibrary:
             blanket_library.p_fw_inboard_nuclear_heat_mw,
             "Inboard first wall",
         )
-        # (
-        #     blanket_library.temp_fw_inboard_peak,
-        #     cf,
-        #     rhof,
-        #     blanket_library.mflow_fw_inboard_coolant_channel,
-        # ) = fw_module.fw_temp(
-        #     int(output),
-        #     self.outfile,
-        #     fwbs_variables.radius_fw_channel,
-        #     build_variables.dr_fw_inboard,
-        #     build_variables.a_fw_inboard,
-        #     fwbs_variables.psurffwi,
-        #     blanket_library.p_fw_inboard_nuclear_heat_mw,
-        #     "Inboard first wall",
-        # )
         (
             blanket_library.temp_fw_outboard_peak,
             cf,
@@ -1783,16 +1784,6 @@ class BlanketLibrary:
             blanket_library.p_fw_outboard_nuclear_heat_mw,
             "Outboard first wall",
         )
-        # (fwbs_variables.temp_fw_outboard_peak, cf, rhof, fwbs_variables.mflow_fw_outboard_coolant_channel) = fw_module.fw_temp(
-        #     int(output),
-        #     self.outfile,
-        #     fwbs_variables.radius_fw_channel,
-        #     build_variables.dr_fw_outboard,
-        #     build_variables.a_fw_outboard,
-        #     fwbs_variables.psurffwo,
-        #     blanket_library.p_fw_outboard_nuclear_heat_mw,
-        #     "Outboard first wall",
-        # )
 
         # Peak first wall temperature (K)
         fwbs_variables.temp_fw_peak = max(
@@ -2296,50 +2287,67 @@ class BlanketLibrary:
     def deltap_tot(
         self,
         output: bool,
-        icoolpump,
-        flow_velocity,
-        flleng,
-        no90,
-        no180,
-        coolant_density,
-        coolant_dynamic_viscosity,
-        coolant_electrical_conductivity,
-        pol_channel_length,
-        nopolchan,
-        label,
-    ):
-        """Routine to calculate the coolant pumping power in MW in the FW and BZ.
-        Adapted from previous pumppower function.
+        icoolpump: int,
+        vel_coolant: float,
+        len_pipe: float,
+        n_pipe_90_deg_bends: int,
+        n_pipe_180_deg_bends: int,
+        den_coolant: float,
+        visc_coolant_dynamic: float,
+        coolant_electrical_conductivity: float,
+        pol_channel_length: float,
+        nopolchan: int,
+        label: str,
+    ) -> float:
+        """
+        Calculate the total pressure drop (Pa) for coolant flow in the first wall (FW) and breeding blanket (BZ).
 
-        original author: P. J. Knight, CCFE
-        original references: Idel'Cik, I. E. (1969), Memento des pertes de charge;
-        A Textbook on Heat Transfer, S.P. Sukhatme, 2005
+        This includes frictional losses and, for liquid breeder coolants, magnetohydrodynamic (MHD) losses.
 
-        author: G. Graham
-
-        :param icoolpump: Switch for primary coolant or secondary coolant/breeder (1=primary He/H2O, 2=secondary PbLi/Li)
-        :param flow_velocity: Coolant flow velocity (m/s)
-        :param flleng: Total flow length along pipe (m)
-        :param no90: Number of 90 degree bends in pipe
-        :param no180: Number of 180 degree bends in pipe
+        :param output: Whether to write output to file.
+        :type output: bool
+        :param icoolpump: Switch for coolant type (1=primary He/H2O, 2=secondary PbLi/Li).
+        :type icoolpump: int
+        :param flow_velocity: Coolant flow velocity (m/s).
+        :type flow_velocity: float
+        :param len_pipe: Total flow length along pipe (m).
+        :type len_pipe: float
+        :param n_pipe_90_deg_bends: Number of 90 degree bends in pipe.
+        :type n_pipe_90_deg_bends: int
+        :param n_pipe_180_deg_bends: Number of 180 degree bends in pipe.
+        :type n_pipe_180_deg_bends: int
+        :param den_coolant: Coolant density (kg/m³).
+        :type den_coolant: float
+        :param visc_coolant_dynamic: Coolant dynamic viscosity (Pa s).
+        :type visc_coolant_dynamic: float
+        :param coolant_electrical_conductivity: Coolant electrical conductivity (A V⁻¹ m⁻¹).
+        :type coolant_electrical_conductivity: float
+        :param pol_channel_length: Length of poloidal channel section (m).
+        :type pol_channel_length: float
+        :param nopolchan: Number of poloidal channel sections.
+        :type nopolchan: int
+        :param label: Description label for output.
+        :type label: str
+        :return: Total pressure drop (Pa).
+        :rtype: float
         """
         # Friction - for all coolants
         frict_drop = self.coolant_friction_pressure_drop(
             i_ps=icoolpump,
-            n_pipe_90_deg_bends=no90,
-            n_pipe_180_deg_bends=no180,
-            len_pipe=flleng,
-            den_coolant=coolant_density,
-            visc_coolant=coolant_dynamic_viscosity,
-            vel_coolant=flow_velocity,
+            n_pipe_90_deg_bends=n_pipe_90_deg_bends,
+            n_pipe_180_deg_bends=n_pipe_180_deg_bends,
+            len_pipe=len_pipe,
+            den_coolant=den_coolant,
+            visc_coolant=visc_coolant_dynamic,
+            vel_coolant=vel_coolant,
             label=label,
             output=output,
         )
 
         if icoolpump == 2:
             mhd_drop = self.liquid_breeder_pressure_drop_mhd(
-                flow_velocity,
-                coolant_dynamic_viscosity,
+                vel_coolant,
+                visc_coolant_dynamic,
                 coolant_electrical_conductivity,
                 pol_channel_length,
                 nopolchan,
@@ -2363,7 +2371,7 @@ class BlanketLibrary:
                 self.outfile,
                 "Coolant flow velocity (m/s)",
                 "(flow_velocity, formerly vv)",
-                flow_velocity,
+                vel_coolant,
                 "OP ",
             )
 
