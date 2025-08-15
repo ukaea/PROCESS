@@ -1050,7 +1050,7 @@ class BlanketLibrary:
 
         # FW Presure Drops ###############
 
-        dpres_fw_inboard_coolant = self.deltap_tot(
+        dpres_fw_inboard_coolant = self.total_pressure_drop(
             output,
             icoolpump=1,
             vel_coolant=vel_fw_inboard_coolant,
@@ -1065,7 +1065,7 @@ class BlanketLibrary:
             label="Inboard first wall",
         )
 
-        dpres_fw_outboard_coolant = self.deltap_tot(
+        dpres_fw_outboard_coolant = self.total_pressure_drop(
             output,
             icoolpump=1,
             vel_coolant=vel_fw_outboard_coolant,
@@ -1087,7 +1087,7 @@ class BlanketLibrary:
             npoltoti = fwbs_variables.nopol * npblkti_liq
         npoltoto = fwbs_variables.nopol * npblkto_liq
 
-        dpres_blkt_outboard_coolant = self.deltap_tot(
+        dpres_blkt_outboard_coolant = self.total_pressure_drop(
             output,
             icoolpump=1,
             vel_coolant=blanket_library.vel_blkt_outboard_coolant,
@@ -1103,7 +1103,7 @@ class BlanketLibrary:
         )
 
         if fwbs_variables.i_blkt_inboard == 1:
-            dpres_blkt_inboard_coolant = self.deltap_tot(
+            dpres_blkt_inboard_coolant = self.total_pressure_drop(
                 output,
                 icoolpump=1,
                 vel_coolant=blanket_library.vel_blkt_inboard_coolant,
@@ -1120,7 +1120,7 @@ class BlanketLibrary:
 
         # If the blanket has a liquid metal breeder...
         if fwbs_variables.i_blkt_dual_coolant > 0:
-            deltap_blo_liq = self.deltap_tot(
+            deltap_blo_liq = self.total_pressure_drop(
                 output,
                 icoolpump=2,
                 vel_coolant=velblkto_liq,
@@ -1135,7 +1135,7 @@ class BlanketLibrary:
                 label="Outboard blanket breeder liquid",
             )
             if fwbs_variables.i_blkt_inboard == 1:
-                deltap_bli_liq = self.deltap_tot(
+                deltap_bli_liq = self.total_pressure_drop(
                     output,
                     icoolpump=2,
                     vel_coolant=velblkti_liq,
@@ -2291,7 +2291,7 @@ class BlanketLibrary:
                 "OP ",
             )
 
-    def deltap_tot(
+    def total_pressure_drop(
         self,
         output: bool,
         icoolpump: int,
