@@ -294,7 +294,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
     }
 
     assert (
-        pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
+        pytest.approx(blanket_library_fixture.total_pressure_drop(False, **data))
         == 5884.982168510442
     )
 
@@ -325,7 +325,7 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
     }
 
     assert (
-        pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
+        pytest.approx(blanket_library_fixture.total_pressure_drop(False, **data))
         == 56.95922064419226
     )
 
