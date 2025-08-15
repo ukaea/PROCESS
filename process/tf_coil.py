@@ -2936,6 +2936,7 @@ class TFCoil:
         return th_cond
 
     @staticmethod
+    @numba.njit(cache=True)
     def tf_coil_self_inductance(
         dr_tf_inboard: float,
         r_tf_arc: np.ndarray,
