@@ -957,6 +957,12 @@ class CCFE_HCPB(BlanketLibrary):
                     heat_transport_variables.p_shld_coolant_pump_mw,
                     "OP ",
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of blanket cooling channels (m)",
+                    "(radius_blkt_channel)",
+                    fwbs_variables.radius_blkt_channel,
+                )
 
     def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):
         """Author : S. Kahn, CCFE, Culham science centre
