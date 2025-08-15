@@ -2338,7 +2338,7 @@ class BlanketLibrary:
         :rtype: float
         """
         # Friction - for all coolants
-        frict_drop = self.coolant_friction_pressure_drop(
+        dpres_friction = self.coolant_friction_pressure_drop(
             i_ps=icoolpump,
             n_pipe_90_deg_bends=n_pipe_90_deg_bends,
             n_pipe_180_deg_bends=n_pipe_180_deg_bends,
@@ -2351,7 +2351,7 @@ class BlanketLibrary:
         )
 
         if icoolpump == 2:
-            mhd_drop = self.liquid_breeder_pressure_drop_mhd(
+            dpres_mhd = self.liquid_breeder_mhd_pressure_drop(
                 vel_coolant,
                 visc_coolant_dynamic,
                 coolant_electrical_conductivity,
@@ -2361,17 +2361,17 @@ class BlanketLibrary:
                 output=output,
             )
         else:
-            mhd_drop = 0
+            dpres_mhd = 0
 
         # Total pressure drop (Pa)
-        deltap_tot = frict_drop + mhd_drop
+        dpres_total = dpres_friction + dpres_mhd
 
         if output:
             po.osubhd(self.outfile, f"Total pressure drop for {label}")
 
             po.ocmmnt(self.outfile, "Friction drops plus MHD drops if applicaple")
             po.ovarre(
-                self.outfile, "Total pressure drop (Pa)", "(deltap)", deltap_tot, "OP "
+                self.outfile, "Total pressure drop (Pa)", "(deltap)", dpres_total, "OP "
             )
             po.ovarre(
                 self.outfile,
@@ -2381,9 +2381,9 @@ class BlanketLibrary:
                 "OP ",
             )
 
-        return deltap_tot
+        return dpres_total
 
-    def liquid_breeder_pressure_drop_mhd(
+    def liquid_breeder_mhd_pressure_drop(
         self,
         vel: float,
         vsc: float,

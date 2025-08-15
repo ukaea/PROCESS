@@ -1990,7 +1990,7 @@ def test_liquid_breeder_pressure_drop_mhd(
     )
 
     liquid_breeder_pressure_drop_mhd_out = (
-        blanket_library_fixture.liquid_breeder_pressure_drop_mhd(
+        blanket_library_fixture.liquid_breeder_mhd_pressure_drop(
             vel=liquidbreederpressuredropmhdparam.vel,
             vsc=liquidbreederpressuredropmhdparam.vsc,
             conduct_liq=liquidbreederpressuredropmhdparam.conduct_liq,
