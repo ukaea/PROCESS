@@ -279,12 +279,12 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
 
     data = {
         "icoolpump": 1,
-        "flow_velocity": 15.9,
-        "flleng": 4,
-        "no90": 2,
-        "no180": 0,
-        "coolant_density": 5.6,
-        "coolant_dynamic_viscosity": 3.5e-5,
+        "vel_coolant": 15.9,
+        "len_pipe": 4,
+        "n_pipe_90_deg_bends": 2,
+        "n_pipe_180_deg_bends": 0,
+        "den_coolant": 5.6,
+        "visc_coolant_dynamic": 3.5e-5,
         "coolant_electrical_conductivity": 0.0,
         "pol_channel_length": 1.89,
         "nopolchan": 0,
@@ -292,7 +292,7 @@ def test_deltap_tot_inboard_first_wall(monkeypatch, blanket_library_fixture):
     }
 
     assert (
-        pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
+        pytest.approx(blanket_library_fixture.total_pressure_drop(False, **data))
         == 5884.982168510442
     )
 
@@ -310,12 +310,12 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
 
     data = {
         "icoolpump": 2,
-        "flow_velocity": 0.06,
-        "flleng": 4.7,
-        "no90": 2,
-        "no180": 1,
-        "coolant_density": 9753.2,
-        "coolant_dynamic_viscosity": 0.0017,
+        "vel_coolant": 0.06,
+        "len_pipe": 4.7,
+        "n_pipe_90_deg_bends": 2,
+        "n_pipe_180_deg_bends": 1,
+        "den_coolant": 9753.2,
+        "visc_coolant_dynamic": 0.0017,
         "coolant_electrical_conductivity": 861800.8,
         "pol_channel_length": 1.89,
         "nopolchan": 0,
@@ -323,7 +323,7 @@ def test_deltap_tot_outboard_blanket_breeder_liquid(
     }
 
     assert (
-        pytest.approx(blanket_library_fixture.deltap_tot(False, **data))
+        pytest.approx(blanket_library_fixture.total_pressure_drop(False, **data))
         == 56.95922064419226
     )
 
@@ -1984,7 +1984,7 @@ def test_liquid_breeder_pressure_drop_mhd(
     )
 
     liquid_breeder_pressure_drop_mhd_out = (
-        blanket_library_fixture.liquid_breeder_pressure_drop_mhd(
+        blanket_library_fixture.liquid_breeder_mhd_pressure_drop(
             vel=liquidbreederpressuredropmhdparam.vel,
             vsc=liquidbreederpressuredropmhdparam.vsc,
             conduct_liq=liquidbreederpressuredropmhdparam.conduct_liq,

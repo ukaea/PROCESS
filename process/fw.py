@@ -699,6 +699,8 @@ def init_fwbs_variables():
     fwbs_variables.i_fw_coolant_type = "helium"
     fwbs_variables.dr_fw_wall = 0.003
     fwbs_variables.radius_fw_channel = 0.006
+    fwbs_variables.radius_blkt_channel = 0.006
+    fwbs_variables.radius_blkt_channel_90_bend = 0.018
     fwbs_variables.dx_fw_module = 0.02
     fwbs_variables.temp_fw_coolant_in = 573.0
     fwbs_variables.temp_fw_coolant_out = 823.0

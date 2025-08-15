@@ -300,7 +300,14 @@ module fwbs_variables
   !! wall thickness of first wall coolant channels [m]
 
   real(dp) :: radius_fw_channel
-  !! radius of first wall cooling channels [m]
+  !! Radius of first wall cooling channels [m]
+
+  real(dp) :: radius_blkt_channel
+  !! Radius of blanket cooling channels [m]
+
+  real(dp) :: radius_blkt_channel_90_bend
+  !! Radius of blanket cooling channel 90° bend [m]
+
 
   real(dp) :: dx_fw_module
   !! Width of a FW module containing a cooling channel [m]
