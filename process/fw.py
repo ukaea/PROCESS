@@ -2,9 +2,8 @@ import numpy as np
 
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
-from process.data_structure import build_variables
+from process.data_structure import blanket_library, build_variables
 from process.fortran import (
-    blanket_library,
     constants,
     error_handling,
     fwbs_variables,

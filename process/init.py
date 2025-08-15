@@ -10,8 +10,8 @@ import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import data_structure
-from process.blanket_library import init_blanket_library
 from process.constraints import ConstraintManager
+from process.data_structure.blanket_library import init_blanket_library
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
 from process.data_structure.constraint_variables import init_constraint_variables
