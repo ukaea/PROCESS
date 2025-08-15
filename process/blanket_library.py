@@ -1070,7 +1070,7 @@ class BlanketLibrary:
             n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
             n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
             den_coolant=fwbs_variables.den_fw_coolant,
-            visc_coolant=fwbs_variables.visc_fw_coolant,
+            visc_coolant_dynamic=fwbs_variables.visc_fw_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -1092,7 +1092,7 @@ class BlanketLibrary:
             n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
             n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
             den_coolant=fwbs_variables.den_blkt_coolant,
-            visc_coolant=fwbs_variables.visc_blkt_coolant,
+            visc_coolant_dynamic=fwbs_variables.visc_blkt_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengo,
             nopolchan=npoltoto,
@@ -1108,7 +1108,7 @@ class BlanketLibrary:
                 n_pipe_90_deg_bends=N_BLKT_PIPE_90_DEG_BENDS,
                 n_pipe_180_deg_bends=N_BLKT_PIPE_180_DEG_BENDS,
                 den_coolant=fwbs_variables.den_blkt_coolant,
-                visc_coolant=fwbs_variables.visc_blkt_coolant,
+                visc_coolant_dynamic=fwbs_variables.visc_blkt_coolant,
                 coolant_electrical_conductivity=0.0e0,
                 pol_channel_length=pollengi,
                 nopolchan=npoltoti,
@@ -1125,7 +1125,7 @@ class BlanketLibrary:
                 n_pipe_90_deg_bends=no90bz_liq,
                 n_pipe_180_deg_bends=no180bz_liq,
                 den_coolant=fwbs_variables.den_liq,
-                visc_coolant=fwbs_variables.dynamic_viscosity_liq,
+                visc_coolant_dynamic=fwbs_variables.dynamic_viscosity_liq,
                 coolant_electrical_conductivity=fwbs_variables.electrical_conductivity_liq,
                 pol_channel_length=pollengo,
                 nopolchan=npoltoto,
@@ -1140,7 +1140,7 @@ class BlanketLibrary:
                     n_pipe_90_deg_bends=no90bz_liq,
                     n_pipe_180_deg_bends=no180bz_liq,
                     den_coolant=fwbs_variables.den_liq,
-                    visc_coolant=fwbs_variables.dynamic_viscosity_liq,
+                    visc_coolant_dynamic=fwbs_variables.dynamic_viscosity_liq,
                     coolant_electrical_conductivity=fwbs_variables.electrical_conductivity_liq,
                     pol_channel_length=pollengi,
                     nopolchan=npoltoti,
@@ -2936,6 +2936,38 @@ class BlanketLibrary:
             )
 
         return pumppower
+
+
+def set_pumping_powers_as_fractions():
+    # User sets mechanical pumping power as a fraction of thermal power in component
+
+    heat_transport_variables.p_fw_coolant_pump_mw = (
+        heat_transport_variables.f_p_fw_coolant_pump_total_heat
+        * (
+            fwbs_variables.p_fw_nuclear_heat_total_mw
+            + fwbs_variables.psurffwi
+            + fwbs_variables.psurffwo
+        )
+    )
+    heat_transport_variables.p_blkt_coolant_pump_mw = (
+        heat_transport_variables.f_p_blkt_coolant_pump_total_heat
+        * fwbs_variables.p_blkt_nuclear_heat_total_mw
+    )
+    heat_transport_variables.p_shld_coolant_pump_mw = (
+        heat_transport_variables.f_p_shld_coolant_pump_total_heat
+        * (
+            fwbs_variables.p_shld_nuclear_heat_mw
+            + fwbs_variables.p_cp_shield_nuclear_heat_mw
+        )
+    )
+    heat_transport_variables.p_div_coolant_pump_mw = (
+        heat_transport_variables.f_p_div_coolant_pump_total_heat
+        * (
+            physics_variables.p_plasma_separatrix_mw
+            + fwbs_variables.p_div_nuclear_heat_total_mw
+            + fwbs_variables.p_div_rad_total_mw
+        )
+    )
 
 
 def eshellarea(rshell, rmini, rmino, zminor):
