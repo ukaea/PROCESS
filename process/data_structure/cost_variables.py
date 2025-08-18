@@ -1550,7 +1550,7 @@ def init_cost_variables():
     ucfuel = 3.45
     uche3 = 1.0e6
     uchrs = 87.9e6
-    uchts = [15.3, 19.1]
+    uchts = [15.3, 19.1, 19.1]
     uciac = 1.5e8
     ucich = 3.0
     uclh = 3.3
@@ -1585,7 +1585,7 @@ def init_cost_variables():
     uctfbus = 100.0
     uctfps = 24.0
     uctfsw = 1.0
-    ucturb = [230.0e6, 245.0e6]
+    ucturb = [230.0e6, 245.0e6, 245.0e6]
     ucwindpf = 465.0
     ucwindtf = 480.0
     ucwst = [0.0, 3.94, 5.91, 7.88]
