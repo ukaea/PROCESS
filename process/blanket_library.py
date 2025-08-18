@@ -1047,6 +1047,11 @@ class BlanketLibrary:
 
         # FW Presure Drops ###############
 
+        (
+            fwbs_variables.radius_blkt_channel_90_bend,
+            fwbs_variables.radius_blkt_channel_180_bend,
+        ) = self.set_pipe_bend_radius(i_ps=1)
+
         dpres_fw_inboard_coolant = self.total_pressure_drop(
             output,
             icoolpump=1,
@@ -1078,6 +1083,10 @@ class BlanketLibrary:
         )
 
         # BB Presure Drops ###############
+        (
+            fwbs_variables.radius_blkt_channel_90_bend,
+            fwbs_variables.radius_blkt_channel_180_bend,
+        ) = self.set_pipe_bend_radius(i_ps=1)
 
         # Long polodal flows
         if fwbs_variables.i_blkt_inboard == 1:

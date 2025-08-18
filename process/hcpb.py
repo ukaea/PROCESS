@@ -963,6 +963,18 @@ class CCFE_HCPB(BlanketLibrary):
                     "(radius_blkt_channel)",
                     fwbs_variables.radius_blkt_channel,
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 90 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_90_bend)",
+                    fwbs_variables.radius_blkt_channel_90_bend,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 180 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_180_bend)",
+                    fwbs_variables.radius_blkt_channel_180_bend,
+                )
 
     def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):
         """Author : S. Kahn, CCFE, Culham science centre
