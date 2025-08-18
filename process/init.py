@@ -14,6 +14,7 @@ from process.constraints import ConstraintManager
 from process.data_structure.blanket_library import init_blanket_library
 from process.data_structure.build_variables import init_build_variables
 from process.data_structure.buildings_variables import init_buildings_variables
+from process.data_structure.ccfe_hcpb_module import init_ccfe_hcpb_module
 from process.data_structure.constraint_variables import init_constraint_variables
 from process.data_structure.cost_2015_variables import init_cost_2015_variables
 from process.data_structure.cost_variables import init_cost_variables
@@ -49,7 +50,6 @@ from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.exceptions import ProcessValidationError
 from process.fw import init_fwbs_variables
-from process.hcpb import init_ccfe_hcpb_module
 from process.input import parse_input_file
 from process.physics import (
     init_physics_module,

@@ -4,6 +4,7 @@ import pytest
 
 from process.data_structure import (
     build_variables,
+    ccfe_hcpb_module,
     current_drive_variables,
     divertor_variables,
     heat_transport_variables,
@@ -11,7 +12,6 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.fortran import (
-    ccfe_hcpb_module,
     fwbs_variables,
     global_variables,
     physics_variables,
