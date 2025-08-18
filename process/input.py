@@ -1967,7 +1967,7 @@ INPUT_VARIABLES = {
     "ccls_ma": InputVariable(data_structure.pfcoil_variables, float, array=True),
     "cfind": InputVariable(data_structure.cost_variables, float, array=True),
     "i_blkt_coolant_type": InputVariable(
-        data_structure.fwbs_variables, int, choices=[1, 2]
+        data_structure.fwbs_variables, int, choices=[1, 3]
     ),
     "coppera_m2_max": InputVariable(
         data_structure.rebco_variables, float, range=(1.0e6, 1.0e10)
@@ -2212,7 +2212,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, str, choices=["exponential", "linear"]
     ),
     "i_fw_coolant_type": InputVariable(
-        data_structure.fwbs_variables, str, choices=["helium", "water"]
+        data_structure.fwbs_variables, str, choices=["helium", "water", "CarbonDioxide"]
     ),
     "vacuum_model": InputVariable(
         data_structure.vacuum_variables, str, choices=["old", "simple"]

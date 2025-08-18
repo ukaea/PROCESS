@@ -414,6 +414,12 @@ class BlanketLibrary:
             and fwbs_variables.i_blkt_coolant_type == 1
         ):
             fwbs_variables.i_fw_blkt_shared_coolant = 1
+        if (
+            f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
+            == "CarbonDioxide"
+            and fwbs_variables.i_blkt_coolant_type == 3
+        ):
+            fwbs_variables.i_fw_blkt_shared_coolant = 1
 
         # If FW and BB have same coolant...
         if fwbs_variables.i_fw_blkt_shared_coolant == 0:
@@ -459,7 +465,15 @@ class BlanketLibrary:
                 + fwbs_variables.temp_blkt_coolant_out
             ) * 0.5
             bb_fluid_properties = FluidProperties.of(
-                "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water",
+                (
+                    "Helium"
+                    if fwbs_variables.i_blkt_coolant_type == 1
+                    else "Water"
+                    if fwbs_variables.i_blkt_coolant_type == 2
+                    else "CarbonDioxide"
+                    if fwbs_variables.i_blkt_coolant_type == 3
+                    else "Unknown"
+                ),
                 temperature=mid_temp_bl,
                 pressure=fwbs_variables.pres_blkt_coolant,
             )
@@ -555,6 +569,11 @@ class BlanketLibrary:
                 if fwbs_variables.i_blkt_coolant_type == 2:
                     po.ocmmnt(
                         self.outfile, "Coolant type (i_blkt_coolant_type=2), Water"
+                    )
+                if fwbs_variables.i_blkt_coolant_type == 3:
+                    po.ocmmnt(
+                        self.outfile,
+                        "Coolant type (i_blkt_coolant_type=3), Carbon Dioxide",
                     )
                 po.ovarrf(
                     self.outfile,
@@ -1702,6 +1721,12 @@ class BlanketLibrary:
             and fwbs_variables.i_blkt_coolant_type == 1
         ):
             fwbs_variables.i_fw_blkt_shared_coolant = 1
+        if (
+            f2py_compatible_to_string(fwbs_variables.i_fw_coolant_type).title()
+            == "CarbonDioxide"
+            and fwbs_variables.i_blkt_coolant_type == 3
+        ):
+            fwbs_variables.i_fw_blkt_shared_coolant = 1
 
         # If FW and BB have the same coolant...
         if fwbs_variables.i_fw_blkt_shared_coolant == 0:
@@ -2022,7 +2047,13 @@ class BlanketLibrary:
                     dpres_coolant=deltap_blkt,
                     mflow_coolant_total=blanket_library.mflow_blkt_coolant_total,
                     primary_coolant_switch=(
-                        "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
+                        "Helium"
+                        if fwbs_variables.i_blkt_coolant_type == 1
+                        else "Water"
+                        if fwbs_variables.i_blkt_coolant_type == 2
+                        else "CarbonDioxide"
+                        if fwbs_variables.i_blkt_coolant_type == 3
+                        else "Unknown"
                     ),
                     den_coolant=fwbs_variables.den_blkt_coolant,
                     label="Blanket",
@@ -2061,7 +2092,13 @@ class BlanketLibrary:
                     dpres_coolant=deltap_bl_liq,
                     mflow_coolant_total=blanket_library.mfblkt_liq,
                     primary_coolant_switch=(
-                        "Helium" if fwbs_variables.i_blkt_coolant_type == 1 else "Water"
+                        "Helium"
+                        if fwbs_variables.i_blkt_coolant_type == 1
+                        else "Water"
+                        if fwbs_variables.i_blkt_coolant_type == 2
+                        else "CarbonDioxide"
+                        if fwbs_variables.i_blkt_coolant_type == 3
+                        else "Unknown"
                     ),
                     den_coolant=fwbs_variables.den_liq,
                     label="Liquid Metal Breeder/Coolant",
@@ -2156,7 +2193,7 @@ class BlanketLibrary:
 
             po.ovarin(
                 self.outfile,
-                "Blanket coolant type (1=He, 2=H20)",
+                "Blanket coolant type (1=He, 2=H20, 3=CO2)",
                 "(i_blkt_coolant_type)",
                 fwbs_variables.i_blkt_coolant_type,
             )
@@ -2852,8 +2889,15 @@ class BlanketLibrary:
         # The pump adds the pressure lost going through the coolant channels back
         pres_coolant_pump_outlet = pres_coolant_pump_inlet + dpres_coolant
 
-        # Adiabatic index for helium or water
-        gamma = (5 / 3) if fwbs_variables.i_blkt_coolant_type == 1 else (4 / 3)
+        # Adiabatic index for coolant types
+        gamma_dict = {
+            1: 5 / 3,  # Helium
+            2: 4 / 3,  # Water
+            3: 1.289,  # Carbon Dioxide (example value, adjust as needed)
+        }
+        gamma = gamma_dict.get(
+            fwbs_variables.i_blkt_coolant_type, 1.4
+        )  # Default to 1.4 if not found
 
         # If calculating for primary coolant
         if i_liquid_breeder == 1:
