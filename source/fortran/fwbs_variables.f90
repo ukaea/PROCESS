@@ -302,6 +302,12 @@ module fwbs_variables
   real(dp) :: radius_fw_channel
   !! Radius of first wall cooling channels [m]
 
+  real(dp) :: radius_fw_channel_90_bend
+  !! Radius of first wall cooling channel 90° bend [m]
+
+  real(dp) :: radius_fw_channel_180_bend
+  !! Radius of first wall cooling channel 180° bend [m]
+
   real(dp) :: radius_blkt_channel
   !! Radius of blanket cooling channels [m]
 

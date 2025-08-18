@@ -712,6 +712,7 @@ def init_fwbs_variables():
     fwbs_variables.dr_fw_wall = 0.003
     fwbs_variables.radius_fw_channel = 0.006
     fwbs_variables.radius_fw_channel_90_bend = 0.018
+    fwbs_variables.radius_fw_channel_180_bend = 0.009
     fwbs_variables.radius_blkt_channel = 0.006
     fwbs_variables.radius_blkt_channel_90_bend = 0.018
     fwbs_variables.dx_fw_module = 0.02
