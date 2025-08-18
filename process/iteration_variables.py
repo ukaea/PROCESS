@@ -379,7 +379,9 @@ ITERATION_VARIABLES = {
     163: IterationVariable(
         "f_t_turn_tf", data_structure.tfcoil_variables, 0.0010, 1000.0
     ),
-    164: IterationVariable("f_crypmw", fortran.heat_transport_variables, 0.001, 1.0),
+    164: IterationVariable(
+        "f_crypmw", data_structure.heat_transport_variables, 0.001, 1.0
+    ),
     165: IterationVariable("fstr_wp", data_structure.constraint_variables, 1.0e-9, 1.0),
     166: IterationVariable(
         "f_copperaoh_m2", data_structure.rebco_variables, 0.001, 1.0

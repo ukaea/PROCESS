@@ -10,6 +10,7 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    heat_transport_variables,
     primary_pumping_variables,
     tfcoil_variables,
 )
@@ -18,7 +19,6 @@ from process.fortran import (
     ccfe_hcpb_module,
     constants,
     fwbs_variables,
-    heat_transport_variables,
     physics_variables,
 )
 from process.fortran import (

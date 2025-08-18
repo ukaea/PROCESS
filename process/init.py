@@ -21,6 +21,9 @@ from process.data_structure.cs_fatigue_variables import init_cs_fatigue_variable
 from process.data_structure.current_drive_variables import init_current_drive_variables
 from process.data_structure.dcll_variables import init_dcll_module
 from process.data_structure.divertor_variables import init_divertor_variables
+from process.data_structure.heat_transport_variables import (
+    init_heat_transport_variables,
+)
 from process.data_structure.ife_variables import init_ife_variables
 from process.data_structure.impurity_radiation_module import (
     init_impurity_radiation_module,
@@ -52,7 +55,6 @@ from process.physics import (
     init_physics_module,
     init_physics_variables,
 )
-from process.power import init_heat_transport_variables
 from process.scan import init_scan_module
 from process.stellarator import stinit
 from process.superconducting_tf_coil import init_sctfcoil_module
@@ -376,7 +378,7 @@ def check_process(inputs):  # noqa: ARG001
 
     if fortran.physics_variables.f_tritium < 1.0e-3:  # tritium fraction is negligible
         data_structure.buildings_variables.triv = 0.0
-        fortran.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
+        data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
     if data_structure.impurity_radiation_module.fimp[1] != 0.1:
         raise ProcessValidationError(

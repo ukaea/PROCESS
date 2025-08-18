@@ -9,6 +9,7 @@ from process.data_structure import (
     constraint_variables,
     cost_variables,
     current_drive_variables,
+    heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
     power_variables,
@@ -18,7 +19,6 @@ from process.data_structure import (
 from process.data_structure import primary_pumping_variables as ppv
 from process.fortran import (
     fwbs_variables,
-    heat_transport_variables,
     numerics,
     physics_variables,
 )
