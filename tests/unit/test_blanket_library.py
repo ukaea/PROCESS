@@ -1772,6 +1772,8 @@ def test_liquid_breeder_properties(
 
 class PressureDropParam(NamedTuple):
     radius_fw_channel: Any = None
+    radius_pipe_90_deg_bend: Any = None
+    radius_pipe_180_deg_bend: Any = None
     a_bz_liq: Any = None
     b_bz_liq: Any = None
     roughness_fw_channel: Any = None
@@ -1793,6 +1795,8 @@ class PressureDropParam(NamedTuple):
     (
         PressureDropParam(
             radius_fw_channel=0.0060000000000000001,
+            radius_pipe_90_deg_bend=0.018,
+            radius_pipe_180_deg_bend=0.09,
             a_bz_liq=0.20000000000000001,
             b_bz_liq=0.20000000000000001,
             roughness_fw_channel=9.9999999999999995e-07,
@@ -1833,6 +1837,8 @@ def test_pressure_drop(pressuredropparam, monkeypatch, blanket_library_fixture):
 
     pressure_drop_out = blanket_library_fixture.coolant_friction_pressure_drop(
         i_ps=pressuredropparam.i_ps,
+        radius_pipe_90_deg_bend=pressuredropparam.radius_pipe_90_deg_bend,
+        radius_pipe_180_deg_bend=pressuredropparam.radius_pipe_180_deg_bend,
         n_pipe_90_deg_bends=pressuredropparam.num_90,
         n_pipe_180_deg_bends=pressuredropparam.num_180,
         len_pipe=pressuredropparam.l_pipe,
