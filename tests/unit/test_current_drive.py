@@ -8,9 +8,8 @@ from process.current_drive import (
     LowerHybrid,
     NeutralBeam,
 )
-from process.data_structure import current_drive_variables
+from process.data_structure import current_drive_variables, heat_transport_variables
 from process.fortran import (
-    heat_transport_variables,
     physics_variables,
 )
 from process.plasma_profiles import PlasmaProfile

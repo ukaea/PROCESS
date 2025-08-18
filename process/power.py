@@ -9,6 +9,7 @@ from process.data_structure import (
     buildings_variables,
     cost_variables,
     current_drive_variables,
+    heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
     power_variables,
@@ -22,7 +23,6 @@ from process.fortran import (
     constants,
     error_handling,
     fwbs_variables,
-    heat_transport_variables,
     numerics,
     physics_variables,
 )
@@ -2189,57 +2189,3 @@ class Power:
             )
 
         return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
-
-
-def init_heat_transport_variables():
-    """Initialise heat transport variables"""
-    heat_transport_variables.p_plant_electric_base = 5.0e6
-    heat_transport_variables.p_cryo_plant_electric_mw = 0.0
-    heat_transport_variables.p_cryo_plant_electric_max_mw = 50.0
-    heat_transport_variables.f_crypmw = 1.0
-    heat_transport_variables.etatf = 0.9
-    heat_transport_variables.eta_turbine = 0.35
-    heat_transport_variables.etath_liq = 0.35
-    heat_transport_variables.fachtmw = 0.0
-    heat_transport_variables.p_plant_electric_base_total_mw = 0.0
-    heat_transport_variables.fgrosbop = 0.0
-    heat_transport_variables.fmgdmw = 0.0
-    heat_transport_variables.f_p_blkt_coolant_pump_total_heat = 0.005
-    heat_transport_variables.f_p_div_coolant_pump_total_heat = 0.005
-    heat_transport_variables.f_p_fw_coolant_pump_total_heat = 0.005
-    heat_transport_variables.f_p_shld_coolant_pump_total_heat = 0.005
-    heat_transport_variables.helpow = 0.0
-    heat_transport_variables.helpow_cryal = 0.0
-    heat_transport_variables.p_coolant_pump_elec_total_mw = 0.0
-    heat_transport_variables.p_blkt_coolant_pump_mw = 0.0
-    heat_transport_variables.p_blkt_breeder_pump_mw = 0.0
-    heat_transport_variables.htpmw_blkt_tot = 0.0
-    heat_transport_variables.p_div_coolant_pump_mw = 0.0
-    heat_transport_variables.p_fw_coolant_pump_mw = 0.0
-    heat_transport_variables.p_shld_coolant_pump_mw = 0.0
-    heat_transport_variables.p_coolant_pump_loss_total_mw = 0.0
-    heat_transport_variables.ipowerflow = 1
-    heat_transport_variables.i_shld_primary_heat = 1
-    heat_transport_variables.n_primary_heat_exchangers = 0
-    heat_transport_variables.pacpmw = 0.0
-    heat_transport_variables.peakmva = 0.0
-    heat_transport_variables.p_fw_div_heat_deposited_mw = 0.0
-    heat_transport_variables.p_plant_electric_gross_mw = 0.0
-    heat_transport_variables.p_hcd_electric_loss_mw = 0.0
-    heat_transport_variables.p_hcd_electric_total_mw = 0.0
-    heat_transport_variables.p_hcd_secondary_electric_mw = 0.0
-    heat_transport_variables.p_plant_electric_net_mw = 0.0
-    heat_transport_variables.p_plant_electric_recirc_mw = 0.0
-    heat_transport_variables.priheat = 0.0
-    heat_transport_variables.p_div_secondary_heat_mw = 0.0
-    heat_transport_variables.p_hcd_secondary_heat_mw = 0.0
-    heat_transport_variables.p_plant_secondary_heat_mw = 0.0
-    heat_transport_variables.p_shld_secondary_heat_mw = 0.0
-    heat_transport_variables.p_plant_primary_heat_mw = 0.0
-    heat_transport_variables.pflux_plant_floor_electric = 150.0
-    heat_transport_variables.p_tf_electric_supplies_mw = 0.0
-    heat_transport_variables.tlvpmw = 0.0
-    heat_transport_variables.p_tritium_plant_electric_mw = 15.0
-    heat_transport_variables.temp_turbine_coolant_in = 0.0
-    heat_transport_variables.vachtmw = 0.5
-    heat_transport_variables.f_p_plant_electric_recirc = 0.0

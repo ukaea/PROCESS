@@ -203,7 +203,7 @@ INPUT_VARIABLES = {
         data_structure.tfcoil_variables, float, range=(0.0, 30.0)
     ),
     "p_plant_electric_base": InputVariable(
-        fortran.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
+        data_structure.heat_transport_variables, float, range=(1000000.0, 10000000000.0)
     ),
     "bcritsc": InputVariable(
         data_structure.tfcoil_variables, float, range=(10.0, 50.0)
@@ -418,7 +418,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "p_cryo_plant_electric_max_mw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.01, 200.0)
+        data_structure.heat_transport_variables, float, range=(0.01, 200.0)
     ),
     "csi": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
     "cturbb": InputVariable(
@@ -606,9 +606,11 @@ INPUT_VARIABLES = {
     ),
     "etapsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "etapump": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
-    "etatf": InputVariable(fortran.heat_transport_variables, float, range=(0.0, 1.0)),
+    "etatf": InputVariable(
+        data_structure.heat_transport_variables, float, range=(0.0, 1.0)
+    ),
     "eta_turbine": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 1.0)
     ),
     "eyoung_al": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
@@ -647,7 +649,7 @@ INPUT_VARIABLES = {
         data_structure.rebco_variables, float, range=(0.001, 1.0)
     ),
     "f_crypmw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 100.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "f_fw_peak": InputVariable(fortran.fwbs_variables, float, range=(1.0, 100.0)),
     "f_fw_rad_max": InputVariable(
@@ -807,7 +809,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 1.0)
     ),
     "fmgdmw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 100.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "fmva": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
@@ -860,16 +862,16 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "f_p_blkt_coolant_pump_total_heat": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 0.2)
+        data_structure.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "f_p_div_coolant_pump_total_heat": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 0.2)
+        data_structure.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "f_p_fw_coolant_pump_total_heat": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 0.2)
+        data_structure.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "f_p_shld_coolant_pump_total_heat": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 0.2)
+        data_structure.heat_transport_variables, float, range=(0.0, 0.2)
     ),
     "fq95_min": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
@@ -1046,19 +1048,19 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "p_blkt_coolant_pump_mw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1000.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "p_div_coolant_pump_mw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1000.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "p_fw_coolant_pump_mw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1000.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "htpmw_ife": InputVariable(
         data_structure.ife_variables, float, range=(0.0, 1000.0)
     ),
     "p_shld_coolant_pump_mw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1000.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "hw_storage_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
@@ -1336,7 +1338,7 @@ INPUT_VARIABLES = {
     ),
     "pumptp": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 1e30)),
     "pflux_plant_floor_electric": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 1000.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
     "q0": InputVariable(fortran.physics_variables, float, range=(0.01, 20.0)),
     "q95": InputVariable(fortran.physics_variables, float, range=(1.0, 50.0)),
@@ -1677,7 +1679,7 @@ INPUT_VARIABLES = {
     "triang": InputVariable(fortran.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
     "p_tritium_plant_electric_mw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 100.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "triv": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
@@ -1807,7 +1809,7 @@ INPUT_VARIABLES = {
     "v3dzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 30.0)),
     "v3dzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 30.0)),
     "vachtmw": InputVariable(
-        fortran.heat_transport_variables, float, range=(0.0, 100.0)
+        data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
     "vcool": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.001, 100.0)
@@ -2012,9 +2014,11 @@ INPUT_VARIABLES = {
         data_structure.pfcoil_variables, int, choices=[0, 1]
     ),
     "ipnet": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
-    "ipowerflow": InputVariable(fortran.heat_transport_variables, int, choices=[0, 1]),
+    "ipowerflow": InputVariable(
+        data_structure.heat_transport_variables, int, choices=[0, 1]
+    ),
     "i_shld_primary_heat": InputVariable(
-        fortran.heat_transport_variables, int, choices=[0, 1]
+        data_structure.heat_transport_variables, int, choices=[0, 1]
     ),
     "i_beta_norm_max": InputVariable(fortran.physics_variables, int, range=(0, 5)),
     "i_ind_plasma_internal_norm": InputVariable(

@@ -578,10 +578,10 @@ def constraint_equation_16():
     return ConstraintResult(
         1.0
         - data_structure.constraint_variables.fp_plant_electric_net_required_mw
-        * fortran.heat_transport_variables.p_plant_electric_net_mw
+        * data_structure.heat_transport_variables.p_plant_electric_net_mw
         / data_structure.constraint_variables.p_plant_electric_net_required_mw,
         data_structure.constraint_variables.p_plant_electric_net_required_mw,
-        fortran.heat_transport_variables.p_plant_electric_net_mw
+        data_structure.heat_transport_variables.p_plant_electric_net_mw
         - data_structure.constraint_variables.p_plant_electric_net_required_mw
         / data_structure.constraint_variables.fp_plant_electric_net_required_mw,
     )
@@ -2196,14 +2196,15 @@ def constraint_equation_87():
     p_cryo_plant_electric_max_mw: Maximum cryogenic plant power (MW)
     """
     cc = (
-        fortran.heat_transport_variables.p_cryo_plant_electric_mw
-        / fortran.heat_transport_variables.p_cryo_plant_electric_max_mw
-        - 1.0 * fortran.heat_transport_variables.f_crypmw
+        data_structure.heat_transport_variables.p_cryo_plant_electric_mw
+        / data_structure.heat_transport_variables.p_cryo_plant_electric_max_mw
+        - 1.0 * data_structure.heat_transport_variables.f_crypmw
     )
     return ConstraintResult(
         cc,
-        fortran.heat_transport_variables.p_cryo_plant_electric_max_mw * (1.0 - cc),
-        fortran.heat_transport_variables.p_cryo_plant_electric_mw * cc,
+        data_structure.heat_transport_variables.p_cryo_plant_electric_max_mw
+        * (1.0 - cc),
+        data_structure.heat_transport_variables.p_cryo_plant_electric_mw * cc,
     )
 
 

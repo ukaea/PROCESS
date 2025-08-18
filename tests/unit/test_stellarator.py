@@ -17,6 +17,7 @@ from process.current_drive import (
 from process.data_structure import (
     build_variables,
     cost_variables,
+    heat_transport_variables,
     impurity_radiation_module,
     stellarator_configuration,
     stellarator_variables,
@@ -25,7 +26,6 @@ from process.data_structure import (
 )
 from process.fortran import (
     fwbs_variables,
-    heat_transport_variables,
     physics_variables,
 )
 from process.hcpb import CCFE_HCPB

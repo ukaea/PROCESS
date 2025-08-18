@@ -1,8 +1,8 @@
 import numpy as np
 
 from process import process_output as po
-from process.data_structure import water_usage_variables
-from process.fortran import constants, heat_transport_variables
+from process.data_structure import heat_transport_variables, water_usage_variables
+from process.fortran import constants
 
 SECDAY = 86400e0
 

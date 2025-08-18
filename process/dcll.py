@@ -6,12 +6,12 @@ from process.data_structure import (
     build_variables,
     current_drive_variables,
     dcll_variables,
+    heat_transport_variables,
     primary_pumping_variables,
 )
 from process.fortran import (
     constants,
     fwbs_variables,
-    heat_transport_variables,
     physics_variables,
 )
 
