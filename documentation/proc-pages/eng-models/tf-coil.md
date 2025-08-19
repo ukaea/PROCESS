@@ -183,7 +183,7 @@ This function calculates the required currents in the TF coils given a required 
 1. The peak field on the inboard TF coil is calculated:
 
     $$
-    \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
+    \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak_symmetric}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
     $$
 
     The value of $R_{\text{TF,peak}}$ is specified as:
@@ -238,7 +238,7 @@ This function calculates the centering and vertical forces on a TF coil
 2. The centering force **per unit length** of the inboard is:
 
   $$
-  F_{\text{centering}} = \frac{I_{\text{TF,coil}}\overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}}}{2}
+  F_{\text{centering}} = \frac{I_{\text{TF,coil}}\overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak_symmetric}}}{2}
   $$
 
   This assumes the average field in the TF coil is half the peak value, which is true for the infinitely long circular conductor approximation.

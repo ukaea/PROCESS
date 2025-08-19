@@ -152,7 +152,7 @@ class ProcessTracker:
         "p_plant_electric_gross_mw",
         "tftmp",
         "n_tf_coils",
-        "b_tf_inboard_peak",
+        "b_tf_inboard_peak_symmetric",
         "vs_cs_pf_total_pulse",
         "nd_ions_total",
         "t_burn",
