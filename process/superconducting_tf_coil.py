@@ -294,22 +294,19 @@ class SuperconductingTFCoil(TFCoil):
 
         self.vv_stress_on_quench()
 
+        # ======================================================
+
         # Peak field including ripple
-        # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
         tfcoil_variables.b_tf_inboard_peak_with_ripple, peaktfflag = (
             self.peak_b_tf_inboard_with_ripple(
                 n_tf_coils=tfcoil_variables.n_tf_coils,
                 dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-                dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation
-                - 2.0e0
-                * (
-                    tfcoil_variables.dx_tf_wp_insulation
-                    + tfcoil_variables.dx_tf_wp_insertion_gap
-                ),
-                tfin=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+                dr_tf_wp_no_insulation=tfcoil_variables.dr_tf_wp_no_insulation,
+                r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
                 b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
             )
         )
+        # ======================================================
 
         # Cross-sectional area per turn
         a_tf_turn = tfcoil_variables.c_tf_total / (
@@ -1727,8 +1724,8 @@ class SuperconductingTFCoil(TFCoil):
         self,
         n_tf_coils: float,
         dx_tf_wp_primary_toroidal: float,
-        dr_tf_wp_with_insulation: float,
-        tfin: float,
+        dr_tf_wp_no_insulation: float,
+        r_tf_wp_inboard_centre: float,
         b_tf_inboard_peak_symmetric: float,
     ) -> tuple[float, int]:
         """
@@ -1743,10 +1740,10 @@ class SuperconductingTFCoil(TFCoil):
         :type n_tf_coils: float
         :param dx_tf_wp_primary_toroidal: Width of plasma-facing face of winding pack (m).
         :type dx_tf_wp_primary_toroidal: float
-        :param dr_tf_wp_with_insulation: Radial thickness of winding pack (m).
-        :type dr_tf_wp_with_insulation: float
-        :param tfin: Major radius of centre of winding pack (m).
-        :type tfin: float
+        :param dr_tf_wp_no_insulation: Radial thickness of winding pack (m).
+        :type dr_tf_wp_no_insulation: float
+        :param r_tf_wp_inboard_centre: Major radius of centre of winding pack (m).
+        :type r_tf_wp_inboard_centre: float
         :param b_tf_inboard_peak_symmetric: Nominal (axisymmetric) peak toroidal field (T).
         :type b_tf_inboard_peak_symmetric: float
 
@@ -1788,7 +1785,9 @@ class SuperconductingTFCoil(TFCoil):
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
 
-        wmax = (2.0e0 * tfin + dr_tf_wp_with_insulation) * np.tan(np.pi / n_tf_coils)
+        wmax = (2.0e0 * r_tf_wp_inboard_centre + dr_tf_wp_no_insulation) * np.tan(
+            np.pi / n_tf_coils
+        )
 
         #  Dimensionless winding pack width
 
@@ -1801,7 +1800,7 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Dimensionless winding pack radial thickness
 
-        superconducting_tf_coil_variables.tf_fit_z = dr_tf_wp_with_insulation / wmax
+        superconducting_tf_coil_variables.tf_fit_z = dr_tf_wp_no_insulation / wmax
         if (superconducting_tf_coil_variables.tf_fit_z < 0.26e0) or (
             superconducting_tf_coil_variables.tf_fit_z > 0.7e0
         ):
