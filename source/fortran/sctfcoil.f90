@@ -27,7 +27,7 @@ module sctfcoil_module
    real(dp) :: tf_fit_z
 !! Dimensionless winding pack radial thickness
 
-   real(dp) :: tf_fit_y
+   real(dp) :: f_b_tf_inboard_peak_ripple_symmetric
 !! Ratio of peak field with ripple to nominal axisymmetric peak field
 
    real(dp) :: c_tf_coil

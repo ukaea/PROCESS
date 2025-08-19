@@ -753,8 +753,8 @@ class SuperconductingTFCoil(TFCoil):
                 po.ovarre(
                     self.outfile,
                     "Ratio of actual peak field to nominal axisymmetric peak field",
-                    "(tf_fit_y)",
-                    sctfcoil_module.tf_fit_y,
+                    "(f_b_tf_inboard_peak_ripple_symmetric)",
+                    sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric,
                     "OP ",
                 )
 
@@ -1475,8 +1475,8 @@ class SuperconductingTFCoil(TFCoil):
                 po.ovarre(
                     self.outfile,
                     "Ratio of peak field with ripple to nominal axisymmetric peak field",
-                    "(tf_fit_y)",
-                    sctfcoil_module.tf_fit_y,
+                    "(f_b_tf_inboard_peak_ripple_symmetric)",
+                    sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric,
                     "OP ",
                 )
 
@@ -1785,14 +1785,17 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Ratio of peak field with ripple to nominal axisymmetric peak field
 
-        sctfcoil_module.tf_fit_y = (
+        sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric = (
             a[0]
             + a[1] * np.exp(-sctfcoil_module.tf_fit_t)
             + a[2] * sctfcoil_module.tf_fit_z
             + a[3] * sctfcoil_module.tf_fit_z * sctfcoil_module.tf_fit_t
         )
 
-        return sctfcoil_module.tf_fit_y * b_tf_inboard_peak_symmetric
+        return (
+            sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric
+            * b_tf_inboard_peak_symmetric
+        )
 
     def sc_tf_internal_geom(self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer):
         """
@@ -2856,7 +2859,7 @@ def init_sctfcoil_module():
     sctfcoil_module.is_leg_cp_temp_same = 0
     sctfcoil_module.tf_fit_t = 0.0
     sctfcoil_module.tf_fit_z = 0.0
-    sctfcoil_module.tf_fit_y = 0.0
+    sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric = 0.0
     sctfcoil_module.c_tf_coil = 0.0
     sctfcoil_module.a_tf_wp_with_insulation = 0.0
     sctfcoil_module.a_tf_wp_no_insulation = 0.0

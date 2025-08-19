@@ -160,7 +160,7 @@ class SuperconParam(NamedTuple):
 
     tf_fit_z: Any = None
 
-    tf_fit_y: Any = None
+    f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
     run_tests: Any = None
 
@@ -230,7 +230,7 @@ class SuperconParam(NamedTuple):
             t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
@@ -273,7 +273,7 @@ class SuperconParam(NamedTuple):
             t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
@@ -314,7 +314,7 @@ class SuperconParam(NamedTuple):
             t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
@@ -405,7 +405,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "tf_fit_z", superconparam.tf_fit_z)
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_y", superconparam.tf_fit_y)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "f_b_tf_inboard_peak_ripple_symmetric",
+        superconparam.f_b_tf_inboard_peak_ripple_symmetric,
+    )
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
@@ -446,7 +450,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tf_fit_z: Any = None
 
-    tf_fit_y: Any = None
+    f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
     n_tf_coils: Any = None
 
@@ -462,7 +466,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     expected_tf_fit_z: Any = None
 
-    expected_tf_fit_y: Any = None
+    expected_f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
     expected_b_tf_inboard_peak_with_ripple: Any = None
 
@@ -473,7 +477,7 @@ class PeakTfWithRippleParam(NamedTuple):
         PeakTfWithRippleParam(
             tf_fit_t=0,
             tf_fit_z=0,
-            tf_fit_y=0,
+            f_b_tf_inboard_peak_ripple_symmetric=0,
             n_tf_coils=16,
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dr_tf_wp_with_insulation=0.50661087836601015,
@@ -481,13 +485,13 @@ class PeakTfWithRippleParam(NamedTuple):
             b_tf_inboard_peak_symmetric=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
-            expected_tf_fit_y=1.0658869305062604,
+            expected_f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
         ),
         PeakTfWithRippleParam(
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             n_tf_coils=16,
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dr_tf_wp_with_insulation=0.50661087836601015,
@@ -495,7 +499,7 @@ class PeakTfWithRippleParam(NamedTuple):
             b_tf_inboard_peak_symmetric=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
-            expected_tf_fit_y=1.0658869305062604,
+            expected_f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
         ),
     ),
@@ -517,7 +521,11 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(sctfcoil_module, "tf_fit_z", peaktfwithrippleparam.tf_fit_z)
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_y", peaktfwithrippleparam.tf_fit_y)
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "f_b_tf_inboard_peak_ripple_symmetric",
+        peaktfwithrippleparam.f_b_tf_inboard_peak_ripple_symmetric,
+    )
 
     b_tf_inboard_peak_with_ripple = sctfcoil.peak_b_tf_inboard_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
@@ -535,8 +543,8 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         peaktfwithrippleparam.expected_tf_fit_z
     )
 
-    assert sctfcoil_module.tf_fit_y == pytest.approx(
-        peaktfwithrippleparam.expected_tf_fit_y
+    assert sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric == pytest.approx(
+        peaktfwithrippleparam.expected_f_b_tf_inboard_peak_ripple_symmetric
     )
 
     assert b_tf_inboard_peak_with_ripple == pytest.approx(
