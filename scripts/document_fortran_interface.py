@@ -17,7 +17,7 @@ import inspect
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from process import fortran
+from process import data_structure, fortran
 
 
 class FortranModuleMember(NamedTuple):
@@ -87,7 +87,7 @@ def get_modules(ftrn) -> list[FortranModule]:
     classes = []
 
     for name, module in inspect.getmembers(ftrn):
-        if type(module) == type(fortran.physics_variables):  # noqa: E721
+        if type(module) == type(data_structure.physics_variables):  # noqa: E721
             classes.append(
                 FortranModule(
                     name=name, docstring=module.__doc__, members=get_members(module)

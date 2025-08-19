@@ -13,15 +13,13 @@ from process.data_structure import (
     heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
+    physics_variables,
     power_variables,
     tfcoil_variables,
     times_variables,
 )
 from process.data_structure import primary_pumping_variables as ppv
-from process.fortran import (
-    numerics,
-    physics_variables,
-)
+from process.fortran import numerics
 from process.power import Power
 
 

@@ -7,9 +7,9 @@ from process.data_structure import (
     current_drive_variables,
     dcll_variables,
     fwbs_variables,
+    physics_variables,
 )
 from process.dcll import DCLL
-from process.fortran import physics_variables
 
 
 @pytest.fixture

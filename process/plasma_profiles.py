@@ -4,12 +4,9 @@ import numpy as np
 import scipy as sp
 
 import process.profiles as profiles
-from process.data_structure import divertor_variables
+from process.data_structure import divertor_variables, physics_variables
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-    physics_variables,
-)
+from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 

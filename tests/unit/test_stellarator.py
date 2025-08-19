@@ -20,12 +20,12 @@ from process.data_structure import (
     fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
+    physics_variables,
     stellarator_configuration,
     stellarator_variables,
     structure_variables,
     tfcoil_variables,
 )
-from process.fortran import physics_variables
 from process.hcpb import CCFE_HCPB
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile

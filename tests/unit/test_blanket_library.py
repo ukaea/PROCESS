@@ -9,8 +9,6 @@ from process.data_structure import (
     build_variables,
     divertor_variables,
     fwbs_variables,
-)
-from process.fortran import (
     physics_variables,
 )
 from process.fw import Fw

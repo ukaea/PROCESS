@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from pytest import approx
 
-from process import data_structure, fortran
+from process import data_structure
 from process.costs import Costs
 from process.data_structure import (
     build_variables,
@@ -19,6 +19,7 @@ from process.data_structure import (
     ife_variables,
     pf_power_variables,
     pfcoil_variables,
+    physics_variables,
     pulse_variables,
     structure_variables,
     tfcoil_variables,
@@ -26,9 +27,6 @@ from process.data_structure import (
     vacuum_variables,
 )
 from process.fortran import error_handling as eh
-from process.fortran import (
-    physics_variables,
-)
 
 
 @pytest.fixture
@@ -184,8 +182,8 @@ def test_acc2272(monkeypatch, costs):
     :param monkeypatch: Mock fixture
     :type monkeypatch: object
     """
-    monkeypatch.setattr(fortran.physics_variables, "rndfuel", 7.158e20)
-    monkeypatch.setattr(fortran.physics_variables, "m_fuel_amu", 2.5)
+    monkeypatch.setattr(physics_variables, "rndfuel", 7.158e20)
+    monkeypatch.setattr(physics_variables, "m_fuel_amu", 2.5)
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "c2271", 0)
 
@@ -248,7 +246,7 @@ def acc2273_fix(request, monkeypatch, costs):
     # Some may be parameterised
     monkeypatch.setattr(data_structure.buildings_variables, "wsvol", param["wsvol"])
     monkeypatch.setattr(data_structure.buildings_variables, "volrci", param["volrci"])
-    monkeypatch.setattr(fortran.physics_variables, "f_tritium", param["f_tritium"])
+    monkeypatch.setattr(physics_variables, "f_tritium", param["f_tritium"])
 
     # Mock result var as negative, as an expected result is 0
     # Otherwise could get false positive result
@@ -632,7 +630,7 @@ def acc26_params():
         acc26_param(),
         acc26_param(
             ireactor=1,
-            p_fusion_total_mw=fortran.physics_variables.p_fusion_total_mw,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
             p_hcd_electric_total_mw=heat_transport_variables.p_hcd_electric_total_mw,
             tfcmw=data_structure.tfcoil_variables.tfcmw,
             p_plant_primary_heat_mw=3000.0,
@@ -659,7 +657,9 @@ def acc26_fix(request, monkeypatch, costs):
     monkeypatch.setattr(cost_variables, "lsa", 4)
     monkeypatch.setattr(cost_variables, "ireactor", param["ireactor"])
     monkeypatch.setattr(
-        fortran.physics_variables, "p_fusion_total_mw", param["p_fusion_total_mw"]
+        physics_variables,
+        "p_fusion_total_mw",
+        param["p_fusion_total_mw"],
     )
     monkeypatch.setattr(
         heat_transport_variables,
@@ -5305,7 +5305,9 @@ def test_acc26_rut(acc26param, monkeypatch, costs):
     )
 
     monkeypatch.setattr(
-        physics_variables, "p_fusion_total_mw", acc26param.p_fusion_total_mw
+        physics_variables,
+        "p_fusion_total_mw",
+        acc26param.p_fusion_total_mw,
     )
 
     monkeypatch.setattr(tfcoil_variables, "tfcmw", acc26param.tfcmw)

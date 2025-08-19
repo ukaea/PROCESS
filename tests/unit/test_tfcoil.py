@@ -7,10 +7,12 @@ import pytest
 
 import process.tf_coil as tfcoil_module
 from process.build import Build
-from process.data_structure import build_variables, fwbs_variables, tfcoil_variables
-from process.fortran import (
-    sctfcoil_module,
+from process.data_structure import (
+    build_variables,
+    fwbs_variables,
+    tfcoil_variables,
 )
+from process.fortran import sctfcoil_module
 from process.tf_coil import TFCoil
 
 

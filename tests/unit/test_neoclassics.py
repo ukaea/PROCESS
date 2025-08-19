@@ -3,8 +3,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import neoclassics_variables
-from process.fortran import physics_variables
+from process.data_structure import neoclassics_variables, physics_variables
 from process.stellarator import Neoclassics
 
 

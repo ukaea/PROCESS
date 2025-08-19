@@ -17,6 +17,7 @@ from process.data_structure import (
     heat_transport_variables,
     impurity_radiation_module,
     pfcoil_variables,
+    physics_variables,
     rebco_variables,
     tfcoil_variables,
 )
@@ -26,7 +27,6 @@ from process.fortran import (
     error_handling,
     global_variables,
     numerics,
-    physics_variables,
     scan_module,
 )
 from process.solver_handler import SolverHandler

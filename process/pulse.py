@@ -3,6 +3,7 @@ from process.data_structure import (
     constraint_variables,
     pf_power_variables,
     pfcoil_variables,
+    physics_variables,
     pulse_variables,
     times_variables,
 )
@@ -10,7 +11,6 @@ from process.fortran import (
     constants,
     error_handling,
     numerics,
-    physics_variables,
 )
 
 
