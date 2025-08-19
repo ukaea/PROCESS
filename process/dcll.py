@@ -8,11 +8,11 @@ from process.data_structure import (
     dcll_variables,
     fwbs_variables,
     heat_transport_variables,
+    physics_variables,
     primary_pumping_variables,
 )
 from process.fortran import (
     constants,
-    physics_variables,
 )
 
 

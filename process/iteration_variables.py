@@ -37,18 +37,20 @@ class IterationVariable:
 
 
 ITERATION_VARIABLES = {
-    1: IterationVariable("aspect", fortran.physics_variables, 1.1, 10.00),
-    2: IterationVariable("bt", fortran.physics_variables, 0.010, 30.00),
-    3: IterationVariable("rmajor", fortran.physics_variables, 0.1, 50.00),
-    4: IterationVariable("te", fortran.physics_variables, 5.0, 150.0),
-    5: IterationVariable("beta", fortran.physics_variables, 0.001, 1.0),
-    6: IterationVariable("dene", fortran.physics_variables, 2.0e19, 1.0e21),
-    7: IterationVariable("f_nd_beam_electron", fortran.physics_variables, 1.0e-6, 1.0),
+    1: IterationVariable("aspect", data_structure.physics_variables, 1.1, 10.00),
+    2: IterationVariable("bt", data_structure.physics_variables, 0.010, 30.00),
+    3: IterationVariable("rmajor", data_structure.physics_variables, 0.1, 50.00),
+    4: IterationVariable("te", data_structure.physics_variables, 5.0, 150.0),
+    5: IterationVariable("beta", data_structure.physics_variables, 0.001, 1.0),
+    6: IterationVariable("dene", data_structure.physics_variables, 2.0e19, 1.0e21),
+    7: IterationVariable(
+        "f_nd_beam_electron", data_structure.physics_variables, 1.0e-6, 1.0
+    ),
     8: IterationVariable(
         "fbeta_poloidal_eps", data_structure.constraint_variables, 0.001, 1.0
     ),
     9: IterationVariable("fdene", data_structure.constraint_variables, 0.001, 1.0),
-    10: IterationVariable("hfact", fortran.physics_variables, 0.1, 3.0),
+    10: IterationVariable("hfact", data_structure.physics_variables, 0.1, 3.0),
     11: IterationVariable(
         "p_hcd_primary_extra_heat_mw",
         data_structure.current_drive_variables,
@@ -67,7 +69,7 @@ ITERATION_VARIABLES = {
     17: IterationVariable(
         "t_between_pulse", data_structure.times_variables, 0.1, 1.0e8
     ),
-    18: IterationVariable("q95", fortran.physics_variables, 2.0, 50.00),
+    18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
     19: IterationVariable(
         "e_beam_kev", data_structure.current_drive_variables, 1.0, 1.0e6
     ),
@@ -115,7 +117,7 @@ ITERATION_VARIABLES = {
     ),
     42: IterationVariable("dr_cs_tf_gap", data_structure.build_variables, 0.001, 10.00),
     44: IterationVariable(
-        "f_c_plasma_non_inductive", fortran.physics_variables, 0.001, 1.0
+        "f_c_plasma_non_inductive", data_structure.physics_variables, 0.001, 1.0
     ),
     45: IterationVariable(
         "fbig_q_plasma_min", data_structure.constraint_variables, 0.001, 1.0
@@ -206,7 +208,7 @@ ITERATION_VARIABLES = {
     107: IterationVariable("favail", data_structure.cost_variables, 0.001, 1.0),
     108: IterationVariable("breeder_f", data_structure.fwbs_variables, 0.060, 1.0),
     109: IterationVariable(
-        "f_nd_alpha_electron", fortran.physics_variables, 0.05, 0.15
+        "f_nd_alpha_electron", data_structure.physics_variables, 0.05, 0.15
     ),
     110: IterationVariable(
         "falpha_energy_confinement", data_structure.constraint_variables, 0.001, 1.0
@@ -232,7 +234,7 @@ ITERATION_VARIABLES = {
     117: IterationVariable(
         "fpsepbqar", data_structure.constraint_variables, 0.001, 1.0
     ),
-    119: IterationVariable("tesep", fortran.physics_variables, 0.0, 1.0e1),
+    119: IterationVariable("tesep", data_structure.physics_variables, 0.0, 1.0e1),
     122: IterationVariable(
         "f_a_cs_steel", data_structure.pfcoil_variables, 0.001, 0.950
     ),
@@ -335,9 +337,9 @@ ITERATION_VARIABLES = {
         target_name="impurity_arr_frac",
         array_index=13,
     ),
-    137: IterationVariable("fplhsep", fortran.physics_variables, 0.001, 1.0),
+    137: IterationVariable("fplhsep", data_structure.physics_variables, 0.001, 1.0),
     138: IterationVariable(
-        "rebco_thickness", fortran.physics_variables, 0.01e-6, 100.0e-6
+        "rebco_thickness", data_structure.physics_variables, 0.01e-6, 100.0e-6
     ),
     139: IterationVariable(
         "copper_thick", data_structure.rebco_variables, 1.0e-6, 1.0e-3
@@ -348,10 +350,10 @@ ITERATION_VARIABLES = {
     141: IterationVariable(
         "ftemp_croco_quench_max", data_structure.constraint_variables, 0.001, 1.0
     ),
-    142: IterationVariable("nesep", fortran.physics_variables, 1.0e17, 1.0e20),
+    142: IterationVariable("nesep", data_structure.physics_variables, 1.0e17, 1.0e20),
     143: IterationVariable("f_coppera_m2", data_structure.rebco_variables, 0.001, 1.0),
     144: IterationVariable("fnesep", data_structure.constraint_variables, 0.001, 1.0),
-    145: IterationVariable("fgwped", fortran.physics_variables, 0.1, 0.9),
+    145: IterationVariable("fgwped", data_structure.physics_variables, 0.1, 0.9),
     146: IterationVariable(
         "fc_tf_turn_max", data_structure.constraint_variables, 0.001, 1.0
     ),
@@ -359,9 +361,9 @@ ITERATION_VARIABLES = {
     149: IterationVariable(
         "fb_cs_limit_max", data_structure.pfcoil_variables, 0.001, 1.0
     ),
-    152: IterationVariable("fgwsep", fortran.physics_variables, 0.001, 0.5),
-    153: IterationVariable("fpdivlim", fortran.physics_variables, 0.001, 1.0),
-    154: IterationVariable("fne0", fortran.physics_variables, 0.001, 1.0),
+    152: IterationVariable("fgwsep", data_structure.physics_variables, 0.001, 0.5),
+    153: IterationVariable("fpdivlim", data_structure.physics_variables, 0.001, 1.0),
+    154: IterationVariable("fne0", data_structure.physics_variables, 0.001, 1.0),
     155: IterationVariable("pfusife", data_structure.ife_variables, 5.0e2, 3.0e3),
     156: IterationVariable("rrin", data_structure.ife_variables, 1.0, 1.0e1),
     157: IterationVariable(
@@ -404,9 +406,9 @@ ITERATION_VARIABLES = {
     172: IterationVariable(
         "dx_tf_side_case_min", data_structure.tfcoil_variables, 0.001, 1.0
     ),
-    173: IterationVariable("f_tritium", fortran.physics_variables, 0.000, 1.000),
-    174: IterationVariable("triang", fortran.physics_variables, 0.00, 1.00),
-    175: IterationVariable("kappa", fortran.physics_variables, 0.00, 10.00),
+    173: IterationVariable("f_tritium", data_structure.physics_variables, 0.000, 1.000),
+    174: IterationVariable("triang", data_structure.physics_variables, 0.00, 1.00),
+    175: IterationVariable("kappa", data_structure.physics_variables, 0.00, 10.00),
 }
 
 

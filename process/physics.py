@@ -21,7 +21,7 @@ from process.data_structure import (
     divertor_variables,
     fwbs_variables,
     impurity_radiation_module,
-    physics_module,
+    physics_variables,
     pulse_variables,
     reinke_variables,
     stellarator_variables,
@@ -32,9 +32,7 @@ from process.fortran import (
     constants,
     error_handling,
     numerics,
-    physics_variables,
 )
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 ELECTRON_CHARGE: float = constants.electron_charge.item()
 RMU0: float = constants.rmu0.item()
@@ -1611,10 +1609,8 @@ class Physics:
         # Plasma Current Profile
         # -----------------------------------------------------
 
-        physics_variables.alphaj_wesson = (
-            self.calculate_current_profile_index_wesson(
-                qstar=physics_variables.qstar, q0=physics_variables.q0
-            ),
+        physics_variables.alphaj_wesson = self.calculate_current_profile_index_wesson(
+            qstar=physics_variables.qstar, q0=physics_variables.q0
         )
 
         # Map calculation methods to a dictionary
@@ -1740,7 +1736,7 @@ class Physics:
             * physics_variables.beta_thermal
             * physics_variables.rminor
             * physics_variables.bt
-            / physics_variables.plasma_current,
+            / physics_variables.plasma_current
         )
         physics_variables.beta_norm_toroidal = (
             physics_variables.beta_norm_total
@@ -1766,7 +1762,7 @@ class Physics:
         )
 
         # Plasma thermal energy derived from the total beta
-        physics_module.e_plasma_beta = (
+        physics_variables.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
             * physics_variables.btot
@@ -2061,7 +2057,7 @@ class Physics:
                 i_bootstrap_current=physics_variables.i_bootstrap_current,
             )
 
-        physics_module.err242 = 0
+        physics_variables.err242 = 0
         if (
             current_drive_variables.f_c_plasma_bootstrap
             > current_drive_variables.f_c_plasma_bootstrap_max
@@ -2070,7 +2066,7 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap,
                 current_drive_variables.f_c_plasma_bootstrap_max,
             )
-            physics_module.err242 = 1
+            physics_variables.err242 = 1
 
         current_drive_variables.f_c_plasma_internal = (
             current_drive_variables.f_c_plasma_bootstrap
@@ -2083,7 +2079,7 @@ class Physics:
         # or equal to the total fraction of the plasma current
         # produced by non-inductive means (which also includes
         # the current drive proportion)
-        physics_module.err243 = 0
+        physics_variables.err243 = 0
         if (
             current_drive_variables.f_c_plasma_internal
             > physics_variables.f_c_plasma_non_inductive
@@ -2092,7 +2088,7 @@ class Physics:
                 current_drive_variables.f_c_plasma_internal,
                 physics_variables.f_c_plasma_non_inductive,
             )
-            physics_module.err243 = 1
+            physics_variables.err243 = 1
 
         # Fraction of plasma current produced by inductive means
         physics_variables.f_c_plasma_inductive = max(
@@ -2122,13 +2118,13 @@ class Physics:
 
         # This neglects the power from the beam
         physics_variables.p_plasma_dt_mw = (
-            physics_module.dt_power_density_plasma * physics_variables.vol_plasma
+            physics_variables.dt_power_density_plasma * physics_variables.vol_plasma
         )
         physics_variables.p_dhe3_total_mw = (
-            physics_module.dhe3_power_density * physics_variables.vol_plasma
+            physics_variables.dhe3_power_density * physics_variables.vol_plasma
         )
         physics_variables.p_dd_total_mw = (
-            physics_module.dd_power_density * physics_variables.vol_plasma
+            physics_variables.dd_power_density * physics_variables.vol_plasma
         )
 
         # Calculate neutral beam slowing down effects
@@ -2154,7 +2150,7 @@ class Physics:
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
-                physics_module.sigmav_dt_average,
+                physics_variables.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.vol_plasma,
@@ -2495,7 +2491,7 @@ class Physics:
             physics_variables.ntau,
             physics_variables.nTtau,
             physics_variables.figmer,
-            physics_module.fusrat,
+            physics_variables.fusrat,
             physics_variables.qfuel,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
@@ -2646,22 +2642,22 @@ class Physics:
 
         # Calculate the target imbalances
         # find the total power into the targets
-        physics_module.ptarmw = physics_variables.p_plasma_separatrix_mw * (
+        physics_variables.ptarmw = physics_variables.p_plasma_separatrix_mw * (
             1.0e0 - physics_variables.rad_fraction_sol
         )
         # use physics_variables.f_p_div_lower to find deltarsep
         # Parameters taken from double null machine
         # D. Brunner et al
-        physics_module.lambdaio = 1.57e-3
+        physics_variables.lambdaio = 1.57e-3
 
         # Issue #1559 Infinities in physics_module.drsep when running single null in a double null machine
         # C W Ashe
         if physics_variables.f_p_div_lower < 4.5e-5:
-            physics_module.drsep = 1.5e-2
+            physics_variables.drsep = 1.5e-2
         elif physics_variables.f_p_div_lower > (1.0e0 - 4.5e-5):
-            physics_module.drsep = -1.5e-2
+            physics_variables.drsep = -1.5e-2
         else:
-            physics_module.drsep = (
+            physics_variables.drsep = (
                 -2.0e0
                 * 1.5e-3
                 * math.atanh(2.0e0 * (physics_variables.f_p_div_lower - 0.5e0))
@@ -2671,13 +2667,15 @@ class Physics:
         # Volumes 290-293, March 2001, Pages 935-939
         # Find the innner and outer lower target imbalance
 
-        physics_module.fio = 0.16e0 + (0.16e0 - 0.41e0) * (
+        physics_variables.fio = 0.16e0 + (0.16e0 - 0.41e0) * (
             1.0e0
             - (
                 2.0e0
                 / (
                     1.0e0
-                    + np.exp(-((physics_module.drsep / physics_module.lambdaio) ** 2))
+                    + np.exp(
+                        -((physics_variables.drsep / physics_variables.lambdaio) ** 2)
+                    )
                 )
             )
         )
@@ -2685,43 +2683,47 @@ class Physics:
             # Double Null configuration
             # Find all the power fractions accross the targets
             # Taken from D3-D conventional divertor design
-            physics_module.fli = physics_variables.f_p_div_lower * physics_module.fio
-            physics_module.flo = physics_variables.f_p_div_lower * (
-                1.0e0 - physics_module.fio
+            physics_variables.fli = (
+                physics_variables.f_p_div_lower * physics_variables.fio
             )
-            physics_module.fui = (
+            physics_variables.flo = physics_variables.f_p_div_lower * (
+                1.0e0 - physics_variables.fio
+            )
+            physics_variables.fui = (
                 1.0e0 - physics_variables.f_p_div_lower
-            ) * physics_module.fio
-            physics_module.fuo = (1.0e0 - physics_variables.f_p_div_lower) * (
-                1.0e0 - physics_module.fio
+            ) * physics_variables.fio
+            physics_variables.fuo = (1.0e0 - physics_variables.f_p_div_lower) * (
+                1.0e0 - physics_variables.fio
             )
             # power into each target
-            physics_module.plimw = physics_module.fli * physics_module.ptarmw
-            physics_module.plomw = physics_module.flo * physics_module.ptarmw
-            physics_module.puimw = physics_module.fui * physics_module.ptarmw
-            physics_module.puomw = physics_module.fuo * physics_module.ptarmw
+            physics_variables.plimw = physics_variables.fli * physics_variables.ptarmw
+            physics_variables.plomw = physics_variables.flo * physics_variables.ptarmw
+            physics_variables.puimw = physics_variables.fui * physics_variables.ptarmw
+            physics_variables.puomw = physics_variables.fuo * physics_variables.ptarmw
         else:
             # Single null configuration
-            physics_module.fli = physics_module.fio
-            physics_module.flo = 1.0e0 - physics_module.fio
+            physics_variables.fli = physics_variables.fio
+            physics_variables.flo = 1.0e0 - physics_variables.fio
             # power into each target
-            physics_module.plimw = physics_module.fli * physics_module.ptarmw
-            physics_module.plomw = physics_module.flo * physics_module.ptarmw
+            physics_variables.plimw = physics_variables.fli * physics_variables.ptarmw
+            physics_variables.plomw = physics_variables.flo * physics_variables.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
-        physics_module.total_loss_power = 1e6 * (
+        physics_variables.total_loss_power = 1e6 * (
             physics_variables.f_p_alpha_plasma_deposited
             * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
         )
-        physics_module.rad_fraction_lcfs = (
-            1.0e6 * physics_variables.p_plasma_rad_mw / physics_module.total_loss_power
+        physics_variables.rad_fraction_lcfs = (
+            1.0e6
+            * physics_variables.p_plasma_rad_mw
+            / physics_variables.total_loss_power
         )
         physics_variables.rad_fraction_total = (
-            physics_module.rad_fraction_lcfs
-            + (1.0e0 - physics_module.rad_fraction_lcfs)
+            physics_variables.rad_fraction_lcfs
+            + (1.0e0 - physics_variables.rad_fraction_lcfs)
             * physics_variables.rad_fraction_sol
         )
         physics_variables.pradsolmw = (
@@ -3283,13 +3285,13 @@ class Physics:
         # pcoef now calculated in plasma_profiles, after the very first
         # call of plasma_composition; use old parabolic profile estimate
         # in this case
-        if physics_module.first_call == 1:
+        if physics_variables.first_call == 1:
             pc = (
                 (1.0 + physics_variables.alphan)
                 * (1.0 + physics_variables.alphat)
                 / (1.0 + physics_variables.alphan + physics_variables.alphat)
             )
-            physics_module.first_call = 0
+            physics_variables.first_call = 0
         else:
             pc = physics_variables.pcoef
 
@@ -3777,7 +3779,7 @@ class Physics:
 
         # ###############################################
         # Dimensionless plasma parameters. See reference below.
-        physics_module.nu_star = (
+        physics_variables.nu_star = (
             1
             / constants.rmu0
             * (15.0e0 * constants.electron_charge**4 * physics_variables.dlamie)
@@ -3788,14 +3790,14 @@ class Physics:
             * np.sqrt(physics_variables.eps)
             * physics_variables.nd_electron_line**3
             * physics_variables.kappa
-            / (physics_module.e_plasma_beta**2 * physics_variables.plasma_current)
+            / (physics_variables.e_plasma_beta**2 * physics_variables.plasma_current)
         )
 
-        physics_module.rho_star = np.sqrt(
+        physics_variables.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
             * physics_variables.m_ions_total_amu
-            * physics_module.e_plasma_beta
+            * physics_variables.e_plasma_beta
             / (
                 3.0e0
                 * physics_variables.vol_plasma
@@ -3808,11 +3810,11 @@ class Physics:
             * physics_variables.rmajor
         )
 
-        physics_module.beta_mcdonald = (
+        physics_variables.beta_mcdonald = (
             4.0e0
             / 3.0e0
             * constants.rmu0
-            * physics_module.e_plasma_beta
+            * physics_variables.e_plasma_beta
             / (physics_variables.vol_plasma * physics_variables.bt**2)
         )
 
@@ -3835,20 +3837,20 @@ class Physics:
 
         if stellarator_variables.istell == 0:
             if physics_variables.itart == 0:
-                physics_module.itart_r = physics_variables.itart
+                physics_variables.itart_r = physics_variables.itart
                 po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Conventional, itart = 0",
                     "(itart)",
-                    physics_module.itart_r,
+                    physics_variables.itart_r,
                 )
             elif physics_variables.itart == 1:
-                physics_module.itart_r = physics_variables.itart
+                physics_variables.itart_r = physics_variables.itart
                 po.ovarin(
                     self.outfile,
                     "Tokamak aspect ratio = Spherical, itart = 1",
                     "(itart)",
-                    physics_module.itart_r,
+                    physics_variables.itart_r,
                 )
 
         po.osubhd(self.outfile, "Plasma Geometry :")
@@ -4417,7 +4419,7 @@ class Physics:
             self.outfile,
             "Plasma thermal energy derived from the total beta (J)",
             "(e_plasma_beta)",
-            physics_module.e_plasma_beta,
+            physics_variables.e_plasma_beta,
             "OP",
         )
 
@@ -5189,7 +5191,7 @@ class Physics:
             self.outfile,
             "LCFS radiation fraction = total radiation in LCFS / total power deposited in plasma",
             "(rad_fraction_LCFS)",
-            physics_module.rad_fraction_lcfs,
+            physics_variables.rad_fraction_lcfs,
             "OP ",
         )
         po.ovarre(
@@ -5241,7 +5243,7 @@ class Physics:
                 self.outfile,
                 "Power incident on the divertor targets (MW)",
                 "(ptarmw)",
-                physics_module.ptarmw,
+                physics_variables.ptarmw,
                 "OP ",
             )
             po.ovarre(
@@ -5255,7 +5257,7 @@ class Physics:
                 self.outfile,
                 "Outboard side heat flux decay length (m)",
                 "(lambdaio)",
-                physics_module.lambdaio,
+                physics_variables.lambdaio,
                 "OP ",
             )
             if physics_variables.n_divertors == 2:
@@ -5263,7 +5265,7 @@ class Physics:
                     self.outfile,
                     "Midplane seperation of the two magnetic closed flux surfaces (m)",
                     "(drsep)",
-                    physics_module.drsep,
+                    physics_variables.drsep,
                     "OP ",
                 )
 
@@ -5271,21 +5273,21 @@ class Physics:
                 self.outfile,
                 "Fraction of power on the inner targets",
                 "(fio)",
-                physics_module.fio,
+                physics_variables.fio,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Fraction of power incident on the lower inner target",
                 "(fLI)",
-                physics_module.fli,
+                physics_variables.fli,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Fraction of power incident on the lower outer target",
                 "(fLO)",
-                physics_module.flo,
+                physics_variables.flo,
                 "OP ",
             )
             if physics_variables.n_divertors == 2:
@@ -5293,14 +5295,14 @@ class Physics:
                     self.outfile,
                     "Fraction of power incident on the upper inner target",
                     "(fUI)",
-                    physics_module.fui,
+                    physics_variables.fui,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Fraction of power incident on the upper outer target",
                     "(fUO)",
-                    physics_module.fuo,
+                    physics_variables.fuo,
                     "OP ",
                 )
 
@@ -5308,14 +5310,14 @@ class Physics:
                 self.outfile,
                 "Power incident on the lower inner target (MW)",
                 "(pLImw)",
-                physics_module.plimw,
+                physics_variables.plimw,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Power incident on the lower outer target (MW)",
                 "(pLOmw)",
-                physics_module.plomw,
+                physics_variables.plomw,
                 "OP ",
             )
             if physics_variables.n_divertors == 2:
@@ -5323,14 +5325,14 @@ class Physics:
                     self.outfile,
                     "Power incident on the upper innner target (MW)",
                     "(pUImw)",
-                    physics_module.puimw,
+                    physics_variables.puimw,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Power incident on the upper outer target (MW)",
                     "(pUOmw)",
-                    physics_module.puomw,
+                    physics_variables.puomw,
                     "OP ",
                 )
 
@@ -5718,11 +5720,9 @@ class Physics:
             )
             po.oblnkl(self.outfile)
 
-        tauelaw = f2py_compatible_to_string(
-            physics_variables.labels_confinement_scalings[
-                physics_variables.i_confinement_time
-            ]
-        )
+        tauelaw = physics_variables.LABELS_CONFINEMENT_SCALINGS[
+            physics_variables.i_confinement_time
+        ]
 
         po.ocmmnt(
             self.outfile,
@@ -5750,7 +5750,7 @@ class Physics:
             self.outfile,
             "Directly calculated total energy confinement time (s)",
             "(t_energy_confinement_beta)",
-            physics_module.t_energy_confinement_beta,
+            physics_variables.t_energy_confinement_beta,
             "OP ",
         )
         po.ocmmnt(
@@ -5908,21 +5908,21 @@ class Physics:
                 self.outfile,
                 "Normalized plasma pressure beta as defined by McDonald et al",
                 "(beta_mcdonald)",
-                physics_module.beta_mcdonald,
+                physics_variables.beta_mcdonald,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Normalized ion Larmor radius",
                 "(rho_star)",
-                physics_module.rho_star,
+                physics_variables.rho_star,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Normalized collisionality",
                 "(nu_star)",
-                physics_module.nu_star,
+                physics_variables.nu_star,
                 "OP ",
             )
             po.ovarre(
@@ -6159,11 +6159,11 @@ class Physics:
                 "OP ",
             )
             # Error to catch if bootstap fraction limit has been enforced
-            if physics_module.err242 == 1:
+            if physics_variables.err242 == 1:
                 error_handling.report_error(242)
 
             # Error to catch if self-driven current fraction limit has been enforced
-            if physics_module.err243 == 1:
+            if physics_variables.err243 == 1:
                 error_handling.report_error(243)
 
             if physics_variables.i_bootstrap_current == 0:
@@ -6369,7 +6369,7 @@ class Physics:
         # Start from range 1 as the first i_confinement_time is a user input
         # If stellarator, use the stellarator scalings
         for i_confinement_time in (
-            range(1, physics_variables.n_confinement_scalings)
+            range(1, physics_variables.N_CONFINEMENT_SCALINGS)
             if istell == 0
             else stellarator_scalings
         ):
@@ -6417,7 +6417,7 @@ class Physics:
 
             po.ocmmnt(
                 self.outfile,
-                f"{'':>2}{f2py_compatible_to_string(physics_variables.labels_confinement_scalings[i_confinement_time]):<38}"
+                f"{'':>2}{physics_variables.LABELS_CONFINEMENT_SCALINGS[i_confinement_time]:<38}"
                 f"{taueez:<28.3f}{physics_variables.hfac[i_confinement_time - 1]:.3f}",
             )
 
@@ -8201,8 +8201,8 @@ class Physics:
 
         # For comparison directly calculate the confinement time from the stored energy calculated
         # from the total plasma beta and the loss power used above.
-        physics_module.t_energy_confinement_beta = (
-            physics_module.e_plasma_beta / 1e6
+        physics_variables.t_energy_confinement_beta = (
+            physics_variables.e_plasma_beta / 1e6
         ) / p_plasma_loss_mw
 
         return (
@@ -8512,249 +8512,3 @@ def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
-
-
-def init_physics_variables():
-    physics_variables.m_beam_amu = 0.0
-    physics_variables.m_fuel_amu = 0.0
-    physics_variables.m_ions_total_amu = 0.0
-    physics_variables.m_plasma_fuel_ions = 0.0
-    physics_variables.m_plasma_ions_total = 0.0
-    physics_variables.m_plasma_alpha = 0.0
-    physics_variables.m_plasma_electron = 0.0
-    physics_variables.m_plasma = 0.0
-    physics_variables.alphaj = 1.0
-    physics_variables.i_alphaj = 0
-    physics_variables.alphan = 0.25
-    physics_variables.alphap = 0.0
-    physics_variables.fusden_alpha_total = 0.0
-    physics_variables.fusden_plasma_alpha = 0.0
-    physics_variables.alphat = 0.5
-    physics_variables.aspect = 2.907
-    physics_variables.beamfus0 = 1.0
-    physics_variables.beta = 0.042
-    physics_variables.beta_fast_alpha = 0.0
-    physics_variables.beta_max = 0.0
-    physics_variables.beta_min = 0.0
-    physics_variables.beta_beam = 0.0
-    physics_variables.beta_poloidal = 0.0
-    physics_variables.beta_poloidal_eps = 0.0
-    physics_variables.beta_toroidal = 0.0
-    physics_variables.beta_thermal = 0.0
-    physics_variables.beta_thermal_poloidal = 0.0
-    physics_variables.beta_thermal_toroidal = 0.0
-    physics_variables.beta_norm_total = 0.0
-    physics_variables.beta_norm_thermal = 0.0
-    physics_variables.beta_norm_poloidal = 0.0
-    physics_variables.e_plasma_beta_thermal = 0.0
-    physics_variables.beta_norm_toroidal = 0.0
-    physics_variables.betbm0 = 1.5
-    physics_variables.bp = 0.0
-    physics_variables.bt = 5.68
-    physics_variables.btot = 0.0
-    physics_variables.burnup = 0.0
-    physics_variables.burnup_in = 0.0
-    physics_variables.bvert = 0.0
-    physics_variables.c_beta = 0.5
-    physics_variables.csawth = 1.0
-    physics_variables.f_vol_plasma = 1.0
-    physics_variables.f_r_conducting_wall = 1.35
-    physics_variables.dene = 9.8e19
-    physics_variables.nd_fuel_ions = 0.0
-    physics_variables.dlamee = 0.0
-    physics_variables.dlamie = 0.0
-    physics_variables.dlimit[:] = 0.0
-    physics_variables.nd_alphas = 0.0
-    physics_variables.nd_beam_ions = 0.0
-    physics_variables.nd_beam_ions_out = 0.0
-    physics_variables.beta_norm_max = 3.5
-    physics_variables.beta_norm_max_wesson = 0.0
-    physics_variables.beta_norm_max_menard = 0.0
-    physics_variables.beta_norm_max_original_scaling = 0.0
-    physics_variables.beta_norm_max_tholerus = 0.0
-    physics_variables.beta_norm_max_stambaugh = 0.0
-    physics_variables.dnelimt = 0.0
-    physics_variables.nd_ions_total = 0.0
-    physics_variables.nd_electron_line = 0.0
-    physics_variables.nd_protons = 0.0
-    physics_variables.ntau = 0.0
-    physics_variables.nTtau = 0.0
-    physics_variables.nd_impurities = 0.0
-    physics_variables.beta_poloidal_eps_max = 1.38
-    physics_variables.eps = 0.34399724802
-    physics_variables.f_c_plasma_auxiliary = 0.0
-    physics_variables.f_c_plasma_inductive = 0.0
-    physics_variables.f_alpha_electron = 0.0
-    physics_variables.f_p_alpha_plasma_deposited = 0.95
-    physics_variables.f_alpha_ion = 0.0
-    physics_variables.f_deuterium = 0.5
-    physics_variables.f_p_div_lower = 1.0
-    physics_variables.ffwal = 0.92
-    physics_variables.fgwped = 0.85
-    physics_variables.fgwsep = 0.50
-    physics_variables.f_helium3 = 0.0
-    physics_variables.figmer = 0.0
-    physics_variables.fkzohm = 1.0
-    physics_variables.fplhsep = 1.0
-    physics_variables.fpdivlim = 1.0
-    physics_variables.fne0 = 1.0
-    physics_variables.f_tritium = 0.5
-    physics_variables.fusden_total = 0.0
-    physics_variables.fusrat_total = 0.0
-    physics_variables.fusden_plasma = 0.0
-    physics_variables.f_c_plasma_non_inductive = 1.0
-    physics_variables.ejima_coeff = 0.4
-    physics_variables.f_beta_alpha_beam_thermal = 0.0
-    physics_variables.hfac[:] = 0.0
-    physics_variables.hfact = 1.0
-    physics_variables.taumax = 10.0
-    physics_variables.i_bootstrap_current = 3
-    physics_variables.i_beta_component = 0
-    physics_variables.i_plasma_current = 4
-    physics_variables.i_diamagnetic_current = 0
-    physics_variables.i_density_limit = 8
-    physics_variables.n_divertors = 2
-    physics_variables.i_beta_fast_alpha = 1
-    physics_variables.i_plasma_ignited = 0
-    physics_variables.ipedestal = 1
-    physics_variables.i_pfirsch_schluter_current = 0
-    physics_variables.neped = 4.0e19
-    physics_variables.nesep = 3.0e19
-    physics_variables.alpha_crit = 0.0
-    physics_variables.nesep_crit = 0.0
-    physics_variables.plasma_res_factor = 1.0
-    physics_variables.rhopedn = 1.0
-    physics_variables.rhopedt = 1.0
-    physics_variables.tbeta = 2.0
-    physics_variables.teped = 1.0
-    physics_variables.tesep = 0.1
-    physics_variables.i_beta_norm_max = 1
-    physics_variables.i_rad_loss = 1
-    physics_variables.i_confinement_time = 34
-    physics_variables.i_plasma_wall_gap = 1
-    physics_variables.i_plasma_geometry = 0
-    physics_variables.i_plasma_shape = 0
-    physics_variables.itart = 0
-    physics_variables.itartpf = 0
-    physics_variables.iwalld = 1
-    physics_variables.plasma_square = 0.0
-    physics_variables.kappa = 1.792
-    physics_variables.kappa95 = 1.6
-    physics_variables.kappa_ipb = 0.0
-    physics_variables.ne0 = 0.0
-    physics_variables.ni0 = 0.0
-    physics_variables.m_s_limit = 0.3
-    physics_variables.p0 = 0.0
-    physics_variables.j_plasma_0 = 0.0
-    physics_variables.f_dd_branching_trit = 0.0
-    physics_variables.pden_plasma_alpha_mw = 0.0
-    physics_variables.pden_alpha_total_mw = 0.0
-    physics_variables.f_pden_alpha_electron_mw = 0.0
-    physics_variables.p_fw_alpha_mw = 0.0
-    physics_variables.f_pden_alpha_ions_mw = 0.0
-    physics_variables.p_alpha_total_mw = 0.0
-    physics_variables.p_plasma_alpha_mw = 0.0
-    physics_variables.p_beam_alpha_mw = 0.0
-    physics_variables.p_beam_neutron_mw = 0.0
-    physics_variables.p_beam_dt_mw = 0.0
-    physics_variables.p_non_alpha_charged_mw = 0.0
-    physics_variables.pden_non_alpha_charged_mw = 0.0
-    physics_variables.pcoef = 0.0
-    physics_variables.p_plasma_inner_rad_mw = 0.0
-    physics_variables.pden_plasma_core_rad_mw = 0.0
-    physics_variables.p_dd_total_mw = 0.0
-    physics_variables.p_dhe3_total_mw = 0.0
-    physics_variables.p_plasma_separatrix_mw = 0.0
-    physics_variables.pdivl = 0.0
-    physics_variables.pdivu = 0.0
-    physics_variables.pdivmax = 0.0
-    physics_variables.p_dt_total_mw = 0.0
-    physics_variables.p_plasma_dt_mw = 0.0
-    physics_variables.p_plasma_outer_rad_mw = 0.0
-    physics_variables.pden_plasma_outer_rad_mw = 0.0
-    physics_variables.p_charged_particle_mw = 0.0
-    physics_variables.vs_plasma_internal = 0.0
-    physics_variables.pflux_fw_rad_mw = 0.0
-    physics_variables.pden_ion_electron_equilibration_mw = 0.0
-    physics_variables.plasma_current = 0.0
-    physics_variables.p_plasma_neutron_mw = 0.0
-    physics_variables.p_neutron_total_mw = 0.0
-    physics_variables.pden_neutron_total_mw = 0.0
-    physics_variables.pden_plasma_neutron_mw = 0.0
-    physics_variables.p_plasma_ohmic_mw = 0.0
-    physics_variables.pden_plasma_ohmic_mw = 0.0
-    physics_variables.p_plasma_loss_mw = 0.0
-    physics_variables.p_fusion_total_mw = 0.0
-    physics_variables.len_plasma_poloidal = 0.0
-    physics_variables.p_plasma_rad_mw = 0.0
-    physics_variables.pden_plasma_rad_mw = 0.0
-    physics_variables.pradsolmw = 0.0
-    physics_variables.proton_rate_density = 0.0
-    physics_variables.psolradmw = 0.0
-    physics_variables.pden_plasma_sync_mw = 0.0
-    physics_variables.p_plasma_sync_mw = 0.0
-    physics_variables.i_l_h_threshold = 19
-    physics_variables.p_l_h_threshold_mw = 0.0
-    physics_variables.l_h_threshold_powers[:] = 0.0
-    physics_variables.p_electron_transport_loss_mw = 0.0
-    physics_variables.pden_electron_transport_loss_mw = 0.0
-    physics_variables.p_ion_transport_loss_mw = 0.0
-    physics_variables.pscalingmw = 0.0
-    physics_variables.pden_ion_transport_loss_mw = 0.0
-    physics_variables.q0 = 1.0
-    physics_variables.q95 = 0.0
-    physics_variables.qfuel = 0.0
-    physics_variables.tauratio = 1.0
-    physics_variables.q95_min = 0.0
-    physics_variables.qstar = 0.0
-    physics_variables.rad_fraction_sol = 0.8
-    physics_variables.rad_fraction_total = 0.0
-    physics_variables.f_nd_alpha_electron = 0.1
-    physics_variables.f_nd_protium_electrons = 0.0
-    physics_variables.ind_plasma_internal_norm = 0.9
-    physics_variables.ind_plasma_internal_norm_wesson = 0.0
-    physics_variables.ind_plasma_internal_norm_menard = 0.0
-    physics_variables.i_ind_plasma_internal_norm = 0
-    physics_variables.ind_plasma = 0.0
-    physics_variables.rmajor = 8.14
-    physics_variables.rminor = 0.0
-    physics_variables.f_nd_beam_electron = 0.005
-    physics_variables.rncne = 0.0
-    physics_variables.rndfuel = 0.0
-    physics_variables.rnfene = 0.0
-    physics_variables.rnone = 0.0
-    physics_variables.f_res_plasma_neo = 0.0
-    physics_variables.res_plasma = 0.0
-    physics_variables.t_plasma_res_diffusion = 0.0
-    physics_variables.a_plasma_surface = 0.0
-    physics_variables.a_plasma_surface_outboard = 0.0
-    physics_variables.i_single_null = 1
-    physics_variables.f_sync_reflect = 0.6
-    physics_variables.t_electron_energy_confinement = 0.0
-    physics_variables.tauee_in = 0.0
-    physics_variables.t_energy_confinement = 0.0
-    physics_variables.t_ion_energy_confinement = 0.0
-    physics_variables.t_alpha_confinement = 0.0
-    physics_variables.f_alpha_energy_confinement = 0.0
-    physics_variables.te = 12.9
-    physics_variables.te0 = 0.0
-    physics_variables.ten = 0.0
-    physics_variables.ti = 12.9
-    physics_variables.ti0 = 0.0
-    physics_variables.tin = 0.0
-    physics_variables.tratio = 1.0
-    physics_variables.triang = 0.36
-    physics_variables.triang95 = 0.24
-    physics_variables.vol_plasma = 0.0
-    physics_variables.vs_plasma_burn_required = 0.0
-    physics_variables.vs_plasma_ramp_required = 0.0
-    physics_variables.v_plasma_loop_burn = 0.0
-    physics_variables.vshift = 0.0
-    physics_variables.vs_plasma_ind_ramp = 0.0
-    physics_variables.vs_plasma_res_ramp = 0.0
-    physics_variables.vs_plasma_total_required = 0.0
-    physics_variables.pflux_fw_neutron_mw = 0.0
-    physics_variables.wtgpd = 0.0
-    physics_variables.a_plasma_poloidal = 0.0
-    physics_variables.zeff = 0.0
-    physics_variables.zeffai = 0.0

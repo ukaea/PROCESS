@@ -10,6 +10,7 @@ from process.build import Build
 from process.data_structure import (
     build_variables,
     fwbs_variables,
+    physics_variables,
     rebco_variables,
     tfcoil_variables,
 )
@@ -20,7 +21,6 @@ from process.fortran import (
     error_handling,
     global_variables,
     numerics,
-    physics_variables,
     sctfcoil_module,
 )
 from process.fortran import error_handling as eh

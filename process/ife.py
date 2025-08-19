@@ -15,14 +15,12 @@ from process.data_structure import (
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
+    physics_variables,
     structure_variables,
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-    physics_variables,
-)
+from process.fortran import constants
 
 MATERIALS = [
     "void",

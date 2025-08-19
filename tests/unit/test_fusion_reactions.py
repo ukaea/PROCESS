@@ -7,7 +7,7 @@ import pytest
 from pytest import approx
 
 from process import fusion_reactions as reactions
-from process.fortran import physics_variables as pv
+from process.data_structure import physics_variables as pv
 
 
 class SetFusionPowersParam(NamedTuple):

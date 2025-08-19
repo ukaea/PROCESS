@@ -16,12 +16,9 @@ from process.current_drive import (
 from process.data_structure import (
     current_drive_variables,
     impurity_radiation_module,
-    physics_module,
-)
-from process.fortran import (
-    constants,
     physics_variables,
 )
+from process.fortran import constants
 from process.impurity_radiation import initialise_imprad
 from process.physics import (
     Physics,
@@ -1815,31 +1812,33 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "nd_protons", plasmacompositionparam.nd_protons
     )
 
-    monkeypatch.setattr(physics_module, "iscz", plasmacompositionparam.iscz)
+    monkeypatch.setattr(physics_variables, "iscz", plasmacompositionparam.iscz)
 
-    monkeypatch.setattr(physics_module, "err242", plasmacompositionparam.err242)
+    monkeypatch.setattr(physics_variables, "err242", plasmacompositionparam.err242)
 
-    monkeypatch.setattr(physics_module, "err243", plasmacompositionparam.err243)
+    monkeypatch.setattr(physics_variables, "err243", plasmacompositionparam.err243)
 
-    monkeypatch.setattr(physics_module, "ptarmw", plasmacompositionparam.ptarmw)
+    monkeypatch.setattr(physics_variables, "ptarmw", plasmacompositionparam.ptarmw)
 
-    monkeypatch.setattr(physics_module, "lambdaio", plasmacompositionparam.lambdaio)
+    monkeypatch.setattr(physics_variables, "lambdaio", plasmacompositionparam.lambdaio)
 
-    monkeypatch.setattr(physics_module, "drsep", plasmacompositionparam.drsep)
+    monkeypatch.setattr(physics_variables, "drsep", plasmacompositionparam.drsep)
 
-    monkeypatch.setattr(physics_module, "fio", plasmacompositionparam.fio)
+    monkeypatch.setattr(physics_variables, "fio", plasmacompositionparam.fio)
 
-    monkeypatch.setattr(physics_module, "rho_star", plasmacompositionparam.rho_star)
+    monkeypatch.setattr(physics_variables, "rho_star", plasmacompositionparam.rho_star)
 
-    monkeypatch.setattr(physics_module, "nu_star", plasmacompositionparam.nu_star)
+    monkeypatch.setattr(physics_variables, "nu_star", plasmacompositionparam.nu_star)
 
     monkeypatch.setattr(
-        physics_module, "beta_mcdonald", plasmacompositionparam.beta_mcdonald
+        physics_variables, "beta_mcdonald", plasmacompositionparam.beta_mcdonald
     )
 
-    monkeypatch.setattr(physics_module, "itart_r", plasmacompositionparam.itart_r)
+    monkeypatch.setattr(physics_variables, "itart_r", plasmacompositionparam.itart_r)
 
-    monkeypatch.setattr(physics_module, "first_call", plasmacompositionparam.first_call)
+    monkeypatch.setattr(
+        physics_variables, "first_call", plasmacompositionparam.first_call
+    )
 
     physics.plasma_composition()
 
@@ -1893,7 +1892,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_nd_protons
     )
 
-    assert physics_module.first_call == pytest.approx(
+    assert physics_variables.first_call == pytest.approx(
         plasmacompositionparam.expected_first_call
     )
 

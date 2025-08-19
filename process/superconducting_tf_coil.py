@@ -11,6 +11,7 @@ from process.data_structure import (
     constraint_variables,
     divertor_variables,
     pfcoil_variables,
+    physics_variables,
     rebco_variables,
     tfcoil_variables,
 )
@@ -20,7 +21,6 @@ from process.fortran import (
     error_handling,
     fwbs_variables,
     global_variables,
-    physics_variables,
     sctfcoil_module,
 )
 from process.quench import calculate_quench_protection_current_density

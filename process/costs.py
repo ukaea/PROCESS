@@ -12,6 +12,7 @@ from process.data_structure import (
     ife_variables,
     pf_power_variables,
     pfcoil_variables,
+    physics_variables,
     pulse_variables,
     structure_variables,
     tfcoil_variables,
@@ -21,7 +22,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    physics_variables,
 )
 
 
