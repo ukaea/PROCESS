@@ -811,7 +811,7 @@ $$
 
 ### Plasma ripple
 
-The maximum plasma ripple is defined in *PROCESS* with the user input `ripmax`
+The maximum plasma ripple is defined in *PROCESS* with the user input `ripple_b_tf_plasma_edge_max`
 as:
 
 $$

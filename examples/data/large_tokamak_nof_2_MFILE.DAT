@@ -704,7 +704,7 @@
  Outboard_vertical_tension_per_coil_(N)___________________________________ (vforce_outboard)______________ 2.11158912751496792e+08 OP
  inboard_vertical_tension_fraction_(-)____________________________________ (f_vforce_inboard)_____________ 5.00000000000000000e-01 OP
  Centring_force_per_coil_(N/m)____________________________________________ (cforce)_______________________ 8.13318161634901613e+07 OP
- Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripmax)_______________________ 6.00000000000000089e-01
+ Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripple_b_tf_plasma_edge_max)_______________________ 6.00000000000000089e-01
  Ripple_amplitude_at_plasma_outboard_midplane_(%)_________________________ (ripple)_______________________ 6.00000000000000533e-01 OP
  Actual_quench_time_(or_time_constant)_(s)________________________________ (tdmptf)_______________________ 1.79728258934420602e+01
  Vacuum_Vessel_stress_on_quench_(Pa)______________________________________ (vv_stress_quench)_____________ 6.29314975367861539e+07 OP
@@ -1556,7 +1556,7 @@ c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for
 dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
 fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
-ripmax   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
 tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)

@@ -1610,8 +1610,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",
-                "(ripmax)",
-                tfcoil_variables.ripmax,
+                "(ripple_b_tf_plasma_edge_max)",
+                tfcoil_variables.ripple_b_tf_plasma_edge_max,
             )
             po.ovarre(
                 self.outfile,
@@ -1624,8 +1624,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma (%)",
-                "(ripmax)",
-                tfcoil_variables.ripmax,
+                "(ripple_b_tf_plasma_edge_max)",
+                tfcoil_variables.ripple_b_tf_plasma_edge_max,
             )
             po.ovarre(
                 self.outfile,

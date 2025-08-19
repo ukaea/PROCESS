@@ -1518,17 +1518,17 @@ class Build:
                 )
         return divht
 
-    def ripple_amplitude(self, ripmax: float, r_tf_outboard_mid: float) -> float:
+    def ripple_amplitude(self, ripple_b_tf_plasma_edge_max: float, r_tf_outboard_mid: float) -> float:
         """
         TF ripple calculation
         author: P J Knight and C W Ashe, CCFE, Culham Science Centre
-        ripmax : input real  : maximum allowed ripple at plasma edge (%)
+        ripple_b_tf_plasma_edge_max : input real  : maximum allowed ripple at plasma edge (%)
         ripple : output real : actual ripple at plasma edge (%)
         rtot   : input real  : radius to the centre of the outboard
         TF coil leg (m)
         rtotmin : output real : radius to the centre of the outboard
         TF coil leg which would produce
-        a ripple of amplitude ripmax (m)
+        a ripple of amplitude ripple_b_tf_plasma_edge_max (m)
         flag : output integer : on exit, =1 if the fitted
         range of applicability is exceeded
         This routine calculates the toroidal field ripple amplitude
@@ -1601,10 +1601,10 @@ class Build:
                 (physics_variables.rmajor + physics_variables.rminor)
                 / r_tf_outboard_mid
             ) ** (n)
-            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripmax
+            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
             r_tf_outboard_midmin = (
                 physics_variables.rmajor + physics_variables.rminor
-            ) / ((0.01e0 * ripmax) ** (1.0e0 / n))
+            ) / ((0.01e0 * ripple_b_tf_plasma_edge_max) ** (1.0e0 / n))
         else:
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
             x = t_wp_max * n / physics_variables.rmajor
@@ -1624,8 +1624,8 @@ class Build:
                 ** (n - c2)
             )
 
-            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripmax
-            base = 0.01 * ripmax / c1
+            #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
+            base = 0.01 * ripple_b_tf_plasma_edge_max / c1
             # Avoid potential negative or complex result: kludge base to be
             # small and positive if required
             try:
@@ -1948,7 +1948,7 @@ class Build:
             r_tf_outboard_midl,
             build_variables.ripflag,
         ) = self.ripple_amplitude(
-            tfcoil_variables.ripmax,
+            tfcoil_variables.ripple_b_tf_plasma_edge_max,
             build_variables.r_tf_outboard_mid,
         )
 
@@ -1974,13 +1974,13 @@ class Build:
             build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
 
         #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.dr_shld_vv_gap_outboard value
-        #  call rippl(tfcoil_variables.ripmax,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple,r_tf_outboard_midl)
+        #  call rippl(tfcoil_variables.ripple_b_tf_plasma_edge_max,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple,r_tf_outboard_midl)
         (
             tfcoil_variables.ripple,
             r_tf_outboard_midl,
             build_variables.ripflag,
         ) = self.ripple_amplitude(
-            tfcoil_variables.ripmax,
+            tfcoil_variables.ripple_b_tf_plasma_edge_max,
             build_variables.r_tf_outboard_mid,
         )
 
