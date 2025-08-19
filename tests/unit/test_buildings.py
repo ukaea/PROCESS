@@ -11,10 +11,8 @@ from process.data_structure import (
     divertor_variables,
     fwbs_variables,
     pfcoil_variables,
-    tfcoil_variables,
-)
-from process.fortran import (
     physics_variables,
+    tfcoil_variables,
 )
 
 

@@ -194,7 +194,7 @@ OBS_VARS = {
     "ftaulimit": "falpha_energy_confinement",
     "isc": "i_confinement_time",
     "iradloss": "i_rad_loss",
-    "ipnlaws": "n_confinement_scalings",
+    "ipnlaws": "N_CONFINEMENT_SCALINGS",
     "iinvqd": None,
     "rhotfleg": "rho_tf_leg",
     "n_tf": "n_tf_coils",

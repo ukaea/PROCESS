@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import integrate
 
-from process.data_structure import physics_module
-from process.fortran import constants, physics_variables
+from process.data_structure import physics_variables
+from process.fortran import constants
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -539,10 +539,10 @@ class FusionReactionRate:
         physics_variables.fusden_plasma = self.fusion_rate_density
         physics_variables.fusden_plasma_alpha = self.alpha_rate_density
         physics_variables.proton_rate_density = self.proton_rate_density
-        physics_module.sigmav_dt_average = self.sigmav_dt_average
-        physics_module.dt_power_density_plasma = self.dt_power_density
-        physics_module.dhe3_power_density = self.dhe3_power_density
-        physics_module.dd_power_density = self.dd_power_density
+        physics_variables.sigmav_dt_average = self.sigmav_dt_average
+        physics_variables.dt_power_density_plasma = self.dt_power_density
+        physics_variables.dhe3_power_density = self.dhe3_power_density
+        physics_variables.dd_power_density = self.dd_power_density
         physics_variables.f_dd_branching_trit = self.f_dd_branching_trit
 
 

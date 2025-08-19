@@ -72,7 +72,6 @@ LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
     sctfcoil.f90
-    physics_variables.f90
     constants.f90
     output.f90
     init_module.f90

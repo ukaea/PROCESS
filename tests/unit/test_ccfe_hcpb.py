@@ -9,12 +9,12 @@ from process.data_structure import (
     divertor_variables,
     fwbs_variables,
     heat_transport_variables,
+    physics_variables,
     primary_pumping_variables,
     tfcoil_variables,
 )
 from process.fortran import (
     global_variables,
-    physics_variables,
 )
 from process.hcpb import CCFE_HCPB
 

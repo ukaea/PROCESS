@@ -3,12 +3,13 @@ import numpy as np
 from process import (
     process_output as po,
 )
-from process.data_structure import current_drive_variables, heat_transport_variables
-from process.exceptions import ProcessError, ProcessValueError
-from process.fortran import (
-    constants,
+from process.data_structure import (
+    current_drive_variables,
+    heat_transport_variables,
     physics_variables,
 )
+from process.exceptions import ProcessError, ProcessValueError
+from process.fortran import constants
 from process.fortran import (
     error_handling as eh,
 )

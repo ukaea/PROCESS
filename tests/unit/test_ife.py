@@ -14,8 +14,6 @@ from process.data_structure import (
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
-)
-from process.fortran import (
     physics_variables,
 )
 from process.ife import IFE

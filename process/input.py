@@ -111,48 +111,68 @@ INPUT_VARIABLES = {
     "nineqns": InputVariable(
         fortran.numerics, int, range=(1, ConstraintManager.num_constraints())
     ),
-    "alphaj": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
-    "alphan": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
-    "alphat": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
-    "aspect": InputVariable(fortran.physics_variables, float, range=(1.001, 40.0)),
-    "beamfus0": InputVariable(fortran.physics_variables, float, range=(0.01, 10.0)),
-    "beta": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "beta_max": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "beta_min": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "betbm0": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
-    "bt": InputVariable(fortran.physics_variables, float, range=(0.0, 30.0)),
-    "burnup_in": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "alphaj": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
+    "alphan": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
+    "alphat": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
+    "aspect": InputVariable(
+        data_structure.physics_variables, float, range=(1.001, 40.0)
+    ),
+    "beamfus0": InputVariable(
+        data_structure.physics_variables, float, range=(0.01, 10.0)
+    ),
+    "beta": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
+    "beta_max": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "beta_min": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "betbm0": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
+    "bt": InputVariable(data_structure.physics_variables, float, range=(0.0, 30.0)),
+    "burnup_in": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "radius_plasma_core_norm": InputVariable(
         data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
     ),
     "coreradiationfraction": InputVariable(
         data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
     ),
-    "c_beta": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "csawth": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
+    "c_beta": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
+    "csawth": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
     "f_vol_plasma": InputVariable(
-        fortran.physics_variables, float, range=(0.001, 10.0)
+        data_structure.physics_variables, float, range=(0.001, 10.0)
     ),
     "f_r_conducting_wall": InputVariable(
-        fortran.physics_variables, float, range=(1.0, 3.0)
+        data_structure.physics_variables, float, range=(1.0, 3.0)
     ),
-    "dene": InputVariable(fortran.physics_variables, float, range=(1.0e18, 1.0e22)),
-    "beta_norm_max": InputVariable(fortran.physics_variables, float, range=(0.0, 20.0)),
+    "dene": InputVariable(
+        data_structure.physics_variables, float, range=(1.0e18, 1.0e22)
+    ),
+    "beta_norm_max": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 20.0)
+    ),
     "beta_poloidal_eps_max": InputVariable(
-        fortran.physics_variables, float, range=(0.01, 10.0)
+        data_structure.physics_variables, float, range=(0.01, 10.0)
     ),
     "f_p_alpha_plasma_deposited": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 1.0)
+        data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
-    "f_p_div_lower": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "f_deuterium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
-    "ffwal": InputVariable(fortran.physics_variables, float, range=(0.0, 10.0)),
-    "fgwped": InputVariable(fortran.physics_variables, float, range=(-1.0, 5.0)),
-    "fgwsep": InputVariable(fortran.physics_variables, float, range=(-1.0, 5.0)),
-    "f_helium3": InputVariable(fortran.physics_variables, float, range=(-1.0, 5.0)),
+    "f_p_div_lower": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "f_deuterium": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
+    "ffwal": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
+    "fgwped": InputVariable(data_structure.physics_variables, float, range=(-1.0, 5.0)),
+    "fgwsep": InputVariable(data_structure.physics_variables, float, range=(-1.0, 5.0)),
+    "f_helium3": InputVariable(
+        data_structure.physics_variables, float, range=(-1.0, 5.0)
+    ),
     # TODO: does fimp require an additional range?
     "fimp": InputVariable(data_structure.impurity_radiation_module, float, array=True),
-    "fkzohm": InputVariable(fortran.physics_variables, float, range=(0.5, 2.0)),
+    "fkzohm": InputVariable(data_structure.physics_variables, float, range=(0.5, 2.0)),
     "fnesep": InputVariable(
         data_structure.constraint_variables, float, range=(0.1, 20.0)
     ),
@@ -564,7 +584,9 @@ INPUT_VARIABLES = {
     "eff_tf_cryo": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "ejima_coeff": InputVariable(fortran.physics_variables, float, range=(0.1, 1.0)),
+    "ejima_coeff": InputVariable(
+        data_structure.physics_variables, float, range=(0.1, 1.0)
+    ),
     "elecdist_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -666,13 +688,13 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.1, 10)
     ),
     "f_nd_alpha_electron": InputVariable(
-        fortran.physics_variables, float, range=(1e-12, 1.0)
+        data_structure.physics_variables, float, range=(1e-12, 1.0)
     ),
     "f_nd_beam_electron": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 1.0)
+        data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "f_nd_protium_electrons": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 1.0)
+        data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "f_neut_shield": InputVariable(
         data_structure.fwbs_variables, float, range=(0.0, 1.0)
@@ -684,11 +706,15 @@ INPUT_VARIABLES = {
     "f_rad": InputVariable(
         data_structure.stellarator_variables, float, range=(0.0, 1.0)
     ),
-    "f_sync_reflect": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "f_sync_reflect": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "f_t_turn_tf": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "f_tritium": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "f_tritium": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "f_beam_tritium": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
@@ -835,7 +861,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(1e-08, 1.0)
     ),
     "fndt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "fne0": InputVariable(fortran.physics_variables, float, range=(0.001, 1.0)),
+    "fne0": InputVariable(data_structure.physics_variables, float, range=(0.001, 1.0)),
     "fniterpump": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
@@ -846,7 +872,7 @@ INPUT_VARIABLES = {
         data_structure.current_drive_variables, float, range=(0.0, 0.999)
     ),
     "fp_plasma_separatrix_min_mw": InputVariable(
-        fortran.physics_variables, float, range=(0.001, 1.0)
+        data_structure.physics_variables, float, range=(0.001, 1.0)
     ),
     "fb_tf_inboard_max": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
@@ -963,7 +989,7 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
     "f_c_plasma_non_inductive": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 1.0)
+        data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "fvs_cs_pf_total_ramp": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.001, 10.0)
@@ -1048,7 +1074,7 @@ INPUT_VARIABLES = {
     "heat_sink_w": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "hfact": InputVariable(fortran.physics_variables, float, range=(0.01, 10.0)),
+    "hfact": InputVariable(data_structure.physics_variables, float, range=(0.01, 10.0)),
     "pflux_div_heat_load_mw": InputVariable(
         data_structure.divertor_variables, float, range=(0.0, 10.0)
     ),
@@ -1104,7 +1130,7 @@ INPUT_VARIABLES = {
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
     "ind_plasma_internal_norm": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 10.0)
+        data_structure.physics_variables, float, range=(0.0, 10.0)
     ),
     "initialpressure": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 10000.0)
@@ -1121,8 +1147,10 @@ INPUT_VARIABLES = {
     "j_tf_bus": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 100000000.0)
     ),
-    "kappa": InputVariable(fortran.physics_variables, float, range=(0.99, 5.0)),
-    "kappa95": InputVariable(fortran.physics_variables, float, range=(0.99, 5.0)),
+    "kappa": InputVariable(data_structure.physics_variables, float, range=(0.99, 5.0)),
+    "kappa95": InputVariable(
+        data_structure.physics_variables, float, range=(0.99, 5.0)
+    ),
     "layer_ins": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
@@ -1151,7 +1179,9 @@ INPUT_VARIABLES = {
     "llw_storage_w": InputVariable(
         data_structure.buildings_variables, float, range=(10.0, 1000.0)
     ),
-    "m_s_limit": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "m_s_limit": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "magnet_pulse_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -1227,8 +1257,8 @@ INPUT_VARIABLES = {
     "f_p_beam_shine_through_max": InputVariable(
         data_structure.constraint_variables, float, range=(1e-20, 0.1)
     ),
-    "neped": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
-    "nesep": InputVariable(fortran.physics_variables, float, range=(0.0, 1e21)),
+    "neped": InputVariable(data_structure.physics_variables, float, range=(0.0, 1e21)),
+    "nesep": InputVariable(data_structure.physics_variables, float, range=(0.0, 1e21)),
     "nflutfmax": InputVariable(
         data_structure.constraint_variables, float, range=(1e20, 1e24)
     ),
@@ -1295,9 +1325,11 @@ INPUT_VARIABLES = {
         data_structure.current_drive_variables, float, range=(0.0, 1000.0)
     ),
     "plasma_res_factor": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 1.0)
+        data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
-    "plasma_square": InputVariable(fortran.physics_variables, float, range=(-5.0, 5.0)),
+    "plasma_square": InputVariable(
+        data_structure.physics_variables, float, range=(-5.0, 5.0)
+    ),
     "plleni": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "plleno": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "plsepi": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
@@ -1354,8 +1386,8 @@ INPUT_VARIABLES = {
     "pflux_plant_floor_electric": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
-    "q0": InputVariable(fortran.physics_variables, float, range=(0.01, 20.0)),
-    "q95": InputVariable(fortran.physics_variables, float, range=(1.0, 50.0)),
+    "q0": InputVariable(data_structure.physics_variables, float, range=(0.01, 20.0)),
+    "q95": InputVariable(data_structure.physics_variables, float, range=(1.0, 50.0)),
     "q95_fixed": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 50.0)
     ),
@@ -1367,7 +1399,7 @@ INPUT_VARIABLES = {
         data_structure.build_variables, float, range=(0.001, 10.0)
     ),
     "rad_fraction_sol": InputVariable(
-        fortran.physics_variables, float, range=(0.0, 1.0)
+        data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "radius_fw_channel": InputVariable(
         data_structure.fwbs_variables, float, range=(0.001, 0.5)
@@ -1426,14 +1458,18 @@ INPUT_VARIABLES = {
     "rho_tf_joints": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.01)
     ),
-    "rhopedn": InputVariable(fortran.physics_variables, float, range=(0.01, 1.0)),
-    "rhopedt": InputVariable(fortran.physics_variables, float, range=(0.01, 1.0)),
+    "rhopedn": InputVariable(
+        data_structure.physics_variables, float, range=(0.01, 1.0)
+    ),
+    "rhopedt": InputVariable(
+        data_structure.physics_variables, float, range=(0.01, 1.0)
+    ),
     "rhopfbus": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
     ),
     "rinboard": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
     "ripmax": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
-    "rmajor": InputVariable(fortran.physics_variables, float, range=(0.1, 50.0)),
+    "rmajor": InputVariable(data_structure.physics_variables, float, range=(0.1, 50.0)),
     "robotics_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
@@ -1587,13 +1623,19 @@ INPUT_VARIABLES = {
     "tape_width": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
-    "tauee_in": InputVariable(fortran.physics_variables, float, range=(0.0, 100.0)),
-    "taumax": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
-    "tauratio": InputVariable(fortran.physics_variables, float, range=(0.1, 100.0)),
+    "tauee_in": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 100.0)
+    ),
+    "taumax": InputVariable(
+        data_structure.physics_variables, float, range=(0.1, 100.0)
+    ),
+    "tauratio": InputVariable(
+        data_structure.physics_variables, float, range=(0.1, 100.0)
+    ),
     "n_beam_decay_lengths_core_required": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 10.0)
     ),
-    "tbeta": InputVariable(fortran.physics_variables, float, range=(0.0, 4.0)),
+    "tbeta": InputVariable(data_structure.physics_variables, float, range=(0.0, 4.0)),
     "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tbrmin": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 2.0)
@@ -1611,7 +1653,7 @@ INPUT_VARIABLES = {
     "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
     "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
     "tdmptf": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
-    "te": InputVariable(fortran.physics_variables, float, range=(1.0, 200.0)),
+    "te": InputVariable(data_structure.physics_variables, float, range=(1.0, 200.0)),
     "te0_ecrh_achievable": InputVariable(
         data_structure.stellarator_variables, float, range=(1.0, 1000.0)
     ),
@@ -1627,8 +1669,8 @@ INPUT_VARIABLES = {
     "temp_fw_max": InputVariable(
         data_structure.fwbs_variables, float, range=(500.0, 2000.0)
     ),
-    "teped": InputVariable(fortran.physics_variables, float, range=(0.0, 20.0)),
-    "tesep": InputVariable(fortran.physics_variables, float, range=(0.0, 20.0)),
+    "teped": InputVariable(data_structure.physics_variables, float, range=(0.0, 20.0)),
+    "tesep": InputVariable(data_structure.physics_variables, float, range=(0.0, 20.0)),
     "tfcbv": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)
     ),
@@ -1659,7 +1701,7 @@ INPUT_VARIABLES = {
     "dx_tf_turn_steel": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "ti": InputVariable(fortran.physics_variables, float, range=(5.0, 50.0)),
+    "ti": InputVariable(data_structure.physics_variables, float, range=(5.0, 50.0)),
     "dx_tf_wp_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
@@ -1690,10 +1732,12 @@ INPUT_VARIABLES = {
     "transp_clrnc": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "tratio": InputVariable(fortran.physics_variables, float, range=(0.0, 2.0)),
+    "tratio": InputVariable(data_structure.physics_variables, float, range=(0.0, 2.0)),
     "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "triang": InputVariable(fortran.physics_variables, float, range=(-1.0, 1.0)),
-    "triang95": InputVariable(fortran.physics_variables, float, range=(0.0, 1.0)),
+    "triang": InputVariable(data_structure.physics_variables, float, range=(-1.0, 1.0)),
+    "triang95": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "p_tritium_plant_electric_mw": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 100.0)
     ),
@@ -1935,8 +1979,12 @@ INPUT_VARIABLES = {
     "i_blkt_liquid_breeder_type": InputVariable(
         data_structure.fwbs_variables, int, choices=[0, 1]
     ),
-    "i_beta_component": InputVariable(fortran.physics_variables, int, range=(0, 3)),
-    "i_beta_fast_alpha": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
+    "i_beta_component": InputVariable(
+        data_structure.physics_variables, int, range=(0, 3)
+    ),
+    "i_beta_fast_alpha": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
     "i_blanket_type": InputVariable(
         data_structure.fwbs_variables, int, choices=[1, 3, 5]
     ),
@@ -1945,29 +1993,43 @@ INPUT_VARIABLES = {
     ),
     "i_bldgs_v": InputVariable(data_structure.buildings_variables, int, choices=[0, 1]),
     "i_blkt_inboard": InputVariable(data_structure.fwbs_variables, int, choices=[0, 1]),
-    "i_bootstrap_current": InputVariable(fortran.physics_variables, int, range=(0, 13)),
+    "i_bootstrap_current": InputVariable(
+        data_structure.physics_variables, int, range=(0, 13)
+    ),
     "i_cp_joints": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
     "i_cp_lifetime": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
     "i_cs_precomp": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
     "i_cs_stress": InputVariable(data_structure.pfcoil_variables, int, choices=[0, 1]),
-    "i_density_limit": InputVariable(fortran.physics_variables, int, range=(1, 8)),
+    "i_density_limit": InputVariable(
+        data_structure.physics_variables, int, range=(1, 8)
+    ),
     "i_diamagnetic_current": InputVariable(
-        fortran.physics_variables, int, choices=[0, 1, 2]
+        data_structure.physics_variables, int, choices=[0, 1, 2]
     ),
     "i_div_heat_load": InputVariable(
         data_structure.divertor_variables, int, choices=[0, 1, 2]
     ),
-    "i_l_h_threshold": InputVariable(fortran.physics_variables, int, range=(1, 21)),
+    "i_l_h_threshold": InputVariable(
+        data_structure.physics_variables, int, range=(1, 21)
+    ),
     "i_pf_current": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1, 2]
     ),
     "i_pfirsch_schluter_current": InputVariable(
-        fortran.physics_variables, int, choices=[0, 1]
+        data_structure.physics_variables, int, choices=[0, 1]
     ),
-    "i_plasma_current": InputVariable(fortran.physics_variables, int, range=(1, 9)),
-    "i_plasma_geometry": InputVariable(fortran.physics_variables, int, range=(0, 11)),
-    "i_plasma_shape": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "i_plasma_wall_gap": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
+    "i_plasma_current": InputVariable(
+        data_structure.physics_variables, int, range=(1, 9)
+    ),
+    "i_plasma_geometry": InputVariable(
+        data_structure.physics_variables, int, range=(0, 11)
+    ),
+    "i_plasma_shape": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
+    "i_plasma_wall_gap": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
     "i_pulsed_plant": InputVariable(
         data_structure.pulse_variables, int, choices=[0, 1]
     ),
@@ -1975,9 +2037,13 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, int, choices=[0, 1]
     ),
     "i_r_cp_top": InputVariable(data_structure.build_variables, int, choices=[0, 1, 2]),
-    "i_rad_loss": InputVariable(fortran.physics_variables, int, choices=[0, 1, 2]),
+    "i_rad_loss": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1, 2]
+    ),
     "i_shield_mat": InputVariable(data_structure.fwbs_variables, int, choices=[0, 1]),
-    "i_single_null": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
+    "i_single_null": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
     "i_str_wp": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
     "i_sup_pf_shape": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1]
@@ -2025,13 +2091,15 @@ INPUT_VARIABLES = {
     "ifedrv": InputVariable(data_structure.ife_variables, int, range=(-1, 3)),
     "ifetyp": InputVariable(data_structure.ife_variables, int, range=(0, 4)),
     "ifueltyp": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
-    "i_plasma_ignited": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
+    "i_plasma_ignited": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
     "i_blkt_module_segmentation": InputVariable(
         data_structure.fwbs_variables, int, choices=[0, 1]
     ),
     "inuclear": InputVariable(data_structure.fwbs_variables, int, choices=[0, 1]),
     "iohcl": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
-    "ipedestal": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
+    "ipedestal": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "i_pf_conductor": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1]
     ),
@@ -2042,11 +2110,13 @@ INPUT_VARIABLES = {
     "i_shld_primary_heat": InputVariable(
         data_structure.heat_transport_variables, int, choices=[0, 1]
     ),
-    "i_beta_norm_max": InputVariable(fortran.physics_variables, int, range=(0, 5)),
-    "i_ind_plasma_internal_norm": InputVariable(
-        fortran.physics_variables, int, range=(0, 2)
+    "i_beta_norm_max": InputVariable(
+        data_structure.physics_variables, int, range=(0, 5)
     ),
-    "i_alphaj": InputVariable(fortran.physics_variables, int, range=(0, 1)),
+    "i_ind_plasma_internal_norm": InputVariable(
+        data_structure.physics_variables, int, range=(0, 2)
+    ),
+    "i_alphaj": InputVariable(data_structure.physics_variables, int, range=(0, 1)),
     "i_fw_blkt_shared_coolant": InputVariable(
         data_structure.fwbs_variables, int, choices=[0, 1, 2]
     ),
@@ -2067,10 +2137,10 @@ INPUT_VARIABLES = {
     "i_pf_superconductor": InputVariable(
         data_structure.pfcoil_variables, int, range=(1, 9)
     ),
-    "itart": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
-    "itartpf": InputVariable(fortran.physics_variables, int, choices=[0, 1]),
+    "itart": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
+    "itartpf": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "itcycl": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
-    "iwalld": InputVariable(fortran.physics_variables, int, range=(1, 2)),
+    "iwalld": InputVariable(data_structure.physics_variables, int, range=(1, 2)),
     "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
     "m_res": InputVariable(data_structure.stellarator_variables, int, range=(1, 10)),
     "n_tf_wp_layers": InputVariable(
@@ -2130,9 +2200,9 @@ INPUT_VARIABLES = {
         data_structure.current_drive_variables, int, choices=[0, 1]
     ),
     "i_confinement_time": InputVariable(
-        fortran.physics_variables,
+        data_structure.physics_variables,
         int,
-        choices=list(range(fortran.physics_variables.n_confinement_scalings)),
+        choices=list(range(data_structure.physics_variables.N_CONFINEMENT_SCALINGS)),
     ),
     "quench_model": InputVariable(
         data_structure.tfcoil_variables, str, choices=["exponential", "linear"]

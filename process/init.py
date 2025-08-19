@@ -36,7 +36,10 @@ from process.data_structure.pfcoil_variables import (
     init_pfcoil_module,
     init_pfcoil_variables,
 )
-from process.data_structure.physics_module import init_physics_module
+from process.data_structure.physics_variables import (
+    init_physics_module,
+    init_physics_variables,
+)
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.primary_pumping_variables import (
     init_primary_pumping_variables,
@@ -52,9 +55,6 @@ from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
-from process.physics import (
-    init_physics_variables,
-)
 from process.scan import init_scan_module
 from process.stellarator import stinit
 from process.superconducting_tf_coil import init_sctfcoil_module
@@ -363,20 +363,22 @@ def check_process(inputs):  # noqa: ARG001
     if (
         abs(
             1.0
-            - fortran.physics_variables.f_deuterium
-            - fortran.physics_variables.f_tritium
-            - fortran.physics_variables.f_helium3
+            - data_structure.physics_variables.f_deuterium
+            - data_structure.physics_variables.f_tritium
+            - data_structure.physics_variables.f_helium3
         )
         > 1e-6
     ):
         raise ProcessValidationError(
             "Fuel ion fractions do not sum to 1.0",
-            f_deuterium=fortran.physics_variables.f_deuterium,
-            f_tritium=fortran.physics_variables.f_tritium,
-            f_helium3=fortran.physics_variables.f_helium3,
+            f_deuterium=data_structure.physics_variables.f_deuterium,
+            f_tritium=data_structure.physics_variables.f_tritium,
+            f_helium3=data_structure.physics_variables.f_helium3,
         )
 
-    if fortran.physics_variables.f_tritium < 1.0e-3:  # tritium fraction is negligible
+    if (
+        data_structure.physics_variables.f_tritium < 1.0e-3
+    ):  # tritium fraction is negligible
         data_structure.buildings_variables.triv = 0.0
         data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
@@ -403,23 +405,30 @@ def check_process(inputs):  # noqa: ARG001
     # Plasma profile consistency checks
     if (
         data_structure.ife_variables.ife != 1
-        and fortran.physics_variables.ipedestal == 1
+        and data_structure.physics_variables.ipedestal == 1
     ):
         # Temperature checks
-        if fortran.physics_variables.teped < fortran.physics_variables.tesep:
+        if (
+            data_structure.physics_variables.teped
+            < data_structure.physics_variables.tesep
+        ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
-                teped=fortran.physics_variables.teped,
-                tesep=fortran.physics_variables.tesep,
+                teped=data_structure.physics_variables.teped,
+                tesep=data_structure.physics_variables.tesep,
             )
 
-        if (abs(fortran.physics_variables.rhopedt - 1.0) <= 1e-7) and (
-            (fortran.physics_variables.teped - fortran.physics_variables.tesep) >= 1e-7
+        if (abs(data_structure.physics_variables.rhopedt - 1.0) <= 1e-7) and (
+            (
+                data_structure.physics_variables.teped
+                - data_structure.physics_variables.tesep
+            )
+            >= 1e-7
         ):
             warn(
                 f"Temperature pedestal is at plasma edge, but teped "
-                f"({fortran.physics_variables.teped}) differs from tesep "
-                f"({fortran.physics_variables.tesep})",
+                f"({data_structure.physics_variables.teped}) differs from tesep "
+                f"({data_structure.physics_variables.tesep})",
                 stacklevel=2,
             )
 
@@ -428,25 +437,31 @@ def check_process(inputs):  # noqa: ARG001
         # volume-averaged temperature never drops below the pedestal
         # temperature. Prevent this by adjusting te, and its lower bound
         # (which will only have an effect if this is an optimisation run)
-        if fortran.physics_variables.te <= fortran.physics_variables.teped:
+        if (
+            data_structure.physics_variables.te
+            <= data_structure.physics_variables.teped
+        ):
             warn(
-                f"Volume-averaged temperature ({fortran.physics_variables.te}) has been "
-                f"forced to exceed input pedestal height ({fortran.physics_variables.teped}). "
+                f"Volume-averaged temperature ({data_structure.physics_variables.te}) has been "
+                f"forced to exceed input pedestal height ({data_structure.physics_variables.teped}). "
                 "Changing to te = teped*1.001",
                 stacklevel=2,
             )
-            fortran.physics_variables.te = fortran.physics_variables.teped * 1.001
+            data_structure.physics_variables.te = (
+                data_structure.physics_variables.teped * 1.001
+            )
 
         if (
             fortran.numerics.ioptimz >= 0
             and (fortran.numerics.ixc[: fortran.numerics.nvar] == 4).any()
-            and fortran.numerics.boundl[3] < fortran.physics_variables.teped * 1.001
+            and fortran.numerics.boundl[3]
+            < data_structure.physics_variables.teped * 1.001
         ):
             warn(
                 "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped",
                 stacklevel=2,
             )
-            fortran.numerics.boundl[3] = fortran.physics_variables.teped * 1.001
+            fortran.numerics.boundl[3] = data_structure.physics_variables.teped * 1.001
             fortran.numerics.boundu[3] = max(
                 fortran.numerics.boundu[3], fortran.numerics.boundl[3]
             )
@@ -454,29 +469,35 @@ def check_process(inputs):  # noqa: ARG001
         # Density checks
         # Case where pedestal density is set manually
         if (
-            fortran.physics_variables.fgwped < 0
+            data_structure.physics_variables.fgwped < 0
             or not (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any()
         ):
             # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
-            if fortran.physics_variables.neped < fortran.physics_variables.nesep:
+            if (
+                data_structure.physics_variables.neped
+                < data_structure.physics_variables.nesep
+            ):
                 raise ProcessValidationError(
                     "Density pedestal is lower than separatrix density",
-                    neped=fortran.physics_variables.neped,
-                    nesep=fortran.physics_variables.nesep,
+                    neped=data_structure.physics_variables.neped,
+                    nesep=data_structure.physics_variables.nesep,
                 )
 
             # Issue #589 Pedestal density is set manually using neped,
             # but pedestal width = 0.
             if (
-                abs(fortran.physics_variables.rhopedn - 1.0) <= 1e-7
-                and (fortran.physics_variables.neped - fortran.physics_variables.nesep)
+                abs(data_structure.physics_variables.rhopedn - 1.0) <= 1e-7
+                and (
+                    data_structure.physics_variables.neped
+                    - data_structure.physics_variables.nesep
+                )
                 >= 1e-7
             ):
                 warn(
                     "Density pedestal is at plasma edge "
-                    f"({fortran.physics_variables.rhopedn = }), but neped "
-                    f"({fortran.physics_variables.neped}) differs from "
-                    f"nesep ({fortran.physics_variables.nesep})",
+                    f"({data_structure.physics_variables.rhopedn = }), but neped "
+                    f"({data_structure.physics_variables.neped}) differs from "
+                    f"nesep ({data_structure.physics_variables.nesep})",
                     stacklevel=2,
                 )
 
@@ -515,11 +536,11 @@ def check_process(inputs):  # noqa: ARG001
     # if lower bound of fgwped < fgwsep
     if (
         fortran.numerics.ixc[: fortran.numerics.nvar] == 145
-    ).any() and fortran.numerics.boundl[144] < fortran.physics_variables.fgwsep:
+    ).any() and fortran.numerics.boundl[144] < data_structure.physics_variables.fgwsep:
         raise ProcessValidationError(
             "Set lower bound of iteration variable 145, fgwped, to be greater than fgwsep",
             boundl_145=fortran.numerics.boundl[144],
-            fgwsep=fortran.physics_variables.fgwsep,
+            fgwsep=data_structure.physics_variables.fgwsep,
         )
 
     if (
@@ -535,22 +556,22 @@ def check_process(inputs):  # noqa: ARG001
 
         # If Reinke criterion is used need to enforce LH-threshold
         # using Martin scaling for consistency
-        if (fortran.physics_variables.i_l_h_threshold != 6) or (
+        if (data_structure.physics_variables.i_l_h_threshold != 6) or (
             not (
                 fortran.numerics.icc[
                     : fortran.numerics.neqns + fortran.numerics.nineqns
                 ]
                 == 15
             ).any()
-            and fortran.physics_variables.ipedestal
+            and data_structure.physics_variables.ipedestal
         ):
             warn(
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",
                 stacklevel=2,
             )
 
-    if fortran.physics_variables.i_single_null == 0:
-        fortran.physics_variables.n_divertors = 2
+    if data_structure.physics_variables.i_single_null == 0:
+        data_structure.physics_variables.n_divertors = 2
         data_structure.build_variables.dz_fw_plasma_gap = (
             data_structure.build_variables.dz_xpoint_divertor
         )
@@ -562,10 +583,10 @@ def check_process(inputs):  # noqa: ARG001
         )
         warn("Double-null: Upper vertical build forced to match lower", stacklevel=2)
     else:  # i_single_null == 1
-        fortran.physics_variables.n_divertors = 1
+        data_structure.physics_variables.n_divertors = 1
 
     #  Tight aspect ratio options (ST)
-    if fortran.physics_variables.itart == 1:
+    if data_structure.physics_variables.itart == 1:
         fortran.global_variables.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
@@ -575,8 +596,8 @@ def check_process(inputs):  # noqa: ARG001
         # 2 : Peng Ip scaling (See STAR code documentation)
         # 9 : Fiesta Ip scaling
         if (
-            fortran.physics_variables.i_plasma_current != 2
-            and fortran.physics_variables.i_plasma_current != 9
+            data_structure.physics_variables.i_plasma_current != 2
+            and data_structure.physics_variables.i_plasma_current != 9
         ):
             warn(
                 "Usual current scaling for TARTs (i_plasma_current=2 or 9) is not being used",
@@ -587,7 +608,7 @@ def check_process(inputs):  # noqa: ARG001
         # Overwrite the location of the TF coils
         # 2 : PF coil on top of TF coil
         # 3 : PF coil outside of TF coil
-        if fortran.physics_variables.itartpf == 0:
+        if data_structure.physics_variables.itartpf == 0:
             data_structure.pfcoil_variables.i_pf_location[0] = 2
             data_structure.pfcoil_variables.i_pf_location[1] = 3
             data_structure.pfcoil_variables.i_pf_location[2] = 3
@@ -655,15 +676,15 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         # Check if the boostrap current selection is addapted to ST
-        if fortran.physics_variables.i_bootstrap_current == 1:
+        if data_structure.physics_variables.i_bootstrap_current == 1:
             raise ProcessValidationError(
                 "Invalid boostrap current law for ST, do not use i_bootstrap_current = 1"
             )
 
         # Check if a single null divertor is used in double null machine
-        if fortran.physics_variables.i_single_null == 0 and (
-            fortran.physics_variables.f_p_div_lower == 1.0
-            or fortran.physics_variables.f_p_div_lower == 0.0
+        if data_structure.physics_variables.i_single_null == 0 and (
+            data_structure.physics_variables.f_p_div_lower == 1.0
+            or data_structure.physics_variables.f_p_div_lower == 0.0
         ):
             warn("Operating with a single null in a double null machine", stacklevel=2)
 
@@ -681,7 +702,7 @@ def check_process(inputs):  # noqa: ARG001
                 ]
                 == 85
             ).any()
-            and fortran.physics_variables.itart == 1
+            and data_structure.physics_variables.itart == 1
         ):
             raise ProcessValidationError(
                 "Al TF coil fluence not calculated properly for Al CP, do not use constraint 85"
@@ -708,8 +729,8 @@ def check_process(inputs):  # noqa: ARG001
     # Conventionnal aspect ratios specific
     else:
         if (
-            fortran.physics_variables.i_plasma_current == 2
-            or fortran.physics_variables.i_plasma_current == 9
+            data_structure.physics_variables.i_plasma_current == 2
+            or data_structure.physics_variables.i_plasma_current == 9
         ):
             raise ProcessValidationError(
                 "i_plasma_current=2,9 is not a valid option for a non-TART device"
@@ -743,7 +764,7 @@ def check_process(inputs):  # noqa: ARG001
             raise ProcessValidationError(
                 "More than 2 divertor coils (i_pf_location = 2) is not a valid configuration"
             )
-        if fortran.physics_variables.i_single_null == 1 and j < 2:
+        if data_structure.physics_variables.i_single_null == 1 and j < 2:
             raise ProcessValidationError(
                 "If i_single_null=1, use 2 individual divertor coils (i_pf_location = 2, 2; n_pf_coils_in_group = 1, 1)"
             )
@@ -1012,8 +1033,8 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     if (
-        fortran.physics_variables.i_bootstrap_current == 5
-        and fortran.physics_variables.i_diamagnetic_current != 0
+        data_structure.physics_variables.i_bootstrap_current == 5
+        and data_structure.physics_variables.i_diamagnetic_current != 0
     ):
         raise ProcessValidationError(
             "i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling"
@@ -1061,9 +1082,9 @@ def check_process(inputs):  # noqa: ARG001
             data_structure.current_drive_variables.i_hcd_primary != 5
             and data_structure.current_drive_variables.i_hcd_primary != 8
         ):
-            fortran.physics_variables.f_nd_beam_electron = 0.0
+            data_structure.physics_variables.f_nd_beam_electron = 0.0
     else:
-        fortran.physics_variables.f_nd_beam_electron = 0.0
+        data_structure.physics_variables.f_nd_beam_electron = 0.0
 
     # Set inboard blanket thickness to zero if no inboard blanket switch
     # used (Issue #732)
@@ -1115,23 +1136,23 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     if (
-        fortran.physics_variables.tauee_in > 1e-10
-        and fortran.physics_variables.i_confinement_time != 48
+        data_structure.physics_variables.tauee_in > 1e-10
+        and data_structure.physics_variables.i_confinement_time != 48
     ):
         # Report error if confinement time is in the input
         # but the scaling to use it is not selected.
         warn("tauee_in is for use with i_confinement_time=48 only", stacklevel=2)
 
     if (
-        fortran.physics_variables.aspect > 1.7
-        and fortran.physics_variables.i_confinement_time == 46
+        data_structure.physics_variables.aspect > 1.7
+        and data_structure.physics_variables.i_confinement_time == 46
     ):
         # NSTX scaling is for A<1.7
         warn("NSTX scaling is for A<1.7", stacklevel=2)
 
     if (
-        fortran.physics_variables.i_plasma_current == 2
-        and fortran.physics_variables.i_confinement_time == 42
+        data_structure.physics_variables.i_plasma_current == 2
+        and data_structure.physics_variables.i_confinement_time == 42
     ):
         raise ProcessValidationError(
             "Lang 2012 confinement scaling cannot be used for i_plasma_current=2 due to wrong q"

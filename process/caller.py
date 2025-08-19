@@ -307,7 +307,7 @@ class Caller:
 
         # Tight aspect ratio machine model
         if (
-            ft.physics_variables.itart == 1
+            data_structure.physics_variables.itart == 1
             and data_structure.tfcoil_variables.i_tf_sup != 1
         ):
             self.models.tfcoil.cntrpst()

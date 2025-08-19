@@ -12,11 +12,11 @@ from process.data_structure import (
     fwbs_variables,
     heat_transport_variables,
     pfcoil_variables,
+    physics_variables,
     tfcoil_variables,
 )
 from process.fortran import (
     constants,
-    physics_variables,
 )
 
 logger = logging.getLogger(__name__)

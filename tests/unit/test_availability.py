@@ -3,16 +3,16 @@
 import pytest
 from pytest import approx
 
-from process import data_structure, fortran
+from process import data_structure
 from process.availability import Availability
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import ife_variables as ifev
+from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
-from process.fortran import physics_variables as pv
 from process.init import init_all_module_vars
 
 
@@ -211,10 +211,8 @@ def calc_u_planned_fix(request, monkeypatch):
         param["pflux_div_heat_load_mw"],
     )
     monkeypatch.setattr(data_structure.fwbs_variables, "life_blkt_fpy", 0.0)
-    monkeypatch.setattr(
-        fortran.physics_variables, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"]
-    )
-    monkeypatch.setattr(fortran.physics_variables, "itart", param["itart"])
+    monkeypatch.setattr(pv, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"])
+    monkeypatch.setattr(pv, "itart", param["itart"])
     monkeypatch.setattr(cv, "tlife", param["tlife"])
     monkeypatch.setattr(cv, "divlife", 0.0)
     monkeypatch.setattr(cv, "adivflnc", param["adivflnc"])

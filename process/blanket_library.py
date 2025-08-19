@@ -15,13 +15,13 @@ from process.data_structure import (
     divertor_variables,
     fwbs_variables,
     heat_transport_variables,
+    physics_variables,
     primary_pumping_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     error_handling,
-    physics_variables,
 )
 from process.fortran import (
     error_handling as eh,
