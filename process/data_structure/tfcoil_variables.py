@@ -82,7 +82,7 @@ b_tf_inboard_peak_symmetric: float = None
 """mean peak field at TF coil (T)"""
 
 
-bmaxtfrp: float = None
+b_tf_inboard_peak_with_ripple: float = None
 """peak field at TF conductor with ripple (T)"""
 
 
@@ -1100,7 +1100,7 @@ def init_tfcoil_variables():
     global a_tf_wp_coolant_channels
     global bcritsc
     global b_tf_inboard_peak_symmetric
-    global bmaxtfrp
+    global b_tf_inboard_peak_with_ripple
     global casestr
     global dr_tf_plasma_case
     global f_dr_tf_plasma_case
@@ -1316,7 +1316,7 @@ def init_tfcoil_variables():
     a_tf_wp_coolant_channels = 0.0
     bcritsc = 24.0
     b_tf_inboard_peak_symmetric = 0.0
-    bmaxtfrp = 0.0
+    b_tf_inboard_peak_with_ripple = 0.0
     casestr = 0.0
     dr_tf_plasma_case = 0.0
     f_dr_tf_plasma_case = 0.05

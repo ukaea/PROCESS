@@ -1559,8 +1559,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Actual peak field at discrete conductor (T)",
-                "(bmaxtfrp)",
-                tfcoil_variables.bmaxtfrp,
+                "(b_tf_inboard_peak_with_ripple)",
+                tfcoil_variables.b_tf_inboard_peak_with_ripple,
                 "OP ",
             )
             po.ovarre(

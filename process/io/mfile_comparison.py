@@ -67,7 +67,7 @@ DEFAULT_COMPARE_PARAMS = [
     "hfact",
     "vs_cs_pf_total_pulse",
     "bt",
-    "bmaxtfrp",
+    "b_tf_inboard_peak_with_ripple",
     "tmarg",
     "iooic",
     "sig_tf_case",

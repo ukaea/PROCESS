@@ -296,17 +296,19 @@ class SuperconductingTFCoil(TFCoil):
 
         # Peak field including ripple
         # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
-        tfcoil_variables.bmaxtfrp, peaktfflag = self.peak_tf_with_ripple(
-            tfcoil_variables.n_tf_coils,
-            tfcoil_variables.dx_tf_wp_primary_toroidal,
-            tfcoil_variables.dr_tf_wp_with_insulation
-            - 2.0e0
-            * (
-                tfcoil_variables.dx_tf_wp_insulation
-                + tfcoil_variables.dx_tf_wp_insertion_gap
-            ),
-            superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
-            tfcoil_variables.b_tf_inboard_peak_symmetric,
+        tfcoil_variables.b_tf_inboard_peak_with_ripple, peaktfflag = (
+            self.peak_tf_with_ripple(
+                tfcoil_variables.n_tf_coils,
+                tfcoil_variables.dx_tf_wp_primary_toroidal,
+                tfcoil_variables.dr_tf_wp_with_insulation
+                - 2.0e0
+                * (
+                    tfcoil_variables.dx_tf_wp_insulation
+                    + tfcoil_variables.dx_tf_wp_insertion_gap
+                ),
+                superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+                tfcoil_variables.b_tf_inboard_peak_symmetric,
+            )
         )
 
         # Cross-sectional area per turn
@@ -320,7 +322,7 @@ class SuperconductingTFCoil(TFCoil):
             (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.tmargtf) = (
                 self.supercon_croco(
                     a_tf_turn,
-                    tfcoil_variables.bmaxtfrp,
+                    tfcoil_variables.b_tf_inboard_peak_with_ripple,
                     tfcoil_variables.c_tf_turn,
                     tfcoil_variables.tftmp,
                     output=output,
@@ -339,7 +341,7 @@ class SuperconductingTFCoil(TFCoil):
             ) = self.supercon(
                 tfcoil_variables.a_tf_turn_cable_space_no_void,
                 a_tf_turn,
-                tfcoil_variables.bmaxtfrp,
+                tfcoil_variables.b_tf_inboard_peak_with_ripple,
                 tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 tfcoil_variables.fcutfsu,
                 tfcoil_variables.c_tf_turn,
@@ -1258,7 +1260,9 @@ class SuperconductingTFCoil(TFCoil):
             )
 
         # REBCO measurements from 2 T to 14 T, extrapolating outside this
-        if (i_tf_superconductor == 8) and (tfcoil_variables.bmaxtfrp >= 14):
+        if (i_tf_superconductor == 8) and (
+            tfcoil_variables.b_tf_inboard_peak_with_ripple >= 14
+        ):
             error_handling.report_error(266)
 
         #  Temperature margin (already calculated in superconductors.bi2212 for i_tf_superconductor=2)
@@ -1751,8 +1755,8 @@ class SuperconductingTFCoil(TFCoil):
         :param b_tf_inboard_peak_symmetric: nominal (axisymmetric) peak toroidal field (T)
         :type b_tf_inboard_peak_symmetric: float
 
-        :returns: (bmaxtfrp, flag)
-        * bmaxtfrp: peak toroidal field including ripple (T)
+        :returns: (b_tf_inboard_peak_with_ripple, flag)
+        * b_tf_inboard_peak_with_ripple: peak toroidal field including ripple (T)
         * flag: flag warning of applicability problems
 
         :rtype: Tuple[float, int]
@@ -1782,8 +1786,8 @@ class SuperconductingTFCoil(TFCoil):
             a[3] = 0.89808e0
 
         else:
-            bmaxtfrp = 1.09e0 * b_tf_inboard_peak_symmetric
-            return bmaxtfrp, flag
+            b_tf_inboard_peak_with_ripple = 1.09e0 * b_tf_inboard_peak_symmetric
+            return b_tf_inboard_peak_with_ripple, flag
 
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
@@ -1819,9 +1823,11 @@ class SuperconductingTFCoil(TFCoil):
             * superconducting_tf_coil_variables.tf_fit_t
         )
 
-        bmaxtfrp = superconducting_tf_coil_variables.tf_fit_y * b_tf_inboard_peak_symmetric
+        b_tf_inboard_peak_with_ripple = (
+            superconducting_tf_coil_variables.tf_fit_y * b_tf_inboard_peak_symmetric
+        )
 
-        return bmaxtfrp, flag
+        return b_tf_inboard_peak_with_ripple, flag
 
     def sc_tf_internal_geom(self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer):
         """

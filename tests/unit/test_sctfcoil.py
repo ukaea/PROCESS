@@ -147,7 +147,7 @@ class SuperconParam(NamedTuple):
 
     c_tf_turn: Any = None
 
-    bmaxtfrp: Any = None
+    b_tf_inboard_peak_with_ripple: Any = None
 
     str_tf_con_res: Any = None
 
@@ -225,7 +225,7 @@ class SuperconParam(NamedTuple):
             temp_margin=0,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
-            bmaxtfrp=12.48976756562082,
+            b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
@@ -268,7 +268,7 @@ class SuperconParam(NamedTuple):
             temp_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
-            bmaxtfrp=12.48976756562082,
+            b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
@@ -309,7 +309,7 @@ class SuperconParam(NamedTuple):
             temp_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
-            bmaxtfrp=12.48976756562082,
+            b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
@@ -384,7 +384,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_turn", superconparam.c_tf_turn)
 
-    monkeypatch.setattr(tfcoil_variables, "bmaxtfrp", superconparam.bmaxtfrp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "b_tf_inboard_peak_with_ripple",
+        superconparam.b_tf_inboard_peak_with_ripple,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "str_tf_con_res", superconparam.str_tf_con_res
@@ -469,7 +473,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     expected_tf_fit_y: Any = None
 
-    expected_bmaxtfrp: Any = None
+    expected_b_tf_inboard_peak_with_ripple: Any = None
 
     expected_flag: Any = None
 
@@ -489,7 +493,7 @@ class PeakTfWithRippleParam(NamedTuple):
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
-            expected_bmaxtfrp=12.48976756562082,
+            expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
             expected_flag=0,
         ),
         PeakTfWithRippleParam(
@@ -504,7 +508,7 @@ class PeakTfWithRippleParam(NamedTuple):
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
-            expected_bmaxtfrp=12.48976756562082,
+            expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
             expected_flag=0,
         ),
     ),
@@ -534,7 +538,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         superconducting_tf_coil_variables, "tf_fit_y", peaktfwithrippleparam.tf_fit_y
     )
 
-    bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
+    b_tf_inboard_peak_with_ripple, flag = sctfcoil.peak_tf_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         dx_tf_wp_primary_toroidal=peaktfwithrippleparam.dx_tf_wp_primary_toroidal,
         dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
@@ -554,7 +558,9 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         peaktfwithrippleparam.expected_tf_fit_y
     )
 
-    assert bmaxtfrp == pytest.approx(peaktfwithrippleparam.expected_bmaxtfrp)
+    assert b_tf_inboard_peak_with_ripple == pytest.approx(
+        peaktfwithrippleparam.expected_b_tf_inboard_peak_with_ripple
+    )
 
     assert flag == pytest.approx(peaktfwithrippleparam.expected_flag)
 

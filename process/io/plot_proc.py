@@ -6787,7 +6787,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
-            ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
+            ("b_tf_inboard_peak_with_ripple", "Peak field at conductor (w. rip.)", "T"),
             ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
             ("tmargtf", "TF Temperature margin", "K"),
             ("temp_cs_margin", "CS Temperature margin", "K"),
