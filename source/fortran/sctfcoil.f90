@@ -75,6 +75,9 @@ module sctfcoil_module
 !! Conductor layer radial thickness at centercollumn top [m]
 !! Ground insulation layer included, only defined for itart = 1
 
+   real(dp) :: dr_tf_wp_no_insulation
+   !! Radial thickness of winding pack without insulation [m]
+
    real(dp) :: vol_ins_cp
 !! CP turn insulation volume [m3]
 
