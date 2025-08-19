@@ -320,6 +320,13 @@ $$
 \overbrace{\mathrm{d}x_{\text{TF,toroidal,WP-min}}}^{\texttt{dx_tf_wp_toroidal_min}} = \mathrm{d}x_{\text{TF,toroidal,WP}} - \left(2 \times \overbrace{\mathrm{d}x_{\text{TF,side case}}}^{\texttt{dx_tf_side_case_min}}\right)
 $$
 
+We also set a commonly used parameter for the radial thickness of the winding pack without the insulation and insertion gap.
+
+$$
+\overbrace{\mathrm{d}R_{\text{TF-WP,no-insulation}}}^{\texttt{dr_tf_wp_no_insulation}} = \overbrace{\mathrm{d}R_{\text{TF,WP}}}^{\texttt{dr_tf_wp_with_insulation}} - \\
+2\times\left(\overbrace{\mathrm{d}R_{\text{TF,WP-insulation}}}^{\texttt{dx_tf_wp_insulation}} + \overbrace{\mathrm{d}R_{\text{TF,WP-gap}}}^{\texttt{dx_tf_wp_insertion_gap}}\right)
+$$
+
 ----------
 
 #### Rectangular WP

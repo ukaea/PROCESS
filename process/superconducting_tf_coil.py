@@ -1837,6 +1837,7 @@ class SuperconductingTFCoil(TFCoil):
             superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
+            sctfcoil_module.dr_tf_wp_no_insulation,
             tfcoil_variables.dx_tf_wp_primary_toroidal,
             tfcoil_variables.dx_tf_wp_secondary_toroidal,
             superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
@@ -2031,6 +2032,7 @@ class SuperconductingTFCoil(TFCoil):
         float,  # r_tf_wp_inboard_outer
         float,  # r_tf_wp_inboard_centre
         float,  # dx_tf_wp_toroidal_min
+        float,  # dr_tf_wp_no_insulation
         float,  # dx_tf_wp_primary_toroidal
         float,  # dx_tf_wp_secondary_toroidal
         float,  # dx_tf_wp_toroidal_average
@@ -2067,6 +2069,7 @@ class SuperconductingTFCoil(TFCoil):
             - r_tf_wp_inboard_outer (float): WP inboard outer radius [m]
             - r_tf_wp_inboard_centre (float): WP inboard centre radius [m]
             - dx_tf_wp_toroidal_min (float): Minimal toroidal thickness of WP [m]
+            - dr_tf_wp_no_insulation (float): Radial thickness of winding pack without insulation [m]
             - dx_tf_wp_primary_toroidal (float): Primary toroidal thickness [m]
             - dx_tf_wp_secondary_toroidal (float): Secondary toroidal thickness [m]
             - dx_tf_wp_toroidal_average (float): Averaged toroidal thickness [m]
@@ -2091,6 +2094,11 @@ class SuperconductingTFCoil(TFCoil):
 
         # Minimal toroidal thickness of winding pack [m]
         dx_tf_wp_toroidal_min = dx_tf_wp_inner_toroidal - 2.0e0 * dx_tf_side_case_min
+
+        # Radial thickness of winding pack without insulation (e.g. the conductor region) [m]
+        dr_tf_wp_no_insulation = dr_tf_wp_with_insulation - 2.0e0 * (
+            dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+        )
 
         # Rectangular WP
         # --------------
@@ -2243,6 +2251,7 @@ class SuperconductingTFCoil(TFCoil):
             r_tf_wp_inboard_outer,
             r_tf_wp_inboard_centre,
             dx_tf_wp_toroidal_min,
+            dr_tf_wp_no_insulation,
             dx_tf_wp_primary_toroidal,
             dx_tf_wp_secondary_toroidal,
             dx_tf_wp_toroidal_average,
