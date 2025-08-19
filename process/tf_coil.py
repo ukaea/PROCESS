@@ -1736,8 +1736,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Ripple amplitude at plasma outboard midplane (%)",
-                "(ripple)",
-                tfcoil_variables.ripple,
+                "(ripple_b_tf_plasma_edge)",
+                tfcoil_variables.ripple_b_tf_plasma_edge,
                 "OP ",
             )
         else:
@@ -1750,8 +1750,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Ripple at plasma edge (%)",
-                "(ripple)",
-                tfcoil_variables.ripple,
+                "(ripple_b_tf_plasma_edge)",
+                tfcoil_variables.ripple_b_tf_plasma_edge,
             )
             po.ocmmnt(
                 self.outfile,

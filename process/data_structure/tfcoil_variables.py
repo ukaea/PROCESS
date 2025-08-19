@@ -516,7 +516,7 @@ ripple_b_tf_plasma_edge_max: float = None
 """maximum allowable toroidal field ripple amplitude at plasma edge (%)"""
 
 
-ripple: float = None
+ripple_b_tf_plasma_edge: float = None
 """peak/average toroidal field ripple at plasma edge (%)"""
 
 
@@ -1175,7 +1175,7 @@ def init_tfcoil_variables():
     global toroidalgap
     global ftoroidalgap
     global ripple_b_tf_plasma_edge_max
-    global ripple
+    global ripple_b_tf_plasma_edge
     global c_tf_total
     global radial_array
     global sig_tf_r
@@ -1410,7 +1410,7 @@ def init_tfcoil_variables():
     toroidalgap = 1.0  # [m]
     ftoroidalgap = 1.0
     ripple_b_tf_plasma_edge_max = 1.0
-    ripple = 0.0
+    ripple_b_tf_plasma_edge = 0.0
     c_tf_total = 0.0
     radial_array = np.zeros(N_RADIAL_ARRAY)
     sig_tf_r = np.zeros(N_RADIAL_ARRAY)
