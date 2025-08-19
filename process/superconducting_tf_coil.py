@@ -296,16 +296,16 @@ class SuperconductingTFCoil(TFCoil):
         # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
         tfcoil_variables.b_tf_inboard_peak_with_ripple, peaktfflag = (
             self.peak_b_tf_inboard_with_ripple(
-                tfcoil_variables.n_tf_coils,
-                tfcoil_variables.dx_tf_wp_primary_toroidal,
-                tfcoil_variables.dr_tf_wp_with_insulation
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+                dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+                dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation
                 - 2.0e0
                 * (
                     tfcoil_variables.dx_tf_wp_insulation
                     + tfcoil_variables.dx_tf_wp_insertion_gap
                 ),
-                sctfcoil_module.r_tf_wp_inboard_centre,
-                tfcoil_variables.b_tf_inboard_peak_symmetric,
+                tfin=sctfcoil_module.r_tf_wp_inboard_centre,
+                b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
             )
         )
 
@@ -1713,42 +1713,38 @@ class SuperconductingTFCoil(TFCoil):
 
     def peak_b_tf_inboard_with_ripple(
         self,
-        n_tf_coils,
-        dx_tf_wp_primary_toroidal,
-        dr_tf_wp_with_insulation,
-        tfin,
-        b_tf_inboard_peak_symmetric,
-    ):
-        """Peak toroidal field on the conductor
-        author: P J Knight, CCFE, Culham Science Centre
-        This subroutine calculates the peak toroidal field at the
-        outboard edge of the inboard TF coil winding pack, including
-        the effects of ripple.
-        <P>For 16, 18 or 20 coils, the calculation uses fitting formulae
-        derived by M. Kovari using MAGINT calculations on coil sets based
-        on a DEMO1 case.
-        <P>For other numbers of coils, the original estimate using a 9%
-        increase due to ripple from the axisymmetric calculation is used.
-        M. Kovari, Toroidal Field Coils - Maximum Field and Ripple -
-        Parametric Calculation, July 2014
+        n_tf_coils: float,
+        dx_tf_wp_primary_toroidal: float,
+        dr_tf_wp_with_insulation: float,
+        tfin: float,
+        b_tf_inboard_peak_symmetric: float,
+    ) -> tuple[float, int]:
+        """
+        Calculates the peak toroidal field at the outboard edge of the inboard TF coil winding pack,
+        including the effects of ripple.
 
-        :param n_tf_coils: number of TF coils
+        For 16, 18, or 20 coils, uses fitting formulae derived by M. Kovari using MAGINT calculations
+        on coil sets based on a DEMO1 case. For other numbers of coils, uses a 9% increase due to ripple
+        from the axisymmetric calculation.
+
+        :param n_tf_coils: Number of TF coils.
         :type n_tf_coils: float
-        :param dx_tf_wp_primary_toroidal: width of plasma-facing face of winding pack (m)
+        :param dx_tf_wp_primary_toroidal: Width of plasma-facing face of winding pack (m).
         :type dx_tf_wp_primary_toroidal: float
-        :param dr_tf_wp_with_insulation: radial thickness of winding pack (m)
+        :param dr_tf_wp_with_insulation: Radial thickness of winding pack (m).
         :type dr_tf_wp_with_insulation: float
-        :param tfin: major radius of centre of winding pack (m)
+        :param tfin: Major radius of centre of winding pack (m).
         :type tfin: float
-        :param b_tf_inboard_peak_symmetric: nominal (axisymmetric) peak toroidal field (T)
+        :param b_tf_inboard_peak_symmetric: Nominal (axisymmetric) peak toroidal field (T).
         :type b_tf_inboard_peak_symmetric: float
 
-        :returns: (b_tf_inboard_peak_with_ripple, flag)
-        * b_tf_inboard_peak_with_ripple: peak toroidal field including ripple (T)
-        * flag: flag warning of applicability problems
+        :returns: Tuple containing:
+            - b_tf_inboard_peak_with_ripple (float): Peak toroidal field including ripple (T).
+            - flag (int): Flag warning of applicability problems.
+        :rtype: tuple[float, int]
 
-        :rtype: Tuple[float, int]
-
+        :notes:
+            - M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric Calculation, July 2014.
         """
         a = np.zeros((4,))
         flag = 0
@@ -1786,14 +1782,12 @@ class SuperconductingTFCoil(TFCoil):
 
         sctfcoil_module.tf_fit_t = dx_tf_wp_primary_toroidal / wmax
         if (sctfcoil_module.tf_fit_t < 0.3e0) or (sctfcoil_module.tf_fit_t > 1.1e0):
-            # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; t = ',t
             flag = 1
 
         #  Dimensionless winding pack radial thickness
 
         sctfcoil_module.tf_fit_z = dr_tf_wp_with_insulation / wmax
         if (sctfcoil_module.tf_fit_z < 0.26e0) or (sctfcoil_module.tf_fit_z > 0.7e0):
-            # write(*,*) 'PEAK_TF_WITH_RIPPLE: fitting problem; z = ',z
             flag = 2
 
         #  Ratio of peak field with ripple to nominal axisymmetric peak field

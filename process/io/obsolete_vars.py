@@ -401,6 +401,7 @@ OBS_VARS = {
     "ims": "i_blkt_module_segmentation",
     "i_coolant_pumping": "i_p_coolant_pumping",
     "vfblkt": "f_a_blkt_cooling_channels",
+    "ripmax": "ripple_b_tf_plasma_edge_max",
 }
 
 OBS_VARS_HELP = {
