@@ -22,6 +22,7 @@ from process.data_structure import (
     impurity_radiation_module,
     neoclassics_variables,
     pfcoil_variables,
+    physics_module,
     rebco_variables,
     stellarator_configuration,
     stellarator_variables,
@@ -35,7 +36,6 @@ from process.fortran import (
     error_handling,
     global_variables,
     numerics,
-    physics_module,
     physics_variables,
     sctfcoil_module,
 )
