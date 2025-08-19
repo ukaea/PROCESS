@@ -297,7 +297,7 @@ class SuperconductingTFCoil(TFCoil):
         # Peak field including ripple
         # Rem : as resistive magnets are axisymmetric, no inboard ripple is present
         tfcoil_variables.b_tf_inboard_peak_with_ripple, peaktfflag = (
-            self.peak_tf_with_ripple(
+            self.peak_b_tf_inboard_with_ripple(
                 tfcoil_variables.n_tf_coils,
                 tfcoil_variables.dx_tf_wp_primary_toroidal,
                 tfcoil_variables.dr_tf_wp_with_insulation
@@ -1723,7 +1723,7 @@ class SuperconductingTFCoil(TFCoil):
             d_vv=build_variables.dr_vv_shells,
         )
 
-    def peak_tf_with_ripple(
+    def peak_b_tf_inboard_with_ripple(
         self,
         n_tf_coils,
         dx_tf_wp_primary_toroidal,

@@ -538,7 +538,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         superconducting_tf_coil_variables, "tf_fit_y", peaktfwithrippleparam.tf_fit_y
     )
 
-    b_tf_inboard_peak_with_ripple, flag = sctfcoil.peak_tf_with_ripple(
+    b_tf_inboard_peak_with_ripple, flag = sctfcoil.peak_b_tf_inboard_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         dx_tf_wp_primary_toroidal=peaktfwithrippleparam.dx_tf_wp_primary_toroidal,
         dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
