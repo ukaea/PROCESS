@@ -7,9 +7,7 @@ import pytest
 
 import process.tf_coil as tfcoil_module
 from process.build import Build
-from process.data_structure import build_variables, tfcoil_variables
-from process.data_structure import build_variables as bv
-from process.fortran import fwbs_variables as fwbsv
+from process.data_structure import build_variables, fwbs_variables, tfcoil_variables
 from process.fortran import (
     sctfcoil_module,
 )
@@ -221,9 +219,9 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
     monkeypatch.setattr(tfcoil_variables, "tcoolin", cntrpst_asset.tcoolin)
-    monkeypatch.setattr(fwbsv, "pnuc_cp_tf", 1)
-    monkeypatch.setattr(bv, "z_tf_inside_half", 1)
-    monkeypatch.setattr(bv, "dr_tf_outboard", 0.5)
+    monkeypatch.setattr(fwbs_variables, "pnuc_cp_tf", 1)
+    monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
+    monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
 
     tfcoil.cntrpst()
 

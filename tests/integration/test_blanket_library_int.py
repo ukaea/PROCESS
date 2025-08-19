@@ -2,9 +2,12 @@ import pytest
 
 from process.blanket_library import BlanketLibrary
 from process.data_structure import build_variables as bv
-from process.fortran import fwbs_variables as fwbs
+from process.data_structure import fwbs_variables as fwbs
 from process.fortran import physics_variables as pv
 from process.fw import Fw
+from process.init import init_all_module_vars
+
+init_all_module_vars()
 
 
 @pytest.fixture

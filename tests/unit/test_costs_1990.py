@@ -14,6 +14,7 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    fwbs_variables,
     heat_transport_variables,
     ife_variables,
     pf_power_variables,
@@ -26,10 +27,8 @@ from process.data_structure import (
 )
 from process.fortran import error_handling as eh
 from process.fortran import (
-    fwbs_variables,
     physics_variables,
 )
-from process.fortran import fwbs_variables as fv
 
 
 @pytest.fixture
@@ -105,14 +104,16 @@ def acc2261_fix(costs, request, monkeypatch):
     monkeypatch.setattr(cost_variables, "fkind", 1)
     monkeypatch.setattr(cost_variables, "lsa", 1)
     monkeypatch.setattr(heat_transport_variables, "p_fw_div_heat_deposited_mw", 0.0)
-    monkeypatch.setattr(fv, "p_blkt_nuclear_heat_total_mw", 1558.0)
-    monkeypatch.setattr(fv, "p_shld_nuclear_heat_mw", 1.478)
+    monkeypatch.setattr(fwbs_variables, "p_blkt_nuclear_heat_total_mw", 1558.0)
+    monkeypatch.setattr(fwbs_variables, "p_shld_nuclear_heat_mw", 1.478)
     monkeypatch.setattr(heat_transport_variables, "p_plant_primary_heat_mw", 2647.0)
     monkeypatch.setattr(heat_transport_variables, "n_primary_heat_exchangers", 3)
     monkeypatch.setattr(cost_variables, "c2261", 0)
 
     # Parameterised mocks
-    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
+    )
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -445,7 +446,9 @@ def acc23_fix(request, monkeypatch, costs):
 
     # Mock variables used by acc23()
     # Some may be parameterised
-    monkeypatch.setattr(fv, "i_blkt_coolant_type", param["i_blkt_coolant_type"])
+    monkeypatch.setattr(
+        fwbs_variables, "i_blkt_coolant_type", param["i_blkt_coolant_type"]
+    )
     monkeypatch.setattr(heat_transport_variables, "p_plant_electric_gross_mw", 1200.0)
     monkeypatch.setattr(cost_variables, "c23", 0)
 

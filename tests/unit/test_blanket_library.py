@@ -4,9 +4,13 @@ import numpy as np
 import pytest
 
 from process.blanket_library import BlanketLibrary
-from process.data_structure import blanket_library, build_variables, divertor_variables
-from process.fortran import (
+from process.data_structure import (
+    blanket_library,
+    build_variables,
+    divertor_variables,
     fwbs_variables,
+)
+from process.fortran import (
     physics_variables,
 )
 from process.fw import Fw
@@ -1594,8 +1598,10 @@ class LiquidBreederPropertiesParam(NamedTuple):
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
             i_blkt_liquid_breeder_type=0,
-            hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
-            b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
+            hartmann_liq=np.array(
+                np.array((0.0, 0.0), order="F"), order="F"
+            ).transpose(),
+            b_mag_blkt=np.array(np.array((5.0, 5.0), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
             i_blkt_dual_coolant=0,
             bt=5.7000000000000002,
@@ -1631,8 +1637,10 @@ class LiquidBreederPropertiesParam(NamedTuple):
             dynamic_viscosity_liq=0,
             electrical_conductivity_liq=0,
             i_blkt_liquid_breeder_type=1,
-            hartmann_liq=np.array(np.array((0, 0), order="F"), order="F").transpose(),
-            b_mag_blkt=np.array(np.array((5, 5), order="F"), order="F").transpose(),
+            hartmann_liq=np.array(
+                np.array((0.0, 0.0), order="F"), order="F"
+            ).transpose(),
+            b_mag_blkt=np.array(np.array((5.0, 5.0), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
             i_blkt_dual_coolant=0,
             bt=5.7000000000000002,

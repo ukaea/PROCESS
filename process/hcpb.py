@@ -11,6 +11,7 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    fwbs_variables,
     heat_transport_variables,
     primary_pumping_variables,
     tfcoil_variables,
@@ -18,12 +19,9 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    fwbs_variables,
     physics_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
+from process.fortran import error_handling as eh
 
 
 class CCFE_HCPB(BlanketLibrary):

@@ -17,6 +17,7 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
     neoclassics_variables,
@@ -32,7 +33,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     error_handling,
-    fwbs_variables,
     global_variables,
     numerics,
     physics_module,

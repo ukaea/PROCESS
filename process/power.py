@@ -9,6 +9,7 @@ from process.data_structure import (
     buildings_variables,
     cost_variables,
     current_drive_variables,
+    fwbs_variables,
     heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
@@ -22,7 +23,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     error_handling,
-    fwbs_variables,
     numerics,
     physics_variables,
 )
