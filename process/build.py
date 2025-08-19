@@ -1523,7 +1523,7 @@ class Build:
         TF ripple calculation
         author: P J Knight and C W Ashe, CCFE, Culham Science Centre
         ripple_b_tf_plasma_edge_max : input real  : maximum allowed ripple at plasma edge (%)
-        ripple : output real : actual ripple at plasma edge (%)
+        ripple_b_tf_plasma_edge : output real : actual ripple at plasma edge (%)
         rtot   : input real  : radius to the centre of the outboard
         TF coil leg (m)
         rtotmin : output real : radius to the centre of the outboard
@@ -1944,7 +1944,7 @@ class Build:
         ) - (build_variables.r_tf_inboard_mid - 0.5e0 * build_variables.dr_tf_inboard)
 
         (
-            tfcoil_variables.ripple,
+            tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
             build_variables.ripflag,
         ) = self.ripple_amplitude(
@@ -1974,9 +1974,9 @@ class Build:
             build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
 
         #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.dr_shld_vv_gap_outboard value
-        #  call rippl(tfcoil_variables.ripple_b_tf_plasma_edge_max,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple,r_tf_outboard_midl)
+        #  call rippl(tfcoil_variables.ripple_b_tf_plasma_edge_max,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple_b_tf_plasma_edge,r_tf_outboard_midl)
         (
-            tfcoil_variables.ripple,
+            tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
             build_variables.ripflag,
         ) = self.ripple_amplitude(
