@@ -312,7 +312,7 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
         build_variables, "r_tf_inboard_in", rippleamplitudeparam.r_tf_inboard_in
     )
 
-    ripple, r_tf_outboard_midmin, flag = build.ripple_amplitude(
+    ripple, r_tf_outboard_midmin, flag = build.plasma_outboard_edge_toroidal_ripple(
         ripple_b_tf_plasma_edge_max=rippleamplitudeparam.ripple_b_tf_plasma_edge_max,
         r_tf_outboard_mid=rippleamplitudeparam.r_tf_outboard_mid,
     )

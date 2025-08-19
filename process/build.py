@@ -1518,7 +1518,7 @@ class Build:
                 )
         return divht
 
-    def ripple_amplitude(
+    def plasma_outboard_edge_toroidal_ripple(
         self, ripple_b_tf_plasma_edge_max: float, r_tf_outboard_mid: float
     ) -> float:
         """
@@ -1949,7 +1949,7 @@ class Build:
             tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
             build_variables.ripflag,
-        ) = self.ripple_amplitude(
+        ) = self.plasma_outboard_edge_toroidal_ripple(
             tfcoil_variables.ripple_b_tf_plasma_edge_max,
             build_variables.r_tf_outboard_mid,
         )
@@ -1981,7 +1981,7 @@ class Build:
             tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
             build_variables.ripflag,
-        ) = self.ripple_amplitude(
+        ) = self.plasma_outboard_edge_toroidal_ripple(
             tfcoil_variables.ripple_b_tf_plasma_edge_max,
             build_variables.r_tf_outboard_mid,
         )
