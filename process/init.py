@@ -36,6 +36,7 @@ from process.data_structure.pfcoil_variables import (
     init_pfcoil_module,
     init_pfcoil_variables,
 )
+from process.data_structure.physics_module import init_physics_module
 from process.data_structure.power_variables import init_power_variables
 from process.data_structure.primary_pumping_variables import (
     init_primary_pumping_variables,
@@ -52,7 +53,6 @@ from process.data_structure.water_usage_variables import init_watuse_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.physics import (
-    init_physics_module,
     init_physics_variables,
 )
 from process.scan import init_scan_module
