@@ -522,7 +522,7 @@ $$
 
 -------------------
 
-### On coil ripple | `peak_tf_with_ripple()`
+### On coil ripple | `peak_b_tf_inboard_with_ripple()`
 
 
 The ratio of TF coil magnetic field increase with respect to the axisymmetric
