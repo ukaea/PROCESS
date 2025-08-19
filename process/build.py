@@ -1518,7 +1518,9 @@ class Build:
                 )
         return divht
 
-    def ripple_amplitude(self, ripple_b_tf_plasma_edge_max: float, r_tf_outboard_mid: float) -> float:
+    def ripple_amplitude(
+        self, ripple_b_tf_plasma_edge_max: float, r_tf_outboard_mid: float
+    ) -> float:
         """
         TF ripple calculation
         author: P J Knight and C W Ashe, CCFE, Culham Science Centre
