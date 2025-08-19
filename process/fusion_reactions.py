@@ -4,7 +4,8 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import integrate
 
-from process.fortran import constants, physics_module, physics_variables
+from process.data_structure import physics_module
+from process.fortran import constants, physics_variables
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
