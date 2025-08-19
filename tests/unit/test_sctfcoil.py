@@ -475,8 +475,6 @@ class PeakTfWithRippleParam(NamedTuple):
 
     expected_b_tf_inboard_peak_with_ripple: Any = None
 
-    expected_flag: Any = None
-
 
 @pytest.mark.parametrize(
     "peaktfwithrippleparam",
@@ -494,7 +492,6 @@ class PeakTfWithRippleParam(NamedTuple):
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
             expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
-            expected_flag=0,
         ),
         PeakTfWithRippleParam(
             tf_fit_t=0.80807838916035957,
@@ -509,7 +506,6 @@ class PeakTfWithRippleParam(NamedTuple):
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
             expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
-            expected_flag=0,
         ),
     ),
 )
@@ -538,7 +534,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         superconducting_tf_coil_variables, "tf_fit_y", peaktfwithrippleparam.tf_fit_y
     )
 
-    b_tf_inboard_peak_with_ripple, flag = sctfcoil.peak_b_tf_inboard_with_ripple(
+    b_tf_inboard_peak_with_ripple = sctfcoil.peak_b_tf_inboard_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         dx_tf_wp_primary_toroidal=peaktfwithrippleparam.dx_tf_wp_primary_toroidal,
         dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
@@ -561,8 +557,6 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     assert b_tf_inboard_peak_with_ripple == pytest.approx(
         peaktfwithrippleparam.expected_b_tf_inboard_peak_with_ripple
     )
-
-    assert flag == pytest.approx(peaktfwithrippleparam.expected_flag)
 
 
 class TfWpGeomParam(NamedTuple):

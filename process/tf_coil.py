@@ -520,11 +520,10 @@ class TFCoil:
             e_tf_coil_magnetic_stored,
         )
 
-    def outtf(self, peaktfflag):
+    def outtf(self):
         """Writes superconducting TF coil output to file
         author: P J Knight, CCFE, Culham Science Centre
         outfile : input integer : output file unit
-        peaktfflag : input integer : warning flag from peak TF calculation
         This routine writes the superconducting TF coil results
         to the output file.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
@@ -1724,11 +1723,6 @@ class TFCoil:
         # Ripple calculations
         po.osubhd(self.outfile, "Ripple information:")
         if tfcoil_variables.i_tf_shape == 1:
-            if peaktfflag == 1:
-                error_handling.report_error(144)
-            elif peaktfflag == 2:
-                error_handling.report_error(145)
-
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",
