@@ -344,7 +344,7 @@ def test_tf_global_geometry(
             2.5,  # Radius at which the peak inboard B field occurs [m]
             0.8,  # Cross-sectional area of the inboard leg of the TF coil [m²]
             (
-                pytest.approx(12.4),  # b_tf_inboard_peak
+                pytest.approx(12.4),  # b_tf_inboard_peak_symmetric
                 pytest.approx(154999999.93042317),  # c_tf_total
                 pytest.approx(9687499.995651448),  # c_tf_coil
                 pytest.approx(193749999.91302896),  # oacdcp
@@ -357,7 +357,7 @@ def test_tf_global_geometry(
             1.8,  # Radius at which the peak inboard B field occurs [m]
             0.5,  # Cross-sectional area of the inboard leg of the TF coil [m²]
             (
-                pytest.approx(8.333333333),  # b_tf_inboard_peak
+                pytest.approx(8.333333333),  # b_tf_inboard_peak_symmetric
                 pytest.approx(74999999.9663338),  # c_tf_total
                 pytest.approx(6249999.997194484),  # c_tf_coil
                 pytest.approx(149999999.9326676),  # oacdcp
@@ -434,7 +434,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     c_tf_total: Any = None
 
-    b_tf_inboard_peak: Any = None
+    b_tf_inboard_peak_symmetric: Any = None
 
     i_tf_sup: Any = None
 
@@ -491,7 +491,7 @@ class TfFieldAndForceParam(NamedTuple):
             sigvvall=93000000,
             cforce=0,
             c_tf_total=25500000,
-            b_tf_inboard_peak=34.862617362267024,
+            b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
             f_vforce_inboard=0.5,
             vforce_outboard=0,
@@ -526,7 +526,7 @@ class TfFieldAndForceParam(NamedTuple):
             sigvvall=93000000,
             cforce=37041530.947408713,
             c_tf_total=25500000,
-            b_tf_inboard_peak=34.862617362267024,
+            b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
             f_vforce_inboard=0.59539634897566385,
             vforce_outboard=8413494.7991220243,
@@ -566,7 +566,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
             r_tf_outboard_in=tffieldandforceparam.r_tf_outboard_in,
             dx_tf_wp_insulation=tffieldandforceparam.dx_tf_wp_insulation,
             dx_tf_wp_insertion_gap=tffieldandforceparam.dx_tf_wp_insertion_gap,
-            b_tf_inboard_peak=tffieldandforceparam.b_tf_inboard_peak,
+            b_tf_inboard_peak_symmetric=tffieldandforceparam.b_tf_inboard_peak_symmetric,
             c_tf_total=tffieldandforceparam.c_tf_total,
             n_tf_coils=tffieldandforceparam.n_tf_coils,
             dr_tf_plasma_case=tffieldandforceparam.dr_tf_plasma_case,

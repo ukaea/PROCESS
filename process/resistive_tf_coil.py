@@ -72,7 +72,7 @@ class ResistiveTFCoil(TFCoil):
             r_tf_outboard_in=superconducting_tf_coil_variables.r_tf_outboard_in,
             dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
             dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
-            b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak,
+            b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
             c_tf_total=tfcoil_variables.c_tf_total,
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,

@@ -2678,8 +2678,8 @@ class Stellarator:
         # Maximum field at superconductor surface (T)
         wp_width_r_min = max(tfcoil_variables.t_turn_tf**2, wp_width_r_min)
 
-        # Recalculate tfcoil_variables.b_tf_inboard_peak at the found awp_min:
-        tfcoil_variables.b_tf_inboard_peak = self.bmax_from_awp(
+        # Recalculate tfcoil_variables.b_tf_inboard_peak_symmetric at the found awp_min:
+        tfcoil_variables.b_tf_inboard_peak_symmetric = self.bmax_from_awp(
             wp_width_r_min,
             coilcurrent,
             tfcoil_variables.n_tf_coils,
@@ -3125,7 +3125,7 @@ class Stellarator:
             stellarator_configuration.stella_config_max_force_density
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
             / a_tf_wp_no_insulation
@@ -3143,7 +3143,7 @@ class Stellarator:
             stellarator_configuration.stella_config_max_force_density_mnm
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
         )
         #
@@ -3151,7 +3151,7 @@ class Stellarator:
             stellarator_configuration.stella_config_max_lateral_force_density
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
             / a_tf_wp_no_insulation
@@ -3160,7 +3160,7 @@ class Stellarator:
             stellarator_configuration.stella_config_max_radial_force_density
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_wp_area
             / a_tf_wp_no_insulation
@@ -3171,7 +3171,7 @@ class Stellarator:
             stellarator_configuration.stella_config_centering_force_max_mn
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
@@ -3181,7 +3181,7 @@ class Stellarator:
             stellarator_configuration.stella_config_centering_force_min_mn
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
@@ -3191,7 +3191,7 @@ class Stellarator:
             stellarator_configuration.stella_config_centering_force_avg_mn
             * stellarator_variables.f_i
             / stellarator_variables.f_n
-            * tfcoil_variables.b_tf_inboard_peak
+            * tfcoil_variables.b_tf_inboard_peak_symmetric
             / stellarator_configuration.stella_config_wp_bmax
             * stellarator_configuration.stella_config_coillength
             / tfcoil_variables.n_tf_coils
@@ -3837,8 +3837,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Maximum field on superconductor (T)",
-            "(b_tf_inboard_peak)",
-            tfcoil_variables.b_tf_inboard_peak,
+            "(b_tf_inboard_peak_symmetric)",
+            tfcoil_variables.b_tf_inboard_peak_symmetric,
         )
         po.ovarre(
             self.outfile,

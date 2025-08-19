@@ -1374,7 +1374,7 @@ boundu(49) = 1.0
 *icc = 25
 * DESCRIPTION:   Constraint equation for peak toroidal field upper limit 
 * JUSTIFICATION: Turned off, dont care toridal field limit
-* VARIABLES:     b_tf_inboard_peak calculated in-situ
+* VARIABLES:     b_tf_inboard_peak_symmetric calculated in-situ
 
 * b_tf_inboard_max  = 
 * DESCRIPTION:   Maximum peak toroidal field (T) (`constraint equation 25`) (default = 12)

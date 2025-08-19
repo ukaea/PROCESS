@@ -77,7 +77,7 @@ class TFCoil:
         )
 
         (
-            tfcoil_variables.b_tf_inboard_peak,
+            tfcoil_variables.b_tf_inboard_peak_symmetric,
             tfcoil_variables.c_tf_total,
             superconducting_tf_coil_variables.c_tf_coil,
             tfcoil_variables.oacdcp,
@@ -299,7 +299,7 @@ class TFCoil:
         :type a_tf_inboard_total: float
 
         :returns: A tuple containing:
-            - **b_tf_inboard_peak** (*float*): Maximum B field on the magnet [T].
+            - **b_tf_inboard_peak_symmetric** (*float*): Maximum B field on the magnet [T].
             - **c_tf_total** (*float*): Total current in TF coils [A].
             - **c_tf_coil** (*float*): Current per TF coil [A].
             - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
@@ -307,11 +307,13 @@ class TFCoil:
         """
 
         # Calculation of the maximum B field on the magnet [T]
-        b_tf_inboard_peak = bt * rmajor / r_b_tf_inboard_peak
+        b_tf_inboard_peak_symmetric = bt * rmajor / r_b_tf_inboard_peak
 
         # Total current in TF coils [A]
         c_tf_total = (
-            b_tf_inboard_peak * r_b_tf_inboard_peak * (2 * np.pi / constants.rmu0)
+            b_tf_inboard_peak_symmetric
+            * r_b_tf_inboard_peak
+            * (2 * np.pi / constants.rmu0)
         )
 
         # Current per TF coil [A]
@@ -320,7 +322,7 @@ class TFCoil:
         # Global inboard leg average current in TF coils [A/m2]
         oacdcp = c_tf_total / a_tf_inboard_total
 
-        return b_tf_inboard_peak, c_tf_total, c_tf_coil, oacdcp
+        return b_tf_inboard_peak_symmetric, c_tf_total, c_tf_coil, oacdcp
 
     def tf_coil_shape_inner(
         self,
@@ -1529,8 +1531,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Nominal peak field assuming toroidal symmetry (T)",
-            "(b_tf_inboard_peak)",
-            tfcoil_variables.b_tf_inboard_peak,
+            "(b_tf_inboard_peak_symmetric)",
+            tfcoil_variables.b_tf_inboard_peak_symmetric,
             "OP ",
         )
         po.ovarre(
@@ -2517,7 +2519,7 @@ class TFCoil:
         r_tf_outboard_in: float,
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
-        b_tf_inboard_peak: float,
+        b_tf_inboard_peak_symmetric: float,
         c_tf_total: float,
         n_tf_coils: int,
         dr_tf_plasma_case: float,
@@ -2544,8 +2546,8 @@ class TFCoil:
         :type dx_tf_wp_insulation: float
         :param dx_tf_wp_insertion_gap: Thickness of winding pack insertion gap [m]
         :type dx_tf_wp_insertion_gap: float
-        :param b_tf_inboard_peak: Peak inboard magnetic field [T]
-        :type b_tf_inboard_peak: float
+        :param b_tf_inboard_peak_symmetric: Peak inboard magnetic field [T]
+        :type b_tf_inboard_peak_symmetric: float
         :param c_tf_total: Total current in TF coils [A]
         :type c_tf_total: float
         :param n_tf_coils: Number of TF coils
@@ -2605,7 +2607,7 @@ class TFCoil:
         # In plane forces
         # ---
         # Centering force = net inwards radial force per meters per TF coil [N/m]
-        cforce = 0.5e0 * b_tf_inboard_peak * c_tf_total / n_tf_coils
+        cforce = 0.5e0 * b_tf_inboard_peak_symmetric * c_tf_total / n_tf_coils
 
         # Vertical force per coil [N]
         # ***

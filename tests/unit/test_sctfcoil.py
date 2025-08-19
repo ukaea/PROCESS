@@ -177,7 +177,7 @@ class SuperconParam(NamedTuple):
 
     a_tf_turn: Any = None
 
-    b_tf_inboard_peak: Any = None
+    b_tf_inboard_peak_symmetric: Any = None
 
     f_a_tf_turn_cable_copper: Any = None
 
@@ -240,7 +240,7 @@ class SuperconParam(NamedTuple):
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
-            b_tf_inboard_peak=12.48976756562082,
+            b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
             f_strain_scale=0.5,
@@ -283,7 +283,7 @@ class SuperconParam(NamedTuple):
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
-            b_tf_inboard_peak=12.48976756562082,
+            b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
             f_strain_scale=0.5,
@@ -324,7 +324,7 @@ class SuperconParam(NamedTuple):
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
-            b_tf_inboard_peak=12.48976756562082,
+            b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
             f_strain_scale=0.5,
@@ -418,7 +418,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
-        b_tf_inboard_peak=superconparam.b_tf_inboard_peak,
+        b_tf_inboard_peak_symmetric=superconparam.b_tf_inboard_peak_symmetric,
         f_a_tf_turn_cable_copper=superconparam.f_a_tf_turn_cable_copper,
         f_a_tf_turn_cooling_extra=superconparam.f_a_tf_turn_cooling_extra,
         f_strain_scale=superconparam.f_strain_scale,
@@ -461,7 +461,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tfin: Any = None
 
-    b_tf_inboard_peak: Any = None
+    b_tf_inboard_peak_symmetric: Any = None
 
     expected_tf_fit_t: Any = None
 
@@ -485,7 +485,7 @@ class PeakTfWithRippleParam(NamedTuple):
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
-            b_tf_inboard_peak=11.717722779177526,
+            b_tf_inboard_peak_symmetric=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
@@ -500,7 +500,7 @@ class PeakTfWithRippleParam(NamedTuple):
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
-            b_tf_inboard_peak=11.717722779177526,
+            b_tf_inboard_peak_symmetric=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
             expected_tf_fit_y=1.0658869305062604,
@@ -539,7 +539,7 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         dx_tf_wp_primary_toroidal=peaktfwithrippleparam.dx_tf_wp_primary_toroidal,
         dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
         tfin=peaktfwithrippleparam.tfin,
-        b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
+        b_tf_inboard_peak_symmetric=peaktfwithrippleparam.b_tf_inboard_peak_symmetric,
     )
 
     assert superconducting_tf_coil_variables.tf_fit_t == pytest.approx(
