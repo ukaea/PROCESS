@@ -4822,6 +4822,9 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     b_tf_inboard_peak_with_ripple = mfile_data.data[
         "b_tf_inboard_peak_with_ripple"
     ].get_scan(scan)
+    f_b_tf_inboard_peak_ripple_symmetric = mfile_data.data[
+        "f_b_tf_inboard_peak_ripple_symmetric"
+    ].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
     dx_tf_wp_insertion_gap = mfile_data.data["dx_tf_wp_insertion_gap"].get_scan(scan)
     r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
@@ -5259,9 +5262,14 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             0,
             marker="o",
             color="red",
-            label=f"Peak axisymmetric field: {b_tf_inboard_peak_symmetric:.3f} T\n"
-            f"Peak non-axisymmetric field with ripple: {b_tf_inboard_peak_with_ripple:.3f} T\n"
-            f"r={r_b_tf_inboard_peak:.3f} m",
+            label=(
+                f"Peak axisymmetric field: {b_tf_inboard_peak_symmetric:.3f} T\n"
+                f"Peak non-axisymmetric field with ripple: "
+                f"{b_tf_inboard_peak_with_ripple:.3f} T\n"
+                f"$\\frac{{B_{{\\text{{axisymmetric}}}}}}{{B_{{\\text{{non-axisymmetric}}}}}}$: "
+                f"{f_b_tf_inboard_peak_ripple_symmetric:.3f}\n"
+                f"$r_{{\\text{{peak}}}}$={r_b_tf_inboard_peak:.3f} m"
+            ),
         )
 
         # Plot a horizontal line at y = dx_tf_wp_inner_toroidal

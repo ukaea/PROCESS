@@ -545,8 +545,8 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     b_tf_inboard_peak_with_ripple = sctfcoil.peak_b_tf_inboard_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         dx_tf_wp_primary_toroidal=peaktfwithrippleparam.dx_tf_wp_primary_toroidal,
-        dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
-        tfin=peaktfwithrippleparam.tfin,
+        dr_tf_wp_no_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
+        r_tf_wp_inboard_centre=peaktfwithrippleparam.tfin,
         b_tf_inboard_peak_symmetric=peaktfwithrippleparam.b_tf_inboard_peak_symmetric,
     )
 
