@@ -519,3 +519,114 @@ Finally, if `i_tf_wp_geom == 2` then a  trapezoidal casing is:
 $$
 \overbrace{\Delta x_{\text{TF,side-case-average}}}^{\texttt{dx_tf_side_case_average}} = \overbrace{\Delta x_{\text{TF,side-case-min}}}^{\texttt{dx_tf_side_case_min}}
 $$
+
+-------------------
+
+### On coil ripple | `peak_tf_with_ripple()`
+
+
+The ratio of TF coil magnetic field increase with respect to the axisymmetric
+formula has been defined as :
+
+$$
+  f_\mathrm{rip}^\mathrm{coil} = \frac{B_\mathrm{rip}}{B_\mathrm{nom}}
+$$
+
+with \(B_\mathrm{rip}\) being the maximum field measured at the middle of the
+plasma facing sides of the winding pack and \(B_\mathrm{nom}\) the nominal maximum
+field obtained with the axisymmetric formula (see section TF coils current).
+The same <em>FIESTA</em> runs have been used to estimate the on-coil ripple.
+This peaking factor has been fitted separately for 16, 18 and 20 coils using
+the following formula:
+
+
+$$
+  f_\mathrm{rip}^\mathrm{coil} = A_0 + A_1 e^{-t} + A_2 z + A_3 zt
+$$
+
+
+with the \(A_n\) the fitted coefficients and \(t\) the relative winding pack
+lateral thickness defined as:
+
+
+$$
+  t = \frac{\Delta R_\mathrm{tWP}^\mathrm{out}}{\Delta R_\mathrm{tWP}^\mathrm{out\ max}}
+$$
+
+
+with \(\Delta R_\mathrm{tWP}^\mathrm{out}\) defined in Figure 1 and 3 and
+\( \Delta R_\mathrm{tWP}^\mathrm{out\ max} \) the same value calculated without
+sidewall case as illustrated in Figure 12.
+
+  
+<figure>
+    <center>
+    <img src="../../images/tfcoil_ripple_on_coil_filaments.png" alt="On_coil_ripple_shapes" 
+    title="Inboard mid-plane superconducting TF coil stress layers"
+    width="800" height="100" />
+    <br>
+    <figcaption><i>
+      <p style='text-align: justify;'> 
+        Figure 12: Inboard midplane cross section showing the filaments used for
+        the on-coil ripple calculations with <em>FIESTA</em> with 16 coils. A
+        radial and toroidal winding pack thickness of 0.5 m and 0.8 m for the 
+        left graph, while a radial and toroidal thickness of 1.2 m and 1.9 m, 
+        respectively, is used in the right figure. The right graph provides
+        a visual illustration of the case where the parameter \(t\) is close to
+        unity.
+      </p>
+    </i></figcaption>
+    <br>
+    </center>
+</figure>
+  
+And the relative winding pack radial thickness \(z\) given by
+
+
+$$
+  z = \frac{\Delta R_\mathrm{WP}}{\Delta R_\mathrm{tWP}^\mathrm{out\ max}}
+$$
+
+
+The three fits (for 16, 18 and 20 coils) are valid for:
+
+- **relative toroidal thickness:**  $t\in[0.35-0.99]$
+
+- **relative radial thickness:** $z\in[0.2-0.7]$
+
+- **Number of TF coils:** Individual fits has been made for 16, 18 and 20.
+    <b>For any other number of coils, the *FIESTA* calculations are not used</b>
+    and a default ripple increase of 9% is taken (\( f_\mathrm{rip}^\mathrm{coil}
+    = 1.09\)). This default value is also used for 17 and 19 coils.
+
+
+Figure 13 shows a contour plot of the on-coil ripple peaking factor as a
+function of the winding pack sizing parameters for 16 coil.
+
+
+<figure>
+    <center>
+    <img src="../../images/tfcoil_ripple_on_coil_contours.png" alt="On_coil_ripple_shapes" 
+    title="Inboard mid-plane superconducting TF coil stress layers"
+    width="520" height="100" />
+    <br>
+    <figcaption><i>
+      <p style='text-align: justify;'>
+        Figure 13: Contour plots of the on-coil peaking factor \(f_\mathrm{rip}
+        ^\mathrm{coil}\) obtained with <em>FIESTA</em> and used in the
+        <em>PROCESS</em> scaling for 16 coils. The horizontal and vertical
+        axis corresponds to the relative transverse \(t\) and radial thickness
+        \(z\), respectively.
+      </p>
+    </i></figcaption>
+    <br>
+    </center>
+</figure>
+
+
+These ripple calculations are out of the spherical tokamak design range, having generally
+fewer coils (between 10 and 14) and more radially thick winding packs.
+It is also worth mentionning that the the ripple must be evaluated layer-by-layer for graded coil designs, to get the genuine B field of each layer
+used to quatify the SC cross-section area per layer. Finally, resistive
+coils do not suffer from on-coil ripple as there is no radial case is present.
+
