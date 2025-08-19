@@ -7,7 +7,12 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
-from process.data_structure import build_variables, rebco_variables, tfcoil_variables
+from process.data_structure import (
+    build_variables,
+    fwbs_variables,
+    rebco_variables,
+    tfcoil_variables,
+)
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -19,7 +24,6 @@ from process.fortran import (
     sctfcoil_module,
 )
 from process.fortran import error_handling as eh
-from process.fortran import fwbs_variables as fwbsv
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
 )
@@ -1688,7 +1692,7 @@ class TFCoil:
                         self.outfile,
                         "Maximum permitted TF coil current / copper area (A/m2)",
                         "(copperA_m2_max)",
-                        rebco_variables.copperA_m2_max,
+                        rebco_variables.coppera_m2_max,
                     )
 
                 po.ovarre(
@@ -2069,7 +2073,7 @@ class TFCoil:
         ro = (acpav / (constants.pi * tfcoil_variables.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
-        ptot = tfcoil_variables.p_cp_resistive + fwbsv.pnuc_cp_tf * 1.0e6
+        ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
 
         # Temperature calculations
         # -------------------------
@@ -2336,7 +2340,10 @@ class TFCoil:
                 tfcoil_variables.p_cp_resistive / 1.0e6,
             )
             po.ovarre(
-                self.outfile, "Nuclear heating (MW)", "(pnuc_cp_tf)", fwbsv.pnuc_cp_tf
+                self.outfile,
+                "Nuclear heating (MW)",
+                "(pnuc_cp_tf)",
+                fwbs_variables.pnuc_cp_tf,
             )
             po.ovarre(self.outfile, "Total heating (MW)", "(ptot/1.0e6)", ptot / 1.0e6)
 

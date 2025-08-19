@@ -11,13 +11,13 @@ from process.data_structure import (
     cost_2015_variables,
     cost_variables,
     current_drive_variables,
+    fwbs_variables,
     heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
     tfcoil_variables,
 )
 from process.fortran import (
-    fwbs_variables,
     physics_variables,
 )
 

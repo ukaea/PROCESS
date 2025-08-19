@@ -193,7 +193,7 @@ ITERATION_VARIABLES = {
     96: IterationVariable("fvvhe", data_structure.constraint_variables, 0.001, 1.0),
     97: IterationVariable("fpsepr", data_structure.constraint_variables, 0.001, 1.0),
     98: IterationVariable(
-        "f_blkt_li6_enrichment", fortran.fwbs_variables, 10.00, 100.0
+        "f_blkt_li6_enrichment", data_structure.fwbs_variables, 10.00, 100.0
     ),
     103: IterationVariable(
         "fl_h_threshold", data_structure.constraint_variables, 0.001, 1.0
@@ -204,7 +204,7 @@ ITERATION_VARIABLES = {
     ),
     106: IterationVariable("ftmargoh", data_structure.constraint_variables, 0.001, 1.0),
     107: IterationVariable("favail", data_structure.cost_variables, 0.001, 1.0),
-    108: IterationVariable("breeder_f", fortran.fwbs_variables, 0.060, 1.0),
+    108: IterationVariable("breeder_f", data_structure.fwbs_variables, 0.060, 1.0),
     109: IterationVariable(
         "f_nd_alpha_electron", fortran.physics_variables, 0.05, 0.15
     ),
@@ -220,7 +220,9 @@ ITERATION_VARIABLES = {
     113: IterationVariable(
         "fmaxvvstress", data_structure.constraint_variables, 0.001, 1.0
     ),
-    114: IterationVariable("len_fw_channel", fortran.fwbs_variables, 0.001, 1.0e3),
+    114: IterationVariable(
+        "len_fw_channel", data_structure.fwbs_variables, 0.001, 1.0e3
+    ),
     115: IterationVariable(
         "fpoloidalpower", data_structure.constraint_variables, 0.001, 1.0
     ),

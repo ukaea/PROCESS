@@ -1145,18 +1145,19 @@ def constraint_equation_39():
     temp_fw_max: maximum temperature of first wall material (K) (i_thermal_electric_conversion>1)
     temp_fw_peak: peak first wall temperature (K)
     """
-    if fortran.fwbs_variables.temp_fw_peak < 1.0:
+    if data_structure.fwbs_variables.temp_fw_peak < 1.0:
         raise ProcessValueError(
             "temp_fw_peak = 0 implies i_pulsed_plant=0; do not use constraint 39 if i_pulsed_plant=0"
         )
     cc = (
-        fortran.fwbs_variables.temp_fw_peak / fortran.fwbs_variables.temp_fw_max
+        data_structure.fwbs_variables.temp_fw_peak
+        / data_structure.fwbs_variables.temp_fw_max
         - 1.0 * data_structure.constraint_variables.ftemp_fw_max
     )
     return ConstraintResult(
         cc,
-        fortran.fwbs_variables.temp_fw_max * (1.0 - cc),
-        fortran.fwbs_variables.temp_fw_peak * cc,
+        data_structure.fwbs_variables.temp_fw_max * (1.0 - cc),
+        data_structure.fwbs_variables.temp_fw_peak * cc,
     )
 
 
@@ -1414,7 +1415,7 @@ def constraint_equation_52():
     cc = (
         1.0
         - data_structure.constraint_variables.ftbr
-        * fortran.fwbs_variables.tbr
+        * data_structure.fwbs_variables.tbr
         / data_structure.constraint_variables.tbrmin
     )
     return ConstraintResult(
@@ -1434,13 +1435,14 @@ def constraint_equation_53():
     nflutf: peak fast neutron fluence on TF coil superconductor (n/m2)
     """
     cc = (
-        fortran.fwbs_variables.nflutf / data_structure.constraint_variables.nflutfmax
+        data_structure.fwbs_variables.nflutf
+        / data_structure.constraint_variables.nflutfmax
         - 1.0 * data_structure.constraint_variables.fflutf
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.nflutfmax * (1.0 - cc),
-        fortran.fwbs_variables.nflutf * cc,
+        data_structure.fwbs_variables.nflutf * cc,
     )
 
 
@@ -1454,13 +1456,14 @@ def constraint_equation_54():
     ptfnucpm3: nuclear heating in the TF coil (MW/m3) (blktmodel>0)
     """
     cc = (
-        fortran.fwbs_variables.ptfnucpm3 / data_structure.constraint_variables.ptfnucmax
+        data_structure.fwbs_variables.ptfnucpm3
+        / data_structure.constraint_variables.ptfnucmax
         - 1.0 * data_structure.constraint_variables.fptfnuc
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.ptfnucmax * (1.0 - cc),
-        fortran.fwbs_variables.ptfnucpm3 * cc,
+        data_structure.fwbs_variables.ptfnucpm3 * cc,
     )
 
 
@@ -2149,7 +2152,7 @@ def constraint_equation_85():
         cc = (
             1.0
             - data_structure.cost_variables.cplife
-            / fortran.fwbs_variables.life_blkt_fpy
+            / data_structure.fwbs_variables.life_blkt_fpy
         )
 
     elif data_structure.cost_variables.i_cp_lifetime == 3:

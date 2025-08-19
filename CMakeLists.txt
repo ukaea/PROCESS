@@ -72,7 +72,6 @@ LIST(APPEND PROCESS_SRCS
     numerics.f90
     scan.f90
     sctfcoil.f90
-    fwbs_variables.f90
     physics.f90
     physics_variables.f90
     constants.f90
