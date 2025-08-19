@@ -762,8 +762,8 @@ class SuperconductingTFCoil(TFCoil):
                 po.ovarre(
                     self.outfile,
                     "Ratio of actual peak field to nominal axisymmetric peak field",
-                    "(tf_fit_y)",
-                    superconducting_tf_coil_variables.tf_fit_y,
+                    "(f_b_tf_inboard_peak_ripple_symmetric)",
+                    superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
                     "OP ",
                 )
 
@@ -1484,8 +1484,8 @@ class SuperconductingTFCoil(TFCoil):
                 po.ovarre(
                     self.outfile,
                     "Ratio of peak field with ripple to nominal axisymmetric peak field",
-                    "(tf_fit_y)",
-                    superconducting_tf_coil_variables.tf_fit_y,
+                    "(f_b_tf_inboard_peak_ripple_symmetric)",
+                    superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
                     "OP ",
                 )
 
@@ -1803,7 +1803,7 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Ratio of peak field with ripple to nominal axisymmetric peak field
 
-        superconducting_tf_coil_variables.tf_fit_y = (
+        superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric = (
             a[0]
             + a[1] * np.exp(-superconducting_tf_coil_variables.tf_fit_t)
             + a[2] * superconducting_tf_coil_variables.tf_fit_z
@@ -1812,7 +1812,10 @@ class SuperconductingTFCoil(TFCoil):
             * superconducting_tf_coil_variables.tf_fit_t
         )
 
-        return superconducting_tf_coil_variables.tf_fit_y * b_tf_inboard_peak_symmetric
+        return (
+            superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric
+            * b_tf_inboard_peak_symmetric
+        )
 
     def sc_tf_internal_geom(self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer):
         """
