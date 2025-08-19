@@ -512,8 +512,8 @@ ftoroidalgap: float = None
 """F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)"""
 
 
-ripmax: float = None
-"""aximum allowable toroidal field ripple amplitude at plasma edge (%)"""
+ripple_b_tf_plasma_edge_max: float = None
+"""maximum allowable toroidal field ripple amplitude at plasma edge (%)"""
 
 
 ripple: float = None
@@ -1174,7 +1174,7 @@ def init_tfcoil_variables():
     global res_tf_leg
     global toroidalgap
     global ftoroidalgap
-    global ripmax
+    global ripple_b_tf_plasma_edge_max
     global ripple
     global c_tf_total
     global radial_array
@@ -1409,7 +1409,7 @@ def init_tfcoil_variables():
     res_tf_leg = 0.0
     toroidalgap = 1.0  # [m]
     ftoroidalgap = 1.0
-    ripmax = 1.0
+    ripple_b_tf_plasma_edge_max = 1.0
     ripple = 0.0
     c_tf_total = 0.0
     radial_array = np.zeros(N_RADIAL_ARRAY)

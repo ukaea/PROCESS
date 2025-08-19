@@ -579,7 +579,7 @@ dr_tf_plasma_case = 0.06
 dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
-ripmax = 0.6
+ripple_b_tf_plasma_edge_max = 0.6
 
 * Number of TF coils
 n_tf_coils = 16

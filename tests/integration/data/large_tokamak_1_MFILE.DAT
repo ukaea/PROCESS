@@ -741,7 +741,7 @@
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.0908E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      8.0590E+07 OP 
- Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripmax)______________________      6.0000E-01    
+ Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.8429E+01 ITV
  Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.1442E+07 OP 
@@ -1772,7 +1772,7 @@ dr_tf_plasma_case = 0.06
 dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
-ripmax = 0.6
+ripple_b_tf_plasma_edge_max = 0.6
 
 * Number of TF coils
 n_tf_coils = 16

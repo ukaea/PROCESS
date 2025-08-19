@@ -1468,7 +1468,7 @@ INPUT_VARIABLES = {
         data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
     ),
     "rinboard": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
-    "ripmax": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
+    "ripple_b_tf_plasma_edge_max": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
     "rmajor": InputVariable(data_structure.physics_variables, float, range=(0.1, 50.0)),
     "robotics_h": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)

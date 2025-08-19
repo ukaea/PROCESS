@@ -86,7 +86,7 @@ class RippleAmplitudeParam(NamedTuple):
 
     r_tf_inboard_in: Any = None
 
-    ripmax: Any = None
+    ripple_b_tf_plasma_edge_max: Any = None
 
     r_tf_outboard_mid: Any = None
 
@@ -207,7 +207,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
-            ripmax=0.60000000000000009,
+            ripple_b_tf_plasma_edge_max=0.60000000000000009,
             r_tf_outboard_mid=14.988874193548387,
             expected_ripple=2.3850014198003961,
             expected_r_tf_outboard_midmin=16.519405859443332,
@@ -228,7 +228,7 @@ def test_divgeom(divgeomparam, monkeypatch, build):
             dx_tf_wp_insertion_gap=0.01,
             tfc_sidewall_is_fraction=False,
             r_tf_inboard_in=2.9939411851091102,
-            ripmax=0.60000000000000009,
+            ripple_b_tf_plasma_edge_max=0.60000000000000009,
             r_tf_outboard_mid=16.519405859443332,
             expected_ripple=0.59999999999999987,
             expected_r_tf_outboard_midmin=16.519405859443332,
@@ -313,7 +313,7 @@ def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
     )
 
     ripple, r_tf_outboard_midmin, flag = build.ripple_amplitude(
-        ripmax=rippleamplitudeparam.ripmax,
+        ripple_b_tf_plasma_edge_max=rippleamplitudeparam.ripple_b_tf_plasma_edge_max,
         r_tf_outboard_mid=rippleamplitudeparam.r_tf_outboard_mid,
     )
 
