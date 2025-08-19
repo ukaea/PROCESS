@@ -582,7 +582,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -1577,7 +1577,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -2572,7 +2572,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -3567,7 +3567,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -4562,7 +4562,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -5557,7 +5557,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -6552,7 +6552,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -7547,7 +7547,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
@@ -8542,7 +8542,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.1200E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.4165E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.4165E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.1982E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.1982E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      1.4412E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      7.2690E+06    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.6312E+02 OP 
