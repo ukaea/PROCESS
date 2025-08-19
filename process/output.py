@@ -108,13 +108,13 @@ def write(models, _outfile):
     # First wall pumping
     models.fw.output_fw_pumping()
 
-    if ft.fwbs_variables.i_blanket_type == 1:
+    if data_structure.fwbs_variables.i_blanket_type == 1:
         # CCFE HCPB model
         models.ccfe_hcpb.run(output=True)
     # i_blanket_type = 2, KIT HCPB removed
     # i_blanket_type = 3, CCFE HCPB with TBR calculation removed
     # i_blanket_type = 4, KIT HCLL removed
-    elif ft.fwbs_variables.i_blanket_type == 5:
+    elif data_structure.fwbs_variables.i_blanket_type == 5:
         # DCLL model
         models.dcll.run(output=True)
 

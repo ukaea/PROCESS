@@ -17,6 +17,7 @@ from process.current_drive import (
 from process.data_structure import (
     build_variables,
     cost_variables,
+    fwbs_variables,
     heat_transport_variables,
     impurity_radiation_module,
     stellarator_configuration,
@@ -24,10 +25,7 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
-from process.fortran import (
-    fwbs_variables,
-    physics_variables,
-)
+from process.fortran import physics_variables
 from process.hcpb import CCFE_HCPB
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile

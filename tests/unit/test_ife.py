@@ -11,11 +11,11 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    fwbs_variables,
     heat_transport_variables,
     ife_variables,
 )
 from process.fortran import (
-    fwbs_variables,
     physics_variables,
 )
 from process.ife import IFE
