@@ -288,21 +288,18 @@ class SuperconductingTFCoil(TFCoil):
                 error_handling.report_error(245)
                 tfcoil_variables.sig_tf_case = 0.0e0
                 tfcoil_variables.sig_tf_wp = 0.0e0
-        peaktfflag = 0
 
         self.vv_stress_on_quench()
 
         # ======================================================
 
-        # Peak field including ripple
-        tfcoil_variables.b_tf_inboard_peak_with_ripple, peaktfflag = (
-            self.peak_b_tf_inboard_with_ripple(
-                n_tf_coils=tfcoil_variables.n_tf_coils,
-                dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-                dr_tf_wp_no_insulation=tfcoil_variables.dr_tf_wp_no_insulation,
-                r_tf_wp_inboard_centre=sctfcoil_module.r_tf_wp_inboard_centre,
-                b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
-            )
+        # Peak inboard toroidal field including ripple
+        tfcoil_variables.b_tf_inboard_peak_with_ripple = self.peak_b_tf_inboard_with_ripple(
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+            dr_tf_wp_no_insulation=sctfcoil_module.dr_tf_wp_no_insulation,
+            r_tf_wp_inboard_centre=sctfcoil_module.r_tf_wp_inboard_centre,
+            b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
         )
         # ======================================================
 
@@ -358,7 +355,7 @@ class SuperconductingTFCoil(TFCoil):
             )  # TFC Quench voltage in kV
 
             if output:
-                self.outtf(peaktfflag)
+                self.outtf()
 
     def croco_voltage(self) -> float:
         if f2py_compatible_to_string(tfcoil_variables.quench_model) == "linear":
@@ -1728,7 +1725,7 @@ class SuperconductingTFCoil(TFCoil):
         :type n_tf_coils: float
         :param dx_tf_wp_primary_toroidal: Width of plasma-facing face of winding pack (m).
         :type dx_tf_wp_primary_toroidal: float
-        :param dr_tf_wp_no_insulation: Radial thickness of winding pack (m).
+        :param dr_tf_wp_no_insulation: Radial thickness of winding pack with no insulation (e.g. conductor region) (m).
         :type dr_tf_wp_no_insulation: float
         :param r_tf_wp_inboard_centre: Major radius of centre of winding pack (m).
         :type r_tf_wp_inboard_centre: float
@@ -1737,14 +1734,12 @@ class SuperconductingTFCoil(TFCoil):
 
         :returns: Tuple containing:
             - b_tf_inboard_peak_with_ripple (float): Peak toroidal field including ripple (T).
-            - flag (int): Flag warning of applicability problems.
-        :rtype: tuple[float, int]
+        :rtype: tuple[float]
 
         :notes:
             - M. Kovari, Toroidal Field Coils - Maximum Field and Ripple - Parametric Calculation, July 2014.
         """
         a = np.zeros((4,))
-        flag = 0
 
         #  Set fitting coefficients for different numbers of TF coils
 
@@ -1767,27 +1762,26 @@ class SuperconductingTFCoil(TFCoil):
             a[3] = 0.89808e0
 
         else:
-            b_tf_inboard_peak_with_ripple = 1.09e0 * b_tf_inboard_peak_symmetric
-            return b_tf_inboard_peak_with_ripple, flag
+            return 1.09e0 * b_tf_inboard_peak_symmetric
 
         #  Maximum winding pack width before adjacent packs touch
         #  (ignoring the external case and ground wall thicknesses)
 
-        wmax = (2.0e0 * r_tf_wp_inboard_centre + dr_tf_wp_no_insulation) * np.tan(
-            np.pi / n_tf_coils
-        )
+        dx_tf_wp_toroidal_max = (
+            2.0e0 * r_tf_wp_inboard_centre + dr_tf_wp_no_insulation
+        ) * np.tan(np.pi / n_tf_coils)
 
         #  Dimensionless winding pack width
 
-        sctfcoil_module.tf_fit_t = dx_tf_wp_primary_toroidal / wmax
+        sctfcoil_module.tf_fit_t = dx_tf_wp_primary_toroidal / dx_tf_wp_toroidal_max
         if (sctfcoil_module.tf_fit_t < 0.3e0) or (sctfcoil_module.tf_fit_t > 1.1e0):
-            flag = 1
+            error_handling.report_error(144)
 
         #  Dimensionless winding pack radial thickness
 
-        sctfcoil_module.tf_fit_z = dr_tf_wp_no_insulation / wmax
+        sctfcoil_module.tf_fit_z = dr_tf_wp_no_insulation / dx_tf_wp_toroidal_max
         if (sctfcoil_module.tf_fit_z < 0.26e0) or (sctfcoil_module.tf_fit_z > 0.7e0):
-            flag = 2
+            error_handling.report_error(145)
 
         #  Ratio of peak field with ripple to nominal axisymmetric peak field
 
@@ -1798,11 +1792,7 @@ class SuperconductingTFCoil(TFCoil):
             + a[3] * sctfcoil_module.tf_fit_z * sctfcoil_module.tf_fit_t
         )
 
-        b_tf_inboard_peak_with_ripple = (
-            sctfcoil_module.tf_fit_y * b_tf_inboard_peak_symmetric
-        )
-
-        return b_tf_inboard_peak_with_ripple, flag
+        return sctfcoil_module.tf_fit_y * b_tf_inboard_peak_symmetric
 
     def sc_tf_internal_geom(self, i_tf_wp_geom, i_tf_case_geom, i_tf_turns_integer):
         """
