@@ -753,13 +753,13 @@ class TfCoilAreaAndMassesParam(NamedTuple):
     "tfcoilareaandmassesparam",
     (
         TfCoilAreaAndMassesParam(
-            r_tf_outboard_mid=16.519405859443332,  #
-            r_tf_inboard_mid=3.5979411851091103,  #
-            r_tf_inboard_in=2.9939411851091102,  #
-            r_tf_inboard_out=4.20194118510911,  #
-            len_tf_coil=50.483843027201402,  #
-            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,  #
-            tan_theta_coil=0.19891236737965801,  #
+            r_tf_outboard_mid=16.519405859443332,
+            r_tf_inboard_mid=3.5979411851091103,
+            r_tf_inboard_in=2.9939411851091102,
+            r_tf_inboard_out=4.20194118510911,
+            len_tf_coil=50.483843027201402,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
+            tan_theta_coil=0.19891236737965801,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6381.2092203414386,
             expected_tfocrn=0.59553192892551199,
