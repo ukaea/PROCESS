@@ -1004,7 +1004,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
         ),
     ),
 )
-def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
+def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     """
     Automatically generated Regression Unit Test for tf_coil_area_and_masses.
 
@@ -1243,7 +1243,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
     )
 
-    tfcoil.tf_coil_area_and_masses()
+    tfcoil.generic_tf_coil_area_and_masses()
 
     assert tfcoil_variables.m_tf_wp_steel_conduit == pytest.approx(
         tfcoilareaandmassesparam.expected_m_tf_wp_steel_conduit

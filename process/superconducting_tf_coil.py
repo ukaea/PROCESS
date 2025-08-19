@@ -18,6 +18,7 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     error_handling,
+    fwbs_variables,
     global_variables,
     physics_variables,
     sctfcoil_module,
@@ -112,7 +113,8 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Calculate TF coil areas and masses
-        self.tf_coil_area_and_masses()
+        super().generic_tf_coil_area_and_masses()
+        self.superconducting_tf_coil_areas_and_masses()
 
         # Do stress calculations (writes the stress output)
         if output:
@@ -2577,6 +2579,121 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_turn_insulation,
             n_tf_coil_turns,
         )
+
+    def superconducting_tf_coil_areas_and_masses(self):
+        # Mass of case [kg]
+        # ***
+
+        # Mass of ground-wall insulation [kg]
+        # (assumed to be same density/material as turn insulation)
+        tfcoil_variables.m_tf_coil_wp_insulation = (
+            tfcoil_variables.len_tf_coil
+            * (
+                sctfcoil_module.a_tf_wp_with_insulation
+                - sctfcoil_module.a_tf_wp_no_insulation
+            )
+            * tfcoil_variables.den_tf_wp_turn_insulation
+        )
+
+        # The length of the vertical section is that of the first (inboard) segment
+        # = height of TF coil inner edge + (2 * coil thickness)
+        tfcoil_variables.cplen = (2.0e0 * build_variables.z_tf_inside_half) + (
+            2.0e0 * build_variables.dr_tf_inboard
+        )
+
+        # The 2.2 factor is used as a scaling factor to fit
+        # to the ITER-FDR value of 450 tonnes; see CCFE note T&M/PKNIGHT/PROCESS/026
+        if physics_variables.itart == 1:
+            # tfcoil_variables.len_tf_coil does not include inboard leg ('centrepost') length in TART
+            tfcoil_variables.m_tf_coil_case = (
+                2.2e0
+                * tfcoil_variables.den_tf_coil_case
+                * (
+                    tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
+                    + tfcoil_variables.len_tf_coil
+                    * tfcoil_variables.a_tf_coil_outboard_case
+                )
+            )
+        else:
+            tfcoil_variables.m_tf_coil_case = (
+                2.2e0
+                * tfcoil_variables.den_tf_coil_case
+                * (
+                    tfcoil_variables.cplen * tfcoil_variables.a_tf_coil_inboard_case
+                    + (tfcoil_variables.len_tf_coil - tfcoil_variables.cplen)
+                    * tfcoil_variables.a_tf_coil_outboard_case
+                )
+            )
+
+        # ***
+
+        # Masses of conductor constituents
+        # ---------------------------------
+        # Superconductor mass [kg]
+        # Includes space allowance for central helium channel, area tfcoil_variables.a_tf_wp_coolant_channels
+        tfcoil_variables.m_tf_coil_superconductor = (
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_cable_space_no_void
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
+            * (1.0e0 - tfcoil_variables.fcutfsu)
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
+        ) * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
+
+        # Copper mass [kg]
+        tfcoil_variables.m_tf_coil_copper = (
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_cable_space_no_void
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
+            * tfcoil_variables.fcutfsu
+            - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
+        ) * constants.den_copper
+        if tfcoil_variables.m_tf_coil_copper <= 0.0e0:
+            tfcoil_variables.m_tf_coil_copper = 0.0e0
+
+        # Steel conduit (sheath) mass [kg]
+        tfcoil_variables.m_tf_wp_steel_conduit = (
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.n_tf_coil_turns
+            * tfcoil_variables.a_tf_turn_steel
+            * fwbs_variables.den_steel
+        )
+
+        # Conduit insulation mass [kg]
+        # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
+        tfcoil_variables.m_tf_coil_wp_turn_insulation = (
+            tfcoil_variables.len_tf_coil
+            * tfcoil_variables.a_tf_coil_wp_turn_insulation
+            * tfcoil_variables.den_tf_wp_turn_insulation
+        )
+
+        # Total conductor mass [kg]
+        tfcoil_variables.m_tf_coil_conductor = (
+            tfcoil_variables.m_tf_coil_superconductor
+            + tfcoil_variables.m_tf_coil_copper
+            + tfcoil_variables.m_tf_wp_steel_conduit
+            + tfcoil_variables.m_tf_coil_wp_turn_insulation
+        )
+        # ---------------------------------
+
+        # Total TF coil mass [kg] (all coils)
+        tfcoil_variables.m_tf_coils_total = (
+            tfcoil_variables.m_tf_coil_case
+            + tfcoil_variables.m_tf_coil_conductor
+            + tfcoil_variables.m_tf_coil_wp_insulation
+        ) * tfcoil_variables.n_tf_coils
+
+        # If spherical tokamak, distribute between centrepost and outboard legs
+        # (in this case, total TF coil length = inboard `cplen` + outboard `len_tf_coil`)
+        if physics_variables.itart == 1:
+            tfleng_sph = tfcoil_variables.cplen + tfcoil_variables.len_tf_coil
+            tfcoil_variables.whtcp = tfcoil_variables.m_tf_coils_total * (
+                tfcoil_variables.cplen / tfleng_sph
+            )
+            tfcoil_variables.whttflgs = tfcoil_variables.m_tf_coils_total * (
+                tfcoil_variables.len_tf_coil / tfleng_sph
+            )
 
 
 @staticmethod
