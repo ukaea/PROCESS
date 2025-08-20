@@ -1299,6 +1299,8 @@ def init_physics_module():
     global puimw
     global puomw
     global rho_star
+    global rho_ne_max
+    global rho_te_max
     global nu_star
     global beta_mcdonald
     global itart_r
@@ -1323,6 +1325,8 @@ def init_physics_module():
     plomw = 0.0
     puimw = 0.0
     puomw = 0.0
+    rho_ne_max = 0.0
+    rho_te_max = 0.0
     rho_star = 0.0
     nu_star = 0.0
     beta_mcdonald = 0.0
