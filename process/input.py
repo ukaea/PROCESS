@@ -2047,9 +2047,13 @@ INPUT_VARIABLES = {
     "iwalld": InputVariable(fortran.physics_variables, int, range=(1, 2)),
     "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
     "m_res": InputVariable(data_structure.stellarator_variables, int, range=(1, 10)),
-    "n_layer": InputVariable(data_structure.tfcoil_variables, int, range=(1, 100)),
+    "n_tf_wp_layers": InputVariable(
+        data_structure.tfcoil_variables, int, range=(1, 100)
+    ),
     "n_liq_recirc": InputVariable(fortran.fwbs_variables, int, range=(1, 50)),
-    "n_pancake": InputVariable(data_structure.tfcoil_variables, int, range=(1, 100)),
+    "n_tf_wp_pancakes": InputVariable(
+        data_structure.tfcoil_variables, int, range=(1, 100)
+    ),
     "n_rad_per_layer": InputVariable(
         data_structure.tfcoil_variables, int, range=(1, 500)
     ),

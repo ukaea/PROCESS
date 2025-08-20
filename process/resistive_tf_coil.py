@@ -125,7 +125,7 @@ class ResistiveTFCoil(TFCoil):
             ) = self.stresscl(
                 int(tfcoil_variables.n_tf_stress_layers),
                 int(tfcoil_variables.n_rad_per_layer),
-                int(tfcoil_variables.n_tf_wp_layers),
+                int(tfcoil_variables.n_tf_wp_stress_layers),
                 int(tfcoil_variables.i_tf_bucking),
                 float(build_variables.r_tf_inboard_in),
                 build_variables.dr_bore,

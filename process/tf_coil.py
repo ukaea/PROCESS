@@ -1034,14 +1034,14 @@ class TFCoil:
                 po.ovarin(
                     self.outfile,
                     "Number of TF pancakes",
-                    "(n_pancake)",
-                    tfcoil_variables.n_pancake,
+                    "(n_tf_wp_pancakes)",
+                    tfcoil_variables.n_tf_wp_pancakes,
                 )
                 po.ovarin(
                     self.outfile,
                     "Number of TF layers",
-                    "(n_layer)",
-                    tfcoil_variables.n_layer,
+                    "(n_tf_wp_layers)",
+                    tfcoil_variables.n_tf_wp_layers,
                 )
 
             po.oblnkl(self.outfile)
@@ -1084,6 +1084,12 @@ class TFCoil:
                     "Toroidal width of cable space",
                     "(dx_tf_turn_cable_space)",
                     sctfcoil_module.dx_tf_turn_cable_space,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of turn cable space rounded corners (m)",
+                    "(radius_tf_turn_cable_space_corners)",
+                    sctfcoil_module.radius_tf_turn_cable_space_corners,
                 )
             else:
                 po.ovarre(
@@ -3243,7 +3249,7 @@ class TFCoil:
     def stresscl(
         n_tf_layer,
         n_radial_array,
-        n_tf_wp_layers,
+        n_tf_wp_stress_layers,
         i_tf_bucking,
         r_tf_inboard_in,
         dr_bore,
@@ -3340,15 +3346,15 @@ class TFCoil:
         # two transverse directions (radial and toroidal). Used in the
         # stress models.
 
-        eyoung_member_array = np.zeros((n_tf_wp_layers,))
+        eyoung_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the Young's moduli of the members to composite into smeared
         # properties [Pa]
 
-        poisson_member_array = np.zeros((n_tf_wp_layers,))
+        poisson_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the Poisson's ratios of the members to composite into smeared
         # properti
 
-        l_member_array = np.zeros((n_tf_wp_layers,))
+        l_member_array = np.zeros((n_tf_wp_stress_layers,))
         # Array to store the linear dimension (thickness) of the members to composite into smeared
         # properties [m]
 

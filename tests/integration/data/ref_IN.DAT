@@ -318,8 +318,8 @@ f_a_tf_turn_cable_space_extra_void     = 0.300 * Coolant fraction of tfc 'cable'
 i_tf_sc_mat = 5
 *strncon = -0.0066
 
-n_pancake = 20
-n_layer = 10
+n_tf_wp_pancakes = 20
+n_tf_wp_layers = 10
 i_tf_turns_integer = 1
 
 inuclear = 1

@@ -4811,8 +4811,8 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     r_tf_wp_inboard_centre = mfile_data.data["r_tf_wp_inboard_centre"].get_scan(scan)
 
     if i_tf_turns_integer == 1:
-        turn_layers = mfile_data.data["n_layer"].get_scan(scan)
-        turn_pancakes = mfile_data.data["n_pancake"].get_scan(scan)
+        turn_layers = mfile_data.data["n_tf_wp_layers"].get_scan(scan)
+        turn_pancakes = mfile_data.data["n_tf_wp_pancakes"].get_scan(scan)
 
     # Superconducting coil check
     if i_tf_sup == 1:

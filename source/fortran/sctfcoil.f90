@@ -129,6 +129,9 @@ module sctfcoil_module
    real(dp) :: dx_tf_turn_cable_space_average
 !! Cable area averaged dimension (square shape) [m]
 
+   real(dp) :: radius_tf_turn_cable_space_corners
+   !! Radius of the corners of the cable space in the TF turn [m]
+
    real(dp) :: vforce_inboard_tot
 !! Total inboard vertical tension (all coils) [N]
 

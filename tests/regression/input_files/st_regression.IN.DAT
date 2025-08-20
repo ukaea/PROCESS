@@ -1095,7 +1095,7 @@ boundu(140) = 0.8
 * WP turn structure *
 *-------------------*
 
-* Specifying number of turns with n_layer *
+* Specifying number of turns with n_tf_wp_layers *
 
 *n_tf_coil_turns = 
 * DESCRIPTION:   Number of turns per TF coil 
@@ -1152,13 +1152,13 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*n_pancake = 4
+*n_tf_wp_pancakes = 4
 * DESCRIPTION:   Number of pancakes in TF coil (i_tf_turns_integer=1)
 * JUSTIFICATION: Not set, as i_tf_turns_integer = 0 
 
 * Setting the winding pack turn numbers in each plane when using a rectangular winding pack
 
-*n_layer = 10
+*n_tf_wp_layers = 10
 * DESCRIPTION:   Number of layers in TF coil (i_tf_turns_integer=1)
 * JUSTIFICATION: Not set, as i_tf_turns_integer = 0
 

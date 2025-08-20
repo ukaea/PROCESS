@@ -84,8 +84,8 @@ module scan_module
   !!         <LI> 45 Minimum allowable temperature margin ; tf coils
   !!         <LI> 46 boundu(150) fgwsep
   !!         <LI> 47 impurity_enrichment(9) Argon impurity enrichment
-  !!         <LI> 48 TF coil - n_pancake (integer turn winding pack)
-  !!         <LI> 49 TF coil - n_layer (integer turn winding pack)
+  !!         <LI> 48 TF coil - n_tf_wp_pancakes (integer turn winding pack)
+  !!         <LI> 49 TF coil - n_tf_wp_layers (integer turn winding pack)
   !!         <LI> 50 Xenon fraction fimp(13)
   !!         <LI> 51 Power fraction to lower DN Divertor f_p_div_lower
   !!         <LI> 52 SoL radiation fraction

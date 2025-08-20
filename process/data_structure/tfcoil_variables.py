@@ -337,11 +337,11 @@ which is set to a sensible material-dependent default.
 """
 
 
-n_pancake: int = None
+n_tf_wp_pancakes: int = None
 """Number of pancakes in TF coil. Only used if `i_tf_turns_integer=1`"""
 
 
-n_layer: int = None
+n_tf_wp_layers: int = None
 """Number of layers in TF coil. Only used if `i_tf_turns_integer=1`"""
 
 
@@ -385,7 +385,7 @@ set in initial.f90 from i_tf_bucking and n_tf_graded_layers
 """
 
 
-n_tf_wp_layers: int = None
+n_tf_wp_stress_layers: int = None
 """Maximum number of layers that can be considered in the TF coil composited/smeared
 stress analysis. This is the layers of one turn, not the entire WP.
 Default: 5. void, conductor, copper, conduit, insulation.
@@ -1139,13 +1139,13 @@ def init_tfcoil_variables():
     global i_tf_shape
     global i_tf_cond_eyoung_axial
     global i_tf_cond_eyoung_trans
-    global n_pancake
-    global n_layer
+    global n_tf_wp_pancakes
+    global n_tf_wp_layers
     global n_rad_per_layer
     global i_tf_bucking
     global n_tf_graded_layers
     global n_tf_stress_layers
-    global n_tf_wp_layers
+    global n_tf_wp_stress_layers
     global j_tf_bus
     global j_crit_str_tf
     global j_crit_str_0
@@ -1363,13 +1363,13 @@ def init_tfcoil_variables():
     i_tf_shape = 0
     i_tf_cond_eyoung_axial = 0
     i_tf_cond_eyoung_trans = 1
-    n_pancake = 10
-    n_layer = 20
+    n_tf_wp_pancakes = 10
+    n_tf_wp_layers = 20
     n_rad_per_layer = 100
     i_tf_bucking = -1
     n_tf_graded_layers = 1
     n_tf_stress_layers = 0
-    n_tf_wp_layers = 5
+    n_tf_wp_stress_layers = 5
     j_tf_bus = 1.25e6
     j_crit_str_tf = 0.0
     j_crit_str_0 = np.array([
