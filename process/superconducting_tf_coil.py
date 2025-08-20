@@ -2575,7 +2575,9 @@ class SuperconductingTFCoil(TFCoil):
         # ITER like turn structure
         if i_tf_sc_mat != 6:
             # Radius of rounded corners of cable space inside conduit [m]
-            radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
+            sctfcoil_module.radius_tf_turn_cable_space_corners = (
+                dx_tf_turn_steel * 0.75e0
+            )
 
             # Dimension of square cable space inside conduit [m]
             sctfcoil_module.dx_tf_turn_cable_space_average = (
@@ -2586,7 +2588,8 @@ class SuperconductingTFCoil(TFCoil):
             # taking account of rounded inside corners [m2]
             a_tf_turn_cable_space_no_void = (
                 sctfcoil_module.dx_tf_turn_cable_space_average**2
-                - (4.0e0 - np.pi) * radius_tf_turn_cable_space_corners**2
+                - (4.0e0 - np.pi)
+                * sctfcoil_module.radius_tf_turn_cable_space_corners**2
             )
 
             if a_tf_turn_cable_space_no_void <= 0.0e0:
@@ -2602,7 +2605,7 @@ class SuperconductingTFCoil(TFCoil):
                         sctfcoil_module.dx_tf_turn_cable_space_average
                     )
                     error_handling.report_error(102)
-                    radius_tf_turn_cable_space_corners = 0.0e0
+                    sctfcoil_module.radius_tf_turn_cable_space_corners = 0.0e0
                     a_tf_turn_cable_space_no_void = (
                         sctfcoil_module.dx_tf_turn_cable_space_average**2
                     )

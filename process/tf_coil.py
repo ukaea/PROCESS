@@ -1113,6 +1113,12 @@ class TFCoil:
                     sctfcoil_module.dx_tf_turn_cable_space_average,
                     "OP ",
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of turn cable space rounded corners (m)",
+                    "(radius_tf_turn_cable_space_corners)",
+                    sctfcoil_module.radius_tf_turn_cable_space_corners,
+                )
 
             po.ovarre(
                 self.outfile,

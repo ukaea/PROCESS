@@ -2311,12 +2311,13 @@ def plot_main_plasma_information(
 
     # Plot the centre of the plasma
     axis.plot(rmajor, 0, "r+", markersize=20, markeredgewidth=2)
-    
+
     # Add injected power label
     axis.text(
         0.325,
         0.925,
-        "$Q_{\\text{plasma}}$: " f"{mfile_data.data['big_q_plasma'].get_scan(scan):.2f}",
+        "$Q_{\\text{plasma}}$: "
+        f"{mfile_data.data['big_q_plasma'].get_scan(scan):.2f}",
         fontsize=15,
         verticalalignment="center",
         horizontalalignment="center",
@@ -5987,7 +5988,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     )
 
 
-def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
+def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     """
     Plots inboard TF coil individual turn structure.
     Author: C. Ashe
@@ -6035,6 +6036,9 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
         mfile_data.data["a_tf_turn_cable_space_no_void"].get_scan(scan) * 1e6, 5
     )
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
+    radius_tf_turn_cable_space_corners = round(
+        mfile_data.data["radius_tf_turn_cable_space_corners"].get_scan(scan) * 1e3, 5
+    )
 
     # Plot the total turn shape
     if i_tf_turns_integer == 0:
@@ -6044,7 +6048,6 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                 turn_width,
                 turn_width,
                 facecolor="red",
-                label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
                 edgecolor="black",
             ),
         )
@@ -6055,12 +6058,28 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                 (turn_width - 2 * insulation_thickness),
                 (turn_width - 2 * insulation_thickness),
                 facecolor="grey",
-                label=f"Steel Conduit: \n{steel_thickness} mm thickness",
                 edgecolor="black",
             ),
         )
 
-        # Plot the cable space
+        # Plot the cable space with rounded corners
+        axis.add_patch(
+            patches.FancyBboxPatch(
+                [
+                    insulation_thickness + steel_thickness,
+                    insulation_thickness + steel_thickness,
+                ],
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                boxstyle=patches.BoxStyle(
+                    "Round", pad=0, rounding_size=radius_tf_turn_cable_space_corners
+                ),
+                facecolor="royalblue",
+                edgecolor="black",
+            ),
+        )
+
+        # Plot dashed line around the cable space
         axis.add_patch(
             Rectangle(
                 [
@@ -6069,17 +6088,19 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                 ],
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
-                facecolor="royalblue",
-                label=f"Cable space: \n{cable_space_width} mm width \n{internal_cable_space} mm$^2$",
+                facecolor="none",
                 edgecolor="black",
+                linestyle="--",
+                linewidth=1.2,
+                alpha=0.5,
             ),
         )
+        # Plot the coolant channel
         axis.add_patch(
             Circle(
                 [(turn_width / 2), (turn_width / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {c_tf_turn:.2f} A",
                 edgecolor="black",
             ),
         )
@@ -6094,7 +6115,6 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                 turn_width,
                 turn_height,
                 facecolor="red",
-                label=f"Inter-turn insulation: \n{insulation_thickness} mm thickness",
                 edgecolor="black",
             ),
         )
@@ -6106,12 +6126,27 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                 (turn_width - 2 * insulation_thickness),
                 (turn_height - 2 * insulation_thickness),
                 facecolor="grey",
-                label=f"Steel Conduit: \n{steel_thickness} mm thickness",
                 edgecolor="black",
             ),
         )
 
-        # Plot the cable space
+        # Plot the cable space with rounded corners
+        axis.add_patch(
+            patches.FancyBboxPatch(
+                [
+                    insulation_thickness + steel_thickness,
+                    insulation_thickness + steel_thickness,
+                ],
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_height - 2 * (insulation_thickness + steel_thickness)),
+                boxstyle=patches.BoxStyle(
+                    "Round", pad=0, rounding_size=radius_tf_turn_cable_space_corners
+                ),
+                facecolor="royalblue",
+                edgecolor="black",
+            ),
+        )
+        # Plot dashed line around the cable space
         axis.add_patch(
             Rectangle(
                 [
@@ -6119,13 +6154,12 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                     insulation_thickness + steel_thickness,
                 ],
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
-                (turn_height - 2 * (insulation_thickness + steel_thickness)),
-                facecolor="royalblue",
-                label=(
-                    f"Cable space: \n{cable_space_width_radial} mm radial width \n"
-                    f"{cable_space_width_toroidal} mm toroidal width \n{internal_cable_space} mm$^2$"
-                ),
+                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                facecolor="none",
                 edgecolor="black",
+                linestyle="--",
+                linewidth=1.0,
+                alpha=0.5,
             ),
         )
         axis.add_patch(
@@ -6133,7 +6167,6 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
                 [(turn_width / 2), (turn_height / 2)],
                 he_pipe_diameter / 2,
                 facecolor="white",
-                label=f"Cooling pipe: \n{he_pipe_diameter} mm diameter \n \n Current per turn: {c_tf_turn:.2f} A",
                 edgecolor="black",
             ),
         )
@@ -6145,28 +6178,102 @@ def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
     axis.set_title("WP Turn Structure")
     axis.set_xlabel("X [mm]")
     axis.set_ylabel("Y [mm]")
-    axis.legend(loc="upper right", bbox_to_anchor=(2.0, 1.0))
-    
-    
+
     # Add info about the steel casing surrounding the WP
-    textstr_wp_insulation = (
-        f"$\\mathbf{{Insulation:}}$\n \n"
-        f"Area of insulation around WP: {mfile_data.data['a_tf_wp_ground_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
-        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m\n\n"
-        f"WP Insertion Gap:\n"
-        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insertion_gap'].get_scan(scan):.4f} m"
+    textstr_turn_insulation = (
+        f"$\\mathbf{{Turn \\ Insulation:}}$\n\n"
+        f"$\\Delta r:${insulation_thickness:.2f} mm"
     )
+
     axis.text(
-        0.775,
-        0.55,
-        textstr_wp_insulation,
+        0.32,
+        0.425,
+        textstr_turn_insulation,
         fontsize=9,
         verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "green",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_steel = (
+        f"$\\mathbf{{Steel Conduit:}}$\n\n$\\Delta r:${steel_thickness} mm"
+    )
+
+    axis.text(
+        0.32,
+        0.35,
+        textstr_turn_steel,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    if i_tf_turns_integer == 0:
+        # Add info about the steel casing surrounding the WP
+        textstr_turn_cable_space = (
+            f"$\\mathbf{{Cable Space:}}$\n\n"
+            f"$\\Delta r:${cable_space_width} mm\n"
+            f"{internal_cable_space} mm$^2$\n"
+            f"Corner radius:{radius_tf_turn_cable_space_corners} mm"
+        )
+    elif i_tf_turns_integer == 1:
+        textstr_turn_cable_space = (
+            (
+                f"$\\mathbf{{Cable Space:}}$\n\n"
+                f"Cable space: \n{cable_space_width_radial} mm radial width \n"
+                f"{cable_space_width_toroidal} mm toroidal width \n{internal_cable_space} mm$^2$\n"
+                f"Corner radius: {radius_tf_turn_cable_space_corners} mm"
+            ),
+        )
+
+    axis.text(
+        0.32,
+        0.275,
+        textstr_turn_cable_space,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_cooling = (
+        f"$\\mathbf{{Cooling:}}$\n\n"
+        f"$\\varnothing$: {he_pipe_diameter} mm\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {c_tf_turn:.2f} A"
+    )
+
+    axis.text(
+        0.32,
+        0.15,
+        textstr_turn_cooling,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
             "alpha": 1.0,
             "linewidth": 2,
         },
