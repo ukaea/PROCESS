@@ -2893,6 +2893,7 @@ def init_sctfcoil_module():
     sctfcoil_module.c_tf_coil = 0.0
     sctfcoil_module.a_tf_wp_with_insulation = 0.0
     sctfcoil_module.a_tf_wp_no_insulation = 0.0
+    sctfcoil_module.a_tf_turn_cable_space_effective = 0.0
     sctfcoil_module.a_tf_coil_inboard_steel = 0.0
     sctfcoil_module.a_tf_coil_inboard_insulation = 0.0
     sctfcoil_module.f_a_tf_coil_inboard_steel = 0.0
