@@ -42,7 +42,7 @@ module sctfcoil_module
 !! ground insulation and insertion gap [m2]
 
    real(dp) :: a_tf_turn_cable_space_effective
-   !! True cable area of WP turn. This includes the removal of the cooling pipe 
+   !! True cable area of WP turn. This includes the removal of the cooling pipe
    !! area and void fraction.
 
    real(dp) :: a_tf_coil_inboard_steel
