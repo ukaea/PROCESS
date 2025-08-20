@@ -6054,6 +6054,9 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         "f_a_tf_turn_cable_space_extra_void"
     ].get_scan(scan)
     a_tf_turn_steel = mfile_data.data["a_tf_turn_steel"].get_scan(scan)
+    a_tf_turn_cable_space_effective = mfile_data.data[
+        "a_tf_turn_cable_space_effective"
+    ].get_scan(scan)
 
     # Plot the total turn shape
     if i_tf_turns_integer == 0:
@@ -6191,13 +6194,12 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
 
     axis.minorticks_on()
     axis.set_title("WP Turn Structure")
-    axis.set_xlabel("X [mm]")
-    axis.set_ylabel("Y [mm]")
+    axis.set_xlabel("X [m]")
+    axis.set_ylabel("Y [m]")
 
     # Add info about the steel casing surrounding the WP
     textstr_turn_insulation = (
-        f"$\\mathbf{{Turn \\ Insulation:}}$\n\n"
-        f"$\\Delta r:${insulation_thickness:.3e} m"
+        f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${insulation_thickness:.3e} m"
     )
 
     axis.text(
@@ -6245,8 +6247,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
             f"$\\Delta r:$ {cable_space_width:.3e} m\n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
-            f"Corner radius: {radius_tf_turn_cable_space_corners:.3e} m\n"
-            f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}"
+            f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
+            f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
     elif i_tf_turns_integer == 1:
         textstr_turn_cable_space = (
@@ -6256,7 +6258,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
                 f"{cable_space_width_toroidal:.3e} m toroidal width \n"
                 f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
                 f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
-                f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}"
+                f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
+                f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
             ),
         )
 

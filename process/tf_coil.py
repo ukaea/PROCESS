@@ -1154,6 +1154,13 @@ class TFCoil:
                 )
                 po.ovarre(
                     self.outfile,
+                    "True area of turn cable space with gaps and channels removed",
+                    "(a_tf_turn_cable_space_effective)",
+                    sctfcoil_module.a_tf_turn_cable_space_effective,
+                )
+
+                po.ovarre(
+                    self.outfile,
                     "Coolant fraction in conductor excluding central channel",
                     "(f_a_tf_turn_cable_space_extra_void)",
                     tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
