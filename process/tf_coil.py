@@ -74,7 +74,7 @@ class TFCoil:
         )
 
         (
-            tfcoil_variables.b_tf_inboard_peak,
+            tfcoil_variables.b_tf_inboard_peak_symmetric,
             tfcoil_variables.c_tf_total,
             sctfcoil_module.c_tf_coil,
             tfcoil_variables.oacdcp,
@@ -296,7 +296,7 @@ class TFCoil:
         :type a_tf_inboard_total: float
 
         :returns: A tuple containing:
-            - **b_tf_inboard_peak** (*float*): Maximum B field on the magnet [T].
+            - **b_tf_inboard_peak_symmetric** (*float*): Maximum B field on the magnet [T].
             - **c_tf_total** (*float*): Total current in TF coils [A].
             - **c_tf_coil** (*float*): Current per TF coil [A].
             - **oacdcp** (*float*): Global inboard leg average current density in TF coils [A/m²].
@@ -304,11 +304,13 @@ class TFCoil:
         """
 
         # Calculation of the maximum B field on the magnet [T]
-        b_tf_inboard_peak = bt * rmajor / r_b_tf_inboard_peak
+        b_tf_inboard_peak_symmetric = bt * rmajor / r_b_tf_inboard_peak
 
         # Total current in TF coils [A]
         c_tf_total = (
-            b_tf_inboard_peak * r_b_tf_inboard_peak * (2 * np.pi / constants.rmu0)
+            b_tf_inboard_peak_symmetric
+            * r_b_tf_inboard_peak
+            * (2 * np.pi / constants.rmu0)
         )
 
         # Current per TF coil [A]
@@ -317,7 +319,7 @@ class TFCoil:
         # Global inboard leg average current in TF coils [A/m2]
         oacdcp = c_tf_total / a_tf_inboard_total
 
-        return b_tf_inboard_peak, c_tf_total, c_tf_coil, oacdcp
+        return b_tf_inboard_peak_symmetric, c_tf_total, c_tf_coil, oacdcp
 
     def tf_coil_shape_inner(
         self,
@@ -470,11 +472,10 @@ class TFCoil:
 
         return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
-    def outtf(self, peaktfflag):
+    def outtf(self):
         """Writes superconducting TF coil output to file
         author: P J Knight, CCFE, Culham Science Centre
         outfile : input integer : output file unit
-        peaktfflag : input integer : warning flag from peak TF calculation
         This routine writes the superconducting TF coil results
         to the output file.
         PROCESS Superconducting TF Coil Model, J. Morris, CCFE, 1st May 2014
@@ -1423,8 +1424,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Nominal peak field assuming toroidal symmetry (T)",
-            "(b_tf_inboard_peak)",
-            tfcoil_variables.b_tf_inboard_peak,
+            "(b_tf_inboard_peak_symmetric)",
+            tfcoil_variables.b_tf_inboard_peak_symmetric,
             "OP ",
         )
         po.ovarre(
@@ -1451,8 +1452,15 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Actual peak field at discrete conductor (T)",
-                "(bmaxtfrp)",
-                tfcoil_variables.bmaxtfrp,
+                "(b_tf_inboard_peak_with_ripple)",
+                tfcoil_variables.b_tf_inboard_peak_with_ripple,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Ratio of peak field with ripple to nominal axisymmetric peak field",
+                "(f_b_tf_inboard_peak_ripple_symmetric)",
+                sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric,
                 "OP ",
             )
             po.ovarre(
@@ -1608,36 +1616,31 @@ class TFCoil:
         # Ripple calculations
         po.osubhd(self.outfile, "Ripple information:")
         if tfcoil_variables.i_tf_shape == 1:
-            if peaktfflag == 1:
-                error_handling.report_error(144)
-            elif peaktfflag == 2:
-                error_handling.report_error(145)
-
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma outboard midplane (%)",
-                "(ripmax)",
-                tfcoil_variables.ripmax,
+                "(ripple_b_tf_plasma_edge_max)",
+                tfcoil_variables.ripple_b_tf_plasma_edge_max,
             )
             po.ovarre(
                 self.outfile,
                 "Ripple amplitude at plasma outboard midplane (%)",
-                "(ripple)",
-                tfcoil_variables.ripple,
+                "(ripple_b_tf_plasma_edge)",
+                tfcoil_variables.ripple_b_tf_plasma_edge,
                 "OP ",
             )
         else:
             po.ovarre(
                 self.outfile,
                 "Max allowed tfcoil_variables.ripple amplitude at plasma (%)",
-                "(ripmax)",
-                tfcoil_variables.ripmax,
+                "(ripple_b_tf_plasma_edge_max)",
+                tfcoil_variables.ripple_b_tf_plasma_edge_max,
             )
             po.ovarre(
                 self.outfile,
                 "Ripple at plasma edge (%)",
-                "(ripple)",
-                tfcoil_variables.ripple,
+                "(ripple_b_tf_plasma_edge)",
+                tfcoil_variables.ripple_b_tf_plasma_edge,
             )
             po.ocmmnt(
                 self.outfile,
@@ -2398,7 +2401,7 @@ class TFCoil:
         r_tf_outboard_in: float,
         dx_tf_wp_insulation: float,
         dx_tf_wp_insertion_gap: float,
-        b_tf_inboard_peak: float,
+        b_tf_inboard_peak_symmetric: float,
         c_tf_total: float,
         n_tf_coils: int,
         dr_tf_plasma_case: float,
@@ -2425,8 +2428,8 @@ class TFCoil:
         :type dx_tf_wp_insulation: float
         :param dx_tf_wp_insertion_gap: Thickness of winding pack insertion gap [m]
         :type dx_tf_wp_insertion_gap: float
-        :param b_tf_inboard_peak: Peak inboard magnetic field [T]
-        :type b_tf_inboard_peak: float
+        :param b_tf_inboard_peak_symmetric: Peak inboard magnetic field [T]
+        :type b_tf_inboard_peak_symmetric: float
         :param c_tf_total: Total current in TF coils [A]
         :type c_tf_total: float
         :param n_tf_coils: Number of TF coils
@@ -2486,7 +2489,7 @@ class TFCoil:
         # In plane forces
         # ---
         # Centering force = net inwards radial force per meters per TF coil [N/m]
-        cforce = 0.5e0 * b_tf_inboard_peak * c_tf_total / n_tf_coils
+        cforce = 0.5e0 * b_tf_inboard_peak_symmetric * c_tf_total / n_tf_coils
 
         # Vertical force per coil [N]
         # ***

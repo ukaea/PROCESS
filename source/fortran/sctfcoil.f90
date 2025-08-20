@@ -27,7 +27,7 @@ module sctfcoil_module
    real(dp) :: tf_fit_z
 !! Dimensionless winding pack radial thickness
 
-   real(dp) :: tf_fit_y
+   real(dp) :: f_b_tf_inboard_peak_ripple_symmetric
 !! Ratio of peak field with ripple to nominal axisymmetric peak field
 
    real(dp) :: c_tf_coil
@@ -74,6 +74,9 @@ module sctfcoil_module
    real(dp) :: dr_tf_wp_top
 !! Conductor layer radial thickness at centercollumn top [m]
 !! Ground insulation layer included, only defined for itart = 1
+
+   real(dp) :: dr_tf_wp_no_insulation
+   !! Radial thickness of winding pack without insulation [m]
 
    real(dp) :: vol_ins_cp
 !! CP turn insulation volume [m3]

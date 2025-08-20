@@ -367,7 +367,7 @@ i_tf_sup = 1 * Switch for TF coil conductor model;
 i_tf_shape = 2 * Switch for TF coil toroidal shape;
 i_tf_bucking = 1 * Switch for TF inboard suport structure design;
 eyoung_res_tf_buck = 205.0e9 * Resistive TF magnets bucking cylinder young modulus (Pa)
-ripmax   = 1.0 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+ripple_b_tf_plasma_edge_max   = 1.0 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
 i_cp_joints = 0 * Switch for CP demoutable joints type
 n_tf_coils     = 12 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 20.0 * peak helium coolant temperature in TF coils and PF coils (K)
