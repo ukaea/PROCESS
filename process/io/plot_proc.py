@@ -2310,6 +2310,18 @@ def plot_main_plasma_information(
 
     # Plot the centre of the plasma
     axis.plot(rmajor, 0, "r+", markersize=20, markeredgewidth=2)
+    
+    # Add injected power label
+    axis.text(
+        0.325,
+        0.925,
+        "$Q_{\\text{plasma}}$: " f"{mfile_data.data['big_q_plasma'].get_scan(scan):.2f}",
+        fontsize=15,
+        verticalalignment="center",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 1.0},
+        transform=fig.transFigure,
+    )
 
     # =========================================
 
@@ -2428,10 +2440,10 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Shaping:}}$\n \n"
         f"$\\kappa_{{95}}$: {mfile_data.data['kappa95'].get_scan(scan):.2f} | $\\delta_{{95}}$: {mfile_data.data['triang95'].get_scan(scan):.2f} | $\\zeta$: {mfile_data.data['plasma_square'].get_scan(scan):.2f}\n"
         f"A: {mfile_data.data['aspect'].get_scan(scan):.2f}\n"
-        f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}$ \\ m^3$\n"
-        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):.2f}$ \\ m^2$\n"
-        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):.2f}$ \\ m^2$\n"
-        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):.2f}$ \\ m$"
+        f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}$ \\ \\text{{m}}^3$\n"
+        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):.2f}$ \\ \\text{{m}}^2$\n"
+        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):.2f}$ \\ \\text{{m}}^2$\n"
+        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):.2f}$ \\ \\text{{m}}$"
     )
 
     axis.text(
@@ -2772,7 +2784,7 @@ def plot_main_plasma_information(
     textstr_neutron = f"$P_{{\\text{{n,total}}}}$ {mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW"
 
     axis.text(
-        0.75,
+        0.775,
         0.85,
         textstr_neutron,
         fontsize=9,
@@ -2854,19 +2866,19 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile_data.data['zeff'].get_scan(scan):.3f}\n\n"
         f"             H:    {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
-        f"             He:   {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
-        f"             Be:   {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
+        f"             He:  {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
+        f"             Be:  {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
         f"             C:    {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
         f"             N:    {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
         f"             O:    {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
-        f"             Ne:   {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
+        f"             Ne:  {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
         f"             Si:   {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
-        f"             Ar:   {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
-        f"             Fe:   {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
+        f"             Ar:  {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
+        f"             Fe:  {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
         f"             Ni:   {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
         f"             Kr:   {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
-        f"             Xe:   {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
-        f"              W:    {mfile_data.data['fimp(14)'].get_scan(scan):.4e}"
+        f"             Xe:  {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
+        f"             W:   {mfile_data.data['fimp(14)'].get_scan(scan):.4e}"
     )
 
     axis.text(
@@ -5407,7 +5419,8 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         # Add info about the Winding Pack
         textstr_general_info = (
             f"$\\mathbf{{General \\ info:}}$\n \n"
-            f"Self inductance: {mfile_data.data['ind_tf_coil'].get_scan(scan) * 1e6:.4f} $\\mu$H\n"
+            f"$N_{{\\text{{TF,coil}}}}$: {mfile_data.data['n_tf_coils'].get_scan(scan)}\n"
+            f"Self inductance of single coil: {mfile_data.data['ind_tf_coil'].get_scan(scan) * 1e6:.4f} $\\mu$H\n"
             f"Stored energy of all coils: {mfile_data.data['e_tf_magnetic_stored_total_gj'].get_scan(scan):.4f} GJ\n"
         )
         axis.text(
@@ -5973,7 +5986,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     )
 
 
-def plot_tf_turn(axis, mfile_data, scan: int) -> None:
+def plot_tf_turn(axis,fig, mfile_data, scan: int) -> None:
     """
     Plots inboard TF coil individual turn structure.
     Author: C. Ashe
@@ -6132,6 +6145,31 @@ def plot_tf_turn(axis, mfile_data, scan: int) -> None:
     axis.set_xlabel("X [mm]")
     axis.set_ylabel("Y [mm]")
     axis.legend(loc="upper right", bbox_to_anchor=(2.0, 1.0))
+    
+    
+    # Add info about the steel casing surrounding the WP
+    textstr_wp_insulation = (
+        f"$\\mathbf{{Insulation:}}$\n \n"
+        f"Area of insulation around WP: {mfile_data.data['a_tf_wp_ground_insulation'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insulation'].get_scan(scan):.4f} m\n\n"
+        f"WP Insertion Gap:\n"
+        f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insertion_gap'].get_scan(scan):.4f} m"
+    )
+    axis.text(
+        0.775,
+        0.55,
+        textstr_wp_insulation,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "green",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -9445,7 +9483,7 @@ def main_plot(
         # TF coil turn structure
         plot_20 = fig8.add_subplot(325, aspect="equal")
         plot_20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_20, m_file_data, scan)
+        plot_tf_turn(plot_20, fig8, m_file_data, scan)
     else:
         plot_19 = fig8.add_subplot(211, aspect="equal")
         plot_19.set_position([0.06, 0.55, 0.675, 0.4])
