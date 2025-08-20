@@ -1160,6 +1160,50 @@ class TFCoil:
                 )
                 po.ovarre(
                     self.outfile,
+                    "Area of steel in turn",
+                    "(a_tf_turn_steel)",
+                    tfcoil_variables.a_tf_turn_steel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Area of all turn insulation in WP",
+                    "(a_tf_coil_wp_turn_insulation)",
+                    tfcoil_variables.a_tf_coil_wp_turn_insulation,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total insulation area in TF coil (turn and WP)",
+                    "(a_tf_coil_inboard_insulation)",
+                    sctfcoil_module.a_tf_coil_inboard_insulation,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total steel area in inboard TF coil (turn and case)",
+                    "(a_tf_coil_inboard_steel)",
+                    sctfcoil_module.a_tf_coil_inboard_steel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total conductor area in WP",
+                    "(a_tf_wp_conductor)",
+                    tfcoil_variables.a_tf_wp_conductor,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total additional void area in WP",
+                    "(a_tf_wp_extra_void)",
+                    tfcoil_variables.a_tf_wp_extra_void,
+                )
+
+                po.ovarre(
+                    self.outfile,
+                    "Area of all coolant channels in WP",
+                    "(a_tf_wp_coolant_channels)",
+                    tfcoil_variables.a_tf_wp_coolant_channels,
+                )
+
+                po.ovarre(
+                    self.outfile,
                     "Copper fraction of conductor",
                     "(fcutfsu)",
                     tfcoil_variables.fcutfsu,
