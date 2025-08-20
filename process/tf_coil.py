@@ -1117,6 +1117,12 @@ class TFCoil:
                     superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                     "OP ",
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of turn cable space rounded corners (m)",
+                    "(radius_tf_turn_cable_space_corners)",
+                    sctfcoil_module.radius_tf_turn_cable_space_corners,
+                )
 
             po.ovarre(
                 self.outfile,
