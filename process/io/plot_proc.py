@@ -5395,7 +5395,6 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$A$, with insulation: {mfile_data.data['a_tf_wp_with_insulation'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"$A$, no insulation: {mfile_data.data['a_tf_wp_no_insulation'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"$A$, total turn insulation: {mfile_data.data['a_tf_coil_wp_turn_insulation'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
-            f"$A$, all insulation in coil: {mfile_data.data['a_tf_coil_inboard_insulation'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"$A$, total turn steel: {mfile_data.data['a_tf_wp_steel'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"$A$, total conductor: {mfile_data.data['a_tf_wp_conductor'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"$A$, total non-cooling void: {mfile_data.data['a_tf_wp_extra_void'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n\n"
@@ -5432,6 +5431,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"Total area of steel in coil: {mfile_data.data['a_tf_coil_inboard_steel'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"Total area fraction of steel: {mfile_data.data['f_a_tf_coil_inboard_steel'].get_scan(scan):.4f}\n"
             f"Total area fraction of insulation: {mfile_data.data['f_a_tf_coil_inboard_insulation'].get_scan(scan):.4f}\n"
+            f"$A$, all insulation in coil: {mfile_data.data['a_tf_coil_inboard_insulation'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
         )
         axis.text(
             0.55,
@@ -6019,41 +6019,41 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
     # If integer turns switch is on then the turns can have non square dimensions
     if i_tf_turns_integer == 1:
-        turn_width = round(mfile_data.data["dr_tf_turn"].get_scan(scan) * 1e3, 5)
-        turn_height = round(mfile_data.data["dx_tf_turn"].get_scan(scan) * 1e3, 5)
-        cable_space_width_radial = round(
-            mfile_data.data["dr_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
+        turn_width = mfile_data.data["dr_tf_turn"].get_scan(scan)
+        turn_height = mfile_data.data["dx_tf_turn"].get_scan(scan)
+        cable_space_width_radial = mfile_data.data["dr_tf_turn_cable_space"].get_scan(
+            scan
         )
-        cable_space_width_toroidal = round(
-            mfile_data.data["dx_tf_turn_cable_space"].get_scan(scan) * 1e3, 5
-        )
-    elif i_tf_turns_integer == 0:
-        turn_width = round(mfile_data.data["t_turn_tf"].get_scan(scan) * 1e3, 5)
-        cable_space_width = round(
-            mfile_data.data["dx_tf_turn_cable_space_average"].get_scan(scan) * 1e3, 5
+        cable_space_width_toroidal = mfile_data.data["dx_tf_turn_cable_space"].get_scan(
+            scan
         )
 
-    he_pipe_diameter = round(
-        mfile_data.data["dia_tf_turn_coolant_channel"].get_scan(scan) * 1e3, 5
-    )
-    steel_thickness = round(mfile_data.data["dx_tf_turn_steel"].get_scan(scan) * 1e3, 5)
-    insulation_thickness = round(
-        mfile_data.data["dx_tf_turn_insulation"].get_scan(scan) * 1e3, 5
-    )
-    a_tf_turn_cable_space_no_void = round(
-        mfile_data.data["a_tf_turn_cable_space_no_void"].get_scan(scan) * 1e6, 5
-    )
+    elif i_tf_turns_integer == 0:
+        turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
+        cable_space_width = mfile_data.data["dx_tf_turn_cable_space_average"].get_scan(
+            scan
+        )
+
+    he_pipe_diameter = mfile_data.data["dia_tf_turn_coolant_channel"].get_scan(scan)
+    steel_thickness = mfile_data.data["dx_tf_turn_steel"].get_scan(scan)
+    insulation_thickness = mfile_data.data["dx_tf_turn_insulation"].get_scan(scan)
+
+    a_tf_turn_cable_space_no_void = mfile_data.data[
+        "a_tf_turn_cable_space_no_void"
+    ].get_scan(scan)
     c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
-    radius_tf_turn_cable_space_corners = round(
-        mfile_data.data["radius_tf_turn_cable_space_corners"].get_scan(scan) * 1e3, 5
-    )
+    radius_tf_turn_cable_space_corners = mfile_data.data[
+        "radius_tf_turn_cable_space_corners"
+    ].get_scan(scan)
+
     a_tf_wp_coolant_channels = mfile_data.data["a_tf_wp_coolant_channels"].get_scan(
         scan
     )
+
     f_a_tf_turn_cable_space_extra_void = mfile_data.data[
         "f_a_tf_turn_cable_space_extra_void"
     ].get_scan(scan)
-    a_tf_turn_steel = round(mfile_data.data["a_tf_turn_steel"].get_scan(scan) * 1e6, 5)
+    a_tf_turn_steel = mfile_data.data["a_tf_turn_steel"].get_scan(scan)
 
     # Plot the total turn shape
     if i_tf_turns_integer == 0:
@@ -6197,7 +6197,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     # Add info about the steel casing surrounding the WP
     textstr_turn_insulation = (
         f"$\\mathbf{{Turn \\ Insulation:}}$\n\n"
-        f"$\\Delta r:${insulation_thickness:.2f} mm"
+        f"$\\Delta r:${insulation_thickness:.3e} m"
     )
 
     axis.text(
@@ -6218,8 +6218,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
 
     # Add info about the steel casing surrounding the WP
     textstr_turn_steel = (
-        f"$\\mathbf{{Steel \\ Conduit:}}$\n\n$\\Delta r:${steel_thickness} mm\n"
-        f"$A$: {a_tf_turn_steel} mm$^2$"
+        f"$\\mathbf{{Steel \\ Conduit:}}$\n\n$\\Delta r:${steel_thickness:.3e} m\n"
+        f"$A$: {a_tf_turn_steel:.3e} m$^2$"
     )
 
     axis.text(
@@ -6242,19 +6242,20 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         # Add info about the steel casing surrounding the WP
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-            f"$\\Delta r:${cable_space_width} mm\n"
-            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void} mm$^2$\n"
-            f"Corner radius:{radius_tf_turn_cable_space_corners} mm\n"
+            f"$\\Delta r:$ {cable_space_width:.3e} m\n"
+            f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
+            f"Cable area with no cooling \nchannel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Corner radius: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}"
         )
     elif i_tf_turns_integer == 1:
         textstr_turn_cable_space = (
             (
                 f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-                f"Cable space: \n{cable_space_width_radial} mm radial width \n"
-                f"{cable_space_width_toroidal} mm toroidal width \n"
-                f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void} mm$^2$\n"
-                f"Corner radius: {radius_tf_turn_cable_space_corners} mm\n"
+                f"Cable space: \n{cable_space_width_radial:.3e} m radial width \n"
+                f"{cable_space_width_toroidal:.3e} m toroidal width \n"
+                f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
+                f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
                 f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}"
             ),
         )
@@ -6278,7 +6279,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     # Add info about the steel casing surrounding the WP
     textstr_turn_cooling = (
         f"$\\mathbf{{Cooling:}}$\n\n"
-        f"$\\varnothing$: {he_pipe_diameter} mm\n"
+        f"$\\varnothing$: {he_pipe_diameter:.3e} m\n"
         f"$I_{{\\text{{TF,turn}}}}$: {c_tf_turn:.2f} A\n"
         f"Total area of all coolant channels: {a_tf_wp_coolant_channels:.4f} m$^2$"
     )
