@@ -171,6 +171,9 @@ radius_tf_turn_cable_space_corners: float = None
 """Radius of the corners of the cable space in the TF turn [m]"""
 
 
+a_tf_turn_cable_space_effective: float = None
+"""True cable area of WP turn. This includes the removal of the cooling pipe [m^2] """
+
 vforce_inboard_tot: float = None
 """Total inboard vertical tension (all coils) [N]"""
 
@@ -265,6 +268,7 @@ def init_superconducting_tf_coil_variables():
     global tau2
     global e_tf_magnetic_stored_total
     global radius_tf_turn_cable_space_corners
+    global a_tf_turn_cable_space_effective
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -311,3 +315,4 @@ def init_superconducting_tf_coil_variables():
     tau2 = 0.0
     e_tf_magnetic_stored_total = 0.0
     radius_tf_turn_cable_space_corners = 0.0
+    a_tf_turn_cable_space_effective = 0.0

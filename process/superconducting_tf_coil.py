@@ -2477,7 +2477,7 @@ class SuperconductingTFCoil(TFCoil):
 
         # Calculate the true effective cable space by taking away the cooling
         # channel and the extra void fraction
-        sctfcoil_module.a_tf_turn_cable_space_effective = (
+        superconducting_tf_coil_variables.a_tf_turn_cable_space_effective = (
             a_tf_turn_cable_space_no_void
             -
             # Coolant channel area
@@ -2628,7 +2628,7 @@ class SuperconductingTFCoil(TFCoil):
         # ITER like turn structure
         if i_tf_sc_mat != 6:
             # Radius of rounded corners of cable space inside conduit [m]
-            sctfcoil_module.radius_tf_turn_cable_space_corners = (
+            superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners = (
                 dx_tf_turn_steel * 0.75e0
             )
 
@@ -2642,13 +2642,14 @@ class SuperconductingTFCoil(TFCoil):
             a_tf_turn_cable_space_no_void = (
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space_average**2
                 - (4.0e0 - np.pi)
-                * sctfcoil_module.radius_tf_turn_cable_space_corners**2
+                * superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners
+                ** 2
             )
 
             # Calculate the true effective cable space by taking away the cooling
             # channel and the extra void fraction
 
-            sctfcoil_module.a_tf_turn_cable_space_effective = (
+            superconducting_tf_coil_variables.a_tf_turn_cable_space_effective = (
                 a_tf_turn_cable_space_no_void
                 -
                 # Coolant channel area
@@ -2677,7 +2678,7 @@ class SuperconductingTFCoil(TFCoil):
                         superconducting_tf_coil_variables.dx_tf_turn_cable_space_average
                     )
                     error_handling.report_error(102)
-                    sctfcoil_module.radius_tf_turn_cable_space_corners = 0.0e0
+                    superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners = 0.0e0
                     a_tf_turn_cable_space_no_void = (
                         superconducting_tf_coil_variables.dx_tf_turn_cable_space_average
                         ** 2

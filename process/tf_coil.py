@@ -1121,7 +1121,7 @@ class TFCoil:
                     self.outfile,
                     "Radius of turn cable space rounded corners (m)",
                     "(radius_tf_turn_cable_space_corners)",
-                    sctfcoil_module.radius_tf_turn_cable_space_corners,
+                    superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
                 )
 
             po.ovarre(
@@ -1156,7 +1156,7 @@ class TFCoil:
                     self.outfile,
                     "True area of turn cable space with gaps and channels removed",
                     "(a_tf_turn_cable_space_effective)",
-                    sctfcoil_module.a_tf_turn_cable_space_effective,
+                    superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
                 )
 
                 po.ovarre(
@@ -1181,13 +1181,13 @@ class TFCoil:
                     self.outfile,
                     "Total insulation area in TF coil (turn and WP)",
                     "(a_tf_coil_inboard_insulation)",
-                    sctfcoil_module.a_tf_coil_inboard_insulation,
+                    superconducting_tf_coil_variables.a_tf_coil_inboard_insulation,
                 )
                 po.ovarre(
                     self.outfile,
                     "Total steel area in inboard TF coil (turn and case)",
                     "(a_tf_coil_inboard_steel)",
-                    sctfcoil_module.a_tf_coil_inboard_steel,
+                    superconducting_tf_coil_variables.a_tf_coil_inboard_steel,
                 )
                 po.ovarre(
                     self.outfile,
