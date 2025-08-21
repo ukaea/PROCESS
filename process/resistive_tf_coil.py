@@ -45,14 +45,14 @@ class ResistiveTFCoil(TFCoil):
             r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
         )
 
-        # Total TF coil stored magnetic energy [J]
-        sctfcoil_module.e_tf_magnetic_stored_total = (
-            0.5e0 * tfcoil_variables.ind_tf_coil * tfcoil_variables.c_tf_total**2
-        )
-
-        # Total TF coil stored magnetic energy [Gigajoule]
-        tfcoil_variables.e_tf_magnetic_stored_total_gj = (
-            1.0e-9 * sctfcoil_module.e_tf_magnetic_stored_total
+        (
+            e_tf_coil_magnetic_stored,
+            sctfcoil_module.e_tf_magnetic_stored_total,
+            tfcoil_variables.e_tf_magnetic_stored_total_gj,
+        ) = super().tf_stored_magnetic_energy(
+            ind_tf_coil=tfcoil_variables.ind_tf_coil,
+            c_tf_coil=sctfcoil_module.c_tf_coil,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
         )
 
         (
