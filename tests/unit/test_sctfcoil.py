@@ -1450,7 +1450,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         a_tf_turn_steel,
         a_tf_turn_insulation,
         n_tf_coil_turns,
-    ) = sctfcoil.tf_averaged_turn_geom(
+    ) = sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
         i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,

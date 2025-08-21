@@ -1895,7 +1895,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.a_tf_turn_steel,
                 tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.n_tf_coil_turns,
-            ) = self.tf_averaged_turn_geom(
+            ) = self.tf_cable_in_conduit_averaged_turn_geometry(
                 tfcoil_variables.j_tf_wp,
                 tfcoil_variables.dx_tf_turn_steel,
                 tfcoil_variables.dx_tf_turn_insulation,
@@ -2578,7 +2578,7 @@ class SuperconductingTFCoil(TFCoil):
             ),
         )
 
-    def tf_averaged_turn_geom(
+    def tf_cable_in_conduit_averaged_turn_geometry(
         self, j_tf_wp, dx_tf_turn_steel, dx_tf_turn_insulation, i_tf_sc_mat
     ):
         """
