@@ -478,7 +478,7 @@ class TFCoil:
         ind_tf_coil: float,
         c_tf_coil: float,
         n_tf_coils: int,
-    ) -> float:
+    ) -> tuple[float, float, float]:
         """
         Calculates the stored magnetic energy in a single TF coil.
 
@@ -489,29 +489,33 @@ class TFCoil:
         :param n_tf_coils: Number of TF coils.
         :type n_tf_coils: int
 
-        :returns: Stored magnetic energy in a single TF coil [J].
-        :rtype: float
+        :returns: Tuple containing:
+            - e_tf_magnetic_stored_total (float): Total stored magnetic energy in all TF coils [J].
+            - e_tf_magnetic_stored_total_gj (float): Total stored magnetic energy in all TF coils [GJ].
+            - e_tf_coil_magnetic_stored (float): Stored magnetic energy in a single TF coil [J].
+        :rtype: tuple[float, float, float]
 
         :notes:
-        - The stored magnetic energy in an inductor is given by:
-        E = (1/2) * L * I^2
-          where E is the energy [J], L is the inductance [H], and I is the current [A].
+            - The stored magnetic energy in an inductor is given by:
+                E = (1/2) * L * I^2
+                where E is the energy [J], L is the inductance [H], and I is the current [A].
+            - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
 
         :references:
             - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
 
             - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
         """
-        e_tf_coil_magnetic_stored = 0.5 * ind_tf_coil * c_tf_coil**2
-
-        e_tf_magnetic_stored_total = e_tf_coil_magnetic_stored * n_tf_coils
+        e_tf_magnetic_stored_total = 0.5 * ind_tf_coil * c_tf_coil**2
 
         e_tf_magnetic_stored_total_gj = e_tf_magnetic_stored_total * 1.0e-9
 
+        e_tf_coil_magnetic_stored = e_tf_magnetic_stored_total / n_tf_coils
+
         return (
-            e_tf_coil_magnetic_stored,
             e_tf_magnetic_stored_total,
             e_tf_magnetic_stored_total_gj,
+            e_tf_coil_magnetic_stored,
         )
 
     def outtf(self, peaktfflag):

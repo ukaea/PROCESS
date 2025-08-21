@@ -11416,3 +11416,28 @@ def test_sigvm(sx, sy, sz, expected):
     ret = tfcoil_module.sigvm(sx, sy, sz, 0, 0, 0)
 
     assert ret == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "ind_tf_coil, c_tf_coil, n_tf_coils, expected_single, expected_total, expected_total_gj",
+    [
+        (1.0, 2.0, 3, 6.0, 6.0e-9, 2.0),
+        (0.5, 4.0, 2, 8.0, 8.0e-9, 4.0),
+        (2.0, 1.5, 4, 9.0, 9.0e-9, 2.25),
+        (0.0, 5.0, 1, 0.0, 0.0, 0.0),
+        (1.0, 0.0, 10, 0.0, 0.0, 0.0),
+    ],
+)
+def test_tf_stored_magnetic_energy(
+    ind_tf_coil,
+    c_tf_coil,
+    n_tf_coils,
+    expected_single,
+    expected_total,
+    expected_total_gj,
+):
+    tfc = TFCoil(build=None)
+    result = tfc.tf_stored_magnetic_energy(ind_tf_coil, c_tf_coil, n_tf_coils)
+    assert pytest.approx(result[0]) == expected_total
+    assert pytest.approx(result[1]) == expected_total_gj
+    assert pytest.approx(result[2]) == expected_single
