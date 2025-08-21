@@ -10,6 +10,7 @@ from process.data_structure import (
     build_variables,
     constraint_variables,
     divertor_variables,
+    fwbs_variables,
     pfcoil_variables,
     physics_variables,
     rebco_variables,
@@ -20,7 +21,6 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     error_handling,
-    fwbs_variables,
     global_variables,
 )
 from process.quench import calculate_quench_protection_current_density
@@ -2676,8 +2676,8 @@ class SuperconductingTFCoil(TFCoil):
         tfcoil_variables.m_tf_coil_wp_insulation = (
             tfcoil_variables.len_tf_coil
             * (
-                sctfcoil_module.a_tf_wp_with_insulation
-                - sctfcoil_module.a_tf_wp_no_insulation
+                superconducting_tf_coil_variables.a_tf_wp_with_insulation
+                - superconducting_tf_coil_variables.a_tf_wp_no_insulation
             )
             * tfcoil_variables.den_tf_wp_turn_insulation
         )

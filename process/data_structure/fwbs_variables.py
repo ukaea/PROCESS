@@ -21,7 +21,7 @@ m_vv: float = None
 """vacuum vessel mass [kg]"""
 
 
-denstl: float = None
+den_steel: float = None
 """density of steel [kg m^-3]"""
 
 
@@ -890,7 +890,7 @@ def init_fwbs_variables():
     global life_blkt
     global m_fw_blkt_div_coolant_total
     global m_vv
-    global denstl
+    global den_steel
     global denwc
     global dewmkg
     global f_p_blkt_multiplication
@@ -1081,7 +1081,7 @@ def init_fwbs_variables():
     life_blkt = 0.0
     m_fw_blkt_div_coolant_total = 0.0
     m_vv = 0.0
-    denstl = 7800.0
+    den_steel = 7800.0
     denwc = 15630.0
     dewmkg = 0.0
     f_p_blkt_multiplication = 1.269

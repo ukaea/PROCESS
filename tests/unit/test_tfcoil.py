@@ -10,7 +10,6 @@ from process.build import Build
 from process.data_structure import (
     build_variables,
     fwbs_variables,
-    physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )

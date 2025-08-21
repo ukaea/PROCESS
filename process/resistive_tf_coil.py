@@ -683,7 +683,10 @@ class ResistiveTFCoil(TFCoil):
             )
 
             # Outboard leg TF conductor volume [m3]
-            vol_cond_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_cond
+            vol_cond_leg = (
+                tfcoil_variables.len_tf_coil
+                * superconducting_tf_coil_variables.a_leg_cond
+            )
 
             # Total TF conductor volume [m3]
             vol_cond = (
@@ -692,25 +695,32 @@ class ResistiveTFCoil(TFCoil):
             )
 
             # Outboard leg TF turn insulation layer volume (per leg) [m3]
-            vol_ins_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_ins
+            vol_ins_leg = (
+                tfcoil_variables.len_tf_coil
+                * superconducting_tf_coil_variables.a_leg_ins
+            )
 
             # Total turn insulation layer volume [m3]
             vol_ins = (
-                sctfcoil_module.vol_ins_cp + tfcoil_variables.n_tf_coils * vol_ins_leg
+                superconducting_tf_coil_variables.vol_ins_cp
+                + tfcoil_variables.n_tf_coils * vol_ins_leg
             )
 
             # Ouboard leg TF ground insulation layer volume (per leg) [m3]
-            vol_gr_ins_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_gr_ins
+            vol_gr_ins_leg = (
+                tfcoil_variables.len_tf_coil
+                * superconducting_tf_coil_variables.a_leg_gr_ins
+            )
 
             # Total ground insulation layer volume [m3]
             vol_gr_ins = (
-                sctfcoil_module.vol_gr_ins_cp
+                superconducting_tf_coil_variables.vol_gr_ins_cp
                 + tfcoil_variables.n_tf_coils * vol_gr_ins_leg
             )
 
             # Total volume of the CP casing [m3]
             # Rem : no outer leg case
-            vol_case = sctfcoil_module.vol_case_cp
+            vol_case = superconducting_tf_coil_variables.vol_case_cp
 
         # No joints
         # ---
@@ -718,21 +728,21 @@ class ResistiveTFCoil(TFCoil):
             # Total TF outer leg conductor volume [m3]
             vol_cond = (
                 tfcoil_variables.len_tf_coil
-                * sctfcoil_module.a_leg_cond
+                * superconducting_tf_coil_variables.a_leg_cond
                 * tfcoil_variables.n_tf_coils
             )
 
             # Total turn insulation layer volume [m3]
             vol_ins = (
                 tfcoil_variables.len_tf_coil
-                * sctfcoil_module.a_leg_ins
+                * superconducting_tf_coil_variables.a_leg_ins
                 * tfcoil_variables.n_tf_coils
             )
 
             # Total ground insulation volume [m3]
             vol_gr_ins = (
                 tfcoil_variables.len_tf_coil
-                * sctfcoil_module.a_leg_gr_ins
+                * superconducting_tf_coil_variables.a_leg_gr_ins
                 * tfcoil_variables.n_tf_coils
             )
 
@@ -769,8 +779,12 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.whtcp = (
                     constants.den_copper * tfcoil_variables.vol_cond_cp
                     + tfcoil_variables.den_tf_wp_turn_insulation
-                    * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
-                    + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
+                    * (
+                        superconducting_tf_coil_variables.vol_ins_cp
+                        + superconducting_tf_coil_variables.vol_gr_ins_cp
+                    )
+                    + superconducting_tf_coil_variables.vol_case_cp
+                    * fwbs_variables.den_steel
                 )
 
         # Cryo-aluminium conductor weights
@@ -798,8 +812,12 @@ class ResistiveTFCoil(TFCoil):
                 tfcoil_variables.whtcp = (
                     constants.den_aluminium * tfcoil_variables.vol_cond_cp
                     + tfcoil_variables.den_tf_wp_turn_insulation
-                    * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
-                    + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
+                    * (
+                        superconducting_tf_coil_variables.vol_ins_cp
+                        + superconducting_tf_coil_variables.vol_gr_ins_cp
+                    )
+                    + superconducting_tf_coil_variables.vol_case_cp
+                    * fwbs_variables.den_steel
                 )
 
         # Turn insulation mass [kg]

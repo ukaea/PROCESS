@@ -2119,37 +2119,45 @@ def test_superconducting_tf_coil_area_and_masses(
     monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "a_tf_wp_with_insulation",
         tfcoilareaandmassesparam.a_tf_wp_with_insulation,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "a_tf_wp_no_insulation",
         tfcoilareaandmassesparam.a_tf_wp_no_insulation,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
+        superconducting_tf_coil_variables,
+        "vol_ins_cp",
+        tfcoilareaandmassesparam.vol_ins_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_gr_ins_cp", tfcoilareaandmassesparam.vol_gr_ins_cp
+        superconducting_tf_coil_variables,
+        "vol_gr_ins_cp",
+        tfcoilareaandmassesparam.vol_gr_ins_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_case_cp", tfcoilareaandmassesparam.vol_case_cp
+        superconducting_tf_coil_variables,
+        "vol_case_cp",
+        tfcoilareaandmassesparam.vol_case_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
+        superconducting_tf_coil_variables,
+        "tan_theta_coil",
+        tfcoilareaandmassesparam.tan_theta_coil,
     )
 
     sctfcoil.superconducting_tf_coil_areas_and_masses()
