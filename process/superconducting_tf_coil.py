@@ -1869,7 +1869,7 @@ class SuperconductingTFCoil(TFCoil):
                 sctfcoil_module.dr_tf_turn_cable_space,
                 sctfcoil_module.dx_tf_turn_cable_space,
                 sctfcoil_module.dx_tf_turn_cable_space_average,
-            ) = self.tf_integer_turn_geom(
+            ) = self.tf_cable_in_conduit_integer_turn_geometry(
                 dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                 dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
                 dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
@@ -2320,7 +2320,7 @@ class SuperconductingTFCoil(TFCoil):
             dx_tf_side_case_average,
         )
 
-    def tf_integer_turn_geom(
+    def tf_cable_in_conduit_integer_turn_geometry(
         self,
         dr_tf_wp_with_insulation: float,
         dx_tf_wp_insulation: float,
