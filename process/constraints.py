@@ -1401,11 +1401,13 @@ def constraint_equation_50():
     author: S I Muldrew, CCFE, Culham Science Centre
     """
     cc = (
-        fortran.ife_variables.reprat / fortran.ife_variables.rrmax
-        - 1.0 * fortran.ife_variables.frrmax
+        data_structure.ife_variables.reprat / data_structure.ife_variables.rrmax
+        - 1.0 * data_structure.ife_variables.frrmax
     )
     return ConstraintResult(
-        cc, fortran.ife_variables.rrmax * (1.0 - cc), fortran.ife_variables.reprat * cc
+        cc,
+        data_structure.ife_variables.rrmax * (1.0 - cc),
+        data_structure.ife_variables.reprat * cc,
     )
 
 
@@ -1670,7 +1672,7 @@ def constraint_equation_65():
     vv_stress_quench: Stress of the VV (Pa)
     """
     cc = (
-        fortran.sctfcoil_module.vv_stress_quench
+        data_structure.superconducting_tf_coil_variables.vv_stress_quench
         / data_structure.tfcoil_variables.max_vv_stress
         - 1.0 * data_structure.constraint_variables.fmaxvvstress
     )

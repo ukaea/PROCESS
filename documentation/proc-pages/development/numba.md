@@ -46,7 +46,7 @@ But, also **cannot** do the following:
 
 ```python
 from numba import njit
-from process.fortran import sctfcoil_variables as sctfv
+from process.data_structure import superconducting_tf_coil_variables as sctfv
 
 @njit
 def my_other_function(n):

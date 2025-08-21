@@ -49,6 +49,9 @@ from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
 from process.data_structure.structure_variables import init_structure_variables
+from process.data_structure.superconducting_tf_coil_variables import (
+    init_superconducting_tf_coil_variables,
+)
 from process.data_structure.tfcoil_variables import init_tfcoil_variables
 from process.data_structure.times_variables import init_times_variables
 from process.data_structure.vacuum_variables import init_vacuum_variables
@@ -57,7 +60,6 @@ from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.scan import init_scan_module
 from process.stellarator import stinit
-from process.superconducting_tf_coil import init_sctfcoil_module
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
@@ -273,7 +275,7 @@ def init_all_module_vars():
     init_physics_module()
     init_physics_variables()
     init_scan_module()
-    init_sctfcoil_module()
+    init_superconducting_tf_coil_variables()
     init_stellarator_variables()
     init_tfcoil_variables()
     init_times_variables()
