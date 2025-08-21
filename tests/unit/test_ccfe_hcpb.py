@@ -50,7 +50,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
 
     dx_fw_module: Any = None
 
-    denstl: Any = None
+    den_steel: Any = None
 
     m_blkt_total: Any = None
 
@@ -135,7 +135,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_shld_outboard=0.80000000000000004,
             radius_fw_channel=0.0060000000000000001,
             dx_fw_module=0.02,
-            denstl=7800,
+            den_steel=7800,
             m_blkt_total=3501027.3252278985,
             vol_blkt_total=1397.9003011502937,
             whtshld=2294873.8131476045,
@@ -182,7 +182,7 @@ class NuclearHeatingMagnetsParam(NamedTuple):
             dr_shld_outboard=0.80000000000000004,
             radius_fw_channel=0.0060000000000000001,
             dx_fw_module=0.02,
-            denstl=7800,
+            den_steel=7800,
             m_blkt_total=3507503.3737008357,
             vol_blkt_total=1400.4860764869636,
             whtshld=2297808.3935174854,
@@ -275,7 +275,9 @@ def test_nuclear_heating_magnets(nuclearheatingmagnetsparam, monkeypatch, ccfe_h
         fwbs_variables, "dx_fw_module", nuclearheatingmagnetsparam.dx_fw_module
     )
 
-    monkeypatch.setattr(fwbs_variables, "denstl", nuclearheatingmagnetsparam.denstl)
+    monkeypatch.setattr(
+        fwbs_variables, "den_steel", nuclearheatingmagnetsparam.den_steel
+    )
 
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_total", nuclearheatingmagnetsparam.m_blkt_total
@@ -1338,7 +1340,7 @@ class ComponentMassesParam(NamedTuple):
     f_a_blkt_cooling_channels: Any = None
     m_blkt_beryllium: Any = None
     m_blkt_steel_total: Any = None
-    denstl: Any = None
+    den_steel: Any = None
     m_blkt_total: Any = None
     vol_shld_total: Any = None
     vfshld: Any = None
@@ -1429,7 +1431,7 @@ class ComponentMassesParam(NamedTuple):
             f_a_blkt_cooling_channels=0.25,
             m_blkt_beryllium=0,
             m_blkt_steel_total=0,
-            denstl=7800,
+            den_steel=7800,
             m_blkt_total=0,
             vol_shld_total=783.69914576548854,
             vfshld=0.60000000000000009,
@@ -1567,7 +1569,7 @@ def test_component_masses(componentmassesparam, monkeypatch, ccfe_hcpb):
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_steel_total", componentmassesparam.m_blkt_steel_total
     )
-    monkeypatch.setattr(fwbs_variables, "denstl", componentmassesparam.denstl)
+    monkeypatch.setattr(fwbs_variables, "den_steel", componentmassesparam.den_steel)
     monkeypatch.setattr(
         fwbs_variables, "m_blkt_total", componentmassesparam.m_blkt_total
     )

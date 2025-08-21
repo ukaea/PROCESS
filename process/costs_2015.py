@@ -748,7 +748,7 @@ class Costs2015:
         cost_2015_variables.s_cref[16] = 21.0e6
         # Scale with total copper mass (kg)
         cost_2015_variables.s_k[16] = (
-            tfcoil_variables.whtconcu * tfcoil_variables.n_tf_coils
+            tfcoil_variables.m_tf_coil_copper * tfcoil_variables.n_tf_coils
         )
         cost_2015_variables.s_kref[16] = 244.0e3
         cost_2015_variables.s_cost[16] = (
@@ -766,7 +766,7 @@ class Costs2015:
         cost_2015_variables.s_cref[17] = 526.0e6
         # Scale with the total mass of Nb3Sn (kg)
         cost_2015_variables.s_k[17] = (
-            tfcoil_variables.whtconsc * tfcoil_variables.n_tf_coils
+            tfcoil_variables.m_tf_coil_superconductor * tfcoil_variables.n_tf_coils
         )
         cost_2015_variables.s_kref[17] = 210.0e3
         cost_2015_variables.s_cost[17] = (

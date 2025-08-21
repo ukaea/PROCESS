@@ -7,6 +7,7 @@ from process.data_structure import build_variables, pfcoil_variables, tfcoil_var
 from process.fortran import (
     constants,
     error_handling,
+    fwbs_variables,
     physics_variables,
     sctfcoil_module,
 )
@@ -80,7 +81,8 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Calculate TF coil areas and masses
-        self.tf_coil_area_and_masses()
+        super().generic_tf_coil_area_and_masses()
+        self.resistive_tf_coil_areas_and_masses()
 
         # Do stress calculations (writes the stress output)
         if output:
@@ -639,6 +641,172 @@ class ResistiveTFCoil(TFCoil):
 
             # No joints if physics_variables.itart = 0
             tfcoil_variables.p_tf_joints_resistive = 0.0e0
+
+    def resistive_tf_coil_areas_and_masses(self):
+        """
+        Calculate the areas and masses of the resistive TF coil
+        """
+
+        vol_case = 0.0e0  # Total TF case volume [m3]
+        vol_ins = 0.0e0  # Total leg turn insulation volume [m3]
+        vol_gr_ins = 0.0e0  # Total leg turn insulation volume [m3]
+        vol_cond = 0.0e0  # Total conductor insulator volume [m3]
+        vol_ins_leg = 0.0e0  # Outboard leg turn isulation volume [m3]
+        vol_gr_ins_leg = 0.0e0  # Outboard leg turn insulation volume [m3]
+        vol_cond_leg = 0.0e0  # Outboard leg conductor insulator volume [m3]
+
+        # Volumes
+        # -------
+        # CP with joints
+        # ---
+        if physics_variables.itart == 1:
+            # Total volume of one outerleg [m3]
+            tfcoil_variables.voltfleg = (
+                tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_leg_outboard
+            )
+
+            # Outboard leg TF conductor volume [m3]
+            vol_cond_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_cond
+
+            # Total TF conductor volume [m3]
+            vol_cond = (
+                tfcoil_variables.vol_cond_cp
+                + tfcoil_variables.n_tf_coils * vol_cond_leg
+            )
+
+            # Outboard leg TF turn insulation layer volume (per leg) [m3]
+            vol_ins_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_ins
+
+            # Total turn insulation layer volume [m3]
+            vol_ins = (
+                sctfcoil_module.vol_ins_cp + tfcoil_variables.n_tf_coils * vol_ins_leg
+            )
+
+            # Ouboard leg TF ground insulation layer volume (per leg) [m3]
+            vol_gr_ins_leg = tfcoil_variables.len_tf_coil * sctfcoil_module.a_leg_gr_ins
+
+            # Total ground insulation layer volume [m3]
+            vol_gr_ins = (
+                sctfcoil_module.vol_gr_ins_cp
+                + tfcoil_variables.n_tf_coils * vol_gr_ins_leg
+            )
+
+            # Total volume of the CP casing [m3]
+            # Rem : no outer leg case
+            vol_case = sctfcoil_module.vol_case_cp
+
+        # No joints
+        # ---
+        else:
+            # Total TF outer leg conductor volume [m3]
+            vol_cond = (
+                tfcoil_variables.len_tf_coil
+                * sctfcoil_module.a_leg_cond
+                * tfcoil_variables.n_tf_coils
+            )
+
+            # Total turn insulation layer volume [m3]
+            vol_ins = (
+                tfcoil_variables.len_tf_coil
+                * sctfcoil_module.a_leg_ins
+                * tfcoil_variables.n_tf_coils
+            )
+
+            # Total ground insulation volume [m3]
+            vol_gr_ins = (
+                tfcoil_variables.len_tf_coil
+                * sctfcoil_module.a_leg_gr_ins
+                * tfcoil_variables.n_tf_coils
+            )
+
+            # Total case volume [m3]
+            vol_case = (
+                tfcoil_variables.len_tf_coil
+                * tfcoil_variables.a_tf_coil_inboard_case
+                * tfcoil_variables.n_tf_coils
+            )
+
+        # ---
+        # -------
+
+        # Copper magnets casing/conductor weights per coil [kg]
+        if tfcoil_variables.i_tf_sup == 0:
+            tfcoil_variables.m_tf_coil_case = (
+                fwbs_variables.den_steel * vol_case / tfcoil_variables.n_tf_coils
+            )  # Per TF leg, no casing for outer leg
+            tfcoil_variables.m_tf_coil_copper = (
+                constants.den_copper * vol_cond / tfcoil_variables.n_tf_coils
+            )
+            tfcoil_variables.whtconal = 0.0e0
+
+            # Outer legs/CP weights
+            if physics_variables.itart == 1:
+                # Weight of all the TF legs
+                tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
+                    constants.den_copper * vol_cond_leg
+                    + tfcoil_variables.den_tf_wp_turn_insulation
+                    * (vol_ins_leg + vol_gr_ins_leg)
+                )
+
+                # CP weight
+                tfcoil_variables.whtcp = (
+                    constants.den_copper * tfcoil_variables.vol_cond_cp
+                    + tfcoil_variables.den_tf_wp_turn_insulation
+                    * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
+                    + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
+                )
+
+        # Cryo-aluminium conductor weights
+        # Casing made of re-inforced aluminium alloy
+        elif tfcoil_variables.i_tf_sup == 2:
+            # Casing weight (CP only if physics_variables.itart = 1)bper leg/coil
+            tfcoil_variables.m_tf_coil_case = (
+                constants.den_aluminium * vol_case / tfcoil_variables.n_tf_coils
+            )
+            tfcoil_variables.m_tf_coil_copper = 0.0e0
+            tfcoil_variables.whtconal = (
+                constants.den_aluminium * vol_cond / tfcoil_variables.n_tf_coils
+            )
+
+            # Outer legs/CP weights
+            if physics_variables.itart == 1:
+                # Weight of all the TF legs
+                tfcoil_variables.whttflgs = tfcoil_variables.n_tf_coils * (
+                    constants.den_aluminium * vol_cond_leg
+                    + tfcoil_variables.den_tf_wp_turn_insulation
+                    * (vol_ins_leg + vol_gr_ins_leg)
+                )
+
+                # CP weight
+                tfcoil_variables.whtcp = (
+                    constants.den_aluminium * tfcoil_variables.vol_cond_cp
+                    + tfcoil_variables.den_tf_wp_turn_insulation
+                    * (sctfcoil_module.vol_ins_cp + sctfcoil_module.vol_gr_ins_cp)
+                    + sctfcoil_module.vol_case_cp * fwbs_variables.den_steel
+                )
+
+        # Turn insulation mass [kg]
+        tfcoil_variables.m_tf_coil_wp_turn_insulation = (
+            tfcoil_variables.den_tf_wp_turn_insulation
+            * vol_ins
+            / tfcoil_variables.n_tf_coils
+        )
+
+        # Ground wall insulation layer weight
+        tfcoil_variables.m_tf_coil_wp_insulation = (
+            tfcoil_variables.den_tf_wp_turn_insulation
+            * vol_gr_ins
+            / tfcoil_variables.n_tf_coils
+        )
+
+        # Total weight
+        tfcoil_variables.m_tf_coils_total = (
+            tfcoil_variables.m_tf_coil_case
+            + tfcoil_variables.m_tf_coil_copper
+            + tfcoil_variables.whtconal
+            + tfcoil_variables.m_tf_coil_wp_turn_insulation
+            + tfcoil_variables.m_tf_coil_wp_insulation
+        ) * tfcoil_variables.n_tf_coils
 
     @staticmethod
     @numba.njit(cache=True)

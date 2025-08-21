@@ -628,7 +628,7 @@ def init_fwbs_variables():
     fwbs_variables.life_blkt = 0.0
     fwbs_variables.m_fw_blkt_div_coolant_total = 0.0
     fwbs_variables.m_vv = 0.0
-    fwbs_variables.denstl = 7800.0
+    fwbs_variables.den_steel = 7800.0
     fwbs_variables.denwc = 15630.0
     fwbs_variables.dewmkg = 0.0
     fwbs_variables.f_p_blkt_multiplication = 1.269

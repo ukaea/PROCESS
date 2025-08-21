@@ -1026,7 +1026,7 @@ i_tf_case_geom = 0
 * DESCRIPTION:   Front casing geometry (0: Circular geometry)
 * JUSTIFICATION: ITER coil plasma side case geomety
 
-*dcase = 
+*den_tf_coil_case = 
 * DESCRIPTION:   Density of coil case (kg/m3)
 * JUSTIFICATION: Not set, assuming default
 
@@ -1171,7 +1171,7 @@ i_tf_turns_integer = 0
 *                on the CS magnet maximum current
 
 
-*dcondins = 
+*den_tf_wp_turn_insulation = 
 * DESCRIPTION: Density of TF coil insulation (kg/m3)
 * JUSTIFICATION: Not set, assuming default
 

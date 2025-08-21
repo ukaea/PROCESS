@@ -805,7 +805,7 @@ class Stellarator:
             0.18e0
             * stellarator_variables.f_b**2
             * intercoil_surface
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
         )
 
         structure_variables.clgsmass = (
@@ -1683,7 +1683,7 @@ class Stellarator:
 
             fwbs_variables.m_blkt_steel_total = (
                 fwbs_variables.vol_blkt_total
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
                 * fwbs_variables.fblss
             )
             fwbs_variables.m_blkt_vanadium = (
@@ -1697,7 +1697,7 @@ class Stellarator:
             )
 
         else:  # volume fractions proportional to sub-assembly thicknesses
-            fwbs_variables.m_blkt_steel_total = fwbs_variables.denstl * (
+            fwbs_variables.m_blkt_steel_total = fwbs_variables.den_steel * (
                 fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
                 * (
@@ -1803,7 +1803,7 @@ class Stellarator:
         # Shield mass
         fwbs_variables.whtshld = (
             fwbs_variables.vol_shld_total
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
             * (1.0e0 - fwbs_variables.vfshld)
         )
 
@@ -1821,7 +1821,7 @@ class Stellarator:
                 build_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
                 * (1.0e0 - fwbs_variables.fwclfr)
             )
 
@@ -1836,7 +1836,7 @@ class Stellarator:
             )
 
         else:
-            fwbs_variables.m_fw_total = fwbs_variables.denstl * (
+            fwbs_variables.m_fw_total = fwbs_variables.den_steel * (
                 build_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
@@ -1929,13 +1929,13 @@ class Stellarator:
 
         #  Vacuum vessel mass
 
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.denstl
+        ) * fwbs_variables.den_steel
 
         if output:
             #  Output section
@@ -2964,20 +2964,20 @@ class Stellarator:
         # [kg] Mass of case
         #  (no need for correction factors as is the case for tokamaks)
         # This is only correct if the winding pack is 'thin' (len_tf_coil>>sqrt(tfcoil_variables.a_tf_coil_inboard_case)).
-        tfcoil_variables.whtcas = (
+        tfcoil_variables.m_tf_coil_case = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_inboard_case
-            * tfcoil_variables.dcase
+            * tfcoil_variables.den_tf_coil_case
         )
         # Mass of ground-wall insulation [kg]
         # (assumed to be same density/material as conduit insulation)
-        tfcoil_variables.whtgw = (
+        tfcoil_variables.m_tf_coil_wp_insulation = (
             tfcoil_variables.len_tf_coil
             * (a_tf_wp_with_insulation - a_tf_wp_no_insulation)
-            * tfcoil_variables.dcondins
+            * tfcoil_variables.den_tf_wp_turn_insulation
         )
         # [kg] mass of Superconductor
-        tfcoil_variables.whtconsc = (
+        tfcoil_variables.m_tf_coil_superconductor = (
             (
                 tfcoil_variables.len_tf_coil
                 * tfcoil_variables.n_tf_coil_turns
@@ -2990,39 +2990,41 @@ class Stellarator:
             * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
         )  # a_tf_wp_coolant_channels is 0 for a stellarator. but keep this term for now.
         # [kg] mass of Copper in conductor
-        tfcoil_variables.whtconcu = (
+        tfcoil_variables.m_tf_coil_copper = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             * tfcoil_variables.fcutfsu
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
-        ) * constants.dcopper
+        ) * constants.den_copper
         # [kg] mass of Steel conduit (sheath)
-        tfcoil_variables.m_tf_turn_steel_conduit = (
+        tfcoil_variables.m_tf_wp_steel_conduit = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_steel
-            * fwbs_variables.denstl
+            * fwbs_variables.den_steel
         )
-        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+        # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.den_steel
         # Conduit insulation mass [kg]
         # (tfcoil_variables.a_tf_coil_wp_turn_insulation already contains tfcoil_variables.n_tf_coil_turns)
-        tfcoil_variables.whtconin = (
+        tfcoil_variables.m_tf_coil_wp_turn_insulation = (
             tfcoil_variables.len_tf_coil
             * tfcoil_variables.a_tf_coil_wp_turn_insulation
-            * tfcoil_variables.dcondins
+            * tfcoil_variables.den_tf_wp_turn_insulation
         )
         # [kg] Total conductor mass
-        tfcoil_variables.whtcon = (
-            tfcoil_variables.whtconsc
-            + tfcoil_variables.whtconcu
-            + tfcoil_variables.m_tf_turn_steel_conduit
-            + tfcoil_variables.whtconin
+        tfcoil_variables.m_tf_coil_conductor = (
+            tfcoil_variables.m_tf_coil_superconductor
+            + tfcoil_variables.m_tf_coil_copper
+            + tfcoil_variables.m_tf_wp_steel_conduit
+            + tfcoil_variables.m_tf_coil_wp_turn_insulation
         )
         # [kg] Total coil mass
         tfcoil_variables.m_tf_coils_total = (
-            tfcoil_variables.whtcas + tfcoil_variables.whtcon + tfcoil_variables.whtgw
+            tfcoil_variables.m_tf_coil_case
+            + tfcoil_variables.m_tf_coil_conductor
+            + tfcoil_variables.m_tf_coil_wp_insulation
         ) * tfcoil_variables.n_tf_coils
         # End of general coil geometry values
         #######################################################################################
@@ -3886,26 +3888,26 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Superconductor mass per coil (kg)",
-            "(whtconsc)",
-            tfcoil_variables.whtconsc,
+            "(m_tf_coil_superconductor)",
+            tfcoil_variables.m_tf_coil_superconductor,
         )
         po.ovarre(
             self.outfile,
             "Copper mass per coil (kg)",
-            "(whtconcu)",
-            tfcoil_variables.whtconcu,
+            "(m_tf_coil_copper)",
+            tfcoil_variables.m_tf_coil_copper,
         )
         po.ovarre(
             self.outfile,
             "Steel conduit mass per coil (kg)",
-            "(m_tf_turn_steel_conduit)",
-            tfcoil_variables.m_tf_turn_steel_conduit,
+            "(m_tf_wp_steel_conduit)",
+            tfcoil_variables.m_tf_wp_steel_conduit,
         )
         po.ovarre(
             self.outfile,
             "Total conductor cable mass per coil (kg)",
-            "(whtcon)",
-            tfcoil_variables.whtcon,
+            "(m_tf_coil_conductor)",
+            tfcoil_variables.m_tf_coil_conductor,
         )
         po.ovarre(
             self.outfile,
@@ -4143,8 +4145,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "External case mass per coil (kg)",
-            "(whtcas)",
-            tfcoil_variables.whtcas,
+            "(m_tf_coil_case)",
+            tfcoil_variables.m_tf_coil_case,
         )
 
         po.osubhd(self.outfile, "Available Space for Ports :")

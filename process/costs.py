@@ -1568,7 +1568,7 @@ class Costs:
             if cost_variables.supercond_cost_model == 0:
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
-                    * tfcoil_variables.whtconsc
+                    * tfcoil_variables.m_tf_coil_superconductor
                     / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
                 )
             else:
@@ -1582,7 +1582,7 @@ class Costs:
 
             costtfcu = (
                 cost_variables.uccu
-                * tfcoil_variables.whtconcu
+                * tfcoil_variables.m_tf_coil_copper
                 / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
             )
 
@@ -1628,7 +1628,7 @@ class Costs:
 
             cost_variables.c22213 = (
                 1.0e-6
-                * (tfcoil_variables.whtcas * cost_variables.uccase)
+                * (tfcoil_variables.m_tf_coil_case * cost_variables.uccase)
                 * tfcoil_variables.n_tf_coils
             )
             cost_variables.c22213 = (
@@ -1762,7 +1762,7 @@ class Costs:
                     )
                     * 1.0e6
                     / pfcoil_variables.j_pf_coil_wp_peak[i]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
             else:
                 costpfcu = (
@@ -1774,7 +1774,7 @@ class Costs:
                     )
                     * 1.0e6
                     / pfcoil_variables.j_pf_coil_wp_peak[i]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1841,7 +1841,7 @@ class Costs:
                     / pfcoil_variables.n_pf_coil_turns[
                         pfcoil_variables.n_cs_pf_coils - 1
                     ]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
             else:
                 # MDK I don't know if this is ccorrect as we never use the resistive model
@@ -1852,7 +1852,7 @@ class Costs:
                     / pfcoil_variables.n_pf_coil_turns[
                         pfcoil_variables.n_cs_pf_coils - 1
                     ]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
 
             #  Total cost/metre of superconductor and copper wire (Central Solenoid)

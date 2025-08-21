@@ -1,5 +1,6 @@
 from typing import Any, NamedTuple
 
+import numpy as np
 import pytest
 
 from process import superconducting_tf_coil as sctf
@@ -10,7 +11,9 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.fortran import (
+    fwbs_variables,
     global_variables,
+    physics_variables,
     sctfcoil_module,
 )
 from process.superconducting_tf_coil import SuperconductingTFCoil
@@ -1615,3 +1618,544 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     sctfcoil.vv_stress_on_quench()
 
     assert pytest.approx(sctfcoil_module.vv_stress_quench) == 56893800.120420754
+
+
+class TfCoilAreaAndMassesParam(NamedTuple):
+    hr1: Any = None
+
+    r_tf_outboard_mid: Any = None
+
+    dr_tf_inboard: Any = None
+
+    r_tf_inboard_mid: Any = None
+
+    r_tf_inboard_in: Any = None
+
+    r_tf_inboard_out: Any = None
+
+    z_tf_inside_half: Any = None
+
+    den_steel: Any = None
+
+    m_tf_wp_steel_conduit: Any = None
+
+    m_tf_coils_total: Any = None
+
+    m_tf_coil_case: Any = None
+
+    tficrn: Any = None
+
+    tfcryoarea: Any = None
+
+    m_tf_coil_wp_insulation: Any = None
+
+    tfocrn: Any = None
+
+    m_tf_coil_superconductor: Any = None
+
+    m_tf_coil_copper: Any = None
+
+    m_tf_coil_conductor: Any = None
+
+    m_tf_coil_wp_turn_insulation: Any = None
+
+    f_a_tf_turn_cable_space_extra_void: Any = None
+
+    dcond: Any = None
+
+    den_tf_wp_turn_insulation: Any = None
+
+    len_tf_coil: Any = None
+
+    den_tf_coil_case: Any = None
+
+    a_tf_turn_steel: Any = None
+
+    n_tf_coil_turns: Any = None
+
+    n_tf_coils: Any = None
+
+    a_tf_coil_wp_turn_insulation: Any = None
+
+    a_tf_coil_outboard_case: Any = None
+
+    a_tf_coil_inboard_case: Any = None
+
+    fcutfsu: Any = None
+
+    a_tf_wp_coolant_channels: Any = None
+
+    a_tf_turn_cable_space_no_void: Any = None
+
+    whttflgs: Any = None
+
+    whtcp: Any = None
+
+    whtconal: Any = None
+
+    vol_cond_cp: Any = None
+
+    i_tf_sup: Any = None
+
+    i_tf_sc_mat: Any = None
+
+    a_tf_leg_outboard: Any = None
+
+    dr_tf_nose_case: Any = None
+
+    voltfleg: Any = None
+
+    cplen: Any = None
+
+    itart: Any = None
+
+    a_tf_wp_with_insulation: Any = None
+
+    a_tf_wp_no_insulation: Any = None
+
+    vol_ins_cp: Any = None
+
+    vol_gr_ins_cp: Any = None
+
+    vol_case_cp: Any = None
+
+    a_leg_ins: Any = None
+
+    a_leg_gr_ins: Any = None
+
+    a_leg_cond: Any = None
+
+    rad_tf_coil_inboard_toroidal_half: Any = None
+
+    tan_theta_coil: Any = None
+
+    expected_m_tf_wp_steel_conduit: Any = None
+
+    expected_m_tf_coil_case: Any = None
+
+    expected_tficrn: Any = None
+
+    expected_tfcryoarea: Any = None
+
+    expected_m_tf_coil_wp_insulation: Any = None
+
+    expected_tfocrn: Any = None
+
+    expected_m_tf_coil_superconductor: Any = None
+
+    expected_m_tf_coil_copper: Any = None
+
+    expected_whtcon: Any = None
+
+    expected_m_tf_coil_wp_turn_insulation: Any = None
+
+    expected_cplen: Any = None
+
+
+@pytest.mark.parametrize(
+    "tfcoilareaandmassesparam",
+    (
+        TfCoilAreaAndMassesParam(
+            hr1=0.0,
+            r_tf_outboard_mid=16.519405859443332,
+            dr_tf_inboard=1.208,
+            r_tf_inboard_mid=3.5979411851091103,
+            r_tf_inboard_in=2.9939411851091102,
+            r_tf_inboard_out=4.20194118510911,
+            z_tf_inside_half=9.0730900215620327,
+            den_steel=7800.0,
+            m_tf_wp_steel_conduit=0.0,
+            m_tf_coils_total=0.0,
+            m_tf_coil_case=0.0,
+            tficrn=0.0,
+            tfcryoarea=0.0,
+            m_tf_coil_wp_insulation=0.0,
+            tfocrn=0.0,
+            m_tf_coil_superconductor=0.0,
+            m_tf_coil_copper=0.0,
+            m_tf_coil_conductor=0.0,
+            m_tf_coil_wp_turn_insulation=0.0,
+            f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
+            dcond=np.array(
+                np.array(
+                    (
+                        6080.0,
+                        6080.0,
+                        6070.0,
+                        6080.0,
+                        6080.0,
+                        8500.0,
+                        6070.0,
+                        8500.0,
+                        8500.0,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            den_tf_wp_turn_insulation=1800.0,
+            len_tf_coil=50.483843027201402,
+            den_tf_coil_case=8000.0,
+            a_tf_turn_steel=0.0014685061538103825,
+            n_tf_coil_turns=200.0,
+            n_tf_coils=16.0,
+            a_tf_coil_wp_turn_insulation=0.087880174466980876,
+            a_tf_coil_outboard_case=1.2752592893394648,
+            a_tf_coil_inboard_case=1.0015169239205168,
+            fcutfsu=0.80884,
+            a_tf_wp_coolant_channels=0.015707963267948974,
+            a_tf_turn_cable_space_no_void=0.001293323051622732,
+            whttflgs=0.0,
+            whtcp=0.0,
+            whtconal=0.0,
+            vol_cond_cp=0.0,
+            i_tf_sup=1,
+            i_tf_sc_mat=5,
+            a_tf_leg_outboard=1.9805354702921749,
+            dr_tf_nose_case=0.52465000000000006,
+            voltfleg=0.0,
+            cplen=0.0,
+            itart=0,
+            a_tf_wp_with_insulation=0.70527618095271016,
+            a_tf_wp_no_insulation=0.64024601555360383,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
+            tan_theta_coil=0.19891236737965801,
+            expected_m_tf_wp_steel_conduit=115651.90127937049,
+            expected_m_tf_coil_case=1034021.9996272125,
+            expected_m_tf_coil_wp_insulation=5909.3507916745702,
+            expected_m_tf_coil_superconductor=5802.5700395134345,
+            expected_m_tf_coil_copper=58744.465423173802,
+            expected_whtcon=188184.68882144717,
+            expected_m_tf_coil_wp_turn_insulation=7985.7520793894437,
+            expected_cplen=20.562180043124066,
+        ),
+        TfCoilAreaAndMassesParam(
+            hr1=0,
+            r_tf_outboard_mid=16.519405859443332,
+            dr_tf_inboard=1.208,
+            r_tf_inboard_mid=3.5979411851091103,
+            r_tf_inboard_in=2.9939411851091102,
+            r_tf_inboard_out=4.20194118510911,
+            z_tf_inside_half=9.0730900215620327,
+            den_steel=7800.0,
+            m_tf_wp_steel_conduit=115651.90127937049,
+            m_tf_coils_total=19649856.627845347,
+            m_tf_coil_case=1034021.9996272125,
+            tficrn=0.8197580588957678,
+            tfcryoarea=6381.2092203414386,
+            m_tf_coil_wp_insulation=5909.3507916745702,
+            tfocrn=0.59553192892551199,
+            m_tf_coil_superconductor=5802.5700395134345,
+            m_tf_coil_copper=58744.465423173802,
+            m_tf_coil_conductor=0.0,
+            m_tf_coil_wp_turn_insulation=0.0,
+            f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
+            dcond=np.array(
+                np.array(
+                    (
+                        6080.0,
+                        6080.0,
+                        6070.0,
+                        6080.0,
+                        6080.0,
+                        8500.0,
+                        6070.0,
+                        8500.0,
+                        8500.0,
+                    ),
+                    order="F",
+                ),
+                order="F",
+            ).transpose(),
+            den_tf_wp_turn_insulation=1800.0,
+            len_tf_coil=50.514015976170839,
+            den_tf_coil_case=8000.0,
+            a_tf_turn_steel=0.0014685061538103825,
+            n_tf_coil_turns=200,
+            n_tf_coils=16,
+            a_tf_coil_wp_turn_insulation=0.087880174466980876,
+            a_tf_coil_outboard_case=1.2752592893394648,
+            a_tf_coil_inboard_case=1.0015169239205168,
+            fcutfsu=0.80884,
+            a_tf_wp_coolant_channels=0.015707963267948974,
+            a_tf_turn_cable_space_no_void=0.001293323051622732,
+            whttflgs=0.0,
+            whtcp=0.0,
+            whtconal=0.0,
+            vol_cond_cp=0.0,
+            i_tf_sup=1,
+            i_tf_sc_mat=5,
+            a_tf_leg_outboard=1.9805354702921749,
+            dr_tf_nose_case=0.52465000000000006,
+            voltfleg=0.0,
+            cplen=20.562180043124066,
+            itart=0,
+            a_tf_wp_with_insulation=0.70527618095271016,
+            a_tf_wp_no_insulation=0.64024601555360383,
+            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
+            tan_theta_coil=0.19891236737965801,
+            expected_m_tf_wp_steel_conduit=115721.02357090525,
+            expected_m_tf_coil_case=1034699.2182961091,
+            expected_m_tf_coil_wp_insulation=5912.8826650262808,
+            expected_m_tf_coil_superconductor=5806.038092640837,
+            expected_m_tf_coil_copper=58779.575542593491,
+            expected_whtcon=188297.16217276,
+            expected_m_tf_coil_wp_turn_insulation=7990.5249666247555,
+            expected_cplen=20.562180043124066,
+        ),
+    ),
+)
+def test_superconducting_tf_coil_area_and_masses(
+    tfcoilareaandmassesparam, monkeypatch, sctfcoil
+):
+    """
+    Automatically generated Regression Unit Test for tf_coil_area_and_masses.
+
+    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
+
+    :param tfcoilareaandmassesparam: the data used to mock and assert in this test.
+    :type tfcoilareaandmassesparam: tfcoilareaandmassesparam
+
+    :param monkeypatch: pytest fixture used to mock module/class variables
+    :type monkeypatch: _pytest.monkeypatch.monkeypatch
+    """
+
+    monkeypatch.setattr(build_variables, "hr1", tfcoilareaandmassesparam.hr1)
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
+    )
+
+    monkeypatch.setattr(
+        build_variables, "dr_tf_inboard", tfcoilareaandmassesparam.dr_tf_inboard
+    )
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_mid", tfcoilareaandmassesparam.r_tf_inboard_mid
+    )
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_in", tfcoilareaandmassesparam.r_tf_inboard_in
+    )
+
+    monkeypatch.setattr(
+        build_variables, "r_tf_inboard_out", tfcoilareaandmassesparam.r_tf_inboard_out
+    )
+
+    monkeypatch.setattr(
+        build_variables, "z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half
+    )
+
+    monkeypatch.setattr(fwbs_variables, "den_steel", tfcoilareaandmassesparam.den_steel)
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_wp_steel_conduit",
+        tfcoilareaandmassesparam.m_tf_wp_steel_conduit,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coils_total", tfcoilareaandmassesparam.m_tf_coils_total
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coil_case", tfcoilareaandmassesparam.m_tf_coil_case
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_wp_insulation",
+        tfcoilareaandmassesparam.m_tf_coil_wp_insulation,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_superconductor",
+        tfcoilareaandmassesparam.m_tf_coil_superconductor,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coil_copper", tfcoilareaandmassesparam.m_tf_coil_copper
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_conductor",
+        tfcoilareaandmassesparam.m_tf_coil_conductor,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_wp_turn_insulation",
+        tfcoilareaandmassesparam.m_tf_coil_wp_turn_insulation,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "f_a_tf_turn_cable_space_extra_void",
+        tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "dcond", tfcoilareaandmassesparam.dcond)
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "den_tf_wp_turn_insulation",
+        tfcoilareaandmassesparam.den_tf_wp_turn_insulation,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "den_tf_coil_case", tfcoilareaandmassesparam.den_tf_coil_case
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coil_turns", tfcoilareaandmassesparam.n_tf_coil_turns
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "n_tf_coils", tfcoilareaandmassesparam.n_tf_coils
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_wp_turn_insulation",
+        tfcoilareaandmassesparam.a_tf_coil_wp_turn_insulation,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_outboard_case",
+        tfcoilareaandmassesparam.a_tf_coil_outboard_case,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_coil_inboard_case",
+        tfcoilareaandmassesparam.a_tf_coil_inboard_case,
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_wp_coolant_channels",
+        tfcoilareaandmassesparam.a_tf_wp_coolant_channels,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_turn_cable_space_no_void",
+        tfcoilareaandmassesparam.a_tf_turn_cable_space_no_void,
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "whttflgs", tfcoilareaandmassesparam.whttflgs)
+
+    monkeypatch.setattr(tfcoil_variables, "whtcp", tfcoilareaandmassesparam.whtcp)
+
+    monkeypatch.setattr(tfcoil_variables, "whtconal", tfcoilareaandmassesparam.whtconal)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "vol_cond_cp", tfcoilareaandmassesparam.vol_cond_cp
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcoilareaandmassesparam.i_tf_sup)
+
+    monkeypatch.setattr(
+        tfcoil_variables, "i_tf_sc_mat", tfcoilareaandmassesparam.i_tf_sc_mat
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "a_tf_leg_outboard",
+        tfcoilareaandmassesparam.a_tf_leg_outboard,
+    )
+
+    monkeypatch.setattr(
+        tfcoil_variables, "dr_tf_nose_case", tfcoilareaandmassesparam.dr_tf_nose_case
+    )
+
+    monkeypatch.setattr(tfcoil_variables, "voltfleg", tfcoilareaandmassesparam.voltfleg)
+
+    monkeypatch.setattr(tfcoil_variables, "cplen", tfcoilareaandmassesparam.cplen)
+
+    monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
+
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_with_insulation",
+        tfcoilareaandmassesparam.a_tf_wp_with_insulation,
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "a_tf_wp_no_insulation",
+        tfcoilareaandmassesparam.a_tf_wp_no_insulation,
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "vol_gr_ins_cp", tfcoilareaandmassesparam.vol_gr_ins_cp
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "vol_case_cp", tfcoilareaandmassesparam.vol_case_cp
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module,
+        "rad_tf_coil_inboard_toroidal_half",
+        tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
+    )
+
+    monkeypatch.setattr(
+        sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
+    )
+
+    sctfcoil.superconducting_tf_coil_areas_and_masses()
+
+    assert tfcoil_variables.m_tf_wp_steel_conduit == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_wp_steel_conduit
+    )
+
+    assert tfcoil_variables.m_tf_coil_case == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_case
+    )
+
+    assert tfcoil_variables.m_tf_coil_wp_insulation == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_wp_insulation
+    )
+
+    assert tfcoil_variables.m_tf_coil_superconductor == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_superconductor
+    )
+
+    assert tfcoil_variables.m_tf_coil_copper == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_copper
+    )
+
+    assert tfcoil_variables.m_tf_coil_conductor == pytest.approx(
+        tfcoilareaandmassesparam.expected_whtcon
+    )
+
+    assert tfcoil_variables.m_tf_coil_wp_turn_insulation == pytest.approx(
+        tfcoilareaandmassesparam.expected_m_tf_coil_wp_turn_insulation
+    )
+
+    assert tfcoil_variables.cplen == pytest.approx(
+        tfcoilareaandmassesparam.expected_cplen
+    )

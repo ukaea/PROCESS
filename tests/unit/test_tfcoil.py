@@ -9,12 +9,10 @@ import process.tf_coil as tfcoil_module
 from process.build import Build
 from process.data_structure import build_variables, tfcoil_variables
 from process.data_structure import build_variables as bv
+from process.fortran import fwbs_variables as fwbsv
 from process.fortran import (
-    fwbs_variables,
-    physics_variables,
     sctfcoil_module,
 )
-from process.fortran import fwbs_variables as fwbsv
 from process.tf_coil import TFCoil
 
 
@@ -724,11 +722,7 @@ def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
 
 
 class TfCoilAreaAndMassesParam(NamedTuple):
-    hr1: Any = None
-
     r_tf_outboard_mid: Any = None
-
-    dr_tf_inboard: Any = None
 
     r_tf_inboard_mid: Any = None
 
@@ -736,275 +730,43 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     r_tf_inboard_out: Any = None
 
-    z_tf_inside_half: Any = None
-
-    denstl: Any = None
-
-    m_tf_turn_steel_conduit: Any = None
-
-    m_tf_coils_total: Any = None
-
-    whtcas: Any = None
-
     tficrn: Any = None
 
     tfcryoarea: Any = None
 
-    whtgw: Any = None
-
-    tfocrn: Any = None
-
-    whtconsc: Any = None
-
-    whtconcu: Any = None
-
-    whtcon: Any = None
-
-    whtconin: Any = None
-
-    f_a_tf_turn_cable_space_extra_void: Any = None
-
-    dcond: Any = None
-
-    dcondins: Any = None
-
     len_tf_coil: Any = None
 
-    dcase: Any = None
-
-    a_tf_turn_steel: Any = None
-
-    n_tf_coil_turns: Any = None
-
-    n_tf_coils: Any = None
-
-    a_tf_coil_wp_turn_insulation: Any = None
-
-    a_tf_coil_outboard_case: Any = None
-
-    a_tf_coil_inboard_case: Any = None
-
-    fcutfsu: Any = None
-
-    a_tf_wp_coolant_channels: Any = None
-
-    a_tf_turn_cable_space_no_void: Any = None
-
-    whttflgs: Any = None
-
-    whtcp: Any = None
-
-    whtconal: Any = None
-
-    vol_cond_cp: Any = None
-
-    i_tf_sup: Any = None
-
-    i_tf_sc_mat: Any = None
-
-    a_tf_leg_outboard: Any = None
-
-    dr_tf_nose_case: Any = None
-
-    voltfleg: Any = None
-
-    cplen: Any = None
-
-    itart: Any = None
-
-    a_tf_wp_with_insulation: Any = None
-
-    a_tf_wp_no_insulation: Any = None
-
-    vol_ins_cp: Any = None
-
-    vol_gr_ins_cp: Any = None
-
-    vol_case_cp: Any = None
-
-    a_leg_ins: Any = None
-
-    a_leg_gr_ins: Any = None
-
-    a_leg_cond: Any = None
+    tfocrn: Any = None
 
     rad_tf_coil_inboard_toroidal_half: Any = None
 
     tan_theta_coil: Any = None
 
-    expected_m_tf_turn_steel_conduit: Any = None
-
-    expected_whtcas: Any = None
-
     expected_tficrn: Any = None
 
     expected_tfcryoarea: Any = None
 
-    expected_whtgw: Any = None
-
     expected_tfocrn: Any = None
-
-    expected_whtconsc: Any = None
-
-    expected_whtconcu: Any = None
-
-    expected_whtcon: Any = None
-
-    expected_whtconin: Any = None
-
-    expected_cplen: Any = None
 
 
 @pytest.mark.parametrize(
     "tfcoilareaandmassesparam",
     (
         TfCoilAreaAndMassesParam(
-            hr1=0,
             r_tf_outboard_mid=16.519405859443332,
-            dr_tf_inboard=1.208,
             r_tf_inboard_mid=3.5979411851091103,
             r_tf_inboard_in=2.9939411851091102,
             r_tf_inboard_out=4.20194118510911,
-            z_tf_inside_half=9.0730900215620327,
-            denstl=7800,
-            m_tf_turn_steel_conduit=0,
-            m_tf_coils_total=0,
-            whtcas=0,
-            tficrn=0,
-            tfcryoarea=0,
-            whtgw=0,
-            tfocrn=0,
-            whtconsc=0,
-            whtconcu=0,
-            whtcon=0,
-            whtconin=0,
-            f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
-            dcond=np.array(
-                np.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
-                ),
-                order="F",
-            ).transpose(),
-            dcondins=1800,
             len_tf_coil=50.483843027201402,
-            dcase=8000,
-            a_tf_turn_steel=0.0014685061538103825,
-            n_tf_coil_turns=200,
-            n_tf_coils=16,
-            a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            a_tf_coil_outboard_case=1.2752592893394648,
-            a_tf_coil_inboard_case=1.0015169239205168,
-            fcutfsu=0.80884,
-            a_tf_wp_coolant_channels=0.015707963267948974,
-            a_tf_turn_cable_space_no_void=0.001293323051622732,
-            whttflgs=0,
-            whtcp=0,
-            whtconal=0,
-            vol_cond_cp=0,
-            i_tf_sup=1,
-            i_tf_sc_mat=5,
-            a_tf_leg_outboard=1.9805354702921749,
-            dr_tf_nose_case=0.52465000000000006,
-            voltfleg=0,
-            cplen=0,
-            itart=0,
-            a_tf_wp_with_insulation=0.70527618095271016,
-            a_tf_wp_no_insulation=0.64024601555360383,
-            vol_ins_cp=0,
-            vol_gr_ins_cp=0,
-            vol_case_cp=0,
-            a_leg_ins=0,
-            a_leg_gr_ins=0,
-            a_leg_cond=0,
             rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
             tan_theta_coil=0.19891236737965801,
-            expected_m_tf_turn_steel_conduit=115651.90127937049,
-            expected_whtcas=1034021.9996272125,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6381.2092203414386,
-            expected_whtgw=5909.3507916745702,
             expected_tfocrn=0.59553192892551199,
-            expected_whtconsc=5802.5700395134345,
-            expected_whtconcu=58744.465423173802,
-            expected_whtcon=188184.68882144717,
-            expected_whtconin=7985.7520793894437,
-            expected_cplen=20.562180043124066,
-        ),
-        TfCoilAreaAndMassesParam(
-            hr1=0,
-            r_tf_outboard_mid=16.519405859443332,
-            dr_tf_inboard=1.208,
-            r_tf_inboard_mid=3.5979411851091103,
-            r_tf_inboard_in=2.9939411851091102,
-            r_tf_inboard_out=4.20194118510911,
-            z_tf_inside_half=9.0730900215620327,
-            denstl=7800,
-            m_tf_turn_steel_conduit=115651.90127937049,
-            m_tf_coils_total=19649856.627845347,
-            whtcas=1034021.9996272125,
-            tficrn=0.8197580588957678,
-            tfcryoarea=6381.2092203414386,
-            whtgw=5909.3507916745702,
-            tfocrn=0.59553192892551199,
-            whtconsc=5802.5700395134345,
-            whtconcu=58744.465423173802,
-            whtcon=0,
-            whtconin=0,
-            f_a_tf_turn_cable_space_extra_void=0.30000000000000004,
-            dcond=np.array(
-                np.array(
-                    (6080, 6080, 6070, 6080, 6080, 8500, 6070, 8500, 8500), order="F"
-                ),
-                order="F",
-            ).transpose(),
-            dcondins=1800,
-            len_tf_coil=50.514015976170839,
-            dcase=8000,
-            a_tf_turn_steel=0.0014685061538103825,
-            n_tf_coil_turns=200,
-            n_tf_coils=16,
-            a_tf_coil_wp_turn_insulation=0.087880174466980876,
-            a_tf_coil_outboard_case=1.2752592893394648,
-            a_tf_coil_inboard_case=1.0015169239205168,
-            fcutfsu=0.80884,
-            a_tf_wp_coolant_channels=0.015707963267948974,
-            a_tf_turn_cable_space_no_void=0.001293323051622732,
-            whttflgs=0,
-            whtcp=0,
-            whtconal=0,
-            vol_cond_cp=0,
-            i_tf_sup=1,
-            i_tf_sc_mat=5,
-            a_tf_leg_outboard=1.9805354702921749,
-            dr_tf_nose_case=0.52465000000000006,
-            voltfleg=0,
-            cplen=20.562180043124066,
-            itart=0,
-            a_tf_wp_with_insulation=0.70527618095271016,
-            a_tf_wp_no_insulation=0.64024601555360383,
-            vol_ins_cp=0,
-            vol_gr_ins_cp=0,
-            vol_case_cp=0,
-            a_leg_ins=0,
-            a_leg_gr_ins=0,
-            a_leg_cond=0,
-            rad_tf_coil_inboard_toroidal_half=0.19634954084936207,
-            tan_theta_coil=0.19891236737965801,
-            expected_m_tf_turn_steel_conduit=115721.02357090525,
-            expected_whtcas=1034699.2182961091,
-            expected_tficrn=0.8197580588957678,
-            expected_tfcryoarea=6385.0231118485681,
-            expected_whtgw=5912.8826650262808,
-            expected_tfocrn=0.59553192892551199,
-            expected_whtconsc=5806.038092640837,
-            expected_whtconcu=58779.575542593491,
-            expected_whtcon=188297.16217276,
-            expected_whtconin=7990.5249666247555,
-            expected_cplen=20.562180043124066,
         ),
     ),
 )
-def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
+def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     """
     Automatically generated Regression Unit Test for tf_coil_area_and_masses.
 
@@ -1017,14 +779,12 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "hr1", tfcoilareaandmassesparam.hr1)
-
     monkeypatch.setattr(
         build_variables, "r_tf_outboard_mid", tfcoilareaandmassesparam.r_tf_outboard_mid
     )
 
     monkeypatch.setattr(
-        build_variables, "dr_tf_inboard", tfcoilareaandmassesparam.dr_tf_inboard
+        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
     )
 
     monkeypatch.setattr(
@@ -1040,174 +800,6 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
     )
 
     monkeypatch.setattr(
-        build_variables, "z_tf_inside_half", tfcoilareaandmassesparam.z_tf_inside_half
-    )
-
-    monkeypatch.setattr(fwbs_variables, "denstl", tfcoilareaandmassesparam.denstl)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "m_tf_turn_steel_conduit",
-        tfcoilareaandmassesparam.m_tf_turn_steel_conduit,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "m_tf_coils_total", tfcoilareaandmassesparam.m_tf_coils_total
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "whtcas", tfcoilareaandmassesparam.whtcas)
-
-    monkeypatch.setattr(tfcoil_variables, "tficrn", tfcoilareaandmassesparam.tficrn)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "whtgw", tfcoilareaandmassesparam.whtgw)
-
-    monkeypatch.setattr(tfcoil_variables, "tfocrn", tfcoilareaandmassesparam.tfocrn)
-
-    monkeypatch.setattr(tfcoil_variables, "whtconsc", tfcoilareaandmassesparam.whtconsc)
-
-    monkeypatch.setattr(tfcoil_variables, "whtconcu", tfcoilareaandmassesparam.whtconcu)
-
-    monkeypatch.setattr(tfcoil_variables, "whtcon", tfcoilareaandmassesparam.whtcon)
-
-    monkeypatch.setattr(tfcoil_variables, "whtconin", tfcoilareaandmassesparam.whtconin)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "tfcryoarea", tfcoilareaandmassesparam.tfcryoarea
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "f_a_tf_turn_cable_space_extra_void",
-        tfcoilareaandmassesparam.f_a_tf_turn_cable_space_extra_void,
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "dcond", tfcoilareaandmassesparam.dcond)
-
-    monkeypatch.setattr(tfcoil_variables, "dcondins", tfcoilareaandmassesparam.dcondins)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "len_tf_coil", tfcoilareaandmassesparam.len_tf_coil
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "dcase", tfcoilareaandmassesparam.dcase)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "a_tf_turn_steel", tfcoilareaandmassesparam.a_tf_turn_steel
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coil_turns", tfcoilareaandmassesparam.n_tf_coil_turns
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "n_tf_coils", tfcoilareaandmassesparam.n_tf_coils
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_coil_wp_turn_insulation",
-        tfcoilareaandmassesparam.a_tf_coil_wp_turn_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_coil_outboard_case",
-        tfcoilareaandmassesparam.a_tf_coil_outboard_case,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_coil_inboard_case",
-        tfcoilareaandmassesparam.a_tf_coil_inboard_case,
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_wp_coolant_channels",
-        tfcoilareaandmassesparam.a_tf_wp_coolant_channels,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_turn_cable_space_no_void",
-        tfcoilareaandmassesparam.a_tf_turn_cable_space_no_void,
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "whttflgs", tfcoilareaandmassesparam.whttflgs)
-
-    monkeypatch.setattr(tfcoil_variables, "whtcp", tfcoilareaandmassesparam.whtcp)
-
-    monkeypatch.setattr(tfcoil_variables, "whtconal", tfcoilareaandmassesparam.whtconal)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "vol_cond_cp", tfcoilareaandmassesparam.vol_cond_cp
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", tfcoilareaandmassesparam.i_tf_sup)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "i_tf_sc_mat", tfcoilareaandmassesparam.i_tf_sc_mat
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "a_tf_leg_outboard",
-        tfcoilareaandmassesparam.a_tf_leg_outboard,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", tfcoilareaandmassesparam.dr_tf_nose_case
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "voltfleg", tfcoilareaandmassesparam.voltfleg)
-
-    monkeypatch.setattr(tfcoil_variables, "cplen", tfcoilareaandmassesparam.cplen)
-
-    monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "a_tf_wp_with_insulation",
-        tfcoilareaandmassesparam.a_tf_wp_with_insulation,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module,
-        "a_tf_wp_no_insulation",
-        tfcoilareaandmassesparam.a_tf_wp_no_insulation,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "vol_gr_ins_cp", tfcoilareaandmassesparam.vol_gr_ins_cp
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "vol_case_cp", tfcoilareaandmassesparam.vol_case_cp
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "a_leg_ins", tfcoilareaandmassesparam.a_leg_ins
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "a_leg_gr_ins", tfcoilareaandmassesparam.a_leg_gr_ins
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "a_leg_cond", tfcoilareaandmassesparam.a_leg_cond
-    )
-
-    monkeypatch.setattr(
         sctfcoil_module,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
@@ -1217,15 +809,7 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
     )
 
-    tfcoil.tf_coil_area_and_masses()
-
-    assert tfcoil_variables.m_tf_turn_steel_conduit == pytest.approx(
-        tfcoilareaandmassesparam.expected_m_tf_turn_steel_conduit
-    )
-
-    assert tfcoil_variables.whtcas == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtcas
-    )
+    tfcoil.generic_tf_coil_area_and_masses()
 
     assert tfcoil_variables.tficrn == pytest.approx(
         tfcoilareaandmassesparam.expected_tficrn
@@ -1235,32 +819,8 @@ def test_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, tfcoil):
         tfcoilareaandmassesparam.expected_tfcryoarea
     )
 
-    assert tfcoil_variables.whtgw == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtgw
-    )
-
     assert tfcoil_variables.tfocrn == pytest.approx(
         tfcoilareaandmassesparam.expected_tfocrn
-    )
-
-    assert tfcoil_variables.whtconsc == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconsc
-    )
-
-    assert tfcoil_variables.whtconcu == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconcu
-    )
-
-    assert tfcoil_variables.whtcon == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtcon
-    )
-
-    assert tfcoil_variables.whtconin == pytest.approx(
-        tfcoilareaandmassesparam.expected_whtconin
-    )
-
-    assert tfcoil_variables.cplen == pytest.approx(
-        tfcoilareaandmassesparam.expected_cplen
     )
 
 

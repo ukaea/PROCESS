@@ -695,7 +695,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6707E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.3122E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.3122E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.4883E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9159E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7806E-01 ITV
@@ -725,11 +725,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      4.1902E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.3501E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.6415E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3121E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4642E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.1902E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.3501E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.6415E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3121E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4642E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8257E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0921E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
@@ -1858,7 +1858,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5744E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1884E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1884E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.4179E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.8472E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7107E-01 ITV
@@ -1888,11 +1888,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.7215E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2837E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.5813E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2720E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4464E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.7215E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2837E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.5813E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2720E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4464E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6839E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0694E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
@@ -3021,7 +3021,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5098E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.0995E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.0995E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.3467E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.7778E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6404E-01 ITV
@@ -3051,11 +3051,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.2683E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2246E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.4962E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2408E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4272E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.2683E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2246E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.4962E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2408E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4272E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5756E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0521E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
@@ -4184,7 +4184,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5136E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1061E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1061E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.3564E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.7873E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6500E-01 ITV
@@ -4214,11 +4214,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.2652E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2369E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.5162E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2436E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4304E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.2652E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2369E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.5162E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2436E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4304E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5855E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0537E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
@@ -5347,7 +5347,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5568E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1735E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1735E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.4356E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.8645E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7283E-01 ITV
@@ -5377,11 +5377,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.7328E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2934E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.6364E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2718E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4530E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.7328E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2934E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.6364E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2718E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4530E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6756E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0681E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
@@ -6510,7 +6510,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6314E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2805E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.2805E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.5336E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9601E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8258E-01 ITV
@@ -6540,11 +6540,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      4.2408E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.3770E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.7899E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3025E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4821E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.2408E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.3770E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.7899E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3025E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4821E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8120E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0899E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
@@ -7673,7 +7673,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6359E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2885E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.2885E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.5458E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9720E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8380E-01 ITV
@@ -7703,11 +7703,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      4.2351E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.3931E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.8136E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3066E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4861E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.2351E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.3931E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.8136E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3066E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4861E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8240E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0918E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
@@ -8836,7 +8836,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5713E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1963E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1963E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.4625E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.8907E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7550E-01 ITV
@@ -8866,11 +8866,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.7437E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.3382E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.6855E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2726E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4625E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.7437E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.3382E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.6855E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2726E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4625E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7080E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0733E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
@@ -9999,7 +9999,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5136E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1119E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1119E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.3798E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.8101E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6731E-01 ITV
@@ -10029,11 +10029,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.2927E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2820E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.5529E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2401E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4388E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.2927E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2820E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.5529E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2401E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4388E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.5997E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0560E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
@@ -11162,7 +11162,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5159E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1159E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1159E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.3854E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.8155E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6786E-01 ITV
@@ -11192,11 +11192,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.2917E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2896E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.5641E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2414E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4407E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.2917E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2896E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.5641E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2414E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4407E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6056E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0569E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 
@@ -12325,7 +12325,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5705E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1979E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1979E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.4722E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9002E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7647E-01 ITV
@@ -12355,11 +12355,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.7517E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.3474E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.7086E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2742E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4659E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.7517E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.3474E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.7086E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2742E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4659E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7129E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0741E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
@@ -13488,7 +13488,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6317E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2865E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.2865E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.5559E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9817E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8480E-01 ITV
@@ -13518,11 +13518,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      4.2545E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.4117E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.8270E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3061E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4895E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.2545E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.4117E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.8270E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3061E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4895E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8254E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0921E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
@@ -14651,7 +14651,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.6346E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2915E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.2915E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.5629E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9886E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.8550E-01 ITV
@@ -14681,11 +14681,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      4.2524E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.4211E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.8412E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3079E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4918E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.2524E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.4211E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.8412E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3079E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4918E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.8328E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0933E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1962E+01 OP 
@@ -15814,7 +15814,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5747E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.2028E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.2028E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.4737E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.9017E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.7662E-01 ITV
@@ -15844,11 +15844,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.7633E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.3629E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.6959E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2727E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4662E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.7633E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.3629E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.6959E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2727E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4662E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.7183E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0749E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1732E+01 OP 
@@ -16977,7 +16977,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.5148E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.1143E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.1143E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.3842E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      4.8144E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      4.6775E-01 ITV
@@ -17007,11 +17007,11 @@
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      3.3149E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.2992E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.5488E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.2376E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.4403E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      3.3149E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.2992E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.5488E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.2376E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.4403E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      6.6037E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.0566E+07 OP 
  Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.1502E+01 OP 

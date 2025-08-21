@@ -401,6 +401,11 @@ OBS_VARS = {
     "ims": "i_blkt_module_segmentation",
     "i_coolant_pumping": "i_p_coolant_pumping",
     "vfblkt": "f_a_blkt_cooling_channels",
+    "dalu": "den_aluminium",
+    "dcase": "den_tf_coil_case",
+    "dcondins": "den_tf_wp_turn_insulation",
+    "dcopper": "den_copper",
+    "denstl": "den_steel",
 }
 
 OBS_VARS_HELP = {

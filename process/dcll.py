@@ -451,7 +451,7 @@ class DCLL(BlanketLibrary):
              - See submodule liquid_breeder_properties for density etc.
         Structure
              - EUROFER
-             - denstl in fwbs_variables
+             - den_steel in fwbs_variables
         Ceramic FCIs
              - SiC
              - den_ceramic in fwbs_variables
@@ -655,7 +655,7 @@ class DCLL(BlanketLibrary):
         # Calculate masses
         # BZ
         dcll_variables.wht_stl_struct = (
-            fwbs_variables.denstl
+            fwbs_variables.den_steel
             * dcll_variables.f_vol_stl_bz_struct
             * dcll_variables.vol_bz_struct
         )
@@ -674,7 +674,7 @@ class DCLL(BlanketLibrary):
         dcll_variables.wht_cer = fwbs_variables.den_ceramic * dcll_variables.vol_fci
         # Back Wall
         dcll_variables.wht_bw_stl = (
-            fwbs_variables.denstl
+            fwbs_variables.den_steel
             * dcll_variables.f_vol_stl_back_wall
             * dcll_variables.vol_bw
         )
@@ -686,7 +686,7 @@ class DCLL(BlanketLibrary):
 
         # Manifold/BSS
         dcll_variables.wht_mfbss_stl = (
-            fwbs_variables.denstl
+            fwbs_variables.den_steel
             * dcll_variables.f_vol_mfbss_stl
             * dcll_variables.vol_bss
         )
@@ -709,7 +709,7 @@ class DCLL(BlanketLibrary):
         )
         # First wall mass, excluding armour (kg)
         dcll_variables.fwmass_stl = (
-            fwbs_variables.denstl
+            fwbs_variables.den_steel
             * dcll_variables.f_vol_stl_fw
             * fwbs_variables.vol_fw_total
         )
