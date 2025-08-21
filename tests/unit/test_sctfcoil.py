@@ -1152,7 +1152,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, sctfcoil):
         dr_tf_turn_cable_space,
         dx_tf_turn_cable_space,
         dx_tf_turn_cable_space_average,
-    ) = sctfcoil.tf_integer_turn_geom(
+    ) = sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
         dr_tf_wp_with_insulation=tfintegerturngeomparam.dr_tf_wp_with_insulation,
         dx_tf_wp_insulation=tfintegerturngeomparam.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=tfintegerturngeomparam.dx_tf_wp_insertion_gap,
