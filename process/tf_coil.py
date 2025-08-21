@@ -473,6 +473,47 @@ class TFCoil:
 
         return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
+    def tf_stored_magnetic_energy(
+        self,
+        ind_tf_coil: float,
+        c_tf_coil: float,
+        n_tf_coils: int,
+    ) -> float:
+        """
+        Calculates the stored magnetic energy in a single TF coil.
+
+        :param ind_tf_coil: Self-inductance of the TF coil [H].
+        :type ind_tf_coil: float
+        :param c_tf_coil: Current per TF coil [A].
+        :type c_tf_coil: float
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: int
+
+        :returns: Stored magnetic energy in a single TF coil [J].
+        :rtype: float
+
+        :notes:
+        - The stored magnetic energy in an inductor is given by:
+        E = (1/2) * L * I^2
+          where E is the energy [J], L is the inductance [H], and I is the current [A].
+
+        :references:
+            - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
+
+            - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
+        """
+        e_tf_coil_magnetic_stored = 0.5 * ind_tf_coil * c_tf_coil**2
+
+        e_tf_magnetic_stored_total = e_tf_coil_magnetic_stored * n_tf_coils
+
+        e_tf_magnetic_stored_total_gj = e_tf_magnetic_stored_total * 1.0e-9
+
+        return (
+            e_tf_coil_magnetic_stored,
+            e_tf_magnetic_stored_total,
+            e_tf_magnetic_stored_total_gj,
+        )
+
     def outtf(self, peaktfflag):
         """Writes superconducting TF coil output to file
         author: P J Knight, CCFE, Culham Science Centre
