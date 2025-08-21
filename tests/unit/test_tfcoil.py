@@ -10,9 +10,9 @@ from process.build import Build
 from process.data_structure import (
     build_variables,
     fwbs_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.fortran import sctfcoil_module
 from process.tf_coil import TFCoil
 
 
@@ -800,13 +800,14 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
     )
-
     monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
+        superconducting_tf_coil_variables,
+        "tan_theta_coil",
+        tfcoilareaandmassesparam.tan_theta_coil,
     )
 
     tfcoil.generic_tf_coil_area_and_masses()

@@ -8,13 +8,13 @@ from process.data_structure import (
     build_variables,
     constraint_variables,
     divertor_variables,
+    fwbs_variables,
+    physics_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
 )
 from process.fortran import (
-    fwbs_variables,
     global_variables,
-    physics_variables,
-    sctfcoil_module,
 )
 from process.superconducting_tf_coil import SuperconductingTFCoil
 
@@ -400,11 +400,17 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "t_crit_nbti", superconparam.t_crit_nbti)
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_t", superconparam.tf_fit_t)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "tf_fit_t", superconparam.tf_fit_t
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_z", superconparam.tf_fit_z)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "tf_fit_z", superconparam.tf_fit_z
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_y", superconparam.tf_fit_y)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "tf_fit_y", superconparam.tf_fit_y
+    )
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
@@ -516,11 +522,17 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_t", peaktfwithrippleparam.tf_fit_t)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "tf_fit_t", peaktfwithrippleparam.tf_fit_t
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_z", peaktfwithrippleparam.tf_fit_z)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "tf_fit_z", peaktfwithrippleparam.tf_fit_z
+    )
 
-    monkeypatch.setattr(sctfcoil_module, "tf_fit_y", peaktfwithrippleparam.tf_fit_y)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "tf_fit_y", peaktfwithrippleparam.tf_fit_y
+    )
 
     bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
@@ -530,15 +542,15 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
     )
 
-    assert sctfcoil_module.tf_fit_t == pytest.approx(
+    assert superconducting_tf_coil_variables.tf_fit_t == pytest.approx(
         peaktfwithrippleparam.expected_tf_fit_t
     )
 
-    assert sctfcoil_module.tf_fit_z == pytest.approx(
+    assert superconducting_tf_coil_variables.tf_fit_z == pytest.approx(
         peaktfwithrippleparam.expected_tf_fit_z
     )
 
-    assert sctfcoil_module.tf_fit_y == pytest.approx(
+    assert superconducting_tf_coil_variables.tf_fit_y == pytest.approx(
         peaktfwithrippleparam.expected_tf_fit_y
     )
 
@@ -1390,21 +1402,25 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "a_tf_wp_no_insulation",
         tfaveragedturngeomparam.a_tf_wp_no_insulation,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "dr_tf_turn", tfaveragedturngeomparam.dr_tf_turn
+        superconducting_tf_coil_variables,
+        "dr_tf_turn",
+        tfaveragedturngeomparam.dr_tf_turn,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "dx_tf_turn", tfaveragedturngeomparam.dx_tf_turn
+        superconducting_tf_coil_variables,
+        "dx_tf_turn",
+        tfaveragedturngeomparam.dx_tf_turn,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "dx_tf_turn_cable_space_average",
         tfaveragedturngeomparam.dx_tf_turn_cable_space_average,
     )
@@ -1429,16 +1445,17 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         tfaveragedturngeomparam.expected_t_turn_tf
     )
 
-    assert sctfcoil_module.dr_tf_turn == pytest.approx(
+    assert superconducting_tf_coil_variables.dr_tf_turn == pytest.approx(
         tfaveragedturngeomparam.expected_t_turn_radial
     )
 
-    assert sctfcoil_module.dx_tf_turn == pytest.approx(
+    assert superconducting_tf_coil_variables.dx_tf_turn == pytest.approx(
         tfaveragedturngeomparam.expected_dx_tf_turn
     )
 
-    assert sctfcoil_module.dx_tf_turn_cable_space_average == pytest.approx(
-        tfaveragedturngeomparam.expected_t_cable
+    assert (
+        superconducting_tf_coil_variables.dx_tf_turn_cable_space_average
+        == pytest.approx(tfaveragedturngeomparam.expected_t_cable)
     )
 
     assert a_tf_turn_cable_space_no_void == pytest.approx(
@@ -1509,7 +1526,7 @@ def test_tf_wp_currents(tfwpcurrentsparam, monkeypatch, sctfcoil):
     monkeypatch.setattr(tfcoil_variables, "j_tf_wp", tfwpcurrentsparam.j_tf_wp)
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "a_tf_wp_no_insulation",
         tfwpcurrentsparam.a_tf_wp_no_insulation,
     )
@@ -1576,12 +1593,16 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
         build_variables, "z_plasma_xpoint_upper", 5.47008
     )  # Baseline 2018
 
-    monkeypatch.setattr(sctfcoil_module, "a_tf_coil_inboard_steel", 0.55)  # Section 3
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "a_tf_coil_inboard_steel", 0.55
+    )  # Section 3
 
     # Sum from Section 3
-    monkeypatch.setattr(sctfcoil_module, "a_tf_plasma_case", 0.42)
-    monkeypatch.setattr(sctfcoil_module, "a_tf_coil_nose_case", 0.42)
-    monkeypatch.setattr(sctfcoil_module, "dx_tf_side_case_average", 0.05)
+    monkeypatch.setattr(superconducting_tf_coil_variables, "a_tf_plasma_case", 0.42)
+    monkeypatch.setattr(superconducting_tf_coil_variables, "a_tf_coil_nose_case", 0.42)
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "dx_tf_side_case_average", 0.05
+    )
 
     monkeypatch.setattr(build_variables, "dz_xpoint_divertor", 0.05)  # Baseline 2018
     monkeypatch.setattr(build_variables, "dz_shld_upper", 0.3)  # Baseline 2018
@@ -1609,7 +1630,9 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_coil_turns", 192)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
-    monkeypatch.setattr(sctfcoil_module, "c_tf_coil", 83200 * 192)  # Section 3
+    monkeypatch.setattr(
+        superconducting_tf_coil_variables, "c_tf_coil", 83200 * 192
+    )  # Section 3
 
     monkeypatch.setattr(
         build_variables, "r_vv_inboard_out", 4.45 + (build_variables.dr_vv_inboard / 2)
@@ -1617,7 +1640,10 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
 
     sctfcoil.vv_stress_on_quench()
 
-    assert pytest.approx(sctfcoil_module.vv_stress_quench) == 56893800.120420754
+    assert (
+        pytest.approx(superconducting_tf_coil_variables.vv_stress_quench)
+        == 56893800.120420754
+    )
 
 
 class TfCoilAreaAndMassesParam(NamedTuple):
@@ -2093,37 +2119,45 @@ def test_superconducting_tf_coil_area_and_masses(
     monkeypatch.setattr(physics_variables, "itart", tfcoilareaandmassesparam.itart)
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "a_tf_wp_with_insulation",
         tfcoilareaandmassesparam.a_tf_wp_with_insulation,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "a_tf_wp_no_insulation",
         tfcoilareaandmassesparam.a_tf_wp_no_insulation,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_ins_cp", tfcoilareaandmassesparam.vol_ins_cp
+        superconducting_tf_coil_variables,
+        "vol_ins_cp",
+        tfcoilareaandmassesparam.vol_ins_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_gr_ins_cp", tfcoilareaandmassesparam.vol_gr_ins_cp
+        superconducting_tf_coil_variables,
+        "vol_gr_ins_cp",
+        tfcoilareaandmassesparam.vol_gr_ins_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "vol_case_cp", tfcoilareaandmassesparam.vol_case_cp
+        superconducting_tf_coil_variables,
+        "vol_case_cp",
+        tfcoilareaandmassesparam.vol_case_cp,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
     )
 
     monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
+        superconducting_tf_coil_variables,
+        "tan_theta_coil",
+        tfcoilareaandmassesparam.tan_theta_coil,
     )
 
     sctfcoil.superconducting_tf_coil_areas_and_masses()
