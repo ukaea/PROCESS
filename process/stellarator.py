@@ -27,6 +27,7 @@ from process.data_structure import (
     stellarator_configuration,
     stellarator_variables,
     structure_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -36,7 +37,6 @@ from process.fortran import (
     error_handling,
     global_variables,
     numerics,
-    sctfcoil_module,
 )
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
@@ -3077,7 +3077,7 @@ class Stellarator:
         # N/m^2
         # is the vv width the correct length to multiply by to turn the
         # force density into a stress?
-        sctfcoil_module.vv_stress_quench = (
+        superconducting_tf_coil_variables.vv_stress_quench = (
             f_vv_actual
             * 1e6
             * ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
