@@ -17,13 +17,17 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
     impurity_radiation_module,
     neoclassics_variables,
     pfcoil_variables,
+    physics_variables,
     rebco_variables,
     stellarator_configuration,
     stellarator_variables,
     structure_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -31,13 +35,8 @@ from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
     error_handling,
-    fwbs_variables,
     global_variables,
-    heat_transport_variables,
     numerics,
-    physics_module,
-    physics_variables,
-    sctfcoil_module,
 )
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
@@ -3078,7 +3077,7 @@ class Stellarator:
         # N/m^2
         # is the vv width the correct length to multiply by to turn the
         # force density into a stress?
-        sctfcoil_module.vv_stress_quench = (
+        superconducting_tf_coil_variables.vv_stress_quench = (
             f_vv_actual
             * 1e6
             * ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
@@ -4261,7 +4260,7 @@ class Stellarator:
             )
             / physics_variables.btot**2
         )
-        physics_module.e_plasma_beta = (
+        physics_variables.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
             * physics_variables.btot
@@ -4270,11 +4269,11 @@ class Stellarator:
             * physics_variables.vol_plasma
         )
 
-        physics_module.rho_star = np.sqrt(
+        physics_variables.rho_star = np.sqrt(
             2.0e0
             * constants.proton_mass
             * physics_variables.m_ions_total_amu
-            * physics_module.e_plasma_beta
+            * physics_variables.e_plasma_beta
             / (
                 3.0e0
                 * physics_variables.vol_plasma
@@ -4312,13 +4311,13 @@ class Stellarator:
 
         # D-T power density is named differently to differentiate it from the beam given component
         physics_variables.p_plasma_dt_mw = (
-            physics_module.dt_power_density_plasma * physics_variables.vol_plasma
+            physics_variables.dt_power_density_plasma * physics_variables.vol_plasma
         )
         physics_variables.p_dhe3_total_mw = (
-            physics_module.dhe3_power_density * physics_variables.vol_plasma
+            physics_variables.dhe3_power_density * physics_variables.vol_plasma
         )
         physics_variables.p_dd_total_mw = (
-            physics_module.dd_power_density * physics_variables.vol_plasma
+            physics_variables.dd_power_density * physics_variables.vol_plasma
         )
 
         #  Calculate neutral beam slowing down effects
@@ -4344,7 +4343,7 @@ class Stellarator:
                 physics_variables.f_deuterium,
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
-                physics_module.sigmav_dt_average,
+                physics_variables.sigmav_dt_average,
                 physics_variables.ten,
                 physics_variables.tin,
                 physics_variables.vol_plasma,
@@ -4708,7 +4707,7 @@ class Stellarator:
                 physics_variables.rho_te_max,
                 physics_variables.gradient_length_ne,
                 physics_variables.gradient_length_te,
-                physics_module.rho_star,
+                physics_variables.rho_star,
                 nu_star_e,
                 nu_star_d,
                 nu_star_T,

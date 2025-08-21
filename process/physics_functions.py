@@ -4,7 +4,8 @@ from dataclasses import dataclass
 import numpy as np
 
 import process.impurity_radiation as impurity
-from process.fortran import constants, physics_variables
+from process.data_structure import physics_variables
+from process.fortran import constants
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)

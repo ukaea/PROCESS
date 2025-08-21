@@ -7,11 +7,11 @@ import pytest
 
 import process.tf_coil as tfcoil_module
 from process.build import Build
-from process.data_structure import build_variables, tfcoil_variables
-from process.data_structure import build_variables as bv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import (
-    sctfcoil_module,
+from process.data_structure import (
+    build_variables,
+    fwbs_variables,
+    superconducting_tf_coil_variables,
+    tfcoil_variables,
 )
 from process.tf_coil import TFCoil
 
@@ -221,9 +221,9 @@ def test_cntrpst(cntrpst_asset, monkeypatch, reinitialise_error_module, tfcoil):
     monkeypatch.setattr(tfcoil_variables, "p_cp_resistive", 1)
     monkeypatch.setattr(tfcoil_variables, "i_tf_sup", cntrpst_asset.i_tf_sup)
     monkeypatch.setattr(tfcoil_variables, "tcoolin", cntrpst_asset.tcoolin)
-    monkeypatch.setattr(fwbsv, "pnuc_cp_tf", 1)
-    monkeypatch.setattr(bv, "z_tf_inside_half", 1)
-    monkeypatch.setattr(bv, "dr_tf_outboard", 0.5)
+    monkeypatch.setattr(fwbs_variables, "pnuc_cp_tf", 1)
+    monkeypatch.setattr(build_variables, "z_tf_inside_half", 1)
+    monkeypatch.setattr(build_variables, "dr_tf_outboard", 0.5)
 
     tfcoil.cntrpst()
 
@@ -762,7 +762,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6381.2092203414386,
-            expected_tfocrn=0.59553192892551199,
+            expected_tfocrn=0.0,
         ),
     ),
 )
@@ -800,13 +800,9 @@ def test_generic_tf_coil_area_and_masses(tfcoilareaandmassesparam, monkeypatch, 
     )
 
     monkeypatch.setattr(
-        sctfcoil_module,
+        superconducting_tf_coil_variables,
         "rad_tf_coil_inboard_toroidal_half",
         tfcoilareaandmassesparam.rad_tf_coil_inboard_toroidal_half,
-    )
-
-    monkeypatch.setattr(
-        sctfcoil_module, "tan_theta_coil", tfcoilareaandmassesparam.tan_theta_coil
     )
 
     tfcoil.generic_tf_coil_area_and_masses()

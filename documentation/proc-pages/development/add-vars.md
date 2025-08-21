@@ -106,13 +106,13 @@ objective_function():
 
 After following the instruction to add an input variable, you can make the variable a scan variable by following these steps:
 
-1. Increment the parameter `ipnscnv` defined in the `scan_module` module in the `scan.f90` source file, to accommodate the new scanning variable. The incremented value will identify your scan variable.
+1. Increment the parameter `IPNSCNV` defined in `scan_variables.py` in the data_structure directory, to accommodate the new scanning variable. The incremented value will identify your scan variable.
   
-2. Add a short description of the new scanning variable in the `nsweep` comment in `scan.f90`, alongside its identification number.
+2. Add a short description of the new scanning variable in the `nsweep` comment in `scan_variables.py`, alongside its identification number.
   
 3. Update the `SCAN_VARIABLES` dictionary in the `scan.py` file by adding a new case statement connecting the variable to the scan integer switch, the variable name and a short description. 
   
-4. Add a comment in the `XX_variables.f90` variable description indicating the scan switch number.
+4. Add a comment in the corresponding variable file in the data_structure directory, eg, `data_structure/[XX]_variables.py`, to add the variable description indicating the scan switch number.
   
 
 `nsweep` comment example:

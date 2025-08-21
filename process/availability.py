@@ -1,6 +1,7 @@
 import logging
 import math
 
+import numpy as np
 from scipy.special import comb as combinations
 
 from process import fortran as ft
@@ -8,13 +9,13 @@ from process import process_output as po
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import ife_variables as ifev
+from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
 from process.exceptions import ProcessValueError
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import physics_variables as pv
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +104,8 @@ class Availability:
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
                     fwbsv.life_blkt_fpy = min(
-                        cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife
+                        (cv.abktflnc / np.asarray(pv.pflux_fw_neutron_mw)).item(),
+                        cv.tlife,
                     )
                 else:
                     fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
@@ -1288,7 +1290,12 @@ class Availability:
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
         if tfv.i_tf_sup == 1:
-            cplife = min(ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife)
+            cplife = min(
+                (
+                    ctv.nflutfmax / (np.asarray(fwbsv.neut_flux_cp) * YEAR_SECONDS)
+                ).item(),
+                cv.tlife,
+            )
 
         # Aluminium/Copper magnets CP lifetime
         # For now, we keep the original def, developed for GLIDCOP magnets ...

@@ -4,7 +4,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 import scipy as sp
 
-from process.fortran import error_handling, physics_variables
+from process.data_structure import physics_variables
+from process.fortran import error_handling
 
 logger = logging.getLogger(__name__)
 # Logging handler for console output

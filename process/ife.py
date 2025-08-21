@@ -12,17 +12,15 @@ from process.data_structure import (
     build_variables,
     buildings_variables,
     cost_variables,
+    fwbs_variables,
+    heat_transport_variables,
     ife_variables,
+    physics_variables,
     structure_variables,
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-    fwbs_variables,
-    heat_transport_variables,
-    physics_variables,
-)
+from process.fortran import constants
 
 MATERIALS = [
     "void",
@@ -2377,7 +2375,7 @@ class IFE:
         if buildings_variables.wgt2 > 1.0:
             wgts = buildings_variables.wgt2
         else:
-            wgts = buildings_variables.whtshld
+            wgts = fwbs_variables.whtshld
 
         cran = 9.41e-6 * wgts + 5.1
         rmbh = (

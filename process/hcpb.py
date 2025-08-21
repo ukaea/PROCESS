@@ -7,23 +7,21 @@ from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     build_variables,
+    ccfe_hcpb_module,
     cost_variables,
     current_drive_variables,
     divertor_variables,
+    fwbs_variables,
+    heat_transport_variables,
+    physics_variables,
     primary_pumping_variables,
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
 from process.fortran import (
-    ccfe_hcpb_module,
     constants,
-    fwbs_variables,
-    heat_transport_variables,
-    physics_variables,
 )
-from process.fortran import (
-    error_handling as eh,
-)
+from process.fortran import error_handling as eh
 
 
 class CCFE_HCPB(BlanketLibrary):

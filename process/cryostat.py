@@ -5,11 +5,11 @@ from process.data_structure import (
     blanket_library,
     build_variables,
     buildings_variables,
+    fwbs_variables,
     pfcoil_variables,
 )
 from process.fortran import (
     constants,
-    fwbs_variables,
 )
 
 

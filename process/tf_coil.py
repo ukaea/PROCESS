@@ -7,7 +7,14 @@ import numpy as np
 from process import fortran as ft
 from process import process_output as po
 from process.build import Build
-from process.data_structure import build_variables, rebco_variables, tfcoil_variables
+from process.data_structure import (
+    build_variables,
+    fwbs_variables,
+    physics_variables,
+    rebco_variables,
+    superconducting_tf_coil_variables,
+    tfcoil_variables,
+)
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
 from process.fortran import (
@@ -15,11 +22,8 @@ from process.fortran import (
     error_handling,
     global_variables,
     numerics,
-    physics_variables,
-    sctfcoil_module,
 )
 from process.fortran import error_handling as eh
-from process.fortran import fwbs_variables as fwbsv
 from process.utilities.f2py_string_patch import (
     f2py_compatible_to_string,
 )
@@ -41,11 +45,11 @@ class TFCoil:
         """Run main tfcoil subroutine without outputting."""
 
         (
-            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
-            sctfcoil_module.tan_theta_coil,
+            superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
+            superconducting_tf_coil_variables.tan_theta_coil,
             tfcoil_variables.a_tf_inboard_total,
-            sctfcoil_module.r_tf_outboard_in,
-            sctfcoil_module.r_tf_outboard_out,
+            superconducting_tf_coil_variables.r_tf_outboard_in,
+            superconducting_tf_coil_variables.r_tf_outboard_out,
             tfcoil_variables.dx_tf_inboard_out_toroidal,
             tfcoil_variables.a_tf_leg_outboard,
             tfcoil_variables.dr_tf_plasma_case,
@@ -75,7 +79,7 @@ class TFCoil:
         (
             tfcoil_variables.b_tf_inboard_peak,
             tfcoil_variables.c_tf_total,
-            sctfcoil_module.c_tf_coil,
+            superconducting_tf_coil_variables.c_tf_coil,
             tfcoil_variables.oacdcp,
         ) = self.tf_current(
             n_tf_coils=tfcoil_variables.n_tf_coils,
@@ -99,7 +103,7 @@ class TFCoil:
             r_cp_top=build_variables.r_cp_top,
             rmajor=physics_variables.rmajor,
             rminor=physics_variables.rminor,
-            r_tf_outboard_in=sctfcoil_module.r_tf_outboard_in,
+            r_tf_outboard_in=superconducting_tf_coil_variables.r_tf_outboard_in,
             z_tf_inside_half=build_variables.z_tf_inside_half,
             z_tf_top=build_variables.z_tf_top,
             dr_tf_inboard=build_variables.dr_tf_inboard,
@@ -605,7 +609,7 @@ class TFCoil:
             self.outfile,
             "Inboard TF half angle [rad]",
             "(rad_tf_coil_inboard_toroidal_half)",
-            sctfcoil_module.rad_tf_coil_inboard_toroidal_half,
+            superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half,
             "OP ",
         )
         po.ovarre(
@@ -639,35 +643,35 @@ class TFCoil:
             constants.mfile,
             "Radial position of inner edge and centre of winding pack (m)",
             "(r_tf_wp_inboard_inner)",
-            sctfcoil_module.r_tf_wp_inboard_inner,
+            superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             "OP ",
         )
         po.ovarre(
             constants.mfile,
             "Radial position of outer edge and of winding pack (m)",
             "(r_tf_wp_inboard_outer)",
-            sctfcoil_module.r_tf_wp_inboard_outer,
+            superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             "OP ",
         )
         po.ovarre(
             constants.mfile,
             "Radial position of centre of winding pack (m)",
             "(r_tf_wp_inboard_centre)",
-            sctfcoil_module.r_tf_wp_inboard_centre,
+            superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             "OP ",
         )
         po.ovarre(
             constants.mfile,
             "Minimum toroidal thickness of winding pack (m)",
             "(dx_tf_wp_toroidal_min)",
-            sctfcoil_module.dx_tf_wp_toroidal_min,
+            superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Outboard leg inner radius (m)",
             "(r_tf_outboard_in)",
-            sctfcoil_module.r_tf_outboard_in,
+            superconducting_tf_coil_variables.r_tf_outboard_in,
             "OP ",
         )
 
@@ -808,7 +812,7 @@ class TFCoil:
                 self.outfile,
                 "Distance from the midplane to the top of the tapered section (m)",
                 "(z_cp_top)",
-                sctfcoil_module.z_cp_top,
+                superconducting_tf_coil_variables.z_cp_top,
             )
             po.ovarre(
                 self.outfile,
@@ -831,26 +835,27 @@ class TFCoil:
                 self.outfile,
                 "Total steel cross-section (m2)",
                 "(a_tf_coil_inboard_steel*n_tf_coils)",
-                sctfcoil_module.a_tf_coil_inboard_steel * tfcoil_variables.n_tf_coils,
+                superconducting_tf_coil_variables.a_tf_coil_inboard_steel
+                * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
                 "Total steel TF fraction",
                 "(f_a_tf_coil_inboard_steel)",
-                sctfcoil_module.f_a_tf_coil_inboard_steel,
+                superconducting_tf_coil_variables.f_a_tf_coil_inboard_steel,
             )
             po.ovarre(
                 self.outfile,
                 "Total Insulation cross-section (total) (m2)",
                 "(a_tf_coil_inboard_insulation*n_tf_coils)",
-                sctfcoil_module.a_tf_coil_inboard_insulation
+                superconducting_tf_coil_variables.a_tf_coil_inboard_insulation
                 * tfcoil_variables.n_tf_coils,
             )
             po.ovarre(
                 self.outfile,
                 "Total Insulation fraction",
                 "(f_a_tf_coil_inboard_insulation)",
-                sctfcoil_module.f_a_tf_coil_inboard_insulation,
+                superconducting_tf_coil_variables.f_a_tf_coil_inboard_insulation,
             )
 
             # External casing
@@ -871,7 +876,7 @@ class TFCoil:
                 self.outfile,
                 "Inboard leg plasma case area (m^2)",
                 "(a_tf_plasma_case)",
-                sctfcoil_module.a_tf_plasma_case,
+                superconducting_tf_coil_variables.a_tf_plasma_case,
             )
             po.ovarre(
                 self.outfile,
@@ -883,7 +888,7 @@ class TFCoil:
                 self.outfile,
                 'Inboard leg case inboard "nose" area (m^2)',
                 "(a_tf_coil_nose_case)",
-                sctfcoil_module.a_tf_coil_nose_case,
+                superconducting_tf_coil_variables.a_tf_coil_nose_case,
             )
             po.ovarre(
                 self.outfile,
@@ -895,7 +900,7 @@ class TFCoil:
                 self.outfile,
                 "Inboard leg case sidewall average thickness (m)",
                 "(dx_tf_side_case_average)",
-                sctfcoil_module.dx_tf_side_case_average,
+                superconducting_tf_coil_variables.dx_tf_side_case_average,
             )
             po.ovarre(
                 self.outfile,
@@ -911,19 +916,19 @@ class TFCoil:
                 self.outfile,
                 "WP cross section area with insulation and insertion (per coil) (m2)",
                 "(a_tf_wp_with_insulation)",
-                sctfcoil_module.a_tf_wp_with_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "WP cross section area with no insulation and insertion (per coil) (m2)",
                 "(a_tf_wp_no_insulation)",
-                sctfcoil_module.a_tf_wp_no_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_no_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "WP cross section area (per coil) (m2)",
                 "(a_tf_wp_steel)",
-                sctfcoil_module.a_tf_wp_no_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_no_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -966,7 +971,7 @@ class TFCoil:
                 self.outfile,
                 "Ground wall insulation area (m^2)",
                 "(a_tf_wp_ground_insulation)",
-                sctfcoil_module.a_tf_wp_ground_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_ground_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -988,25 +993,25 @@ class TFCoil:
                 "Steel WP fraction",
                 "(a_tf_wp_steel/a_tf_wp_with_insulation)",
                 tfcoil_variables.a_tf_wp_steel
-                / sctfcoil_module.a_tf_wp_with_insulation,
+                / superconducting_tf_coil_variables.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "Insulation WP fraction",
                 "(a_tf_coil_wp_turn_insulation/a_tf_wp_with_insulation)",
                 tfcoil_variables.a_tf_coil_wp_turn_insulation
-                / sctfcoil_module.a_tf_wp_with_insulation,
+                / superconducting_tf_coil_variables.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "Cable WP fraction",
                 "((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)",
                 (
-                    sctfcoil_module.a_tf_wp_with_insulation
+                    superconducting_tf_coil_variables.a_tf_wp_with_insulation
                     - tfcoil_variables.a_tf_wp_steel
                     - tfcoil_variables.a_tf_coil_wp_turn_insulation
                 )
-                / sctfcoil_module.a_tf_wp_with_insulation,
+                / superconducting_tf_coil_variables.a_tf_wp_with_insulation,
             )
 
             # Number of turns
@@ -1050,45 +1055,45 @@ class TFCoil:
                     self.outfile,
                     "Radial width of turn (m)",
                     "(dr_tf_turn)",
-                    sctfcoil_module.dr_tf_turn,
+                    superconducting_tf_coil_variables.dr_tf_turn,
                 )
                 po.ovarre(
                     self.outfile,
                     "Toroidal width of turn (m)",
                     "(dx_tf_turn)",
-                    sctfcoil_module.dx_tf_turn,
+                    superconducting_tf_coil_variables.dx_tf_turn,
                 )
                 po.ovarre(
                     self.outfile,
                     "Radial width of conductor (m)",
                     "(t_conductor_radial)",
-                    sctfcoil_module.t_conductor_radial,
+                    superconducting_tf_coil_variables.t_conductor_radial,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Toroidal width of conductor (m)",
                     "(t_conductor_toroidal)",
-                    sctfcoil_module.t_conductor_toroidal,
+                    superconducting_tf_coil_variables.t_conductor_toroidal,
                     "OP ",
                 )
                 po.ovarre(
                     self.outfile,
                     "Radial width of cable space",
                     "(dr_tf_turn_cable_space)",
-                    sctfcoil_module.dr_tf_turn_cable_space,
+                    superconducting_tf_coil_variables.dr_tf_turn_cable_space,
                 )
                 po.ovarre(
                     self.outfile,
                     "Toroidal width of cable space",
                     "(dx_tf_turn_cable_space)",
-                    sctfcoil_module.dx_tf_turn_cable_space,
+                    superconducting_tf_coil_variables.dx_tf_turn_cable_space,
                 )
                 po.ovarre(
                     self.outfile,
                     "Radius of turn cable space rounded corners (m)",
                     "(radius_tf_turn_cable_space_corners)",
-                    sctfcoil_module.radius_tf_turn_cable_space_corners,
+                    superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
                 )
             else:
                 po.ovarre(
@@ -1109,7 +1114,7 @@ class TFCoil:
                     self.outfile,
                     "Width of space inside conductor (m)",
                     "(dx_tf_turn_cable_space_average)",
-                    sctfcoil_module.dx_tf_turn_cable_space_average,
+                    superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                     "OP ",
                 )
 
@@ -1247,7 +1252,7 @@ class TFCoil:
                 self.outfile,
                 "Inboard leg plasma case area (m^2)",
                 "(a_tf_plasma_case)",
-                sctfcoil_module.a_tf_plasma_case,
+                superconducting_tf_coil_variables.a_tf_plasma_case,
             )
             po.ovarre(
                 self.outfile,
@@ -1259,7 +1264,7 @@ class TFCoil:
                 self.outfile,
                 'Inboard leg case inboard "nose" area (m^2)',
                 "(a_tf_coil_nose_case)",
-                sctfcoil_module.a_tf_coil_nose_case,
+                superconducting_tf_coil_variables.a_tf_coil_nose_case,
             )
 
             # Conductor layer geometry
@@ -1268,19 +1273,19 @@ class TFCoil:
                 self.outfile,
                 "Inboard TFC conductor sector area with gr insulation (per leg) (m2)",
                 "(a_tf_wp_with_insulation)",
-                sctfcoil_module.a_tf_wp_with_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_with_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "Inboard TFC conductor sector area, NO ground & gap (per leg) (m2)",
                 "(a_tf_wp_no_insulation)",
-                sctfcoil_module.a_tf_wp_no_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_no_insulation,
             )
             po.ovarre(
                 self.outfile,
                 "Ground wall insulation area (m^2)",
                 "(a_tf_wp_ground_insulation)",
-                sctfcoil_module.a_tf_wp_ground_insulation,
+                superconducting_tf_coil_variables.a_tf_wp_ground_insulation,
             )
             po.ovarre(
                 self.outfile,
@@ -1293,7 +1298,7 @@ class TFCoil:
                     self.outfile,
                     "Central collumn top conductor sector radial thickness (m)",
                     "(dr_tf_wp_top)",
-                    sctfcoil_module.dr_tf_wp_top,
+                    superconducting_tf_coil_variables.dr_tf_wp_top,
                 )
 
             po.ovarre(
@@ -1656,7 +1661,7 @@ class TFCoil:
                 self.outfile,
                 "Vacuum Vessel stress on quench (Pa)",
                 "(vv_stress_quench)",
-                sctfcoil_module.vv_stress_quench,
+                superconducting_tf_coil_variables.vv_stress_quench,
                 "OP ",
             )
             po.ovarre(
@@ -1688,7 +1693,7 @@ class TFCoil:
                         self.outfile,
                         "Maximum permitted TF coil current / copper area (A/m2)",
                         "(copperA_m2_max)",
-                        rebco_variables.copperA_m2_max,
+                        rebco_variables.coppera_m2_max,
                     )
 
                 po.ovarre(
@@ -1938,13 +1943,13 @@ class TFCoil:
 
             radius = (
                 radius
-                + 0.5e0 * sctfcoil_module.dr_tf_wp_top
+                + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
                 - tfcoil_variables.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - first half",
-                0.5e0 * sctfcoil_module.dr_tf_wp_top
+                0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
                 - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
                 "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
@@ -1952,13 +1957,13 @@ class TFCoil:
 
             radius = (
                 radius
-                + 0.5e0 * sctfcoil_module.dr_tf_wp_top
+                + 0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
                 - tfcoil_variables.dx_tf_wp_insulation
             )
             po.obuild(
                 self.outfile,
                 "Conductor - second half",
-                0.5e0 * sctfcoil_module.dr_tf_wp_top
+                0.5e0 * superconducting_tf_coil_variables.dr_tf_wp_top
                 - tfcoil_variables.dx_tf_wp_insulation,
                 radius,
                 "(dr_tf_wp_top/2-dx_tf_wp_insulation)",
@@ -2032,7 +2037,7 @@ class TFCoil:
 
         # Vertical distance from the midplane to the top of the tapered section [m]
         if physics_variables.itart == 1:
-            sctfcoil_module.z_cp_top = (
+            superconducting_tf_coil_variables.z_cp_top = (
                 build_variables.z_plasma_xpoint_upper + tfcoil_variables.dztop
             )
 
@@ -2040,7 +2045,9 @@ class TFCoil:
             tfcoil_variables.dx_tf_inboard_out_toroidal = (
                 2.0e0
                 * build_variables.r_cp_top
-                * np.sin(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
+                * np.sin(
+                    superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half
+                )
             )
 
         # Temperature margin used in calculations (K)
@@ -2069,7 +2076,7 @@ class TFCoil:
         ro = (acpav / (constants.pi * tfcoil_variables.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
-        ptot = tfcoil_variables.p_cp_resistive + fwbsv.pnuc_cp_tf * 1.0e6
+        ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
 
         # Temperature calculations
         # -------------------------
@@ -2336,7 +2343,10 @@ class TFCoil:
                 tfcoil_variables.p_cp_resistive / 1.0e6,
             )
             po.ovarre(
-                self.outfile, "Nuclear heating (MW)", "(pnuc_cp_tf)", fwbsv.pnuc_cp_tf
+                self.outfile,
+                "Nuclear heating (MW)",
+                "(pnuc_cp_tf)",
+                fwbs_variables.pnuc_cp_tf,
             )
             po.ovarre(self.outfile, "Total heating (MW)", "(ptot/1.0e6)", ptot / 1.0e6)
 
@@ -2943,11 +2953,15 @@ class TFCoil:
         # Surface areas (for cryo system) [m²]
         wbtf = (
             build_variables.r_tf_inboard_out
-            * np.sin(sctfcoil_module.rad_tf_coil_inboard_toroidal_half)
-            - build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
+            * np.sin(
+                superconducting_tf_coil_variables.rad_tf_coil_inboard_toroidal_half
+            )
+            - build_variables.r_tf_inboard_in
+            * superconducting_tf_coil_variables.tan_theta_coil
         )
         tfcoil_variables.tfocrn = (
-            build_variables.r_tf_inboard_in * sctfcoil_module.tan_theta_coil
+            build_variables.r_tf_inboard_in
+            * superconducting_tf_coil_variables.tan_theta_coil
         )
         tfcoil_variables.tficrn = tfcoil_variables.tfocrn + wbtf
 

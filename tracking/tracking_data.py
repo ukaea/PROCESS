@@ -56,7 +56,7 @@ from bokeh.palettes import Category10
 from bokeh.plotting import figure
 from bokeh.resources import CDN
 
-from process import fortran
+from process import data_structure, fortran
 from process.io import mfile as mf
 
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
@@ -545,8 +545,8 @@ class PythonFortranInterfaceVariables:
             # this allow checking that module is a
             # fortran module and is the next best
             # thing to check this is a module.
-            # physics_variables is just the chosen arbitrary module
-            if type(module) == type(fortran.physics_variables):  # noqa: E721
+            # data_structure.physics_variables is just the chosen arbitrary module
+            if type(module) == type(data_structure.physics_variables):  # noqa: E721
                 classes[name] = cls._get_variables(module)
 
         cls.tree = classes
@@ -559,7 +559,7 @@ class PythonFortranInterfaceVariables:
         variables = []
 
         for name, function in inspect.getmembers(fortran_module):
-            # type(fortran.physics_variables.constants.init_constants) => fortran subroutine
+            # type(data_structure.physics_variables.constants.init_constants) => fortran subroutine
             # if its not a fortran subroutine, its a variable
             # because type `fortran` cannot be checked as a type
             if type(function) != type(fortran.constants.init_constants):  # noqa: E721

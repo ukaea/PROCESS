@@ -2,7 +2,7 @@ from typing import Any, NamedTuple
 
 import pytest
 
-from process.fortran import fwbs_variables
+from process.data_structure import fwbs_variables
 from process.fw import Fw
 
 

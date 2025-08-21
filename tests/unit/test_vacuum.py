@@ -1,9 +1,9 @@
 import pytest
 
+from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
-from process.fortran import physics_variables as pv
 from process.vacuum import Vacuum
 
 
