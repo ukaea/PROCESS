@@ -2183,7 +2183,7 @@ INPUT_VARIABLES = {
         data_structure.fwbs_variables, int, range=(0, 3)
     ),
     "reinke_mode": InputVariable(data_structure.reinke_variables, int, choices=[0, 1]),
-    "scan_dim": InputVariable(fortran.scan_module, int, range=(1, 2)),
+    "scan_dim": InputVariable(data_structure.scan_variables, int, range=(1, 2)),
     "i_thermal_electric_conversion": InputVariable(
         data_structure.fwbs_variables, int, range=(0, 4)
     ),
@@ -2247,23 +2247,27 @@ INPUT_VARIABLES = {
     "v2matf": InputVariable(data_structure.ife_variables, float, array=True),
     "v3matf": InputVariable(data_structure.ife_variables, float, array=True),
     "isweep": InputVariable(
-        fortran.scan_module, int, choices=range(fortran.scan_module.ipnscns.item() + 1)
+        data_structure.scan_variables,
+        int,
+        choices=range(data_structure.scan_variables.IPNSCNS + 1),
     ),
     "nsweep": InputVariable(
-        fortran.scan_module,
+        data_structure.scan_variables,
         int,
-        choices=range(1, fortran.scan_module.ipnscnv.item() + 1),
+        choices=range(1, data_structure.scan_variables.IPNSCNV + 1),
     ),
     "isweep_2": InputVariable(
-        fortran.scan_module, int, choices=range(fortran.scan_module.ipnscns.item() + 1)
+        data_structure.scan_variables,
+        int,
+        choices=range(data_structure.scan_variables.IPNSCNS + 1),
     ),
     "nsweep_2": InputVariable(
-        fortran.scan_module,
+        data_structure.scan_variables,
         int,
-        choices=range(1, fortran.scan_module.ipnscnv.item() + 1),
+        choices=range(1, data_structure.scan_variables.IPNSCNV + 1),
     ),
-    "sweep": InputVariable(fortran.scan_module, float, array=True),
-    "sweep_2": InputVariable(fortran.scan_module, float, array=True),
+    "sweep": InputVariable(data_structure.scan_variables, float, array=True),
+    "sweep_2": InputVariable(data_structure.scan_variables, float, array=True),
     "impvardiv": InputVariable(
         data_structure.reinke_variables,
         int,
