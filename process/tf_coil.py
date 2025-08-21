@@ -1112,6 +1112,12 @@ class TFCoil:
                     sctfcoil_module.dx_tf_turn_cable_space_average,
                     "OP ",
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of turn cable space rounded corners (m)",
+                    "(radius_tf_turn_cable_space_corners)",
+                    sctfcoil_module.radius_tf_turn_cable_space_corners,
+                )
 
             po.ovarre(
                 self.outfile,
@@ -1143,10 +1149,61 @@ class TFCoil:
                 )
                 po.ovarre(
                     self.outfile,
+                    "True area of turn cable space with gaps and channels removed",
+                    "(a_tf_turn_cable_space_effective)",
+                    sctfcoil_module.a_tf_turn_cable_space_effective,
+                )
+
+                po.ovarre(
+                    self.outfile,
                     "Coolant fraction in conductor excluding central channel",
                     "(f_a_tf_turn_cable_space_extra_void)",
                     tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Area of steel in turn",
+                    "(a_tf_turn_steel)",
+                    tfcoil_variables.a_tf_turn_steel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Area of all turn insulation in WP",
+                    "(a_tf_coil_wp_turn_insulation)",
+                    tfcoil_variables.a_tf_coil_wp_turn_insulation,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total insulation area in TF coil (turn and WP)",
+                    "(a_tf_coil_inboard_insulation)",
+                    sctfcoil_module.a_tf_coil_inboard_insulation,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total steel area in inboard TF coil (turn and case)",
+                    "(a_tf_coil_inboard_steel)",
+                    sctfcoil_module.a_tf_coil_inboard_steel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total conductor area in WP",
+                    "(a_tf_wp_conductor)",
+                    tfcoil_variables.a_tf_wp_conductor,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total additional void area in WP",
+                    "(a_tf_wp_extra_void)",
+                    tfcoil_variables.a_tf_wp_extra_void,
+                )
+
+                po.ovarre(
+                    self.outfile,
+                    "Area of all coolant channels in WP",
+                    "(a_tf_wp_coolant_channels)",
+                    tfcoil_variables.a_tf_wp_coolant_channels,
+                )
+
                 po.ovarre(
                     self.outfile,
                     "Copper fraction of conductor",
