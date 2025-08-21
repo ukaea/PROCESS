@@ -19,7 +19,7 @@ def vacuum_vessel_geometry_single_null(
     cumulative_lower: dict,
     lower: dict,
 ) -> ArbitraryGeometry:
-    """Calculates radial and vertical distances for the geometry of vacuum vessel in a single null configuration
+    """Calculates radial and vertical distances for the geometry of the vacuum vessel in a single null configuration
 
     :param cumulative_upper: cumulative vertical thicknesses of components above the midplane
     :type cumulative_upper: dict
