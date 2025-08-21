@@ -47,6 +47,7 @@ from process.data_structure.primary_pumping_variables import (
 from process.data_structure.pulse_variables import init_pulse_variables
 from process.data_structure.rebco_variables import init_rebco_variables
 from process.data_structure.reinke_variables import init_reinke_variables
+from process.data_structure.scan_variables import init_scan_variables
 from process.data_structure.stellarator_variables import init_stellarator_variables
 from process.data_structure.structure_variables import init_structure_variables
 from process.data_structure.superconducting_tf_coil_variables import (
@@ -58,7 +59,6 @@ from process.data_structure.vacuum_variables import init_vacuum_variables
 from process.data_structure.water_usage_variables import init_watuse_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
-from process.scan import init_scan_module
 from process.stellarator import stinit
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
@@ -274,7 +274,7 @@ def init_all_module_vars():
     init_pfcoil_module()
     init_physics_module()
     init_physics_variables()
-    init_scan_module()
+    init_scan_variables()
     init_superconducting_tf_coil_variables()
     init_stellarator_variables()
     init_tfcoil_variables()

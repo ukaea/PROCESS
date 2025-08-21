@@ -19,6 +19,7 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     rebco_variables,
+    scan_variables,
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
@@ -27,7 +28,6 @@ from process.fortran import (
     error_handling,
     global_variables,
     numerics,
-    scan_module,
 )
 from process.solver_handler import SolverHandler
 from process.utilities.f2py_string_patch import (
@@ -172,7 +172,7 @@ class Scan:
         # Turn off error reporting (until next output)
         error_handling.errors_on = False
 
-        if scan_module.isweep == 0:
+        if scan_variables.isweep == 0:
             # Solve single problem, rather than an array of problems (scan)
             # doopt() can also run just an evaluation
             ifail = self.doopt()
@@ -180,14 +180,14 @@ class Scan:
             error_handling.show_errors()
             return
 
-        if scan_module.isweep > scan_module.ipnscns:
+        if scan_variables.isweep > scan_variables.IPNSCNS:
             raise ProcessValueError(
                 "Illegal value of isweep",
-                isweep=scan_module.isweep,
-                ipnscns=scan_module.ipnscns,
+                isweep=scan_variables.isweep,
+                IPNSCNS=scan_variables.IPNSCNS,
             )
 
-        if scan_module.scan_dim == 2:
+        if scan_variables.scan_dim == 2:
             self.scan_2d()
         else:
             self.scan_1d()
@@ -709,7 +709,7 @@ class Scan:
         # initialise dict which will contain ifail values for each scan point
         scan_1d_ifail_dict = {}
 
-        for iscan in range(1, scan_module.isweep + 1):
+        for iscan in range(1, scan_variables.isweep + 1):
             self.scan_1d_write_point_header(iscan)
             ifail = self.doopt()
             scan_1d_ifail_dict[iscan] = ifail
@@ -723,9 +723,9 @@ class Scan:
         print(
             " ****************************************** Scan Convergence Summary ****************************************** \n"
         )
-        sweep_values = scan_module.sweep[: scan_module.isweep]
+        sweep_values = scan_variables.sweep[: scan_variables.isweep]
         nsweep_var_name, _ = self.scan_select(
-            scan_module.nsweep, scan_module.sweep, scan_module.isweep
+            scan_variables.nsweep, scan_variables.sweep, scan_variables.isweep
         )
         converged_count = 0
         # offsets for aligning the converged/unconverged column
@@ -734,7 +734,7 @@ class Scan:
             max_sweep_value_length - len(str(sweep_val).replace(".", ""))
             for sweep_val in sweep_values
         ]
-        for iscan in range(1, scan_module.isweep + 1):
+        for iscan in range(1, scan_variables.isweep + 1):
             if scan_1d_ifail_dict[iscan] == 1:
                 converged_count += 1
                 print(
@@ -748,7 +748,7 @@ class Scan:
                     + " " * offsets[iscan - 1]
                     + "\u001b[31mUNCONVERGED \u001b[0m"
                 )
-        converged_percentage = converged_count / scan_module.isweep * 100
+        converged_percentage = converged_count / scan_variables.isweep * 100
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
     def scan_2d(self):
@@ -759,10 +759,12 @@ class Scan:
 
         # initialise array which will contain ifail values for each scan point
         scan_2d_ifail_list = np.zeros(
-            (scan_module.noutvars, scan_module.ipnscns), dtype=np.float64, order="F"
+            (scan_variables.NOUTVARS, scan_variables.IPNSCNS),
+            dtype=np.float64,
+            order="F",
         )
-        for iscan_1 in range(1, scan_module.isweep + 1):
-            for iscan_2 in range(1, scan_module.isweep_2 + 1):
+        for iscan_1 in range(1, scan_variables.isweep + 1):
+            for iscan_2 in range(1, scan_variables.isweep_2 + 1):
                 self.scan_2d_write_point_header(iscan, iscan_1, iscan_2)
                 ifail = self.doopt()
 
@@ -776,13 +778,13 @@ class Scan:
         print(
             " ****************************************** Scan Convergence Summary ****************************************** \n"
         )
-        sweep_1_values = scan_module.sweep[: scan_module.isweep]
-        sweep_2_values = scan_module.sweep_2[: scan_module.isweep_2]
+        sweep_1_values = scan_variables.sweep[: scan_variables.isweep]
+        sweep_2_values = scan_variables.sweep_2[: scan_variables.isweep_2]
         nsweep_var_name, _ = self.scan_select(
-            scan_module.nsweep, scan_module.sweep, scan_module.isweep
+            scan_variables.nsweep, scan_variables.sweep, scan_variables.isweep
         )
         nsweep_2_var_name, _ = self.scan_select(
-            scan_module.nsweep_2, scan_module.sweep_2, scan_module.isweep_2
+            scan_variables.nsweep_2, scan_variables.sweep_2, scan_variables.isweep_2
         )
         converged_count = 0
         scan_point = 1
@@ -790,7 +792,7 @@ class Scan:
         max_sweep1_value_length = len(str(np.max(sweep_1_values)).replace(".", ""))
         max_sweep2_value_length = len(str(np.max(sweep_2_values)).replace(".", ""))
         offsets = np.zeros(
-            (scan_module.isweep, scan_module.isweep_2), dtype=int, order="F"
+            (scan_variables.isweep, scan_variables.isweep_2), dtype=int, order="F"
         )
         for count1, sweep1 in enumerate(sweep_1_values):
             for count2, sweep2 in enumerate(sweep_2_values):
@@ -801,8 +803,8 @@ class Scan:
                     - len(str(sweep2).replace(".", ""))
                 )
 
-        for iscan_1 in range(1, scan_module.isweep + 1):
-            for iscan_2 in range(1, scan_module.isweep_2 + 1):
+        for iscan_1 in range(1, scan_variables.isweep + 1):
+            for iscan_2 in range(1, scan_variables.isweep_2 + 1):
                 if scan_2d_ifail_list[iscan_1][iscan_2] == 1:
                     converged_count += 1
                     print(
@@ -819,7 +821,7 @@ class Scan:
                     )
                     scan_point += 1
         converged_percentage = (
-            converged_count / (scan_module.isweep * scan_module.isweep_2) * 100
+            converged_count / (scan_variables.isweep * scan_variables.isweep_2) * 100
         )
         print(f"\nConvergence Percentage: {converged_percentage:.2f}%")
 
@@ -828,43 +830,43 @@ class Scan:
             constants.mfile,
             "Number of first variable scan points",
             "(isweep)",
-            scan_module.isweep,
+            scan_variables.isweep,
         )
         process_output.ovarin(
             constants.mfile,
             "Number of second variable scan points",
             "(isweep_2)",
-            scan_module.isweep_2,
+            scan_variables.isweep_2,
         )
         process_output.ovarin(
             constants.mfile,
             "Scanning first variable number",
             "(nsweep)",
-            scan_module.nsweep,
+            scan_variables.nsweep,
         )
         process_output.ovarin(
             constants.mfile,
             "Scanning second variable number",
             "(nsweep_2)",
-            scan_module.nsweep_2,
+            scan_variables.nsweep_2,
         )
         process_output.ovarin(
             constants.mfile,
             "Scanning second variable number",
             "(nsweep_2)",
-            scan_module.nsweep_2,
+            scan_variables.nsweep_2,
         )
         process_output.ovarin(
             constants.mfile,
             "Scanning second variable number",
             "(nsweep_2)",
-            scan_module.nsweep_2,
+            scan_variables.nsweep_2,
         )
 
     def scan_1d_write_point_header(self, iscan: int):
         global_variables.iscan_global = iscan
         global_variables.vlabel, global_variables.xlabel = self.scan_select(
-            scan_module.nsweep, scan_module.sweep, iscan
+            scan_variables.nsweep, scan_variables.sweep, iscan
         )
 
         process_output.oblnkl(constants.nout)
@@ -872,8 +874,8 @@ class Scan:
 
         process_output.write(
             constants.nout,
-            f"***** Scan point {iscan} of {scan_module.isweep} : {f2py_compatible_to_string(global_variables.xlabel)}"
-            f", {f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan - 1]} "
+            f"***** Scan point {iscan} of {scan_variables.isweep} : {f2py_compatible_to_string(global_variables.xlabel)}"
+            f", {f2py_compatible_to_string(global_variables.vlabel)} = {scan_variables.sweep[iscan - 1]} "
             "*****",
         )
         process_output.ostars(constants.nout, 110)
@@ -881,22 +883,22 @@ class Scan:
         process_output.ovarin(constants.mfile, "Scan point number", "(iscan)", iscan)
 
         print(
-            f"Starting scan point {iscan} of {scan_module.isweep} : "
+            f"Starting scan point {iscan} of {scan_variables.isweep} : "
             f"{f2py_compatible_to_string(global_variables.xlabel)} , {f2py_compatible_to_string(global_variables.vlabel)}"
-            f" = {scan_module.sweep[iscan - 1]}"
+            f" = {scan_variables.sweep[iscan - 1]}"
         )
 
     def scan_2d_write_point_header(self, iscan, iscan_1, iscan_2):
-        iscan_r = scan_module.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
+        iscan_r = scan_variables.isweep_2 - iscan_2 + 1 if iscan_1 % 2 == 0 else iscan_2
 
         # Makes iscan available globally (read-only)
         global_variables.iscan_global = iscan
 
         global_variables.vlabel, global_variables.xlabel = self.scan_select(
-            scan_module.nsweep, scan_module.sweep, iscan_1
+            scan_variables.nsweep, scan_variables.sweep, iscan_1
         )
         global_variables.vlabel_2, global_variables.xlabel_2 = self.scan_select(
-            scan_module.nsweep_2, scan_module.sweep_2, iscan_r
+            scan_variables.nsweep_2, scan_variables.sweep_2, iscan_r
         )
 
         process_output.oblnkl(constants.nout)
@@ -904,9 +906,9 @@ class Scan:
 
         process_output.write(
             constants.nout,
-            f"***** 2D Scan point {iscan} of {scan_module.isweep * scan_module.isweep_2} : "
-            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan_1 - 1]} and"
-            f" {f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r - 1]} "
+            f"***** 2D Scan point {iscan} of {scan_variables.isweep * scan_variables.isweep_2} : "
+            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_variables.sweep[iscan_1 - 1]} and"
+            f" {f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_variables.sweep_2[iscan_r - 1]} "
             "*****",
         )
         process_output.ostars(constants.nout, 110)
@@ -915,26 +917,29 @@ class Scan:
 
         print(
             f"Starting scan point {iscan}:  {f2py_compatible_to_string(global_variables.xlabel)}, "
-            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_module.sweep[iscan_1 - 1]}"
+            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_variables.sweep[iscan_1 - 1]}"
             f" and {f2py_compatible_to_string(global_variables.xlabel_2)}, "
-            f"{f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_module.sweep_2[iscan_r - 1]} "
+            f"{f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_variables.sweep_2[iscan_r - 1]} "
         )
 
         return iscan_r
 
     def scan_1d_write_plot(self):
-        if scan_module.first_call_1d:
+        if scan_variables.first_call_1d:
             process_output.ovarin(
-                constants.mfile, "Number of scan points", "(isweep)", scan_module.isweep
+                constants.mfile,
+                "Number of scan points",
+                "(isweep)",
+                scan_variables.isweep,
             )
             process_output.ovarin(
                 constants.mfile,
                 "Scanning variable number",
                 "(nsweep)",
-                scan_module.nsweep,
+                scan_variables.nsweep,
             )
 
-            scan_module.first_call_1d = False
+            scan_variables.first_call_1d = False
 
     def scan_select(self, nwp, swp, iscn):
         match nwp:
@@ -1094,16 +1099,3 @@ class Scan:
                 raise ProcessValueError("Illegal scan variable number", nwp=nwp)
 
         return SCAN_VARIABLES[int(nwp)]
-
-
-def init_scan_module():
-    """Initialise the scan module"""
-    scan_module.scan_dim = 1
-    scan_module.isweep = 0
-    scan_module.isweep_2 = 0
-    scan_module.nsweep = 1
-    scan_module.nsweep_2 = 3
-    scan_module.sweep[:] = 0.0
-    scan_module.sweep_2[:] = 0.0
-    scan_module.first_call_1d = True
-    scan_module.first_call_2d = True
