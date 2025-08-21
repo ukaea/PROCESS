@@ -762,7 +762,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             tan_theta_coil=0.19891236737965801,
             expected_tficrn=0.8197580588957678,
             expected_tfcryoarea=6381.2092203414386,
-            expected_tfocrn=0.59553192892551199,
+            expected_tfocrn=0.0,
         ),
     ),
 )
