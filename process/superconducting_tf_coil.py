@@ -83,7 +83,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
         ) = super().tf_stored_magnetic_energy(
             ind_tf_coil=tfcoil_variables.ind_tf_coil,
-            c_tf_total=tfcoil_variables.c_tf_total,
+            c_tf_coil=sctfcoil_module.c_tf_coil,
             n_tf_coils=tfcoil_variables.n_tf_coils,
         )
 
