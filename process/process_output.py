@@ -1,12 +1,11 @@
 import numpy as np
 
-from process.fortran import constants, process_output_fortran, numerics
+from process.fortran import constants, numerics, process_output_fortran
 
 # necessary to avoid using process_output in the code through
 # two different interfaces
 write = process_output_fortran.write
 dblcol = process_output_fortran.dblcol
-ovarin = process_output_fortran.ovarin
 ovarst = process_output_fortran.ovarst
 obuild = process_output_fortran.obuild
 
@@ -98,12 +97,14 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
     elif isinstance(value, str):
         value = float(value)
 
+    format_value = f"{value:.17e}" if isinstance(value, float) else f"{value: >12}"
+
     if varnam.strip("()") in numerics.name_xc:
         # MDK add ITV label if it is an iteration variable
         # The ITV flag overwrites the output_flag
         output_flag = "ITV"
 
-    line = f"{description}{replacement_character} {varname}{replacement_character} {value:.17e} {output_flag}"
+    line = f"{description}{replacement_character} {varname}{replacement_character} {format_value} {output_flag}"
     write(file, line)
     if file != constants.mfile:
         ovarre(constants.mfile, descr, varnam, value, output_flag)
@@ -114,4 +115,8 @@ def ocosts(file, varnam: str, descr: str, value):
 
 
 def ovarrf(file, descr: str, varnam: str, value, output_flag: str = ""):
+    ovarre(file, descr, varnam, value, output_flag)
+
+
+def ovarin(file, descr: str, varnam: str, value, output_flag: str = ""):
     ovarre(file, descr, varnam, value, output_flag)
