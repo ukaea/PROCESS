@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 import numpy as np
 
 from process.fortran import constants, numerics, process_output_fortran
@@ -6,7 +8,6 @@ from process.fortran import constants, numerics, process_output_fortran
 # two different interfaces
 write = process_output_fortran.write
 dblcol = process_output_fortran.dblcol
-ovarst = process_output_fortran.ovarst
 obuild = process_output_fortran.obuild
 
 
@@ -94,8 +95,14 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
 
     if isinstance(value, np.ndarray):
         value = value.item()
-    elif isinstance(value, str):
-        value = float(value)
+    if isinstance(value, bytes):
+        # TODO: remove when Fortran is gone
+        value = value.decode().strip()
+    if isinstance(value, str):
+        # try and convert the value to a float
+        # if it fails, leave as a string
+        with suppress(ValueError):
+            value = float(value)
 
     format_value = f"{value:.17e}" if isinstance(value, float) else f"{value: >12}"
 
@@ -119,4 +126,8 @@ def ovarrf(file, descr: str, varnam: str, value, output_flag: str = ""):
 
 
 def ovarin(file, descr: str, varnam: str, value, output_flag: str = ""):
+    ovarre(file, descr, varnam, value, output_flag)
+
+
+def ovarst(file, descr: str, varnam: str, value, output_flag: str = ""):
     ovarre(file, descr, varnam, value, output_flag)

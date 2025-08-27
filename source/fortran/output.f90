@@ -52,58 +52,6 @@ contains
     10 format(1x,a,t75,f10.2,t100,f10.2)
   end subroutine dblcol
 
-
-  ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine ovarst(file,descr,varnam,value)
-
-    !! Routine to print out the details of a character variable
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! file : input integer : Fortran output unit identifier
-    !! descr : input character string : Description of the variable
-    !! varnam : input character string : Name of the variable
-    !! value : input character string : Value of the variable
-    !! This routine writes out the description, name and value of a
-    !! character string variable.
-    !! None
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-		use numerics, only: sqsumsq
-		use constants, only: mfile
-    implicit none
-
-    !  Arguments
-
-    integer, intent(in) :: file
-    character(len=*), intent(in) :: descr, varnam, value
-
-    !  Local variables
-
-    character(len=72) :: dum72
-    character(len=30) :: dum20
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !  Replace descr and varnam with dummy strings of the correct length.
-    !  This counters problems that would occur if the two original strings
-    !  were the wrong length.
-
-    dum72 = descr
-    dum20 = varnam
-
-    if (file /= mfile) then
-       write(file,10) dum72, dum20, value
-    end if
-
-    call underscore(dum72)
-    call underscore(dum20)
-    write(mfile,10) dum72, dum20, value
-
-10  format(1x,a,t75,a,t110,a)
-
-  end subroutine ovarst
-
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   subroutine obuild(file,descr,thick,total,variable_name)
@@ -155,39 +103,5 @@ contains
   end subroutine obuild
 
   ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine underscore(string)
-
-    !! Routine that converts spaces in a string to underscores
-    !! author: P J Knight, CCFE, Culham Science Centre
-    !! string : input/output string : character string of interest
-    !! This routine converts any space characters in the string
-    !! to underscore characters.
-    !! None
-    !
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-		use numerics, only: active_constraints, boundu, boundl
-		use constants, only: electron_charge
-    implicit none
-
-    !  Arguments
-
-    character(len=*), intent(inout) :: string
-
-    !  Local variables
-
-    integer :: loop, i
-
-    ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    i = index(string, ' ')
-    if (i > 0) then
-       do loop = i, len(string)
-          if (string(loop:loop) == ' ') string(loop:loop) = '_'
-       end do
-    end if
-
-  end subroutine underscore
 
 end module process_output_fortran
