@@ -331,7 +331,7 @@ def main(args=None):
         39: "boundu(131)",
         40: "boundu(135)",
         41: "dr_blkt_outboard",
-        42: "fimp(9)",
+        42: "f_nd_impurity_electrons(9)",
         43: "Obsolete",  # Removed
         44: "alstrtf",
         45: "tmargmin_tf",
@@ -339,7 +339,7 @@ def main(args=None):
         47: "impurity_enrichment(9)",
         48: "n_tf_wp_pancakes",
         49: "n_tf_wp_layers",
-        50: "fimp(13)",
+        50: "f_nd_impurity_electrons(13)",
         51: "f_p_div_lower",
         52: "rad_fraction_sol",
         54: "b_crit_upper_nbti",

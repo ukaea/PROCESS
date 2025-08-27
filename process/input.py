@@ -170,8 +170,10 @@ INPUT_VARIABLES = {
     "f_helium3": InputVariable(
         data_structure.physics_variables, float, range=(-1.0, 5.0)
     ),
-    # TODO: does fimp require an additional range?
-    "fimp": InputVariable(data_structure.impurity_radiation_module, float, array=True),
+    # TODO: does f_nd_impurity_electrons require an additional range?
+    "f_nd_impurity_electrons": InputVariable(
+        data_structure.impurity_radiation_module, float, array=True
+    ),
     "fkzohm": InputVariable(data_structure.physics_variables, float, range=(0.5, 2.0)),
     "fnesep": InputVariable(
         data_structure.constraint_variables, float, range=(0.1, 20.0)

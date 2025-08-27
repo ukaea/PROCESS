@@ -252,7 +252,7 @@ f_a_cs_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135
-fimp(13) = 0.00038
+f_nd_impurity_electrons(13) = 0.00038
 
 * TF winding pack thickness [m]
 ixc = 140
@@ -451,20 +451,20 @@ radius_plasma_core_norm = 0.75
 coreradiationfraction = 0.6
 
 * impurity array
-fimp(1) = 0.9
-fimp(2) = 0.1
-fimp(3) = 0.0
-fimp(4) = 0.0
-fimp(5) = 0.0
-fimp(6) = 0.0
-fimp(7) = 0.0
-fimp(8) = 0.0
-fimp(9) = 0.0
-fimp(10) = 0.0
-fimp(11) = 0.0
-fimp(12) = 0.0
-fimp(13) = 0.00038
-fimp(14) = 0.000005
+f_nd_impurity_electrons(1) = 0.9
+f_nd_impurity_electrons(2) = 0.1
+f_nd_impurity_electrons(3) = 0.0
+f_nd_impurity_electrons(4) = 0.0
+f_nd_impurity_electrons(5) = 0.0
+f_nd_impurity_electrons(6) = 0.0
+f_nd_impurity_electrons(7) = 0.0
+f_nd_impurity_electrons(8) = 0.0
+f_nd_impurity_electrons(9) = 0.0
+f_nd_impurity_electrons(10) = 0.0
+f_nd_impurity_electrons(11) = 0.0
+f_nd_impurity_electrons(12) = 0.0
+f_nd_impurity_electrons(13) = 0.00038
+f_nd_impurity_electrons(14) = 0.000005
 
 * Heat transport *
 ******************

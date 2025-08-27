@@ -182,7 +182,7 @@ def main(args=None):
         "boundu(131)",
         "boundu(135)",
         "dr_blkt_outboard",
-        "fimp(9)",
+        "f_nd_impurity_electrons(9)",
         "Obsolete",  # Removed
         "alstrtf",
         "tmargmin_tf",
@@ -190,7 +190,7 @@ def main(args=None):
         "impurity_enrichment(9)",
         "n_tf_wp_pancakes",
         "n_tf_wp_layers",
-        "fimp(13)",
+        "f_nd_impurity_electrons(13)",
         "f_p_div_lower",
         "rad_fraction_sol",
         "",

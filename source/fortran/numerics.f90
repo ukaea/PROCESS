@@ -329,18 +329,18 @@ module numerics
   !! <LI> (122) f_a_cs_steel : streel fraction of Central Solenoid
   !! <LI> (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)
   !! <LI> (124) qtargettotal : Power density on target including surface recombination [W/m2]
-  !! <LI> (125) fimp(3) :  Beryllium density fraction relative to electron density
-  !! <LI> (126) fimp(4) :  Carbon density fraction relative to electron density
-  !! <LI> (127) fimp(5) :  Nitrogen fraction relative to electron density
-  !! <LI> (128) fimp(6) :  Oxygen density fraction relative to electron density
-  !! <LI> (129) fimp(7) :  Neon density fraction relative to electron density
-  !! <LI> (130) fimp(8) :  Silicon density fraction relative to electron density
-  !! <LI> (131) fimp(9) :  Argon density fraction relative to electron density
-  !! <LI> (132) fimp(10) :  Iron density fraction relative to electron density
-  !! <LI> (133) fimp(11) :  Nickel density fraction relative to electron density
-  !! <LI> (134) fimp(12) :  Krypton density fraction relative to electron density
-  !! <LI> (135) fimp(13) :  Xenon density fraction relative to electron density
-  !! <LI> (136) fimp(14) :  Tungsten density fraction relative to electron density
+  !! <LI> (125) f_nd_impurity_electrons(3) :  Beryllium density fraction relative to electron density
+  !! <LI> (126) f_nd_impurity_electrons(4) :  Carbon density fraction relative to electron density
+  !! <LI> (127) f_nd_impurity_electrons(5) :  Nitrogen fraction relative to electron density
+  !! <LI> (128) f_nd_impurity_electrons(6) :  Oxygen density fraction relative to electron density
+  !! <LI> (129) f_nd_impurity_electrons(7) :  Neon density fraction relative to electron density
+  !! <LI> (130) f_nd_impurity_electrons(8) :  Silicon density fraction relative to electron density
+  !! <LI> (131) f_nd_impurity_electrons(9) :  Argon density fraction relative to electron density
+  !! <LI> (132) f_nd_impurity_electrons(10) :  Iron density fraction relative to electron density
+  !! <LI> (133) f_nd_impurity_electrons(11) :  Nickel density fraction relative to electron density
+  !! <LI> (134) f_nd_impurity_electrons(12) :  Krypton density fraction relative to electron density
+  !! <LI> (135) f_nd_impurity_electrons(13) :  Xenon density fraction relative to electron density
+  !! <LI> (136) f_nd_impurity_electrons(14) :  Tungsten density fraction relative to electron density
   !! <LI> (137) fplhsep (f-value for equation 73)
   !! <LI> (138) rebco_thickness : thickness of REBCO layer in tape (m)
   !! <LI> (139) copper_thick : thickness of copper layer in tape (m)

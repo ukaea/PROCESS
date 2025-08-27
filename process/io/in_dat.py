@@ -345,10 +345,10 @@ def get_parameters(data, use_string_values=True):
             # Store a variable in parameters dict if it's in the IN.DAT file
             # (and not in the exclusion list). Store parameter name and value
             if item not in exclusions and item in data:
-                if item == "fimp":
-                    for k in range(len(data["fimp"].get_value)):
-                        name = f"fimp({str(k + 1).zfill(1)})"
-                        value = data["fimp"].get_value[k]
+                if item == "f_nd_impurity_electrons":
+                    for k in range(len(data["f_nd_impurity_electrons"].get_value)):
+                        name = f"f_nd_impurity_electrons({str(k + 1).zfill(1)})"
+                        value = data["f_nd_impurity_electrons"].get_value[k]
                         parameters[module][name] = value
 
                 elif item == "ioptimz":
@@ -423,7 +423,7 @@ def write_parameters(data, out_file):
     :param out_file: Output file for new IN.DAT
     :return: Nothing
     """
-    filter_list = ["fimp(", "zref(", "imp_rich", "vmec"]
+    filter_list = ["f_nd_impurity_electrons(", "zref(", "imp_rich", "vmec"]
     # Special parameters that require different formatting
     parameters = get_parameters(data)
 
@@ -538,8 +538,8 @@ def add_parameter(data, parameter_name, parameter_value):
     # Check that the parameter is not already in the dictionary
     if parameter_name not in data:
         parameter_group = find_parameter_group(parameter_name)
-        if "fimp" in parameter_name:
-            comment = dicts["DICT_DESCRIPTIONS"]["fimp"]
+        if "f_nd_impurity_electrons" in parameter_name:
+            comment = dicts["DICT_DESCRIPTIONS"]["f_nd_impurity_electrons"]
         else:
             try:
                 comment = dicts["DICT_DESCRIPTIONS"][parameter_name]

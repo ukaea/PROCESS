@@ -364,7 +364,7 @@ var_dicts = {
     "beta": VariableMetadata(
         latex=r"$\beta$", description="Total plasma beta", units=""
     ),
-    "fimp(13)": VariableMetadata(
+    "f_nd_impurity_electrons(13)": VariableMetadata(
         latex=r"$Xe_{\mathrm{f}}$", description="Impurity fraction (Xenon)", units=""
     ),
     "pdivmax_over_rmajor": VariableMetadata(
