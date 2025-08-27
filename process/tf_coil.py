@@ -1566,7 +1566,7 @@ class TFCoil:
                 self.outfile,
                 "Ratio of peak field with ripple to nominal axisymmetric peak field",
                 "(f_b_tf_inboard_peak_ripple_symmetric)",
-                sctfcoil_module.f_b_tf_inboard_peak_ripple_symmetric,
+                superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
                 "OP ",
             )
             po.ovarre(

@@ -607,7 +607,7 @@ The three fits (for 16, 18 and 20 coils) are valid for:
     = 1.09\)). This default value is also used for 17 and 19 coils.
 
 
-Figure 13 shows a contour plot of the on-coil ripple peaking factor as a
+Figure 6 shows a contour plot of the on-coil ripple peaking factor as a
 function of the winding pack sizing parameters for 16 coil.
 
 
@@ -618,12 +618,8 @@ function of the winding pack sizing parameters for 16 coil.
     width="520" height="100" />
     <br>
     <figcaption><i>
-      <p style='text-align: justify;'>
-        Figure 6: Contour plots of the on-coil peaking factor $f_\mathrm{rip}
-        ^\mathrm{coil}$ obtained with FIESTA and used in the
-        `PROCESS` scaling for 16 coils. The horizontal and vertical
-        axis corresponds to the relative transverse $t$ and radial thickness
-        $z$, respectively.
+      <p style='text-align: justify;'> 
+        Figure 6: Contour plots of the on-coil peaking factor $f_\mathrm{rip}^\mathrm{coil}$ obtained with FIESTA and used in the <code>PROCESS</code> scaling for 16 coils. The horizontal and vertical axis corresponds to the relative transverse $\mathit{t}$ and radial thickness $\mathit{z}$, respectively.
       </p>
     </i></figcaption>
     <br>
@@ -631,9 +627,9 @@ function of the winding pack sizing parameters for 16 coil.
 </figure>
 
 
-These ripple calculations are out of the spherical tokamak design range, having generally
+These ripple calculations are out of the spherical tokamak design range, which generally have
 fewer coils (between 10 and 14) and more radially thick winding packs.
 It is also worth mentioning that the the ripple must be evaluated layer-by-layer for graded coil designs, to get the genuine B field of each layer
 used to quantify the SC cross-section area per layer. Finally, resistive
-coils do not suffer from on-coil ripple as there is no radial case is present.
+coils do not suffer from on-coil ripple as there is no radial case present.
 

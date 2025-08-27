@@ -299,7 +299,7 @@ class SuperconductingTFCoil(TFCoil):
         tfcoil_variables.b_tf_inboard_peak_with_ripple = self.peak_b_tf_inboard_with_ripple(
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
-            dr_tf_wp_no_insulation=sctfcoil_module.dr_tf_wp_no_insulation,
+            dr_tf_wp_no_insulation=superconducting_tf_coil_variables.dr_tf_wp_no_insulation,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             b_tf_inboard_peak_symmetric=tfcoil_variables.b_tf_inboard_peak_symmetric,
         )
@@ -1785,7 +1785,9 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Dimensionless winding pack width
 
-        superconducting_tf_coil_variables.tf_fit_t = dx_tf_wp_primary_toroidal / dx_tf_wp_toroidal_max
+        superconducting_tf_coil_variables.tf_fit_t = (
+            dx_tf_wp_primary_toroidal / dx_tf_wp_toroidal_max
+        )
         if (superconducting_tf_coil_variables.tf_fit_t < 0.3e0) or (
             superconducting_tf_coil_variables.tf_fit_t > 1.1e0
         ):
@@ -1794,7 +1796,9 @@ class SuperconductingTFCoil(TFCoil):
 
         #  Dimensionless winding pack radial thickness
 
-        superconducting_tf_coil_variables.tf_fit_z = dr_tf_wp_no_insulation / dx_tf_wp_toroidal_max
+        superconducting_tf_coil_variables.tf_fit_z = (
+            dr_tf_wp_no_insulation / dx_tf_wp_toroidal_max
+        )
         if (superconducting_tf_coil_variables.tf_fit_z < 0.26e0) or (
             superconducting_tf_coil_variables.tf_fit_z > 0.7e0
         ):
@@ -1829,7 +1833,7 @@ class SuperconductingTFCoil(TFCoil):
             superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
-            sctfcoil_module.dr_tf_wp_no_insulation,
+            superconducting_tf_coil_variables.dr_tf_wp_no_insulation,
             tfcoil_variables.dx_tf_wp_primary_toroidal,
             tfcoil_variables.dx_tf_wp_secondary_toroidal,
             superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,

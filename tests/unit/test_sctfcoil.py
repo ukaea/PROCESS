@@ -413,11 +413,9 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        
         superconducting_tf_coil_variables,
         "f_b_tf_inboard_peak_ripple_symmetric",
         superconparam.f_b_tf_inboard_peak_ripple_symmetric,
-    
     )
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
@@ -535,11 +533,9 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        
         superconducting_tf_coil_variables,
         "f_b_tf_inboard_peak_ripple_symmetric",
         peaktfwithrippleparam.f_b_tf_inboard_peak_ripple_symmetric,
-    
     )
 
     b_tf_inboard_peak_with_ripple = sctfcoil.peak_b_tf_inboard_with_ripple(
@@ -558,8 +554,11 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         peaktfwithrippleparam.expected_tf_fit_z
     )
 
-    assert superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric == pytest.approx(
-        peaktfwithrippleparam.expected_f_b_tf_inboard_peak_ripple_symmetric
+    assert (
+        superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric
+        == pytest.approx(
+            peaktfwithrippleparam.expected_f_b_tf_inboard_peak_ripple_symmetric
+        )
     )
 
     assert b_tf_inboard_peak_with_ripple == pytest.approx(

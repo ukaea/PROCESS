@@ -17,7 +17,7 @@ tf_fit_z: float = None
 """Dimensionless winding pack radial thickness"""
 
 
-tf_fit_y: float = None
+f_b_tf_inboard_peak_ripple_symmetric: float = None
 """Ratio of peak field with ripple to nominal axisymmetric peak field"""
 
 
@@ -177,6 +177,9 @@ a_tf_turn_cable_space_effective: float = None
 vforce_inboard_tot: float = None
 """Total inboard vertical tension (all coils) [N]"""
 
+dr_tf_wp_no_insulation: float = None
+"""Radial thickness of winding pack without insulation [m]"""
+
 
 # Vacuum Vessel stress on TF coil quench
 
@@ -226,7 +229,7 @@ def init_superconducting_tf_coil_variables():
     global is_leg_cp_temp_same
     global tf_fit_t
     global tf_fit_z
-    global tf_fit_y
+    global f_b_tf_inboard_peak_ripple_symmetric
     global c_tf_coil
     global a_tf_wp_with_insulation
     global a_tf_wp_no_insulation
@@ -269,11 +272,12 @@ def init_superconducting_tf_coil_variables():
     global e_tf_magnetic_stored_total
     global radius_tf_turn_cable_space_corners
     global a_tf_turn_cable_space_effective
+    global dr_tf_wp_no_insulation
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
     tf_fit_z = 0.0
-    tf_fit_y = 0.0
+    f_b_tf_inboard_peak_ripple_symmetric = 0.0
     c_tf_coil = 0.0
     a_tf_wp_with_insulation = 0.0
     a_tf_wp_no_insulation = 0.0
@@ -316,3 +320,4 @@ def init_superconducting_tf_coil_variables():
     e_tf_magnetic_stored_total = 0.0
     radius_tf_turn_cable_space_corners = 0.0
     a_tf_turn_cable_space_effective = 0.0
+    dr_tf_wp_no_insulation = 0.0

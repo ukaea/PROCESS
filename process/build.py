@@ -1975,8 +1975,6 @@ class Build:
         else:
             build_variables.dr_shld_vv_gap_outboard = build_variables.gapomin
 
-        #  Call tfcoil_variables.ripple calculation again with new build_variables.r_tf_outboard_mid/build_variables.dr_shld_vv_gap_outboard value
-        #  call rippl(tfcoil_variables.ripple_b_tf_plasma_edge_max,rmajor,rminor,r_tf_outboard_mid,n_tf_coils,ripple_b_tf_plasma_edge,r_tf_outboard_midl)
         (
             tfcoil_variables.ripple_b_tf_plasma_edge,
             r_tf_outboard_midl,
