@@ -81,7 +81,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[test, examples]'
+          pip install -e '.[test]'
           pip install -r requirements_dev.txt
       - name: Install poppler
         run: |
@@ -89,6 +89,31 @@ jobs:
           sudo apt install poppler-utils
       - name: Run integration tests
         run: pytest tests/integration -n auto -v
+
+  example-test:
+    runs-on: ubuntu-latest
+    needs: make
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: process-build-artifacts
+          path: process/
+      - name: Install PROCESS
+        # Editable install to match default install
+        run: |
+          pip install -e '.[test, examples]'
+          pip install -r requirements_dev.txt
+      - name: Install poppler
+        run: |
+          sudo apt update
+          sudo apt install poppler-utils
+      - name: Run example notebook tests
+        run: pytest tests/examples -n auto -v
 
 
   regression-test:
