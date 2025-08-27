@@ -7,7 +7,6 @@ from process.fortran import constants, numerics, process_output_fortran
 # necessary to avoid using process_output in the code through
 # two different interfaces
 write = process_output_fortran.write
-dblcol = process_output_fortran.dblcol
 
 
 def ocentr(file, string: str, width: int, *, character="*"):
