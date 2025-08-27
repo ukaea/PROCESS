@@ -204,7 +204,7 @@ class SuperconductingTFCoil(TFCoil):
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                 superconducting_tf_coil_variables.dr_tf_turn_cable_space,
                 tfcoil_variables.dia_tf_turn_coolant_channel,
-                tfcoil_variables.fcutfsu,
+                tfcoil_variables.f_a_tf_turn_cable_copper,
                 tfcoil_variables.dx_tf_turn_steel,
                 superconducting_tf_coil_variables.dx_tf_side_case_average,
                 superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
@@ -345,7 +345,7 @@ class SuperconductingTFCoil(TFCoil):
                 a_tf_turn=a_tf_turn,
                 b_tf_inboard_peak=tfcoil_variables.bmaxtfrp,
                 f_a_tf_turn_cooling_extra=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-                f_a_tf_turn_cable_copper=tfcoil_variables.fcutfsu,
+                f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
                 c_tf_turn=tfcoil_variables.c_tf_turn,
                 j_tf_wp=tfcoil_variables.j_tf_wp,
                 i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
@@ -1487,7 +1487,7 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Copper fraction of conductor",
-                "(fcutfsu)",
+                "(f_a_tf_turn_cable_copper)",
                 f_a_tf_turn_cable_copper,
             )
             po.ovarre(

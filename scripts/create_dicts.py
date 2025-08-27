@@ -154,9 +154,9 @@ class DefaultValues(ProjectDictionary):
     re-initialisation. Use Ford project's value for this variable.
 
     Case 2:
-    real(kind(1.0D0)) :: fcutfsu
+    real(kind(1.0D0)) :: f_a_tf_turn_cable_copper
     Declared only (requires re-initialisation)
-    fcutfsu = 0.69D0
+    f_a_tf_turn_cable_copper = 0.69D0
     Initialised separately in init subroutine
     The Ford project value will be None, but we want to extract the value from
     the init subroutine. This requires Fortran source regex.
