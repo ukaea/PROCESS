@@ -208,7 +208,10 @@ dia_tf_turn_coolant_channel: float = None
 
 
 e_tf_magnetic_stored_total_gj: float = None
-"""total stored energy in the toroidal field (GJ)"""
+"""total magnetic stored energy in the toroidal field coils (GJ)"""
+
+e_tf_coil_magnetic_stored: float = None
+"""Stored magnetic energy in a single TF coil (J)"""
 
 
 b_crit_upper_nbti: float = None
@@ -1123,6 +1126,7 @@ def init_tfcoil_variables():
     global den_tf_wp_turn_insulation
     global dia_tf_turn_coolant_channel
     global e_tf_magnetic_stored_total_gj
+    global e_tf_coil_magnetic_stored
     global b_crit_upper_nbti
     global t_crit_nbti
     global max_force_density
@@ -1347,6 +1351,7 @@ def init_tfcoil_variables():
     den_tf_wp_turn_insulation = 1800.0
     dia_tf_turn_coolant_channel = 0.005
     e_tf_magnetic_stored_total_gj = 0.0
+    e_tf_coil_magnetic_stored = 0.0
     b_crit_upper_nbti = 14.86
     t_crit_nbti = 9.04
     max_force_density = 0.0
