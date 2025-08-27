@@ -226,7 +226,7 @@ max_force_density: float = None
 """Maximal (WP averaged) force density in TF coils at 1 point. (MN/m3)"""
 
 
-fcutfsu: float = None
+f_a_tf_turn_cable_copper: float = None
 """copper fraction of cable conductor (TF coils)
 (iteration variable 59)
 """
@@ -1130,7 +1130,7 @@ def init_tfcoil_variables():
     global b_crit_upper_nbti
     global t_crit_nbti
     global max_force_density
-    global fcutfsu
+    global f_a_tf_turn_cable_copper
     global fhts
     global insstrain
     global i_tf_stress_model
@@ -1355,7 +1355,7 @@ def init_tfcoil_variables():
     b_crit_upper_nbti = 14.86
     t_crit_nbti = 9.04
     max_force_density = 0.0
-    fcutfsu = 0.69
+    f_a_tf_turn_cable_copper = 0.69
     fhts = 0.5
     insstrain = 0.0
     i_tf_stress_model = 1

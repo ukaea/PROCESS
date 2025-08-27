@@ -1257,14 +1257,14 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Copper fraction of conductor",
-                    "(fcutfsu)",
-                    tfcoil_variables.fcutfsu,
+                    "(f_a_tf_turn_cable_copper)",
+                    tfcoil_variables.f_a_tf_turn_cable_copper,
                 )
                 po.ovarre(
                     self.outfile,
                     "Superconductor fraction of conductor",
-                    "(1-fcutfsu)",
-                    1 - tfcoil_variables.fcutfsu,
+                    "(1-f_a_tf_turn_cable_copper)",
+                    1 - tfcoil_variables.f_a_tf_turn_cable_copper,
                 )
                 # TODO
                 # po.ovarre(self.outfile,'Conductor fraction of winding pack','(tfcoil_variables.a_tf_wp_conductor/ap)',a_tf_wp_conductor/ap, 'OP ')
@@ -3143,7 +3143,7 @@ class TFCoil:
         dx_tf_turn_cable_space_average,
         dr_tf_turn_cable_space,
         dia_tf_turn_coolant_channel,
-        fcutfsu,
+        f_a_tf_turn_cable_copper,
         dx_tf_turn_steel,
         dx_tf_side_case_average,
         dx_tf_wp_toroidal_average,
@@ -3513,10 +3513,10 @@ class TFCoil:
                 poisson_member_array[1],
             ) = eyoung_series(
                 np.double(eyoung_cond_trans),
-                (t_cable_eyng - dia_tf_turn_coolant_channel) * (1.0e0 - fcutfsu),
+                (t_cable_eyng - dia_tf_turn_coolant_channel) * (1.0e0 - f_a_tf_turn_cable_copper),
                 np.double(poisson_cond_trans),
                 np.double(eyoung_copper),
-                (t_cable_eyng - dia_tf_turn_coolant_channel) * fcutfsu,
+                (t_cable_eyng - dia_tf_turn_coolant_channel) * f_a_tf_turn_cable_copper,
                 np.double(poisson_copper),
             )
             # Steel conduit
@@ -3567,11 +3567,11 @@ class TFCoil:
             # Copper
             eyoung_member_array[2] = eyoung_copper
             poisson_member_array[2] = poisson_copper
-            l_member_array[2] = a_tf_wp_conductor * fcutfsu
+            l_member_array[2] = a_tf_wp_conductor * f_a_tf_turn_cable_copper
             # Conductor
             eyoung_member_array[3] = eyoung_cond_axial
             poisson_member_array[3] = poisson_cond_axial
-            l_member_array[3] = a_tf_wp_conductor * (1.0e0 - fcutfsu)
+            l_member_array[3] = a_tf_wp_conductor * (1.0e0 - f_a_tf_turn_cable_copper)
             # Helium and void
             eyoung_member_array[4] = 0e0
             poisson_member_array[4] = poisson_steel

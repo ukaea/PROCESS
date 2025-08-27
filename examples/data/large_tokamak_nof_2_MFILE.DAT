@@ -678,8 +678,8 @@
  Diameter_of_central_helium_channel_in_cable______________________________ (dia_tf_turn_coolant_channel)______________________ 1.00000000000000002e-02
  internal_area_of_the_cable_space_________________________________________ (a_tf_turn_cable_space_no_void)________________________ 1.61887869455795111e-03
  Coolant_fraction_in_conductor_excluding_central_channel__________________ (f_a_tf_turn_cable_space_extra_void)_________________________ 3.00000000000000044e-01
- Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.23199976882647566e-01
- Superconductor_fraction_of_conductor_____________________________________ (1-fcutfsu)____________________ 1.76800023117352434e-01
+ Copper_fraction_of_conductor_____________________________________________ (f_a_tf_turn_cable_copper)______________________ 8.23199976882647566e-01
+ Superconductor_fraction_of_conductor_____________________________________ (1-f_a_tf_turn_cable_copper)____________________ 1.76800023117352434e-01
  Check_total_area_fractions_in_winding_pack_=_1___________________________ _______________________________ 1.00000000000000000e+00
  minimum_TF_conductor_temperature_margin__(K)_____________________________ (tmargmin_tf)__________________ 1.50000000000000000e+00
  TF_conductor_temperature_margin_(K)______________________________________ (tmargtf)______________________ 1.84958797271245423e+00
@@ -717,7 +717,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)________________________ (tc0m)_________________________ 1.60599999999999987e+01
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)______ (thelium)______________________ 4.75000000000000000e+00
  Total_helium_fraction_inside_cable_space_________________________________ (fhetot)_______________________ 3.48514948404575087e-01 OP
- Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.23199976882647566e-01
+ Copper_fraction_of_conductor_____________________________________________ (f_a_tf_turn_cable_copper)______________________ 8.23199976882647566e-01
  Residual_manufacturing_strain_on_superconductor__________________________ (str_tf_con_res)_______________ -5.00000000000000010e-03
  Self-consistent_strain_on_superconductor_________________________________ (str_wp)_______________________ 2.06584525638417709e-03
  Critical_current_density_in_superconductor_(A/m2)________________________ (j_crit_sc)____________________ 7.06210744114827156e+08 OP
@@ -1207,7 +1207,7 @@ ixc = 56 * tdmptf
 ixc = 57 * thkcas
 ixc = 58 * dx_tf_turn_steel
 boundl(58) = 0.008
-ixc = 59 * fcutfsu
+ixc = 59 * f_a_tf_turn_cable_copper
 boundl(59) = 0.50
 boundu(59) = 0.94
 ixc = 60 * c_tf_turn
@@ -1554,7 +1554,7 @@ dr_tf_plasma_case   = 0.06 * inboard TF coil case plasma side thickness (m) (cal
 casths   = 0.05 * inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
 dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
-fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
+f_a_tf_turn_cable_copper  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
 ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
 tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)

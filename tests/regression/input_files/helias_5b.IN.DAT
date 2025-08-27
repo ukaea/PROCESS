@@ -167,7 +167,7 @@ runtitle = HELIAS-5B
 
 *-----------------Tfcoil Variables-----------------*
 
-fcutfsu  = 0.69         *Copper fraction of cable conductor (TF coils)
+f_a_tf_turn_cable_copper  = 0.69         *Copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1         *Switch for superconductor material in tf coils (1: ITER Nb3Sn)
 tftmp     = 4.2         *Peak helium coolant temperature in TF coils and PF coils (k)
 temp_tf_cryo    = 4.2         *Coil temperature for cryogenic plant power calculation (K)
