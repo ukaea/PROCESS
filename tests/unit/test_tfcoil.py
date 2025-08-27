@@ -11419,25 +11419,27 @@ def test_sigvm(sx, sy, sz, expected):
 
 
 @pytest.mark.parametrize(
-    "ind_tf_coil, c_tf_coil, n_tf_coils, expected_single, expected_total, expected_total_gj",
+    "ind_tf_coil, c_tf_total, n_tf_coils, expected_total, expected_total_gj, expected_single",
     [
-        (1.0, 2.0, 3, 6.0, 6.0e-9, 2.0),
-        (0.5, 4.0, 2, 8.0, 8.0e-9, 4.0),
-        (2.0, 1.5, 4, 9.0, 9.0e-9, 2.25),
+        (1.0, 2.0, 3, 2.0, 2.0e-9, 2 / 3),
+        (0.5, 4.0, 2, 4.0, 4.0e-9, 2.0),
+        (2.0, 5.0, 4, 25.0, 25.0e-9, 6.25),
         (0.0, 5.0, 1, 0.0, 0.0, 0.0),
         (1.0, 0.0, 10, 0.0, 0.0, 0.0),
     ],
 )
 def test_tf_stored_magnetic_energy(
     ind_tf_coil,
-    c_tf_coil,
+    c_tf_total,
     n_tf_coils,
-    expected_single,
     expected_total,
     expected_total_gj,
+    expected_single,
 ):
     tfc = TFCoil(build=None)
-    result = tfc.tf_stored_magnetic_energy(ind_tf_coil, c_tf_coil, n_tf_coils)
+    result = tfc.tf_stored_magnetic_energy(
+        ind_tf_coil=ind_tf_coil, c_tf_total=c_tf_total, n_tf_coils=n_tf_coils
+    )
     assert pytest.approx(result[0]) == expected_total
     assert pytest.approx(result[1]) == expected_total_gj
     assert pytest.approx(result[2]) == expected_single

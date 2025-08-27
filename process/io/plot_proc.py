@@ -5428,6 +5428,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$N_{{\\text{{TF,coil}}}}$: {mfile_data.data['n_tf_coils'].get_scan(scan)}\n"
             f"Self inductance of single coil: {mfile_data.data['ind_tf_coil'].get_scan(scan) * 1e6:.4f} $\\mu$H\n"
             f"Stored energy of all coils: {mfile_data.data['e_tf_magnetic_stored_total_gj'].get_scan(scan):.4f} GJ\n"
+            f"Stored energy of a single coil: {mfile_data.data['e_tf_coil_magnetic_stored'].get_scan(scan):.4f} GJ\n"
             f"Total area of steel in coil: {mfile_data.data['a_tf_coil_inboard_steel'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"Total area fraction of steel: {mfile_data.data['f_a_tf_coil_inboard_steel'].get_scan(scan):.4f}\n"
             f"Total area fraction of insulation: {mfile_data.data['f_a_tf_coil_inboard_insulation'].get_scan(scan):.4f}\n"

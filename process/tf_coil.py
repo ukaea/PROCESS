@@ -476,7 +476,7 @@ class TFCoil:
     def tf_stored_magnetic_energy(
         self,
         ind_tf_coil: float,
-        c_tf_coil: float,
+        c_tf_total: float,
         n_tf_coils: int,
     ) -> tuple[float, float, float]:
         """
@@ -484,8 +484,8 @@ class TFCoil:
 
         :param ind_tf_coil: Self-inductance of the TF coil [H].
         :type ind_tf_coil: float
-        :param c_tf_coil: Current per TF coil [A].
-        :type c_tf_coil: float
+        :param c_tf_total: Current in all TF coils [A].
+        :type c_tf_total: float
         :param n_tf_coils: Number of TF coils.
         :type n_tf_coils: int
 
@@ -506,7 +506,7 @@ class TFCoil:
 
             - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
         """
-        e_tf_magnetic_stored_total = 0.5 * ind_tf_coil * c_tf_coil**2
+        e_tf_magnetic_stored_total = 0.5 * ind_tf_coil * c_tf_total**2
 
         e_tf_magnetic_stored_total_gj = e_tf_magnetic_stored_total * 1.0e-9
 
@@ -1594,6 +1594,14 @@ class TFCoil:
             "Total stored energy in TF coils (GJ)",
             "(e_tf_magnetic_stored_total_gj)",
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total magnetic energy in a TF coil (J)",
+            "(e_tf_coil_magnetic_stored)",
+            tfcoil_variables.e_tf_coil_magnetic_stored,
             "OP ",
         )
 

@@ -78,13 +78,12 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         (
-            e_tf_coil_magnetic_stored,
             superconducting_tf_coil_variables.e_tf_magnetic_stored_total,
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
-            e_tf_coil_magnetic_stored,
-        ) = super().tf_stored_magnetic_energy(
+            tfcoil_variables.e_tf_coil_magnetic_stored,
+        ) = self.tf_stored_magnetic_energy(
             ind_tf_coil=tfcoil_variables.ind_tf_coil,
-            c_tf_coil=sctfcoil_module.c_tf_coil,
+            c_tf_total=tfcoil_variables.c_tf_total,
             n_tf_coils=tfcoil_variables.n_tf_coils,
         )
 
@@ -310,10 +309,6 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.b_tf_inboard_peak,
         )
 
-        tfes = (
-            superconducting_tf_coil_variables.e_tf_magnetic_stored_total
-            / tfcoil_variables.n_tf_coils
-        )
         # Cross-sectional area per turn
         a_tf_turn = tfcoil_variables.c_tf_total / (
             tfcoil_variables.j_tf_wp
@@ -352,7 +347,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.i_tf_sc_mat,
                 tfcoil_variables.fhts,
                 tfcoil_variables.tdmptf,
-                tfes,
+                tfcoil_variables.e_tf_coil_magnetic_stored,
                 tfcoil_variables.tftmp,
                 tfcoil_variables.tmaxpro,
                 tfcoil_variables.bcritsc,
