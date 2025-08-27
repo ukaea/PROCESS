@@ -93,6 +93,7 @@ from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
+from process.process_output import oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
@@ -103,7 +104,6 @@ from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
-from process.process_output import oheadr
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 

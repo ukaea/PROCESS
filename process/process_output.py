@@ -8,7 +8,6 @@ from process.fortran import constants, numerics, process_output_fortran
 # two different interfaces
 write = process_output_fortran.write
 dblcol = process_output_fortran.dblcol
-obuild = process_output_fortran.obuild
 
 
 def ocentr(file, string: str, width: int, *, character="*"):
@@ -131,3 +130,7 @@ def ovarin(file, descr: str, varnam: str, value, output_flag: str = ""):
 
 def ovarst(file, descr: str, varnam: str, value, output_flag: str = ""):
     ovarre(file, descr, varnam, value, output_flag)
+
+
+def obuild(file, descr: str, thick: float, total: float, variable_name: str = ""):
+    write(file, f"{descr:<50}{thick:.3e}{' ':<10}{total:.3e}  {variable_name}")
