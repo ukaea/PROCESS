@@ -711,7 +711,7 @@ class Models:
 # or writing to the log file (on info+)
 logging_formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
 logging_stream_handler = logging.StreamHandler()
-logging_stream_handler.setLevel(logging.ERROR)
+logging_stream_handler.setLevel(logging.CRITICAL)
 logging_stream_handler.setFormatter(logging_formatter)
 
 logging_file_handler = logging.FileHandler("process.log", mode="w")
@@ -736,11 +736,16 @@ def main(args=None):
     # Only add our handlers if PROCESS is being run as an application
     # This should allow it to be used as a package (e.g. people import models that log)
     # without creating a process.log file... people can then handle our logs as they wish.
-    # If we did this on the 'process.main' logger then I don't think the handlers
-    # would propogate up the heirachy properly.
-    logging.basicConfig(
-        handlers=[logging_file_handler, logging_stream_handler, logging_model_handler]
-    )
+    # Using basicConfig adds these handlers to the root logger iff the root logger has not
+    # been setup yet. This means that during testing these hanlders won't be present, which
+    # will ensure they do not conflict with the pytest handlers.
+    logging.basicConfig(handlers=[logging_stream_handler, logging_file_handler])
+
+    # However, this handler we know to be safe and necessary so we add it to the root logger
+    # regardless of whether it has already been created.
+    root_logger = logging.getLogger()
+    root_logger.addHandler(logging_model_handler)
+
     Process(args)
 
 
