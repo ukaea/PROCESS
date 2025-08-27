@@ -1,6 +1,6 @@
 import numpy as np
 
-from process.fortran import constants, process_output_fortran
+from process.fortran import constants, process_output_fortran, numerics
 
 # necessary to avoid using process_output in the code through
 # two different interfaces
@@ -97,6 +97,11 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
         value = value.item()
     elif isinstance(value, str):
         value = float(value)
+
+    if varnam.strip("()") in numerics.name_xc:
+        # MDK add ITV label if it is an iteration variable
+        # The ITV flag overwrites the output_flag
+        output_flag = "ITV"
 
     line = f"{description}{replacement_character} {varname}{replacement_character} {value:.17e} {output_flag}"
     write(file, line)
