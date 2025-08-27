@@ -1201,7 +1201,7 @@ i_tf_turns_integer = 0
 * REFERENCE:     Zachary S Hartwig et al 2020 Supercond. Sci. Technol. 
 *                in press https://doi.org/10.1088/1361-6668/abb8c0
 
-*fcutfsu = 
+*f_a_tf_turn_cable_copper = 
 * DESCRIPTION:   Fraction of copper in TF cable space
 * JUSTIFICATION: The HTS scaling is not defined separating SC material from 
 *                Copper at the HTS strands level. Therefore this Cu fraction

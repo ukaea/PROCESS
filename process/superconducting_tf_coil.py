@@ -204,7 +204,7 @@ class SuperconductingTFCoil(TFCoil):
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                 superconducting_tf_coil_variables.dr_tf_turn_cable_space,
                 tfcoil_variables.dia_tf_turn_coolant_channel,
-                tfcoil_variables.fcutfsu,
+                tfcoil_variables.f_a_tf_turn_cable_copper,
                 tfcoil_variables.dx_tf_turn_steel,
                 superconducting_tf_coil_variables.dx_tf_side_case_average,
                 superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
@@ -341,21 +341,21 @@ class SuperconductingTFCoil(TFCoil):
                 vdump,
                 tfcoil_variables.tmargtf,
             ) = self.supercon(
-                tfcoil_variables.a_tf_turn_cable_space_no_void,
-                a_tf_turn,
-                tfcoil_variables.bmaxtfrp,
-                tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-                tfcoil_variables.fcutfsu,
-                tfcoil_variables.c_tf_turn,
-                tfcoil_variables.j_tf_wp,
-                tfcoil_variables.i_tf_sc_mat,
-                tfcoil_variables.fhts,
-                tfcoil_variables.tdmptf,
-                tfes,
-                tfcoil_variables.tftmp,
-                tfcoil_variables.tmaxpro,
-                tfcoil_variables.bcritsc,
-                tfcoil_variables.tcritsc,
+                a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
+                a_tf_turn=a_tf_turn,
+                b_tf_inboard_peak=tfcoil_variables.bmaxtfrp,
+                f_a_tf_turn_cooling_extra=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+                f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
+                c_tf_turn=tfcoil_variables.c_tf_turn,
+                j_tf_wp=tfcoil_variables.j_tf_wp,
+                i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
+                f_strain_scale=tfcoil_variables.fhts,
+                t_tf_quench_dump=tfcoil_variables.tdmptf,
+                e_tf_coil_magnetic_stored=tfes,
+                temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
+                temp_tf_conductor_peak_quench=tfcoil_variables.tmaxpro,
+                bcritsc=tfcoil_variables.bcritsc,
+                tcritsc=tfcoil_variables.tcritsc,
                 output=output,
             )
 
@@ -1487,7 +1487,7 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Copper fraction of conductor",
-                "(fcutfsu)",
+                "(f_a_tf_turn_cable_copper)",
                 f_a_tf_turn_cable_copper,
             )
             po.ovarre(
@@ -1867,7 +1867,7 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.a_tf_turn_steel,
                 tfcoil_variables.a_tf_turn_insulation,
                 tfcoil_variables.n_tf_coil_turns,
-            ) = self.tf_averaged_turn_geom(
+            ) = self.tf_cable_in_conduit_averaged_turn_geometry(
                 tfcoil_variables.j_tf_wp,
                 tfcoil_variables.dx_tf_turn_steel,
                 tfcoil_variables.dx_tf_turn_insulation,
@@ -1891,7 +1891,7 @@ class SuperconductingTFCoil(TFCoil):
                 superconducting_tf_coil_variables.dr_tf_turn_cable_space,
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space,
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
-            ) = self.tf_integer_turn_geom(
+            ) = self.tf_cable_in_conduit_integer_turn_geometry(
                 dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                 dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
                 dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
@@ -2350,7 +2350,7 @@ class SuperconductingTFCoil(TFCoil):
             dx_tf_side_case_average,
         )
 
-    def tf_integer_turn_geom(
+    def tf_cable_in_conduit_integer_turn_geometry(
         self,
         dr_tf_wp_with_insulation: float,
         dx_tf_wp_insulation: float,
@@ -2553,7 +2553,7 @@ class SuperconductingTFCoil(TFCoil):
             ),
         )
 
-    def tf_averaged_turn_geom(
+    def tf_cable_in_conduit_averaged_turn_geometry(
         self, j_tf_wp, dx_tf_turn_steel, dx_tf_turn_insulation, i_tf_sc_mat
     ):
         """
@@ -2764,7 +2764,7 @@ class SuperconductingTFCoil(TFCoil):
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
 
@@ -2774,7 +2774,7 @@ class SuperconductingTFCoil(TFCoil):
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-            * tfcoil_variables.fcutfsu
+            * tfcoil_variables.f_a_tf_turn_cable_copper
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.den_copper
         if tfcoil_variables.m_tf_coil_copper <= 0.0e0:

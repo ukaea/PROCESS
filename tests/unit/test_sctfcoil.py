@@ -1132,7 +1132,7 @@ def test_tf_integer_turn_geom(tfintegerturngeomparam, sctfcoil):
         dr_tf_turn_cable_space,
         dx_tf_turn_cable_space,
         dx_tf_turn_cable_space_average,
-    ) = sctfcoil.tf_integer_turn_geom(
+    ) = sctfcoil.tf_cable_in_conduit_integer_turn_geometry(
         dr_tf_wp_with_insulation=tfintegerturngeomparam.dr_tf_wp_with_insulation,
         dx_tf_wp_insulation=tfintegerturngeomparam.dx_tf_wp_insulation,
         dx_tf_wp_insertion_gap=tfintegerturngeomparam.dx_tf_wp_insertion_gap,
@@ -1430,7 +1430,7 @@ def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
         a_tf_turn_steel,
         a_tf_turn_insulation,
         n_tf_coil_turns,
-    ) = sctfcoil.tf_averaged_turn_geom(
+    ) = sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
         i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
@@ -1707,7 +1707,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_tf_coil_inboard_case: Any = None
 
-    fcutfsu: Any = None
+    f_a_tf_turn_cable_copper: Any = None
 
     a_tf_wp_coolant_channels: Any = None
 
@@ -1828,7 +1828,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_coil_inboard_case=1.0015169239205168,
-            fcutfsu=0.80884,
+            f_a_tf_turn_cable_copper=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             whttflgs=0.0,
@@ -1902,7 +1902,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_coil_inboard_case=1.0015169239205168,
-            fcutfsu=0.80884,
+            f_a_tf_turn_cable_copper=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             whttflgs=0.0,
@@ -2072,7 +2072,11 @@ def test_superconducting_tf_coil_area_and_masses(
         tfcoilareaandmassesparam.a_tf_coil_inboard_case,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "f_a_tf_turn_cable_copper",
+        tfcoilareaandmassesparam.f_a_tf_turn_cable_copper,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
