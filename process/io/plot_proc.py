@@ -2866,20 +2866,20 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{relative \\ number}}$\n"
         f"             $\\mathbf{{densities:}}$\n \n"
         f"             Effective charge: {mfile_data.data['zeff'].get_scan(scan):.3f}\n\n"
-        f"             H:    {mfile_data.data['fimp(01)'].get_scan(scan):.4e}\n"
-        f"             He:  {mfile_data.data['fimp(02)'].get_scan(scan):.4e}\n"
-        f"             Be:  {mfile_data.data['fimp(03)'].get_scan(scan):.4e}\n"
-        f"             C:    {mfile_data.data['fimp(04)'].get_scan(scan):.4e}\n"
-        f"             N:    {mfile_data.data['fimp(05)'].get_scan(scan):.4e}\n"
-        f"             O:    {mfile_data.data['fimp(06)'].get_scan(scan):.4e}\n"
-        f"             Ne:  {mfile_data.data['fimp(07)'].get_scan(scan):.4e}\n"
-        f"             Si:   {mfile_data.data['fimp(08)'].get_scan(scan):.4e}\n"
-        f"             Ar:  {mfile_data.data['fimp(09)'].get_scan(scan):.4e}\n"
-        f"             Fe:  {mfile_data.data['fimp(10)'].get_scan(scan):.4e}\n"
-        f"             Ni:   {mfile_data.data['fimp(11)'].get_scan(scan):.4e}\n"
-        f"             Kr:   {mfile_data.data['fimp(12)'].get_scan(scan):.4e}\n"
-        f"             Xe:  {mfile_data.data['fimp(13)'].get_scan(scan):.4e}\n"
-        f"             W:   {mfile_data.data['fimp(14)'].get_scan(scan):.4e}"
+        f"             H:    {mfile_data.data['f_nd_impurity_electrons(01)'].get_scan(scan):.4e}\n"
+        f"             He:  {mfile_data.data['f_nd_impurity_electrons(02)'].get_scan(scan):.4e}\n"
+        f"             Be:  {mfile_data.data['f_nd_impurity_electrons(03)'].get_scan(scan):.4e}\n"
+        f"             C:    {mfile_data.data['f_nd_impurity_electrons(04)'].get_scan(scan):.4e}\n"
+        f"             N:    {mfile_data.data['f_nd_impurity_electrons(05)'].get_scan(scan):.4e}\n"
+        f"             O:    {mfile_data.data['f_nd_impurity_electrons(06)'].get_scan(scan):.4e}\n"
+        f"             Ne:  {mfile_data.data['f_nd_impurity_electrons(07)'].get_scan(scan):.4e}\n"
+        f"             Si:   {mfile_data.data['f_nd_impurity_electrons(08)'].get_scan(scan):.4e}\n"
+        f"             Ar:  {mfile_data.data['f_nd_impurity_electrons(09)'].get_scan(scan):.4e}\n"
+        f"             Fe:  {mfile_data.data['f_nd_impurity_electrons(10)'].get_scan(scan):.4e}\n"
+        f"             Ni:   {mfile_data.data['f_nd_impurity_electrons(11)'].get_scan(scan):.4e}\n"
+        f"             Kr:   {mfile_data.data['f_nd_impurity_electrons(12)'].get_scan(scan):.4e}\n"
+        f"             Xe:  {mfile_data.data['f_nd_impurity_electrons(13)'].get_scan(scan):.4e}\n"
+        f"             W:   {mfile_data.data['f_nd_impurity_electrons(14)'].get_scan(scan):.4e}"
     )
 
     axis.text(
@@ -3854,20 +3854,20 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
     # find impurity densities
     imp_frac = np.array([
-        mfile_data.data["fimp(01)"].get_scan(scan),
-        mfile_data.data["fimp(02)"].get_scan(scan),
-        mfile_data.data["fimp(03)"].get_scan(scan),
-        mfile_data.data["fimp(04)"].get_scan(scan),
-        mfile_data.data["fimp(05)"].get_scan(scan),
-        mfile_data.data["fimp(06)"].get_scan(scan),
-        mfile_data.data["fimp(07)"].get_scan(scan),
-        mfile_data.data["fimp(08)"].get_scan(scan),
-        mfile_data.data["fimp(09)"].get_scan(scan),
-        mfile_data.data["fimp(10)"].get_scan(scan),
-        mfile_data.data["fimp(11)"].get_scan(scan),
-        mfile_data.data["fimp(12)"].get_scan(scan),
-        mfile_data.data["fimp(13)"].get_scan(scan),
-        mfile_data.data["fimp(14)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(01)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(02)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(03)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(04)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(05)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(06)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(07)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(08)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(09)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(10)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(11)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(12)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(13)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
     ])
 
     if ipedestal == 0:
@@ -6516,20 +6516,20 @@ def plot_header(axis, mfile_data, scan):
     )
     axis.text(0.0, 2.0, "OP  --> Output variable", color="blue", ha="left", va="center")
 
-    H = mfile_data.data["fimp(01)"].get_scan(scan)
-    He = mfile_data.data["fimp(02)"].get_scan(scan)
-    Be = mfile_data.data["fimp(03)"].get_scan(scan)
-    C = mfile_data.data["fimp(04)"].get_scan(scan)
-    N = mfile_data.data["fimp(05)"].get_scan(scan)
-    O = mfile_data.data["fimp(06)"].get_scan(scan)  # noqa: E741
-    Ne = mfile_data.data["fimp(07)"].get_scan(scan)
-    Si = mfile_data.data["fimp(08)"].get_scan(scan)
-    Ar = mfile_data.data["fimp(09)"].get_scan(scan)
-    Fe = mfile_data.data["fimp(10)"].get_scan(scan)
-    Ni = mfile_data.data["fimp(11)"].get_scan(scan)
-    Kr = mfile_data.data["fimp(12)"].get_scan(scan)
-    Xe = mfile_data.data["fimp(13)"].get_scan(scan)
-    W = mfile_data.data["fimp(14)"].get_scan(scan)
+    H = mfile_data.data["f_nd_impurity_electrons(01)"].get_scan(scan)
+    He = mfile_data.data["f_nd_impurity_electrons(02)"].get_scan(scan)
+    Be = mfile_data.data["f_nd_impurity_electrons(03)"].get_scan(scan)
+    C = mfile_data.data["f_nd_impurity_electrons(04)"].get_scan(scan)
+    N = mfile_data.data["f_nd_impurity_electrons(05)"].get_scan(scan)
+    O = mfile_data.data["f_nd_impurity_electrons(06)"].get_scan(scan)  # noqa: E741
+    Ne = mfile_data.data["f_nd_impurity_electrons(07)"].get_scan(scan)
+    Si = mfile_data.data["f_nd_impurity_electrons(08)"].get_scan(scan)
+    Ar = mfile_data.data["f_nd_impurity_electrons(09)"].get_scan(scan)
+    Fe = mfile_data.data["f_nd_impurity_electrons(10)"].get_scan(scan)
+    Ni = mfile_data.data["f_nd_impurity_electrons(11)"].get_scan(scan)
+    Kr = mfile_data.data["f_nd_impurity_electrons(12)"].get_scan(scan)
+    Xe = mfile_data.data["f_nd_impurity_electrons(13)"].get_scan(scan)
+    W = mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan)
 
     data = [("", "", ""), ("", "", "")]
     count = 0

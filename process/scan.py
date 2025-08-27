@@ -85,13 +85,13 @@ SCAN_VARIABLES = {
     39: ScanVariable("boundu(131)", " Argon upper limit"),
     40: ScanVariable("boundu(135)", " Xenon upper limit"),
     41: ScanVariable("dr_blkt_outboard", "Outboard blanket thick."),
-    42: ScanVariable("fimp(9)", "Argon fraction"),
+    42: ScanVariable("f_nd_impurity_electrons(9)", "Argon fraction"),
     44: ScanVariable("sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)"),
     45: ScanVariable("tmargmin_tf", "Minimum_allowable_temperature_margin"),
     46: ScanVariable("boundu(152)", "Max allowable fgwsep"),
     48: ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes"),
     49: ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers"),
-    50: ScanVariable("fimp(13)", "Xenon fraction"),
+    50: ScanVariable("f_nd_impurity_electrons(13)", "Xenon fraction"),
     51: ScanVariable("f_p_div_lower", "lower_divertor_power_fraction"),
     52: ScanVariable("rad_fraction_sol", "SoL radiation fraction"),
     53: ScanVariable("boundu(157)", "Max allowable fvssu"),
@@ -1011,9 +1011,9 @@ class Scan:
             case 41:
                 build_variables.dr_blkt_outboard = swp[iscn - 1]
             case 42:
-                impurity_radiation_module.fimp[8] = swp[iscn - 1]
+                impurity_radiation_module.f_nd_impurity_electrons[8] = swp[iscn - 1]
                 impurity_radiation_module.impurity_arr_frac[8] = (
-                    impurity_radiation_module.fimp[8]
+                    impurity_radiation_module.f_nd_impurity_electrons[8]
                 )
             case 44:
                 tfcoil_variables.sig_tf_case_max = swp[iscn - 1]
@@ -1026,9 +1026,9 @@ class Scan:
             case 49:
                 tfcoil_variables.n_tf_wp_layers = int(swp[iscn - 1])
             case 50:
-                impurity_radiation_module.fimp[12] = swp[iscn - 1]
+                impurity_radiation_module.f_nd_impurity_electrons[12] = swp[iscn - 1]
                 impurity_radiation_module.impurity_arr_frac[12] = (
-                    impurity_radiation_module.fimp[12]
+                    impurity_radiation_module.f_nd_impurity_electrons[12]
                 )
             case 51:
                 physics_variables.f_p_div_lower = swp[iscn - 1]

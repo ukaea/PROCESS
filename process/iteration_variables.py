@@ -242,7 +242,7 @@ ITERATION_VARIABLES = {
         "foh_stress", data_structure.constraint_variables, 0.001, 1.0
     ),
     125: IterationVariable(
-        "fimp(03)",
+        "f_nd_impurity_electrons(03)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -250,7 +250,7 @@ ITERATION_VARIABLES = {
         array_index=2,
     ),
     126: IterationVariable(
-        "fimp(04)",
+        "f_nd_impurity_electrons(04)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -258,7 +258,7 @@ ITERATION_VARIABLES = {
         array_index=3,
     ),
     127: IterationVariable(
-        "fimp(05)",
+        "f_nd_impurity_electrons(05)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -266,7 +266,7 @@ ITERATION_VARIABLES = {
         array_index=4,
     ),
     128: IterationVariable(
-        "fimp(06)",
+        "f_nd_impurity_electrons(06)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -274,7 +274,7 @@ ITERATION_VARIABLES = {
         array_index=5,
     ),
     129: IterationVariable(
-        "fimp(07)",
+        "f_nd_impurity_electrons(07)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -282,7 +282,7 @@ ITERATION_VARIABLES = {
         array_index=6,
     ),
     130: IterationVariable(
-        "fimp(08)",
+        "f_nd_impurity_electrons(08)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -290,7 +290,7 @@ ITERATION_VARIABLES = {
         array_index=7,
     ),
     131: IterationVariable(
-        "fimp(09)",
+        "f_nd_impurity_electrons(09)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -298,7 +298,7 @@ ITERATION_VARIABLES = {
         array_index=8,
     ),
     132: IterationVariable(
-        "fimp(10)",
+        "f_nd_impurity_electrons(10)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -306,7 +306,7 @@ ITERATION_VARIABLES = {
         array_index=9,
     ),
     133: IterationVariable(
-        "fimp(11)",
+        "f_nd_impurity_electrons(11)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -314,7 +314,7 @@ ITERATION_VARIABLES = {
         array_index=10,
     ),
     134: IterationVariable(
-        "fimp(12)",
+        "f_nd_impurity_electrons(12)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -322,7 +322,7 @@ ITERATION_VARIABLES = {
         array_index=11,
     ),
     135: IterationVariable(
-        "fimp(13)",
+        "f_nd_impurity_electrons(13)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,
@@ -330,7 +330,7 @@ ITERATION_VARIABLES = {
         array_index=12,
     ),
     136: IterationVariable(
-        "fimp(14)",
+        "f_nd_impurity_electrons(14)",
         data_structure.impurity_radiation_module,
         1e-8,
         0.01,

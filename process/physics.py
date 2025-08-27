@@ -4582,22 +4582,31 @@ class Physics:
         po.ocmmnt(self.outfile, "Plasma ion densities / electron density:")
 
         for imp in range(impurity_radiation_module.N_IMPURITIES):
-            # MDK Update fimp, as this will make the ITV output work correctly.
-            impurity_radiation_module.fimp[imp] = (
+            # MDK Update f_nd_impurity_electrons, as this will make the ITV output work correctly.
+            impurity_radiation_module.f_nd_impurity_electrons[imp] = (
                 impurity_radiation_module.impurity_arr_frac[imp]
             )
             str1 = (
                 impurity_radiation_module.impurity_arr_label[imp].item()
                 + " concentration"
             )
-            str2 = f"(fimp({imp + 1:02}))"
+            str2 = f"(f_nd_impurity_electrons({imp + 1:02}))"
             # MDK Add output flag for H which is calculated.
             if imp == 0:
                 po.ovarre(
-                    self.outfile, str1, str2, impurity_radiation_module.fimp[imp], "OP "
+                    self.outfile,
+                    str1,
+                    str2,
+                    impurity_radiation_module.f_nd_impurity_electrons[imp],
+                    "OP ",
                 )
             else:
-                po.ovarre(self.outfile, str1, str2, impurity_radiation_module.fimp[imp])
+                po.ovarre(
+                    self.outfile,
+                    str1,
+                    str2,
+                    impurity_radiation_module.f_nd_impurity_electrons[imp],
+                )
 
         po.ovarre(
             self.outfile,

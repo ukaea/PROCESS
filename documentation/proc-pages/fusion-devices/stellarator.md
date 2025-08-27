@@ -134,7 +134,7 @@ $n_{max} = 0.25(PB_0/R_0a^2_p)^{1/2}$
 where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5 with iteration variable no. 9 (`fdene`).
 
 Note that the Sudo limit is a radiation based density limit and it is unclear how well this limit extrapolates to reactor parameters, especially as no impurity dependence e.g. is present in the Sudo model.
-PROCESS features an impurity dependent radiation module already which can be used with `icc=17` and by setting the `fimp` vector.
+PROCESS features an impurity dependent radiation module already which can be used with `icc=17` and by setting the `f_nd_impurity_electrons` vector.
 For certain regimes, this model is able to reassemble a Sudo-like scaling behaviour in the maximal achievable density, see also the density limit chapter in [^15].
 
 In addition to the sudo limit the density in a stellarator is bound by the ECRH heating which requires density values below the critical density.
