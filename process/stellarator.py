@@ -3105,7 +3105,10 @@ class Stellarator:
         rebco_variables.coppera_m2 = (
             coilcurrent
             * 1.0e6
-            / (tfcoil_variables.a_tf_wp_conductor * tfcoil_variables.f_a_tf_turn_cable_copper)
+            / (
+                tfcoil_variables.a_tf_wp_conductor
+                * tfcoil_variables.f_a_tf_turn_cable_copper
+            )
         )
         tfcoil_variables.v_tf_coil_dump_quench_kv = vd / 1.0e3  # Dump voltage
         #

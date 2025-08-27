@@ -784,7 +784,9 @@ INPUT_VARIABLES = {
     "fcspc": InputVariable(data_structure.build_variables, float, range=(0.0, 1.0)),
     "fcuohsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
     "fcupfsu": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 1.0)),
-    "f_a_tf_turn_cable_copper": InputVariable(data_structure.tfcoil_variables, float, range=(0.0, 1.0)),
+    "f_a_tf_turn_cable_copper": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.0, 1.0)
+    ),
     "fdene": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),

@@ -3513,7 +3513,8 @@ class TFCoil:
                 poisson_member_array[1],
             ) = eyoung_series(
                 np.double(eyoung_cond_trans),
-                (t_cable_eyng - dia_tf_turn_coolant_channel) * (1.0e0 - f_a_tf_turn_cable_copper),
+                (t_cable_eyng - dia_tf_turn_coolant_channel)
+                * (1.0e0 - f_a_tf_turn_cable_copper),
                 np.double(poisson_cond_trans),
                 np.double(eyoung_copper),
                 (t_cable_eyng - dia_tf_turn_coolant_channel) * f_a_tf_turn_cable_copper,

@@ -180,6 +180,9 @@ vforce_inboard_tot: float = None
 dr_tf_wp_no_insulation: float = None
 """Radial thickness of winding pack without insulation [m]"""
 
+dia_tf_turn_superconducting_cable: float = None
+"""Diameter of the superconducting cable in the TF turn [m]"""
+
 
 # Vacuum Vessel stress on TF coil quench
 
@@ -273,6 +276,7 @@ def init_superconducting_tf_coil_variables():
     global radius_tf_turn_cable_space_corners
     global a_tf_turn_cable_space_effective
     global dr_tf_wp_no_insulation
+    global dia_tf_turn_superconducting_cable
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -321,3 +325,4 @@ def init_superconducting_tf_coil_variables():
     radius_tf_turn_cable_space_corners = 0.0
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0
+    dia_tf_turn_superconducting_cable = 0.0

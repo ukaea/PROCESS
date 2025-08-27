@@ -139,7 +139,9 @@ ITERATION_VARIABLES = {
     58: IterationVariable(
         "dx_tf_turn_steel", data_structure.tfcoil_variables, 0.001, 0.1
     ),
-    59: IterationVariable("f_a_tf_turn_cable_copper", data_structure.tfcoil_variables, 0.001, 1.0),
+    59: IterationVariable(
+        "f_a_tf_turn_cable_copper", data_structure.tfcoil_variables, 0.001, 1.0
+    ),
     60: IterationVariable("c_tf_turn", data_structure.tfcoil_variables, 0.001, 4.0e4),
     61: IterationVariable(
         "dr_shld_vv_gap_inboard", data_structure.build_variables, 0.001, 10.00

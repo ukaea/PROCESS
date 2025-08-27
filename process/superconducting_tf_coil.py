@@ -2787,7 +2787,7 @@ class SuperconductingTFCoil(TFCoil):
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * tfcoil_variables.dcond[tfcoil_variables.i_tf_sc_mat - 1]
 
@@ -2797,7 +2797,7 @@ class SuperconductingTFCoil(TFCoil):
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-            * tfcoil_variables.fcutfsu
+            * tfcoil_variables.f_a_tf_turn_cable_copper
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.den_copper
         if tfcoil_variables.m_tf_coil_copper <= 0.0e0:

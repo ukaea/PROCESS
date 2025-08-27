@@ -1727,7 +1727,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
 
     a_tf_coil_inboard_case: Any = None
 
-    fcutfsu: Any = None
+    f_a_tf_turn_cable_copper: Any = None
 
     a_tf_wp_coolant_channels: Any = None
 
@@ -1848,7 +1848,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_coil_inboard_case=1.0015169239205168,
-            fcutfsu=0.80884,
+            f_a_tf_turn_cable_copper=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             whttflgs=0.0,
@@ -1922,7 +1922,7 @@ class TfCoilAreaAndMassesParam(NamedTuple):
             a_tf_coil_wp_turn_insulation=0.087880174466980876,
             a_tf_coil_outboard_case=1.2752592893394648,
             a_tf_coil_inboard_case=1.0015169239205168,
-            fcutfsu=0.80884,
+            f_a_tf_turn_cable_copper=0.80884,
             a_tf_wp_coolant_channels=0.015707963267948974,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
             whttflgs=0.0,
@@ -2092,7 +2092,11 @@ def test_superconducting_tf_coil_area_and_masses(
         tfcoilareaandmassesparam.a_tf_coil_inboard_case,
     )
 
-    monkeypatch.setattr(tfcoil_variables, "fcutfsu", tfcoilareaandmassesparam.fcutfsu)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "f_a_tf_turn_cable_copper",
+        tfcoilareaandmassesparam.f_a_tf_turn_cable_copper,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables,
