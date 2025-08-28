@@ -11,6 +11,7 @@ from process.data_structure import (
     constraint_variables,
     divertor_variables,
     fwbs_variables,
+    global_variables,
     pfcoil_variables,
     physics_variables,
     rebco_variables,
@@ -18,7 +19,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants, global_variables
+from process.fortran import constants
 from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import f2py_compatible_to_string

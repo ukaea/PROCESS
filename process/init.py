@@ -165,12 +165,12 @@ def run_summary():
         process_output.ocmmnt(outfile, f"Computer : {machine}")
         process_output.ocmmnt(outfile, f"Directory : {Path.cwd()}")
 
-        fileprefix = f2py_compatible_to_string(fortran.global_variables.fileprefix)
+        fileprefix = data_structure.global_variables.fileprefix
         process_output.ocmmnt(
             outfile,
             f"Input : {fileprefix}",
         )
-        runtitle = f2py_compatible_to_string(fortran.global_variables.runtitle)
+        runtitle = data_structure.global_variables.runtitle
         process_output.ocmmnt(
             outfile,
             f"Run title : {runtitle}",
@@ -178,7 +178,7 @@ def run_summary():
 
         process_output.ocmmnt(
             outfile,
-            f"Run type : Reactor concept design: {f2py_compatible_to_string(fortran.global_variables.icase)}, (c) UK Atomic Energy Authority",
+            f"Run type : Reactor concept design: {data_structure.global_variables.icase}, (c) UK Atomic Energy Authority",
         )
 
         process_output.oblnkl(outfile)
@@ -201,7 +201,8 @@ def run_summary():
         # If optimising, write objective function and convergence parameter
         if fortran.numerics.ioptimz == 1:
             process_output.ocmmnt(
-                outfile, f"Max iterations : {fortran.global_variables.maxcal.item()}"
+                outfile,
+                f"Max iterations : {data_structure.global_variables.maxcal}",
             )
 
             if fortran.numerics.minmax > 0:
@@ -263,7 +264,7 @@ def init_all_module_vars():
     init_cost_variables()
     init_divertor_variables()
     init_fwbs_variables()
-    fortran.global_variables.init_global_variables()
+    data_structure.global_variables.init_global_variables()
     init_ccfe_hcpb_module()
     init_heat_transport_variables()
     init_ife_variables()
@@ -584,7 +585,7 @@ def check_process(inputs):  # noqa: ARG001
 
     #  Tight aspect ratio options (ST)
     if data_structure.physics_variables.itart == 1:
-        fortran.global_variables.icase = "Tight aspect ratio tokamak model"
+        data_structure.global_variables.icase = "Tight aspect ratio tokamak model"
 
         # Disabled Forcing that no inboard breeding blanket is used
         # Disabled i_blkt_inboard = 0
@@ -777,7 +778,7 @@ def check_process(inputs):  # noqa: ARG001
 
     #  Pulsed power plant model
     if data_structure.pulse_variables.i_pulsed_plant == 1:
-        fortran.global_variables.icase = "Pulsed tokamak model"
+        data_structure.global_variables.icase = "Pulsed tokamak model"
     else:
         data_structure.buildings_variables.esbldgm3 = 0.0
 
@@ -1205,6 +1206,6 @@ def set_active_constraints():
 
 def set_device_type():
     if data_structure.ife_variables.ife == 1:
-        fortran.global_variables.icase = "Inertial Fusion model"
+        data_structure.global_variables.icase = "Inertial Fusion model"
     elif data_structure.stellarator_variables.istell != 0:
-        fortran.global_variables.icase = "Stellarator model"
+        data_structure.global_variables.icase = "Stellarator model"

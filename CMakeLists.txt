@@ -71,7 +71,6 @@ FILE(GLOB PROCESS_PYTHON_SRC_PATHS ${PROCESS_PYTHON_SRC_DIR}/*.py)
 LIST(APPEND PROCESS_SRCS
     numerics.f90
     constants.f90
-    global_variables.f90
 )
 
 PREPROCESS()

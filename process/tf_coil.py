@@ -11,6 +11,7 @@ from process.build import Build
 from process.data_structure import (
     build_variables,
     fwbs_variables,
+    global_variables,
     physics_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
@@ -18,10 +19,7 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
-from process.fortran import constants, global_variables, numerics
-from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
-)
+from process.fortran import constants, numerics
 
 logger = logging.getLogger(__name__)
 
@@ -4277,9 +4275,7 @@ class TFCoil:
             for k, v in sig_file_data.items()
         }
 
-        sig_filename = (
-            f2py_compatible_to_string(global_variables.output_prefix) + "SIG_TF.json"
-        )
+        sig_filename = global_variables.output_prefix + "SIG_TF.json"
         with open(sig_filename, "w") as f:
             json.dump(sig_file_data, f)
 
