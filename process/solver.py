@@ -15,9 +15,10 @@ from pyvmcon import (
 )
 from scipy.optimize import fsolve
 
+from process.data_structure import global_variables
 from process.evaluators import Evaluators
 from process.exceptions import ProcessValueError
-from process.fortran import global_variables, numerics
+from process.fortran import numerics
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)

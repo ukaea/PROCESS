@@ -12,10 +12,6 @@ import process.data_structure as data_structure
 import process.fortran as fortran
 from process.constraints import ConstraintManager
 from process.exceptions import ProcessValidationError, ProcessValueError
-from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
-    string_to_f2py_compatible,
-)
 
 NumberType = int | float
 ValidInputTypes = NumberType | str
@@ -95,15 +91,15 @@ class InputVariable:
 
 
 INPUT_VARIABLES = {
-    "runtitle": InputVariable(fortran.global_variables, str),
-    "verbose": InputVariable(fortran.global_variables, int, choices=[0, 1]),
-    "run_tests": InputVariable(fortran.global_variables, int, choices=[0, 1]),
+    "runtitle": InputVariable(data_structure.global_variables, str),
+    "verbose": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
+    "run_tests": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
     "ioptimz": InputVariable(fortran.numerics, int, choices=[1, -2]),
     "epsvmc": InputVariable(fortran.numerics, float, range=(0.0, 1.0)),
     "boundl": InputVariable(fortran.numerics, float, array=True),
     "boundu": InputVariable(fortran.numerics, float, array=True),
     "epsfcn": InputVariable(fortran.numerics, float, range=(0.0, 1.0)),
-    "maxcal": InputVariable(fortran.global_variables, int, range=(0, 10000)),
+    "maxcal": InputVariable(data_structure.global_variables, int, range=(0, 10000)),
     "minmax": InputVariable(fortran.numerics, int),
     "neqns": InputVariable(
         fortran.numerics, int, range=(1, ConstraintManager.num_constraints())
@@ -2310,7 +2306,7 @@ INPUT_VARIABLES = {
 
 
 def parse_input_file():
-    input_file = f2py_compatible_to_string(fortran.global_variables.fileprefix)
+    input_file = data_structure.global_variables.fileprefix
 
     input_file_path = Path("IN.DAT")
     if input_file != "":
@@ -2501,11 +2497,7 @@ def set_scalar_variable(name: str, value: ValidInputTypes, config: InputVariable
         )
         raise ProcessValueError(error_msg)
 
-    # Can remove once global_variables is in Python
-    if name == "runtitle":
-        setattr(config.module, name, string_to_f2py_compatible(current_value, value))
-    else:
-        setattr(config.module, name, value)
+    setattr(config.module, name, value)
 
 
 def set_array_variable(name: str, value: str, array_index: int, config: InputVariable):
