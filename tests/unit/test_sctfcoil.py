@@ -147,7 +147,7 @@ class SuperconParam(NamedTuple):
 
     c_tf_turn: Any = None
 
-    bmaxtfrp: Any = None
+    b_tf_inboard_peak_with_ripple: Any = None
 
     str_tf_con_res: Any = None
 
@@ -163,7 +163,7 @@ class SuperconParam(NamedTuple):
 
     tf_fit_z: Any = None
 
-    tf_fit_y: Any = None
+    f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
     run_tests: Any = None
 
@@ -177,7 +177,7 @@ class SuperconParam(NamedTuple):
 
     a_tf_turn: Any = None
 
-    b_tf_inboard_peak: Any = None
+    b_tf_inboard_peak_symmetric: Any = None
 
     f_a_tf_turn_cable_copper: Any = None
 
@@ -225,7 +225,7 @@ class SuperconParam(NamedTuple):
             temp_margin=0,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
-            bmaxtfrp=12.48976756562082,
+            b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
@@ -233,14 +233,14 @@ class SuperconParam(NamedTuple):
             t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
-            b_tf_inboard_peak=12.48976756562082,
+            b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
             f_strain_scale=0.5,
@@ -268,7 +268,7 @@ class SuperconParam(NamedTuple):
             temp_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
-            bmaxtfrp=12.48976756562082,
+            b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
@@ -276,14 +276,14 @@ class SuperconParam(NamedTuple):
             t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
-            b_tf_inboard_peak=12.48976756562082,
+            b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
             f_strain_scale=0.5,
@@ -309,7 +309,7 @@ class SuperconParam(NamedTuple):
             temp_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
             c_tf_turn=74026.751437500003,
-            bmaxtfrp=12.48976756562082,
+            b_tf_inboard_peak_with_ripple=12.48976756562082,
             str_tf_con_res=-0.0050000000000000001,
             b_crit_upper_nbti=14.859999999999999,
             i_str_wp=1,
@@ -317,14 +317,14 @@ class SuperconParam(NamedTuple):
             t_crit_nbti=9.0399999999999991,
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             run_tests=0,
             i_tf_superconductor=5,
             iprint=0,
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
-            b_tf_inboard_peak=12.48976756562082,
+            b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
             f_strain_scale=0.5,
@@ -384,7 +384,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "c_tf_turn", superconparam.c_tf_turn)
 
-    monkeypatch.setattr(tfcoil_variables, "bmaxtfrp", superconparam.bmaxtfrp)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "b_tf_inboard_peak_with_ripple",
+        superconparam.b_tf_inboard_peak_with_ripple,
+    )
 
     monkeypatch.setattr(
         tfcoil_variables, "str_tf_con_res", superconparam.str_tf_con_res
@@ -409,7 +413,9 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "tf_fit_y", superconparam.tf_fit_y
+        superconducting_tf_coil_variables,
+        "f_b_tf_inboard_peak_ripple_symmetric",
+        superconparam.f_b_tf_inboard_peak_ripple_symmetric,
     )
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
@@ -418,7 +424,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
-        b_tf_inboard_peak=superconparam.b_tf_inboard_peak,
+        b_tf_inboard_peak_symmetric=superconparam.b_tf_inboard_peak_symmetric,
         f_a_tf_turn_cable_copper=superconparam.f_a_tf_turn_cable_copper,
         f_a_tf_turn_cooling_extra=superconparam.f_a_tf_turn_cooling_extra,
         f_strain_scale=superconparam.f_strain_scale,
@@ -451,7 +457,7 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tf_fit_z: Any = None
 
-    tf_fit_y: Any = None
+    f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
     n_tf_coils: Any = None
 
@@ -461,17 +467,15 @@ class PeakTfWithRippleParam(NamedTuple):
 
     tfin: Any = None
 
-    b_tf_inboard_peak: Any = None
+    b_tf_inboard_peak_symmetric: Any = None
 
     expected_tf_fit_t: Any = None
 
     expected_tf_fit_z: Any = None
 
-    expected_tf_fit_y: Any = None
+    expected_f_b_tf_inboard_peak_ripple_symmetric: Any = None
 
-    expected_bmaxtfrp: Any = None
-
-    expected_flag: Any = None
+    expected_b_tf_inboard_peak_with_ripple: Any = None
 
 
 @pytest.mark.parametrize(
@@ -480,32 +484,30 @@ class PeakTfWithRippleParam(NamedTuple):
         PeakTfWithRippleParam(
             tf_fit_t=0,
             tf_fit_z=0,
-            tf_fit_y=0,
+            f_b_tf_inboard_peak_ripple_symmetric=0,
             n_tf_coils=16,
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
-            b_tf_inboard_peak=11.717722779177526,
+            b_tf_inboard_peak_symmetric=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
-            expected_tf_fit_y=1.0658869305062604,
-            expected_bmaxtfrp=12.48976756562082,
-            expected_flag=0,
+            expected_f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
+            expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
         ),
         PeakTfWithRippleParam(
             tf_fit_t=0.80807838916035957,
             tf_fit_z=0.3149613642807837,
-            tf_fit_y=1.0658869305062604,
+            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
             n_tf_coils=16,
             dx_tf_wp_primary_toroidal=1.299782604942499,
             dr_tf_wp_with_insulation=0.50661087836601015,
             tfin=3.789896624292115,
-            b_tf_inboard_peak=11.717722779177526,
+            b_tf_inboard_peak_symmetric=11.717722779177526,
             expected_tf_fit_t=0.80807838916035957,
             expected_tf_fit_z=0.3149613642807837,
-            expected_tf_fit_y=1.0658869305062604,
-            expected_bmaxtfrp=12.48976756562082,
-            expected_flag=0,
+            expected_f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
+            expected_b_tf_inboard_peak_with_ripple=12.48976756562082,
         ),
     ),
 )
@@ -531,15 +533,17 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
     )
 
     monkeypatch.setattr(
-        superconducting_tf_coil_variables, "tf_fit_y", peaktfwithrippleparam.tf_fit_y
+        superconducting_tf_coil_variables,
+        "f_b_tf_inboard_peak_ripple_symmetric",
+        peaktfwithrippleparam.f_b_tf_inboard_peak_ripple_symmetric,
     )
 
-    bmaxtfrp, flag = sctfcoil.peak_tf_with_ripple(
+    b_tf_inboard_peak_with_ripple = sctfcoil.peak_b_tf_inboard_with_ripple(
         n_tf_coils=peaktfwithrippleparam.n_tf_coils,
         dx_tf_wp_primary_toroidal=peaktfwithrippleparam.dx_tf_wp_primary_toroidal,
-        dr_tf_wp_with_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
-        tfin=peaktfwithrippleparam.tfin,
-        b_tf_inboard_peak=peaktfwithrippleparam.b_tf_inboard_peak,
+        dr_tf_wp_no_insulation=peaktfwithrippleparam.dr_tf_wp_with_insulation,
+        r_tf_wp_inboard_centre=peaktfwithrippleparam.tfin,
+        b_tf_inboard_peak_symmetric=peaktfwithrippleparam.b_tf_inboard_peak_symmetric,
     )
 
     assert superconducting_tf_coil_variables.tf_fit_t == pytest.approx(
@@ -550,13 +554,16 @@ def test_peak_tf_with_ripple(peaktfwithrippleparam, monkeypatch, sctfcoil):
         peaktfwithrippleparam.expected_tf_fit_z
     )
 
-    assert superconducting_tf_coil_variables.tf_fit_y == pytest.approx(
-        peaktfwithrippleparam.expected_tf_fit_y
+    assert (
+        superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric
+        == pytest.approx(
+            peaktfwithrippleparam.expected_f_b_tf_inboard_peak_ripple_symmetric
+        )
     )
 
-    assert bmaxtfrp == pytest.approx(peaktfwithrippleparam.expected_bmaxtfrp)
-
-    assert flag == pytest.approx(peaktfwithrippleparam.expected_flag)
+    assert b_tf_inboard_peak_with_ripple == pytest.approx(
+        peaktfwithrippleparam.expected_b_tf_inboard_peak_with_ripple
+    )
 
 
 class TfWpGeomParam(NamedTuple):
@@ -567,6 +574,8 @@ class TfWpGeomParam(NamedTuple):
     r_tf_inboard_out: Any = None
 
     dr_tf_wp_with_insulation: Any = None
+
+    dr_tf_wp_no_insulation: Any = None
 
     dr_tf_plasma_case: Any = None
 
@@ -612,6 +621,8 @@ class TfWpGeomParam(NamedTuple):
 
     expected_a_tf_wp_no_insulation: Any = None
 
+    expected_dr_tf_wp_no_insulation: Any = None
+
     expected_r_tf_wp_inboard_inner: Any = None
 
     expected_r_tf_wp_inboard_outer: Any = None
@@ -656,6 +667,7 @@ class TfWpGeomParam(NamedTuple):
             expected_a_tf_wp_with_insulation=0.70527618095271016,
             expected_a_tf_wp_no_insulation=0.64024601555360383,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
+            expected_dr_tf_wp_no_insulation=0.5066108783660102,
             expected_r_tf_wp_inboard_outer=4.06120206347512,
             expected_r_tf_wp_inboard_centre=3.789896624292115,
             expected_t_wp_toroidal=1.299782604942499,
@@ -689,6 +701,7 @@ class TfWpGeomParam(NamedTuple):
             expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
             expected_a_tf_wp_with_insulation=0.70527618095271016,
             expected_a_tf_wp_no_insulation=0.64024601555360383,
+            expected_dr_tf_wp_no_insulation=0.5066108783660102,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
             expected_r_tf_wp_inboard_outer=4.06120206347512,
             expected_r_tf_wp_inboard_centre=3.789896624292115,
@@ -714,6 +727,7 @@ class TfWpGeomParam(NamedTuple):
             expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
             expected_a_tf_wp_with_insulation=0.7345587235164542,
             expected_a_tf_wp_no_insulation=0.6675857818584766,
+            expected_dr_tf_wp_no_insulation=0.5066108783660102,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
             expected_r_tf_wp_inboard_outer=4.06120206347512,
             expected_r_tf_wp_inboard_centre=3.789896624292115,
@@ -739,6 +753,7 @@ class TfWpGeomParam(NamedTuple):
             expected_dx_tf_wp_secondary_toroidal=1.299782604942499,
             expected_a_tf_wp_with_insulation=0.7638412660801982,
             expected_a_tf_wp_no_insulation=0.6949255481633493,
+            expected_dr_tf_wp_no_insulation=0.5066108783660102,
             expected_r_tf_wp_inboard_inner=3.5185911851091101,
             expected_r_tf_wp_inboard_outer=4.06120206347512,
             expected_r_tf_wp_inboard_centre=3.789896624292115,
@@ -765,6 +780,7 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
         r_tf_wp_inboard_outer,
         r_tf_wp_inboard_centre,
         dx_tf_wp_toroidal_min,
+        dr_tf_wp_no_insulation,
         dx_tf_wp_primary_toroidal,
         dx_tf_wp_secondary_toroidal,
         dx_tf_wp_toroidal_average,
@@ -796,6 +812,10 @@ def test_superconducting_tf_wp_geometry(tfwpgeomparam, sctfcoil):
 
     assert a_tf_wp_no_insulation == pytest.approx(
         tfwpgeomparam.expected_a_tf_wp_no_insulation
+    )
+
+    assert dr_tf_wp_no_insulation == pytest.approx(
+        tfwpgeomparam.expected_dr_tf_wp_no_insulation
     )
 
     assert r_tf_wp_inboard_inner == pytest.approx(

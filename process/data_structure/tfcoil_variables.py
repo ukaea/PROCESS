@@ -78,11 +78,11 @@ strain (`i_tf_sc_mat=4, =bc20m`)
 """
 
 
-b_tf_inboard_peak: float = None
+b_tf_inboard_peak_symmetric: float = None
 """mean peak field at TF coil (T)"""
 
 
-bmaxtfrp: float = None
+b_tf_inboard_peak_with_ripple: float = None
 """peak field at TF conductor with ripple (T)"""
 
 
@@ -512,11 +512,11 @@ ftoroidalgap: float = None
 """F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)"""
 
 
-ripmax: float = None
-"""aximum allowable toroidal field ripple amplitude at plasma edge (%)"""
+ripple_b_tf_plasma_edge_max: float = None
+"""maximum allowable toroidal field ripple amplitude at plasma edge (%)"""
 
 
-ripple: float = None
+ripple_b_tf_plasma_edge: float = None
 """peak/average toroidal field ripple at plasma edge (%)"""
 
 
@@ -1099,8 +1099,8 @@ def init_tfcoil_variables():
     global a_tf_wp_extra_void
     global a_tf_wp_coolant_channels
     global bcritsc
-    global b_tf_inboard_peak
-    global bmaxtfrp
+    global b_tf_inboard_peak_symmetric
+    global b_tf_inboard_peak_with_ripple
     global casestr
     global dr_tf_plasma_case
     global f_dr_tf_plasma_case
@@ -1174,8 +1174,8 @@ def init_tfcoil_variables():
     global res_tf_leg
     global toroidalgap
     global ftoroidalgap
-    global ripmax
-    global ripple
+    global ripple_b_tf_plasma_edge_max
+    global ripple_b_tf_plasma_edge
     global c_tf_total
     global radial_array
     global sig_tf_r
@@ -1315,8 +1315,8 @@ def init_tfcoil_variables():
     a_tf_wp_extra_void = 0.0
     a_tf_wp_coolant_channels = 0.0
     bcritsc = 24.0
-    b_tf_inboard_peak = 0.0
-    bmaxtfrp = 0.0
+    b_tf_inboard_peak_symmetric = 0.0
+    b_tf_inboard_peak_with_ripple = 0.0
     casestr = 0.0
     dr_tf_plasma_case = 0.0
     f_dr_tf_plasma_case = 0.05
@@ -1409,8 +1409,8 @@ def init_tfcoil_variables():
     res_tf_leg = 0.0
     toroidalgap = 1.0  # [m]
     ftoroidalgap = 1.0
-    ripmax = 1.0
-    ripple = 0.0
+    ripple_b_tf_plasma_edge_max = 1.0
+    ripple_b_tf_plasma_edge = 0.0
     c_tf_total = 0.0
     radial_array = np.zeros(N_RADIAL_ARRAY)
     sig_tf_r = np.zeros(N_RADIAL_ARRAY)

@@ -183,7 +183,7 @@ This function calculates the required currents in the TF coils given a required 
 1. The peak field on the inboard TF coil is calculated:
 
     $$
-    \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
+    \overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak_symmetric}} = \frac{B_{\text{T}}R_0}{\underbrace{R_{\text{TF,peak}}}_{\texttt{r_b_tf_inboard_peak}}}
     $$
 
     The value of $R_{\text{TF,peak}}$ is specified as:
@@ -238,7 +238,7 @@ This function calculates the centering and vertical forces on a TF coil
 2. The centering force **per unit length** of the inboard is:
 
   $$
-  F_{\text{centering}} = \frac{I_{\text{TF,coil}}\overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak}}}{2}
+  F_{\text{centering}} = \frac{I_{\text{TF,coil}}\overbrace{B_{\text{TF,peak}}}^{\texttt{b_tf_inboard_peak_symmetric}}}{2}
   $$
 
   This assumes the average field in the TF coil is half the peak value, which is true for the infinitely long circular conductor approximation.
@@ -788,44 +788,40 @@ $$
 
 ## TF coil ripple
 
-<p style='text-align: justify;'>
-  Because of the finite number of TF coils used in a tokamak (18 for ITER and 16
-  for DEMO), the axisymmetry is effectively broken. Therefore, in addition to
-  the radial dependency, the toroidal field also varies as a function of the toroidal
-  angle and the vertical position. This effect is known as ripple. Electromagnetic
-  ripple impacts TF coil design in two ways:
-</p>
-- <p style='text-align: justify;'>
-    **Plasma ripple:** The toroidal filed variation on the low field side
+
+Because of the finite number of TF coils used in a tokamak (18 for ITER and 16
+for DEMO), the axisymmetry is effectively broken. Therefore, in addition to
+the radial dependency, the toroidal field also varies as a function of the toroidal
+angle and the vertical position. This effect is known as ripple. Electromagnetic
+ripple impacts TF coil design in two ways:
+
+- **Plasma ripple:** The toroidal filed variation on the low field side
     generates some instabilities that degrades the plasma confinement.
     Moreover, some significant fast particles losses can be present if the
     field variation becomes too large between coils, threatening the divertor
     and first wall integrity.  
-  </p>
-- <p style='text-align: justify;'>
-    **On coil ripple:** If the lateral case is separating the conductor region
+
+- **On coil ripple:** If the lateral case is separating the conductor region
     (winding pack), the genuine magnetic field at the inboard superconducting
     conductor is larger than the value obtained using the axisymmetric
-    assumption.
-  </p>
+    assumption. This is only true in `PROCESS` for the superconducting coil case. More info can be found [here](../eng-models/tf-coil-superconducting.md#on-coil-ripple-peak_tf_with_ripple).
 
 ### Plasma ripple
 
-The maximum plasma ripple is defined in *PROCESS* with the user input `ripmax`
+The maximum plasma ripple is defined in *PROCESS* with the user input `ripple_b_tf_plasma_edge_max`
 as:
 
 $$
   \delta = \frac{B_\mathrm{max}-B_\mathrm{min}}{B_\mathrm{max}+B_\mathrm{min}}
 $$
 
-<p style='text-align: justify;'>
-  with \( B_\mathrm{min}\) and \( B_\mathrm{max}\) minimum field (between coils)
-  and the maximum field (on coil toroidal direction) respectively, measured at
-  the mid-plane plasma outer limit (separatrix). <em>PROCESS</em> plasma ripple
-  is estimated using a parametric Bio-Savart calculation fitted using the
-  <em>UKAEA</em> free boundary MHD code <em>FIESTA</em>. The shape (Princeton-D) 
-  used for these MHD model is shown in the left section of Figure 11. 
-  </p>
+with \( B_\mathrm{min}\) and \( B_\mathrm{max}\) minimum field (between coils)
+and the maximum field (on coil toroidal direction) respectively, measured at
+the mid-plane plasma outer limit (separatrix). <em>PROCESS</em> plasma ripple
+is estimated using a parametric Bio-Savart calculation fitted using the
+<em>UKAEA</em> free boundary MHD code <em>FIESTA</em>. The shape (Princeton-D) 
+used for these MHD model is shown in the left section of Figure 11. 
+
 
 <figure>
     <center>
@@ -852,192 +848,70 @@ $$
     </center>
 </figure>
 
-<p style='text-align: justify;'>
-  The results of the ripple fit is shown on the right section of Figure 11 and
-  its analytical expression given by:
-</p>
+
+The results of the ripple fit is shown on the right section of Figure 11 and
+its analytical expression given by:
+
 
 $$
   \delta = (0.875 - 0.0557x)\ y^{N_\mathrm{TF}-\left(1.617+0.0832x\right)}
 $$
 
-<p style='text-align: justify;'>
-  with \(x\) the lateral thickness of the winding pack normalized to the coil
-  dimensions defined as:
-</p>
+
+with \(x\) the lateral thickness of the winding pack normalized to the coil
+dimensions defined as:
+
 
 $$
   x = \frac{\Delta R_\mathrm{tWP}^\mathrm{out}}{R_\mathrm{maj}} N_\mathrm{TF}
 $$
 
   
-<p style='text-align: justify;'>
-  with \(\Delta R_\mathrm{tWP}^\mathrm{out}\) the plasma side WP thickness
-  defined in the Figures 1 and 3, \(N_\mathrm{TF}\) the number of coils and
-  \(R_\mathrm{maj}\) the plasma centre radius. \(y\) is the plasma outer
-  mid-plane separatrix to outboard TF leg mid-plane radius ratio:
-</p>
+with \(\Delta R_\mathrm{tWP}^\mathrm{out}\) the plasma side WP thickness
+defined in the Figures 1 and 3, \(N_\mathrm{TF}\) the number of coils and
+\(R_\mathrm{maj}\) the plasma centre radius. \(y\) is the plasma outer
+mid-plane separatrix to outboard TF leg mid-plane radius ratio:
+
 
 $$
   y = \frac{R_\mathrm{maj} + a_\mathrm{min}}{R_\mathrm{outboard\ TF}^\mathrm{mid}}
 $$
 
-<p style='text-align: justify;'>
-  with \(a_\mathrm{min}\) the plasma minor radius and \(R_\mathrm{outboard\ TF}
-  ^\mathrm{mid}\) the TF winding pack outboard leg midplane radius at its
-  centre. The scaling fitting range is provided by:
-</p>
 
-- <p style='text-align: justify;'>
-    **Number of coils:** \( N_\mathrm{TF} \in \{16, 18, 20\} \).
-  </p>
-- <p style='text-align: justify;'>
-    **Winding pack size ratio:** \( x \in [0.737-2.95] \)
-  </p>
-- <p style='text-align: justify;'>
-    **separatrix to TF ratio:** \( y \in [0.7-0.8] \)
-  </p>
+with \(a_\mathrm{min}\) the plasma minor radius and \(R_\mathrm{outboard\ TF}
+^\mathrm{mid}\) the TF winding pack outboard leg midplane radius at its
+centre. The scaling fitting range is provided by:
+
+
+- **Number of coils:** \( N_\mathrm{TF} \in \{16, 18, 20\} \).
+
+- **Winding pack size ratio:** \( x \in [0.737-2.95] \)
+
+- **separatrix to TF ratio:** \( y \in [0.7-0.8] \)
+
   
 
-<p style='text-align: justify;'>
-  To prevent intolerable fast particles losses and plasma instabilities,
-  \(\delta\) must be limited to a few percent, approximatively \( \delta \in
-  [0.5-1]\) . If intolerable, the plasma ripple can be reduced with many
-  different techniques, for example the TF coil shape, stabilisation coils can
-  be added, more coils can be used or the coil outboard radius can be increased.
-  All these design modifications affects the coil system design, for example
-  ripple shape optimisation should be done without generating too much bending
-  stress due to the un-adapted curvature radius, and adding coils must not prevent
-  remote maintenance. To keep the design procedure as simple as possible in
-  <em>PROCESS</em>, unacceptable ripple is reduced by simply moving the
-  TF coil leg to a larger radius. The outboard ripple is directly obtained reverting the ripple fit to provide
-  \(R_\mathrm{outboard\ WP}^\mathrm{mid}\) as a function of the ripple.
-  The minimal \(R_\mathrm{outboard\ WP}^\mathrm{mid}\) is technically obtained
-  by increasing the gap between the vacuum vessel and the coil (dr_shld_vv_gap_outboard).
-</p>
 
-<p style='text-align: justify;'>
-  The currently implemented plasma ripple evaluation assumes a Princeton-D shape
-  and is therefore not valid anymore if very different shapes are considered,
-  with picture frame coils, for example, different models should be 
-  considered/implemented in <em>PROCESS</em>.
-</p>
+To prevent intolerable fast particles losses and plasma instabilities,
+\(\delta\) must be limited to a few percent, approximatively \( \delta \in
+[0.5-1]\) . If intolerable, the plasma ripple can be reduced with many
+different techniques, for example the TF coil shape, stabilisation coils can
+be added, more coils can be used or the coil outboard radius can be increased.
+All these design modifications affects the coil system design, for example
+ripple shape optimisation should be done without generating too much bending
+stress due to the un-adapted curvature radius, and adding coils must not prevent
+remote maintenance. To keep the design procedure as simple as possible in
+<em>PROCESS</em>, unacceptable ripple is reduced by simply moving the
+TF coil leg to a larger radius. The outboard ripple is directly obtained reverting the ripple fit to provide
+\(R_\mathrm{outboard\ WP}^\mathrm{mid}\) as a function of the ripple.
+The minimal \(R_\mathrm{outboard\ WP}^\mathrm{mid}\) is technically obtained
+by increasing the gap between the vacuum vessel and the coil (dr_shld_vv_gap_outboard).
 
-### On coil ripple
 
-<p style='text-align: justify;'>
-  The ratio of TF coil magnetic field increase with respect to the axisymmetric
-  formula has been defined as :
-</p>
-
-$$
-  f_\mathrm{rip}^\mathrm{coil} = \frac{B_\mathrm{rip}}{B_\mathrm{nom}}
-$$
-
-<p style='text-align: justify;'>
-  with \(B_\mathrm{rip}\) being the maximum field measured at the middle of the
-  plasma facing sides of the winding pack and \(B_\mathrm{nom}\) the nominal maximum
-  field obtained with the axisymmetric formula (see section TF coils current).
-  The same <em>FIESTA</em> runs have been used to estimate the on-coil ripple.
-  This peaking factor has been fitted separately for 16, 18 and 20 coils using
-  the following formula:
-</p>
-
-$$
-  f_\mathrm{rip}^\mathrm{coil} = A_0 + A_1 e^{-t} + A_2 z + A_3 zt
-$$
-
-<p style='text-align: justify;'>
-  with the \(A_n\) the fitted coefficients and \(t\) the relative winding pack
-  lateral thickness defined as:
-</p>
-
-$$
-  t = \frac{\Delta R_\mathrm{tWP}^\mathrm{out}}{\Delta R_\mathrm{tWP}^\mathrm{out\ max}}
-$$
-
-<p style='text-align: justify;'>
-  with \(\Delta R_\mathrm{tWP}^\mathrm{out}\) defined in Figure 1 and 3 and
-  \( \Delta R_\mathrm{tWP}^\mathrm{out\ max} \) the same value calculated without
-  sidewall case as illustrated in Figure 12.
-</p>
-  
-<figure>
-    <center>
-    <img src="../../images/tfcoil_ripple_on_coil_filaments.png" alt="On_coil_ripple_shapes" 
-    title="Inboard mid-plane superconducting TF coil stress layers"
-    width="800" height="100" />
-    <br>
-    <figcaption><i>
-      <p style='text-align: justify;'> 
-        Figure 12: Inboard midplane cross section showing the filaments used for
-        the on-coil ripple calculations with <em>FIESTA</em> with 16 coils. A
-        radial and toroidal winding pack thickness of 0.5 m and 0.8 m for the 
-        left graph, while a radial and toroidal thickness of 1.2 m and 1.9 m, 
-        respectively, is used in the right figure. The right graph provides
-        a visual illustration of the case where the parameter \(t\) is close to
-        unity.
-      </p>
-    </i></figcaption>
-    <br>
-    </center>
-</figure>
-  
-<p style='text-align: justify;'>
-  And the relative winding pack radial thickness \(z\) given by
-</p>
-
-$$
-  z = \frac{\Delta R_\mathrm{WP}}{\Delta R_\mathrm{tWP}^\mathrm{out\ max}}
-$$
-
-<p style='text-align: justify;'>
-  The three fits (for 16, 18 and 20 coils) are valid for:
-</p>
-- <p style='text-align: justify;'>
-    **relative toroidal thickness:**  $t\in[0.35-0.99]$
-  </p>
-- <p style='text-align: justify;'>
-    **relative radial thickness:** $z\in[0.2-0.7]$
-  </p>
-- <p style='text-align: justify;'>
-    **Number of TF coils:** Individual fits has been made for 16, 18 and 20.
-    <b>For any other number of coils, the *FIESTA* calculations are not used</b>
-    and a default ripple increase of 9% is taken (\( f_\mathrm{rip}^\mathrm{coil}
-    = 1.09\)). This default value is also used for 17 and 19 coils.
-  </p>
-
-<p style='text-align: justify;'>
-  Figure 13 shows a contour plot of the on-coil ripple peaking factor as a
-  function of the winding pack sizing parameters for 16 coil.
-</p>
-
-<figure>
-    <center>
-    <img src="../../images/tfcoil_ripple_on_coil_contours.png" alt="On_coil_ripple_shapes" 
-    title="Inboard mid-plane superconducting TF coil stress layers"
-    width="520" height="100" />
-    <br>
-    <figcaption><i>
-      <p style='text-align: justify;'>
-        Figure 13: Contour plots of the on-coil peaking factor \(f_\mathrm{rip}
-        ^\mathrm{coil}\) obtained with <em>FIESTA</em> and used in the
-        <em>PROCESS</em> scaling for 16 coils. The horizontal and vertical
-        axis corresponds to the relative transverse \(t\) and radial thickness
-        \(z\), respectively.
-      </p>
-    </i></figcaption>
-    <br>
-    </center>
-</figure>
-
-<p style='text-align: justify;'>
-  These ripple calculations are out of the spherical tokamak design range, having generally
-  fewer coils (between 10 and 14) and more radially thick winding packs.
-  It is also worth mentionning that the the ripple must be evaluated layer-by-layer for graded coil designs, to get the genuine B field of each layer
-  used to quatify the SC cross-section area per layer. Finally, resistive
-  coils do not suffer from on-coil ripple as there is no radial case is present.
-</p>
+The currently implemented plasma ripple evaluation assumes a Princeton-D shape
+and is therefore not valid anymore if very different shapes are considered,
+with picture frame coils, for example, different models should be 
+considered/implemented in <em>PROCESS</em>.
 
 
 ## TF coil parameter summary table

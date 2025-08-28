@@ -405,6 +405,7 @@ OBS_VARS = {
     "dcondins": "den_tf_wp_turn_insulation",
     "dcopper": "den_copper",
     "denstl": "den_steel",
+    "ripmax": "ripple_b_tf_plasma_edge_max",
 }
 
 OBS_VARS_HELP = {

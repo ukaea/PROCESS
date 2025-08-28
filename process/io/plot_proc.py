@@ -4816,7 +4816,15 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     i_tf_sup = round(mfile_data.data["i_tf_sup"].get_scan(scan))
     i_tf_case_geom = mfile_data.data["i_tf_case_geom"].get_scan(scan)
     i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
-    b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
+    b_tf_inboard_peak_symmetric = mfile_data.data[
+        "b_tf_inboard_peak_symmetric"
+    ].get_scan(scan)
+    b_tf_inboard_peak_with_ripple = mfile_data.data[
+        "b_tf_inboard_peak_with_ripple"
+    ].get_scan(scan)
+    f_b_tf_inboard_peak_ripple_symmetric = mfile_data.data[
+        "f_b_tf_inboard_peak_ripple_symmetric"
+    ].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
     dx_tf_wp_insertion_gap = mfile_data.data["dx_tf_wp_insertion_gap"].get_scan(scan)
     r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
@@ -5254,8 +5262,14 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             0,
             marker="o",
             color="red",
-            label=f"Peak Field: {b_tf_inboard_peak:.2f} T\n"
-            f"r={r_b_tf_inboard_peak:.3f} m",
+            label=(
+                f"Peak axisymmetric field: {b_tf_inboard_peak_symmetric:.3f} T\n"
+                f"Peak non-axisymmetric field with ripple: "
+                f"{b_tf_inboard_peak_with_ripple:.3f} T\n"
+                f"$\\frac{{B_{{\\text{{axisymmetric}}}}}}{{B_{{\\text{{non-axisymmetric}}}}}}$: "
+                f"{f_b_tf_inboard_peak_ripple_symmetric:.3f}\n"
+                f"$r_{{\\text{{peak}}}}$={r_b_tf_inboard_peak:.3f} m"
+            ),
         )
 
         # Plot a horizontal line at y = dx_tf_wp_inner_toroidal
@@ -5485,7 +5499,9 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
 
     r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
     i_tf_case_geom = mfile_data.data["i_tf_case_geom"].get_scan(scan)
-    b_tf_inboard_peak = mfile_data.data["b_tf_inboard_peak"].get_scan(scan)
+    b_tf_inboard_peak_symmetric = mfile_data.data[
+        "b_tf_inboard_peak_symmetric"
+    ].get_scan(scan)
     r_b_tf_inboard_peak = mfile_data.data["r_b_tf_inboard_peak"].get_scan(scan)
     r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
     r_tf_wp_inboard_centre = mfile_data.data["r_tf_wp_inboard_centre"].get_scan(scan)
@@ -5828,7 +5844,7 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         0,
         marker="o",
         color="red",
-        label=f"Peak Field: {b_tf_inboard_peak:.2f} T\nr={r_b_tf_inboard_peak:.3f} m",
+        label=f"Peak Field: {b_tf_inboard_peak_symmetric:.2f} T\nr={r_b_tf_inboard_peak:.3f} m",
     )
 
     axis.axvline(
@@ -6783,7 +6799,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
-            ("bmaxtfrp", "Peak field at conductor (w. rip.)", "T"),
+            ("b_tf_inboard_peak_with_ripple", "Peak field at conductor (w. rip.)", "T"),
             ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
             ("tmargtf", "TF Temperature margin", "K"),
             ("temp_cs_margin", "CS Temperature margin", "K"),
@@ -6811,7 +6827,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (t_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
-            ("b_tf_inboard_peak", "Peak field at conductor (w. rip.)", "T"),
+            ("b_tf_inboard_peak_symmetric", "Peak field at conductor (w. rip.)", "T"),
             ("c_tf_total", "TF coil currents sum", "A"),
             ("", "", ""),
             ("#TF coil forces/stresses", "", ""),

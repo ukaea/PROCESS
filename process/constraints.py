@@ -890,17 +890,17 @@ def constraint_equation_25():
 
     fb_tf_inboard_max: f-value for maximum toroidal field
     b_tf_inboard_max: maximum peak toroidal field (T)
-    b_tf_inboard_peak: mean peak field at TF coil (T)
+    b_tf_inboard_peak_symmetric: mean peak field at TF coil (T)
     """
     cc = (
-        data_structure.tfcoil_variables.b_tf_inboard_peak
+        data_structure.tfcoil_variables.b_tf_inboard_peak_symmetric
         / data_structure.constraint_variables.b_tf_inboard_max
         - 1.0 * data_structure.constraint_variables.fb_tf_inboard_max
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.b_tf_inboard_max * (1.0 - cc),
-        data_structure.tfcoil_variables.b_tf_inboard_peak * cc,
+        data_structure.tfcoil_variables.b_tf_inboard_peak_symmetric * cc,
     )
 
 

@@ -378,7 +378,7 @@ c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for
 dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
 fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
-ripmax   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
 tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)

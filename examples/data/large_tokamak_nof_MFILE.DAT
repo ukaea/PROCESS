@@ -770,7 +770,7 @@
  Nominal_peak_field_assuming_toroidal_symmetry_(T)________________________ (bmaxtf)_______________________ 1.09107052376956108e+01 OP
  Total_current_in_all_TF_coils_(MA)_______________________________________ (c_tf_total/1.D6)______________ 1.89719356169890972e+02 OP
  TF_coil_current_(summed_over_all_coils)_(A)______________________________ (c_tf_total)___________________ 1.89719356169890970e+08
- Actual_peak_field_at_discrete_conductor_(T)______________________________ (bmaxtfrp)_____________________ 1.13169718868215874e+01 OP
+ Actual_peak_field_at_discrete_conductor_(T)______________________________ (b_tf_inboard_peak_with_ripple)_____________________ 1.13169718868215874e+01 OP
  Winding_pack_current_density_(A/m2)______________________________________ (jwptf)________________________ 2.40600403349869028e+07 OP
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)___________________ (oacdcp)_______________________ 1.16024624117961004e+07
  Total_stored_energy_in_TF_coils_(GJ)_____________________________________ (e_tf_magnetic_stored_total_gj)____________________ 9.61191069479479268e+01 OP
@@ -778,8 +778,8 @@
  Outboard_vertical_tension_per_coil_(N)___________________________________ (vforce_outboard)______________ 1.67882860406308293e+08 OP
  inboard_vertical_tension_fraction_(-)____________________________________ (f_vforce_inboard)_____________ 5.00000000000000000e-01 OP
  Centring_force_per_coil_(N/m)____________________________________________ (cforce)_______________________ 6.46866241579708904e+07 OP
- Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripmax)_______________________ 6.00000000000000089e-01
- Ripple_amplitude_at_plasma_outboard_midplane_(%)_________________________ (ripple)_______________________ 6.00000000000000422e-01 OP
+ Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripple_b_tf_plasma_edge_max)_______________________ 6.00000000000000089e-01
+ Ripple_amplitude_at_plasma_outboard_midplane_(%)_________________________ (ripple_b_tf_plasma_edge)_______________________ 6.00000000000000422e-01 OP
  Actual_quench_time_(or_time_constant)_(s)________________________________ (tdmptf)_______________________ 1.71695351006736985e+01
  Vacuum_Vessel_stress_on_quench_(Pa)______________________________________ (vv_stress_quench)_____________ 5.46051500076268986e+07 OP
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)_____________ (v_tf_coil_dump_quench_max_kv)________________________ 1.00000000000000000e+01
@@ -1783,7 +1783,7 @@ dr_tf_plasma_case = 0.06
 casths = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
-ripmax = 0.6
+ripple_b_tf_plasma_edge_max = 0.6
 
 * Number of TF coils
 n_tf_coils = 16

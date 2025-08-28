@@ -974,11 +974,11 @@
  Total_conduit_mass_per_coil_(kg)_________________________________________ (m_tf_coil_conductor)_______________________ 1.66867416166056821e+05 OP
  Mass_of_each_TF_coil_(kg)________________________________________________ (m_tf_coils_total/n_tf_coils)__ 7.72383729974863119e+05 OP
  Total_TF_coil_mass_(kg)__________________________________________________ (m_tf_coils_total)_____________ 1.23581396795978099e+07 OP
- Nominal_peak_field_assuming_toroidal_symmetry_(T)________________________ (b_tf_inboard_peak)____________ 1.26237132856957359e+01 OP
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)________________________ (b_tf_inboard_peak_symmetric)____________ 1.26237132856957359e+01 OP
  Radius_of_maximum_field_position_on_inboard_TF_coil_(m)__________________ (r_b_tf_inboard_peak)__________ 3.47767357004491018e+00 OP
  Total_current_in_all_TF_coils_(MA)_______________________________________ (c_tf_total/1.D6)______________ 2.19505770148911893e+02 OP
  TF_coil_current_(summed_over_all_coils)_(A)______________________________ (c_tf_total)___________________ 2.19505770148911893e+08
- Actual_peak_field_at_discrete_conductor_(T)______________________________ (bmaxtfrp)_____________________ 1.31035355557187589e+01 OP
+ Actual_peak_field_at_discrete_conductor_(T)______________________________ (b_tf_inboard_peak_with_ripple)_____________________ 1.31035355557187589e+01 OP
  Winding_pack_current_density_(A/m2)______________________________________ (j_tf_wp)______________________ 2.46168014087849893e+07 OP
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)___________________ (oacdcp)_______________________ 1.12753392255279534e+07
  Total_stored_energy_in_TF_coils_(GJ)_____________________________________ (e_tf_magnetic_stored_total_gj)____________________ 1.32087541411207525e+02 OP
@@ -986,7 +986,7 @@
  Outboard_vertical_tension_per_coil_(N)___________________________________ (vforce_outboard)______________ 2.25093198490908325e+08 OP
  inboard_vertical_tension_fraction_(-)____________________________________ (f_vforce_inboard)_____________ 5.00000000000000000e-01 OP
  Centring_force_per_coil_(N/m)____________________________________________ (cforce)_______________________ 8.65930595911154300e+07 OP
- Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripmax)_______________________ 5.99999999999999978e-01
+ Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripple_b_tf_plasma_edge_max)_______________________ 5.99999999999999978e-01
  Ripple_amplitude_at_plasma_outboard_midplane_(%)_________________________ (ripple)_______________________ 5.99999999999999978e-01 OP
  Actual_quench_time_(or_time_constant)_(s)________________________________ (tdmptf)_______________________ 2.01007186358202219e+01
  Vacuum_Vessel_stress_on_quench_(Pa)______________________________________ (vv_stress_quench)_____________ 5.05849462607899085e+07 OP
@@ -2001,7 +2001,7 @@ dr_tf_plasma_case = 0.06
 dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
-ripmax = 0.6
+ripple_b_tf_plasma_edge_max = 0.6
 
 * Number of TF coils
 n_tf_coils = 16
