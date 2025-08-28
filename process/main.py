@@ -87,6 +87,7 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
+from process.log import logging_model_handler, show_errors
 from process.pfcoil import PFCoil
 from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
@@ -105,21 +106,7 @@ from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
-# Define parent logger
-logger = logging.getLogger("process")
-# Ensure every log goes through to a handler
-logger.setLevel(logging.DEBUG)
-# Handler for logging to stderr (and hence the terminal by default)
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.WARNING)
-# Handler for logging to file
-f_handler = logging.FileHandler("process.log", mode="w")
-f_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
-s_handler.setFormatter(formatter)
-f_handler.setFormatter(formatter)
-logger.addHandler(s_handler)
-logger.addHandler(f_handler)
+logger = logging.getLogger(__name__)
 
 
 class Process:
@@ -487,7 +474,7 @@ class SingleRun:
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        fortran.error_handling.show_errors()
+        show_errors(fortran.constants.nout)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
@@ -720,6 +707,21 @@ class Models:
         self._costs_custom = value
 
 
+# setup handlers for writing to terminal (on warnings+)
+# or writing to the log file (on info+)
+logging_formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+logging_stream_handler = logging.StreamHandler()
+logging_stream_handler.setLevel(logging.CRITICAL)
+logging_stream_handler.setFormatter(logging_formatter)
+
+logging_file_handler = logging.FileHandler("process.log", mode="w")
+logging_file_handler.setLevel(logging.INFO)
+logging_file_handler.setFormatter(logging_formatter)
+
+logging_model_handler.setLevel(logging.WARNING)
+logging_model_handler.setFormatter(logging_formatter)
+
+
 def main(args=None):
     """Run Process.
 
@@ -731,6 +733,19 @@ def main(args=None):
     :param args: Arguments to parse, defaults to None
     :type args: list, optional
     """
+    # Only add our handlers if PROCESS is being run as an application
+    # This should allow it to be used as a package (e.g. people import models that log)
+    # without creating a process.log file... people can then handle our logs as they wish.
+    # Using basicConfig adds these handlers to the root logger iff the root logger has not
+    # been setup yet. This means that during testing these hanlders won't be present, which
+    # will ensure they do not conflict with the pytest handlers.
+    logging.basicConfig(handlers=[logging_stream_handler, logging_file_handler])
+
+    # However, this handler we know to be safe and necessary so we add it to the root logger
+    # regardless of whether it has already been created.
+    root_logger = logging.getLogger()
+    root_logger.addHandler(logging_model_handler)
+
     Process(args)
 
 

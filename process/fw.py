@@ -1,15 +1,13 @@
+import logging
+
 import numpy as np
 
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
 from process.data_structure import blanket_library, build_variables, fwbs_variables
-from process.fortran import (
-    constants,
-    error_handling,
-)
-from process.fortran import (
-    error_handling as eh,
-)
+from process.fortran import constants
+
+logger = logging.getLogger(__name__)
 
 
 class Fw:
@@ -146,10 +144,11 @@ class Fw:
 
         # Print debug info if temperature too low/high or NaN/Inf
         if np.isnan(temp_k):
-            eh.report_error(223)
+            logger.error("NaN first wall temperature")
         elif (temp_k <= 100) or (temp_k > 1500):
-            eh.fdiags[0] = temp_k
-            eh.report_error(224)
+            logger.error(
+                f"First wall temperature (temp_k) out of range : [100-1500] K. {temp_k=}"
+            )
 
         # Thermal conductivity of first wall material (W/m.K)
         tkfw = self.fw_thermal_conductivity(temp_k)
@@ -440,17 +439,15 @@ class Fw:
 
         # Check that Reynolds number is in valid range for the Gnielinski correlation
         if (reynolds <= 3000.0) or (reynolds > 5.0e6):
-            error_handling.fdiags[0] = reynolds
-            error_handling.report_error(225)
+            logger.error(f"Reynolds number out of range : [3e3-5000e3]. {reynolds=}")
 
         # Check that Prandtl number is in valid range for the Gnielinski correlation
         if (pr < 0.5) or (pr > 2000.0):
-            error_handling.fdiags[0] = pr
-            error_handling.report_error(226)
+            logger.error(f"Prandtl number out of range : [0.5-2000]. {pr=}")
 
         # Check that the Darcy friction factor is in valid range for the Gnielinski correlation
         if f <= 0.0:
-            error_handling.report_error(227)
+            logger.error(f"Negative Darcy friction factor (f). {f=}")
 
         return heat_transfer_coefficient
 

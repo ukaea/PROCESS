@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from process import (
@@ -10,10 +12,9 @@ from process.data_structure import (
 )
 from process.exceptions import ProcessError, ProcessValueError
 from process.fortran import constants
-from process.fortran import (
-    error_handling as eh,
-)
 from process.plasma_profiles import PlasmaProfile
+
+logger = logging.getLogger(__name__)
 
 
 class NeutralBeam:
@@ -809,7 +810,6 @@ class ElectronCyclotron:
         Abramowitz and Stegun, equation 8.12.1
         """
         if abs(arg) > (1.0e0 + 1.0e-10):
-            eh.fdiags[0] = arg
             raise ProcessValueError("Invalid argument", arg=arg)
 
         arg2 = min(arg, (1.0e0 - 1.0e-10))
@@ -1089,7 +1089,9 @@ class LowerHybrid:
             rat0 = rat1
 
         else:
-            eh.report_error(16)
+            logger.error(
+                "LH penetration radius not found after lapno iterations, using 0.8*rminor"
+            )
             rat0 = 0.8e0
 
         return rat0

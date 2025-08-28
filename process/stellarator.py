@@ -32,21 +32,12 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-    error_handling,
-    global_variables,
-    numerics,
-)
+from process.fortran import constants, global_variables, numerics
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
-# Logging handler for console output
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.ERROR)
-logger.addHandler(s_handler)
 
 # NOTE: a different value of electron_charge was used in the original implementation
 # making the post-Python results slightly different. As a result, there is a
@@ -3471,11 +3462,10 @@ class Stellarator:
         xmax = min(np.max(x1), np.amax(x2))
 
         if xmin >= xmax:
-            error_handling.fdiags[0] = np.amin(x1)
-            error_handling.fdiags[1] = np.amin(x2)
-            error_handling.fdiags[2] = np.amax(x1)
-            error_handling.fdiags[3] = np.amax(x2)
-            error_handling.report_error(111)
+            logger.error(
+                f"X ranges not overlapping. {np.amin(x1)=} {np.amin(x2)=} "
+                f"{np.amax(x1)=} {np.amax(x2)=}"
+            )
 
         #  Ensure input guess for x is within this range
 
@@ -3523,20 +3513,20 @@ class Stellarator:
             x = x - 2.0e0 * dx * y / (yright - yleft)
 
             if x < xmin:
-                error_handling.fdiags[0] = x
-                error_handling.fdiags[1] = xmin
-                error_handling.report_error(112)
+                logger.error(
+                    f"X has dropped below Xmin; X={x} has been set equal to Xmin={xmin}"
+                )
                 x = xmin
                 break
 
             if x > xmax:
-                error_handling.fdiags[0] = x
-                error_handling.fdiags[1] = xmax
-                error_handling.report_error(113)
+                logger.error(
+                    f"X has risen above Xmax; X={x} has been set equal to Xmax={xmin}"
+                )
                 x = xmax
                 break
         else:
-            error_handling.report_error(114)
+            logger.error("Convergence too slow; X may be wrong...")
 
         return x
 
@@ -4210,7 +4200,7 @@ class Stellarator:
             # Parabolic profiles used, use analytical formula:
             dlimit_ecrh = ne0_max
         else:
-            logger.warning(
+            logger.error(
                 "It was used physics_variables.ipedestal = 1 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.ipedestal = 0)."
             )
             dlimit_ecrh = ne0_max

@@ -5,13 +5,8 @@ import numpy as np
 import scipy as sp
 
 from process.data_structure import physics_variables
-from process.fortran import error_handling
 
 logger = logging.getLogger(__name__)
-# Logging handler for console output
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.ERROR)
-logger.addHandler(s_handler)
 
 
 class Profile(ABC):
@@ -212,7 +207,9 @@ class NeProfile(Profile):
         if ncore < 0.0:
             # Allows solver to continue and
             # warns the user to raise the lower bound on dene if the run did not converge
-            error_handling.report_error(282)
+            logger.error(
+                "ncore is going negative when solving. Please raise the value of dene and or its lower limit."
+            )
             ncore = 1.0e-6
         return ncore
 

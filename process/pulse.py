@@ -1,3 +1,5 @@
+import logging
+
 from process import process_output as po
 from process.data_structure import (
     constraint_variables,
@@ -9,9 +11,10 @@ from process.data_structure import (
 )
 from process.fortran import (
     constants,
-    error_handling,
     numerics,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class Pulse:
@@ -180,10 +183,9 @@ class Pulse:
         t_burn = (abs(vs_cs_pf_total_burn) / v_plasma_loop_burn) - t_fusion_ramp
 
         if t_burn < 0.0e0:
-            error_handling.fdiags[0] = t_burn
-            error_handling.fdiags[1] = vs_cs_pf_total_burn
-            error_handling.fdiags[2] = v_plasma_loop_burn
-            error_handling.fdiags[3] = t_fusion_ramp
-            error_handling.report_error(93)
+            logger.error(
+                "Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capabilit. "
+                f"{t_burn=} {vs_cs_pf_total_burn=} {v_plasma_loop_burn=} {t_fusion_ramp=}"
+            )
 
         return t_burn
