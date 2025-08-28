@@ -3,6 +3,7 @@ import logging
 import numba
 import numpy as np
 
+from process import constants
 from process.data_structure import (
     build_variables,
     fwbs_variables,
@@ -11,18 +12,16 @@ from process.data_structure import (
     superconducting_tf_coil_variables,
     tfcoil_variables,
 )
-from process.fortran import constants
 from process.tf_coil import TFCoil
 
 logger = logging.getLogger(__name__)
 
 EPS = np.finfo(1.0).eps
-RMU0 = constants.rmu0
 
 
 class ResistiveTFCoil(TFCoil):
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self, output: bool):
         """Run main tfcoil subroutine without outputting."""

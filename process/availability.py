@@ -4,7 +4,7 @@ import math
 import numpy as np
 from scipy.special import comb as combinations
 
-from process import fortran as ft
+from process import constants
 from process import process_output as po
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
@@ -38,7 +38,7 @@ class Availability:
     """
 
     def __init__(self) -> None:
-        self.outfile = ft.constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool = False):
         """Run appropriate availability model

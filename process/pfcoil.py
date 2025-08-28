@@ -8,7 +8,7 @@ from scipy.linalg import svd
 from scipy.special import ellipe, ellipk
 
 import process.superconductors as superconductors
-from process import fortran as ft
+from process import constants
 from process import process_output as op
 from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
@@ -20,11 +20,9 @@ from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.exceptions import ProcessValueError
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
-
-RMU0 = ft.constants.rmu0
 
 
 class PFCoil:
@@ -32,8 +30,8 @@ class PFCoil:
 
     def __init__(self, cs_fatigue) -> None:
         """Initialise Fortran module variables."""
-        self.outfile = ft.constants.nout  # output file unit
-        self.mfile = ft.constants.mfile  # mfile file unit
+        self.outfile = constants.NOUT  # output file unit
+        self.mfile = constants.MFILE  # mfile file unit
         pfcoil_variables.init_pfcoil_module()
         self.cs_fatigue = cs_fatigue
 
@@ -556,8 +554,8 @@ class PFCoil:
 
             ddics = (
                 4.0e-7
-                * constants.pi
-                * constants.pi
+                * constants.PI
+                * constants.PI
                 * (
                     (bv.dr_bore * bv.dr_bore)
                     + (bv.dr_cs * bv.dr_cs) / 6.0e0
@@ -806,7 +804,7 @@ class PFCoil:
 
                 rll = (
                     2.0e0
-                    * constants.pi
+                    * constants.PI
                     * pfcoil_variables.r_pf_coil_middle[i]
                     * pfcoil_variables.n_pf_coil_turns[i]
                 )
@@ -904,7 +902,7 @@ class PFCoil:
                 pfcoil_variables.m_pf_coil_structure[i] = (
                     areaspf
                     * 2.0e0
-                    * constants.pi
+                    * constants.PI
                     * pfcoil_variables.r_pf_coil_middle[i]
                     * fwbsv.den_steel
                 )
@@ -1326,22 +1324,22 @@ class PFCoil:
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
         pfcoil_variables.radius_cs_turn_cable_space = -(
-            (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn) / constants.pi
+            (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn) / constants.PI
         ) + math.sqrt(
             (
                 (
                     (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn)
-                    / constants.pi
+                    / constants.PI
                 )
                 ** 2
             )
             + (
                 (
                     (pfcoil_variables.dr_cs_turn * pfcoil_variables.dz_cs_turn)
-                    - (4 - constants.pi) * (pfcoil_variables.r_out_cst**2)
+                    - (4 - constants.PI) * (pfcoil_variables.r_out_cst**2)
                     - (pfcoil_variables.a_cs_turn * pfcoil_variables.f_a_cs_steel)
                 )
-                / constants.pi
+                / constants.PI
             )
         )
 
@@ -1466,7 +1464,7 @@ class PFCoil:
         pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
             areaspf
             * 2.0e0
-            * constants.pi
+            * constants.PI
             * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
             * fwbsv.den_steel
         )
@@ -1487,7 +1485,7 @@ class PFCoil:
                 pfcoil_variables.awpoh
                 * (1.0e0 - pfcoil_variables.f_a_cs_void)
                 * 2.0e0
-                * constants.pi
+                * constants.PI
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * tfv.dcond[pfcoil_variables.i_cs_superconductor - 1]
             )
@@ -1496,7 +1494,7 @@ class PFCoil:
                 pfcoil_variables.awpoh
                 * (1.0e0 - pfcoil_variables.f_a_cs_void)
                 * 2.0e0
-                * constants.pi
+                * constants.PI
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * constants.den_copper
             )
@@ -1588,7 +1586,7 @@ class PFCoil:
 
             pfcoil_variables.p_cs_resistive_flat_top = (
                 2.0e0
-                * constants.pi
+                * constants.PI
                 * pfcoil_variables.r_cs_middle
                 * pfcoil_variables.rho_pf_coil
                 / (
@@ -1827,7 +1825,7 @@ class PFCoil:
         # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
         b0 = (
             rj
-            * constants.rmu0
+            * constants.RMU0
             * h
             * math.log(
                 (alpha + math.sqrt(alpha**2 + beta**2))
@@ -1836,7 +1834,7 @@ class PFCoil:
         )
 
         if beta > 3.0:
-            b1 = constants.rmu0 * rj * (b - a)
+            b1 = constants.RMU0 * rj * (b - a)
             f = (3.0 / beta) ** 2
             bfmax = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
 
@@ -2070,7 +2068,7 @@ class PFCoil:
         k2b2 = (4.0e0 * b**2) / (4.0e0 * b**2 + 4.0e0 * hl**2)
 
         # term 1
-        axial_term_1 = -(constants.rmu0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
+        axial_term_1 = -(constants.RMU0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
 
         # term 2
         ekb2_1 = ellipk(kb2)
@@ -2090,7 +2088,7 @@ class PFCoil:
         axial_force = axial_term_1 * (axial_term_2 - axial_term_3)
 
         # axial area [m2]
-        area_ax = constants.pi * (
+        area_ax = constants.PI * (
             pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1] ** 2
             - pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1] ** 2
         )
@@ -2339,9 +2337,9 @@ class PFCoil:
                     rl = abs(
                         pfcoil_variables.z_pf_coil_upper[k]
                         - pfcoil_variables.z_pf_coil_lower[k]
-                    ) / math.sqrt(constants.pi)
+                    ) / math.sqrt(constants.PI)
                     pfcoil_variables.ind_pf_cs_plasma_mutual[k, k] = (
-                        constants.rmu0
+                        constants.RMU0
                         * pfcoil_variables.n_pf_coil_turns[k] ** 2
                         * pfcoil_variables.r_pf_coil_middle[k]
                         * (
@@ -3708,19 +3706,19 @@ def bfield(rc, zc, cc, rp, zp):
 
         #  Mutual inductances
 
-        xc[i] = 0.5 * RMU0 * sd * ((2.0 - s) * xk - 2.0 * xe)
+        xc[i] = 0.5 * constants.RMU0 * sd * ((2.0 - s) * xk - 2.0 * xe)
 
         #  Radial, vertical fields
 
         brx = (
-            RMU0
+            constants.RMU0
             * cc[i]
             * dz
             / (2 * np.pi * rp * sd)
             * (-xk + (rc[i] ** 2 + rp**2 + zs) / (dr**2 + zs) * xe)
         )
         bzx = (
-            RMU0
+            constants.RMU0
             * cc[i]
             / (2 * np.pi * sd)
             * (xk + (rc[i] ** 2 - rp**2 - zs) / (dr**2 + zs) * xe)

@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import numpy as np
 
 import process.impurity_radiation as impurity
+from process import constants
 from process.data_structure import physics_variables
-from process.fortran import constants
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -262,8 +262,8 @@ def fast_alpha_beta(
     if physics_variables.f_deuterium < 1.0:
         beta_thermal = (
             2.0
-            * constants.rmu0
-            * constants.kiloelectron_volt
+            * constants.RMU0
+            * constants.KILOELECTRON_VOLT
             * (dene * ten + nd_ions_total * tin)
             / (bt**2 + bp**2)
         )
