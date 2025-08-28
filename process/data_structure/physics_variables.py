@@ -514,6 +514,9 @@ fusrat_total: float = None
 fusrat_plasma_dt_profile: list[float] = None
 """Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
 
+fusrat_plasma_dd_triton_profile: list[float] = None
+"""Profile of D-D fusion reaction rate (triton branch) in plasma, (reactions/sec)"""
+
 fusden_plasma: float = None
 """fusion reaction rate, just from plasma (reactions/m3/sec)"""
 
@@ -1423,6 +1426,7 @@ def init_physics_variables():
     global fusden_total
     global fusrat_total
     global fusrat_plasma_dt_profile
+    global fusrat_plasma_dd_triton_profile
     global fusden_plasma
     global f_c_plasma_non_inductive
     global ejima_coeff
@@ -1668,6 +1672,7 @@ def init_physics_variables():
     fusden_total = 0.0
     fusrat_total = 0.0
     fusrat_plasma_dt_profile = []
+    fusrat_plasma_dd_triton_profile = []
     fusden_plasma = 0.0
     f_c_plasma_non_inductive = 1.0
     ejima_coeff = 0.4
