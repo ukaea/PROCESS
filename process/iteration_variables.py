@@ -9,7 +9,6 @@ import process.data_structure as data_structure
 import process.fortran as fortran
 from process.exceptions import ProcessValueError
 from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
     string_to_f2py_compatible,
 )
 
@@ -469,8 +468,8 @@ def load_iteration_variables():
         # warn of the iteration variable is also a scan variable because this will cause
         # the optimiser and scan to overwrite the same variable and conflict
         if iteration_variable.name in (
-            f2py_compatible_to_string(fortran.global_variables.vlabel),
-            f2py_compatible_to_string(fortran.global_variables.vlabel_2),
+            data_structure.global_variables.vlabel,
+            data_structure.global_variables.vlabel_2,
         ):
             warn(
                 (

@@ -18,6 +18,7 @@ from process.data_structure import (
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
+    global_variables,
     heat_transport_variables,
     impurity_radiation_module,
     neoclassics_variables,
@@ -32,10 +33,9 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants, global_variables, numerics
+from process.fortran import constants, numerics
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -192,9 +192,7 @@ class Stellarator:
 
         load_stellarator_config(
             stellarator_variables.istell,
-            Path(
-                f"{f2py_compatible_to_string(global_variables.output_prefix)}stella_conf.json"
-            ),
+            Path(f"{global_variables.output_prefix}stella_conf.json"),
         )
 
         # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
