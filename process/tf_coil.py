@@ -473,6 +473,51 @@ class TFCoil:
 
         return len_tf_coil, tfa, tfb, r_tf_arc, z_tf_arc
 
+    def tf_stored_magnetic_energy(
+        self,
+        ind_tf_coil: float,
+        c_tf_total: float,
+        n_tf_coils: int,
+    ) -> tuple[float, float, float]:
+        """
+        Calculates the stored magnetic energy in a single TF coil.
+
+        :param ind_tf_coil: Self-inductance of the TF coil [H].
+        :type ind_tf_coil: float
+        :param c_tf_total: Current in all TF coils [A].
+        :type c_tf_total: float
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: int
+
+        :returns: Tuple containing:
+            - e_tf_magnetic_stored_total (float): Total stored magnetic energy in all TF coils [J].
+            - e_tf_magnetic_stored_total_gj (float): Total stored magnetic energy in all TF coils [GJ].
+            - e_tf_coil_magnetic_stored (float): Stored magnetic energy in a single TF coil [J].
+        :rtype: tuple[float, float, float]
+
+        :notes:
+            - The stored magnetic energy in an inductor is given by:
+                E = (1/2) * L * I^2
+                where E is the energy [J], L is the inductance [H], and I is the current [A].
+            - Total energy is for all coils; per-coil energy is divided by n_tf_coils.
+
+        :references:
+            - http://hyperphysics.phy-astr.gsu.edu/hbase/electric/indeng.html
+
+            - https://en.wikipedia.org/wiki/Inductance#Self-inductance_and_magnetic_energy
+        """
+        e_tf_magnetic_stored_total = 0.5 * ind_tf_coil * c_tf_total**2
+
+        e_tf_magnetic_stored_total_gj = e_tf_magnetic_stored_total * 1.0e-9
+
+        e_tf_coil_magnetic_stored = e_tf_magnetic_stored_total / n_tf_coils
+
+        return (
+            e_tf_magnetic_stored_total,
+            e_tf_magnetic_stored_total_gj,
+            e_tf_coil_magnetic_stored,
+        )
+
     def outtf(self, peaktfflag):
         """Writes superconducting TF coil output to file
         author: P J Knight, CCFE, Culham Science Centre
@@ -1549,6 +1594,14 @@ class TFCoil:
             "Total stored energy in TF coils (GJ)",
             "(e_tf_magnetic_stored_total_gj)",
             tfcoil_variables.e_tf_magnetic_stored_total_gj,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Total magnetic energy in a TF coil (J)",
+            "(e_tf_coil_magnetic_stored)",
+            tfcoil_variables.e_tf_coil_magnetic_stored,
             "OP ",
         )
 
