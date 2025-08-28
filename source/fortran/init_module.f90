@@ -6,8 +6,6 @@ use, intrinsic :: iso_fortran_env, only: dp=>real64
 
    implicit none
 
-   integer, parameter :: nin = 10
-
 contains
 
    subroutine open_files
@@ -17,12 +15,6 @@ contains
       implicit none
 
       !  Open the input/output external files
-      if (trim(fileprefix) == "") then
-         open(unit=nin,file="IN.DAT",status='old')
-      else
-         open(unit=nin,file=trim(fileprefix),status='old')
-      end if
-
       open(unit=nout     ,file=trim(output_prefix)//'OUT.DAT'   ,status='unknown')
       open(unit=mfile    ,file=trim(output_prefix)//'MFILE.DAT' ,status='unknown')
 
@@ -72,7 +64,6 @@ contains
       use global_variables, only: verbose
       implicit none
 
-      close(unit = nin)
       close(unit = nout)
       close(unit = nplot)
       close(unit = mfile)
