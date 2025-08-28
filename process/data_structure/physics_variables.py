@@ -511,6 +511,8 @@ fusden_total: float = None
 fusrat_total: float = None
 """fusion reaction rate, from beams and plasma (reactions/sec)"""
 
+fusrat_plasma_dt_profile: list[float] = None
+"""Profile of D-T fusion reaction rate in plasma, (reactions/sec)"""
 
 fusden_plasma: float = None
 """fusion reaction rate, just from plasma (reactions/m3/sec)"""
@@ -1420,6 +1422,7 @@ def init_physics_variables():
     global f_tritium
     global fusden_total
     global fusrat_total
+    global fusrat_plasma_dt_profile
     global fusden_plasma
     global f_c_plasma_non_inductive
     global ejima_coeff
@@ -1664,6 +1667,7 @@ def init_physics_variables():
     f_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
+    fusrat_plasma_dt_profile = []
     fusden_plasma = 0.0
     f_c_plasma_non_inductive = 1.0
     ejima_coeff = 0.4
