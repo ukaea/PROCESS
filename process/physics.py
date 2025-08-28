@@ -12,9 +12,8 @@ import process.fusion_reactions as reactions
 import process.impurity_radiation as impurity_radiation
 import process.l_h_transition as transition
 import process.physics_functions as physics_funcs
-from process import (
-    process_output as po,
-)
+from process import constants
+from process import process_output as po
 from process.data_structure import (
     build_variables,
     constraint_variables,
@@ -29,12 +28,9 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
-
-ELECTRON_CHARGE: float = constants.electron_charge.item()
-RMU0: float = constants.rmu0.item()
 
 
 @nb.jit(nopython=True, cache=True)
@@ -130,7 +126,7 @@ def calculate_volt_second_requirements(
     """
     # Plasma internal inductance
 
-    ind_plasma_internal = RMU0 * rmajor * ind_plasma_internal_norm / 2.0
+    ind_plasma_internal = constants.RMU0 * rmajor * ind_plasma_internal_norm / 2.0
 
     # Internal plasma flux (V-s) component
     vs_plasma_internal = ind_plasma_internal * plasma_current
@@ -138,7 +134,7 @@ def calculate_volt_second_requirements(
     # Start-up resistive component
     # Uses ITER formula without the 10 V-s add-on
 
-    vs_res_ramp = ejima_coeff * RMU0 * plasma_current * rmajor
+    vs_res_ramp = ejima_coeff * constants.RMU0 * plasma_current * rmajor
 
     # ======================================================================
 
@@ -150,7 +146,7 @@ def calculate_volt_second_requirements(
     beps = 0.73 * np.sqrt(eps) * (1.0 + 2.0 * eps**4 - 6.0 * eps**5 + 3.7 * eps**6)
 
     ind_plasma_external = (
-        rmajor * RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
+        rmajor * constants.RMU0 * aeps * (1.0 - eps) / (1.0 - eps + beps * kappa)
     )
 
     # ======================================================================
@@ -688,7 +684,9 @@ def _nevins_integral(
     """
 
     # Compute average electron beta
-    betae = dene * te * 1.0e3 * ELECTRON_CHARGE / (bt**2 / (2.0 * RMU0))
+    betae = (
+        dene * te * 1.0e3 * constants.ELECTRON_CHARGE / (bt**2 / (2.0 * constants.RMU0))
+    )
 
     nabla = rminor * np.sqrt(y) / rmajor
     x = (1.46 * np.sqrt(nabla) + 2.4 * nabla) / (1.0 - nabla) ** 1.5
@@ -1529,7 +1527,7 @@ def _trapped_particle_fraction_sauter(
 
 class Physics:
     def __init__(self, plasma_profile, current_drive):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
 
@@ -1756,7 +1754,7 @@ class Physics:
             * physics_variables.beta_thermal
             * physics_variables.btot
             * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
+            / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
 
@@ -1766,7 +1764,7 @@ class Physics:
             * physics_variables.beta
             * physics_variables.btot
             * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
+            / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
 
@@ -2159,27 +2157,27 @@ class Physics:
                 physics_variables.fusden_plasma
                 + 1.0e6
                 * physics_variables.p_beam_alpha_mw
-                / (constants.dt_alpha_energy)
+                / (constants.DT_ALPHA_ENERGY)
                 / physics_variables.vol_plasma
             )
             physics_variables.fusden_alpha_total = (
                 physics_variables.fusden_plasma_alpha
                 + 1.0e6
                 * physics_variables.p_beam_alpha_mw
-                / (constants.dt_alpha_energy)
+                / (constants.DT_ALPHA_ENERGY)
                 / physics_variables.vol_plasma
             )
             physics_variables.p_dt_total_mw = (
                 physics_variables.p_plasma_dt_mw
-                + (1.0 / (1.0 - constants.dt_neutron_energy_fraction))
+                + (1.0 / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION))
                 * physics_variables.p_beam_alpha_mw
             )
             physics_variables.p_beam_neutron_mw = physics_variables.p_beam_alpha_mw * (
-                constants.dt_neutron_energy_fraction
-                / (1 - constants.dt_neutron_energy_fraction)
+                constants.DT_NEUTRON_ENERGY_FRACTION
+                / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
             )
             physics_variables.p_beam_dt_mw = physics_variables.p_beam_alpha_mw * (
-                1 / (1 - constants.dt_neutron_energy_fraction)
+                1 / (1 - constants.DT_NEUTRON_ENERGY_FRACTION)
             )
         else:
             # If no beams present then the total alpha rates and power are the same as the plasma values
@@ -3305,9 +3303,9 @@ class Physics:
 
         # Average atomic masses of injected fuel species
         physics_variables.m_fuel_amu = (
-            (constants.m_deuteron_amu * physics_variables.f_deuterium)
-            + (constants.m_triton_amu * physics_variables.f_tritium)
-            + (constants.m_helion_amu * physics_variables.f_helium3)
+            (constants.M_DEUTERON_AMU * physics_variables.f_deuterium)
+            + (constants.M_TRITON_AMU * physics_variables.f_tritium)
+            + (constants.M_HELION_AMU * physics_variables.f_helium3)
         )
 
         # ======================================================================
@@ -3315,16 +3313,16 @@ class Physics:
         # Average atomic masses of injected fuel species in the neutral beams
         # Only deuterium and tritium in the beams
         physics_variables.m_beam_amu = (
-            constants.m_deuteron_amu * (1.0 - current_drive_variables.f_beam_tritium)
-        ) + (constants.m_triton_amu * current_drive_variables.f_beam_tritium)
+            constants.M_DEUTERON_AMU * (1.0 - current_drive_variables.f_beam_tritium)
+        ) + (constants.M_TRITON_AMU * current_drive_variables.f_beam_tritium)
 
         # ======================================================================
 
         # Average mass of all ions
         physics_variables.m_ions_total_amu = (
             (physics_variables.m_fuel_amu * physics_variables.nd_fuel_ions)
-            + (constants.m_alpha_amu * physics_variables.nd_alphas)
-            + (physics_variables.nd_protons * constants.m_proton_amu)
+            + (constants.M_ALPHA_AMU * physics_variables.nd_alphas)
+            + (physics_variables.nd_protons * constants.M_PROTON_AMU)
             + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
         )
         for imp in range(impurity_radiation_module.N_IMPURITIES):
@@ -3347,30 +3345,30 @@ class Physics:
             (
                 physics_variables.f_deuterium
                 * physics_variables.nd_fuel_ions
-                / constants.m_deuteron_amu
+                / constants.M_DEUTERON_AMU
             )
             + (
                 physics_variables.f_tritium
                 * physics_variables.nd_fuel_ions
-                / constants.m_triton_amu
+                / constants.M_TRITON_AMU
             )
             + (
                 4.0
                 * physics_variables.f_helium3
                 * physics_variables.nd_fuel_ions
-                / constants.m_helion_amu
+                / constants.M_HELION_AMU
             )
-            + (4.0 * physics_variables.nd_alphas / constants.m_alpha_amu)
-            + (physics_variables.nd_protons / constants.m_proton_amu)
+            + (4.0 * physics_variables.nd_alphas / constants.M_ALPHA_AMU)
+            + (physics_variables.nd_protons / constants.M_PROTON_AMU)
             + (
                 (1.0 - current_drive_variables.f_beam_tritium)
                 * physics_variables.nd_beam_ions
-                / constants.m_deuteron_amu
+                / constants.M_DEUTERON_AMU
             )
             + (
                 current_drive_variables.f_beam_tritium
                 * physics_variables.nd_beam_ions
-                / constants.m_triton_amu
+                / constants.M_TRITON_AMU
             )
         ) / physics_variables.dene
         for imp in range(impurity_radiation_module.N_IMPURITIES):
@@ -3668,7 +3666,7 @@ class Physics:
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
             fq = calculate_current_coefficient_hastie(
-                alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.rmu0
+                alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.RMU0
             )
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
@@ -3687,7 +3685,7 @@ class Physics:
         # Main plasma current calculation using the fq value from the different settings
         if i_plasma_current != 2:
             plasma_current = (
-                (constants.twopi / constants.rmu0)
+                (constants.TWOPI / constants.RMU0)
                 * rminor**2
                 / (rmajor * q95)
                 * fq
@@ -3720,7 +3718,7 @@ class Physics:
             kappa,
             triang,
             len_plasma_poloidal,
-            constants.rmu0,
+            constants.RMU0,
         )
 
         return bp, qstar, plasma_current
@@ -3782,9 +3780,9 @@ class Physics:
         # Dimensionless plasma parameters. See reference below.
         physics_variables.nu_star = (
             1
-            / constants.rmu0
-            * (15.0e0 * constants.electron_charge**4 * physics_variables.dlamie)
-            / (4.0e0 * np.pi**1.5e0 * constants.epsilon0**2)
+            / constants.RMU0
+            * (15.0e0 * constants.ELECTRON_CHARGE**4 * physics_variables.dlamie)
+            / (4.0e0 * np.pi**1.5e0 * constants.EPSILON0**2)
             * physics_variables.vol_plasma**2
             * physics_variables.rmajor**2
             * physics_variables.bt
@@ -3796,7 +3794,7 @@ class Physics:
 
         physics_variables.rho_star = np.sqrt(
             2.0e0
-            * constants.proton_mass
+            * constants.PROTON_MASS
             * physics_variables.m_ions_total_amu
             * physics_variables.e_plasma_beta
             / (
@@ -3805,7 +3803,7 @@ class Physics:
                 * physics_variables.nd_electron_line
             )
         ) / (
-            constants.electron_charge
+            constants.ELECTRON_CHARGE
             * physics_variables.bt
             * physics_variables.eps
             * physics_variables.rmajor
@@ -3814,7 +3812,7 @@ class Physics:
         physics_variables.beta_mcdonald = (
             4.0e0
             / 3.0e0
-            * constants.rmu0
+            * constants.RMU0
             * physics_variables.e_plasma_beta
             / (physics_variables.vol_plasma * physics_variables.bt**2)
         )
@@ -6656,8 +6654,8 @@ class Physics:
             physics_variables.ne0
             * physics_variables.te0
             * 1.0e3
-            * constants.electron_charge
-            / (bt**2 / (2.0 * constants.rmu0))
+            * constants.ELECTRON_CHARGE
+            / (bt**2 / (2.0 * constants.RMU0))
         )
 
         # Call integration routine using definite integral routine from scipy
@@ -8195,14 +8193,14 @@ class Physics:
         # The transport losses is just the electron and ion thermal energies divided by the confinement time.
         pden_ion_transport_loss_mw = (
             (3 / 2)
-            * (constants.electron_charge / 1e3)
+            * (constants.ELECTRON_CHARGE / 1e3)
             * nd_ions_total
             * tin
             / t_ion_energy_confinement
         )
         pden_electron_transport_loss_mw = (
             (3 / 2)
-            * (constants.electron_charge / 1e3)
+            * (constants.ELECTRON_CHARGE / 1e3)
             * dene
             * ten
             / t_electron_energy_confinement
@@ -8264,17 +8262,17 @@ class Physics:
         """
 
         # Calculate mass of fuel ions
-        m_plasma_fuel_ions = (m_fuel_amu * constants.atomic_mass_unit) * (
+        m_plasma_fuel_ions = (m_fuel_amu * constants.ATOMIC_MASS_UNIT) * (
             nd_fuel_ions * vol_plasma
         )
 
-        m_plasma_ions_total = (m_ions_total_amu * constants.atomic_mass_unit) * (
+        m_plasma_ions_total = (m_ions_total_amu * constants.ATOMIC_MASS_UNIT) * (
             nd_ions_total * vol_plasma
         )
 
-        m_plasma_alpha = (nd_alphas * vol_plasma) * constants.alpha_mass
+        m_plasma_alpha = (nd_alphas * vol_plasma) * constants.ALPHA_MASS
 
-        m_plasma_electron = constants.electron_mass * (dene * vol_plasma)
+        m_plasma_electron = constants.ELECTRON_MASS * (dene * vol_plasma)
 
         m_plasma = m_plasma_electron + m_plasma_ions_total
 
@@ -8312,7 +8310,7 @@ def res_diff_time(rmajor, res_plasma, kappa95):
     :param kappa95: plasma elongation at 95% flux surface
     """
 
-    return 2 * constants.rmu0 * rmajor / (res_plasma * kappa95)
+    return 2 * constants.RMU0 * rmajor / (res_plasma * kappa95)
 
 
 def l_h_threshold_power(

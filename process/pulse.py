@@ -1,5 +1,6 @@
 import logging
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     constraint_variables,
@@ -9,17 +10,14 @@ from process.data_structure import (
     pulse_variables,
     times_variables,
 )
-from process.fortran import (
-    constants,
-    numerics,
-)
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 
 
 class Pulse:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self, output: bool) -> None:
         """Caller for the pulsed reactor model

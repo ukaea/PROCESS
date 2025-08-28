@@ -5,6 +5,7 @@ import numpy as np
 from scipy import optimize
 
 import process.superconductors as superconductors
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     build_variables,
@@ -19,7 +20,6 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants
 from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
@@ -39,13 +39,9 @@ SUPERCONDUCTING_TF_TYPES = {
 }
 
 
-RMU0 = constants.rmu0
-EPS = np.finfo(1.0).eps
-
-
 class SuperconductingTFCoil(TFCoil):
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self, output: bool):
         """
@@ -2959,12 +2955,12 @@ def vv_stress_on_quench(
 
     # relevant self-inductances in henry (H)
     coil_structure_self_inductance = (
-        (constants.rmu0 / np.pi)
+        (constants.RMU0 / np.pi)
         * H_coil
         * _inductance_factor(H_coil, ri_coil, ro_coil, rm_coil, theta1_coil)
     )
     vv_self_inductance = (
-        (constants.rmu0 / np.pi)
+        (constants.RMU0 / np.pi)
         * H_vv
         * _inductance_factor(H_vv, ri_vv, ro_vv, rm_vv, theta1_vv)
     )
@@ -2991,7 +2987,7 @@ def vv_stress_on_quench(
     i2 = (lambda1 / lambda2) * i1
 
     a_vv = (ro_vv + ri_vv) / (ro_vv - ri_vv)
-    b_vvi = (constants.rmu0 * (n_tf_coils * n_tf_coil_turns * i0 + i1 + (i2 / 2))) / (
+    b_vvi = (constants.RMU0 * (n_tf_coils * n_tf_coil_turns * i0 + i1 + (i2 / 2))) / (
         2 * np.pi * ri_vv
     )
     j_vvi = i2 / (2 * np.pi * d_vv * ri_vv)

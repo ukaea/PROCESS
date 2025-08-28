@@ -1,12 +1,12 @@
 import math
 
+from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as dv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.exceptions import ProcessValueError
-from process.fortran import constants
 
 
 class Divertor:
@@ -18,7 +18,7 @@ class Divertor:
     """
 
     def __init__(self) -> None:
-        self.outfile = constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool) -> None:
         """Routine to call the divertor model
@@ -153,11 +153,11 @@ class Divertor:
 
         #  Vertical plate area
 
-        a1 = 2.0e0 * constants.pi * r1 * dz_divertor
+        a1 = 2.0e0 * constants.PI * r1 * dz_divertor
 
         #  Horizontal plate area
 
-        a2 = constants.pi * (r2 * r2 - r1 * r1)
+        a2 = constants.PI * (r2 * r2 - r1 * r1)
 
         #  Diagonal plate area
 
@@ -324,7 +324,7 @@ class Divertor:
         # Wetted area
         area_wetted = (
             2
-            * constants.pi
+            * constants.PI
             * rmajor
             * lambda_int
             * f_div_flux_expansion

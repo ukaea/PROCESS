@@ -2,17 +2,17 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
 from process.data_structure import blanket_library, build_variables, fwbs_variables
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
 
 class Fw:
     def __init__(self) -> None:
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self):
         (

@@ -5,7 +5,7 @@ import logging
 import numba
 import numpy as np
 
-from process import fortran as ft
+from process import constants
 from process import process_output as po
 from process.build import Build
 from process.data_structure import (
@@ -19,11 +19,9 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
-
-RMU0 = constants.rmu0
 
 
 class TFCoil:
@@ -31,7 +29,7 @@ class TFCoil:
 
     def __init__(self, build: Build):
         """Initialise Fortran module variables."""
-        self.outfile = ft.constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
         self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
@@ -310,7 +308,7 @@ class TFCoil:
         c_tf_total = (
             b_tf_inboard_peak_symmetric
             * r_b_tf_inboard_peak
-            * (2 * np.pi / constants.rmu0)
+            * (2 * np.pi / constants.RMU0)
         )
 
         # Current per TF coil [A]
@@ -663,14 +661,14 @@ class TFCoil:
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Inboard leg inner radius (m)",
             "(r_tf_inboard_in)",
             build_variables.r_tf_inboard_in,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Inboard leg outer radius (m)",
             "(r_tf_inboard_out)",
             build_variables.r_tf_inboard_out,
@@ -683,28 +681,28 @@ class TFCoil:
             tfcoil_variables.i_tf_wp_geom,
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Radial position of inner edge and centre of winding pack (m)",
             "(r_tf_wp_inboard_inner)",
             superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Radial position of outer edge and of winding pack (m)",
             "(r_tf_wp_inboard_outer)",
             superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Radial position of centre of winding pack (m)",
             "(r_tf_wp_inboard_centre)",
             superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Minimum toroidal thickness of winding pack (m)",
             "(dx_tf_wp_toroidal_min)",
             superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
@@ -818,13 +816,13 @@ class TFCoil:
                 f"  {ii}              {tfcoil_variables.r_tf_arc[ii]}              {tfcoil_variables.z_tf_arc[ii]}",
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"TF coil arc point {ii} R (m)",
                 f"(r_tf_arc({ii + 1}))",
                 tfcoil_variables.r_tf_arc[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"TF coil arc point {ii} Z (m)",
                 f"(z_tf_arc({ii + 1}))",
                 tfcoil_variables.z_tf_arc[ii],
@@ -2173,7 +2171,7 @@ class TFCoil:
         dcool = 2.0e0 * tfcoil_variables.rcool  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
         tfcoil_variables.ncool = acool / (
-            constants.pi * tfcoil_variables.rcool**2
+            constants.PI * tfcoil_variables.rcool**2
         )  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
@@ -2183,7 +2181,7 @@ class TFCoil:
             / (bv.z_tf_inside_half + bv.dr_tf_outboard)
             + acool
         )
-        ro = (acpav / (constants.pi * tfcoil_variables.ncool)) ** 0.5
+        ro = (acpav / (constants.PI * tfcoil_variables.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
         ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
@@ -2196,10 +2194,10 @@ class TFCoil:
         # --------------
         if tfcoil_variables.i_tf_sup == 0:
             # Water coolant physical properties
-            coolant_density = constants.denh2o
-            coolant_cp = constants.cph2o
-            coolant_visco = constants.muh2o
-            coolant_th_cond = constants.kh2o
+            coolant_density = constants.DENH2O
+            coolant_cp = constants.CPH2O
+            coolant_visco = constants.MUH2O
+            coolant_th_cond = constants.KH2O
 
             # Mass flow rate [kg/s]
             cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
@@ -2272,7 +2270,7 @@ class TFCoil:
         dtfilmav = ptot / (
             h
             * 2.0e0
-            * constants.pi
+            * constants.PI
             * tfcoil_variables.rcool
             * tfcoil_variables.ncool
             * lcool
@@ -2288,7 +2286,7 @@ class TFCoil:
         # ******
         # Copper conductor
         if tfcoil_variables.i_tf_sup == 0:
-            conductor_th_cond = constants.k_copper
+            conductor_th_cond = constants.K_COPPER
 
         # Aluminium
         elif tfcoil_variables.i_tf_sup == 2:
@@ -3012,7 +3010,7 @@ class TFCoil:
 
             for _ in range(NINTERVALS):
                 # Field in the dr_bore for unit current
-                b = RMU0 / (2.0e0 * np.pi * r)
+                b = constants.RMU0 / (2.0e0 * np.pi * r)
                 # Find out if there is a dr_bore
                 if x0 - r < ai:
                     h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
@@ -3038,7 +3036,7 @@ class TFCoil:
 
             for _ in range(NINTERVALS):
                 # Field in the dr_bore for unit current
-                b = RMU0 / (2.0e0 * np.pi * r)
+                b = constants.RMU0 / (2.0e0 * np.pi * r)
                 # Find out if there is a dr_bore
                 if r - x0 < ai:
                     h_bore = y0 + bi * np.sqrt(1 - ((r - x0) / ai) ** 2)
@@ -3055,8 +3053,8 @@ class TFCoil:
             # Picture frame TF coil
             ind_tf_coil = (
                 (z_tf_inside_half + dr_tf_outboard)
-                * RMU0
-                / constants.pi
+                * constants.RMU0
+                / constants.PI
                 * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
             )
 
@@ -3086,7 +3084,7 @@ class TFCoil:
         tfcoil_variables.tfcryoarea = (
             2.0e0
             * tfcoil_variables.len_tf_coil
-            * constants.twopi
+            * constants.TWOPI
             * 0.5e0
             * (build_variables.r_tf_inboard_mid + build_variables.r_tf_outboard_mid)
         )
@@ -4200,39 +4198,39 @@ class TFCoil:
         # MFILE.DAT data
         for ii in range(n_tf_bucking + 2):
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"Radial    stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_r_max({ii + 1}))",
                 sig_tf_r_max[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"toroidal  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_t_max({ii + 1}))",
                 sig_tf_t_max[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"Vertical  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_z_max({ii + 1}))",
                 sig_tf_z_max[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"Von-Mises stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_vmises_max({ii + 1}))",
                 sig_tf_vmises_max[ii],
             )
             if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
                 po.ovarre(
-                    constants.mfile,
+                    constants.MFILE,
                     f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
                     f"(s_shear_tf_peak({ii + 1}))",
                     s_shear_tf_peak[ii],
                 )
             else:
                 po.ovarre(
-                    constants.mfile,
+                    constants.MFILE,
                     f"Maximum shear stress for the Tresca yield criterion {ii + 1} (Pa)",
                     f"(s_shear_tf_peak({ii + 1}))",
                     s_shear_tf_peak[ii],
@@ -4612,10 +4610,10 @@ def extended_plane_strain(
     for ii in range(1, nlayers):
         currents_enclosed[ii] = currents_enclosed[ii - 1] + currents[ii - 1]
     # Factor that multiplies r linearly in the force density
-    f_lin_fac[:] = RMU0 / 2.0e0 * d_curr**2
+    f_lin_fac[:] = constants.RMU0 / 2.0e0 * d_curr**2
     # Factor that multiplies r reciprocally in the force density
     f_rec_fac[:] = (
-        RMU0
+        constants.RMU0
         / 2.0e0
         * (d_curr * currents_enclosed / np.pi - d_curr**2 * rad[:nlayers] ** 2)
     )
@@ -4934,13 +4932,13 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     kk = ey / (1 - nu**2)
 
     # Lorentz forces parametrisation coeficients (array equation)
-    alpha = 0.5e0 * RMU0 * j**2 / kk
+    alpha = 0.5e0 * constants.RMU0 * j**2 / kk
 
     inner_layer_curr = 0.0e0
     for ii in range(nlayers):
         beta[ii] = (
             0.5e0
-            * RMU0
+            * constants.RMU0
             * j[ii]
             * (inner_layer_curr - np.pi * j[ii] * rad[ii] ** 2)
             / (np.pi * kk[ii])
