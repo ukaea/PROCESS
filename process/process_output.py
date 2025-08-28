@@ -3,26 +3,18 @@ from pathlib import Path
 
 import numpy as np
 
-from process.fortran import (
-    constants,
-    global_variables,
-    numerics,
-)
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.data_structure import global_variables
+from process.fortran import constants, numerics
 
 
 class OutputFileManager:
     @classmethod
     def open_files(cls, *, mode="w"):
         cls._outfile = open(  # noqa: SIM115
-            Path(f2py_compatible_to_string(global_variables.output_prefix) + "OUT.DAT"),
-            mode,
+            Path(global_variables.output_prefix + "OUT.DAT"), mode
         )
         cls._mfile = open(  # noqa: SIM115
-            Path(
-                f2py_compatible_to_string(global_variables.output_prefix) + "MFILE.DAT"
-            ),
-            mode,
+            Path(global_variables.output_prefix + "MFILE.DAT"), mode
         )
 
     @classmethod
@@ -31,18 +23,10 @@ class OutputFileManager:
         cls._mfile.close()
 
         cls._outfile = open(  # noqa: SIM115
-            Path(
-                f2py_compatible_to_string(global_variables.output_prefix)
-                + "IDEM_OUT.DAT"
-            ),
-            "w",
+            Path(global_variables.output_prefix + "IDEM_OUT.DAT"), "w"
         )
         cls._mfile = open(  # noqa: SIM115
-            Path(
-                f2py_compatible_to_string(global_variables.output_prefix)
-                + "IDEM_MFILE.DAT"
-            ),
-            "w",
+            Path(global_variables.output_prefix + "IDEM_MFILE.DAT"), "w"
         )
 
     @classmethod

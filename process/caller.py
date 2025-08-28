@@ -15,7 +15,6 @@ from process.io.mfile import MFile
 from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
 from process.process_output import OutputFileManager
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -140,9 +139,8 @@ class Caller:
 
                 # Extract data from intermediate idempotence-checking mfile
                 mfile_path = (
-                    f2py_compatible_to_string(ft.global_variables.output_prefix)
-                    + "IDEM_MFILE.DAT"
-                )
+                    data_structure.global_variables.output_prefix
+                ) + "IDEM_MFILE.DAT"
                 mfile = MFile(mfile_path)
                 # Create mfile dict of float values: only compare floats
                 mfile_data = {

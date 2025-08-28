@@ -5,9 +5,9 @@ import numpy as np
 
 from process.caller import Caller
 from process.data_structure import cost_variables as cv
+from process.data_structure import global_variables as gv
 from process.data_structure import physics_variables as pv
 from process.data_structure import times_variables as tv
-from process.fortran import global_variables as gv
 from process.fortran import numerics
 
 logger = logging.getLogger(__name__)

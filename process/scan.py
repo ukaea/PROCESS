@@ -15,6 +15,7 @@ from process.data_structure import (
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
+    global_variables,
     heat_transport_variables,
     impurity_radiation_module,
     pfcoil_variables,
@@ -26,7 +27,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.fortran import (
     constants,
-    global_variables,
     numerics,
 )
 from process.log import logging_model_handler, show_errors
@@ -871,8 +871,8 @@ class Scan:
 
         process_output.write(
             constants.nout,
-            f"***** Scan point {iscan} of {scan_variables.isweep} : {f2py_compatible_to_string(global_variables.xlabel)}"
-            f", {f2py_compatible_to_string(global_variables.vlabel)} = {scan_variables.sweep[iscan - 1]} "
+            f"***** Scan point {iscan} of {scan_variables.isweep} : {global_variables.xlabel}"
+            f", {global_variables.vlabel} = {scan_variables.sweep[iscan - 1]} "
             "*****",
         )
         process_output.ostars(constants.nout, 110)
@@ -881,7 +881,7 @@ class Scan:
 
         print(
             f"Starting scan point {iscan} of {scan_variables.isweep} : "
-            f"{f2py_compatible_to_string(global_variables.xlabel)} , {f2py_compatible_to_string(global_variables.vlabel)}"
+            f"{global_variables.xlabel} , {global_variables.vlabel}"
             f" = {scan_variables.sweep[iscan - 1]}"
         )
 
@@ -904,8 +904,8 @@ class Scan:
         process_output.write(
             constants.nout,
             f"***** 2D Scan point {iscan} of {scan_variables.isweep * scan_variables.isweep_2} : "
-            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_variables.sweep[iscan_1 - 1]} and"
-            f" {f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_variables.sweep_2[iscan_r - 1]} "
+            f"{global_variables.vlabel} = {scan_variables.sweep[iscan_1 - 1]} and"
+            f" {global_variables.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
             "*****",
         )
         process_output.ostars(constants.nout, 110)
@@ -913,10 +913,10 @@ class Scan:
         process_output.ovarin(constants.mfile, "Scan point number", "(iscan)", iscan)
 
         print(
-            f"Starting scan point {iscan}:  {f2py_compatible_to_string(global_variables.xlabel)}, "
-            f"{f2py_compatible_to_string(global_variables.vlabel)} = {scan_variables.sweep[iscan_1 - 1]}"
-            f" and {f2py_compatible_to_string(global_variables.xlabel_2)}, "
-            f"{f2py_compatible_to_string(global_variables.vlabel_2)} = {scan_variables.sweep_2[iscan_r - 1]} "
+            f"Starting scan point {iscan}:  {global_variables.xlabel}, "
+            f"{global_variables.vlabel} = {scan_variables.sweep[iscan_1 - 1]}"
+            f" and {global_variables.xlabel_2}, "
+            f"{global_variables.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
         )
 
         return iscan_r
