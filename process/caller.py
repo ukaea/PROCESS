@@ -14,6 +14,7 @@ from process.final import finalise
 from process.io.mfile import MFile
 from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
+from process.process_output import OutputFileManager
 from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 if TYPE_CHECKING:
@@ -132,7 +133,7 @@ class Caller:
             for _ in range(10):
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
-                ft.init_module.open_idempotence_files()
+                OutputFileManager.open_idempotence_files()
                 self._call_models_once(xc)
                 # Write mfile
                 finalise(self.models, ifail)
@@ -176,7 +177,7 @@ class Caller:
                     logger.debug("Mfiles idempotent, returning")
                     # Divert OUT.DAT and MFILE.DAT output back to original files
                     # now idempotence checking complete
-                    ft.init_module.close_idempotence_files()
+                    OutputFileManager.close_idempotence_files()
                     # Write final output file and mfile
                     finalise(self.models, ifail)
                     return
@@ -202,7 +203,7 @@ class Caller:
             )
 
             # Close idempotence files, write final output file and mfile
-            ft.init_module.close_idempotence_files()
+            OutputFileManager.close_idempotence_files()
             finalise(
                 self.models,
                 ifail,
@@ -213,7 +214,7 @@ class Caller:
         except Exception:
             # If exception in model evaluations delete intermediate idempotence
             # files to clean up
-            ft.init_module.close_idempotence_files()
+            OutputFileManager.close_idempotence_files()
             raise
 
     def _call_models_once(self, xc: np.ndarray) -> None:
