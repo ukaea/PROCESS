@@ -4,8 +4,8 @@ from dataclasses import dataclass
 import numpy as np
 from scipy import integrate
 
+from process import constants
 from process.data_structure import physics_variables
-from process.fortran import constants
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -221,7 +221,7 @@ class FusionReactionRate:
         self.sigmav_dt_average = sigmav
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.d_t_energy / 1.0e6
+        reaction_energy = constants.D_T_ENERGY / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
@@ -234,11 +234,11 @@ class FusionReactionRate:
         # Power densities for different particles [MW/m^3]
         # Alpha particle gets approximately 20% of the fusion power
         alpha_power_density = (
-            1.0 - constants.dt_neutron_energy_fraction
+            1.0 - constants.DT_NEUTRON_ENERGY_FRACTION
         ) * fusion_power_density
         pden_non_alpha_charged_mw = 0.0
         neutron_power_density = (
-            constants.dt_neutron_energy_fraction * fusion_power_density
+            constants.DT_NEUTRON_ENERGY_FRACTION * fusion_power_density
         )
 
         # Calculate the fusion rate density [reactions/m^3/second]
@@ -290,7 +290,7 @@ class FusionReactionRate:
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.d_helium_energy / 1.0e6
+        reaction_energy = constants.D_HELIUM_ENERGY / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         fusion_power_density = (
@@ -303,10 +303,10 @@ class FusionReactionRate:
         # Power densities for different particles [MW/m^3]
         # Alpha particle gets approximately 20% of the fusion power
         alpha_power_density = (
-            1.0 - constants.dhelium_proton_energy_fraction
+            1.0 - constants.DHELIUM_PROTON_ENERGY_FRACTION
         ) * fusion_power_density
         pden_non_alpha_charged_mw = (
-            constants.dhelium_proton_energy_fraction * fusion_power_density
+            constants.DHELIUM_PROTON_ENERGY_FRACTION * fusion_power_density
         )
         neutron_power_density = 0.0
 
@@ -360,7 +360,7 @@ class FusionReactionRate:
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.dd_helium_energy / 1.0e6
+        reaction_energy = constants.DD_HELIUM_ENERGY / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         # The power density is scaled by the branching ratio to simulate the different
@@ -377,10 +377,10 @@ class FusionReactionRate:
         # Neutron particle gets approximately 75% of the fusion power
         alpha_power_density = 0.0
         pden_non_alpha_charged_mw = (
-            1.0 - constants.dd_neutron_energy_fraction
+            1.0 - constants.DD_NEUTRON_ENERGY_FRACTION
         ) * fusion_power_density
         neutron_power_density = (
-            constants.dd_neutron_energy_fraction * fusion_power_density
+            constants.DD_NEUTRON_ENERGY_FRACTION * fusion_power_density
         )
 
         # Calculate the fusion rate density [reactions/m^3/second]
@@ -433,7 +433,7 @@ class FusionReactionRate:
         )
 
         # Reaction energy in MegaJoules [MJ]
-        reaction_energy = constants.dd_triton_energy / 1.0e6
+        reaction_energy = constants.DD_TRITON_ENERGY / 1.0e6
 
         # Calculate the fusion power density produced [MW/m^3]
         # The power density is scaled by the branching ratio to simulate the different
@@ -741,8 +741,8 @@ def set_fusion_powers(
     pden_neutron_total_mw = pden_plasma_neutron_mw + (
         (
             (
-                constants.dt_neutron_energy_fraction
-                / (1.0 - constants.dt_neutron_energy_fraction)
+                constants.DT_NEUTRON_ENERGY_FRACTION
+                / (1.0 - constants.DT_NEUTRON_ENERGY_FRACTION)
             )
             * p_beam_alpha_mw
         )
@@ -864,8 +864,8 @@ def beam_fusion(
     beam_slow_time = (
         1.99e19
         * (
-            constants.m_deuteron_amu * (1.0 - f_beam_tritium)
-            + (constants.m_triton_amu * f_beam_tritium)
+            constants.M_DEUTERON_AMU * (1.0 - f_beam_tritium)
+            + (constants.M_TRITON_AMU * f_beam_tritium)
         )
         * (ten**1.5 / dene)
         / ion_electron_coulomb_log
@@ -876,14 +876,14 @@ def beam_fusion(
     # Taken from J.W Sheffield, “The physics of magnetic fusion reactors,”
     critical_energy_deuterium = (
         14.8
-        * constants.m_deuteron_amu
+        * constants.M_DEUTERON_AMU
         * ten
         * zeffai ** (2 / 3)
         * (ion_electron_coulomb_log + 4.0)
         / ion_electron_coulomb_log
     )
     critical_energy_tritium = critical_energy_deuterium * (
-        constants.m_triton_amu / constants.m_deuteron_amu
+        constants.M_TRITON_AMU / constants.M_DEUTERON_AMU
     )
 
     # Deuterium and tritium ion densities
@@ -1006,7 +1006,7 @@ def beamcalc(
     deuterium_beam_density = (
         beam_current_deuterium
         * characteristic_deuterium_beam_slow_time
-        / (constants.electron_charge * vol_plasma)
+        / (constants.ELECTRON_CHARGE * vol_plasma)
     )
 
     # Ratio of beam energy to critical energy for tritium
@@ -1021,7 +1021,7 @@ def beamcalc(
     tritium_beam_density = (
         beam_current_tritium
         * characteristic_tritium_beam_slow_time
-        / (constants.electron_charge * vol_plasma)
+        / (constants.ELECTRON_CHARGE * vol_plasma)
     )
 
     hot_beam_density = deuterium_beam_density + tritium_beam_density
@@ -1030,43 +1030,43 @@ def beamcalc(
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     deuterium_critical_energy_speed = np.sqrt(
         2.0
-        * constants.kiloelectron_volt
+        * constants.KILOELECTRON_VOLT
         * critical_energy_deuterium
-        / (constants.atomic_mass_unit * constants.m_deuteron_amu)
+        / (constants.ATOMIC_MASS_UNIT * constants.M_DEUTERON_AMU)
     )
 
     # Find the speed of the tritium particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     tritium_critical_energy_speed = np.sqrt(
         2.0
-        * constants.kiloelectron_volt
+        * constants.KILOELECTRON_VOLT
         * critical_energy_tritium
-        / (constants.atomic_mass_unit * constants.m_triton_amu)
+        / (constants.ATOMIC_MASS_UNIT * constants.M_TRITON_AMU)
     )
 
     # Source term representing the number of ions born per unit time per unit volume.
     # D.Baiquan et.al.  “Fast ion pressure in fusion plasma,” Nuclear Fusion and Plasma Physics,
     # vol. 9, no. 3, pp. 136-141, 2022, Available: https://fti.neep.wisc.edu/fti.neep.wisc.edu/pdf/fdm718.pdf
 
-    source_deuterium = beam_current_deuterium / (constants.electron_charge * vol_plasma)
+    source_deuterium = beam_current_deuterium / (constants.ELECTRON_CHARGE * vol_plasma)
 
-    source_tritium = beam_current_tritium / (constants.electron_charge * vol_plasma)
+    source_tritium = beam_current_tritium / (constants.ELECTRON_CHARGE * vol_plasma)
 
     pressure_coeff_deuterium = (
-        constants.m_deuteron_amu
-        * constants.atomic_mass_unit
+        constants.M_DEUTERON_AMU
+        * constants.ATOMIC_MASS_UNIT
         * beam_slow_time
         * deuterium_critical_energy_speed**2
         * source_deuterium
-        / (constants.kiloelectron_volt * 3.0)
+        / (constants.KILOELECTRON_VOLT * 3.0)
     )
     pressure_coeff_tritium = (
-        constants.m_triton_amu
-        * constants.atomic_mass_unit
+        constants.M_TRITON_AMU
+        * constants.ATOMIC_MASS_UNIT
         * beam_slow_time
         * tritium_critical_energy_speed**2
         * source_tritium
-        / (constants.kiloelectron_volt * 3.0)
+        / (constants.KILOELECTRON_VOLT * 3.0)
     )
 
     # Fast Ion Pressure
@@ -1089,11 +1089,11 @@ def beamcalc(
     ) / hot_beam_density
 
     hot_deuterium_rate = 1e-4 * beam_reaction_rate(
-        constants.m_deuteron_amu, deuterium_critical_energy_speed, e_beam_kev
+        constants.M_DEUTERON_AMU, deuterium_critical_energy_speed, e_beam_kev
     )
 
     hot_tritium_rate = 1e-4 * beam_reaction_rate(
-        constants.m_triton_amu, tritium_critical_energy_speed, e_beam_kev
+        constants.M_TRITON_AMU, tritium_critical_energy_speed, e_beam_kev
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
@@ -1200,7 +1200,7 @@ def alpha_power_beam(
         beam_ion_desnity
         * plasma_ion_desnity
         * sigv
-        * (constants.dt_alpha_energy / 1e6)
+        * (constants.DT_ALPHA_ENERGY / 1e6)
         * vol_plasma
         * ratio
     )
@@ -1236,9 +1236,9 @@ def beam_reaction_rate(
     # Find the speed of the beam particle when it has the critical energy.
     # Re-arrange kinetic energy equation to find speed. Non-relativistic.
     beam_velocity = np.sqrt(
-        (beam_energy_keV * constants.kiloelectron_volt)
+        (beam_energy_keV * constants.KILOELECTRON_VOLT)
         * 2.0
-        / (relative_mass_ion * constants.atomic_mass_unit)
+        / (relative_mass_ion * constants.ATOMIC_MASS_UNIT)
     )
 
     relative_velocity = beam_velocity / critical_velocity
@@ -1288,7 +1288,7 @@ def _hot_beam_fusion_reaction_rate_integrand(
     beam_velcoity = critical_velocity * velocity_ratio
 
     # Calculate the beam kinetic energy per amu and normalise to keV
-    xvcs = beam_velcoity**2 * constants.atomic_mass_unit / (constants.kiloelectron_volt)
+    xvcs = beam_velcoity**2 * constants.ATOMIC_MASS_UNIT / (constants.KILOELECTRON_VOLT)
 
     # Calculate the fusion reaction cross-section from beam kinetic energy
     cross_section = _beam_fusion_cross_section(xvcs)
@@ -1328,7 +1328,7 @@ def _beam_fusion_cross_section(vrelsq: float) -> float:
     a5 = 4.09e2
 
     # Beam kinetic energy
-    e_beam_kev = 0.5 * constants.m_deuteron_amu * vrelsq
+    e_beam_kev = 0.5 * constants.M_DEUTERON_AMU * vrelsq
 
     # Set limits on cross-section at low and high beam energies
     if e_beam_kev < 10.0:

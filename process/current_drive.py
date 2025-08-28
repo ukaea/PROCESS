@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import (
     process_output as po,
 )
@@ -11,7 +12,6 @@ from process.data_structure import (
     physics_variables,
 )
 from process.exceptions import ProcessError, ProcessValueError
-from process.fortran import constants
 from process.plasma_profiles import PlasmaProfile
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 class NeutralBeam:
     def __init__(self, plasma_profile: PlasmaProfile):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
 
     def iternb(self):
@@ -481,7 +481,7 @@ class NeutralBeam:
         atmdt = 2.5
         # atmt = 3.0
         c = 3.0e8
-        me = constants.electron_mass
+        me = constants.ELECTRON_MASS
         # zd = 1.0
         # zt = 1.0
 
@@ -494,17 +494,17 @@ class NeutralBeam:
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
         sumln = zeffai * xlmbdai / xlmbda
         xlnrat = (
-            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.proton_mass * sumln
+            3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.PROTON_MASS * sumln
         ) ** (2.0e0 / 3.0e0)
         ve = c * np.sqrt(2.0e0 * te / 511.0e0)
 
         ecritfi = (
             afast
-            * constants.proton_mass
+            * constants.PROTON_MASS
             * ve
             * ve
             * xlnrat
-            / (2.0e0 * constants.electron_charge * 1.0e3)
+            / (2.0e0 * constants.ELECTRON_CHARGE * 1.0e3)
         )
 
         x = np.sqrt(efast / ecritfi)
@@ -536,7 +536,7 @@ class NeutralBeam:
 
 class ElectronCyclotron:
     def __init__(self, plasma_profile: PlasmaProfile):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
 
     def culecd(self):
@@ -626,7 +626,7 @@ class ElectronCyclotron:
         ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
         """
         mcsq = (
-            constants.electron_mass * 2.9979e8**2 / (1.0e3 * constants.electron_volt)
+            constants.ELECTRON_MASS * 2.9979e8**2 / (1.0e3 * constants.ELECTRON_VOLT)
         )  # keV
         f = 16.0e0 * (tlocal / mcsq) ** 2
 
@@ -748,7 +748,7 @@ class ElectronCyclotron:
         """
 
         # Cyclotron frequency
-        fc = 1 / (2 * np.pi) * constants.electron_charge * bt / constants.electron_mass
+        fc = 1 / (2 * np.pi) * constants.ELECTRON_CHARGE * bt / constants.ELECTRON_MASS
 
         # Plasma frequency
         fp = (
@@ -756,8 +756,8 @@ class ElectronCyclotron:
             / (2 * np.pi)
             * np.sqrt(
                 (dene / 1.0e19)
-                * constants.electron_charge**2
-                / (constants.electron_mass * constants.epsilon0)
+                * constants.ELECTRON_CHARGE**2
+                / (constants.ELECTRON_MASS * constants.EPSILON0)
             )
         )
 
@@ -848,7 +848,7 @@ class ElectronCyclotron:
 
 class IonCyclotron:
     def __init__(self, plasma_profile: PlasmaProfile):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
 
     def ion_cyclotron_ipdg89(
@@ -889,7 +889,7 @@ class IonCyclotron:
 
 class ElectronBernstein:
     def __init__(self, plasma_profile: PlasmaProfile):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
 
     def electron_bernstein_freethy(
@@ -946,9 +946,9 @@ class ElectronBernstein:
             1.0e0
             / (2.0e0 * np.pi)
             * n_ecrh_harmonic
-            * constants.electron_charge
+            * constants.ELECTRON_CHARGE
             * bt
-            / constants.electron_mass
+            / constants.ELECTRON_MASS
         )
 
         fp = (
@@ -956,8 +956,8 @@ class ElectronBernstein:
             / (2.0e0 * np.pi)
             * np.sqrt(
                 dene20
-                * constants.electron_charge**2
-                / (constants.electron_mass * constants.epsilon0)
+                * constants.ELECTRON_CHARGE**2
+                / (constants.ELECTRON_MASS * constants.EPSILON0)
             )
         )
 
@@ -968,7 +968,7 @@ class ElectronBernstein:
 
 class LowerHybrid:
     def __init__(self, plasma_profile: PlasmaProfile):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
 
     def cullhy(self):
@@ -1241,7 +1241,7 @@ class CurrentDrive:
         neutral_beam: NeutralBeam,
         electron_bernstein: ElectronBernstein,
     ):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.plasma_profile = plasma_profile
         self.electron_cyclotron = electron_cyclotron
         self.ion_cyclotron = ion_cyclotron

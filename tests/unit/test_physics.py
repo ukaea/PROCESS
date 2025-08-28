@@ -5,6 +5,7 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
+from process import constants
 from process.current_drive import (
     CurrentDrive,
     ElectronBernstein,
@@ -18,7 +19,6 @@ from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
 )
-from process.fortran import constants
 from process.impurity_radiation import initialise_imprad
 from process.physics import (
     Physics,
@@ -1241,7 +1241,7 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.rmu0,
+                "rmu0": constants.RMU0,
             },
             3.4401302177092803,
         ),
@@ -1256,7 +1256,7 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.rmu0,
+                "rmu0": constants.RMU0,
             },
             2.9310284627233205,
         ),
@@ -1271,7 +1271,7 @@ def test_calculate_plasma_current_peng(arguments, expected):
                 "kappa": 1.85,
                 "delta": 0.5,
                 "perim": 24,
-                "rmu0": constants.rmu0,
+                "rmu0": constants.RMU0,
             },
             0.8377580413333333,
         ),
@@ -1287,7 +1287,7 @@ def test_calculate_beta_limit():
 
 def test_conhas():
     assert calculate_current_coefficient_hastie(
-        5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.rmu0
+        5, 5, 12, 0.5, 0.33, 1.85, 2e3, constants.RMU0
     ) == pytest.approx(2.518876726889116)
 
 

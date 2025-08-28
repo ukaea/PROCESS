@@ -9,7 +9,7 @@ import process
 import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
-from process import data_structure
+from process import constants, data_structure
 from process.constraints import ConstraintManager
 from process.data_structure.blanket_library import init_blanket_library
 from process.data_structure.build_variables import init_build_variables
@@ -132,7 +132,7 @@ def get_git_summary() -> tuple[str, str]:
 def run_summary():
     """Write a summary of the PROCESS run to the output file and MFile"""
     # Outfile and terminal #
-    for outfile in [fortran.constants.nout, fortran.constants.iotty]:
+    for outfile in [constants.NOUT, constants.IOTTY]:
         # PROCESS code header
         process_output.oblnkl(outfile)
         process_output.ostars(outfile, 110)
@@ -228,7 +228,7 @@ def run_summary():
         process_output.ostars(outfile, 110)
 
     # MFile #
-    mfile = fortran.constants.mfile
+    mfile = constants.MFILE
 
     process_output.ovarst(mfile, "PROCESS version", "(procver)", f'"{version}"')
     process_output.ovarst(mfile, "Date of run", "(date)", f'"{date_string}"')
@@ -277,7 +277,7 @@ def init_all_module_vars():
     init_stellarator_variables()
     init_tfcoil_variables()
     init_times_variables()
-    fortran.constants.init_constants()
+    constants.init_constants()
     init_current_drive_variables()
     init_primary_pumping_variables()
     init_pfcoil_variables()

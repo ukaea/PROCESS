@@ -3,6 +3,7 @@ import logging
 import numpy as np
 
 import process.blanket_library as blanket_library
+from process import constants
 from process import (
     process_output as po,
 )
@@ -21,7 +22,6 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -349,7 +349,7 @@ class CCFE_HCPB(BlanketLibrary):
 
         # First wall armour mass (kg)
         fwbs_variables.fw_armour_mass = (
-            fwbs_variables.fw_armour_vol * constants.den_tungsten
+            fwbs_variables.fw_armour_vol * constants.DEN_TUNGSTEN
         )
 
         if fwbs_variables.breeder_f < 1.0e-10:
@@ -444,7 +444,7 @@ class CCFE_HCPB(BlanketLibrary):
 
         # Calculate smeared densities of blanket sections
         # gaseous He coolant in armour, FW & blanket: He mass is neglected
-        ccfe_hcpb_module.armour_density = constants.den_tungsten * (1.0 - vffwm)
+        ccfe_hcpb_module.armour_density = constants.DEN_TUNGSTEN * (1.0 - vffwm)
         ccfe_hcpb_module.fw_density = fwbs_variables.den_steel * (1.0 - vffwm)
         ccfe_hcpb_module.blanket_density = (
             fwbs_variables.m_blkt_total / fwbs_variables.vol_blkt_total

@@ -51,6 +51,7 @@ import process
 import process.data_structure as data_structure
 import process.fortran as fortran
 import process.init as init
+from process import constants
 from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.build import Build
@@ -468,7 +469,7 @@ class SingleRun:
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        show_errors(fortran.constants.nout)
+        show_errors(constants.NOUT)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
@@ -476,9 +477,9 @@ class SingleRun:
         Files being handled by Fortran must be closed before attempting to
         write to them using Python, otherwise only parts are written.
         """
-        oheadr(fortran.constants.nout, "End of PROCESS Output")
-        oheadr(fortran.constants.iotty, "End of PROCESS Output")
-        oheadr(fortran.constants.nout, "Copy of PROCESS Input Follows")
+        oheadr(constants.NOUT, "End of PROCESS Output")
+        oheadr(constants.IOTTY, "End of PROCESS Output")
+        oheadr(constants.NOUT, "Copy of PROCESS Input Follows")
         OutputFileManager.finish()
 
     def append_input(self):

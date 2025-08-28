@@ -6,6 +6,7 @@ from tabulate import tabulate
 
 import process.constraints as constraints
 import process.process_output as process_output
+from process import constants
 from process.caller import write_output_files
 from process.data_structure import (
     build_variables,
@@ -25,10 +26,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-    numerics,
-)
+from process.fortran import numerics
 from process.log import logging_model_handler, show_errors
 from process.solver_handler import SolverHandler
 from process.utilities.f2py_string_patch import (
@@ -178,7 +176,7 @@ class Scan:
             # doopt() can also run just an evaluation
             ifail = self.doopt()
             write_output_files(models=self.models, ifail=ifail)
-            show_errors(constants.nout)
+            show_errors(constants.NOUT)
             return
 
         if scan_variables.isweep > scan_variables.IPNSCNS:
@@ -207,95 +205,95 @@ class Scan:
         """
         numerics.sqsumsq = (numerics.rcm[: numerics.neqns] ** 2).sum() ** 0.5
 
-        process_output.oheadr(constants.nout, "Numerics")
+        process_output.oheadr(constants.NOUT, "Numerics")
         if self.solver == "fsolve":
             process_output.ocmmnt(
-                constants.nout, "PROCESS has performed an fsolve (evaluation) run."
+                constants.NOUT, "PROCESS has performed an fsolve (evaluation) run."
             )
         else:
             process_output.ocmmnt(
-                constants.nout, "PROCESS has performed a VMCON (optimisation) run."
+                constants.NOUT, "PROCESS has performed a VMCON (optimisation) run."
             )
         if ifail != 1:
-            process_output.ovarin(constants.nout, "Error flag", "(ifail)", ifail)
+            process_output.ovarin(constants.NOUT, "Error flag", "(ifail)", ifail)
             process_output.oheadr(
-                constants.iotty, "PROCESS COULD NOT FIND A FEASIBLE SOLUTION"
+                constants.IOTTY, "PROCESS COULD NOT FIND A FEASIBLE SOLUTION"
             )
-            process_output.oblnkl(constants.iotty)
+            process_output.oblnkl(constants.IOTTY)
 
             logger.critical(f"Solver returns with ifail /= 1. {ifail=}")
 
             # Error code handler for VMCON
             if self.solver == "vmcon":
                 self.verror(ifail)
-            process_output.oblnkl(constants.nout)
-            process_output.oblnkl(constants.iotty)
+            process_output.oblnkl(constants.NOUT)
+            process_output.oblnkl(constants.IOTTY)
         else:
             # Solution found
             if self.solver != "fsolve":
                 process_output.ocmmnt(
-                    constants.nout, "and found a feasible set of parameters."
+                    constants.NOUT, "and found a feasible set of parameters."
                 )
                 process_output.oheadr(
-                    constants.iotty, "PROCESS found a feasible solution"
+                    constants.IOTTY, "PROCESS found a feasible solution"
                 )
             else:
                 process_output.ocmmnt(
-                    constants.nout, "and found a consistent set of parameters."
+                    constants.NOUT, "and found a consistent set of parameters."
                 )
                 process_output.oheadr(
-                    constants.iotty, "PROCESS found a consistent solution"
+                    constants.IOTTY, "PROCESS found a consistent solution"
                 )
-            process_output.oblnkl(constants.nout)
-            process_output.ovarin(constants.nout, "Error flag", "(ifail)", ifail)
+            process_output.oblnkl(constants.NOUT)
+            process_output.ovarin(constants.NOUT, "Error flag", "(ifail)", ifail)
 
             if numerics.sqsumsq >= 1.0e-2:
-                process_output.oblnkl(constants.nout)
+                process_output.oblnkl(constants.NOUT)
                 process_output.ocmmnt(
-                    constants.nout,
+                    constants.NOUT,
                     "WARNING: Constraint residues are HIGH; consider re-running",
                 )
                 process_output.ocmmnt(
-                    constants.nout,
+                    constants.NOUT,
                     "   with lower values of EPSVMC to confirm convergence...",
                 )
                 process_output.ocmmnt(
-                    constants.nout,
+                    constants.NOUT,
                     "   (should be able to get down to about 1.0E-8 okay)",
                 )
-                process_output.oblnkl(constants.nout)
+                process_output.oblnkl(constants.NOUT)
                 process_output.ocmmnt(
-                    constants.iotty,
+                    constants.IOTTY,
                     "WARNING: Constraint residues are HIGH; consider re-running",
                 )
                 process_output.ocmmnt(
-                    constants.iotty,
+                    constants.IOTTY,
                     "   with lower values of EPSVMC to confirm convergence...",
                 )
                 process_output.ocmmnt(
-                    constants.iotty,
+                    constants.IOTTY,
                     "   (should be able to get down to about 1.0E-8 okay)",
                 )
-                process_output.oblnkl(constants.iotty)
+                process_output.oblnkl(constants.IOTTY)
 
                 logger.warning(f"High final constraint residues. {numerics.sqsumsq=}")
 
         process_output.ovarin(
-            constants.nout, "Number of iteration variables", "(nvar)", numerics.nvar
+            constants.NOUT, "Number of iteration variables", "(nvar)", numerics.nvar
         )
         process_output.ovarin(
-            constants.nout,
+            constants.NOUT,
             "Number of constraints (total)",
             "(neqns+nineqns)",
             numerics.neqns + numerics.nineqns,
         )
         process_output.ovarin(
-            constants.nout, "Optimisation switch", "(ioptimz)", numerics.ioptimz
+            constants.NOUT, "Optimisation switch", "(ioptimz)", numerics.ioptimz
         )
         # Objective function output: none for fsolve
         if self.solver != "fsolve":
             process_output.ovarin(
-                constants.nout, "Figure of merit switch", "(minmax)", numerics.minmax
+                constants.NOUT, "Figure of merit switch", "(minmax)", numerics.minmax
             )
 
             objf_name = string_to_f2py_compatible(
@@ -306,13 +304,13 @@ class Scan:
             numerics.objf_name = objf_name
 
             process_output.ovarst(
-                constants.nout,
+                constants.NOUT,
                 "Objective function name",
                 "(objf_name)",
                 numerics.objf_name,
             )
             process_output.ovarre(
-                constants.nout,
+                constants.NOUT,
                 "Normalised objective function",
                 "(norm_objf)",
                 numerics.norm_objf,
@@ -320,7 +318,7 @@ class Scan:
             )
 
         process_output.ovarre(
-            constants.nout,
+            constants.NOUT,
             "Square root of the sum of squares of the constraint residuals",
             "(sqsumsq)",
             numerics.sqsumsq,
@@ -328,20 +326,20 @@ class Scan:
         )
         if self.solver != "fsolve":
             process_output.ovarre(
-                constants.nout,
+                constants.NOUT,
                 "VMCON convergence parameter",
                 "(convergence_parameter)",
                 global_variables.convergence_parameter,
                 "OP ",
             )
             process_output.ovarin(
-                constants.nout,
+                constants.NOUT,
                 "Number of optimising solver iterations",
                 "(nviter)",
                 numerics.nviter,
                 "OP ",
             )
-        process_output.oblnkl(constants.nout)
+        process_output.oblnkl(constants.NOUT)
 
         if self.solver == "fsolve":
             if ifail == 1:
@@ -349,7 +347,7 @@ class Scan:
             else:
                 msg = "PROCESS failed to solve using fsolve."
             process_output.write(
-                constants.nout,
+                constants.NOUT,
                 f"{msg}\n",
             )
         else:
@@ -361,7 +359,7 @@ class Scan:
             string2 = "minimise" if numerics.minmax > 0 else "maximise"
 
             process_output.write(
-                constants.nout,
+                constants.NOUT,
                 f"{string1} the optimisation parameters to {string2} the objective function: {objf_name}\n",
             )
 
@@ -383,7 +381,7 @@ class Scan:
                 if not written_warning:
                     written_warning = True
                     process_output.ocmmnt(
-                        constants.nout,
+                        constants.NOUT,
                         (
                             "Certain operating limits have been reached,"
                             "\n as shown by the following optimisation parameters that are"
@@ -398,14 +396,14 @@ class Scan:
                 else:
                     location, bound = "above", "upper"
                 process_output.write(
-                    constants.nout,
+                    constants.NOUT,
                     f"   {name:<30}= {xcval} is at or {location} its {bound} bound:"
                     f" {numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i]}",
                 )
 
             # Write optimisation parameters to mfile
             process_output.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f2py_compatible_to_string(numerics.lablxc[numerics.ixc[i] - 1]),
                 f"(itvar{i + 1:03d})",
                 numerics.xcs[i],
@@ -427,25 +425,25 @@ class Scan:
                 )
 
             process_output.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"{name} (final value/initial value)",
                 f"(xcm{i + 1:03d})",
                 numerics.xcm[i],
             )
             process_output.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"{name} (range normalised)",
                 f"(nitvar{i + 1:03d})",
                 xnorm,
             )
             process_output.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"{name} (upper bound)",
                 f"(boundu{i + 1:03d})",
                 numerics.itv_scaled_upper_bounds[i] * numerics.scafc[i],
             )
             process_output.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"{name} (lower bound)",
                 f"(boundl{i + 1:03d})",
                 numerics.itv_scaled_lower_bounds[i] * numerics.scafc[i],
@@ -453,10 +451,10 @@ class Scan:
 
         # Write optimisation parameter headings to output file
         process_output.osubhd(
-            constants.nout, "The solution vector is comprised as follows :"
+            constants.NOUT, "The solution vector is comprised as follows :"
         )
         process_output.write(
-            constants.nout,
+            constants.NOUT,
             tabulate(
                 solution_vector_table,
                 headers=["", "Final value", "Final / initial"],
@@ -465,7 +463,7 @@ class Scan:
         )
 
         process_output.osubhd(
-            constants.nout,
+            constants.NOUT,
             "The following equality constraint residues should be close to zero:",
         )
 
@@ -486,7 +484,7 @@ class Scan:
                 con1[i],
             ])
             process_output.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"{name:<33} normalised residue",
                 f"(eq_con{numerics.icc[i]:03d})",
                 con1[i],
@@ -494,7 +492,7 @@ class Scan:
 
         # Write equality constraints to output file
         process_output.write(
-            constants.nout,
+            constants.NOUT,
             tabulate(
                 equality_constraint_table,
                 headers=[
@@ -514,7 +512,7 @@ class Scan:
             # Inequalities not necessarily satisfied when evaluating
             if self.solver != "fsolve":
                 process_output.osubhd(
-                    constants.nout,
+                    constants.NOUT,
                     "The following inequality constraint residues should be "
                     "greater than or approximately equal to zero:",
                 )
@@ -528,14 +526,14 @@ class Scan:
                     f"{err[i]} {lab[i]}",
                 ])
                 process_output.ovarre(
-                    constants.mfile,
+                    constants.MFILE,
                     f"{name} normalised residue",
                     f"(ineq_con{numerics.icc[i]:03d})",
                     numerics.rcm[i],
                 )
 
             process_output.write(
-                constants.nout,
+                constants.NOUT,
                 tabulate(
                     inequality_constraint_table,
                     headers=[
@@ -557,149 +555,149 @@ class Scan:
         an unfeasible result from a VMCON (optimisation) run.
         """
         if ifail == -1:
-            process_output.ocmmnt(constants.nout, "User-terminated execution of VMCON.")
+            process_output.ocmmnt(constants.NOUT, "User-terminated execution of VMCON.")
             process_output.ocmmnt(
-                constants.iotty, "User-terminated execution of VMCON."
+                constants.IOTTY, "User-terminated execution of VMCON."
             )
         elif ifail == 0:
             process_output.ocmmnt(
-                constants.nout, "Improper input parameters to the VMCON routine."
+                constants.NOUT, "Improper input parameters to the VMCON routine."
             )
-            process_output.ocmmnt(constants.nout, "PROCESS coding must be checked.")
+            process_output.ocmmnt(constants.NOUT, "PROCESS coding must be checked.")
 
             process_output.ocmmnt(
-                constants.iotty, "Improper input parameters to the VMCON routine."
+                constants.IOTTY, "Improper input parameters to the VMCON routine."
             )
-            process_output.ocmmnt(constants.iotty, "PROCESS coding must be checked.")
+            process_output.ocmmnt(constants.IOTTY, "PROCESS coding must be checked.")
         elif ifail == 2:
             process_output.ocmmnt(
-                constants.nout,
+                constants.NOUT,
                 "The maximum number of calls has been reached without solution.",
             )
             process_output.ocmmnt(
-                constants.nout,
+                constants.NOUT,
                 "The code may be stuck in a minimum in the residual space that is significantly above zero.",
             )
-            process_output.oblnkl(constants.nout)
+            process_output.oblnkl(constants.NOUT)
             process_output.ocmmnt(
-                constants.nout, "There is either no solution possible, or the code"
+                constants.NOUT, "There is either no solution possible, or the code"
             )
             process_output.ocmmnt(
-                constants.nout, "is failing to escape from a deep local minimum."
+                constants.NOUT, "is failing to escape from a deep local minimum."
             )
             process_output.ocmmnt(
-                constants.nout,
+                constants.NOUT,
                 "Try changing the variables in IXC, or modify their initial values.",
             )
 
             process_output.ocmmnt(
-                constants.iotty,
+                constants.IOTTY,
                 "The maximum number of calls has been reached without solution.",
             )
             process_output.ocmmnt(
-                constants.iotty,
+                constants.IOTTY,
                 "The code may be stuck in a minimum in the residual space that is significantly above zero.",
             )
-            process_output.oblnkl(constants.nout)
-            process_output.oblnkl(constants.iotty)
+            process_output.oblnkl(constants.NOUT)
+            process_output.oblnkl(constants.IOTTY)
             process_output.ocmmnt(
-                constants.iotty, "There is either no solution possible, or the code"
+                constants.IOTTY, "There is either no solution possible, or the code"
             )
             process_output.ocmmnt(
-                constants.iotty, "is failing to escape from a deep local minimum."
+                constants.IOTTY, "is failing to escape from a deep local minimum."
             )
             process_output.ocmmnt(
-                constants.iotty,
+                constants.IOTTY,
                 "Try changing the variables in IXC, or modify their initial values.",
             )
         elif ifail == 3:
             process_output.ocmmnt(
-                constants.nout, "The line search required the maximum of 10 calls."
+                constants.NOUT, "The line search required the maximum of 10 calls."
             )
             process_output.ocmmnt(
-                constants.nout, "A feasible solution may be difficult to achieve."
+                constants.NOUT, "A feasible solution may be difficult to achieve."
             )
             process_output.ocmmnt(
-                constants.nout, "Try changing or adding variables to IXC."
+                constants.NOUT, "Try changing or adding variables to IXC."
             )
 
             process_output.ocmmnt(
-                constants.iotty, "The line search required the maximum of 10 calls."
+                constants.IOTTY, "The line search required the maximum of 10 calls."
             )
             process_output.ocmmnt(
-                constants.iotty, "A feasible solution may be difficult to achieve."
+                constants.IOTTY, "A feasible solution may be difficult to achieve."
             )
             process_output.ocmmnt(
-                constants.iotty, "Try changing or adding variables to IXC."
+                constants.IOTTY, "Try changing or adding variables to IXC."
             )
         elif ifail == 4:
             process_output.ocmmnt(
-                constants.nout, "An uphill search direction was found."
+                constants.NOUT, "An uphill search direction was found."
             )
             process_output.ocmmnt(
-                constants.nout, "Try changing the equations in ICC, or"
+                constants.NOUT, "Try changing the equations in ICC, or"
             )
-            process_output.ocmmnt(constants.nout, "adding new variables to IXC.")
+            process_output.ocmmnt(constants.NOUT, "adding new variables to IXC.")
 
             process_output.ocmmnt(
-                constants.iotty, "An uphill search direction was found."
+                constants.IOTTY, "An uphill search direction was found."
             )
             process_output.ocmmnt(
-                constants.iotty, "Try changing the equations in ICC, or"
+                constants.IOTTY, "Try changing the equations in ICC, or"
             )
-            process_output.ocmmnt(constants.iotty, "adding new variables to IXC.")
+            process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
         elif ifail == 5:
             process_output.ocmmnt(
-                constants.nout, "The quadratic programming technique was unable to"
+                constants.NOUT, "The quadratic programming technique was unable to"
             )
-            process_output.ocmmnt(constants.nout, "find a feasible point.")
-            process_output.oblnkl(constants.nout)
+            process_output.ocmmnt(constants.NOUT, "find a feasible point.")
+            process_output.oblnkl(constants.NOUT)
             process_output.ocmmnt(
-                constants.nout, "Try changing or adding variables to IXC, or modify"
+                constants.NOUT, "Try changing or adding variables to IXC, or modify"
             )
             process_output.ocmmnt(
-                constants.nout,
+                constants.NOUT,
                 "their initial values (especially if only 1 optimisation",
             )
-            process_output.ocmmnt(constants.nout, "iteration was performed).")
+            process_output.ocmmnt(constants.NOUT, "iteration was performed).")
 
             process_output.ocmmnt(
-                constants.iotty, "The quadratic programming technique was unable to"
+                constants.IOTTY, "The quadratic programming technique was unable to"
             )
-            process_output.ocmmnt(constants.iotty, "find a feasible point.")
-            process_output.oblnkl(constants.iotty)
+            process_output.ocmmnt(constants.IOTTY, "find a feasible point.")
+            process_output.oblnkl(constants.IOTTY)
             process_output.ocmmnt(
-                constants.iotty, "Try changing or adding variables to IXC, or modify"
+                constants.IOTTY, "Try changing or adding variables to IXC, or modify"
             )
             process_output.ocmmnt(
-                constants.iotty,
+                constants.IOTTY,
                 "their initial values (especially if only 1 optimisation",
             )
-            process_output.ocmmnt(constants.iotty, "iteration was performed).")
+            process_output.ocmmnt(constants.IOTTY, "iteration was performed).")
         elif ifail == 6:
             process_output.ocmmnt(
-                constants.nout, "The quadratic programming technique was restricted"
+                constants.NOUT, "The quadratic programming technique was restricted"
             )
             process_output.ocmmnt(
-                constants.nout, "by an artificial bound, or failed due to a singular"
+                constants.NOUT, "by an artificial bound, or failed due to a singular"
             )
-            process_output.ocmmnt(constants.nout, "matrix.")
+            process_output.ocmmnt(constants.NOUT, "matrix.")
             process_output.ocmmnt(
-                constants.nout, "Try changing the equations in ICC, or"
+                constants.NOUT, "Try changing the equations in ICC, or"
             )
-            process_output.ocmmnt(constants.nout, "adding new variables to IXC.")
+            process_output.ocmmnt(constants.NOUT, "adding new variables to IXC.")
 
             process_output.ocmmnt(
-                constants.iotty, "The quadratic programming technique was restricted"
+                constants.IOTTY, "The quadratic programming technique was restricted"
             )
             process_output.ocmmnt(
-                constants.iotty, "by an artificial bound, or failed due to a singular"
+                constants.IOTTY, "by an artificial bound, or failed due to a singular"
             )
-            process_output.ocmmnt(constants.iotty, "matrix.")
+            process_output.ocmmnt(constants.IOTTY, "matrix.")
             process_output.ocmmnt(
-                constants.iotty, "Try changing the equations in ICC, or"
+                constants.IOTTY, "Try changing the equations in ICC, or"
             )
-            process_output.ocmmnt(constants.iotty, "adding new variables to IXC.")
+            process_output.ocmmnt(constants.IOTTY, "adding new variables to IXC.")
 
     def scan_1d(self):
         """Run a 1-D scan."""
@@ -712,7 +710,7 @@ class Scan:
             scan_1d_ifail_dict[iscan] = ifail
             write_output_files(models=self.models, ifail=ifail)
 
-            show_errors(constants.nout)
+            show_errors(constants.NOUT)
             logging_model_handler.clear_logs()
 
         # outvar now contains results
@@ -767,7 +765,7 @@ class Scan:
 
                 write_output_files(models=self.models, ifail=ifail)
 
-                show_errors(constants.nout)
+                show_errors(constants.NOUT)
                 logging_model_handler.clear_logs()
                 scan_2d_ifail_list[iscan_1][iscan_2] = ifail
                 iscan = iscan + 1
@@ -824,37 +822,37 @@ class Scan:
 
     def scan_2d_init(self):
         process_output.ovarin(
-            constants.mfile,
+            constants.MFILE,
             "Number of first variable scan points",
             "(isweep)",
             scan_variables.isweep,
         )
         process_output.ovarin(
-            constants.mfile,
+            constants.MFILE,
             "Number of second variable scan points",
             "(isweep_2)",
             scan_variables.isweep_2,
         )
         process_output.ovarin(
-            constants.mfile,
+            constants.MFILE,
             "Scanning first variable number",
             "(nsweep)",
             scan_variables.nsweep,
         )
         process_output.ovarin(
-            constants.mfile,
+            constants.MFILE,
             "Scanning second variable number",
             "(nsweep_2)",
             scan_variables.nsweep_2,
         )
         process_output.ovarin(
-            constants.mfile,
+            constants.MFILE,
             "Scanning second variable number",
             "(nsweep_2)",
             scan_variables.nsweep_2,
         )
         process_output.ovarin(
-            constants.mfile,
+            constants.MFILE,
             "Scanning second variable number",
             "(nsweep_2)",
             scan_variables.nsweep_2,
@@ -866,18 +864,18 @@ class Scan:
             scan_variables.nsweep, scan_variables.sweep, iscan
         )
 
-        process_output.oblnkl(constants.nout)
-        process_output.ostars(constants.nout, 110)
+        process_output.oblnkl(constants.NOUT)
+        process_output.ostars(constants.NOUT, 110)
 
         process_output.write(
-            constants.nout,
+            constants.NOUT,
             f"***** Scan point {iscan} of {scan_variables.isweep} : {global_variables.xlabel}"
             f", {global_variables.vlabel} = {scan_variables.sweep[iscan - 1]} "
             "*****",
         )
-        process_output.ostars(constants.nout, 110)
-        process_output.oblnkl(constants.mfile)
-        process_output.ovarin(constants.mfile, "Scan point number", "(iscan)", iscan)
+        process_output.ostars(constants.NOUT, 110)
+        process_output.oblnkl(constants.MFILE)
+        process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
         print(
             f"Starting scan point {iscan} of {scan_variables.isweep} : "
@@ -898,19 +896,19 @@ class Scan:
             scan_variables.nsweep_2, scan_variables.sweep_2, iscan_r
         )
 
-        process_output.oblnkl(constants.nout)
-        process_output.ostars(constants.nout, 110)
+        process_output.oblnkl(constants.NOUT)
+        process_output.ostars(constants.NOUT, 110)
 
         process_output.write(
-            constants.nout,
+            constants.NOUT,
             f"***** 2D Scan point {iscan} of {scan_variables.isweep * scan_variables.isweep_2} : "
             f"{global_variables.vlabel} = {scan_variables.sweep[iscan_1 - 1]} and"
             f" {global_variables.vlabel_2} = {scan_variables.sweep_2[iscan_r - 1]} "
             "*****",
         )
-        process_output.ostars(constants.nout, 110)
-        process_output.oblnkl(constants.mfile)
-        process_output.ovarin(constants.mfile, "Scan point number", "(iscan)", iscan)
+        process_output.ostars(constants.NOUT, 110)
+        process_output.oblnkl(constants.MFILE)
+        process_output.ovarin(constants.MFILE, "Scan point number", "(iscan)", iscan)
 
         print(
             f"Starting scan point {iscan}:  {global_variables.xlabel}, "
@@ -924,13 +922,13 @@ class Scan:
     def scan_1d_write_plot(self):
         if scan_variables.first_call_1d:
             process_output.ovarin(
-                constants.mfile,
+                constants.MFILE,
                 "Number of scan points",
                 "(isweep)",
                 scan_variables.isweep,
             )
             process_output.ovarin(
-                constants.mfile,
+                constants.MFILE,
                 "Scanning variable number",
                 "(nsweep)",
                 scan_variables.nsweep,

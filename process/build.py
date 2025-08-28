@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.blanket_library import dshellarea, eshellarea
 from process.data_structure import (
@@ -15,15 +16,15 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 
 
 class Build:
     def __init__(self):
-        self.outfile = constants.nout
-        self.mfile = constants.mfile
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
 
     def run(self) -> None:
         self.calculate_radial_build(output=False)
@@ -78,7 +79,7 @@ class Build:
         # Have kept the single letter variable names to match the original code and documentation diagram.
         radius_beam_tangency = f_radius_beam_tangency_rmajor * rmajor
 
-        omega = constants.twopi / n_tf_coils
+        omega = constants.TWOPI / n_tf_coils
 
         a = 0.5e0 * dx_tf_inboard_out_toroidal
         try:
