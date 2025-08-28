@@ -75,9 +75,8 @@ def init_process():
     # Initialise the program variables
     iteration_variables.initialise_iteration_variables()
 
-    # Initialise the Fortran file specifiers
-    # (creating and opening the files in the process)
-    fortran.init_module.open_files()
+    # Creating and open the files MFile and OUTFile
+    process_output.OutputFileManager.open_files()
 
     # Input any desired new initial values
     inputs = parse_input_file()
