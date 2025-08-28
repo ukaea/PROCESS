@@ -9835,6 +9835,25 @@ def plot_fw_90_deg_pipe_bend(ax, m_file_data, scan):
     )
 
 
+def plot_fusion_rate_profiles(axis, mfile_data, scan):
+    # Plot the fusion rate profiles on the given axis
+    fusrat_plasma_dt_profile = []
+    fusrat_plasma_dt_profile = [
+        mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    # Change from 0 to 1 index to align with poloidal cross-section plot numbering
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+        fusrat_plasma_dt_profile,
+        linestyle="--",
+    )
+
+    axis.set_xlabel("$\\rho$")
+    axis.set_ylabel("Fusion Rate [MW/m^3]")
+    axis.legend()
+
+
 def main_plot(
     fig1,
     fig2,
@@ -10034,6 +10053,12 @@ def main_plot(
 
     plot_33 = fig17.add_subplot(111, aspect="equal")
     plot_main_power_flow(plot_33, m_file_data, scan, fig17)
+
+    plot_33 = fig17.add_subplot(122)
+    plot_fusion_rate_profiles(plot_33, m_file_data, scan)
+
+    plot_33 = fig17.add_subplot(122)
+    plot_fusion_rate_profiles(plot_33, m_file_data, scan)
 
 
 def main(args=None):
