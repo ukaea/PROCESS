@@ -32,6 +32,7 @@ import process.confinement_time as confine
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.data_structure import physics_variables
+from process.fortran import constants
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -9838,20 +9839,100 @@ def plot_fw_90_deg_pipe_bend(ax, m_file_data, scan):
 def plot_fusion_rate_profiles(axis, mfile_data, scan):
     # Plot the fusion rate profiles on the given axis
     fusrat_plasma_dt_profile = []
+    fusrat_plasma_dd_triton_profile = []
+    fusrat_plasma_dd_helion_profile = []
+
     fusrat_plasma_dt_profile = [
         mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
         for i in range(500)
     ]
-    # Change from 0 to 1 index to align with poloidal cross-section plot numbering
+
+    fusrat_plasma_dd_triton_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_triton_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    fusrat_plasma_dd_helion_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_helion_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    axis.spines["left"].set_color("red")
+    axis.yaxis.label.set_color("black")
+    axis.tick_params(axis="y", colors="red")
+
+    # Plot fusion rates (dashed lines, left axis) with axis color and different linestyles
     axis.plot(
         np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
         fusrat_plasma_dt_profile,
-        linestyle="--",
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="-",
+        label=r"$\mathrm{D-T}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
+        fusrat_plasma_dd_triton_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle=":",
+        label=r"$\mathrm{D-D \ Triton}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
+        fusrat_plasma_dd_helion_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="-.",
+        label=r"$\mathrm{D-D \ Helion}$",
     )
 
-    axis.set_xlabel("$\\rho$")
-    axis.set_ylabel("Fusion Rate [MW/m^3]")
-    axis.legend()
+    # Plot fusion power (solid lines, right axis) with axis color and different linestyles
+    ax2 = axis.twinx()
+    ax2.spines["right"].set_color("blue")
+    ax2.yaxis.label.set_color("black")
+    ax2.tick_params(axis="y", colors="blue")
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+        np.array(fusrat_plasma_dt_profile) * constants.d_t_energy,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="-",
+    )
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
+        np.array(fusrat_plasma_dd_triton_profile) * constants.dd_triton_energy,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle=":",
+    )
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
+        np.array(fusrat_plasma_dd_helion_profile) * constants.dd_helium_energy,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="-.",
+    )
+
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.set_ylabel("Fusion Rate [reactions/second]")
+    axis.legend(
+        loc="lower left", edgecolor="black", facecolor="white", labelcolor="black"
+    )
+    axis.set_yscale("log")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.01])
+    axis.minorticks_on()
+    axis.set_ylim([1e10, 1e19])
+    axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
+    axis.yaxis.set_minor_locator(
+        plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
+    )
+    axis.tick_params(axis="y", which="minor", colors="red")
+
+    ax2.set_title("Fusion Rate and Fusion Power Profiles")
+    ax2.set_ylabel("Fusion Power [W]")
+    ax2.set_yscale("log")
+    ax2.minorticks_on()
+    ax2.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
+    ax2.yaxis.set_minor_locator(
+        plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
+    )
+    ax2.tick_params(axis="y", which="minor", colors="blue")
 
 
 def main_plot(
