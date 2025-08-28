@@ -9,12 +9,10 @@ from process.data_structure import (
     constraint_variables,
     divertor_variables,
     fwbs_variables,
+    global_variables,
     physics_variables,
     superconducting_tf_coil_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    global_variables,
 )
 from process.superconducting_tf_coil import SuperconductingTFCoil
 

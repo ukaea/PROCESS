@@ -101,7 +101,6 @@ from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
-from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
 
@@ -423,11 +422,7 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        fortran.global_variables.fileprefix = string_to_f2py_compatible(
-            fortran.global_variables.fileprefix,
-            str(self.input_path.resolve()),
-            except_length=True,
-        )
+        data_structure.global_variables.fileprefix = str(self.input_path.resolve())
 
     def set_output(self):
         """Set the output file name.
@@ -435,9 +430,7 @@ class SingleRun:
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
         self.output_path = Path(self.filename_prefix + "OUT.DAT")
-        fortran.global_variables.output_prefix = string_to_f2py_compatible(
-            fortran.global_variables.output_prefix, self.filename_prefix
-        )
+        data_structure.global_variables.output_prefix = self.filename_prefix
 
     def set_mfile(self):
         """Set the mfile filename."""
