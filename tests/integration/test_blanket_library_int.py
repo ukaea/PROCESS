@@ -190,8 +190,8 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
     assert blanket_library_fixture.coolant_friction_pressure_drop(
         i_ps=2,
-        radius_pipe_90_deg_bend=3.0,
-        radius_pipe_180_deg_bend=1.5,
+        radius_pipe_90_deg_bend=1.0,
+        radius_pipe_180_deg_bend=1.0,
         n_pipe_90_deg_bends=1.0,
         n_pipe_180_deg_bends=1.0,
         len_pipe=1.0,
@@ -199,7 +199,7 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
         visc_coolant=1.0,
         vel_coolant=1.0,
         label="label",
-    ) == pytest.approx(1.4363243643098162, rel=1e-3)
+    ) == pytest.approx(1.4325633520224854, rel=1e-3)
 
 
 # Should add test_liquid_breeder_pressure_drop_mhd
