@@ -7,9 +7,9 @@ from pathlib import Path
 import numpy as np
 from scipy import integrate
 
+from process import constants
 from process.data_structure import impurity_radiation_module
 from process.exceptions import ProcessError, ProcessValueError
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ def initialise_imprad():
         no=1,
         label=impurity_radiation_module.imp_label[0],
         z=1,
-        amass=constants.m_protium_amu,  # 1.00782503223 1H
+        amass=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
         frac=frac,
         len_tab=table_length,
         error=errorflag,
@@ -47,7 +47,7 @@ def initialise_imprad():
         2,
         impurity_radiation_module.imp_label[1],
         2,
-        constants.m_helium_amu,  # 4.002602 (3He,4He) Average mass
+        constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
         frac,
         table_length,
         errorflag,
@@ -58,7 +58,7 @@ def initialise_imprad():
         3,
         impurity_radiation_module.imp_label[2],
         4,
-        constants.m_beryllium_amu,  # 9.0121831 9Be
+        constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
         frac,
         table_length,
         errorflag,
@@ -69,7 +69,7 @@ def initialise_imprad():
         4,
         impurity_radiation_module.imp_label[3],
         6,
-        constants.m_carbon_amu,  # 12.0096, (12C,13C,14C) Average mass
+        constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
         frac,
         table_length,
         errorflag,
@@ -80,7 +80,7 @@ def initialise_imprad():
         5,
         impurity_radiation_module.imp_label[4],
         7,
-        constants.m_nitrogen_amu,  # 14.00643, (14N,15N) Average mass
+        constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
         frac,
         table_length,
         errorflag,
@@ -91,7 +91,7 @@ def initialise_imprad():
         6,
         impurity_radiation_module.imp_label[5],
         8,
-        constants.m_oxygen_amu,  # 15.99903, (16O,17O,18O) Average mass
+        constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
         frac,
         table_length,
         errorflag,
@@ -102,7 +102,7 @@ def initialise_imprad():
         7,
         impurity_radiation_module.imp_label[6],
         10,
-        constants.m_neon_amu,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
+        constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
         frac,
         table_length,
         errorflag,
@@ -113,7 +113,7 @@ def initialise_imprad():
         8,
         impurity_radiation_module.imp_label[7],
         14,
-        constants.m_silicon_amu,  # 28.084 (28Si,29Si,30Si) Average mass
+        constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
         frac,
         table_length,
         errorflag,
@@ -124,7 +124,7 @@ def initialise_imprad():
         9,
         impurity_radiation_module.imp_label[8],
         18,
-        constants.m_argon_amu,  # 39.948 (40Ar,36Ar,38Ar) Average mass
+        constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
         frac,
         table_length,
         errorflag,
@@ -135,7 +135,7 @@ def initialise_imprad():
         10,
         impurity_radiation_module.imp_label[9],
         26,
-        constants.m_iron_amu,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
+        constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
         frac,
         table_length,
         errorflag,
@@ -146,7 +146,7 @@ def initialise_imprad():
         11,
         impurity_radiation_module.imp_label[10],
         28,
-        constants.m_nickel_amu,  # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
+        constants.M_NICKEL_AMU,  # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
         frac,
         table_length,
         errorflag,
@@ -157,7 +157,7 @@ def initialise_imprad():
         12,
         impurity_radiation_module.imp_label[11],
         36,
-        constants.m_krypton_amu,  # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
+        constants.M_KRYPTON_AMU,  # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
         frac,
         table_length,
         errorflag,
@@ -168,7 +168,7 @@ def initialise_imprad():
         13,
         impurity_radiation_module.imp_label[12],
         54,
-        constants.m_xenon_amu,  # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
+        constants.M_XENON_AMU,  # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
         frac,
         table_length,
         errorflag,
@@ -179,7 +179,7 @@ def initialise_imprad():
         14,
         impurity_radiation_module.imp_label[13],
         74,
-        constants.m_tungsten_amu,  # 183.84 (184W,186W,182W,183W,180W) Average mass
+        constants.M_TUNGSTEN_AMU,  # 183.84 (184W,186W,182W,183W,180W) Average mass
         frac,
         table_length,
         errorflag,

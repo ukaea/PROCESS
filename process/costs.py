@@ -1,5 +1,6 @@
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     build_variables,
@@ -20,14 +21,11 @@ from process.data_structure import (
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import (
-    constants,
-)
 
 
 class Costs:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self):
         """
@@ -1692,7 +1690,7 @@ class Costs:
         for i in range(pfcoil_variables.n_cs_pf_coils):
             pfwndl = (
                 pfwndl
-                + constants.twopi
+                + constants.TWOPI
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
             )
@@ -1789,7 +1787,7 @@ class Costs:
 
             cost_variables.c22221 = cost_variables.c22221 + (
                 1.0e-6
-                * constants.twopi
+                * constants.TWOPI
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
                 * cpfconpm
@@ -1867,7 +1865,7 @@ class Costs:
 
             cost_variables.c22221 = cost_variables.c22221 + (
                 1.0e-6
-                * constants.twopi
+                * constants.TWOPI
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
                 * cpfconpm
@@ -2459,7 +2457,7 @@ class Costs:
                 2.0e0
                 * physics_variables.rndfuel
                 * physics_variables.m_fuel_amu
-                * constants.umass
+                * constants.UMASS
                 * 1000.0e0
                 * 86400.0e0
             )
@@ -2470,7 +2468,7 @@ class Costs:
                 * 3.0e0
                 * 1.67e-27
                 * 1.0e3
-                / (constants.electron_volt * 17.6e6 * ife_variables.fburn)
+                / (constants.ELECTRON_VOLT * 17.6e6 * ife_variables.fburn)
             )
             physics_variables.wtgpd = targtm * ife_variables.reprat * 86400.0e0
 
@@ -2860,14 +2858,14 @@ class Costs:
             kwhpy = (
                 1.0e3
                 * heat_transport_variables.p_plant_electric_net_mw
-                * (24.0e0 * constants.n_day_year)
+                * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
             )
         else:
             kwhpy = (
                 1.0e3
                 * heat_transport_variables.p_plant_electric_net_mw
-                * (24.0e0 * constants.n_day_year)
+                * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
                 * times_variables.t_burn
                 / times_variables.t_cycle
@@ -3079,7 +3077,7 @@ class Costs:
                 * physics_variables.wtgpd
                 * 1.0e-3
                 * cost_variables.uche3
-                * constants.n_day_year
+                * constants.N_DAY_YEAR
                 * cost_variables.cfactr
             )
         else:

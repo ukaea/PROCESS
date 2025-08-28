@@ -7,6 +7,7 @@ import numpy as np
 
 import process.data_structure as data_structure
 import process.fortran as fortran
+from process import constants
 from process.exceptions import ProcessError, ProcessValueError
 
 ConstraintSymbolType = Literal["=", ">=", "<="]
@@ -142,8 +143,8 @@ def constraint_equation_1():
             data_structure.physics_variables.beta_fast_alpha
             + data_structure.physics_variables.beta_beam
             + 2.0e3
-            * fortran.constants.rmu0
-            * fortran.constants.electron_charge
+            * constants.RMU0
+            * constants.ELECTRON_CHARGE
             * (
                 data_structure.physics_variables.dene
                 * data_structure.physics_variables.ten

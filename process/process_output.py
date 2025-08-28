@@ -3,8 +3,9 @@ from pathlib import Path
 
 import numpy as np
 
+from process import constants
 from process.data_structure import global_variables
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 
 class OutputFileManager:
@@ -44,9 +45,9 @@ class OutputFileManager:
 
 
 def write(file, string: str):
-    if file == constants.mfile:
+    if file == constants.MFILE:
         OutputFileManager._mfile.write(f"{string}\n")  # noqa: SLF001
-    elif file == constants.nout:
+    elif file == constants.NOUT:
         OutputFileManager._outfile.write(f"{string}\n")  # noqa: SLF001
 
 
@@ -59,7 +60,7 @@ def ocentr(file, string: str, width: int, *, character="*"):
     :param character: the character to pad the heading with (*)
     """
     write(file, f"{f' {string} ':{character}^{width}}")
-    write(constants.mfile, f"# {string} #")
+    write(constants.MFILE, f"# {string} #")
 
 
 def ostars(file, width: int, *, character="*"):
@@ -126,7 +127,7 @@ def ocmmnt(file, string: str):
 
 def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
     replacement_character = "_"
-    if file != constants.mfile:
+    if file != constants.MFILE:
         replacement_character = " "
 
     description = f"{descr:<72}".replace(" ", replacement_character)
@@ -152,8 +153,8 @@ def ovarre(file, descr: str, varnam: str, value, output_flag: str = ""):
 
     line = f"{description}{replacement_character} {varname}{replacement_character} {format_value} {output_flag}"
     write(file, line)
-    if file != constants.mfile:
-        ovarre(constants.mfile, descr, varnam, value, output_flag)
+    if file != constants.MFILE:
+        ovarre(constants.MFILE, descr, varnam, value, output_flag)
 
 
 def ocosts(file, varnam: str, descr: str, value):

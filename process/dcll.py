@@ -1,4 +1,5 @@
 import process.blanket_library as blanket_library
+from process import constants
 from process import (
     process_output as po,
 )
@@ -11,9 +12,6 @@ from process.data_structure import (
     heat_transport_variables,
     physics_variables,
     primary_pumping_variables,
-)
-from process.fortran import (
-    constants,
 )
 
 
@@ -699,7 +697,7 @@ class DCLL(BlanketLibrary):
         )
         # First wall armour mass (kg)
         fwbs_variables.fw_armour_mass = (
-            fwbs_variables.fw_armour_vol * constants.den_tungsten
+            fwbs_variables.fw_armour_vol * constants.DEN_TUNGSTEN
         )
 
         # Total mass of blanket

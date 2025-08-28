@@ -4,9 +4,9 @@ import numpy as np
 import scipy as sp
 
 import process.profiles as profiles
+from process import constants
 from process.data_structure import divertor_variables, physics_variables
 from process.exceptions import ProcessValueError
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +43,7 @@ class PlasmaProfile:
         """
         # Default profile_size = 501, but it's possible to experiment with this value.
         self.profile_size = 501
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
         self.neprofile = profiles.NeProfile(self.profile_size)
         self.teprofile = profiles.TeProfile(self.profile_size)
 
@@ -253,7 +253,7 @@ class PlasmaProfile:
                 + physics_variables.ni0 * physics_variables.ti0
             )
             * 1.0e3
-            * constants.electron_charge
+            * constants.ELECTRON_CHARGE
         )
 
         #  Pressure profile index (N.B. no pedestal effects included here)

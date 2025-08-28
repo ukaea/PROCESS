@@ -9,7 +9,7 @@ to the MFile.
 from logging import Handler
 
 import process.process_output as process_output
-from process.fortran import constants
+from process import constants
 
 
 class ProcessLogHandler(Handler):
@@ -74,7 +74,7 @@ def show_errors(file_unit: int):
     print(warning_string)
     process_output.write(file_unit, warning_string)
     process_output.ovarre(
-        constants.mfile,
+        constants.MFILE,
         "Error status",
         "(error_status)",
         0 if logging_model_handler.num_logs() == 0 else 2,

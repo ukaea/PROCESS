@@ -7,7 +7,7 @@ parameters of an Inertial Fusion Energy power plant.
 
 import numpy as np
 
-from process import process_output
+from process import constants, process_output
 from process.data_structure import (
     build_variables,
     buildings_variables,
@@ -20,7 +20,6 @@ from process.data_structure import (
     vacuum_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants
 
 MATERIALS = [
     "void",
@@ -52,7 +51,7 @@ class IFE:
         :type costs: process.costs.Costs
         """
 
-        self.outfile: int = constants.nout
+        self.outfile: int = constants.NOUT
         self.availability = availability
         self.costs = costs
 
@@ -892,7 +891,7 @@ class IFE:
         # Velocity
         vel = np.sqrt(
             2.0
-            * constants.acceleration_gravity
+            * constants.ACCELERATION_GRAVITY
             * (ife_variables.chdzu + ife_variables.bldzu)
         )
 
@@ -917,7 +916,7 @@ class IFE:
         ife_variables.lipmw = (
             1e-6
             * mdot
-            * constants.acceleration_gravity
+            * constants.ACCELERATION_GRAVITY
             * (
                 ife_variables.chdzl
                 + ife_variables.chdzu
@@ -1980,7 +1979,7 @@ class IFE:
             1.0e6
             * heat_transport_variables.p_cryo_plant_electric_mw
             * (0.13 * 4.5)
-            / (constants.temp_room - 4.5)
+            / (constants.TEMP_ROOM - 4.5)
         )
 
     def ifepw2(self, output: bool = False):
