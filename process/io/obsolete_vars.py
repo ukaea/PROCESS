@@ -405,6 +405,7 @@ OBS_VARS = {
     "dcondins": "den_tf_wp_turn_insulation",
     "dcopper": "den_copper",
     "denstl": "den_steel",
+    "fimp": "f_nd_impurity_electrons",
 }
 
 OBS_VARS_HELP = {

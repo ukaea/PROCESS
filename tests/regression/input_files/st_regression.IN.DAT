@@ -643,26 +643,26 @@ boundu(28) = 1.0
 * JUSTIFICATION: Turned off, allow to be calculated in-situ
 
 ixc = 135
-fimp(13) = 0.0005
+f_nd_impurity_electrons(13) = 0.0005
 *boundl(135) = 0.000495
 *boundu(135) = 0.000505
 * DESCRIPTION:   Xenon Impurity Concentration
 * JUSTIFICATION: 
 
-*fimp(1)  = 1.0     *Hydrogen (fraction calculated by code)
-*fimp(2)  = 0.1     *Helium (fraction calculated by code)
-fimp(3)  = 0.0      *Beryllium
-fimp(4)  = 0.0      *Carbon
-fimp(5)  = 0.0      *Nitrogen
-fimp(6)  = 0.0      *Oxygen
-fimp(7)  = 0.0      *Neon
-fimp(8)  = 0.0      *Silicon
-fimp(9)  = 0.00    *Argon
-fimp(10) = 0.0      *Iron
-fimp(11) = 0.0      *Nickel
-fimp(12) = 0.0      *Krypton
-*fimp(13) = 0.0   *Xenon
-fimp(14) = 5e-05    *Tungsten
+*f_nd_impurity_electrons(1)  = 1.0     *Hydrogen (fraction calculated by code)
+*f_nd_impurity_electrons(2)  = 0.1     *Helium (fraction calculated by code)
+f_nd_impurity_electrons(3)  = 0.0      *Beryllium
+f_nd_impurity_electrons(4)  = 0.0      *Carbon
+f_nd_impurity_electrons(5)  = 0.0      *Nitrogen
+f_nd_impurity_electrons(6)  = 0.0      *Oxygen
+f_nd_impurity_electrons(7)  = 0.0      *Neon
+f_nd_impurity_electrons(8)  = 0.0      *Silicon
+f_nd_impurity_electrons(9)  = 0.00    *Argon
+f_nd_impurity_electrons(10) = 0.0      *Iron
+f_nd_impurity_electrons(11) = 0.0      *Nickel
+f_nd_impurity_electrons(12) = 0.0      *Krypton
+*f_nd_impurity_electrons(13) = 0.0   *Xenon
+f_nd_impurity_electrons(14) = 5e-05    *Tungsten
 * DESCRIPTION:   Density Fractions Relative to Electron Density
 * JUSTIFICATION: 
 
