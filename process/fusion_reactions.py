@@ -216,6 +216,11 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
+        physics_variables.fusrat_plasma_dt_profile = (
+            fusion_rate_integral(self.plasma_profile, dt)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_tritium * physics_variables.nd_fuel_ions)
+        )
 
         # Store the average fusion reaction rate
         self.sigmav_dt_average = sigmav
