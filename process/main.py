@@ -93,7 +93,7 @@ from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
-from process.process_output import oheadr
+from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
@@ -486,7 +486,7 @@ class SingleRun:
         oheadr(fortran.constants.nout, "End of PROCESS Output")
         oheadr(fortran.constants.iotty, "End of PROCESS Output")
         oheadr(fortran.constants.nout, "Copy of PROCESS Input Follows")
-        fortran.init_module.finish()
+        OutputFileManager.finish()
 
     def append_input(self):
         """Append the input file to the output file and mfile."""

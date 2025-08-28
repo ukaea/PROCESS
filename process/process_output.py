@@ -1,12 +1,69 @@
 from contextlib import suppress
+from pathlib import Path
 
 import numpy as np
 
-from process.fortran import constants, numerics, process_output_fortran
+from process.fortran import (
+    constants,
+    global_variables,
+    numerics,
+)
+from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
-# necessary to avoid using process_output in the code through
-# two different interfaces
-write = process_output_fortran.write
+
+class OutputFileManager:
+    @classmethod
+    def open_files(cls, *, mode="w"):
+        cls._outfile = open(  # noqa: SIM115
+            Path(f2py_compatible_to_string(global_variables.output_prefix) + "OUT.DAT"),
+            mode,
+        )
+        cls._mfile = open(  # noqa: SIM115
+            Path(
+                f2py_compatible_to_string(global_variables.output_prefix) + "MFILE.DAT"
+            ),
+            mode,
+        )
+
+    @classmethod
+    def open_idempotence_files(cls):
+        cls._outfile.close()
+        cls._mfile.close()
+
+        cls._outfile = open(  # noqa: SIM115
+            Path(
+                f2py_compatible_to_string(global_variables.output_prefix)
+                + "IDEM_OUT.DAT"
+            ),
+            "w",
+        )
+        cls._mfile = open(  # noqa: SIM115
+            Path(
+                f2py_compatible_to_string(global_variables.output_prefix)
+                + "IDEM_MFILE.DAT"
+            ),
+            "w",
+        )
+
+    @classmethod
+    def close_idempotence_files(cls):
+        Path(cls._outfile.name).unlink()
+        Path(cls._mfile.name).unlink()
+        cls._outfile.close()
+        cls._mfile.close()
+        cls.open_files(mode="a")
+
+    @classmethod
+    def finish(cls):
+        cls._outfile.close()
+        cls._mfile.close()
+
+
+def write(file, string: str):
+    if file == constants.mfile:
+        OutputFileManager._mfile.write(f"{string}\n")  # noqa: SLF001
+    elif file == constants.nout:
+        OutputFileManager._outfile.write(f"{string}\n")  # noqa: SLF001
 
 
 def ocentr(file, string: str, width: int, *, character="*"):
