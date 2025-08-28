@@ -619,7 +619,7 @@ function of the winding pack sizing parameters for 16 coil.
     <br>
     <figcaption><i>
       <p style='text-align: justify;'> 
-        Figure 6: Contour plots of the on-coil peaking factor $f_\mathrm{rip}^\mathrm{coil}$ obtained with FIESTA and used in the <code>PROCESS</code> scaling for 16 coils. The horizontal and vertical axis corresponds to the relative transverse $\mathit{t}$ and radial thickness $\mathit{z}$, respectively.
+        Figure 6: Contour plots of the on-coil peaking factor \(f_\mathrm{rip}^\mathrm{coil}\) obtained with FIESTA and used in the <code>PROCESS</code> scaling for 16 coils. The horizontal and vertical axis corresponds to the relative transverse \(\mathit{t}\) and radial thickness \(\mathit{z}\), respectively.
       </p>
     </i></figcaption>
     <br>
