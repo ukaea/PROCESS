@@ -2,12 +2,12 @@ import numpy as np
 from numba import njit
 
 import process.data_structure as data_structure
-from process.fortran import constants
+from process import constants
 
 
 class CsFatigue:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def ncycle(
         self,

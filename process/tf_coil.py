@@ -5,7 +5,7 @@ import logging
 import numba
 import numpy as np
 
-from process import fortran as ft
+from process import constants
 from process import process_output as po
 from process.build import Build
 from process.data_structure import (
@@ -19,11 +19,11 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 
-RMU0 = constants.rmu0
+RMU0 = constants.RMU0
 
 
 class TFCoil:
@@ -31,7 +31,7 @@ class TFCoil:
 
     def __init__(self, build: Build):
         """Initialise Fortran module variables."""
-        self.outfile = ft.constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
         self.iprint = 0  # switch for writing to output file (1=yes)
         self.build = build
         self.a_tf_inboard_total = tfcoil_variables.a_tf_inboard_total
@@ -310,7 +310,7 @@ class TFCoil:
         c_tf_total = (
             b_tf_inboard_peak_symmetric
             * r_b_tf_inboard_peak
-            * (2 * np.pi / constants.rmu0)
+            * (2 * np.pi / constants.RMU0)
         )
 
         # Current per TF coil [A]
@@ -663,14 +663,14 @@ class TFCoil:
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Inboard leg inner radius (m)",
             "(r_tf_inboard_in)",
             build_variables.r_tf_inboard_in,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Inboard leg outer radius (m)",
             "(r_tf_inboard_out)",
             build_variables.r_tf_inboard_out,
@@ -683,28 +683,28 @@ class TFCoil:
             tfcoil_variables.i_tf_wp_geom,
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Radial position of inner edge and centre of winding pack (m)",
             "(r_tf_wp_inboard_inner)",
             superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Radial position of outer edge and of winding pack (m)",
             "(r_tf_wp_inboard_outer)",
             superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Radial position of centre of winding pack (m)",
             "(r_tf_wp_inboard_centre)",
             superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             "OP ",
         )
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             "Minimum toroidal thickness of winding pack (m)",
             "(dx_tf_wp_toroidal_min)",
             superconducting_tf_coil_variables.dx_tf_wp_toroidal_min,
@@ -818,13 +818,13 @@ class TFCoil:
                 f"  {ii}              {tfcoil_variables.r_tf_arc[ii]}              {tfcoil_variables.z_tf_arc[ii]}",
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"TF coil arc point {ii} R (m)",
                 f"(r_tf_arc({ii + 1}))",
                 tfcoil_variables.r_tf_arc[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"TF coil arc point {ii} Z (m)",
                 f"(z_tf_arc({ii + 1}))",
                 tfcoil_variables.z_tf_arc[ii],
@@ -2173,7 +2173,7 @@ class TFCoil:
         dcool = 2.0e0 * tfcoil_variables.rcool  # Diameter
         lcool = 2.0e0 * (bv.z_tf_inside_half + bv.dr_tf_outboard)  # Length
         tfcoil_variables.ncool = acool / (
-            constants.pi * tfcoil_variables.rcool**2
+            constants.PI * tfcoil_variables.rcool**2
         )  # Number
 
         # Average conductor cross-sectional area to cool (with cooling area)
@@ -2183,7 +2183,7 @@ class TFCoil:
             / (bv.z_tf_inside_half + bv.dr_tf_outboard)
             + acool
         )
-        ro = (acpav / (constants.pi * tfcoil_variables.ncool)) ** 0.5
+        ro = (acpav / (constants.PI * tfcoil_variables.ncool)) ** 0.5
 
         # Inner legs total heating power (to be removed by coolant)
         ptot = tfcoil_variables.p_cp_resistive + fwbs_variables.pnuc_cp_tf * 1.0e6
@@ -2196,10 +2196,10 @@ class TFCoil:
         # --------------
         if tfcoil_variables.i_tf_sup == 0:
             # Water coolant physical properties
-            coolant_density = constants.denh2o
-            coolant_cp = constants.cph2o
-            coolant_visco = constants.muh2o
-            coolant_th_cond = constants.kh2o
+            coolant_density = constants.DENH2O
+            coolant_cp = constants.CPH2O
+            coolant_visco = constants.MUH2O
+            coolant_th_cond = constants.KH2O
 
             # Mass flow rate [kg/s]
             cool_mass_flow = acool * coolant_density * tfcoil_variables.vcool
@@ -2272,7 +2272,7 @@ class TFCoil:
         dtfilmav = ptot / (
             h
             * 2.0e0
-            * constants.pi
+            * constants.PI
             * tfcoil_variables.rcool
             * tfcoil_variables.ncool
             * lcool
@@ -2288,7 +2288,7 @@ class TFCoil:
         # ******
         # Copper conductor
         if tfcoil_variables.i_tf_sup == 0:
-            conductor_th_cond = constants.k_copper
+            conductor_th_cond = constants.K_COPPER
 
         # Aluminium
         elif tfcoil_variables.i_tf_sup == 2:
@@ -3056,7 +3056,7 @@ class TFCoil:
             ind_tf_coil = (
                 (z_tf_inside_half + dr_tf_outboard)
                 * RMU0
-                / constants.pi
+                / constants.PI
                 * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
             )
 
@@ -3086,7 +3086,7 @@ class TFCoil:
         tfcoil_variables.tfcryoarea = (
             2.0e0
             * tfcoil_variables.len_tf_coil
-            * constants.twopi
+            * constants.TWOPI
             * 0.5e0
             * (build_variables.r_tf_inboard_mid + build_variables.r_tf_outboard_mid)
         )
@@ -4199,39 +4199,39 @@ class TFCoil:
         # MFILE.DAT data
         for ii in range(n_tf_bucking + 2):
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"Radial    stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_r_max({ii + 1}))",
                 sig_tf_r_max[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"toroidal  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_t_max({ii + 1}))",
                 sig_tf_t_max[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"Vertical  stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_z_max({ii + 1}))",
                 sig_tf_z_max[ii],
             )
             po.ovarre(
-                constants.mfile,
+                constants.MFILE,
                 f"Von-Mises stress at maximum shear of layer {ii + 1} (Pa)",
                 f"(sig_tf_vmises_max({ii + 1}))",
                 sig_tf_vmises_max[ii],
             )
             if tfcoil_variables.i_tf_tresca == 1 and tfcoil_variables.i_tf_sup == 1:
                 po.ovarre(
-                    constants.mfile,
+                    constants.MFILE,
                     f"Maximum shear stress for CEA Tresca yield criterion {ii + 1} (Pa)",
                     f"(s_shear_tf_peak({ii + 1}))",
                     s_shear_tf_peak[ii],
                 )
             else:
                 po.ovarre(
-                    constants.mfile,
+                    constants.MFILE,
                     f"Maximum shear stress for the Tresca yield criterion {ii + 1} (Pa)",
                     f"(s_shear_tf_peak({ii + 1}))",
                     s_shear_tf_peak[ii],

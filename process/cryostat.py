@@ -1,5 +1,6 @@
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     blanket_library,
@@ -8,14 +9,11 @@ from process.data_structure import (
     fwbs_variables,
     pfcoil_variables,
 )
-from process.fortran import (
-    constants,
-)
 
 
 class Cryostat:
     def __init__(self) -> None:
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self) -> None:
         """Run the cryostat calculations.

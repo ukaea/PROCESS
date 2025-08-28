@@ -3,13 +3,13 @@ import math
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as buv
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class Vacuum:
     """
 
     def __init__(self) -> None:
-        self.outfile: int = constants.nout
+        self.outfile: int = constants.NOUT
 
     def run(self, output: bool) -> None:
         """Routine to call the vacuum module
@@ -42,7 +42,7 @@ class Vacuum:
         #  2 nuclei * nucleus-pairs/sec * mass/nucleus
 
         # MDK Check this!!
-        gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.umass
+        gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.UMASS
 
         self.vacuum_model = vacv.vacuum_model
 

@@ -559,10 +559,10 @@ class PythonFortranInterfaceVariables:
         variables = []
 
         for name, function in inspect.getmembers(fortran_module):
-            # type(data_structure.physics_variables.constants.init_constants) => fortran subroutine
+            # type(data_structure.physics_variables.numerics.init_numerics) => fortran subroutine
             # if its not a fortran subroutine, its a variable
             # because type `fortran` cannot be checked as a type
-            if type(function) != type(fortran.constants.init_constants):  # noqa: E721
+            if type(function) != type(fortran.numerics.init_numerics):  # noqa: E721
                 variables.append(name)
 
         return variables

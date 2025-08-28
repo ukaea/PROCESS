@@ -7,6 +7,7 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
@@ -19,7 +20,6 @@ from process.data_structure import (
     primary_pumping_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 
 class BlanketLibrary:
     def __init__(self, fw) -> None:
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
         self.fw = fw
 
