@@ -1531,6 +1531,7 @@ def _trapped_particle_fraction_sauter(
 class Physics:
     def __init__(self, plasma_profile, current_drive):
         self.outfile = constants.nout
+        self.mfile = constants.mfile
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
 
@@ -4950,6 +4951,13 @@ class Physics:
             physics_variables.p_dt_total_mw,
             "OP ",
         )
+        for i in range(len(physics_variables.fusrat_plasma_dt_profile)):
+            po.ovarre(
+                self.mfile,
+                f"DT fusion rate at point {i}",
+                f"fusrat_plasma_dt_profile{i}",
+                physics_variables.fusrat_plasma_dt_profile[i],
+            )
         po.ovarre(
             self.outfile,
             "D-T fusion power: plasma (MW)",

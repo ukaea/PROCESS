@@ -9468,6 +9468,25 @@ def plot_tf_stress(axis):
     plt.tight_layout()
 
 
+def plot_fusion_rate_profiles(axis, mfile_data, scan):
+    # Plot the fusion rate profiles on the given axis
+    fusrat_plasma_dt_profile = []
+    fusrat_plasma_dt_profile = [
+        mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    # Change from 0 to 1 index to align with poloidal cross-section plot numbering
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+        fusrat_plasma_dt_profile,
+        linestyle="--",
+    )
+
+    axis.set_xlabel("$\\rho$")
+    axis.set_ylabel("Fusion Rate [MW/m^3]")
+    axis.legend()
+
+
 def main_plot(
     fig1,
     fig2,
@@ -9485,6 +9504,7 @@ def main_plot(
     fig14,
     fig15,
     fig16,
+    fig17,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -9656,6 +9676,9 @@ def main_plot(
 
     plot_32 = fig16.add_subplot(111, aspect="equal")
     plot_main_power_flow(plot_32, m_file_data, scan, fig16)
+
+    plot_33 = fig17.add_subplot(122)
+    plot_fusion_rate_profiles(plot_33, m_file_data, scan)
 
 
 def main(args=None):
@@ -9948,6 +9971,7 @@ def main(args=None):
     page14 = plt.figure(figsize=(12, 9), dpi=80)
     page15 = plt.figure(figsize=(12, 9), dpi=80)
     page16 = plt.figure(figsize=(12, 9), dpi=80)
+    page17 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -9967,6 +9991,7 @@ def main(args=None):
         page14,
         page15,
         page16,
+        page17,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -9991,6 +10016,7 @@ def main(args=None):
         pdf.savefig(page14)
         pdf.savefig(page15)
         pdf.savefig(page16)
+        pdf.savefig(page17)
 
     # show fig if option used
     if args.show:
@@ -10012,6 +10038,7 @@ def main(args=None):
     plt.close(page14)
     plt.close(page15)
     plt.close(page16)
+    plt.close(page17)
 
 
 if __name__ == "__main__":
