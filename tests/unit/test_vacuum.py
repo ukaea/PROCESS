@@ -41,9 +41,9 @@ class TestVacuum:
         monkeypatch.setattr(vacv, "pumpspeedmax", 27.3)
         monkeypatch.setattr(vacv, "pumptp", 1.2155e22)
 
-        niterpump = vacuum.vacuum_simple(output=False)
+        n_iter_vacuum_pumps = vacuum.vacuum_simple(output=False)
 
-        assert niterpump == pytest.approx(14.082585474801862)
+        assert n_iter_vacuum_pumps == pytest.approx(14.082585474801862)
 
     def test_old_model(self, monkeypatch, vacuum):
         """Test `vacuum` subroutine.
