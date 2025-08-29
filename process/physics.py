@@ -4970,17 +4970,24 @@ class Physics:
         for i in range(len(physics_variables.fusrat_plasma_dd_triton_profile)):
             po.ovarre(
                 self.mfile,
-                f"DT fusion rate at point {i}",
+                f"D-D -> T fusion rate at point {i}",
                 f"fusrat_plasma_dd_triton_profile{i}",
                 physics_variables.fusrat_plasma_dd_triton_profile[i],
             )
         for i in range(len(physics_variables.fusrat_plasma_dd_helion_profile)):
             po.ovarre(
                 self.mfile,
-                f"DT fusion rate at point {i}",
+                f"D-D -> 3He fusion rate at point {i}",
                 f"fusrat_plasma_dd_helion_profile{i}",
                 physics_variables.fusrat_plasma_dd_helion_profile[i],
             )
+        for i in range(len(physics_variables.fusrat_plasma_dhe3_profile)):
+            po.ovarre(
+                self.mfile,
+                f"D-3He fusion rate at point {i}",
+                f"fusrat_plasma_dhe3_profile{i}",
+                physics_variables.fusrat_plasma_dhe3_profile[i],
+            )    
         po.ovarre(
             self.outfile,
             "D-T fusion power: plasma (MW)",
