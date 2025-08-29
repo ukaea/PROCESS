@@ -2104,7 +2104,7 @@ class Costs:
         cost_variables.c2245 = (
             1.0e-6
             * vacuum_variables.n_vv_vacuum_ducts
-            * vacuum_variables.vacdshm
+            * vacuum_variables.m_vv_vacuum_duct_shield
             * cost_variables.UCVDSH
         )
         cost_variables.c2245 = cost_variables.fkind * cost_variables.c2245
