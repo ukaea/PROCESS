@@ -3085,7 +3085,7 @@ lsa = 2
 * DESCRIPTION:   Pump throughput (molecules/s) (default is ITER value) (default = 1.2155e+22) :
 * JUSTIFICATION: Not yet set.
 
-*rat = 
+*outgrat_fw = 
 * DESCRIPTION:   Plasma chamber wall outgassing rate (Pa-m/s) (default = 1.3D-8) :
 * JUSTIFICATION: Not yet set.
 

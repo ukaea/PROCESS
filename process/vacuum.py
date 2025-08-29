@@ -302,14 +302,14 @@ class Vacuum:
         #  Initial pumpdown based on outgassing
         #  s(1) = net pump speed (N2) required for pumpdown to base pressure (m^3/s)
         #  area = vacuum chamber/fw area (m^2)  ;  outgassing area = 10 x area
-        #  rat = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
+        #  outgrat_fw = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
         #  pres_vv_chamber_base = base pressure (Pa)
 
         #  Old method: area = 4.0e0 * pi*pi * r0 * aw * sqrt(0.5e0*(1.0e0 + kappa*kappa))
 
         area = plasma_sarea * (aw + dsol) / aw
 
-        ogas = vacv.rat * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
+        ogas = vacv.outgrat_fw * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
         s.append(ogas / vacv.pres_vv_chamber_base)
 
         #  Pumpdown between burns
@@ -510,7 +510,7 @@ class Vacuum:
             po.ocmmnt(self.outfile, "Pumpdown to Base Pressure :")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "First wall outgassing rate (Pa m/s)", "(rat)", vacv.rat
+                self.outfile, "First wall outgassing rate (Pa m/s)", "(outgrat_fw)", vacv.outgrat_fw
             )
             po.ovarre(
                 self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "

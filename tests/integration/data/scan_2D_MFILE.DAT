@@ -1035,7 +1035,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0222E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8240E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -2198,7 +2198,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0522E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8351E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -3361,7 +3361,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0750E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8432E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -4524,7 +4524,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0718E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8494E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -5687,7 +5687,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0613E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8437E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -6850,7 +6850,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0284E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8301E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -8013,7 +8013,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0253E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8358E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -9176,7 +9176,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0532E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8508E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -10339,7 +10339,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0779E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8691E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -11502,7 +11502,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0795E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8725E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -12665,7 +12665,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0542E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8512E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -13828,7 +13828,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0198E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8319E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -14991,7 +14991,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0201E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8354E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -16154,7 +16154,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0539E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8490E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
@@ -17317,7 +17317,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0868E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8617E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
  Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
