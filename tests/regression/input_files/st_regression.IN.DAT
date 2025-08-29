@@ -3125,9 +3125,9 @@ lsa = 2
 * JUSTIFICATION: Not yet set.
 
 *icc = 63
-* DESCRIPTION:   Upper limit on niterpump (vacuum_model = simple)
+* DESCRIPTION:   Upper limit on n_iter_vacuum_pumps (vacuum_model = simple)
 * JUSTIFICATION: Turned off, not using simple pumping 
-* VARIABLES:     tfno(TF coil number), niterpump calculated in-situ
+* VARIABLES:     tfno(TF coil number), n_iter_vacuum_pumps calculated in-situ
 
 *________________________________________________________________________*
 *---------------------------------Time-----------------------------------*

@@ -71,7 +71,7 @@ class Vacuum:
             # MDK pumpn is real: convert to integer by rounding.
             vacv.vpumpn = math.floor(pumpn + 0.5e0)
         elif self.vacuum_model == "simple":
-            vacv.niterpump = self.vacuum_simple(output=output)
+            vacv.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:
             logger.error(f"vacuum_model is invalid: {vacv.vacuum_model}")
 
@@ -89,7 +89,7 @@ class Vacuum:
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
-        niterpump = pv.qfuel / vacv.pumptp
+        n_iter_vacuum_pumps = pv.qfuel / vacv.pumptp
 
         # Pump-down:
         # Pumping speed per pump m3/s
@@ -111,7 +111,7 @@ class Vacuum:
 
         # Combine the two (somewhat inconsistent) models
         # Note that 'npump' can be constrained by constraint equation 63
-        npump = max(niterpump, npumpdown)
+        npump = max(n_iter_vacuum_pumps, npumpdown)
 
         #  Output section
         if output:
@@ -143,8 +143,8 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 " all operating at the same time",
-                "(niterpump)",
-                niterpump,
+                "(n_iter_vacuum_pumps)",
+                n_iter_vacuum_pumps,
                 "OP ",
             )
 

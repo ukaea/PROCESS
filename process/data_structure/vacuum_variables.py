@@ -6,7 +6,7 @@ vacuum_model: str = None
   !#TODO: old and simple not suitable names.
 """
 
-niterpump: float = None
+n_iter_vacuum_pumps: float = None
 """number of high vacuum pumps (real number), each with the throughput of one
 ITER cryopump (50 Pa m3 s-1), all operating at the same time (`vacuum_model='simple'`)
 """
@@ -84,7 +84,7 @@ outgasfactor: float = None
 def init_vacuum_variables():
     """Initialise Vacuum variables"""
     global vacuum_model
-    global niterpump
+    global n_iter_vacuum_pumps
     global i_vacuum_pump_type
     global nvduct
     global dlscal
@@ -105,7 +105,7 @@ def init_vacuum_variables():
     global outgasfactor
 
     vacuum_model = "old"
-    niterpump = 0.0
+    n_iter_vacuum_pumps = 0.0
     i_vacuum_pump_type = 1
     nvduct = 0
     dlscal = 0.0
