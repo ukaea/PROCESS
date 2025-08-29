@@ -1050,7 +1050,7 @@ class BlanketLibrary:
         (
             fwbs_variables.radius_blkt_channel_90_bend,
             fwbs_variables.radius_blkt_channel_180_bend,
-        ) = self.set_pipe_bend_radius(i_ps=1)
+        ) = self.calculate_pipe_bend_radius(i_ps=1)
 
         dpres_fw_inboard_coolant = self.total_pressure_drop(
             output,
@@ -1086,7 +1086,7 @@ class BlanketLibrary:
         (
             fwbs_variables.radius_blkt_channel_90_bend,
             fwbs_variables.radius_blkt_channel_180_bend,
-        ) = self.set_pipe_bend_radius(i_ps=1)
+        ) = self.calculate_pipe_bend_radius(i_ps=1)
 
         # Long polodal flows
         if fwbs_variables.i_blkt_inboard == 1:
@@ -2347,8 +2347,8 @@ class BlanketLibrary:
         :rtype: float
         """
 
-        radius_pipe_90_deg_bend, radius_pipe_180_deg_bend = self.set_pipe_bend_radius(
-            i_ps=icoolpump
+        radius_pipe_90_deg_bend, radius_pipe_180_deg_bend = (
+            self.calculate_pipe_bend_radius(i_ps=icoolpump)
         )
 
         # Friction - for all coolants
@@ -2542,7 +2542,7 @@ class BlanketLibrary:
 
         return liquid_breeder_pressure_drop_mhd
 
-    def set_pipe_bend_radius(self, i_ps: int):
+    def calculate_pipe_bend_radius(self, i_ps: int):
         """Set the pipe bend radius based on the coolant type.
 
         :param i_ps: switch for primary or secondary coolant
