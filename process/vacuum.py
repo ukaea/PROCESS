@@ -104,7 +104,7 @@ class Vacuum:
         wallarea = (pv.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
-            vacv.outgasfactor * wallarea / vacv.pbase
+            vacv.outgasfactor * wallarea / vacv.pres_vv_chamber_base
         ) * tv.t_between_pulse ** (-vacv.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
@@ -303,14 +303,14 @@ class Vacuum:
         #  s(1) = net pump speed (N2) required for pumpdown to base pressure (m^3/s)
         #  area = vacuum chamber/fw area (m^2)  ;  outgassing area = 10 x area
         #  rat = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
-        #  pbase = base pressure (Pa)
+        #  pres_vv_chamber_base = base pressure (Pa)
 
         #  Old method: area = 4.0e0 * pi*pi * r0 * aw * sqrt(0.5e0*(1.0e0 + kappa*kappa))
 
         area = plasma_sarea * (aw + dsol) / aw
 
         ogas = vacv.rat * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
-        s.append(ogas / vacv.pbase)
+        s.append(ogas / vacv.pres_vv_chamber_base)
 
         #  Pumpdown between burns
         #  s(2) = net pump speed (DT) required for pumpdown between burns (m^3/s)
@@ -516,7 +516,7 @@ class Vacuum:
                 self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "
             )
             po.ovarre(
-                self.outfile, "Base pressure required (Pa)", "(pbase)", vacv.pbase
+                self.outfile, "Base pressure required (Pa)", "(pres_vv_chamber_base)", vacv.pres_vv_chamber_base
             )
             po.ovarre(
                 self.outfile, "Required N2 pump speed (m3/s)", "(s(1))", s[0], "OP "
