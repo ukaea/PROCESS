@@ -226,6 +226,16 @@ This unit is normally used for fuelling or vacuum pumping models
 
 ---------------------
 
+##### Volume flow rates
+
+- Volume flow rates should start with the `volflow_` prefix
+
+This should be used for units of $\text{m}^{3} \cdot \text{s}^{-1}$
+
+This unit is normally used for fuelling or vacuum pumping models
+
+---------------------
+
 ##### Outgassing rates
 
 - Outgassing rates should start with the `outgrat_` prefix
