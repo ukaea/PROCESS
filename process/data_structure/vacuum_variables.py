@@ -68,7 +68,7 @@ f_a_vac_pump_port_plasma_surface: float = None
 volflow_vac_pumps_max: float = None
 """maximum pumping speed per unit area for deuterium & tritium, molecular flow"""
 
-pumpspeedfactor: float = None
+f_volflow_vac_pumps_impedance: float = None
 """effective pumping speed reduction factor due to duct impedance"""
 
 initialpressure: float = None
@@ -99,7 +99,7 @@ def init_vacuum_variables():
     global i_vac_pump_dwell
     global f_a_vac_pump_port_plasma_surface
     global volflow_vac_pumps_max
-    global pumpspeedfactor
+    global f_volflow_vac_pumps_impedance
     global initialpressure
     global outgasindex
     global outgasfactor
@@ -120,7 +120,7 @@ def init_vacuum_variables():
     i_vac_pump_dwell = 0
     f_a_vac_pump_port_plasma_surface = 0.0203
     volflow_vac_pumps_max = 27.3
-    pumpspeedfactor = 0.167
+    f_volflow_vac_pumps_impedance = 0.167
     initialpressure = 1.0
     outgasindex = 1.0
     outgasfactor = 0.0235

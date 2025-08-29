@@ -1378,7 +1378,7 @@ INPUT_VARIABLES = {
     "f_a_vac_pump_port_plasma_surface": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
-    "pumpspeedfactor": InputVariable(
+    "f_volflow_vac_pumps_impedance": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
     "volflow_vac_pumps_max": InputVariable(
