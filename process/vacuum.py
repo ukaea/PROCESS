@@ -342,16 +342,16 @@ class Vacuum:
         #  s(3) = net pump speed (He) required for helium ash removal (m^3/s)
         #  source = alpha production rate (pa - m^3/s)
         #  fhe = fraction of neutral gas in divertor chamber that is helium
-        #  prdiv = pressure in divertor chamber during burn (Pa)
+        #  pres_div_chamber_burn = pressure in divertor chamber during burn (Pa)
 
         source = pfus * 1.47e-09
         fhe = source / (frate * 4.985e5)
-        s.append(source / vacv.prdiv / fhe)
+        s.append(source / vacv.pres_div_chamber_burn / fhe)
 
         #  Removal of dt on steady state basis
         #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
 
-        s.append((frate * 4.985e5 - source) / (vacv.prdiv * (1.0e0 - fhe)))
+        s.append((frate * 4.985e5 - source) / (vacv.pres_div_chamber_burn * (1.0e0 - fhe)))
 
         #  Calculate conductance of a single duct
 
@@ -578,8 +578,8 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 "Divertor chamber gas pressure (Pa)",
-                "(prdiv)",
-                vacv.prdiv,
+                "(pres_div_chamber_burn)",
+                vacv.pres_div_chamber_burn,
             )
             po.ovarre(
                 self.outfile,

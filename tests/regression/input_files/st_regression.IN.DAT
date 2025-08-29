@@ -3077,7 +3077,7 @@ lsa = 2
 * DESCRIPTION:   Base pressure during dwell before gas pre-fill (Pa):
 * JUSTIFICATION: Not yet set.
 
-*prdiv = 
+*pres_div_chamber_burn = 
 * DESCRIPTION:   Divertor chamber pressure during burn (Pa):
 * JUSTIFICATION: Not yet set.
 
