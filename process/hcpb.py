@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+import process.blanket_library as blanket_library
 from process import (
     process_output as po,
 )
@@ -805,39 +806,9 @@ class CCFE_HCPB(BlanketLibrary):
             1 - build_variables.a_fw_outboard / build_variables.a_fw_total
         )
 
-        # i_p_coolant_pumping == 0
-        # User sets mechanical pumping power directly (primary_pumping_power)
-        # Values of p_blkt_coolant_pump_mw, p_div_coolant_pump_mw, p_fw_coolant_pump_mw, p_shld_coolant_pump_mw set in input file
         if fwbs_variables.i_p_coolant_pumping == 1:
-            # User sets mechanical pumping power as a fraction of thermal power
-            # removed by coolant
-            heat_transport_variables.p_fw_coolant_pump_mw = (
-                heat_transport_variables.f_p_fw_coolant_pump_total_heat
-                * (
-                    fwbs_variables.p_fw_nuclear_heat_total_mw
-                    + fwbs_variables.psurffwi
-                    + fwbs_variables.psurffwo
-                )
-            )
-            heat_transport_variables.p_blkt_coolant_pump_mw = (
-                heat_transport_variables.f_p_blkt_coolant_pump_total_heat
-                * fwbs_variables.p_blkt_nuclear_heat_total_mw
-            )
-            heat_transport_variables.p_shld_coolant_pump_mw = (
-                heat_transport_variables.f_p_shld_coolant_pump_total_heat
-                * (
-                    fwbs_variables.p_shld_nuclear_heat_mw
-                    + fwbs_variables.p_cp_shield_nuclear_heat_mw
-                )
-            )
-            heat_transport_variables.p_div_coolant_pump_mw = (
-                heat_transport_variables.f_p_div_coolant_pump_total_heat
-                * (
-                    physics_variables.p_plasma_separatrix_mw
-                    + fwbs_variables.p_div_nuclear_heat_total_mw
-                    + fwbs_variables.p_div_rad_total_mw
-                )
-            )
+            # User sets mechanical pumping power directly
+            blanket_library.set_pumping_powers_as_fractions()
 
         elif fwbs_variables.i_p_coolant_pumping == 2:
             # Calculate the required material properties of the FW and BB coolant.
@@ -985,6 +956,24 @@ class CCFE_HCPB(BlanketLibrary):
                     "(p_shld_coolant_pump_mw)",
                     heat_transport_variables.p_shld_coolant_pump_mw,
                     "OP ",
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of blanket cooling channels (m)",
+                    "(radius_blkt_channel)",
+                    fwbs_variables.radius_blkt_channel,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 90 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_90_bend)",
+                    fwbs_variables.radius_blkt_channel_90_bend,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Radius of 180 degree coolant channel bend (m)",
+                    "(radius_blkt_channel_180_bend)",
+                    fwbs_variables.radius_blkt_channel_180_bend,
                 )
 
     def st_cp_angle_fraction(self, z_cp_top, r_cp_mid, r_cp_top, rmajor):

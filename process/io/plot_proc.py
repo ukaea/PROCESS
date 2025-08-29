@@ -4568,7 +4568,7 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
 
     props_fw = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     axis.text(
-        -0.7,
+        -0.5,
         0.05,
         textstr_fw,
         transform=axis.transAxes,
@@ -9485,6 +9485,127 @@ def plot_tf_stress(axis):
     plt.tight_layout()
 
 
+def plot_blkt_pipe_bends(fig, m_file_data, scan):
+    """Plot the blanket pipe bends on the given axis, with axes in mm."""
+
+    ax_90 = fig.add_subplot(331)
+    ax_180 = fig.add_subplot(334)
+
+    # Get pipe radius from m_file_data, fallback to 0.1 m
+    r = m_file_data.data["radius_blkt_channel"].get_scan(scan)
+    elbow_radius_90 = m_file_data.data["radius_blkt_channel_90_bend"].get_scan(scan)
+
+    # --- 90 degree bend ---
+    theta_90 = np.linspace(0, np.pi / 2, 100)
+    # Convert coordinates from meters to millimeters
+    x_center_90 = elbow_radius_90 * np.cos(theta_90) * 1000
+    y_center_90 = elbow_radius_90 * np.sin(theta_90) * 1000
+    x_outer_90 = (elbow_radius_90 + r) * np.cos(theta_90) * 1000
+    y_outer_90 = (elbow_radius_90 + r) * np.sin(theta_90) * 1000
+    x_inner_90 = (elbow_radius_90 - r) * np.cos(theta_90) * 1000
+    y_inner_90 = (elbow_radius_90 - r) * np.sin(theta_90) * 1000
+
+    ax_90.plot(
+        x_center_90, y_center_90, color="black", linestyle="--", label="Centerline"
+    )
+    ax_90.plot(x_outer_90, y_outer_90, color="black")
+    ax_90.plot(x_inner_90, y_inner_90, color="black")
+    ax_90.fill(
+        np.concatenate([x_outer_90, x_inner_90[::-1]]),
+        np.concatenate([y_outer_90, y_inner_90[::-1]]),
+        color="lightgrey",
+        alpha=1.0,
+    )
+    ax_90.set_aspect("equal")
+    ax_90.set_xlabel("X [mm]")
+    ax_90.set_ylabel("Y [mm]")
+    ax_90.set_title("Blanket Pipe 90° Bend")
+    ax_90.grid(True, linestyle="--", alpha=0.3)
+    # Add legend with radius values
+    ax_90.legend(
+        [
+            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius_90 * 1000:.2f} mm"
+        ],
+        loc="upper right",
+    )
+
+    # --- 180 degree bend ---
+
+    elbow_radius_180 = m_file_data.data["radius_blkt_channel_180_bend"].get_scan(scan)
+
+    theta_180 = np.linspace(0, np.pi, 100)
+    x_center_180 = elbow_radius_180 * np.cos(theta_180) * 1000
+    y_center_180 = elbow_radius_180 * np.sin(theta_180) * 1000
+    x_outer_180 = (elbow_radius_180 + r) * np.cos(theta_180) * 1000
+    y_outer_180 = (elbow_radius_180 + r) * np.sin(theta_180) * 1000
+    x_inner_180 = (elbow_radius_180 - r) * np.cos(theta_180) * 1000
+    y_inner_180 = (elbow_radius_180 - r) * np.sin(theta_180) * 1000
+
+    ax_180.plot(
+        x_center_180, y_center_180, color="black", linestyle="--", label="Centerline"
+    )
+    ax_180.plot(x_outer_180, y_outer_180, color="black")
+    ax_180.plot(x_inner_180, y_inner_180, color="black")
+    ax_180.fill(
+        np.concatenate([x_outer_180, x_inner_180[::-1]]),
+        np.concatenate([y_outer_180, y_inner_180[::-1]]),
+        color="lightgrey",
+        alpha=1.0,
+    )
+
+    ax_180.set_aspect("equal")
+    ax_180.set_xlabel("X [mm]")
+    ax_180.set_ylabel("Y [mm]")
+    ax_180.set_title("Blanket Pipe 180° Bend")
+    ax_180.grid(True, linestyle="--", alpha=0.3)
+    # Add legend with radius values
+    ax_180.legend(
+        [
+            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius_180 * 1000:.2f} mm"
+        ],
+        loc="upper right",
+    )
+
+
+def plot_fw_90_deg_pipe_bend(ax, m_file_data, scan):
+    """Plot the first wall pipe 90 degree bend on the given axis, with axes in mm."""
+
+    # Get pipe radius from m_file_data, fallback to 0.1 m
+    r = m_file_data.data["radius_fw_channel"].get_scan(scan)
+    elbow_radius = m_file_data.data["radius_fw_channel_90_bend"].get_scan(scan)
+
+    # --- 90 degree bend ---
+    theta_90 = np.linspace(0, np.pi / 2, 100)
+    # Convert coordinates from meters to millimeters
+    x_center_90 = elbow_radius * np.cos(theta_90) * 1000
+    y_center_90 = elbow_radius * np.sin(theta_90) * 1000
+    x_outer_90 = (elbow_radius + r) * np.cos(theta_90) * 1000
+    y_outer_90 = (elbow_radius + r) * np.sin(theta_90) * 1000
+    x_inner_90 = (elbow_radius - r) * np.cos(theta_90) * 1000
+    y_inner_90 = (elbow_radius - r) * np.sin(theta_90) * 1000
+
+    ax.plot(x_center_90, y_center_90, color="black", linestyle="--", label="Centerline")
+    ax.plot(x_outer_90, y_outer_90, color="black")
+    ax.plot(x_inner_90, y_inner_90, color="black")
+    ax.fill(
+        np.concatenate([x_outer_90, x_inner_90[::-1]]),
+        np.concatenate([y_outer_90, y_inner_90[::-1]]),
+        color="lightgrey",
+        alpha=1.0,
+    )
+    ax.set_aspect("equal")
+    ax.set_xlabel("X [mm]")
+    ax.set_ylabel("Y [mm]")
+    ax.set_title("First Wall Pipe 90° Bend")
+    ax.grid(True, linestyle="--", alpha=0.3)
+    ax.legend(
+        [
+            f"Centerline\nPipe radius: {r * 1000:.2f} mm\nElbow radius: {elbow_radius * 1000:.2f} mm"
+        ],
+        loc="upper right",
+    )
+
+
 def main_plot(
     fig1,
     fig2,
@@ -9502,6 +9623,7 @@ def main_plot(
     fig14,
     fig15,
     fig16,
+    fig17,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -9671,8 +9793,13 @@ def main_plot(
     plot_31 = fig15.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
 
-    plot_32 = fig16.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_32, m_file_data, scan, fig16)
+    plot_32 = fig15.add_subplot(337)
+    plot_fw_90_deg_pipe_bend(plot_32, m_file_data, scan)
+
+    plot_blkt_pipe_bends(fig16, m_file_data, scan)
+
+    plot_33 = fig17.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_33, m_file_data, scan, fig17)
 
 
 def main(args=None):
@@ -9965,6 +10092,7 @@ def main(args=None):
     page14 = plt.figure(figsize=(12, 9), dpi=80)
     page15 = plt.figure(figsize=(12, 9), dpi=80)
     page16 = plt.figure(figsize=(12, 9), dpi=80)
+    page17 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -9984,6 +10112,7 @@ def main(args=None):
         page14,
         page15,
         page16,
+        page17,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -10008,6 +10137,7 @@ def main(args=None):
         pdf.savefig(page14)
         pdf.savefig(page15)
         pdf.savefig(page16)
+        pdf.savefig(page17)
 
     # show fig if option used
     if args.show:
@@ -10029,6 +10159,7 @@ def main(args=None):
     plt.close(page14)
     plt.close(page15)
     plt.close(page16)
+    plt.close(page17)
 
 
 if __name__ == "__main__":

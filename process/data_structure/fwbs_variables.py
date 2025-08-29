@@ -883,6 +883,21 @@ bzfllengo_n_pol_liq: int = None
 flow length in a blanket module (IB and OB)
 """
 
+radius_blkt_channel: float = None
+"""Radius of blanket cooling channels [m]"""
+
+radius_blkt_channel_90_bend: float = None
+"""Radius of blanket cooling channel 90° bend [m]"""
+
+radius_fw_channel_90_bend: float = None
+"""Radius of first wall cooling channel 90° bend [m]"""
+
+radius_fw_channel_180_bend: float = None
+"""Radius of first wall cooling channel 180° bend [m]"""
+
+radius_blkt_channel_180_bend: float = None
+"""Radius of blanket cooling channel 180° bend [m]"""
+
 
 def init_fwbs_variables():
     """Initialise FWBS variables"""
@@ -1076,6 +1091,11 @@ def init_fwbs_variables():
     global bzfllengi_n_pol_liq
     global bzfllengo_n_rad_liq
     global bzfllengo_n_pol_liq
+    global radius_blkt_channel
+    global radius_fw_channel_90_bend
+    global radius_fw_channel_180_bend
+    global radius_blkt_channel_90_bend
+    global radius_blkt_channel_180_bend
 
     life_blkt_fpy = 0.0
     life_blkt = 0.0
@@ -1267,3 +1287,8 @@ def init_fwbs_variables():
     bzfllengi_n_pol_liq = 2
     bzfllengo_n_rad_liq = 2
     bzfllengo_n_pol_liq = 2
+    radius_blkt_channel = 0.0
+    radius_fw_channel_90_bend = 0.0
+    radius_fw_channel_180_bend = 0.0
+    radius_blkt_channel_90_bend = 0.0
+    radius_blkt_channel_180_bend = 0.0

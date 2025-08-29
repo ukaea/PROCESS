@@ -522,6 +522,18 @@ class Fw:
             fwbs_variables.radius_fw_channel,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Radius of 90 degree coolant channel bend (m)",
+            "(radius_fw_channel_90_bend)",
+            fwbs_variables.radius_fw_channel_90_bend,
+        )
+        po.ovarre(
+            self.outfile,
+            "Radius of 180 degree coolant channel bend (m)",
+            "(radius_fw_channel_180_bend)",
+            fwbs_variables.radius_fw_channel_180_bend,
+        )
         po.ovarrf(
             self.outfile,
             "Radial wall thickness surrounding first wall coolant channel (m)",

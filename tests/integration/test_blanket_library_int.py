@@ -31,10 +31,10 @@ def test_hydraulic_diameter(monkeypatch, blanket_library_fixture):
 
     # hydraulic_diameter input = i_channel_shape: 1 = circle, 2 = rectangle
     assert (
-        blanket_library_fixture.hydraulic_diameter(1) == 2.0
+        blanket_library_fixture.pipe_hydraulic_diameter(1) == 2.0
     )  # 2.0D0*radius_fw_channel
     assert (
-        blanket_library_fixture.hydraulic_diameter(2) == 1.0
+        blanket_library_fixture.pipe_hydraulic_diameter(2) == 1.0
     )  # 2*a_bz_liq*b_bz_liq/(a_bz_liq+b_bz_liq)
 
 
@@ -189,8 +189,17 @@ def test_pressure_drop(monkeypatch, blanket_library_fixture):
 
     # input = ip, ofile, i_ps, num_90, num_180, l_pipe, den, vsc, vv, label
     assert blanket_library_fixture.coolant_friction_pressure_drop(
-        2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, "label"
-    ) == pytest.approx(1.4363243643098162, rel=1e-3)
+        i_ps=2,
+        radius_pipe_90_deg_bend=1.0,
+        radius_pipe_180_deg_bend=1.0,
+        n_pipe_90_deg_bends=1.0,
+        n_pipe_180_deg_bends=1.0,
+        len_pipe=1.0,
+        den_coolant=1.0,
+        visc_coolant=1.0,
+        vel_coolant=1.0,
+        label="label",
+    ) == pytest.approx(1.4325633520224854, rel=1e-3)
 
 
 # Should add test_liquid_breeder_pressure_drop_mhd
