@@ -12,6 +12,7 @@ from process.data_structure import (
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
+    numerics,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
@@ -22,7 +23,6 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 

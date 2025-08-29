@@ -22,7 +22,6 @@ from process.data_structure import (
 from process.exceptions import ProcessValueError
 from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -361,7 +360,7 @@ class SuperconductingTFCoil(TFCoil):
                 self.outtf()
 
     def croco_voltage(self) -> float:
-        if f2py_compatible_to_string(tfcoil_variables.quench_model) == "linear":
+        if tfcoil_variables.quench_model == "linear":
             superconducting_tf_coil_variables.time2 = tfcoil_variables.tdmptf
             croco_voltage = (
                 2.0e0
@@ -372,7 +371,7 @@ class SuperconductingTFCoil(TFCoil):
                 )
                 / tfcoil_variables.c_tf_turn
             )
-        elif f2py_compatible_to_string(tfcoil_variables.quench_model) == "exponential":
+        elif tfcoil_variables.quench_model == "exponential":
             superconducting_tf_coil_variables.tau2 = tfcoil_variables.tdmptf
             croco_voltage = (
                 2.0e0

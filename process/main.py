@@ -49,7 +49,6 @@ from typing import Protocol
 
 import process
 import process.data_structure as data_structure
-import process.fortran as fortran
 import process.init as init
 from process import constants
 from process.availability import Availability
@@ -446,23 +445,23 @@ class SingleRun:
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(fortran.numerics.nvar)
+        n = int(data_structure.numerics.nvar)
         # [:n] as array always at max size: contains 0s
-        fortran.numerics.ixc[:n].sort()
+        data_structure.numerics.ixc[:n].sort()
 
     def run_scan(self):
         """Create scan object if required."""
         # TODO Move this solver logic up to init?
         # ioptimz == 1: optimisation
-        if fortran.numerics.ioptimz == 1:
+        if data_structure.numerics.ioptimz == 1:
             pass
         # ioptimz == -2: evaluation
-        elif fortran.numerics.ioptimz == -2:
+        elif data_structure.numerics.ioptimz == -2:
             # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
-                f"Invalid ioptimz value: {fortran.numerics.ioptimz}. Please "
+                f"Invalid ioptimz value: {data_structure.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
         self.scan = Scan(self.models, self.solver)

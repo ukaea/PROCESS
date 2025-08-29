@@ -19,6 +19,7 @@ from process.data_structure import (
     global_variables,
     heat_transport_variables,
     impurity_radiation_module,
+    numerics,
     pfcoil_variables,
     physics_variables,
     rebco_variables,
@@ -26,13 +27,8 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
 from process.log import logging_model_handler, show_errors
 from process.solver_handler import SolverHandler
-from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
-    string_to_f2py_compatible,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -203,7 +199,7 @@ class Scan:
         author: P J Knight, CCFE, Culham Science Centre
         ifail   : input integer : error flag
         """
-        numerics.sqsumsq = (numerics.rcm[: numerics.neqns] ** 2).sum() ** 0.5
+        numerics.sqsumsq = sum(r**2 for r in numerics.rcm[: numerics.neqns]) ** 0.5
 
         process_output.oheadr(constants.NOUT, "Numerics")
         if self.solver == "fsolve":
@@ -296,10 +292,7 @@ class Scan:
                 constants.NOUT, "Figure of merit switch", "(minmax)", numerics.minmax
             )
 
-            objf_name = string_to_f2py_compatible(
-                numerics.objf_name,
-                f'"{f2py_compatible_to_string(numerics.lablmm[abs(numerics.minmax) - 1])}"',
-            )
+            objf_name = f'"{numerics.lablmm[abs(numerics.minmax) - 1]}"'
 
             numerics.objf_name = objf_name
 
@@ -370,7 +363,7 @@ class Scan:
         for i in range(numerics.nvar):
             numerics.xcs[i] = numerics.xcm[i] * numerics.scafc[i]
 
-            name = f2py_compatible_to_string(numerics.lablxc[numerics.ixc[i] - 1])
+            name = numerics.lablxc[numerics.ixc[i] - 1]
             solution_vector_table.append([name, numerics.xcs[i], numerics.xcm[i]])
 
             xminn = 1.01 * numerics.itv_scaled_lower_bounds[i]
@@ -404,7 +397,7 @@ class Scan:
             # Write optimisation parameters to mfile
             process_output.ovarre(
                 constants.MFILE,
-                f2py_compatible_to_string(numerics.lablxc[numerics.ixc[i] - 1]),
+                numerics.lablxc[numerics.ixc[i] - 1],
                 f"(itvar{i + 1:03d})",
                 numerics.xcs[i],
             )
@@ -474,7 +467,7 @@ class Scan:
         # Write equality constraints to mfile
         equality_constraint_table = []
         for i in range(numerics.neqns):
-            name = f2py_compatible_to_string(numerics.lablcc[numerics.icc[i] - 1])
+            name = numerics.lablcc[numerics.icc[i] - 1]
 
             equality_constraint_table.append([
                 name,
@@ -518,7 +511,7 @@ class Scan:
                 )
 
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
-                name = f2py_compatible_to_string(numerics.lablcc[numerics.icc[i] - 1])
+                name = numerics.lablcc[numerics.icc[i] - 1]
                 inequality_constraint_table.append([
                     name,
                     sym[i],

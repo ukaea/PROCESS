@@ -1,5 +1,5 @@
+from process.data_structure import numerics
 from process.evaluators import Evaluators
-from process.fortran import numerics
 from process.iteration_variables import load_iteration_variables, load_scaled_bounds
 from process.solver import get_solver
 
