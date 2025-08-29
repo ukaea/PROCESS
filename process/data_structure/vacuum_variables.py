@@ -26,7 +26,7 @@ n_vv_vacuum_ducts: int = None
 dlscal: float = None
 """vacuum system duct length scaling"""
 
-pbase: float = None
+pres_vv_chamber_base: float = None
 """base pressure during dwell before gas pre-fill(Pa)"""
 
 prdiv: float = None
@@ -88,7 +88,7 @@ def init_vacuum_variables():
     global i_vacuum_pump_type
     global n_vv_vacuum_ducts
     global dlscal
-    global pbase
+    global pres_vv_chamber_base
     global prdiv
     global pumptp
     global rat
@@ -109,7 +109,7 @@ def init_vacuum_variables():
     i_vacuum_pump_type = 1
     n_vv_vacuum_ducts = 0
     dlscal = 0.0
-    pbase = 5.0e-4
+    pres_vv_chamber_base = 5.0e-4
     prdiv = 0.36
     pumptp = 1.2155e22
     rat = 1.3e-8

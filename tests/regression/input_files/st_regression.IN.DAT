@@ -3073,7 +3073,7 @@ lsa = 2
 *  (9.0 for N2, 5.0 for He and 25.0 for DT)
 * JUSTIFICATION: Not yet set.
 
-*pbase = 
+*pres_vv_chamber_base = 
 * DESCRIPTION:   Base pressure during dwell before gas pre-fill (Pa):
 * JUSTIFICATION: Not yet set.
 
