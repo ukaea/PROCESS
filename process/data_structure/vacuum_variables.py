@@ -29,7 +29,7 @@ dlscal: float = None
 pres_vv_chamber_base: float = None
 """base pressure during dwell before gas pre-fill(Pa)"""
 
-prdiv: float = None
+pres_div_chamber_burn: float = None
 """divertor chamber pressure during burn (Pa)"""
 
 pumptp: float = None
@@ -89,7 +89,7 @@ def init_vacuum_variables():
     global n_vv_vacuum_ducts
     global dlscal
     global pres_vv_chamber_base
-    global prdiv
+    global pres_div_chamber_burn
     global pumptp
     global rat
     global tn
@@ -110,7 +110,7 @@ def init_vacuum_variables():
     n_vv_vacuum_ducts = 0
     dlscal = 0.0
     pres_vv_chamber_base = 5.0e-4
-    prdiv = 0.36
+    pres_div_chamber_burn = 0.36
     pumptp = 1.2155e22
     rat = 1.3e-8
     tn = 300.0

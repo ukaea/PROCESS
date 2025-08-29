@@ -1354,7 +1354,7 @@ INPUT_VARIABLES = {
     "p_fusion_total_max_mw": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 10000.0)
     ),
-    "prdiv": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 10.0)),
+    "pres_div_chamber_burn": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 10.0)),
     "pres_fw_coolant": InputVariable(
         data_structure.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
