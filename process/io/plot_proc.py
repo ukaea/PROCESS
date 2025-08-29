@@ -9895,6 +9895,7 @@ def plot_fusion_rate_profiles(axis, mfile_data, scan):
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-",
     )
+    
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
         np.array(fusrat_plasma_dd_triton_profile) * constants.dd_triton_energy,

@@ -517,8 +517,11 @@ fusrat_plasma_dt_profile: list[float] = None
 fusrat_plasma_dd_helion_profile: list[float] = None
 """Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
 
-fusrat_plasma_dd_triton_profile: list[float] = None
-"""Profile of D-D fusion reaction rate (triton branch) in plasma, (reactions/sec)"""
+fusrat_plasma_dd_helion_profile: list[float] = None
+"""Profile of D-D fusion reaction rate (helium branch) in plasma, (reactions/sec)"""
+
+fusrat_plasma_dhe3_profile: list[float] = None
+"""Profile of D-3He fusion reaction rate in plasma, (reactions/sec)"""
 
 fusden_plasma: float = None
 """fusion reaction rate, just from plasma (reactions/m3/sec)"""
@@ -1431,6 +1434,7 @@ def init_physics_variables():
     global fusrat_plasma_dt_profile
     global fusrat_plasma_dd_triton_profile
     global fusrat_plasma_dd_helion_profile
+    global fusrat_plasma_dhe3_profile
     global fusden_plasma
     global f_c_plasma_non_inductive
     global ejima_coeff
@@ -1678,6 +1682,7 @@ def init_physics_variables():
     fusrat_plasma_dt_profile = []
     fusrat_plasma_dd_triton_profile = []
     fusrat_plasma_dd_helion_profile = []
+    fusrat_plasma_dhe3_profile = []
     fusden_plasma = 0.0
     f_c_plasma_non_inductive = 1.0
     ejima_coeff = 0.4
