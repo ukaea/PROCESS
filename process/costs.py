@@ -2064,11 +2064,11 @@ class Costs:
         """
         if vacuum_variables.i_vacuum_pump_type == 1:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.vpumpn * cost_variables.UCCPMP
+                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.UCCPMP
             )
         else:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.vpumpn * cost_variables.uctpmp
+                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.uctpmp
             )
 
         cost_variables.c2241 = cost_variables.fkind * cost_variables.c2241
