@@ -71,7 +71,7 @@ volflow_vac_pumps_max: float = None
 f_volflow_vac_pumps_impedance: float = None
 """effective pumping speed reduction factor due to duct impedance"""
 
-initialpressure: float = None
+pres_vv_chamber_dwell_start: float = None
 """initial neutral pressure at the beginning of the dwell phase (Pa)"""
 
 outgasindex: float = None
@@ -100,7 +100,7 @@ def init_vacuum_variables():
     global f_a_vac_pump_port_plasma_surface
     global volflow_vac_pumps_max
     global f_volflow_vac_pumps_impedance
-    global initialpressure
+    global pres_vv_chamber_dwell_start
     global outgasindex
     global outgasfactor
 
@@ -121,6 +121,6 @@ def init_vacuum_variables():
     f_a_vac_pump_port_plasma_surface = 0.0203
     volflow_vac_pumps_max = 27.3
     f_volflow_vac_pumps_impedance = 0.167
-    initialpressure = 1.0
+    pres_vv_chamber_dwell_start = 1.0
     outgasindex = 1.0
     outgasfactor = 0.0235
