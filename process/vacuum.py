@@ -69,7 +69,7 @@ class Vacuum:
                 output=output,
             )
             # MDK pumpn is real: convert to integer by rounding.
-            vacv.vpumpn = math.floor(pumpn + 0.5e0)
+            vacv.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
         elif self.vacuum_model == "simple":
             vacv.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:

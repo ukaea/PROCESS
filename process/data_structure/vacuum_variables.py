@@ -47,7 +47,7 @@ m_vv_vacuum_duct_shield: float = None
 dia_vv_vacuum_ducts: float = None
 """diameter of duct passage (m)"""
 
-vpumpn: int = None
+n_vac_pumps_high: int = None
 """number of high vacuum pumps"""
 
 i_vac_pump_dwell: int = None
@@ -95,7 +95,7 @@ def init_vacuum_variables():
     global tn
     global m_vv_vacuum_duct_shield
     global dia_vv_vacuum_ducts
-    global vpumpn
+    global n_vac_pumps_high
     global i_vac_pump_dwell
     global pumpareafraction
     global pumpspeedmax
@@ -116,7 +116,7 @@ def init_vacuum_variables():
     tn = 300.0
     m_vv_vacuum_duct_shield = 0.0
     dia_vv_vacuum_ducts = 0.0
-    vpumpn = 0
+    n_vac_pumps_high = 0
     i_vac_pump_dwell = 0
     pumpareafraction = 0.0203
     pumpspeedmax = 27.3
