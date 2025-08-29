@@ -39,7 +39,7 @@ class TestVacuum:
         monkeypatch.setattr(vacv, "pumpareafraction", 0.0203)
         monkeypatch.setattr(vacv, "pumpspeedfactor", 0.4)
         monkeypatch.setattr(vacv, "pumpspeedmax", 27.3)
-        monkeypatch.setattr(vacv, "pumptp", 1.2155e22)
+        monkeypatch.setattr(vacv, "molflow_vac_pumps", 1.2155e22)
 
         n_iter_vacuum_pumps = vacuum.vacuum_simple(output=False)
 

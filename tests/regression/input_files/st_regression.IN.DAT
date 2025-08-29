@@ -3081,7 +3081,7 @@ lsa = 2
 * DESCRIPTION:   Divertor chamber pressure during burn (Pa):
 * JUSTIFICATION: Not yet set.
 
-*pumptp = 
+*molflow_vac_pumps = 
 * DESCRIPTION:   Pump throughput (molecules/s) (default is ITER value) (default = 1.2155e+22) :
 * JUSTIFICATION: Not yet set.
 

@@ -89,7 +89,7 @@ class Vacuum:
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
-        n_iter_vacuum_pumps = pv.qfuel / vacv.pumptp
+        n_iter_vacuum_pumps = pv.qfuel / vacv.molflow_vac_pumps
 
         # Pump-down:
         # Pumping speed per pump m3/s
