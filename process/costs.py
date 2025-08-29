@@ -2062,7 +2062,7 @@ class Costs:
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if vacuum_variables.ntype == 1:
+        if vacuum_variables.i_vacuum_pump_type == 1:
             cost_variables.c2241 = (
                 1.0e-6 * vacuum_variables.vpumpn * cost_variables.UCCPMP
             )

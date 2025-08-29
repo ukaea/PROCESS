@@ -54,7 +54,7 @@ class TestVacuum:
         monkeypatch.setattr(pv, "te", 15.872999999999999)
         monkeypatch.setattr(tv, "t_precharge", 30)
         monkeypatch.setattr(vacv, "dwell_pump", 0)
-        monkeypatch.setattr(vacv, "ntype", 1)
+        monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)
         monkeypatch.setattr(vacv, "pbase", 0.00050000000000000001)
         monkeypatch.setattr(vacv, "prdiv", 0.35999999999999999)
         monkeypatch.setattr(vacv, "rat", 1.3000000000000001e-08)
