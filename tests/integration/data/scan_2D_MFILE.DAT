@@ -525,7 +525,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4126E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7176E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7176E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.6999E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5332E-01    
  # Energy confinement times, and required H-factors : #
@@ -1688,7 +1688,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4036E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7709E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7709E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7523E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5255E-01    
  # Energy confinement times, and required H-factors : #
@@ -2851,7 +2851,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3947E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7853E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7853E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7799E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5269E-01    
  # Energy confinement times, and required H-factors : #
@@ -4014,7 +4014,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3964E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7588E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7588E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7900E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5404E-01    
  # Energy confinement times, and required H-factors : #
@@ -5177,7 +5177,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4042E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7831E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7831E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7992E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5329E-01    
  # Energy confinement times, and required H-factors : #
@@ -6340,7 +6340,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4131E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.8047E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.8047E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7809E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5194E-01    
  # Energy confinement times, and required H-factors : #
@@ -7503,7 +7503,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4147E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7806E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7806E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7927E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5322E-01    
  # Energy confinement times, and required H-factors : #
@@ -8666,7 +8666,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4067E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7852E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7852E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8008E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5325E-01    
  # Energy confinement times, and required H-factors : #
@@ -9829,7 +9829,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3998E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7734E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7734E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7790E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5315E-01    
  # Energy confinement times, and required H-factors : #
@@ -10992,7 +10992,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4003E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7567E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7567E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8167E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5484E-01    
  # Energy confinement times, and required H-factors : #
@@ -12155,7 +12155,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4067E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7723E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7723E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8510E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5510E-01    
  # Energy confinement times, and required H-factors : #
@@ -13318,7 +13318,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4146E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7780E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7780E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8488E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5481E-01    
  # Energy confinement times, and required H-factors : #
@@ -14481,7 +14481,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4153E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7598E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7598E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8804E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5640E-01    
  # Energy confinement times, and required H-factors : #
@@ -15644,7 +15644,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4063E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7620E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7620E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.9113E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5713E-01    
  # Energy confinement times, and required H-factors : #
@@ -16807,7 +16807,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3971E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7644E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7644E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.9439E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5790E-01    
  # Energy confinement times, and required H-factors : #

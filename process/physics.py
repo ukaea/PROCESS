@@ -2491,7 +2491,7 @@ class Physics:
             physics_variables.nTtau,
             physics_variables.figmer,
             physics_variables.fusrat,
-            physics_variables.qfuel,
+            physics_variables.molflow_plasma_fuelling_required,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,
@@ -3422,7 +3422,7 @@ class Physics:
                 - nTtau (float): Plasma triple product nT-tau (s/m3).
                 - figmer (float): Physics figure of merit.
                 - fusrat (float): Number of fusion reactions per second.
-                - qfuel (float): Fuelling rate for D-T (nucleus-pairs/sec).
+                - molflow_plasma_fuelling_required (float): Fuelling rate for D-T (nucleus-pairs/sec).
                 - rndfuel (float): Fuel burnup rate (reactions/s).
                 - t_alpha_confinement (float): Alpha particle confinement time (s).
                 - f_alpha_energy_confinement (float): Fraction of alpha energy confinement.
@@ -3467,7 +3467,7 @@ class Physics:
         rndfuel = fusrat
 
         # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        qfuel = rndfuel / burnup
+        molflow_plasma_fuelling_required = rndfuel / burnup
 
         f_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
@@ -3477,7 +3477,7 @@ class Physics:
             nTtau,
             figmer,
             fusrat,
-            qfuel,
+            molflow_plasma_fuelling_required,
             rndfuel,
             t_alpha_confinement,
             f_alpha_energy_confinement,
@@ -6300,8 +6300,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Fuelling rate (nucleus-pairs/s)",
-            "(qfuel)",
-            physics_variables.qfuel,
+            "(molflow_plasma_fuelling_required)",
+            physics_variables.molflow_plasma_fuelling_required,
             "OP ",
         )
         po.ovarre(
