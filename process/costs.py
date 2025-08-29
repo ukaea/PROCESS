@@ -2075,14 +2075,14 @@ class Costs:
 
         #  Account 224.2 : Backing pumps
 
-        cost_variables.c2242 = 1.0e-6 * vacuum_variables.nvduct * cost_variables.UCBPMP
+        cost_variables.c2242 = 1.0e-6 * vacuum_variables.n_vv_vacuum_ducts * cost_variables.UCBPMP
         cost_variables.c2242 = cost_variables.fkind * cost_variables.c2242
 
         #  Account 224.3 : Vacuum duct
 
         cost_variables.c2243 = (
             1.0e-6
-            * vacuum_variables.nvduct
+            * vacuum_variables.n_vv_vacuum_ducts
             * vacuum_variables.dlscal
             * cost_variables.UCDUCT
         )
@@ -2093,7 +2093,7 @@ class Costs:
         cost_variables.c2244 = (
             1.0e-6
             * 2.0e0
-            * vacuum_variables.nvduct
+            * vacuum_variables.n_vv_vacuum_ducts
             * (vacuum_variables.vcdimax * 1.2e0) ** 1.4e0
             * cost_variables.UCVALV
         )
@@ -2103,7 +2103,7 @@ class Costs:
 
         cost_variables.c2245 = (
             1.0e-6
-            * vacuum_variables.nvduct
+            * vacuum_variables.n_vv_vacuum_ducts
             * vacuum_variables.vacdshm
             * cost_variables.UCVDSH
         )

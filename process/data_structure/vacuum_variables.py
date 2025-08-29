@@ -20,7 +20,7 @@ i_vacuum_pump_type: int = None
      (9.0 for N2, 5.0 for He and 25.0 for DT)
 """
 
-nvduct: int = None
+n_vv_vacuum_ducts: int = None
 """number of ducts (torus to pumps)"""
 
 dlscal: float = None
@@ -86,7 +86,7 @@ def init_vacuum_variables():
     global vacuum_model
     global n_iter_vacuum_pumps
     global i_vacuum_pump_type
-    global nvduct
+    global n_vv_vacuum_ducts
     global dlscal
     global pbase
     global prdiv
@@ -107,7 +107,7 @@ def init_vacuum_variables():
     vacuum_model = "old"
     n_iter_vacuum_pumps = 0.0
     i_vacuum_pump_type = 1
-    nvduct = 0
+    n_vv_vacuum_ducts = 0
     dlscal = 0.0
     pbase = 5.0e-4
     prdiv = 0.36
