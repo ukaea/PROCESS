@@ -41,7 +41,7 @@ rat: float = None
 tn: float = None
 """neutral gas temperature in chamber (K)"""
 
-vacdshm: float = None
+m_vv_vacuum_duct_shield: float = None
 """mass of vacuum duct shield (kg)"""
 
 vcdimax: float = None
@@ -93,7 +93,7 @@ def init_vacuum_variables():
     global pumptp
     global rat
     global tn
-    global vacdshm
+    global m_vv_vacuum_duct_shield
     global vcdimax
     global vpumpn
     global dwell_pump
@@ -114,7 +114,7 @@ def init_vacuum_variables():
     pumptp = 1.2155e22
     rat = 1.3e-8
     tn = 300.0
-    vacdshm = 0.0
+    m_vv_vacuum_duct_shield = 0.0
     vcdimax = 0.0
     vpumpn = 0
     dwell_pump = 0
