@@ -127,6 +127,7 @@ Below are a few shorthand designations for different systems that should be used
   - Electron Bernstein Wave: `_ebw_`
   - Neutral Beam: `_nb_`
 - Centre post: `_cp_` Should only be used for ST's
+- Vacuum pumping systems: `_vac_`
 - The fusion power plant as a whole: `_plant_`
 
 If the variables are physics variables and do not belong to a system then:
