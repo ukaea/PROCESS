@@ -57,7 +57,7 @@ class TestVacuum:
         monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)
         monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.00050000000000000001)
         monkeypatch.setattr(vacv, "pres_div_chamber_burn", 0.35999999999999999)
-        monkeypatch.setattr(vacv, "rat", 1.3000000000000001e-08)
+        monkeypatch.setattr(vacv, "outgrat_fw", 1.3000000000000001e-08)
         monkeypatch.setattr(vacv, "tn", 300)
 
         ndiv = 1

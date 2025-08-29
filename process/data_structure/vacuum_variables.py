@@ -35,7 +35,7 @@ pres_div_chamber_burn: float = None
 molflow_vac_pumps: float = None
 """Pump throughput (molecules/s) (default is ITER value)"""
 
-rat: float = None
+outgrat_fw: float = None
 """plasma chamber wall outgassing rate (Pa-m/s)"""
 
 tn: float = None
@@ -91,7 +91,7 @@ def init_vacuum_variables():
     global pres_vv_chamber_base
     global pres_div_chamber_burn
     global molflow_vac_pumps
-    global rat
+    global outgrat_fw
     global tn
     global m_vv_vacuum_duct_shield
     global dia_vv_vacuum_ducts
@@ -112,7 +112,7 @@ def init_vacuum_variables():
     pres_vv_chamber_base = 5.0e-4
     pres_div_chamber_burn = 0.36
     molflow_vac_pumps = 1.2155e22
-    rat = 1.3e-8
+    outgrat_fw = 1.3e-8
     tn = 300.0
     m_vv_vacuum_duct_shield = 0.0
     dia_vv_vacuum_ducts = 0.0

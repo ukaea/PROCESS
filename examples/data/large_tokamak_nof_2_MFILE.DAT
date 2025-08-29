@@ -990,7 +990,7 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)_____________________________ (ensxpfm)______________________ 2.95772752878290012e+04 OP
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)_____ (peakpoloidalpower)____________ 1.83811446876676598e+02 OP
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)______________________________________ (rat)__________________________ 1.30000000000000006e-08
+ First_wall_outgassing_rate_(Pa_m/s)______________________________________ (outgrat_fw)__________________________ 1.30000000000000006e-08
  Total_outgassing_load_(Pa_m3/s)__________________________________________ (ogas)_________________________ 1.66905769872398269e-04 OP
  Base_pressure_required_(Pa)______________________________________________ (pres_vv_chamber_base)________________________ 5.00000000000000010e-04
  Required_N2_pump_speed_(m3/s)____________________________________________ (s(1))_________________________ 3.33811539744796548e-01 OP

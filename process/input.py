@@ -1406,7 +1406,7 @@ INPUT_VARIABLES = {
     "radius_fw_channel": InputVariable(
         data_structure.fwbs_variables, float, range=(0.001, 0.5)
     ),
-    "rat": InputVariable(data_structure.vacuum_variables, float, range=(1e-10, 1e-06)),
+    "outgrat_fw": InputVariable(data_structure.vacuum_variables, float, range=(1e-10, 1e-06)),
     "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rbvfac": InputVariable(
         data_structure.buildings_variables, float, range=(0.9, 3.0)
