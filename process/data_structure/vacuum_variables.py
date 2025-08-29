@@ -1,4 +1,4 @@
-vacuum_model: str = None
+i_vacuum_pumping: str = None
 """switch for vacuum pumping model:
 
  - ='old' for old detailed ETR model
@@ -8,7 +8,7 @@ vacuum_model: str = None
 
 n_iter_vacuum_pumps: float = None
 """number of high vacuum pumps (real number), each with the throughput of one
-ITER cryopump (50 Pa m3 s-1), all operating at the same time (`vacuum_model='simple'`)
+ITER cryopump (50 Pa m3 s-1), all operating at the same time (`i_vacuum_pumping='simple'`)
 """
 
 i_vacuum_pump_type: int = None
@@ -59,7 +59,7 @@ i_vac_pump_dwell: int = None
 
    The following are used in the Battes, Day and Rohde pump-down model
    See "Basic considerations on the pump-down time in the dwell phase of a pulsed fusion DEMO"
-   http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(vacuum_model=simple')
+   http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(i_vacuum_pumping=simple')
 """
 
 f_a_vac_pump_port_plasma_surface: float = None
@@ -83,7 +83,7 @@ outgasfactor: float = None
 
 def init_vacuum_variables():
     """Initialise Vacuum variables"""
-    global vacuum_model
+    global i_vacuum_pumping
     global n_iter_vacuum_pumps
     global i_vacuum_pump_type
     global n_vv_vacuum_ducts
@@ -104,7 +104,7 @@ def init_vacuum_variables():
     global outgasindex
     global outgasfactor
 
-    vacuum_model = "old"
+    i_vacuum_pumping = "old"
     n_iter_vacuum_pumps = 0.0
     i_vacuum_pump_type = 1
     n_vv_vacuum_ducts = 0
