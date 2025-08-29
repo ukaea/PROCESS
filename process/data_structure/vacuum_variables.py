@@ -44,7 +44,7 @@ tn: float = None
 m_vv_vacuum_duct_shield: float = None
 """mass of vacuum duct shield (kg)"""
 
-vcdimax: float = None
+dia_vv_vacuum_ducts: float = None
 """diameter of duct passage (m)"""
 
 vpumpn: int = None
@@ -94,7 +94,7 @@ def init_vacuum_variables():
     global rat
     global tn
     global m_vv_vacuum_duct_shield
-    global vcdimax
+    global dia_vv_vacuum_ducts
     global vpumpn
     global dwell_pump
     global pumpareafraction
@@ -115,7 +115,7 @@ def init_vacuum_variables():
     rat = 1.3e-8
     tn = 300.0
     m_vv_vacuum_duct_shield = 0.0
-    vcdimax = 0.0
+    dia_vv_vacuum_ducts = 0.0
     vpumpn = 0
     dwell_pump = 0
     pumpareafraction = 0.0203

@@ -2094,7 +2094,7 @@ class Costs:
             1.0e-6
             * 2.0e0
             * vacuum_variables.n_vv_vacuum_ducts
-            * (vacuum_variables.vcdimax * 1.2e0) ** 1.4e0
+            * (vacuum_variables.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
             * cost_variables.UCVALV
         )
         cost_variables.c2244 = cost_variables.fkind * cost_variables.c2244
