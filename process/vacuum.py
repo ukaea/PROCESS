@@ -95,7 +95,7 @@ class Vacuum:
         # Pumping speed per pump m3/s
         pumpspeed = (
             vacv.pumpspeedmax
-            * vacv.pumpareafraction
+            * vacv.f_a_vac_pump_port_plasma_surface
             * vacv.pumpspeedfactor
             * pv.a_plasma_surface
             / tfv.n_tf_coils

@@ -1375,7 +1375,7 @@ INPUT_VARIABLES = {
     "pulsetimings": InputVariable(
         data_structure.times_variables, float, range=(0.0, 1.0)
     ),
-    "pumpareafraction": InputVariable(
+    "f_a_vac_pump_port_plasma_surface": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
     "pumpspeedfactor": InputVariable(

@@ -62,7 +62,7 @@ i_vac_pump_dwell: int = None
    http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(vacuum_model=simple')
 """
 
-pumpareafraction: float = None
+f_a_vac_pump_port_plasma_surface: float = None
 """area of one pumping port as a fraction of plasma surface area"""
 
 pumpspeedmax: float = None
@@ -97,7 +97,7 @@ def init_vacuum_variables():
     global dia_vv_vacuum_ducts
     global n_vac_pumps_high
     global i_vac_pump_dwell
-    global pumpareafraction
+    global f_a_vac_pump_port_plasma_surface
     global pumpspeedmax
     global pumpspeedfactor
     global initialpressure
@@ -118,7 +118,7 @@ def init_vacuum_variables():
     dia_vv_vacuum_ducts = 0.0
     n_vac_pumps_high = 0
     i_vac_pump_dwell = 0
-    pumpareafraction = 0.0203
+    f_a_vac_pump_port_plasma_surface = 0.0203
     pumpspeedmax = 27.3
     pumpspeedfactor = 0.167
     initialpressure = 1.0
