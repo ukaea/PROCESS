@@ -11,7 +11,7 @@ niterpump: float = None
 ITER cryopump (50 Pa m3 s-1), all operating at the same time (`vacuum_model='simple'`)
 """
 
-ntype: int = None
+i_vacuum_pump_type: int = None
 """switch for vacuum pump type:
 
    - =0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s
@@ -85,7 +85,7 @@ def init_vacuum_variables():
     """Initialise Vacuum variables"""
     global vacuum_model
     global niterpump
-    global ntype
+    global i_vacuum_pump_type
     global nvduct
     global dlscal
     global pbase
@@ -106,7 +106,7 @@ def init_vacuum_variables():
 
     vacuum_model = "old"
     niterpump = 0.0
-    ntype = 1
+    i_vacuum_pump_type = 1
     nvduct = 0
     dlscal = 0.0
     pbase = 5.0e-4

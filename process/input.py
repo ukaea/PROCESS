@@ -2180,7 +2180,7 @@ INPUT_VARIABLES = {
     "npdiv": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
     "nphcdin": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
     "nphcdout": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
-    "ntype": InputVariable(data_structure.vacuum_variables, int, choices=[0, 1]),
+    "i_vacuum_pump_type": InputVariable(data_structure.vacuum_variables, int, choices=[0, 1]),
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "i_p_coolant_pumping": InputVariable(

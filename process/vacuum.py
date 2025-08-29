@@ -260,9 +260,9 @@ class Vacuum:
         fsolid = 0.9e0  # Fraction of duct shielding that is solid material
 
         #  Pump type;
-        #    ntype = 0 for turbomolecular pump (mag. bearing) with a nominal
+        #    i_vacuum_pump_type = 0 for turbomolecular pump (mag. bearing) with a nominal
         #              speed of 2.0 m^3/s (1.95 for N2, 1.8 for He, 1.8 for DT)
-        #    ntype = 1 for compound cryopump with nominal speed of 10 m^3/s
+        #    i_vacuum_pump_type = 1 for compound cryopump with nominal speed of 10 m^3/s
         #              (9.0 for N2, 5.0 for He and 25. for DT)
 
         pfus = pfusmw * 1.0e6  # Fusion power (W)
@@ -293,7 +293,7 @@ class Vacuum:
         #  Speed of high-vacuum pumps (m^3/s)
 
         # nitrogen, DT, helium, DT again
-        sp = [1.95, 1.8, 1.8, 1.8] if vacv.ntype == 0 else [9.0, 25.0, 5.0, 25.0]
+        sp = [1.95, 1.8, 1.8, 1.8] if vacv.i_vacuum_pump_type == 0 else [9.0, 25.0, 5.0, 25.0]
 
         #  Calculate required pumping speeds
 
@@ -486,7 +486,7 @@ class Vacuum:
         #  If cryopumps are used then an additional pump is required
         #  for continuous operation with regeneration.
 
-        if vacv.ntype == 1:
+        if vacv.i_vacuum_pump_type == 1:
             pumpn = pumpn * 2.0e0
 
         #  Information for costing routine
@@ -619,7 +619,7 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "Conductance is inadequate.")
                 po.oblnkl(self.outfile)
 
-            i_fw_blkt_shared_coolant = "cryo " if vacv.ntype == 1 else "turbo"
+            i_fw_blkt_shared_coolant = "cryo " if vacv.i_vacuum_pump_type == 1 else "turbo"
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")
