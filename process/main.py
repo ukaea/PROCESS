@@ -51,6 +51,7 @@ import process
 import process.data_structure as data_structure
 import process.fortran as fortran
 import process.init as init
+from process import constants
 from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.build import Build
@@ -93,6 +94,7 @@ from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
+from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
@@ -100,7 +102,6 @@ from process.stellarator import Neoclassics, Stellarator
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
-from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
 
@@ -422,11 +423,7 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        fortran.global_variables.fileprefix = string_to_f2py_compatible(
-            fortran.global_variables.fileprefix,
-            str(self.input_path.resolve()),
-            except_length=True,
-        )
+        data_structure.global_variables.fileprefix = str(self.input_path.resolve())
 
     def set_output(self):
         """Set the output file name.
@@ -434,9 +431,7 @@ class SingleRun:
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
         self.output_path = Path(self.filename_prefix + "OUT.DAT")
-        fortran.global_variables.output_prefix = string_to_f2py_compatible(
-            fortran.global_variables.output_prefix, self.filename_prefix
-        )
+        data_structure.global_variables.output_prefix = self.filename_prefix
 
     def set_mfile(self):
         """Set the mfile filename."""
@@ -474,7 +469,7 @@ class SingleRun:
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        show_errors(fortran.constants.nout)
+        show_errors(constants.NOUT)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
@@ -482,7 +477,10 @@ class SingleRun:
         Files being handled by Fortran must be closed before attempting to
         write to them using Python, otherwise only parts are written.
         """
-        fortran.init_module.finish()
+        oheadr(constants.NOUT, "End of PROCESS Output")
+        oheadr(constants.IOTTY, "End of PROCESS Output")
+        oheadr(constants.NOUT, "Copy of PROCESS Input Follows")
+        OutputFileManager.finish()
 
     def append_input(self):
         """Append the input file to the output file and mfile."""

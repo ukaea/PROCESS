@@ -70,10 +70,6 @@ FILE(GLOB PROCESS_PYTHON_SRC_PATHS ${PROCESS_PYTHON_SRC_DIR}/*.py)
 # Define interface source filenames to wrap
 LIST(APPEND PROCESS_SRCS
     numerics.f90
-    constants.f90
-    output.f90
-    init_module.f90
-    global_variables.f90
 )
 
 PREPROCESS()

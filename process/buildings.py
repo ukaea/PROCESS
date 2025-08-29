@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     build_variables,
@@ -14,9 +15,6 @@ from process.data_structure import (
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    constants,
 )
 
 logger = logging.getLogger(__name__)
@@ -34,7 +32,7 @@ class Buildings:
 
         This routine calls the buildings calculations.
         """
-        self.outfile = constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool = False):
         # Find TF coil radial positions

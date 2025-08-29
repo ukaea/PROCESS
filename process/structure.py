@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import build_variables as bv
 from process.data_structure import divertor_variables as divv
@@ -11,7 +12,6 @@ from process.data_structure import pfcoil_variables as pfv
 from process.data_structure import physics_variables as pv
 from process.data_structure import structure_variables as stv
 from process.data_structure import tfcoil_variables as tfv
-from process.fortran import constants
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class Structure:
     """
 
     def __init__(self) -> None:
-        self.outfile = constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool = False) -> None:
         """Structure calculation caller

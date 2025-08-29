@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     build_variables,
@@ -9,15 +10,12 @@ from process.data_structure import (
     cost_variables,
     current_drive_variables,
     fwbs_variables,
+    global_variables,
     heat_transport_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    constants,
-    global_variables,
 )
 
 logger = logging.getLogger(__name__)
@@ -25,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 class Costs2015:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self):
         """
@@ -296,7 +294,7 @@ class Costs2015:
         cost_2015_variables.s_k[24] = (
             build_variables.a_fw_total
             * fwbs_variables.fw_armour_thickness
-            * constants.den_tungsten
+            * constants.DEN_TUNGSTEN
         )
         cost_2015_variables.s_kref[24] = 29000.0e0
         cost_2015_variables.s_cost[24] = (

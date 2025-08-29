@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
     build_variables,
@@ -21,14 +22,14 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import constants, numerics
+from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 
 
 class Power:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def pfpwr(self, output: bool):
         """
@@ -752,7 +753,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.temp_tf_cryo (MW)
             heat_transport_variables.p_cryo_plant_electric_mw = (
                 1.0e-6
-                * (constants.temp_room - tfcoil_variables.temp_tf_cryo)
+                * (constants.TEMP_ROOM - tfcoil_variables.temp_tf_cryo)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.temp_tf_cryo)
                 * heat_transport_variables.helpow
             )
@@ -774,7 +775,7 @@ class Power:
             # Calculate electric power requirement for cryogenic plant at tfcoil_variables.tcoolin (MW)
             p_tf_cryoal_cryo = (
                 1.0e-6
-                * (constants.temp_room - tfcoil_variables.tcoolin)
+                * (constants.TEMP_ROOM - tfcoil_variables.tcoolin)
                 / (tfcoil_variables.eff_tf_cryo * tfcoil_variables.tcoolin)
                 * heat_transport_variables.helpow_cryal
             )
