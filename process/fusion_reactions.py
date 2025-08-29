@@ -298,6 +298,16 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
+        
+        physics_variables.fusrat_plasma_dhe3_profile = (
+            bosch_hale_reactivity(
+                (physics_variables.ti / physics_variables.te)
+                * self.plasma_profile.teprofile.profile_y,
+                dhe3,
+            )
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
+        )
 
         # Reaction energy in MegaJoules [MJ]
         reaction_energy = constants.D_HELIUM_ENERGY / 1.0e6
