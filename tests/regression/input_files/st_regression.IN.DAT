@@ -3093,7 +3093,7 @@ lsa = 2
 * DESCRIPTION:   Neutral gas temperature in chamber (K) (default = 300) :
 * JUSTIFICATION: Not yet set.
 
-*dwell_pump = 
+*i_vac_pump_dwell = 
 * DESCRIPTION:   Switch for dwell pumping options:
 * =0 pumping only during t_between_pulse
 * =1 pumping only during t_precharge

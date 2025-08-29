@@ -50,7 +50,7 @@ dia_vv_vacuum_ducts: float = None
 vpumpn: int = None
 """number of high vacuum pumps"""
 
-dwell_pump: int = None
+i_vac_pump_dwell: int = None
 """switch for dwell pumping options:
 
    - =0 pumping only during t_between_pulse
@@ -96,7 +96,7 @@ def init_vacuum_variables():
     global m_vv_vacuum_duct_shield
     global dia_vv_vacuum_ducts
     global vpumpn
-    global dwell_pump
+    global i_vac_pump_dwell
     global pumpareafraction
     global pumpspeedmax
     global pumpspeedfactor
@@ -117,7 +117,7 @@ def init_vacuum_variables():
     m_vv_vacuum_duct_shield = 0.0
     dia_vv_vacuum_ducts = 0.0
     vpumpn = 0
-    dwell_pump = 0
+    i_vac_pump_dwell = 0
     pumpareafraction = 0.0203
     pumpspeedmax = 27.3
     pumpspeedfactor = 0.167
