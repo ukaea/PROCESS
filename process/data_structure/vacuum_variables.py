@@ -38,7 +38,7 @@ molflow_vac_pumps: float = None
 outgrat_fw: float = None
 """plasma chamber wall outgassing rate (Pa-m/s)"""
 
-tn: float = None
+temp_vv_chamber_gas_burn_end: float = None
 """neutral gas temperature in chamber (K)"""
 
 m_vv_vacuum_duct_shield: float = None
@@ -92,7 +92,7 @@ def init_vacuum_variables():
     global pres_div_chamber_burn
     global molflow_vac_pumps
     global outgrat_fw
-    global tn
+    global temp_vv_chamber_gas_burn_end
     global m_vv_vacuum_duct_shield
     global dia_vv_vacuum_ducts
     global n_vac_pumps_high
@@ -113,7 +113,7 @@ def init_vacuum_variables():
     pres_div_chamber_burn = 0.36
     molflow_vac_pumps = 1.2155e22
     outgrat_fw = 1.3e-8
-    tn = 300.0
+    temp_vv_chamber_gas_burn_end = 300.0
     m_vv_vacuum_duct_shield = 0.0
     dia_vv_vacuum_ducts = 0.0
     n_vac_pumps_high = 0
