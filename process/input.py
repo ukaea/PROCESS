@@ -1973,7 +1973,7 @@ INPUT_VARIABLES = {
         data_structure.rebco_variables, float, range=(1.0e6, 1.0e10)
     ),
     "cost_model": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
-    "dwell_pump": InputVariable(
+    "i_vac_pump_dwell": InputVariable(
         data_structure.vacuum_variables, int, choices=[0, 1, 2]
     ),
     "i_fw_blkt_vv_shape": InputVariable(

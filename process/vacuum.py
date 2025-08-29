@@ -329,9 +329,9 @@ class Vacuum:
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        if (vacv.dwell_pump == 1) or (t_between_pulse == 0):
+        if (vacv.i_vac_pump_dwell == 1) or (t_between_pulse == 0):
             tpump = tv.t_precharge
-        elif vacv.dwell_pump == 2:
+        elif vacv.i_vac_pump_dwell == 2:
             tpump = t_between_pulse + tv.t_precharge
         else:
             tpump = t_between_pulse
@@ -542,8 +542,8 @@ class Vacuum:
             po.ovarin(
                 self.outfile,
                 "Allowable pumping time switch",
-                "(dwell_pump)",
-                vacv.dwell_pump,
+                "(i_vac_pump_dwell)",
+                vacv.i_vac_pump_dwell,
             )
             po.ovarre(
                 self.outfile,

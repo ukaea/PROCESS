@@ -53,7 +53,7 @@ class TestVacuum:
         monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
         monkeypatch.setattr(pv, "te", 15.872999999999999)
         monkeypatch.setattr(tv, "t_precharge", 30)
-        monkeypatch.setattr(vacv, "dwell_pump", 0)
+        monkeypatch.setattr(vacv, "i_vac_pump_dwell", 0)
         monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)
         monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.00050000000000000001)
         monkeypatch.setattr(vacv, "pres_div_chamber_burn", 0.35999999999999999)
