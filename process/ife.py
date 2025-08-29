@@ -2512,7 +2512,7 @@ class IFE:
         vacuum_variables.dlscal = 2.0
         vacuum_variables.n_vv_vacuum_ducts = 16
         vacuum_variables.m_vv_vacuum_duct_shield = 0.0
-        vacuum_variables.vcdimax = 0.3
+        vacuum_variables.dia_vv_vacuum_ducts = 0.3
         vacuum_variables.vpumpn = 32
 
 
