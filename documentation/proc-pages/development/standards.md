@@ -226,6 +226,16 @@ This unit is normally used for fuelling or vacuum pumping models
 
 ---------------------
 
+##### Outgassing rates
+
+- Outgassing rates should start with the `outgrat_` prefix
+
+This should be used for units of $\text{Pa} \cdot \text{m}\text{s}^{-1}$
+
+This is normally used for vacuum systems and outgassing from its surfaces.
+
+---------------------
+
 ##### Mass flow rates
 
 - Mass flow rates should start with the `mflow_` prefix
