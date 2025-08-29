@@ -6,7 +6,6 @@ from typing import ClassVar, Literal
 import numpy as np
 
 import process.data_structure as data_structure
-import process.fortran as fortran
 from process import constants
 from process.exceptions import ProcessError, ProcessValueError
 
@@ -2406,7 +2405,7 @@ def constraint_eqns(m: int, ieqn: int):
     cc, con, err, symbol, units = [], [], [], [], []
 
     for i in range(i1, i2):
-        constraint_id = fortran.numerics.icc[i].item()
+        constraint_id = data_structure.numerics.icc[i]
         constraint = ConstraintManager.get_constraint(constraint_id)
 
         if constraint is None:

@@ -20,9 +20,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-from process.fortran import numerics
+from process.data_structure import numerics
 from process.io.mfile import MFile
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 # Variables of interest in mfiles and subsequent dataframes
 # Be specific about exact names, patterns and regex
@@ -407,8 +406,7 @@ def _plot_solutions(
     else:
         numerics.init_numerics()
         objf_list = {
-            f2py_compatible_to_string(numerics.lablmm[int(abs(minmax)) - 1])
-            for minmax in diffs_df["minmax"]
+            numerics.lablmm[int(abs(minmax)) - 1] for minmax in diffs_df["minmax"]
         }
 
     if len(objf_list) != 1:

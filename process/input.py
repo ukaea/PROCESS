@@ -8,9 +8,10 @@ from pathlib import Path
 from typing import Any
 from warnings import warn
 
+import numpy as np
+
 import process
 import process.data_structure as data_structure
-import process.fortran as fortran
 from process.constraints import ConstraintManager
 from process.exceptions import ProcessValidationError, ProcessValueError
 
@@ -22,13 +23,13 @@ DataTypes = (int, float, str)
 
 
 def _ixc_additional_actions(_name, value: int, _array_index, _config):
-    fortran.numerics.ixc[fortran.numerics.nvar.item()] = value
-    fortran.numerics.nvar += 1
+    data_structure.numerics.ixc[data_structure.numerics.nvar] = value
+    data_structure.numerics.nvar += 1
 
 
 def _icc_additional_actions(_name, value: int, _array_index, _config):
-    fortran.numerics.icc[fortran.numerics.n_constraints.item()] = value
-    fortran.numerics.n_constraints += 1
+    data_structure.numerics.icc[data_structure.numerics.n_constraints] = value
+    data_structure.numerics.n_constraints += 1
 
 
 @dataclass
@@ -95,18 +96,18 @@ INPUT_VARIABLES = {
     "runtitle": InputVariable(data_structure.global_variables, str),
     "verbose": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
     "run_tests": InputVariable(data_structure.global_variables, int, choices=[0, 1]),
-    "ioptimz": InputVariable(fortran.numerics, int, choices=[1, -2]),
-    "epsvmc": InputVariable(fortran.numerics, float, range=(0.0, 1.0)),
-    "boundl": InputVariable(fortran.numerics, float, array=True),
-    "boundu": InputVariable(fortran.numerics, float, array=True),
-    "epsfcn": InputVariable(fortran.numerics, float, range=(0.0, 1.0)),
+    "ioptimz": InputVariable(data_structure.numerics, int, choices=[1, -2]),
+    "epsvmc": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
+    "boundl": InputVariable(data_structure.numerics, float, array=True),
+    "boundu": InputVariable(data_structure.numerics, float, array=True),
+    "epsfcn": InputVariable(data_structure.numerics, float, range=(0.0, 1.0)),
     "maxcal": InputVariable(data_structure.global_variables, int, range=(0, 10000)),
-    "minmax": InputVariable(fortran.numerics, int),
+    "minmax": InputVariable(data_structure.numerics, int),
     "neqns": InputVariable(
-        fortran.numerics, int, range=(1, ConstraintManager.num_constraints())
+        data_structure.numerics, int, range=(1, ConstraintManager.num_constraints())
     ),
     "nineqns": InputVariable(
-        fortran.numerics, int, range=(1, ConstraintManager.num_constraints())
+        data_structure.numerics, int, range=(1, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
     "alphan": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
@@ -2278,14 +2279,14 @@ INPUT_VARIABLES = {
     "ixc": InputVariable(
         None,
         int,
-        range=(1, fortran.numerics.ipnvars.item()),
+        range=(1, data_structure.numerics.ipnvars),
         additional_actions=_ixc_additional_actions,
         set_variable=False,
     ),
     "icc": InputVariable(
         None,
         int,
-        range=(1, fortran.numerics.ipeqns.item()),
+        range=(1, data_structure.numerics.ipeqns),
         additional_actions=_icc_additional_actions,
         set_variable=False,
     ),
@@ -2341,7 +2342,13 @@ def parse_input_file():
         # defines the whole array so needs to be split down into its elements
         # and the parsed like an array defined as 'my_array(<index>) = <value>'
         if "," in variable_value:
-            getattr(variable_config.module, variable_name)[:] = 0.0
+            array = getattr(variable_config.module, variable_name)
+            zerod_array = [type(array[0])(0) for _ in range(len(array))]
+            setattr(
+                variable_config.module,
+                variable_name,
+                np.array(zerod_array) if isinstance(array, np.ndarray) else zerod_array,
+            )
             clean_variable_value = [
                 validate_variable(
                     variable_name,
@@ -2499,11 +2506,10 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
     :param config: the config of the variable that describes how to validate and process it.
     """
     current_array = getattr(config.module, name, ...)
-    shape = current_array.shape
 
     # use ... sentinel for same reason as above
     if current_array is ...:
-        error_msg = f"Fortran module '{config.module}' does not have an array '{name}'."
+        error_msg = f"Data structure '{config.module}' does not have an array '{name}'."
         raise ProcessValueError(error_msg)
 
     if config.type is str:
@@ -2511,12 +2517,6 @@ def set_array_variable(name: str, value: str, array_index: int, config: InputVar
 
     new_array = copy.deepcopy(current_array)
 
-    if len(shape) > 1:
-        new_array = new_array.T.ravel()
-
     new_array[array_index - 1] = value
-
-    if len(shape) > 1:
-        new_array = new_array.reshape(shape, order="F")
 
     setattr(config.module, name, new_array)

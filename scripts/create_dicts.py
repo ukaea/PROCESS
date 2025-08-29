@@ -686,39 +686,7 @@ def dict_icc_full():
         DICT_IXC_FULL['5'] = {'name' : 'beta'}
     """
 
-    di = {}
-
-    # get slice of file from ":: lablcc" to a blank line
-    lcctext = slice_file(SOURCEDIR + "/numerics.f90", r"::\slablcc", r"^$")
-
-    regexp = r"""
-               !!               #var comment begins with !!
-
-               .*?              #irrelevant stuff until open brackets
-
-               \(\s*(\d+)\s*\)  #an integer in brackets possibly bounded by
-                                #whitespace. Capture the number in group 1
-
-               \s*\*?\s*        #whitespace and a possible asterix
-
-               ([\w ]+)        #the name of the variable should be captured
-                               #in group 2
-              """
-    lcc = []
-    # ignore first and last lines
-    for line in lcctext[1:-1]:
-        match = re.search(regexp, line, re.VERBOSE)
-        if match:
-            num = int(match.group(1))
-            name = match.group(2).strip()
-            lcc.append(name)
-            assert num == len(lcc)
-
-    for i in range(len(lcc)):
-        assign = {"name": lcc[i]}
-        di[str(i + 1)] = assign
-
-    return di
+    return {str(k): {"name": v.name} for k, v in ITERATION_VARIABLES.items()}
 
 
 def dict_input_bounds():

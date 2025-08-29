@@ -198,6 +198,8 @@ def get_constraint_equations(data):
 
     # Find associated comments and create constraint dict
     for constraint_number in constraint_numbers:
+        if str(constraint_number) not in dicts["DICT_ICC_FULL"]:
+            continue
         comment = dicts["DICT_ICC_FULL"][str(constraint_number)]["name"]
         constraints[constraint_number] = comment
 

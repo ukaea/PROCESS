@@ -21,6 +21,7 @@ from process.data_structure import (
     heat_transport_variables,
     impurity_radiation_module,
     neoclassics_variables,
+    numerics,
     pfcoil_variables,
     physics_variables,
     rebco_variables,
@@ -32,7 +33,6 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
 from process.physics import rether
 from process.stellarator_config import load_stellarator_config
 
@@ -166,7 +166,7 @@ class Stellarator:
         self.availability.avail(output=False)
         self.costs.run()
 
-        if any(numerics.icc == 91):
+        if 91 in numerics.icc:
             # This call is comparably time consuming..
             # If the respective constraint equation is not called, do not set the values
             (

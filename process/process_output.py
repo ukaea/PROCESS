@@ -4,8 +4,7 @@ from pathlib import Path
 import numpy as np
 
 from process import constants
-from process.data_structure import global_variables
-from process.fortran import numerics
+from process.data_structure import global_variables, numerics
 
 
 class OutputFileManager:
