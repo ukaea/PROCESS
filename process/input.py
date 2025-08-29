@@ -1134,7 +1134,7 @@ INPUT_VARIABLES = {
     "ind_plasma_internal_norm": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 10.0)
     ),
-    "initialpressure": InputVariable(
+    "pres_vv_chamber_dwell_start": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 10000.0)
     ),
     "temp_blkt_coolant_in": InputVariable(
