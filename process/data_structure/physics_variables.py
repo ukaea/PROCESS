@@ -1057,7 +1057,7 @@ in which case q95 = mean edge safety factor qbar)
 """
 
 
-qfuel: float = None
+molflow_plasma_fuelling_required: float = None
 """plasma fuelling rate (nucleus-pairs/s)"""
 
 
@@ -1522,7 +1522,7 @@ def init_physics_variables():
     global pden_ion_transport_loss_mw
     global q0
     global q95
-    global qfuel
+    global molflow_plasma_fuelling_required
     global tauratio
     global q95_min
     global qstar
@@ -1766,7 +1766,7 @@ def init_physics_variables():
     pden_ion_transport_loss_mw = 0.0
     q0 = 1.0
     q95 = 0.0
-    qfuel = 0.0
+    molflow_plasma_fuelling_required = 0.0
     tauratio = 1.0
     q95_min = 0.0
     qstar = 0.0

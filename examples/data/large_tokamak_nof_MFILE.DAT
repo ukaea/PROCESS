@@ -493,7 +493,7 @@
  Diamagnetic_fraction_(enforced)__________________________________________ (diamagnetic_current_fraction.)_ 0.00000000000000000e+00 OP
  Pfirsch-Schlueter_fraction_(enforced)____________________________________ (ps_current_fraction.)_________ 0.00000000000000000e+00 OP
  Ratio_of_He_and_pellet_particle_confinement_times________________________ (tauratio)_____________________ 1.00000000000000000e+00
- Fuelling_rate_(nucleus-pairs/s)__________________________________________ (qfuel)________________________ 3.01653095758062472e+21 OP
+ Fuelling_rate_(nucleus-pairs/s)__________________________________________ (molflow_plasma_fuelling_required)________________________ 3.01653095758062472e+21 OP
  Fuel_burn-up_rate_(reactions/s)__________________________________________ (rndfuel)______________________ 6.21552794214192120e+20 OP
  Burn-up_fraction_________________________________________________________ (burnup)_______________________ 2.06048869696567494e-01 OP
  # Current Drive System #

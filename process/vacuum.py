@@ -42,7 +42,7 @@ class Vacuum:
         #  2 nuclei * nucleus-pairs/sec * mass/nucleus
 
         # MDK Check this!!
-        gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.umass
+        gasld = 2.0e0 * pv.molflow_plasma_fuelling_required * pv.m_fuel_amu * constants.umass
 
         self.vacuum_model = vacv.vacuum_model
 
@@ -89,7 +89,7 @@ class Vacuum:
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
-        n_iter_vacuum_pumps = pv.qfuel / vacv.molflow_vac_pumps
+        n_iter_vacuum_pumps = pv.molflow_plasma_fuelling_required / vacv.molflow_vac_pumps
 
         # Pump-down:
         # Pumping speed per pump m3/s
@@ -129,8 +129,8 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 "Plasma fuelling rate (nucleus-pairs/s)",
-                "(qfuel)",
-                pv.qfuel,
+                "(molflow_plasma_fuelling_required)",
+                pv.molflow_plasma_fuelling_required,
                 "OP ",
             )
             po.ocmmnt(
