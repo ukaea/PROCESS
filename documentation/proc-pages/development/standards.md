@@ -216,6 +216,16 @@ Example, the area of the TF winding pack: `a_tf_wp`
 
 ---------------------
 
+##### Molecule flow rates
+
+- Molecule flow rates should start with the `molflow_` prefix
+
+This should be used for units of $\text{molecules} \cdot \text{s}^{-1}$
+
+This unit is normally used for fuelling or vacuum pumping models
+
+---------------------
+
 ##### Mass flow rates
 
 - Mass flow rates should start with the `mflow_` prefix
