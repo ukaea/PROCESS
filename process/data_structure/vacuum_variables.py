@@ -32,7 +32,7 @@ pres_vv_chamber_base: float = None
 pres_div_chamber_burn: float = None
 """divertor chamber pressure during burn (Pa)"""
 
-pumptp: float = None
+molflow_vac_pumps: float = None
 """Pump throughput (molecules/s) (default is ITER value)"""
 
 rat: float = None
@@ -90,7 +90,7 @@ def init_vacuum_variables():
     global dlscal
     global pres_vv_chamber_base
     global pres_div_chamber_burn
-    global pumptp
+    global molflow_vac_pumps
     global rat
     global tn
     global m_vv_vacuum_duct_shield
@@ -111,7 +111,7 @@ def init_vacuum_variables():
     dlscal = 0.0
     pres_vv_chamber_base = 5.0e-4
     pres_div_chamber_burn = 0.36
-    pumptp = 1.2155e22
+    molflow_vac_pumps = 1.2155e22
     rat = 1.3e-8
     tn = 300.0
     m_vv_vacuum_duct_shield = 0.0
