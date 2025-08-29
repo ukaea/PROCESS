@@ -3059,13 +3059,13 @@ lsa = 2
 
 * Calculates pumping rates and required pumps*
 
-*vacuum_model = 
+*i_vacuum_pumping = 
 * DESCRIPTION:   Switch for vacuum pumping model:
 * ='old' for old detailed ETR model
 * ='simple' for simple steady-state model with comparison to ITER cryopumps
 * JUSTIFICATION: Not yet set.
 
-*ntype = 
+*i_vacuum_pump_type = 
 * DESCRIPTION:   Switch for vacuum pump type:
 * =0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s
 *    (1.95 for N2, 1.8 for He, 1.8 for DT)
@@ -3089,7 +3089,7 @@ lsa = 2
 * DESCRIPTION:   Plasma chamber wall outgassing rate (Pa-m/s) (default = 1.3D-8) :
 * JUSTIFICATION: Not yet set.
 
-*tn = 
+*temp_vv_chamber_gas_burn_end = 
 * DESCRIPTION:   Neutral gas temperature in chamber (K) (default = 300) :
 * JUSTIFICATION: Not yet set.
 
@@ -3104,15 +3104,15 @@ lsa = 2
 * DESCRIPTION:   Area of one pumping port as a fraction of plasma surface area (default = 0.0203) :
 * JUSTIFICATION: Not yet set.
 
-*pumpspeedmax = 
+*volflow_vac_pumps_max = 
 * DESCRIPTION:   Maximum pumping speed per unit area for deuterium & tritium, molecular flow (default = 27.3) :
 * JUSTIFICATION: Not yet set.
 
-*initialpressure = 
+*pres_vv_chamber_dwell_start = 
 * DESCRIPTION:   Initial neutral pressure at the beginning of the dwell phase (Pa) (default = 1.0) :
 * JUSTIFICATION: Not yet set.
 
-*pumpspeedfactor = 
+*f_volflow_vac_pumps_impedance = 
 * DESCRIPTION:   Effective pumping speed reduction factor due to duct impedance (default = 0.167) :
 * JUSTIFICATION: Not yet set.
 
@@ -3125,7 +3125,7 @@ lsa = 2
 * JUSTIFICATION: Not yet set.
 
 *icc = 63
-* DESCRIPTION:   Upper limit on n_iter_vacuum_pumps (vacuum_model = simple)
+* DESCRIPTION:   Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
 * JUSTIFICATION: Turned off, not using simple pumping 
 * VARIABLES:     tfno(TF coil number), n_iter_vacuum_pumps calculated in-situ
 
