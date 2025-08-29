@@ -1625,15 +1625,15 @@ def constraint_equation_62():
 
 @ConstraintManager.register_constraint(63, "", "<=")
 def constraint_equation_63():
-    """Upper limit on niterpump (vacuum_model = simple)
+    """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fniterpump: f-value for constraint that number of pumps < tfno
     tfno: number of TF coils (default = 50 for stellarators)
-    niterpump: number of high vacuum pumps (real number), each with the throughput
+    n_iter_vacuum_pumps: number of high vacuum pumps (real number), each with the throughput
     """
     cc = (
-        data_structure.vacuum_variables.niterpump
+        data_structure.vacuum_variables.n_iter_vacuum_pumps
         / data_structure.tfcoil_variables.n_tf_coils
         - 1.0 * data_structure.constraint_variables.fniterpump
     )
