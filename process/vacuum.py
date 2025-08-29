@@ -314,11 +314,11 @@ class Vacuum:
 
         #  Pumpdown between burns
         #  s(2) = net pump speed (DT) required for pumpdown between burns (m^3/s)
-        #  tn = temperature of neutral gas in chamber (K)
+        #  temp_vv_chamber_gas_burn_end = temperature of neutral gas in chamber (K)
         #  t_between_pulse = dwell time between burns (s)
 
         pend = (
-            0.5e0 * nplasma * k * vacv.tn
+            0.5e0 * nplasma * k * vacv.temp_vv_chamber_gas_burn_end
         )  # pressure in plasma chamber after burn (Pa)
         pstart = 0.01e0 * pend  # pressure in chamber before start of burn (Pa)
 

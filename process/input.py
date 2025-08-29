@@ -1729,7 +1729,7 @@ INPUT_VARIABLES = {
     "temp_tf_cryo": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.01, 293.0)
     ),
-    "tn": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
+    "temp_vv_chamber_gas_burn_end": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
     "i_t_current_ramp_up": InputVariable(
         data_structure.times_variables, int, choices=[0, 1]
     ),
