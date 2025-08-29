@@ -65,7 +65,7 @@ i_vac_pump_dwell: int = None
 f_a_vac_pump_port_plasma_surface: float = None
 """area of one pumping port as a fraction of plasma surface area"""
 
-pumpspeedmax: float = None
+volflow_vac_pumps_max: float = None
 """maximum pumping speed per unit area for deuterium & tritium, molecular flow"""
 
 pumpspeedfactor: float = None
@@ -98,7 +98,7 @@ def init_vacuum_variables():
     global n_vac_pumps_high
     global i_vac_pump_dwell
     global f_a_vac_pump_port_plasma_surface
-    global pumpspeedmax
+    global volflow_vac_pumps_max
     global pumpspeedfactor
     global initialpressure
     global outgasindex
@@ -119,7 +119,7 @@ def init_vacuum_variables():
     n_vac_pumps_high = 0
     i_vac_pump_dwell = 0
     f_a_vac_pump_port_plasma_surface = 0.0203
-    pumpspeedmax = 27.3
+    volflow_vac_pumps_max = 27.3
     pumpspeedfactor = 0.167
     initialpressure = 1.0
     outgasindex = 1.0

@@ -1381,7 +1381,7 @@ INPUT_VARIABLES = {
     "pumpspeedfactor": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1.0)
     ),
-    "pumpspeedmax": InputVariable(
+    "volflow_vac_pumps_max": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
     "molflow_vac_pumps": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 1e30)),
