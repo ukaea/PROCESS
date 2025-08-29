@@ -49,7 +49,7 @@ class Vacuum:
         # vacuum_model required to be compared to a b string
         # as this is what f2py returns
         if self.vacuum_model == "old":
-            pumpn, vacv.nvduct, vacv.dlscal, vacv.vacdshm, vacv.vcdimax = self.vacuum(
+            pumpn, vacv.n_vv_vacuum_ducts, vacv.dlscal, vacv.vacdshm, vacv.vcdimax = self.vacuum(
                 pv.p_fusion_total_mw,
                 pv.rmajor,
                 pv.rminor,

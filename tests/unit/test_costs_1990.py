@@ -3123,7 +3123,7 @@ class Acc224Param(NamedTuple):
 
     i_vacuum_pump_type: Any = None
 
-    nvduct: Any = None
+    n_vv_vacuum_ducts: Any = None
 
     c22: Any = None
 
@@ -3164,7 +3164,7 @@ class Acc224Param(NamedTuple):
             vpumpn=46,
             vcdimax=0.57081858183821432,
             i_vacuum_pump_type=1,
-            nvduct=16,
+            n_vv_vacuum_ducts=16,
             c22=0,
             c224=0,
             c2241=0,
@@ -3187,7 +3187,7 @@ class Acc224Param(NamedTuple):
             vpumpn=46,
             vcdimax=0.57072331228476758,
             i_vacuum_pump_type=1,
-            nvduct=16,
+            n_vv_vacuum_ducts=16,
             c22=3474.7391916096453,
             c224=34.593599813216727,
             c2241=17.940000000000001,
@@ -3230,7 +3230,7 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type)
 
-    monkeypatch.setattr(vacuum_variables, "nvduct", acc224param.nvduct)
+    monkeypatch.setattr(vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts)
 
     monkeypatch.setattr(cost_variables, "c22", acc224param.c22)
 
