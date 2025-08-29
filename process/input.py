@@ -1354,7 +1354,9 @@ INPUT_VARIABLES = {
     "p_fusion_total_max_mw": InputVariable(
         data_structure.constraint_variables, float, range=(1.0, 10000.0)
     ),
-    "pres_div_chamber_burn": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 10.0)),
+    "pres_div_chamber_burn": InputVariable(
+        data_structure.vacuum_variables, float, range=(0.0, 10.0)
+    ),
     "pres_fw_coolant": InputVariable(
         data_structure.fwbs_variables, float, range=(100000.0, 100000000.0)
     ),
@@ -1384,7 +1386,9 @@ INPUT_VARIABLES = {
     "volflow_vac_pumps_max": InputVariable(
         data_structure.vacuum_variables, float, range=(1e-06, 1000.0)
     ),
-    "molflow_vac_pumps": InputVariable(data_structure.vacuum_variables, float, range=(0.0, 1e30)),
+    "molflow_vac_pumps": InputVariable(
+        data_structure.vacuum_variables, float, range=(0.0, 1e30)
+    ),
     "pflux_plant_floor_electric": InputVariable(
         data_structure.heat_transport_variables, float, range=(0.0, 1000.0)
     ),
@@ -1406,7 +1410,9 @@ INPUT_VARIABLES = {
     "radius_fw_channel": InputVariable(
         data_structure.fwbs_variables, float, range=(0.001, 0.5)
     ),
-    "outgrat_fw": InputVariable(data_structure.vacuum_variables, float, range=(1e-10, 1e-06)),
+    "outgrat_fw": InputVariable(
+        data_structure.vacuum_variables, float, range=(1e-10, 1e-06)
+    ),
     "rbrt": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "rbvfac": InputVariable(
         data_structure.buildings_variables, float, range=(0.9, 3.0)
@@ -1729,7 +1735,9 @@ INPUT_VARIABLES = {
     "temp_tf_cryo": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.01, 293.0)
     ),
-    "temp_vv_chamber_gas_burn_end": InputVariable(data_structure.vacuum_variables, float, range=(1.0, 1000.0)),
+    "temp_vv_chamber_gas_burn_end": InputVariable(
+        data_structure.vacuum_variables, float, range=(1.0, 1000.0)
+    ),
     "i_t_current_ramp_up": InputVariable(
         data_structure.times_variables, int, choices=[0, 1]
     ),
@@ -2180,7 +2188,9 @@ INPUT_VARIABLES = {
     "npdiv": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
     "nphcdin": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
     "nphcdout": InputVariable(data_structure.fwbs_variables, int, range=(0, 4)),
-    "i_vacuum_pump_type": InputVariable(data_structure.vacuum_variables, int, choices=[0, 1]),
+    "i_vacuum_pump_type": InputVariable(
+        data_structure.vacuum_variables, int, choices=[0, 1]
+    ),
     "num_rh_systems": InputVariable(data_structure.cost_variables, int, range=(1, 10)),
     "output_costs": InputVariable(data_structure.cost_variables, int, choices=[0, 1]),
     "i_p_coolant_pumping": InputVariable(
@@ -2214,7 +2224,7 @@ INPUT_VARIABLES = {
     "i_fw_coolant_type": InputVariable(
         data_structure.fwbs_variables, str, choices=["helium", "water"]
     ),
-    "vacuum_model": InputVariable(
+    "i_vacuum_pumping": InputVariable(
         data_structure.vacuum_variables, str, choices=["old", "simple"]
     ),
     "dcond": InputVariable(data_structure.tfcoil_variables, float, array=True),

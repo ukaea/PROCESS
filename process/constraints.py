@@ -1625,7 +1625,7 @@ def constraint_equation_62():
 
 @ConstraintManager.register_constraint(63, "", "<=")
 def constraint_equation_63():
-    """Upper limit on n_iter_vacuum_pumps (vacuum_model = simple)
+    """Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fniterpump: f-value for constraint that number of pumps < tfno

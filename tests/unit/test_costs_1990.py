@@ -3222,15 +3222,25 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(vacuum_variables, "dlscal", acc224param.dlscal)
 
-    monkeypatch.setattr(vacuum_variables, "m_vv_vacuum_duct_shield", acc224param.m_vv_vacuum_duct_shield)
+    monkeypatch.setattr(
+        vacuum_variables, "m_vv_vacuum_duct_shield", acc224param.m_vv_vacuum_duct_shield
+    )
 
-    monkeypatch.setattr(vacuum_variables, "n_vac_pumps_high", acc224param.n_vac_pumps_high)
+    monkeypatch.setattr(
+        vacuum_variables, "n_vac_pumps_high", acc224param.n_vac_pumps_high
+    )
 
-    monkeypatch.setattr(vacuum_variables, "dia_vv_vacuum_ducts", acc224param.dia_vv_vacuum_ducts)
+    monkeypatch.setattr(
+        vacuum_variables, "dia_vv_vacuum_ducts", acc224param.dia_vv_vacuum_ducts
+    )
 
-    monkeypatch.setattr(vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type)
+    monkeypatch.setattr(
+        vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type
+    )
 
-    monkeypatch.setattr(vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts)
+    monkeypatch.setattr(
+        vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc224param.c22)
 

@@ -42,14 +42,25 @@ class Vacuum:
         #  2 nuclei * nucleus-pairs/sec * mass/nucleus
 
         # MDK Check this!!
-        gasld = 2.0e0 * pv.molflow_plasma_fuelling_required * pv.m_fuel_amu * constants.umass
+        gasld = (
+            2.0e0
+            * pv.molflow_plasma_fuelling_required
+            * pv.m_fuel_amu
+            * constants.umass
+        )
 
-        self.vacuum_model = vacv.vacuum_model
+        self.i_vacuum_pumping = vacv.i_vacuum_pumping
 
-        # vacuum_model required to be compared to a b string
+        # i_vacuum_pumping required to be compared to a b string
         # as this is what f2py returns
-        if self.vacuum_model == "old":
-            pumpn, vacv.n_vv_vacuum_ducts, vacv.dlscal, vacv.m_vv_vacuum_duct_shield, vacv.dia_vv_vacuum_ducts = self.vacuum(
+        if self.i_vacuum_pumping == "old":
+            (
+                pumpn,
+                vacv.n_vv_vacuum_ducts,
+                vacv.dlscal,
+                vacv.m_vv_vacuum_duct_shield,
+                vacv.dia_vv_vacuum_ducts,
+            ) = self.vacuum(
                 pv.p_fusion_total_mw,
                 pv.rmajor,
                 pv.rminor,
@@ -70,10 +81,10 @@ class Vacuum:
             )
             # MDK pumpn is real: convert to integer by rounding.
             vacv.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
-        elif self.vacuum_model == "simple":
+        elif self.i_vacuum_pumping == "simple":
             vacv.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:
-            logger.error(f"vacuum_model is invalid: {vacv.vacuum_model}")
+            logger.error(f"i_vacuum_pumping is invalid: {vacv.i_vacuum_pumping}")
 
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system
@@ -89,7 +100,9 @@ class Vacuum:
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
-        n_iter_vacuum_pumps = pv.molflow_plasma_fuelling_required / vacv.molflow_vac_pumps
+        n_iter_vacuum_pumps = (
+            pv.molflow_plasma_fuelling_required / vacv.molflow_vac_pumps
+        )
 
         # Pump-down:
         # Pumping speed per pump m3/s
@@ -119,8 +132,8 @@ class Vacuum:
             po.ovarst(
                 self.outfile,
                 "Switch for vacuum pumping model",
-                "(vacuum_model)",
-                '"' + self.vacuum_model + '"',
+                "(i_vacuum_pumping)",
+                '"' + self.i_vacuum_pumping + '"',
             )
             po.ocmmnt(
                 self.outfile,
@@ -293,7 +306,11 @@ class Vacuum:
         #  Speed of high-vacuum pumps (m^3/s)
 
         # nitrogen, DT, helium, DT again
-        sp = [1.95, 1.8, 1.8, 1.8] if vacv.i_vacuum_pump_type == 0 else [9.0, 25.0, 5.0, 25.0]
+        sp = (
+            [1.95, 1.8, 1.8, 1.8]
+            if vacv.i_vacuum_pump_type == 0
+            else [9.0, 25.0, 5.0, 25.0]
+        )
 
         #  Calculate required pumping speeds
 
@@ -351,7 +368,9 @@ class Vacuum:
         #  Removal of dt on steady state basis
         #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
 
-        s.append((frate * 4.985e5 - source) / (vacv.pres_div_chamber_burn * (1.0e0 - fhe)))
+        s.append(
+            (frate * 4.985e5 - source) / (vacv.pres_div_chamber_burn * (1.0e0 - fhe))
+        )
 
         #  Calculate conductance of a single duct
 
@@ -510,13 +529,19 @@ class Vacuum:
             po.ocmmnt(self.outfile, "Pumpdown to Base Pressure :")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "First wall outgassing rate (Pa m/s)", "(outgrat_fw)", vacv.outgrat_fw
+                self.outfile,
+                "First wall outgassing rate (Pa m/s)",
+                "(outgrat_fw)",
+                vacv.outgrat_fw,
             )
             po.ovarre(
                 self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "
             )
             po.ovarre(
-                self.outfile, "Base pressure required (Pa)", "(pres_vv_chamber_base)", vacv.pres_vv_chamber_base
+                self.outfile,
+                "Base pressure required (Pa)",
+                "(pres_vv_chamber_base)",
+                vacv.pres_vv_chamber_base,
             )
             po.ovarre(
                 self.outfile, "Required N2 pump speed (m3/s)", "(s(1))", s[0], "OP "
@@ -619,7 +644,9 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "Conductance is inadequate.")
                 po.oblnkl(self.outfile)
 
-            i_fw_blkt_shared_coolant = "cryo " if vacv.i_vacuum_pump_type == 1 else "turbo"
+            i_fw_blkt_shared_coolant = (
+                "cryo " if vacv.i_vacuum_pump_type == 1 else "turbo"
+            )
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")
