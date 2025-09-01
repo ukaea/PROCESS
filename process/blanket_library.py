@@ -1060,7 +1060,7 @@ class BlanketLibrary:
             n_pipe_90_deg_bends=N_FW_PIPE_90_DEG_BENDS,
             n_pipe_180_deg_bends=N_FW_PIPE_180_DEG_BENDS,
             den_coolant=fwbs_variables.den_fw_coolant,
-            visc_coolant=fwbs_variables.visc_fw_coolant,
+            visc_coolant_dynamic=fwbs_variables.visc_fw_coolant,
             coolant_electrical_conductivity=0.0e0,
             pol_channel_length=pollengi,
             nopolchan=npoltoti,

@@ -26,6 +26,7 @@ from process.data_structure import (
     structure_variables,
     tfcoil_variables,
 )
+from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
@@ -48,7 +49,7 @@ def stellarator():
         Costs(),
         Power(),
         PlasmaProfile(),
-        CCFE_HCPB(),
+        CCFE_HCPB(Fw()),
         CurrentDrive(
             PlasmaProfile(),
             ElectronCyclotron(plasma_profile=PlasmaProfile()),

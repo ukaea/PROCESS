@@ -16,6 +16,7 @@ from process.data_structure import (
 from process.fortran import (
     global_variables,
 )
+from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 
 
@@ -26,7 +27,7 @@ def ccfe_hcpb():
     :returns: initialised CCFE_HCPB object
     :rtype: process.hcpb.CCFE_HCPB
     """
-    return CCFE_HCPB()
+    return CCFE_HCPB(Fw())
 
 
 class NuclearHeatingMagnetsParam(NamedTuple):
