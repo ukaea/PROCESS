@@ -53,7 +53,7 @@ class SuperconductingTFCoil(TFCoil):
         self.iprint = 0
 
         # Set up TF values share by all coil types
-        super().run_base_tf()
+        self.run_base_tf()
 
         self.sc_tf_internal_geom(
             tfcoil_variables.i_tf_wp_geom,
@@ -89,7 +89,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.vforce_outboard,
             superconducting_tf_coil_variables.vforce_inboard_tot,
             tfcoil_variables.f_vforce_inboard,
-        ) = super().tf_field_and_force(
+        ) = self.tf_field_and_force(
             i_tf_sup=tfcoil_variables.i_tf_sup,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
@@ -109,7 +109,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # Calculate TF coil areas and masses
-        super().generic_tf_coil_area_and_masses()
+        self.generic_tf_coil_area_and_masses()
         self.superconducting_tf_coil_areas_and_masses()
 
         # Do stress calculations (writes the stress output)

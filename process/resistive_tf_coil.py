@@ -1131,21 +1131,9 @@ class CopperTFCoil(ResistiveTFCoil):
     Inherits from ResistiveTFCoil and implements specific methods for copper TF coils.
     """
 
-    def __init__(self):
-        super().__init__()
-
-    def run(self, output: bool):
-        super().run(output)
-
 
 class AluminiumTFCoil(ResistiveTFCoil):
     """
     Aluminium TF coil class for resistive TF coil calculations.
     Inherits from ResistiveTFCoil and implements specific methods for aluminium TF coils.
     """
-
-    def __init__(self):
-        super().__init__()
-
-    def run(self, output: bool):
-        super().run(output)
