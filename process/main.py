@@ -687,7 +687,7 @@ class Models:
             physics=self.physics,
             neoclassics=self.neoclassics,
         )
-        self.dcll = DCLL()
+        self.dcll = DCLL(fw=self.fw)
 
     @property
     def costs(self) -> CostsProtocol:

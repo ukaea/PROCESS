@@ -89,13 +89,10 @@ class DCLL(BlanketLibrary):
     Note: request for when CCFE Bluemira nutronics work is added: output maximum values, as well as average values, for wall neutronics calculation if possible.
     """
 
-    def __init__(self) -> None:
-        self.outfile = constants.nout
-
     def run(self, output: bool):
-        super().component_volumes()
-        super().primary_coolant_properties(output=output)
-        super().liquid_breeder_properties(output=output)
+        self.component_volumes()
+        self.primary_coolant_properties(output=output)
+        self.liquid_breeder_properties(output=output)
         self.dcll_neutronics_and_power(output=output)
         self.dcll_masses(output=output)
         self.dcll_power_and_heating(output=output)
@@ -311,7 +308,7 @@ class DCLL(BlanketLibrary):
 
         elif fwbs_variables.i_p_coolant_pumping in [2, 3]:
             # Mechanical pumping power is calculated for first wall and blanket
-            super().thermo_hydraulic_model(output=output)
+            self.thermo_hydraulic_model(output=output)
             # For divertor,mechanical pumping power is a fraction of thermal power removed by coolant
             heat_transport_variables.p_div_coolant_pump_mw = (
                 heat_transport_variables.f_p_div_coolant_pump_total_heat
