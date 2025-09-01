@@ -37,16 +37,13 @@ class CCFE_HCPB(BlanketLibrary):
         doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
     """
 
-    def __init__(self) -> None:
-        self.outfile = constants.nout
-
     def run(self, output: bool):
         # Coolant type
         fwbs_variables.i_blkt_coolant_type = 1
         # Note that the first wall coolant is now input separately.
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
-        super().component_volumes()
+        self.component_volumes()
 
         # Centrepost neutronics
         if physics_variables.itart == 1:
@@ -812,9 +809,9 @@ class CCFE_HCPB(BlanketLibrary):
 
         elif fwbs_variables.i_p_coolant_pumping == 2:
             # Calculate the required material properties of the FW and BB coolant.
-            super().primary_coolant_properties(output=output)
+            self.primary_coolant_properties(output=output)
             # Mechanical pumping power is calculated for first wall and blanket
-            super().thermo_hydraulic_model(output)
+            self.thermo_hydraulic_model(output)
 
             # For divertor and shield, mechanical pumping power is a fraction of thermal
             # power removed by coolant

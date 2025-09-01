@@ -662,7 +662,7 @@ class Models:
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
-        self.ccfe_hcpb = CCFE_HCPB()
+        self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
             electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
@@ -687,7 +687,7 @@ class Models:
             physics=self.physics,
             neoclassics=self.neoclassics,
         )
-        self.dcll = DCLL()
+        self.dcll = DCLL(fw=self.fw)
 
     @property
     def costs(self) -> CostsProtocol:

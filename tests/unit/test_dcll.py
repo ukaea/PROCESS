@@ -10,6 +10,7 @@ from process.data_structure import (
     physics_variables,
 )
 from process.dcll import DCLL
+from process.fw import Fw
 
 
 @pytest.fixture
@@ -19,7 +20,7 @@ def dcll():
     :returns: initialised DCLL object
     :rtype: process.dcll.DCLL
     """
-    return DCLL()
+    return DCLL(Fw())
 
 
 class DcllNeutronicsAndPowerParam(NamedTuple):
