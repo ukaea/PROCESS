@@ -29,12 +29,12 @@ class ResistiveTFCoil(TFCoil):
         self.iprint = 0
 
         # Set up TF values share by all coil types
-        super().run_base_tf()
+        self.run_base_tf()
 
         self.res_tf_internal_geom()
         self.tf_res_heating()
 
-        tfcoil_variables.ind_tf_coil = super().tf_coil_self_inductance(
+        tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
             dr_tf_inboard=build_variables.dr_tf_inboard,
             r_tf_arc=tfcoil_variables.r_tf_arc,
             z_tf_arc=tfcoil_variables.z_tf_arc,
@@ -62,7 +62,7 @@ class ResistiveTFCoil(TFCoil):
             tfcoil_variables.vforce_outboard,
             superconducting_tf_coil_variables.vforce_inboard_tot,
             tfcoil_variables.f_vforce_inboard,
-        ) = super().tf_field_and_force(
+        ) = self.tf_field_and_force(
             i_tf_sup=tfcoil_variables.i_tf_sup,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
@@ -82,7 +82,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         # Calculate TF coil areas and masses
-        super().generic_tf_coil_area_and_masses()
+        self.generic_tf_coil_area_and_masses()
         self.resistive_tf_coil_areas_and_masses()
 
         # Do stress calculations (writes the stress output)

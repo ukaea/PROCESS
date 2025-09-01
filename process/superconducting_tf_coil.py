@@ -61,7 +61,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.i_tf_turns_integer,
         )
 
-        tfcoil_variables.ind_tf_coil = super().tf_coil_self_inductance(
+        tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
             dr_tf_inboard=build_variables.dr_tf_inboard,
             r_tf_arc=tfcoil_variables.r_tf_arc,
             z_tf_arc=tfcoil_variables.z_tf_arc,
