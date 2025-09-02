@@ -20,6 +20,7 @@ from process.data_structure import (
     power_variables,
     primary_pumping_variables,
     structure_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -2068,7 +2069,9 @@ class Power:
         r1ppmw = nsptfc * r1dump * (c_tf_turn_ka / 2.0e0) ** 2
 
         #  Energy to dump resistor during quench, MJ
-        r1emj = nsptfc * e_tf_magnetic_stored_mj / (n_tf_dump_resistors + 0.0001e0)
+        r1emj = (
+            nsptfc * e_tf_magnetic_stored_total_mj / (n_tf_dump_resistors + 0.0001e0)
+        )
 
         #  Total TF coil peak resistive power demand, MVA
         rpower = (n_tf_coils * 0.0 + res_tf_bus) * c_tf_turn_ka**2
