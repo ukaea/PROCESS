@@ -1928,14 +1928,6 @@ class Power:
         the power conversion requirements for superconducting TF coils.
         None
         """
-        e_tf_coil_magnetic_stored_mj = (
-            (
-            tfcoil_variables.e_tf_magnetic_stored_total_gj
-            / tfcoil_variables.n_tf_coils
-            * 1.0e3
-        )
-        )
-
         #  TF coil current (kA)
 
         itfka = 1.0e-3 * tfcoil_variables.c_tf_turn
@@ -1947,13 +1939,14 @@ class Power:
             buildings_variables.tfcbv,
             heat_transport_variables.p_tf_electric_supplies_mw,
         ) = self.tfcpwr(
-            output,
-            itfka,
-            physics_variables.rmajor,
-            tfcoil_variables.n_tf_coils,
-            tfcoil_variables.v_tf_coil_dump_quench_kv,
-            e_tf_coil_magnetic_stored_mj,
-            tfcoil_variables.res_tf_leg,
+            output=output,
+            itfka=itfka,
+            rmajor=physics_variables.rmajor,
+            n_tf_coils=tfcoil_variables._tf_coils,
+            v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
+            e_tf_coil_magnetic_stored_mj=tfcoil_variables.e_tf_coil_magnetic_stored
+            / 1e6,
+            rptfc=tfcoil_variables.res_tf_leg,
         )
 
     def tfcpwr(
@@ -1962,7 +1955,7 @@ class Power:
         itfka: float,
         rmajor: float,
         n_tf_coils: int,
-        vtfskv: float,
+        v_tf_coil_dump_quench_kv: float,
         e_tf_coil_magnetic_stored_mj: float,
         rptfc: float,
     ) -> tuple[float, float, float, float, float]:
@@ -1977,8 +1970,8 @@ class Power:
         :type rmajor: float
         :param n_tf_coils: Number of TF coils.
         :type n_tf_coils: int
-        :param vtfskv: Voltage across a TF coil during quench (kV).
-        :type vtfskv: float
+        :param v_tf_coil_dump_quench_kv: Voltage across a TF coil during quench (kV).
+        :type v_tf_coil_dump_quench_kv: float
         :param e_tf_coil_magnetic_stored_mj: Stored energy per TF coil (MJ).
         :type e_tf_coil_magnetic_stored_mj: float
         :param rptfc: Resistance per TF coil (ohm).
