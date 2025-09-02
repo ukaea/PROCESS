@@ -21,7 +21,7 @@ class TestVacuum:
     def test_simple_model(self, monkeypatch, vacuum):
         """Tests `vacuum_simple` subroutine.
 
-        Values taken from first calling of the model in vacuum_model regression test.
+        Values taken from first calling of the model in i_vacuum_pumping regression test.
 
         :param monkeypatch: Mock fixture
         :type monkeypatch: object
@@ -29,21 +29,23 @@ class TestVacuum:
         :param tfcoil: fixture containing an initialised `TFCoil` object
         :type tfcoil: tests.unit.test_tfcoil.tfcoil (functional fixture)
         """
-        monkeypatch.setattr(pv, "qfuel", 7.5745668997694112e22)
+        monkeypatch.setattr(
+            pv, "molflow_plasma_fuelling_required", 7.5745668997694112e22
+        )
         monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf_coils", 18)
         monkeypatch.setattr(tv, "t_between_pulse", 500)
         monkeypatch.setattr(vacv, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacv, "outgasindex", 1)
-        monkeypatch.setattr(vacv, "pbase", 0.0005)
-        monkeypatch.setattr(vacv, "pumpareafraction", 0.0203)
-        monkeypatch.setattr(vacv, "pumpspeedfactor", 0.4)
-        monkeypatch.setattr(vacv, "pumpspeedmax", 27.3)
-        monkeypatch.setattr(vacv, "pumptp", 1.2155e22)
+        monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.0005)
+        monkeypatch.setattr(vacv, "f_a_vac_pump_port_plasma_surface", 0.0203)
+        monkeypatch.setattr(vacv, "f_volflow_vac_pumps_impedance", 0.4)
+        monkeypatch.setattr(vacv, "volflow_vac_pumps_max", 27.3)
+        monkeypatch.setattr(vacv, "molflow_vac_pumps", 1.2155e22)
 
-        niterpump = vacuum.vacuum_simple(output=False)
+        n_iter_vacuum_pumps = vacuum.vacuum_simple(output=False)
 
-        assert niterpump == pytest.approx(14.082585474801862)
+        assert n_iter_vacuum_pumps == pytest.approx(14.082585474801862)
 
     def test_old_model(self, monkeypatch, vacuum):
         """Test `vacuum` subroutine.
@@ -53,12 +55,12 @@ class TestVacuum:
         monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
         monkeypatch.setattr(pv, "te", 15.872999999999999)
         monkeypatch.setattr(tv, "t_precharge", 30)
-        monkeypatch.setattr(vacv, "dwell_pump", 0)
-        monkeypatch.setattr(vacv, "ntype", 1)
-        monkeypatch.setattr(vacv, "pbase", 0.00050000000000000001)
-        monkeypatch.setattr(vacv, "prdiv", 0.35999999999999999)
-        monkeypatch.setattr(vacv, "rat", 1.3000000000000001e-08)
-        monkeypatch.setattr(vacv, "tn", 300)
+        monkeypatch.setattr(vacv, "i_vac_pump_dwell", 0)
+        monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)
+        monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.00050000000000000001)
+        monkeypatch.setattr(vacv, "pres_div_chamber_burn", 0.35999999999999999)
+        monkeypatch.setattr(vacv, "outgrat_fw", 1.3000000000000001e-08)
+        monkeypatch.setattr(vacv, "temp_vv_chamber_gas_burn_end", 300)
 
         ndiv = 1
         pfusmw = 2115.3899563651776

@@ -3115,15 +3115,15 @@ class Acc224Param(NamedTuple):
 
     dlscal: Any = None
 
-    vacdshm: Any = None
+    m_vv_vacuum_duct_shield: Any = None
 
-    vpumpn: Any = None
+    n_vac_pumps_high: Any = None
 
-    vcdimax: Any = None
+    dia_vv_vacuum_ducts: Any = None
 
-    ntype: Any = None
+    i_vacuum_pump_type: Any = None
 
-    nvduct: Any = None
+    n_vv_vacuum_ducts: Any = None
 
     c22: Any = None
 
@@ -3160,11 +3160,11 @@ class Acc224Param(NamedTuple):
         Acc224Param(
             fkind=1,
             dlscal=4.9196133171476717,
-            vacdshm=0,
-            vpumpn=46,
-            vcdimax=0.57081858183821432,
-            ntype=1,
-            nvduct=16,
+            m_vv_vacuum_duct_shield=0,
+            n_vac_pumps_high=46,
+            dia_vv_vacuum_ducts=0.57081858183821432,
+            i_vacuum_pump_type=1,
+            n_vv_vacuum_ducts=16,
             c22=0,
             c224=0,
             c2241=0,
@@ -3183,11 +3183,11 @@ class Acc224Param(NamedTuple):
         Acc224Param(
             fkind=1,
             dlscal=4.9184638394909044,
-            vacdshm=0,
-            vpumpn=46,
-            vcdimax=0.57072331228476758,
-            ntype=1,
-            nvduct=16,
+            m_vv_vacuum_duct_shield=0,
+            n_vac_pumps_high=46,
+            dia_vv_vacuum_ducts=0.57072331228476758,
+            i_vacuum_pump_type=1,
+            n_vv_vacuum_ducts=16,
             c22=3474.7391916096453,
             c224=34.593599813216727,
             c2241=17.940000000000001,
@@ -3222,15 +3222,25 @@ def test_acc224(acc224param, monkeypatch, costs):
 
     monkeypatch.setattr(vacuum_variables, "dlscal", acc224param.dlscal)
 
-    monkeypatch.setattr(vacuum_variables, "vacdshm", acc224param.vacdshm)
+    monkeypatch.setattr(
+        vacuum_variables, "m_vv_vacuum_duct_shield", acc224param.m_vv_vacuum_duct_shield
+    )
 
-    monkeypatch.setattr(vacuum_variables, "vpumpn", acc224param.vpumpn)
+    monkeypatch.setattr(
+        vacuum_variables, "n_vac_pumps_high", acc224param.n_vac_pumps_high
+    )
 
-    monkeypatch.setattr(vacuum_variables, "vcdimax", acc224param.vcdimax)
+    monkeypatch.setattr(
+        vacuum_variables, "dia_vv_vacuum_ducts", acc224param.dia_vv_vacuum_ducts
+    )
 
-    monkeypatch.setattr(vacuum_variables, "ntype", acc224param.ntype)
+    monkeypatch.setattr(
+        vacuum_variables, "i_vacuum_pump_type", acc224param.i_vacuum_pump_type
+    )
 
-    monkeypatch.setattr(vacuum_variables, "nvduct", acc224param.nvduct)
+    monkeypatch.setattr(
+        vacuum_variables, "n_vv_vacuum_ducts", acc224param.n_vv_vacuum_ducts
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc224param.c22)
 

@@ -525,7 +525,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4126E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7176E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7176E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.6999E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5332E-01    
  # Energy confinement times, and required H-factors : #
@@ -1035,21 +1035,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0222E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8240E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.6704E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6636E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6636E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.4806E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5277E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.2741E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.2741E+01 OP 
@@ -1688,7 +1688,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4036E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7709E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7709E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7523E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5255E-01    
  # Energy confinement times, and required H-factors : #
@@ -2198,21 +2198,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0522E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8351E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7087E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6700E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6700E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5734E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5200E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3353E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3353E+01 OP 
@@ -2851,7 +2851,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3947E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7853E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7853E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7799E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5269E-01    
  # Energy confinement times, and required H-factors : #
@@ -3361,21 +3361,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0750E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8432E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7191E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6750E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6750E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5987E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5215E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3520E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3520E+01 OP 
@@ -4014,7 +4014,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3964E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7588E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7588E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7900E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5404E-01    
  # Energy confinement times, and required H-factors : #
@@ -4524,21 +4524,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0718E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8494E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7000E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6676E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6676E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5523E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5348E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3214E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3214E+01 OP 
@@ -5177,7 +5177,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4042E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7831E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7831E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7992E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5329E-01    
  # Energy confinement times, and required H-factors : #
@@ -5687,21 +5687,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0613E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8437E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7174E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6671E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6671E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5947E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5274E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3493E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3493E+01 OP 
@@ -6340,7 +6340,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4131E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.8047E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.8047E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7809E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5194E-01    
  # Energy confinement times, and required H-factors : #
@@ -6850,21 +6850,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0284E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8301E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7330E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6614E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6614E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.6324E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5139E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3742E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3742E+01 OP 
@@ -7503,7 +7503,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4147E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7806E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7806E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7927E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5322E-01    
  # Energy confinement times, and required H-factors : #
@@ -8013,21 +8013,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0253E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8358E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7157E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6546E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6546E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5904E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5267E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3465E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3465E+01 OP 
@@ -8666,7 +8666,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4067E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7852E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7852E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8008E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5325E-01    
  # Energy confinement times, and required H-factors : #
@@ -9176,21 +9176,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0532E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8508E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7190E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6563E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6563E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5984E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5269E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3518E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3518E+01 OP 
@@ -9829,7 +9829,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3998E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7734E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7734E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7790E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5315E-01    
  # Energy confinement times, and required H-factors : #
@@ -10339,21 +10339,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0779E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8691E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7105E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6534E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6534E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5778E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5260E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3382E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3382E+01 OP 
@@ -10992,7 +10992,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4003E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7567E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7567E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8167E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5484E-01    
  # Energy confinement times, and required H-factors : #
@@ -11502,21 +11502,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0795E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8725E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.6985E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6513E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6513E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5487E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5427E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3190E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3190E+01 OP 
@@ -12155,7 +12155,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4067E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7723E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7723E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8510E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5510E-01    
  # Energy confinement times, and required H-factors : #
@@ -12665,21 +12665,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0542E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8512E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7097E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6564E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6564E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5760E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5454E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3370E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3370E+01 OP 
@@ -13318,7 +13318,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4146E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7780E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7780E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8488E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5481E-01    
  # Energy confinement times, and required H-factors : #
@@ -13828,21 +13828,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0198E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8319E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7138E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6551E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6551E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5859E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5425E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3436E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3436E+01 OP 
@@ -14481,7 +14481,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4153E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7598E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7598E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.8804E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5640E-01    
  # Energy confinement times, and required H-factors : #
@@ -14991,21 +14991,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0201E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8354E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7007E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6521E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6521E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5541E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5583E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3226E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3226E+01 OP 
@@ -15644,7 +15644,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4063E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7620E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7620E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.9113E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5713E-01    
  # Energy confinement times, and required H-factors : #
@@ -16154,21 +16154,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0539E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8490E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7023E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6583E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6583E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5579E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5656E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3251E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3251E+01 OP 
@@ -16807,7 +16807,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.3971E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.7644E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.7644E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.9439E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.5790E-01    
  # Energy confinement times, and required H-factors : #
@@ -17317,21 +17317,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      3.0868E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.8617E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.7041E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6648E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6648E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
  Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
  CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      6.5622E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.5732E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      4.3279E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      4.3279E+01 OP 

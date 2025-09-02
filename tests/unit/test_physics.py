@@ -2085,7 +2085,7 @@ class PhyauxParam(NamedTuple):
 
     expected_fusrat: Any = None
 
-    expected_qfuel: Any = None
+    expected_molflow_plasma_fuelling_required: Any = None
 
     expected_rndfuel: Any = None
 
@@ -2114,7 +2114,7 @@ class PhyauxParam(NamedTuple):
             expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7484146722826997e20,
-            expected_qfuel=1.8389516394951276e21,
+            expected_molflow_plasma_fuelling_required=1.8389516394951276e21,
             expected_rndfuel=3.7484146722826997e20,
             expected_t_alpha_confinement=37.993985551650177,
         ),
@@ -2137,7 +2137,7 @@ class PhyauxParam(NamedTuple):
             expected_nTtau=3.253e21,
             expected_figmer=55.195367036602576,
             expected_fusrat=3.7467489360461772e20,
-            expected_qfuel=1.8378092331723546e21,
+            expected_molflow_plasma_fuelling_required=1.8378092331723546e21,
             expected_rndfuel=3.7467489360461772e20,
             expected_t_alpha_confinement=38.010876984618747,
         ),
@@ -2160,20 +2160,28 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "burnup_in", phyauxparam.burnup_in)
 
-    burnup, ntau, nTtau, figmer, fusrat, qfuel, rndfuel, t_alpha_confinement, _ = (
-        physics.phyaux(
-            aspect=phyauxparam.aspect,
-            dene=phyauxparam.dene,
-            te=phyauxparam.te,
-            nd_fuel_ions=phyauxparam.nd_fuel_ions,
-            nd_alphas=phyauxparam.nd_alphas,
-            fusden_total=phyauxparam.fusden_total,
-            fusden_alpha_total=phyauxparam.fusden_alpha_total,
-            plasma_current=phyauxparam.plasma_current,
-            sbar=phyauxparam.sbar,
-            t_energy_confinement=phyauxparam.t_energy_confinement,
-            vol_plasma=phyauxparam.vol_plasma,
-        )
+    (
+        burnup,
+        ntau,
+        nTtau,
+        figmer,
+        fusrat,
+        molflow_plasma_fuelling_required,
+        rndfuel,
+        t_alpha_confinement,
+        _,
+    ) = physics.phyaux(
+        aspect=phyauxparam.aspect,
+        dene=phyauxparam.dene,
+        te=phyauxparam.te,
+        nd_fuel_ions=phyauxparam.nd_fuel_ions,
+        nd_alphas=phyauxparam.nd_alphas,
+        fusden_total=phyauxparam.fusden_total,
+        fusden_alpha_total=phyauxparam.fusden_alpha_total,
+        plasma_current=phyauxparam.plasma_current,
+        sbar=phyauxparam.sbar,
+        t_energy_confinement=phyauxparam.t_energy_confinement,
+        vol_plasma=phyauxparam.vol_plasma,
     )
 
     assert burnup == pytest.approx(phyauxparam.expected_burnup)
@@ -2184,7 +2192,9 @@ def test_phyaux(phyauxparam, monkeypatch, physics):
 
     assert fusrat == pytest.approx(phyauxparam.expected_fusrat)
 
-    assert qfuel == pytest.approx(phyauxparam.expected_qfuel)
+    assert molflow_plasma_fuelling_required == pytest.approx(
+        phyauxparam.expected_molflow_plasma_fuelling_required
+    )
 
     assert rndfuel == pytest.approx(phyauxparam.expected_rndfuel)
 

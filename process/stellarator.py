@@ -4630,7 +4630,7 @@ class Stellarator:
             physics_variables.nTtau,
             physics_variables.figmer,
             fusrat,
-            physics_variables.qfuel,
+            physics_variables.molflow_plasma_fuelling_required,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,

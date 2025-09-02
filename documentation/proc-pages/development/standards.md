@@ -127,6 +127,7 @@ Below are a few shorthand designations for different systems that should be used
   - Electron Bernstein Wave: `_ebw_`
   - Neutral Beam: `_nb_`
 - Centre post: `_cp_` Should only be used for ST's
+- Vacuum pumping systems: `_vac_`
 - The fusion power plant as a whole: `_plant_`
 
 If the variables are physics variables and do not belong to a system then:
@@ -212,6 +213,36 @@ Example, the area of the TF winding pack: `a_tf_wp`
 ##### Mass
 
 - Masses should start with the `m_` prefix
+
+---------------------
+
+##### Molecule flow rates
+
+- Molecule flow rates should start with the `molflow_` prefix
+
+This should be used for units of $\text{molecules} \cdot \text{s}^{-1}$
+
+This unit is normally used for fuelling or vacuum pumping models
+
+---------------------
+
+##### Volume flow rates
+
+- Volume flow rates should start with the `volflow_` prefix
+
+This should be used for units of $\text{m}^{3} \cdot \text{s}^{-1}$
+
+This unit is normally used for fuelling or vacuum pumping models
+
+---------------------
+
+##### Outgassing rates
+
+- Outgassing rates should start with the `outgrat_` prefix
+
+This should be used for units of $\text{Pa} \cdot \text{m}\text{s}^{-1}$
+
+This is normally used for vacuum systems and outgassing from its surfaces.
 
 ---------------------
 

@@ -346,7 +346,7 @@ class Availability:
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(vacv.vpumpn * cv.redun_vacp / 100.0 + 0.5e0)
+        cv.redun_vac = math.floor(vacv.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0)
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
 
@@ -947,7 +947,7 @@ class Availability:
         cryo_main_time = 1.0e0 / 6.0e0
 
         # Total pumps = pumps + redundant pumps
-        total_pumps = vacv.vpumpn + cv.redun_vac
+        total_pumps = vacv.n_vac_pumps_high + cv.redun_vac
 
         # Cryopump failure rate per machine operational period
         # From "Selected component failure rate values from fusion
@@ -982,8 +982,8 @@ class Availability:
             po.ovarin(
                 self.outfile,
                 "Number of pumps (excluding redundant pumps)",
-                "(vpumpn)",
-                vacv.vpumpn,
+                "(n_vac_pumps_high)",
+                vacv.n_vac_pumps_high,
                 "OP ",
             )
             po.ovarin(
@@ -1107,7 +1107,7 @@ class Availability:
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(vacv.vpumpn * cv.redun_vacp / 100.0 + 0.5e0)
+        cv.redun_vac = math.floor(vacv.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0)
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
 

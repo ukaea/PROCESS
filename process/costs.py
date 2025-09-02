@@ -2062,27 +2062,29 @@ class Costs:
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if vacuum_variables.ntype == 1:
+        if vacuum_variables.i_vacuum_pump_type == 1:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.vpumpn * cost_variables.UCCPMP
+                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.UCCPMP
             )
         else:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.vpumpn * cost_variables.uctpmp
+                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.uctpmp
             )
 
         cost_variables.c2241 = cost_variables.fkind * cost_variables.c2241
 
         #  Account 224.2 : Backing pumps
 
-        cost_variables.c2242 = 1.0e-6 * vacuum_variables.nvduct * cost_variables.UCBPMP
+        cost_variables.c2242 = (
+            1.0e-6 * vacuum_variables.n_vv_vacuum_ducts * cost_variables.UCBPMP
+        )
         cost_variables.c2242 = cost_variables.fkind * cost_variables.c2242
 
         #  Account 224.3 : Vacuum duct
 
         cost_variables.c2243 = (
             1.0e-6
-            * vacuum_variables.nvduct
+            * vacuum_variables.n_vv_vacuum_ducts
             * vacuum_variables.dlscal
             * cost_variables.UCDUCT
         )
@@ -2093,8 +2095,8 @@ class Costs:
         cost_variables.c2244 = (
             1.0e-6
             * 2.0e0
-            * vacuum_variables.nvduct
-            * (vacuum_variables.vcdimax * 1.2e0) ** 1.4e0
+            * vacuum_variables.n_vv_vacuum_ducts
+            * (vacuum_variables.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
             * cost_variables.UCVALV
         )
         cost_variables.c2244 = cost_variables.fkind * cost_variables.c2244
@@ -2103,8 +2105,8 @@ class Costs:
 
         cost_variables.c2245 = (
             1.0e-6
-            * vacuum_variables.nvduct
-            * vacuum_variables.vacdshm
+            * vacuum_variables.n_vv_vacuum_ducts
+            * vacuum_variables.m_vv_vacuum_duct_shield
             * cost_variables.UCVDSH
         )
         cost_variables.c2245 = cost_variables.fkind * cost_variables.c2245
@@ -2448,9 +2450,9 @@ class Costs:
         This routine evaluates the Account 2272 - Fuel processing
         """
         if ife_variables.ife != 1:
-            #  Previous calculation, using qfuel in Amps:
+            #  Previous calculation, using molflow_plasma_fuelling_required in Amps:
             #  1.3 should have been physics_variables.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
-            # wtgpd = burnup * qfuel * 1.3e0
+            # wtgpd = burnup * molflow_plasma_fuelling_required * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
             physics_variables.wtgpd = (
