@@ -406,6 +406,8 @@ OBS_VARS = {
     "dcopper": "den_copper",
     "denstl": "den_steel",
     "ripmax": "ripple_b_tf_plasma_edge_max",
+    "n_layer": "n_tf_wp_layers",
+    "n_pancake": "n_tf_wp_pancakes",
     "fimp": "f_nd_impurity_electrons",
 }
 
