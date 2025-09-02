@@ -380,16 +380,16 @@ def check_process(inputs):  # noqa: ARG001
         data_structure.buildings_variables.triv = 0.0
         data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0
 
-    if data_structure.impurity_radiation_module.fimp[1] != 0.1:
+    if data_structure.impurity_radiation_module.f_nd_impurity_electrons[1] != 0.1:
         raise ProcessValidationError(
-            "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not fimp(2)."
-            "fimp(2) should be removed from the input file, or set to the default value 0.1D0."
+            "The thermal alpha/electron density ratio should be controlled using f_nd_alpha_electron (itv 109) and not f_nd_impurity_electrons(2)."
+            "f_nd_impurity_electrons(2) should be removed from the input file, or set to the default value 0.1D0."
         )
 
     # Impurity fractions
     for imp in range(data_structure.impurity_radiation_module.N_IMPURITIES):
         data_structure.impurity_radiation_module.impurity_arr_frac[imp] = (
-            data_structure.impurity_radiation_module.fimp[imp]
+            data_structure.impurity_radiation_module.f_nd_impurity_electrons[imp]
         )
 
     # Stop the run if oacdcp is used as an optimisation variable

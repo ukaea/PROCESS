@@ -15,23 +15,23 @@ $$
 
 
 The impurity number density fractions relative to the electron density are constant and are set 
-using input array `fimp(1,...,14)`. The available species along with their `fimp()` index and iteration variable number are as follows:
+using input array `f_nd_impurity_electrons(1,...,14)`. The available species along with their `f_nd_impurity_electrons()` index and iteration variable number are as follows:
 
 
-- `fimp(1)`: Hydrogen isotopes (fraction calculated by code)
-- `fimp(2)`: Helium (fraction calculated by code)
-- `fimp(3)`: Beryllium, (`ixc = 125`)
-- `fimp(4)`: Carbon, (`ixc = 126`)
-- `fimp(5)`: Nitrogen, (`ixc = 127`)
-- `fimp(6)`: Oxygen, (`ixc = 128`)
-- `fimp(7)`: Neon, (`ixc = 129`)
-- `fimp(8)`: Silicon, (`ixc = 130`)
-- `fimp(9)`: Argon, (`ixc = 131`)
-- `fimp(10)`: Iron, (`ixc = 132`)
-- `fimp(11)`: Nickel, (`ixc = 133`)
-- `fimp(12)`: Krypton, (`ixc = 134`)
-- `fimp(13)`: Xenon, (`ixc = 135`)
-- `fimp(14)`: Tungsten, (`ixc = 136`)
+- `f_nd_impurity_electrons(1)`: Hydrogen isotopes (fraction calculated by code)
+- `f_nd_impurity_electrons(2)`: Helium (fraction calculated by code)
+- `f_nd_impurity_electrons(3)`: Beryllium, (`ixc = 125`)
+- `f_nd_impurity_electrons(4)`: Carbon, (`ixc = 126`)
+- `f_nd_impurity_electrons(5)`: Nitrogen, (`ixc = 127`)
+- `f_nd_impurity_electrons(6)`: Oxygen, (`ixc = 128`)
+- `f_nd_impurity_electrons(7)`: Neon, (`ixc = 129`)
+- `f_nd_impurity_electrons(8)`: Silicon, (`ixc = 130`)
+- `f_nd_impurity_electrons(9)`: Argon, (`ixc = 131`)
+- `f_nd_impurity_electrons(10)`: Iron, (`ixc = 132`)
+- `f_nd_impurity_electrons(11)`: Nickel, (`ixc = 133`)
+- `f_nd_impurity_electrons(12)`: Krypton, (`ixc = 134`)
+- `f_nd_impurity_electrons(13)`: Xenon, (`ixc = 135`)
+- `f_nd_impurity_electrons(14)`: Tungsten, (`ixc = 136`)
 
 As stated above, the number density fractions for hydrogen (all isotopes) and
 helium should not be set, as they are calculated by the code. This is to ensure 
@@ -39,10 +39,10 @@ plasma quasi-neutrality taking into account the fuel ratios
 `f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
 be input by the user or selected as an iteration variable.
 
-The impurity fraction of any one of the elements listed in array `fimp` (other than hydrogen 
+The impurity fraction of any one of the elements listed in array `f_nd_impurity_electrons` (other than hydrogen 
 isotopes and helium) may be used as an iteration variable.
 
-**The impurity fraction to be varied can be set simply with `fimp(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.**
+**The impurity fraction to be varied can be set simply with `f_nd_impurity_electrons(i) = <value>`, where `i` is the corresponding number value for the desired impurity in the table above.**
 
 ----------------
 

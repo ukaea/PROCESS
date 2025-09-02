@@ -76,7 +76,7 @@ nsweep: int = None
 <LI> 39 Argon upper limit
 <LI> 40 Xenon upper limit
 <LI> 41 dr_blkt_outboard
-<LI> 42 Argon fraction fimp(9)
+<LI> 42 Argon fraction f_nd_impurity_electrons(9)
 <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum
 <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material
 <LI> 45 Minimum allowable temperature margin ; tf coils
@@ -84,7 +84,7 @@ nsweep: int = None
 <LI> 47 impurity_enrichment(9) Argon impurity enrichment
 <LI> 48 TF coil - n_tf_wp_pancakes (integer turn winding pack)
 <LI> 49 TF coil - n_tf_wp_layers (integer turn winding pack)
-<LI> 50 Xenon fraction fimp(13)
+<LI> 50 Xenon fraction f_nd_impurity_electrons(13)
 <LI> 51 Power fraction to lower DN Divertor f_p_div_lower
 <LI> 52 SoL radiation fraction
 <LI> 54 GL_nbti upper critical field at 0 Kelvin
