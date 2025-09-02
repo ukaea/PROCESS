@@ -993,7 +993,7 @@ def plot_main_power_flow(
     # Generator to gross electric power
     axis.annotate(
         "",
-        xy=(0.75, 0.17),
+        xy=(0.745, 0.17),
         xytext=(0.79, 0.17),
         xycoords=fig.transFigure,
         arrowprops={
@@ -1165,7 +1165,7 @@ def plot_main_power_flow(
     # Gross to recirculated power arrow
     axis.annotate(
         "",
-        xy=(0.635, 0.17),
+        xy=(0.64, 0.17),
         xytext=(0.675, 0.17),
         xycoords=fig.transFigure,
         arrowprops={
@@ -1181,7 +1181,7 @@ def plot_main_power_flow(
     axis.annotate(
         "",
         xy=(0.7, 0.225),
-        xytext=(0.635, 0.185),
+        xytext=(0.645, 0.185),
         xycoords=fig.transFigure,
         arrowprops={
             "arrowstyle": "-|>,head_length=1,head_width=0.3",
@@ -2053,7 +2053,7 @@ def plot_main_power_flow(
 
     # Cryo Plant box
     axis.text(
-        0.45,
+        0.49,
         0.05,
         f"Cryo Plant:\n{mfile_data.data['p_cryo_plant_electric_mw'].get_scan(scan):.3f} MWe",
         fontsize=9,
@@ -2071,8 +2071,8 @@ def plot_main_power_flow(
     # Recirculated power to cryo plant arrow
     axis.annotate(
         "",
-        xy=(0.49, 0.09),
-        xytext=(0.575, 0.14),
+        xy=(0.525, 0.075),
+        xytext=(0.525, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
             "arrowstyle": "-|>,head_length=1,head_width=0.3",
@@ -2085,7 +2085,7 @@ def plot_main_power_flow(
 
     # Tritium Plant box
     axis.text(
-        0.35,
+        0.4,
         0.05,
         f"Tritium Plant:\n{mfile_data.data['p_tritium_plant_electric_mw'].get_scan(scan):.3f} MWe",
         fontsize=9,
@@ -2103,8 +2103,8 @@ def plot_main_power_flow(
     # # Recirculated power to tritium plant arrow
     axis.annotate(
         "",
-        xy=(0.4, 0.09),
-        xytext=(0.575, 0.15),
+        xy=(0.44, 0.075),
+        xytext=(0.44, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
             "arrowstyle": "-|>,head_length=1,head_width=0.3",
@@ -2117,7 +2117,7 @@ def plot_main_power_flow(
 
     # Vacuum Pumps box
     axis.text(
-        0.55,
+        0.575,
         0.05,
         f"Vacuum pumps:\n{mfile_data.data['vachtmw'].get_scan(scan):.3f} MWe",
         fontsize=9,
@@ -2135,8 +2135,8 @@ def plot_main_power_flow(
     # Recirculated power to vacuum pumps arrow
     axis.annotate(
         "",
-        xy=(0.6, 0.08),
-        xytext=(0.6, 0.14),
+        xy=(0.62, 0.08),
+        xytext=(0.62, 0.1375),
         xycoords=fig.transFigure,
         arrowprops={
             "arrowstyle": "-|>,head_length=1,head_width=0.3",
@@ -2149,8 +2149,8 @@ def plot_main_power_flow(
 
     # Plant base load box
     axis.text(
-        0.15,
-        0.05,
+        0.085,
+        0.075,
         (
             f"Plant base load:\n{mfile_data.data['p_plant_electric_base_total_mw'].get_scan(scan):.3f} MWe\n"
             f"Minimum base load:\n{mfile_data.data['p_plant_electric_base'].get_scan(scan) * 1.0e-6:.3f} MWe\n"
@@ -2168,11 +2168,75 @@ def plot_main_power_flow(
         },
     )
 
-    # Recirculated power to plant base load arrow
+    # TF coil power box
+    axis.text(
+        0.325,
+        0.05,
+        f"TF coils:\n{mfile_data.data['p_tf_electric_supplies_mw'].get_scan(scan):.3f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "burlywood",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+
+    # PF coil power box
+    axis.text(
+        0.25,
+        0.05,
+        f"PF coils:\n{mfile_data.data['p_pf_electric_supplies_mw'].get_scan(scan):.3f} MWe",
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "burlywood",
+            "alpha": 0.8,
+            "linewidth": 2,
+        },
+    )
+
+    # Recirculated power to TF,PF and plant base arrow bend
     axis.annotate(
         "",
-        xy=(0.28, 0.09),
-        xytext=(0.575, 0.17),
+        xy=(0.22, 0.16),
+        xytext=(0.574, 0.16),
+        xycoords=fig.transFigure,
+        arrowprops={
+            "arrowstyle": "-|>,head_length=1,head_width=0.3",
+            "color": "black",
+            "linewidth": 1.5,
+            "zorder": 5,
+            "fill": True,
+        },
+    )
+
+    # Recirculated power to  PF
+    axis.annotate(
+        "",
+        xy=(0.28, 0.075),
+        xytext=(0.28, 0.1625),
+        xycoords=fig.transFigure,
+        arrowprops={
+            "arrowstyle": "-|>,head_length=1,head_width=0.3",
+            "color": "black",
+            "linewidth": 2.0,
+            "zorder": 5,
+            "fill": True,
+        },
+    )
+
+    # Recirculated power to TF
+    axis.annotate(
+        "",
+        xy=(0.35, 0.075),
+        xytext=(0.35, 0.1625),
         xycoords=fig.transFigure,
         arrowprops={
             "arrowstyle": "-|>,head_length=1,head_width=0.3",
@@ -5442,7 +5506,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$N_{{\\text{{TF,coil}}}}$: {mfile_data.data['n_tf_coils'].get_scan(scan)}\n"
             f"Self inductance of single coil: {mfile_data.data['ind_tf_coil'].get_scan(scan) * 1e6:.4f} $\\mu$H\n"
             f"Stored energy of all coils: {mfile_data.data['e_tf_magnetic_stored_total_gj'].get_scan(scan):.4f} GJ\n"
-            f"Stored energy of a single coil: {mfile_data.data['e_tf_coil_magnetic_stored'].get_scan(scan):.4f} GJ\n"
+            f"Stored energy of a single coil: {mfile_data.data['e_tf_coil_magnetic_stored'].get_scan(scan) / 1e9:.2f} GJ\n"
             f"Total area of steel in coil: {mfile_data.data['a_tf_coil_inboard_steel'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
             f"Total area fraction of steel: {mfile_data.data['f_a_tf_coil_inboard_steel'].get_scan(scan):.4f}\n"
             f"Total area fraction of insulation: {mfile_data.data['f_a_tf_coil_inboard_insulation'].get_scan(scan):.4f}\n"
