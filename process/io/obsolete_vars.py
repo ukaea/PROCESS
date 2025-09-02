@@ -421,6 +421,18 @@ OBS_VARS = {
     "dwell_pump": "i_vac_pump_dwell",
     "ntype": "i_vacuum_pump_type",
     "vacuum_model": "i_vacuum_pumping",
+    "initialpressure": "pres_vv_chamber_dwell_start",
+    "pbase": "pres_vv_chamber_base",
+    "prdiv": "pres_div_chamber_burn",
+    "pumpareafraction": "f_a_vac_pump_port_plasma_surface",
+    "pumpspeedfactor": "f_volflow_vac_pumps_impedance",
+    "pumpspeedmax": "volflow_vac_pumps_max",
+    "pumptp": "molflow_vac_pumps",
+    "rat": "outgrat_fw",
+    "tn": "temp_vv_chamber_gas_burn_end",
+    "dwell_pump": "i_vac_pump_dwell",
+    "ntype": "i_vacuum_pump_type",
+    "vacuum_model": "i_vacuum_pumping",
     "fcutfsu": "f_a_tf_turn_cable_copper",
 }
 
