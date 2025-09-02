@@ -9,11 +9,11 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ---
 
-#### Superconducting TF coil power requirements | `tfcpwr()`
+#### Superconducting TF coil power requirements | `superconducting_tf_power_iter_1988()`
 
 ---
 
-#### TF coil power conversion system parameters | `tfcpwr()`
+#### TF coil power conversion system parameters | `superconducting_tf_power_iter_1988()`
 
 ---
 
