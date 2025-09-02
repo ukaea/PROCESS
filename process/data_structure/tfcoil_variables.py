@@ -666,6 +666,9 @@ tficrn: float = None
 ind_tf_coil: float = None
 """TF coil inductance (H)"""
 
+ind_tf_total: float = None
+"""Total inductance of all TF coils (H)"""
+
 
 dx_tf_wp_insertion_gap: float = None
 """TF coil WP insertion gap (m)"""
@@ -1211,6 +1214,7 @@ def init_tfcoil_variables():
     global tfcryoarea
     global tficrn
     global ind_tf_coil
+    global ind_tf_total
     global dx_tf_wp_insertion_gap
     global p_tf_leg_resistive_mw
     global rho_cp
@@ -1447,6 +1451,7 @@ def init_tfcoil_variables():
     tfcryoarea = 0.0
     tficrn = 0.0
     ind_tf_coil = 0.0
+    ind_tf_total = 0.0
     dx_tf_wp_insertion_gap = 0.01
     p_tf_leg_resistive_mw = 0.0
     rho_cp = 0.0
