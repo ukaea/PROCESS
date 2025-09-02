@@ -1845,7 +1845,6 @@ class Power:
                 v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
                 e_tf_coil_magnetic_stored_mj=tfcoil_variables.e_tf_coil_magnetic_stored
                 / 1e6,
-                rptfc=tfcoil_variables.res_tf_leg,
             )
             return
 
@@ -1939,7 +1938,6 @@ class Power:
         n_tf_coils: int,
         v_tf_coil_dump_quench_kv: float,
         e_tf_coil_magnetic_stored_mj: float,
-        rptfc: float,
     ) -> tuple[float, float, float, float, float]:
         """
         Calculates the TF coil power conversion system parameters for superconducting coils.
@@ -1956,8 +1954,6 @@ class Power:
         :type v_tf_coil_dump_quench_kv: float
         :param e_tf_coil_magnetic_stored_mj: Stored energy per TF coil (MJ).
         :type e_tf_coil_magnetic_stored_mj: float
-        :param rptfc: Resistance per TF coil (ohm).
-        :type rptfc: float
 
         :returns: Tuple containing:
             - tfckw (float): DC power supply rating (kW)
@@ -1989,12 +1985,9 @@ class Power:
         fspc2 = 0.8e0  # floor space coefficient for circuit breakers
         fspc3 = 0.4e0  # floor space coefficient for load centres
 
-        if rptfc == 0.0e0:
-            T_TF_CHARGE_HOURS = 4.0e0  # charge time of the coils, hours
-            nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
-        else:
-            T_TF_CHARGE_HOURS = 0.16667e0  # charge time of the coils, hours
-            nsptfc = 0.0e0  # resistive (1.0 = superconducting, 0.0 = resistive)
+
+        T_TF_CHARGE_HOURS = 4.0e0  # charge time of the coils, hours
+        nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
 
         #  Total steady state TF coil AC power demand (summed later)
         p_tf_electric_supplies_mw = 0.0e0
@@ -2018,7 +2011,6 @@ class Power:
         len_tf_bus = (
             8.0e0 * np.pi * rmajor
             + (1.0e0 + n_tf_breakers) * (12.0e0 * rmajor + 80.0e0)
-            + 0.2e0 * c_tf_turn_ka * np.sqrt(n_tf_coils * rptfc * 1000.0e0)
         )
 
         #  Aluminium bus weight, tonnes
@@ -2032,7 +2024,7 @@ class Power:
         v_tf_bus = 1000.0e0 * c_tf_turn_ka * res_tf_bus
 
         #  Total resistance of the TF coils, ohms
-        rcoils = n_tf_coils * rptfc
+        rcoils = 0.0
 
         #  Total impedance, ohms
         ztotal = res_tf_bus + rcoils + ind_tf_total / (3600.0e0 * T_TF_CHARGE_HOURS)
@@ -2071,7 +2063,7 @@ class Power:
         ttfsec = (
             ind_tf_coil
             * N_TF_COIL_BREAKERS
-            / (r1dump * nsptfc + rptfc * (1.0e0 - nsptfc))
+            / (r1dump * nsptfc + 0.0 * (1.0e0 - nsptfc))
         )
 
         #  Number of dump resistors
@@ -2084,7 +2076,7 @@ class Power:
         r1emj = nsptfc * e_tf_magnetic_stored_mj / (n_tf_dump_resistors + 0.0001e0)
 
         #  Total TF coil peak resistive power demand, MVA
-        rpower = (n_tf_coils * rptfc + res_tf_bus) * c_tf_turn_ka**2
+        rpower = (n_tf_coils * 0.0 + res_tf_bus) * c_tf_turn_ka**2
 
         #  Total TF coil peak inductive power demand, MVA
         xpower = ind_tf_total / (3600.0e0 * T_TF_CHARGE_HOURS) * c_tf_turn_ka**2
