@@ -352,7 +352,7 @@ def check_process(inputs):  # noqa: ARG001
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
         fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 63
-    ).any() and data_structure.vacuum_variables.vacuum_model != "simple":
+    ).any() and data_structure.vacuum_variables.i_vacuum_pumping != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
         )

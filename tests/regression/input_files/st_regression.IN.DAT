@@ -3059,13 +3059,13 @@ lsa = 2
 
 * Calculates pumping rates and required pumps*
 
-*vacuum_model = 
+*i_vacuum_pumping = 
 * DESCRIPTION:   Switch for vacuum pumping model:
 * ='old' for old detailed ETR model
 * ='simple' for simple steady-state model with comparison to ITER cryopumps
 * JUSTIFICATION: Not yet set.
 
-*ntype = 
+*i_vacuum_pump_type = 
 * DESCRIPTION:   Switch for vacuum pump type:
 * =0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s
 *    (1.95 for N2, 1.8 for He, 1.8 for DT)
@@ -3073,27 +3073,27 @@ lsa = 2
 *  (9.0 for N2, 5.0 for He and 25.0 for DT)
 * JUSTIFICATION: Not yet set.
 
-*pbase = 
+*pres_vv_chamber_base = 
 * DESCRIPTION:   Base pressure during dwell before gas pre-fill (Pa):
 * JUSTIFICATION: Not yet set.
 
-*prdiv = 
+*pres_div_chamber_burn = 
 * DESCRIPTION:   Divertor chamber pressure during burn (Pa):
 * JUSTIFICATION: Not yet set.
 
-*pumptp = 
+*molflow_vac_pumps = 
 * DESCRIPTION:   Pump throughput (molecules/s) (default is ITER value) (default = 1.2155e+22) :
 * JUSTIFICATION: Not yet set.
 
-*rat = 
+*outgrat_fw = 
 * DESCRIPTION:   Plasma chamber wall outgassing rate (Pa-m/s) (default = 1.3D-8) :
 * JUSTIFICATION: Not yet set.
 
-*tn = 
+*temp_vv_chamber_gas_burn_end = 
 * DESCRIPTION:   Neutral gas temperature in chamber (K) (default = 300) :
 * JUSTIFICATION: Not yet set.
 
-*dwell_pump = 
+*i_vac_pump_dwell = 
 * DESCRIPTION:   Switch for dwell pumping options:
 * =0 pumping only during t_between_pulse
 * =1 pumping only during t_precharge
@@ -3104,15 +3104,15 @@ lsa = 2
 * DESCRIPTION:   Area of one pumping port as a fraction of plasma surface area (default = 0.0203) :
 * JUSTIFICATION: Not yet set.
 
-*pumpspeedmax = 
+*volflow_vac_pumps_max = 
 * DESCRIPTION:   Maximum pumping speed per unit area for deuterium & tritium, molecular flow (default = 27.3) :
 * JUSTIFICATION: Not yet set.
 
-*initialpressure = 
+*pres_vv_chamber_dwell_start = 
 * DESCRIPTION:   Initial neutral pressure at the beginning of the dwell phase (Pa) (default = 1.0) :
 * JUSTIFICATION: Not yet set.
 
-*pumpspeedfactor = 
+*f_volflow_vac_pumps_impedance = 
 * DESCRIPTION:   Effective pumping speed reduction factor due to duct impedance (default = 0.167) :
 * JUSTIFICATION: Not yet set.
 
@@ -3125,9 +3125,9 @@ lsa = 2
 * JUSTIFICATION: Not yet set.
 
 *icc = 63
-* DESCRIPTION:   Upper limit on niterpump (vacuum_model = simple)
+* DESCRIPTION:   Upper limit on n_iter_vacuum_pumps (i_vacuum_pumping = simple)
 * JUSTIFICATION: Turned off, not using simple pumping 
-* VARIABLES:     tfno(TF coil number), niterpump calculated in-situ
+* VARIABLES:     tfno(TF coil number), n_iter_vacuum_pumps calculated in-situ
 
 *________________________________________________________________________*
 *---------------------------------Time-----------------------------------*
