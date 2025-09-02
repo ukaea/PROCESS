@@ -1831,7 +1831,22 @@ class Power:
             )
 
         else:  # Superconducting TF coil option
-            self.tfpwcall(output)
+            (
+                tfcoil_variables.tfckw,
+                tfcoil_variables.len_tf_bus,
+                tfcoil_variables.drarea,
+                buildings_variables.tfcbv,
+                heat_transport_variables.p_tf_electric_supplies_mw,
+            ) = self.tfcpwr(
+                output=output,
+                itfka=tfcoil_variables.c_tf_turn / 1e3,
+                rmajor=physics_variables.rmajor,
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+                v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
+                e_tf_coil_magnetic_stored_mj=tfcoil_variables.e_tf_coil_magnetic_stored
+                / 1e6,
+                rptfc=tfcoil_variables.res_tf_leg,
+            )
             return
 
         # Output section
@@ -1915,39 +1930,6 @@ class Power:
 
         # Reactive poower has been set to zero.
         # po.ovarre(outfile,'TF coil reactive power (MW)','(tfreacmw)', tfreacmw)
-
-    def tfpwcall(self, output: bool):
-        """
-        Calls the TF coil power conversion routine for
-        superconducting coils
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
-        This routine calls routine <CODE>tfcpwr</CODE> to calculate
-        the power conversion requirements for superconducting TF coils.
-        None
-        """
-        #  TF coil current (kA)
-
-        itfka = 1.0e-3 * tfcoil_variables.c_tf_turn
-
-        (
-            tfcoil_variables.tfckw,
-            tfcoil_variables.len_tf_bus,
-            tfcoil_variables.drarea,
-            buildings_variables.tfcbv,
-            heat_transport_variables.p_tf_electric_supplies_mw,
-        ) = self.tfcpwr(
-            output=output,
-            itfka=itfka,
-            rmajor=physics_variables.rmajor,
-            n_tf_coils=tfcoil_variables._tf_coils,
-            v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
-            e_tf_coil_magnetic_stored_mj=tfcoil_variables.e_tf_coil_magnetic_stored
-            / 1e6,
-            rptfc=tfcoil_variables.res_tf_leg,
-        )
 
     def tfcpwr(
         self,
