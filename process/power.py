@@ -1843,7 +1843,7 @@ class Power:
                 rmajor=physics_variables.rmajor,
                 n_tf_coils=tfcoil_variables.n_tf_coils,
                 v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
-                e_tf_coil_magnetic_stored_mj=tfcoil_variables.e_tf_coil_magnetic_stored
+                e_tf_magnetic_stored_total_mj=superconducting_tf_coil_variables.e_tf_magnetic_stored_total
                 / 1e6,
             )
             return
@@ -1937,7 +1937,7 @@ class Power:
         rmajor: float,
         n_tf_coils: int,
         v_tf_coil_dump_quench_kv: float,
-        e_tf_coil_magnetic_stored_mj: float,
+        e_tf_magnetic_stored_total_mj: float,
     ) -> tuple[float, float, float, float, float]:
         """
         Calculates the TF coil power conversion system parameters for superconducting coils.
@@ -1952,8 +1952,8 @@ class Power:
         :type n_tf_coils: int
         :param v_tf_coil_dump_quench_kv: Voltage across a TF coil during quench (kV).
         :type v_tf_coil_dump_quench_kv: float
-        :param e_tf_coil_magnetic_stored_mj: Stored energy per TF coil (MJ).
-        :type e_tf_coil_magnetic_stored_mj: float
+        :param e_tf_magnetic_stored_total_mj: Total stored energy in TF coils (MJ).
+        :type e_tf_magnetic_stored_total_mj: float
 
         :returns: Tuple containing:
             - tfckw (float): DC power supply rating (kW)
@@ -1985,18 +1985,14 @@ class Power:
         fspc2 = 0.8e0  # floor space coefficient for circuit breakers
         fspc3 = 0.4e0  # floor space coefficient for load centres
 
-
         T_TF_CHARGE_HOURS = 4.0e0  # charge time of the coils, hours
         nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
 
         #  Total steady state TF coil AC power demand (summed later)
         p_tf_electric_supplies_mw = 0.0e0
 
-        #  Stored energy of all TF coils, MJ
-        e_tf_magnetic_stored_mj = n_tf_coils * e_tf_coil_magnetic_stored_mj
-
         #  Inductance of all TF coils, Henries
-        ind_tf_total = 2.0e0 * e_tf_magnetic_stored_mj / c_tf_turn_ka**2
+        ind_tf_total = 2.0e0 * e_tf_magnetic_stored_total_mj / c_tf_turn_ka**2
 
         #  Number of circuit breakers
         n_tf_breakers = n_tf_coils / N_TF_COIL_BREAKERS
@@ -2008,9 +2004,8 @@ class Power:
         albusa = c_tf_turn_ka / j_tf_bus_design_ka_cm
 
         #  Total TF system bus length, m
-        len_tf_bus = (
-            8.0e0 * np.pi * rmajor
-            + (1.0e0 + n_tf_breakers) * (12.0e0 * rmajor + 80.0e0)
+        len_tf_bus = 8.0e0 * np.pi * rmajor + (1.0e0 + n_tf_breakers) * (
+            12.0e0 * rmajor + 80.0e0
         )
 
         #  Aluminium bus weight, tonnes
@@ -2086,7 +2081,9 @@ class Power:
         part1 = fspc1 * ntfpm * tfpmkw**0.667e0
 
         #  Circuit breakers floor space, m2
-        part2 = fspc2 * n_tf_breakers * (v_tf_coil_dump_quench_kv * c_tf_turn_ka) ** 0.667e0
+        part2 = (
+            fspc2 * n_tf_breakers * (v_tf_coil_dump_quench_kv * c_tf_turn_ka) ** 0.667e0
+        )
 
         #  Load centres floor space, m2
         part3 = (
@@ -2119,7 +2116,13 @@ class Power:
         #  Output section
         if output:
             po.oheadr(self.outfile, "Superconducting TF Coil Power Conversion")
-            po.ovarre(self.outfile, "TF coil current (kA)", "(c_tf_turn_ka)", c_tf_turn_ka, "OP ")
+            po.ovarre(
+                self.outfile,
+                "TF coil current (kA)",
+                "(c_tf_turn_ka)",
+                c_tf_turn_ka,
+                "OP ",
+            )
             po.ovarre(self.outfile, "Number of TF coils", "(n_tf_coils)", n_tf_coils)
             po.ovarre(
                 self.outfile,
