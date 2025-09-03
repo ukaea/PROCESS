@@ -189,6 +189,8 @@ j_tf_superconductor_critical: float = None
 f_c_tf_turn_operating_critical: float = None
 """Ratio of the TF operating current to the critical current"""
 
+j_tf_coil_turn: float = None
+"""Current density in the TF coil turn [A/m^2]"""
 
 # Vacuum Vessel stress on TF coil quench
 
@@ -285,6 +287,7 @@ def init_superconducting_tf_coil_variables():
     global dia_tf_turn_superconducting_cable
     global j_tf_superconductor_critical
     global f_c_tf_turn_operating_critical
+    global j_tf_coil_turn
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -336,3 +339,4 @@ def init_superconducting_tf_coil_variables():
     dia_tf_turn_superconducting_cable = 0.0
     j_tf_superconductor_critical = 0.0
     f_c_tf_turn_operating_critical = 0.0
+    j_tf_coil_turn = 0.0
