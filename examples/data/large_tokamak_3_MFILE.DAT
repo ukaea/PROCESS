@@ -720,7 +720,7 @@
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5788E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5049E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5049E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    

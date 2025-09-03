@@ -1440,7 +1440,7 @@ tftmp = 20.0
 *icc = 36
 * DESCRIPTION:   Constraint equation for TF coil s/c temperature margin lower limit (SCTF)
 * JUSTIFICATION: Turned off, do not care about minimum temperature margin
-* VARIABLES:     tmargtf calculated in-situ
+* VARIABLES:     temp_tf_superconductor_margin calculated in-situ
 
 *tmargmin_tf = 
 * DESCRIPTION:   Minimum allowable temperature margin : TF coils (K) (icc = 36)

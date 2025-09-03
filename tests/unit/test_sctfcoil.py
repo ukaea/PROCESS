@@ -424,7 +424,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
-        b_tf_inboard_peak_symmetric=superconparam.b_tf_inboard_peak_symmetric,
+        b_tf_inboard_peak=superconparam.b_tf_inboard_peak_symmetric,
         f_a_tf_turn_cable_copper=superconparam.f_a_tf_turn_cable_copper,
         f_a_tf_turn_cooling_extra=superconparam.f_a_tf_turn_cooling_extra,
         f_strain_scale=superconparam.f_strain_scale,

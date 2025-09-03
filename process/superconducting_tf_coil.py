@@ -311,7 +311,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
-            (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.tmargtf) = (
+            (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.temp_tf_superconductor_margin) = (
                 self.supercon_croco(
                     a_tf_turn,
                     tfcoil_variables.b_tf_inboard_peak_with_ripple,
@@ -329,7 +329,7 @@ class SuperconductingTFCoil(TFCoil):
             (
                 tfcoil_variables.j_tf_wp_critical,
                 vdump,
-                tfcoil_variables.tmargtf,
+                tfcoil_variables.temp_tf_superconductor_margin,
             ) = self.supercon(
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
                 a_tf_turn=a_tf_turn,

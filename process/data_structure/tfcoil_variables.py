@@ -810,8 +810,8 @@ temp_margin: float = None
 """temperature margin (K)"""
 
 
-tmargtf: float = None
-"""TF coil temperature margin (K)"""
+temp_tf_superconductor_margin: float = None
+"""TF coil superconductor temperature margin (K)"""
 
 
 tmaxpro: float = None
@@ -1238,7 +1238,7 @@ def init_tfcoil_variables():
     global tmargmin_cs
     global tmargmin
     global temp_margin
-    global tmargtf
+    global temp_tf_superconductor_margin
     global tmaxpro
     global temp_croco_quench_max
     global temp_croco_quench
@@ -1472,7 +1472,7 @@ def init_tfcoil_variables():
     tmargmin_cs = 0.0
     tmargmin = 0.0
     temp_margin = 0.0
-    tmargtf = 0.0
+    temp_tf_superconductor_margin = 0.0
     tmaxpro = 150.0
     temp_croco_quench_max = 200.0
     temp_croco_quench = 0.0
