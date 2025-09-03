@@ -336,10 +336,12 @@ class SuperconductingTFCoil(TFCoil):
                 superconducting_tf_coil_variables.j_tf_coil_turn,
                 superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
                 superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
+                superconducting_tf_coil_variables.c_tf_turn_cables_critical,
             ) = self.supercon(
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
                 a_tf_turn=a_tf_turn,
                 a_tf_turn_cable_space_effective=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
+                f_a_tf_turn_cable_space_cooling=superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
                 b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
                 f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
                 c_tf_turn=tfcoil_variables.c_tf_turn,
@@ -850,6 +852,7 @@ class SuperconductingTFCoil(TFCoil):
         a_tf_turn_cable_space: float,
         a_tf_turn: float,
         a_tf_turn_cable_space_effective: float,
+        f_a_tf_turn_cable_space_cooling: float,
         b_tf_inboard_peak: float,
         f_a_tf_turn_cable_copper: float,
         c_tf_turn: float,
@@ -872,6 +875,8 @@ class SuperconductingTFCoil(TFCoil):
             Area per turn (i.e. entire jacketed conductor) (m²).
         :param float a_tf_turn_cable_space_effective:
             Effective cable space area per turn (m²).
+        :param float f_a_tf_turn_cable_space_cooling:
+            Fraction of cable space used for cooling.
         :param float b_tf_inboard_peak:
             Peak field at conductor (T).
         :param float f_a_tf_turn_cable_copper:
@@ -922,10 +927,6 @@ class SuperconductingTFCoil(TFCoil):
             conductor copper fraction (i.e., the copper in the superconducting strands and any additional
             copper, such as REBCO tape support).
         """
-
-        f_a_tf_turn_cable_space_cooling = 1 - (
-            a_tf_turn_cable_space_effective / a_tf_turn_cable_space
-        )
 
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
         # Kludge to allow solver to continue and hopefully be constrained away
@@ -1468,7 +1469,7 @@ class SuperconductingTFCoil(TFCoil):
             self.outfile,
             "Actual current density in winding pack (A/m2)",
             "(j_tf_coil_turn)",
-            tfcoil_variables.j_tf_coil_turn,
+            superconducting_tf_coil_variables.j_tf_coil_turn,
             "OP ",
         )
 

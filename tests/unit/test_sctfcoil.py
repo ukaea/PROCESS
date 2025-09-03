@@ -151,6 +151,8 @@ class SuperconParam(NamedTuple):
 
     str_tf_con_res: Any = None
 
+    a_tf_turn_cable_space_effective: Any = None
+
     b_crit_upper_nbti: Any = None
 
     i_str_wp: Any = None
@@ -215,6 +217,18 @@ class SuperconParam(NamedTuple):
 
     expected_tmarg: Any = None
 
+    expected_j_superconductor_critical: Any = None
+
+    expected_f_c_tf_turn_operating_critical: Any = None
+
+    expected_j_tf_coil_turn: Any = None
+
+    expected_bc20m: Any = None
+
+    expected_tc0m: Any = None
+
+    expected_c_turn_cables_critical: Any = None
+
 
 @pytest.mark.parametrize(
     "superconparam",
@@ -240,6 +254,7 @@ class SuperconParam(NamedTuple):
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
+            a_tf_turn_cable_space_effective=0.001,
             b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
@@ -261,6 +276,12 @@ class SuperconParam(NamedTuple):
             expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=9988.2637896807955,
             expected_tmarg=2.34312129,
+            expected_j_superconductor_critical=41107234.360397324,
+            expected_f_c_tf_turn_operating_critical=41107234.360397324,
+            expected_j_tf_coil_turn=41107234.360397324,
+            expected_bc20m=41107234.360397324,
+            expected_tc0m=41107234.360397324,
+            expected_c_turn_cables_critical=41107234.360397324,
         ),
         SuperconParam(
             tmargmin_tf=1.5,
@@ -283,6 +304,7 @@ class SuperconParam(NamedTuple):
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
+            a_tf_turn_cable_space_effective=0.001,
             b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
@@ -302,6 +324,12 @@ class SuperconParam(NamedTuple):
             expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
+            expected_j_superconductor_critical=41107234.360397324,
+            expected_f_c_tf_turn_operating_critical=41107234.360397324,
+            expected_j_tf_coil_turn=41107234.360397324,
+            expected_bc20m=41107234.360397324,
+            expected_tc0m=41107234.360397324,
+            expected_c_turn_cables_critical=41107234.360397324,
         ),
         SuperconParam(
             tmargmin_tf=1.5,
@@ -324,6 +352,7 @@ class SuperconParam(NamedTuple):
             outfile=11,
             a_tf_turn_cable_space=0.001293323051622732,
             a_tf_turn=0.0032012300777680192,
+            a_tf_turn_cable_space_effective=0.001,
             b_tf_inboard_peak_symmetric=12.48976756562082,
             f_a_tf_turn_cable_copper=0.80884,
             f_a_tf_turn_cooling_extra=0.30000000000000004,
@@ -343,6 +372,12 @@ class SuperconParam(NamedTuple):
             expected_j_tf_wp_critical=41107234.360397324,
             expected_vd=10001.287165953383,
             expected_tmarg=2.34312129,
+            expected_j_superconductor_critical=41107234.360397324,
+            expected_f_c_tf_turn_operating_critical=41107234.360397324,
+            expected_j_tf_coil_turn=41107234.360397324,
+            expected_bc20m=41107234.360397324,
+            expected_tc0m=41107234.360397324,
+            expected_c_turn_cables_critical=41107234.360397324,
         ),
     ),
 )
@@ -420,13 +455,24 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     monkeypatch.setattr(global_variables, "run_tests", superconparam.run_tests)
 
-    j_tf_wp_critical, vd, tmarg = sctfcoil.supercon(
+    (
+        j_tf_wp_critical,
+        vd,
+        tmarg,
+        j_superconductor_critical,
+        f_c_tf_turn_operating_critical,
+        j_tf_coil_turn,
+        bc20m,
+        tc0m,
+        c_turn_cables_critical,
+    ) = sctfcoil.supercon(
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
+        a_tf_turn_cable_space_effective=superconparam.a_tf_turn_cable_space_effective,
+        f_a_tf_turn_cable_space_cooling=superconparam.f_a_tf_turn_cable_space_cooling,
         b_tf_inboard_peak=superconparam.b_tf_inboard_peak_symmetric,
         f_a_tf_turn_cable_copper=superconparam.f_a_tf_turn_cable_copper,
-        f_a_tf_turn_cooling_extra=superconparam.f_a_tf_turn_cooling_extra,
         f_strain_scale=superconparam.f_strain_scale,
         c_tf_turn=superconparam.c_tf_turn,
         j_tf_wp=superconparam.j_tf_wp,
@@ -438,9 +484,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         tcritsc=superconparam.tcritsc,
     )
 
-    assert tfcoil_variables.temp_margin == pytest.approx(
-        superconparam.expected_temp_margin
-    )
+    assert tmarg == pytest.approx(superconparam.expected_temp_margin)
 
     assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
 
@@ -449,6 +493,24 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     assert vd == pytest.approx(superconparam.expected_vd)
 
     assert tmarg == pytest.approx(superconparam.expected_tmarg)
+
+    assert j_superconductor_critical == pytest.approx(
+        superconparam.expected_j_superconductor_critical
+    )
+
+    assert f_c_tf_turn_operating_critical == pytest.approx(
+        superconparam.expected_f_c_tf_turn_operating_critical
+    )
+
+    assert j_tf_coil_turn == pytest.approx(superconparam.expected_j_tf_coil_turn)
+
+    assert bc20m == pytest.approx(superconparam.expected_bc20m)
+
+    assert tc0m == pytest.approx(superconparam.expected_tc0m)
+
+    assert c_turn_cables_critical == pytest.approx(
+        superconparam.expected_c_turn_cables_critical
+    )
 
 
 class PeakTfWithRippleParam(NamedTuple):
