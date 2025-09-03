@@ -311,14 +311,15 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         if tfcoil_variables.i_tf_sc_mat == 6:
-            (tfcoil_variables.j_tf_wp_critical, tfcoil_variables.temp_tf_superconductor_margin) = (
-                self.supercon_croco(
-                    a_tf_turn,
-                    tfcoil_variables.b_tf_inboard_peak_with_ripple,
-                    tfcoil_variables.c_tf_turn,
-                    tfcoil_variables.tftmp,
-                    output=output,
-                )
+            (
+                tfcoil_variables.j_tf_wp_critical,
+                tfcoil_variables.temp_tf_superconductor_margin,
+            ) = self.supercon_croco(
+                a_tf_turn,
+                tfcoil_variables.b_tf_inboard_peak_with_ripple,
+                tfcoil_variables.c_tf_turn,
+                tfcoil_variables.tftmp,
+                output=output,
             )
 
             tfcoil_variables.v_tf_coil_dump_quench_kv = (
@@ -333,8 +334,8 @@ class SuperconductingTFCoil(TFCoil):
             ) = self.supercon(
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
                 a_tf_turn=a_tf_turn,
+                a_tf_turn_cable_space_effective=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
                 b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
-                f_a_tf_turn_cooling_extra=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
                 c_tf_turn=tfcoil_variables.c_tf_turn,
                 j_tf_wp=tfcoil_variables.j_tf_wp,
@@ -844,8 +845,8 @@ class SuperconductingTFCoil(TFCoil):
         self,
         a_tf_turn_cable_space: float,
         a_tf_turn: float,
+        a_tf_turn_cable_space_effective: float,
         b_tf_inboard_peak: float,
-        f_a_tf_turn_cooling_extra: float,
         f_a_tf_turn_cable_copper: float,
         c_tf_turn: float,
         j_tf_wp: float,
@@ -866,10 +867,10 @@ class SuperconductingTFCoil(TFCoil):
             Cable space - inside area (m²).
         :param float a_tf_turn:
             Area per turn (i.e. entire jacketed conductor) (m²).
+        :param float a_tf_turn_cable_space_effective:
+            Effective cable space area per turn (m²).
         :param float b_tf_inboard_peak:
             Peak field at conductor (T).
-        :param float f_a_tf_turn_cooling_extra:
-            Additional fraction of turn cable space reserved for cooling.
         :param float f_a_tf_turn_cable_copper:
             Fraction of conductor that is copper.
         :param float c_tf_turn:
@@ -923,17 +924,8 @@ class SuperconductingTFCoil(TFCoil):
         tdump = t_tf_quench_dump
 
         # Helium channel
-        f_a_tf_turn_cable_space_cooling = (
-            f_a_tf_turn_cooling_extra
-            # Area of inner cooling channel
-            + (
-                (
-                    (np.pi / 4.0e0)
-                    * tfcoil_variables.dia_tf_turn_coolant_channel
-                    * tfcoil_variables.dia_tf_turn_coolant_channel
-                )
-                / a_tf_turn_cable_space
-            )
+        f_a_tf_turn_cable_space_cooling = 1 - (
+            a_tf_turn_cable_space_effective / a_tf_turn_cable_space
         )
 
         # Guard against negative conductor fraction f_a_tf_turn_cable_space_conductor
@@ -955,9 +947,12 @@ class SuperconductingTFCoil(TFCoil):
 
         # =================================================================
 
-        if i_tf_superconductor == 1:  # ITER Nb3Sn critical surface parameterization
-            bc20m = 32.97e0
-            tc0m = 16.06e0
+        # ITER Nb3Sn critical surface parameterization
+        if i_tf_superconductor == 1:  
+
+            bc20m = 32.97e0 # [T]
+            tc0m = 16.06e0 # [K]
+            
             # If strain limit achieved, throw a warning and use the lower strain
             if abs(strain) > 0.5e-2:
                 logger.error(
@@ -967,25 +962,25 @@ class SuperconductingTFCoil(TFCoil):
 
             #  j_crit_sc returned by superconductors.itersc is the critical current density in the
             #  superconductor - not the whole strand, which contains copper
-            j_crit_sc, _, _ = superconductors.itersc(
-                temp_tf_coolant_peak_field,
-                b_tf_inboard_peak,
-                strain,
-                bc20m,
-                tc0m,
+            j_superconductor_critical, _, _ = superconductors.itersc(
+                temp_conductor=temp_tf_coolant_peak_field,
+                b_conductor=b_tf_inboard_peak,
+                strain=strain,
+                b_c20max=bc20m,
+                temp_c0max=tc0m,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = (
-                j_crit_sc
+            j_cables_critical = (
+                j_superconductor_critical
                 * (1.0e0 - f_a_tf_turn_cable_copper)
                 * f_a_tf_turn_cable_space_conductor
             )
             #  Critical current in cable
-            icrit = j_crit_cable * a_tf_turn_cable_space
+            i_cables_critical = j_cables_critical * a_tf_turn_cable_space
 
             # Strand critical current calculation for costing in $/kAm
             # = Superconducting filaments jc * (1 - strand copper fraction)
-            tfcoil_variables.j_crit_str_tf = j_crit_sc * (
+            tfcoil_variables.j_crit_str_tf = j_superconductor_critical * (
                 1.0e0 - f_a_tf_turn_cable_copper
             )
 
