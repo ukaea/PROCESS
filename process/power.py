@@ -1846,6 +1846,8 @@ class Power:
                 v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
                 e_tf_magnetic_stored_total_mj=superconducting_tf_coil_variables.e_tf_magnetic_stored_total
                 / 1e6,
+                ind_tf_total=superconducting_tf_coil_variables.ind_tf_total,
+                ind_tf_coil=superconducting_tf_coil_variables.ind_tf_coil,
             )
             return
 
@@ -1939,6 +1941,8 @@ class Power:
         n_tf_coils: int,
         v_tf_coil_dump_quench_kv: float,
         e_tf_magnetic_stored_total_mj: float,
+        ind_tf_total: float,
+        ind_tf_coil: float
     ) -> tuple[float, float, float, float, float]:
         """
         Calculates the TF coil power conversion system parameters for superconducting coils.
@@ -1955,6 +1959,10 @@ class Power:
         :type v_tf_coil_dump_quench_kv: float
         :param e_tf_magnetic_stored_total_mj: Total stored energy in TF coils (MJ).
         :type e_tf_magnetic_stored_total_mj: float
+        :param ind_tf_total: Total inductance of TF coils (H).
+        :type ind_tf_total: float
+        :param ind_tf_coil: Inductance of a single TF coil (H).
+        :type ind_tf_coil: float
 
         :returns: Tuple containing:
             - tfckw (float): DC power supply rating (kW)
@@ -1976,7 +1984,6 @@ class Power:
             Available: https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwjX9Ozasb6OAxX1U0EAHV-3C
             0QQFnoECBYQAQ&url=https%3A%2F%2Fengineering.purdue.edu%2FCMUXE%2FPublications%2FAHR%2FR88ORNL-FEDC-87-7.pdf&
             usg=AOvVaw1-LdCefwqI0hJumpHvfTlX&opi=89978449
-        ‌
         """
 
         N_TF_COIL_BREAKERS = 1.0e0  # number of TF coils per circuit breaker
@@ -1992,17 +1999,11 @@ class Power:
         #  Total steady state TF coil AC power demand (summed later)
         p_tf_electric_supplies_mw = 0.0e0
 
-        #  Inductance of all TF coils, Henries
-        ind_tf_total = 2.0e0 * e_tf_magnetic_stored_total_mj / c_tf_turn_ka**2
-
         #  Number of circuit breakers
         n_tf_breakers = n_tf_coils / N_TF_COIL_BREAKERS
 
-        #  Inductance per TF coil, Henries
-        ind_tf_coil = ind_tf_total / n_tf_coils
-
         #  Aluminium bus section area, sq cm
-        albusa = c_tf_turn_ka / j_tf_bus_design_ka_cm
+        a_tf_bus_cm = c_tf_turn_ka / j_tf_bus_design_ka_cm
 
         #  Total TF system bus length, m
         len_tf_bus = 8.0e0 * np.pi * rmajor + (1.0e0 + n_tf_breakers) * (
@@ -2010,11 +2011,11 @@ class Power:
         )
 
         #  Aluminium bus weight, tonnes
-        m_tf_bus_aluminium_tonnes = 2.7e0 * albusa * len_tf_bus / 1.0e4
+        m_tf_bus_aluminium_tonnes = (constants.den_aluminium/1e3) * a_tf_bus_cm * len_tf_bus / 1.0e4
 
         #  Total resistance of TF bus, ohms
-        # res_tf_bus = 2.62e-4 * len_tf_bus / albusa
-        res_tf_bus = tfcoil_variables.rho_tf_bus * len_tf_bus / (albusa / 10000)
+        # res_tf_bus = 2.62e-4 * len_tf_bus / a_tf_bus_cm
+        res_tf_bus = tfcoil_variables.rho_tf_bus * len_tf_bus / (a_tf_bus_cm / 10000)
 
         #  Total voltage drop across TF bus, volts
         v_tf_bus = 1000.0e0 * c_tf_turn_ka * res_tf_bus
@@ -2217,8 +2218,8 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Aluminium bus cross-sectional area (cm2)",
-                "(albusa)",
-                albusa,
+                "(a_tf_bus_cm)",
+                a_tf_bus_cm,
                 "OP ",
             )
             po.ovarre(
