@@ -929,41 +929,86 @@ def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
     )
 
 
-def current_density_margin(ttest, isumat, jsc, bmax, strain, bc20m, tc0m, c0=None):
-    """Current density margin is the difference between the operating current density and
-    the critical current density of a superconductor, at a given temperature and field.
-    It is zero at the current-sharing temperature.
-    ttest : input real :    Temperature
-    isumat : input real :   Switch for superconductor material
-                            (This has different global names depending on which coil is referred to.)
-    jsc : input real : actual current density
-    bmax : input real : magnetic field (T)
-    strain : input real : superconductor strain
-    bc20m, tc0m : input real : superconductor parameters
+def current_density_margin(
+    temp_superconductor: float,
+    i_superconductor_type: int,
+    j_superconductor: float,
+    b_superconductor: float,
+    strain: float,
+    bc20m: float,
+    tc0m: float,
+    c0: float,
+) -> float:
     """
+    Calculate the current density margin for a superconductor.
 
-    # Critical current density jcrit
-    if isumat == 1:
-        jcrit, _, _ = itersc(ttest, bmax, strain, bc20m, tc0m)
-    elif isumat == 3:
-        jcrit, _ = jcrit_nbti(ttest, bmax, c0, bc20m, tc0m)
-    if isumat == 4:
-        jcrit, _, _ = itersc(ttest, bmax, strain, bc20m, tc0m)
-    elif isumat == 5:
-        jcrit, _, _ = western_superconducting_nb3sn(ttest, bmax, strain, bc20m, tc0m)
-    elif isumat == 7:
-        jcrit, _, _ = gl_nbti(ttest, bmax, strain, bc20m, tc0m)
-    elif isumat == 8:
-        jcrit, _, _ = gl_rebco(ttest, bmax, strain, bc20m, tc0m)
-    elif isumat == 9:
-        jcrit, _, _ = hijc_rebco(
-            ttest,
-            bmax,
+    :param temp_superconductor: Superconductor Temperature (K)
+    :type temp_superconductor: float
+    :param i_superconductor_type: Switch for superconductor material
+    :type i_superconductor_type: int
+    :param j_superconductor: Actual current density (A/m²)
+    :type j_superconductor: float
+    :param b_superconductor: Magnetic field (T)
+    :type b_superconductor: float
+    :param strain: Superconductor strain
+    :type strain: float
+    :param bc20m: Upper critical field (T)
+    :type bc20m: float
+    :param tc0m: Critical temperature (K)
+    :type tc0m: float
+    :param c0: Scaling constant (A/m²), required for NbTi
+    :type c0: float, optional
+    :return: Current density margin (A/m²)
+    :rtype: float
+
+    The current density margin is the difference between the operating current density and
+    the critical current density of a superconductor at a given temperature and field.
+    It is zero at the current-sharing temperature.
+
+    Superconductor material codes:
+        1: ITER Nb₃Sn
+        3: NbTi (Lubell scaling)
+        4: ITER Nb₃Sn (alternate)
+        5: Western Superconducting Nb₃Sn
+        7: Ginzburg-Landau NbTi
+        8: Ginzburg-Landau REBCO
+        9: High current density REBCO
+    """
+    material_functions = {
+        1: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
+            0
+        ],
+        3: lambda: jcrit_nbti(temp_superconductor, b_superconductor, c0, bc20m, tc0m)[
+            0
+        ],
+        4: lambda: itersc(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
+            0
+        ],
+        5: lambda: western_superconducting_nb3sn(
+            temp_superconductor, b_superconductor, strain, bc20m, tc0m
+        )[0],
+        7: lambda: gl_nbti(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
+            0
+        ],
+        8: lambda: gl_rebco(temp_superconductor, b_superconductor, strain, bc20m, tc0m)[
+            0
+        ],
+        9: lambda: hijc_rebco(
+            temp_superconductor,
+            b_superconductor,
             bc20m,
             tc0m,
             rebco_variables.tape_width,
             rebco_variables.rebco_thickness,
             rebco_variables.tape_thickness,
-        )
+        )[0],
+    }
 
-    return jcrit - jsc
+    try:
+        j_superconductor_critical = material_functions[i_superconductor_type]()
+    except KeyError as err:
+        raise ValueError(
+            f"Unknown superconductor material code: {i_superconductor_type}"
+        ) from err
+
+    return j_superconductor_critical - j_superconductor
