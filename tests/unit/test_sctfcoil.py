@@ -436,7 +436,6 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         temp_tf_conductor_peak_quench=superconparam.temp_tf_conductor_peak_quench,
         bcritsc=superconparam.bcritsc,
         tcritsc=superconparam.tcritsc,
-        output=False,
     )
 
     assert tfcoil_variables.temp_margin == pytest.approx(

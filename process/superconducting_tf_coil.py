@@ -331,9 +331,11 @@ class SuperconductingTFCoil(TFCoil):
                 tfcoil_variables.j_tf_wp_critical,
                 vdump,
                 tfcoil_variables.temp_tf_superconductor_margin,
-                _,
-                _,
-                _,
+                superconducting_tf_coil_variables.j_tf_superconductor_critical,
+                superconducting_tf_coil_variables.f_c_tf_turn_operating_critical,
+                superconducting_tf_coil_variables.j_tf_coil_turn,
+                superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
+                superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
             ) = self.supercon(
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
                 a_tf_turn=a_tf_turn,
@@ -350,7 +352,6 @@ class SuperconductingTFCoil(TFCoil):
                 temp_tf_conductor_peak_quench=tfcoil_variables.tmaxpro,
                 bcritsc=tfcoil_variables.bcritsc,
                 tcritsc=tfcoil_variables.tcritsc,
-                output=output,
             )
 
             tfcoil_variables.v_tf_coil_dump_quench_kv = (
@@ -861,7 +862,6 @@ class SuperconductingTFCoil(TFCoil):
         temp_tf_conductor_peak_quench: float,
         bcritsc: float,
         tcritsc: float,
-        output: bool,
     ) -> tuple[float, float, float]:
         """
         Calculates the properties of the TF superconducting conductor.
@@ -904,8 +904,6 @@ class SuperconductingTFCoil(TFCoil):
             Critical field at zero temperature and strain (T) (used only if i_tf_superconductor=4).
         :param float tcritsc:
             Critical temperature at zero field and strain (K) (used only if i_tf_superconductor=4).
-        :param bool output:
-            Switch for printing output.
 
         :returns: tuple (j_tf_wp_critical, vd, temp_tf_superconductor_margin)
             - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
@@ -924,8 +922,6 @@ class SuperconductingTFCoil(TFCoil):
             conductor copper fraction (i.e., the copper in the superconducting strands and any additional
             copper, such as REBCO tape support).
         """
-
-        tdump = t_tf_quench_dump
 
         f_a_tf_turn_cable_space_cooling = 1 - (
             a_tf_turn_cable_space_effective / a_tf_turn_cable_space
@@ -1332,7 +1328,7 @@ class SuperconductingTFCoil(TFCoil):
             e_tf_coil_magnetic_stored,
             a_tf_turn_cable_space,
             a_tf_turn,
-            tdump,
+            t_tf_quench_dump,
             f_a_tf_turn_cable_space_conductor,
             f_a_tf_turn_cable_copper,
             temp_tf_coolant_peak_field,
@@ -1343,264 +1339,15 @@ class SuperconductingTFCoil(TFCoil):
             constraint_variables.nflutfmax,
         )
 
-        if output:  # Output --------------------------
-            if temp_tf_superconductor_margin <= 0.0e0:
-                logger.error(
-                    """Negative TFC temperature margin
-                temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
-                b_tf_inboard_peak: {b_tf_inboard_peak}
-                jcrit0: {jcrit0}
-                jsc: {jsc}
-                """
-                )
-
-            po.oheadr(self.outfile, "Superconducting TF Coils")
-            po.ovarin(
-                self.outfile,
-                "Superconductor switch",
-                "(i_tf_superconductor)",
-                i_tf_superconductor,
+        if temp_tf_superconductor_margin <= 0.0e0:
+            logger.error(
+                """Negative TFC temperature margin
+            temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
+            b_tf_inboard_peak: {b_tf_inboard_peak}
+            jcrit0: {jcrit0}
+            jsc: {jsc}
+            """
             )
-
-            if i_tf_superconductor == 1:
-                po.ocmmnt(self.outfile, "Superconductor used: Nb3Sn")
-                po.ocmmnt(self.outfile, "  (ITER Jcrit model, standard parameters)")
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-            if i_tf_superconductor == 2:
-                po.ocmmnt(self.outfile, "Superconductor used: Bi-2212 HTS")
-            if i_tf_superconductor == 3:
-                po.ocmmnt(self.outfile, "Superconductor used: NbTi")
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-            if i_tf_superconductor == 4:
-                po.ocmmnt(self.outfile, "Superconductor used: Nb3Sn")
-                po.ocmmnt(self.outfile, "  (ITER Jcrit model, user-defined parameters)")
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-            if i_tf_superconductor == 5:
-                po.ocmmnt(self.outfile, "Superconductor used: Nb3Sn")
-                po.ocmmnt(self.outfile, " (WST Nb3Sn critical surface model)")
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-            if i_tf_superconductor == 7:
-                po.ocmmnt(self.outfile, "Superconductor used: Nb-Ti")
-                po.ocmmnt(
-                    self.outfile, " (Durham Ginzburg-Landau critical surface model)"
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-            if i_tf_superconductor == 8:
-                po.ocmmnt(self.outfile, "Superconductor used: REBCO")
-                po.ocmmnt(
-                    self.outfile, " (Durham Ginzburg-Landau critical surface model)"
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-            if i_tf_superconductor == 9:
-                po.ocmmnt(self.outfile, "Superconductor used: REBCO")
-                po.ocmmnt(
-                    self.outfile,
-                    " (Hazelton experimental data + Zhai conceptual model)",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical field at zero temperature and strain (T)",
-                    "(bc20m)",
-                    bc20m,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Critical temperature at zero field and strain (K)",
-                    "(tc0m)",
-                    tc0m,
-                )
-
-            if global_variables.run_tests == 1:
-                po.oblnkl(self.outfile)
-                po.ocmmnt(
-                    self.outfile,
-                    "PROCESS TF Coil peak field fit. Values for t, z and y:",
-                )
-                po.oblnkl(self.outfile)
-                po.ovarre(
-                    self.outfile,
-                    "Dimensionless winding pack width",
-                    "(tf_fit_t)",
-                    superconducting_tf_coil_variables.tf_fit_t,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Dimensionless winding pack radial thickness",
-                    "(tf_fit_z)",
-                    superconducting_tf_coil_variables.tf_fit_z,
-                    "OP ",
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Ratio of peak field with ripple to nominal axisymmetric peak field",
-                    "(f_b_tf_inboard_peak_ripple_symmetric)",
-                    superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
-                    "OP ",
-                )
-
-            po.oblnkl(self.outfile)
-            po.ovarre(
-                self.outfile,
-                "Helium temperature at peak field (= superconductor temperature) (K)",
-                "(temp_tf_coolant_peak_field)",
-                temp_tf_coolant_peak_field,
-            )
-            po.ovarre(
-                self.outfile,
-                "Total helium fraction inside cable space",
-                "(f_a_tf_turn_cable_space_cooling)",
-                f_a_tf_turn_cable_space_cooling,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Copper fraction of conductor",
-                "(f_a_tf_turn_cable_copper)",
-                f_a_tf_turn_cable_copper,
-            )
-            po.ovarre(
-                self.outfile,
-                "Residual manufacturing strain on superconductor",
-                "(str_tf_con_res)",
-                tfcoil_variables.str_tf_con_res,
-            )
-            po.ovarre(
-                self.outfile,
-                "Self-consistent strain on superconductor",
-                "(str_wp)",
-                tfcoil_variables.str_wp,
-            )
-            po.ovarre(
-                self.outfile,
-                "Critical current density in superconductor (A/m2)",
-                "(j_superconductor_critical)",
-                j_superconductor_critical,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Critical current density in cable (A/m2)",
-                "(j_crit_cable)",
-                j_crit_cable,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Critical current density in winding pack (A/m2)",
-                "(j_tf_wp_critical)",
-                j_tf_wp_critical,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual current density in winding pack (A/m2)",
-                "(j_tf_coil_turn)",
-                j_tf_coil_turn,
-                "OP ",
-            )
-
-            po.ovarre(
-                self.outfile,
-                "Minimum allowed temperature margin in superconductor (K)",
-                "(tmargmin_tf)",
-                tfcoil_variables.tmargmin_tf,
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual temperature margin in superconductor (K)",
-                "(temp_tf_superconductor_margin)",
-                temp_tf_superconductor_margin,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Critical current (A)",
-                "(c_turn_cables_critical)",
-                c_turn_cables_critical,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual current (A)",
-                "(c_tf_turn)",
-                tfcoil_variables.c_tf_turn,
-                "OP ",
-            )
-            po.ovarre(
-                self.outfile,
-                "Actual current / critical current",
-                "(f_c_tf_turn_operating_critical)",
-                f_c_tf_turn_operating_critical,
-                "OP ",
-            )
-
         return (
             j_tf_wp_critical,
             vd,
@@ -1608,6 +1355,156 @@ class SuperconductingTFCoil(TFCoil):
             j_superconductor_critical,
             f_c_tf_turn_operating_critical,
             j_tf_coil_turn,
+            bc20m,
+            tc0m,
+            c_turn_cables_critical,
+        )
+
+    def output_tf_superconductor_info(self):
+        """Output TF superconductor information"""
+
+        po.oheadr(self.outfile, "TF Coils Superconductor Information")
+        po.ovarin(
+            self.outfile,
+            "TF superconductor switch",
+            "(i_tf_sc_mat)",
+            tfcoil_variables.i_tf_sc_mat,
+        )
+
+        po.ocmmnt(
+            self.outfile,
+            f"Superconductor used: {SUPERCONDUCTING_TF_TYPES[tfcoil_variables.i_tf_sc_mat]}",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Critical field at zero temperature and strain (T)",
+            "(b_tf_superconductor_critical_zero_temp_strain)",
+            superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
+        )
+        po.ovarre(
+            self.outfile,
+            "Critical temperature at zero field and strain (K)",
+            "(temp_tf_superconductor_critical_zero_field_strain)",
+            superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
+        )
+
+        if global_variables.run_tests == 1:
+            po.oblnkl(self.outfile)
+            po.ocmmnt(
+                self.outfile,
+                "PROCESS TF Coil peak field fit. Values for t, z and y:",
+            )
+            po.oblnkl(self.outfile)
+            po.ovarre(
+                self.outfile,
+                "Dimensionless winding pack width",
+                "(tf_fit_t)",
+                superconducting_tf_coil_variables.tf_fit_t,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Dimensionless winding pack radial thickness",
+                "(tf_fit_z)",
+                superconducting_tf_coil_variables.tf_fit_z,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Ratio of peak field with ripple to nominal axisymmetric peak field",
+                "(f_b_tf_inboard_peak_ripple_symmetric)",
+                superconducting_tf_coil_variables.f_b_tf_inboard_peak_ripple_symmetric,
+                "OP ",
+            )
+
+        po.oblnkl(self.outfile)
+        po.ovarre(
+            self.outfile,
+            "Helium temperature at peak field (= superconductor temperature) (K)",
+            "(tftmp)",
+            tfcoil_variables.tftmp,
+        )
+        po.ovarre(
+            self.outfile,
+            "Total cooling area fraction inside cable space",
+            "(f_a_tf_turn_cable_space_cooling)",
+            superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Copper fraction of conductor",
+            "(f_a_tf_turn_cable_copper)",
+            tfcoil_variables.f_a_tf_turn_cable_copper,
+        )
+        po.ovarre(
+            self.outfile,
+            "Residual manufacturing strain on superconductor",
+            "(str_tf_con_res)",
+            tfcoil_variables.str_tf_con_res,
+        )
+        po.ovarre(
+            self.outfile,
+            "Self-consistent strain on superconductor",
+            "(str_wp)",
+            tfcoil_variables.str_wp,
+        )
+        po.ovarre(
+            self.outfile,
+            "Critical current density in superconductor (A/m2)",
+            "(j_tf_superconductor_critical)",
+            superconducting_tf_coil_variables.j_tf_superconductor_critical,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Critical current density in winding pack (A/m2)",
+            "(j_tf_wp_critical)",
+            tfcoil_variables.j_tf_wp_critical,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual current density in winding pack (A/m2)",
+            "(j_tf_coil_turn)",
+            tfcoil_variables.j_tf_coil_turn,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Minimum allowed temperature margin in superconductor (K)",
+            "(tmargmin_tf)",
+            tfcoil_variables.tmargmin_tf,
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual temperature margin in superconductor (K)",
+            "(temp_tf_superconductor_margin)",
+            tfcoil_variables.temp_tf_superconductor_margin,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Critical current (A)",
+            "(c_turn_cables_critical)",
+            superconducting_tf_coil_variables.c_tf_turn_cables_critical,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual current (A)",
+            "(c_tf_turn)",
+            tfcoil_variables.c_tf_turn,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Actual current / critical current",
+            "(f_c_tf_turn_operating_critical)",
+            superconducting_tf_coil_variables.f_c_tf_turn_operating_critical,
+            "OP ",
         )
 
     def protect(
@@ -2543,6 +2440,11 @@ class SuperconductingTFCoil(TFCoil):
             )
         )
 
+        superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling = 1 - (
+            superconducting_tf_coil_variables.a_tf_turn_cable_space_effective
+            / a_tf_turn_cable_space_no_void
+        )
+
         if a_tf_turn_cable_space_no_void <= 0.0e0:
             if (dr_tf_turn_cable_space < 0.0e0) or (dx_tf_turn_cable_space < 0.0e0):
                 logger.error(
@@ -2712,6 +2614,11 @@ class SuperconductingTFCoil(TFCoil):
                     a_tf_turn_cable_space_no_void
                     * tfcoil_variables.f_a_tf_turn_cable_space_extra_void
                 )
+            )
+
+            superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling = 1 - (
+                superconducting_tf_coil_variables.a_tf_turn_cable_space_effective
+                / a_tf_turn_cable_space_no_void
             )
 
             if a_tf_turn_cable_space_no_void <= 0.0e0:
