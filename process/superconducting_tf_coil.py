@@ -844,7 +844,7 @@ class SuperconductingTFCoil(TFCoil):
         self,
         a_tf_turn_cable_space: float,
         a_tf_turn: float,
-        b_tf_inboard_peak_symmetric: float,
+        b_tf_inboard_peak: float,
         f_a_tf_turn_cooling_extra: float,
         f_a_tf_turn_cable_copper: float,
         c_tf_turn: float,
@@ -866,7 +866,7 @@ class SuperconductingTFCoil(TFCoil):
             Cable space - inside area (m²).
         :param float a_tf_turn:
             Area per turn (i.e. entire jacketed conductor) (m²).
-        :param float b_tf_inboard_peak_symmetric:
+        :param float b_tf_inboard_peak:
             Peak field at conductor (T).
         :param float f_a_tf_turn_cooling_extra:
             Additional fraction of turn cable space reserved for cooling.
@@ -969,7 +969,7 @@ class SuperconductingTFCoil(TFCoil):
             #  superconductor - not the whole strand, which contains copper
             j_crit_sc, _, _ = superconductors.itersc(
                 temp_tf_coolant_peak_field,
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 strain,
                 bc20m,
                 tc0m,
@@ -1007,7 +1007,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
             j_crit_cable, tmarg = superconductors.bi2212(
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 jstrand,
                 temp_tf_coolant_peak_field,
                 f_strain_scale,
@@ -1028,7 +1028,7 @@ class SuperconductingTFCoil(TFCoil):
             tc0m = 9.3e0
             c0 = 1.0e10
             j_crit_sc, _ = superconductors.jcrit_nbti(
-                temp_tf_coolant_peak_field, b_tf_inboard_peak_symmetric, c0, bc20m, tc0m
+                temp_tf_coolant_peak_field, b_tf_inboard_peak, c0, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = (
@@ -1061,7 +1061,7 @@ class SuperconductingTFCoil(TFCoil):
 
             j_crit_sc, _, _ = superconductors.itersc(
                 temp_tf_coolant_peak_field,
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 strain,
                 bc20m,
                 tc0m,
@@ -1097,7 +1097,7 @@ class SuperconductingTFCoil(TFCoil):
             #  superconductor - not the whole strand, which contains copper
             j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
                 temp_tf_coolant_peak_field,
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 strain,
                 bc20m,
                 tc0m,
@@ -1131,7 +1131,7 @@ class SuperconductingTFCoil(TFCoil):
             tc0m = tfcoil_variables.t_crit_nbti
             j_crit_sc, _, _ = superconductors.gl_nbti(
                 temp_tf_coolant_peak_field,
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 strain,
                 bc20m,
                 tc0m,
@@ -1167,7 +1167,7 @@ class SuperconductingTFCoil(TFCoil):
 
             j_crit_sc, _, _ = superconductors.gl_rebco(
                 temp_tf_coolant_peak_field,
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 strain,
                 bc20m,
                 tc0m,
@@ -1205,7 +1205,7 @@ class SuperconductingTFCoil(TFCoil):
             #  see subroutine for full references
             j_crit_sc, _, _ = superconductors.hijc_rebco(
                 temp_tf_coolant_peak_field,
-                b_tf_inboard_peak_symmetric,
+                b_tf_inboard_peak,
                 bc20m,
                 tc0m,
                 rebco_variables.tape_width,
@@ -1279,7 +1279,7 @@ class SuperconductingTFCoil(TFCoil):
                 arguments = (
                     i_tf_superconductor,
                     jsc,
-                    b_tf_inboard_peak_symmetric,
+                    b_tf_inboard_peak,
                     strain,
                     bc20m,
                     tc0m,
@@ -1289,7 +1289,7 @@ class SuperconductingTFCoil(TFCoil):
                 arguments = (
                     i_tf_superconductor,
                     jsc,
-                    b_tf_inboard_peak_symmetric,
+                    b_tf_inboard_peak,
                     strain,
                     bc20m,
                     tc0m,
@@ -1301,7 +1301,7 @@ class SuperconductingTFCoil(TFCoil):
                 temp_tf_coolant_peak_field,
                 fprime=None,
                 args=arguments,
-                # args=(i_tf_superconductor, jsc, b_tf_inboard_peak_symmetric, strain, bc20m, tc0m,),
+                # args=(i_tf_superconductor, jsc, b_tf_inboard_peak, strain, bc20m, tc0m,),
                 tol=1.0e-06,
                 maxiter=50,
                 fprime2=None,
@@ -1326,7 +1326,7 @@ class SuperconductingTFCoil(TFCoil):
             f_a_tf_turn_cable_copper,
             temp_tf_coolant_peak_field,
             temp_tf_conductor_peak_quench,
-            b_tf_inboard_peak_symmetric,
+            b_tf_inboard_peak,
             tfcoil_variables.rrr_tf_cu,
             tfcoil_variables.t_tf_quench_detection,
             constraint_variables.nflutfmax,
@@ -1337,7 +1337,7 @@ class SuperconductingTFCoil(TFCoil):
                 logger.error(
                     """Negative TFC temperature margin
                 tmarg: {tmarg}
-                b_tf_inboard_peak_symmetric: {b_tf_inboard_peak_symmetric}
+                b_tf_inboard_peak: {b_tf_inboard_peak}
                 jcrit0: {jcrit0}
                 jsc: {jsc}
                 """

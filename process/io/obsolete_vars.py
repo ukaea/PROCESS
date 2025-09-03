@@ -421,6 +421,7 @@ OBS_VARS = {
     "dwell_pump": "i_vac_pump_dwell",
     "ntype": "i_vacuum_pump_type",
     "vacuum_model": "i_vacuum_pumping",
+    "fcutfsu": "f_a_tf_turn_cable_copper",
 }
 
 OBS_VARS_HELP = {
