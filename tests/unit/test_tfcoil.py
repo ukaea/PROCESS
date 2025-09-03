@@ -724,7 +724,6 @@ class TfcindParam(NamedTuple):
             z_tf_arc=np.zeros(3),
             r_tf_arc=np.zeros(3),
             ind_tf_coil=0.0,
-            expected_ind_tf_coil=6.26806810007207e-06,
         ),
     ),
 )

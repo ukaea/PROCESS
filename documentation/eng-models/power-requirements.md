@@ -5,10 +5,10 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ### TF Coils
 
-Generall the newt power consumption of one magnet in $\text{VA}$ is given by:
+Generall the net power consumption of one magnet in $\text{VA}$ is given by:
 
 $$
-P_{\text{TF,electric}} = \left(R_{\text{TF,coil}}+R_{\text{joints}}+R_{\text{feeder}}\right) \times I_{\text{TF,coil}}^2 
+P_{\text{TF,electric}} = \left(\Omega_{\text{TF,coil}}+\Omega_{\text{joints}}+\Omega_{\text{feeder}}\right) \times I_{\text{TF,coil}}^2 
 \\ +\left(L_{\text{TF,coil-self}}+L_{\text{feeder}}\right)\frac{dI}{dt}
 $$
 

@@ -1846,8 +1846,8 @@ class Power:
                 v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
                 e_tf_magnetic_stored_total_mj=superconducting_tf_coil_variables.e_tf_magnetic_stored_total
                 / 1e6,
-                ind_tf_total=superconducting_tf_coil_variables.ind_tf_total,
-                ind_tf_coil=superconducting_tf_coil_variables.ind_tf_coil,
+                ind_tf_total=tfcoil_variables.ind_tf_total,
+                ind_tf_coil=tfcoil_variables.ind_tf_coil,
                 t_tf_charge=tfcoil_variables.t_tf_charge,
             )
             return
@@ -2026,34 +2026,34 @@ class Power:
         v_tf_bus = 1000.0e0 * c_tf_turn_ka * res_tf_bus
 
         #  Total resistance of the TF coils, ohms
-        rcoils = 0.0
+        res_tf_coils = 0.0
 
         #  Total impedance, ohms
-        ztotal = res_tf_bus + rcoils + ind_tf_total / t_tf_charge
+        imp_tf_total = res_tf_bus + res_tf_coils + ind_tf_total / t_tf_charge
 
         #  Charging voltage for the TF coils, volts
-        tfcv = 1000.0e0 * c_tf_turn_ka * ztotal
+        v_tf_charge = 1000.0e0 * c_tf_turn_ka * imp_tf_total
 
         #  Number of TF power modules
-        ntfpm = (c_tf_turn_ka * (1.0e0 + nsptfc)) / 5.0e0
+        n_tf_power_modules = (c_tf_turn_ka * (1.0e0 + nsptfc)) / 5.0e0
 
         #  TF coil power module voltage, volts
-        tfpmv = rtfps * tfcv / (1.0e0 + nsptfc)
+        v_tf_power_module = rtfps * v_tf_charge / (1.0e0 + nsptfc)
 
         #  TF coil power supply voltage, volts
-        tfpsv = rtfps * tfcv
+        tfpsv = rtfps * v_tf_charge
 
         #  Power supply current, kA
         tfpska = rtfps * c_tf_turn_ka
 
         #  TF power module current, kA
-        tfpmka = rtfps * c_tf_turn_ka / (ntfpm / (1.0e0 + nsptfc))
+        tfpmka = rtfps * c_tf_turn_ka / (n_tf_power_modules / (1.0e0 + nsptfc))
 
         #  TF power module power, kW
-        tfpmkw = tfpmv * tfpmka
+        tfpmkw = v_tf_power_module * tfpmka
 
         #  Available DC power for charging the TF coils, kW
-        tfckw = tfpmkw * ntfpm
+        tfckw = tfpmkw * n_tf_power_modules
 
         #  Peak AC power needed to charge coils, kW
         tfackw = tfckw / 0.9e0
@@ -2087,7 +2087,7 @@ class Power:
 
         #  Building space:
         #  Power modules floor space, m2
-        part1 = fspc1 * ntfpm * tfpmkw**0.667e0
+        part1 = fspc1 * n_tf_power_modules * tfpmkw**0.667e0
 
         #  Circuit breakers floor space, m2
         part2 = (
@@ -2156,14 +2156,19 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Total resistance of TF coils (ohm)",
-                "(rcoils)",
-                rcoils,
+                "(res_tf_coils)",
+                res_tf_coils,
                 "OP ",
             )
             # MDK Remove this as it leads to confusion between (a) total inductance/n_tf_coils, or (b)
             #     self-inductance of one single coil
             # po.ovarre(outfile,'Inductance per TF coil (H)','(ind_tf_coil)',ind_tf_coil, 'OP ')
-            po.ovarre(self.outfile, "TF coil charging voltage (V)", "(tfcv)", tfcv)
+            po.ovarre(
+                self.outfile,
+                "TF coil charging voltage (V)",
+                "(v_tf_charge)",
+                v_tf_charge,
+            )
             po.ovarre(
                 self.outfile,
                 "Number of DC circuit breakers",
