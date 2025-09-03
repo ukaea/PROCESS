@@ -1848,6 +1848,7 @@ class Power:
                 / 1e6,
                 ind_tf_total=superconducting_tf_coil_variables.ind_tf_total,
                 ind_tf_coil=superconducting_tf_coil_variables.ind_tf_coil,
+                t_tf_charge=tfcoil_variables.t_tf_charge,
             )
             return
 
@@ -1942,7 +1943,8 @@ class Power:
         v_tf_coil_dump_quench_kv: float,
         e_tf_magnetic_stored_total_mj: float,
         ind_tf_total: float,
-        ind_tf_coil: float
+        ind_tf_coil: float,
+        t_tf_charge: float = 4.0 * 3600.0,  # Default: 4 hours in seconds
     ) -> tuple[float, float, float, float, float]:
         """
         Calculates the TF coil power conversion system parameters for superconducting coils.
@@ -1963,6 +1965,8 @@ class Power:
         :type ind_tf_total: float
         :param ind_tf_coil: Inductance of a single TF coil (H).
         :type ind_tf_coil: float
+        :param t_tf_charge: TF coil charging time (s).
+        :type t_tf_charge: float
 
         :returns: Tuple containing:
             - tfckw (float): DC power supply rating (kW)
@@ -1993,7 +1997,6 @@ class Power:
         fspc2 = 0.8e0  # floor space coefficient for circuit breakers
         fspc3 = 0.4e0  # floor space coefficient for load centres
 
-        T_TF_CHARGE_HOURS = 4.0e0  # charge time of the coils, hours
         nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
 
         #  Total steady state TF coil AC power demand (summed later)
@@ -2011,7 +2014,9 @@ class Power:
         )
 
         #  Aluminium bus weight, tonnes
-        m_tf_bus_aluminium_tonnes = (constants.den_aluminium/1e3) * a_tf_bus_cm * len_tf_bus / 1.0e4
+        m_tf_bus_aluminium_tonnes = (
+            (constants.den_aluminium / 1e3) * a_tf_bus_cm * len_tf_bus / 1.0e4
+        )
 
         #  Total resistance of TF bus, ohms
         # res_tf_bus = 2.62e-4 * len_tf_bus / a_tf_bus_cm
@@ -2024,7 +2029,7 @@ class Power:
         rcoils = 0.0
 
         #  Total impedance, ohms
-        ztotal = res_tf_bus + rcoils + ind_tf_total / (3600.0e0 * T_TF_CHARGE_HOURS)
+        ztotal = res_tf_bus + rcoils + ind_tf_total / t_tf_charge
 
         #  Charging voltage for the TF coils, volts
         tfcv = 1000.0e0 * c_tf_turn_ka * ztotal
@@ -2078,7 +2083,7 @@ class Power:
         rpower = (n_tf_coils * 0.0 + res_tf_bus) * c_tf_turn_ka**2
 
         #  Total TF coil peak inductive power demand, MVA
-        xpower = ind_tf_total / (3600.0e0 * T_TF_CHARGE_HOURS) * c_tf_turn_ka**2
+        xpower = ind_tf_total / t_tf_charge * c_tf_turn_ka**2
 
         #  Building space:
         #  Power modules floor space, m2
@@ -2137,9 +2142,9 @@ class Power:
             )
             po.ovarre(
                 self.outfile,
-                "TF coil charge time (hours)",
-                "(T_TF_CHARGE_HOURS)",
-                T_TF_CHARGE_HOURS,
+                "TF coil charge time (s)",
+                "(t_tf_charge)",
+                t_tf_charge,
             )
             po.ovarre(
                 self.outfile,
