@@ -195,6 +195,9 @@ j_tf_coil_turn: float = None
 b_tf_superconductor_critical_zero_temp_strain: float = None
 """Critical magnetic field of the superconducting cable at zero temperature and strain [T]"""
 
+temp_tf_superconductor_critical_zero_field_strain: float = None
+"""Critical temperature of the superconducting cable at zero magnetic field and strain [K]"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -292,6 +295,7 @@ def init_superconducting_tf_coil_variables():
     global f_c_tf_turn_operating_critical
     global j_tf_coil_turn
     global b_tf_superconductor_critical_zero_temp_strain
+    global temp_tf_superconductor_critical_zero_field_strain
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -345,3 +349,4 @@ def init_superconducting_tf_coil_variables():
     f_c_tf_turn_operating_critical = 0.0
     j_tf_coil_turn = 0.0
     b_tf_superconductor_critical_zero_temp_strain = 0.0
+    temp_tf_superconductor_critical_zero_field_strain = 0.0
