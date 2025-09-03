@@ -1311,7 +1311,7 @@ class SuperconductingTFCoil(TFCoil):
 
             another_estimate = 2 * temp_tf_coolant_peak_field
             t_zero_margin, root_result = optimize.newton(
-                superconductors.current_density_margin,
+                superconductors.superconductor_current_density_margin,
                 temp_tf_coolant_peak_field,
                 fprime=None,
                 args=arguments,

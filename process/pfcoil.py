@@ -3606,7 +3606,7 @@ class PFCoil:
 
             another_estimate = 2 * thelium
             t_zero_margin, root_result = optimize.newton(
-                superconductors.current_density_margin,
+                superconductors.superconductor_current_density_margin,
                 thelium,
                 fprime=None,
                 args=arguments,

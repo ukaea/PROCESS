@@ -929,7 +929,7 @@ def croco(j_crit_sc, conductor_area, croco_od, croco_thick):
     )
 
 
-def current_density_margin(
+def superconductor_current_density_margin(
     temp_superconductor: float,
     i_superconductor_type: int,
     j_superconductor: float,
@@ -937,7 +937,7 @@ def current_density_margin(
     strain: float,
     bc20m: float,
     tc0m: float,
-    c0: float,
+    c0: float = 0.0,
 ) -> float:
     """
     Calculate the current density margin for a superconductor.
@@ -946,9 +946,9 @@ def current_density_margin(
     :type temp_superconductor: float
     :param i_superconductor_type: Switch for superconductor material
     :type i_superconductor_type: int
-    :param j_superconductor: Actual current density (A/m²)
+    :param j_superconductor: Superconductor actual current density (A/m²)
     :type j_superconductor: float
-    :param b_superconductor: Magnetic field (T)
+    :param b_superconductor: Magnetic field at the superconductor (T)
     :type b_superconductor: float
     :param strain: Superconductor strain
     :type strain: float
