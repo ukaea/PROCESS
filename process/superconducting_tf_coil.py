@@ -865,7 +865,7 @@ class SuperconductingTFCoil(TFCoil):
         temp_tf_conductor_peak_quench: float,
         bcritsc: float,
         tcritsc: float,
-    ) -> tuple[float, float, float]:
+    ) -> tuple[float, float, float, float, float, float, float, float, float]:
         """
         Calculates the properties of the TF superconducting conductor.
 
@@ -914,6 +914,12 @@ class SuperconductingTFCoil(TFCoil):
             - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
             - vd (float): Discharge voltage imposed on a TF coil (V).
             - temp_tf_superconductor_margin (float): Temperature margin (K).
+            - j_superconductor_critical (float): Critical current density in superconductor (A/m²).
+            - f_c_tf_turn_operating_critical (float): Ratio of operating / critical current.
+            - j_tf_coil_turn (float): Actual current density in superconductor (A/m²).
+            - b_tf_superconductor_critical_zero_temp_strain (float): Critical field at zero temperature and strain (T).
+            - temp_tf_superconductor_critical_zero_field_strain (float): Critical temperature at zero field and strain (K).
+            - c_tf_turn_cables_critical (float): Critical current in cable (A).
 
         :notes:
             This routine calculates the superconductor properties for the TF coils.
