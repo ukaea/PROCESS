@@ -646,7 +646,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -1641,7 +1641,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -2636,7 +2636,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -3631,7 +3631,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -4626,7 +4626,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -5621,7 +5621,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -6616,7 +6616,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -7611,7 +7611,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    
@@ -8606,7 +8606,7 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      4.1259E+00 OP 
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      4.1259E+00 OP 
  Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
  Copper_fraction_in_conductor____________________________________________ (fcupfsu)_____________________      6.9000E-01    

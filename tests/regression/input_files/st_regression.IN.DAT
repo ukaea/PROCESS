@@ -3337,7 +3337,7 @@ iavail = 0
 *icc = 61
 * DESCRIPTION:   Constraint equation for availability limit
 * JUSTIFICATION: Turned off, do not care about availability limit 
-* VARIABLES:     temp_cs_superconductor_margin_min (Minimum allowable temperature margin in CS (K)), temp_cs_margin calculated in-situ
+* VARIABLES:     temp_cs_superconductor_margin_min (Minimum allowable temperature margin in CS (K)), temp_cs_superconductor_margin calculated in-situ
 
 *avail_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)

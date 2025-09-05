@@ -1581,7 +1581,7 @@ class PFCoil:
                 pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
-            pfcoil_variables.temp_cs_margin = min(tmarg1, tmarg2)
+            pfcoil_variables.temp_cs_superconductor_margin = min(tmarg1, tmarg2)
 
         else:
             # Resistive power losses (non-superconducting coil)
@@ -2714,8 +2714,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS temperature margin (K)",
-                    "(temp_cs_margin)",
-                    pfcoil_variables.temp_cs_margin,
+                    "(temp_cs_superconductor_margin)",
+                    pfcoil_variables.temp_cs_superconductor_margin,
                     "OP ",
                 )
                 op.ovarre(
@@ -2818,7 +2818,7 @@ class PFCoil:
                     )
                 ):
                     pfcoil_variables.cslimit = True
-                if pfcoil_variables.temp_cs_margin < 1.01e0 * tfv.temp_cs_superconductor_margin_min:
+                if pfcoil_variables.temp_cs_superconductor_margin < 1.01e0 * tfv.temp_cs_superconductor_margin_min:
                     pfcoil_variables.cslimit = True
                 if not pfcoil_variables.cslimit:
                     logger.warning(

@@ -1557,17 +1557,17 @@ def constraint_equation_60():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ftmargoh: f-value for central solenoid temperature margin
-    temp_cs_margin: Central solenoid temperature margin (K)
+    temp_cs_superconductor_margin: Central solenoid temperature margin (K)
     temp_cs_superconductor_margin_min: Minimum allowable temperature margin : CS (K)
     """
     return ConstraintResult(
         1.0
         - data_structure.constraint_variables.ftmargoh
-        * data_structure.pfcoil_variables.temp_cs_margin
+        * data_structure.pfcoil_variables.temp_cs_superconductor_margin
         / data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
         data_structure.tfcoil_variables.temp_cs_superconductor_margin_min,
         data_structure.tfcoil_variables.temp_cs_superconductor_margin_min
-        - data_structure.pfcoil_variables.temp_cs_margin,
+        - data_structure.pfcoil_variables.temp_cs_superconductor_margin,
     )
 
 
