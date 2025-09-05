@@ -717,11 +717,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5830E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4085E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5915E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4085E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5915E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5000E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5000E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -756,7 +756,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4961E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4085E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4085E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0593E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4389E+08 OP 
@@ -1880,11 +1880,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5793E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4877E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5123E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4877E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5123E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5076E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5076E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -1919,7 +1919,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4973E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4877E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4877E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0049E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7927E+08 OP 
@@ -3043,11 +3043,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5669E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5652E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4348E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5652E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4348E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5137E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5137E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -3082,7 +3082,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.5012E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5652E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5652E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9466E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1596E+08 OP 
@@ -4206,11 +4206,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5691E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5682E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4318E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5682E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4318E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5139E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5139E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -4245,7 +4245,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.5005E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5682E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5682E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9433E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1612E+08 OP 
@@ -5369,11 +5369,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5872E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4897E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5103E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4897E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5103E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5089E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5089E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -5408,7 +5408,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4948E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4897E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4897E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0026E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7936E+08 OP 
@@ -6532,11 +6532,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6152E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4141E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5859E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4141E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5859E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5044E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5044E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -6571,7 +6571,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4863E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4141E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4141E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0499E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4433E+08 OP 
@@ -7695,11 +7695,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6173E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4183E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5817E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4183E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5817E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5046E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5046E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -7734,7 +7734,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4856E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4183E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4183E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0461E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4453E+08 OP 
@@ -8858,11 +8858,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6050E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5001E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4999E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5001E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4999E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5114E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5114E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -8897,7 +8897,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4894E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5001E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5001E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9928E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7986E+08 OP 
@@ -10021,11 +10021,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5918E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5768E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4232E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5768E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4232E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5196E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5196E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -10060,7 +10060,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4934E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5768E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5768E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9393E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1629E+08 OP 
@@ -11184,11 +11184,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.5936E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5786E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4214E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5786E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4214E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5197E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5197E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -11223,7 +11223,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4929E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5786E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5786E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9374E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1638E+08 OP 
@@ -12347,11 +12347,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6082E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5009E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4991E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5009E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4991E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5161E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5161E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -12386,7 +12386,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4884E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5009E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5009E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9903E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7998E+08 OP 
@@ -13510,11 +13510,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6258E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4203E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5797E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4203E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5797E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5114E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5114E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -13549,7 +13549,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4831E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4203E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4203E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0460E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4451E+08 OP 
@@ -14673,11 +14673,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6277E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4227E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5773E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4227E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5773E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5116E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5116E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -14712,7 +14712,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4825E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4227E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4227E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0435E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.4464E+08 OP 
@@ -15836,11 +15836,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6146E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5030E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4970E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5030E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4970E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5201E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5201E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -15875,7 +15875,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4864E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5030E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5030E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9912E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.7993E+08 OP 
@@ -16999,11 +16999,11 @@
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6010E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5779E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.4221E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5779E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4221E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
  minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5282E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5282E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
@@ -17038,7 +17038,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4906E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.5779E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5779E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      1.9399E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      8.1624E+08 OP 
@@ -17733,7 +17733,7 @@ dx_tf_turn_steel = 0.008
 ixc = 59 
 boundl(59) = 0.50
 boundu(59) = 0.94
-fcutfsu = 0.8
+f_a_tf_turn_cable_copper = 0.8
 
 * TF Current per turn [A]
 ixc = 60

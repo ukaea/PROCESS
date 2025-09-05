@@ -264,7 +264,7 @@ module numerics
   !! <LI> (56) tdmptf
   !! <LI> (57) dr_tf_nose_case
   !! <LI> (58) dx_tf_turn_steel
-  !! <LI> (59) fcutfsu
+  !! <LI> (59) f_a_tf_turn_cable_copper
   !! <LI> (60) c_tf_turn
   !! <LI> (61) dr_shld_vv_gap_inboard
   !! <LI> (62) fdtmp (f-value for equation 38)

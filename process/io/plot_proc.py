@@ -30,6 +30,7 @@ from matplotlib.path import Path
 
 import process.confinement_time as confine
 import process.io.mfile as mf
+import process.superconducting_tf_coil as sctf
 from process.data_structure import physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
@@ -5424,8 +5425,8 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"Average $\\Delta r$: {mfile_data.data['dx_tf_side_case_average'].get_scan(scan):.3f} m"
         )
         axis.text(
-            0.775,
-            0.925,
+            0.55,
+            0.95,
             textstr_casing,
             fontsize=9,
             verticalalignment="top",
@@ -5448,8 +5449,8 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$\\Delta r$: {mfile_data.data['dx_tf_wp_insertion_gap'].get_scan(scan):.4f} m"
         )
         axis.text(
-            0.775,
             0.55,
+            0.575,
             textstr_wp_insulation,
             fontsize=9,
             verticalalignment="top",
@@ -5485,7 +5486,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
 
         axis.text(
             0.775,
-            0.425,
+            0.95,
             textstr_wp,
             fontsize=9,
             verticalalignment="top",
@@ -5513,8 +5514,8 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$A$, all insulation in coil: {mfile_data.data['a_tf_coil_inboard_insulation'].get_scan(scan):.4f} $\\mathrm{{m}}^2$\n"
         )
         axis.text(
-            0.55,
-            0.425,
+            0.775,
+            0.575,
             textstr_general_info,
             fontsize=9,
             verticalalignment="top",
@@ -5529,7 +5530,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
         )
 
         axis.minorticks_on()
-        axis.set_xlim(0.0, r_tf_inboard_out * 1.1)
+        axis.set_xlim(r_tf_inboard_in * 0.8, r_tf_inboard_out * 1.1)
         axis.set_ylim((y14[-1] * 1.25), (-y14[-1] * 1.25))
 
         axis.set_title("Top-down view of inboard TF coil at midplane")
@@ -6122,7 +6123,6 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     a_tf_turn_cable_space_no_void = mfile_data.data[
         "a_tf_turn_cable_space_no_void"
     ].get_scan(scan)
-    c_tf_turn = mfile_data.data["c_tf_turn"].get_scan(scan)
     radius_tf_turn_cable_space_corners = mfile_data.data[
         "radius_tf_turn_cable_space_corners"
     ].get_scan(scan)
@@ -6364,7 +6364,6 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     textstr_turn_cooling = (
         f"$\\mathbf{{Cooling:}}$\n\n"
         f"$\\varnothing$: {he_pipe_diameter:.3e} m\n"
-        f"$I_{{\\text{{TF,turn}}}}$: {c_tf_turn:.2f} A\n"
         f"Total area of all coolant channels: {a_tf_wp_coolant_channels:.4f} m$^2$"
     )
 
@@ -6379,6 +6378,32 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         bbox={
             "boxstyle": "round",
             "facecolor": "white",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_superconductor = (
+        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"Superconductor used: {sctf.SUPERCONDUCTING_TF_TYPES[mfile_data.data['i_tf_sc_mat'].get_scan(scan)]}\n"
+        f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
+        f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
+        f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):.2f} A\n"
+        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):.4f}\n"
+    )
+    axis.text(
+        0.775,
+        0.375,
+        textstr_superconductor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#6dd3f7",  # light blue for superconductors
             "alpha": 1.0,
             "linewidth": 2,
         },
@@ -6864,8 +6889,8 @@ def plot_magnetics_info(axis, mfile_data, scan):
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("b_tf_inboard_peak_with_ripple", "Peak field at conductor (w. rip.)", "T"),
-            ("iooic", r"I/I$_{\mathrm{crit}}$", ""),
-            ("tmargtf", "TF Temperature margin", "K"),
+            ("f_c_tf_turn_operating_critical", r"I/I$_{\mathrm{crit}}$", ""),
+            ("temp_tf_superconductor_margin", "TF Temperature margin", "K"),
             ("temp_cs_margin", "CS Temperature margin", "K"),
             (sig_cond, "TF Cond max TRESCA stress", "MPa"),
             (sig_case, "TF Case max TRESCA stress", "MPa"),
@@ -9811,8 +9836,13 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_19 = fig8.add_subplot(211, aspect="equal")
-        plot_19.set_position([0.05, 0.5, 0.7, 0.4])
+        plot_19 = fig8.add_subplot(231, aspect="equal")
+        plot_19.set_position([
+            0.025,
+            0.5,
+            0.45,
+            0.45,
+        ])  # Half height, a bit wider, top left
         plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig8)
 
         # TF coil turn structure
