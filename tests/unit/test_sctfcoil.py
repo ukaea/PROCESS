@@ -335,55 +335,6 @@ class SuperconParam(NamedTuple):
             expected_tc0m=16.06,
             expected_c_turn_cables_critical=159162.9081148869,
         ),
-        SuperconParam(
-            tmargmin_tf=1.5,
-            n_tf_coils=16,
-            temp_margin=2.3431632224075836,
-            dia_tf_turn_coolant_channel=0.010000000000000002,
-            c_tf_turn=74026.751437500003,
-            b_tf_inboard_peak_with_ripple=12.48976756562082,
-            str_tf_con_res=-0.0050000000000000001,
-            b_crit_upper_nbti=14.859999999999999,
-            i_str_wp=1,
-            f_a_tf_turn_cable_space_cooling=0.3,
-            str_wp=0.0015619754370069119,
-            t_crit_nbti=9.0399999999999991,
-            tf_fit_t=0.80807838916035957,
-            tf_fit_z=0.3149613642807837,
-            f_b_tf_inboard_peak_ripple_symmetric=1.0658869305062604,
-            run_tests=0,
-            i_tf_superconductor=5,
-            iprint=0,
-            outfile=11,
-            a_tf_turn_cable_space=0.001293323051622732,
-            a_tf_turn=0.0032012300777680192,
-            a_tf_turn_cable_space_effective=0.001,
-            b_tf_inboard_peak_symmetric=12.48976756562082,
-            f_a_tf_turn_cable_copper=0.80884,
-            f_a_tf_turn_cooling_extra=0.30000000000000004,
-            f_strain_scale=0.5,
-            j_tf_wp=23124470.793774806,
-            t_tf_quench_dump=25.829000000000001,
-            e_tf_coil_magnetic_stored=9561415368.8360519,
-            temp_tf_coolant_peak_field=4.75,
-            temp_tf_conductor_peak_quench=150,
-            cu_rrr=33.0,
-            fluence=0.0,
-            detection_time=0.0,
-            bcritsc=24,
-            tcritsc=16,
-            expected_temp_margin=2.864553846654988,
-            expected_jwdgpro=17213147.288375787,
-            expected_j_tf_wp_critical=49719296.722920775,
-            expected_vd=10001.287165953383,
-            expected_tmarg=2.864553846654988,
-            expected_j_superconductor_critical=832616175.5329928,
-            expected_f_c_tf_turn_operating_critical=0.46510052068203006,
-            expected_j_tf_coil_turn=23124470.793774802,
-            expected_bc20m=32.97,
-            expected_tc0m=16.06,
-            expected_c_turn_cables_critical=159162.9081148869,
-        ),
     ),
 )
 def test_supercon(superconparam, monkeypatch, sctfcoil):
@@ -1190,9 +1141,9 @@ class TfIntegerTurnGeomParam(NamedTuple):
         ),
     ),
 )
-def test_tf_integer_turn_geom(tfintegerturngeomparam, sctfcoil):
+def test_tf_cable_in_conduit_integer_turn_geometry(tfintegerturngeomparam, sctfcoil):
     """
-    Automatically generated Regression Unit Test for tf_integer_turn_geom.
+    Automatically generated Regression Unit Test for tf_cable_in_conduit_integer_turn_geometry.
 
     This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
 
@@ -1442,9 +1393,11 @@ class TfAveragedTurnGeomParam(NamedTuple):
         ),
     ),
 )
-def test_tf_averaged_turn_geom(tfaveragedturngeomparam, monkeypatch, sctfcoil):
+def test_tf_cable_in_conduit_averaged_turn_geometry(
+    tfaveragedturngeomparam, monkeypatch, sctfcoil
+):
     """
-    Automatically generated Regression Unit Test for tf_averaged_turn_geom.
+    Automatically generated Regression Unit Test for tf_cable_in_conduit_averaged_turn_geometry.
 
     This test was generated using data from tests/regression/scenarios/i_mode/IN.DAT.
 
