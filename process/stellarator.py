@@ -2627,7 +2627,7 @@ class Stellarator:
                 tfcoil_variables.i_tf_sc_mat,
                 tfcoil_variables.b_crit_upper_nbti,
                 tfcoil_variables.bcritsc,
-                tfcoil_variables.fcutfsu,
+                tfcoil_variables.f_a_tf_turn_cable_copper,
                 tfcoil_variables.fhts,
                 tfcoil_variables.t_crit_nbti,
                 tfcoil_variables.tcritsc,
@@ -2645,7 +2645,7 @@ class Stellarator:
                 * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             )
             / (tfcoil_variables.t_turn_tf**2)
-            * (1.0e0 - tfcoil_variables.fcutfsu)
+            * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
         )  # fraction that is SC of wp.
         # print *, "f_scu. ",f_scu,"Awp min: ",Awp(1)
 
@@ -2973,7 +2973,7 @@ class Stellarator:
                 * tfcoil_variables.n_tf_coil_turns
                 * tfcoil_variables.a_tf_turn_cable_space_no_void
                 * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-                * (1.0e0 - tfcoil_variables.fcutfsu)
+                * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
                 - tfcoil_variables.len_tf_coil
                 * tfcoil_variables.a_tf_wp_coolant_channels
             )
@@ -2985,7 +2985,7 @@ class Stellarator:
             * tfcoil_variables.n_tf_coil_turns
             * tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
-            * tfcoil_variables.fcutfsu
+            * tfcoil_variables.f_a_tf_turn_cable_copper
             - tfcoil_variables.len_tf_coil * tfcoil_variables.a_tf_wp_coolant_channels
         ) * constants.den_copper
         # [kg] mass of Steel conduit (sheath)
@@ -3077,7 +3077,7 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,f_a_tf_turn_cable_copper,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.e_tf_magnetic_stored_total_gj
@@ -3092,20 +3092,23 @@ class Stellarator:
         tfcoil_variables.jwdgpro = self.j_max_protect_am2(
             tfcoil_variables.tdmptf,
             0.0e0,
-            tfcoil_variables.fcutfsu,
+            tfcoil_variables.f_a_tf_turn_cable_copper,
             1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             tfcoil_variables.tftmp,
             tfcoil_variables.a_tf_turn_cable_space_no_void,
             tfcoil_variables.t_turn_tf**2,
         )
 
-        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
+        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.f_a_tf_turn_cable_copper: ",f_a_tf_turn_cable_copper
         # print *, "a_tf_turn_cable_space_no_void: ", tfcoil_variables.a_tf_turn_cable_space_no_void
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
             coilcurrent
             * 1.0e6
-            / (tfcoil_variables.a_tf_wp_conductor * tfcoil_variables.fcutfsu)
+            / (
+                tfcoil_variables.a_tf_wp_conductor
+                * tfcoil_variables.f_a_tf_turn_cable_copper
+            )
         )
         tfcoil_variables.v_tf_coil_dump_quench_kv = vd / 1.0e3  # Dump voltage
         #
@@ -3279,7 +3282,7 @@ class Stellarator:
         i_tf_sc_mat,
         b_crit_upper_nbti,
         bcritsc,
-        fcutfsu,
+        f_a_tf_turn_cable_copper,
         fhts,
         t_crit_nbti,
         tcritsc,
@@ -3289,7 +3292,7 @@ class Stellarator:
         strain = -0.005  # for now a small value
         fhe = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
-        fcu = fcutfsu  # fcutfsu is a global variable. Is the copper fraction
+        fcu = f_a_tf_turn_cable_copper  # f_a_tf_turn_cable_copper is a global variable. Is the copper fraction
         # of a cable conductor.
 
         if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
@@ -3935,8 +3938,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Copper fraction of conductor",
-            "(fcutfsu)",
-            tfcoil_variables.fcutfsu,
+            "(f_a_tf_turn_cable_copper)",
+            tfcoil_variables.f_a_tf_turn_cable_copper,
         )
         po.ovarre(
             self.outfile,

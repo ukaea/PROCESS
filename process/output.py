@@ -69,6 +69,7 @@ def write(models, _outfile):
     # Toroidal field coil superconductor model
     if data_structure.tfcoil_variables.i_tf_sup == 1:
         models.sctfcoil.run(output=True)
+        models.sctfcoil.output_tf_superconductor_info()
 
     # Toroidal field coil aluminium model
     if data_structure.tfcoil_variables.i_tf_sup == 2:

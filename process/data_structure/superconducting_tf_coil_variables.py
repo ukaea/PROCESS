@@ -180,6 +180,29 @@ vforce_inboard_tot: float = None
 dr_tf_wp_no_insulation: float = None
 """Radial thickness of winding pack without insulation [m]"""
 
+dia_tf_turn_superconducting_cable: float = None
+"""Diameter of the superconducting cable in the TF turn [m]"""
+
+j_tf_superconductor_critical: float = None
+"""Critical current density of the superconducting cable [A/m^2]"""
+
+f_c_tf_turn_operating_critical: float = None
+"""Ratio of the TF operating current to the critical current"""
+
+j_tf_coil_turn: float = None
+"""Current density in the TF coil turn [A/m^2]"""
+
+b_tf_superconductor_critical_zero_temp_strain: float = None
+"""Critical magnetic field of the superconducting cable at zero temperature and strain [T]"""
+
+temp_tf_superconductor_critical_zero_field_strain: float = None
+"""Critical temperature of the superconducting cable at zero magnetic field and strain [K]"""
+
+f_a_tf_turn_cable_space_cooling: float = None
+"""Fraction of usable turn cable space area used for cooling"""
+
+c_tf_turn_cables_critical: float = None
+"""Critical current density in the turn cables [A/m^2]"""
 
 # Vacuum Vessel stress on TF coil quench
 
@@ -273,6 +296,14 @@ def init_superconducting_tf_coil_variables():
     global radius_tf_turn_cable_space_corners
     global a_tf_turn_cable_space_effective
     global dr_tf_wp_no_insulation
+    global dia_tf_turn_superconducting_cable
+    global j_tf_superconductor_critical
+    global f_c_tf_turn_operating_critical
+    global j_tf_coil_turn
+    global b_tf_superconductor_critical_zero_temp_strain
+    global temp_tf_superconductor_critical_zero_field_strain
+    global f_a_tf_turn_cable_space_cooling
+    global c_tf_turn_cables_critical
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -321,3 +352,11 @@ def init_superconducting_tf_coil_variables():
     radius_tf_turn_cable_space_corners = 0.0
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0
+    dia_tf_turn_superconducting_cable = 0.0
+    j_tf_superconductor_critical = 0.0
+    f_c_tf_turn_operating_critical = 0.0
+    j_tf_coil_turn = 0.0
+    b_tf_superconductor_critical_zero_temp_strain = 0.0
+    temp_tf_superconductor_critical_zero_field_strain = 0.0
+    f_a_tf_turn_cable_space_cooling = 0.0
+    c_tf_turn_cables_critical = 0.0

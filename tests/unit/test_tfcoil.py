@@ -938,7 +938,7 @@ class StressclParam(NamedTuple):
 
     dia_tf_turn_coolant_channel: Any = None
 
-    fcutfsu: Any = None
+    f_a_tf_turn_cable_copper: Any = None
 
     str_wp: Any = None
 
@@ -1067,7 +1067,7 @@ class StressclParam(NamedTuple):
             poisson_cond_axial=0.30000001192092896,
             poisson_cond_trans=0.30000001192092896,
             dia_tf_turn_coolant_channel=0.010000000000000002,
-            fcutfsu=0.80884,
+            f_a_tf_turn_cable_copper=0.80884,
             str_wp=0,
             n_tf_wp_stress_layers=5,
             i_pf_conductor=0,
@@ -1190,7 +1190,7 @@ class StressclParam(NamedTuple):
             poisson_cond_axial=0.30000001192092896,
             poisson_cond_trans=0.30000001192092896,
             dia_tf_turn_coolant_channel=0.010000000000000002,
-            fcutfsu=0.80884,
+            f_a_tf_turn_cable_copper=0.80884,
             str_wp=0.0015619754370069119,
             n_tf_wp_stress_layers=5,
             i_pf_conductor=0,
@@ -1354,7 +1354,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.dx_tf_turn_cable_space_average,
         stressclparam.dr_tf_turn_cable_space,
         stressclparam.dia_tf_turn_coolant_channel,
-        stressclparam.fcutfsu,
+        stressclparam.f_a_tf_turn_cable_copper,
         stressclparam.dx_tf_turn_steel,
         stressclparam.dx_tf_side_case_average,
         stressclparam.dx_tf_wp_toroidal_average,

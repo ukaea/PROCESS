@@ -977,7 +977,7 @@ considered/implemented in <em>PROCESS</em>.
 | `dx_tf_turn_steel`           | Steekl jacket/conduit thickness                                                                                             | 58                 | $8.10^{-3}$   | m    |
 | `dia_tf_turn_coolant_channel`            | Helium cooling channel diameter                                                                                             | -                  | $5.10^{-3}$   | m    |
 | `f_a_tf_turn_cable_space_extra_void`               | Cable void fraction                                                                                                         | -                  | 0.4           | -    |
-| `fcutfsu`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
+| `f_a_tf_turn_cable_copper`            | Copper cable fraction <br> defined with the cable area minus the void and cooling channel area                              | ixc = 59           | 0.69          | -    |
 
 <br>
 

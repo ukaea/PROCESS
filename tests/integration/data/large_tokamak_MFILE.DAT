@@ -886,7 +886,7 @@
  Critical_temperature_at_zero_field_and_strain_(K)________________________ (tc0m)_________________________ 1.60599999999999987e+01
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)______ (temp_tf_coolant_peak_field)___ 4.75000000000000000e+00
  Total_helium_fraction_inside_cable_space_________________________________ (f_a_tf_turn_cable_space_cooling)_ 3.45405942754025586e-01 OP
- Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.31847298851364769e-01
+ Copper_fraction_of_conductor_____________________________________________ (f_a_tf_turn_cable_copper)______________________ 8.31847298851364769e-01
  Residual_manufacturing_strain_on_superconductor__________________________ (str_tf_con_res)_______________ -5.00000000000000010e-03
  Self-consistent_strain_on_superconductor_________________________________ (str_wp)_______________________ 2.08748744502181699e-03
  Critical_current_density_in_superconductor_(A/m2)________________________ (j_crit_sc)____________________ 6.54725277641392350e+08 OP
@@ -959,11 +959,11 @@
  Diameter_of_central_helium_channel_in_cable______________________________ (dia_tf_turn_coolant_channel)__ 1.00000000000000002e-02
  internal_area_of_the_cable_space_________________________________________ (a_tf_turn_cable_space_no_void)_ 1.72972548472813317e-03
  Coolant_fraction_in_conductor_excluding_central_channel__________________ (f_a_tf_turn_cable_space_extra_void)_ 2.99999999999999989e-01
- Copper_fraction_of_conductor_____________________________________________ (fcutfsu)______________________ 8.31847298851364769e-01
- Superconductor_fraction_of_conductor_____________________________________ (1-fcutfsu)____________________ 1.68152701148635231e-01
+ Copper_fraction_of_conductor_____________________________________________ (f_a_tf_turn_cable_copper)______________________ 8.31847298851364769e-01
+ Superconductor_fraction_of_conductor_____________________________________ (1-f_a_tf_turn_cable_copper)____________________ 1.68152701148635231e-01
  Check_total_area_fractions_in_winding_pack_=_1___________________________ _______________________________ 1.00000000000000000e+00
  minimum_TF_conductor_temperature_margin__(K)_____________________________ (tmargmin_tf)__________________ 1.50000000000000000e+00
- TF_conductor_temperature_margin_(K)______________________________________ (tmargtf)______________________ 1.52743980913292443e+00
+ TF_conductor_temperature_margin_(K)______________________________________ (temp_tf_superconductor_margin)______________________ 1.52743980913292443e+00
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus___________________________________________ (eyoung_cond_axial)____________ 0.00000000000000000e+00
  Conductor_transverse_Youngs_modulus______________________________________ (eyoung_cond_trans)____________ 0.00000000000000000e+00
@@ -1675,7 +1675,7 @@ dx_tf_turn_steel = 0.008
 ixc = 59 
 boundl(59) = 0.50
 boundu(59) = 0.94
-fcutfsu = 0.8
+f_a_tf_turn_cable_copper = 0.8
 
 * TF Current per turn [A]
 ixc = 60

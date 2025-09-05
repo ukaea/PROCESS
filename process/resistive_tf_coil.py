@@ -173,7 +173,7 @@ class ResistiveTFCoil(TFCoil):
                 superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                 superconducting_tf_coil_variables.dr_tf_turn_cable_space,
                 tfcoil_variables.dia_tf_turn_coolant_channel,
-                tfcoil_variables.fcutfsu,
+                tfcoil_variables.f_a_tf_turn_cable_copper,
                 tfcoil_variables.dx_tf_turn_steel,
                 superconducting_tf_coil_variables.dx_tf_side_case_average,
                 superconducting_tf_coil_variables.dx_tf_wp_toroidal_average,
