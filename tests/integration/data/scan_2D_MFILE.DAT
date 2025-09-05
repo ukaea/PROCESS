@@ -720,7 +720,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4085E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5915E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5000E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -763,7 +763,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1839E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6519E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6445E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5000E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2189E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.8267E+04 ITV
@@ -1883,7 +1883,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4877E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5123E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5076E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -1926,7 +1926,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1785E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6069E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6304E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5076E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2103E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.8260E+04 ITV
@@ -3046,7 +3046,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5652E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4348E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5137E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -3089,7 +3089,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1707E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5620E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6163E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5137E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.1921E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.7563E+04 ITV
@@ -4209,7 +4209,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5682E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4318E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5139E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -4252,7 +4252,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1685E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5548E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6111E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5139E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.1917E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.7532E+04 ITV
@@ -5372,7 +5372,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4897E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5103E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5089E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -5415,7 +5415,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1771E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5952E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6210E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5089E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2153E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.8601E+04 ITV
@@ -6535,7 +6535,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4141E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5859E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5044E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -6578,7 +6578,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1804E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6229E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6209E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5044E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2419E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9844E+04 ITV
@@ -7698,7 +7698,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4183E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5817E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5046E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -7741,7 +7741,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1776E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6141E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6147E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5046E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2407E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9757E+04 ITV
@@ -8861,7 +8861,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5001E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4999E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5114E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -8904,7 +8904,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1697E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5776E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6070E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5114E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2223E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9068E+04 ITV
@@ -10024,7 +10024,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5768E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4232E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5196E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -10067,7 +10067,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1617E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5428E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5987E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5196E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2032E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.8260E+04 ITV
@@ -11187,7 +11187,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5786E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4214E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5197E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -11230,7 +11230,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1604E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5387E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5958E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5197E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2033E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.8265E+04 ITV
@@ -12350,7 +12350,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5009E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4991E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5161E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -12393,7 +12393,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1692E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5747E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6019E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5161E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2244E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9124E+04 ITV
@@ -13513,7 +13513,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4203E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5797E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5114E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -13556,7 +13556,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1761E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6136E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6095E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5114E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2461E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9989E+04 ITV
@@ -14676,7 +14676,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4227E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5773E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5116E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -14719,7 +14719,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1745E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.6085E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6060E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5116E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2460E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9982E+04 ITV
@@ -15839,7 +15839,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5030E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4970E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5201E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -15882,7 +15882,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1675E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5774E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.6012E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5201E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2279E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9278E+04 ITV
@@ -17002,7 +17002,7 @@
  Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.5779E-01 ITV
  Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.4221E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5282E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
@@ -17045,7 +17045,7 @@
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1608E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5472E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5964E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5282E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2097E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.8545E+04 ITV

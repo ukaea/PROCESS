@@ -599,7 +599,7 @@ class Availability:
 
         # Magnet temperature margin limit (K)
         # Use the lower of the two values.  Issue #526
-        tmargmin = min(tfv.tmargmin_tf, tfv.tmargmin_cs)
+        tmargmin = min(tfv.temp_tf_superconductor_margin_min, tfv.tmargmin_cs)
         mag_temp_marg_limit = tmargmin
 
         # Magnet maintenance time (years)

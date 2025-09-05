@@ -1725,7 +1725,7 @@ INPUT_VARIABLES = {
     "tmargmin_cs": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 20.0)
     ),
-    "tmargmin_tf": InputVariable(
+    "temp_tf_superconductor_margin_min": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 20.0)
     ),
     "temp_croco_quench_max": InputVariable(

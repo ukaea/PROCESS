@@ -1297,8 +1297,8 @@ class TFCoil:
                 po.ovarrf(
                     self.outfile,
                     "minimum TF conductor temperature margin  (K)",
-                    "(tmargmin_tf)",
-                    tfcoil_variables.tmargmin_tf,
+                    "(temp_tf_superconductor_margin_min)",
+                    tfcoil_variables.temp_tf_superconductor_margin_min,
                 )
                 po.ovarrf(
                     self.outfile,

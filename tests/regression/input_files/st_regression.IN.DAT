@@ -1442,7 +1442,7 @@ tftmp = 20.0
 * JUSTIFICATION: Turned off, do not care about minimum temperature margin
 * VARIABLES:     temp_tf_superconductor_margin calculated in-situ
 
-*tmargmin_tf = 
+*temp_tf_superconductor_margin_min = 
 * DESCRIPTION:   Minimum allowable temperature margin : TF coils (K) (icc = 36)
 * JUSTIFICATION: Turned off, do not care about winding pack current density
 

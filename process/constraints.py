@@ -1134,15 +1134,15 @@ def constraint_equation_36():
 
     ftmargtf: f-value for TF coil temperature margin
     temp_tf_superconductor_margin: TF coil temperature margin (K)
-    tmargmin_tf: minimum allowable temperature margin : TF coils (K)
+    temp_tf_superconductor_margin_min: minimum allowable temperature margin : TF coils (K)
     """
     return ConstraintResult(
         1.0
         - data_structure.constraint_variables.ftmargtf
         * data_structure.tfcoil_variables.temp_tf_superconductor_margin
-        / data_structure.tfcoil_variables.tmargmin_tf,
-        data_structure.tfcoil_variables.tmargmin_tf,
-        data_structure.tfcoil_variables.tmargmin_tf
+        / data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
+        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min,
+        data_structure.tfcoil_variables.temp_tf_superconductor_margin_min
         - data_structure.tfcoil_variables.temp_tf_superconductor_margin,
     )
 

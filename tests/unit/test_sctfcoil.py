@@ -137,7 +137,7 @@ def test_protect(protectparam, sctfcoil):
 
 
 class SuperconParam(NamedTuple):
-    tmargmin_tf: Any = None
+    temp_tf_superconductor_margin_min: Any = None
 
     n_tf_coils: Any = None
 
@@ -236,7 +236,7 @@ class SuperconParam(NamedTuple):
     "superconparam",
     (
         SuperconParam(
-            tmargmin_tf=1.5,
+            temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
             temp_margin=0,
             dia_tf_turn_coolant_channel=0.010000000000000002,
@@ -287,7 +287,7 @@ class SuperconParam(NamedTuple):
             expected_c_turn_cables_critical=159162.9081148869,
         ),
         SuperconParam(
-            tmargmin_tf=1.5,
+            temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
@@ -353,7 +353,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    monkeypatch.setattr(tfcoil_variables, "tmargmin_tf", superconparam.tmargmin_tf)
+    monkeypatch.setattr(tfcoil_variables, "temp_tf_superconductor_margin_min", superconparam.temp_tf_superconductor_margin_min)
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", superconparam.n_tf_coils)
 

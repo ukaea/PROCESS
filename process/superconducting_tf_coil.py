@@ -811,8 +811,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Minimum allowed temperature margin in superconductor (K)",
-                "(tmargmin_tf)",
-                tfcoil_variables.tmargmin_tf,
+                "(temp_tf_superconductor_margin_min)",
+                tfcoil_variables.temp_tf_superconductor_margin_min,
             )
 
             po.ovarre(
@@ -1482,8 +1482,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Minimum allowed temperature margin in superconductor (K)",
-            "(tmargmin_tf)",
-            tfcoil_variables.tmargmin_tf,
+            "(temp_tf_superconductor_margin_min)",
+            tfcoil_variables.temp_tf_superconductor_margin_min,
         )
         po.ovarre(
             self.outfile,
