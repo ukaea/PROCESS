@@ -1442,7 +1442,7 @@ tftmp = 20.0
 * JUSTIFICATION: Turned off, do not care about minimum temperature margin
 * VARIABLES:     temp_tf_superconductor_margin calculated in-situ
 
-*tmargmin_tf = 
+*temp_tf_superconductor_margin_min = 
 * DESCRIPTION:   Minimum allowable temperature margin : TF coils (K) (icc = 36)
 * JUSTIFICATION: Turned off, do not care about winding pack current density
 
@@ -1753,7 +1753,7 @@ i_pf_conductor = 0
 * JUSTIFICATION: Turned off, do not care about temp lower limit 
 * VARIABLES:     avail_min (Minimum availability), cfactr calculated in-situ
 
-*tmargmin_cs = 
+*temp_cs_superconductor_margin_min = 
 * DESCRIPTION:   Minimum allowable temp margin: CS (K) (icc = 60)
 * JUSTIFICATION: Turned off, do not care about winding pack current density
 
@@ -3337,7 +3337,7 @@ iavail = 0
 *icc = 61
 * DESCRIPTION:   Constraint equation for availability limit
 * JUSTIFICATION: Turned off, do not care about availability limit 
-* VARIABLES:     tmargmin_cs (Minimum allowable temperature margin in CS (K)), temp_cs_margin calculated in-situ
+* VARIABLES:     temp_cs_superconductor_margin_min (Minimum allowable temperature margin in CS (K)), temp_cs_superconductor_margin calculated in-situ
 
 *avail_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)

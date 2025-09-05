@@ -811,8 +811,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Minimum allowed temperature margin in superconductor (K)",
-                "(tmargmin_tf)",
-                tfcoil_variables.tmargmin_tf,
+                "(temp_tf_superconductor_margin_min)",
+                tfcoil_variables.temp_tf_superconductor_margin_min,
             )
 
             po.ovarre(
@@ -1311,7 +1311,7 @@ class SuperconductingTFCoil(TFCoil):
 
             another_estimate = 2 * temp_tf_coolant_peak_field
             t_zero_margin, root_result = optimize.newton(
-                superconductors.current_density_margin,
+                superconductors.superconductor_current_density_margin,
                 temp_tf_coolant_peak_field,
                 fprime=None,
                 args=arguments,
@@ -1482,8 +1482,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Minimum allowed temperature margin in superconductor (K)",
-            "(tmargmin_tf)",
-            tfcoil_variables.tmargmin_tf,
+            "(temp_tf_superconductor_margin_min)",
+            tfcoil_variables.temp_tf_superconductor_margin_min,
         )
         po.ovarre(
             self.outfile,

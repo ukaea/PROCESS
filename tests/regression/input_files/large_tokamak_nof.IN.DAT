@@ -111,7 +111,7 @@ tmargmin = 1.5
 * CS coil temp margin lower limit *
 *---------------------------------*
 icc = 60
-tmargmin_cs = 1.5
+temp_cs_superconductor_margin_min = 1.5
 
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*

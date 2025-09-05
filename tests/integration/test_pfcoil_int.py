@@ -221,7 +221,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "f_a_cs_steel", 5.926e-1)
     monkeypatch.setattr(pfcoil_variables, "b_cs_peak_pulse_start", 1.4e1)
     monkeypatch.setattr(pfcoil_variables, "j_cs_critical_flat_top_end", 4.070e7)
-    monkeypatch.setattr(pfcoil_variables, "temp_cs_margin", 1.5)
+    monkeypatch.setattr(pfcoil_variables, "temp_cs_superconductor_margin", 1.5)
     monkeypatch.setattr(pfcoil_variables, "i_pf_conductor", 0)
     monkeypatch.setattr(pfcoil_variables, "j_pf_wp_critical", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", 2.8e-8)
@@ -282,7 +282,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(tfv, "poisson_steel", 3.0e-1)
 
     # Mocks for superconpf()
-    monkeypatch.setattr(tfv, "tmargmin_cs", 1.5)
+    monkeypatch.setattr(tfv, "temp_cs_superconductor_margin_min", 1.5)
     monkeypatch.setattr(tfv, "temp_margin", 0.0)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 9.04)
@@ -2575,7 +2575,7 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """
     # TODO This test would benefit from parameterisation for different SC
     # materials (isumat)
-    monkeypatch.setattr(tfv, "tmargmin_cs", 0.0)
+    monkeypatch.setattr(tfv, "temp_cs_superconductor_margin_min", 0.0)
     monkeypatch.setattr(tfv, "temp_margin", 0.0)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 0.0)
     monkeypatch.setattr(tfv, "t_crit_nbti", 0.0)
