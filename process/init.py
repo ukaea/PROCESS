@@ -1119,17 +1119,17 @@ def check_process(inputs):  # noqa: ARG001
                 "temp_tf_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
-        if data_structure.tfcoil_variables.tmargmin_cs > 0.0001:
+        if data_structure.tfcoil_variables.temp_cs_superconductor_margin_min > 0.0001:
             warn(
-                "tmargmin_cs and tmargmin should not both be specified in IN.DAT "
-                "tmargmin_cs has been ignored",
+                "temp_cs_superconductor_margin_min and tmargmin should not both be specified in IN.DAT "
+                "temp_cs_superconductor_margin_min has been ignored",
                 stacklevel=2,
             )
 
         data_structure.tfcoil_variables.temp_tf_superconductor_margin_min = (
             data_structure.tfcoil_variables.tmargmin
         )
-        data_structure.tfcoil_variables.tmargmin_cs = (
+        data_structure.tfcoil_variables.temp_cs_superconductor_margin_min = (
             data_structure.tfcoil_variables.tmargmin
         )
 

@@ -2721,8 +2721,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Minimum permitted temperature margin (K)",
-                    "(tmargmin_cs)",
-                    tfv.tmargmin_cs,
+                    "(temp_cs_superconductor_margin_min)",
+                    tfv.temp_cs_superconductor_margin_min,
                 )
                 # only output CS fatigue model for pulsed reactor design
                 if pv.f_c_plasma_inductive > 0.0e-4:
@@ -2818,7 +2818,7 @@ class PFCoil:
                     )
                 ):
                     pfcoil_variables.cslimit = True
-                if pfcoil_variables.temp_cs_margin < 1.01e0 * tfv.tmargmin_cs:
+                if pfcoil_variables.temp_cs_margin < 1.01e0 * tfv.temp_cs_superconductor_margin_min:
                     pfcoil_variables.cslimit = True
                 if not pfcoil_variables.cslimit:
                     logger.warning(
