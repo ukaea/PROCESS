@@ -29,10 +29,10 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 
 import process.confinement_time as confine
+import process.constants as constants
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.data_structure import physics_variables
-from process.fortran import constants
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -9763,26 +9763,26 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     ax2.tick_params(axis="y", colors="blue")
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
-        np.array(fusrat_plasma_dt_profile) * constants.d_t_energy,
+        np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-",
     )
 
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
-        np.array(fusrat_plasma_dd_triton_profile) * constants.dd_triton_energy,
+        np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle=":",
     )
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
-        np.array(fusrat_plasma_dd_helion_profile) * constants.dd_helium_energy,
+        np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-.",
     )
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
-        np.array(fusrat_plasma_dhe3_profile) * constants.d_helium_energy,
+        np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="--",
     )
