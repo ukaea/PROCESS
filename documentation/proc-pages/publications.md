@@ -1,11 +1,22 @@
 # PROCESS Publications
 
 ## Physics and Engineering Model Papers
-The [physics](http://www.sciencedirect.com/science/article/pii/S0920379614005961) and [engineering](http://www.euro-fusionscipub.org/wp-content/uploads/2015/08/WPPMIPR1505.pdf) papers outline the models used in PROCESS, both published in Fusion Engineering and Design.
+The [physics](http://www.sciencedirect.com/science/article/pii/S0920379614005961) and [engineering](https://doi.org/10.1016/j.fusengdes.2016.01.007) papers outline the models used in PROCESS, both published in Fusion Engineering and Design.
 
+```markdown
+- M. Kovari, R. Kemp, H. D. Lux, P. L. Knight, J. Morris, and D. R. Ward, “‘PROCESS’: A systems code for fusion power plants—Part 1: Physics,” vol. 89, no. 12, pp. 3054–3069, Dec. 2014, doi: https://doi.org/10.1016/j.fusengdes.2014.09.018.
+‌
+- M. Kovari et al., “‘PROCESS’: A systems code for fusion power plants – Part 2: Engineering,” Fusion Engineering and Design, vol. 104, pp. 9–20, Mar. 2016, doi: https://doi.org/10.1016/j.fusengdes.2016.01.007.
+```
+‌
 Below is a list of publications using or citing PROCESS by year:
 
 ## 2025
+
+[Benchmarking of spherical tokamak power plant design in PROCESS and SARAS](https://www.sciencedirect.com/science/article/pii/S0920379625005551)   
+C. Ashe, P.N. Maya, S.I. Muldrew, S. Deshpande   
+Fusion Engineering & Design 221 (2025) 115359   
+
 [Optimisation of STEP poloidal field coils with superconducting coil constraints in STEP-Bluemira power plant design framework](https://www.sciencedirect.com/science/article/pii/S0920379625005538)   
 A. Nilima, M. Bluteau, J. Cook, O. Funk, G. Graham, J. Matthews, S.I. Muldrew, A.J. Pearce, D. Vaccaro   
 Fusion Engineering & Design 220 (2025) 115357   
