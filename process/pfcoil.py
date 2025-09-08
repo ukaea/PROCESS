@@ -2818,7 +2818,10 @@ class PFCoil:
                     )
                 ):
                     pfcoil_variables.cslimit = True
-                if pfcoil_variables.temp_cs_superconductor_margin < 1.01e0 * tfv.temp_cs_superconductor_margin_min:
+                if (
+                    pfcoil_variables.temp_cs_superconductor_margin
+                    < 1.01e0 * tfv.temp_cs_superconductor_margin_min
+                ):
                     pfcoil_variables.cslimit = True
                 if not pfcoil_variables.cslimit:
                     logger.warning(

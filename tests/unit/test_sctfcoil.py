@@ -353,7 +353,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    monkeypatch.setattr(tfcoil_variables, "temp_tf_superconductor_margin_min", superconparam.temp_tf_superconductor_margin_min)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "temp_tf_superconductor_margin_min",
+        superconparam.temp_tf_superconductor_margin_min,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", superconparam.n_tf_coils)
 
