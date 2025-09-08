@@ -325,7 +325,6 @@ class SuperconductingTFCoil(TFCoil):
         else:
             (
                 tfcoil_variables.j_tf_wp_critical,
-                vdump,
                 superconducting_tf_coil_variables.j_tf_superconductor_critical,
                 superconducting_tf_coil_variables.f_c_tf_turn_operating_critical,
                 superconducting_tf_coil_variables.j_tf_superconductor,
@@ -344,17 +343,10 @@ class SuperconductingTFCoil(TFCoil):
                 j_tf_wp=tfcoil_variables.j_tf_wp,
                 i_tf_superconductor=tfcoil_variables.i_tf_sc_mat,
                 f_strain_scale=tfcoil_variables.fhts,
-                t_tf_quench_dump=tfcoil_variables.tdmptf,
-                e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
                 temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
-                temp_tf_conductor_peak_quench=tfcoil_variables.tmaxpro,
                 bcritsc=tfcoil_variables.bcritsc,
                 tcritsc=tfcoil_variables.tcritsc,
             )
-
-            tfcoil_variables.v_tf_coil_dump_quench_kv = (
-                vdump / 1.0e3
-            )  # TFC Quench voltage in kV
 
         if tfcoil_variables.i_str_wp == 0:
             strain = tfcoil_variables.str_tf_con_res
@@ -371,6 +363,33 @@ class SuperconductingTFCoil(TFCoil):
             c0=1.0e10,
             temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
         )
+
+        # Do current density protection calculation
+        # Only setup for Nb3Sn at present.
+        if tfcoil_variables.i_tf_sc_mat not in {1, 4, 5}:
+            logger.warning("Calculating current density protection limit for Nb3Sn TF coil (LTS windings only)")
+            # Find the current density limited by the protection limit
+            # At present only valid for LTS windings (Nb3Sn properties assumed)
+        tfcoil_variables.jwdgpro, vd = self.protect(
+            c_tf_turn=tfcoil_variables.c_tf_turn,
+            e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
+            a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
+            a_tf_turn=a_tf_turn,
+            t_tf_quench_dump=tfcoil_variables.tdmptf,
+            f_a_tf_turn_cable_space_conductor=1.0e0
+            - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
+            f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
+            temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
+            temp_tf_conductor_peak_quench=tfcoil_variables.tmaxpro,
+            b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
+            cu_rrr=tfcoil_variables.rrr_tf_cu,
+            t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
+            nflutfmax=constraint_variables.nflutfmax,
+        )
+
+        tfcoil_variables.v_tf_coil_dump_quench_kv = (
+            vd / 1.0e3
+        )  # TFC Quench voltage in kV
 
         if output:
             self.outtf()
@@ -871,13 +890,10 @@ class SuperconductingTFCoil(TFCoil):
         j_tf_wp: float,
         i_tf_superconductor: int,
         f_strain_scale: float,
-        t_tf_quench_dump: float,
-        e_tf_coil_magnetic_stored: float,
         temp_tf_coolant_peak_field: float,
-        temp_tf_conductor_peak_quench: float,
         bcritsc: float,
         tcritsc: float,
-    ) -> tuple[float, float, float, float, float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float, float, float, float]:
         """
         Calculates the properties of the TF superconducting conductor.
 
@@ -909,14 +925,8 @@ class SuperconductingTFCoil(TFCoil):
             - 9: Hazelton experimental data + Zhai conceptual model for REBCO
         :param float f_strain_scale:
             Adjustment factor (<= 1) to account for strain, radiation damage, fatigue or AC losses.
-        :param float t_tf_quench_dump:
-            Dump time (s).
-        :param float e_tf_coil_magnetic_stored:
-            Energy stored in one TF coil (J).
         :param float temp_tf_coolant_peak_field:
             He temperature at peak field point (K).
-        :param float temp_tf_conductor_peak_quench:
-            Max conductor temperature during quench (K).
         :param float bcritsc:
             Critical field at zero temperature and strain (T) (used only if i_tf_superconductor=4).
         :param float tcritsc:
@@ -924,7 +934,6 @@ class SuperconductingTFCoil(TFCoil):
 
         :returns: tuple (float, float, float, float, float, float, float, float, float)
             - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
-            - vd (float): Discharge voltage imposed on a TF coil (V).
             - j_superconductor_critical (float): Critical current density in superconductor (A/m²).
             - f_c_tf_turn_operating_critical (float): Ratio of operating / critical current.
             - j_superconductor_turn (float): Actual current density in superconductor (A/m²).
@@ -1287,27 +1296,8 @@ class SuperconductingTFCoil(TFCoil):
             """
             )
 
-        # Find the current density limited by the protection limit
-        # At present only valid for LTS windings (Nb3Sn properties assumed)
-        tfcoil_variables.jwdgpro, vd = self.protect(
-            c_tf_turn=c_tf_turn,
-            e_tf_coil_magnetic_stored=e_tf_coil_magnetic_stored,
-            a_tf_turn_cable_space=a_tf_turn_cable_space,
-            a_tf_turn=a_tf_turn,
-            t_tf_quench_dump=t_tf_quench_dump,
-            f_a_tf_turn_cable_space_conductor=f_a_tf_turn_cable_space_conductor,
-            f_a_tf_turn_cable_copper=f_a_tf_turn_cable_copper,
-            temp_tf_coolant_peak_field=temp_tf_coolant_peak_field,
-            temp_tf_conductor_peak_quench=temp_tf_conductor_peak_quench,
-            b_tf_inboard_peak=b_tf_inboard_peak,
-            cu_rrr=tfcoil_variables.rrr_tf_cu,
-            t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
-            nflutfmax=constraint_variables.nflutfmax,
-        )
-
         return (
             j_tf_wp_critical,
-            vd,
             j_superconductor_critical,
             f_c_tf_turn_operating_critical,
             j_superconductor,
@@ -1620,7 +1610,12 @@ class SuperconductingTFCoil(TFCoil):
             - ajwpro (float): Winding pack current density from temperature rise protection (A/m²)
             - vd (float): Discharge voltage imposed on a TF coil (V)
         :rtype: tuple[float, float]
+
+        :references:
+        - L. Bottura, “Magnet Quench 101,” arXiv (Cornell University), Jan. 2014,
+        doi: https://doi.org/10.48550/arxiv.1401.3927.
         """
+
         #  Dump voltage
         vd = 2.0e0 * e_tf_coil_magnetic_stored / (t_tf_quench_dump * c_tf_turn)
         ajwpro = (
