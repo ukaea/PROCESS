@@ -1482,7 +1482,7 @@ tftmp = 20.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*tmaxpro = 
+*temp_tf_conductor_quench_max = 
 * DESCRIPTION:   Maximum temp rise during a quench for protection (K) (default = 150K)
 * only for i_tf_sc_mat = 1-5
 * JUSTIFICATION: Not set, assuming default

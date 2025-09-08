@@ -753,7 +753,7 @@
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      5.5495E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.3438E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      8.7306E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              1    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    

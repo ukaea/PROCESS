@@ -814,8 +814,8 @@ temp_tf_superconductor_margin: float = None
 """TF coil superconductor temperature margin (K)"""
 
 
-tmaxpro: float = None
-"""maximum temp rise during a quench for protection (K)"""
+temp_tf_conductor_quench_max: float = None
+"""maximum temp during a quench for protection (K)"""
 
 
 temp_croco_quench_max: float = None
@@ -1239,7 +1239,7 @@ def init_tfcoil_variables():
     global tmargmin
     global temp_margin
     global temp_tf_superconductor_margin
-    global tmaxpro
+    global temp_tf_conductor_quench_max
     global temp_croco_quench_max
     global temp_croco_quench
     global temp_tf_cryo
@@ -1473,7 +1473,7 @@ def init_tfcoil_variables():
     tmargmin = 0.0
     temp_margin = 0.0
     temp_tf_superconductor_margin = 0.0
-    tmaxpro = 150.0
+    temp_tf_conductor_quench_max = 150.0
     temp_croco_quench_max = 200.0
     temp_croco_quench = 0.0
     temp_tf_cryo = 4.5

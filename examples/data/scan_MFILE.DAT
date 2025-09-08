@@ -597,7 +597,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7001E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      1.0000E+01 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      1.0000E+01 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -1592,7 +1592,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7003E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9996E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9992E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -2587,7 +2587,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7005E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9992E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9984E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -3582,7 +3582,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7007E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9988E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9976E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -4577,7 +4577,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7009E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9984E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9969E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -5572,7 +5572,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7011E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9981E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9962E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -6567,7 +6567,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7013E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9978E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9956E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -7562,7 +7562,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7015E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9975E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9950E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -8557,7 +8557,7 @@
  Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      2.7016E+01 ITV
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9972E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9944E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              5    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    

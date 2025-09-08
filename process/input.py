@@ -1727,7 +1727,7 @@ INPUT_VARIABLES = {
     "temp_croco_quench_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 1000.0)
     ),
-    "tmaxpro": InputVariable(
+    "temp_tf_conductor_quench_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1000.0)
     ),
     "temp_tf_cryo": InputVariable(

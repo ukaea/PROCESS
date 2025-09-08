@@ -367,7 +367,9 @@ class SuperconductingTFCoil(TFCoil):
         # Do current density protection calculation
         # Only setup for Nb3Sn at present.
         if tfcoil_variables.i_tf_sc_mat not in {1, 4, 5}:
-            logger.warning("Calculating current density protection limit for Nb3Sn TF coil (LTS windings only)")
+            logger.warning(
+                "Calculating current density protection limit for Nb3Sn TF coil (LTS windings only)"
+            )
             # Find the current density limited by the protection limit
             # At present only valid for LTS windings (Nb3Sn properties assumed)
         tfcoil_variables.jwdgpro, vd = self.protect(
@@ -380,7 +382,7 @@ class SuperconductingTFCoil(TFCoil):
             - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
             f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
             temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
-            temp_tf_conductor_peak_quench=tfcoil_variables.tmaxpro,
+            temp_tf_conductor_quench_max=tfcoil_variables.temp_tf_conductor_quench_max,
             b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
             cu_rrr=tfcoil_variables.rrr_tf_cu,
             t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
@@ -1569,7 +1571,7 @@ class SuperconductingTFCoil(TFCoil):
         f_a_tf_turn_cable_space_conductor: float,
         f_a_tf_turn_cable_copper: float,
         temp_tf_coolant_peak_field: float,
-        temp_tf_conductor_peak_quench: float,
+        temp_tf_conductor_quench_max: float,
         b_tf_inboard_peak: float,
         cu_rrr: float,
         t_tf_quench_detection: float,
@@ -1595,8 +1597,8 @@ class SuperconductingTFCoil(TFCoil):
         :type f_a_tf_turn_cable_copper: float
         :param temp_tf_coolant_peak_field: Helium temperature at peak field point (K)
         :type temp_tf_coolant_peak_field: float
-        :param temp_tf_conductor_peak_quench: Maximum conductor temperature during quench (K)
-        :type temp_tf_conductor_peak_quench: float
+        :param temp_tf_conductor_quench_max: Maximum conductor temperature during quench (K)
+        :type temp_tf_conductor_quench_max: float
         :param b_tf_inboard_peak: Peak magnetic field at conductor (T)
         :type b_tf_inboard_peak: float
         :param cu_rrr: Copper residual-resistance-ratio
@@ -1627,7 +1629,7 @@ class SuperconductingTFCoil(TFCoil):
                 f_a_tf_turn_cable_copper,
                 1.0 - f_a_tf_turn_cable_space_conductor,
                 temp_tf_coolant_peak_field,
-                temp_tf_conductor_peak_quench,
+                temp_tf_conductor_quench_max,
                 cu_rrr,
                 t_tf_quench_detection,
                 nflutfmax,
