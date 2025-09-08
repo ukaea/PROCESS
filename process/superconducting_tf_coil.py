@@ -1290,19 +1290,19 @@ class SuperconductingTFCoil(TFCoil):
         # Find the current density limited by the protection limit
         # At present only valid for LTS windings (Nb3Sn properties assumed)
         tfcoil_variables.jwdgpro, vd = self.protect(
-            c_tf_turn,
-            e_tf_coil_magnetic_stored,
-            a_tf_turn_cable_space,
-            a_tf_turn,
-            t_tf_quench_dump,
-            f_a_tf_turn_cable_space_conductor,
-            f_a_tf_turn_cable_copper,
-            temp_tf_coolant_peak_field,
-            temp_tf_conductor_peak_quench,
-            b_tf_inboard_peak,
-            tfcoil_variables.rrr_tf_cu,
-            tfcoil_variables.t_tf_quench_detection,
-            constraint_variables.nflutfmax,
+            c_tf_turn=c_tf_turn,
+            e_tf_coil_magnetic_stored=e_tf_coil_magnetic_stored,
+            a_tf_turn_cable_space=a_tf_turn_cable_space,
+            a_tf_turn=a_tf_turn,
+            t_tf_quench_dump=t_tf_quench_dump,
+            f_a_tf_turn_cable_space_conductor=f_a_tf_turn_cable_space_conductor,
+            f_a_tf_turn_cable_copper=f_a_tf_turn_cable_copper,
+            temp_tf_coolant_peak_field=temp_tf_coolant_peak_field,
+            temp_tf_conductor_peak_quench=temp_tf_conductor_peak_quench,
+            b_tf_inboard_peak=b_tf_inboard_peak,
+            cu_rrr=tfcoil_variables.rrr_tf_cu,
+            t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
+            nflutfmax=constraint_variables.nflutfmax,
         )
 
         return (
@@ -1571,56 +1571,71 @@ class SuperconductingTFCoil(TFCoil):
 
     def protect(
         self,
-        aio,
-        tfes,
-        acs,
-        aturn,
-        tdump,
-        fcond,
-        fcu,
-        tba,
-        tmax,
-        peak_field,
-        cu_rrr,
-        detection_time,
-        fluence,
-    ):
+        c_tf_turn: float,
+        e_tf_coil_magnetic_stored: float,
+        a_tf_turn_cable_space: float,
+        a_tf_turn: float,
+        t_tf_quench_dump: float,
+        f_a_tf_turn_cable_space_conductor: float,
+        f_a_tf_turn_cable_copper: float,
+        temp_tf_coolant_peak_field: float,
+        temp_tf_conductor_peak_quench: float,
+        b_tf_inboard_peak: float,
+        cu_rrr: float,
+        t_tf_quench_detection: float,
+        nflutfmax: float,
+    ) -> tuple[float, float]:
         """
         Calculates the maximum conductor current density limited by the protection limit,
         and the discharge voltage for a TF coil.
 
-        :param float aio: Operating current (A)
-        :param float tfes: Energy stored in one TF coil (J)
-        :param float acs: Cable space - inside area (m²)
-        :param float aturn: Area per turn (i.e. entire cable) (m²)
-        :param float tdump: Dump time (s)
-        :param float fcond: Fraction of cable space containing conductor
-        :param float fcu: Fraction of conductor that is copper
-        :param float tba: Helium temperature at peak field point (K)
-        :param float tmax: Maximum conductor temperature during quench (K)
-        :param float peak_field: Maximum conductor temperature during quench (T)
-        :param float cur_rrr: Copper residual-resistance-ratio
-        :param float detection_time: Quench detection time (s)
-        :param float fluence: End-of-life neutron fluence in the copper (1/m²)
+        :param c_tf_turn: Operating current (A)
+        :type c_tf_turn: float
+        :param e_tf_coil_magnetic_stored: Energy stored in one TF coil (J)
+        :type e_tf_coil_magnetic_stored: float
+        :param a_tf_turn_cable_space: Cable space - inside area (m²)
+        :type a_tf_turn_cable_space: float
+        :param a_tf_turn: Area per turn (i.e. entire cable) (m²)
+        :type a_tf_turn: float
+        :param t_tf_quench_dump: Dump time (s)
+        :type t_tf_quench_dump: float
+        :param f_a_tf_turn_cable_space_conductor: Fraction of cable space containing conductor
+        :type f_a_tf_turn_cable_space_conductor: float
+        :param f_a_tf_turn_cable_copper: Fraction of conductor that is copper
+        :type f_a_tf_turn_cable_copper: float
+        :param temp_tf_coolant_peak_field: Helium temperature at peak field point (K)
+        :type temp_tf_coolant_peak_field: float
+        :param temp_tf_conductor_peak_quench: Maximum conductor temperature during quench (K)
+        :type temp_tf_conductor_peak_quench: float
+        :param b_tf_inboard_peak: Peak magnetic field at conductor (T)
+        :type b_tf_inboard_peak: float
+        :param cu_rrr: Copper residual-resistance-ratio
+        :type cu_rrr: float
+        :param t_tf_quench_detection: Quench detection time (s)
+        :type t_tf_quench_detection: float
+        :param nflutfmax: End-of-life neutron fluence in the copper (1/m²)
+        :type nflutfmax: float
 
-        :return float ajwpro: Winding pack current density from temperature rise protection (A/m²)
-        :return float vd: Discharge voltage imposed on a TF coil (V)
+        :returns:
+            - ajwpro (float): Winding pack current density from temperature rise protection (A/m²)
+            - vd (float): Discharge voltage imposed on a TF coil (V)
+        :rtype: tuple[float, float]
         """
         #  Dump voltage
-        vd = 2.0e0 * tfes / (tdump * aio)
+        vd = 2.0e0 * e_tf_coil_magnetic_stored / (t_tf_quench_dump * c_tf_turn)
         ajwpro = (
-            acs
-            / aturn
+            a_tf_turn_cable_space
+            / a_tf_turn
             * calculate_quench_protection_current_density(
-                tdump,
-                peak_field,
-                fcu,
-                1.0 - fcond,
-                tba,
-                tmax,
+                t_tf_quench_dump,
+                b_tf_inboard_peak,
+                f_a_tf_turn_cable_copper,
+                1.0 - f_a_tf_turn_cable_space_conductor,
+                temp_tf_coolant_peak_field,
+                temp_tf_conductor_peak_quench,
                 cu_rrr,
-                detection_time,
-                fluence,
+                t_tf_quench_detection,
+                nflutfmax,
             )
         )
 
