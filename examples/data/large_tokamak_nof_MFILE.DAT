@@ -755,7 +755,7 @@
  Copper_fraction_of_conductor_____________________________________________ (f_a_tf_turn_cable_copper)______________________ 8.79481349092732456e-01
  Superconductor_fraction_of_conductor_____________________________________ (1-f_a_tf_turn_cable_copper)____________________ 1.20518650907267544e-01
  Check_total_area_fractions_in_winding_pack_=_1___________________________ _______________________________ 1.00000000000000000e+00
- minimum_TF_conductor_temperature_margin__(K)_____________________________ (tmargmin_tf)__________________ 1.50000000000000000e+00
+ minimum_TF_conductor_temperature_margin__(K)_____________________________ (temp_tf_superconductor_margin_min)__________________ 1.50000000000000000e+00
  TF_conductor_temperature_margin_(K)______________________________________ (temp_tf_superconductor_margin)______________________ 1.50565423091495720e+00
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus___________________________________________ (eyoung_cond_axial)____________ 0.00000000000000000e+00
@@ -798,7 +798,7 @@
  Critical_current_density_in_cable_(A/m2)_________________________________ (j_crit_cable)_________________ 7.10131486784986258e+07 OP
  Critical_current_density_in_winding_pack_(A/m2)__________________________ (j_tf_wp_critical)______________________ 3.20450971452338099e+07 OP
  Actual_current_density_in_winding_pack_(A/m2)____________________________ (jwdgop)_______________________ 2.40600403349869065e+07 OP
- Minimum_allowed_temperature_margin_in_superconductor_(K)_________________ (tmargmin_tf)__________________ 1.50000000000000000e+00
+ Minimum_allowed_temperature_margin_in_superconductor_(K)_________________ (temp_tf_superconductor_margin_min)__________________ 1.50000000000000000e+00
  Actual_temperature_margin_in_superconductor_(K)__________________________ (tmarg)________________________ 1.50565423091495720e+00 OP
  Critical_current_(A)_____________________________________________________ (icrit)________________________ 1.02295735736185030e+05 OP
  Actual_current_(A)_______________________________________________________ (c_tf_turn)________________________ 7.68054943555021455e+04 OP
@@ -835,7 +835,7 @@
  Void_(coolant)_fraction_in_conductor_____________________________________ (vfohc)________________________ 2.99999999999999989e-01
  Helium_coolant_temperature_(K)___________________________________________ (tftmp)________________________ 4.75000000000000000e+00
  CS_temperature_margin_(K)________________________________________________ (tmargoh)______________________ 1.76953790646132347e+00 OP
- Minimum_permitted_temperature_margin_(K)_________________________________ (tmargmin_cs)__________________ 1.50000000000000000e+00
+ Minimum_permitted_temperature_margin_(K)_________________________________ (temp_cs_superconductor_margin_min)__________________ 1.50000000000000000e+00
  Residual_hoop_stress_in_CS_Steel_(Pa)____________________________________ (residual_sig_hoop)____________ 2.40000000000000000e+08
  Minimum_burn_time_(s)____________________________________________________ (t_burn_min)___________________ 7.20000000000000000e+03
  Initial_vertical_crack_size_(m)__________________________________________ (t_crack_vertical)_____________ 8.89999999999999949e-04
@@ -1329,7 +1329,7 @@ tmargmin = 1.5
 * CS coil temp margin lower limit *
 *---------------------------------*
 icc = 60
-tmargmin_cs = 1.5
+temp_cs_superconductor_margin_min = 1.5
 
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*

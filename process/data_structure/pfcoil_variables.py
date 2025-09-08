@@ -425,7 +425,7 @@ ind_pf_cs_plasma_mutual: list[float] = None
 """mutual inductance matrix (H)"""
 
 
-temp_cs_margin: float = None
+temp_cs_superconductor_margin: float = None
 """Central solenoid temperature margin (K)"""
 
 
@@ -666,7 +666,7 @@ def init_pfcoil_variables():
     global sigpfcalw
     global sigpfcf
     global ind_pf_cs_plasma_mutual
-    global temp_cs_margin
+    global temp_cs_superconductor_margin
     global n_pf_coil_turns
     global f_a_pf_coil_void
     global f_a_cs_void
@@ -766,7 +766,7 @@ def init_pfcoil_variables():
     sigpfcalw = 500.0
     sigpfcf = 1.0
     ind_pf_cs_plasma_mutual = np.zeros((NGC2, NGC2))
-    temp_cs_margin = 0.0
+    temp_cs_superconductor_margin = 0.0
     n_pf_coil_turns = np.zeros(NGC2)
     f_a_pf_coil_void = np.full(NGC2, 0.3)
     f_a_cs_void = 0.3

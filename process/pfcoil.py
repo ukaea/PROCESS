@@ -1579,7 +1579,7 @@ class PFCoil:
                 pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
-            pfcoil_variables.temp_cs_margin = min(tmarg1, tmarg2)
+            pfcoil_variables.temp_cs_superconductor_margin = min(tmarg1, tmarg2)
 
         else:
             # Resistive power losses (non-superconducting coil)
@@ -2712,15 +2712,15 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS temperature margin (K)",
-                    "(temp_cs_margin)",
-                    pfcoil_variables.temp_cs_margin,
+                    "(temp_cs_superconductor_margin)",
+                    pfcoil_variables.temp_cs_superconductor_margin,
                     "OP ",
                 )
                 op.ovarre(
                     self.outfile,
                     "Minimum permitted temperature margin (K)",
-                    "(tmargmin_cs)",
-                    tfv.tmargmin_cs,
+                    "(temp_cs_superconductor_margin_min)",
+                    tfv.temp_cs_superconductor_margin_min,
                 )
                 # only output CS fatigue model for pulsed reactor design
                 if pv.f_c_plasma_inductive > 0.0e-4:
@@ -2816,7 +2816,10 @@ class PFCoil:
                     )
                 ):
                     pfcoil_variables.cslimit = True
-                if pfcoil_variables.temp_cs_margin < 1.01e0 * tfv.tmargmin_cs:
+                if (
+                    pfcoil_variables.temp_cs_superconductor_margin
+                    < 1.01e0 * tfv.temp_cs_superconductor_margin_min
+                ):
                     pfcoil_variables.cslimit = True
                 if not pfcoil_variables.cslimit:
                     logger.warning(
@@ -3604,7 +3607,7 @@ class PFCoil:
 
             another_estimate = 2 * thelium
             t_zero_margin, root_result = optimize.newton(
-                superconductors.current_density_margin,
+                superconductors.superconductor_current_density_margin,
                 thelium,
                 fprime=None,
                 args=arguments,

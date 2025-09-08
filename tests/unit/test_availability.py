@@ -251,8 +251,8 @@ def calc_u_unplanned_magnets_param(**kwargs):
     """
     defaults = {
         "temp_margin": 1.5,
-        "tmargmin_tf": 1.5,
-        "tmargmin_cs": 1.5,
+        "temp_tf_superconductor_margin_min": 1.5,
+        "temp_cs_superconductor_margin_min": 1.5,
         "t_operation": 30,
         "conf_mag": 1.0,
         "expected": approx(0.02, abs=0.005),
@@ -276,12 +276,15 @@ def calc_u_unplanned_magnets_params():
     return [
         calc_u_unplanned_magnets_param(),
         calc_u_unplanned_magnets_param(
-            temp_margin=2.0, tmargmin_tf=1.6, tmargmin_cs=1.6, conf_mag=0.8
+            temp_margin=2.0,
+            temp_tf_superconductor_margin_min=1.6,
+            temp_cs_superconductor_margin_min=1.6,
+            conf_mag=0.8,
         ),
         calc_u_unplanned_magnets_param(
             temp_margin=1.8,
-            tmargmin_tf=1.6,
-            tmargmin_cs=1.6,
+            temp_tf_superconductor_margin_min=1.6,
+            temp_cs_superconductor_margin_min=1.6,
             conf_mag=0.8,
             expected=approx(0.03, abs=0.005),
         ),
@@ -309,8 +312,16 @@ def calc_u_unplanned_magnets_fix(request, monkeypatch):
     # Mock module variables
     monkeypatch.setattr(cv, "t_operation", param["t_operation"])
     monkeypatch.setattr(cv, "conf_mag", param["conf_mag"])
-    monkeypatch.setattr(tfv, "tmargmin_cs", param["tmargmin_cs"])
-    monkeypatch.setattr(tfv, "tmargmin_tf", param["tmargmin_tf"])
+    monkeypatch.setattr(
+        tfv,
+        "temp_cs_superconductor_margin_min",
+        param["temp_cs_superconductor_margin_min"],
+    )
+    monkeypatch.setattr(
+        tfv,
+        "temp_tf_superconductor_margin_min",
+        param["temp_tf_superconductor_margin_min"],
+    )
     monkeypatch.setattr(tfv, "temp_margin", param["temp_margin"])
 
     return param["expected"]

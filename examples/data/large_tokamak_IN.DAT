@@ -149,7 +149,7 @@ tmargmin = 1.5
 *---------------------------------*
 icc = 60
 ixc = 106 * ftmargoh
-tmargmin_cs = 1.5
+temp_cs_superconductor_margin_min = 1.5
 
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*

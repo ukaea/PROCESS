@@ -85,7 +85,9 @@ SCAN_VARIABLES = {
     41: ScanVariable("dr_blkt_outboard", "Outboard blanket thick."),
     42: ScanVariable("f_nd_impurity_electrons(9)", "Argon fraction"),
     44: ScanVariable("sig_tf_case_max", "Allowable_stress_in_tf_coil_case_Tresca_(pa)"),
-    45: ScanVariable("tmargmin_tf", "Minimum_allowable_temperature_margin"),
+    45: ScanVariable(
+        "temp_tf_superconductor_margin_min", "Minimum_allowable_temperature_margin"
+    ),
     46: ScanVariable("boundu(152)", "Max allowable fgwsep"),
     48: ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes"),
     49: ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers"),
@@ -1016,7 +1018,7 @@ class Scan:
             case 44:
                 tfcoil_variables.sig_tf_case_max = swp[iscn - 1]
             case 45:
-                tfcoil_variables.tmargmin_tf = swp[iscn - 1]
+                tfcoil_variables.temp_tf_superconductor_margin_min = swp[iscn - 1]
             case 46:
                 numerics.boundu[151] = swp[iscn - 1]
             case 48:
