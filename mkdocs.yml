@@ -134,11 +134,9 @@ nav:
           - Inertial Fusion Energy Model: fusion-devices/inertial.md
   - Publications: publications.md
   - Source Documentation:
-      - FORD Documentation: ford_site
       - process: python/process.md
       - process.io: python/process.io.md
       - process.utilities: python/process.utilities.md
-      - process.fortran: python/process.fortran.md
 
 # repo_url: https://git.ccfe.ac.uk/process/process.git
 

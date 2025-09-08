@@ -110,15 +110,7 @@ def get_input_output_variables(variables: list[FortranVariable]):
 
 
 if __name__ == "__main__":
-    variables, modules = get_variables_and_modules(
-        Path(__file__).resolve().parent.parent / "build/ford_project.pickle"
-    )
-
-    variables = get_input_output_variables(variables)
-
-    mods = {module: [] for module in modules}
-    for var in variables:
-        mods[var.module].append(var)
+    mods = {"vardes will be fixed in https://github.com/ukaea/PROCESS/issues/3834": []}
 
     loader = jinja2.FileSystemLoader(searchpath=Path(__file__).resolve().parent)
     env = jinja2.Environment(loader=loader)

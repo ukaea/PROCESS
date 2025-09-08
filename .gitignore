@@ -40,7 +40,8 @@ com.msg
 *.fls
 *.gz
 ford_site/
-lib/ford
+lib/
+process/io/python_fortran_dicts.json
 *.egg-info
 fortran.py
 .coverage

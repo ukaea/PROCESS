@@ -21,12 +21,7 @@ setup_kwargs = {
     "packages": find_packages(),
     "package_dir": {"process": "process"},
     "package_data": {
-        "process": [
-            "lib/lib*",
-            "fortran*.so",
-            "data/lz_non_corona_14_elements/*",
-            "utilities/*",
-        ],
+        "process": ["data/lz_non_corona_14_elements/*"],
         "process.data.impuritydata": ["*"],
     },
     "test_suite": "pytest",
