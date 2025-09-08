@@ -926,7 +926,7 @@ class SuperconductingTFCoil(TFCoil):
         :param float tcritsc:
             Critical temperature at zero field and strain (K) (used only if i_tf_superconductor=4).
 
-        :returns: tuple (j_tf_wp_critical, vd, temp_tf_superconductor_margin)
+        :returns: tuple (float, float, float, float, float, float, float, float, float)
             - j_tf_wp_critical (float): Critical winding pack current density (A/m²).
             - vd (float): Discharge voltage imposed on a TF coil (V).
             - j_superconductor_critical (float): Critical current density in superconductor (A/m²).
@@ -1019,7 +1019,7 @@ class SuperconductingTFCoil(TFCoil):
                 / (a_tf_turn_cable_space * f_a_tf_turn_cable_space_conductor)
             )
 
-            j_crit_cable, temp_tf_superconductor_margin = superconductors.bi2212(
+            j_crit_cable, _ = superconductors.bi2212(
                 b_conductor=b_tf_inboard_peak,
                 jstrand=j_strand,
                 temp_conductor=temp_tf_coolant_peak_field,
@@ -1272,8 +1272,7 @@ class SuperconductingTFCoil(TFCoil):
         #  Operating current density
         j_tf_coil_turn = c_tf_turn / a_tf_turn
 
-        #  Actual current density in superconductor, which should be equal to jcrit(temp_tf_coolant_peak_field+temp_tf_superconductor_margin)
-        #  when we have found the desired value of temp_tf_superconductor_margin
+        #  Actual current density in superconductor, not including copper
 
         j_superconductor = f_c_tf_turn_operating_critical * j_superconductor_critical
 
@@ -1310,15 +1309,6 @@ class SuperconductingTFCoil(TFCoil):
             constraint_variables.nflutfmax,
         )
 
-        if temp_tf_superconductor_margin <= 0.0e0:
-            logger.error(
-                """Negative TFC temperature margin
-            temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
-            b_tf_inboard_peak: {b_tf_inboard_peak}
-            jcrit0: {jcrit0}
-            j_superconductor: {j_superconductor}
-            """
-            )
         return (
             j_tf_wp_critical,
             vd,
@@ -1517,7 +1507,7 @@ class SuperconductingTFCoil(TFCoil):
         :param float temp_tf_coolant_peak_field:
             He temperature at peak field point (K).
 
-        :return: None. Updates tfcoil_variables.temp_tf_superconductor_margin.
+        :return: temp_tf_superconductor_margin.
         """
 
         # =================================================================
@@ -1571,6 +1561,15 @@ class SuperconductingTFCoil(TFCoil):
             # print(root_result)  # Diagnostic for newton method
             temp_tf_superconductor_margin = t_zero_margin - temp_tf_coolant_peak_field
             tfcoil_variables.temp_margin = temp_tf_superconductor_margin
+
+            if temp_tf_superconductor_margin <= 0.0e0:
+                logger.error(
+                    """Negative TFC temperature margin
+                temp_tf_superconductor_margin: {temp_tf_superconductor_margin}
+                b_tf_inboard_peak: {b_tf_inboard_peak}
+                j_superconductor: {j_superconductor}
+                """
+                )
 
         return temp_tf_superconductor_margin
 
