@@ -4987,7 +4987,7 @@ class Physics:
                 f"D-3He fusion rate at point {i}",
                 f"fusrat_plasma_dhe3_profile{i}",
                 physics_variables.fusrat_plasma_dhe3_profile[i],
-            )    
+            )
         po.ovarre(
             self.outfile,
             "D-T fusion power: plasma (MW)",

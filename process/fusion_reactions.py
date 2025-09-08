@@ -298,7 +298,7 @@ class FusionReactionRate:
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
         )
-        
+
         physics_variables.fusrat_plasma_dhe3_profile = (
             bosch_hale_reactivity(
                 (physics_variables.ti / physics_variables.te)
