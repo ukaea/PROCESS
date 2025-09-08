@@ -337,7 +337,7 @@ class SuperconductingTFCoil(TFCoil):
                 superconducting_tf_coil_variables.b_tf_superconductor_critical_zero_temp_strain,
                 superconducting_tf_coil_variables.temp_tf_superconductor_critical_zero_field_strain,
                 superconducting_tf_coil_variables.c_tf_turn_cables_critical,
-            ) = self.supercon(
+            ) = self.tf_cable_in_conduit_superconductor_properties(
                 a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
                 a_tf_turn=a_tf_turn,
                 a_tf_turn_cable_space_effective=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
@@ -863,7 +863,7 @@ class SuperconductingTFCoil(TFCoil):
 
         return j_tf_wp_critical, tmarg
 
-    def supercon(
+    def tf_cable_in_conduit_superconductor_properties(
         self,
         a_tf_turn_cable_space: float,
         a_tf_turn: float,

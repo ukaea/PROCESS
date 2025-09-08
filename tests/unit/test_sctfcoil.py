@@ -425,7 +425,7 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         bc20m,
         tc0m,
         c_turn_cables_critical,
-    ) = sctfcoil.supercon(
+    ) = sctfcoil.tf_cable_in_conduit_superconductor_properties(
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
