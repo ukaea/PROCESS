@@ -108,7 +108,6 @@ F2PY()
 # These are wanted for making docs, but not when making dicts quickly
 # This produces the pickled project file
 FORD()
-DICTS()
 
 # Copy libgfortran from system into Python module folder
 GET_GFORTRANLIBS()
