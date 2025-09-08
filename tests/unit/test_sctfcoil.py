@@ -2238,3 +2238,48 @@ def test_superconducting_tf_coil_area_and_masses(
     assert tfcoil_variables.cplen == pytest.approx(
         tfcoilareaandmassesparam.expected_cplen
     )
+
+
+@pytest.mark.parametrize(
+    "i_tf_superconductor, j_superconductor, b_tf_inboard_peak, strain, bc20m, tc0m, c0, temp_tf_coolant_peak_field, expected_margin",
+    [
+        # ITER Nb3Sn, standard parameters
+        (1, 1e8, 12.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.679499736095401),
+        # NbTi
+        (3, 1e8, 8.0, 0.0, 15.0, 9.3, 1e10, 4.5, 1.3048296694055175),
+        # User-defined Nb3Sn
+        (4, 1e8, 10.0, 0.0, 30.0, 15.0, 1e10, 4.5, 5.539631803535094),
+        # WST Nb3Sn
+        (5, 1e8, 13.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.221287311831414),
+        # Durham Ginzburg-Landau Nb-Ti
+        (7, 1e8, 7.0, 0.0, 14.85, 9.04, 1e10, 4.5, 1.263064155425198),
+        # Durham Ginzburg-Landau REBCO
+        (8, 1e8, 10.0, 0.0, 430, 185, 1e10, 20.0, 31.82616792800119),
+        # Hazelton-Zhai REBCO
+        (9, 1e8, 10.0, 0.0, 138, 92, 1e10, 20.0, 48.363687012510425),
+    ],
+)
+def test_calculate_superconductor_temperature_margin(
+    i_tf_superconductor,
+    j_superconductor,
+    b_tf_inboard_peak,
+    strain,
+    bc20m,
+    tc0m,
+    c0,
+    temp_tf_coolant_peak_field,
+    expected_margin,
+):
+    sctfcoil = SuperconductingTFCoil()
+    margin = sctfcoil.calculate_superconductor_temperature_margin(
+        i_tf_superconductor=i_tf_superconductor,
+        j_superconductor=j_superconductor,
+        b_tf_inboard_peak=b_tf_inboard_peak,
+        strain=strain,
+        bc20m=bc20m,
+        tc0m=tc0m,
+        c0=c0,
+        temp_tf_coolant_peak_field=temp_tf_coolant_peak_field,
+    )
+    # The expected_margin values are illustrative; in real tests, use values from reference calculations.
+    assert margin == pytest.approx(expected_margin)
