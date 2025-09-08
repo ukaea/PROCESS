@@ -1528,7 +1528,7 @@ def _trapped_particle_fraction_sauter(
 class Physics:
     def __init__(self, plasma_profile, current_drive):
         self.outfile = constants.NOUT
-        self.mfile = constants.mfile
+        self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
 

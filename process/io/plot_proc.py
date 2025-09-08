@@ -29,10 +29,10 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 
 import process.confinement_time as confine
+import process.constants as constants
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.data_structure import physics_variables
-from process.fortran import constants
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -9903,26 +9903,26 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     ax2.tick_params(axis="y", colors="blue")
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
-        np.array(fusrat_plasma_dt_profile) * constants.d_t_energy,
+        np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-",
     )
 
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
-        np.array(fusrat_plasma_dd_triton_profile) * constants.dd_triton_energy,
+        np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle=":",
     )
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
-        np.array(fusrat_plasma_dd_helion_profile) * constants.dd_helium_energy,
+        np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="-.",
     )
     ax2.plot(
         np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
-        np.array(fusrat_plasma_dhe3_profile) * constants.d_helium_energy,
+        np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="--",
     )
@@ -10015,7 +10015,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
 
     textstr_dd = (
         f"Total fusion power: {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Tritium branching ratio: {mfile_data.data['f_dd_branching_trit'].get_scan(scan):.2f}                      \n"
+        f"Tritium branching ratio: {mfile_data.data['f_dd_branching_trit'].get_scan(scan):.4f}                      \n"
     )
 
     axis.text(
@@ -10036,7 +10036,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
 
     axis.text(
         0.22,
-        0.68,
+        0.685,
         "$\\text{D - D}$",
         fontsize=20,
         verticalalignment="top",
@@ -10045,11 +10045,11 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW                    \n"
+    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW                                 \n\n"
 
     axis.text(
         0.05,
-        0.6,
+        0.55,
         textstr_dhe3,
         fontsize=9,
         verticalalignment="bottom",
@@ -10064,8 +10064,8 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     )
 
     axis.text(
-        0.225,
-        0.6,
+        0.21,
+        0.59,
         "$\\text{D - 3He}$",
         fontsize=20,
         verticalalignment="top",
@@ -10106,7 +10106,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
         0.35,
         0.45,
         "$\\alpha$",
-        fontsize=20,
+        fontsize=22,
         verticalalignment="top",
         transform=fig.transFigure,
     )
