@@ -6429,7 +6429,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
 
     dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
     dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
-    ohdz = mfile_data.data["ohdz"].get_scan(scan)
+    dz_cs_full = mfile_data.data["dz_cs_full"].get_scan(scan)
 
     # Number of coils, both PF and CS
     number_of_coils = 0
@@ -6458,7 +6458,7 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         coils_dz=coils_dz,
         dr_bore=dr_bore,
         dr_cs=dr_cs,
-        ohdz=ohdz,
+        ohdz=dz_cs_full,
     )
 
     # Plot CS compression structure
@@ -8371,7 +8371,9 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
     """
     # Get CS coil parameters
     dr_cs = mfile_data.data["dr_cs"].get_scan(scan)
-    dz_cs = mfile_data.data["ohdz"].get_scan(scan)
+    dr_cs_full = mfile_data.data["dr_cs_full"].get_scan(scan)
+    dz_cs_full = mfile_data.data["dz_cs_full"].get_scan(scan)
+    dz_cs = mfile_data.data["dz_cs_full"].get_scan(scan)
     dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
 
     # Plot the right side of the CS
@@ -8537,11 +8539,55 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
             alpha=0.5,
         )
 
+        # Arrow for coil width
+        axis.annotate(
+            "",
+            xy=(0, (dz_cs_full / 2)),
+            xytext=(0, -(dz_cs_full / 2)),
+            arrowprops={"arrowstyle": "<->", "color": "black"},
+        )
+
+        # Add a label for full coil width
+        axis.text(
+            0.0,
+            -(dz_cs_full / 4),
+            f"{dz_cs_full:.3f} m",
+            fontsize=7,
+            color="black",
+            rotation=270,
+            verticalalignment="center",
+            horizontalalignment="center",
+            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        )
+
+        # Arrow for coil width
+        axis.annotate(
+            "",
+            xy=(-(dr_cs_full / 2), (dz_cs_full / 4)),
+            xytext=((dr_cs_full / 2), (dz_cs_full / 4)),
+            arrowprops={"arrowstyle": "<->", "color": "black"},
+        )
+
+        # Add a label for full coil width
+        axis.text(
+            0.0,
+            (dz_cs_full / 4),
+            f"{dr_cs_full:.3f} m",
+            fontsize=7,
+            color="black",
+            rotation=0,
+            verticalalignment="center",
+            horizontalalignment="center",
+            bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        )
+
     textstr_cs = (
         f"$\\mathbf{{Coil \\ parameters:}}$\n \n"
         f"CS height vs TF internal height: {mfile_data.data['f_z_cs_tf_internal'].get_scan(scan):.2f}\n"
         f"CS thickness: {mfile_data.data['dr_cs'].get_scan(scan):.4f} m\n"
         f"CS radial middle: {mfile_data.data['r_cs_middle'].get_scan(scan):.4f} m\n"
+        f"CS full height: {mfile_data.data['dz_cs_full'].get_scan(scan):.4f} m\n"
+        f"CS full width: {mfile_data.data['dr_cs_full'].get_scan(scan):.4f} m\n"
         f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
