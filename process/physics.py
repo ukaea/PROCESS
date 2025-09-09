@@ -21,6 +21,7 @@ from process.data_structure import (
     divertor_variables,
     fwbs_variables,
     impurity_radiation_module,
+    numerics,
     physics_variables,
     pulse_variables,
     reinke_variables,
@@ -28,7 +29,6 @@ from process.data_structure import (
     times_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -2728,7 +2728,7 @@ class Physics:
             * physics_variables.p_plasma_separatrix_mw
         )
 
-        if any(numerics.icc == 78):
+        if 78 in numerics.icc:
             po.write(
                 self.outfile,
                 (
@@ -4745,7 +4745,7 @@ class Physics:
                 "(teped)",
                 physics_variables.teped,
             )
-            if any(numerics.icc == 78):
+            if 78 in numerics.icc:
                 po.ovarrf(
                     self.outfile,
                     "Electron temp. at separatrix (keV)",
@@ -4775,7 +4775,7 @@ class Physics:
             )
 
         # Issue 558 - addition of constraint 76 to limit the value of nesep, in proportion with the ballooning parameter and Greenwald density
-        if any(numerics.icc == 76):
+        if 76 in numerics.icc:
             po.ovarre(
                 self.outfile,
                 "Critical ballooning parameter value",
@@ -6317,7 +6317,7 @@ class Physics:
             "OP ",
         )
 
-        if any(numerics.icc == 78):
+        if 78 in numerics.icc:
             po.osubhd(self.outfile, "Reinke Criterion :")
             po.ovarin(
                 self.outfile,

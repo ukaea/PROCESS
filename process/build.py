@@ -11,12 +11,12 @@ from process.data_structure import (
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
+    numerics,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 
@@ -1743,7 +1743,7 @@ class Build:
 
         # Issue #514 Radial dimensions of inboard leg
         # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
-        if any(numerics.ixc[0 : numerics.nvar] == 140):
+        if 140 in numerics.ixc[0 : numerics.nvar]:
             build_variables.dr_tf_inboard = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 + tfcoil_variables.dr_tf_plasma_case
@@ -1778,7 +1778,7 @@ class Build:
 
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
-        if not any(numerics.ixc[0 : numerics.nvar] == 140):
+        if 140 not in numerics.ixc[0 : numerics.nvar]:
             tfcoil_variables.dr_tf_wp_with_insulation = (
                 build_variables.dr_tf_inboard
                 - tfcoil_variables.dr_tf_plasma_case

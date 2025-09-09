@@ -6,11 +6,7 @@ from warnings import warn
 import numpy as np
 
 import process.data_structure as data_structure
-import process.fortran as fortran
 from process.exceptions import ProcessValueError
-from process.utilities.f2py_string_patch import (
-    string_to_f2py_compatible,
-)
 
 
 @dataclass
@@ -434,8 +430,8 @@ def check_iteration_variable(iteration_variable_value, name: str = ""):
 def load_iteration_variables():
     """Loads the physics and engineering variables into the optimisation variable array."""
 
-    for i in range(fortran.numerics.nvar):
-        variable_index = fortran.numerics.ixc[i].item()
+    for i in range(data_structure.numerics.nvar):
+        variable_index = data_structure.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
         # use ... as the default return value because None might be a valid return from Fortran?
@@ -460,9 +456,10 @@ def load_iteration_variables():
                 iteration_variable.array_index
             ]
 
-        fortran.numerics.xcm[i] = iteration_variable_value
-        fortran.numerics.name_xc[i] = string_to_f2py_compatible(
-            fortran.numerics.name_xc[i], iteration_variable.name
+        data_structure.numerics.xcm[i] = iteration_variable_value
+        data_structure.numerics.name_xc[i] = (
+            data_structure.numerics.name_xc[i],
+            iteration_variable.name,
         )
 
         # warn of the iteration variable is also a scan variable because this will cause
@@ -486,10 +483,12 @@ def load_iteration_variables():
             name=f"{variable_index} ({iteration_variable.name})",
         )
 
-        fortran.numerics.scale[i] = 1.0 / iteration_variable_value
-        fortran.numerics.scafc[i] = 1.0 / fortran.numerics.scale[i]
+        data_structure.numerics.scale[i] = 1.0 / iteration_variable_value
+        data_structure.numerics.scafc[i] = 1.0 / data_structure.numerics.scale[i]
 
-        fortran.numerics.xcm[i] = iteration_variable_value * fortran.numerics.scale[i]
+        data_structure.numerics.xcm[i] = (
+            iteration_variable_value * data_structure.numerics.scale[i]
+        )
 
 
 def set_scaled_iteration_variable(xc, nn: int):
@@ -503,10 +502,10 @@ def set_scaled_iteration_variable(xc, nn: int):
         # there is less error handling here than in load_iteration_variables
         # because many errors will be caught in load_iteration_variables which is
         # run first. This verifies the variables exist and the module target is correct.
-        variable_index = fortran.numerics.ixc[i].item()
+        variable_index = data_structure.numerics.ixc[i]
         iteration_variable = ITERATION_VARIABLES[variable_index]
 
-        ratio = xc[i] / fortran.numerics.scale[i]
+        ratio = xc[i] / data_structure.numerics.scale[i]
 
         if iteration_variable.array_index is None:
             setattr(
@@ -535,22 +534,22 @@ def set_scaled_iteration_variable(xc, nn: int):
 def load_scaled_bounds():
     """Sets the scaled bounds of the iteration variables."""
 
-    for i in range(fortran.numerics.nvar.item()):
-        variable_index = fortran.numerics.ixc[i].item() - 1
-        fortran.numerics.itv_scaled_lower_bounds[i] = (
-            fortran.numerics.boundl[variable_index] * fortran.numerics.scale[i]
+    for i in range(data_structure.numerics.nvar):
+        variable_index = data_structure.numerics.ixc[i] - 1
+        data_structure.numerics.itv_scaled_lower_bounds[i] = (
+            data_structure.numerics.boundl[variable_index]
+            * data_structure.numerics.scale[i]
         )
-        fortran.numerics.itv_scaled_upper_bounds[i] = (
-            fortran.numerics.boundu[variable_index] * fortran.numerics.scale[i]
+        data_structure.numerics.itv_scaled_upper_bounds[i] = (
+            data_structure.numerics.boundu[variable_index]
+            * data_structure.numerics.scale[i]
         )
 
 
 def initialise_iteration_variables():
     """Initialise the iteration variables (label and default bounds)"""
     for itv_index, itv in ITERATION_VARIABLES.items():
-        fortran.numerics.lablxc[itv_index - 1] = string_to_f2py_compatible(
-            fortran.numerics.lablxc[itv_index - 1], itv.name
-        )
+        data_structure.numerics.lablxc[itv_index - 1] = itv.name
 
-        fortran.numerics.boundl[itv_index - 1] = itv.lower_bound
-        fortran.numerics.boundu[itv_index - 1] = itv.upper_bound
+        data_structure.numerics.boundl[itv_index - 1] = itv.lower_bound
+        data_structure.numerics.boundu[itv_index - 1] = itv.upper_bound

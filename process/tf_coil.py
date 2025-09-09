@@ -12,6 +12,7 @@ from process.data_structure import (
     build_variables,
     fwbs_variables,
     global_variables,
+    numerics,
     physics_variables,
     rebco_variables,
     superconducting_tf_coil_variables,
@@ -19,7 +20,6 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 

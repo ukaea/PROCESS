@@ -4,13 +4,13 @@ from process import constants
 from process import process_output as po
 from process.data_structure import (
     constraint_variables,
+    numerics,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
     pulse_variables,
     times_variables,
 )
-from process.fortran import numerics
 
 logger = logging.getLogger(__name__)
 

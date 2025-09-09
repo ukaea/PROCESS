@@ -5,12 +5,12 @@ import pytest
 
 from process.data_structure import (
     constraint_variables,
+    numerics,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
     pulse_variables,
 )
-from process.fortran import numerics
 from process.pulse import Pulse
 
 

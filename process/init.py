@@ -6,7 +6,6 @@ from pathlib import Path
 from warnings import warn
 
 import process
-import process.fortran as fortran
 import process.iteration_variables as iteration_variables
 import process.process_output as process_output
 from process import constants, data_structure
@@ -61,7 +60,6 @@ from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.log import logging_model_handler
 from process.stellarator import stinit
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 def init_process():
@@ -186,42 +184,43 @@ def run_summary():
         process_output.oblnkl(outfile)
 
         process_output.ocmmnt(
-            outfile, f"Equality constraints : {fortran.numerics.neqns.item()}"
-        )
-        process_output.ocmmnt(
-            outfile, f"Inequality constraints : {fortran.numerics.nineqns.item()}"
+            outfile, f"Equality constraints : {data_structure.numerics.neqns}"
         )
         process_output.ocmmnt(
             outfile,
-            f"Total constraints : {fortran.numerics.nineqns.item() + fortran.numerics.neqns.item()}",
+            f"Inequality constraints : {data_structure.numerics.nineqns}",
         )
         process_output.ocmmnt(
-            outfile, f"Iteration variables : {fortran.numerics.nvar.item()}"
+            outfile,
+            f"Total constraints : {data_structure.numerics.nineqns + data_structure.numerics.neqns}",
+        )
+        process_output.ocmmnt(
+            outfile, f"Iteration variables : {data_structure.numerics.nvar}"
         )
         # If optimising, write objective function and convergence parameter
-        if fortran.numerics.ioptimz == 1:
+        if data_structure.numerics.ioptimz == 1:
             process_output.ocmmnt(
                 outfile,
                 f"Max iterations : {data_structure.global_variables.maxcal}",
             )
 
-            if fortran.numerics.minmax > 0:
+            if data_structure.numerics.minmax > 0:
                 minmax_string = "  -- minimise "
                 minmax_sign = "+"
             else:
                 minmax_string = "  -- maximise "
                 minmax_sign = "-"
 
-            fom_string = f2py_compatible_to_string(
-                fortran.numerics.lablmm[abs(fortran.numerics.minmax) - 1]
+            fom_string = data_structure.numerics.lablmm[
+                abs(data_structure.numerics.minmax) - 1
+            ]
+            process_output.ocmmnt(
+                outfile,
+                f"Figure of merit : {minmax_sign}{abs(data_structure.numerics.minmax)}{minmax_string}{fom_string}",
             )
             process_output.ocmmnt(
                 outfile,
-                f"Figure of merit : {minmax_sign}{abs(fortran.numerics.minmax)}{minmax_string}{fom_string}",
-            )
-            process_output.ocmmnt(
-                outfile,
-                f"Convergence parameter : {fortran.numerics.epsvmc}",
+                f"Convergence parameter : {data_structure.numerics.epsvmc}",
             )
 
         process_output.oblnkl(outfile)
@@ -242,12 +241,12 @@ def run_summary():
     process_output.ovarst(mfile, "Input filename", "(fileprefix)", f'"{fileprefix}"')
 
     process_output.ovarin(
-        mfile, "Optimisation switch", "(ioptimz)", fortran.numerics.ioptimz
+        mfile, "Optimisation switch", "(ioptimz)", data_structure.numerics.ioptimz
     )
     # If optimising, write figure of merit switch
-    if fortran.numerics.ioptimz == 1:
+    if data_structure.numerics.ioptimz == 1:
         process_output.ovarin(
-            mfile, "Figure of merit switch", "(minmax)", fortran.numerics.minmax
+            mfile, "Figure of merit switch", "(minmax)", data_structure.numerics.minmax
         )
 
 
@@ -259,7 +258,7 @@ def init_all_module_vars():
     than a 'run-once' executable.
     """
     logging_model_handler.clear_logs()
-    fortran.numerics.init_numerics()
+    data_structure.numerics.init_numerics()
     init_buildings_variables()
     init_cost_variables()
     init_divertor_variables()
@@ -308,41 +307,46 @@ def check_process(inputs):  # noqa: ARG001
     """
 
     # Check that there are sufficient iteration variables
-    if fortran.numerics.nvar < fortran.numerics.neqns:
+    if data_structure.numerics.nvar < data_structure.numerics.neqns:
         raise ProcessValidationError(
             "Insufficient iteration variables to solve the problem! NVAR < NEQNS",
-            nvar=fortran.numerics.nvar,
-            neqns=fortran.numerics.neqns,
+            nvar=data_structure.numerics.nvar,
+            neqns=data_structure.numerics.neqns,
         )
 
     # Check that sufficient elements of ixc and icc have been specified
-    if (fortran.numerics.ixc[: fortran.numerics.nvar] == 0).any():
+    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 0).any():
         raise ProcessValidationError(
             "The number of iteration variables specified is smaller than the number stated in ixc",
-            nvar=fortran.numerics.nvar,
+            nvar=data_structure.numerics.nvar,
         )
 
     # Check that dr_tf_wp_with_insulation (ixc = 140) and dr_tf_inboard (ixc = 13) are not being used simultaneously as iteration variables
-    if (fortran.numerics.ixc[: fortran.numerics.nvar] == 13).any() and (
-        fortran.numerics.ixc[: fortran.numerics.nvar] == 140
+    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 13).any() and (
+        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140
     ).any():
         raise ProcessValidationError(
             "Iteration variables 13 and 140 cannot be used simultaneously",
         )
 
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 0
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 0
     ).any():
         raise ProcessValidationError(
             "The number of constraints specified is smaller than the number stated in neqns+nineqns",
-            neqns=fortran.numerics.neqns,
-            nineqns=fortran.numerics.nineqns,
+            neqns=data_structure.numerics.neqns,
+            nineqns=data_structure.numerics.nineqns,
         )
 
     # Deprecate constraints
     for depcrecated_constraint in [3, 4, 10, 74, 42]:
         if (
-            fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns]
+            data_structure.numerics.icc[
+                : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            ]
             == depcrecated_constraint
         ).any():
             raise ProcessValidationError(
@@ -351,7 +355,10 @@ def check_process(inputs):  # noqa: ARG001
 
     # MDK Report error if constraint 63 is used with old vacuum model
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 63
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 63
     ).any() and data_structure.vacuum_variables.i_vacuum_pumping != "simple":
         raise ProcessValidationError(
             "Constraint 63 is requested without the correct vacuum model (simple)"
@@ -395,7 +402,7 @@ def check_process(inputs):  # noqa: ARG001
     # Stop the run if oacdcp is used as an optimisation variable
     # As the current density is now calculated from bt without constraint 10
 
-    if (fortran.numerics.ixc[: fortran.numerics.nvar] == 12).any():
+    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 12).any():
         raise ProcessValidationError(
             "The 1/R toroidal B field dependency constraint is being depreciated"
         )
@@ -450,25 +457,29 @@ def check_process(inputs):  # noqa: ARG001
             )
 
         if (
-            fortran.numerics.ioptimz >= 0
-            and (fortran.numerics.ixc[: fortran.numerics.nvar] == 4).any()
-            and fortran.numerics.boundl[3]
+            data_structure.numerics.ioptimz >= 0
+            and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
+            and data_structure.numerics.boundl[3]
             < data_structure.physics_variables.teped * 1.001
         ):
             warn(
                 "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped",
                 stacklevel=2,
             )
-            fortran.numerics.boundl[3] = data_structure.physics_variables.teped * 1.001
-            fortran.numerics.boundu[3] = max(
-                fortran.numerics.boundu[3], fortran.numerics.boundl[3]
+            data_structure.numerics.boundl[3] = (
+                data_structure.physics_variables.teped * 1.001
+            )
+            data_structure.numerics.boundu[3] = max(
+                data_structure.numerics.boundu[3], data_structure.numerics.boundl[3]
             )
 
         # Density checks
         # Case where pedestal density is set manually
         if (
             data_structure.physics_variables.fgwped < 0
-            or not (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any()
+            or not (
+                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
+            ).any()
         ):
             # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
             if (
@@ -502,20 +513,22 @@ def check_process(inputs):  # noqa: ARG001
         # Issue #862 : Variable ne0/neped ratio without constraint eq 81 (ne0>neped)
         #  -> Potential hollowed density profile
         if (
-            fortran.numerics.ioptimz >= 0
+            data_structure.numerics.ioptimz >= 0
             and not (
-                fortran.numerics.icc[
-                    : fortran.numerics.neqns + fortran.numerics.nineqns
+                data_structure.numerics.icc[
+                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
                 ]
                 == 81
             ).any()
         ):
-            if (fortran.numerics.ixc[: fortran.numerics.nvar] == 145).any():
+            if (
+                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
+            ).any():
                 warn(
                     "neped set with fgwped without constraint eq 81 (neped<ne0)",
                     stacklevel=2,
                 )
-            if (fortran.numerics.ixc[: fortran.numerics.nvar] == 6).any():
+            if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
                 warn(
                     "dene used as iteration variable without constraint 81 (neped<ne0)",
                     stacklevel=2,
@@ -523,9 +536,15 @@ def check_process(inputs):  # noqa: ARG001
 
     # Cannot use Psep/R and PsepB/qAR limits at the same time
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 68
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 68
     ).any() and (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 56
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 56
     ).any():
         raise ProcessValidationError(
             "Cannot use Psep/R and PsepB/qAR constraint equations at the same time"
@@ -533,20 +552,25 @@ def check_process(inputs):  # noqa: ARG001
 
     # if lower bound of fgwped < fgwsep
     if (
-        fortran.numerics.ixc[: fortran.numerics.nvar] == 145
-    ).any() and fortran.numerics.boundl[144] < data_structure.physics_variables.fgwsep:
+        data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
+    ).any() and data_structure.numerics.boundl[
+        144
+    ] < data_structure.physics_variables.fgwsep:
         raise ProcessValidationError(
             "Set lower bound of iteration variable 145, fgwped, to be greater than fgwsep",
-            boundl_145=fortran.numerics.boundl[144],
+            boundl_145=data_structure.numerics.boundl[144],
             fgwsep=data_structure.physics_variables.fgwsep,
         )
 
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 78
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 78
     ).any():
         # If Reinke criterion is used tesep is calculated and cannot be an
         # iteration variable
-        if (fortran.numerics.ixc[: fortran.numerics.nvar] == 119).any():
+        if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 119).any():
             raise ProcessValidationError(
                 "REINKE IMPURITY MODEL: tesep is calculated and cannot be an "
                 "iteration variable for the Reinke model"
@@ -556,8 +580,8 @@ def check_process(inputs):  # noqa: ARG001
         # using Martin scaling for consistency
         if (data_structure.physics_variables.i_l_h_threshold != 6) or (
             not (
-                fortran.numerics.icc[
-                    : fortran.numerics.neqns + fortran.numerics.nineqns
+                data_structure.numerics.icc[
+                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
                 ]
                 == 15
             ).any()
@@ -631,8 +655,8 @@ def check_process(inputs):  # noqa: ARG001
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                fortran.numerics.ixc[: fortran.numerics.nvar] == 20
-            ).any() and fortran.numerics.boundu[19] < 273.15:
+                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 20
+            ).any() and data_structure.numerics.boundu[19] < 273.15:
                 raise ProcessValidationError(
                     "Too low CP conductor temperature (temp_cp_average). Lower limit for copper > 273.15 K"
                 )
@@ -662,8 +686,8 @@ def check_process(inputs):  # noqa: ARG001
 
             # Check if conductor upper limit is properly set to 50 K or below
             if (
-                fortran.numerics.ixc[: fortran.numerics.nvar] == 20
-            ).any() and fortran.numerics.boundu[19] > 50.0:
+                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 20
+            ).any() and data_structure.numerics.boundu[19] > 50.0:
                 raise ProcessValidationError(
                     "Too large CP conductor temperature (temp_cp_average). Upper limit for cryo-al < 50 K"
                 )
@@ -695,8 +719,8 @@ def check_process(inputs):  # noqa: ARG001
         if (
             data_structure.tfcoil_variables.i_tf_sup == 2
             and (
-                fortran.numerics.icc[
-                    : fortran.numerics.neqns + fortran.numerics.nineqns
+                data_structure.numerics.icc[
+                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
                 ]
                 == 85
             ).any()
@@ -718,7 +742,9 @@ def check_process(inputs):  # noqa: ARG001
         # Checking the CP TF top radius
         if (
             abs(data_structure.build_variables.r_cp_top) > 0
-            or (fortran.numerics.ixc[: fortran.numerics.nvar] == 174).any()
+            or (
+                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 174
+            ).any()
         ) and data_structure.build_variables.i_r_cp_top != 1:
             raise ProcessValidationError(
                 "To set the TF CP top value, you must use i_r_cp_top = 1"
@@ -769,7 +795,9 @@ def check_process(inputs):  # noqa: ARG001
 
         # Constraint 10 is dedicated to ST designs with demountable joints
         if (
-            fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns]
+            data_structure.numerics.icc[
+                : data_structure.numerics.neqns + data_structure.numerics.nineqns
+            ]
             == 10
         ).any():
             raise ProcessValidationError(
@@ -791,9 +819,15 @@ def check_process(inputs):  # noqa: ARG001
     if (
         (
             not (
-                (fortran.numerics.ixc[: fortran.numerics.nvar] == 16).any()
-                or (fortran.numerics.ixc[: fortran.numerics.nvar] == 29).any()
-                or (fortran.numerics.ixc[: fortran.numerics.nvar] == 42).any()
+                (
+                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 16
+                ).any()
+                or (
+                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 29
+                ).any()
+                or (
+                    data_structure.numerics.ixc[: data_structure.numerics.nvar] == 42
+                ).any()
             )
         )  # No dr_bore,dr_cs_tf_gap, dr_cs iteration
         and (
@@ -807,14 +841,14 @@ def check_process(inputs):  # noqa: ARG001
         )  # dr_bore + dr_cs_tf_gap + dr_cs = 0
         and (
             (
-                fortran.numerics.icc[
-                    : fortran.numerics.neqns + fortran.numerics.nineqns
+                data_structure.numerics.icc[
+                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
                 ]
                 == 31
             ).any()
             or (
-                fortran.numerics.icc[
-                    : fortran.numerics.neqns + fortran.numerics.nineqns
+                data_structure.numerics.icc[
+                    : data_structure.numerics.neqns + data_structure.numerics.nineqns
                 ]
                 == 32
             ).any()
@@ -969,7 +1003,7 @@ def check_process(inputs):  # noqa: ARG001
     # Check if the WP/conductor radial thickness (dr_tf_wp_with_insulation) is large enough
     # To contains the insulation, cooling and the support structure
     # Rem : Only verified if the WP thickness is used
-    if (fortran.numerics.ixc[: fortran.numerics.nvar] == 140).any():
+    if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 140).any():
         # Minimal WP thickness
         if data_structure.tfcoil_variables.i_tf_sup == 1:
             dr_tf_wp_min = 2.0 * (
@@ -980,8 +1014,10 @@ def check_process(inputs):  # noqa: ARG001
             )
 
             # Steel conduit thickness (can be an iteration variable)
-            if (fortran.numerics.ixc[: fortran.numerics.nvar] == 58).any():
-                dr_tf_wp_min = dr_tf_wp_min + 2.0 * fortran.numerics.boundl[57]
+            if (
+                data_structure.numerics.ixc[: data_structure.numerics.nvar] == 58
+            ).any():
+                dr_tf_wp_min = dr_tf_wp_min + 2.0 * data_structure.numerics.boundl[57]
             else:
                 dr_tf_wp_min = (
                     dr_tf_wp_min
@@ -1002,7 +1038,7 @@ def check_process(inputs):  # noqa: ARG001
                 + 4.0 * data_structure.tfcoil_variables.rcool
             )
 
-        if fortran.numerics.boundl[139] < dr_tf_wp_min:
+        if data_structure.numerics.boundl[139] < dr_tf_wp_min:
             raise ProcessValidationError(
                 "The TF coil WP thickness (dr_tf_wp_with_insulation) must be at least",
                 dr_tf_wp_min=dr_tf_wp_min,
@@ -1158,7 +1194,10 @@ def check_process(inputs):  # noqa: ARG001
 
     # Cannot use temperature margin constraint with REBCO TF coils
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 36
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 36
     ).any() and (
         data_structure.tfcoil_variables.i_tf_sc_mat == 8
         or data_structure.tfcoil_variables.i_tf_sc_mat == 9
@@ -1169,7 +1208,10 @@ def check_process(inputs):  # noqa: ARG001
 
     # Cannot use temperature margin constraint with REBCO CS coils
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 60
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 60
     ).any() and data_structure.pfcoil_variables.i_cs_superconductor == 8:
         raise ProcessValidationError(
             "turn off CS temperature margin constraint icc = 60 when using REBCO"
@@ -1184,7 +1226,10 @@ def check_process(inputs):  # noqa: ARG001
 
     # Cannot use TF coil strain limit if i_str_wp is off:
     if (
-        fortran.numerics.icc[: fortran.numerics.neqns + fortran.numerics.nineqns] == 88
+        data_structure.numerics.icc[
+            : data_structure.numerics.neqns + data_structure.numerics.nineqns
+        ]
+        == 88
     ).any() and data_structure.tfcoil_variables.i_str_wp == 0:
         raise ProcessValidationError("Can't use constraint 88 if i_strain_tf == 0")
 
@@ -1193,15 +1238,21 @@ def set_active_constraints():
     """Set constraints provided in the input file as 'active'"""
     num_constraints = 0
     for i in range(ConstraintManager.num_constraints()):
-        if fortran.numerics.icc[i] != 0:
-            fortran.numerics.active_constraints[fortran.numerics.icc[i] - 1] = True
+        if data_structure.numerics.icc[i] != 0:
+            data_structure.numerics.active_constraints[
+                data_structure.numerics.icc[i] - 1
+            ] = True
             num_constraints += 1
 
-    if fortran.numerics.neqns == 0:
+    if data_structure.numerics.neqns == 0:
         # The value of neqns has not been set in the input file.  Default = 0.
-        fortran.numerics.neqns = num_constraints - fortran.numerics.nineqns
+        data_structure.numerics.neqns = (
+            num_constraints - data_structure.numerics.nineqns
+        )
     else:
-        fortran.numerics.nineqns = num_constraints - fortran.numerics.neqns
+        data_structure.numerics.nineqns = (
+            num_constraints - data_structure.numerics.neqns
+        )
 
 
 def set_device_type():

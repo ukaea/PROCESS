@@ -9,7 +9,6 @@ from tabulate import tabulate
 
 import process.constraints as constraints
 from process import data_structure
-from process import fortran as ft
 from process.final import finalise
 from process.io.mfile import MFile
 from process.iteration_variables import set_scaled_iteration_variable
@@ -76,7 +75,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = objective_function(ft.numerics.minmax)
+            objf = objective_function(data_structure.numerics.minmax)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
 
             if objf_prev is None and conf_prev is None:
@@ -225,10 +224,10 @@ class Caller:
         :type xc: np.array
         """
         # Number of active iteration variables
-        nvars = xc.shape[0]
+        nvars = len(xc)
 
         # Increment the call counter
-        ft.numerics.ncalls = ft.numerics.ncalls + 1
+        data_structure.numerics.ncalls = data_structure.numerics.ncalls + 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars)
@@ -362,8 +361,8 @@ def write_output_files(models: Models, ifail: int) -> None:
     :param ifail: solver return code
     :type ifail: int
     """
-    n = ft.numerics.nvar
-    x = ft.numerics.xcm[:n]
+    n = data_structure.numerics.nvar
+    x = data_structure.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models)
     caller.call_models_and_write_output(

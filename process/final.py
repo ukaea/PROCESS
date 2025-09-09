@@ -6,9 +6,8 @@ import process.constraints as constraints
 from process import constants
 from process import output as op
 from process import process_output as po
-from process.fortran import numerics
+from process.data_structure import numerics
 from process.objectives import objective_function
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
@@ -60,8 +59,8 @@ def output_evaluation():
     )
 
     labels = [
-        f2py_compatible_to_string(i)
-        for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns] - 1]
+        numerics.lablcc[j]
+        for j in [i - 1 for i in numerics.icc[: numerics.neqns + numerics.nineqns]]
     ]
     physical_constraint = [f"{c} {u}" for c, u in zip(value, units, strict=False)]
     physical_residual = [f"{c} {u}" for c, u in zip(residual, units, strict=False)]
