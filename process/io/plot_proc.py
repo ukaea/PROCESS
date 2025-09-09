@@ -8455,9 +8455,94 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
                 linewidth=0.2,
             )
 
+        # Plot a horizontal line at y = 0.0
+        axis.axhline(
+            y=0.0,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at x = 0.0
+        axis.axvline(
+            x=0.0,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at x = dr_bore
+        axis.axvline(
+            x=dr_bore,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at x = -dr_bore
+        axis.axvline(
+            x=-dr_bore,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at x = dr_bore + dr_cs
+        axis.axvline(
+            x=(dr_bore + dr_cs),
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at x = -dr_bore - dr_cs
+        axis.axvline(
+            x=-(dr_bore + dr_cs),
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at y= dz_cs / 2
+        axis.axhline(
+            y=(dz_cs / 2),
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at y= -dz_cs / 2
+        axis.axhline(
+            y=-(dz_cs / 2),
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+
+        # Plot a vertical line at x = r_cs_middle
+        axis.axvline(
+            x=mfile_data.data["r_cs_middle"].get_scan(scan),
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+        # Plot a vertical line at x= -r_cs_middle
+        axis.axvline(
+            x=-mfile_data.data["r_cs_middle"].get_scan(scan),
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+
     textstr_cs = (
         f"$\\mathbf{{Coil \\ parameters:}}$\n \n"
         f"CS height vs TF internal height: {mfile_data.data['f_z_cs_tf_internal'].get_scan(scan):.2f}\n"
+        f"CS thickness: {mfile_data.data['dr_cs'].get_scan(scan):.4f} m\n"
+        f"CS radial middle: {mfile_data.data['r_cs_middle'].get_scan(scan):.4f} m\n"
+        f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
         f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n"
@@ -8465,7 +8550,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
 
     axis.text(
         0.6,
-        0.825,
+        0.75,
         textstr_cs,
         fontsize=9,
         verticalalignment="bottom",
@@ -8479,12 +8564,15 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         },
     )
 
+    axis.plot(0, 0, marker="o", color="red", markersize=8, label="Center (0,0)")
+
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
-    axis.set_title("Central Solenoid Cross-Section")
+    axis.set_title("Central Solenoid Poloidal Cross-Section")
     axis.grid(True, linestyle="--", alpha=0.3)
-    axis.set_xlim(-(dr_bore + dr_cs + 0.1), (dr_bore + dr_cs + 0.1))
-    axis.set_ylim(-dz_cs / 2 - 0.1, dz_cs / 2 + 0.1)
+    axis.minorticks_on()
+    axis.set_xlim(-((dr_bore + dr_cs) * 1.2), (dr_bore + dr_cs) * 1.2)
+    axis.set_ylim(-(dz_cs / 2) * 1.2, (dz_cs / 2) * 1.2)
 
 
 def plot_cs_turn_structure(axis, fig, mfile_data, scan):

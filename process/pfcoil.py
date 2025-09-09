@@ -2640,6 +2640,13 @@ class PFCoil:
                 )
                 op.ovarre(
                     self.outfile,
+                    "CS radial middle (m)",
+                    "(r_cs_middle)",
+                    pfcoil_variables.r_cs_middle,
+                    "OP ",
+                )
+                op.ovarre(
+                    self.outfile,
                     "CS conductor+void cross-sectional area (m2)",
                     "(awpoh)",
                     pfcoil_variables.awpoh,
