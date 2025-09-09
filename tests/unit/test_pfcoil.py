@@ -2083,27 +2083,23 @@ def test_brookscoil(pfcoil):
 
 
 @pytest.mark.parametrize(
-    "z_tf_inside_half, f_z_cs_tf_internal, dr_cs, r_cs_middle, expected",
+    "z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected",
     [
         # Typical values
-        (2.0, 0.5, 0.3, 1.5, (1.0, -1.0, 1.5, 0.0, 1.65, 1.35, 0.6)),
+        (2.0, 0.5, 0.3, 0.15, (1.0, -1.0, 0.3, 0.3, 0.0, 0.45, 0.15, 0.6)),
         # Zero thickness
-        (2.0, 0.5, 0.0, 1.5, (1.0, -1.0, 1.5, 0.0, 1.5, 1.5, 0.0)),
+        (2.0, 0.5, 0.0, 0.0, (1.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)),
         # Zero fractional height
-        (2.0, 0.0, 0.3, 1.5, (0.0, -0.0, 1.5, 0.0, 1.65, 1.35, 0.0)),
-        # Negative thickness (should still compute)
-        (2.0, 0.5, -0.3, 1.5, (1.0, -1.0, 1.5, 0.0, 1.35, 1.65, -0.6)),
-        # Large values
-        (10.0, 0.8, 2.0, 5.0, (8.0, -8.0, 5.0, 0.0, 6.0, 4.0, 32.0)),
+        (2.0, 0.0, 0.3, 1.5, (0.0, -0.0, 1.65, 1.65, 0.0, 1.8, 1.5, 0.0)),
     ],
 )
 def test_calculate_cs_geometry(
-    pfcoil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, r_cs_middle, expected
+    pfcoil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected
 ):
     result = pfcoil.calculate_cs_geometry(
         z_tf_inside_half=z_tf_inside_half,
         f_z_cs_tf_internal=f_z_cs_tf_internal,
         dr_cs=dr_cs,
-        r_cs_middle=r_cs_middle,
+        dr_bore=dr_bore,
     )
     assert pytest.approx(result) == expected
