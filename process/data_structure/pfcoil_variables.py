@@ -375,6 +375,9 @@ j_pf_wp_critical: list[float] = None
 r_cs_middle: float = None
 """radius to the centre of the central solenoid (m)"""
 
+dz_cs_full: float = None
+"""Full height of the central solenoid (m)"""
+
 
 routr: float = None
 """radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils"""
@@ -657,6 +660,7 @@ def init_pfcoil_variables():
     global j_cs_critical_pulse_start
     global j_pf_wp_critical
     global r_cs_middle
+    global dz_cs_full
     global routr
     global r_pf_coil_middle
     global rpf1
@@ -757,6 +761,7 @@ def init_pfcoil_variables():
     j_cs_critical_pulse_start = 0.0
     j_pf_wp_critical = np.zeros(NGC2)
     r_cs_middle = 0.0
+    dz_cs_full = 0.0
     routr = 1.5
     r_pf_coil_middle = np.zeros(NGC2)
     rpf1 = 0.0
