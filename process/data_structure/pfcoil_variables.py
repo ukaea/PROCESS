@@ -541,6 +541,9 @@ ld_ratio_cst: float = None
 dr_cs_turn: float = None
 """Length of CS of CS coil turn conduit"""
 
+dr_cs_full: float = None
+"""Full radial thickness of the central solenoid (m)"""
+
 
 dz_cs_turn: float = None
 """Depth/width of CS of CS coil turn conduit"""
@@ -696,6 +699,7 @@ def init_pfcoil_variables():
     global fb_cs_limit_max
     global ld_ratio_cst
     global dr_cs_turn
+    global dr_cs_full
     global dz_cs_turn
     global r_out_cst
     global radius_cs_turn_cable_space
@@ -797,6 +801,7 @@ def init_pfcoil_variables():
     fb_cs_limit_max = 1.0
     ld_ratio_cst = 70.0 / 22.0
     dr_cs_turn = 0.0
+    dr_cs_full = 0.0
     dz_cs_turn = 0.0
     radius_cs_turn_cable_space = 0.0
     r_out_cst = 3.0e-3
