@@ -1254,6 +1254,24 @@ class PFCoil:
         author: P J Knight, CCFE, Culham Science Centre
         """
 
+        (
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.z_pf_coil_lower[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_cs_middle,
+            pfcoil_variables.z_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.a_cs_poloidal,
+            pfcoil_variables.dz_cs_full,
+            pfcoil_variables.dr_cs_full,
+        ) = self.calculate_cs_geometry(
+            z_tf_inside_half=bv.z_tf_inside_half,
+            f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
+            dr_cs=bv.dr_cs,
+            dr_bore=bv.dr_bore,
+        )
+
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if pfcoil_variables.j_cs_pulse_start > pfcoil_variables.j_cs_flat_top_end:
             sgn = 1.0e0
