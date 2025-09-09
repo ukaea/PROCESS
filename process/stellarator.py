@@ -2623,11 +2623,13 @@ class Stellarator:
                 r_coil_major,
                 r_coil_minor,
             )
-
+            # Two margins can be applied for jcrit: direct or by temperature margin.
+            # Temperature margin is implemented in the jcrit_vector definition, 
+            # direct margin is implemented after jcrit is defined (equation below)
             # jcrit for this bmax:
             jcrit_vector[k] = self.jcrit_frommaterial(
                 b_max_k[k],
-                tfcoil_variables.tftmp + 1.5,
+                tfcoil_variables.tftmp + tfcoil_variables.tmargmin,
                 tfcoil_variables.i_tf_sc_mat,
                 tfcoil_variables.b_crit_upper_nbti,
                 tfcoil_variables.bcritsc,
@@ -2637,25 +2639,26 @@ class Stellarator:
                 tfcoil_variables.tcritsc,
                 tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
                 tfcoil_variables.j_tf_wp,
-            )  # Get here a temperature margin of 1.5K.
+            )  # Get here a temperature margin from tfcoil_variables.tmargtf.
 
         # The operation current density weighted with the global iop/icrit fraction
         lhs[:] = constraint_variables.fiooic * jcrit_vector
 
-        # Conduct fraction of conduit * Superconductor fraction in conductor
-        f_scu = (
+        # Superconductor fraction in wp
+        f_a_scu_of_wp = (
             (
                 tfcoil_variables.a_tf_turn_cable_space_no_void
                 * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             )
-            / (tfcoil_variables.t_turn_tf**2)
             * (1.0e0 - tfcoil_variables.fcutfsu)
-        )  # fraction that is SC of wp.
-        # print *, "f_scu. ",f_scu,"Awp min: ",Awp(1)
+            / (tfcoil_variables.t_turn_tf**2)
+            
+        )
+        # print *, "f_a_scu_of_wp. ",f_a_scu_of_wp,"Awp min: ",Awp(1)
 
         rhs[:] = coilcurrent / (
-            wp_width_r**2 / stellarator_configuration.stella_config_wp_ratio * f_scu
-        )  # f_scu should be the fraction of the sc that is in the winding pack.
+            wp_width_r**2 / stellarator_configuration.stella_config_wp_ratio * f_a_scu_of_wp
+        )  # f_a_scu_of_wp should be the fraction of the sc that is in the winding pack.
 
         wp_width_r_min = (
             r_coil_minor / 10.0e0
@@ -3100,13 +3103,13 @@ class Stellarator:
         # comparison
         # the new quench protection routine, see #1047
         tfcoil_variables.jwdgpro = self.j_max_protect_am2(
-            tfcoil_variables.tdmptf,
-            0.0e0,
-            tfcoil_variables.fcutfsu,
-            1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-            tfcoil_variables.tftmp,
-            tfcoil_variables.a_tf_turn_cable_space_no_void,
-            tfcoil_variables.t_turn_tf**2,
+            tau_quench=tfcoil_variables.tdmptf,
+            t_detect=0.0e0,
+            fcu=tfcoil_variables.fcutfsu,
+            fcond=1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+            temp=tfcoil_variables.tftmp,
+            acs=tfcoil_variables.a_tf_turn_cable_space_no_void,
+            aturn=tfcoil_variables.t_turn_tf**2,
         )
 
         # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
@@ -3210,7 +3213,7 @@ class Stellarator:
                 coilcoilgap,
                 rebco_variables.coppera_m2,
                 rebco_variables.coppera_m2_max,
-                f_scu,
+                f_a_scu_of_wp,
                 f_vv_actual,
                 constraint_variables.fiooic,
                 inductance,
@@ -3239,7 +3242,8 @@ class Stellarator:
         """
         return 2 * tfes / (tdump * aio)
 
-    def j_max_protect_am2(self, tau_quench, t_detect, fcu, fcond, temp, acs, aturn):
+    @staticmethod
+    def j_max_protect_am2(tau_quench, t_detect, fcu, fcond, temp, acs, aturn):
         temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
         q_cu_array_sa2m4 = [
             1.08514e17,
@@ -3701,7 +3705,7 @@ class Stellarator:
         coilcoilgap,
         coppera_m2,
         coppera_m2_max,
-        f_scu,
+        f_a_scu_of_wp,
         f_vv_actual,
         fiooic,
         inductance,
@@ -4016,14 +4020,14 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Current density in SC area (A/m2)",
-            "(c_tf_total/a_tf_wp_conductor/f_scu)",
+            "(c_tf_total/a_tf_wp_conductor/f_a_scu_of_wp)",
             1.0e-6
             * tfcoil_variables.c_tf_total
             / tfcoil_variables.n_tf_coils
             / ap
-            / f_scu,
+            / f_a_scu_of_wp,
         )
-        po.ovarre(self.outfile, "Superconductor faction of WP (1)", "(f_scu)", f_scu)
+        po.ovarre(self.outfile, "Superconductor faction of WP (1)", "(f_a_scu_of_wp)", f_a_scu_of_wp)
 
         po.osubhd(self.outfile, "Forces and Stress :")
         po.ovarre(
