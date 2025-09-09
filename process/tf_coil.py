@@ -1762,8 +1762,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Actual quench time (or time constant) (s)",
-                "(tdmptf)",
-                tfcoil_variables.tdmptf,
+                "(t_tf_superconductor_quench)",
+                tfcoil_variables.t_tf_superconductor_quench,
             )
             po.ovarre(
                 self.outfile,

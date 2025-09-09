@@ -706,7 +706,7 @@
  Centring_force_per_coil_(N/m)____________________________________________ (cforce)_______________________ 8.13318161634901613e+07 OP
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplane_(%)_ (ripple_b_tf_plasma_edge_max)_______________________ 6.00000000000000089e-01
  Ripple_amplitude_at_plasma_outboard_midplane_(%)_________________________ (ripple_b_tf_plasma_edge)_______________________ 6.00000000000000533e-01 OP
- Actual_quench_time_(or_time_constant)_(s)________________________________ (tdmptf)_______________________ 1.79728258934420602e+01
+ Actual_quench_time_(or_time_constant)_(s)________________________________ (t_tf_superconductor_quench)_______________________ 1.79728258934420602e+01
  Vacuum_Vessel_stress_on_quench_(Pa)______________________________________ (vv_stress_quench)_____________ 6.29314975367861539e+07 OP
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)_____________ (v_tf_coil_dump_quench_max_kv)________________________ 1.00000000000000000e+01
  Actual_quench_voltage_(kV)_______________________________________________ (v_tf_coil_dump_quench_kv)_______________________ 9.99244747689453128e+00 OP
@@ -1203,7 +1203,7 @@ boundl(29) = 0.1
 ixc = 37 * coheof
 ixc = 41 * fcohbop
 ixc = 44 * fvsbrnni
-ixc = 56 * tdmptf
+ixc = 56 * t_tf_superconductor_quench
 ixc = 57 * thkcas
 ixc = 58 * dx_tf_turn_steel
 boundl(58) = 0.008
@@ -1557,7 +1557,7 @@ dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF w
 f_a_tf_turn_cable_copper  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
 ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
-tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
+t_tf_superconductor_quench   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 thkcas   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)

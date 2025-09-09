@@ -616,7 +616,7 @@ tcritsc: float = None
 """critical temperature (K) for superconductor at zero field and strain (`i_tf_sc_mat=4, =tc0m`)"""
 
 
-tdmptf: float = None
+t_tf_superconductor_quench: float = None
 """fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 For REBCO model, meaning depends on quench_model:
 - exponential quench : e-folding time (s)`
@@ -1196,7 +1196,7 @@ def init_tfcoil_variables():
     global quench_model
     global time1
     global tcritsc
-    global tdmptf
+    global t_tf_superconductor_quench
     global a_tf_inboard_total
     global len_tf_bus
     global m_tf_bus
@@ -1431,7 +1431,7 @@ def init_tfcoil_variables():
     quench_model = "exponential"
     time1 = 0
     tcritsc = 16.0
-    tdmptf = 10.0
+    t_tf_superconductor_quench = 10.0
     a_tf_inboard_total = 0.0
     len_tf_bus = 300.0
     m_tf_bus = 0.0

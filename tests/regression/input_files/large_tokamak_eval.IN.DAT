@@ -379,7 +379,7 @@ dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF w
 f_a_tf_turn_cable_copper  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
 ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
-tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
+t_tf_superconductor_quench   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 dr_tf_nose_case   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)

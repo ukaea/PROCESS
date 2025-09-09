@@ -3055,7 +3055,7 @@ class Stellarator:
                 / (
                     (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
                     / 2
-                    * tfcoil_variables.tdmptf
+                    * tfcoil_variables.t_tf_superconductor_quench
                     * radvv
                 )
             )
@@ -3074,20 +3074,20 @@ class Stellarator:
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,f_a_tf_turn_cable_copper,tftmp,temp_tf_conductor_quench_max,jwdgpro2,vd)
+        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,t_tf_superconductor_quench,1-f_a_tf_turn_cable_space_extra_void,f_a_tf_turn_cable_copper,tftmp,temp_tf_conductor_quench_max,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.e_tf_magnetic_stored_total_gj
             / tfcoil_variables.n_tf_coils
             * 1.0e9,
-            tfcoil_variables.tdmptf,
+            tfcoil_variables.t_tf_superconductor_quench,
             tfcoil_variables.c_tf_turn,
         )
 
         # comparison
         # the new quench protection routine, see #1047
         tfcoil_variables.jwdgpro = self.j_max_protect_am2(
-            tfcoil_variables.tdmptf,
+            tfcoil_variables.t_tf_superconductor_quench,
             0.0e0,
             tfcoil_variables.f_a_tf_turn_cable_copper,
             1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
@@ -3096,7 +3096,7 @@ class Stellarator:
             tfcoil_variables.t_turn_tf**2,
         )
 
-        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.f_a_tf_turn_cable_copper: ",f_a_tf_turn_cable_copper
+        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.t_tf_superconductor_quench: ",t_tf_superconductor_quench, " tfcoil_variables.f_a_tf_turn_cable_copper: ",f_a_tf_turn_cable_copper
         # print *, "a_tf_turn_cable_space_no_void: ", tfcoil_variables.a_tf_turn_cable_space_no_void
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
@@ -3214,7 +3214,7 @@ class Stellarator:
                 r_tf_inleg_mid,
                 tfcoil_variables.sig_tf_wp,
                 tfcoil_variables.t_turn_tf,
-                tfcoil_variables.tdmptf,
+                tfcoil_variables.t_tf_superconductor_quench,
                 tf_total_h_width,
                 tfborev,
                 tfcoil_variables.toroidalgap,
@@ -3704,7 +3704,7 @@ class Stellarator:
         r_tf_inleg_mid,
         sig_tf_wp,
         t_turn_tf,
-        tdmptf,
+        t_tf_superconductor_quench,
         tf_total_h_width,
         tfborev,
         toroidalgap,
@@ -4070,8 +4070,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Actual quench time (or time constant) (s)",
-            "(tdmptf)",
-            tdmptf,
+            "(t_tf_superconductor_quench)",
+            t_tf_superconductor_quench,
         )
         po.ovarre(
             self.outfile,

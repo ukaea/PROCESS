@@ -377,7 +377,7 @@ class SuperconductingTFCoil(TFCoil):
             e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
             a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
             a_tf_turn=a_tf_turn,
-            t_tf_quench_dump=tfcoil_variables.tdmptf,
+            t_tf_quench_dump=tfcoil_variables.t_tf_superconductor_quench,
             f_a_tf_turn_cable_space_conductor=1.0e0
             - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
             f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
@@ -398,7 +398,7 @@ class SuperconductingTFCoil(TFCoil):
 
     def croco_voltage(self) -> float:
         if tfcoil_variables.quench_model == "linear":
-            superconducting_tf_coil_variables.time2 = tfcoil_variables.tdmptf
+            superconducting_tf_coil_variables.time2 = tfcoil_variables.t_tf_superconductor_quench
             croco_voltage = (
                 2.0e0
                 / superconducting_tf_coil_variables.time2
@@ -409,7 +409,7 @@ class SuperconductingTFCoil(TFCoil):
                 / tfcoil_variables.c_tf_turn
             )
         elif tfcoil_variables.quench_model == "exponential":
-            superconducting_tf_coil_variables.tau2 = tfcoil_variables.tdmptf
+            superconducting_tf_coil_variables.tau2 = tfcoil_variables.t_tf_superconductor_quench
             croco_voltage = (
                 2.0e0
                 / superconducting_tf_coil_variables.tau2
@@ -1458,8 +1458,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "TF Superconductor quench dump time (s)",
-            "(tdmptf)",
-            tfcoil_variables.tdmptf,
+            "(t_tf_superconductor_quench)",
+            tfcoil_variables.t_tf_superconductor_quench,
             "OP ",
         )
         po.ovarre(
@@ -1734,7 +1734,7 @@ class SuperconductingTFCoil(TFCoil):
             s_cc=superconducting_tf_coil_variables.a_tf_plasma_case
             + superconducting_tf_coil_variables.a_tf_coil_nose_case
             + 2.0 * superconducting_tf_coil_variables.dx_tf_side_case_average,
-            taud=tfcoil_variables.tdmptf,
+            taud=tfcoil_variables.t_tf_superconductor_quench,
             # TODO: is this the correct current?
             i_op=superconducting_tf_coil_variables.c_tf_coil
             / tfcoil_variables.n_tf_coil_turns,

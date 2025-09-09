@@ -1460,7 +1460,7 @@ tftmp = 20.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *ixc = 56
-*tdmptf = 
+*t_tf_superconductor_quench = 
 *boundl(56) = 
 *boundu(56) = 
 * DESCRIPTION:   Fast discharge time for TF coil in event of quench (s) 

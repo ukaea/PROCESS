@@ -1660,7 +1660,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )  # chosen to achieve Rm_coil in Table 2
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_coil_turns", 192)  # Section 3
-    monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
+    monkeypatch.setattr(tfcoil_variables, "t_tf_superconductor_quench", 30)  # Figure 6
     monkeypatch.setattr(
         superconducting_tf_coil_variables, "c_tf_coil", 83200 * 192
     )  # Section 3

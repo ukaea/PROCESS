@@ -745,7 +745,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.7753E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6496E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6496E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.4655E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9979E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9958E+00 OP 
@@ -1908,7 +1908,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.4791E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6085E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6085E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.3691E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9228E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.8463E+00 OP 
@@ -3071,7 +3071,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.1887E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5790E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5790E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2300E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.8452E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.6928E+00 OP 
@@ -4234,7 +4234,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.1887E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5798E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5798E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2253E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.8459E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.6942E+00 OP 
@@ -5397,7 +5397,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.4791E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6022E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6022E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.3904E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9233E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.8471E+00 OP 
@@ -6560,7 +6560,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.7753E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6223E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6223E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.5467E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9933E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9865E+00 OP 
@@ -7723,7 +7723,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.7753E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6254E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6254E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.5353E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9904E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9808E+00 OP 
@@ -8886,7 +8886,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.4791E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5972E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5972E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.3946E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9163E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.8333E+00 OP 
@@ -10049,7 +10049,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.1887E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5704E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5704E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2479E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.8364E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.6756E+00 OP 
@@ -11212,7 +11212,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.1887E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5708E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5708E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2453E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.8357E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.6742E+00 OP 
@@ -12375,7 +12375,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.4791E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5966E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5966E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.3953E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9158E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.8324E+00 OP 
@@ -13538,7 +13538,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.7753E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6183E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6183E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.5554E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9998E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9997E+00 OP 
@@ -14701,7 +14701,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.7753E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.6188E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.6188E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.5520E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9996E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.9992E+00 OP 
@@ -15864,7 +15864,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.4791E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5921E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5921E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.4062E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.9218E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.8443E+00 OP 
@@ -17027,7 +17027,7 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      7.1887E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.5648E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.5648E+01 ITV
  Vacuum_Vassel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.2626E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.8388E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.6802E+00 OP 
@@ -17716,9 +17716,9 @@ dr_bore = 2.0
 ixc = 44
 f_c_plasma_non_inductive = 0.4
 
-* tdmptf [s]
+* t_tf_superconductor_quench [s]
 ixc = 56
-tdmptf = 25.0
+t_tf_superconductor_quench = 25.0
 
 * dr_tf_nose_case [m]
 ixc = 57
