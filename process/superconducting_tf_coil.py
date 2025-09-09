@@ -372,7 +372,7 @@ class SuperconductingTFCoil(TFCoil):
             )
             # Find the current density limited by the protection limit
             # At present only valid for LTS windings (Nb3Sn properties assumed)
-        tfcoil_variables.jwdgpro, vd = self.protect(
+        tfcoil_variables.j_tf_wp_quench_heat_max, vd = self.protect(
             c_tf_turn=tfcoil_variables.c_tf_turn,
             e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
             a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
@@ -398,7 +398,9 @@ class SuperconductingTFCoil(TFCoil):
 
     def croco_voltage(self) -> float:
         if tfcoil_variables.quench_model == "linear":
-            superconducting_tf_coil_variables.time2 = tfcoil_variables.t_tf_superconductor_quench
+            superconducting_tf_coil_variables.time2 = (
+                tfcoil_variables.t_tf_superconductor_quench
+            )
             croco_voltage = (
                 2.0e0
                 / superconducting_tf_coil_variables.time2
@@ -409,7 +411,9 @@ class SuperconductingTFCoil(TFCoil):
                 / tfcoil_variables.c_tf_turn
             )
         elif tfcoil_variables.quench_model == "exponential":
-            superconducting_tf_coil_variables.tau2 = tfcoil_variables.t_tf_superconductor_quench
+            superconducting_tf_coil_variables.tau2 = (
+                tfcoil_variables.t_tf_superconductor_quench
+            )
             croco_voltage = (
                 2.0e0
                 / superconducting_tf_coil_variables.tau2
@@ -1472,8 +1476,8 @@ class SuperconductingTFCoil(TFCoil):
         po.ovarre(
             self.outfile,
             "Maximum winding pack current density for protection (A/m2)",
-            "(jwdgpro)",
-            tfcoil_variables.jwdgpro,
+            "(j_tf_wp_quench_heat_max)",
+            tfcoil_variables.j_tf_wp_quench_heat_max,
             "OP ",
         )
 

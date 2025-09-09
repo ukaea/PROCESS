@@ -209,7 +209,7 @@ class SuperconParam(NamedTuple):
 
     expected_temp_margin: Any = None
 
-    expected_jwdgpro: Any = None
+    expected_j_tf_wp_quench_heat_max: Any = None
 
     expected_j_tf_wp_critical: Any = None
 
@@ -273,7 +273,7 @@ class SuperconParam(NamedTuple):
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.864553846654988,
-            expected_jwdgpro=17213147.288375787,
+            expected_j_tf_wp_quench_heat_max=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=9988.2637896807955,
             expected_j_superconductor_critical=832616175.5329928,
@@ -322,7 +322,7 @@ class SuperconParam(NamedTuple):
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.864553846654988,
-            expected_jwdgpro=17213147.288375787,
+            expected_j_tf_wp_quench_heat_max=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=10001.287165953383,
             expected_j_superconductor_critical=832616175.5329928,

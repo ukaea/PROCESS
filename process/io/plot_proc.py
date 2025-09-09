@@ -6397,7 +6397,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
         f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
         f"User input max temperature \nduring quench: {mfile_data.data['temp_tf_conductor_quench_max'].get_scan(scan):.2f} K\n"
-        f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['jwdgpro'].get_scan(scan):.2e} A/m$^2$\n"
+        f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
     )
     axis.text(
         0.55,

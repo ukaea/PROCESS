@@ -3086,7 +3086,7 @@ class Stellarator:
 
         # comparison
         # the new quench protection routine, see #1047
-        tfcoil_variables.jwdgpro = self.j_max_protect_am2(
+        tfcoil_variables.j_tf_wp_quench_heat_max = self.j_max_protect_am2(
             tfcoil_variables.t_tf_superconductor_quench,
             0.0e0,
             tfcoil_variables.f_a_tf_turn_cable_copper,
@@ -3096,7 +3096,7 @@ class Stellarator:
             tfcoil_variables.t_turn_tf**2,
         )
 
-        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.t_tf_superconductor_quench: ",t_tf_superconductor_quench, " tfcoil_variables.f_a_tf_turn_cable_copper: ",f_a_tf_turn_cable_copper
+        # print *, "Jmax, comparison: ", j_tf_wp_quench_heat_max, "  ", jwdgpro2,"  ",j_tf_wp/j_tf_wp_quench_heat_max, "   , tfcoil_variables.t_tf_superconductor_quench: ",t_tf_superconductor_quench, " tfcoil_variables.f_a_tf_turn_cable_copper: ",f_a_tf_turn_cable_copper
         # print *, "a_tf_turn_cable_space_no_void: ", tfcoil_variables.a_tf_turn_cable_space_no_void
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
@@ -3815,8 +3815,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Max allowable current density as restricted by quench (A/m2)",
-            "(jwdgpro)",
-            tfcoil_variables.jwdgpro,
+            "(j_tf_wp_quench_heat_max)",
+            tfcoil_variables.j_tf_wp_quench_heat_max,
         )
         po.ovarre(
             self.outfile,

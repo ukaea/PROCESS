@@ -127,7 +127,9 @@ ITERATION_VARIABLES = {
     51: IterationVariable("fvdump", data_structure.constraint_variables, 0.001, 1.0),
     53: IterationVariable("fjprot", data_structure.constraint_variables, 0.001, 1.0),
     54: IterationVariable("ftmargtf", data_structure.constraint_variables, 0.001, 1.0),
-    56: IterationVariable("t_tf_superconductor_quench", data_structure.tfcoil_variables, 0.1, 100.0),
+    56: IterationVariable(
+        "t_tf_superconductor_quench", data_structure.tfcoil_variables, 0.1, 100.0
+    ),
     57: IterationVariable(
         "dr_tf_nose_case", data_structure.tfcoil_variables, 0.05, 1.0
     ),

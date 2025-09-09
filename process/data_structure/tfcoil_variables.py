@@ -415,7 +415,7 @@ j_tf_wp_critical: float = None
 """critical current density for winding pack (A/m2)"""
 
 
-jwdgpro: float = None
+j_tf_wp_quench_heat_max: float = None
 """allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)"""
 
 
@@ -1154,7 +1154,7 @@ def init_tfcoil_variables():
     global j_crit_str_tf
     global j_crit_str_0
     global j_tf_wp_critical
-    global jwdgpro
+    global j_tf_wp_quench_heat_max
     global j_tf_wp
     global oacdcp
     global eyoung_ins
@@ -1389,7 +1389,7 @@ def init_tfcoil_variables():
         865652122.9071957,
     ])
     j_tf_wp_critical = 0.0
-    jwdgpro = 0.0
+    j_tf_wp_quench_heat_max = 0.0
     j_tf_wp = 0.0
     oacdcp = 0.0
     eyoung_ins = 1.0e8
