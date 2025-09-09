@@ -114,19 +114,19 @@ def test_protect(protectparam, sctfcoil):
     """
 
     ajwpro, vd = sctfcoil.protect(
-        aio=protectparam.aio,
-        tfes=protectparam.tfes,
-        acs=protectparam.acs,
-        aturn=protectparam.aturn,
-        tdump=protectparam.tdump,
-        fcond=protectparam.fcond,
-        fcu=protectparam.fcu,
-        tba=protectparam.tba,
-        tmax=protectparam.tmax,
-        peak_field=protectparam.peak_field,
+        c_tf_turn=protectparam.aio,
+        e_tf_coil_magnetic_stored=protectparam.tfes,
+        a_tf_turn_cable_space=protectparam.acs,
+        a_tf_turn=protectparam.aturn,
+        t_tf_quench_dump=protectparam.tdump,
+        f_a_tf_turn_cable_space_conductor=protectparam.fcond,
+        f_a_tf_turn_cable_copper=protectparam.fcu,
+        temp_tf_coolant_peak_field=protectparam.tba,
+        temp_tf_conductor_quench_max=protectparam.tmax,
+        b_tf_inboard_peak=protectparam.peak_field,
         cu_rrr=protectparam.cu_rrr,
-        detection_time=protectparam.detection_time,
-        fluence=protectparam.fluence,
+        t_tf_quench_detection=protectparam.detection_time,
+        nflutfmax=protectparam.fluence,
     )
 
     assert ajwpro == pytest.approx(protectparam.expected_ajwpro)
@@ -415,7 +415,6 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     (
         j_tf_wp_critical,
-        vd,
         j_superconductor_critical,
         f_c_tf_turn_operating_critical,
         j_superconductor,
@@ -434,21 +433,14 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         f_strain_scale=superconparam.f_strain_scale,
         c_tf_turn=superconparam.c_tf_turn,
         j_tf_wp=superconparam.j_tf_wp,
-        t_tf_quench_dump=superconparam.t_tf_quench_dump,
-        e_tf_coil_magnetic_stored=superconparam.e_tf_coil_magnetic_stored,
         temp_tf_coolant_peak_field=superconparam.temp_tf_coolant_peak_field,
-        temp_tf_conductor_peak_quench=superconparam.temp_tf_conductor_peak_quench,
         bcritsc=superconparam.bcritsc,
         tcritsc=superconparam.tcritsc,
     )
 
     assert j_superconductor == pytest.approx(superconparam.expected_j_superconductor)
 
-    assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
-
     assert j_tf_wp_critical == pytest.approx(superconparam.expected_j_tf_wp_critical)
-
-    assert vd == pytest.approx(superconparam.expected_vd)
 
     assert j_superconductor_critical == pytest.approx(
         superconparam.expected_j_superconductor_critical
