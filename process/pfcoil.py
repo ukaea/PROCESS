@@ -1249,9 +1249,9 @@ class PFCoil:
             pfcoil_variables.a_cs_poloidal,
         ) = self.calculate_cs_geometry(
             z_tf_inside_half=bv.z_tf_inside_half,
-            f_z_cs_tf_internal=pv.f_z_cs_tf_internal,
+            f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
             dr_cs=bv.dr_cs,
-            r_cs_middle=bv.r_cs_middle,
+            r_cs_middle=pfcoil_variables.r_cs_middle,
         )
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
@@ -1354,7 +1354,7 @@ class PFCoil:
             pfcoil_variables.j_cs_flat_top_end,
             pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
             pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            hohc,
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
         )
 
         # Peak field due to other PF coils plus plasma
@@ -1373,7 +1373,7 @@ class PFCoil:
             pfcoil_variables.j_cs_pulse_start,
             pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
             pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            hohc,
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
         )
         timepoint = 2
         bri, bro, bzi, bzo = self.peakb(pfcoil_variables.n_cs_pf_coils, 99, timepoint)
@@ -1441,7 +1441,9 @@ class PFCoil:
             # its inside and outside edges; in reality, the steel is distributed
             # throughout the conductor
             pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = (
-                0.25e0 * areaspf / hohc
+                0.25e0
+                * areaspf
+                / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
         else:

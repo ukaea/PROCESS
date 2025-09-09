@@ -2080,3 +2080,30 @@ def test_brookscoil(pfcoil):
     # Self-inductance of 1m Brooks coil: PROCESS formula
 
     assert (l_self / l_self_p < 1.05e0) and (l_self / l_self_p > 0.95e0)
+
+
+@pytest.mark.parametrize(
+    "z_tf_inside_half, f_z_cs_tf_internal, dr_cs, r_cs_middle, expected",
+    [
+        # Typical values
+        (2.0, 0.5, 0.3, 1.5, (1.0, -1.0, 1.5, 0.0, 1.65, 1.35, 0.6)),
+        # Zero thickness
+        (2.0, 0.5, 0.0, 1.5, (1.0, -1.0, 1.5, 0.0, 1.5, 1.5, 0.0)),
+        # Zero fractional height
+        (2.0, 0.0, 0.3, 1.5, (0.0, -0.0, 1.5, 0.0, 1.65, 1.35, 0.0)),
+        # Negative thickness (should still compute)
+        (2.0, 0.5, -0.3, 1.5, (1.0, -1.0, 1.5, 0.0, 1.35, 1.65, -0.6)),
+        # Large values
+        (10.0, 0.8, 2.0, 5.0, (8.0, -8.0, 5.0, 0.0, 6.0, 4.0, 32.0)),
+    ],
+)
+def test_calculate_cs_geometry(
+    pfcoil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, r_cs_middle, expected
+):
+    result = pfcoil.calculate_cs_geometry(
+        z_tf_inside_half=z_tf_inside_half,
+        f_z_cs_tf_internal=f_z_cs_tf_internal,
+        dr_cs=dr_cs,
+        r_cs_middle=r_cs_middle,
+    )
+    assert pytest.approx(result) == expected
