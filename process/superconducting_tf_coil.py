@@ -4,6 +4,7 @@ import logging
 import numpy as np
 from scipy import optimize
 
+import process.quench as quench
 import process.superconductors as superconductors
 from process import constants
 from process import process_output as po
@@ -20,7 +21,6 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.quench import calculate_quench_protection_current_density
 from process.tf_coil import TFCoil
 
 logger = logging.getLogger(__name__)
@@ -1455,6 +1455,27 @@ class SuperconductingTFCoil(TFCoil):
             superconducting_tf_coil_variables.f_c_tf_turn_operating_critical,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "TF Superconductor quench dump time (s)",
+            "(tdmptf)",
+            tfcoil_variables.tdmptf,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "TF Superconductor quench detection time (s)",
+            "(t_tf_quench_detection)",
+            tfcoil_variables.t_tf_quench_detection,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Maximum winding pack current density for protection (A/m2)",
+            "(jwdgpro)",
+            tfcoil_variables.jwdgpro,
+            "OP ",
+        )
 
     def calculate_superconductor_temperature_margin(
         self,
@@ -1609,8 +1630,8 @@ class SuperconductingTFCoil(TFCoil):
         :type nflutfmax: float
 
         :returns:
-            - ajwpro (float): Winding pack current density from temperature rise protection (A/m²)
-            - vd (float): Discharge voltage imposed on a TF coil (V)
+            - j_tf_wp_quench_protection_max (float): Winding pack current density from temperature rise protection (A/m²)
+            - v_tf_dump_voltage_peak (float): Discharge voltage imposed on a TF coil (V)
         :rtype: tuple[float, float]
 
         :references:
@@ -1618,12 +1639,16 @@ class SuperconductingTFCoil(TFCoil):
         doi: https://doi.org/10.48550/arxiv.1401.3927.
         """
 
-        #  Dump voltage
-        vd = 2.0e0 * e_tf_coil_magnetic_stored / (t_tf_quench_dump * c_tf_turn)
-        ajwpro = (
+        #  Peak Dump voltage
+        v_tf_dump_voltage_peak = (
+            2.0e0 * e_tf_coil_magnetic_stored / (t_tf_quench_dump * c_tf_turn)
+        )
+
+        # Winding pack current density from temperature rise protection
+        j_tf_wp_quench_protection_max = (
             a_tf_turn_cable_space
             / a_tf_turn
-            * calculate_quench_protection_current_density(
+            * quench.calculate_quench_protection_current_density(
                 t_tf_quench_dump,
                 b_tf_inboard_peak,
                 f_a_tf_turn_cable_copper,
@@ -1636,7 +1661,7 @@ class SuperconductingTFCoil(TFCoil):
             )
         )
 
-        return ajwpro, vd
+        return j_tf_wp_quench_protection_max, v_tf_dump_voltage_peak
 
     def vv_stress_on_quench(self):
         """Calculate the Tresca stress [Pa] of the Vacuum Vessel (VV)
