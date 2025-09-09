@@ -15,11 +15,9 @@ from pyvmcon import (
 )
 from scipy.optimize import fsolve
 
-from process.data_structure import global_variables
+from process.data_structure import global_variables, numerics
 from process.evaluators import Evaluators
 from process.exceptions import ProcessValueError
-from process.fortran import numerics
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -82,8 +80,8 @@ class _Solver(ABC):
         # If lower and upper bounds switch arrays aren't specified, set all bounds
         # to defined
         if ilower is None and iupper is None:
-            ilower = np.ones(bndl.shape[0], dtype=int)
-            iupper = np.ones(bndu.shape[0], dtype=int)
+            ilower = np.ones(len(bndl), dtype=int)
+            iupper = np.ones(len(bndu), dtype=int)
 
         self.ilower = ilower
         self.iupper = iupper
@@ -212,9 +210,9 @@ class Vmcon(_Solver):
         try:
             x, _, _, res = solve(
                 problem,
-                self.x_0,
-                self.bndl,
-                self.bndu,
+                np.array(self.x_0),
+                np.array(self.bndl),
+                np.array(self.bndu),
                 max_iter=global_variables.maxcal,
                 epsilon=self.tolerance,
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
@@ -238,7 +236,7 @@ class Vmcon(_Solver):
         except ValueError as e:
             itervar_name_list = ""
             for count, iter_var in enumerate(numerics.ixc[: numerics.nvar]):
-                itervar_name = f2py_compatible_to_string(numerics.lablxc[iter_var - 1])
+                itervar_name = numerics.lablxc[iter_var - 1]
                 itervar_name_list += f"{count}: {itervar_name} \n"
 
             logger.warning(f"Active iteration variables are : \n{itervar_name_list}")

@@ -4,7 +4,6 @@ import pytest
 import process.data_structure as data_structure
 import process.init as init
 import process.input as process_input
-from process import fortran
 from process.exceptions import ProcessValidationError
 
 
@@ -64,7 +63,7 @@ def test_parse_real(epsvmc, expected, tmp_path):
     )
     init.init_process()
 
-    assert fortran.numerics.epsvmc == expected
+    assert data_structure.numerics.epsvmc == expected
 
 
 @pytest.mark.parametrize(
@@ -89,7 +88,7 @@ def test_exact_parsing(value, tmp_path):
     )
     init.init_process()
 
-    assert fortran.numerics.epsvmc == value
+    assert data_structure.numerics.epsvmc == value
 
 
 def test_parse_input(tmp_path):
@@ -100,9 +99,9 @@ def test_parse_input(tmp_path):
     init.init_process()
 
     assert data_structure.global_variables.runtitle == "my run title"
-    assert fortran.numerics.ioptimz == -2
-    assert pytest.approx(fortran.numerics.epsvmc) == 0.6
-    assert pytest.approx(fortran.numerics.boundl[0]) == 0.5
+    assert data_structure.numerics.ioptimz == -2
+    assert pytest.approx(data_structure.numerics.epsvmc) == 0.6
+    assert pytest.approx(data_structure.numerics.boundl[0]) == 0.5
 
 
 def test_input_choices(tmp_path):
@@ -163,5 +162,5 @@ def test_input_array(tmp_path):
 
     init.init_process()
     np.testing.assert_array_equal(
-        fortran.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
+        data_structure.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
     )
