@@ -288,13 +288,13 @@ class PFCoil:
                     pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
                         pv.rminor * pfcoil_variables.zref[group] * signn[coil]
                     )
-                    # Coil radius follows TF coil curve for SC TF (D-shape)
-                    # otherwise stacked for resistive TF (rectangle-shape)
-                    if tfv.i_tf_sup != 1 or pfcoil_variables.i_r_pf_outside_tf_placement == 1:
+                    # Coil radius is constant / stacked for picture frame TF or if placement switch is set
+                    if tfv.i_tf_shape == 2 or pfcoil_variables.i_r_pf_outside_tf_placement == 1:
                         pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
                             pfcoil_variables.r_pf_outside_tf_midplane
                         )
                     else:
+                        # Coil radius follows TF coil curve for TF (D-shape)
                         pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
                             math.sqrt(
                                 pfcoil_variables.r_pf_outside_tf_midplane**2
