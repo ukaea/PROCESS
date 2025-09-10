@@ -3029,23 +3029,31 @@ class Stellarator:
         #######################################################################################
         # Quench protection:
         #
-        # This is incorrect for stellartors...
-        # # This copied from the tokamak module:
-        # # Radial position of vacuum vessel [m]
-        # radvv = (
-        #     physics_variables.rmajor
-        #     - physics_variables.rminor
-        #     - build_variables.dr_fw_plasma_gap_inboard
-        #     - build_variables.dr_fw_inboard
-        #     - build_variables.dr_blkt_inboard
-        #     - build_variables.dr_shld_blkt_gap
-        #     - build_variables.dr_shld_inboard
-        # )
+        # This copied from the tokamak module:
+        # Radial position of vacuum vessel [m]
+        rad_vv_in = (
+            physics_variables.rmajor
+            - physics_variables.rminor
+            - build_variables.dr_fw_plasma_gap_inboard
+            - build_variables.dr_fw_inboard
+            - build_variables.dr_blkt_inboard
+            - build_variables.dr_shld_blkt_gap
+            - build_variables.dr_shld_inboard
+        )
+        rad_vv_out = (
+            physics_variables.rmajor
+            + physics_variables.rminor
+            + build_variables.dr_fw_plasma_gap_outboard
+            + build_variables.dr_fw_outboard
+            + build_variables.dr_blkt_outboard
+            + build_variables.dr_shld_blkt_gap
+            + build_variables.dr_shld_outboard
+        )
 
         # Stellarator version is working on the W7-X scaling, so we should use actual vv r_major
         # plasma r_major is just an approximation, but exact calculations require 3D geometry
         # Maybe it can be added to the stella_config file in the future
-        radvv = physics_variables.rmajor
+        rad_vv = physics_variables.rmajor
 
         # Actual VV force density
         # Based on reference values from W-7X:
@@ -3072,20 +3080,28 @@ class Stellarator:
                     (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
                     / 2
                     * tfcoil_variables.tdmptf
-                    * radvv
+                    * rad_vv
                 )
             )
             ** (-1)
         )
 
+
+        # This is not correct - it gives pressure on the vv wall, not stress
         # N/m^2
         # is the vv width the correct length to multiply by to turn the
         # force density into a stress?
-        sctfcoil_module.vv_stress_quench = (
-            f_vv_actual
-            * 1e6
-            * ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
-        )
+        # sctfcoil_module.vv_stress_quench = (
+        #     f_vv_actual
+        #     * 1e6
+        #     * ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
+        # )
+
+        # This approach merge stress model from tokamaks with induced force calculated from W7-X scaling
+        a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
+        zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
+
+        sctfcoil_module.vv_stress_quench =  zeta * f_vv_actual * rad_vv_in
 
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
