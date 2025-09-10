@@ -113,20 +113,20 @@ def test_protect(protectparam, sctfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    ajwpro, vd = sctfcoil.protect(
-        aio=protectparam.aio,
-        tfes=protectparam.tfes,
-        acs=protectparam.acs,
-        aturn=protectparam.aturn,
-        tdump=protectparam.tdump,
-        fcond=protectparam.fcond,
-        fcu=protectparam.fcu,
-        tba=protectparam.tba,
-        tmax=protectparam.tmax,
-        peak_field=protectparam.peak_field,
+    ajwpro, vd = sctfcoil.quench_heat_protection_current_density(
+        c_tf_turn=protectparam.aio,
+        e_tf_coil_magnetic_stored=protectparam.tfes,
+        a_tf_turn_cable_space=protectparam.acs,
+        a_tf_turn=protectparam.aturn,
+        t_tf_quench_dump=protectparam.tdump,
+        f_a_tf_turn_cable_space_conductor=protectparam.fcond,
+        f_a_tf_turn_cable_copper=protectparam.fcu,
+        temp_tf_coolant_peak_field=protectparam.tba,
+        temp_tf_conductor_quench_max=protectparam.tmax,
+        b_tf_inboard_peak=protectparam.peak_field,
         cu_rrr=protectparam.cu_rrr,
-        detection_time=protectparam.detection_time,
-        fluence=protectparam.fluence,
+        t_tf_quench_detection=protectparam.detection_time,
+        nflutfmax=protectparam.fluence,
     )
 
     assert ajwpro == pytest.approx(protectparam.expected_ajwpro)
@@ -209,7 +209,7 @@ class SuperconParam(NamedTuple):
 
     expected_temp_margin: Any = None
 
-    expected_jwdgpro: Any = None
+    expected_j_tf_wp_quench_heat_max: Any = None
 
     expected_j_tf_wp_critical: Any = None
 
@@ -273,7 +273,7 @@ class SuperconParam(NamedTuple):
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.864553846654988,
-            expected_jwdgpro=17213147.288375787,
+            expected_j_tf_wp_quench_heat_max=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=9988.2637896807955,
             expected_j_superconductor_critical=832616175.5329928,
@@ -322,7 +322,7 @@ class SuperconParam(NamedTuple):
             bcritsc=24,
             tcritsc=16,
             expected_temp_margin=2.864553846654988,
-            expected_jwdgpro=17213147.288375787,
+            expected_j_tf_wp_quench_heat_max=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=10001.287165953383,
             expected_j_superconductor_critical=832616175.5329928,
@@ -415,7 +415,6 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
 
     (
         j_tf_wp_critical,
-        vd,
         j_superconductor_critical,
         f_c_tf_turn_operating_critical,
         j_superconductor,
@@ -434,21 +433,14 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         f_strain_scale=superconparam.f_strain_scale,
         c_tf_turn=superconparam.c_tf_turn,
         j_tf_wp=superconparam.j_tf_wp,
-        t_tf_quench_dump=superconparam.t_tf_quench_dump,
-        e_tf_coil_magnetic_stored=superconparam.e_tf_coil_magnetic_stored,
         temp_tf_coolant_peak_field=superconparam.temp_tf_coolant_peak_field,
-        temp_tf_conductor_peak_quench=superconparam.temp_tf_conductor_peak_quench,
         bcritsc=superconparam.bcritsc,
         tcritsc=superconparam.tcritsc,
     )
 
     assert j_superconductor == pytest.approx(superconparam.expected_j_superconductor)
 
-    assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
-
     assert j_tf_wp_critical == pytest.approx(superconparam.expected_j_tf_wp_critical)
-
-    assert vd == pytest.approx(superconparam.expected_vd)
 
     assert j_superconductor_critical == pytest.approx(
         superconparam.expected_j_superconductor_critical
@@ -1668,7 +1660,7 @@ def test_vv_stress_on_quench_integration(sctfcoil, monkeypatch):
     )  # chosen to achieve Rm_coil in Table 2
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", 18)  # Section 3
     monkeypatch.setattr(tfcoil_variables, "n_tf_coil_turns", 192)  # Section 3
-    monkeypatch.setattr(tfcoil_variables, "tdmptf", 30)  # Figure 6
+    monkeypatch.setattr(tfcoil_variables, "t_tf_superconductor_quench", 30)  # Figure 6
     monkeypatch.setattr(
         superconducting_tf_coil_variables, "c_tf_coil", 83200 * 192
     )  # Section 3

@@ -18,7 +18,7 @@ Constraint 65 implements this model, by applying a maximum permitted stress in t
 Example output:  
 ```
 Minimum allowed quench time due to stress in VV (s)                      (taucq)                   2.831E+01  OP 
-Actual quench time (or time constant) (s)                                (tdmptf)                  2.840E+01  ITV
+Actual quench time (or time constant) (s)                                (t_tf_superconductor_quench)                  2.840E+01  ITV
 Vacuum Vessel stress on quench (Pa)                                      (vv_stress_quench)        4.589E+07  OP 
 ```
 In this example the stress is much smaller than the permissible value, so the constraint is satisfied but has no effect on the design.

@@ -1762,8 +1762,8 @@ class TFCoil:
             po.ovarre(
                 self.outfile,
                 "Actual quench time (or time constant) (s)",
-                "(tdmptf)",
-                tfcoil_variables.tdmptf,
+                "(t_tf_superconductor_quench)",
+                tfcoil_variables.t_tf_superconductor_quench,
             )
             po.ovarre(
                 self.outfile,
@@ -1789,9 +1789,9 @@ class TFCoil:
             if tfcoil_variables.i_tf_sc_mat in (1, 2, 3, 4, 5):
                 po.ovarre(
                     self.outfile,
-                    "Maximum allowed temp rise during a quench (K)",
-                    "(tmaxpro)",
-                    tfcoil_variables.tmaxpro,
+                    "Maximum allowed temp during a quench (K)",
+                    "(temp_tf_conductor_quench_max)",
+                    tfcoil_variables.temp_tf_conductor_quench_max,
                 )
             elif tfcoil_variables == 6:
                 po.ocmmnt(self.outfile, "CroCo cable with jacket: ")

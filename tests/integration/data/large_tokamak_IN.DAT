@@ -235,9 +235,9 @@ dr_bore = 2.0
 ixc = 44
 f_c_plasma_non_inductive = 0.4
 
-* tdmptf [s]
+* t_tf_superconductor_quench [s]
 ixc = 56
-tdmptf = 25.0
+t_tf_superconductor_quench = 25.0
 
 * dr_tf_nose_case [m]
 ixc = 57

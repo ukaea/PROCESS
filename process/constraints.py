@@ -1113,17 +1113,17 @@ def constraint_equation_35():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fjprot: f-value for TF coil winding pack current density
-    jwdgpro: allowable TF coil winding pack current density, for dump temperature
+    j_tf_wp_quench_heat_max: allowable TF coil winding pack current density, for dump temperature
     rise protection (A/m2)
     j_tf_wp: winding pack current density (A/m2)
     """
     return ConstraintResult(
         data_structure.tfcoil_variables.j_tf_wp
-        / data_structure.tfcoil_variables.jwdgpro
+        / data_structure.tfcoil_variables.j_tf_wp_quench_heat_max
         - 1.0 * data_structure.constraint_variables.fjprot,
-        data_structure.tfcoil_variables.jwdgpro,
+        data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
         data_structure.tfcoil_variables.j_tf_wp
-        - data_structure.tfcoil_variables.jwdgpro,
+        - data_structure.tfcoil_variables.j_tf_wp_quench_heat_max,
     )
 
 

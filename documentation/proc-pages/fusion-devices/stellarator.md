@@ -228,7 +228,7 @@ temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 f_a_tf_turn_cable_space_extra_void = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
 fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 v_tf_coil_dump_quench_max_kv = 12.64 * Max voltage across tf coil during quench (kV)
-tdmptf = 20 * Dump time (should be iteration variable)
+t_tf_superconductor_quench = 20 * Dump time (should be iteration variable)
 dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)
 t_turn_tf = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
 dx_tf_turn_insulation = 0.0015 * Conduit insulation thickness (one side) (m)
