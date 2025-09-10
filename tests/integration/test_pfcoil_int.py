@@ -404,7 +404,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         (10, 2),
         order="F",
     )
-    zcls = np.reshape(
+    z_pf_coil_middle_group_array = np.reshape(
         [
             9.8904697261474404,
             -11.124884737289973,
@@ -448,7 +448,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         n_pf_coil_groups,
         n_pf_coils_in_group,
         r_pf_coil_middle_group_array,
-        zcls,
+        z_pf_coil_middle_group_array,
         alfa,
         bfix,
         gmat,
@@ -545,7 +545,7 @@ def test_mtrx(pfcoil: PFCoil):
         (10, 2),
         order="F",
     )
-    zcls = np.reshape(
+    z_pf_coil_middle_group_array = np.reshape(
         [
             0,
             0,
@@ -660,7 +660,7 @@ def test_mtrx(pfcoil: PFCoil):
         n_pf_coil_groups,
         n_pf_coils_in_group,
         r_pf_coil_middle_group_array,
-        zcls,
+        z_pf_coil_middle_group_array,
         alfa,
         bfix,
         int(pfcoil_variables.N_PF_COILS_IN_GROUP_MAX),

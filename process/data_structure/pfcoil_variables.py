@@ -45,7 +45,7 @@ xind: list[float] = None
 
 r_pf_coil_middle_group_array: list[float] = None
 
-zcls: list[float] = None
+z_pf_coil_middle_group_array: list[float] = None
 
 ccls: list[float] = None
 
@@ -572,7 +572,7 @@ def init_pfcoil_module():
     global cfxf
     global xind
     global r_pf_coil_middle_group_array
-    global zcls
+    global z_pf_coil_middle_group_array
     global ccls
     global ccl0
     global bpf2
@@ -593,7 +593,7 @@ def init_pfcoil_module():
     cfxf = np.zeros(NFIXMX)
     xind = np.zeros(NFIXMX)
     r_pf_coil_middle_group_array = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
-    zcls = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
+    z_pf_coil_middle_group_array = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
     ccls = np.zeros(N_PF_GROUPS_MAX)
     ccl0 = np.zeros(N_PF_GROUPS_MAX)
     bpf2 = np.zeros(NGC2)
