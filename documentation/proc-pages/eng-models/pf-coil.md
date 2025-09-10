@@ -25,7 +25,7 @@ values for `dr_pf_cs_middle_offset`, `rpf2`, `zref(j)` and `dr_pf_tf_outboard_ou
 coils accurately.
 
 The three possible values of `i_pf_location(j)` correspond to the following PF coil positions: (Redo taking 
-into account `i_single_null` and other recent changes e.g. rclsnorm)
+into account `i_single_null` and other recent changes e.g. r_pf_outside_tf_midplane)
 
 `i_pf_location(j)` = 1: PF coils are placed above the central solenoid (one group only);
 *R* = `r_cs_middle` + `dr_pf_cs_middle_offset`<br>

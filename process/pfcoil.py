@@ -212,7 +212,7 @@ class PFCoil:
         # Scale PF coil locations
         signn[0] = 1.0e0
         signn[1] = -1.0e0
-        pfcoil_variables.rclsnorm = (
+        pfcoil_variables.r_pf_outside_tf_midplane = (
             superconducting_tf_coil_variables.r_tf_outboard_out
             + pfcoil_variables.dr_pf_tf_outboard_out_offset
         )
@@ -278,12 +278,12 @@ class PFCoil:
                     # otherwise stacked for resistive TF (rectangle-shape)
                     if tfv.i_tf_sup != 1 or pfcoil_variables.i_sup_pf_shape == 1:
                         pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
-                            pfcoil_variables.rclsnorm
+                            pfcoil_variables.r_pf_outside_tf_midplane
                         )
                     else:
                         pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
                             math.sqrt(
-                                pfcoil_variables.rclsnorm**2
+                                pfcoil_variables.r_pf_outside_tf_midplane**2
                                 - pfcoil_variables.z_pf_coil_middle_group_array[
                                     group, coil
                                 ]
@@ -1250,7 +1250,7 @@ class PFCoil:
                         if pfcoil_variables.r_pf_coil_middle_group_array[
                             ii, ij
                         ] <= (  # Outboard TF coil collision
-                            pfcoil_variables.rclsnorm
+                            pfcoil_variables.r_pf_outside_tf_midplane
                             - pfcoil_variables.dr_pf_tf_outboard_out_offset
                             + pfcoil_variables.r_pf_coil_middle[i]
                         ) and pfcoil_variables.r_pf_coil_middle_group_array[ii, ij] >= (
