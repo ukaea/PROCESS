@@ -245,9 +245,8 @@ center (equilibrium coils)
 """
 
 
-i_sup_pf_shape: int = None
+i_r_pf_outside_tf_placement: int = None
 """Switch for the placement of Location 3 (outboard) PF coils
-when the TF coils are superconducting (i_tf_sup = 1)
 - =0 (Default) Outboard PF coils follow TF shape
 in an ellipsoidal winding surface
 - =1 Outboard PF coils all have same radius, cylindrical
@@ -634,7 +633,7 @@ def init_pfcoil_variables():
     global j_crit_str_cs
     global j_crit_str_pf
     global i_pf_current
-    global i_sup_pf_shape
+    global i_r_pf_outside_tf_placement
     global j_cs_conductor_critical_pulse_start
     global j_cs_conductor_critical_flat_top_end
     global jcableoh_bop
@@ -736,7 +735,7 @@ def init_pfcoil_variables():
     j_crit_str_cs = 0.0
     j_crit_str_pf = 0.0
     i_pf_current = 1
-    i_sup_pf_shape = 0
+    i_r_pf_outside_tf_placement = 0
     j_cs_conductor_critical_pulse_start = 0.0
     j_cs_conductor_critical_flat_top_end = 0.0
     jcableoh_bop = 0.0

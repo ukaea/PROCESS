@@ -122,7 +122,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "fcupfsu", 6.900e-1)
     monkeypatch.setattr(pfcoil_variables, "j_cs_pulse_start", 1.693e7)
     monkeypatch.setattr(pfcoil_variables, "j_pf_wp_critical", np.full(22, 0.0))
-    monkeypatch.setattr(pfcoil_variables, "i_sup_pf_shape", 0)
+    monkeypatch.setattr(pfcoil_variables, "i_r_pf_outside_tf_placement", 0)
     monkeypatch.setattr(pfcoil_variables, "rref", np.full(10, 7.0))
     monkeypatch.setattr(pfcoil_variables, "i_pf_current", 1)
     monkeypatch.setattr(pfcoil_variables, "ccl0_ma", np.full(10, 0.0))

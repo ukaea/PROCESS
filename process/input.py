@@ -2061,7 +2061,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, choices=[0, 1]
     ),
     "i_str_wp": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
-    "i_sup_pf_shape": InputVariable(
+    "i_r_pf_outside_tf_placement": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1]
     ),
     "i_tf_bucking": InputVariable(data_structure.tfcoil_variables, int, range=(0, 3)),

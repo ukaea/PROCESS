@@ -290,7 +290,7 @@ class PFCoil:
                     )
                     # Coil radius follows TF coil curve for SC TF (D-shape)
                     # otherwise stacked for resistive TF (rectangle-shape)
-                    if tfv.i_tf_sup != 1 or pfcoil_variables.i_sup_pf_shape == 1:
+                    if tfv.i_tf_sup != 1 or pfcoil_variables.i_r_pf_outside_tf_placement == 1:
                         pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
                             pfcoil_variables.r_pf_outside_tf_midplane
                         )
@@ -1106,11 +1106,11 @@ class PFCoil:
 
         # Initialise as empty arrays; will be resized in the loop
         r_pf_coil_middle_group_array = np.zeros((
-            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.n_pf_coil_groups,
             pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
         z_pf_coil_middle_group_array = np.zeros((
-            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.n_pf_coil_groups,
             pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
 
@@ -1183,11 +1183,11 @@ class PFCoil:
         """
         # Initialise as empty arrays; will be resized in the loop
         r_pf_coil_middle_group_array = np.zeros((
-            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.n_pf_coil_groups,
             pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
         z_pf_coil_middle_group_array = np.zeros((
-            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.n_pf_coil_groups,
             pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
 
