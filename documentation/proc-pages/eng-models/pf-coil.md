@@ -21,14 +21,14 @@ and `n_pf_coils_in_group(j)` should be assigned the number of coils in each grou
 </figure>
 
 In the following, all variables are defined in the variable descriptor file `vardes.html`. The 
-values for `rpf1`, `rpf2`, `zref(j)` and `routr` should be adjusted by the user to locate the PF 
+values for `dr_pf_cs_middle_offset`, `rpf2`, `zref(j)` and `routr` should be adjusted by the user to locate the PF 
 coils accurately.
 
 The three possible values of `i_pf_location(j)` correspond to the following PF coil positions: (Redo taking 
 into account `i_single_null` and other recent changes e.g. rclsnorm)
 
 `i_pf_location(j)` = 1: PF coils are placed above the central solenoid (one group only);
-*R* = `r_cs_middle` + `rpf1`<br>
+*R* = `r_cs_middle` + `dr_pf_cs_middle_offset`<br>
 *Z* = $\pm$(`z_tf_inside_half` * `f_z_cs_tf_internal` + 0.1 + 0.5 * (`z_tf_inside_half` * (1 - `f_z_cs_tf_internal`) + `dr_tf_inboard` + 0.1))
 
 `i_pf_location(j)` = 2: PF coils are placed above the TF coils (one group only);<br>

@@ -1492,7 +1492,9 @@ INPUT_VARIABLES = {
     ),
     "routr": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
     "row": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "rpf1": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 3.0)),
+    "dr_pf_cs_middle_offset": InputVariable(
+        data_structure.pfcoil_variables, float, range=(0.0, 3.0)
+    ),
     "rpf2": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
     "rrin": InputVariable(data_structure.ife_variables, float, range=(0.1, 50.0)),
     "rrmax": InputVariable(data_structure.ife_variables, float, range=(1.0, 50.0)),

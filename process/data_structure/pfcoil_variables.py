@@ -387,7 +387,7 @@ r_pf_coil_middle: list[float] = None
 """radius of PF coil i (m)"""
 
 
-rpf1: float = None
+dr_pf_cs_middle_offset: float = None
 """offset (m) of radial position of `i_pf_location=1` PF coils from being directly above
 the central solenoid
 """
@@ -666,7 +666,7 @@ def init_pfcoil_variables():
     global dz_cs_full
     global routr
     global r_pf_coil_middle
-    global rpf1
+    global dr_pf_cs_middle_offset
     global rpf2
     global rref
     global s_shear_cs_peak
@@ -768,7 +768,7 @@ def init_pfcoil_variables():
     dz_cs_full = 0.0
     routr = 1.5
     r_pf_coil_middle = np.zeros(NGC2)
-    rpf1 = 0.0
+    dr_pf_cs_middle_offset = 0.0
     rpf2 = -1.63
     rref = np.full(N_PF_GROUPS_MAX, 7.0)
     s_shear_cs_peak = 0.0

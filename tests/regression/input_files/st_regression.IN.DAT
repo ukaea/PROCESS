@@ -1879,7 +1879,7 @@ i_sup_pf_shape = 1
 * (default = 1.5) 
 * JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
-*rpf1 =  
+*dr_pf_cs_middle_offset =  
 * DESCRIPTION:  offset (m) of radial position of i_pf_location=1 PF coils from being directly above
 * the central solenoid
 * JUSTIFICATION: Not used, no i_pf_location = 1 coils
