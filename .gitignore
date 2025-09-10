@@ -46,7 +46,7 @@ process/io/python_fortran_dicts.json
 fortran.py
 .coverage
 dist/*
-documentation/proc-pages/io/vardes.md
+documentation/io/vardes.md
 lcov_results/
 env/
 .venv

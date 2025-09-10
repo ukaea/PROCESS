@@ -1,6 +1,6 @@
 ---
 site_name: PROCESS
-docs_dir: documentation/proc-pages/
+docs_dir: documentation/
 nav:
   - Getting Started:
       - About: index.md
