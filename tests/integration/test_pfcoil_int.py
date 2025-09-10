@@ -55,7 +55,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(bv, "r_tf_outboard_mid", 1.66e1)
     monkeypatch.setattr(bv, "dr_bore", 2.15)
     monkeypatch.setattr(fwbsv, "den_steel", 7.8e3)
-    monkeypatch.setattr(pfcoil_variables, "rpf1", 0.0)
+    monkeypatch.setattr(pfcoil_variables, "dr_pf_cs_middle_offset", 0.0)
     monkeypatch.setattr(pfcoil_variables, "m_pf_coil_structure_total", 0.0)
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coil_flat_top_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 0)
