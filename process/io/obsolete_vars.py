@@ -422,6 +422,8 @@ OBS_VARS = {
     "ntype": "i_vacuum_pump_type",
     "vacuum_model": "i_vacuum_pumping",
     "fcutfsu": "f_a_tf_turn_cable_copper",
+    "tdmptf": "t_tf_superconductor_quench",
+    "tmaxpro": "temp_tf_conductor_quench_max",
 }
 
 OBS_VARS_HELP = {
