@@ -113,7 +113,7 @@ def test_protect(protectparam, sctfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    ajwpro, vd = sctfcoil.protect(
+    ajwpro, vd = sctfcoil.quench_heat_protection_current_density(
         c_tf_turn=protectparam.aio,
         e_tf_coil_magnetic_stored=protectparam.tfes,
         a_tf_turn_cable_space=protectparam.acs,

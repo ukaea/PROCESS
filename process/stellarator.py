@@ -3072,9 +3072,6 @@ class Stellarator:
         )
 
         # the conductor fraction is meant of the cable space#
-        # This is the old routine which is being replaced for now by the new one below
-        #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,t_tf_superconductor_quench,1-f_a_tf_turn_cable_space_extra_void,f_a_tf_turn_cable_copper,tftmp,temp_tf_conductor_quench_max,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.e_tf_magnetic_stored_total_gj

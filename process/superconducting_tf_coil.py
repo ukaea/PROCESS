@@ -372,25 +372,27 @@ class SuperconductingTFCoil(TFCoil):
             )
             # Find the current density limited by the protection limit
             # At present only valid for LTS windings (Nb3Sn properties assumed)
-        tfcoil_variables.j_tf_wp_quench_heat_max, vd = self.protect(
-            c_tf_turn=tfcoil_variables.c_tf_turn,
-            e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
-            a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
-            a_tf_turn=a_tf_turn,
-            t_tf_quench_dump=tfcoil_variables.t_tf_superconductor_quench,
-            f_a_tf_turn_cable_space_conductor=1.0e0
-            - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
-            f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
-            temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
-            temp_tf_conductor_quench_max=tfcoil_variables.temp_tf_conductor_quench_max,
-            b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
-            cu_rrr=tfcoil_variables.rrr_tf_cu,
-            t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
-            nflutfmax=constraint_variables.nflutfmax,
+        tfcoil_variables.j_tf_wp_quench_heat_max, v_tf_coil_dump_quench = (
+            self.quench_heat_protection_current_density(
+                c_tf_turn=tfcoil_variables.c_tf_turn,
+                e_tf_coil_magnetic_stored=tfcoil_variables.e_tf_coil_magnetic_stored,
+                a_tf_turn_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
+                a_tf_turn=a_tf_turn,
+                t_tf_quench_dump=tfcoil_variables.t_tf_superconductor_quench,
+                f_a_tf_turn_cable_space_conductor=1.0e0
+                - superconducting_tf_coil_variables.f_a_tf_turn_cable_space_cooling,
+                f_a_tf_turn_cable_copper=tfcoil_variables.f_a_tf_turn_cable_copper,
+                temp_tf_coolant_peak_field=tfcoil_variables.tftmp,
+                temp_tf_conductor_quench_max=tfcoil_variables.temp_tf_conductor_quench_max,
+                b_tf_inboard_peak=tfcoil_variables.b_tf_inboard_peak_with_ripple,
+                cu_rrr=tfcoil_variables.rrr_tf_cu,
+                t_tf_quench_detection=tfcoil_variables.t_tf_quench_detection,
+                nflutfmax=constraint_variables.nflutfmax,
+            )
         )
 
         tfcoil_variables.v_tf_coil_dump_quench_kv = (
-            vd / 1.0e3
+            v_tf_coil_dump_quench / 1.0e3
         )  # TFC Quench voltage in kV
 
         if output:
@@ -1586,7 +1588,7 @@ class SuperconductingTFCoil(TFCoil):
 
         return temp_tf_superconductor_margin
 
-    def protect(
+    def quench_heat_protection_current_density(
         self,
         c_tf_turn: float,
         e_tf_coil_magnetic_stored: float,
