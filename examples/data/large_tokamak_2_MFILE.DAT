@@ -131,9 +131,9 @@
  f_c_plasma_non_inductive________________________________________________________________ (itvar036)____________________      4.3358E-01    
  f_c_plasma_non_inductive_(final_value/initial_value)____________________________________ (xcm036)______________________      1.0839E+00    
  f_c_plasma_non_inductive_(range_normalised)_____________________________________________ (nitvar036)___________________      4.3301E-01    
- tdmptf__________________________________________________________________ (itvar037)____________________      1.8429E+01    
- tdmptf_(final_value/initial_value)______________________________________ (xcm037)______________________      7.3716E-01    
- tdmptf_(range_normalised)_______________________________________________ (nitvar037)___________________      1.8347E-01    
+ t_tf_superconductor_quench__________________________________________________________________ (itvar037)____________________      1.8429E+01    
+ t_tf_superconductor_quench_(final_value/initial_value)______________________________________ (xcm037)______________________      7.3716E-01    
+ t_tf_superconductor_quench_(range_normalised)_______________________________________________ (nitvar037)___________________      1.8347E-01    
  thkcas__________________________________________________________________ (itvar038)____________________      2.8216E-01    
  thkcas_(final_value/initial_value)______________________________________ (xcm038)______________________      5.6431E-01    
  thkcas_(range_normalised)_______________________________________________ (nitvar038)___________________      2.4437E-01    
@@ -744,11 +744,11 @@
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      8.0590E+07 OP 
  Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple_b_tf_plasma_edge)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.8429E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.8429E+01 ITV
  Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.1442E+07 OP 
  Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.5837E+00 ITV
  Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.1862E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              1    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
@@ -1430,9 +1430,9 @@ dr_bore = 2.0
 ixc = 44
 f_c_plasma_non_inductive = 0.4
 
-* tdmptf [s]
+* t_tf_superconductor_quench [s]
 ixc = 56
-tdmptf = 25.0
+t_tf_superconductor_quench = 25.0
 
 * dr_tf_nose_case [m]
 ixc = 57

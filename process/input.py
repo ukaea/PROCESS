@@ -1660,7 +1660,9 @@ INPUT_VARIABLES = {
     ),
     "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
     "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
-    "tdmptf": InputVariable(data_structure.tfcoil_variables, float, range=(0.1, 100.0)),
+    "t_tf_superconductor_quench": InputVariable(
+        data_structure.tfcoil_variables, float, range=(0.1, 100.0)
+    ),
     "te": InputVariable(data_structure.physics_variables, float, range=(1.0, 200.0)),
     "te0_ecrh_achievable": InputVariable(
         data_structure.stellarator_variables, float, range=(1.0, 1000.0)
@@ -1727,7 +1729,7 @@ INPUT_VARIABLES = {
     "temp_croco_quench_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(4.0, 1000.0)
     ),
-    "tmaxpro": InputVariable(
+    "temp_tf_conductor_quench_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1000.0)
     ),
     "temp_tf_cryo": InputVariable(

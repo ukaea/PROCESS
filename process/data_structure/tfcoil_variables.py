@@ -415,7 +415,7 @@ j_tf_wp_critical: float = None
 """critical current density for winding pack (A/m2)"""
 
 
-jwdgpro: float = None
+j_tf_wp_quench_heat_max: float = None
 """allowable TF coil winding pack current density, for dump temperature rise protection (A/m2)"""
 
 
@@ -616,7 +616,7 @@ tcritsc: float = None
 """critical temperature (K) for superconductor at zero field and strain (`i_tf_sc_mat=4, =tc0m`)"""
 
 
-tdmptf: float = None
+t_tf_superconductor_quench: float = None
 """fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 For REBCO model, meaning depends on quench_model:
 - exponential quench : e-folding time (s)`
@@ -814,8 +814,8 @@ temp_tf_superconductor_margin: float = None
 """TF coil superconductor temperature margin (K)"""
 
 
-tmaxpro: float = None
-"""maximum temp rise during a quench for protection (K)"""
+temp_tf_conductor_quench_max: float = None
+"""maximum temp during a quench for protection (K)"""
 
 
 temp_croco_quench_max: float = None
@@ -1154,7 +1154,7 @@ def init_tfcoil_variables():
     global j_crit_str_tf
     global j_crit_str_0
     global j_tf_wp_critical
-    global jwdgpro
+    global j_tf_wp_quench_heat_max
     global j_tf_wp
     global oacdcp
     global eyoung_ins
@@ -1196,7 +1196,7 @@ def init_tfcoil_variables():
     global quench_model
     global time1
     global tcritsc
-    global tdmptf
+    global t_tf_superconductor_quench
     global a_tf_inboard_total
     global len_tf_bus
     global m_tf_bus
@@ -1239,7 +1239,7 @@ def init_tfcoil_variables():
     global tmargmin
     global temp_margin
     global temp_tf_superconductor_margin
-    global tmaxpro
+    global temp_tf_conductor_quench_max
     global temp_croco_quench_max
     global temp_croco_quench
     global temp_tf_cryo
@@ -1389,7 +1389,7 @@ def init_tfcoil_variables():
         865652122.9071957,
     ])
     j_tf_wp_critical = 0.0
-    jwdgpro = 0.0
+    j_tf_wp_quench_heat_max = 0.0
     j_tf_wp = 0.0
     oacdcp = 0.0
     eyoung_ins = 1.0e8
@@ -1431,7 +1431,7 @@ def init_tfcoil_variables():
     quench_model = "exponential"
     time1 = 0
     tcritsc = 16.0
-    tdmptf = 10.0
+    t_tf_superconductor_quench = 10.0
     a_tf_inboard_total = 0.0
     len_tf_bus = 300.0
     m_tf_bus = 0.0
@@ -1473,7 +1473,7 @@ def init_tfcoil_variables():
     tmargmin = 0.0
     temp_margin = 0.0
     temp_tf_superconductor_margin = 0.0
-    tmaxpro = 150.0
+    temp_tf_conductor_quench_max = 150.0
     temp_croco_quench_max = 200.0
     temp_croco_quench = 0.0
     temp_tf_cryo = 4.5

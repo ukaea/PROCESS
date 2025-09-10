@@ -252,7 +252,7 @@ lablxc: list[str] = None
 * (53) fjprot (f-value for equation 35)
 * (54) ftmargtf (f-value for equation 36)
 * (55) NOT USED
-* (56) tdmptf
+* (56) t_tf_superconductor_quench
 * (57) dr_tf_nose_case
 * (58) dx_tf_turn_steel
 * (59) f_a_tf_turn_cable_copper
