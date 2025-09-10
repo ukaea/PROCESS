@@ -44,8 +44,10 @@ cfxf: list[float] = None
 xind: list[float] = None
 
 r_pf_coil_middle_group_array: list[float] = None
+"""2D array of PF coil middle radii, indexed by group and coil in group"""
 
 z_pf_coil_middle_group_array: list[float] = None
+"""2D array of PF coil middle heights, indexed by group and coil in group"""
 
 ccls: list[float] = None
 
