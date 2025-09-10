@@ -56,8 +56,7 @@ Furthermore, the `-k` can be used to match tests within a test collection, e.g.
 pytest tests/regression/ -k "large_tokamak"
 ```
 
-The Continuous Integration (CI) system also runs the `pytest` test suite in the `testing` stage of 
-the pipeline. Unit, integration and regression tests are run as separate jobs to make it easier to see where failures lie.
+The Continuous Integration (CI) system also runs the `pytest` test suite. Unit, integration, example, and regression tests are run as separate jobs to make it easier to see where failures lie.
 
 ### Custom pytest options
 
@@ -74,8 +73,8 @@ pytest --opt-params-only
 ```
 
 Only compares final optimisation parameters (solution vector) and the objective function value 
-(figure of merit) in regression tests. `pytest -k baseline_jan --opt-params-only` will do so only 
-for the "baseline_jan_2017" test. This is particularly useful when comparing solutions obtained 
+(figure of merit) in regression tests. `pytest -k large_tokamak --opt-params-only` will do so only 
+for the "large_tokamak" test. This is particularly useful when comparing solutions obtained 
 from different solvers, for example.
 
 ### Test failures
@@ -119,34 +118,11 @@ pytest -n auto -k regression
 
 runs just the regression tests on all available cores.
 
-## Test coverage
-
-Test coverage (in Python only) is provided in a badge on the repository homepage. A report can 
-also be generated locally. A development (editable) pip installation (which is run by default by the `cmake` build script) ensures that `pytest` and `pytest-cov` will use the same installed location of Process. Then:
-
 ```bash
 pytest --cov=process tests/unit/
 ```
 
 runs the unit tests and produces a coverage report for them.
-
-## pytest failures on older OS's
-
-As discussed in the Installation guide, PROCESS is dependant on a number of dynamically linked 
-libraries. The versions of these libraries are different on different versions of OS's. This 
-introduces floating-point differences in the code which can propogate and show tests failing by 
-~0.70%. The cause of such issues has been isolated and will be highlighted by a warning message 
-when running pytest:
-
-```
-You are running the PROCESS test suite on an outdated system.
-This can cause floating point rounding errors in regression tests.
-
-Please see documentation for information on running PROCESS (and tests)
-using a Docker/Singularity container.
-```
-
-It is suggested that PROCESS is run, built, and tested via a container when not using Ubuntu 20.
 
 ## Reasoning behind the CONTRIBUTING.md method
 

@@ -34,32 +34,32 @@ the commit will not be made. On a failure, one of two things can happen:
 
 ## Installation
 
-When running `cmake --build build/` pre-commit should have been installed automatically. This can 
-be tested by typing
+Check if pre-commit is installed in your environment by running:
 
 ```bash
 pre-commit -h
 ```
 
-If pre-commit is not installed, then it can be installed by:
+If pre-commit is not installed, then it can be installed by running:
 
 ```bash
-python3 -m pip install pre-commit
+pip install -r requirements_dev.txt
 ```
 
-For developers of PROCESS
+in your environment, which will install all development dependencies including pre-commit. 
+Alternatively, pre-commit can be installed on its own by running 
 
+```bash
+pip install pre-commit
+```
+
+You should then run
 ```bash
 pre-commit install
 ```
-
-will install pre-commit as a **Git pre-commit hook**. When pre-commit is a hook, it will run on all of the 
-files you have changed before allowing a commit -- if any changes are identified, they will be 
+which will install pre-commit as a **Git pre-commit hook**. When pre-commit is a hook, it will run on all of the 
+files you have changed before allowing a commit -- if any problems are identified, they will be 
 fixed and you will need to re-add the files that pre-commit has changed.
-
-!!! warning "Pre-commit Python version"
-    It is important then pre-commit is running on Python 3.8. Any other Python version may 
-    produce code formatted in such a way that our CI system rejects your code.
 
 !!! example "Adding two files"
     Consider that two files are being `git add`ed.
@@ -115,13 +115,7 @@ Pre-commit performs a few checks on each and every file you add, regardless of t
 
 ### Python checks
 
-Because Process is becoming increasingly Pythonised, pre-commit performs many Python style checks.
-
 * [`ruff`](https://github.com/astral-sh/ruff) formats and lints code. It will identify formatting and stylistic errors in Python code. **This plugin will automatically fix any mistakes it finds**.
-* `check-docstring-first` will check that a function/class docstring comes before any of the body 
-  (ie the docstring must be at the top). **This plugin will NOT automatically fix any mistakes it finds**.
-* `debug-statements` will check that debug statements (those using the built-in `pdb` module) 
-  have been removed. **This plugin will NOT automatically fix any mistakes it finds**.
 
 ### Other checks
 

@@ -1,30 +1,15 @@
 # Style Guide
 
-`PROCESS` follows the Python [PEP8](https://peps.python.org/pep-0008/) style guide for its layout and namespace style. This should not conflict with Fortran90 in terms of names but may with the line lengths.
+`PROCESS` uses [`ruff`](https://github.com/astral-sh/ruff) to enforce code formatting and detect common code mistakes/smells. Unless there is a justifiable reason, the `ruff` linter should not be ignored or overridden. 
 
---------------------
+You can check if your code meets the `ruff` standards by running:
 
-##  Line Length
+1. `ruff check` and `ruff format` (the later may modify your source code, this is completely safe)
+2. `pre-commit run --all-files`
 
-For optimal readability, a limit of 79 characters for maximum line length has been encouraged, as recommended in [PEP8](https://peps.python.org/pep-0008/). This is below the maximum line length of 132 characters for Fortran (to prevent compilation errors) and prevents long lines that run on past the edge of the screen wasting programmers time with scrolling.
+!!! Info "ruff automatic fixes"
+    Many problems that `ruff` can detect it can also safely fix. Simply run `ruff check --fix` and it will try and automatically fix the mistakes, rewritting your source code. 
 
---------------------
-
-## Double declarations
-
-PROCESS uses the Fortran 2008+ intrinsic precision module as shown in the example below. The
-use statement will need to be at the module level. See the
-[fortran wiki](http://fortranwiki.org/fortran/show/Real+precision) for more information.
-
-```fortran
-use, intrinsic :: iso_fortran_env, only: dp=>real64
-
-real(dp) :: b
-!! Variable description
-
-```
-
-all new models should have their own function
 
 --------------------
 
@@ -528,10 +513,6 @@ Example:
 p_fusion_total_mw = 1000.0d0
 ```
 
-!!! note
-
-    With `f2py` you may encounter a Fortran error where the variable with units at the end in capital letters is not recognised. If so for the meantime put the units in their lowercase form. This problem will be solved in the future by full Pythonisation.
-
 ---------------------
 
 ### Coordinates and dimensions
@@ -680,97 +661,3 @@ class ExampleClass:
 - Use inline comments sparingly.
 
 - Comments above apply to code below.
-
-## Code Documentation Using FORD
-
-PROCESS uses FORD (FORtran Documentation) to automatically generate documentation from comments
-in the FORTRAN code. FORD parses FORTRAN source to understand the structure of the project as well
-as picking up "docmarked" comments in the source to create the documentation.
-
-Regular Fortran comments are prefixed with a "!"; these are ignored by FORD and don't go into
-the documentation. FORD comments are prefixed by a "!!", called a docmark; these are picked up
-by FORD and go into the documentation.
-
-The "!!" docmark goes after the statement it documents. For example, to document variables:
-
-```fortran
-real(kind(1.0D0)) :: alphan = 0.25D0
-!! Density profile index
-
-real(kind(1.0D0)) :: alphap = 0.0D0
-!! Pressure profile index
-
-real(kind(1.0D0)) :: alpha_rate_density = 0.0D0
-!! Alpha particle production rate (particles/m3/sec)
-```
-
-...and to document modules:
-
-```fortran
-module global_variables
-  !! Module containing miscellaneous global variables
-  !! This module contains miscellaneous global variables not
-  !! well-suited to any of the other 'variables' modules.
-```
-
-This documentation will appear in the
-[FORD docs](http://process.gitpages.ccfe.ac.uk/process/ford_site/index.html) section in the
-left-hand navigation bar. Within this site, the "Variables" section in the top navigation bar
-provides variable descriptions in the same manner as the original "vardes" page.
-
-To document a statement before it occurs in the source, use "!>". However, it is encouraged to
-use "!!" for consistency. The rationale behind this and further information is included on the
-[FORD wiki](https://github.com/Fortran-FOSS-Programmers/ford/wiki/Writing-Documentation).
-
-The FORD project on github can be found [here](https://github.com/Fortran-FOSS-Programmers/ford).
-
-### Example of FORD documentation for a subroutine (constraint equation)
-
-```fortran
-
-subroutine constraint_eqn_001(args)
-  !! author: J Morris
-  !! category: equality constraint
-  !!
-  !! Relationship between beta, temperature (keV) and density
-  !!
-  !! \begin{equation} 
-  !! c_i = 1 - \frac{1}{\beta}\left( \beta_{ft} + \beta_{NBI} + 2 \times 10^3 \mu_0 e
-  !! \left( \frac{n_e T_e + n_i T_i}{B_{tot}^2} \right) \right)
-  !! \end{equation}
-  !!
-  !! - \( \beta \) -- total plasma beta
-  !! - \( \beta_{ft} \) -- fast alpha beta component
-  !! - \( \beta_{NBI} \) -- neutral beam beta component
-  !! - \( n_e \) -- electron density [m\(^3\)]
-  !! - \( n_i \) -- total ion density [m\(^3\)]
-  !! - \( T_e \) -- density weighted average electron temperature [keV]
-  !! - \( T_i \) -- density weighted average ion temperature [keV]
-  !! - \( B_{tot} \) -- total toroidal + poloidal field [T]
-
-  use physics_variables, only: beta_fast_alpha, beta_beam, dene, ten, nd_ions_total, tin, btot, beta
-  use constants, only: electron_charge,rmu0
-
-  implicit none
-
-  type(constraint_args_type), intent(out) :: args
-  !! constraint derived type
-
-    args%cc = 1.0D0 - (beta_fast_alpha + beta_beam + &
-      2.0D3*rmu0*electron_charge * (dene*ten + nd_ions_total*tin)/btot**2 )/beta
-    args%con = beta * (1.0D0 - args%cc)
-    args%err = beta * args%cc
-    args%symbol = '='
-    args%units  = ''
-
-end subroutine constraint_eqn_001
-
-```
-
-Creates:
-
-<img
-    src="../../images/ford_example_1.png"
-    alt="alt text"
-    width="700px"
-    >
