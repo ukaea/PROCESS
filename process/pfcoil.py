@@ -222,24 +222,19 @@ class PFCoil:
         for group in range(pfcoil_variables.n_pf_coil_groups):
             if pfcoil_variables.i_pf_location[group] == 1:
                 # PF coil is stacked on top of the Central Solenoid
+                # Use a helper function to compute rcls and zcls arrays for this group
+                rcls, zcls = self.place_pf_above_cs(
+                    n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                    n_pf_group=group,
+                    r_cs_middle=pfcoil_variables.r_cs_middle,
+                    rpf1=pfcoil_variables.rpf1,
+                    z_tf_inside_half=bv.z_tf_inside_half,
+                    dr_tf_inboard=bv.dr_tf_inboard,
+                    z_cs_coil_upper=pfcoil_variables.dz_cs_full / 2,
+                )
                 for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
-                    pfcoil_variables.rcls[group, coil] = (
-                        pfcoil_variables.r_cs_middle + pfcoil_variables.rpf1
-                    )
-
-                    # Z coordinate of coil enforced so as not
-                    # to occupy the same space as the Central Solenoid
-                    pfcoil_variables.zcls[group, coil] = signn[coil] * (
-                        bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal
-                        + 0.1e0
-                        + 0.5e0
-                        * (
-                            bv.z_tf_inside_half
-                            * (1.0e0 - pfcoil_variables.f_z_cs_tf_internal)
-                            + bv.dr_tf_inboard
-                            + 0.1e0
-                        )
-                    )
+                    pfcoil_variables.rcls[group, coil] = rcls[group, coil]
+                    pfcoil_variables.zcls[group, coil] = zcls[group, coil]
 
             elif pfcoil_variables.i_pf_location[group] == 2:
                 # PF coil is on top of the TF coil
@@ -1022,6 +1017,61 @@ class PFCoil:
         pfcoil_variables.c_pf_coil_turn[
             pfcoil_variables.n_pf_cs_plasma_circuits - 1, 5
         ] = 0.0e0
+
+    def place_pf_above_cs(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        r_cs_middle: float,
+        rpf1: float,
+        z_tf_inside_half: float,
+        dr_tf_inboard: float,
+        z_cs_coil_upper: float,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Calculate the placement of PF coils stacked above the Central Solenoid.
+
+        :param n_pf_coils_in_group: Array containing the number of coils in each PF group.
+        :type n_pf_coils_in_group: np.ndarray
+        :param n_pf_group: Index of the PF coil group.
+        :type n_pf_group: int
+        :param r_cs_middle: Radial coordinate of CS coil centre (m).
+        :type r_cs_middle: float
+        :param rpf1: Radial offset for PF coil placement (m).
+        :type rpf1: float
+        :param z_tf_inside_half: Half-height of the TF bore (m).
+        :type z_tf_inside_half: float
+        :param dr_tf_inboard: Thickness of the TF inboard leg (m).
+        :type dr_tf_inboard: float
+        :param z_cs_coil_upper: Upper z coordinate of the CS coil (m).
+        :type z_cs_coil_upper: float
+        :return: Tuple of arrays containing the radial and vertical coordinates of PF coils in the group.
+        :rtype: tuple[np.ndarray, np.ndarray]
+        """
+        # Assign empty 2D arrays to be filled
+        r_pf_coil_middle_group_array = np.zeros((
+            n_pf_group,
+            n_pf_coils_in_group[n_pf_group],
+        ))
+        z_pf_coil_middle_group_array = np.zeros((
+            n_pf_group,
+            n_pf_coils_in_group[n_pf_group],
+        ))
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            # Positions PF coil directly above centre of CS with offset from rpf1
+            r_pf_coil_middle_group_array[n_pf_group, coil] = r_cs_middle + rpf1
+
+            # Z coordinate of coil enforced so as not
+            # to occupy the same space as the Central Solenoid
+            # Set sign: +1 for coil 0, -1 for coil 1
+            sign = 1.0 if coil == 0 else -1.0
+            z_pf_coil_middle_group_array[n_pf_group, coil] = sign * (
+                z_cs_coil_upper
+                + 0.1e0
+                + 0.5e0 * ((z_tf_inside_half - z_cs_coil_upper) + dr_tf_inboard + 0.1e0)
+            )
+        return r_pf_coil_middle_group_array, z_pf_coil_middle_group_array
 
     def efc(
         self,
