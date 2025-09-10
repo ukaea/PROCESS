@@ -1865,7 +1865,7 @@ i_pf_location = 2,3,3,4
 * JUSTIFICATION: Design choice, one above x-point and two outboard
 
 
-i_sup_pf_shape = 1
+i_r_pf_outside_tf_placement = 1
 * DESCRIPTION:   Switch for the placement of i_pf_location = 3 (outboard) PF coils
 *  when the TF coils are superconducting (i_tf_sup = 1)
 *  =0 (Default) Outboard PF coils follow TF shape
