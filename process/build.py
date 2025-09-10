@@ -842,10 +842,9 @@ class Build:
                 + build_variables.dz_fw_plasma_gap
                 + build_variables.z_plasma_xpoint_upper
             )
-            build_variables.dz_tf_upper_lower_midplane = (
-                build_variables.z_tf_top
-                - (build_variables.z_tf_inside_half + build_variables.dr_tf_inboard)
-            ) / 2.0e0
+            build_variables.dz_tf_upper_lower_midplane = build_variables.z_tf_top - (
+                build_variables.z_tf_inside_half + build_variables.dr_tf_inboard
+            )
 
     def divgeom(self, output: bool):
         """

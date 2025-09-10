@@ -1146,7 +1146,7 @@ class PFCoil:
         top_bottom: int,
         rpf2: float,
         zref: np.ndarray,
-    ) -> tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray, int]:
         """
         Calculates and places poloidal field (PF) coils above the toroidal field (TF) coils for a given group.
 
@@ -1177,8 +1177,9 @@ class PFCoil:
         :param zref: Array of reference z-coordinates for PF coil placement.
         :type zref: np.ndarray
 
-        :returns: Tuple containing arrays of radial and vertical positions of PF coil middles for the specified group.
-        :rtype: tuple[np.ndarray, np.ndarray]
+        :returns: Tuple containing arrays of radial and vertical positions of PF coil middles for the specified group,
+                  and the updated top_bottom indicator.
+        :rtype: tuple[np.ndarray, np.ndarray, int]
         """
         # Initialise as empty arrays; will be resized in the loop
         r_pf_coil_middle_group_array = np.zeros((
@@ -1208,7 +1209,7 @@ class PFCoil:
                     top_bottom = -1
                 else:  # this coil is below midplane
                     z_pf_coil_middle_group_array[n_pf_group, coil] = -1.0e0 * (
-                        z_tf_top - 2.0e0 * dz_tf_upper_lower_midplane + 0.86e0
+                        z_tf_top - dz_tf_upper_lower_midplane + 0.86e0
                     )
                     top_bottom = 1
 
