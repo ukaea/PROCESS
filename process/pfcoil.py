@@ -222,8 +222,8 @@ class PFCoil:
         for group in range(pfcoil_variables.n_pf_coil_groups):
             if pfcoil_variables.i_pf_location[group] == 1:
                 # PF coil is stacked on top of the Central Solenoid
-                # Use a helper function to compute rcls and zcls arrays for this group
-                rcls, zcls = self.place_pf_above_cs(
+                # Use a helper function to compute r_pf_coil_middle_group_array and zcls arrays for this group
+                r_pf_coil_middle_group_array, zcls = self.place_pf_above_cs(
                     n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
                     n_pf_group=group,
                     r_cs_middle=pfcoil_variables.r_cs_middle,
@@ -233,13 +233,13 @@ class PFCoil:
                     z_cs_coil_upper=pfcoil_variables.dz_cs_full / 2,
                 )
                 for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
-                    pfcoil_variables.rcls[group, coil] = rcls[group, coil]
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = r_pf_coil_middle_group_array[group, coil]
                     pfcoil_variables.zcls[group, coil] = zcls[group, coil]
 
             elif pfcoil_variables.i_pf_location[group] == 2:
                 # PF coil is on top of the TF coil
                 for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
-                    pfcoil_variables.rcls[group, coil] = (
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
                         pv.rmajor + pfcoil_variables.rpf2 * pv.triang * pv.rminor
                     )
                     if pv.itart == 1 and pv.itartpf == 0:
@@ -266,19 +266,19 @@ class PFCoil:
                     # Coil radius follows TF coil curve for SC TF (D-shape)
                     # otherwise stacked for resistive TF (rectangle-shape)
                     if tfv.i_tf_sup != 1 or pfcoil_variables.i_sup_pf_shape == 1:
-                        pfcoil_variables.rcls[group, coil] = pfcoil_variables.rclsnorm
+                        pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = pfcoil_variables.rclsnorm
                     else:
-                        pfcoil_variables.rcls[group, coil] = math.sqrt(
+                        pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = math.sqrt(
                             pfcoil_variables.rclsnorm**2
                             - pfcoil_variables.zcls[group, coil] ** 2
                         )
                         try:
-                            assert pfcoil_variables.rcls[group, coil] < np.inf
+                            assert pfcoil_variables.r_pf_coil_middle_group_array[group, coil] < np.inf
                         except AssertionError:
                             logger.exception(
-                                "Element of pfcoil_variables.rcls is inf. Kludging to 1e10."
+                                "Element of pfcoil_variables.r_pf_coil_middle_group_array is inf. Kludging to 1e10."
                             )
-                            pfcoil_variables.rcls[group, coil] = 1e10
+                            pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = 1e10
 
             elif pfcoil_variables.i_pf_location[group] == 4:
                 # PF coil is in general location
@@ -288,7 +288,7 @@ class PFCoil:
                     pfcoil_variables.zcls[group, coil] = (
                         pv.rminor * pfcoil_variables.zref[group] * signn[coil]
                     )
-                    pfcoil_variables.rcls[group, coil] = (
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
                         pv.rminor * pfcoil_variables.rref[group] + pv.rmajor
                     )
 
@@ -342,7 +342,7 @@ class PFCoil:
                 pfcoil_variables.cfxf,
                 pfcoil_variables.n_pf_coil_groups,
                 pfcoil_variables.n_pf_coils_in_group,
-                pfcoil_variables.rcls,
+                pfcoil_variables.r_pf_coil_middle_group_array,
                 pfcoil_variables.zcls,
                 pfcoil_variables.alfapf,
                 bfix,
@@ -411,7 +411,7 @@ class PFCoil:
                         pfcoil_variables.ccls[i] = 0.0e0
                         nfxf0 = nfxf0 + pfcoil_variables.n_pf_coils_in_group[i]
                         for ccount in range(pfcoil_variables.n_pf_coils_in_group[i]):
-                            pfcoil_variables.rfxf[nocoil] = pfcoil_variables.rcls[
+                            pfcoil_variables.rfxf[nocoil] = pfcoil_variables.r_pf_coil_middle_group_array[
                                 i, ccount
                             ]
                             pfcoil_variables.zfxf[nocoil] = pfcoil_variables.zcls[
@@ -435,7 +435,7 @@ class PFCoil:
                         )
                         nfxf0 = nfxf0 + pfcoil_variables.n_pf_coils_in_group[i]
                         for ccount in range(pfcoil_variables.n_pf_coils_in_group[i]):
-                            pfcoil_variables.rfxf[nocoil] = pfcoil_variables.rcls[
+                            pfcoil_variables.rfxf[nocoil] = pfcoil_variables.r_pf_coil_middle_group_array[
                                 i, ccount
                             ]
                             pfcoil_variables.zfxf[nocoil] = pfcoil_variables.zcls[
@@ -469,10 +469,10 @@ class PFCoil:
 
                 for ccount in range(ngrp0):
                     ncls0[ccount] = 2
-                    pfcoil_variables.rcls0[ccount, 0] = pfcoil_variables.rcls[
+                    pfcoil_variables.rcls0[ccount, 0] = pfcoil_variables.r_pf_coil_middle_group_array[
                         pcls0[ccount] - 1, 0
                     ]
-                    pfcoil_variables.rcls0[ccount, 1] = pfcoil_variables.rcls[
+                    pfcoil_variables.rcls0[ccount, 1] = pfcoil_variables.r_pf_coil_middle_group_array[
                         pcls0[ccount] - 1, 1
                     ]
                     pfcoil_variables.zcls0[ccount, 0] = pfcoil_variables.zcls[
@@ -591,7 +591,7 @@ class PFCoil:
         ncl = 0
         for nng in range(pfcoil_variables.n_pf_coil_groups):
             for ng2 in range(pfcoil_variables.n_pf_coils_in_group[nng]):
-                pfcoil_variables.r_pf_coil_middle[ncl] = pfcoil_variables.rcls[nng, ng2]
+                pfcoil_variables.r_pf_coil_middle[ncl] = pfcoil_variables.r_pf_coil_middle_group_array[nng, ng2]
                 pfcoil_variables.z_pf_coil_middle[ncl] = pfcoil_variables.zcls[nng, ng2]
 
                 # Currents at different times:
@@ -1086,7 +1086,7 @@ class PFCoil:
         cfix,
         n_pf_coil_groups,
         n_pf_coils_in_group,
-        rcls,
+        r_pf_coil_middle_group_array,
         zcls,
         alfa,
         bfix,
@@ -1128,8 +1128,8 @@ class PFCoil:
         :type n_pf_coil_groups: int
         :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
         :type n_pf_coils_in_group: np.ndarray
-        :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
-        :type rcls: np.ndarray
+        :param r_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
+        :type r_pf_coil_middle_group_array: np.ndarray
         :param zcls: coords R(i,j), Z(i,j) of coil j in group i (m)
         :type zcls: np.ndarray
         :param alfa: smoothing parameter (0 = no smoothing, 1.0D-9 = large
@@ -1176,7 +1176,7 @@ class PFCoil:
             bzin,
             int(n_pf_coil_groups),
             n_pf_coils_in_group,
-            rcls,
+            r_pf_coil_middle_group_array,
             zcls,
             alfa,
             bfix,
@@ -1206,19 +1206,19 @@ class PFCoil:
             for i in range(pfcoil_variables.n_pf_coil_groups):
                 for ii in range(pfcoil_variables.n_pf_coil_groups):
                     for ij in range(pfcoil_variables.n_pf_coils_in_group[ii]):
-                        if pfcoil_variables.rcls[
+                        if pfcoil_variables.r_pf_coil_middle_group_array[
                             ii, ij
                         ] <= (  # Outboard TF coil collision
                             pfcoil_variables.rclsnorm
                             - pfcoil_variables.routr
                             + pfcoil_variables.r_pf_coil_middle[i]
-                        ) and pfcoil_variables.rcls[ii, ij] >= (
+                        ) and pfcoil_variables.r_pf_coil_middle_group_array[ii, ij] >= (
                             bv.r_tf_outboard_mid
                             - (0.5 * bv.dr_tf_outboard)
                             - pfcoil_variables.r_pf_coil_middle[i]
                         ):
                             pf_tf_collision += 1
-                        if pfcoil_variables.rcls[
+                        if pfcoil_variables.r_pf_coil_middle_group_array[
                             ii, ij
                         ] <= (  # Inboard TF coil collision
                             bv.dr_bore
@@ -1227,7 +1227,7 @@ class PFCoil:
                             + bv.dr_cs_tf_gap
                             + bv.dr_tf_inboard
                             + pfcoil_variables.r_pf_coil_middle[i]
-                        ) and pfcoil_variables.rcls[ii, ij] >= (
+                        ) and pfcoil_variables.r_pf_coil_middle_group_array[ii, ij] >= (
                             bv.dr_bore
                             + bv.dr_cs
                             + bv.dr_cs_precomp
@@ -3997,7 +3997,7 @@ def mtrx(
     bzin,
     n_pf_coil_groups,
     n_pf_coils_in_group,
-    rcls,
+    r_pf_coil_middle_group_array,
     zcls,
     alfa,
     bfix,
@@ -4033,8 +4033,8 @@ def mtrx(
     :type n_pf_coil_groups: int
     :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
     :type n_pf_coils_in_group: numpy.ndarray
-    :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
-    :type rcls: numpy.ndarray
+    :param r_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
+    :type r_pf_coil_middle_group_array: numpy.ndarray
     :param zcls: coords R(i,j), Z(i,j) of coil j in group i (m)
     :type zcls: numpy.ndarray
     :param alfa: smoothing parameter (0 = no smoothing, 1.0D-9 = large
@@ -4060,7 +4060,7 @@ def mtrx(
             nc = n_pf_coils_in_group[j]
 
             _, gmat[i, j], gmat[i + npts, j], _ = bfield(
-                rcls[j, :nc], zcls[j, :nc], cc[:nc], rpts[i], zpts[i]
+                r_pf_coil_middle_group_array[j, :nc], zcls[j, :nc], cc[:nc], rpts[i], zpts[i]
             )
 
     # Add constraint equations
