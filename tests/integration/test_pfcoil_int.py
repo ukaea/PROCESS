@@ -378,7 +378,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     # This 2D array argument discovered via gdb prints as a 1D array, therefore
     # needs to be reshaped into its original 2D. Fortran ordering is essential
     # when passing greater-than-1D arrays from Python to Fortran
-    rcls = np.reshape(
+    r_pf_coil_middle_group_array = np.reshape(
         [
             6.7651653417201345,
             6.7651653417201345,
@@ -447,7 +447,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         cfix,
         n_pf_coil_groups,
         n_pf_coils_in_group,
-        rcls,
+        r_pf_coil_middle_group_array,
         zcls,
         alfa,
         bfix,
@@ -519,7 +519,7 @@ def test_mtrx(pfcoil: PFCoil):
     bzin = np.zeros(nptsmx)
     n_pf_coil_groups = 4
     n_pf_coils_in_group = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
-    rcls = np.reshape(
+    r_pf_coil_middle_group_array = np.reshape(
         [
             0,
             0,
@@ -659,7 +659,7 @@ def test_mtrx(pfcoil: PFCoil):
         bzin,
         n_pf_coil_groups,
         n_pf_coils_in_group,
-        rcls,
+        r_pf_coil_middle_group_array,
         zcls,
         alfa,
         bfix,
