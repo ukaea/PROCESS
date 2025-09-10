@@ -218,18 +218,18 @@ class PFCoil:
 
         # Place the PF coils:
 
-        # N.B. Problems here if k=n_pf_coils_in_group(group) is greater than 2.
-        for j in range(pfcoil_variables.n_pf_coil_groups):
-            if pfcoil_variables.i_pf_location[j] == 1:
+        # N.B. Problems here if coil=n_pf_coils_in_group(group) is greater than 2.
+        for group in range(pfcoil_variables.n_pf_coil_groups):
+            if pfcoil_variables.i_pf_location[group] == 1:
                 # PF coil is stacked on top of the Central Solenoid
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.rcls[j, k] = (
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.rcls[group, coil] = (
                         pfcoil_variables.r_cs_middle + pfcoil_variables.rpf1
                     )
 
                     # Z coordinate of coil enforced so as not
                     # to occupy the same space as the Central Solenoid
-                    pfcoil_variables.zcls[j, k] = signn[k] * (
+                    pfcoil_variables.zcls[group, coil] = signn[coil] * (
                         bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal
                         + 0.1e0
                         + 0.5e0
@@ -241,67 +241,67 @@ class PFCoil:
                         )
                     )
 
-            elif pfcoil_variables.i_pf_location[j] == 2:
+            elif pfcoil_variables.i_pf_location[group] == 2:
                 # PF coil is on top of the TF coil
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.rcls[j, k] = (
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.rcls[group, coil] = (
                         pv.rmajor + pfcoil_variables.rpf2 * pv.triang * pv.rminor
                     )
                     if pv.itart == 1 and pv.itartpf == 0:
-                        pfcoil_variables.zcls[j, k] = (
-                            bv.z_tf_inside_half - pfcoil_variables.zref[j]
-                        ) * signn[k]
+                        pfcoil_variables.zcls[group, coil] = (
+                            bv.z_tf_inside_half - pfcoil_variables.zref[group]
+                        ) * signn[coil]
                     else:
-                        # pfcoil_variables.zcls(j,k) = (bv.z_tf_inside_half + bv.dr_tf_inboard + 0.86e0) * signn(k)
+                        # pfcoil_variables.zcls(group,coil) = (bv.z_tf_inside_half + bv.dr_tf_inboard + 0.86e0) * signn(coil)
                         if top_bottom == 1:  # this coil is above midplane
-                            pfcoil_variables.zcls[j, k] = bv.z_tf_top + 0.86e0
+                            pfcoil_variables.zcls[group, coil] = bv.z_tf_top + 0.86e0
                             top_bottom = -1
                         else:  # this coil is below midplane
-                            pfcoil_variables.zcls[j, k] = -1.0e0 * (
+                            pfcoil_variables.zcls[group, coil] = -1.0e0 * (
                                 bv.z_tf_top - 2.0e0 * bv.hpfdif + 0.86e0
                             )
                             top_bottom = 1
 
-            elif pfcoil_variables.i_pf_location[j] == 3:
+            elif pfcoil_variables.i_pf_location[group] == 3:
                 # PF coil is radially outside the TF coil
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.zcls[j, k] = (
-                        pv.rminor * pfcoil_variables.zref[j] * signn[k]
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.zcls[group, coil] = (
+                        pv.rminor * pfcoil_variables.zref[group] * signn[coil]
                     )
                     # Coil radius follows TF coil curve for SC TF (D-shape)
                     # otherwise stacked for resistive TF (rectangle-shape)
                     if tfv.i_tf_sup != 1 or pfcoil_variables.i_sup_pf_shape == 1:
-                        pfcoil_variables.rcls[j, k] = pfcoil_variables.rclsnorm
+                        pfcoil_variables.rcls[group, coil] = pfcoil_variables.rclsnorm
                     else:
-                        pfcoil_variables.rcls[j, k] = math.sqrt(
+                        pfcoil_variables.rcls[group, coil] = math.sqrt(
                             pfcoil_variables.rclsnorm**2
-                            - pfcoil_variables.zcls[j, k] ** 2
+                            - pfcoil_variables.zcls[group, coil] ** 2
                         )
                         try:
-                            assert pfcoil_variables.rcls[j, k] < np.inf
+                            assert pfcoil_variables.rcls[group, coil] < np.inf
                         except AssertionError:
                             logger.exception(
                                 "Element of pfcoil_variables.rcls is inf. Kludging to 1e10."
                             )
-                            pfcoil_variables.rcls[j, k] = 1e10
+                            pfcoil_variables.rcls[group, coil] = 1e10
 
-            elif pfcoil_variables.i_pf_location[j] == 4:
+            elif pfcoil_variables.i_pf_location[group] == 4:
                 # PF coil is in general location
                 # See issue 1418
                 # https://git.ccfe.ac.uk/process/process/-/issues/1418
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.zcls[j, k] = (
-                        pv.rminor * pfcoil_variables.zref[j] * signn[k]
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.zcls[group, coil] = (
+                        pv.rminor * pfcoil_variables.zref[group] * signn[coil]
                     )
-                    pfcoil_variables.rcls[j, k] = (
-                        pv.rminor * pfcoil_variables.rref[j] + pv.rmajor
+                    pfcoil_variables.rcls[group, coil] = (
+                        pv.rminor * pfcoil_variables.rref[group] + pv.rmajor
                     )
 
             else:
                 raise ProcessValueError(
                     "Illegal i_pf_location value",
-                    j=j,
-                    i_pf_location=pfcoil_variables.i_pf_location[j],
+                    group=group,
+                    i_pf_location=pfcoil_variables.i_pf_location[group],
                 )
 
         # Allocate current to the PF coils:
