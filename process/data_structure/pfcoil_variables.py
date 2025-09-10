@@ -375,6 +375,9 @@ j_pf_wp_critical: list[float] = None
 r_cs_middle: float = None
 """radius to the centre of the central solenoid (m)"""
 
+dz_cs_full: float = None
+"""Full height of the central solenoid (m)"""
+
 
 routr: float = None
 """radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils"""
@@ -538,6 +541,9 @@ ld_ratio_cst: float = None
 dr_cs_turn: float = None
 """Length of CS of CS coil turn conduit"""
 
+dr_cs_full: float = None
+"""Full radial thickness of the central solenoid (m)"""
+
 
 dz_cs_turn: float = None
 """Depth/width of CS of CS coil turn conduit"""
@@ -657,6 +663,7 @@ def init_pfcoil_variables():
     global j_cs_critical_pulse_start
     global j_pf_wp_critical
     global r_cs_middle
+    global dz_cs_full
     global routr
     global r_pf_coil_middle
     global rpf1
@@ -692,6 +699,7 @@ def init_pfcoil_variables():
     global fb_cs_limit_max
     global ld_ratio_cst
     global dr_cs_turn
+    global dr_cs_full
     global dz_cs_turn
     global r_out_cst
     global radius_cs_turn_cable_space
@@ -757,6 +765,7 @@ def init_pfcoil_variables():
     j_cs_critical_pulse_start = 0.0
     j_pf_wp_critical = np.zeros(NGC2)
     r_cs_middle = 0.0
+    dz_cs_full = 0.0
     routr = 1.5
     r_pf_coil_middle = np.zeros(NGC2)
     rpf1 = 0.0
@@ -792,6 +801,7 @@ def init_pfcoil_variables():
     fb_cs_limit_max = 1.0
     ld_ratio_cst = 70.0 / 22.0
     dr_cs_turn = 0.0
+    dr_cs_full = 0.0
     dz_cs_turn = 0.0
     radius_cs_turn_cable_space = 0.0
     r_out_cst = 3.0e-3
