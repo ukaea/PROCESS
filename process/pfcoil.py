@@ -284,40 +284,26 @@ class PFCoil:
 
             elif pfcoil_variables.i_pf_location[group] == 3:
                 # PF coil is radially outside the TF coil
+                (
+                    r_pf_coil_middle_group_array,
+                    z_pf_coil_middle_group_array,
+                ) = self.place_pf_outside_tf(
+                    n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                    n_pf_group=group,
+                    rminor=pv.rminor,
+                    zref=pfcoil_variables.zref,
+                    i_tf_shape=tfv.i_tf_shape,
+                    i_r_pf_outside_tf_placement=pfcoil_variables.i_r_pf_outside_tf_placement,
+                    r_pf_outside_tf_midplane=pfcoil_variables.r_pf_outside_tf_midplane,
+                )
+
                 for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
-                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
-                        pv.rminor * pfcoil_variables.zref[group] * signn[coil]
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
+                        r_pf_coil_middle_group_array[group, coil]
                     )
-                    # Coil radius is constant / stacked for picture frame TF or if placement switch is set
-                    if tfv.i_tf_shape == 2 or pfcoil_variables.i_r_pf_outside_tf_placement == 1:
-                        pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
-                            pfcoil_variables.r_pf_outside_tf_midplane
-                        )
-                    else:
-                        # Coil radius follows TF coil curve for TF (D-shape)
-                        pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
-                            math.sqrt(
-                                pfcoil_variables.r_pf_outside_tf_midplane**2
-                                - pfcoil_variables.z_pf_coil_middle_group_array[
-                                    group, coil
-                                ]
-                                ** 2
-                            )
-                        )
-                        try:
-                            assert (
-                                pfcoil_variables.r_pf_coil_middle_group_array[
-                                    group, coil
-                                ]
-                                < np.inf
-                            )
-                        except AssertionError:
-                            logger.exception(
-                                "Element of pfcoil_variables.r_pf_coil_middle_group_array is inf. Kludging to 1e10."
-                            )
-                            pfcoil_variables.r_pf_coil_middle_group_array[
-                                group, coil
-                            ] = 1e10
+                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
+                        z_pf_coil_middle_group_array[group, coil]
+                    )
 
             # =========================================================================
 
@@ -1214,6 +1200,79 @@ class PFCoil:
                     top_bottom = 1
 
         return r_pf_coil_middle_group_array, z_pf_coil_middle_group_array, top_bottom
+
+    def place_pf_outside_tf(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        rminor: float,
+        zref: np.ndarray,
+        i_tf_shape: int,
+        i_r_pf_outside_tf_placement: int,
+        r_pf_outside_tf_midplane: float,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Calculates the radial and vertical positions of poloidal field (PF) coils placed outside the toroidal field (TF) coil.
+
+        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
+        :type n_pf_coils_in_group: np.ndarray
+        :param n_pf_group: Index of the PF coil group to process.
+        :type n_pf_group: int
+        :param rminor: Minor radius of the device.
+        :type rminor: float
+        :param zref: Reference vertical positions for each PF coil group.
+        :type zref: np.ndarray
+        :param i_tf_shape: Integer flag indicating TF coil shape (2 for picture frame, others for D-shape).
+        :type i_tf_shape: int
+        :param i_r_pf_outside_tf_placement: Placement switch for PF coil radius (1 for constant/stacked, 0 for following TF curve).
+        :type i_r_pf_outside_tf_placement: int
+        :param r_pf_outside_tf_midplane: Radial position of PF coil at the midplane.
+        :type r_pf_outside_tf_midplane: float
+
+        :returns: Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
+        :rtype: tuple[np.ndarray, np.ndarray]
+        """
+
+        # Initialise as empty arrays; will be resized in the loop
+        r_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+        z_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+
+        # PF coil is radially outside the TF coil
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            sign = 1.0 if coil == 0 else -1.0
+
+            z_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rminor * zref[n_pf_group] * sign
+            )
+            # Coil radius is constant / stacked for picture frame TF or if placement switch is set
+            if i_tf_shape == 2 or i_r_pf_outside_tf_placement == 1:
+                r_pf_coil_middle_group_array[n_pf_group, coil] = (
+                    r_pf_outside_tf_midplane
+                )
+            else:
+                # Coil radius follows TF coil curve for TF (D-shape)
+                r_pf_coil_middle_group_array[n_pf_group, coil] = math.sqrt(
+                    r_pf_outside_tf_midplane**2
+                    - z_pf_coil_middle_group_array[n_pf_group, coil] ** 2
+                )
+                try:
+                    assert r_pf_coil_middle_group_array[n_pf_group, coil] < np.inf
+                except AssertionError:
+                    logger.exception(
+                        "Element of pfcoil_variables.r_pf_coil_middle_group_array is inf. Kludging to 1e10."
+                    )
+                    r_pf_coil_middle_group_array[n_pf_group, coil] = 1e10
+        return (
+            r_pf_coil_middle_group_array,
+            z_pf_coil_middle_group_array,
+        )
 
     def efc(
         self,
