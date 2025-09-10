@@ -762,6 +762,13 @@ class TFCoil:
             build_variables.z_tf_top,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Height difference in upper and lower TF from midplane (m)",
+            "(dz_tf_upper_lower_midplane)",
+            build_variables.dz_tf_upper_lower_midplane,
+            "OP ",
+        )
         if physics_variables.itart == 1:
             po.ovarre(
                 self.outfile,
