@@ -46,7 +46,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     """
 
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(bv, "hpfdif", 0.0)
+    monkeypatch.setattr(bv, "dz_tf_upper_lower_midplane", 0.0)
     monkeypatch.setattr(bv, "z_tf_top", 4.0)  # guess
     monkeypatch.setattr(bv, "z_tf_inside_half", 8.8)
     monkeypatch.setattr(bv, "dr_cs", 0.65)
