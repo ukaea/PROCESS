@@ -14,7 +14,7 @@ from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cs_fatigue_variables as csfv
 from process.data_structure import fwbs_variables as fwbsv
-from process.data_structure import numerics, pfcoil_variables
+from process.data_structure import numerics, pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
@@ -213,7 +213,8 @@ class PFCoil:
         signn[0] = 1.0e0
         signn[1] = -1.0e0
         pfcoil_variables.rclsnorm = (
-            bv.r_tf_outboard_mid + 0.5e0 * bv.dr_tf_outboard + pfcoil_variables.routr
+            superconducting_tf_coil_variables.r_tf_outboard_out
+            + pfcoil_variables.dr_pf_tf_outboard_out_offset
         )
 
         # Place the PF coils:
@@ -222,7 +223,9 @@ class PFCoil:
         for group in range(pfcoil_variables.n_pf_coil_groups):
             if pfcoil_variables.i_pf_location[group] == 1:
                 # PF coil is stacked on top of the Central Solenoid
-                # Use a helper function to compute r_pf_coil_middle_group_array and z_pf_coil_middle_group_array arrays for this group
+                # Use a helper function to compute r_pf_coil_middle_group_array and
+                # z_pf_coil_middle_group_array arrays for this group
+
                 r_pf_coil_middle_group_array, z_pf_coil_middle_group_array = (
                     self.place_pf_above_cs(
                         n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
@@ -1248,7 +1251,7 @@ class PFCoil:
                             ii, ij
                         ] <= (  # Outboard TF coil collision
                             pfcoil_variables.rclsnorm
-                            - pfcoil_variables.routr
+                            - pfcoil_variables.dr_pf_tf_outboard_out_offset
                             + pfcoil_variables.r_pf_coil_middle[i]
                         ) and pfcoil_variables.r_pf_coil_middle_group_array[ii, ij] >= (
                             bv.r_tf_outboard_mid

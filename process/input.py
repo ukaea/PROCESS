@@ -1490,7 +1490,9 @@ INPUT_VARIABLES = {
     "roughness_fw_channel": InputVariable(
         data_structure.fwbs_variables, float, range=(0.0, 0.01)
     ),
-    "routr": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
+    "dr_pf_tf_outboard_out_offset": InputVariable(
+        data_structure.pfcoil_variables, float, range=(-3.0, 3.0)
+    ),
     "row": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "dr_pf_cs_middle_offset": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 3.0)

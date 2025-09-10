@@ -85,7 +85,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(
         pfcoil_variables, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0)
     )
-    monkeypatch.setattr(pfcoil_variables, "routr", 1.5)
+    monkeypatch.setattr(pfcoil_variables, "dr_pf_tf_outboard_out_offset", 1.5)
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfcoil_variables, "rpf2", -1.825)
