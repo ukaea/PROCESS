@@ -142,8 +142,23 @@ class PFCoil:
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
 
-        # Central Solenoid mean radius
-        pfcoil_variables.r_cs_middle = bv.dr_bore + 0.5e0 * bv.dr_cs
+        (
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.z_pf_coil_lower[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_cs_middle,
+            pfcoil_variables.z_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.a_cs_poloidal,
+            pfcoil_variables.dz_cs_full,
+            pfcoil_variables.dr_cs_full,
+        ) = self.calculate_cs_geometry(
+            z_tf_inside_half=bv.z_tf_inside_half,
+            f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
+            dr_cs=bv.dr_cs,
+            dr_bore=bv.dr_bore,
+        )
 
         # nfxf is the total no of filaments into which the Central Solenoid is split,
         # if present
@@ -1237,33 +1252,24 @@ class PFCoil:
 
         author: P J Knight, CCFE, Culham Science Centre
         """
-        hohc = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal
 
-        # Z coordinates of coil edges
-        pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1] = hohc
-        pfcoil_variables.z_pf_coil_lower[
-            pfcoil_variables.n_cs_pf_coils - 1
-        ] = -pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
-
-        # (R,Z) coordinates of coil centre
-        pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1] = (
-            pfcoil_variables.r_cs_middle
+        (
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.z_pf_coil_lower[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_cs_middle,
+            pfcoil_variables.z_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.a_cs_poloidal,
+            pfcoil_variables.dz_cs_full,
+            pfcoil_variables.dr_cs_full,
+        ) = self.calculate_cs_geometry(
+            z_tf_inside_half=bv.z_tf_inside_half,
+            f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
+            dr_cs=bv.dr_cs,
+            dr_bore=bv.dr_bore,
         )
-        pfcoil_variables.z_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1] = 0.0e0
-
-        # Radius of outer edge
-        pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1] = (
-            pfcoil_variables.r_cs_middle + 0.5e0 * bv.dr_cs
-        )
-
-        # Radius of inner edge
-        pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1] = (
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
-            - bv.dr_cs
-        )
-
-        # Total cross-sectional area
-        pfcoil_variables.a_cs_poloidal = 2.0e0 * hohc * bv.dr_cs
 
         # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
         if pfcoil_variables.j_cs_pulse_start > pfcoil_variables.j_cs_flat_top_end:
@@ -1365,7 +1371,7 @@ class PFCoil:
             pfcoil_variables.j_cs_flat_top_end,
             pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
             pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            hohc,
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
         )
 
         # Peak field due to other PF coils plus plasma
@@ -1384,7 +1390,7 @@ class PFCoil:
             pfcoil_variables.j_cs_pulse_start,
             pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
             pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            hohc,
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
         )
         timepoint = 2
         bri, bro, bzi, bzo = self.peakb(pfcoil_variables.n_cs_pf_coils, 99, timepoint)
@@ -1452,7 +1458,9 @@ class PFCoil:
             # its inside and outside edges; in reality, the steel is distributed
             # throughout the conductor
             pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = (
-                0.25e0 * areaspf / hohc
+                0.25e0
+                * areaspf
+                / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
             )
 
         else:
@@ -1604,6 +1612,77 @@ class PFCoil:
                 pfcoil_variables.p_pf_coil_resistive_total_flat_top
                 + pfcoil_variables.p_cs_resistive_flat_top
             )
+
+    def calculate_cs_geometry(
+        self,
+        z_tf_inside_half: float,
+        f_z_cs_tf_internal: float,
+        dr_cs: float,
+        dr_bore: float,
+    ) -> tuple[float, float, float, float, float, float, float, float, float]:
+        """
+        Calculate the geometry of the Central Solenoid (CS) coil.
+
+        :param z_tf_inside_half: Half-height of the TF bore (m)
+        :type z_tf_inside_half: float
+        :param f_z_cs_tf_internal: Fractional height of CS relative to TF bore
+        :type f_z_cs_tf_internal: float
+        :param dr_cs: Thickness of the CS coil (m)
+        :type dr_cs: float
+        :param dr_bore: Radius of the TF bore (m)
+        :type dr_bore: float
+        :return: Tuple containing:
+            - z_cs_coil_upper: Upper Z coordinate of CS coil (m)
+            - z_cs_coil_lower: Lower Z coordinate of CS coil (m)
+            - r_cs_coil_middle: Radial coordinate of CS coil centre (m)
+            - z_cs_coil_middle: Z coordinate of CS coil centre (m)
+            - r_cs_coil_outer: Outer radius of CS coil (m)
+            - r_cs_coil_inner: Inner radius of CS coil (m)
+            - a_cs_poloidal: Total poloidal cross-sectional area of CS coil (m²)
+            - dz_cs_full: Full height of CS coil (m)
+        :rtype: tuple[float, float, float, float, float, float, float, float]
+        """
+
+        # Central Solenoid mean radius
+        r_cs_middle = dr_bore + (0.5e0 * dr_cs)
+
+        # Scale the CS height relative to TF bore height
+        z_cs_inside_half = z_tf_inside_half * f_z_cs_tf_internal
+
+        dz_cs_full = 2.0e0 * z_cs_inside_half  # Full height of CS coil
+
+        # Z coordinates of CS coil edges
+        z_cs_coil_upper = z_cs_inside_half
+        z_cs_coil_lower = -z_cs_coil_upper
+
+        # (R,Z) coordinates of coil centre
+        r_cs_coil_middle = r_cs_middle
+        z_cs_coil_middle = 0.0e0
+
+        # Radius of outer edge
+        r_cs_coil_outer = r_cs_middle + 0.5e0 * dr_cs
+
+        # Radius of inner edge
+        r_cs_coil_inner = r_cs_coil_outer - dr_cs
+
+        # Full radial thickness of CS coil
+        dr_cs_full = 2 * r_cs_coil_outer
+
+        # Total cross-sectional area
+        a_cs_poloidal = 2.0e0 * z_cs_inside_half * dr_cs
+
+        return (
+            z_cs_coil_upper,
+            z_cs_coil_lower,
+            r_cs_coil_middle,
+            r_cs_middle,
+            z_cs_coil_middle,
+            r_cs_coil_outer,
+            r_cs_coil_inner,
+            a_cs_poloidal,
+            dz_cs_full,
+            dr_cs_full,
+        )
 
     def peakb(self, i, ii, it):
         """Calculates the peak field at a PF coil.
@@ -2588,6 +2667,13 @@ class PFCoil:
                 )
                 op.ovarre(
                     self.outfile,
+                    "CS radial middle (m)",
+                    "(r_cs_middle)",
+                    pfcoil_variables.r_cs_middle,
+                    "OP ",
+                )
+                op.ovarre(
+                    self.outfile,
                     "CS conductor+void cross-sectional area (m2)",
                     "(awpoh)",
                     pfcoil_variables.awpoh,
@@ -3042,13 +3128,14 @@ class PFCoil:
             op.ovarre(
                 self.mfile,
                 "Central solenoid vertical thickness (m)",
-                "(ohdz)",
-                (
-                    pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
-                    - pfcoil_variables.z_pf_coil_lower[
-                        pfcoil_variables.n_cs_pf_coils - 1
-                    ]
-                ),
+                "(dz_cs_full)",
+                (pfcoil_variables.dz_cs_full),
+            )
+            op.ovarre(
+                self.mfile,
+                "Central solenoid full radial width (m)",
+                "(dr_cs_full)",
+                (pfcoil_variables.dr_cs_full),
             )
             op.ovarre(
                 self.mfile,
