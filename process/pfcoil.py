@@ -14,7 +14,11 @@ from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cs_fatigue_variables as csfv
 from process.data_structure import fwbs_variables as fwbsv
-from process.data_structure import numerics, pfcoil_variables, superconducting_tf_coil_variables
+from process.data_structure import (
+    numerics,
+    pfcoil_variables,
+    superconducting_tf_coil_variables,
+)
 from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
@@ -262,7 +266,7 @@ class PFCoil:
                     itart=pv.itart,
                     itartpf=pv.itartpf,
                     z_tf_inside_half=bv.z_tf_inside_half,
-                    hpfdif=bv.hpfdif,
+                    dz_tf_upper_lower_midplane=bv.dz_tf_upper_lower_midplane,
                     z_tf_top=bv.z_tf_top,
                     top_bottom=top_bottom,
                     rpf2=pfcoil_variables.rpf2,
@@ -1099,14 +1103,15 @@ class PFCoil:
         :return: Tuple of arrays containing the radial and vertical coordinates of PF coils in the group.
         :rtype: tuple[np.ndarray, np.ndarray]
         """
-        # Assign empty 2D arrays to be filled
+
+        # Initialise as empty arrays; will be resized in the loop
         r_pf_coil_middle_group_array = np.zeros((
-            n_pf_group,
-            n_pf_coils_in_group[n_pf_group],
+            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
         z_pf_coil_middle_group_array = np.zeros((
-            n_pf_group,
-            n_pf_coils_in_group[n_pf_group],
+            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
 
         for coil in range(n_pf_coils_in_group[n_pf_group]):
@@ -1136,7 +1141,7 @@ class PFCoil:
         itart: int,
         itartpf: int,
         z_tf_inside_half: float,
-        hpfdif: float,
+        dz_tf_upper_lower_midplane: float,
         z_tf_top: float,
         top_bottom: int,
         rpf2: float,
@@ -1161,8 +1166,8 @@ class PFCoil:
         :type itartpf: int
         :param z_tf_inside_half: Half-height of the TF coil inside region.
         :type z_tf_inside_half: float
-        :param hpfdif: Height difference parameter for PF coil placement.
-        :type hpfdif: float
+        :param dz_tf_upper_lower_midplane: Height difference parameter for PF coil placement.
+        :type dz_tf_upper_lower_midplane: float
         :param z_tf_top: Top z-coordinate of the TF coil.
         :type z_tf_top: float
         :param top_bottom: Indicator for coil placement above (+1) or below (-1) the midplane.
@@ -1175,14 +1180,14 @@ class PFCoil:
         :returns: Tuple containing arrays of radial and vertical positions of PF coil middles for the specified group.
         :rtype: tuple[np.ndarray, np.ndarray]
         """
-        # Assign empty 2D arrays to be filled
+        # Initialise as empty arrays; will be resized in the loop
         r_pf_coil_middle_group_array = np.zeros((
-            n_pf_group,
-            n_pf_coils_in_group[n_pf_group],
+            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
         z_pf_coil_middle_group_array = np.zeros((
-            n_pf_group,
-            n_pf_coils_in_group[n_pf_group],
+            pfcoil_variables.N_PF_GROUPS_MAX,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
         ))
 
         for coil in range(n_pf_coils_in_group[n_pf_group]):
@@ -1203,7 +1208,7 @@ class PFCoil:
                     top_bottom = -1
                 else:  # this coil is below midplane
                     z_pf_coil_middle_group_array[n_pf_group, coil] = -1.0e0 * (
-                        z_tf_top - 2.0e0 * hpfdif + 0.86e0
+                        z_tf_top - 2.0e0 * dz_tf_upper_lower_midplane + 0.86e0
                     )
                     top_bottom = 1
 
