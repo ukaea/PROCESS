@@ -379,7 +379,7 @@ dz_cs_full: float = None
 """Full height of the central solenoid (m)"""
 
 
-routr: float = None
+dr_pf_tf_outboard_out_offset: float = None
 """radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils"""
 
 
@@ -664,7 +664,7 @@ def init_pfcoil_variables():
     global j_pf_wp_critical
     global r_cs_middle
     global dz_cs_full
-    global routr
+    global dr_pf_tf_outboard_out_offset
     global r_pf_coil_middle
     global dr_pf_cs_middle_offset
     global rpf2
@@ -766,7 +766,7 @@ def init_pfcoil_variables():
     j_pf_wp_critical = np.zeros(NGC2)
     r_cs_middle = 0.0
     dz_cs_full = 0.0
-    routr = 1.5
+    dr_pf_tf_outboard_out_offset = 1.5
     r_pf_coil_middle = np.zeros(NGC2)
     dr_pf_cs_middle_offset = 0.0
     rpf2 = -1.63

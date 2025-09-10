@@ -1874,7 +1874,7 @@ i_sup_pf_shape = 1
 *  winding surface
 * JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
-*routr =  
+*dr_pf_tf_outboard_out_offset =  
 * DESCRIPTION:  Radial distance (m) from outboard TF coil leg to centre of i_pf_location=3 PF coils
 * (default = 1.5) 
 * JUSTIFICATION: Not used, no i_pf_location = 3 coils

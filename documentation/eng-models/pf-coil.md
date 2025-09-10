@@ -21,7 +21,7 @@ and `n_pf_coils_in_group(j)` should be assigned the number of coils in each grou
 </figure>
 
 In the following, all variables are defined in the variable descriptor file `vardes.html`. The 
-values for `dr_pf_cs_middle_offset`, `rpf2`, `zref(j)` and `routr` should be adjusted by the user to locate the PF 
+values for `dr_pf_cs_middle_offset`, `rpf2`, `zref(j)` and `dr_pf_tf_outboard_out_offset` should be adjusted by the user to locate the PF 
 coils accurately.
 
 The three possible values of `i_pf_location(j)` correspond to the following PF coil positions: (Redo taking 
@@ -36,7 +36,7 @@ into account `i_single_null` and other recent changes e.g. rclsnorm)
 *Z* = $\pm$(`z_tf_inside_half` * `dr_tf_inboard` + 0.86)
 
 `i_pf_location(j)` = 3: PF coils are placed radially outside the TF coils (any number of groups);<br>
-*R* = `rtot` + `dr_tf_outboard`/2 + `routr`<br>
+*R* = `rtot` + `dr_tf_outboard`/2 + `dr_pf_tf_outboard_out_offset`<br>
 *Z* = $\pm$(`rminor` * `zref(j)`
 
 The void fraction (for coolant) in each coil `i`'s winding pack is given by `f_a_pf_coil_void(i)`.
