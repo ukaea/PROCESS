@@ -2103,3 +2103,43 @@ def test_calculate_cs_geometry(
         dr_bore=dr_bore,
     )
     assert pytest.approx(result) == expected
+
+
+@pytest.mark.parametrize(
+    "n_pf_coils_in_group, n_pf_group, r_cs_middle, dr_pf_cs_middle_offset, z_tf_inside_half, dr_tf_inboard, z_cs_coil_upper, expected_r, expected_z",
+    [
+        # Single coil, above CS
+        (np.array([1, 0]), 0, 2.0, 0.1, 5.0, 0.2, 2.5, [2.1], [4.0]),
+        # Two coils, above CS
+        (np.array([2, 0]), 0, 3.0, 0.2, 6.0, 0.3, 3.0, [3.2, 3.2], [4.8, -4.8]),
+        # Single coil, different offset
+        (np.array([1, 0]), 0, 1.5, 0.05, 4.0, 0.1, 2.0, [1.55], [3.2]),
+        # Two coils, different offset and heights
+        (np.array([2, 0]), 0, 2.5, 0.15, 7.0, 0.25, 3.5, [2.65, 2.65], [5.525,-5.525]),
+    ],
+)
+def test_place_pf_above_cs(
+    pfcoil,
+    n_pf_coils_in_group,
+    n_pf_group,
+    r_cs_middle,
+    dr_pf_cs_middle_offset,
+    z_tf_inside_half,
+    dr_tf_inboard,
+    z_cs_coil_upper,
+    expected_r,
+    expected_z,
+):
+    r_array, z_array = pfcoil.place_pf_above_cs(
+        n_pf_coils_in_group=n_pf_coils_in_group,
+        n_pf_group=n_pf_group,
+        r_cs_middle=r_cs_middle,
+        dr_pf_cs_middle_offset=dr_pf_cs_middle_offset,
+        z_tf_inside_half=z_tf_inside_half,
+        dr_tf_inboard=dr_tf_inboard,
+        z_cs_coil_upper=z_cs_coil_upper,
+    )
+    # Only check the relevant group and number of coils
+    n_coils = n_pf_coils_in_group[n_pf_group]
+    assert_array_almost_equal(r_array[n_pf_group, :n_coils], expected_r)
+    assert_array_almost_equal(z_array[n_pf_group, :n_coils], expected_z)
