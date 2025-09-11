@@ -308,16 +308,17 @@ class PFCoil:
             # =========================================================================
 
             elif pfcoil_variables.i_pf_location[group] == 4:
-                # PF coil is in general location
-                # See issue 1418
-                # https://git.ccfe.ac.uk/process/process/-/issues/1418
-                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
-                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
-                        pv.rminor * pfcoil_variables.zref[group] * signn[coil]
-                    )
-                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
-                        pv.rminor * pfcoil_variables.rref[group] + pv.rmajor
-                    )
+                (
+                    r_pf_coil_middle_group_array,
+                    z_pf_coil_middle_group_array,
+                ) = self.place_pf_generally(
+                    n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                    n_pf_group=group,
+                    rminor=pv.rminor,
+                    rmajor=pv.rmajor,
+                    zref=pfcoil_variables.zref,
+                    rref=pfcoil_variables.rref,
+                )
 
             else:
                 raise ProcessValueError(
@@ -325,6 +326,7 @@ class PFCoil:
                     group=group,
                     i_pf_location=pfcoil_variables.i_pf_location[group],
                 )
+            # =========================================================================
 
         # Allocate current to the PF coils:
         # "Flux swing coils" participate in cancellation of the CS
@@ -1269,6 +1271,59 @@ class PFCoil:
                         "Element of pfcoil_variables.r_pf_coil_middle_group_array is inf. Kludging to 1e10."
                     )
                     r_pf_coil_middle_group_array[n_pf_group, coil] = 1e10
+        return (
+            r_pf_coil_middle_group_array,
+            z_pf_coil_middle_group_array,
+        )
+
+    def place_pf_generally(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        rminor: float,
+        rmajor: float,
+        zref: np.ndarray,
+        rref: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Calculates the radial and vertical positions of poloidal field (PF) coils placed in a general location.
+
+        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
+        :type n_pf_coils_in_group: numpy.ndarray
+        :param n_pf_group: Index of the PF coil group to process.
+        :type n_pf_group: int
+        :param rminor: Minor radius of the device.
+        :type rminor: float
+        :param rmajor: Major radius of the device.
+        :type rmajor: float
+        :param zref: Reference vertical positions for each PF coil group.
+        :type zref: numpy.ndarray
+        :param rref: Reference radial positions for each PF coil group.
+        :type rref: numpy.ndarray
+
+        :returns: Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
+        :rtype: tuple[numpy.ndarray, numpy.ndarray]
+        """
+        r_pf_coil_middle_group_array: np.ndarray = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+        z_pf_coil_middle_group_array: np.ndarray = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            sign: float = 1.0 if coil == 0 else -1.0
+
+            # Place as mutiples of minor radius from the midplane
+            z_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rminor * zref[n_pf_group] * sign
+            )
+            # Place as multiples of minor radius from the plasma centre
+            r_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rminor * rref[n_pf_group] + rmajor
+            )
         return (
             r_pf_coil_middle_group_array,
             z_pf_coil_middle_group_array,
