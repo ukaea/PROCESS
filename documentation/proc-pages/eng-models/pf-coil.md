@@ -9,37 +9,101 @@ position and shape during the flat-top period.
 The positions and sizes of te PF coils are partly input, and partly calculated after consideration 
 of the required currents and allowable current density.
 
-The PF coil locations are controlled using a set of switched stored in array `i_pf_location` (see 
-Figure 1), and are calculated in routine `PFCOIL`. The coils are (usually) organised into groups 
+The PF coil locations are controlled using a set of switches stored in array `i_pf_location[]`. The coils are (usually) organised into groups 
 containing two PF coils placed symmetrically above and below the midplane, and each group `j` has 
 an element `i_pf_location(j)` assigned to it. Input parameter `n_pf_coil_groups` should be set to the number of groups, 
 and `n_pf_coils_in_group(j)` should be assigned the number of coils in each group - which should be 2 in each case.
 
-<figure markdown>
-![Machine build](../images/vertical-build.png){ width="100%"}
-<figcaption>Figure 1: Machine build for D-shaped major components</figcaption>
-</figure>
-
-In the following, all variables are defined in the variable descriptor file `vardes.html`. The 
-values for `rpf1`, `rpf2`, `zref(j)` and `routr` should be adjusted by the user to locate the PF 
+The values for `dr_pf_cs_middle_offset`, `rpf2`, `zref(j)` and `dr_pf_tf_outboard_out_offset` should be adjusted by the user to locate the PF 
 coils accurately.
 
-The three possible values of `i_pf_location(j)` correspond to the following PF coil positions: (Redo taking 
-into account `i_single_null` and other recent changes e.g. rclsnorm)
+For PF coils going to be placed outside the TF coils the key radius is defined as:
 
-`i_pf_location(j)` = 1: PF coils are placed above the central solenoid (one group only);
-*R* = `r_cs_middle` + `rpf1`<br>
-*Z* = $\pm$(`z_tf_inside_half` * `f_z_cs_tf_internal` + 0.1 + 0.5 * (`z_tf_inside_half` * (1 - `f_z_cs_tf_internal`) + `dr_tf_inboard` + 0.1))
+$$
+\overbrace{R_{\text{PF, outside-TF}}}^{\texttt{r_pf_outside_tf_midplane}} = \overbrace{R_{\text{TF,outboard-out}}}^{\texttt{r_tf_outboard_out}} + \overbrace{dR_{\text{PF,TF-offset}}}^{\texttt{dr_tf_outboard_out_offset}}
+$$
 
-`i_pf_location(j)` = 2: PF coils are placed above the TF coils (one group only);<br>
-*R* = `rmajor` + `rpf2`<br>
-*Z* = $\pm$(`z_tf_inside_half` * `dr_tf_inboard` + 0.86)
+The four possible values of `i_pf_location(j)` correspond to the following PF coil positions: 
 
-`i_pf_location(j)` = 3: PF coils are placed radially outside the TF coils (any number of groups);<br>
-*R* = `rtot` + `dr_tf_outboard`/2 + `routr`<br>
-*Z* = $\pm$(`rminor` * `zref(j)`
+### Above the central solenoid (one group only) | `place_pf_above_cs()`
 
-The void fraction (for coolant) in each coil `i`'s winding pack is given by `f_a_pf_coil_void(i)`.
+- `i_pf_location(j) = 1`;
+
+    $$
+    R = \overbrace{R_{\text{CS,middle}}}^{\texttt{r_cs_middle}} + \overbrace{dR_{\text{offset}}}^{\texttt{dr_pf_cs_middle_offset}}
+    $$
+
+    $$
+    Z = \pm \ \overbrace{Z_{\text{CS,top}}}^{\texttt{z_cs_coil_upper}} + 0.1 
+    \\ + \frac{1}{2}\left(\left(\underbrace{Z_{\text{TF,inside}}}_{\texttt{z_tf_inside_half}}-Z_{\text{CS,top}}\right)+\underbrace{dR_{\text{TF,inboard}}}_{\texttt{dr_tf_inboard}}+0.1\right)
+    $$
+
+-----------------------------
+
+### Above the TF coils (one group only) | `place_pf_above_tf()`
+
+- `i_pf_location(j) = 2`;
+
+    $$
+    R = R_0 + \texttt{rpf2} \times \delta \times a
+    $$
+
+    Due to the nautre of the TF coils not being top-down symmetric for single null cases the positioning slightly differs if the coil is above or below the midplane.
+    
+    For above the midplane:
+
+    $$
+    Z = Z_{\text{TF,top}} + 0.86
+    $$    
+
+    For below the midplane:
+
+    $$
+    Z = - \left(Z_{\text{TF,top}} - \overbrace{dZ_{\text{TF,upper-lower-midplane}}}^{\texttt{dz_tf_upper_lower_midplane}} + 0.86  \right)
+    $$
+
+-------------------
+
+
+### Outside the TF coils | `place_pf_outside_tf()`
+
+- `i_pf_location(j) = 3`;
+
+    The PF coils can either be stacked vertically outside the TF (ideal for a picture frame coil) or follow the TF coil curve (D-shaped):
+
+    If the chosen value for `i_tf_shape` is that of a picture frame or `i_r_pf_outside_tf_placement == 1` then:
+
+    $$
+    R = \overbrace{R_{\text{PF, outside-TF}}}^{\texttt{r_pf_outside_tf_midplane}}
+    $$
+
+    Else, the coils follow a D-shape curve
+
+    $$
+    R =  \sqrt{\left(\overbrace{R_{\text{PF, outside-TF}}}^{\texttt{r_pf_outside_tf_midplane}}\right)^2 - Z^2}
+    $$
+
+    $$
+    Z = \pm \ a \times \texttt{zref}
+    $$
+
+---------------------
+
+### General placement | `place_pf_generally()`
+
+- `i_pf_location(j) = 4`;
+
+    The PF coils are placed generally in units of minor radius ($a$) relative to the mid-plane and plasma major radius ($R_0$);
+
+    $$
+    R = \pm \ a \times \texttt{rref[]} + R_0
+    $$
+
+    $$
+    Z = \pm \ a \times \texttt{zref[]}
+    $$    
+
+-------------------------
 
 ## Coil currents
 

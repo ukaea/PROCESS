@@ -1490,9 +1490,13 @@ INPUT_VARIABLES = {
     "roughness_fw_channel": InputVariable(
         data_structure.fwbs_variables, float, range=(0.0, 0.01)
     ),
-    "routr": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
+    "dr_pf_tf_outboard_out_offset": InputVariable(
+        data_structure.pfcoil_variables, float, range=(-3.0, 3.0)
+    ),
     "row": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
-    "rpf1": InputVariable(data_structure.pfcoil_variables, float, range=(0.0, 3.0)),
+    "dr_pf_cs_middle_offset": InputVariable(
+        data_structure.pfcoil_variables, float, range=(0.0, 3.0)
+    ),
     "rpf2": InputVariable(data_structure.pfcoil_variables, float, range=(-3.0, 3.0)),
     "rrin": InputVariable(data_structure.ife_variables, float, range=(0.1, 50.0)),
     "rrmax": InputVariable(data_structure.ife_variables, float, range=(1.0, 50.0)),
@@ -2057,7 +2061,7 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, int, choices=[0, 1]
     ),
     "i_str_wp": InputVariable(data_structure.tfcoil_variables, int, choices=[0, 1]),
-    "i_sup_pf_shape": InputVariable(
+    "i_r_pf_outside_tf_placement": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1]
     ),
     "i_tf_bucking": InputVariable(data_structure.tfcoil_variables, int, range=(0, 3)),
