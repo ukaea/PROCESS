@@ -5,6 +5,7 @@ from importlib import resources
 from pathlib import Path
 
 import numpy as np
+from numba import njit
 from scipy import integrate
 
 from process import constants
@@ -351,40 +352,45 @@ def zav_of_te(imp_element_index, teprofile):
     :rtype: numpy.array
     """
     # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
-    bins = impurity_radiation_module.impurity_arr_temp_kev[imp_element_index]
+    return _zav_of_te_compiled(
+        imp_element_index,
+        teprofile,
+        impurity_radiation_module.impurity_arr_temp_kev,
+        impurity_radiation_module.impurity_arr_zav,
+        impurity_radiation_module.impurity_arr_len_tab,
+    )
+
+
+@njit(cache=True)
+def _zav_of_te_compiled(
+    imp_element_index: int,
+    teprofile: np.array,
+    impurity_arr_temp_kev: np.array,
+    impurity_arr_zav: np.array,
+    impurity_arr_len_tab: np.array,
+):
+    bins = impurity_arr_temp_kev[imp_element_index]
     indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
-    yi = impurity_radiation_module.impurity_arr_zav[imp_element_index, indices - 1]
-    xi = np.log(
-        impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1]
-    )
-    c = (
-        impurity_radiation_module.impurity_arr_zav[imp_element_index, indices] - yi
-    ) / (
-        np.log(
-            impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices]
-        )
-        - xi
+    yi = impurity_arr_zav[imp_element_index, indices - 1]
+    xi = np.log(impurity_arr_temp_kev[imp_element_index, indices - 1])
+    c = (impurity_arr_zav[imp_element_index, indices] - yi) / (
+        np.log(impurity_arr_temp_kev[imp_element_index, indices]) - xi
     )
     zav_of_te = yi + c * (np.log(teprofile) - xi)
-    less_than_imp_temp_mask = (
-        teprofile
-        <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
-    )
-    zav_of_te[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_zav[
-        imp_element_index, 0
-    ]
+    less_than_imp_temp_mask = teprofile <= impurity_arr_temp_kev[imp_element_index, 0]
+    zav_of_te[less_than_imp_temp_mask] = impurity_arr_zav[imp_element_index, 0]
     greater_than_imp_temp_mask = (
         teprofile
-        >= impurity_radiation_module.impurity_arr_temp_kev[
+        >= impurity_arr_temp_kev[
             imp_element_index,
-            (impurity_radiation_module.impurity_arr_len_tab[imp_element_index]) - 1,
+            (impurity_arr_len_tab[imp_element_index]) - 1,
         ]
     )
-    zav_of_te[greater_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_zav[
+    zav_of_te[greater_than_imp_temp_mask] = impurity_arr_zav[
         imp_element_index,
-        impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
+        impurity_arr_len_tab[imp_element_index] - 1,
     ]
 
     return zav_of_te
