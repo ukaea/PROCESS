@@ -5,7 +5,6 @@ Our GitHub actions Continuous Integration (CI) pipeline serves to ensure each br
 
 | Name | Functionality |
 | ---- | ------------- |
-| make | Builds and archives the PROCESS build artefacts |
 | unit-test | Installs PROCESS and runs the unit tests. The job will fail if any of the unit tests fail. |
 | integration-test | Installs PROCESS and runs the integration tests. The job will fail if any of the integration tests fail. |
 | regression-test | Installs PROCESS and runs the regression tests with a 0% and 5% tolerance, respectively. The job will fail if any of the regression tests fail. |
