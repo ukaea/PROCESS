@@ -17,7 +17,7 @@ from process import constants
 from process.cs_fatigue import CsFatigue
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbsv
-from process.data_structure import pfcoil_variables
+from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -86,6 +86,7 @@ def test_pfcoil(monkeypatch, pfcoil):
         pfcoil_variables, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0)
     )
     monkeypatch.setattr(pfcoil_variables, "dr_pf_tf_outboard_out_offset", 1.5)
+    monkeypatch.setattr(superconducting_tf_coil_variables, "r_tf_outboard_out", 10.0)
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfcoil_variables, "rpf2", -1.825)
