@@ -2115,7 +2115,7 @@ def test_calculate_cs_geometry(
         # Single coil, different offset
         (np.array([1, 0]), 0, 1.5, 0.05, 4.0, 0.1, 2.0, [1.55], [3.2]),
         # Two coils, different offset and heights
-        (np.array([2, 0]), 0, 2.5, 0.15, 7.0, 0.25, 3.5, [2.65, 2.65], [5.525,-5.525]),
+        (np.array([2, 0]), 0, 2.5, 0.15, 7.0, 0.25, 3.5, [2.65, 2.65], [5.525, -5.525]),
     ],
 )
 def test_place_pf_above_cs(
@@ -2143,3 +2143,87 @@ def test_place_pf_above_cs(
     n_coils = n_pf_coils_in_group[n_pf_group]
     assert_array_almost_equal(r_array[n_pf_group, :n_coils], expected_r)
     assert_array_almost_equal(z_array[n_pf_group, :n_coils], expected_z)
+
+
+@pytest.mark.parametrize(
+    "n_pf_coils_in_group, n_pf_group, rmajor, triang, rminor, itart, itartpf, z_tf_inside_half, dz_tf_upper_lower_midplane, z_tf_top, top_bottom, rpf2, zref, expected_r, expected_z, expected_top_bottom",
+    [
+        # Test case 1: ST configuration, coil above midplane
+        (
+            np.array([2, 2]),
+            0,
+            3.0,
+            0.5,
+            1.0,
+            1,
+            0,
+            2.0,
+            0.5,
+            2.5,
+            1,
+            1.2,
+            np.array([0.3, 0.4]),
+            [3.6, 3.6],
+            [1.7, -1.7],
+            1,
+        ),
+        # Test case 2: Conventional configuration, coil above and below midplane
+        (
+            np.array([2, 2]),
+            1,
+            4.0,
+            0.3,
+            1.5,
+            0,
+            1,
+            2.5,
+            0.7,
+            3.0,
+            1,
+            1.0,
+            np.array([0.2, 0.5]),
+            [4.45, 4.45],
+            [3.86, -3.16],
+            1,
+        ),
+    ],
+)
+def test_place_pf_above_tf(
+    pfcoil,
+    n_pf_coils_in_group,
+    n_pf_group,
+    rmajor,
+    triang,
+    rminor,
+    itart,
+    itartpf,
+    z_tf_inside_half,
+    dz_tf_upper_lower_midplane,
+    z_tf_top,
+    top_bottom,
+    rpf2,
+    zref,
+    expected_r,
+    expected_z,
+    expected_top_bottom,
+):
+    r_arr, z_arr, top_bottom_out = pfcoil.place_pf_above_tf(
+        n_pf_coils_in_group=n_pf_coils_in_group,
+        n_pf_group=n_pf_group,
+        rmajor=rmajor,
+        triang=triang,
+        rminor=rminor,
+        itart=itart,
+        itartpf=itartpf,
+        z_tf_inside_half=z_tf_inside_half,
+        dz_tf_upper_lower_midplane=dz_tf_upper_lower_midplane,
+        z_tf_top=z_tf_top,
+        top_bottom=top_bottom,
+        rpf2=rpf2,
+        zref=zref,
+    )
+    # Only check the relevant group and number of coils
+    n_coils = n_pf_coils_in_group[n_pf_group]
+    assert np.allclose(r_arr[n_pf_group, :n_coils], expected_r)
+    assert np.allclose(z_arr[n_pf_group, :n_coils], expected_z)
+    assert top_bottom_out == expected_top_bottom
