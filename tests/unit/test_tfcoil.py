@@ -597,29 +597,17 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
 
 
 class TfcindParam(NamedTuple):
-    z_tf_arc: Any = None
-
-    r_tf_arc: Any = None
-
-    ind_tf_coil: Any = None
-
-    dr_tf_inboard: Any = None
-
-    itart: Any = None
-
-    i_tf_shape: Any = None
-
-    z_tf_inside_half: Any = None
-
-    dr_tf_outboard: Any = None
-
-    r_tf_outboard_mid: Any = None
-
-    r_tf_inboard_mid: Any = None
-
-    expected_yarc: Any = None
-
-    expected_ind_tf_coil: Any = None
+    z_tf_arc: Any
+    r_tf_arc: Any
+    ind_tf_coil: Any
+    dr_tf_inboard: Any
+    itart: Any
+    i_tf_shape: Any
+    z_tf_inside_half: Any
+    dr_tf_outboard: Any
+    r_tf_outboard_mid: Any
+    r_tf_inboard_mid: Any
+    expected_ind_tf_coil: Any
 
 
 @pytest.mark.parametrize(
@@ -650,6 +638,13 @@ class TfcindParam(NamedTuple):
             dr_tf_inboard=1.208,
             itart=0,
             i_tf_shape=1,
+            # The following 4 params are not used by tf_coil_self_inductance because
+            # this tests the D-shaped coil branch. However they are provided because
+            # the function is Numba compiled and cannot be called with None arguments.
+            z_tf_inside_half=0.0,
+            dr_tf_outboard=0.0,
+            r_tf_outboard_mid=0.0,
+            r_tf_inboard_mid=0.0,
             expected_ind_tf_coil=5.4453892599192845e-06,
         ),
         TfcindParam(
@@ -677,17 +672,26 @@ class TfcindParam(NamedTuple):
             dr_tf_inboard=1.208,
             itart=0,
             i_tf_shape=1,
+            # following 4 params are not used by needed for numba to be happy
+            z_tf_inside_half=0.0,
+            dr_tf_outboard=0.0,
+            r_tf_outboard_mid=0.0,
+            r_tf_inboard_mid=0.0,
             expected_ind_tf_coil=5.4524893280368181e-06,
         ),
         TfcindParam(
             dr_tf_inboard=1.208,
             itart=0,
             i_tf_shape=0,
-            expected_ind_tf_coil=6.26806810007207e-06,
             z_tf_inside_half=9.0730900215620327,
             dr_tf_outboard=1.208,
             r_tf_outboard_mid=16.519405859443332,
             r_tf_inboard_mid=3.5979411851091103,
+            # following 3 params are not used by needed for numba to be happy
+            z_tf_arc=np.zeros(3),
+            r_tf_arc=np.zeros(3),
+            ind_tf_coil=0.0,
+            expected_ind_tf_coil=6.26806810007207e-06,
         ),
     ),
 )
