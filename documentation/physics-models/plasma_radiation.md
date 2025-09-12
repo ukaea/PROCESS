@@ -30,8 +30,19 @@ $$
 P_i = n_i n_e L_Z (Z_i, T)
 $$
 
-where \(P_i\) is the radiation per unit volume (excluding synchrotron radiation),
-\(L_Z (Z_i, T)\) is the loss function for ion species \(i\) at temperature \(T\), and \(n_i\) is the density of ion species \(i\).
+where $P_i$ is the radiation per unit volume (excluding synchrotron radiation),
+$L_Z (Z_i, T)$ is the loss function for ion species $i$ at temperature $T$, and $n_i$ is the density of ion species $i$.
+
+!!! note "Particle confinement"
+    For the loss function $L_Z (Z_i, T)$, the particles are assumed to be in equailibrium and thus have infinite confinement time. (This is the data found at the bottom of the ADAS derived files in `process/data/lz_non_corona_14_elements`)
+
+    This assumes:
+
+    - There are no particle losses to the walls of the confinement vessel or through magnetic field lines.
+
+    - The system exists in a perfectly steady state where the ionization and recombination rates precisely balance, allowing the coronal equilibrium model to apply perfectly. 
+
+    - The radiation is "optically thin," meaning that the emitted photons can escape the plasma without being re-absorbed by other particles. 
 
 The radiation emission is numerically integrated over the plasma profile, 
 using the corresponding temperature and density distributions. Emission is only considered from within the separatrix, 
