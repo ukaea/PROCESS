@@ -33,9 +33,11 @@ impurity_arr_label: list[str] = None
 
 impurity_arr_z: list[float] = None
 
-impurity_arr_amass: list[float] = None
+m_impurity_amu_array: list[float] = None
+"""1D array of impurity atomic masses in Atomic Mass Units (amu)"""
 
 f_nd_impurity_electron_array: list[float] = None
+"""1D array of impurity relative densities (n_imp/n_e)"""
 
 impurity_arr_len_tab: list[int] = None
 
@@ -53,7 +55,7 @@ def init_impurity_radiation_module():
     global imp_label
     global impurity_arr_label
     global impurity_arr_z
-    global impurity_arr_amass
+    global m_impurity_amu_array
     global f_nd_impurity_electron_array
     global impurity_arr_len_tab
     global impurity_arr_temp_kev
@@ -96,7 +98,7 @@ def init_impurity_radiation_module():
     ])
     impurity_arr_label = np.full(N_IMPURITIES, "  ")
     impurity_arr_z = np.zeros(N_IMPURITIES)
-    impurity_arr_amass = np.zeros(N_IMPURITIES)
+    m_impurity_amu_array = np.zeros(N_IMPURITIES)
     f_nd_impurity_electron_array = np.zeros(N_IMPURITIES)
     impurity_arr_len_tab = np.full(N_IMPURITIES, 0)
     impurity_arr_temp_kev = np.zeros((N_IMPURITIES, 200))
