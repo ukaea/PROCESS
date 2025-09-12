@@ -210,6 +210,16 @@ class FusionReactionRate:
         # Initialize Bosch-Hale constants for the D-T reaction
         dt = BoschHaleConstants(**REACTION_CONSTANTS_DT)
 
+        physics_variables.fusrat_plasma_dt_profile = (
+            bosch_hale_reactivity(
+                (physics_variables.ti / physics_variables.te)
+                * self.plasma_profile.teprofile.profile_y,
+                dt,
+            )
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_tritium * physics_variables.nd_fuel_ions)
+        )
+
         # Calculate the fusion reaction rate integral using Simpson's rule
         sigmav = integrate.simpson(
             fusion_rate_integral(self.plasma_profile, dt),
@@ -289,6 +299,16 @@ class FusionReactionRate:
             dx=self.plasma_profile.neprofile.profile_dx,
         )
 
+        physics_variables.fusrat_plasma_dhe3_profile = (
+            bosch_hale_reactivity(
+                (physics_variables.ti / physics_variables.te)
+                * self.plasma_profile.teprofile.profile_y,
+                dhe3,
+            )
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
+        )
+
         # Reaction energy in MegaJoules [MJ]
         reaction_energy = constants.D_HELIUM_ENERGY / 1.0e6
 
@@ -357,6 +377,16 @@ class FusionReactionRate:
             fusion_rate_integral(self.plasma_profile, dd1),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
+        physics_variables.fusrat_plasma_dd_helion_profile = (
+            bosch_hale_reactivity(
+                (physics_variables.ti / physics_variables.te)
+                * self.plasma_profile.teprofile.profile_y,
+                dd1,
+            )
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
         )
 
         # Reaction energy in MegaJoules [MJ]
@@ -430,6 +460,16 @@ class FusionReactionRate:
             fusion_rate_integral(self.plasma_profile, dd2),
             x=self.plasma_profile.neprofile.profile_x,
             dx=self.plasma_profile.neprofile.profile_dx,
+        )
+
+        physics_variables.fusrat_plasma_dd_triton_profile = (
+            bosch_hale_reactivity(
+                (physics_variables.ti / physics_variables.te)
+                * self.plasma_profile.teprofile.profile_y,
+                dd2,
+            )
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
         )
 
         # Reaction energy in MegaJoules [MJ]
