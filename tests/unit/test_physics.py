@@ -1294,7 +1294,7 @@ def test_conhas():
 class PlasmaCompositionParam(NamedTuple):
     f_beam_tritium: Any = None
 
-    impurity_arr_frac: Any = None
+    f_nd_impurity_electron_array: Any = None
 
     impurity_arr_z: Any = None
 
@@ -1422,7 +1422,7 @@ class PlasmaCompositionParam(NamedTuple):
     (
         PlasmaCompositionParam(
             f_beam_tritium=9.9999999999999995e-07,
-            impurity_arr_frac=np.array([
+            f_nd_impurity_electron_array=np.array([
                 0.90000000000000002,
                 0.10000000000000001,
                 0,
@@ -1546,7 +1546,7 @@ class PlasmaCompositionParam(NamedTuple):
         ),
         PlasmaCompositionParam(
             f_beam_tritium=9.9999999999999995e-07,
-            impurity_arr_frac=np.array([
+            f_nd_impurity_electron_array=np.array([
                 0.78128900936605694,
                 0.10000000000000001,
                 0,
@@ -1684,8 +1684,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         impurity_radiation_module,
-        "impurity_arr_frac",
-        plasmacompositionparam.impurity_arr_frac,
+        "f_nd_impurity_electron_array",
+        plasmacompositionparam.f_nd_impurity_electron_array,
     )
 
     monkeypatch.setattr(
@@ -1842,7 +1842,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     physics.plasma_composition()
 
-    assert impurity_radiation_module.impurity_arr_frac == pytest.approx(
+    assert impurity_radiation_module.f_nd_impurity_electron_array == pytest.approx(
         plasmacompositionparam.expected_impurity_arr_frac
     )
 
