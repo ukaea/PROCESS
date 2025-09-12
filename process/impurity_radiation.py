@@ -27,163 +27,163 @@ def initialise_imprad():
 
     table_length = 200  # Number of temperature and Lz values in data file
 
-    frac = 1.0e0
+    f_nd_species_electron = 1.0e0
 
     #  Hydrogen
 
     init_imp_element(
-        no=1,
-        label=impurity_radiation_module.imp_label[0],
+        n_species_index=1,
+        name_label=impurity_radiation_module.imp_label[0],
         z=1,
-        amass=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
-        frac=frac,
+        m_species_amu=constants.M_PROTIUM_AMU,  # 1.00782503223 1H
+        f_nd_species_electron=f_nd_species_electron,
         len_tab=table_length,
         error=errorflag,
     )
 
-    frac = 0.0e0
+    f_nd_species_electron = 0.0e0
 
     #  Helium
     init_imp_element(
-        2,
-        impurity_radiation_module.imp_label[1],
-        2,
-        constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=2,
+        name_label=impurity_radiation_module.imp_label[1],
+        z=2,
+        m_species_amu=constants.M_HELIUM_AMU,  # 4.002602 (3He,4He) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Beryllium
     init_imp_element(
-        3,
-        impurity_radiation_module.imp_label[2],
-        4,
-        constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=3,
+        name_label=impurity_radiation_module.imp_label[2],
+        z=4,
+        m_species_amu=constants.M_BERYLLIUM_AMU,  # 9.0121831 9Be
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Carbon
     init_imp_element(
-        4,
-        impurity_radiation_module.imp_label[3],
-        6,
-        constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=4,
+        name_label=impurity_radiation_module.imp_label[3],
+        z=6,
+        m_species_amu=constants.M_CARBON_AMU,  # 12.0096, (12C,13C,14C) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Nitrogen
     init_imp_element(
-        5,
-        impurity_radiation_module.imp_label[4],
-        7,
-        constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=5,
+        name_label=impurity_radiation_module.imp_label[4],
+        z=7,
+        m_species_amu=constants.M_NITROGEN_AMU,  # 14.00643, (14N,15N) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Oxygen
     init_imp_element(
-        6,
-        impurity_radiation_module.imp_label[5],
-        8,
-        constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=6,
+        name_label=impurity_radiation_module.imp_label[5],
+        z=8,
+        m_species_amu=constants.M_OXYGEN_AMU,  # 15.99903, (16O,17O,18O) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Neon
     init_imp_element(
-        7,
-        impurity_radiation_module.imp_label[6],
-        10,
-        constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=7,
+        name_label=impurity_radiation_module.imp_label[6],
+        z=10,
+        m_species_amu=constants.M_NEON_AMU,  # 20.1797 (20Ne,21Ne,22Ne) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Silicon
     init_imp_element(
-        8,
-        impurity_radiation_module.imp_label[7],
-        14,
-        constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=8,
+        name_label=impurity_radiation_module.imp_label[7],
+        z=14,
+        m_species_amu=constants.M_SILICON_AMU,  # 28.084 (28Si,29Si,30Si) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Argon
     init_imp_element(
-        9,
-        impurity_radiation_module.imp_label[8],
-        18,
-        constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=9,
+        name_label=impurity_radiation_module.imp_label[8],
+        z=18,
+        m_species_amu=constants.M_ARGON_AMU,  # 39.948 (40Ar,36Ar,38Ar) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Iron
     init_imp_element(
-        10,
-        impurity_radiation_module.imp_label[9],
-        26,
-        constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=10,
+        name_label=impurity_radiation_module.imp_label[9],
+        z=26,
+        m_species_amu=constants.M_IRON_AMU,  # 55.845 (56Fe,54Fe,57Fe,58Fe) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Nickel
     init_imp_element(
-        11,
-        impurity_radiation_module.imp_label[10],
-        28,
-        constants.M_NICKEL_AMU,  # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=11,
+        name_label=impurity_radiation_module.imp_label[10],
+        z=28,
+        m_species_amu=constants.M_NICKEL_AMU,  # 58.6934 (58Ni,60Ni,61Ni,62Ni,64Ni) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Krypton
     init_imp_element(
-        12,
-        impurity_radiation_module.imp_label[11],
-        36,
-        constants.M_KRYPTON_AMU,  # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=12,
+        name_label=impurity_radiation_module.imp_label[11],
+        z=36,
+        m_species_amu=constants.M_KRYPTON_AMU,  # 83.798 (84Kr,86Kr,82Kr,80Kr,78Kr) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Xenon
     init_imp_element(
-        13,
-        impurity_radiation_module.imp_label[12],
-        54,
-        constants.M_XENON_AMU,  # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=13,
+        name_label=impurity_radiation_module.imp_label[12],
+        z=54,
+        m_species_amu=constants.M_XENON_AMU,  # 131.293 (132Xe,129Xe,131Xe,134Xe,136Xe) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
     #  Tungsten
     init_imp_element(
-        14,
-        impurity_radiation_module.imp_label[13],
-        74,
-        constants.M_TUNGSTEN_AMU,  # 183.84 (184W,186W,182W,183W,180W) Average mass
-        frac,
-        table_length,
-        errorflag,
+        n_species_index=14,
+        name_label=impurity_radiation_module.imp_label[13],
+        z=74,
+        m_species_amu=constants.M_TUNGSTEN_AMU,  # 183.84 (184W,186W,182W,183W,180W) Average mass
+        f_nd_species_electron=f_nd_species_electron,
+        len_tab=table_length,
+        error=errorflag,
     )
 
 
@@ -227,39 +227,56 @@ def read_impurity_file(impurity_file: Path):
     return file_contents
 
 
-def init_imp_element(no, label, z, amass, frac, len_tab, error):
+def init_imp_element(
+    n_species_index: int,
+    name_label: str,
+    z: int,
+    m_species_amu: float,
+    f_nd_species_electron: float,
+    len_tab: int,
+    error: int,
+) -> None:
     """
-    Initialises the impurity radiation data for a species
-    author: H Lux, CCFE, Culham Science Centre
-    author: P J Knight, CCFE, Culham Science Centre
-    no      : input integer  : position of species in impurity array
-    label   : input string   : species name
-    Z       : input integer  : species charge number
-    amass   : input real     : species atomic mass (amu)
-    frac    : input real     : number density / electron density
-    len_tab : input integer  : length of temperature and Lz tables
-    error   : input/output integer : Error flag; 0 = okay, 1 = missing
-    impurity data
+    Initialise the impurity radiation data for a species.
+
+    :param n_species_index: Position of species in impurity array
+    :type n_species_index: int
+    :param name_label: Species name
+    :type name_label: str
+    :param z: Species charge number
+    :type z: int
+    :param m_species_amu: Species atomic mass (amu)
+    :type m_species_amu: float
+    :param f_nd_species_electron: Number density / electron density
+    :type f_nd_species_electron: float
+    :param len_tab: Length of temperature and Lz tables
+    :type len_tab: int
+    :param error: Error flag; 0 = okay, 1 = missing impurity data
+    :type error: int
+    :raises ProcessValueError: If illegal impurity number is provided
+    :raises FileNotFoundError: If impurity data files are missing
+    :raises ProcessError: If required data cannot be located in files
+
     This routine initialises the impurity radiation data structure
-    for a given impurity species.
-    The Lz versus temperature data are read in from file.
+    for a given impurity species. The Lz versus temperature data are
+    read in from file.
     """
 
     if error == 1:
         return
 
-    if no > len(impurity_radiation_module.impurity_arr_label):
+    if n_species_index > len(impurity_radiation_module.impurity_arr_label):
         raise ProcessValueError(
             "Illegal impurity number",
-            number=no,
+            number=n_species_index,
             max=len(impurity_radiation_module.impurity_arr_label),
         )
 
-    impurity_radiation_module.impurity_arr_label[no - 1] = label
-    impurity_radiation_module.impurity_arr_z[no - 1] = z
-    impurity_radiation_module.impurity_arr_amass[no - 1] = amass
-    impurity_radiation_module.impurity_arr_frac[no - 1] = frac
-    impurity_radiation_module.impurity_arr_len_tab[no - 1] = len_tab
+    impurity_radiation_module.impurity_arr_label[n_species_index - 1] = name_label
+    impurity_radiation_module.impurity_arr_z[n_species_index - 1] = z
+    impurity_radiation_module.impurity_arr_amass[n_species_index - 1] = m_species_amu
+    impurity_radiation_module.impurity_arr_frac[n_species_index - 1] = f_nd_species_electron
+    impurity_radiation_module.impurity_arr_len_tab[n_species_index - 1] = len_tab
 
     if len_tab > 200:
         print(
@@ -268,8 +285,8 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
 
     impurity_dir = resources.files("process") / "data/lz_non_corona_14_elements/"
 
-    lz_file = impurity_dir / f"{label}_lz_tau.dat"
-    z_file = impurity_dir / f"{label}_z_tau.dat"
+    lz_file = impurity_dir / f"{name_label}_lz_tau.dat"
+    z_file = impurity_dir / f"{name_label}_z_tau.dat"
 
     if not lz_file.exists() or not z_file.exists():
         raise FileNotFoundError(
@@ -306,9 +323,9 @@ def init_imp_element(no, label, z, amass, frac, len_tab, error):
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 
-    impurity_radiation_module.impurity_arr_temp_kev[no - 1, :] = Te * 1e-3
-    impurity_radiation_module.impurity_arr_lz_wm3[no - 1, :] = lz
-    impurity_radiation_module.impurity_arr_zav[no - 1, :] = zav
+    impurity_radiation_module.impurity_arr_temp_kev[n_species_index - 1, :] = Te * 1e-3
+    impurity_radiation_module.impurity_arr_lz_wm3[n_species_index - 1, :] = lz
+    impurity_radiation_module.impurity_arr_zav[n_species_index - 1, :] = zav
 
 
 def z2index(zimp):
