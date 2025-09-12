@@ -1298,7 +1298,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     impurity_arr_z: Any = None
 
-    impurity_arr_amass: Any = None
+    m_impurity_amu_array: Any = None
 
     alphat: Any = None
 
@@ -1454,7 +1454,7 @@ class PlasmaCompositionParam(NamedTuple):
                 54.0,
                 74.0,
             ]),
-            impurity_arr_amass=np.array([
+            m_impurity_amu_array=np.array([
                 1.01,
                 4.0030000000000001,
                 9.0099999999999998,
@@ -1566,7 +1566,7 @@ class PlasmaCompositionParam(NamedTuple):
                 np.array((1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74), order="F"),
                 order="F",
             ).transpose(),
-            impurity_arr_amass=np.array(
+            m_impurity_amu_array=np.array(
                 np.array(
                     (
                         1.01,
@@ -1696,8 +1696,8 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(
         impurity_radiation_module,
-        "impurity_arr_amass",
-        plasmacompositionparam.impurity_arr_amass,
+        "m_impurity_amu_array",
+        plasmacompositionparam.m_impurity_amu_array,
     )
 
     monkeypatch.setattr(physics_variables, "alphat", plasmacompositionparam.alphat)
