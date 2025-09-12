@@ -41,7 +41,8 @@ f_nd_impurity_electron_array: list[float] = None
 
 impurity_arr_len_tab: list[int] = None
 
-impurity_arr_temp_kev: list[float] = None
+temp_impurity_keV_array: list[float] = None
+"""1D array of impurity temperatures in kilo-electronvolts (keV)"""
 
 impurity_arr_lz_wm3: list[float] = None
 
@@ -58,7 +59,7 @@ def init_impurity_radiation_module():
     global m_impurity_amu_array
     global f_nd_impurity_electron_array
     global impurity_arr_len_tab
-    global impurity_arr_temp_kev
+    global temp_impurity_keV_array
     global impurity_arr_lz_wm3
     global impurity_arr_zav
 
@@ -101,6 +102,6 @@ def init_impurity_radiation_module():
     m_impurity_amu_array = np.zeros(N_IMPURITIES)
     f_nd_impurity_electron_array = np.zeros(N_IMPURITIES)
     impurity_arr_len_tab = np.full(N_IMPURITIES, 0)
-    impurity_arr_temp_kev = np.zeros((N_IMPURITIES, 200))
+    temp_impurity_keV_array = np.zeros((N_IMPURITIES, 200))
     impurity_arr_lz_wm3 = np.zeros((N_IMPURITIES, 200))
     impurity_arr_zav = np.zeros((N_IMPURITIES, 200))

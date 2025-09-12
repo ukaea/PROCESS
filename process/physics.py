@@ -3115,7 +3115,7 @@ class Physics:
         - Sums the ion densities for all impurity ions with charge greater than helium.
         - Ensures charge neutrality by adjusting the fuel portion.
         - Calculates the total ion density.
-        - Sets impurity fractions for radiation calculations.
+        - Sets the relative impurity densities for radiation calculations.
         - Calculates the effective charge.
         - Defines the Coulomb logarithm for ion-electron and electron-electron collisions.
         - Calculates the fraction of alpha energy to ions and electrons.
@@ -3198,7 +3198,7 @@ class Physics:
 
         # ======================================================================
 
-        # Set hydrogen and helium impurity fractions for
+        # Set hydrogen and helium relative impurity densities for
         # radiation calculations
         impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("H_")
