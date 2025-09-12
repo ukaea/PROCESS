@@ -3334,7 +3334,7 @@ class Physics:
                 physics_variables.m_ions_total_amu += (
                     physics_variables.dene
                     * impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * impurity_radiation_module.impurity_arr_amass[imp]
+                    * impurity_radiation_module.m_impurity_amu_array[imp]
                 )
 
         physics_variables.m_ions_total_amu = (
@@ -3383,7 +3383,7 @@ class Physics:
                         imp, np.array([physics_variables.te])
                     ).squeeze()
                     ** 2
-                    / impurity_radiation_module.impurity_arr_amass[imp]
+                    / impurity_radiation_module.m_impurity_amu_array[imp]
                 )
 
         # ======================================================================
