@@ -274,7 +274,7 @@ def init_imp_element(
 
     impurity_radiation_module.impurity_arr_label[n_species_index - 1] = name_label
     impurity_radiation_module.impurity_arr_z[n_species_index - 1] = z
-    impurity_radiation_module.impurity_arr_amass[n_species_index - 1] = m_species_amu
+    impurity_radiation_module.m_impurity_amu_array[n_species_index - 1] = m_species_amu
     impurity_radiation_module.f_nd_impurity_electron_array[n_species_index - 1] = (
         f_nd_species_electron
     )
