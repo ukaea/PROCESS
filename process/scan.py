@@ -1005,7 +1005,7 @@ class Scan:
                 build_variables.dr_blkt_outboard = swp[iscn - 1]
             case 42:
                 impurity_radiation_module.f_nd_impurity_electrons[8] = swp[iscn - 1]
-                impurity_radiation_module.impurity_arr_frac[8] = (
+                impurity_radiation_module.f_nd_impurity_electron_array[8] = (
                     impurity_radiation_module.f_nd_impurity_electrons[8]
                 )
             case 44:
@@ -1020,7 +1020,7 @@ class Scan:
                 tfcoil_variables.n_tf_wp_layers = int(swp[iscn - 1])
             case 50:
                 impurity_radiation_module.f_nd_impurity_electrons[12] = swp[iscn - 1]
-                impurity_radiation_module.impurity_arr_frac[12] = (
+                impurity_radiation_module.f_nd_impurity_electron_array[12] = (
                     impurity_radiation_module.f_nd_impurity_electrons[12]
                 )
             case 51:

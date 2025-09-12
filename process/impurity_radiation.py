@@ -275,7 +275,9 @@ def init_imp_element(
     impurity_radiation_module.impurity_arr_label[n_species_index - 1] = name_label
     impurity_radiation_module.impurity_arr_z[n_species_index - 1] = z
     impurity_radiation_module.impurity_arr_amass[n_species_index - 1] = m_species_amu
-    impurity_radiation_module.impurity_arr_frac[n_species_index - 1] = f_nd_species_electron
+    impurity_radiation_module.f_nd_impurity_electron_array[n_species_index - 1] = (
+        f_nd_species_electron
+    )
     impurity_radiation_module.impurity_arr_len_tab[n_species_index - 1] = len_tab
 
     if len_tab > 200:
@@ -451,7 +453,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
     pimpden = np.exp(yi + c * (np.log(teprofile) - xi))
 
     pimpden = (
-        impurity_radiation_module.impurity_arr_frac[imp_element_index]
+        impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
         * neprofile
         * neprofile
         * pimpden
@@ -511,7 +513,9 @@ class ImpurityRadiation:
         self.plasma_profile = plasma_profile
         self.rho = plasma_profile.neprofile.profile_x
         self.rhodx = plasma_profile.neprofile.profile_dx
-        self.imp = np.nonzero(impurity_radiation_module.impurity_arr_frac > 1.0e-30)[0]
+        self.imp = np.nonzero(
+            impurity_radiation_module.f_nd_impurity_electron_array > 1.0e-30
+        )[0]
 
         self.pimp_profile = np.zeros(self.plasma_profile.profile_size)
         self.radtot_profile = np.zeros(self.plasma_profile.profile_size)
