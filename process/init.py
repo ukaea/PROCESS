@@ -395,7 +395,7 @@ def check_process(inputs):  # noqa: ARG001
 
     # Impurity fractions
     for imp in range(data_structure.impurity_radiation_module.N_IMPURITIES):
-        data_structure.impurity_radiation_module.impurity_arr_frac[imp] = (
+        data_structure.impurity_radiation_module.f_nd_impurity_electron_array[imp] = (
             data_structure.impurity_radiation_module.f_nd_impurity_electrons[imp]
         )
 
