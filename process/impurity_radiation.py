@@ -325,7 +325,9 @@ def init_imp_element(
             f"Cannot locate Zav for infinite confinement data in {z_file}"
         )
 
-    impurity_radiation_module.impurity_arr_temp_kev[n_species_index - 1, :] = Te * 1e-3
+    impurity_radiation_module.temp_impurity_keV_array[n_species_index - 1, :] = (
+        Te * 1e-3
+    )
     impurity_radiation_module.impurity_arr_lz_wm3[n_species_index - 1, :] = lz
     impurity_radiation_module.impurity_arr_zav[n_species_index - 1, :] = zav
 
@@ -374,7 +376,7 @@ def zav_of_te(imp_element_index, teprofile):
     return _zav_of_te_compiled(
         imp_element_index,
         teprofile,
-        impurity_radiation_module.impurity_arr_temp_kev,
+        impurity_radiation_module.temp_impurity_keV_array,
         impurity_radiation_module.impurity_arr_zav,
         impurity_radiation_module.impurity_arr_len_tab,
     )
@@ -384,25 +386,25 @@ def zav_of_te(imp_element_index, teprofile):
 def _zav_of_te_compiled(
     imp_element_index: int,
     teprofile: np.array,
-    impurity_arr_temp_kev: np.array,
+    temp_impurity_keV_array: np.array,
     impurity_arr_zav: np.array,
     impurity_arr_len_tab: np.array,
 ):
-    bins = impurity_arr_temp_kev[imp_element_index]
+    bins = temp_impurity_keV_array[imp_element_index]
     indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
     yi = impurity_arr_zav[imp_element_index, indices - 1]
-    xi = np.log(impurity_arr_temp_kev[imp_element_index, indices - 1])
+    xi = np.log(temp_impurity_keV_array[imp_element_index, indices - 1])
     c = (impurity_arr_zav[imp_element_index, indices] - yi) / (
-        np.log(impurity_arr_temp_kev[imp_element_index, indices]) - xi
+        np.log(temp_impurity_keV_array[imp_element_index, indices]) - xi
     )
     zav_of_te = yi + c * (np.log(teprofile) - xi)
-    less_than_imp_temp_mask = teprofile <= impurity_arr_temp_kev[imp_element_index, 0]
+    less_than_imp_temp_mask = teprofile <= temp_impurity_keV_array[imp_element_index, 0]
     zav_of_te[less_than_imp_temp_mask] = impurity_arr_zav[imp_element_index, 0]
     greater_than_imp_temp_mask = (
         teprofile
-        >= impurity_arr_temp_kev[
+        >= temp_impurity_keV_array[
             imp_element_index,
             (impurity_arr_len_tab[imp_element_index]) - 1,
         ]
@@ -428,7 +430,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
     :rtype: numpy.array
     """
     # less_than_imp_temp_mask = teprofile values less than impurity temperature. greater_than_imp_temp_mask = teprofile values higher than impurity temperature.
-    bins = impurity_radiation_module.impurity_arr_temp_kev[imp_element_index]
+    bins = impurity_radiation_module.temp_impurity_keV_array[imp_element_index]
     indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
@@ -437,7 +439,9 @@ def pimpden(imp_element_index, neprofile, teprofile):
         impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices - 1]
     )
     xi = np.log(
-        impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices - 1]
+        impurity_radiation_module.temp_impurity_keV_array[
+            imp_element_index, indices - 1
+        ]
     )
     c = (
         np.log(
@@ -446,7 +450,9 @@ def pimpden(imp_element_index, neprofile, teprofile):
         - yi
     ) / (
         np.log(
-            impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, indices]
+            impurity_radiation_module.temp_impurity_keV_array[
+                imp_element_index, indices
+            ]
         )
         - xi
     )
@@ -461,7 +467,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
 
     less_than_imp_temp_mask = (
         teprofile
-        <= impurity_radiation_module.impurity_arr_temp_kev[imp_element_index, 0]
+        <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
     )
     pimpden[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
         imp_element_index, 0
@@ -469,7 +475,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
 
     greater_than_imp_temp_mask = (
         teprofile
-        >= impurity_radiation_module.impurity_arr_temp_kev[
+        >= impurity_radiation_module.temp_impurity_keV_array[
             imp_element_index,
             impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
         ]
