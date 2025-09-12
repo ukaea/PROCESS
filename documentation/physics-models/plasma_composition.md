@@ -39,6 +39,11 @@ plasma quasi-neutrality taking into account the fuel ratios
 `f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
 be input by the user or selected as an iteration variable.
 
+!!! note "Location of impurities"
+
+    All species/impurities are currently assumed to be distributed homogeneously throughout the plasma.
+    This is an important assumptions that affects the [plasma radiation](./plasma_radiation.md).
+
 The impurity fraction of any one of the elements listed in array `f_nd_impurity_electrons` (other than hydrogen 
 isotopes and helium) may be used as an iteration variable.
 

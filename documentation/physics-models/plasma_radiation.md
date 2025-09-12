@@ -33,6 +33,11 @@ $$
 where $P_i$ is the radiation per unit volume (excluding synchrotron radiation),
 $L_Z (Z_i, T)$ is the loss function for ion species $i$ at temperature $T$, and $n_i$ is the density of ion species $i$.
 
+!!! note "Location of impurities"
+
+    All species/impurities are currently assumed to be distributed homogeneously throughout the plasma. So the electron density and temperature profiles are integrated using the values of `f_nd_impurity_electron()` to get the line and Bhremmsstrahlung radiation of a species across the plasma profile. 
+    
+
 !!! note "Particle confinement"
     For the loss function $L_Z (Z_i, T)$, the particles are assumed to be in equailibrium and thus have infinite confinement time. (This is the data found at the bottom of the ADAS derived files in `process/data/lz_non_corona_14_elements`)
 
