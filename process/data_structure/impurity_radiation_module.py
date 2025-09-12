@@ -34,15 +34,15 @@ impurity_arr_label: list[str] = None
 impurity_arr_z: list[float] = None
 
 m_impurity_amu_array: list[float] = None
-"""1D array of impurity atomic masses in Atomic Mass Units (amu)"""
+"""2D array of impurity atomic masses in Atomic Mass Units (amu)"""
 
 f_nd_impurity_electron_array: list[float] = None
-"""1D array of impurity relative densities (n_imp/n_e)"""
+"""2D array of impurity relative densities (n_imp/n_e)"""
 
 impurity_arr_len_tab: list[int] = None
 
 temp_impurity_keV_array: list[float] = None
-"""1D array of impurity temperatures in kilo-electronvolts (keV)"""
+"""2D array of impurity temperatures in kilo-electronvolts (keV)"""
 
 impurity_arr_lz_wm3: list[float] = None
 
