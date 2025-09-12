@@ -328,7 +328,7 @@ def init_imp_element(
     impurity_radiation_module.temp_impurity_keV_array[n_species_index - 1, :] = (
         Te * 1e-3
     )
-    impurity_radiation_module.impurity_arr_lz_wm3[n_species_index - 1, :] = lz
+    impurity_radiation_module.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = lz
     impurity_radiation_module.impurity_arr_zav[n_species_index - 1, :] = zav
 
 
@@ -436,7 +436,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
     indices[indices < 0] = 0
 
     yi = np.log(
-        impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices - 1]
+        impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, indices - 1]
     )
     xi = np.log(
         impurity_radiation_module.temp_impurity_keV_array[
@@ -445,7 +445,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
     )
     c = (
         np.log(
-            impurity_radiation_module.impurity_arr_lz_wm3[imp_element_index, indices]
+            impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, indices]
         )
         - yi
     ) / (
@@ -469,7 +469,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
         teprofile
         <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
     )
-    pimpden[less_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
+    pimpden[less_than_imp_temp_mask] = impurity_radiation_module.pden_impurity_lz_nd_temp_array[
         imp_element_index, 0
     ]
 
@@ -481,7 +481,7 @@ def pimpden(imp_element_index, neprofile, teprofile):
         ]
     )
     #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pimpden[greater_than_imp_temp_mask] = impurity_radiation_module.impurity_arr_lz_wm3[
+    pimpden[greater_than_imp_temp_mask] = impurity_radiation_module.pden_impurity_lz_nd_temp_array[
         imp_element_index,
         impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
     ]
