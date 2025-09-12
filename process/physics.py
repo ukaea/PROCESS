@@ -2758,7 +2758,7 @@ class Physics:
                 self.outfile,
                 (
                     f" 'fzactual, frac, reinke_variables.impvardiv = {reinke_variables.fzactual},"
-                    f" {impurity_radiation_module.impurity_arr_frac(reinke_variables.impvardiv)},"
+                    f" {impurity_radiation_module.f_nd_impurity_electron_array(reinke_variables.impvardiv)},"
                     f" {reinke_variables.impvardiv}"
                 ),
             )
@@ -3173,7 +3173,7 @@ class Physics:
                 znimp += impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.te])
                 ).squeeze() * (
-                    impurity_radiation_module.impurity_arr_frac[imp]
+                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * physics_variables.dene
                 )
 
@@ -3200,7 +3200,7 @@ class Physics:
 
         # Set hydrogen and helium impurity fractions for
         # radiation calculations
-        impurity_radiation_module.impurity_arr_frac[
+        impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("H_")
         ] = (
             physics_variables.nd_protons
@@ -3209,7 +3209,7 @@ class Physics:
             + physics_variables.nd_beam_ions
         ) / physics_variables.dene
 
-        impurity_radiation_module.impurity_arr_frac[
+        impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("He")
         ] = (
             physics_variables.f_helium3
@@ -3225,7 +3225,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.nd_impurities += (
-                    impurity_radiation_module.impurity_arr_frac[imp]
+                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * physics_variables.dene
                 )
 
@@ -3242,19 +3242,23 @@ class Physics:
 
         # ======================================================================
 
-        # Set some impurity fraction variables
+        # Set some relative impurity density variables
         # for the benefit of other routines
-        physics_variables.rncne = impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation.element2index("C_")
-        ]
-        physics_variables.rnone = impurity_radiation_module.impurity_arr_frac[
-            impurity_radiation.element2index("O_")
-        ]
+        physics_variables.rncne = (
+            impurity_radiation_module.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("C_")
+            ]
+        )
+        physics_variables.rnone = (
+            impurity_radiation_module.f_nd_impurity_electron_array[
+                impurity_radiation.element2index("O_")
+            ]
+        )
         physics_variables.rnfene = (
-            impurity_radiation_module.impurity_arr_frac[
+            impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("Fe")
             ]
-            + impurity_radiation_module.impurity_arr_frac[
+            + impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("Ar")
             ]
         )
@@ -3267,7 +3271,7 @@ class Physics:
         physics_variables.zeff = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             physics_variables.zeff += (
-                impurity_radiation_module.impurity_arr_frac[imp]
+                impurity_radiation_module.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.te])
                 ).squeeze()
@@ -3329,7 +3333,7 @@ class Physics:
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.m_ions_total_amu += (
                     physics_variables.dene
-                    * impurity_radiation_module.impurity_arr_frac[imp]
+                    * impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation_module.impurity_arr_amass[imp]
                 )
 
@@ -3374,7 +3378,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.zeffai += (
-                    impurity_radiation_module.impurity_arr_frac[imp]
+                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
                         imp, np.array([physics_variables.te])
                     ).squeeze()
@@ -4582,7 +4586,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             # MDK Update f_nd_impurity_electrons, as this will make the ITV output work correctly.
             impurity_radiation_module.f_nd_impurity_electrons[imp] = (
-                impurity_radiation_module.impurity_arr_frac[imp]
+                impurity_radiation_module.f_nd_impurity_electron_array[imp]
             )
             str1 = (
                 impurity_radiation_module.impurity_arr_label[imp].item()

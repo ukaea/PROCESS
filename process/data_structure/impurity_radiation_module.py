@@ -35,7 +35,7 @@ impurity_arr_z: list[float] = None
 
 impurity_arr_amass: list[float] = None
 
-impurity_arr_frac: list[float] = None
+f_nd_impurity_electron_array: list[float] = None
 
 impurity_arr_len_tab: list[int] = None
 
@@ -54,7 +54,7 @@ def init_impurity_radiation_module():
     global impurity_arr_label
     global impurity_arr_z
     global impurity_arr_amass
-    global impurity_arr_frac
+    global f_nd_impurity_electron_array
     global impurity_arr_len_tab
     global impurity_arr_temp_kev
     global impurity_arr_lz_wm3
@@ -97,7 +97,7 @@ def init_impurity_radiation_module():
     impurity_arr_label = np.full(N_IMPURITIES, "  ")
     impurity_arr_z = np.zeros(N_IMPURITIES)
     impurity_arr_amass = np.zeros(N_IMPURITIES)
-    impurity_arr_frac = np.zeros(N_IMPURITIES)
+    f_nd_impurity_electron_array = np.zeros(N_IMPURITIES)
     impurity_arr_len_tab = np.full(N_IMPURITIES, 0)
     impurity_arr_temp_kev = np.zeros((N_IMPURITIES, 200))
     impurity_arr_lz_wm3 = np.zeros((N_IMPURITIES, 200))
