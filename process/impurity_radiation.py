@@ -435,28 +435,11 @@ def pimpden(imp_element_index, neprofile, teprofile):
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
 
-    yi = np.log(
-        impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, indices - 1]
-    )
-    xi = np.log(
-        impurity_radiation_module.temp_impurity_keV_array[
-            imp_element_index, indices - 1
-        ]
-    )
-    c = (
-        np.log(
-            impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, indices]
-        )
-        - yi
-    ) / (
-        np.log(
-            impurity_radiation_module.temp_impurity_keV_array[
-                imp_element_index, indices
-            ]
-        )
-        - xi
-    )
-    pimpden = np.exp(yi + c * (np.log(teprofile) - xi))
+    # Use numpy.interp for linear interpolation in log-log space
+    log_teprofile = np.log(teprofile)
+    log_temp = np.log(impurity_radiation_module.temp_impurity_keV_array[imp_element_index, :])
+    log_lz = np.log(impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, :])
+    pimpden = np.exp(np.interp(log_teprofile, log_temp, log_lz))
 
     pimpden = (
         impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
