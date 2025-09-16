@@ -19,9 +19,9 @@ from time import sleep
 from numpy.random import default_rng
 
 from process.data_structure import numerics
+from process.io.data_structure_dicts import get_dicts
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
-from process.io.python_fortran_dicts import get_dicts
 
 logger = logging.getLogger(__name__)
 

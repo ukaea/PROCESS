@@ -1,13 +1,11 @@
 ---
 site_name: PROCESS
-docs_dir: documentation/proc-pages/
+docs_dir: documentation/
 nav:
   - Getting Started:
       - About: index.md
       - Installation:
-          - Introduction: installation/introduction.md
-          - Installation on Ubuntu/Windows: installation/installation-ubuntu.md
-          - Installation on CSD3: installation/csd3-for-process.md
+          - Installation: installation/installation.md
           - Visual Studio Code: installation/vs-code.md
       - Usage:
           - Running PROCESS: usage/running-process.md
@@ -29,14 +27,11 @@ nav:
       - Maintenance:
           - Testing: development/testing.md
           - Debugging: development/debugging.md
-          - Tools: development/tools.md
       - Code modification:
           - Adding Variables & Constraints: development/add-vars.md
-          - Adding Physics and Engineering Variables to Python: development/annotated-variable.md
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-          - F2Py Standards: development/f2py-standards.md
       # - Versioning: development/versioning.md
   - Models:
       - Physics Models:
@@ -134,11 +129,9 @@ nav:
           - Inertial Fusion Energy Model: fusion-devices/inertial.md
   - Publications: publications.md
   - Source Documentation:
-      - FORD Documentation: ford_site
       - process: python/process.md
       - process.io: python/process.io.md
       - process.utilities: python/process.utilities.md
-      - process.fortran: python/process.fortran.md
 
 # repo_url: https://git.ccfe.ac.uk/process/process.git
 

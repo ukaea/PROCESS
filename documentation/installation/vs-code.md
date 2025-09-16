@@ -28,7 +28,7 @@ source env/bin/activate
 
 is executed automatically. This saves manually activating the virtual environment every time you 
 open the application. This is done by first using `Ctrl+Shift+P` and searching for 
-`Python:Select Interpreter`. The select: `Python *version* ('env':venv) ./env/bin/python`. This 
+`Python:Select Interpreter`. The select: `Python *version* ('env':venv) ./.venv/bin/python`. This 
 should be starred as the recommended version.
 
 You will see that in your project the .vscode directory will contain a `settings.json` file. Open 
@@ -41,4 +41,4 @@ this and inside of it add:
 Don't forget to add a comma before to separate it from already present key value pairs.
 
 Now, close your terminal and close VS Code. Reopen and open a new terminal which should now 
-automatically point to the virtual environment signalled by an `(env)` in front of your user.
+automatically point to the virtual environment signalled by an `(.venv)` in front of your user.
