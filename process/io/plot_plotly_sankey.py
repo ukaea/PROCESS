@@ -59,41 +59,41 @@ def plot_power_balance_sankey(m_file):
 
     # Define node labels (linearized flow)
     labels = [
-        "0: H&CD injector",
-        "1: Ohmic",
-        "2: Plasma Fusion Power",
-        "3: Alpha particles",
-        "4: Neutrons",
-        "5: Radiation",
-        "6: First Wall",
-        "7: Blanket",
-        "8: Divertor",
-        "9: FW+Blkt",
-        "10: Primary Thermal",
-        "11: Turbine",
-        "12: Gross Electric",
-        "13: Net Electric",
-        "14: HCD Electric Power",
-        "15: HCD electric losses",
-        "16: Core systems",
-        "17: Cryo plant",
-        "18: Base plant load",
-        "19: TF power supplies",
-        "20: PF power supplies",
-        "21: Vacuum pumps",
-        "22: Tritium plant",
-        "23: Coolant pumps electric",
-        "24: Coolant pump electric losses",
-        "25: Divertor pump",
-        "26: FW+Blkt pumps",
-        "27: Shield pump",
-        "28: Shield",
-        "29: Secondary heat",
-        "30: TF nuclear heat",
-        "31: H&CD & Diagnostics",
-        "32: Total Secondary Heat",
-        "33: Turbine Loss",
-        "34: Blanket neutron multiplication",
+        "H&CD injector",  # 0
+        "Ohmic",  # 1
+        "Plasma Fusion Power",  # 2
+        "Alpha particles",  # 3
+        "Neutrons",  # 4
+        "Radiation",  # 5
+        "First Wall",  # 6
+        "Blanket",  # 7
+        "Divertor",  # 8
+        "FW+Blkt",  # 9
+        "Primary Thermal",  # 10
+        "Turbine",  # 11
+        "Gross Electric",  # 12
+        "Net Electric",  # 13
+        "HCD Electric Power",  # 14
+        "HCD electric losses",  # 15
+        "Core systems",  # 16
+        "Cryo plant",  # 17
+        "Base plant load",  # 18
+        "TF power supplies",  # 19
+        "PF power supplies",  # 20
+        "Vacuum pumps",  # 21
+        "Tritium plant",  # 22
+        "Coolant pumps electric",  # 23
+        "Coolant pump electric losses",  # 24
+        "Divertor pump",  # 25
+        "FW+Blkt pumps",  # 26
+        "Shield pump",  # 27
+        "Shield",  # 28
+        "Secondary heat",  # 29
+        "TF nuclear heat",  # 30
+        "H&CD & Diagnostics",  # 31
+        "Total Secondary Heat",  # 32
+        "Turbine Loss",  # 33
+        "Blanket neutron multiplication",  # 34
     ]
 
     # Define links (source, target, value) for a more linear flow
