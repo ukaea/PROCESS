@@ -430,7 +430,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      1.5187E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.1650E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (p_plasma_outer_rad_mw)_____________      1.3482E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2647E+02 OP 
@@ -1658,7 +1658,7 @@ p_hcd_primary_extra_heat_mw = 75.0
 radius_plasma_core_norm = 0.75
 
 * fraction of radiation from 'core' region that is subtracted
-coreradiationfraction = 0.6
+f_p_plasma_core_rad_reduction = 0.6
 
 * impurity array
 f_nd_impurity_electrons(1) = 0.9

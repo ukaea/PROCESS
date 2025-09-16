@@ -5165,8 +5165,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Fraction of core radiation subtracted from P_L",
-            "(coreradiationfraction)",
-            impurity_radiation_module.coreradiationfraction,
+            "(f_p_plasma_core_rad_reduction)",
+            impurity_radiation_module.f_p_plasma_core_rad_reduction,
         )
         po.ovarre(
             self.outfile,

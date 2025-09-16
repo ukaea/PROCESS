@@ -315,7 +315,7 @@
  Synchrotron_radiation_power_(MW)_________________________________________ (pden_plasma_sync_mw*vol_plasma)_ 1.51830269530638411e+01 OP
  Synchrotron_wall_reflectivity_factor_____________________________________ (f_sync_reflect)_______________ 6.00000000000000089e-01
  Normalised_minor_radius_defining_'core'__________________________________ (coreradius)___________________ 7.50000000000000111e-01
- Fraction_of_core_radiation_subtracted_from_P_L___________________________ (coreradiationfraction)________ 6.00000000000000089e-01
+ Fraction_of_core_radiation_subtracted_from_P_L___________________________ (f_p_plasma_core_rad_reduction)________ 6.00000000000000089e-01
  Radiation_power_from_inner_zone_(MW)_____________________________________ (p_plasma_inner_rad_mw)________ 1.30345146305381149e+02 OP
  Radiation_power_from_outer_zone_(MW)_____________________________________ (p_plasma_outer_rad_mw)________ 2.14188557103284040e+02 OP
  Total_radiation_power_from_inside_LCFS_(MW)______________________________ (p_plasma_rad_mw)______________ 3.44533703408665190e+02 OP
@@ -1377,7 +1377,7 @@ i_shld_primary_heat = 1 * Switch for shield thermal power destiny;
 *------------Impurity Radiation Module-------------*
 
 coreradius = 0.75 * coreradius /0;6/ ; normalised radius defining the 'core' region
-coreradiationfraction = 0.6 * coreradiationfraction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
+f_p_plasma_core_rad_reduction = 0.6 * f_p_plasma_core_rad_reduction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
 f_nd_impurity_electrons(1) = 0.9
 f_nd_impurity_electrons(2) = 0.1
 f_nd_impurity_electrons(3) = 0.0

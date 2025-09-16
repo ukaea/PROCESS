@@ -22,8 +22,8 @@ N_IMPURITIES = 14
 radius_plasma_core_norm: float = None
 """Normalised radius defining the 'core' region"""
 
-coreradiationfraction: float = None
-"""Fraction of radiation from 'core' region that is subtracted from the loss power"""
+f_p_plasma_core_rad_reduction: float = None
+"""Fraction of radiation from 'core' region"""
 
 f_nd_impurity_electrons: list[float] = None
 
@@ -51,7 +51,7 @@ impurity_arr_zav: list[float] = None
 
 def init_impurity_radiation_module():
     global radius_plasma_core_norm
-    global coreradiationfraction
+    global f_p_plasma_core_rad_reduction
     global f_nd_impurity_electrons
     global imp_label
     global impurity_arr_label
@@ -64,7 +64,7 @@ def init_impurity_radiation_module():
     global impurity_arr_zav
 
     radius_plasma_core_norm = 0.6
-    coreradiationfraction = 1.0
+    f_p_plasma_core_rad_reduction = 1.0
     f_nd_impurity_electrons = np.array([
         1.0,
         0.1,
