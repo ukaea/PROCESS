@@ -131,7 +131,7 @@ INPUT_VARIABLES = {
     "radius_plasma_core_norm": InputVariable(
         data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
     ),
-    "coreradiationfraction": InputVariable(
+    "f_p_plasma_core_rad_reduction": InputVariable(
         data_structure.impurity_radiation_module, float, range=(0.0, 1.0)
     ),
     "c_beta": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),

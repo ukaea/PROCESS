@@ -199,7 +199,7 @@ eta_turbine = 0.375D0  * thermal to electric conversion efficiency
 
 *imprad_model = 1 * Switch for impurity radiation model;
 radius_plasma_core_norm = 0.75 * Normalised radius defining the 'core' region
-coreradiationfraction = 0.6 * fraction of radiation from 'core' region that is subtracted from the loss pow
+f_p_plasma_core_rad_reduction = 0.6 * fraction of radiation from 'core' region that is subtracted from the loss pow
 f_nd_impurity_electrons(1) = 1.0
 f_nd_impurity_electrons(2) = 0.1
 f_nd_impurity_electrons(3) = 0.0

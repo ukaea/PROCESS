@@ -285,7 +285,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -1280,7 +1280,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -2275,7 +2275,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -3270,7 +3270,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -4265,7 +4265,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -5260,7 +5260,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -6255,7 +6255,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -7250,7 +7250,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -8245,7 +8245,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      2.2989E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Total_core_radiation_power_(MW)_________________________________________ (pcoreradmw)__________________      1.0500E+02 OP 
  Edge_radiation_power_(MW)_______________________________________________ (pedgeradmw)__________________      1.5597E+02 OP 
  Total_radiation_power_(MW)______________________________________________ (p_plasma_rad_mw)______________________      2.6097E+02 OP 
@@ -9178,7 +9178,7 @@ eta_turbine = 0.375D0  * thermal to electric conversion efficiency
 
 *imprad_model = 1 * Switch for impurity radiation model;
 radius_plasma_core_norm = 0.75 * Normalised radius defining the 'core' region
-coreradiationfraction = 0.6 * fraction of radiation from 'core' region that is subtracted from the loss pow
+f_p_plasma_core_rad_reduction = 0.6 * fraction of radiation from 'core' region that is subtracted from the loss pow
 fimp(1) = 1.0
 fimp(2) = 0.1
 fimp(3) = 0.0

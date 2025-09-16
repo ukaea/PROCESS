@@ -582,7 +582,7 @@ radius_plasma_core_norm = 0.75
 * JUSTIFICATION:
 * REFERENCE:     Lux et al. (2016), Plasma Phys. Control. Fusion, 58, 075001
 
-coreradiationfraction = 0.7 
+f_p_plasma_core_rad_reduction = 0.7 
 * DESCRIPTION:   Fraction of Radiation from Core Region Lost
 * JUSTIFICATION: 
 * REFERENCE:     Lux et al. (2016), Plasma Phys. Control. Fusion, 58, 075001
