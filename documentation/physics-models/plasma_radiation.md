@@ -226,10 +226,10 @@ Initialize the FusionReactionRate class with the given plasma profile.
 - `rhodx` (`numpy.ndarray`): Density profile step size along the x-axis.
 - `imp` (`numpy.ndarray`): Indices of impurities with a fraction greater than 1.0e-30.
 - `pimp_profile` (`numpy.ndarray`): Impurity profile array initialized to zeros.
-- `radtot_profile` (`numpy.ndarray`): Total radiation profile array initialized to zeros.
-- `radcore_profile` (`numpy.ndarray`): Core radiation profile array initialized to zeros.
-- `radtot` (`float`): Total radiation initialized to 0.0.
-- `radcore` (`float`): Core radiation initialized to 0.0.
+- `pden_impurity_rad_profile` (`numpy.ndarray`): Total radiation profile array initialized to zeros.
+- `pden_impurity_core_rad_profile` (`numpy.ndarray`): Core radiation profile array initialized to zeros.
+- `pden_impurity_rad_total` (`float`): Total radiation initialized to 0.0.
+- `pden_impurity_core_rad_total` (`float`): Core radiation initialized to 0.0.
 
 
 
