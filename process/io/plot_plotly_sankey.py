@@ -1,5 +1,6 @@
 import argparse
 import pathlib
+import re
 
 import matplotlib as mpl
 import plotly.graph_objects as go
@@ -390,7 +391,11 @@ def plot_power_balance_sankey(m_file):
         "autosize": True,
         "margin": {"l": 40, "r": 40, "t": 40, "b": 40},
     })
-    html_output_path = pathlib.Path(m_file.filename).with_suffix(".html")
+    # Strip 'MFILE' from the filename for the HTML output
+    # Remove the character before "MFILE" and "MFILE" itself from the filename
+    html_output_path = pathlib.Path(
+        re.sub(r"(.)?MFILE", r"\1_plotly_sankey", m_file.filename)
+    ).with_suffix(".html")
     fig.write_html(str(html_output_path))
     print(f"Interactive Sankey diagram saved to {html_output_path}")
     return fig
