@@ -396,13 +396,15 @@ def _zav_of_te_compiled(
     indices = np.digitize(teprofile, bins)
     indices[indices >= bins.shape[0]] = bins.shape[0] - 1
     indices[indices < 0] = 0
-    yi = impurity_arr_zav[imp_element_index, indices - 1]
-    xi = np.log(temp_impurity_keV_array[imp_element_index, indices - 1])
-    c = (impurity_arr_zav[imp_element_index, indices] - yi) / (
-        np.log(temp_impurity_keV_array[imp_element_index, indices]) - xi
+    # Use numpy.interp for linear interpolation in log space
+    zav_of_te = np.interp(
+        np.log(teprofile),
+        np.log(temp_impurity_keV_array[imp_element_index, :]),
+        impurity_arr_zav[imp_element_index, :],
     )
-    zav_of_te = yi + c * (np.log(teprofile) - xi)
+
     less_than_imp_temp_mask = teprofile <= temp_impurity_keV_array[imp_element_index, 0]
+
     zav_of_te[less_than_imp_temp_mask] = impurity_arr_zav[imp_element_index, 0]
     greater_than_imp_temp_mask = (
         teprofile
@@ -438,14 +440,19 @@ def pimpden(imp_element_index, neprofile, teprofile):
     indices[indices < 0] = 0
 
     # Use numpy.interp for linear interpolation in log-log space
-    log_teprofile = np.log(teprofile)
-    log_temp = np.log(
-        impurity_radiation_module.temp_impurity_keV_array[imp_element_index, :]
+    pimpden = np.exp(
+        np.interp(
+            np.log(teprofile),
+            np.log(
+                impurity_radiation_module.temp_impurity_keV_array[imp_element_index, :]
+            ),
+            np.log(
+                impurity_radiation_module.pden_impurity_lz_nd_temp_array[
+                    imp_element_index, :
+                ]
+            ),
+        )
     )
-    log_lz = np.log(
-        impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, :]
-    )
-    pimpden = np.exp(np.interp(log_teprofile, log_temp, log_lz))
 
     pimpden = (
         impurity_radiation_module.f_nd_impurity_electron_array[imp_element_index]
@@ -498,8 +505,8 @@ def element2index(element: str):
 
 class ImpurityRadiation:
     """This class calculates the impurity radiation losses for given temperature and density profiles.
-    The considers the  total impurity radiation from the core (radcore) and total impurity radiation
-    (radtot) [MW/(m^3)]. The class is used to sum the impurity radiation loss from each impurity
+    The considers the  total impurity radiation from the core (pden_impurity_core_rad_total_mw) and total impurity radiation
+    (pden_impurity_rad_total_mw) [MW/(m^3)]. The class is used to sum the impurity radiation loss from each impurity
     element to find the total impurity radiation loss."""
 
     def __init__(self, plasma_profile):
@@ -515,11 +522,11 @@ class ImpurityRadiation:
         )[0]
 
         self.pimp_profile = np.zeros(self.plasma_profile.profile_size)
-        self.radtot_profile = np.zeros(self.plasma_profile.profile_size)
-        self.radcore_profile = np.zeros(self.plasma_profile.profile_size)
+        self.pden_impurity_rad_profile = np.zeros(self.plasma_profile.profile_size)
+        self.pden_impurity_core_rad_profile = np.zeros(self.plasma_profile.profile_size)
 
-        self.radtot = 0.0
-        self.radcore = 0.0
+        self.pden_impurity_rad_total_mw = 0.0
+        self.pden_impurity_core_rad_total_mw = 0.0
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
@@ -554,12 +561,12 @@ class ImpurityRadiation:
 
     def calculate_radiation_loss_profiles(self):
         """Calculate the Bremsstrahlung (radb), line radiation (radl), total impurity radiation
-        from the core (radcore) and total impurity radiation (radtot). Update the stored arrays with
+        from the core (pden_impurity_core_rad_total_mw) and total impurity radiation (pden_impurity_rad_total_mw). Update the stored arrays with
         the values.
         """
 
-        radtot = self.pimp_profile * self.rho
-        radcore = self.pimp_profile * (
+        pden_impurity_rad_total = self.pimp_profile * self.rho
+        pden_impurity_core_rad_total = self.pimp_profile * (
             self.rho
             * fradcore(
                 self.rho,
@@ -568,17 +575,23 @@ class ImpurityRadiation:
             )
         )
 
-        self.radtot_profile = np.add(self.radtot_profile, radtot)
-        self.radcore_profile = np.add(self.radcore_profile, radcore)
+        self.pden_impurity_rad_profile = np.add(
+            self.pden_impurity_rad_profile, pden_impurity_rad_total
+        )
+        self.pden_impurity_core_rad_profile = np.add(
+            self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
+        )
 
     def integrate_radiation_loss_profiles(self):
         """Integrate the radiation loss profiles using the Simpson rule.
         Store the total values for each aspect of impurity radiation loss."""
-        self.radtot = 2.0e-6 * integrate.simpson(
-            self.radtot_profile, x=self.rho, dx=self.rhodx
+
+        # 2.0e-6 converts from W/m^3 to MW/m^3 and also accounts for both sides of the plasma
+        self.pden_impurity_rad_total_mw = 2.0e-6 * integrate.simpson(
+            self.pden_impurity_rad_profile, x=self.rho, dx=self.rhodx
         )
-        self.radcore = 2.0e-6 * integrate.simpson(
-            self.radcore_profile, x=self.rho, dx=self.rhodx
+        self.pden_impurity_core_rad_total_mw = 2.0e-6 * integrate.simpson(
+            self.pden_impurity_core_rad_profile, x=self.rho, dx=self.rhodx
         )
 
     def calculate_imprad(self):
