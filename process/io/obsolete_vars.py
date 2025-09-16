@@ -73,7 +73,7 @@ OBS_VARS = {
     "rad_fraction": "rad_fraction_total",
     "pcoreradmw": "p_plasma_inner_rad_mw",
     "pedgeradmw": "p_plasma_outer_rad_mw",
-    "rad_fraction_core": "rad_fraction_LCFS",
+    "rad_fraction_core": "",
     "thshield": [
         "dr_shld_thermal_inboard",
         "dr_shld_thermal_outboard",
