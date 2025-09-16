@@ -1,5 +1,5 @@
 * Evaluation problem: evaluate models consistently by solving equality constraints only
-ioptimz  = -2
+ioptimz  = 1
 
 *---------------Constraint Equations---------------*
 * Define number of equality constraints
@@ -36,10 +36,85 @@ icc = 32 * TF coil conduit stress upper limit
 
 *---------------Iteration Variables----------------*
 
-ixc = 4 * te
-boundu(4) = 100.0
-ixc = 6 * dene
+* bt [T]
+ixc = 2
+bt = 5.7
 
+* rmajor [m]
+ixc = 3
+boundl(3) = 8.0
+boundu(3) = 9.0
+rmajor = 8.0
+
+* te [keV]
+ixc = 4
+boundu(4) = 100.0
+te = 12.0
+
+* h factor
+ixc = 10
+boundu(10) = 1.2
+
+* dr_cs [m]
+ixc = 16
+boundl(16) = 0.3
+dr_cs = 0.5
+
+* Safety factor at 95% flux surface 
+ixc = 18
+boundl(18) = 3.0
+q95 = 3.5
+
+* Machine dr_bore [m]
+ixc = 29
+boundl(29) = 0.1
+dr_bore = 2.0
+
+* f_c_plasma_non_inductive
+ixc = 44
+f_c_plasma_non_inductive = 0.4
+
+* tdmptf [s]
+ixc = 56
+tdmptf = 25.0
+
+* dr_tf_nose_case [m]
+ixc = 57
+dr_tf_nose_case = 0.5
+
+* TF coil conduit thickness [m]
+ixc = 58
+boundl(58) = 0.008
+dx_tf_turn_steel = 0.008
+
+* copper fraction of cable conductor (TF coils)
+ixc = 59 
+boundl(59) = 0.50
+boundu(59) = 0.94
+f_a_tf_turn_cable_copper = 0.8
+
+* TF Current per turn [A]
+ixc = 60
+boundl(60) = 65000.0
+boundu(60) = 90000.0
+c_tf_turn = 65000.0
+
+* Helium fraction (f_nd_alpha_electron)
+ixc = 109
+boundu(109) = 0.1
+
+* CS steel fraction, f_a_cs_steel
+ixc = 122
+f_a_cs_steel = 0.8
+
+* core impurity fraction, Xenon
+ixc = 135
+f_nd_impurity_electrons(13) = 0.00038
+
+* TF winding pack thickness [m]
+ixc = 140
+boundl(140) = 0.4
+dr_tf_wp_with_insulation = 0.5
 *---------------Cs Fatigue Variables---------------*
 
 
