@@ -2513,11 +2513,11 @@ def plot_main_plasma_information(
     )
 
     axis.text(
-        0.6,
-        0.825,
+        0.55,
+        0.975,
         textstr_plasma,
         fontsize=9,
-        verticalalignment="bottom",
+        verticalalignment="top",
         horizontalalignment="left",
         transform=fig.transFigure,
         bbox={
@@ -2987,7 +2987,7 @@ def plot_main_plasma_information(
 
     axis.text(
         0.765,
-        0.95,
+        0.975,
         textstr_currents,
         fontsize=9,
         verticalalignment="top",
@@ -3003,7 +3003,7 @@ def plot_main_plasma_information(
     # Add plasma current label
     axis.text(
         0.78,
-        0.9,
+        0.925,
         "$I_{\\text{p}} $",
         fontsize=23,
         verticalalignment="top",
@@ -3052,6 +3052,7 @@ def plot_main_plasma_information(
     textstr_radiation = (
         f"           $\\mathbf{{Radiation:}}$\n\n"
         f"           Total radiation power {mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"           Separatrix radiation fraction {mfile_data.data['f_p_plasma_separatrix_rad'].get_scan(scan):.4f}\n"
         f"           Core radiation power {mfile_data.data['p_plasma_inner_rad_mw'].get_scan(scan):.4f} MW\n"
         f"              - $f_{{\\text{{core,reduce}}}}$ {mfile_data.data['f_p_plasma_core_rad_reduction'].get_scan(scan):.4f}\n"
         f"           Edge radiation power {mfile_data.data['p_plasma_outer_rad_mw'].get_scan(scan):.4f} MW\n"
@@ -3061,7 +3062,7 @@ def plot_main_plasma_information(
 
     axis.text(
         0.72,
-        0.81,
+        0.83,
         textstr_radiation,
         fontsize=9,
         verticalalignment="top",
@@ -3078,7 +3079,7 @@ def plot_main_plasma_information(
     # Add radiation label
     axis.text(
         0.725,
-        0.76,
+        0.78,
         "$\\gamma$",
         fontsize=23,
         verticalalignment="top",
@@ -4033,6 +4034,17 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
     # Plot a vertical line at the core region radius
     prof.axvline(x=core_radius, color="black", linestyle="--", linewidth=1.0, alpha=0.7)
+    # Plot a box in the bottom left with f_{core,reduce}
+    props_core_reduce = {"boxstyle": "round", "facecolor": "khaki", "alpha": 0.8}
+    prof.text(
+        0.02,
+        0.02,
+        rf"$f_{{\text{{core,reduce}}}}$ =  {1.0}",
+        transform=prof.transAxes,
+        fontsize=8,
+        verticalalignment="bottom",
+        bbox=props_core_reduce,
+    )
 
     # Ranges
     # ---
