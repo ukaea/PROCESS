@@ -434,7 +434,7 @@
  Radiation_power_from_outer_zone_(MW)____________________________________ (p_plasma_outer_rad_mw)_____________      1.3480E+02 OP 
  SOL_radiation_power_as_imposed_by_f_rad_(MW)____________________________ (psolradmw)___________________      0.0000E+00 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2417E+02 OP 
- LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite (rad_fraction_LCFS)___________      5.9094E-01 OP 
+ LCFS_radiation_fraction_=_total_radiation_in_LCFS_/_total_power_deposite ()___________      5.9094E-01 OP 
  Nominal_mean_radiation_load_on_inside_surface_of_reactor_(MW/m2)________ (pflux_fw_rad_mw)_________________      1.7570E-01 OP 
  Peaking_factor_for_radiation_wall_load__________________________________ (f_fw_rad_max)_________________      3.3300E+00 IP 
  Maximum_permitted_radiation_wall_load_(MW/m^2)__________________________ (pflux_fw_rad_max)______________      1.0000E+00 IP 

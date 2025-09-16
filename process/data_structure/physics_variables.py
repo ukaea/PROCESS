@@ -20,7 +20,8 @@ err242: int = None
 err243: int = None
 
 
-rad_fraction_lcfs: float = None
+f_p_plasma_separatrix_rad: float = None
+"""Separatrix radiation fraction"""
 
 
 e_plasma_beta: float = None
@@ -1282,7 +1283,7 @@ def init_physics_module():
     global iscz
     global err242
     global err243
-    global rad_fraction_lcfs
+    global f_p_plasma_separatrix_rad
     global e_plasma_beta
     global total_loss_power
     global t_energy_confinement_beta
@@ -1309,7 +1310,7 @@ def init_physics_module():
     iscz = 0
     err242 = 0
     err243 = 0
-    rad_fraction_lcfs = 0.0
+    f_p_plasma_separatrix_rad = 0.0
     e_plasma_beta = 0.0
     total_loss_power = 0.0
     t_energy_confinement_beta = 0.0

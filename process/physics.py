@@ -2713,14 +2713,14 @@ class Physics:
             + physics_variables.p_plasma_ohmic_mw
             + current_drive_variables.p_hcd_injected_total_mw
         )
-        physics_variables.rad_fraction_lcfs = (
+        physics_variables.f_p_plasma_separatrix_rad = (
             1.0e6
             * physics_variables.p_plasma_rad_mw
             / physics_variables.total_loss_power
         )
         physics_variables.rad_fraction_total = (
-            physics_variables.rad_fraction_lcfs
-            + (1.0e0 - physics_variables.rad_fraction_lcfs)
+            physics_variables.f_p_plasma_separatrix_rad
+            + (1.0e0 - physics_variables.f_p_plasma_separatrix_rad)
             * physics_variables.rad_fraction_sol
         )
         physics_variables.pradsolmw = (
@@ -5201,9 +5201,9 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "LCFS radiation fraction = total radiation in LCFS / total power deposited in plasma",
-            "(rad_fraction_LCFS)",
-            physics_variables.rad_fraction_lcfs,
+            "Separatrix radiation fraction (MW)",
+            "(f_p_plasma_separatrix_rad)",
+            physics_variables.f_p_plasma_separatrix_rad,
             "OP ",
         )
         po.ovarre(
