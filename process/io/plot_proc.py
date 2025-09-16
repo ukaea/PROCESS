@@ -3053,9 +3053,10 @@ def plot_main_plasma_information(
         f"           $\\mathbf{{Radiation:}}$\n\n"
         f"           Total radiation power {mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.4f} MW\n"
         f"           Core radiation power {mfile_data.data['p_plasma_inner_rad_mw'].get_scan(scan):.4f} MW\n"
+        f"              - $f_{{\\text{{core,reduce}}}}$ {mfile_data.data['f_p_plasma_core_rad_reduction'].get_scan(scan):.4f}\n"
         f"           Edge radiation power {mfile_data.data['p_plasma_outer_rad_mw'].get_scan(scan):.4f} MW\n"
         f"           Synchrotron radiation power {mfile_data.data['p_plasma_sync_mw'].get_scan(scan):.4f} MW\n"
-        f"           Synchrotron wall reflectivity {mfile_data.data['f_sync_reflect'].get_scan(scan):.4f}\n"
+        f"           Synchrotron wall reflectivity {mfile_data.data['f_sync_reflect'].get_scan(scan):.4f}"
     )
 
     axis.text(
@@ -3912,7 +3913,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$P_{\mathrm{rad}}$ $[\mathrm{MW.m}^{-3}]$")
-    prof.set_title("Line & Bremsstrahlung radiation profile")
+    prof.set_title("Raw Data: Line & Bremsstrahlung radiation profile")
 
     # read in the impurity data
     imp_data = read_imprad_data(2, impp)
