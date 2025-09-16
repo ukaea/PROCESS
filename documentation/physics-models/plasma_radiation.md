@@ -10,16 +10,15 @@ By changing the input parameter `radius_plasma_core_norm`, the user may set the 
 ----------------
 
 
-
 ## Line & Bremsstrahlung Radiation
 
 The radiation per unit volume is determined using loss functions computed by the `ADAS405` code [^1].
 The effective collisional–radiative coefficients necessary to determine the ionization state and radiative losses of each ionic species, 
 assuming equilibrium ionization balance in an optically thin plasma, were sourced from `ADF11`-derived data files [^2]. 
-These coefficients utilize the generalized collisional-radiative approach [^3] for elements such as H, He, Be, C, N, O, Ne, and Si. 
+These coefficients utilize the generalized collisional-radiative approach [^3] for elements such as $\text{H, He, Be, C, N, O, Ne,}$ and $\text{Si}$. 
 
-For Ni, the data is based on [^4], for Fe it is derived from [^5]; and for W, the data is obtained from [^6].
-The Ni and Fe rates incorporate a density dependence as described in [^7]. For Kr and Xe, data is taken from the ADAS baseline.
+For $\text{Ni}$, the data is based on [^4], for $\text{Fe}$ it is derived from [^5]; and for $\text{W,}$ the data is obtained from [^6].
+The $\text{Ni}$ and $\text{Fe}$ rates incorporate a density dependence as described in [^7]. For $\text{Kr}$ and $\text{Xe}$, data is taken from the ADAS baseline.
 
 The computed loss functions exhibit a weak dependence on density but are evaluated at a fixed electron density of $10^{19} \text{m}^{-3}$.
 This differs from strict coronal equilibrium, which assumes density independence. 
@@ -32,6 +31,21 @@ $$
 
 where $P_i$ is the radiation per unit volume (excluding synchrotron radiation),
 $L_Z (Z_i, T)$ is the loss function for ion species $i$ at temperature $T$, and $n_i$ is the density of ion species $i$.
+
+The source data comprises of 200 separate data points with a fitted temperature range of $1 \ \text{eV}$ tp $40 \ \text{keV}$. The fitted radiation profiles for each species against temperature can be found in the figure below.
+
+
+
+
+<figure markdown>
+![ADAS Radiation](../images/adas_radiation.png){ width = "100"}
+<figcaption>Figure 1: Radiation loss functions as a function of temperature, at 10^19 electrons m^−3.
+The lowest line is H, with the other lines in the order listed. The dashed lines show
+the bremsstrahlung calculated using a separate method.</figcaption>
+</figure>
+
+For the regime above $40 \ \text{keV}$ whichc an be seen by the dashed lines in Figure 1 above, the radiation is assumed to be Bhremsstrahlung dominated so the values are extrapolated via a power law.
+
 
 !!! note "Location of impurities"
 
@@ -54,6 +68,14 @@ using the corresponding temperature and density distributions. Emission is only 
 as the PROCESS model does not account for the scrape-off layer. 
 The plasma inside the separatrix is divided into two regions: the “core” and the “edge,” separated by a normalized minor radius defined by the user. 
 Radiation is calculated separately for the core and edge regions, except for synchrotron radiation, which is assumed to originate solely from the core.
+
+--------------
+
+### Reduction of core radiation
+
+Work by H.Lux et al. has showed that reducing the total core contribution of the radiation from that predicted by the raw ADAS data allows better fitting to the $\text{IPB98(y,2)}$ scaling for actual plasma stored energies calculated in the `ASTRA/TGLF` codes.
+
+Setting of the value `f_p_plasma_core_rad_reduction` will cause each radiated power density value in the core profile to be multiplied by this value. This in essence allows a scaling of the core radiated power to be higher or lower than the raw ADAS data.
 
 ------------
 

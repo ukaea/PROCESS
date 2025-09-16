@@ -9841,352 +9841,6 @@ def plot_fw_90_deg_pipe_bend(ax, m_file_data, scan):
     )
 
 
-def plot_3d_plasma(axes, mfile_data, scan, colour_scheme):
-    """
-    Plots a 3D toroidal plasma using matplotlib's 3D plotting.
-
-    Args:
-        fig: matplotlib figure object to plot on.
-        mfile_data: MFILE data object.
-        scan: Scan number to use.
-        colour_scheme: Colour scheme index.
-    """
-    from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
-
-    rmajor = mfile_data.data["rmajor"].get_scan(scan)
-    rminor = mfile_data.data["rminor"].get_scan(scan)
-    kappa = mfile_data.data["kappa"].get_scan(scan)
-    triang = mfile_data.data["triang"].get_scan(scan)
-    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
-    plasma_square = mfile_data.data["plasma_square"].get_scan(scan)
-
-    # Get plasma boundary points
-    # Forcing to use Sauter shape for now
-    pg = plasma_geometry(
-        rmajor=rmajor,
-        rminor=rminor,
-        triang=triang,
-        kappa=kappa,
-        i_single_null=i_single_null,
-        i_plasma_shape=1,
-        square=plasma_square,
-    )
-
-    # Use the outer boundary for 3D torus
-    rs = pg.rs
-    zs = pg.zs
-
-    # Create mesh for toroidal rotation
-    theta = np.linspace(np.pi / 2, 2 * np.pi, 100)
-    rs = np.array(rs)
-    zs = np.array(zs)
-    r_grid, theta_grid = np.meshgrid(rs, theta)
-    z_grid, _ = np.meshgrid(zs, theta)
-
-    # Convert to Cartesian coordinates
-    X = r_grid * np.cos(theta_grid)
-    Y = r_grid * np.sin(theta_grid)
-    Z = z_grid
-
-    axes.plot_surface(
-        X,
-        Y,
-        Z,
-        rstride=2,
-        cstride=2,
-        color=PLASMA_COLOUR[colour_scheme - 1],
-        alpha=1.0,  # fully opaque
-        edgecolor="none",
-        shade=True,
-    )
-
-
-def plot_3d_blanket(axis, mfile_data, scan, colour_scheme) -> None:
-    """
-    Function to plot blanket in 3D as a solid shape.
-
-    Arguments:
-      axis --> 3D axis object to plot to
-      mfile_data --> MFILE.DAT object
-      scan --> scan number to use
-      colour_scheme --> colour scheme to use for plots
-    """
-
-    i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
-    triang_95 = mfile_data.data["triang95"].get_scan(scan)
-    if int(i_single_null) == 1:
-        dz_blkt_upper = mfile_data.data["dz_blkt_upper"].get_scan(scan)
-    else:
-        dz_blkt_upper = 0.0
-
-    c_shldith = cumulative_radial_build("dr_shld_inboard", mfile_data, scan)
-    c_blnkoth = cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
-
-    # Choose geometry function
-    if i_single_null == 1:
-        radx_outer = (
-            cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
-            + cumulative_radial_build("vvblgapi", mfile_data, scan)
-        ) / 2.0
-        rminx_outer = (
-            cumulative_radial_build("dr_blkt_outboard", mfile_data, scan)
-            - cumulative_radial_build("vvblgapi", mfile_data, scan)
-        ) / 2.0
-
-        radx_inner = (
-            cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
-            + cumulative_radial_build("dr_blkt_inboard", mfile_data, scan)
-        ) / 2.0
-        rminx_inner = (
-            cumulative_radial_build("dr_fw_outboard", mfile_data, scan)
-            - cumulative_radial_build("dr_blkt_inboard", mfile_data, scan)
-        ) / 2.0
-
-        bg_single_null = blanket_geometry_single_null(
-            radx_outer=radx_outer,
-            rminx_outer=rminx_outer,
-            radx_inner=radx_inner,
-            rminx_inner=rminx_inner,
-            cumulative_upper=cumulative_upper,
-            triang=triang_95,
-            cumulative_lower=cumulative_lower,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
-
-        # 3D solid revolution
-        rs_outer = np.array(bg_single_null.rs)
-        zs_outer = np.array(bg_single_null.zs)
-        # For solid, create inner boundary slightly inside
-        # thickness = 0.05  # blanket thickness offset [m], can be parameterized
-        rs_inner = rs_outer
-        zs_inner = zs_outer
-
-        theta = np.linspace(np.pi / 2, np.pi * 2.0, 80)
-        rs_outer_grid, theta_grid = np.meshgrid(rs_outer, theta)
-        zs_outer_grid, _ = np.meshgrid(zs_outer, theta)
-        x_outer = rs_outer_grid * np.cos(theta_grid)
-        y_outer = rs_outer_grid * np.sin(theta_grid)
-        z_outer = zs_outer_grid
-
-        rs_inner_grid, theta_grid = np.meshgrid(rs_inner, theta)
-        zs_inner_grid, _ = np.meshgrid(zs_inner, theta)
-        x_inner = rs_inner_grid * np.cos(theta_grid)
-        y_inner = rs_inner_grid * np.sin(theta_grid)
-        z_inner = zs_inner_grid
-
-        # Plot outer surface
-        axis.plot_surface(
-            x_outer,
-            y_outer,
-            z_outer,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            alpha=1.0,
-            linewidth=0.5,
-            antialiased=True,
-        )
-        # Plot inner surface (slightly darker)
-        axis.plot_surface(
-            x_inner,
-            y_inner,
-            z_inner,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            alpha=1.0,
-            linewidth=0.5,
-            antialiased=True,
-        )
-        # Connect the edges to make it look solid
-        for i in [0, -1]:
-            axis.plot(
-                x_outer[i],
-                y_outer[i],
-                z_outer[i],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-            axis.plot(
-                x_inner[i],
-                y_inner[i],
-                z_inner[i],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-            axis.plot(
-                [x_outer[i][0], x_inner[i][0]],
-                [y_outer[i][0], y_inner[i][0]],
-                [z_outer[i][0], z_inner[i][0]],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-            axis.plot(
-                [x_outer[i][-1], x_inner[i][-1]],
-                [y_outer[i][-1], y_inner[i][-1]],
-                [z_outer[i][-1], z_inner[i][-1]],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-
-    else:
-        bg_double_null = blanket_geometry_double_null(
-            cumulative_lower=cumulative_lower,
-            triang=triang_95,
-            dz_blkt_upper=dz_blkt_upper,
-            c_shldith=c_shldith,
-            c_blnkoth=c_blnkoth,
-            dr_blkt_inboard=dr_blkt_inboard,
-            dr_blkt_outboard=dr_blkt_outboard,
-        )
-        # Outboard blanket
-        rs0 = np.array(bg_double_null.rs[0])
-        zs0 = np.array(bg_double_null.zs[0])
-        thickness = 0.05
-        rs0_inner = rs0 - thickness
-        zs0_inner = zs0
-
-        theta = np.linspace(np.pi / 2, np.pi / 3, 80)
-        rs_grid0, theta_grid0 = np.meshgrid(rs0, theta)
-        zs_grid0, _ = np.meshgrid(zs0, theta)
-        x0 = rs_grid0 * np.cos(theta_grid0)
-        y0 = rs_grid0 * np.sin(theta_grid0)
-        z0 = zs_grid0
-
-        rs_grid0_inner, theta_grid0 = np.meshgrid(rs0_inner, theta)
-        zs_grid0_inner, _ = np.meshgrid(zs0_inner, theta)
-        x0_inner = rs_grid0_inner * np.cos(theta_grid0)
-        y0_inner = rs_grid0_inner * np.sin(theta_grid0)
-        z0_inner = zs_grid0_inner
-
-        axis.plot_surface(
-            x0,
-            y0,
-            z0,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            alpha=1.0,
-            linewidth=0,
-            antialiased=False,
-        )
-        axis.plot_surface(
-            x0_inner,
-            y0_inner,
-            z0_inner,
-            color=BLANKET_COLOUR[colour_scheme - 1],
-            alpha=0.7,
-            linewidth=0,
-            antialiased=False,
-        )
-        for i in [0, -1]:
-            axis.plot(
-                x0[i],
-                y0[i],
-                z0[i],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-            axis.plot(
-                x0_inner[i],
-                y0_inner[i],
-                z0_inner[i],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-            axis.plot(
-                [x0[i][0], x0_inner[i][0]],
-                [y0[i][0], y0_inner[i][0]],
-                [z0[i][0], z0_inner[i][0]],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-            axis.plot(
-                [x0[i][-1], x0_inner[i][-1]],
-                [y0[i][-1], y0_inner[i][-1]],
-                [z0[i][-1], z0_inner[i][-1]],
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=1.5,
-            )
-
-        # Inboard blanket (if thickness > 0)
-        if dr_blkt_inboard > 0.0:
-            rs1 = np.array(bg_double_null.rs[1])
-            zs1 = np.array(bg_double_null.zs[1])
-            rs1_inner = rs1 - thickness
-            zs1_inner = zs1
-
-            rs_grid1, theta_grid1 = np.meshgrid(rs1, theta)
-            zs_grid1, _ = np.meshgrid(zs1, theta)
-            x1 = rs_grid1 * np.cos(theta_grid1)
-            y1 = rs_grid1 * np.sin(theta_grid1)
-            z1 = zs_grid1
-
-            rs_grid1_inner, theta_grid1 = np.meshgrid(rs1_inner, theta)
-            zs_grid1_inner, _ = np.meshgrid(zs1_inner, theta)
-            x1_inner = rs_grid1_inner * np.cos(theta_grid1)
-            y1_inner = rs_grid1_inner * np.sin(theta_grid1)
-            z1_inner = zs_grid1_inner
-
-            axis.plot_surface(
-                x1,
-                y1,
-                z1,
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=1.0,
-                linewidth=0,
-                antialiased=False,
-            )
-            axis.plot_surface(
-                x1_inner,
-                y1_inner,
-                z1_inner,
-                color=BLANKET_COLOUR[colour_scheme - 1],
-                alpha=0.7,
-                linewidth=0,
-                antialiased=False,
-            )
-            for i in [0, -1]:
-                axis.plot(
-                    x1[i],
-                    y1[i],
-                    z1[i],
-                    color=BLANKET_COLOUR[colour_scheme - 1],
-                    alpha=1.0,
-                    linewidth=1.5,
-                )
-                axis.plot(
-                    x1_inner[i],
-                    y1_inner[i],
-                    z1_inner[i],
-                    color=BLANKET_COLOUR[colour_scheme - 1],
-                    alpha=1.0,
-                    linewidth=1.5,
-                )
-                axis.plot(
-                    [x1[i][0], x1_inner[i][0]],
-                    [y1[i][0], y1_inner[i][0]],
-                    [z1[i][0], z1_inner[i][0]],
-                    color=BLANKET_COLOUR[colour_scheme - 1],
-                    alpha=1.0,
-                    linewidth=1.5,
-                )
-                axis.plot(
-                    [x1[i][-1], x1_inner[i][-1]],
-                    [y1[i][-1], y1_inner[i][-1]],
-                    [z1[i][-1], z1_inner[i][-1]],
-                    color=BLANKET_COLOUR[colour_scheme - 1],
-                    alpha=1.0,
-                    linewidth=1.5,
-                )
-
-
 def main_plot(
     fig1,
     fig2,
@@ -10205,7 +9859,6 @@ def main_plot(
     fig15,
     fig16,
     fig17,
-    fig18,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10387,17 +10040,6 @@ def main_plot(
 
     plot_33 = fig17.add_subplot(111, aspect="equal")
     plot_main_power_flow(plot_33, m_file_data, scan, fig17)
-
-    plot_34 = fig18.add_subplot(111, projection="3d", aspect="equal")
-    plot_3d_plasma(plot_34, m_file_data, scan, colour_scheme)
-    plot_3d_blanket(plot_34, m_file_data, scan, colour_scheme)
-
-    plot_34.set_xlabel("X [m]")
-    plot_34.set_ylabel("Y [m]")
-    plot_34.set_zlabel("Z [m]")
-    plot_34.set_title("3D Plasma Toroidal Shape")
-    plot_34.view_init(elev=10.0, azim=45)
-    plot_34.grid(False)
 
 
 def main(args=None):
@@ -10691,7 +10333,6 @@ def main(args=None):
     page15 = plt.figure(figsize=(12, 9), dpi=80)
     page16 = plt.figure(figsize=(12, 9), dpi=80)
     page17 = plt.figure(figsize=(12, 9), dpi=80)
-    page18 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -10712,7 +10353,6 @@ def main(args=None):
         page15,
         page16,
         page17,
-        page18,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -10738,7 +10378,6 @@ def main(args=None):
         pdf.savefig(page15)
         pdf.savefig(page16)
         pdf.savefig(page17)
-        pdf.savefig(page18)
 
     # show fig if option used
     if args.show:
@@ -10761,7 +10400,6 @@ def main(args=None):
     plt.close(page15)
     plt.close(page16)
     plt.close(page17)
-    plt.close(page18)
 
 
 if __name__ == "__main__":
