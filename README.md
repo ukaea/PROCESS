@@ -6,13 +6,11 @@
 
 PROCESS is the reactor systems code at the [UK Atomic Energy Authority](https://ccfe.ukaea.uk/). More information on PROCESS can be found on the PROCESS [webpage](https://ccfe.ukaea.uk/resources/process/).
 
-PROCESS was originally a Fortran code, but is currently a mixture of Python and Python-wrapped Fortran; the eventual aim is to have an entirely Python code base. In order to use PROCESS, the Fortran must be compiled and a Python-Fortran interface generated for the Python to import. Once built, it can be installed and run as a Python package. 
-
-Due to this ongoing conversion work, **PROCESS version 3 is unstable and does not guarantee backward compatibility**. PROCESS version 4 will be the first major version to enforce backward-compatible API changes and will be released following confirmation of variable names and the Python data structure. 
+PROCESS was originally a Fortran code, but is now a pure-Python command line program. PROCESS is still undergoing a significant resturucture and, as such, **PROCESS version 3 is unstable and does not guarantee backward compatibility**. PROCESS version 4 will be the first major version to enforce backward-compatible API changes and will be released following a refactor of the data structure. 
 
 
 
-![Blender_and_output](./documentation/proc-pages/images/README_image.PNG)
+![Blender_and_output](./documentation/images/README_image.PNG)
 <center>Overview of some outputs for a DEMO-like reactor.</center>
 
 

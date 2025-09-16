@@ -16,7 +16,7 @@ Notes:
 from re import sub
 from sys import stderr
 
-from process.io.python_fortran_dicts import get_dicts
+from process.io.data_structure_dicts import get_dicts
 
 # ioptimz values
 ioptimz_des = {

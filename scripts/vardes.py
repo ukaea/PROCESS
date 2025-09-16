@@ -1,15 +1,10 @@
 import dataclasses
 import pickle
-from copy import copy
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
 import jinja2
-import numpy as np
-
-from process import fortran
-from process.init import init_all_module_vars
 
 
 class VariableTypes(str, Enum):
@@ -63,62 +58,8 @@ def get_variables_and_modules(ford_project: Path):
     return variables, modules
 
 
-def get_input_output_variables(variables: list[FortranVariable]):
-    fortran_initial_values = {}
-    for var in variables:
-        if var.typ == VariableTypes.PARAMETER:
-            continue
-
-        if var.initial is not None:
-            continue
-
-        # cant get the value of private variables
-        if var.private:
-            continue
-
-        try:
-            fortran_initial_values[f"{var.module}.{var.name}"] = copy(
-                getattr(getattr(fortran, var.module), var.name)
-            )
-        except AttributeError:
-            continue
-
-    init_all_module_vars()
-
-    for var in variables:
-        current_values_entry = f"{var.module}.{var.name}"
-        if current_values_entry not in fortran_initial_values:
-            continue
-
-        try:
-            new_value = getattr(getattr(fortran, var.module), var.name)
-        except ValueError:
-            continue
-
-        try:
-            is_input = np.any(new_value != fortran_initial_values[current_values_entry])
-        except (TypeError, AttributeError):
-            is_input = np.any(new_value != fortran_initial_values[current_values_entry])
-
-        if is_input:
-            var.typ = VariableTypes.INPUT
-            var.initial = new_value
-        else:
-            var.typ = VariableTypes.OUTPUT
-
-    return variables
-
-
 if __name__ == "__main__":
-    variables, modules = get_variables_and_modules(
-        Path(__file__).resolve().parent.parent / "build/ford_project.pickle"
-    )
-
-    variables = get_input_output_variables(variables)
-
-    mods = {module: [] for module in modules}
-    for var in variables:
-        mods[var.module].append(var)
+    mods = {"vardes will be fixed in https://github.com/ukaea/PROCESS/issues/3834": []}
 
     loader = jinja2.FileSystemLoader(searchpath=Path(__file__).resolve().parent)
     env = jinja2.Environment(loader=loader)
@@ -126,7 +67,7 @@ if __name__ == "__main__":
     vardes_template = env.get_template("vardes.jinja2")
 
     with open(
-        Path(__file__).resolve().parent / "../documentation/proc-pages/io/vardes.md",
+        Path(__file__).resolve().parent / "../documentation/io/vardes.md",
         "w",
     ) as f:
         f.write(vardes_template.render(mods=mods))
