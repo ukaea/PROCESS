@@ -424,6 +424,7 @@ OBS_VARS = {
     "fcutfsu": "f_a_tf_turn_cable_copper",
     "tdmptf": "t_tf_superconductor_quench",
     "tmaxpro": "temp_tf_conductor_quench_max",
+    "coreradiationfraction": "f_p_plasma_core_rad_reduction",
 }
 
 OBS_VARS_HELP = {
