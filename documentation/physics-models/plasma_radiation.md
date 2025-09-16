@@ -73,7 +73,7 @@ Radiation is calculated separately for the core and edge regions, except for syn
 
 ### Reduction of core radiation
 
-Work by H.Lux et al. has showed that reducing the total core contribution of the radiation from that predicted by the raw ADAS data allows better fitting to the $\text{IPB98(y,2)}$ scaling for actual plasma stored energies calculated in the `ASTRA/TGLF` codes.
+Work by H.Lux et al.[^8] has showed that reducing the total core contribution of the radiation from that predicted by the raw ADAS data allows better fitting to the $\text{IPB98(y,2)}$ scaling for actual plasma stored energies calculated in the `ASTRA/TGLF` codes.
 
 Setting of the value `f_p_plasma_core_rad_reduction` will cause each radiated power density value in the core profile to be multiplied by this value. This in essence allows a scaling of the core radiated power to be higher or lower than the raw ADAS data.
 
@@ -81,7 +81,7 @@ Setting of the value `f_p_plasma_core_rad_reduction` will cause each radiated po
 
 ## Synchrotron radiation | `psync_albajar_fidone()`
 
-The formula below is the current synchrotron radiation loss power implemented in `PROCESS`. It is a combination of the general form given by Albajar et al. [^8] and a wall reflectivity correction given by Fidone et al. [^9]
+The formula below is the current synchrotron radiation loss power implemented in `PROCESS`. It is a combination of the general form given by Albajar et al. [^9] and a wall reflectivity correction given by Fidone et al. [^10]
 
 $$
 \begin{aligned}
@@ -104,7 +104,7 @@ $$
 
 where $T_{\text{e0}}$ is the central electron temperature in keV, $R$ is the plasma major radius, $a$ is the plasma minor radius, $\kappa$ is the plasma separatrix elongation, $B_{\text{T}}$ is the on axis toroidal magnetic field, $n_{\text{e0,20}}$ is the central electron density in units of $10^{20} \text{m}^{-3}$, $\alpha_n$ is the density profile peaking parameter, $\alpha_T$ is the temperature profile peaking parameter, $\beta_T$ is the [secondary temperature profile peaking parameter](./profiles/plasma_profiles.md#pedestal-profile--h-mode) and $A$ is the plasma aspect ratio.
 
-The original form of the synchrotron radiation formula presented by Albajar et al. [^8] is based off using multiple non-linear regression from a database consisting of 3000 complete computations of the analytical expression for synchrotron power derived by Albajar et al.[^8] to include aspect ratio and temperature profile dependence.
+The original form of the synchrotron radiation formula presented by Albajar et al. [^9] is based off using multiple non-linear regression from a database consisting of 3000 complete computations of the analytical expression for synchrotron power derived by Albajar et al.[^9] to include aspect ratio and temperature profile dependence.
 
 The fitting variable range is:
 
@@ -119,7 +119,7 @@ The fitting variable range is:
 The root mean square error of the fit is found to be 5.8%
 
 The original form also uses a fair estimation of the effect of a wall with
-a reflection coefficient $f_{\text{reflect}}$ obtained from the Trubnikov approach [^10].
+a reflection coefficient $f_{\text{reflect}}$ obtained from the Trubnikov approach [^11].
 
 $$
 P_{\text{syn,r}} \propto \left(1 − f_{\text{reflect}}\right)^{1/2} P_{\text{syn}}
@@ -129,13 +129,13 @@ It should also be noted that the wall reflection coefficient for the synchrotron
 
 - The wall reflection factor ($f_{\text{reflect}}$) may be set by the user by inputting `f_sync_reflect = <value>`.
 
-The wall reflectivity correction presented later by Fidone et al. [^9] is of the form:
+The wall reflectivity correction presented later by Fidone et al. [^10] is of the form:
 
 $$
 P_{\text{syn,r}} \propto \frac{\left(1 − f_{\text{reflect}}\right)^{0.62}}{\left[1+\left(1 − f_{\text{reflect}}\right)^{0.41}\right]^{1.51}} P_{\text{syn}}
 $$
 
-A comparison of the different reflection functions canbe seen in the graph below:
+A comparison of the different reflection functions can be seen in the graph below:
 
 <!DOCTYPE html>
 <html lang="en">
@@ -274,6 +274,7 @@ The scaling value `fpflux_fw_rad_max` can be varied also.
 [^5]: M. Arnaud, R. Rothenflug, An updated evaluation of recombination and ionization rates, Astron. & Astrophys. Supp. Ser. 60 (1985) 425–457.
 [^6]: T. Pütterich, R. Neu, R. Dux, A. D. Whiteford, and M. G. O’Mullane, “Modelling of measured tungsten spectra from ASDEX Upgrade and predictions for ITER,” Plasma Physics and Controlled Fusion, vol. 50, no. 8, p. 085016, Jun. 2008, doi: https://doi.org/10.1088/0741-3335/50/8/085016.
 [^7]: Summers, H. P. (1974). Tables and Graphs of Collisional Dielectronic Recombination and Ionisation Coefficients and Ionisation Equilibria of H-like to A-like Ions of Elements. Appleton Laboratory.
-[^8]: F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,"Nuclear Fusion, vol. 41, no. 6, pp. 665–678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
-[^9]: I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755–1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
-[^10]: Trubnikov, B.A., in Reviews of Plasma Physics, Vol. 7 (Leontovich, M.A., Ed.), Consultants Bureau, New York (1979) 345.
+[^8]: H. Lux, R. Kemp, E. Fable, and R. Wenninger, “Radiation and confinement in 0D fusion systems codes,” Plasma Physics and Controlled Fusion, vol. 58, no. 7, pp. 075001–075001, May 2016, doi: https://doi.org/10.1088/0741-3335/58/7/075001.
+[^9]: F. Albajar, J. Johner, and G. Granata, “Improved calculation of synchrotron radiation losses in realistic tokamak plasmas,"Nuclear Fusion, vol. 41, no. 6, pp. 665–678, Jun. 2001, doi: https://doi.org/10.1088/0029-5515/41/6/301.
+[^10]: I. Fidone, G Giruzzi, and G. Granata, “Synchrotron radiation loss in tokamaks of arbitrary geometry,” Nuclear Fusion, vol. 41, no. 12, pp. 1755–1758, Dec. 2001, doi: https://doi.org/10.1088/0029-5515/41/12/102.
+[^11]: Trubnikov, B.A., in Reviews of Plasma Physics, Vol. 7 (Leontovich, M.A., Ed.), Consultants Bureau, New York (1979) 345.
