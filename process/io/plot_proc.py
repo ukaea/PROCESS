@@ -3990,17 +3990,10 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
             elif te[k] >= imp_data[i][imp_data.shape[1] - 1][0]:
                 lz[i][k] = imp_data[i][imp_data.shape[1] - 1][1]
             else:
-                for j in range(imp_data.shape[1] - 1):
-                    # Linear interpolation in log-log space
-                    if (te[k] > imp_data[i][j][0]) and (te[k] <= imp_data[i][j + 1][0]):
-                        yi = np.log(imp_data[i][j][1])
-                        xi = np.log(imp_data[i][j][0])
-                        c = (np.log(imp_data[i][j + 1][1]) - yi) / (
-                            np.log(imp_data[i][j + 1][0]) - xi
-                        )
-                        lz[i][k] = np.exp(yi + c * (np.log(te[k]) - xi))
-                        # Zav[i][k] = imp_data[i][j][2]
-            # The impurity radiation
+                # Use np.interp for log-log interpolation
+                log_te_data = np.log([row[0] for row in imp_data[i]])
+                log_lz_data = np.log([row[1] for row in imp_data[i]])
+                lz[i][k] = np.exp(np.interp(np.log(te[k]), log_te_data, log_lz_data))
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
         for l in range(imp_data.shape[0]):  # noqa: E741
