@@ -49,7 +49,9 @@ def plot_power_balance_sankey(m_file):
     p_neutron_total_mw = m_file.data["p_neutron_total_mw"].get_scan(-1)
     p_plasma_rad_mw = m_file.data["p_plasma_rad_mw"].get_scan(-1)
     p_fw_rad_total_mw = m_file.data["p_fw_rad_total_mw"].get_scan(-1)
-    p_fw_alpha_mw = p_alpha_total_mw * (1 - m_file.data["f_alpha_plasma"].get_scan(-1))
+    p_fw_alpha_mw = p_alpha_total_mw * (
+        1 - m_file.data["f_p_alpha_plasma_deposited"].get_scan(-1)
+    )
     p_blkt_nuclear_heat_total_mw = m_file.data["p_blkt_nuclear_heat_total_mw"].get_scan(
         -1
     )
@@ -90,6 +92,7 @@ def plot_power_balance_sankey(m_file):
         "31: H&CD & Diagnostics",
         "32: Total Secondary Heat",
         "33: Turbine Loss",
+        "34: Blanket neutron multiplication",
     ]
 
     # Define links (source, target, value) for a more linear flow
@@ -156,6 +159,7 @@ def plot_power_balance_sankey(m_file):
         11,  # 59: Turbine Loss
         4,  # 60: FW nuclear heat
         3,  # 61: Alpha particles back to plasma
+        34,  # 62: Blanket neutron multiplication
     ]
     targets = [
         2,  # 0: H&CD to Fusion
@@ -220,6 +224,7 @@ def plot_power_balance_sankey(m_file):
         33,  # 59: Turbine Loss
         6,  # 60: FW nuclear heat
         2,  # 61: Alpha particles back to plasma
+        7,  # 62: Blanket neutron multiplication
     ]
     values = [
         p_hcd_injected_total_mw,  # 0
@@ -228,7 +233,8 @@ def plot_power_balance_sankey(m_file):
         p_neutron_total_mw,  # 3
         p_plasma_rad_mw,  # 4
         p_fw_alpha_mw,  # 5
-        p_blkt_nuclear_heat_total_mw,  # 6
+        p_blkt_nuclear_heat_total_mw
+        - m_file.data["p_blkt_multiplication_mw"].get_scan(-1),  # 6
         p_fw_rad_total_mw,  # 7
         m_file.data["p_div_nuclear_heat_total_mw"].get_scan(-1),  # 8
         m_file.data["p_div_rad_total_mw"].get_scan(-1),  # 9
@@ -308,9 +314,10 @@ def plot_power_balance_sankey(m_file):
         m_file.data["p_turbine_loss_mw"].get_scan(-1),  # 59: Turbine Loss
         m_file.data["p_fw_nuclear_heat_total_mw"].get_scan(-1),  # 60: FW nuclear heat
         p_alpha_total_mw
-        * m_file.data["f_alpha_plasma"].get_scan(
+        * m_file.data["f_p_alpha_plasma_deposited"].get_scan(
             -1
         ),  # 61: Alpha particles back to plasma
+        m_file.data["p_blkt_multiplication_mw"].get_scan(-1),
     ]
 
     # Define colors for each node (hex or rgba)
@@ -349,6 +356,7 @@ def plot_power_balance_sankey(m_file):
         "#ad494a",  # 31: H&CD & Diagnostics
         "#a55194",  # 32: Total Secondary Heat
         "#393b79",  # 33: Turbine Loss
+        "#637939",  # 34: Blanket neutron multiplication
     ]
 
     # Assign link colors to match their source node
