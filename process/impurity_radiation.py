@@ -328,7 +328,9 @@ def init_imp_element(
     impurity_radiation_module.temp_impurity_keV_array[n_species_index - 1, :] = (
         Te * 1e-3
     )
-    impurity_radiation_module.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = lz
+    impurity_radiation_module.pden_impurity_lz_nd_temp_array[n_species_index - 1, :] = (
+        lz
+    )
     impurity_radiation_module.impurity_arr_zav[n_species_index - 1, :] = zav
 
 
@@ -343,21 +345,21 @@ def z2index(zimp):
     )
 
 
-def fradcore(rho, radius_plasma_core_norm, coreradiationfraction):
+def fradcore(rho, radius_plasma_core_norm, f_p_plasma_core_rad_reduction):
     """Finds the fraction of radiation from the core that is subtracted in impurity radiation model.
 
     :param rho: normalised minor radius
     :type rho: numpy.array
     :param radius_plasma_core_norm: normalised radius defining the 'core' region
     :type radius_plasma_core_norm: float
-    :param coreradiationfraction: fraction of radiation from the core region
-    :type coreradiationfraction: float
-    :return: fradcore - array filled with the coreradiationfraction
+    :param f_p_plasma_core_rad_reduction: fraction of radiation from the core region
+    :type f_p_plasma_core_rad_reduction: float
+    :return: fradcore - array filled with the f_p_plasma_core_rad_reduction
     :rtype: numpy.array
     """
     fradcore = np.zeros(len(rho))
     rho_mask = rho < radius_plasma_core_norm
-    fradcore[rho_mask] = coreradiationfraction
+    fradcore[rho_mask] = f_p_plasma_core_rad_reduction
 
     return fradcore
 
@@ -437,8 +439,12 @@ def pimpden(imp_element_index, neprofile, teprofile):
 
     # Use numpy.interp for linear interpolation in log-log space
     log_teprofile = np.log(teprofile)
-    log_temp = np.log(impurity_radiation_module.temp_impurity_keV_array[imp_element_index, :])
-    log_lz = np.log(impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, :])
+    log_temp = np.log(
+        impurity_radiation_module.temp_impurity_keV_array[imp_element_index, :]
+    )
+    log_lz = np.log(
+        impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, :]
+    )
     pimpden = np.exp(np.interp(log_teprofile, log_temp, log_lz))
 
     pimpden = (
@@ -452,9 +458,9 @@ def pimpden(imp_element_index, neprofile, teprofile):
         teprofile
         <= impurity_radiation_module.temp_impurity_keV_array[imp_element_index, 0]
     )
-    pimpden[less_than_imp_temp_mask] = impurity_radiation_module.pden_impurity_lz_nd_temp_array[
-        imp_element_index, 0
-    ]
+    pimpden[less_than_imp_temp_mask] = (
+        impurity_radiation_module.pden_impurity_lz_nd_temp_array[imp_element_index, 0]
+    )
 
     greater_than_imp_temp_mask = (
         teprofile
@@ -464,10 +470,12 @@ def pimpden(imp_element_index, neprofile, teprofile):
         ]
     )
     #  This is okay because Bremsstrahlung will dominate at higher temp.
-    pimpden[greater_than_imp_temp_mask] = impurity_radiation_module.pden_impurity_lz_nd_temp_array[
-        imp_element_index,
-        impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
-    ]
+    pimpden[greater_than_imp_temp_mask] = (
+        impurity_radiation_module.pden_impurity_lz_nd_temp_array[
+            imp_element_index,
+            impurity_radiation_module.impurity_arr_len_tab[imp_element_index] - 1,
+        ]
+    )
 
     return pimpden
 
@@ -556,7 +564,7 @@ class ImpurityRadiation:
             * fradcore(
                 self.rho,
                 impurity_radiation_module.radius_plasma_core_norm,
-                impurity_radiation_module.coreradiationfraction,
+                impurity_radiation_module.f_p_plasma_core_rad_reduction,
             )
         )
 

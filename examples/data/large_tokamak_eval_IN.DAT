@@ -200,7 +200,7 @@ i_shld_primary_heat = 1 * Switch for shield thermal power destiny;
 *------------Impurity Radiation Module-------------*
 
 radius_plasma_core_norm = 0.75 * radius_plasma_core_norm /0;6/ ; normalised radius defining the 'core' region
-coreradiationfraction = 0.6 * coreradiationfraction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
+f_p_plasma_core_rad_reduction = 0.6 * f_p_plasma_core_rad_reduction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
 f_nd_impurity_electrons(1) = 0.9
 f_nd_impurity_electrons(2) = 0.1
 f_nd_impurity_electrons(3) = 0.0
