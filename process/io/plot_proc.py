@@ -3998,35 +3998,35 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
             pimpden[i][k] = imp_frac[i] * ne[k] * ne[k] * lz[i][k]
 
         for l in range(imp_data.shape[0]):  # noqa: E741
-            prad[k] = prad[k] + pimpden[l][k] * 2.0e-6
+            prad[k] = prad[k] + pimpden[l][k] * 1.0e-6
 
     prof.plot(rho, prad, label="Total", linestyle="dotted")
-    prof.plot(rho, pimpden[0] * 2.0e-6, label="H")
-    prof.plot(rho, pimpden[1] * 2.0e-6, label="He")
+    prof.plot(rho, pimpden[0] * 1.0e-6, label="H")
+    prof.plot(rho, pimpden[1] * 1.0e-6, label="He")
     if imp_frac[2] > 1.0e-30:
-        prof.plot(rho, pimpden[2] * 2.0e-6, label="Be")
+        prof.plot(rho, pimpden[2] * 1.0e-6, label="Be")
     if imp_frac[3] > 1.0e-30:
-        prof.plot(rho, pimpden[3] * 2.0e-6, label="C")
+        prof.plot(rho, pimpden[3] * 1.0e-6, label="C")
     if imp_frac[4] > 1.0e-30:
-        prof.plot(rho, pimpden[4] * 2.0e-6, label="N")
+        prof.plot(rho, pimpden[4] * 1.0e-6, label="N")
     if imp_frac[5] > 1.0e-30:
-        prof.plot(rho, pimpden[5] * 2.0e-6, label="O")
+        prof.plot(rho, pimpden[5] * 1.0e-6, label="O")
     if imp_frac[6] > 1.0e-30:
-        prof.plot(rho, pimpden[6] * 2.0e-6, label="Ne")
+        prof.plot(rho, pimpden[6] * 1.0e-6, label="Ne")
     if imp_frac[7] > 1.0e-30:
-        prof.plot(rho, pimpden[7] * 2.0e-6, label="Si")
+        prof.plot(rho, pimpden[7] * 1.0e-6, label="Si")
     if imp_frac[8] > 1.0e-30:
-        prof.plot(rho, pimpden[8] * 2.0e-6, label="Ar")
+        prof.plot(rho, pimpden[8] * 1.0e-6, label="Ar")
     if imp_frac[9] > 1.0e-30:
-        prof.plot(rho, pimpden[9] * 2.0e-6, label="Fe")
+        prof.plot(rho, pimpden[9] * 1.0e-6, label="Fe")
     if imp_frac[10] > 1.0e-30:
-        prof.plot(rho, pimpden[10] * 2.0e-6, label="Ni")
+        prof.plot(rho, pimpden[10] * 1.0e-6, label="Ni")
     if imp_frac[11] > 1.0e-30:
-        prof.plot(rho, pimpden[11] * 2.0e-6, label="Kr")
+        prof.plot(rho, pimpden[11] * 1.0e-6, label="Kr")
     if imp_frac[12] > 1.0e-30:
-        prof.plot(rho, pimpden[12] * 2.0e-6, label="Xe")
+        prof.plot(rho, pimpden[12] * 1.0e-6, label="Xe")
     if imp_frac[13] > 1.0e-30:
-        prof.plot(rho, pimpden[13] * 2.0e-6, label="W")
+        prof.plot(rho, pimpden[13] * 1.0e-6, label="W")
     prof.legend(loc="upper left", bbox_to_anchor=(-0.1, -0.1), ncol=4)
     prof.minorticks_on()
     # Plot a vertical line at the core region radius
