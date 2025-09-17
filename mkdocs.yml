@@ -9,6 +9,7 @@ nav:
           - Visual Studio Code: installation/vs-code.md
       - Usage:
           - Running PROCESS: usage/running-process.md
+          - Writing input files: usage/writing-input-files.md
           - Examples: usage/examples.md
           - Troubleshooting: usage/troubleshooting.md
           - Plotting: usage/plotting.md
