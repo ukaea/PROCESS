@@ -5140,10 +5140,10 @@ def test_plane_stress(planestressparam, monkeypatch):
         j=planestressparam.j,
     )
 
-    assert sigr == pytest.approx(planestressparam.expected_sigr)
-    assert sigt == pytest.approx(planestressparam.expected_sigt)
-    assert r_deflect == pytest.approx(planestressparam.expected_r_deflect)
-    assert rradius == pytest.approx(planestressparam.expected_rradius)
+    np.testing.assert_allclose(sigr, planestressparam.expected_sigr, atol=1e-6)
+    np.testing.assert_allclose(sigt, planestressparam.expected_sigt)
+    np.testing.assert_allclose(rradius, planestressparam.expected_rradius)
+    np.testing.assert_allclose(r_deflect, planestressparam.expected_r_deflect)
 
 
 class ExtendedPlaneStrainParam(NamedTuple):
