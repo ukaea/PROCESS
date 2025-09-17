@@ -36,6 +36,7 @@ setup_kwargs = {
         "PyVMCON>=2.3.1,<3.0.0",
         "CoolProp>=6.4",
         "matplotlib>=2.1.1",
+        "plotly>=5.15.0,<6",
         "seaborn>=0.12.2",
         "tabulate",
     ],
