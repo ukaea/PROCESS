@@ -134,8 +134,8 @@ keywords:
   - systems codes
   - power plant
 license: MIT
-version: 3.1.0
-date-released: "2024-03-21"
+version: 3.2.0
+date-released: "2025-09-17"
 references:
   - title: '"PROCESS": A systems code for fusion power plants—Part 1 Physics'
     type: article
