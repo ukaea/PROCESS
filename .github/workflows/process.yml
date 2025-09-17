@@ -12,12 +12,16 @@ permissions:
 
 jobs:
   unit-test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python-version }}
       - name: Install PROCESS
         # Editable install to match default install
         run: |
@@ -28,6 +32,7 @@ jobs:
           pytest --cov=process tests/unit -v \
                  --cov-report xml
       - name: Upload coverage to Codecov
+        if: ${{ matrix.python-version }} == '3.10'
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
