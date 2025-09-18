@@ -216,8 +216,13 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dt,
             )
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
-            * (physics_variables.f_tritium * physics_variables.nd_fuel_ions)
+            * physics_variables.f_deuterium
+            * physics_variables.f_tritium
+            * (
+                self.plasma_profile.neprofile.profile_y
+                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+            )
+            ** 2
         )
 
         # Calculate the fusion reaction rate integral using Simpson's rule
@@ -305,8 +310,13 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dhe3,
             )
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
-            * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
+            * physics_variables.f_deuterium
+            * physics_variables.f_helium3
+            * (
+                self.plasma_profile.neprofile.profile_y
+                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+            )
+            ** 2
         )
 
         # Reaction energy in MegaJoules [MJ]
@@ -385,8 +395,13 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dd1,
             )
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * physics_variables.f_deuterium
+            * physics_variables.f_deuterium
+            * (
+                self.plasma_profile.neprofile.profile_y
+                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+            )
+            ** 2
         )
 
         # Reaction energy in MegaJoules [MJ]
@@ -468,8 +483,13 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dd2,
             )
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * physics_variables.f_deuterium
+            * physics_variables.f_deuterium
+            * (
+                self.plasma_profile.neprofile.profile_y
+                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+            )
+            ** 2
         )
 
         # Reaction energy in MegaJoules [MJ]

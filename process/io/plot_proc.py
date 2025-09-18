@@ -9934,7 +9934,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     )
     axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.01])
+    axis.set_xlim([0, 1.025])
     axis.minorticks_on()
     axis.set_ylim([1e10, 1e19])
     axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
