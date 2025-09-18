@@ -30,16 +30,7 @@ def main(args=None):
     #########################################################
     # main program
 
-    fig = plot_power_balance_sankey(args.mfile)
-
-    # Get directory of mfile
-    mfile_path = pathlib.Path(args.mfile).resolve()
-    mfile_dir = mfile_path.parent
-    output_path = mfile_dir / f"SankeyPowerFlow.{args.end}"
-
-    # Save the Plotly figure as a static image
-    fig.write_image(str(output_path))
-    print(f"Sankey diagram saved to {output_path}")
+    plot_power_balance_sankey(args.mfile)
 
 
 def plot_power_balance_sankey(m_file):

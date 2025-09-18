@@ -38,7 +38,6 @@ setup_kwargs = {
         "matplotlib>=2.1.1",
         "plotly>=5.15.0,<6",
         "seaborn>=0.12.2",
-        "kaleido==0.2.1",
         "tabulate",
     ],
     "extras_require": {
