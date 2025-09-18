@@ -48,6 +48,8 @@ def write(file, string: str):
         OutputFileManager._mfile.write(f"{string}\n")  # noqa: SLF001
     elif file == constants.NOUT:
         OutputFileManager._outfile.write(f"{string}\n")  # noqa: SLF001
+    elif file == constants.IOTTY:
+        print(string)
 
 
 def ocentr(file, string: str, width: int, *, character="*"):
