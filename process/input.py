@@ -2304,6 +2304,11 @@ INPUT_VARIABLES = {
         additional_actions=_icc_additional_actions,
         set_variable=False,
     ),
+    "force_vmcon_inequality_satisfication": InputVariable(
+        data_structure.numerics,
+        int,
+        choices=(0, 1),
+    ),
 }
 
 
