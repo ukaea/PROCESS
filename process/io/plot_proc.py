@@ -9862,6 +9862,14 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
         for i in range(500)
     ]
 
+    fusrat_plasma_total_profile = [
+        fusrat_plasma_dt_profile[i]
+        + fusrat_plasma_dd_triton_profile[i]
+        + fusrat_plasma_dd_helion_profile[i]
+        + fusrat_plasma_dhe3_profile[i]
+        for i in range(len(fusrat_plasma_dt_profile))
+    ]
+
     axis.spines["left"].set_color("red")
     axis.yaxis.label.set_color("black")
     axis.tick_params(axis="y", colors="red")
@@ -9895,6 +9903,15 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
         linestyle="--",
         label=r"$\mathrm{D-3He}$",
     )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+        fusrat_plasma_total_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="None",
+        marker="d",
+        markersize=1,
+        label=r"Total",
+    )
 
     # Plot fusion power (solid lines, right axis) with axis color and different linestyles
     ax2 = axis.twinx()
@@ -9925,6 +9942,20 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
         np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
         color=ax2.spines["right"].get_edgecolor(),
         linestyle="--",
+    )
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+        (
+            np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
+            + np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
+            + np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY
+            + np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY
+        ),
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="None",
+        marker="d",
+        markersize=1,
+        label=r"Total",
     )
 
     axis.set_xlabel("$\\rho \\ [r/a]$")
