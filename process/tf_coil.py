@@ -5023,8 +5023,8 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
 
     #  Find solution vector cc
     # ***
-    aa = np.asfortranarray(aa)
-    cc = np.linalg.solve(aa, bb)
+    with numba.objmode(cc="float64[:]"):
+        cc = np.linalg.solve(aa, bb)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)
     for ii in range(nlayers):
