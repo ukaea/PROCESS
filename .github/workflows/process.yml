@@ -14,7 +14,7 @@ jobs:
   unit-test:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm]
         python-version: ['3.10', '3.11', '3.12', '3.13']
     runs-on: ${{ matrix.os }}
     steps:
@@ -27,6 +27,8 @@ jobs:
         run: |
           pip install -e '.[test, examples]'
           pip install -r requirements_dev.txt
+      - run: python -c 'import sys, scipy, numpy; print(scipy.__version__, numpy.__version__, sys.version_info); scipy.show_config()'
+      - run: python -c 'import numpy; numpy.show_config()'
       - name: Run unit tests
         run: |
           pytest --cov=process tests/unit -v \
