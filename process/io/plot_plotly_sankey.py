@@ -3,7 +3,13 @@ import pathlib
 import re
 
 import matplotlib as mpl
-import plotly.graph_objects as go
+
+try:
+    import plotly.graph_objects as go
+
+    PLOT_SANKEY = True
+except ImportError:
+    PLOT_SANKEY = False
 
 from process.io.mfile import MFile
 
@@ -13,6 +19,14 @@ mpl.use("Agg")
 def main(args=None):
     ###########################################################
     # Usage
+
+    if not PLOT_SANKEY:
+        print(
+            "\nPlotly is not installed, unable to create sankey diagram!\n"
+            "Install plotly by installing the optional 'plotly' dependency "
+            "e.g. \"pip install -e '.[plotly]'\""
+        )
+        return
 
     parser = argparse.ArgumentParser(
         description="Program to plot\
