@@ -5030,8 +5030,17 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
 
     #  Find solution vector cc
     # ***
-    aa = np.asfortranarray(aa)
-    cc = np.linalg.solve(aa, bb)
+    # This context manager runs the code in Python by copying the data
+    # out of numba, running the code, and then copying the result
+    # back in. This means that the linear algebra solve is not compiled and runs
+    # as if it were written in normal Python.
+    # This is necessary because numba compiles against the SciPy algebra library,
+    # not the Numpy one. There are differences in the Scipy solvers depending on
+    # operating system/architecture/Scipy version that cause tests to fail.
+    # https://github.com/ukaea/PROCESS/issues/3027
+    # https://github.com/scipy/scipy/issues/23639
+    with numba.objmode(cc="float64[:]"):
+        cc = np.linalg.solve(aa, bb)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)
     for ii in range(nlayers):
