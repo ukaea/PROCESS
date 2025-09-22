@@ -169,7 +169,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     rhopedn: float = 0.0
 
-    dene: float = 0.0
+    nd_plasma_electrons_vol_avg: float = 0.0
 
     teped: float = 0.0
 
@@ -238,7 +238,7 @@ class PlasmaProfilesParam(NamedTuple):
             neped=6.1916268627398164e19,
             ti=12.9,
             rhopedn=0.94000000000000006,
-            dene=7.983e19,
+            nd_plasma_electrons_vol_avg=7.983e19,
             teped=5.5,
             alphan=1,
             te=13.07,
@@ -283,7 +283,7 @@ class PlasmaProfilesParam(NamedTuple):
             neped=6.1916268627398164e19,
             ti=13.07,
             rhopedn=0.94000000000000006,
-            dene=7.983e19,
+            nd_plasma_electrons_vol_avg=7.983e19,
             teped=5.5,
             alphan=1,
             te=13.07,
@@ -369,7 +369,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "rhopedn", plasmaprofilesparam.rhopedn)
 
-    monkeypatch.setattr(physics_variables, "dene", plasmaprofilesparam.dene)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electrons_vol_avg",
+        plasmaprofilesparam.nd_plasma_electrons_vol_avg,
+    )
 
     monkeypatch.setattr(physics_variables, "teped", plasmaprofilesparam.teped)
 

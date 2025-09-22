@@ -228,7 +228,7 @@
  Ion_temperature_(keV)____________________________________________________ (ti)___________________________ 1.22213835283789436e+01
  Ion_temperature_on_axis_(keV)____________________________________________ (ti0)__________________________ 2.50171046225989251e+01 OP
  Electron_temp.,_density_weighted_(keV)___________________________________ (ten)__________________________ 1.34914174066700241e+01 OP
- Volume_averaged_electron_number_density_(/m3)____________________________ (dene)_________________________ 7.79622390002983731e+19
+ Volume_averaged_electron_number_density_(/m3)____________________________ (nd_plasma_electrons_vol_avg)_________________________ 7.79622390002983731e+19
  Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.02466460344915771e+20 OP
  Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_________________________ 8.63127495812675338e+19 OP
  Plasma_pressure_on_axis_(Pa)_____________________________________________ (p0)___________________________ 7.82668759018785902e+05 OP
@@ -1189,7 +1189,7 @@ boundu(3) = 9.0
 ixc = 4 * te
 boundu(4) = 100.0
 ixc = 5 * beta
-ixc = 6 * dene
+ixc = 6 * nd_plasma_electrons_vol_avg
 ixc = 10 * hfact
 boundu(10) = 1.2
 ixc = 13 * tfcth
@@ -1461,7 +1461,7 @@ alphat   = 1.45 * temperature profile index
 aspect   = 3.0 * aspect ratio (`iteration variable 1`)
 beta     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
 b_plasma_toroidal_on_axis       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
-dene     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
+nd_plasma_electrons_vol_avg     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
 fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fkzohm   = 1.02 * Zohm elongation scaling adjustment factor (`ishape=2; 3`)

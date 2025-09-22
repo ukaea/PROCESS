@@ -323,8 +323,8 @@ vertical stability (`constraint equation 23`)
 """
 
 
-dene: float = None
-"""electron density (/m3) (`iteration variable 6`)"""
+nd_plasma_electrons_vol_avg: float = None
+"""Plasma volume averaged electron density (/m3) (`iteration variable 6`)"""
 
 
 nd_fuel_ions: float = None
@@ -1386,7 +1386,7 @@ def init_physics_variables():
     global csawth
     global f_vol_plasma
     global f_r_conducting_wall
-    global dene
+    global nd_plasma_electrons_vol_avg
     global nd_fuel_ions
     global dlamee
     global dlamie
@@ -1633,7 +1633,7 @@ def init_physics_variables():
     csawth = 1.0
     f_vol_plasma = 1.0
     f_r_conducting_wall = 1.35
-    dene = 9.8e19
+    nd_plasma_electrons_vol_avg = 9.8e19
     nd_fuel_ions = 0.0
     dlamee = 0.0
     dlamie = 0.0

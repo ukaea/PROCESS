@@ -145,7 +145,7 @@ def constraint_equation_1():
             * constants.RMU0
             * constants.ELECTRON_CHARGE
             * (
-                data_structure.physics_variables.dene
+                data_structure.physics_variables.nd_plasma_electrons_vol_avg
                 * data_structure.physics_variables.ten
                 + data_structure.physics_variables.nd_ions_total
                 * data_structure.physics_variables.tin
@@ -352,7 +352,7 @@ def constraint_equation_5():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fdene: f-value for density limit
-    dene: electron density (/m3)
+    nd_plasma_electrons_vol_avg: electron density (/m3)
     dnelimt: density limit (/m3)
     nd_electron_line: line averaged electron density (m-3)
 
@@ -379,13 +379,14 @@ def constraint_equation_5():
         )
 
     cc = (
-        data_structure.physics_variables.dene / data_structure.physics_variables.dnelimt
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg
+        / data_structure.physics_variables.dnelimt
         - 1.0 * data_structure.constraint_variables.fdene
     )
     return ConstraintResult(
         cc,
         data_structure.physics_variables.dnelimt * (1.0 - cc),
-        data_structure.physics_variables.dene * cc,
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg * cc,
     )
 
 

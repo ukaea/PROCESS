@@ -21,7 +21,7 @@ class SetFusionPowersParam(NamedTuple):
 
     b_plasma_toroidal_on_axis: Any = None
 
-    dene: Any = None
+    nd_plasma_electrons_vol_avg: Any = None
 
     nd_fuel_ions: Any = None
 

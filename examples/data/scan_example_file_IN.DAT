@@ -40,9 +40,9 @@ icc = 11
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*

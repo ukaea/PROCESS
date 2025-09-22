@@ -366,7 +366,7 @@
  Ion_temperature_(keV)___________________________________________________ (ti)__________________________      1.2489E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.5758E+01    
  Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3805E+01    
- Electron_density_(/m3)__________________________________________________ (dene)________________________      8.0667E+19 ITV
+ Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      8.0667E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      1.0610E+20 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      8.9334E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
@@ -1228,9 +1228,9 @@ icc = 11
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*

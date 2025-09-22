@@ -148,7 +148,7 @@ class PlasmaProfile:
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
 
         physics_variables.nd_electron_line = (
-            physics_variables.dene
+            physics_variables.nd_plasma_electrons_vol_avg
             * (1.0 + physics_variables.alphan)
             * (sp.special.gamma(0.5) / 2.0)
             * sp.special.gamma(physics_variables.alphan + 1.0)
@@ -165,7 +165,7 @@ class PlasmaProfile:
         physics_variables.te0 = physics_variables.te * (1.0 + physics_variables.alphat)
         physics_variables.ti0 = physics_variables.ti * (1.0 + physics_variables.alphat)
 
-        physics_variables.ne0 = physics_variables.dene * (
+        physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
             1.0 + physics_variables.alphan
         )
         physics_variables.ni0 = physics_variables.nd_ions_total * (
@@ -228,7 +228,8 @@ class PlasmaProfile:
         #  (Input value is used if ipedestal = 0)
 
         divertor_variables.prn1 = max(
-            0.01e0, physics_variables.nesep / physics_variables.dene
+            0.01e0,
+            physics_variables.nesep / physics_variables.nd_plasma_electrons_vol_avg,
         )  # Preventing division by zero later
 
     def calculate_profile_factors(self) -> None:

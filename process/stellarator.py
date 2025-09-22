@@ -124,7 +124,7 @@ class Stellarator:
             self.stphys(True)
             self.stopt(True)
 
-            # As stopt changes dene, te and b_plasma_toroidal_on_axis, stphys needs two calls
+            # As stopt changes nd_plasma_electrons_vol_avg, te and b_plasma_toroidal_on_axis, stphys needs two calls
             # to correct for larger changes (it is only consistent after
             # two or three fix point iterations) call stphys here again, just to be sure.
             # This can be removed once the bad practice in stopt is removed!
@@ -3620,8 +3620,8 @@ class Stellarator:
         )
         # Now go to point where ECRH is still available
         # In density..
-        dene_old = copy(physics_variables.dene)
-        physics_variables.dene = min(
+        dene_old = copy(physics_variables.nd_plasma_electrons_vol_avg)
+        physics_variables.nd_plasma_electrons_vol_avg = min(
             dene_old, ne0_max / (1.0e0 + physics_variables.alphan)
         )
 
@@ -3644,7 +3644,7 @@ class Stellarator:
         # Reverse it and do it again because anything more efficiently isn't suitable with the current implementation
         # This is bad practice but seems to be necessary as of now:
         physics_variables.te = te_old
-        physics_variables.dene = dene_old
+        physics_variables.nd_plasma_electrons_vol_avg = dene_old
         physics_variables.b_plasma_toroidal_on_axis = bt_old
 
         self.stphys(False)
@@ -3684,7 +3684,11 @@ class Stellarator:
         #  Scale the result so that it applies to the volume-averaged
         #  electron density
 
-        dlimit = dnlamx * physics_variables.dene / physics_variables.nd_electron_line
+        dlimit = (
+            dnlamx
+            * physics_variables.nd_plasma_electrons_vol_avg
+            / physics_variables.nd_electron_line
+        )
 
         #  Set the required value for icc=5
 
@@ -4257,7 +4261,7 @@ class Stellarator:
             * constants.RMU0
             * constants.ELECTRON_CHARGE
             * (
-                physics_variables.dene * physics_variables.ten
+                physics_variables.nd_plasma_electrons_vol_avg * physics_variables.ten
                 + physics_variables.nd_ions_total * physics_variables.tin
             )
             / physics_variables.b_plasma_total**2
@@ -4338,7 +4342,7 @@ class Stellarator:
                 physics_variables.b_plasma_poloidal_average,
                 physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
@@ -4401,7 +4405,7 @@ class Stellarator:
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.b_plasma_poloidal_average,
             physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
             physics_variables.ten,
@@ -4443,7 +4447,7 @@ class Stellarator:
         physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
             physics_variables.te,
             physics_variables.ti,
@@ -4597,7 +4601,7 @@ class Stellarator:
             physics_variables.aspect,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_ions_total,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
@@ -4648,7 +4652,7 @@ class Stellarator:
             physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
@@ -5602,7 +5606,7 @@ class Neoclassics:
             * KEV
         )
         density = np.array([
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_fuel_ions * physics_variables.f_deuterium,
             physics_variables.nd_fuel_ions * (1 - physics_variables.f_deuterium),
             physics_variables.nd_alphas,

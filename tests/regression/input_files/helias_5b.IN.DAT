@@ -30,8 +30,8 @@ ixc = 4                 *te
 boundl(4) = 4.
 boundu(4) = 25.
 
-ixc = 6                 *dene
-dene = 2.0914E20        *Electron density (/m3)
+ixc = 6                 *nd_plasma_electrons_vol_avg
+nd_plasma_electrons_vol_avg = 2.0914E20        *Electron density (/m3)
 boundl(6) = 3.005E19
 boundu(6) = 5.005E20
 

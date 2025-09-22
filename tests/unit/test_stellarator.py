@@ -2619,7 +2619,7 @@ def test_intersect(intersectparam, stellarator):
 
 
 class StdlimParam(NamedTuple):
-    dene: Any = None
+    nd_plasma_electrons_vol_avg: Any = None
 
     nd_electron_line: Any = None
 
@@ -2642,7 +2642,7 @@ class StdlimParam(NamedTuple):
     "stdlimparam",
     (
         StdlimParam(
-            dene=2.0914e20,
+            nd_plasma_electrons_vol_avg=2.0914e20,
             nd_electron_line=2.357822619799476e20,
             dnelimt=0,
             b_plasma_toroidal_on_axis=5.5,
@@ -2653,7 +2653,7 @@ class StdlimParam(NamedTuple):
             expected_dlimit=1.2918765671497731e20,
         ),
         StdlimParam(
-            dene=2.0914e20,
+            nd_plasma_electrons_vol_avg=2.0914e20,
             nd_electron_line=2.357822619799476e20,
             dnelimt=1.2918765671497731e20,
             b_plasma_toroidal_on_axis=5.5,
@@ -2678,7 +2678,11 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "dene", stdlimparam.dene)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electrons_vol_avg",
+        stdlimparam.nd_plasma_electrons_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables, "nd_electron_line", stdlimparam.nd_electron_line

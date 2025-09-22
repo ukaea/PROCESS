@@ -70,7 +70,7 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 | $\mathtt{alphan}$, $\alpha_n$       | density profile factor   |
 | $\mathtt{alphat}$, $\alpha_T$       | temperature profile factor  |
 |  $\mathtt{aspect}$, $A$      |   aspect ratio                            |
-|  $\mathtt{dene}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
+|  $\mathtt{nd_plasma_electrons_vol_avg}$, $n_{\text{e}}$     |    volume averaged electron density $(\text{m}^{-3})$                           |
 |  $\mathtt{nd_electron_line}$, $n_{\text{e,0}}$      |    line averaged electron density $(\text{m}^{-3})$                           |
 |  $\mathtt{e_beam_kev}$      |  neutral beam energy $(\text{keV})$                             |
 |  $\mathtt{f_radius_beam_tangency_rmajor}$      |   R_tangent / R_major for neutral beam injection                            |

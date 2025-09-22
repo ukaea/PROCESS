@@ -300,7 +300,7 @@
  Ion_temperature_(keV)____________________________________________________ (ti)___________________________ 1.30315794262759219e+01
  Ion_temperature_on_axis_(keV)____________________________________________ (ti0)__________________________ 2.72635735563331849e+01 OP
  Electron_temp.,_density_weighted_(keV)___________________________________ (ten)__________________________ 1.44360335891099503e+01 OP
- Volume_averaged_electron_number_density_(/m3)____________________________ (dene)_________________________ 8.50078961768999158e+19
+ Volume_averaged_electron_number_density_(/m3)____________________________ (nd_plasma_electrons_vol_avg)_________________________ 8.50078961768999158e+19
  Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.11814263037413868e+20 OP
  Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_________________________ 9.41418090734859715e+19 OP
  Plasma_pressure_on_axis_(Pa)_____________________________________________ (p0)___________________________ 9.10652371594472905e+05 OP
@@ -1369,9 +1369,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*

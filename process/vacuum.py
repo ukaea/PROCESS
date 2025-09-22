@@ -73,7 +73,7 @@ class Vacuum:
                 buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
                 tfv.n_tf_coils,
                 tv.t_between_pulse,
-                pv.dene,
+                pv.nd_plasma_electrons_vol_avg,
                 pv.n_divertors,
                 qtorus,
                 gasld,

@@ -39,7 +39,9 @@ ITERATION_VARIABLES = {
     3: IterationVariable("rmajor", data_structure.physics_variables, 0.1, 50.00),
     4: IterationVariable("te", data_structure.physics_variables, 5.0, 150.0),
     5: IterationVariable("beta", data_structure.physics_variables, 0.001, 1.0),
-    6: IterationVariable("dene", data_structure.physics_variables, 2.0e19, 1.0e21),
+    6: IterationVariable(
+        "nd_plasma_electrons_vol_avg", data_structure.physics_variables, 2.0e19, 1.0e21
+    ),
     7: IterationVariable(
         "f_nd_beam_electron", data_structure.physics_variables, 1.0e-6, 1.0
     ),

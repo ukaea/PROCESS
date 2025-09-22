@@ -530,7 +530,7 @@ def check_process(inputs):  # noqa: ARG001
                 )
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
                 warn(
-                    "dene used as iteration variable without constraint 81 (neped<ne0)",
+                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (neped<ne0)",
                     stacklevel=2,
                 )
 

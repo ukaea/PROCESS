@@ -32,7 +32,7 @@ icc = 16 * Net electric lower limit
 ixc = 4 * te
 boundl(4) = 5.0
 boundu(4) = 25.0
-ixc = 6 * dene
+ixc = 6 * nd_plasma_electrons_vol_avg
 boundl(6) = 0.5d+20
 boundu(6) = 5.0d+20
 ixc = 29 * bore
@@ -269,7 +269,7 @@ alphat   = 1.4 * temperature profile index
 aspect   = 1.8 * aspect ratio (`iteration variable 1`)
 beta     = 0.13134204235647895 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
 b_plasma_toroidal_on_axis       = 3.0 * toroidal field on axis (T) (`iteration variable 2`)
-dene     = 9.69888313737236e+19 * electron density (/m3) (`iteration variable 6`)
+nd_plasma_electrons_vol_avg     = 9.69888313737236e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max = 5.0 * Troyon-like coefficient for beta scaling
 i_beta_norm_max = 0 * Normalised beta max selection (0 = user input)
 f_p_div_lower     = 0.5 * fraction of power to the lower divertor in double null configuration

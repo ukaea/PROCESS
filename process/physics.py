@@ -34,13 +34,13 @@ logger = logging.getLogger(__name__)
 
 
 @nb.jit(nopython=True, cache=True)
-def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
+def rether(alphan, alphat, nd_plasma_electrons_vol_avg, dlamie, te, ti, zeffai):
     """Routine to find the equilibration power between the
     ions and electrons
     author: P J Knight, CCFE, Culham Science Centre
     alphan : input real :  density profile index
     alphat : input real :  temperature profile index
-    dene   : input real :  electron density (/m3)
+    nd_plasma_electrons_vol_avg   : input real :  electron density (/m3)
     dlamie : input real :  ion-electron coulomb logarithm
     te     : input real :  electron temperature (keV)
     ti     : input real :  ion temperature (keV)
@@ -53,7 +53,7 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     profie = (1.0 + alphan) ** 2 / (
         (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
     )
-    conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
+    conie = 2.42165e-41 * dlamie * nd_plasma_electrons_vol_avg**2 * zeffai * profie
 
     return conie * (ti - te) / (te**1.5)
 
@@ -646,7 +646,7 @@ def calculate_current_coefficient_fiesta(
 @nb.jit(nopython=True, cache=True)
 def _nevins_integral(
     y: float,
-    dene: float,
+    nd_plasma_electrons_vol_avg: float,
     te: float,
     b_plasma_toroidal_on_axis: float,
     rminor: float,
@@ -663,7 +663,7 @@ def _nevins_integral(
 
     Parameters:
     - y: float, abscissa of integration, normalized minor radius
-    - dene: float, volume averaged electron density (/m^3)
+    - nd_plasma_electrons_vol_avg: float, volume averaged electron density (/m^3)
     - te: float, volume averaged electron temperature (keV)
     - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - rminor: float, plasma minor radius (m)
@@ -693,7 +693,7 @@ def _nevins_integral(
 
     # Compute average electron beta
     betae = (
-        dene
+        nd_plasma_electrons_vol_avg
         * te
         * 1.0e3
         * constants.ELECTRON_CHARGE
@@ -1591,19 +1591,19 @@ class Physics:
             physics_variables.nd_fuel_ions,
             physics_variables.nd_alphas,
             physics_variables.vol_plasma,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
         )
 
         # Define coulomb logarithm
         # (collisions: ion-electron, electron-electron)
         physics_variables.dlamee = (
             31.0
-            - (np.log(physics_variables.dene) / 2.0)
+            - (np.log(physics_variables.nd_plasma_electrons_vol_avg) / 2.0)
             + np.log(physics_variables.te * 1000.0)
         )
         physics_variables.dlamie = (
             31.3
-            - (np.log(physics_variables.dene) / 2.0)
+            - (np.log(physics_variables.nd_plasma_electrons_vol_avg) / 2.0)
             + np.log(physics_variables.te * 1000.0)
         )
 
@@ -1940,7 +1940,7 @@ class Physics:
                 physics_variables.alphat,
                 physics_variables.beta_toroidal,
                 physics_variables.b_plasma_toroidal_on_axis,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.plasma_current,
                 physics_variables.q95,
                 physics_variables.q0,
@@ -1990,7 +1990,7 @@ class Physics:
                 beta_poloidal=physics_variables.beta_poloidal,
                 ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.ne0,
-                average_density=physics_variables.dene,
+                average_density=physics_variables.nd_plasma_electrons_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -2188,7 +2188,7 @@ class Physics:
                 physics_variables.b_plasma_poloidal_average,
                 physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
@@ -2263,7 +2263,7 @@ class Physics:
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.b_plasma_poloidal_average,
             physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
             physics_variables.ten,
@@ -2310,7 +2310,7 @@ class Physics:
         physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
             physics_variables.te,
             physics_variables.ti,
@@ -2474,7 +2474,7 @@ class Physics:
             physics_variables.aspect,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_ions_total,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
@@ -2543,7 +2543,7 @@ class Physics:
             physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
             physics_variables.aspect,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.te,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
@@ -2783,8 +2783,11 @@ class Physics:
                     f"reinke t and fz, physics = {physics_variables.tesep} , {reinke_variables.fzmin}"
                 ),
             )
-            # fsep = physics_variables.nesep / physics_variables.dene
-            fgw = physics_variables.dlimit(7) / physics_variables.dene
+            # fsep = physics_variables.nesep / physics_variables.nd_plasma_electrons_vol_avg
+            fgw = (
+                physics_variables.dlimit(7)
+                / physics_variables.nd_plasma_electrons_vol_avg
+            )
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.tesep = reinke_tsep(
                 physics_variables.b_plasma_toroidal_on_axis,
@@ -3198,7 +3201,8 @@ class Physics:
 
         # Alpha ash portion
         physics_variables.nd_alphas = (
-            physics_variables.dene * physics_variables.f_nd_alpha_electron
+            physics_variables.nd_plasma_electrons_vol_avg
+            * physics_variables.f_nd_alpha_electron
         )
 
         # ======================================================================
@@ -3210,12 +3214,14 @@ class Physics:
         # This will override the calculated value which is a minimum.
         if physics_variables.fusden_alpha_total < 1.0e-6:  # not calculated yet...
             physics_variables.nd_protons = max(
-                physics_variables.f_nd_protium_electrons * physics_variables.dene,
+                physics_variables.f_nd_protium_electrons
+                * physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.nd_protons = max(
-                physics_variables.f_nd_protium_electrons * physics_variables.dene,
+                physics_variables.f_nd_protium_electrons
+                * physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
                 / physics_variables.fusden_alpha_total,
@@ -3227,7 +3233,8 @@ class Physics:
         # If ignited, prevent beam fusion effects
         if physics_variables.i_plasma_ignited == 0:
             physics_variables.nd_beam_ions = (
-                physics_variables.dene * physics_variables.f_nd_beam_electron
+                physics_variables.nd_plasma_electrons_vol_avg
+                * physics_variables.f_nd_beam_electron
             )
         else:
             physics_variables.nd_beam_ions = 0.0
@@ -3242,7 +3249,7 @@ class Physics:
                     imp, np.array([physics_variables.te])
                 ).squeeze() * (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * physics_variables.dene
+                    * physics_variables.nd_plasma_electrons_vol_avg
                 )
 
         # ======================================================================
@@ -3250,7 +3257,7 @@ class Physics:
         # Fuel portion - conserve charge neutrality
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
-            physics_variables.dene
+            physics_variables.nd_plasma_electrons_vol_avg
             - 2.0 * physics_variables.nd_alphas
             - physics_variables.nd_protons
             - physics_variables.nd_beam_ions
@@ -3275,14 +3282,14 @@ class Physics:
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
             * physics_variables.nd_fuel_ions
             + physics_variables.nd_beam_ions
-        ) / physics_variables.dene
+        ) / physics_variables.nd_plasma_electrons_vol_avg
 
         impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("He")
         ] = (
             physics_variables.f_helium3
             * physics_variables.nd_fuel_ions
-            / physics_variables.dene
+            / physics_variables.nd_plasma_electrons_vol_avg
             + physics_variables.f_nd_alpha_electron
         )
 
@@ -3294,7 +3301,7 @@ class Physics:
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.nd_impurities += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * physics_variables.dene
+                    * physics_variables.nd_plasma_electrons_vol_avg
                 )
 
         # ======================================================================
@@ -3400,7 +3407,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.m_ions_total_amu += (
-                    physics_variables.dene
+                    physics_variables.nd_plasma_electrons_vol_avg
                     * impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation_module.m_impurity_amu_array[imp]
                 )
@@ -3442,7 +3449,7 @@ class Physics:
                 * physics_variables.nd_beam_ions
                 / constants.M_TRITON_AMU
             )
-        ) / physics_variables.dene
+        ) / physics_variables.nd_plasma_electrons_vol_avg
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.zeffai += (
@@ -3459,7 +3466,7 @@ class Physics:
     @staticmethod
     def phyaux(
         aspect: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
         te: float,
         nd_fuel_ions: float,
         fusden_total: float,
@@ -3474,7 +3481,7 @@ class Physics:
 
         Args:
             aspect (float): Plasma aspect ratio.
-            dene (float): Electron density (/m3).
+            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
             te (float): Volume avergaed electron temperature (keV).
             nd_fuel_ions (float): Fuel ion density (/m3).
             fusden_total (float): Fusion reaction rate from plasma and beams (/m3/s).
@@ -3501,7 +3508,7 @@ class Physics:
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
-        ntau = t_energy_confinement * dene
+        ntau = t_energy_confinement * nd_plasma_electrons_vol_avg
         nTtau = ntau * te
 
         # Fusion reactions per second
@@ -4551,8 +4558,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Volume averaged electron number density (/m3)",
-            "(dene)",
-            physics_variables.dene,
+            "(nd_plasma_electrons_vol_avg)",
+            physics_variables.nd_plasma_electrons_vol_avg,
         )
         po.ovarre(
             self.outfile,
@@ -6528,7 +6535,7 @@ class Physics:
                 physics_variables.aspect,
                 physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_ions_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_electron_line,
                 physics_variables.eps,
                 1.0,
@@ -6729,7 +6736,7 @@ class Physics:
         alphat: float,
         beta_toroidal: float,
         b_plasma_toroidal_on_axis: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
         plasma_current: float,
         q95: float,
         q0: float,
@@ -6746,7 +6753,7 @@ class Physics:
             alphat (float): Temperature profile index.
             beta_toroidal (float): Toroidal plasma beta.
             b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-            dene (float): Electron density (/m3).
+            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
             plasma_current (float): Plasma current (A).
             q0 (float): Central safety factor.
             q95 (float): Safety factor at 95% surface.
@@ -6788,7 +6795,7 @@ class Physics:
         ainteg, _ = integrate.quad(
             lambda y: _nevins_integral(
                 y,
-                dene,
+                nd_plasma_electrons_vol_avg,
                 te,
                 b_plasma_toroidal_on_axis,
                 rminor,
@@ -6847,7 +6854,10 @@ class Physics:
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
-        ni = (physics_variables.nd_ions_total / physics_variables.dene) * ne
+        ni = (
+            physics_variables.nd_ions_total
+            / physics_variables.nd_plasma_electrons_vol_avg
+        ) * ne
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
@@ -7452,7 +7462,7 @@ class Physics:
                 physics_variables.aspect,
                 physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_ions_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_electron_line,
                 physics_variables.eps,
                 hfact,
@@ -7508,7 +7518,7 @@ class Physics:
         aspect: float,
         b_plasma_toroidal_on_axis: float,
         nd_ions_total: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
         nd_electron_line: float,
         eps: float,
         hfact: float,
@@ -7537,7 +7547,7 @@ class Physics:
         :param aspect: Aspect ratio
         :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
         :param nd_ions_total: Total ion density (/m3)
-        :param dene: Volume averaged electron density (/m3)
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3)
         :param nd_electron_line: Line-averaged electron density (/m3)
         :param eps: Inverse aspect ratio
         :param hfact: H factor on energy confinement scalings
@@ -7602,7 +7612,7 @@ class Physics:
         dnla19 = nd_electron_line * 1.0e-19
 
         # Volume averaged electron density in units of 10**20 m**-3
-        n20 = dene / 1.0e20
+        n20 = nd_plasma_electrons_vol_avg / 1.0e20
 
         # Plasma current in MA
         pcur = plasma_current / 1.0e6
@@ -8355,12 +8365,12 @@ class Physics:
         pden_electron_transport_loss_mw = (
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
-            * dene
+            * nd_plasma_electrons_vol_avg
             * ten
             / t_electron_energy_confinement
         )
 
-        ratio = (nd_ions_total / dene) * (tin / ten)
+        ratio = (nd_ions_total / nd_plasma_electrons_vol_avg) * (tin / ten)
 
         # Global energy confinement time
 
@@ -8391,7 +8401,7 @@ class Physics:
         nd_fuel_ions: float,
         nd_alphas: float,
         vol_plasma: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
     ) -> tuple[float, float, float, float, float]:
         """
         Calculate the plasma masses.
@@ -8408,8 +8418,8 @@ class Physics:
         :type nd_alphas: float
         :param vol_plasma: Plasma volume (m3).
         :type vol_plasma: float
-        :param dene: Volume averaged electron density (/m3).
-        :type dene: float
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3).
+        :type nd_plasma_electrons_vol_avg: float
 
         :returns: A tuple containing:
         :rtype: tuple[float, float, float, float, float]
@@ -8426,7 +8436,9 @@ class Physics:
 
         m_plasma_alpha = (nd_alphas * vol_plasma) * constants.ALPHA_MASS
 
-        m_plasma_electron = constants.ELECTRON_MASS * (dene * vol_plasma)
+        m_plasma_electron = constants.ELECTRON_MASS * (
+            nd_plasma_electrons_vol_avg * vol_plasma
+        )
 
         m_plasma = m_plasma_electron + m_plasma_ions_total
 

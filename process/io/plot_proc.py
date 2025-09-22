@@ -3582,11 +3582,11 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     if ipedestal == 1:
         rhocore = np.linspace(0, rhopedn)
         necore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
-        nicore = necore * (nd_fuel_ions / dene)
+        nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(rhopedn, 1)
         neesep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
-        nisep = neesep * (nd_fuel_ions / dene)
+        nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
@@ -3596,7 +3596,9 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
-        ni = (ne0 * (nd_fuel_ions / dene)) * (1 - rho**2) ** alphan
+        ni = (ne0 * (nd_fuel_ions / nd_plasma_electrons_vol_avg)) * (
+            1 - rho**2
+        ) ** alphan
     ne = ne / 1e19
     ni = ni / 1e19
     prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
@@ -3637,15 +3639,15 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
-        rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['dene'].get_scan(scan):.3e} m$^{{-3}}$",
+        rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['nd_plasma_electrons_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
         rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
         rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
         r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-        f"{nd_fuel_ions / dene:.3f}",
+        f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}",
         rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
         r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
-        f"{ne0 / dene:.3f}",
+        f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
         rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
         r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
         f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
@@ -6778,16 +6780,16 @@ def plot_physics_info(axis, mfile_data, scan):
     ].get_scan(scan)
 
     nd_impurities = mfile_data.data["nd_impurities"].get_scan(scan) / mfile_data.data[
-        "dene"
+        "nd_plasma_electrons_vol_avg"
     ].get_scan(scan)
 
     tepeak = mfile_data.data["te0"].get_scan(scan) / mfile_data.data["te"].get_scan(
         scan
     )
 
-    nepeak = mfile_data.data["ne0"].get_scan(scan) / mfile_data.data["dene"].get_scan(
-        scan
-    )
+    nepeak = mfile_data.data["ne0"].get_scan(scan) / mfile_data.data[
+        "nd_plasma_electrons_vol_avg"
+    ].get_scan(scan)
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
@@ -6807,7 +6809,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$\langle T_e \rangle$", "keV"),
-        ("dene", r"$\langle n_e \rangle$", "m$^{-3}$"),
+        ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
@@ -7136,7 +7138,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
         * mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
         / (
             mfile_data.data["rmajor"].get_scan(scan)
-            * mfile_data.data["dene"].get_scan(scan)
+            * mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
         )
     )
 
@@ -10716,7 +10718,7 @@ def main(args=None):
     global alphat
     global ne0
     global nd_fuel_ions
-    global dene
+    global nd_plasma_electrons_vol_avg
     global te0
     global ti
     global te
@@ -10736,7 +10738,9 @@ def main(args=None):
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["ne0"].get_scan(scan)
     nd_fuel_ions = m_file.data["nd_fuel_ions"].get_scan(scan)
-    dene = m_file.data["dene"].get_scan(scan)
+    nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
+        scan
+    )
     te0 = m_file.data["te0"].get_scan(scan)
     ti = m_file.data["ti"].get_scan(scan)
     te = m_file.data["te"].get_scan(scan)
