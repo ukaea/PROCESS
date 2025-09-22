@@ -145,7 +145,7 @@ class NeProfile(Profile):
             None
         """
 
-        if physics_variables.ipedestal == 0:
+        if physics_variables.i_plasma_pedestal == 0:
             self.profile_y = n0 * (1 - rho**2) ** alphan
 
         # Input checks
@@ -233,11 +233,11 @@ class NeProfile(Profile):
     def set_physics_variables(self) -> None:
         """Calculates and sets physics variables required for the profile."""
 
-        if physics_variables.ipedestal == 0:
+        if physics_variables.i_plasma_pedestal == 0:
             physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
                 1.0 + physics_variables.alphan
             )
-        elif physics_variables.ipedestal == 1:
+        elif physics_variables.i_plasma_pedestal == 1:
             physics_variables.ne0 = self.ncore(
                 physics_variables.radius_plasma_pedestal_density_norm,
                 physics_variables.nd_plasma_pedestal_electron,
@@ -283,7 +283,7 @@ class TeProfile(Profile):
     ) -> None:
         """
         Calculates the temperature at a normalised minor radius position rho for a pedestalised profile (teprofile).
-        If ipedestal = 0 the original parabolic profile form is used instead.
+        If i_plasma_pedestal = 0 the original parabolic profile form is used instead.
         References:
             Jean, J. (2011). HELIOS: A Zero-Dimensional Tool for Next Step and Reactor Studies. Fusion Science and Technology, 59(2), 308-349. https://doi.org/10.13182/FST11-A11650
         Authors:
@@ -300,7 +300,7 @@ class TeProfile(Profile):
             alphat (float): Temperature peaking parameter.
             tbeta (float): Second temperature exponent.
         """
-        if physics_variables.ipedestal == 0:
+        if physics_variables.i_plasma_pedestal == 0:
             self.profile_y = t0 * (1 - rho**2) ** alphat
 
         if t0 < temp_plasma_pedestal_kev:
@@ -391,11 +391,11 @@ class TeProfile(Profile):
         Returns:
             None
         """
-        if physics_variables.ipedestal == 0:
+        if physics_variables.i_plasma_pedestal == 0:
             physics_variables.te0 = physics_variables.te * (
                 1.0 + physics_variables.alphat
             )
-        elif physics_variables.ipedestal == 1:
+        elif physics_variables.i_plasma_pedestal == 1:
             physics_variables.te0 = self.tcore(
                 physics_variables.radius_plasma_pedestal_temp_norm,
                 physics_variables.temp_plasma_pedestal_kev,

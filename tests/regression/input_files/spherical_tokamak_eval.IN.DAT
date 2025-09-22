@@ -282,13 +282,13 @@ i_beta_component = 3 * switch for beta limit scaling (`constraint equation 24`)
 i_plasma_current = 9 * switch for plasma current scaling to use
 i_diamagnetic_current = 2 * switch for diamagnetic current scaling
 i_density_limit = 7 * switch for density limit to enforce (`constraint equation 5`)
-ipedestal = 1 * switch for pedestal profiles;
+i_plasma_pedestal = 1 * switch for pedestal profiles;
 i_pfirsch_schluter_current = 1 * switch for Pfirsch-Schlüter current scaling (issue #413);
-radius_plasma_pedestal_density_norm  = 0.95 * r/a of density pedestal (`ipedestal==1`)
-radius_plasma_pedestal_temp_norm  = 0.925 * r/a of temperature pedestal (`ipedestal==1`)
-tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
-temp_plasma_pedestal_kev    = 4.5 * electron temperature of pedestal (keV) (`ipedestal==1`)
-temp_plasma_separatrix_kev    = 0.125 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+radius_plasma_pedestal_density_norm  = 0.95 * r/a of density pedestal (`i_plasma_pedestal==1`)
+radius_plasma_pedestal_temp_norm  = 0.925 * r/a of temperature pedestal (`i_plasma_pedestal==1`)
+tbeta    = 2.0 * temperature profile index beta  (`i_plasma_pedestal==1)
+temp_plasma_pedestal_kev    = 4.5 * electron temperature of pedestal (keV) (`i_plasma_pedestal==1`)
+temp_plasma_separatrix_kev    = 0.125 * electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
 i_plasma_geometry = 0 * switch for plasma elongation and triangularity calculations;
 itart    = 1 * switch for spherical tokamak (ST) models;
 itartpf  = 1 * switch for Spherical Tokamak PF models;

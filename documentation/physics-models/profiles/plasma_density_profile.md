@@ -21,7 +21,7 @@ $$
 
 #### Electron core density of a pedestalised profile | `ncore()`
 
-This function calculates the core electron density for a pedestalsied profile (`ipedestal == 1`). It takes in values of
+This function calculates the core electron density for a pedestalsied profile (`i_plasma_pedestal == 1`). It takes in values of
 
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
@@ -123,7 +123,7 @@ A table of the input variables can be found below
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
 
-If `ipedestal == 0` then the original parabolic profile form is used
+If `i_plasma_pedestal == 0` then the original parabolic profile form is used
 
 $$
 n(\rho) = n_0(1 - \rho^2)^{\alpha_n}

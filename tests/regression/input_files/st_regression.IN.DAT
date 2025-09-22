@@ -463,7 +463,7 @@ f_alpha_energy_confinement_min = 5.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pedestal & Profiles ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-ipedestal= 1
+i_plasma_pedestal= 1
 * DESCRIPTION:   Switch for Pedestal Profiles (1: Use Pedestal Profiles)
 * =0 use original parabolic profiles
 * =1 use pedestal profile
@@ -479,7 +479,7 @@ ipedestal= 1
 *---------*
 
 radius_plasma_pedestal_density_norm = 0.95  
-* DESCRIPTION:   r/a of Density Pedestal (ipedestal==1)
+* DESCRIPTION:   r/a of Density Pedestal (i_plasma_pedestal==1)
 * JUSTIFICATION: 
 
 alphan = 0.9 
@@ -501,11 +501,11 @@ boundu(152) = 0.1
 * JUSTIFICATION: Assumed, compare with SCENE profile
 
 *nd_plasma_pedestal_electron =  
-* DESCRIPTION:   Electron density of pedestal [m-3] (ipedestal=1)(default = 4.0E19)
+* DESCRIPTION:   Electron density of pedestal [m-3] (i_plasma_pedestal=1)(default = 4.0E19)
 * JUSTIFICATION: Not set, used as a fraction of greenwald instead
 
 *nd_plasma_separatrix_electron =  
-* DESCRIPTION:   electron density at separatrix [m-3] (ipedestal=1)(default = 3.0E19)
+* DESCRIPTION:   electron density at separatrix [m-3] (i_plasma_pedestal=1)(default = 3.0E19)
 * JUSTIFICATION: Not set, assumed default
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -539,7 +539,7 @@ boundu(154) = 0.99
 *-------------*
 
 radius_plasma_pedestal_temp_norm = 0.925
-* DESCRIPTION:   r/a of Temperature Pedestal (ipedestal==1)
+* DESCRIPTION:   r/a of Temperature Pedestal (i_plasma_pedestal==1)
 * JUSTIFICATION: 
 
 alphat = 1.4
@@ -831,7 +831,7 @@ boundu(97) = 1.0
 * JUSTIFICATION: Not yet set
 
 *prn1 = 
-* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `ipedestal==1`) (default =  0.285)
+* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `i_plasma_pedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `i_plasma_pedestal==1`) (default =  0.285)
 * JUSTIFICATION: Not yet set
 
 *tdiv = 

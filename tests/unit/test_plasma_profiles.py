@@ -15,7 +15,7 @@ class ProfileParam(NamedTuple):
 
 class NeProfileParam(NamedTuple):
     nd_plasma_separatrix_electron: float = 0.0
-    ipedestal: float = 0.0
+    i_plasma_pedestal: float = 0.0
     ne0: float = 0.0
     nd_plasma_pedestal_electron: float = 0.0
     radius_plasma_pedestal_density_norm: float = 0.0
@@ -28,7 +28,7 @@ class NeProfileParam(NamedTuple):
     (
         NeProfileParam(
             nd_plasma_separatrix_electron=3.6421334486704804e19,
-            ipedestal=1,
+            i_plasma_pedestal=1,
             ne0=0.0,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
@@ -71,7 +71,7 @@ class TeProfileParam(NamedTuple):
     radius_plasma_pedestal_temp_norm: float = 0.0
     tbeta: float = 0.0
     temp_plasma_separatrix_kev: float = 0.0
-    ipedestal: float = 0.0
+    i_plasma_pedestal: float = 0.0
     alphat: float = 0.0
     temp_plasma_pedestal_kev: float = 0.0
     expected_teprofile: Any = np.array
@@ -84,7 +84,7 @@ class TeProfileParam(NamedTuple):
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
             tbeta=2,
             temp_plasma_separatrix_kev=0.10000000000000001,
-            ipedestal=1,
+            i_plasma_pedestal=1,
             alphat=1.45,
             temp_plasma_pedestal_kev=5.5,
             expected_teprofile=[
@@ -104,7 +104,9 @@ class TeProfileParam(NamedTuple):
     ids=["baseline_2018"],
 )
 def test_teprofile(teprofileparam: ProfileParam, monkeypatch):
-    monkeypatch.setattr(physics_variables, "ipedestal", teprofileparam.ipedestal)
+    monkeypatch.setattr(
+        physics_variables, "i_plasma_pedestal", teprofileparam.i_plasma_pedestal
+    )
     teprofile = TeProfile(10)
     teprofile.run()
     assert teprofile.profile_y == pytest.approx(teprofileparam.expected_teprofile)
@@ -147,7 +149,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     pcoef: float = 0.0
 
-    ipedestal: float = 0.0
+    i_plasma_pedestal: float = 0.0
 
     ni0: float = 0.0
 
@@ -227,7 +229,7 @@ class PlasmaProfilesParam(NamedTuple):
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             temp_plasma_separatrix_kev=0.10000000000000001,
             pcoef=0.0,
-            ipedestal=1,
+            i_plasma_pedestal=1,
             ni0=0.0,
             ne0=0.0,
             ti0=0.0,
@@ -272,7 +274,7 @@ class PlasmaProfilesParam(NamedTuple):
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             temp_plasma_separatrix_kev=0.10000000000000001,
             pcoef=1.1110842637642833,
-            ipedestal=1,
+            i_plasma_pedestal=1,
             ni0=9.210720071916929e19,
             ne0=1.0585658890823703e20,
             ti0=27.369013322953624,
@@ -355,7 +357,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "pcoef", plasmaprofilesparam.pcoef)
 
-    monkeypatch.setattr(physics_variables, "ipedestal", plasmaprofilesparam.ipedestal)
+    monkeypatch.setattr(
+        physics_variables, "i_plasma_pedestal", plasmaprofilesparam.i_plasma_pedestal
+    )
 
     monkeypatch.setattr(physics_variables, "ni0", plasmaprofilesparam.ni0)
 

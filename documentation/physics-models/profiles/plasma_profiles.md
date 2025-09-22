@@ -2,7 +2,7 @@
 
 ## Overview
 
-In `PROCESS` the density, temperature and current profiles of the plasma for electrons and ions can take two forms depending on the switch value for `ipedestal`. Either without a [pedestal](http://fusionwiki.ciemat.es/wiki/Pedestal), `ipedestal == 0` or with a pedestal `ipedestal == 1`.  `ipedestal == 0` is better suited for modelling L-mode plasmas, while `ipedestal == 1` is better suited for modelling [H-mode](https://en.wikipedia.org/wiki/High-confinement_mode) plasmas.
+In `PROCESS` the density, temperature and current profiles of the plasma for electrons and ions can take two forms depending on the switch value for `i_plasma_pedestal`. Either without a [pedestal](http://fusionwiki.ciemat.es/wiki/Pedestal), `i_plasma_pedestal == 0` or with a pedestal `i_plasma_pedestal == 1`.  `i_plasma_pedestal == 0` is better suited for modelling L-mode plasmas, while `i_plasma_pedestal == 1` is better suited for modelling [H-mode](https://en.wikipedia.org/wiki/High-confinement_mode) plasmas.
 
 The files responsible for calculating and storing the profiles are `plasma_profiles.py` and `profiles.py`. A central plasma profile object is created from the [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) class that contains attributes for the plasma density and temperature. The density and temperature profiles are in themselves objects of the [`Profile`](./plasma_profiles_abstract_class.md) abstract base class. [`Profile`](./plasma_profiles_abstract_class.md), [`NeProfile`](plasma_density_profile.md) and [`TeProfile`](./plasma_temperature_profile.md) are all defined in `profiles.py`. [`PlasmaProfile`](plasma_profiles.md#plasma-profile-class-plasmaprofile) is exclusively in `plasma_profiles.py`
 
@@ -13,7 +13,7 @@ The files responsible for calculating and storing the profiles are `plasma_profi
 
 ## Parabolic Profile | L-mode
 
-If `ipedestal == 0` then no pedestal is present and the function describing the profiles is given by:
+If `i_plasma_pedestal == 0` then no pedestal is present and the function describing the profiles is given by:
 
 $$\begin{aligned}
 \mbox{Density : } n(\rho) & = n_0 \left( 1 - \rho^2 \right)^{\alpha_n} \\
@@ -109,7 +109,7 @@ The graph below is for a standard parabolic profile. You can vary the core value
 
 ## Pedestal Profile | H-mode
 
-If `ipedestal == 1` there is now a pedestal present in the profile and they follow the form shown below:
+If `i_plasma_pedestal == 1` there is now a pedestal present in the profile and they follow the form shown below:
 
 $$\begin{aligned}
 \mbox{Density:} \qquad n(\rho) = \left\{
@@ -149,7 +149,7 @@ scaled from the electron values by the ratio of the volume-averaged values).
     For more info on its effect, visit the radiation section [here](../plasma_radiation.md).
 
 !!! warning " Pedestal setting"
-    If `ipedestal == 1` then the pedestal density `nd_plasma_pedestal_electron` is set as a fraction `f_nd_plasma_pedestal_greenwald` of the
+    If `i_plasma_pedestal == 1` then the pedestal density `nd_plasma_pedestal_electron` is set as a fraction `f_nd_plasma_pedestal_greenwald` of the
     Greenwald density (providing `f_nd_plasma_pedestal_greenwald` >= 0).  The default value of `f_nd_plasma_pedestal_greenwald` is 0.8[^2].
 
 A table of the the associated variables can be seen below
@@ -231,7 +231,7 @@ The graph below is for a standard pedestal profile. You can vary its attributes 
 
 !!! warning " Un-realistic profiles"
 
-    If setting `ipedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$.
+    If setting `i_plasma_pedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$.
     Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\mathtt{nd_plasma_electrons_vol_avg})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
 
 --------
@@ -258,9 +258,9 @@ $$
 T_{\text{i}} = \mathtt{f_temp_plasma_ion_electron}\times T_{\text{e}}
 $$
 
-Depending on the value of `ipedestal` different functions will be ran, the different run cases are given below:
+Depending on the value of `i_plasma_pedestal` different functions will be ran, the different run cases are given below:
 
-#### Parabolic Profile | `ipedestal == 0`
+#### Parabolic Profile | `i_plasma_pedestal == 0`
 
 ##### `parabolic_paramterisation()`
 
@@ -576,7 +576,7 @@ $$
 
 -------
 
-#### H-mode profile | ipedestal == 1
+#### H-mode profile | i_plasma_pedestal == 1
 
 ##### `pedestal_parameterisation()`
 
@@ -615,7 +615,7 @@ $$
 
 ##### `calculate_profile_factors()`
 
-The same function is run from the `ipedestal == 0 ` profile case, found [here](plasma_profiles.md#calculate_profile_factors)
+The same function is run from the `i_plasma_pedestal == 0 ` profile case, found [here](plasma_profiles.md#calculate_profile_factors)
 
 -----
 

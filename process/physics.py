@@ -1696,10 +1696,10 @@ class Physics:
         # ===================================================
 
         # Calculate density and temperature profile quantities
-        # If physics_variables.ipedestal = 1 then set pedestal density to
+        # If physics_variables.i_plasma_pedestal = 1 then set pedestal density to
         #   physics_variables.f_nd_plasma_pedestal_greenwald * Greenwald density limit
         # Note: this used to be done before plasma current
-        if (physics_variables.ipedestal == 1) and (
+        if (physics_variables.i_plasma_pedestal == 1) and (
             physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0
         ):
             physics_variables.nd_plasma_pedestal_electron = (
@@ -1709,7 +1709,7 @@ class Physics:
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
             )
 
-        if (physics_variables.ipedestal == 1) and (
+        if (physics_variables.i_plasma_pedestal == 1) and (
             physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0
         ):
             physics_variables.nd_plasma_separatrix_electron = (
@@ -4780,11 +4780,11 @@ class Physics:
         po.ovarin(
             self.outfile,
             "Plasma profile model",
-            "(ipedestal)",
-            physics_variables.ipedestal,
+            "(i_plasma_pedestal)",
+            physics_variables.i_plasma_pedestal,
         )
 
-        if physics_variables.ipedestal >= 1:
+        if physics_variables.i_plasma_pedestal >= 1:
             if physics_variables.ne0 < physics_variables.nd_plasma_pedestal_electron:
                 logger.error("Central density is less than pedestal density")
 

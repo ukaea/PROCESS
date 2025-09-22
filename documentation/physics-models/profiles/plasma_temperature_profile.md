@@ -121,7 +121,7 @@ A table of the input variables can be found below
 | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
 | 2nd profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 
-If `ipedestal == 0` then the original parabolic profile form is used
+If `i_plasma_pedestal == 0` then the original parabolic profile form is used
 
 $$
 T(\rho) = T_0(1 - \rho^2)^{\alpha_T}

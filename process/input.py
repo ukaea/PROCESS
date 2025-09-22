@@ -2131,7 +2131,9 @@ INPUT_VARIABLES = {
     ),
     "inuclear": InputVariable(data_structure.fwbs_variables, int, choices=[0, 1]),
     "iohcl": InputVariable(data_structure.build_variables, int, choices=[0, 1]),
-    "ipedestal": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
+    "i_plasma_pedestal": InputVariable(
+        data_structure.physics_variables, int, choices=[0, 1]
+    ),
     "i_pf_conductor": InputVariable(
         data_structure.pfcoil_variables, int, choices=[0, 1]
     ),

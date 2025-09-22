@@ -263,7 +263,7 @@
  Effective_charge_________________________________________________________ (zeff)_________________________ 2.82595071046277502e+00 OP
  Mass-weighted_Effective_charge___________________________________________ (zeffai)_______________________ 4.22680696347369822e-01 OP
  Density_profile_factor___________________________________________________ (alphan)_______________________ 1.00000000000000000e+00
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location____________________________________________ (radius_plasma_pedestal_density_norm)______________________ 9.40000000000000058e-01
  Electron_density_pedestal_height_(/m3)___________________________________ (nd_plasma_pedestal_electron)________________________ 6.12233653460693156e+19 OP
  Electron_density_at_pedestal_/_nGW_______________________________________ (f_nd_plasma_pedestal_greenwald_out)___________________ 8.49999999999999978e-01
@@ -1473,15 +1473,15 @@ i_beta_component   = 1 * switch for beta limit scaling (`constraint equation 24`
 i_plasma_current = 4 * switch for plasma current scaling to use
 i_density_limit   = 7 * switch for density limit to enforce (`constraint equation 5`)
 i_beta_fast_alpha = 1 * switch for fast alpha pressure calculation
-ipedestal = 1 * switch for pedestal profiles;
-nd_plasma_pedestal_electron    = 0.5e20 * electron density of pedestal [m-3] (`ipedestal==1)
-nd_plasma_separatrix_electron    = 0.2e20 * electron density at separatrix [m-3] (`ipedestal==1)
+i_plasma_pedestal = 1 * switch for pedestal profiles;
+nd_plasma_pedestal_electron    = 0.5e20 * electron density of pedestal [m-3] (`i_plasma_pedestal==1)
+nd_plasma_separatrix_electron    = 0.2e20 * electron density at separatrix [m-3] (`i_plasma_pedestal==1)
 plasma_res_factor = 0.7 * plasma resistivity pre-factor
-radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`ipedestal==1`)
-radius_plasma_pedestal_temp_norm  = 0.94 * r/a of temperature pedestal (`ipedestal==1`)
-tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
-temp_plasma_pedestal_kev    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')
-temp_plasma_separatrix_kev    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`i_plasma_pedestal==1`)
+radius_plasma_pedestal_temp_norm  = 0.94 * r/a of temperature pedestal (`i_plasma_pedestal==1`)
+tbeta    = 2.0 * temperature profile index beta  (`i_plasma_pedestal==1)
+temp_plasma_pedestal_kev    = 5.5 * electron temperature of pedestal (keV) (`i_plasma_pedestal==1')
+temp_plasma_separatrix_kev    = 0.1 * electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
 i_confinement_time      = 34 * switch for energy confinement time scaling law (see description in `tauscl`)
 i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
 kappa    = 1.85 * plasma separatrix elongation (calculated if `ishape = 1-5; 7 or 9-10`)

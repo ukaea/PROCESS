@@ -2703,7 +2703,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
 
 
 class StdlimEcrhParam(NamedTuple):
-    ipedestal: Any = None
+    i_plasma_pedestal: Any = None
 
     bt_input: Any = None
 
@@ -2718,7 +2718,7 @@ class StdlimEcrhParam(NamedTuple):
     "stdlimecrhparam",
     (
         StdlimEcrhParam(
-            ipedestal=0,
+            i_plasma_pedestal=0,
             bt_input=6.9100000000000001,
             gyro_frequency_max=400000000000,
             expected_dlimit_ecrh=4.6472737339514113e20,
@@ -2739,7 +2739,9 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "ipedestal", stdlimecrhparam.ipedestal)
+    monkeypatch.setattr(
+        physics_variables, "i_plasma_pedestal", stdlimecrhparam.i_plasma_pedestal
+    )
 
     dlimit_ecrh, bt_max = stellarator.stdlim_ecrh(
         bt_input=stdlimecrhparam.bt_input,

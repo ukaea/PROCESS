@@ -166,7 +166,7 @@ def constraint_equation_2():
     """author: J. Morris
 
      i_rad_loss: switch for radiation loss term usage in power balance (see User Guide):
-    -  0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
+    -  0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
     -  1 total power lost is scaling power plus core radiation only
     -  2 total power lost is scaling power only, with no additional
         allowance for radiation. This is not recommended for power plant models.
@@ -296,7 +296,7 @@ def constraint_equation_4():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     i_rad_loss: switch for radiation loss term usage in power balance
-    - 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
+    - 0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
     - 1 total power lost is scaling power plus core radiation only
     - 2 total power lost is scaling power only, with no additional
         allowance for radiation. This is not recommended for power plant models.
@@ -798,7 +798,7 @@ def constraint_equation_24():
     - 1 use stellarator model
     fbeta_max: f-value for beta limit
     beta_max: allowable beta
-    beta: total plasma beta (calculated if ipedestal =3)
+    beta: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
     b_plasma_toroidal_on_axis: toroidal field
