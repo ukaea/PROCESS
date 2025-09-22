@@ -457,7 +457,7 @@ f_p_div_lower: float = None
 
 ffwal: float = None
 """factor to convert plasma surface area to first wall area in neutron wall
-load calculation (`iwalld=1`)
+load calculation (`i_pflux_fw_neutron=1`)
 """
 
 
@@ -768,7 +768,7 @@ itartpf: int = None
 """
 
 
-iwalld: int = None
+i_pflux_fw_neutron: int = None
 """switch for neutron wall load calculation:
 - =1 use scaled plasma surface area
 - =2 use first wall area directly
@@ -1467,7 +1467,7 @@ def init_physics_variables():
     global i_plasma_shape
     global itart
     global itartpf
-    global iwalld
+    global i_pflux_fw_neutron
     global plasma_square
     global kappa
     global kappa95
@@ -1714,7 +1714,7 @@ def init_physics_variables():
     i_plasma_shape = 0
     itart = 0
     itartpf = 0
-    iwalld = 1
+    i_pflux_fw_neutron = 1
     plasma_square = 0.0
     kappa = 1.792
     kappa95 = 1.6

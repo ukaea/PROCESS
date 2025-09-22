@@ -2275,7 +2275,7 @@ class Physics:
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
-        if physics_variables.iwalld == 1:
+        if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_neutron_total_mw
@@ -2635,7 +2635,7 @@ class Physics:
         # MDK
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
-        if physics_variables.iwalld == 1:
+        if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_plasma_rad_mw

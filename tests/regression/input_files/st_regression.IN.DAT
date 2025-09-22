@@ -2569,7 +2569,7 @@ f_fw_rad_max = 1.0
 * JUSTIFICATION: Turned off, dot care about wall load
 * VARIABLES:     pflux_fw_neutron_mw calculated in-situ
 
-*iwalld = 2
+*i_pflux_fw_neutron = 2
 * DESCRIPTION:   Switch for neutron wall load calculation (default = 1)
 * =1 use scaled plasma surface area
 * =2 use first wall area directly
@@ -2606,7 +2606,7 @@ boundu(116) = 1.0
 
 *ffwal = 
 * DESCRIPTION:   Wall load fiddle factor
-* JUSTIFICATION: Not scaling wall load. Used when iwalld=1
+* JUSTIFICATION: Not scaling wall load. Used when i_pflux_fw_neutron=1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
