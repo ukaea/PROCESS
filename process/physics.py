@@ -3330,7 +3330,7 @@ class Physics:
                 impurity_radiation.element2index("C_")
             ]
         )
-        physics_variables.rnone = (
+        physics_variables.f_nd_plasma_oxygen_electron = (
             impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("O_")
             ]
