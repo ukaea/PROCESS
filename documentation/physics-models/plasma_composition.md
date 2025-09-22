@@ -151,7 +151,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Set global impurity fraction variables for other routines.
 
     $$
-    \mathtt{rncne} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \mathtt{rnone} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \mathtt{rnfene} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
+    \mathtt{rncne} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \mathtt{f_nd_plasma_oxygen_electron} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \mathtt{rnfene} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
     $$
 
     The variable above are set as global physics variables to be used in the [`sigbeam()`](../eng-models/heating_and_current_drive/NBI/nbi_overview.md#beam-stopping-cross-section--sigbeam) routine, which calculates the beam stopping cross-section.

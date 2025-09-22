@@ -1141,7 +1141,7 @@ rnfene: float = None
 """n_highZ / n_e"""
 
 
-rnone: float = None
+f_nd_plasma_oxygen_electron: float = None
 """n_oxygen / n_e"""
 
 
@@ -1553,7 +1553,7 @@ def init_physics_variables():
     global rncne
     global rndfuel
     global rnfene
-    global rnone
+    global f_nd_plasma_oxygen_electron
     global f_res_plasma_neo
     global res_plasma
     global t_plasma_res_diffusion
@@ -1800,7 +1800,7 @@ def init_physics_variables():
     rncne = 0.0
     rndfuel = 0.0
     rnfene = 0.0
-    rnone = 0.0
+    f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0
     res_plasma = 0.0
     t_plasma_res_diffusion = 0.0
