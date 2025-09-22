@@ -660,8 +660,8 @@ alpha_crit: float = None
 """critical ballooning parameter value"""
 
 
-nesep_crit: float = None
-"""critical electron density at separatrix [m-3]"""
+nd_plasma_separatrix_electron_eich_max: float = None
+"""Eich critical electron density at separatrix [m-3]"""
 
 
 plasma_res_factor: float = None
@@ -1452,7 +1452,7 @@ def init_physics_variables():
     global nd_plasma_pedestal_electron
     global nd_plasma_separatrix_electron
     global alpha_crit
-    global nesep_crit
+    global nd_plasma_separatrix_electron_eich_max
     global plasma_res_factor
     global rhopedn
     global rhopedt
@@ -1699,7 +1699,7 @@ def init_physics_variables():
     nd_plasma_pedestal_electron = 4.0e19
     nd_plasma_separatrix_electron = 3.0e19
     alpha_crit = 0.0
-    nesep_crit = 0.0
+    nd_plasma_separatrix_electron_eich_max = 0.0
     plasma_res_factor = 1.0
     rhopedn = 1.0
     rhopedt = 1.0

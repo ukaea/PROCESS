@@ -1930,7 +1930,7 @@ def constraint_equation_76():
     Added for issue 558 with ref to http://iopscience.iop.org/article/10.1088/1741-4326/aaa340/pdf
 
     alpha_crit: critical ballooning parameter value
-    nesep_crit: critical electron density at separatrix [m-3]
+    nd_plasma_separatrix_electron_eich_max: critical electron density at separatrix [m-3]
     kappa: plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
     triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
     aspect: aspect ratio (iteration variable 1)
@@ -1942,7 +1942,7 @@ def constraint_equation_76():
     data_structure.physics_variables.alpha_crit = (
         data_structure.physics_variables.kappa**1.2
     ) * (1.0 + 1.5 * data_structure.physics_variables.triang)
-    data_structure.physics_variables.nesep_crit = (
+    data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max = (
         5.9
         * data_structure.physics_variables.alpha_crit
         * (data_structure.physics_variables.aspect ** (-2.0 / 7.0))
@@ -1959,7 +1959,7 @@ def constraint_equation_76():
 
     cc = (
         data_structure.physics_variables.nd_plasma_separatrix_electron
-        / data_structure.physics_variables.nesep_crit
+        / data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max
         - 1.0 * data_structure.constraint_variables.fnesep
     )
     return ConstraintResult(
