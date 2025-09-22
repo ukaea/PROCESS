@@ -124,7 +124,7 @@ BASELINE_LIST = [
     "nd_plasma_electrons_vol_avg",
     "ne0",
     "dnla_gw",
-    "tesep",
+    "temp_plasma_separatrix_kev",
     "nd_plasma_separatrix_electron",
     "temp_plasma_pedestal_kev",
     "nd_plasma_pedestal_electron",

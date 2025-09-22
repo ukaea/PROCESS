@@ -407,7 +407,7 @@ tbeta = 2.0
 temp_plasma_pedestal_kev = 5.5
 
 * Electron temperature at separatrix (kev) (ipedestal=1)
-tesep = 0.1
+temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law
 i_confinement_time = 34

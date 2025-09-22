@@ -569,7 +569,7 @@ class ElectronCyclotron:
             physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.tesep,
+            physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,
             physics_variables.tbeta,
         )
@@ -1016,7 +1016,7 @@ class LowerHybrid:
             physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.tesep,
+            physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,
             physics_variables.tbeta,
         )
@@ -1145,7 +1145,7 @@ class LowerHybrid:
             physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.tesep,
+            physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,
             physics_variables.tbeta,
         )

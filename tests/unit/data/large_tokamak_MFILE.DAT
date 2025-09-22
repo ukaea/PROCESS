@@ -398,7 +398,7 @@
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
- Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
+ Electron_temp._at_separatrix_(keV)______________________________________ (temp_plasma_separatrix_kev)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6975E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
@@ -1603,7 +1603,7 @@ tbeta = 2.0
 temp_plasma_pedestal_kev = 5.5
 
 * Electron temperature at separatrix (kev) (ipedestal=1)
-tesep = 0.1
+temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law
 i_confinement_time = 34

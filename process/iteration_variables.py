@@ -237,7 +237,9 @@ ITERATION_VARIABLES = {
     117: IterationVariable(
         "fpsepbqar", data_structure.constraint_variables, 0.001, 1.0
     ),
-    119: IterationVariable("tesep", data_structure.physics_variables, 0.0, 1.0e1),
+    119: IterationVariable(
+        "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
+    ),
     122: IterationVariable(
         "f_a_cs_steel", data_structure.pfcoil_variables, 0.001, 0.950
     ),

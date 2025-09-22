@@ -269,7 +269,7 @@
  Electron_density_at_pedestal_/_nGW_______________________________________ (fgwped_out)___________________ 8.49999999999999978e-01
  Temperature_pedestal_r/a_location________________________________________ (radius_plasma_pedestal_temp_norm)______________________ 9.40000000000000058e-01
  Electron_temp._pedestal_height_(keV)_____________________________________ (temp_plasma_pedestal_kev)________________________ 5.50000000000000000e+00
- Electron_temp._at_separatrix_(keV)_______________________________________ (tesep)________________________ 1.00000000000000006e-01
+ Electron_temp._at_separatrix_(keV)_______________________________________ (temp_plasma_separatrix_kev)________________________ 1.00000000000000006e-01
  Electron_density_at_separatrix_(/m3)_____________________________________ (nd_plasma_separatrix_electron)________________________ 3.60137443212172452e+19
  Electron_density_at_separatrix_/_nGW_____________________________________ (fgwsep_out)___________________ 5.00000000000000000e-01
  Temperature_profile_index________________________________________________ (alphat)_______________________ 1.44999999999999996e+00
@@ -1481,7 +1481,7 @@ radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`ipedesta
 radius_plasma_pedestal_temp_norm  = 0.94 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
 temp_plasma_pedestal_kev    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')
-tesep    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+temp_plasma_separatrix_kev    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
 i_confinement_time      = 34 * switch for energy confinement time scaling law (see description in `tauscl`)
 i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
 kappa    = 1.85 * plasma separatrix elongation (calculated if `ishape = 1-5; 7 or 9-10`)
