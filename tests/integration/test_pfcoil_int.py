@@ -130,7 +130,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "i_pf_current", 1)
     monkeypatch.setattr(pfcoil_variables, "ccl0_ma", np.full(10, 0.0))
     monkeypatch.setattr(pfcoil_variables, "ccls_ma", np.full(10, 0.0))
-    monkeypatch.setattr(pv, "bvert", -6.51e-1)
+    monkeypatch.setattr(pv, "b_plasma_vertical", -6.51e-1)
     monkeypatch.setattr(pv, "kappa", 1.727)
     monkeypatch.setattr(pv, "ind_plasma_internal_norm", 1.693)
     monkeypatch.setattr(pv, "itartpf", 0)
@@ -163,7 +163,7 @@ def test_pfcoil(monkeypatch, pfcoil):
 
     pfcoil.pfcoil()
 
-    assert pytest.approx(pv.bvert) == -0.65121393
+    assert pytest.approx(pv.b_plasma_vertical) == -0.65121393
     assert pytest.approx(pfcoil_variables.z_pf_coil_middle) == np.array([
         4.86,
         -4.86,

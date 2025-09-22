@@ -335,7 +335,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6699E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8387E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1898E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3601E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3601E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.0627E+00 ITV
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.7139E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.1372E+00    

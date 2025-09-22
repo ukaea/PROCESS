@@ -301,7 +301,7 @@ burnup_in: float = None
 """fractional plasma burnup user input"""
 
 
-bvert: float = None
+b_plasma_vertical: float = None
 """vertical field at plasma (T)"""
 
 
@@ -1381,7 +1381,7 @@ def init_physics_variables():
     global b_plasma_total
     global burnup
     global burnup_in
-    global bvert
+    global b_plasma_vertical
     global c_beta
     global csawth
     global f_vol_plasma
@@ -1628,7 +1628,7 @@ def init_physics_variables():
     b_plasma_total = 0.0
     burnup = 0.0
     burnup_in = 0.0
-    bvert = 0.0
+    b_plasma_vertical = 0.0
     c_beta = 0.5
     csawth = 1.0
     f_vol_plasma = 1.0
