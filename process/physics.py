@@ -2428,7 +2428,7 @@ class Physics:
             physics_variables.p_div_upper_separatrix_mw = (
                 1.0e0 - physics_variables.f_p_div_lower
             ) * physics_variables.p_plasma_separatrix_mw
-            physics_variables.pdivmax = max(
+            physics_variables.p_div_separatrix_max_mw = max(
                 physics_variables.p_div_lower_separatrix_mw,
                 physics_variables.p_div_upper_separatrix_mw,
             )
@@ -5579,8 +5579,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(pdivmax/physics_variables.rmajor)",
-                physics_variables.pdivmax / physics_variables.rmajor,
+                "(p_div_separatrix_max_mw/physics_variables.rmajor)",
+                physics_variables.p_div_separatrix_max_mw / physics_variables.rmajor,
                 "OP ",
             )
             po.ovarre(
@@ -5589,7 +5589,7 @@ class Physics:
                 "(pdivmaxbt/qar)",
                 (
                     (
-                        physics_variables.pdivmax
+                        physics_variables.p_div_separatrix_max_mw
                         * physics_variables.b_plasma_toroidal_on_axis
                     )
                     / (
