@@ -277,13 +277,13 @@ boundu(4) = 25.0
 * DESCRIPTION:   Volume averaged electron temperature (keV)
 * JUSTIFICATION: Iterate temperature to get solution
 
-tratio = 1.0
+f_temp_plasma_ion_electron = 1.0
 * DESCRIPTION:   Ion Temperature / Electron Temperature
 * JUSTIFICATION: Default value
 
 *ti =   
-* DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from te if tratio > 0.0
-* JUSTIFICATION: Calculated in-situ as tratio >0
+* DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from te if f_temp_plasma_ion_electron > 0.0
+* JUSTIFICATION: Calculated in-situ as f_temp_plasma_ion_electron >0
 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Beta ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -1213,7 +1213,7 @@ ten: float = None
 
 
 ti: float = None
-"""volume averaged ion temperature (keV). N.B. calculated from te if `tratio > 0.0`"""
+"""volume averaged ion temperature (keV). N.B. calculated from te if `f_temp_plasma_ion_electron > 0.0`"""
 
 
 ti0: float = None
@@ -1224,8 +1224,8 @@ tin: float = None
 """density weighted average ion temperature (keV)"""
 
 
-tratio: float = None
-"""ion temperature / electron temperature(used to calculate ti if `tratio > 0.0`"""
+f_temp_plasma_ion_electron: float = None
+"""ion temperature / electron temperature(used to calculate ti if `f_temp_plasma_ion_electron > 0.0`"""
 
 
 triang: float = None
@@ -1573,7 +1573,7 @@ def init_physics_variables():
     global ti
     global ti0
     global tin
-    global tratio
+    global f_temp_plasma_ion_electron
     global triang
     global triang95
     global vol_plasma
@@ -1820,7 +1820,7 @@ def init_physics_variables():
     ti = 12.9
     ti0 = 0.0
     tin = 0.0
-    tratio = 1.0
+    f_temp_plasma_ion_electron = 1.0
     triang = 0.36
     triang95 = 0.24
     vol_plasma = 0.0

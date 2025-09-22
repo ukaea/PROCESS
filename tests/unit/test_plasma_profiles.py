@@ -155,7 +155,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     ti0: float = 0.0
 
-    tratio: float = 0.0
+    f_temp_plasma_ion_electron: float = 0.0
 
     nd_electron_line: float = 0.0
 
@@ -231,7 +231,7 @@ class PlasmaProfilesParam(NamedTuple):
             ni0=0.0,
             ne0=0.0,
             ti0=0.0,
-            tratio=1,
+            f_temp_plasma_ion_electron=1,
             nd_electron_line=0.0,
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
@@ -276,7 +276,7 @@ class PlasmaProfilesParam(NamedTuple):
             ni0=9.210720071916929e19,
             ne0=1.0585658890823703e20,
             ti0=27.369013322953624,
-            tratio=1,
+            f_temp_plasma_ion_electron=1,
             nd_electron_line=8.8687354645836431e19,
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
@@ -363,7 +363,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "ti0", plasmaprofilesparam.ti0)
 
-    monkeypatch.setattr(physics_variables, "tratio", plasmaprofilesparam.tratio)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_temp_plasma_ion_electron",
+        plasmaprofilesparam.f_temp_plasma_ion_electron,
+    )
 
     monkeypatch.setattr(
         physics_variables, "nd_electron_line", plasmaprofilesparam.nd_electron_line

@@ -252,10 +252,10 @@ This function is used to run the appropriate function relating to the calculatio
 ------------
 
 ### Plasma Parameterization | `parameterise_plasma()`
-The input variable `tratio` can be used to define the ratio between the volume averaged ion and electron temperatures. By default it is set so that the volume averaged ion and electron temperatures are equal. The value of $T_{\text{i}}$ is set such that:
+The input variable `f_temp_plasma_ion_electron` can be used to define the ratio between the volume averaged ion and electron temperatures. By default it is set so that the volume averaged ion and electron temperatures are equal. The value of $T_{\text{i}}$ is set such that:
 
 $$
-T_{\text{i}} = \mathtt{tratio}\times T_{\text{e}}
+T_{\text{i}} = \mathtt{f_temp_plasma_ion_electron}\times T_{\text{e}}
 $$
 
 Depending on the value of `ipedestal` different functions will be ran, the different run cases are given below:

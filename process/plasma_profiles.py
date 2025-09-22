@@ -78,10 +78,12 @@ class PlasmaProfile:
         """
 
         #  Volume-averaged ion temperature
-        #  (input value used directly if tratio=0.0)
+        #  (input value used directly if f_temp_plasma_ion_electron=0.0)
 
-        if physics_variables.tratio > 0.0e0:
-            physics_variables.ti = physics_variables.tratio * physics_variables.te
+        if physics_variables.f_temp_plasma_ion_electron > 0.0e0:
+            physics_variables.ti = (
+                physics_variables.f_temp_plasma_ion_electron * physics_variables.te
+            )
 
         # Parabolic profile case
         if physics_variables.ipedestal == 0:
