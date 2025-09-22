@@ -487,7 +487,7 @@ alphan = 0.9
 * JUSTIFICATION: 
 
 ixc = 145
-fgwped = 0.1
+f_nd_plasma_pedestal_greenwald = 0.1
 boundl(145) = 0.1
 boundu(145) = 1.0 
 * DESCRIPTION:   Fraction of Greenwald Density to Set as Pedestal-Top Density

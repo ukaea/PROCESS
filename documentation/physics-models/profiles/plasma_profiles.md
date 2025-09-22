@@ -149,8 +149,8 @@ scaled from the electron values by the ratio of the volume-averaged values).
     For more info on its effect, visit the radiation section [here](../plasma_radiation.md).
 
 !!! warning " Pedestal setting"
-    If `ipedestal == 1` then the pedestal density `nd_plasma_pedestal_electron` is set as a fraction `fgwped` of the
-    Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2].
+    If `ipedestal == 1` then the pedestal density `nd_plasma_pedestal_electron` is set as a fraction `f_nd_plasma_pedestal_greenwald` of the
+    Greenwald density (providing `f_nd_plasma_pedestal_greenwald` >= 0).  The default value of `f_nd_plasma_pedestal_greenwald` is 0.8[^2].
 
 A table of the the associated variables can be seen below
 
@@ -628,16 +628,16 @@ The same function is run from the `ipedestal == 0 ` profile case, found [here](p
 By default, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as:
 
 $$
-n_{\text{ped}} = \mathtt{fgwped} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+n_{\text{ped}} = \mathtt{f_nd_plasma_pedestal_greenwald} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
 $$
 
 $$
 n_{\text{sep}} = \mathtt{fgwsep} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
 $$
 
-To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\mathtt{fgwped}$ or $\mathtt{fgwsep}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
+To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\mathtt{f_nd_plasma_pedestal_greenwald}$ or $\mathtt{fgwsep}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
 
-$\mathtt{fgwped}$ and $\mathtt{fgwsep}$ can be set as iteration variables respectively by using `ixc = 45`
+$\mathtt{f_nd_plasma_pedestal_greenwald}$ and $\mathtt{fgwsep}$ can be set as iteration variables respectively by using `ixc = 45`
 and `ixc = 152` respectively
 
 ------
