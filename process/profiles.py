@@ -95,8 +95,8 @@ class NeProfile(Profile):
 
     Methods:
         run(): Subroutine which calls functions and stores neprofile data.
-        calculate_profile_y(rho, rhopedn, n0, nped, nsep, alphan): Calculates the density at each normalised minor radius position.
-        ncore(rhopedn, nped, nsep, nav, alphan): Calculates the core density of a pedestalised profile.
+        calculate_profile_y(rho, radius_plasma_pedestal_density_norm, n0, nped, nsep, alphan): Calculates the density at each normalised minor radius position.
+        ncore(radius_plasma_pedestal_density_norm, nped, nsep, nav, alphan): Calculates the core density of a pedestalised profile.
         set_physics_variables(): Calculates and sets physics variables required for the profile.
     """
 
@@ -107,7 +107,7 @@ class NeProfile(Profile):
         self.set_physics_variables()
         self.calculate_profile_y(
             self.profile_x,
-            physics_variables.rhopedn,
+            physics_variables.radius_plasma_pedestal_density_norm,
             physics_variables.ne0,
             physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nd_plasma_separatrix_electron,
@@ -118,7 +118,7 @@ class NeProfile(Profile):
     def calculate_profile_y(
         self,
         rho: np.array,
-        rhopedn: float,
+        radius_plasma_pedestal_density_norm: float,
         n0: float,
         nped: float,
         nsep: float,
@@ -135,7 +135,7 @@ class NeProfile(Profile):
 
         Parameters:
             - rho (np.array): Normalised minor radius vector.
-            - rhopedn (float): Normalised minor radius pedestal position.
+            - radius_plasma_pedestal_density_norm (float): Normalised minor radius pedestal position.
             - n0 (float): Central density (/m3).
             - nped (float): Pedestal density (/m3).
             - nsep (float): Separatrix density (/m3).
@@ -154,18 +154,18 @@ class NeProfile(Profile):
             logger.info(
                 f"NPROFILE: density pedestal is higher than core density. {nped = }, {n0 = }"
             )
-        rho_index = rho <= rhopedn
+        rho_index = rho <= radius_plasma_pedestal_density_norm
         self.profile_y[rho_index] = (
-            nped + (n0 - nped) * (1 - (rho[rho_index] / rhopedn) ** 2) ** alphan
+            nped + (n0 - nped) * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2) ** alphan
         )
         # Invert the rho_index
         self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
-            1 - rhopedn
+            1 - radius_plasma_pedestal_density_norm
         )
 
     @staticmethod
     def ncore(
-        rhopedn: float, nped: float, nsep: float, nav: float, alphan: float
+        radius_plasma_pedestal_density_norm: float, nped: float, nsep: float, nav: float, alphan: float
     ) -> float:
         """
         This routine calculates the core density of a pedestalised profile.
@@ -183,7 +183,7 @@ class NeProfile(Profile):
             C. Ashe, CCFE, Culham Science Centre
 
         Parameters:
-        - rhopedn (float): The normalised minor radius pedestal position.
+        - radius_plasma_pedestal_density_norm (float): The normalised minor radius pedestal position.
         - nped (float): The pedestal density (/m3).
         - nsep (float): The separatrix density (/m3).
         - nav (float): The electron density (/m3).
@@ -196,11 +196,11 @@ class NeProfile(Profile):
 
         ncore = (
             1
-            / (3 * rhopedn**2)
+            / (3 * radius_plasma_pedestal_density_norm**2)
             * (
                 3 * nav * (1 + alphan)
-                + nsep * (1 + alphan) * (-2 + rhopedn + rhopedn**2)
-                - nped * ((1 + alphan) * (1 + rhopedn) + (alphan - 2) * rhopedn**2)
+                + nsep * (1 + alphan) * (-2 + radius_plasma_pedestal_density_norm + radius_plasma_pedestal_density_norm**2)
+                - nped * ((1 + alphan) * (1 + radius_plasma_pedestal_density_norm) + (alphan - 2) * radius_plasma_pedestal_density_norm**2)
             )
         )
 
@@ -222,7 +222,7 @@ class NeProfile(Profile):
             )
         elif physics_variables.ipedestal == 1:
             physics_variables.ne0 = self.ncore(
-                physics_variables.rhopedn,
+                physics_variables.radius_plasma_pedestal_density_norm,
                 physics_variables.nd_plasma_pedestal_electron,
                 physics_variables.nd_plasma_separatrix_electron,
                 physics_variables.nd_plasma_electrons_vol_avg,

@@ -18,7 +18,7 @@ class NeProfileParam(NamedTuple):
     ipedestal: float = 0.0
     ne0: float = 0.0
     nd_plasma_pedestal_electron: float = 0.0
-    rhopedn: float = 0.0
+    radius_plasma_pedestal_density_norm: float = 0.0
     alphan: float = 0.0
     expected_neprofile: list | None = None
 
@@ -31,7 +31,7 @@ class NeProfileParam(NamedTuple):
             ipedestal=1,
             ne0=0.0,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
-            rhopedn=0.94000000000000006,
+            radius_plasma_pedestal_density_norm=0.94000000000000006,
             alphan=1,
             expected_neprofile=[
                 1.12500000e20,
@@ -57,12 +57,12 @@ def test_neprofile(neprofileparam: ProfileParam, monkeypatch):
 
 def test_ncore():
     neprofile = NeProfile(10)
-    rhopedn = 0.94
+    radius_plasma_pedestal_density_norm = 0.94
     nped = 5.8300851381352219e19
     nsep = 3.4294618459618943e19
     nav = 7.4321e19
     alphan = 1.0
-    assert neprofile.ncore(rhopedn, nped, nsep, nav, alphan) == pytest.approx(
+    assert neprofile.ncore(radius_plasma_pedestal_density_norm, nped, nsep, nav, alphan) == pytest.approx(
         9.7756974320342041e19
     )
 
@@ -167,7 +167,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     ti: float = 0.0
 
-    rhopedn: float = 0.0
+    radius_plasma_pedestal_density_norm: float = 0.0
 
     nd_plasma_electrons_vol_avg: float = 0.0
 
@@ -237,7 +237,7 @@ class PlasmaProfilesParam(NamedTuple):
             nd_ions_total=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             ti=12.9,
-            rhopedn=0.94000000000000006,
+            radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
             teped=5.5,
             alphan=1,
@@ -282,7 +282,7 @@ class PlasmaProfilesParam(NamedTuple):
             nd_ions_total=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             ti=13.07,
-            rhopedn=0.94000000000000006,
+            radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
             teped=5.5,
             alphan=1,
@@ -375,7 +375,7 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "ti", plasmaprofilesparam.ti)
 
-    monkeypatch.setattr(physics_variables, "rhopedn", plasmaprofilesparam.rhopedn)
+    monkeypatch.setattr(physics_variables, "radius_plasma_pedestal_density_norm", plasmaprofilesparam.radius_plasma_pedestal_density_norm)
 
     monkeypatch.setattr(
         physics_variables,

@@ -297,7 +297,7 @@ ipedestal = 1 * switch for pedestal profiles;
 nd_plasma_pedestal_electron    = 0.5e20 * electron density of pedestal [m-3] (`ipedestal==1)
 nd_plasma_separatrix_electron    = 0.2e20 * electron density at separatrix [m-3] (`ipedestal==1)
 plasma_res_factor = 0.7 * plasma resistivity pre-factor
-rhopedn  = 0.94 * r/a of density pedestal (`ipedestal==1`)
+radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`ipedestal==1`)
 rhopedt  = 0.94 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
 teped    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')

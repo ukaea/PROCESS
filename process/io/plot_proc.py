@@ -3580,18 +3580,18 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     prof.set_title("Density profile")
 
     if ipedestal == 1:
-        rhocore = np.linspace(0, rhopedn)
+        rhocore = np.linspace(0, radius_plasma_pedestal_density_norm)
         necore = (
             nd_plasma_pedestal_electron
             + (ne0 - nd_plasma_pedestal_electron)
-            * (1 - rhocore**2 / rhopedn**2) ** alphan
+            * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
         )
         nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
-        rhosep = np.linspace(rhopedn, 1)
+        rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
         neesep = nd_plasma_separatrix_electron + (
             nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
-        ) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
+        ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
         nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
@@ -3626,14 +3626,14 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         # Print pedestal lines
         prof.axhline(
             y=nd_plasma_pedestal_electron / 1e19,
-            xmax=rhopedn,
+            xmax=radius_plasma_pedestal_density_norm,
             color="r",
             linestyle="-",
             linewidth=0.4,
             alpha=0.4,
         )
         prof.vlines(
-            x=rhopedn,
+            x=radius_plasma_pedestal_density_norm,
             ymin=0.0,
             ymax=nd_plasma_pedestal_electron / 1e19,
             color="r",
@@ -3654,7 +3654,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
         r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
         f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
-        rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
+        rf"$\rho_{{\text{{ped,n}}}}$: {radius_plasma_pedestal_density_norm:.3f}"
         r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
         f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
         rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
@@ -3959,7 +3959,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
     if ipedestal == 1:
         # Intialise the normalised radius
-        rhoped = (rhopedn + rhopedt) / 2.0
+        rhoped = (radius_plasma_pedestal_density_norm + rhopedt) / 2.0
         rhocore1 = np.linspace(0, 0.95 * rhoped)
         rhocore2 = np.linspace(0.95 * rhoped, rhoped)
         rhocore = np.append(rhocore1, rhocore2)
@@ -3968,20 +3968,20 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
         # The density and temperature profile
         # done in such away as to allow for plotting pedestals
-        # with different rhopedn and rhopedt
+        # with different radius_plasma_pedestal_density_norm and rhopedt
         ne = np.zeros(rho.shape[0])
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
-            if rho[q] <= rhopedn:
+            if rho[q] <= radius_plasma_pedestal_density_norm:
                 ne[q] = (
                     nd_plasma_pedestal_electron
                     + (ne0 - nd_plasma_pedestal_electron)
-                    * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                    * (1 - rho[q] ** 2 / radius_plasma_pedestal_density_norm**2) ** alphan
                 )
             else:
                 ne[q] = nd_plasma_separatrix_electron + (
                     nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
-                ) * (1 - rho[q]) / (1 - min(0.9999, rhopedn))
+                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
 
             if rho[q] <= rhopedt:
                 te[q] = (
@@ -7028,7 +7028,7 @@ def plot_power_info(axis, mfile_data, scan):
             "Electron density at pedestal",
             "m$^{-3}$",
         )
-        ped_pos = ("rhopedn", "r/a at density pedestal", "")
+        ped_pos = ("radius_plasma_pedestal_density_norm", "r/a at density pedestal", "")
     else:
         ped_height = ("", "No pedestal model used", "")
         ped_pos = ("", "", "")
@@ -10723,7 +10723,7 @@ def main(args=None):
     global ipedestal
     global nd_plasma_pedestal_electron
     global nd_plasma_separatrix_electron
-    global rhopedn
+    global radius_plasma_pedestal_density_norm
     global rhopedt
     global tbeta
     global teped
@@ -10747,7 +10747,7 @@ def main(args=None):
     nd_plasma_separatrix_electron = m_file.data[
         "nd_plasma_separatrix_electron"
     ].get_scan(scan)
-    rhopedn = m_file.data["rhopedn"].get_scan(scan)
+    radius_plasma_pedestal_density_norm = m_file.data["radius_plasma_pedestal_density_norm"].get_scan(scan)
     rhopedt = m_file.data["rhopedt"].get_scan(scan)
     tbeta = m_file.data["tbeta"].get_scan(scan)
     teped = m_file.data["teped"].get_scan(scan)

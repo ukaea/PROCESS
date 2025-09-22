@@ -1470,7 +1470,7 @@ INPUT_VARIABLES = {
     "rho_tf_joints": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.01)
     ),
-    "rhopedn": InputVariable(
+    "radius_plasma_pedestal_density_norm": InputVariable(
         data_structure.physics_variables, float, range=(0.01, 1.0)
     ),
     "rhopedt": InputVariable(

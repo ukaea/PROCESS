@@ -269,7 +269,7 @@ ipedestal = 1 * Switch for pedestal profiles;
 fgwped = 0.85 * fraction of Greenwald density to set as pedestal-top density
 nd_plasma_pedestal_electron    = 0.678e20 * Electron density of pedestal (/m3) (ipedestal=1) INITIAL VALUE
 nd_plasma_separatrix_electron    = 0.2e20 * Electron density at separatrix (/m3) (ipedestal=1)
-rhopedn  = 0.94 * R/a of density pedestal (ipedestal=1)
+radius_plasma_pedestal_density_norm  = 0.94 * R/a of density pedestal (ipedestal=1)
 rhopedt  = 0.94 * R/a of temperature pedestal (ipedestal=1)
 tbeta    = 2.0 * Temperature profile index beta  (ipedestal=1)
 teped    = 5.5 * Electron temperature of pedestal (kev) (ipedestal=1)

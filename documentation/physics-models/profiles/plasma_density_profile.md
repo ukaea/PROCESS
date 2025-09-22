@@ -25,7 +25,7 @@ This function calculates the core electron density for a pedestalsied profile (`
 
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,n}}$ |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$ |
 | Average density             | `nd_plasma_electrons_vol_avg`, $\langle n \rangle$ |
@@ -117,7 +117,7 @@ A table of the input variables can be found below
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
 | Normalized plasma radii            | `profile_x` |
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,n}}$ |
 | Core density                | `ne0`, $n_{\text{e0}}$ |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$ |
@@ -132,7 +132,7 @@ $$
 The central density ($n_0$) is then checked to make sure it is not less than the pedestal density, $n_{\text{ped}}$.
 If it is less than a logger warning is pushed to the terminal at runtime.
 
-Values of the profile density are then assigned based on the density function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
+Values of the profile density are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
 
 $$\begin{aligned}
 \mbox{Density:} \ n(\rho) = \left\{

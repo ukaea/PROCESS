@@ -284,7 +284,7 @@ i_diamagnetic_current = 2 * switch for diamagnetic current scaling
 i_density_limit = 7 * switch for density limit to enforce (`constraint equation 5`)
 ipedestal = 1 * switch for pedestal profiles;
 i_pfirsch_schluter_current = 1 * switch for Pfirsch-Schlüter current scaling (issue #413);
-rhopedn  = 0.95 * r/a of density pedestal (`ipedestal==1`)
+radius_plasma_pedestal_density_norm  = 0.95 * r/a of density pedestal (`ipedestal==1`)
 rhopedt  = 0.925 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
 teped    = 4.5 * electron temperature of pedestal (keV) (`ipedestal==1`)

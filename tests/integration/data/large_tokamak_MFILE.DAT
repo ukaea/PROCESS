@@ -502,7 +502,7 @@
  Mass-weighted_Effective_charge___________________________________________ (zeffai)_______________________ 4.27186909562117689e-01 OP
  Density_profile_factor___________________________________________________ (alphan)_______________________ 1.00000000000000000e+00
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
- Density_pedestal_r/a_location____________________________________________ (rhopedn)______________________ 9.39999999999999947e-01
+ Density_pedestal_r/a_location____________________________________________ (radius_plasma_pedestal_density_norm)______________________ 9.39999999999999947e-01
  Electron_density_pedestal_height_(/m3)___________________________________ (nd_plasma_pedestal_electron)________________________ 6.28165115868681994e+19 OP
  Electron_density_at_pedestal_/_nGW_______________________________________ (fgwped_out)___________________ 8.50000000000000311e-01
  Temperature_pedestal_r/a_location________________________________________ (rhopedt)______________________ 9.39999999999999947e-01
@@ -1817,7 +1817,7 @@ nd_plasma_pedestal_electron = 0.5e20
 nd_plasma_separatrix_electron = 0.2e20
 
 * R/a of density pedestal (ipedestal=1)
-rhopedn = 0.94
+radius_plasma_pedestal_density_norm = 0.94
 
 * R/a of temperature pedestal (ipedestal=1)
 rhopedt = 0.94
