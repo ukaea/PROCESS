@@ -425,7 +425,7 @@ boundu(21) = 10.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*taumax = 
+*t_plasma_energy_confinement_max = 
 * DESCRIPTION:   Maximum allowed energy confinement time (s)
 * JUSTIFICATION: Not setting a limit on confinement time. 
 
