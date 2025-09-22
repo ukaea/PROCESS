@@ -1129,7 +1129,7 @@ f_nd_beam_electron: float = None
 """hot beam density / n_e (`iteration variable 7`)"""
 
 
-rncne: float = None
+f_nd_plasma_carbon_electron: float = None
 """n_carbon / n_e"""
 
 
@@ -1550,7 +1550,7 @@ def init_physics_variables():
     global rmajor
     global rminor
     global f_nd_beam_electron
-    global rncne
+    global f_nd_plasma_carbon_electron
     global rndfuel
     global rnfene
     global f_nd_plasma_oxygen_electron
@@ -1797,7 +1797,7 @@ def init_physics_variables():
     rmajor = 8.14
     rminor = 0.0
     f_nd_beam_electron = 0.005
-    rncne = 0.0
+    f_nd_plasma_carbon_electron = 0.0
     rndfuel = 0.0
     rnfene = 0.0
     f_nd_plasma_oxygen_electron = 0.0

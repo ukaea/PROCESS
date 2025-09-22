@@ -1348,7 +1348,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     zeffai: Any = None
 
-    rncne: Any = None
+    f_nd_plasma_carbon_electron: Any = None
 
     f_nd_plasma_oxygen_electron: Any = None
 
@@ -1508,7 +1508,7 @@ class PlasmaCompositionParam(NamedTuple):
             nd_ions_total=0,
             f_nd_protium_electrons=0,
             zeffai=0,
-            rncne=0,
+            f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0,
             f_nd_alpha_electron=0.10000000000000001,
@@ -1626,7 +1626,7 @@ class PlasmaCompositionParam(NamedTuple):
             nd_ions_total=6.6125550702454276e19,
             f_nd_protium_electrons=0,
             zeffai=0.43046641789338563,
-            rncne=0,
+            f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0.3154069116809366,
             f_nd_alpha_electron=0.10000000000000001,
@@ -1766,7 +1766,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "zeffai", plasmacompositionparam.zeffai)
 
-    monkeypatch.setattr(physics_variables, "rncne", plasmacompositionparam.rncne)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_nd_plasma_carbon_electron",
+        plasmacompositionparam.f_nd_plasma_carbon_electron,
+    )
 
     monkeypatch.setattr(
         physics_variables,

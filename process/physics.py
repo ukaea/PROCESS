@@ -3325,7 +3325,7 @@ class Physics:
 
         # Set some relative impurity density variables
         # for the benefit of other routines
-        physics_variables.rncne = (
+        physics_variables.f_nd_plasma_carbon_electron = (
             impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("C_")
             ]
