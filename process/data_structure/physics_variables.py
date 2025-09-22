@@ -468,7 +468,7 @@ density set manually using nd_plasma_pedestal_electron (`ipedestal==1`).
 """
 
 
-fgwsep: float = None
+f_nd_plasma_separatrix_greenwald: float = None
 """fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
 density set manually using nd_plasma_separatrix_electron (`ipedestal==1`).
 (`iteration variable 152`)
@@ -1418,7 +1418,7 @@ def init_physics_variables():
     global f_p_div_lower
     global ffwal
     global f_nd_plasma_pedestal_greenwald
-    global fgwsep
+    global f_nd_plasma_separatrix_greenwald
     global f_helium3
     global figmer
     global fkzohm
@@ -1665,7 +1665,7 @@ def init_physics_variables():
     f_p_div_lower = 1.0
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
-    fgwsep = 0.50
+    f_nd_plasma_separatrix_greenwald = 0.50
     f_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0

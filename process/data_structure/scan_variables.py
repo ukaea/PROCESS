@@ -80,7 +80,7 @@ nsweep: int = None
 <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum
 <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material
 <LI> 45 Minimum allowable temperature margin ; tf coils
-<LI> 46 boundu(150) fgwsep
+<LI> 46 boundu(150) f_nd_plasma_separatrix_greenwald
 <LI> 47 impurity_enrichment(9) Argon impurity enrichment
 <LI> 48 TF coil - n_tf_wp_pancakes (integer turn winding pack)
 <LI> 49 TF coil - n_tf_wp_layers (integer turn winding pack)

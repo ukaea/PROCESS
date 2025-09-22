@@ -347,7 +347,7 @@ lablxc: list[str] = None
 * (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
 * (150) REMOVED
 * (151) REMOVED
-* (152) fgwsep : Ratio of separatrix density to Greenwald density
+* (152) f_nd_plasma_separatrix_greenwald : Ratio of separatrix density to Greenwald density
 * (153) fp_plasma_separatrix_min_mw : F-value for minimum p_plasma_separatrix_mw (con. 80)
 * (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
 * (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)

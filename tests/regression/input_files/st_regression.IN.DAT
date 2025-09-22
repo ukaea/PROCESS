@@ -494,7 +494,7 @@ boundu(145) = 1.0
 * JUSTIFICATION: testing...
 
 ixc = 152
-fgwsep = 0.1 
+f_nd_plasma_separatrix_greenwald = 0.1 
 boundl(152) = 0.001
 boundu(152) = 0.1
 * DESCRIPTION:   Fraction of Greenwald Density to Set as Separatrix Density

@@ -391,7 +391,7 @@ i_beta_fast_alpha = 1
 ipedestal = 1
 
 * fraction of Greenwald density to set as separatrix density
-fgwsep = 0.5
+f_nd_plasma_separatrix_greenwald = 0.5
 
 * Electron density of pedestal [m-3] (ipedestal=1) - initial value
 nd_plasma_pedestal_electron = 0.5e20

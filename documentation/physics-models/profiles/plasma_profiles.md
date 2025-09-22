@@ -632,12 +632,12 @@ n_{\text{ped}} = \mathtt{f_nd_plasma_pedestal_greenwald} \times \frac{I_p [\text
 $$
 
 $$
-n_{\text{sep}} = \mathtt{fgwsep} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+n_{\text{sep}} = \mathtt{f_nd_plasma_separatrix_greenwald} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
 $$
 
-To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\mathtt{f_nd_plasma_pedestal_greenwald}$ or $\mathtt{fgwsep}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
+To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\mathtt{f_nd_plasma_pedestal_greenwald}$ or $\mathtt{f_nd_plasma_separatrix_greenwald}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
 
-$\mathtt{f_nd_plasma_pedestal_greenwald}$ and $\mathtt{fgwsep}$ can be set as iteration variables respectively by using `ixc = 45`
+$\mathtt{f_nd_plasma_pedestal_greenwald}$ and $\mathtt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
 and `ixc = 152` respectively
 
 ------

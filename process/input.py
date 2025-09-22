@@ -166,7 +166,9 @@ INPUT_VARIABLES = {
     "f_nd_plasma_pedestal_greenwald": InputVariable(
         data_structure.physics_variables, float, range=(-1.0, 5.0)
     ),
-    "fgwsep": InputVariable(data_structure.physics_variables, float, range=(-1.0, 5.0)),
+    "f_nd_plasma_separatrix_greenwald": InputVariable(
+        data_structure.physics_variables, float, range=(-1.0, 5.0)
+    ),
     "f_helium3": InputVariable(
         data_structure.physics_variables, float, range=(-1.0, 5.0)
     ),
