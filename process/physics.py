@@ -1718,7 +1718,7 @@ class Physics:
         self.plasma_profile.run()
 
         # Calculate total magnetic field [T]
-        physics_variables.btot = np.sqrt(
+        physics_variables.b_plasma_total = np.sqrt(
             physics_variables.b_plasma_toroidal_on_axis**2
             + physics_variables.b_plasma_poloidal_average**2
         )
@@ -1731,13 +1731,13 @@ class Physics:
 
         physics_variables.beta_toroidal = (
             physics_variables.beta
-            * physics_variables.btot**2
+            * physics_variables.b_plasma_total**2
             / physics_variables.b_plasma_toroidal_on_axis**2
         )
 
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.beta_poloidal = calculate_poloidal_beta(
-            physics_variables.btot,
+            physics_variables.b_plasma_total,
             physics_variables.b_plasma_poloidal_average,
             physics_variables.beta,
         )
@@ -1754,12 +1754,18 @@ class Physics:
 
         physics_variables.beta_thermal_poloidal = (
             physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.b_plasma_poloidal_average)
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
             ** 2
         )
         physics_variables.beta_thermal_toroidal = (
             physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.b_plasma_toroidal_on_axis)
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
             ** 2
         )
         physics_variables.beta_norm_thermal = (
@@ -1771,12 +1777,18 @@ class Physics:
         )
         physics_variables.beta_norm_toroidal = (
             physics_variables.beta_norm_total
-            * (physics_variables.btot / physics_variables.b_plasma_toroidal_on_axis)
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
             ** 2
         )
         physics_variables.beta_norm_poloidal = (
             physics_variables.beta_norm_total
-            * (physics_variables.btot / physics_variables.b_plasma_poloidal_average)
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
             ** 2
         )
 
@@ -1788,8 +1800,8 @@ class Physics:
         physics_variables.e_plasma_beta_thermal = (
             1.5e0
             * physics_variables.beta_thermal
-            * physics_variables.btot
-            * physics_variables.btot
+            * physics_variables.b_plasma_total
+            * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
@@ -1798,8 +1810,8 @@ class Physics:
         physics_variables.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
-            * physics_variables.btot
-            * physics_variables.btot
+            * physics_variables.b_plasma_total
+            * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
@@ -1912,7 +1924,7 @@ class Physics:
             * self.bootstrap_fraction_iter89(
                 physics_variables.aspect,
                 physics_variables.beta,
-                physics_variables.btot,
+                physics_variables.b_plasma_total,
                 physics_variables.plasma_current,
                 physics_variables.q95,
                 physics_variables.q0,
@@ -4190,8 +4202,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Total field (sqrt(b_plasma_poloidal_average^2 + b_plasma_toroidal_on_axis^2)) (T)",
-                "(btot)",
-                physics_variables.btot,
+                "(b_plasma_total)",
+                physics_variables.b_plasma_total,
                 "OP ",
             )
 
@@ -8427,7 +8439,7 @@ class Physics:
         )
 
 
-def calculate_poloidal_beta(btot, b_plasma_poloidal_average, beta):
+def calculate_poloidal_beta(b_plasma_total, b_plasma_poloidal_average, beta):
     """Calculates total poloidal beta
 
     Author: James Morris (UKAEA)
@@ -8435,11 +8447,11 @@ def calculate_poloidal_beta(btot, b_plasma_poloidal_average, beta):
     J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
     Page 270 ISBN 0521851076
 
-    :param btot: sum of the toroidal and poloidal fields (T)
+    :param b_plasma_total: sum of the toroidal and poloidal fields (T)
     :param b_plasma_poloidal_average: poloidal field (T)
     :param beta: total plasma beta
     """
-    return beta * (btot / b_plasma_poloidal_average) ** 2
+    return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
 
 
 def res_diff_time(rmajor, res_plasma, kappa95):
