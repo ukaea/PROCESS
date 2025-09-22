@@ -1423,7 +1423,7 @@ def init_physics_variables():
     global figmer
     global fkzohm
     global fplhsep
-    global fpdivlim
+    global fp_plasma_separatrix_min_mw
     global fne0
     global f_tritium
     global fusden_total
@@ -1670,7 +1670,7 @@ def init_physics_variables():
     figmer = 0.0
     fkzohm = 1.0
     fplhsep = 1.0
-    fpdivlim = 1.0
+    fp_plasma_separatrix_min_mw = 1.0
     fne0 = 1.0
     f_tritium = 0.5
     fusden_total = 0.0

@@ -320,7 +320,7 @@ OBS_VARS = {
     "divplt": "dx_div_plate",
     "fhldiv": "fpflux_div_heat_load_mw",
     "flux_exp": "f_div_flux_expansion",
-    "fpdivlim": "fp_plasma_separatrix_min_mw",
+    "fp_plasma_separatrix_min_mw": "fp_plasma_separatrix_min_mw",
     "hldiv": "pflux_div_heat_load_mw",
     "hldivlim": "pflux_div_heat_load_max_mw",
     "pdivtlim": "p_plasma_separatrix_min_mw",
