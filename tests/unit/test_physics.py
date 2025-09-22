@@ -361,7 +361,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     te0: Any = None
 
-    neped: Any = None
+    nd_plasma_pedestal_electron: Any = None
 
     tbeta: Any = None
 
@@ -400,7 +400,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             q95=3.5,
             nesep=3.6992211545476006e19,
             te0=25.986118047669795,
-            neped=6.2886759627309195e19,
+            nd_plasma_pedestal_electron=6.2886759627309195e19,
             tbeta=2,
             ne0=1.054474759840606e20,
             alphan=1,
@@ -491,7 +491,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(physics_variables, "te0", bootstrapfractionsauterparam.te0)
 
-    monkeypatch.setattr(physics_variables, "neped", bootstrapfractionsauterparam.neped)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_pedestal_electron",
+        bootstrapfractionsauterparam.nd_plasma_pedestal_electron,
+    )
 
     monkeypatch.setattr(physics_variables, "tbeta", bootstrapfractionsauterparam.tbeta)
 
@@ -961,7 +965,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
     q95: Any = None
     q0: Any = None
     rhopedn: Any = None
-    neped: Any = None
+    nd_plasma_pedestal_electron: Any = None
     n_greenwald: Any = None
     teped: Any = None
     expected_bfs: Any = None
@@ -980,7 +984,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             q95=3.5,
             q0=1.0,
             rhopedn=0.9,
-            neped=6.0e19,
+            nd_plasma_pedestal_electron=6.0e19,
             n_greenwald=8.0e19,
             teped=5.0,
             expected_bfs=0.5875359328840783,
@@ -995,7 +999,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             q95=4.0,
             q0=1.2,
             rhopedn=0.85,
-            neped=5.5e19,
+            nd_plasma_pedestal_electron=5.5e19,
             n_greenwald=7.5e19,
             teped=4.5,
             expected_bfs=0.40154857221044604,
@@ -1011,7 +1015,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             q95=4.09,
             q0=1.0,
             rhopedn=0.91,
-            neped=0.98e20,
+            nd_plasma_pedestal_electron=0.98e20,
             n_greenwald=1e20,
             teped=6.0,
             expected_bfs=0.5634482876932788,
@@ -1027,7 +1031,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             q95=6.26,
             q0=1.0,
             rhopedn=0.93,
-            neped=0.75e20,
+            nd_plasma_pedestal_electron=0.75e20,
             n_greenwald=1e20,
             teped=6.0,
             expected_bfs=0.2770187998673241,
@@ -1054,7 +1058,7 @@ def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, phy
         q95=bootstrapfractionsugiyamahparam.q95,
         q0=bootstrapfractionsugiyamahparam.q0,
         rhopedn=bootstrapfractionsugiyamahparam.rhopedn,
-        neped=bootstrapfractionsugiyamahparam.neped,
+        nd_plasma_pedestal_electron=bootstrapfractionsugiyamahparam.nd_plasma_pedestal_electron,
         n_greenwald=bootstrapfractionsugiyamahparam.n_greenwald,
         teped=bootstrapfractionsugiyamahparam.teped,
     )

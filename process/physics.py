@@ -1700,7 +1700,7 @@ class Physics:
         #   physics_variables.fgwped * Greenwald density limit
         # Note: this used to be done before plasma current
         if (physics_variables.ipedestal == 1) and (physics_variables.fgwped >= 0e0):
-            physics_variables.neped = (
+            physics_variables.nd_plasma_pedestal_electron = (
                 physics_variables.fgwped
                 * 1.0e14
                 * physics_variables.plasma_current
@@ -2070,7 +2070,7 @@ class Physics:
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 rhopedn=physics_variables.rhopedn,
-                neped=physics_variables.neped,
+                nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
                 n_greenwald=physics_variables.dlimit[6],
                 teped=physics_variables.teped,
             )
@@ -4780,7 +4780,7 @@ class Physics:
         )
 
         if physics_variables.ipedestal >= 1:
-            if physics_variables.ne0 < physics_variables.neped:
+            if physics_variables.ne0 < physics_variables.nd_plasma_pedestal_electron:
                 logger.error("Central density is less than pedestal density")
 
             po.ocmmnt(self.outfile, "Pedestal profiles are used.")
@@ -4794,25 +4794,29 @@ class Physics:
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",
-                    "(neped)",
-                    physics_variables.neped,
+                    "(nd_plasma_pedestal_electron)",
+                    physics_variables.nd_plasma_pedestal_electron,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",
-                    "(neped)",
-                    physics_variables.neped,
+                    "(nd_plasma_pedestal_electron)",
+                    physics_variables.nd_plasma_pedestal_electron,
                 )
 
             # This code is ODD# Don't change it# No explanation why fgwped and physics_variables.fgwsep
             # must be assigned to their exisiting values#
-            fgwped_out = physics_variables.neped / physics_variables.dlimit[6]
+            fgwped_out = (
+                physics_variables.nd_plasma_pedestal_electron
+                / physics_variables.dlimit[6]
+            )
             fgwsep_out = physics_variables.nesep / physics_variables.dlimit[6]
             if physics_variables.fgwped >= 0e0:
                 physics_variables.fgwped = (
-                    physics_variables.neped / physics_variables.dlimit[6]
+                    physics_variables.nd_plasma_pedestal_electron
+                    / physics_variables.dlimit[6]
                 )
             if physics_variables.fgwsep >= 0e0:
                 physics_variables.fgwsep = (
@@ -7365,7 +7369,7 @@ class Physics:
         q95: float,
         q0: float,
         rhopedn: float,
-        neped: float,
+        nd_plasma_pedestal_electron: float,
         n_greenwald: float,
         teped: float,
     ) -> float:
@@ -7390,8 +7394,8 @@ class Physics:
         :type q0: float
         :param rhopedn: Normalised plasma radius of density pedestal.
         :type rhopedn: float
-        :param neped: Electron number density at the pedestal [m^-3].
-        :type neped: float
+        :param nd_plasma_pedestal_electron: Electron number density at the pedestal [m^-3].
+        :type nd_plasma_pedestal_electron: float
         :param n_greenwald: Greenwald density limit [m^-3].
         :type n_greenwald: float
         :param teped: Electron temperature at the pedestal [keV].
@@ -7424,7 +7428,7 @@ class Physics:
             * zeff**0.241
             * (q95 / q0) ** -0.103
             * rhopedn**0.367
-            * (neped / n_greenwald) ** -0.174
+            * (nd_plasma_pedestal_electron / n_greenwald) ** -0.174
             * teped**0.0552
         )
 

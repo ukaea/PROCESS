@@ -140,7 +140,7 @@ respectively. The density and temperature peaking parameters $\alpha_n$ and a
 $\alpha_T$ as well as the second exponent $\beta_T$ (input parameter
 `tbeta`, not to be confused with the plasma beta) in the temperature
 profile can be chosen by the user, as can the pedestal heights and the values
-at the separatrix (`neped, nesep` for the electron density, and
+at the separatrix (`nd_plasma_pedestal_electron, nesep` for the electron density, and
 `teped, tesep` for the electron temperature); the ion equivalents are
 scaled from the electron values by the ratio of the volume-averaged values).
 
@@ -149,7 +149,7 @@ scaled from the electron values by the ratio of the volume-averaged values).
     For more info on its effect, visit the radiation section [here](../plasma_radiation.md).
 
 !!! warning " Pedestal setting"
-    If `ipedestal == 1` then the pedestal density `neped` is set as a fraction `fgwped` of the
+    If `ipedestal == 1` then the pedestal density `nd_plasma_pedestal_electron` is set as a fraction `fgwped` of the
     Greenwald density (providing `fgwped` >= 0).  The default value of `fgwped` is 0.8[^2].
 
 A table of the the associated variables can be seen below
@@ -158,7 +158,7 @@ A table of the the associated variables can be seen below
 |----------------------------------|-----------|-------------|
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped},n}$ |   `rhopedt`, $\rho_{\text{ped},T}$   |  
 | Plasma centre value              | `ne0`, $n_0$      |           `te0`, $T_0$       |
-| Pedestal value                   | `neped`, $n_{\text{ped}}$    |       `teped`, $T_{\text{ped}}$     |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$    |       `teped`, $T_{\text{ped}}$     |
 | Separatrix value                 | `nesep`, $n_{\text{sep}}$   |        `tesep`, $T_{\text{sep}}$     |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$  |       `alphat`, $\alpha_T$    |
 | Profile index $\beta$            |           |                 `tbeta`, $\beta_T$     |
@@ -646,7 +646,7 @@ and `ixc = 152` respectively
 
 This constraint can be activated by stating `icc = 81` in the input file
 
-To prevent unrealistic profiles when iterating the values of `ne0, nesep, neped` etc, this constraint ensures that the value of `ne0` is always higher that `neped` to get a converged solution. This can be scaled with `fne0`
+To prevent unrealistic profiles when iterating the values of `ne0, nesep, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `ne0` is always higher that `nd_plasma_pedestal_electron` to get a converged solution. This can be scaled with `fne0`
 
 -------
 

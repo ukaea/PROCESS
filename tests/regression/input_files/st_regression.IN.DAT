@@ -500,7 +500,7 @@ boundu(152) = 0.1
 * DESCRIPTION:   Fraction of Greenwald Density to Set as Separatrix Density
 * JUSTIFICATION: Assumed, compare with SCENE profile
 
-*neped =  
+*nd_plasma_pedestal_electron =  
 * DESCRIPTION:   Electron density of pedestal [m-3] (ipedestal=1)(default = 4.0E19)
 * JUSTIFICATION: Not set, used as a fraction of greenwald instead
 

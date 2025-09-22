@@ -463,7 +463,7 @@ load calculation (`iwalld=1`)
 
 fgwped: float = None
 """fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-density set manually using neped (`ipedestal==1`).
+density set manually using nd_plasma_pedestal_electron (`ipedestal==1`).
 (`iteration variable 145`)
 """
 
@@ -648,7 +648,7 @@ i_pfirsch_schluter_current: int = None
 """
 
 
-neped: float = None
+nd_plasma_pedestal_electron: float = None
 """electron density of pedestal [m-3] (`ipedestal==1)"""
 
 
@@ -1449,7 +1449,7 @@ def init_physics_variables():
     global i_plasma_ignited
     global ipedestal
     global i_pfirsch_schluter_current
-    global neped
+    global nd_plasma_pedestal_electron
     global nesep
     global alpha_crit
     global nesep_crit
@@ -1696,7 +1696,7 @@ def init_physics_variables():
     i_plasma_ignited = 0
     ipedestal = 1
     i_pfirsch_schluter_current = 0
-    neped = 4.0e19
+    nd_plasma_pedestal_electron = 4.0e19
     nesep = 3.0e19
     alpha_crit = 0.0
     nesep_crit = 0.0
