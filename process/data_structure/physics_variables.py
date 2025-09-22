@@ -286,7 +286,7 @@ bp: float = None
 
 
 bt: float = None
-"""toroidal field on axis (T) (`iteration variable 2`)"""
+"""Plasma toroidal field on axis (T) (`iteration variable 2`)"""
 
 
 btot: float = None
@@ -1252,10 +1252,6 @@ v_plasma_loop_burn: float = None
 """Plasma loop voltage during flat-top (V)"""
 
 
-vshift: float = None
-"""plasma/device midplane vertical shift - single null"""
-
-
 vs_plasma_ind_ramp: float = None
 """Total plasma inductive flux consumption for plasma current ramp-up (Vs)(Wb)"""
 
@@ -1584,7 +1580,6 @@ def init_physics_variables():
     global vs_plasma_burn_required
     global vs_plasma_ramp_required
     global v_plasma_loop_burn
-    global vshift
     global vs_plasma_ind_ramp
     global vs_plasma_res_ramp
     global vs_plasma_total_required
@@ -1832,7 +1827,6 @@ def init_physics_variables():
     vs_plasma_burn_required = 0.0
     vs_plasma_ramp_required = 0.0
     v_plasma_loop_burn = 0.0
-    vshift = 0.0
     vs_plasma_ind_ramp = 0.0
     vs_plasma_res_ramp = 0.0
     vs_plasma_total_required = 0.0
