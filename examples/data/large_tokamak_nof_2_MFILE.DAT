@@ -232,7 +232,7 @@
  Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.02466460344915771e+20 OP
  Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_________________________ 8.63127495812675338e+19 OP
  Plasma_pressure_on_axis_(Pa)_____________________________________________ (p0)___________________________ 7.82668759018785902e+05 OP
- Volume_averaged_plasma_pressure_(Pa)_____________________________________ (vol_avg_pressure)_____________ 2.26860509860517632e+05 OP
+ Volume_averaged_plasma_pressure_(Pa)_____________________________________ (pres_plasma_vol_avg)_____________ 2.26860509860517632e+05 OP
  Line-averaged_electron_density_/_Greenwald_density_______________________ (dnla_gw)______________________ 1.19833068191158598e+00 OP
  Total_Ion_number_density_(/m3)___________________________________________ (nd_ions_total)________________ 7.06084473006886912e+19 OP
  Fuel_ion_number_density_(/m3)____________________________________________ (nd_fuel_ions)_________________ 6.58453241268011663e+19 OP

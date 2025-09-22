@@ -3371,8 +3371,8 @@ def test_calculate_beta_norm_max_thloreus():
     """Test calculate_beta_norm_max_thloreus()"""
     c_beta = 0.5
     p0 = 2.0
-    vol_avg_pressure = 1.0
-    result = Physics.calculate_beta_norm_max_thloreus(c_beta, p0, vol_avg_pressure)
+    pres_plasma_vol_avg = 1.0
+    result = Physics.calculate_beta_norm_max_thloreus(c_beta, p0, pres_plasma_vol_avg)
     assert result == pytest.approx(5.075, abs=0.00001)
 
 

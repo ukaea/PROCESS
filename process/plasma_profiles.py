@@ -267,7 +267,7 @@ class PlasmaProfile:
 
         # Shall assume that the pressure profile is parabolic. Can find volume average from
         # profile index and core value the same as for density and temperature
-        physics_variables.vol_avg_pressure = physics_variables.p0 / (
+        physics_variables.pres_plasma_vol_avg = physics_variables.p0 / (
             physics_variables.alphap + 1
         )
 
