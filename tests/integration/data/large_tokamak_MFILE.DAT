@@ -420,7 +420,7 @@
  J._Wesson_plasma_current_profile_index___________________________________ (alphaj_wesson)________________ 2.11220688952915792e+00 OP
  On-axis_plasma_current_density_(A/m2)____________________________________ (j_plasma_0)___________________ 6.44944535839810502e+05 OP
  Vertical_field_at_plasma_(T)_____________________________________________ (bvert)________________________ -7.12495975576990404e-01 OP
- Vacuum_toroidal_field_at_R_(T)___________________________________________ (bt)___________________________ 5.48764425618610652e+00
+ Vacuum_toroidal_field_at_R_(T)___________________________________________ (b_plasma_toroidal_on_axis)___________________________ 5.48764425618610652e+00
  Average_poloidal_field_(T)_______________________________________________ (b_plasma_poloidal_average)___________________________ 8.61531084659517776e-01 OP
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)______________________________________ (btot)_________________________ 5.55486051060573160e+00 OP
  Safety_factor_on_axis____________________________________________________ (q0)___________________________ 1.00000000000000000e+00
@@ -1620,9 +1620,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3

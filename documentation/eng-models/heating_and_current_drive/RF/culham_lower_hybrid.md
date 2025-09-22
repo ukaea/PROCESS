@@ -11,7 +11,7 @@ AEA FUS 172: Physics Assessment for the European Reactor Study[^1]
 2. Calculate the penetration radius, `rpenet`, by multiplying `rratio` with the minor radius of the plasma.
 3. Calculate the local density, `dlocal`, using the `neprofile()` function from the `profiles_module` module. This function takes into account various plasma parameters such as the density profile, electron density at the edge, pedestal density, separatrix density, and the value of the parameter `alphan`.
 4. Similarly, calculate the local temperature, `tlocal`, using the `teprofile()` function from the `profiles_module` module. This function considers parameters such as the temperature profile, electron temperature at the edge, pedestal temperature, separatrix temperature, `alphat`, and `tbeta`.
-5. Calculate the local toroidal magnetic field, `blocal`, using the formula `bt * rmajor / (rmajor - rpenet)`. Here, `bt` is the toroidal magnetic field at the magnetic axis, and `rmajor` is the major radius of the plasma.
+5. Calculate the local toroidal magnetic field, `blocal`, using the formula `b_plasma_toroidal_on_axis * rmajor / (rmajor - rpenet)`. Here, `b_plasma_toroidal_on_axis` is the toroidal magnetic field at the magnetic axis, and `rmajor` is the major radius of the plasma.
 6. Calculate the parallel refractive index, `nplacc`, which is needed for plasma access. It uses the local density `dlocal` and the local magnetic field `blocal` to calculate a fraction `frac`. `nplacc` is then obtained by adding `frac` to the square root of `1.0 + frac * frac`.
 7. Calculate the local inverse aspect ratio, `epslh`, by dividing `rpenet` by `rmajor`.
 8. Calculate the LH normalized efficiency, `x`, using the formula `24.0 / (nplacc * sqrt(tlocal))`.

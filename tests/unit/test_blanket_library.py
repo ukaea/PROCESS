@@ -1566,7 +1566,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
     b_mag_blkt: Any = None
     i_blkt_inboard: Any = None
     i_blkt_dual_coolant: Any = None
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
     aspect: Any = None
     rmajor: Any = None
     dr_blkt_inboard: Any = None
@@ -1602,7 +1602,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             b_mag_blkt=np.array(np.array((5.0, 5.0), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
             i_blkt_dual_coolant=0,
-            bt=5.7000000000000002,
+            b_plasma_toroidal_on_axis=5.7000000000000002,
             aspect=3,
             rmajor=8,
             dr_blkt_inboard=0.70000000000000007,
@@ -1641,7 +1641,7 @@ class LiquidBreederPropertiesParam(NamedTuple):
             b_mag_blkt=np.array(np.array((5.0, 5.0), order="F"), order="F").transpose(),
             i_blkt_inboard=1,
             i_blkt_dual_coolant=0,
-            bt=5.7000000000000002,
+            b_plasma_toroidal_on_axis=5.7000000000000002,
             aspect=3,
             rmajor=8,
             dr_blkt_inboard=0.70000000000000007,
@@ -1729,7 +1729,11 @@ def test_liquid_breeder_properties(
         "i_blkt_dual_coolant",
         liquidbreederpropertiesparam.i_blkt_dual_coolant,
     )
-    monkeypatch.setattr(physics_variables, "bt", liquidbreederpropertiesparam.bt)
+    monkeypatch.setattr(
+        physics_variables,
+        "b_plasma_toroidal_on_axis",
+        liquidbreederpropertiesparam.b_plasma_toroidal_on_axis,
+    )
     monkeypatch.setattr(
         physics_variables, "aspect", liquidbreederpropertiesparam.aspect
     )

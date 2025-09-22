@@ -76,7 +76,7 @@ class TFCoil:
             tfcoil_variables.oacdcp,
         ) = self.tf_current(
             n_tf_coils=tfcoil_variables.n_tf_coils,
-            bt=physics_variables.bt,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
             rmajor=physics_variables.rmajor,
             r_b_tf_inboard_peak=tfcoil_variables.r_b_tf_inboard_peak,
             a_tf_inboard_total=tfcoil_variables.a_tf_inboard_total,
@@ -274,7 +274,7 @@ class TFCoil:
     def tf_current(
         self,
         n_tf_coils: int,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         rmajor: float,
         r_b_tf_inboard_peak: float,
         a_tf_inboard_total: float,
@@ -284,8 +284,8 @@ class TFCoil:
 
         :param n_tf_coils: Number of TF coils.
         :type n_tf_coils: int
-        :param bt: Toroidal magnetic field at the plasma center [T].
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field at the plasma center [T].
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Major radius of the plasma [m].
         :type rmajor: float
         :param r_b_tf_inboard_peak: Radius at which the peak inboard B field occurs [m].
@@ -302,7 +302,9 @@ class TFCoil:
         """
 
         # Calculation of the maximum B field on the magnet [T]
-        b_tf_inboard_peak_symmetric = bt * rmajor / r_b_tf_inboard_peak
+        b_tf_inboard_peak_symmetric = (
+            b_plasma_toroidal_on_axis * rmajor / r_b_tf_inboard_peak
+        )
 
         # Total current in TF coils [A]
         c_tf_total = (
@@ -2527,7 +2529,7 @@ class TFCoil:
         n_tf_coils: int,
         dr_tf_plasma_case: float,
         rmajor: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         r_cp_top: float,
         itart: int,
         i_cp_joints: int,
@@ -2559,8 +2561,8 @@ class TFCoil:
         :type dr_tf_plasma_case: float
         :param rmajor: Major radius of the plasma [m]
         :type rmajor: float
-        :param bt: Toroidal magnetic field at plasma center [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field at plasma center [T]
+        :type b_plasma_toroidal_on_axis: float
         :param r_cp_top: Centrepost outer radius at the top [m]
         :type r_cp_top: float
         :param itart: TART (tight aspect ratio tokamak) switch (0 = standard, 1 = TART)
@@ -2639,7 +2641,7 @@ class TFCoil:
         # May the force be with you
         vforce_tot = (
             0.5e0
-            * (bt * rmajor * c_tf_total)
+            * (b_plasma_toroidal_on_axis * rmajor * c_tf_total)
             / (n_tf_coils * dr_tf_wp_inboard_conductor**2)
             * (
                 r_tf_wp_inboard_outer_conductor**2
@@ -2681,7 +2683,7 @@ class TFCoil:
             # CP vertical tension [N]
             vforce = (
                 0.25e0
-                * (bt * rmajor * c_tf_total)
+                * (b_plasma_toroidal_on_axis * rmajor * c_tf_total)
                 / (n_tf_coils * dr_tf_wp_inboard_conductor**2)
                 * (
                     2.0e0

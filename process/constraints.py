@@ -800,7 +800,7 @@ def constraint_equation_24():
     beta: total plasma beta (calculated if ipedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
-    bt: toroidal field
+    b_plasma_toroidal_on_axis: toroidal field
     btot: total field
     """
     # Include all beta components: relevant for both tokamaks and stellarators
@@ -862,7 +862,7 @@ def constraint_equation_24():
                 data_structure.physics_variables.beta
                 * (
                     data_structure.physics_variables.btot
-                    / data_structure.physics_variables.bt
+                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2
             )
@@ -876,7 +876,7 @@ def constraint_equation_24():
                 data_structure.physics_variables.beta
                 * (
                     data_structure.physics_variables.btot
-                    / data_structure.physics_variables.bt
+                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2
             )
@@ -1736,7 +1736,7 @@ def constraint_equation_68():
     fpsepbqar: f-value for upper limit on psepbqar, maximum Psep*Bt/qAR limit
     psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
-    bt: toroidal field on axis (T) (iteration variable 2)
+    b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
     q95: safety factor q at 95% flux surface
     aspect: aspect ratio (iteration variable 1)
     rmajor: plasma major radius (m) (iteration variable 3)
@@ -1748,7 +1748,7 @@ def constraint_equation_68():
             (
                 (
                     data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.bt
+                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 / (
                     data_structure.constraint_variables.q95_fixed
@@ -1761,7 +1761,7 @@ def constraint_equation_68():
         )
         err = (
             data_structure.physics_variables.p_plasma_separatrix_mw
-            * data_structure.physics_variables.bt
+            * data_structure.physics_variables.b_plasma_toroidal_on_axis
         ) / (
             data_structure.constraint_variables.q95_fixed
             * data_structure.physics_variables.aspect
@@ -1772,7 +1772,7 @@ def constraint_equation_68():
             (
                 (
                     data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.bt
+                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 / (
                     data_structure.physics_variables.q95
@@ -1785,7 +1785,7 @@ def constraint_equation_68():
         )
         err = (
             data_structure.physics_variables.p_plasma_separatrix_mw
-            * data_structure.physics_variables.bt
+            * data_structure.physics_variables.b_plasma_toroidal_on_axis
         ) / (
             data_structure.physics_variables.q95
             * data_structure.physics_variables.aspect

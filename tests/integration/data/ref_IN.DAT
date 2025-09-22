@@ -27,7 +27,7 @@ icc = 62 * f_alpha_energy_confinement_min
 
 *---------------Iteration Variables----------------*
 
-ixc= 2 * bt
+ixc= 2 * b_plasma_toroidal_on_axis
 boundu(2) = 20.0
 ixc = 3 * rmajor
 boundu(3) = 13
@@ -332,7 +332,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
 t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
 
 
-                     bt            =   5.3292E+00
+                     b_plasma_toroidal_on_axis            =   5.3292E+00
                      rmajor        =   8.8901E+00
                      te             =  1.2330E+01
                      beta           =  3.1421E-02

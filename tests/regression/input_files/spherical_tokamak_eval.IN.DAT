@@ -268,7 +268,7 @@ alphan   = 0.9 * density profile index
 alphat   = 1.4 * temperature profile index
 aspect   = 1.8 * aspect ratio (`iteration variable 1`)
 beta     = 0.13134204235647895 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
-bt       = 3.0 * toroidal field on axis (T) (`iteration variable 2`)
+b_plasma_toroidal_on_axis       = 3.0 * toroidal field on axis (T) (`iteration variable 2`)
 dene     = 9.69888313737236e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max = 5.0 * Troyon-like coefficient for beta scaling
 i_beta_norm_max = 0 * Normalised beta max selection (0 = user input)

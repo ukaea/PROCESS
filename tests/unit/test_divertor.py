@@ -75,7 +75,7 @@ class TestDivertor:
         rmajor = 2.0
         rminor = 1.0
         aspect = 2.0
-        bt = 0.5
+        b_plasma_toroidal_on_axis = 0.5
         b_plasma_poloidal_average = 0.09595
         p_plasma_separatrix_mw = 1.0e2
         f_div_flux_expansion = 2
@@ -90,7 +90,7 @@ class TestDivertor:
             rmajor,
             rminor,
             aspect,
-            bt,
+            b_plasma_toroidal_on_axis,
             b_plasma_poloidal_average,
             p_plasma_separatrix_mw,
             f_div_flux_expansion,

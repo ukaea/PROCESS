@@ -854,7 +854,7 @@ def beam_fusion(
     beamfus0: float,
     betbm0: float,
     b_plasma_poloidal_average: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     c_beam_total: float,
     dene: float,
     nd_fuel_ions: float,
@@ -879,7 +879,7 @@ def beam_fusion(
                 beamfus0 (float): Multiplier for beam-background fusion calculation.
                 betbm0 (float): Leading coefficient for neutral beam beta fraction.
                 b_plasma_poloidal_average (float): Poloidal field (T).
-                bt (float): Toroidal field on axis (T).
+                b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
                 c_beam_total (float): Neutral beam current (A).
                 dene (float): Electron density (m^-3).
                 nd_fuel_ions (float): Fuel ion density (m^-3).
@@ -979,7 +979,7 @@ def beam_fusion(
         * (2 / 3)
         * hot_beam_density
         * beam_deposited_energy
-        / (bt**2 + b_plasma_poloidal_average**2)
+        / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
     )
 
     return beta_beam, hot_beam_density, p_beam_alpha_mw

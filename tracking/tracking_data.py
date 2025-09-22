@@ -125,7 +125,7 @@ class ProcessTracker:
         "Physics.beta",
         "Physics.f_c_plasma_inductive",
         "Physics.zeff",
-        "Physics.bt",
+        "Physics.b_plasma_toroidal_on_axis",
         "Physics.hfact",
         "Physics.kappa",
         "Physics.p_fusion_total_mw",

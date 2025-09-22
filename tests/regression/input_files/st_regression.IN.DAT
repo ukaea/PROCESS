@@ -89,7 +89,7 @@ icc = 2
 *----------------*
 
 *ixc = 2  
-bt = 3.0
+b_plasma_toroidal_on_axis = 3.0
 *boundl(2) = 2.0 
 *boundu(2) = 5.0
 * DESCRIPTION:   Toroidal field on axis (T)

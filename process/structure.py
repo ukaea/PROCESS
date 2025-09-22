@@ -52,7 +52,7 @@ class Structure:
             pv.rmajor,
             pv.rminor,
             pv.kappa,
-            pv.bt,
+            pv.b_plasma_toroidal_on_axis,
             tfv.i_tf_sup,
             pfv.i_pf_conductor,
             bv.dr_tf_inner_bore + bv.dr_tf_outboard + bv.dr_tf_inboard,

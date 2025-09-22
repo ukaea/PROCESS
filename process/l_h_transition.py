@@ -1,11 +1,13 @@
-def calculate_iter1996_nominal(dnla20: float, bt: float, rmajor: float) -> float:
+def calculate_iter1996_nominal(
+    dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
+) -> float:
     """
     Calculate the nominal ITER-1996 L-H transition power threshold.
 
     :param dnla20: Line averaged electron density in units of 10^20 m^-3.
     :type dnla20: float
-    :param bt: Toroidal magnetic field [T]
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius [m]
     :type rmajor: float
     :return: The ITER-1996 L-H transition power threshold [MW]
@@ -21,17 +23,19 @@ def calculate_iter1996_nominal(dnla20: float, bt: float, rmajor: float) -> float
         Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
         doi: https://doi.org/10.1063/1.872406.
     """
-    return 0.45 * dnla20**0.75 * bt * rmajor**2
+    return 0.45 * dnla20**0.75 * b_plasma_toroidal_on_axis * rmajor**2
 
 
-def calculate_iter1996_upper(dnla20: float, bt: float, rmajor: float) -> float:
+def calculate_iter1996_upper(
+    dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
+) -> float:
     """
     Calculate the upper variant ITER-1996 L-H transition power threshold.
 
     :param dnla20: Line averaged electron density in units of 10^20 m^-3.
     :type dnla20: float
-    :param bt: Toroidal magnetic field [T]
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius [m]
     :type rmajor: float
     :return: The ITER-1996 L-H transition power threshold [MW]
@@ -47,17 +51,19 @@ def calculate_iter1996_upper(dnla20: float, bt: float, rmajor: float) -> float:
         Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
         doi: https://doi.org/10.1063/1.872406.
     """
-    return 0.3960502816 * dnla20 * bt * rmajor**2.5
+    return 0.3960502816 * dnla20 * b_plasma_toroidal_on_axis * rmajor**2.5
 
 
-def calculate_iter1996_lower(dnla20: float, bt: float, rmajor: float) -> float:
+def calculate_iter1996_lower(
+    dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
+) -> float:
     """
     Calculate the lower variant ITER-1996 L-H transition power threshold.
 
     :param dnla20: Line averaged electron density in units of 10^20 m^-3.
     :type dnla20: float
-    :param bt: Toroidal magnetic field [T]
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius [m]
     :type rmajor: float
     :return: The ITER-1996 L-H transition power threshold [MW]
@@ -73,17 +79,19 @@ def calculate_iter1996_lower(dnla20: float, bt: float, rmajor: float) -> float:
         Physics of Plasmas, vol. 4, no. 7, pp. 2642-2652, Jul. 1997,
         doi: https://doi.org/10.1063/1.872406.
     """
-    return 0.5112987149 * dnla20**0.5 * bt * rmajor**1.5
+    return 0.5112987149 * dnla20**0.5 * b_plasma_toroidal_on_axis * rmajor**1.5
 
 
-def calculate_snipes1997_iter(dnla20: float, bt: float, rmajor: float) -> float:
+def calculate_snipes1997_iter(
+    dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float
+) -> float:
     """
     Calculate the Snipes 1997 ITER L-H transition power threshold.
 
     :param dnla20: Line averaged electron density in units of 10^20 m^-3.
     :type dnla20: float
-    :param bt: Toroidal magnetic field [T]
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius [m]
     :type rmajor: float
     :return: The Snipes 1997 L-H transition power threshold [MW]
@@ -98,19 +106,19 @@ def calculate_snipes1997_iter(dnla20: float, bt: float, rmajor: float) -> float:
         url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
         *This is a conference poster*
     """
-    return 0.65 * dnla20**0.93 * bt**0.86 * rmajor**2.15
+    return 0.65 * dnla20**0.93 * b_plasma_toroidal_on_axis**0.86 * rmajor**2.15
 
 
 def calculate_snipes1997_kappa(
-    dnla20: float, bt: float, rmajor: float, kappa: float
+    dnla20: float, b_plasma_toroidal_on_axis: float, rmajor: float, kappa: float
 ) -> float:
     """
     Calculate the Snipes 1997 ITER L-H transition power threshold with kappa factor.
 
     :param dnla20: Line averaged electron density in units of 10^20 m^-3.
     :type dnla20: float
-    :param bt: Toroidal magnetic field [T]
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius [m]
     :type rmajor: float
     :param kappa: Plasma elongation
@@ -127,19 +135,28 @@ def calculate_snipes1997_kappa(
         url:https://library.ipp.mpg.de/EPS_24_Vol3_1997.pdf.
         *This is a conference poster*
     """
-    return 0.42 * dnla20**0.80 * bt**0.90 * rmajor**1.99 * kappa**0.76
+    return (
+        0.42
+        * dnla20**0.80
+        * b_plasma_toroidal_on_axis**0.90
+        * rmajor**1.99
+        * kappa**0.76
+    )
 
 
 def calculate_martin08_nominal(
-    dnla20: float, bt: float, a_plasma_surface: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    a_plasma_surface: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the nominal Martin L-H transition power threshold.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param a_plasma_surface: Plasma surface area [m^2]
         :type a_plasma_surface: float
         :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -162,22 +179,25 @@ def calculate_martin08_nominal(
     return (
         0.0488
         * dnla20**0.717
-        * bt**0.803
+        * b_plasma_toroidal_on_axis**0.803
         * a_plasma_surface**0.941
         * (2.0 / m_ions_total_amu)
     )
 
 
 def calculate_martin08_upper(
-    dnla20: float, bt: float, a_plasma_surface: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    a_plasma_surface: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the upper Martin L-H transition power threshold.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param a_plasma_surface: Plasma surface area [m^2]
         :type a_plasma_surface: float
         :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -198,22 +218,25 @@ def calculate_martin08_upper(
     return (
         0.05166240355
         * dnla20**0.752
-        * bt**0.835
+        * b_plasma_toroidal_on_axis**0.835
         * a_plasma_surface**0.96
         * (2.0 / m_ions_total_amu)
     )
 
 
 def calculate_martin08_lower(
-    dnla20: float, bt: float, a_plasma_surface: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    a_plasma_surface: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the lower Martin L-H transition power threshold.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param a_plasma_surface: Plasma surface area [m^2]
         :type a_plasma_surface: float
         :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -235,22 +258,26 @@ def calculate_martin08_lower(
     return (
         0.04609619059
         * dnla20**0.682
-        * bt**0.771
+        * b_plasma_toroidal_on_axis**0.771
         * a_plasma_surface**0.922
         * (2.0 / m_ions_total_amu)
     )
 
 
 def calculate_snipes2000_nominal(
-    dnla20: float, bt: float, rmajor: float, rminor: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    rmajor: float,
+    rminor: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the nominal Snipes 2000 L-H transition power threshold.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Plasma major radius [m]
         :type rmajor: float
         :param rminor: Plasma minor radius [m]
@@ -274,7 +301,7 @@ def calculate_snipes2000_nominal(
     return (
         1.42
         * dnla20**0.58
-        * bt**0.82
+        * b_plasma_toroidal_on_axis**0.82
         * rmajor
         * rminor**0.81
         * (2.0 / m_ions_total_amu)
@@ -282,15 +309,19 @@ def calculate_snipes2000_nominal(
 
 
 def calculate_snipes2000_upper(
-    dnla20: float, bt: float, rmajor: float, rminor: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    rmajor: float,
+    rminor: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the upper Snipes 2000 L-H transition power threshold.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Plasma major radius [m]
         :type rmajor: float
         :param rminor: Plasma minor radius [m]
@@ -314,7 +345,7 @@ def calculate_snipes2000_upper(
     return (
         1.547
         * dnla20**0.615
-        * bt**0.851
+        * b_plasma_toroidal_on_axis**0.851
         * rmajor**1.089
         * rminor**0.876
         * (2.0 / m_ions_total_amu)
@@ -322,15 +353,19 @@ def calculate_snipes2000_upper(
 
 
 def calculate_snipes2000_lower(
-    dnla20: float, bt: float, rmajor: float, rminor: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    rmajor: float,
+    rminor: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the lower Snipes 2000 L-H transition power threshold.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Plasma major radius [m]
         :type rmajor: float
         :param rminor: Plasma minor radius [m]
@@ -354,7 +389,7 @@ def calculate_snipes2000_lower(
     return (
         1.293
         * dnla20**0.545
-        * bt**0.789
+        * b_plasma_toroidal_on_axis**0.789
         * rmajor**0.911
         * rminor**0.744
         * (2.0 / m_ions_total_amu)
@@ -362,15 +397,18 @@ def calculate_snipes2000_lower(
 
 
 def calculate_snipes2000_closed_divertor_nominal(
-    dnla20: float, bt: float, rmajor: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    rmajor: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the nominal Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Plasma major radius [m]
         :type rmajor: float
         :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -389,19 +427,28 @@ def calculate_snipes2000_closed_divertor_nominal(
             doi: https://doi.org/10.1088/0741-3335/42/5a/336.
     ‌
     """
-    return 0.8 * dnla20**0.5 * bt**0.53 * rmajor**1.51 * (2.0 / m_ions_total_amu)
+    return (
+        0.8
+        * dnla20**0.5
+        * b_plasma_toroidal_on_axis**0.53
+        * rmajor**1.51
+        * (2.0 / m_ions_total_amu)
+    )
 
 
 def calculate_snipes2000_closed_divertor_upper(
-    dnla20: float, bt: float, rmajor: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    rmajor: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the upper Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Plasma major radius [m]
         :type rmajor: float
         :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -420,19 +467,28 @@ def calculate_snipes2000_closed_divertor_upper(
             doi: https://doi.org/10.1088/0741-3335/42/5a/336.
     ‌
     """
-    return 0.867 * dnla20**0.561 * bt**0.588 * rmajor**1.587 * (2.0 / m_ions_total_amu)
+    return (
+        0.867
+        * dnla20**0.561
+        * b_plasma_toroidal_on_axis**0.588
+        * rmajor**1.587
+        * (2.0 / m_ions_total_amu)
+    )
 
 
 def calculate_snipes2000_closed_divertor_lower(
-    dnla20: float, bt: float, rmajor: float, m_ions_total_amu: float
+    dnla20: float,
+    b_plasma_toroidal_on_axis: float,
+    rmajor: float,
+    m_ions_total_amu: float,
 ) -> float:
     """
         Calculate the lower Snipes 2000 Closed Divertor L-H transition power threshold with CD factor.
 
         :param dnla20: Line averaged electron density in units of 10^20 m^-3.
         :type dnla20: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :param rmajor: Plasma major radius [m]
         :type rmajor: float
         :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -451,7 +507,13 @@ def calculate_snipes2000_closed_divertor_lower(
             doi: https://doi.org/10.1088/0741-3335/42/5a/336.
     ‌
     """
-    return 0.733 * dnla20**0.439 * bt**0.472 * rmajor**1.433 * (2.0 / m_ions_total_amu)
+    return (
+        0.733
+        * dnla20**0.439
+        * b_plasma_toroidal_on_axis**0.472
+        * rmajor**1.433
+        * (2.0 / m_ions_total_amu)
+    )
 
 
 def calculate_hubbard2012_nominal(plasma_current: float, dnla20: float) -> float:
@@ -520,7 +582,9 @@ def calculate_hubbard2012_lower(plasma_current: float, dnla20: float) -> float:
     return 2.11 * (plasma_current / 1e6) ** 0.7 * dnla20**0.47
 
 
-def calculate_hubbard2017(dnla20: float, a_plasma_surface: float, bt: float) -> float:
+def calculate_hubbard2017(
+    dnla20: float, a_plasma_surface: float, b_plasma_toroidal_on_axis: float
+) -> float:
     """
         Calculate the Hubbard 2017 L-I transition power threshold.
 
@@ -528,8 +592,8 @@ def calculate_hubbard2017(dnla20: float, a_plasma_surface: float, bt: float) -> 
         :type dnla20: float
         :param a_plasma_surface: Plasma surface area [m^2]
         :type a_plasma_surface: float
-        :param bt: Toroidal magnetic field [T]
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+        :type b_plasma_toroidal_on_axis: float
         :return: The Hubbard 2017 L-I transition power threshold [MW]
         :rtype: float
 
@@ -542,12 +606,12 @@ def calculate_hubbard2017(dnla20: float, a_plasma_surface: float, bt: float) -> 
             doi: https://doi.org/10.1088/1741-4326/aa8570.
     ‌
     """
-    return 0.162 * dnla20 * a_plasma_surface * bt**0.26
+    return 0.162 * dnla20 * a_plasma_surface * b_plasma_toroidal_on_axis**0.26
 
 
 def calculate_martin08_aspect_nominal(
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     a_plasma_surface: float,
     m_ions_total_amu: float,
     aspect: float,
@@ -557,8 +621,8 @@ def calculate_martin08_aspect_nominal(
 
             :param dnla20: Line averaged electron density in units of 10^20 m^-3.
             :type dnla20: float
-            :param bt: Toroidal magnetic field [T]
-            :type bt: float
+            :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+            :type b_plasma_toroidal_on_axis: float
             :param a_plasma_surface: Plasma surface area [m^2]
             :type a_plasma_surface: float
             :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -595,7 +659,7 @@ def calculate_martin08_aspect_nominal(
     return (
         0.0488
         * dnla20**0.717
-        * bt**0.803
+        * b_plasma_toroidal_on_axis**0.803
         * a_plasma_surface**0.941
         * (2.0 / m_ions_total_amu)
         * aspect_correction
@@ -604,7 +668,7 @@ def calculate_martin08_aspect_nominal(
 
 def calculate_martin08_aspect_upper(
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     a_plasma_surface: float,
     m_ions_total_amu: float,
     aspect: float,
@@ -614,8 +678,8 @@ def calculate_martin08_aspect_upper(
 
             :param dnla20: Line averaged electron density in units of 10^20 m^-3.
             :type dnla20: float
-            :param bt: Toroidal magnetic field [T]
-            :type bt: float
+            :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+            :type b_plasma_toroidal_on_axis: float
             :param a_plasma_surface: Plasma surface area [m^2]
             :type a_plasma_surface: float
             :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -652,7 +716,7 @@ def calculate_martin08_aspect_upper(
     return (
         0.05166240355
         * dnla20**0.752
-        * bt**0.835
+        * b_plasma_toroidal_on_axis**0.835
         * a_plasma_surface**0.96
         * (2.0 / m_ions_total_amu)
         * aspect_correction
@@ -661,7 +725,7 @@ def calculate_martin08_aspect_upper(
 
 def calculate_martin08_aspect_lower(
     dnla20: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     a_plasma_surface: float,
     m_ions_total_amu: float,
     aspect: float,
@@ -671,8 +735,8 @@ def calculate_martin08_aspect_lower(
 
             :param dnla20: Line averaged electron density in units of 10^20 m^-3.
             :type dnla20: float
-            :param bt: Toroidal magnetic field [T]
-            :type bt: float
+            :param b_plasma_toroidal_on_axis: Toroidal magnetic field [T]
+            :type b_plasma_toroidal_on_axis: float
             :param a_plasma_surface: Plasma surface area [m^2]
             :type a_plasma_surface: float
             :param m_ions_total_amu: Total ion mass in atomic mass units [amu]
@@ -709,7 +773,7 @@ def calculate_martin08_aspect_lower(
     return (
         0.04609619059
         * dnla20**0.682
-        * bt**0.771
+        * b_plasma_toroidal_on_axis**0.771
         * a_plasma_surface**0.922
         * (2.0 / m_ions_total_amu)
         * aspect_correction

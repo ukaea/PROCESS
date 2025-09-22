@@ -195,7 +195,7 @@
  On-axis_plasma_current_density_(A/m2)____________________________________ (j_plasma_0)___________________ 9.32140247531424044e+05 OP
  Plasma_normalised_internal_inductance____________________________________ (ind_plasma_internal_norm)_____ 1.48928812034438063e+00 OP
  Vertical_field_at_plasma_(T)_____________________________________________ (bvert)________________________ -7.54455488297703147e-01 OP
- Vacuum_toroidal_field_at_R_(T)___________________________________________ (bt)___________________________ 5.31832217464490409e+00
+ Vacuum_toroidal_field_at_R_(T)___________________________________________ (b_plasma_toroidal_on_axis)___________________________ 5.31832217464490409e+00
  Average_poloidal_field_(T)_______________________________________________ (b_plasma_poloidal_average)___________________________ 8.39681017309652167e-01 OP
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)______________________________________ (btot)_________________________ 5.38420049442346382e+00 OP
  Safety_factor_on_axis____________________________________________________ (q0)___________________________ 1.00000000000000000e+00
@@ -1182,7 +1182,7 @@ icc = 32 * TF coil conduit stress upper limit
 
 *---------------Iteration Variables----------------*
 
-ixc = 2 * bt
+ixc = 2 * b_plasma_toroidal_on_axis
 ixc = 3 * rmajor
 boundl(3) = 8.0
 boundu(3) = 9.0
@@ -1460,7 +1460,7 @@ alphan   = 1.00 * density profile index
 alphat   = 1.45 * temperature profile index
 aspect   = 3.0 * aspect ratio (`iteration variable 1`)
 beta     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
-bt       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
+b_plasma_toroidal_on_axis       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
 dene     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
 fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix

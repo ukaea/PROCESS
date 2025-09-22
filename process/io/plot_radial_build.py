@@ -168,7 +168,7 @@ def main(args=None):
         "kappa",
         "triang",
         "tbrmin",
-        "bt",
+        "b_plasma_toroidal_on_axis",
         "radius_plasma_core_norm",
         "Obsolete",  # Removed
         "f_alpha_energy_confinement_min",
@@ -197,7 +197,7 @@ def main(args=None):
         "b_crit_upper_nbti",
         "dr_shld_inboard",
         "p_cryo_plant_electric_max_mw",
-        "bt",  # Genuinly bt lower bound
+        "b_plasma_toroidal_on_axis",  # Genuinly b_plasma_toroidal_on_axis lower bound
         "dr_fw_plasma_gap_inboard",
         "dr_fw_plasma_gap_outboard",
         "sig_tf_wp_max",

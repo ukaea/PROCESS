@@ -124,7 +124,7 @@ class Stellarator:
             self.stphys(True)
             self.stopt(True)
 
-            # As stopt changes dene, te and bt, stphys needs two calls
+            # As stopt changes dene, te and b_plasma_toroidal_on_axis, stphys needs two calls
             # to correct for larger changes (it is only consistent after
             # two or three fix point iterations) call stphys here again, just to be sure.
             # This can be removed once the bad practice in stopt is removed!
@@ -229,7 +229,8 @@ class Stellarator:
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
         stellarator_variables.f_b = (
-            physics_variables.bt / stellarator_configuration.stella_config_bt_ref
+            physics_variables.b_plasma_toroidal_on_axis
+            / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
     def stgeom(self):
@@ -281,7 +282,7 @@ class Stellarator:
         """
 
         physics_variables.dnelimt = self.stdlim(
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.p_plasma_loss_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -290,16 +291,17 @@ class Stellarator:
         # Calculates the ECRH parameters
 
         ne0_max_ECRH, bt_ecrh = self.stdlim_ecrh(
-            stellarator_variables.max_gyrotron_frequency, physics_variables.bt
+            stellarator_variables.max_gyrotron_frequency,
+            physics_variables.b_plasma_toroidal_on_axis,
         )
 
         ne0_max_ECRH = min(physics_variables.ne0, ne0_max_ECRH)
-        bt_ecrh = min(physics_variables.bt, bt_ecrh)
+        bt_ecrh = min(physics_variables.b_plasma_toroidal_on_axis, bt_ecrh)
 
         if output:
             self.stopt_output(
                 stellarator_variables.max_gyrotron_frequency,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 bt_ecrh,
                 ne0_max_ECRH,
                 stellarator_variables.te0_ecrh_achievable,
@@ -3049,7 +3051,7 @@ class Stellarator:
             * (3e0 * 1.3e0 * 50e0 * 0.92e0**2e0)
             / (1e0 * 5.2e0 * 0.014e0)
             * (
-                physics_variables.bt
+                physics_variables.b_plasma_toroidal_on_axis
                 * tfcoil_variables.c_tf_total
                 * physics_variables.rminor**2
                 / (
@@ -3528,7 +3530,12 @@ class Stellarator:
         return x
 
     def stopt_output(
-        self, max_gyrotron_frequency, bt, bt_ecrh, ne0_max_ECRH, te0_ecrh_achievable
+        self,
+        max_gyrotron_frequency,
+        b_plasma_toroidal_on_axis,
+        bt_ecrh,
+        ne0_max_ECRH,
+        te0_ecrh_achievable,
     ):
         po.oheadr(self.outfile, "ECRH Ignition at lower values. Information:")
 
@@ -3539,7 +3546,12 @@ class Stellarator:
             max_gyrotron_frequency,
         )
 
-        po.ovarre(self.outfile, "Operating point: bfield", "(bt)", bt)
+        po.ovarre(
+            self.outfile,
+            "Operating point: bfield",
+            "(b_plasma_toroidal_on_axis)",
+            b_plasma_toroidal_on_axis,
+        )
         po.ovarre(
             self.outfile,
             "Operating point: Peak density",
@@ -3604,7 +3616,7 @@ class Stellarator:
         # Volume averaged physics_variables.te from te0_achievable
         physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
         ne0_max, bt_ecrh_max = self.stdlim_ecrh(
-            gyro_frequency_max, physics_variables.bt
+            gyro_frequency_max, physics_variables.b_plasma_toroidal_on_axis
         )
         # Now go to point where ECRH is still available
         # In density..
@@ -3614,8 +3626,10 @@ class Stellarator:
         )
 
         # And B-field..
-        bt_old = copy(physics_variables.bt)
-        physics_variables.bt = min(bt_ecrh_max, physics_variables.bt)
+        bt_old = copy(physics_variables.b_plasma_toroidal_on_axis)
+        physics_variables.b_plasma_toroidal_on_axis = min(
+            bt_ecrh_max, physics_variables.b_plasma_toroidal_on_axis
+        )
 
         self.stphys(False)
         self.stphys(
@@ -3631,17 +3645,17 @@ class Stellarator:
         # This is bad practice but seems to be necessary as of now:
         physics_variables.te = te_old
         physics_variables.dene = dene_old
-        physics_variables.bt = bt_old
+        physics_variables.b_plasma_toroidal_on_axis = bt_old
 
         self.stphys(False)
         self.stphys(False)
 
         return powerht_out, pscalingmw_out
 
-    def stdlim(self, bt, powht, rmajor, rminor):
+    def stdlim(self, b_plasma_toroidal_on_axis, powht, rmajor, rminor):
         """Routine to calculate the Sudo density limit in a stellarator
         author: P J Knight, CCFE, Culham Science Centre
-        bt     : input real : Toroidal field on axis (T)
+        b_plasma_toroidal_on_axis     : input real : Toroidal field on axis (T)
         powht  : input real : Absorbed heating power (MW)
         rmajor : input real : Plasma major radius (m)
         rminor : input real : Plasma minor radius (m)
@@ -3651,14 +3665,14 @@ class Stellarator:
         and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
         vol.30, 11 (1990).
         """
-        arg = powht * bt / (rmajor * rminor * rminor)
+        arg = powht * b_plasma_toroidal_on_axis / (rmajor * rminor * rminor)
 
         if arg <= 0.0e0:
             raise ProcessValueError(
                 "Negative square root imminent",
                 arg=arg,
                 powht=powht,
-                bt=bt,
+                b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
                 rmajor=rmajor,
                 rminor=rminor,
             )
@@ -4179,7 +4193,7 @@ class Stellarator:
         depending on an assumed maximal available gyrotron frequency.
         author: J Lion, IPP Greifswald
         gyro_frequency_max     : input real : Maximal available Gyrotron frequency (1/s) NOT (rad/s)
-        bt  : input real : Maximal magnetic field on axis (T)
+        b_plasma_toroidal_on_axis  : input real : Maximal magnetic field on axis (T)
         dlimit_ecrh : output real : Maximum peak plasma density by ECRH constraints (/m3)
         bt_max : output real : Maximum allowable b field for ecrh heating (T)
         This routine calculates the density limit due to an ECRH heating scheme on axis
@@ -4224,7 +4238,8 @@ class Stellarator:
 
         #  Total field
         physics_variables.btot = np.sqrt(
-            physics_variables.bt**2 + physics_variables.b_plasma_poloidal_average**2
+            physics_variables.b_plasma_toroidal_on_axis**2
+            + physics_variables.b_plasma_poloidal_average**2
         )
 
         # Check if physics_variables.beta (iteration variable 5) is an iteration variable
@@ -4268,7 +4283,7 @@ class Stellarator:
             )
         ) / (
             constants.ELECTRON_CHARGE
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.eps
             * physics_variables.rmajor
         )
@@ -4276,7 +4291,7 @@ class Stellarator:
         #  Calculate poloidal field using rotation transform
         physics_variables.b_plasma_poloidal_average = (
             physics_variables.rminor
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.rmajor
             * stellarator_variables.iotabar
         )
@@ -4321,7 +4336,7 @@ class Stellarator:
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.b_plasma_poloidal_average,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
@@ -4385,7 +4400,7 @@ class Stellarator:
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.b_plasma_poloidal_average,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.dene,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
@@ -4440,7 +4455,7 @@ class Stellarator:
             self.plasma_profile,
             physics_variables.ne0,
             physics_variables.rminor,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.aspect,
             physics_variables.alphan,
             physics_variables.alphat,
@@ -4580,7 +4595,7 @@ class Stellarator:
             physics_variables.m_fuel_amu,
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.nd_electron_line,
@@ -5654,7 +5669,7 @@ class Neoclassics:
             / (
                 constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
         vdD = (
@@ -5663,7 +5678,7 @@ class Neoclassics:
             / (
                 constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
         vdT = (
@@ -5672,7 +5687,7 @@ class Neoclassics:
             / (
                 constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
         vda = (
@@ -5682,7 +5697,7 @@ class Neoclassics:
                 2.0
                 * constants.ELECTRON_CHARGE
                 * physics_variables.rmajor
-                * physics_variables.bt
+                * physics_variables.b_plasma_toroidal_on_axis
             )
         )
 

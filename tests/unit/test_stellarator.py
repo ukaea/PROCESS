@@ -88,7 +88,7 @@ class StgeomParam(NamedTuple):
 
     a_plasma_poloidal: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
     stella_config_vol_plasma: Any = None
 
@@ -118,7 +118,7 @@ class StgeomParam(NamedTuple):
             a_plasma_surface_outboard=0,
             vol_plasma=0,
             a_plasma_poloidal=0,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
@@ -136,7 +136,7 @@ class StgeomParam(NamedTuple):
             a_plasma_surface_outboard=962.68206568287667,
             vol_plasma=1385.2745877380669,
             a_plasma_poloidal=10.001590778710231,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
@@ -183,7 +183,11 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
         physics_variables, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
     )
 
-    monkeypatch.setattr(physics_variables, "bt", stgeomparam.bt)
+    monkeypatch.setattr(
+        physics_variables,
+        "b_plasma_toroidal_on_axis",
+        stgeomparam.b_plasma_toroidal_on_axis,
+    )
 
     monkeypatch.setattr(
         stellarator_configuration,
@@ -2621,7 +2625,7 @@ class StdlimParam(NamedTuple):
 
     dnelimt: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
     powht: Any = None
 
@@ -2641,7 +2645,7 @@ class StdlimParam(NamedTuple):
             dene=2.0914e20,
             nd_electron_line=2.357822619799476e20,
             dnelimt=0,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             powht=432.20449197454559,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -2652,7 +2656,7 @@ class StdlimParam(NamedTuple):
             dene=2.0914e20,
             nd_electron_line=2.357822619799476e20,
             dnelimt=1.2918765671497731e20,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             powht=431.98698920075435,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -2683,7 +2687,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "dnelimt", stdlimparam.dnelimt)
 
     dlimit = stellarator.stdlim(
-        bt=stdlimparam.bt,
+        b_plasma_toroidal_on_axis=stdlimparam.b_plasma_toroidal_on_axis,
         powht=stdlimparam.powht,
         rmajor=stdlimparam.rmajor,
         rminor=stdlimparam.rminor,

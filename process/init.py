@@ -400,7 +400,7 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     # Stop the run if oacdcp is used as an optimisation variable
-    # As the current density is now calculated from bt without constraint 10
+    # As the current density is now calculated from b_plasma_toroidal_on_axis without constraint 10
 
     if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 12).any():
         raise ProcessValidationError(

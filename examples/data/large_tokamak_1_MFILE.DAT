@@ -337,7 +337,7 @@
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9805E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2275E+00    
  Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4373E-01    
- Vacuum_toroidal_field_at_R_(T)__________________________________________ (bt)__________________________      5.2940E+00 ITV
+ Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2940E+00 ITV
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6787E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (btot)________________________      5.3647E+00    
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
@@ -1387,9 +1387,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3

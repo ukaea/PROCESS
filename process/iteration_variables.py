@@ -33,7 +33,9 @@ class IterationVariable:
 
 ITERATION_VARIABLES = {
     1: IterationVariable("aspect", data_structure.physics_variables, 1.1, 10.00),
-    2: IterationVariable("bt", data_structure.physics_variables, 0.010, 30.00),
+    2: IterationVariable(
+        "b_plasma_toroidal_on_axis", data_structure.physics_variables, 0.010, 30.00
+    ),
     3: IterationVariable("rmajor", data_structure.physics_variables, 0.1, 50.00),
     4: IterationVariable("te", data_structure.physics_variables, 5.0, 150.0),
     5: IterationVariable("beta", data_structure.physics_variables, 0.001, 1.0),
