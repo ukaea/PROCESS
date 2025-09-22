@@ -301,7 +301,7 @@ radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`ipedesta
 radius_plasma_pedestal_temp_norm  = 0.94 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
 temp_plasma_pedestal_kev    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')
-tesep    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+temp_plasma_separatrix_kev    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
 i_confinement_time      = 34 * switch for energy confinement time scaling law (see description in `labels_confinement_scalings`)
 i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
 kappa    = 1.85 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)

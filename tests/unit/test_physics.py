@@ -325,7 +325,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     rminor: Any = None
 
-    tesep: Any = None
+    temp_plasma_separatrix_kev: Any = None
 
     ti: Any = None
 
@@ -382,7 +382,7 @@ class BootstrapFractionSauterParam(NamedTuple):
         BootstrapFractionSauterParam(
             nd_ions_total=7.1297522422781575e19,
             rminor=2.6666666666666665,
-            tesep=0.10000000000000001,
+            temp_plasma_separatrix_kev=0.10000000000000001,
             ti=12.570861186498382,
             triang=0.5,
             q0=1,
@@ -431,7 +431,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "rminor", bootstrapfractionsauterparam.rminor
     )
 
-    monkeypatch.setattr(physics_variables, "tesep", bootstrapfractionsauterparam.tesep)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_separatrix_kev",
+        bootstrapfractionsauterparam.temp_plasma_separatrix_kev,
+    )
 
     monkeypatch.setattr(physics_variables, "ti", bootstrapfractionsauterparam.ti)
 
@@ -473,7 +477,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
     )
 
-    monkeypatch.setattr(physics_variables, "temp_plasma_pedestal_kev", bootstrapfractionsauterparam.temp_plasma_pedestal_kev)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_pedestal_kev",
+        bootstrapfractionsauterparam.temp_plasma_pedestal_kev,
+    )
 
     monkeypatch.setattr(
         physics_variables,

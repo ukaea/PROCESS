@@ -70,7 +70,7 @@ def test_ncore():
 class TeProfileParam(NamedTuple):
     radius_plasma_pedestal_temp_norm: float = 0.0
     tbeta: float = 0.0
-    tesep: float = 0.0
+    temp_plasma_separatrix_kev: float = 0.0
     ipedestal: float = 0.0
     alphat: float = 0.0
     temp_plasma_pedestal_kev: float = 0.0
@@ -83,7 +83,7 @@ class TeProfileParam(NamedTuple):
         TeProfileParam(
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
             tbeta=2,
-            tesep=0.10000000000000001,
+            temp_plasma_separatrix_kev=0.10000000000000001,
             ipedestal=1,
             alphat=1.45,
             temp_plasma_pedestal_kev=5.5,
@@ -143,7 +143,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     nd_plasma_separatrix_electron: float = 0.0
 
-    tesep: float = 0.0
+    temp_plasma_separatrix_kev: float = 0.0
 
     pcoef: float = 0.0
 
@@ -225,7 +225,7 @@ class PlasmaProfilesParam(NamedTuple):
             te0=0.0,
             p0=0.0,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
-            tesep=0.10000000000000001,
+            temp_plasma_separatrix_kev=0.10000000000000001,
             pcoef=0.0,
             ipedestal=1,
             ni0=0.0,
@@ -270,7 +270,7 @@ class PlasmaProfilesParam(NamedTuple):
             te0=27.369013322953624,
             p0=868071.46874220832,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
-            tesep=0.10000000000000001,
+            temp_plasma_separatrix_kev=0.10000000000000001,
             pcoef=1.1110842637642833,
             ipedestal=1,
             ni0=9.210720071916929e19,
@@ -347,7 +347,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.nd_plasma_separatrix_electron,
     )
 
-    monkeypatch.setattr(physics_variables, "tesep", plasmaprofilesparam.tesep)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_separatrix_kev",
+        plasmaprofilesparam.temp_plasma_separatrix_kev,
+    )
 
     monkeypatch.setattr(physics_variables, "pcoef", plasmaprofilesparam.pcoef)
 
@@ -391,7 +395,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.nd_plasma_electrons_vol_avg,
     )
 
-    monkeypatch.setattr(physics_variables, "temp_plasma_pedestal_kev", plasmaprofilesparam.temp_plasma_pedestal_kev)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_pedestal_kev",
+        plasmaprofilesparam.temp_plasma_pedestal_kev,
+    )
 
     monkeypatch.setattr(physics_variables, "alphan", plasmaprofilesparam.alphan)
 

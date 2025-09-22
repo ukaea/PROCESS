@@ -415,12 +415,12 @@ def check_process(inputs):  # noqa: ARG001
         # Temperature checks
         if (
             data_structure.physics_variables.temp_plasma_pedestal_kev
-            < data_structure.physics_variables.tesep
+            < data_structure.physics_variables.temp_plasma_separatrix_kev
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
                 temp_plasma_pedestal_kev=data_structure.physics_variables.temp_plasma_pedestal_kev,
-                tesep=data_structure.physics_variables.tesep,
+                temp_plasma_separatrix_kev=data_structure.physics_variables.temp_plasma_separatrix_kev,
             )
 
         if (
@@ -429,14 +429,14 @@ def check_process(inputs):  # noqa: ARG001
         ) and (
             (
                 data_structure.physics_variables.temp_plasma_pedestal_kev
-                - data_structure.physics_variables.tesep
+                - data_structure.physics_variables.temp_plasma_separatrix_kev
             )
             >= 1e-7
         ):
             warn(
                 f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
-                f"({data_structure.physics_variables.temp_plasma_pedestal_kev}) differs from tesep "
-                f"({data_structure.physics_variables.tesep})",
+                f"({data_structure.physics_variables.temp_plasma_pedestal_kev}) differs from temp_plasma_separatrix_kev "
+                f"({data_structure.physics_variables.temp_plasma_separatrix_kev})",
                 stacklevel=2,
             )
 
@@ -575,11 +575,11 @@ def check_process(inputs):  # noqa: ARG001
         ]
         == 78
     ).any():
-        # If Reinke criterion is used tesep is calculated and cannot be an
+        # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and cannot be an
         # iteration variable
         if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 119).any():
             raise ProcessValidationError(
-                "REINKE IMPURITY MODEL: tesep is calculated and cannot be an "
+                "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and cannot be an "
                 "iteration variable for the Reinke model"
             )
 

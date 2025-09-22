@@ -265,7 +265,7 @@ class TeProfile(Profile):
             physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.temp_plasma_pedestal_kev,
-            physics_variables.tesep,
+            physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,
             physics_variables.tbeta,
         )
@@ -277,7 +277,7 @@ class TeProfile(Profile):
         radius_plasma_pedestal_temp_norm: float,
         t0: float,
         temp_plasma_pedestal_kev: float,
-        tesep: float,
+        temp_plasma_separatrix_kev: float,
         alphat: float,
         tbeta: float,
     ) -> None:
@@ -296,7 +296,7 @@ class TeProfile(Profile):
             radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
             t0 (float): Central temperature (keV).
             temp_plasma_pedestal_kev (float): Pedestal temperature (keV).
-            tesep (float): Separatrix temperature (keV).
+            temp_plasma_separatrix_kev (float): Separatrix temperature (keV).
             alphat (float): Temperature peaking parameter.
             tbeta (float): Second temperature exponent.
         """
@@ -314,15 +314,15 @@ class TeProfile(Profile):
             * (1 - (rho[rho_index] / radius_plasma_pedestal_temp_norm) ** tbeta)
             ** alphat
         )
-        self.profile_y[~rho_index] = tesep + (temp_plasma_pedestal_kev - tesep) * (1 - rho[~rho_index]) / (
-            1 - radius_plasma_pedestal_temp_norm
-        )
+        self.profile_y[~rho_index] = temp_plasma_separatrix_kev + (
+            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+        ) * (1 - rho[~rho_index]) / (1 - radius_plasma_pedestal_temp_norm)
 
     @staticmethod
     def tcore(
         radius_plasma_pedestal_temp_norm: float,
         temp_plasma_pedestal_kev: float,
-        tesep: float,
+        temp_plasma_separatrix_kev: float,
         tav: float,
         alphat: float,
         tbeta: float,
@@ -345,7 +345,7 @@ class TeProfile(Profile):
         Args:
             radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
             temp_plasma_pedestal_kev (float): Pedestal temperature (keV).
-            tesep (float): Separatrix temperature (keV).
+            temp_plasma_separatrix_kev (float): Separatrix temperature (keV).
             tav (float): Volume average temperature (keV).
             alphat (float): Temperature peaking parameter.
             tbeta (float): Second temperature exponent.
@@ -360,7 +360,7 @@ class TeProfile(Profile):
                 tbeta
                 * (
                     3 * tav
-                    + tesep
+                    + temp_plasma_separatrix_kev
                     * (
                         -2.0
                         + radius_plasma_pedestal_temp_norm
@@ -399,7 +399,7 @@ class TeProfile(Profile):
             physics_variables.te0 = self.tcore(
                 physics_variables.radius_plasma_pedestal_temp_norm,
                 physics_variables.temp_plasma_pedestal_kev,
-                physics_variables.tesep,
+                physics_variables.temp_plasma_separatrix_kev,
                 physics_variables.te,
                 physics_variables.alphat,
                 physics_variables.tbeta,

@@ -114,7 +114,7 @@ class ProcessTracker:
         "Physics.triang",
         "Physics.triang95",
         "Physics.p_plasma_inner_rad_mw",
-        "Physics.tesep",
+        "Physics.temp_plasma_separatrix_kev",
         "Physics.f_nd_alpha_electron",
         "Physics.pflux_fw_neutron_mw",
         "Physics.aspect",

@@ -692,8 +692,8 @@ temp_plasma_pedestal_kev: float = None
 """Plasma electron temperature of pedestal (keV) (`ipedestal==1`)"""
 
 
-tesep: float = None
-"""electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+temp_plasma_separatrix_kev: float = None
+"""Plasma electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
 criterion is used (`icc=78`)
 """
 
@@ -1458,7 +1458,7 @@ def init_physics_variables():
     global radius_plasma_pedestal_temp_norm
     global tbeta
     global temp_plasma_pedestal_kev
-    global tesep
+    global temp_plasma_separatrix_kev
     global i_beta_norm_max
     global i_rad_loss
     global i_confinement_time
@@ -1705,7 +1705,7 @@ def init_physics_variables():
     radius_plasma_pedestal_temp_norm = 1.0
     tbeta = 2.0
     temp_plasma_pedestal_kev = 1.0
-    tesep = 0.1
+    temp_plasma_separatrix_kev = 0.1
     i_beta_norm_max = 1
     i_rad_loss = 1
     i_confinement_time = 34

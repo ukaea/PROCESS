@@ -554,7 +554,7 @@ temp_plasma_pedestal_kev = 4.5
 * DESCRIPTION:   Electron Temperature of Pedestal top (keV)
 * JUSTIFICATION: 
 
-tesep = 0.125 
+temp_plasma_separatrix_kev = 0.125 
 * DESCRIPTION:   Electron Temperature at Separatrix (keV)
 * JUSTIFICATION: 
 

@@ -2780,7 +2780,7 @@ class Physics:
             po.write(
                 self.outfile,
                 (
-                    f"reinke t and fz, physics = {physics_variables.tesep} , {reinke_variables.fzmin}"
+                    f"reinke t and fz, physics = {physics_variables.temp_plasma_separatrix_kev} , {reinke_variables.fzmin}"
                 ),
             )
             # fsep = physics_variables.nd_plasma_separatrix_electron / physics_variables.nd_plasma_electrons_vol_avg
@@ -2789,7 +2789,7 @@ class Physics:
                 / physics_variables.nd_plasma_electrons_vol_avg
             )
             # calculate separatrix temperature, if Reinke criterion is used
-            physics_variables.tesep = reinke_tsep(
+            physics_variables.temp_plasma_separatrix_kev = reinke_tsep(
                 physics_variables.b_plasma_toroidal_on_axis,
                 constraint_variables.fl_h_threshold,
                 physics_variables.q95,
@@ -4850,16 +4850,16 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "Electron temp. at separatrix (keV)",
-                    "(tesep)",
-                    physics_variables.tesep,
+                    "(temp_plasma_separatrix_kev)",
+                    physics_variables.temp_plasma_separatrix_kev,
                     "OP ",
                 )
             else:
                 po.ovarrf(
                     self.outfile,
                     "Electron temp. at separatrix (keV)",
-                    "(tesep)",
-                    physics_variables.tesep,
+                    "(temp_plasma_separatrix_kev)",
+                    physics_variables.temp_plasma_separatrix_kev,
                 )
 
             po.ovarre(

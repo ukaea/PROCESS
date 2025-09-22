@@ -3739,9 +3739,9 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         )
 
         rhosep = np.linspace(radius_plasma_pedestal_temp_norm, 1)
-        tsep = tesep + (temp_plasma_pedestal_kev - tesep) * (1 - rhosep) / (
-            1 - min(0.9999, radius_plasma_pedestal_temp_norm)
-        )
+        tsep = temp_plasma_separatrix_kev + (
+            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+        ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
         rho = np.append(rhocore, rhosep)
         te = np.append(tcore, tsep)
@@ -3798,7 +3798,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
         r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
         f"{te0 / te:.3f}",
-        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
+        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -4007,9 +4007,9 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
                     ** alphat
                 )
             else:
-                te[q] = tesep + (temp_plasma_pedestal_kev - tesep) * (1 - rho[q]) / (
-                    1 - min(0.9999, radius_plasma_pedestal_temp_norm)
-                )
+                te[q] = temp_plasma_separatrix_kev + (
+                    temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -10746,7 +10746,7 @@ def main(args=None):
     global radius_plasma_pedestal_temp_norm
     global tbeta
     global temp_plasma_pedestal_kev
-    global tesep
+    global temp_plasma_separatrix_kev
     global alphan
     global alphat
     global ne0
@@ -10774,7 +10774,9 @@ def main(args=None):
     ].get_scan(scan)
     tbeta = m_file.data["tbeta"].get_scan(scan)
     temp_plasma_pedestal_kev = m_file.data["temp_plasma_pedestal_kev"].get_scan(scan)
-    tesep = m_file.data["tesep"].get_scan(scan)
+    temp_plasma_separatrix_kev = m_file.data["temp_plasma_separatrix_kev"].get_scan(
+        scan
+    )
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["ne0"].get_scan(scan)
