@@ -84,7 +84,7 @@ SCAN_VARIABLES = {
     45: ScanVariable(
         "temp_tf_superconductor_margin_min", "Minimum_allowable_temperature_margin"
     ),
-    46: ScanVariable("boundu(152)", "Max allowable fgwsep"),
+    46: ScanVariable("boundu(152)", "Max allowable f_nd_plasma_separatrix_greenwald"),
     48: ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes"),
     49: ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers"),
     50: ScanVariable("f_nd_impurity_electrons(13)", "Xenon fraction"),

@@ -373,7 +373,9 @@ ITERATION_VARIABLES = {
     149: IterationVariable(
         "fb_cs_limit_max", data_structure.pfcoil_variables, 0.001, 1.0
     ),
-    152: IterationVariable("fgwsep", data_structure.physics_variables, 0.001, 0.5),
+    152: IterationVariable(
+        "f_nd_plasma_separatrix_greenwald", data_structure.physics_variables, 0.001, 0.5
+    ),
     153: IterationVariable("fpdivlim", data_structure.physics_variables, 0.001, 1.0),
     154: IterationVariable("fne0", data_structure.physics_variables, 0.001, 1.0),
     155: IterationVariable("pfusife", data_structure.ife_variables, 5.0e2, 3.0e3),

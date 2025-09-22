@@ -1709,9 +1709,11 @@ class Physics:
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
             )
 
-        if (physics_variables.ipedestal == 1) and (physics_variables.fgwsep >= 0e0):
+        if (physics_variables.ipedestal == 1) and (
+            physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0
+        ):
             physics_variables.nd_plasma_separatrix_electron = (
-                physics_variables.fgwsep
+                physics_variables.f_nd_plasma_separatrix_greenwald
                 * 1.0e14
                 * physics_variables.plasma_current
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
@@ -4809,7 +4811,7 @@ class Physics:
                     physics_variables.nd_plasma_pedestal_electron,
                 )
 
-            # This code is ODD# Don't change it# No explanation why f_nd_plasma_pedestal_greenwald and physics_variables.fgwsep
+            # This code is ODD# Don't change it# No explanation why f_nd_plasma_pedestal_greenwald and physics_variables.f_nd_plasma_separatrix_greenwald
             # must be assigned to their exisiting values#
             fgwped_out = (
                 physics_variables.nd_plasma_pedestal_electron
@@ -4824,8 +4826,8 @@ class Physics:
                     physics_variables.nd_plasma_pedestal_electron
                     / physics_variables.dlimit[6]
                 )
-            if physics_variables.fgwsep >= 0e0:
-                physics_variables.fgwsep = (
+            if physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0:
+                physics_variables.f_nd_plasma_separatrix_greenwald = (
                     physics_variables.nd_plasma_separatrix_electron
                     / physics_variables.dlimit[6]
                 )

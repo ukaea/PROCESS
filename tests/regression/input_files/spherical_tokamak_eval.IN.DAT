@@ -274,7 +274,7 @@ beta_norm_max = 5.0 * Troyon-like coefficient for beta scaling
 i_beta_norm_max = 0 * Normalised beta max selection (0 = user input)
 f_p_div_lower     = 0.5 * fraction of power to the lower divertor in double null configuration
 f_nd_plasma_pedestal_greenwald   = 0.1 * fraction of Greenwald density to set as pedestal-top density; If `<0`; pedestal-top
-fgwsep   = 0.1 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
+f_nd_plasma_separatrix_greenwald   = 0.1 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fne0     = 0.06753736857715759 * f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
 hfact    = 1.2 * H factor on energy confinement times; radiation corrected (`iteration variable 10`);
 i_bootstrap_current = 4 * switch for bootstrap current scaling

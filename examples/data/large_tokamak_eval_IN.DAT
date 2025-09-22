@@ -283,7 +283,7 @@ beta     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (cal
 b_plasma_toroidal_on_axis       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
 nd_plasma_electrons_vol_avg     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
-fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
+f_nd_plasma_separatrix_greenwald   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fkzohm   = 1.02 * Zohm elongation scaling adjustment factor (`i_plasma_geometry=2; 3`)
 f_c_plasma_non_inductive = 0.4242184436680697 * fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 ejima_coeff    = 0.3 * Ejima coefficient for resistive startup V-s formula

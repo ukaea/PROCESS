@@ -557,16 +557,16 @@ def check_process(inputs):  # noqa: ARG001
             "Cannot use Psep/R and PsepB/qAR constraint equations at the same time"
         )
 
-    # if lower bound of f_nd_plasma_pedestal_greenwald < fgwsep
+    # if lower bound of f_nd_plasma_pedestal_greenwald < f_nd_plasma_separatrix_greenwald
     if (
         data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
     ).any() and data_structure.numerics.boundl[
         144
-    ] < data_structure.physics_variables.fgwsep:
+    ] < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald:
         raise ProcessValidationError(
-            "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald, to be greater than fgwsep",
+            "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald, to be greater than f_nd_plasma_separatrix_greenwald",
             boundl_145=data_structure.numerics.boundl[144],
-            fgwsep=data_structure.physics_variables.fgwsep,
+            f_nd_plasma_separatrix_greenwald=data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
         )
 
     if (
