@@ -811,7 +811,7 @@ j_plasma_0: float = None
 """Central plasma current density (A/m2)"""
 
 
-vol_avg_pressure: float = None
+pres_plasma_vol_avg: float = None
 """Volume averaged plasma pressure (Pa)"""
 
 

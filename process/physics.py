@@ -2000,7 +2000,7 @@ class Physics:
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
                 core_pressure=physics_variables.p0,
-                average_pressure=physics_variables.vol_avg_pressure,
+                average_pressure=physics_variables.pres_plasma_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -2588,7 +2588,7 @@ class Physics:
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
                 p0=physics_variables.p0,
-                vol_avg_pressure=physics_variables.vol_avg_pressure,
+                pres_plasma_vol_avg=physics_variables.pres_plasma_vol_avg,
             )
         )
 
@@ -2930,7 +2930,7 @@ class Physics:
 
     @staticmethod
     def calculate_beta_norm_max_thloreus(
-        c_beta: float, p0: float, vol_avg_pressure: float
+        c_beta: float, p0: float, pres_plasma_vol_avg: float
     ) -> float:
         """
         Calculate the E. Tholerus normalized beta upper limit.
@@ -2939,8 +2939,8 @@ class Physics:
         :type c_beta: float
         :param p0: Central plasma pressure (Pa).
         :type p0: float
-        :param vol_avg_pressure: Volume-averaged plasma pressure (Pa).
-        :type vol_avg_pressure: float
+        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
+        :type pres_plasma_vol_avg: float
 
         :return: The E. Tholerus normalized beta upper limit.
         :rtype: float
@@ -2955,7 +2955,8 @@ class Physics:
               Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
         """
         return 3.7 + (
-            (c_beta / (p0 / vol_avg_pressure)) * (12.5 - 3.5 * (p0 / vol_avg_pressure))
+            (c_beta / (p0 / pres_plasma_vol_avg))
+            * (12.5 - 3.5 * (p0 / pres_plasma_vol_avg))
         )
 
     @staticmethod
@@ -4585,8 +4586,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Volume averaged plasma pressure (Pa)",
-            "(vol_avg_pressure)",
-            physics_variables.vol_avg_pressure,
+            "(pres_plasma_vol_avg)",
+            physics_variables.pres_plasma_vol_avg,
             "OP ",
         )
 
