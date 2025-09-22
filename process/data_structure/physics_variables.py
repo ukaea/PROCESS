@@ -408,11 +408,11 @@ nd_impurities: float = None
 
 
 gradient_length_ne: float = None
-"""Max. normalized gradient length in el. density (ipedestal==0 only)"""
+"""Max. normalized gradient length in el. density (i_plasma_pedestal==0 only)"""
 
 
 gradient_length_te: float = None
-"""Max. normalized gradient length in el. temperature (ipedestal==0 only)"""
+"""Max. normalized gradient length in el. temperature (i_plasma_pedestal==0 only)"""
 
 
 beta_poloidal_eps_max: float = None
@@ -463,14 +463,14 @@ load calculation (`i_pflux_fw_neutron=1`)
 
 f_nd_plasma_pedestal_greenwald: float = None
 """fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-density set manually using nd_plasma_pedestal_electron (`ipedestal==1`).
+density set manually using nd_plasma_pedestal_electron (`i_plasma_pedestal==1`).
 (`iteration variable 145`)
 """
 
 
 f_nd_plasma_separatrix_greenwald: float = None
 """fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-density set manually using nd_plasma_separatrix_electron (`ipedestal==1`).
+density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`).
 (`iteration variable 152`)
 """
 
@@ -634,7 +634,7 @@ plasma start-up, and is excluded from all steady-state power balance calculation
 """
 
 
-ipedestal: int = None
+i_plasma_pedestal: int = None
 """switch for pedestal profiles:
 - =0 use original parabolic profiles
 - =1 use pedestal profile
@@ -649,11 +649,11 @@ i_pfirsch_schluter_current: int = None
 
 
 nd_plasma_pedestal_electron: float = None
-"""electron density of pedestal [m-3] (`ipedestal==1)"""
+"""electron density of pedestal [m-3] (`i_plasma_pedestal==1)"""
 
 
 nd_plasma_separatrix_electron: float = None
-"""electron density at separatrix [m-3] (`ipedestal==1)"""
+"""electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
 
 
 alpha_crit: float = None
@@ -669,31 +669,31 @@ plasma_res_factor: float = None
 
 
 radius_plasma_pedestal_density_norm: float = None
-"""Normalised radius of density pedestal (`ipedestal==1`)"""
+"""Normalised radius of density pedestal (`i_plasma_pedestal==1`)"""
 
 
 radius_plasma_pedestal_temp_norm: float = None
-"""Normalised radius of temperature pedestal (`ipedestal==1`)"""
+"""Normalised radius of temperature pedestal (`i_plasma_pedestal==1`)"""
 
 
 rho_te_max: float = None
-"""r/a where the temperature gradient is largest (`ipedestal==0`)"""
+"""r/a where the temperature gradient is largest (`i_plasma_pedestal==0`)"""
 
 
 rho_ne_max: float = None
-"""r/a where the density gradient is largest (`ipedestal==0`)"""
+"""r/a where the density gradient is largest (`i_plasma_pedestal==0`)"""
 
 
 tbeta: float = None
-"""temperature profile index beta  (`ipedestal==1)"""
+"""temperature profile index beta  (`i_plasma_pedestal==1)"""
 
 
 temp_plasma_pedestal_kev: float = None
-"""Plasma electron temperature of pedestal (keV) (`ipedestal==1`)"""
+"""Plasma electron temperature of pedestal (keV) (`i_plasma_pedestal==1`)"""
 
 
 temp_plasma_separatrix_kev: float = None
-"""Plasma electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+"""Plasma electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
 criterion is used (`icc=78`)
 """
 
@@ -1447,7 +1447,7 @@ def init_physics_variables():
     global n_divertors
     global i_beta_fast_alpha
     global i_plasma_ignited
-    global ipedestal
+    global i_plasma_pedestal
     global i_pfirsch_schluter_current
     global nd_plasma_pedestal_electron
     global nd_plasma_separatrix_electron
@@ -1694,7 +1694,7 @@ def init_physics_variables():
     n_divertors = 2
     i_beta_fast_alpha = 1
     i_plasma_ignited = 0
-    ipedestal = 1
+    i_plasma_pedestal = 1
     i_pfirsch_schluter_current = 0
     nd_plasma_pedestal_electron = 4.0e19
     nd_plasma_separatrix_electron = 3.0e19

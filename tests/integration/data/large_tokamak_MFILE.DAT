@@ -501,7 +501,7 @@
  Effective_charge_________________________________________________________ (zeff)_________________________ 2.61287031166971184e+00 OP
  Mass-weighted_Effective_charge___________________________________________ (zeffai)_______________________ 4.27186909562117689e-01 OP
  Density_profile_factor___________________________________________________ (alphan)_______________________ 1.00000000000000000e+00
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location____________________________________________ (radius_plasma_pedestal_density_norm)______________________ 9.39999999999999947e-01
  Electron_density_pedestal_height_(/m3)___________________________________ (nd_plasma_pedestal_electron)________________________ 6.28165115868681994e+19 OP
  Electron_density_at_pedestal_/_nGW_______________________________________ (f_nd_plasma_pedestal_greenwald_out)___________________ 8.50000000000000311e-01
@@ -1805,30 +1805,30 @@ i_density_limit = 7
 i_beta_fast_alpha = 1
 
 * Switch for pedestal profiles
-ipedestal = 1
+i_plasma_pedestal = 1
 
 * fraction of Greenwald density to set as separatrix density
 f_nd_plasma_separatrix_greenwald = 0.5
 
-* Electron density of pedestal [m-3] (ipedestal=1) - initial value
+* Electron density of pedestal [m-3] (i_plasma_pedestal=1) - initial value
 nd_plasma_pedestal_electron = 0.5e20
 
-* Electron density at separatrix [m-3] (ipedestal=1) - initial value
+* Electron density at separatrix [m-3] (i_plasma_pedestal=1) - initial value
 nd_plasma_separatrix_electron = 0.2e20
 
-* R/a of density pedestal (ipedestal=1)
+* R/a of density pedestal (i_plasma_pedestal=1)
 radius_plasma_pedestal_density_norm = 0.94
 
-* R/a of temperature pedestal (ipedestal=1)
+* R/a of temperature pedestal (i_plasma_pedestal=1)
 radius_plasma_pedestal_temp_norm = 0.94
 
-* Temperature profile index beta (ipedestal=1)
+* Temperature profile index beta (i_plasma_pedestal=1)
 tbeta = 2.0
 
-* Electron temperature of pedestal (kev) (ipedestal=1)
+* Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
 temp_plasma_pedestal_kev = 5.5
 
-* Electron temperature at separatrix (kev) (ipedestal=1)
+* Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
 temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law

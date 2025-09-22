@@ -4211,12 +4211,12 @@ class Stellarator:
         ne0_max = max(0.0e0, 3.142077e-4 * gyro_frequency**2)
 
         # Check if parabolic profiles are used:
-        if physics_variables.ipedestal == 0:
+        if physics_variables.i_plasma_pedestal == 0:
             # Parabolic profiles used, use analytical formula:
             dlimit_ecrh = ne0_max
         else:
             logger.error(
-                "It was used physics_variables.ipedestal = 1 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.ipedestal = 0)."
+                "It was used physics_variables.i_plasma_pedestal = 1 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.i_plasma_pedestal = 0)."
             )
             dlimit_ecrh = ne0_max
 

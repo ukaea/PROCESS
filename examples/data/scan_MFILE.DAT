@@ -251,7 +251,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -1246,7 +1246,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -2241,7 +2241,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -3236,7 +3236,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -4231,7 +4231,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -5226,7 +5226,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -6221,7 +6221,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -7216,7 +7216,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -8211,7 +8211,7 @@
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.6725E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.1247E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      5.5802E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
@@ -9244,15 +9244,15 @@ i_plasma_current    = 4 * Switch for plasma current scaling to use;
 i_density_limit   = 7 * Switch for density limit to enforce (constraint equation 5);
 i_beta_fast_alpha = 1 * Switch for fast alpha pressure calculation;
 ifispact = 0 * Switch for neutronics calculations;
-ipedestal = 1 * Switch for pedestal profiles;
+i_plasma_pedestal = 1 * Switch for pedestal profiles;
 f_nd_plasma_pedestal_greenwald = 0.85 * fraction of Greenwald density to set as pedestal-top density
-nd_plasma_pedestal_electron    = 0.678e20 * Electron density of pedestal (/m3) (ipedestal=1) INITIAL VALUE
-nd_plasma_separatrix_electron    = 0.2e20 * Electron density at separatrix (/m3) (ipedestal=1)
-radius_plasma_pedestal_density_norm  = 0.94 * R/a of density pedestal (ipedestal=1)
-radius_plasma_pedestal_temp_norm  = 0.94 * R/a of temperature pedestal (ipedestal=1)
-tbeta    = 2.0 * Temperature profile index beta  (ipedestal=1)
-temp_plasma_pedestal_kev    = 5.5 * Electron temperature of pedestal (kev) (ipedestal=1)
-temp_plasma_separatrix_kev    = 0.1 * Electron temperature at separatrix (kev) (ipedestal=1)
+nd_plasma_pedestal_electron    = 0.678e20 * Electron density of pedestal (/m3) (i_plasma_pedestal=1) INITIAL VALUE
+nd_plasma_separatrix_electron    = 0.2e20 * Electron density at separatrix (/m3) (i_plasma_pedestal=1)
+radius_plasma_pedestal_density_norm  = 0.94 * R/a of density pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_temp_norm  = 0.94 * R/a of temperature pedestal (i_plasma_pedestal=1)
+tbeta    = 2.0 * Temperature profile index beta  (i_plasma_pedestal=1)
+temp_plasma_pedestal_kev    = 5.5 * Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
+temp_plasma_separatrix_kev    = 0.1 * Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
 i_confinement_time      = 34 * Switch for energy confinement time scaling law
 i_plasma_geometry   = 0 * Switch for plasma cross-sectional shape calculation: use input kappa & triang
 *kappa = 1.7808

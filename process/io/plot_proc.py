@@ -3578,7 +3578,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
-    if ipedestal == 1:
+    if i_plasma_pedestal == 1:
         rhocore = np.linspace(0, radius_plasma_pedestal_density_norm)
         necore = (
             nd_plasma_pedestal_electron
@@ -3621,7 +3621,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
 
-    if ipedestal != 0:
+    if i_plasma_pedestal != 0:
         # Print pedestal lines
         prof.axhline(
             y=nd_plasma_pedestal_electron / 1e19,
@@ -3729,7 +3729,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     prof.set_ylabel("$T$ [keV]")
     prof.set_title("Temperature profile")
 
-    if ipedestal == 1:
+    if i_plasma_pedestal == 1:
         rhocore = np.linspace(0.0, radius_plasma_pedestal_temp_norm)
         tcore = (
             temp_plasma_pedestal_kev
@@ -3764,7 +3764,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
 
-    if ipedestal != 0:
+    if i_plasma_pedestal != 0:
         # Plot pedestal lines
         prof.axhline(
             y=temp_plasma_pedestal_kev,
@@ -3957,7 +3957,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
     ])
 
-    if ipedestal == 0:
+    if i_plasma_pedestal == 0:
         # Intialise the radius
         rho = np.linspace(0, 1.0)
 
@@ -3967,7 +3967,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         # The temperature profile
         te = te0 * (1 - rho**2) ** alphat
 
-    if ipedestal == 1:
+    if i_plasma_pedestal == 1:
         # Intialise the normalised radius
         rhoped = (
             radius_plasma_pedestal_density_norm + radius_plasma_pedestal_temp_norm
@@ -7034,7 +7034,7 @@ def plot_power_info(axis, mfile_data, scan):
         "Normalised radius of 'core' region",
         "",
     )
-    if ipedestal == 1:
+    if i_plasma_pedestal == 1:
         ped_height = (
             "nd_plasma_pedestal_electron",
             "Electron density at pedestal",
@@ -10552,7 +10552,7 @@ def main(args=None):
         ) = 0.0
 
     # Pedestal profile parameters
-    global ipedestal
+    global i_plasma_pedestal
     global nd_plasma_pedestal_electron
     global nd_plasma_separatrix_electron
     global radius_plasma_pedestal_density_norm
@@ -10572,7 +10572,7 @@ def main(args=None):
     global fgwsep_out
     global f_temp_plasma_ion_electron
 
-    ipedestal = m_file.data["ipedestal"].get_scan(scan)
+    i_plasma_pedestal = m_file.data["i_plasma_pedestal"].get_scan(scan)
     nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
         scan
     )

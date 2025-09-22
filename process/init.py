@@ -410,7 +410,7 @@ def check_process(inputs):  # noqa: ARG001
     # Plasma profile consistency checks
     if (
         data_structure.ife_variables.ife != 1
-        and data_structure.physics_variables.ipedestal == 1
+        and data_structure.physics_variables.i_plasma_pedestal == 1
     ):
         # Temperature checks
         if (
@@ -592,7 +592,7 @@ def check_process(inputs):  # noqa: ARG001
                 ]
                 == 15
             ).any()
-            and data_structure.physics_variables.ipedestal
+            and data_structure.physics_variables.i_plasma_pedestal
         ):
             warn(
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",
