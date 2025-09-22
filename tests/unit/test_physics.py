@@ -1101,7 +1101,7 @@ class PlasmaCurrentParam(NamedTuple):
 
     kappa95: Any = None
 
-    p0: Any = None
+    pres_plasma_on_axis: Any = None
 
     len_plasma_poloidal: Any = None
 
@@ -1137,7 +1137,7 @@ class PlasmaCurrentParam(NamedTuple):
             eps=0.33333333333333331,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            p0=0,
+            pres_plasma_on_axis=0,
             len_plasma_poloidal=24.081367139525412,
             q95=3.5,
             rmajor=8,
@@ -1159,7 +1159,7 @@ class PlasmaCurrentParam(NamedTuple):
             eps=0.33333333333333331,
             kappa=1.8500000000000001,
             kappa95=1.6517857142857142,
-            p0=626431.90482713911,
+            pres_plasma_on_axis=626431.90482713911,
             len_plasma_poloidal=24.081367139525412,
             q95=3.5,
             rmajor=8,
@@ -1202,7 +1202,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         eps=plasmacurrentparam.eps,
         kappa=plasmacurrentparam.kappa,
         kappa95=plasmacurrentparam.kappa95,
-        p0=plasmacurrentparam.p0,
+        pres_plasma_on_axis=plasmacurrentparam.pres_plasma_on_axis,
         len_plasma_poloidal=plasmacurrentparam.len_plasma_poloidal,
         q95=plasmacurrentparam.q95,
         rmajor=plasmacurrentparam.rmajor,
@@ -3382,9 +3382,11 @@ def test_calculate_beta_norm_max_menard():
 def test_calculate_beta_norm_max_thloreus():
     """Test calculate_beta_norm_max_thloreus()"""
     c_beta = 0.5
-    p0 = 2.0
+    pres_plasma_on_axis = 2.0
     pres_plasma_vol_avg = 1.0
-    result = Physics.calculate_beta_norm_max_thloreus(c_beta, p0, pres_plasma_vol_avg)
+    result = Physics.calculate_beta_norm_max_thloreus(
+        c_beta, pres_plasma_on_axis, pres_plasma_vol_avg
+    )
     assert result == pytest.approx(5.075, abs=0.00001)
 
 

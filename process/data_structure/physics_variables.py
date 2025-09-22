@@ -803,7 +803,7 @@ m_s_limit: float = None
 """margin to vertical stability"""
 
 
-p0: float = None
+pres_plasma_on_axis: float = None
 """central total plasma pressure (Pa)"""
 
 
@@ -1475,7 +1475,7 @@ def init_physics_variables():
     global ne0
     global ni0
     global m_s_limit
-    global p0
+    global pres_plasma_on_axis
     global j_plasma_0
     global f_dd_branching_trit
     global pden_plasma_alpha_mw
@@ -1722,7 +1722,7 @@ def init_physics_variables():
     ne0 = 0.0
     ni0 = 0.0
     m_s_limit = 0.3
-    p0 = 0.0
+    pres_plasma_on_axis = 0.0
     j_plasma_0 = 0.0
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
