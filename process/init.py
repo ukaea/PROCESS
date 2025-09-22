@@ -423,7 +423,10 @@ def check_process(inputs):  # noqa: ARG001
                 tesep=data_structure.physics_variables.tesep,
             )
 
-        if (abs(data_structure.physics_variables.rhopedt - 1.0) <= 1e-7) and (
+        if (
+            abs(data_structure.physics_variables.radius_plasma_pedestal_temp_norm - 1.0)
+            <= 1e-7
+        ) and (
             (
                 data_structure.physics_variables.teped
                 - data_structure.physics_variables.tesep
@@ -495,7 +498,11 @@ def check_process(inputs):  # noqa: ARG001
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
             # but pedestal width = 0.
             if (
-                abs(data_structure.physics_variables.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
+                abs(
+                    data_structure.physics_variables.radius_plasma_pedestal_density_norm
+                    - 1.0
+                )
+                <= 1e-7
                 and (
                     data_structure.physics_variables.nd_plasma_pedestal_electron
                     - data_structure.physics_variables.nd_plasma_separatrix_electron

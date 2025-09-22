@@ -156,7 +156,10 @@ class NeProfile(Profile):
             )
         rho_index = rho <= radius_plasma_pedestal_density_norm
         self.profile_y[rho_index] = (
-            nped + (n0 - nped) * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2) ** alphan
+            nped
+            + (n0 - nped)
+            * (1 - (rho[rho_index] / radius_plasma_pedestal_density_norm) ** 2)
+            ** alphan
         )
         # Invert the rho_index
         self.profile_y[~rho_index] = nsep + (nped - nsep) * (1 - rho[~rho_index]) / (
@@ -165,7 +168,11 @@ class NeProfile(Profile):
 
     @staticmethod
     def ncore(
-        radius_plasma_pedestal_density_norm: float, nped: float, nsep: float, nav: float, alphan: float
+        radius_plasma_pedestal_density_norm: float,
+        nped: float,
+        nsep: float,
+        nav: float,
+        alphan: float,
     ) -> float:
         """
         This routine calculates the core density of a pedestalised profile.
@@ -199,8 +206,18 @@ class NeProfile(Profile):
             / (3 * radius_plasma_pedestal_density_norm**2)
             * (
                 3 * nav * (1 + alphan)
-                + nsep * (1 + alphan) * (-2 + radius_plasma_pedestal_density_norm + radius_plasma_pedestal_density_norm**2)
-                - nped * ((1 + alphan) * (1 + radius_plasma_pedestal_density_norm) + (alphan - 2) * radius_plasma_pedestal_density_norm**2)
+                + nsep
+                * (1 + alphan)
+                * (
+                    -2
+                    + radius_plasma_pedestal_density_norm
+                    + radius_plasma_pedestal_density_norm**2
+                )
+                - nped
+                * (
+                    (1 + alphan) * (1 + radius_plasma_pedestal_density_norm)
+                    + (alphan - 2) * radius_plasma_pedestal_density_norm**2
+                )
             )
         )
 
@@ -245,7 +262,7 @@ class TeProfile(Profile):
         self.set_physics_variables()
         self.calculate_profile_y(
             self.profile_x,
-            physics_variables.rhopedt,
+            physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.teped,
             physics_variables.tesep,
@@ -257,7 +274,7 @@ class TeProfile(Profile):
     def calculate_profile_y(
         self,
         rho: np.array,
-        rhopedt: float,
+        radius_plasma_pedestal_temp_norm: float,
         t0: float,
         teped: float,
         tesep: float,
@@ -276,7 +293,7 @@ class TeProfile(Profile):
 
         Args:
             rho (np.array): Normalised minor radius.
-            rhopedt (float): Normalised minor radius pedestal position.
+            radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
             t0 (float): Central temperature (keV).
             teped (float): Pedestal temperature (keV).
             tesep (float): Separatrix temperature (keV).
@@ -290,17 +307,20 @@ class TeProfile(Profile):
             logger.info(
                 f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
             )
-        rho_index = rho <= rhopedt
+        rho_index = rho <= radius_plasma_pedestal_temp_norm
         self.profile_y[rho_index] = (
-            teped + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
+            teped
+            + (t0 - teped)
+            * (1 - (rho[rho_index] / radius_plasma_pedestal_temp_norm) ** tbeta)
+            ** alphat
         )
         self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
-            1 - rhopedt
+            1 - radius_plasma_pedestal_temp_norm
         )
 
     @staticmethod
     def tcore(
-        rhopedt: float,
+        radius_plasma_pedestal_temp_norm: float,
         teped: float,
         tesep: float,
         tav: float,
@@ -323,7 +343,7 @@ class TeProfile(Profile):
             C. Ashe, CCFE, Culham Science Centre
 
         Args:
-            rhopedt (float): Normalised minor radius pedestal position.
+            radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
             teped (float): Pedestal temperature (keV).
             tesep (float): Separatrix temperature (keV).
             tav (float): Volume average temperature (keV).
@@ -340,11 +360,25 @@ class TeProfile(Profile):
                 tbeta
                 * (
                     3 * tav
-                    + tesep * (-2.0 + rhopedt + rhopedt**2)
-                    - teped * (1 + rhopedt + rhopedt**2)
+                    + tesep
+                    * (
+                        -2.0
+                        + radius_plasma_pedestal_temp_norm
+                        + radius_plasma_pedestal_temp_norm**2
+                    )
+                    - teped
+                    * (
+                        1
+                        + radius_plasma_pedestal_temp_norm
+                        + radius_plasma_pedestal_temp_norm**2
+                    )
                 )
             )
-            / (6 * rhopedt**2 * sp.special.beta(1 + alphat, 2 / tbeta))
+            / (
+                6
+                * radius_plasma_pedestal_temp_norm**2
+                * sp.special.beta(1 + alphat, 2 / tbeta)
+            )
         )
 
     def set_physics_variables(self) -> None:
@@ -363,7 +397,7 @@ class TeProfile(Profile):
             )
         elif physics_variables.ipedestal == 1:
             physics_variables.te0 = self.tcore(
-                physics_variables.rhopedt,
+                physics_variables.radius_plasma_pedestal_temp_norm,
                 physics_variables.teped,
                 physics_variables.tesep,
                 physics_variables.te,

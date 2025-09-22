@@ -1473,7 +1473,7 @@ INPUT_VARIABLES = {
     "radius_plasma_pedestal_density_norm": InputVariable(
         data_structure.physics_variables, float, range=(0.01, 1.0)
     ),
-    "rhopedt": InputVariable(
+    "radius_plasma_pedestal_temp_norm": InputVariable(
         data_structure.physics_variables, float, range=(0.01, 1.0)
     ),
     "rhopfbus": InputVariable(

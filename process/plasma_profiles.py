@@ -108,7 +108,7 @@ class PlasmaProfile:
         """
         # Reset pedestal values to agree with original parabolic profiles
         if (
-            physics_variables.rhopedt != 1.0
+            physics_variables.radius_plasma_pedestal_temp_norm != 1.0
             or physics_variables.radius_plasma_pedestal_density_norm != 1.0
             or physics_variables.teped != 0.0
             or physics_variables.tesep != 0.0
@@ -119,11 +119,11 @@ class PlasmaProfile:
             logger.error(
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
-                "'rhopedt', 'radius_plasma_pedestal_density_norm', 'teped', 'tesep', 'nd_plasma_pedestal_electron', 'nd_plasma_separatrix_electron', "
+                "'radius_plasma_pedestal_temp_norm', 'radius_plasma_pedestal_density_norm', 'teped', 'tesep', 'nd_plasma_pedestal_electron', 'nd_plasma_separatrix_electron', "
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
             )
 
-            physics_variables.rhopedt = 1.0e0
+            physics_variables.radius_plasma_pedestal_temp_norm = 1.0e0
             physics_variables.radius_plasma_pedestal_density_norm = 1.0e0
             physics_variables.teped = 0.0e0
             physics_variables.tesep = 0.0e0

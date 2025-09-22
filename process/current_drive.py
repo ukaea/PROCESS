@@ -566,7 +566,7 @@ class ElectronCyclotron:
         #  Temperature
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rrr,
-            physics_variables.rhopedt,
+            physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.teped,
             physics_variables.tesep,
@@ -1013,7 +1013,7 @@ class LowerHybrid:
         )
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
-            physics_variables.rhopedt,
+            physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.teped,
             physics_variables.tesep,
@@ -1142,7 +1142,7 @@ class LowerHybrid:
 
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
-            physics_variables.rhopedt,
+            physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
             physics_variables.teped,
             physics_variables.tesep,

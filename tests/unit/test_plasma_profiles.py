@@ -62,13 +62,13 @@ def test_ncore():
     nsep = 3.4294618459618943e19
     nav = 7.4321e19
     alphan = 1.0
-    assert neprofile.ncore(radius_plasma_pedestal_density_norm, nped, nsep, nav, alphan) == pytest.approx(
-        9.7756974320342041e19
-    )
+    assert neprofile.ncore(
+        radius_plasma_pedestal_density_norm, nped, nsep, nav, alphan
+    ) == pytest.approx(9.7756974320342041e19)
 
 
 class TeProfileParam(NamedTuple):
-    rhopedt: float = 0.0
+    radius_plasma_pedestal_temp_norm: float = 0.0
     tbeta: float = 0.0
     tesep: float = 0.0
     ipedestal: float = 0.0
@@ -81,7 +81,7 @@ class TeProfileParam(NamedTuple):
     "teprofileparam",
     (
         TeProfileParam(
-            rhopedt=0.94000000000000006,
+            radius_plasma_pedestal_temp_norm=0.94000000000000006,
             tbeta=2,
             tesep=0.10000000000000001,
             ipedestal=1,
@@ -112,22 +112,22 @@ def test_teprofile(teprofileparam: ProfileParam, monkeypatch):
 
 def test_tcore():
     teprofile = TeProfile(10)
-    rhopedt = 0.94
+    radius_plasma_pedestal_temp_norm = 0.94
     tped = 3.7775374842470044
     tsep = 0.1
     tav = 12.33
     alphat = 1.45
     tbeta = 2.0
 
-    assert teprofile.tcore(rhopedt, tped, tsep, tav, alphat, tbeta) == pytest.approx(
-        28.09093632260765
-    )
+    assert teprofile.tcore(
+        radius_plasma_pedestal_temp_norm, tped, tsep, tav, alphat, tbeta
+    ) == pytest.approx(28.09093632260765)
 
 
 class PlasmaProfilesParam(NamedTuple):
     prn1: float = 0.0
 
-    rhopedt: float = 0.0
+    radius_plasma_pedestal_temp_norm: float = 0.0
 
     ten: float = 0.0
 
@@ -217,7 +217,7 @@ class PlasmaProfilesParam(NamedTuple):
     (
         PlasmaProfilesParam(
             prn1=0.40000000000000002,
-            rhopedt=0.94000000000000006,
+            radius_plasma_pedestal_temp_norm=0.94000000000000006,
             ten=0.0,
             tin=0.0,
             alphap=0.0,
@@ -262,7 +262,7 @@ class PlasmaProfilesParam(NamedTuple):
         ),
         PlasmaProfilesParam(
             prn1=0.45623618297262686,
-            rhopedt=0.94000000000000006,
+            radius_plasma_pedestal_temp_norm=0.94000000000000006,
             ten=14.521871327399182,
             tin=14.521871327399182,
             alphap=2.4500000000000002,
@@ -323,7 +323,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(divertor_variables, "prn1", plasmaprofilesparam.prn1)
 
-    monkeypatch.setattr(physics_variables, "rhopedt", plasmaprofilesparam.rhopedt)
+    monkeypatch.setattr(
+        physics_variables,
+        "radius_plasma_pedestal_temp_norm",
+        plasmaprofilesparam.radius_plasma_pedestal_temp_norm,
+    )
 
     monkeypatch.setattr(physics_variables, "ten", plasmaprofilesparam.ten)
 
@@ -375,7 +379,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "ti", plasmaprofilesparam.ti)
 
-    monkeypatch.setattr(physics_variables, "radius_plasma_pedestal_density_norm", plasmaprofilesparam.radius_plasma_pedestal_density_norm)
+    monkeypatch.setattr(
+        physics_variables,
+        "radius_plasma_pedestal_density_norm",
+        plasmaprofilesparam.radius_plasma_pedestal_density_norm,
+    )
 
     monkeypatch.setattr(
         physics_variables,
