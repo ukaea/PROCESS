@@ -1640,7 +1640,7 @@ INPUT_VARIABLES = {
     "tauee_in": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 100.0)
     ),
-    "taumax": InputVariable(
+    "t_plasma_energy_confinement_max": InputVariable(
         data_structure.physics_variables, float, range=(0.1, 100.0)
     ),
     "tauratio": InputVariable(
