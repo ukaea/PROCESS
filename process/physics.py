@@ -4530,8 +4530,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Ratio of ion to electron volume-averaged temperature",
-            "(tratio)",
-            physics_variables.tratio,
+            "(f_temp_plasma_ion_electron)",
+            physics_variables.f_temp_plasma_ion_electron,
             "IP ",
         )
         po.ovarrf(

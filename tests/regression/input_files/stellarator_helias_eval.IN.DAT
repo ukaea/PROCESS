@@ -275,7 +275,7 @@ f_nd_alpha_electron = 0.048598535626890565 * thermal alpha density/electron dens
 rmajor   = 22.541131410425415 * plasma major radius (m) (`iteration variable 3`)
 f_sync_reflect = 0.6 * synchrotron wall reflectivity factor
 te       = 7.374569057199403 * volume averaged electron temperature (keV) (`iteration variable 4`)
-tratio   = 0.95 * ion temperature / electron temperature(used to calculate ti if `tratio > 0;0`
+f_temp_plasma_ion_electron   = 0.95 * ion temperature / electron temperature(used to calculate ti if `f_temp_plasma_ion_electron > 0;0`
 
 *----------------------Power-----------------------*
 

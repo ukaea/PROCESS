@@ -63,7 +63,7 @@ kappa    = 1.001        *Plasma separatrix elongation
 rmajor   = 22.0         *Plasma major radius (m)
 f_sync_reflect    = 0.6          *Synchrotron wall reflectivity factor
 te       = 7.0          *Volume averaged electron temperature (keV)
-tratio   = 0.95         *Ion temperature / electron temperature
+f_temp_plasma_ion_electron   = 0.95         *Ion temperature / electron temperature
 *zfear    = 0            *High-Z impurity switch (0: Iron)
 
 *--------------Stellarator Variables---------------*

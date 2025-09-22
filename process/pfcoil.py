@@ -3654,7 +3654,7 @@ class PFCoil:
         )
         op.write(
             self.outfile,
-            "\t(MA)\t\t(A/m2)\t\t(A/m2)\t\tratio\t\t(kg)\t\t(kg)\t\t(T)",
+            "\t(MA)\t\t(A/m2)\t\t(A/m2)\t\f_temp_plasma_ion_electron\t\t(kg)\t\t(kg)\t\t(T)",
         )
 
         op.oblnkl(self.outfile)

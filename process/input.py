@@ -1758,7 +1758,9 @@ INPUT_VARIABLES = {
     "transp_clrnc": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "tratio": InputVariable(data_structure.physics_variables, float, range=(0.0, 2.0)),
+    "f_temp_plasma_ion_electron": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 2.0)
+    ),
     "trcl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
     "triang": InputVariable(data_structure.physics_variables, float, range=(-1.0, 1.0)),
     "triang95": InputVariable(

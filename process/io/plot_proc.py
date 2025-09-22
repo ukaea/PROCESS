@@ -3751,7 +3751,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
     prof.plot(rho, te, color="blue", label="$T_{e}$")
-    prof.plot(rho, te[:] * tratio, color="red", label="$T_{i}$")
+    prof.plot(rho, te[:] * f_temp_plasma_ion_electron, color="red", label="$T_{i}$")
     prof.legend()
 
     # Ranges
@@ -3794,7 +3794,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-        f"{tratio:.3f}",
+        f"{f_temp_plasma_ion_electron:.3f}",
         rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
         r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
         f"{te0 / te:.3f}",
@@ -10757,7 +10757,7 @@ def main(args=None):
     global te
     global fgwped_out
     global fgwsep_out
-    global tratio
+    global f_temp_plasma_ion_electron
 
     ipedestal = m_file.data["ipedestal"].get_scan(scan)
     nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
@@ -10789,7 +10789,9 @@ def main(args=None):
     te = m_file.data["te"].get_scan(scan)
     fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
     fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
-    tratio = m_file.data["tratio"].get_scan(scan)
+    f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(
+        scan
+    )
 
     # Plasma
     global triang
