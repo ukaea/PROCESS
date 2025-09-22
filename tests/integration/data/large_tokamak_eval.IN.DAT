@@ -294,7 +294,7 @@ i_plasma_current = 4 * switch for plasma current scaling to use
 i_density_limit   = 7 * switch for density limit to enforce (`constraint equation 5`)
 i_beta_fast_alpha = 1 * switch for fast alpha pressure calculation
 ipedestal = 1 * switch for pedestal profiles;
-neped    = 0.5e20 * electron density of pedestal [m-3] (`ipedestal==1)
+nd_plasma_pedestal_electron    = 0.5e20 * electron density of pedestal [m-3] (`ipedestal==1)
 nesep    = 0.2e20 * electron density at separatrix [m-3] (`ipedestal==1)
 plasma_res_factor = 0.7 * plasma resistivity pre-factor
 rhopedn  = 0.94 * r/a of density pedestal (`ipedestal==1`)

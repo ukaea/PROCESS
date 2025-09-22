@@ -17,7 +17,7 @@ class NeProfileParam(NamedTuple):
     nesep: float = 0.0
     ipedestal: float = 0.0
     ne0: float = 0.0
-    neped: float = 0.0
+    nd_plasma_pedestal_electron: float = 0.0
     rhopedn: float = 0.0
     alphan: float = 0.0
     expected_neprofile: list | None = None
@@ -30,7 +30,7 @@ class NeProfileParam(NamedTuple):
             nesep=3.6421334486704804e19,
             ipedestal=1,
             ne0=0.0,
-            neped=6.1916268627398164e19,
+            nd_plasma_pedestal_electron=6.1916268627398164e19,
             rhopedn=0.94000000000000006,
             alphan=1,
             expected_neprofile=[
@@ -163,7 +163,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     nd_ions_total: float = 0.0
 
-    neped: float = 0.0
+    nd_plasma_pedestal_electron: float = 0.0
 
     ti: float = 0.0
 
@@ -235,7 +235,7 @@ class PlasmaProfilesParam(NamedTuple):
             nd_electron_line=0.0,
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
-            neped=6.1916268627398164e19,
+            nd_plasma_pedestal_electron=6.1916268627398164e19,
             ti=12.9,
             rhopedn=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
@@ -280,7 +280,7 @@ class PlasmaProfilesParam(NamedTuple):
             nd_electron_line=8.8687354645836431e19,
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
-            neped=6.1916268627398164e19,
+            nd_plasma_pedestal_electron=6.1916268627398164e19,
             ti=13.07,
             rhopedn=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
@@ -363,7 +363,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         physics_variables, "nd_ions_total", plasmaprofilesparam.nd_ions_total
     )
 
-    monkeypatch.setattr(physics_variables, "neped", plasmaprofilesparam.neped)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_pedestal_electron",
+        plasmaprofilesparam.nd_plasma_pedestal_electron,
+    )
 
     monkeypatch.setattr(physics_variables, "ti", plasmaprofilesparam.ti)
 

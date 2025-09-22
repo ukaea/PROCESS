@@ -598,7 +598,7 @@ def init_numerics():
         "Reinke criterion fZ lower limit  ",
         "Peak CS field upper limit        ",
         "p_sep lower limit                ",
-        "ne0 > neped                      ",
+        "ne0 > nd_plasma_pedestal_electron                      ",
         "toroidalgap > dx_tf_inboard_out_t",
         "available_space > required_space ",
         "beta > beta_min                  ",

@@ -579,7 +579,7 @@ class ElectronCyclotron:
             rrr,
             physics_variables.rhopedn,
             physics_variables.ne0,
-            physics_variables.neped,
+            physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nesep,
             physics_variables.alphan,
         )
@@ -1007,7 +1007,7 @@ class LowerHybrid:
             rratio,
             physics_variables.rhopedn,
             physics_variables.ne0,
-            physics_variables.neped,
+            physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nesep,
             physics_variables.alphan,
         )
@@ -1133,7 +1133,7 @@ class LowerHybrid:
             rratio,
             physics_variables.rhopedn,
             physics_variables.ne0,
-            physics_variables.neped,
+            physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nesep,
             physics_variables.alphan,
         )

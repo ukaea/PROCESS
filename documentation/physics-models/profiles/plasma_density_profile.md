@@ -26,7 +26,7 @@ This function calculates the core electron density for a pedestalsied profile (`
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
-| Pedestal value                   | `neped`, $n_{\text{ped}}$ |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
 | Separatrix value                 | `nesep`, $n_{\text{sep}}$ |
 | Average density             | `nd_plasma_electrons_vol_avg`, $\langle n \rangle$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
@@ -119,7 +119,7 @@ A table of the input variables can be found below
 | Normalized plasma radii            | `profile_x` |
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
 | Core density                | `ne0`, $n_{\text{e0}}$ |
-| Pedestal value                   | `neped`, $n_{\text{ped}}$ |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
 | Separatrix value                 | `nesep`, $n_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
 

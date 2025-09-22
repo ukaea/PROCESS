@@ -3581,11 +3581,17 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
     if ipedestal == 1:
         rhocore = np.linspace(0, rhopedn)
-        necore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
+        necore = (
+            nd_plasma_pedestal_electron
+            + (ne0 - nd_plasma_pedestal_electron)
+            * (1 - rhocore**2 / rhopedn**2) ** alphan
+        )
         nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(rhopedn, 1)
-        neesep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
+        neesep = nesep + (nd_plasma_pedestal_electron - nesep) * (1 - rhosep) / (
+            1 - min(0.9999, rhopedn)
+        )
         nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
@@ -3619,7 +3625,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     if ipedestal != 0:
         # Print pedestal lines
         prof.axhline(
-            y=neped / 1e19,
+            y=nd_plasma_pedestal_electron / 1e19,
             xmax=rhopedn,
             color="r",
             linestyle="-",
@@ -3629,7 +3635,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         prof.vlines(
             x=rhopedn,
             ymin=0.0,
-            ymax=neped / 1e19,
+            ymax=nd_plasma_pedestal_electron / 1e19,
             color="r",
             linestyle="-",
             linewidth=0.4,
@@ -3642,7 +3648,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['nd_plasma_electrons_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
         rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
-        rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
+        rf"$n_{{\text{{e,ped}}}}$: {nd_plasma_pedestal_electron:.3e} m$^{{-3}}$"
         r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
         f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}",
         rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
@@ -3967,9 +3973,13 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
             if rho[q] <= rhopedn:
-                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                ne[q] = (
+                    nd_plasma_pedestal_electron
+                    + (ne0 - nd_plasma_pedestal_electron)
+                    * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+                )
             else:
-                ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
+                ne[q] = nesep + (nd_plasma_pedestal_electron - nesep) * (1 - rho[q]) / (
                     1 - min(0.9999, rhopedn)
                 )
 
@@ -7013,7 +7023,11 @@ def plot_power_info(axis, mfile_data, scan):
         "",
     )
     if ipedestal == 1:
-        ped_height = ("neped", "Electron density at pedestal", "m$^{-3}$")
+        ped_height = (
+            "nd_plasma_pedestal_electron",
+            "Electron density at pedestal",
+            "m$^{-3}$",
+        )
         ped_pos = ("rhopedn", "r/a at density pedestal", "")
     else:
         ped_height = ("", "No pedestal model used", "")
@@ -10707,7 +10721,7 @@ def main(args=None):
 
     # Pedestal profile parameters
     global ipedestal
-    global neped
+    global nd_plasma_pedestal_electron
     global nesep
     global rhopedn
     global rhopedt
@@ -10727,7 +10741,9 @@ def main(args=None):
     global tratio
 
     ipedestal = m_file.data["ipedestal"].get_scan(scan)
-    neped = m_file.data["neped"].get_scan(scan)
+    nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
+        scan
+    )
     nesep = m_file.data["nesep"].get_scan(scan)
     rhopedn = m_file.data["rhopedn"].get_scan(scan)
     rhopedt = m_file.data["rhopedt"].get_scan(scan)

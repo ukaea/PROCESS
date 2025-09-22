@@ -399,7 +399,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3042E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3042E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -1562,7 +1562,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3285E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3285E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -2725,7 +2725,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3475E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3475E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -3888,7 +3888,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3196E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3196E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01      
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -5051,7 +5051,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3174E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3174E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01      
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -6214,7 +6214,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2961E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2961E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01      
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -7377,7 +7377,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2701E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2701E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -8540,7 +8540,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2767E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2767E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01      
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -9703,7 +9703,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2657E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2657E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -10866,7 +10866,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2576E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2576E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -12029,7 +12029,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2772E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2772E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01      
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -13192,7 +13192,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2722E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2722E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -14355,7 +14355,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2607E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2607E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -15518,7 +15518,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.2841E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2841E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -16681,7 +16681,7 @@
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3087E+19 OP 
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3087E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
@@ -17656,7 +17656,7 @@ foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<ne0 *
 *------------------*
 
 icc = 81
@@ -17870,7 +17870,7 @@ ipedestal = 1
 fgwsep = 0.5
 
 * Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+nd_plasma_pedestal_electron = 0.5e20
 
 * Electron density at separatrix [m-3] (ipedestal=1) - initial value
 nesep = 0.2e20

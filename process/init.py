@@ -481,36 +481,36 @@ def check_process(inputs):  # noqa: ARG001
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any()
         ):
-            # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
+            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nesep.
             if (
-                data_structure.physics_variables.neped
+                data_structure.physics_variables.nd_plasma_pedestal_electron
                 < data_structure.physics_variables.nesep
             ):
                 raise ProcessValidationError(
                     "Density pedestal is lower than separatrix density",
-                    neped=data_structure.physics_variables.neped,
+                    nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
                     nesep=data_structure.physics_variables.nesep,
                 )
 
-            # Issue #589 Pedestal density is set manually using neped,
+            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
             # but pedestal width = 0.
             if (
                 abs(data_structure.physics_variables.rhopedn - 1.0) <= 1e-7
                 and (
-                    data_structure.physics_variables.neped
+                    data_structure.physics_variables.nd_plasma_pedestal_electron
                     - data_structure.physics_variables.nesep
                 )
                 >= 1e-7
             ):
                 warn(
                     "Density pedestal is at plasma edge "
-                    f"({data_structure.physics_variables.rhopedn = }), but neped "
-                    f"({data_structure.physics_variables.neped}) differs from "
+                    f"({data_structure.physics_variables.rhopedn = }), but nd_plasma_pedestal_electron "
+                    f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
                     f"nesep ({data_structure.physics_variables.nesep})",
                     stacklevel=2,
                 )
 
-        # Issue #862 : Variable ne0/neped ratio without constraint eq 81 (ne0>neped)
+        # Issue #862 : Variable ne0/nd_plasma_pedestal_electron ratio without constraint eq 81 (ne0>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
             data_structure.numerics.ioptimz >= 0
@@ -525,12 +525,12 @@ def check_process(inputs):  # noqa: ARG001
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any():
                 warn(
-                    "neped set with fgwped without constraint eq 81 (neped<ne0)",
+                    "nd_plasma_pedestal_electron set with fgwped without constraint eq 81 (nd_plasma_pedestal_electron<ne0)",
                     stacklevel=2,
                 )
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
                 warn(
-                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (neped<ne0)",
+                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<ne0)",
                     stacklevel=2,
                 )
 

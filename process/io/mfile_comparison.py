@@ -127,7 +127,7 @@ BASELINE_LIST = [
     "tesep",
     "nesep",
     "teped",
-    "neped",
+    "nd_plasma_pedestal_electron",
     "zeff",
     "nd_impurities",
     "t_energy_confinement",

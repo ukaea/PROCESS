@@ -337,7 +337,7 @@
  Density_profile_factor___________________________________________________ (alphan)_______________________ 1.00000000000000000e+00
  Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
  Density_pedestal_r/a_location____________________________________________ (rhopedn)______________________ 9.40000000000000058e-01
- Electron_density_pedestal_height_(/m3)___________________________________ (neped)________________________ 6.66837814270525932e+19 OP
+ Electron_density_pedestal_height_(/m3)___________________________________ (nd_plasma_pedestal_electron)________________________ 6.66837814270525932e+19 OP
  Electron_density_at_pedestal_/_nGW_______________________________________ (fgwped_out)___________________ 8.49999999999999978e-01
  Temperature_pedestal_r/a_location________________________________________ (rhopedt)______________________ 9.40000000000000058e-01
  Electron_temp._pedestal_height_(keV)_____________________________________ (teped)________________________ 5.50000000000000000e+00
@@ -1347,7 +1347,7 @@ icc = 72
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<ne0 *
 *------------------*
 
 icc = 81
@@ -1593,7 +1593,7 @@ ipedestal = 1
 fgwsep = 0.5
 
 * Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+nd_plasma_pedestal_electron = 0.5e20
 
 * Electron density at separatrix [m-3] (ipedestal=1) - initial value
 nesep = 0.2e20

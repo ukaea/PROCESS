@@ -129,7 +129,7 @@ icc = 72
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<ne0 *
 *------------------*
 
 icc = 81
@@ -373,7 +373,7 @@ ipedestal = 1
 fgwsep = 0.5
 
 * Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+nd_plasma_pedestal_electron = 0.5e20
 
 * Electron density at separatrix [m-3] (ipedestal=1) - initial value
 nesep = 0.2e20
