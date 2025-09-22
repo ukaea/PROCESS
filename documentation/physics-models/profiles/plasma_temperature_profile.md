@@ -116,7 +116,7 @@ A table of the input variables can be found below
 | Normalised plasma radii            | `profile_x` |
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
 | Core density                | `te0`, $T_{\text{e0}}$ |
-| Pedestal value                   | `teped`, $T_{\text{ped}}$ |
+| Pedestal value                   | `temp_plasma_pedestal_kev`, $T_{\text{ped}}$ |
 | Separatrix value                 | `tesep`, $T_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
 | 2nd profile index/ peaking parameter | `tbeta`, $\beta_T$ |

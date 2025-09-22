@@ -264,7 +264,7 @@ class TeProfile(Profile):
             self.profile_x,
             physics_variables.radius_plasma_pedestal_temp_norm,
             physics_variables.te0,
-            physics_variables.teped,
+            physics_variables.temp_plasma_pedestal_kev,
             physics_variables.tesep,
             physics_variables.alphat,
             physics_variables.tbeta,
@@ -276,7 +276,7 @@ class TeProfile(Profile):
         rho: np.array,
         radius_plasma_pedestal_temp_norm: float,
         t0: float,
-        teped: float,
+        temp_plasma_pedestal_kev: float,
         tesep: float,
         alphat: float,
         tbeta: float,
@@ -295,7 +295,7 @@ class TeProfile(Profile):
             rho (np.array): Normalised minor radius.
             radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
             t0 (float): Central temperature (keV).
-            teped (float): Pedestal temperature (keV).
+            temp_plasma_pedestal_kev (float): Pedestal temperature (keV).
             tesep (float): Separatrix temperature (keV).
             alphat (float): Temperature peaking parameter.
             tbeta (float): Second temperature exponent.
@@ -303,25 +303,25 @@ class TeProfile(Profile):
         if physics_variables.ipedestal == 0:
             self.profile_y = t0 * (1 - rho**2) ** alphat
 
-        if t0 < teped:
+        if t0 < temp_plasma_pedestal_kev:
             logger.info(
-                f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
+                f"TPROFILE: temperature pedestal is higher than core temperature. {temp_plasma_pedestal_kev = }, {t0 = }"
             )
         rho_index = rho <= radius_plasma_pedestal_temp_norm
         self.profile_y[rho_index] = (
-            teped
-            + (t0 - teped)
+            temp_plasma_pedestal_kev
+            + (t0 - temp_plasma_pedestal_kev)
             * (1 - (rho[rho_index] / radius_plasma_pedestal_temp_norm) ** tbeta)
             ** alphat
         )
-        self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
+        self.profile_y[~rho_index] = tesep + (temp_plasma_pedestal_kev - tesep) * (1 - rho[~rho_index]) / (
             1 - radius_plasma_pedestal_temp_norm
         )
 
     @staticmethod
     def tcore(
         radius_plasma_pedestal_temp_norm: float,
-        teped: float,
+        temp_plasma_pedestal_kev: float,
         tesep: float,
         tav: float,
         alphat: float,
@@ -344,7 +344,7 @@ class TeProfile(Profile):
 
         Args:
             radius_plasma_pedestal_temp_norm (float): Normalised minor radius pedestal position.
-            teped (float): Pedestal temperature (keV).
+            temp_plasma_pedestal_kev (float): Pedestal temperature (keV).
             tesep (float): Separatrix temperature (keV).
             tav (float): Volume average temperature (keV).
             alphat (float): Temperature peaking parameter.
@@ -355,7 +355,7 @@ class TeProfile(Profile):
         """
         #  Calculate core temperature
 
-        return teped + (
+        return temp_plasma_pedestal_kev + (
             (
                 tbeta
                 * (
@@ -366,7 +366,7 @@ class TeProfile(Profile):
                         + radius_plasma_pedestal_temp_norm
                         + radius_plasma_pedestal_temp_norm**2
                     )
-                    - teped
+                    - temp_plasma_pedestal_kev
                     * (
                         1
                         + radius_plasma_pedestal_temp_norm
@@ -398,7 +398,7 @@ class TeProfile(Profile):
         elif physics_variables.ipedestal == 1:
             physics_variables.te0 = self.tcore(
                 physics_variables.radius_plasma_pedestal_temp_norm,
-                physics_variables.teped,
+                physics_variables.temp_plasma_pedestal_kev,
                 physics_variables.tesep,
                 physics_variables.te,
                 physics_variables.alphat,

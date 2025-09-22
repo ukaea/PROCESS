@@ -2072,7 +2072,7 @@ class Physics:
                 radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
                 nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
                 n_greenwald=physics_variables.dlimit[6],
-                teped=physics_variables.teped,
+                temp_plasma_pedestal_kev=physics_variables.temp_plasma_pedestal_kev,
             )
         )
 
@@ -4843,8 +4843,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Electron temp. pedestal height (keV)",
-                "(teped)",
-                physics_variables.teped,
+                "(temp_plasma_pedestal_kev)",
+                physics_variables.temp_plasma_pedestal_kev,
             )
             if 78 in numerics.icc:
                 po.ovarrf(
@@ -7375,7 +7375,7 @@ class Physics:
         radius_plasma_pedestal_density_norm: float,
         nd_plasma_pedestal_electron: float,
         n_greenwald: float,
-        teped: float,
+        temp_plasma_pedestal_kev: float,
     ) -> float:
         """
         Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
@@ -7402,8 +7402,8 @@ class Physics:
         :type nd_plasma_pedestal_electron: float
         :param n_greenwald: Greenwald density limit [m^-3].
         :type n_greenwald: float
-        :param teped: Electron temperature at the pedestal [keV].
-        :type teped: float
+        :param temp_plasma_pedestal_kev: Electron temperature at the pedestal [keV].
+        :type temp_plasma_pedestal_kev: float
 
         :returns: The calculated bootstrap fraction.
         :rtype: float
@@ -7433,7 +7433,7 @@ class Physics:
             * (q95 / q0) ** -0.103
             * radius_plasma_pedestal_density_norm**0.367
             * (nd_plasma_pedestal_electron / n_greenwald) ** -0.174
-            * teped**0.0552
+            * temp_plasma_pedestal_kev**0.0552
         )
 
     def find_other_h_factors(self, i_confinement_time: int) -> float:

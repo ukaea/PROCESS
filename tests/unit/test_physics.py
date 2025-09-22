@@ -347,7 +347,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     f_helium3: Any = None
 
-    teped: Any = None
+    temp_plasma_pedestal_kev: Any = None
 
     nd_plasma_electrons_vol_avg: Any = None
 
@@ -393,7 +393,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             plasma_current=16528278.760008096,
             a_plasma_poloidal=38.39822223637151,
             f_helium3=0,
-            teped=5.5,
+            temp_plasma_pedestal_kev=5.5,
             nd_plasma_electrons_vol_avg=8.016748468651018e19,
             te=12.570861186498382,
             rmajor=8,
@@ -473,7 +473,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
     )
 
-    monkeypatch.setattr(physics_variables, "teped", bootstrapfractionsauterparam.teped)
+    monkeypatch.setattr(physics_variables, "temp_plasma_pedestal_kev", bootstrapfractionsauterparam.temp_plasma_pedestal_kev)
 
     monkeypatch.setattr(
         physics_variables,
@@ -975,7 +975,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
     radius_plasma_pedestal_density_norm: Any = None
     nd_plasma_pedestal_electron: Any = None
     n_greenwald: Any = None
-    teped: Any = None
+    temp_plasma_pedestal_kev: Any = None
     expected_bfs: Any = None
 
 
@@ -994,7 +994,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             radius_plasma_pedestal_density_norm=0.9,
             nd_plasma_pedestal_electron=6.0e19,
             n_greenwald=8.0e19,
-            teped=5.0,
+            temp_plasma_pedestal_kev=5.0,
             expected_bfs=0.5875359328840783,
         ),
         BootstrapFractionSugiyamaHModeParam(
@@ -1009,7 +1009,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             radius_plasma_pedestal_density_norm=0.85,
             nd_plasma_pedestal_electron=5.5e19,
             n_greenwald=7.5e19,
-            teped=4.5,
+            temp_plasma_pedestal_kev=4.5,
             expected_bfs=0.40154857221044604,
         ),
         # JA-DEMO steady state case from the paper
@@ -1025,7 +1025,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             radius_plasma_pedestal_density_norm=0.91,
             nd_plasma_pedestal_electron=0.98e20,
             n_greenwald=1e20,
-            teped=6.0,
+            temp_plasma_pedestal_kev=6.0,
             expected_bfs=0.5634482876932788,
         ),
         # ITER 15MA case from the paper
@@ -1041,7 +1041,7 @@ class BootstrapFractionSugiyamaHModeParam(NamedTuple):
             radius_plasma_pedestal_density_norm=0.93,
             nd_plasma_pedestal_electron=0.75e20,
             n_greenwald=1e20,
-            teped=6.0,
+            temp_plasma_pedestal_kev=6.0,
             expected_bfs=0.2770187998673241,
         ),
     ),
@@ -1068,7 +1068,7 @@ def test_bootstrap_fraction_sugiyama_h_mode(bootstrapfractionsugiyamahparam, phy
         radius_plasma_pedestal_density_norm=bootstrapfractionsugiyamahparam.radius_plasma_pedestal_density_norm,
         nd_plasma_pedestal_electron=bootstrapfractionsugiyamahparam.nd_plasma_pedestal_electron,
         n_greenwald=bootstrapfractionsugiyamahparam.n_greenwald,
-        teped=bootstrapfractionsugiyamahparam.teped,
+        temp_plasma_pedestal_kev=bootstrapfractionsugiyamahparam.temp_plasma_pedestal_kev,
     )
 
     assert bfs == pytest.approx(bootstrapfractionsugiyamahparam.expected_bfs)

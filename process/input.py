@@ -1689,7 +1689,7 @@ INPUT_VARIABLES = {
     "temp_fw_max": InputVariable(
         data_structure.fwbs_variables, float, range=(500.0, 2000.0)
     ),
-    "teped": InputVariable(data_structure.physics_variables, float, range=(0.0, 20.0)),
+    "temp_plasma_pedestal_kev": InputVariable(data_structure.physics_variables, float, range=(0.0, 20.0)),
     "tesep": InputVariable(data_structure.physics_variables, float, range=(0.0, 20.0)),
     "tfcbv": InputVariable(
         data_structure.buildings_variables, float, range=(10000.0, 1000000.0)

@@ -3733,13 +3733,13 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     if ipedestal == 1:
         rhocore = np.linspace(0.0, radius_plasma_pedestal_temp_norm)
         tcore = (
-            teped
-            + (te0 - teped)
+            temp_plasma_pedestal_kev
+            + (te0 - temp_plasma_pedestal_kev)
             * (1 - (rhocore / radius_plasma_pedestal_temp_norm) ** tbeta) ** alphat
         )
 
         rhosep = np.linspace(radius_plasma_pedestal_temp_norm, 1)
-        tsep = tesep + (teped - tesep) * (1 - rhosep) / (
+        tsep = tesep + (temp_plasma_pedestal_kev - tesep) * (1 - rhosep) / (
             1 - min(0.9999, radius_plasma_pedestal_temp_norm)
         )
 
@@ -3768,7 +3768,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     if ipedestal != 0:
         # Plot pedestal lines
         prof.axhline(
-            y=teped,
+            y=temp_plasma_pedestal_kev,
             xmax=radius_plasma_pedestal_temp_norm,
             color="r",
             linestyle="-",
@@ -3778,7 +3778,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         prof.vlines(
             x=radius_plasma_pedestal_temp_norm,
             ymin=0.0,
-            ymax=teped,
+            ymax=temp_plasma_pedestal_kev,
             color="r",
             linestyle="-",
             linewidth=0.4,
@@ -3792,7 +3792,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['te'].get_scan(scan):.3f} keV",
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
-        rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
+        rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
         f"{tratio:.3f}",
         rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
@@ -4001,13 +4001,13 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
             if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
-                    teped
-                    + (te0 - teped)
+                    temp_plasma_pedestal_kev
+                    + (te0 - temp_plasma_pedestal_kev)
                     * (1 - (rho[q] / radius_plasma_pedestal_temp_norm) ** tbeta)
                     ** alphat
                 )
             else:
-                te[q] = tesep + (teped - tesep) * (1 - rho[q]) / (
+                te[q] = tesep + (temp_plasma_pedestal_kev - tesep) * (1 - rho[q]) / (
                     1 - min(0.9999, radius_plasma_pedestal_temp_norm)
                 )
 
@@ -10745,7 +10745,7 @@ def main(args=None):
     global radius_plasma_pedestal_density_norm
     global radius_plasma_pedestal_temp_norm
     global tbeta
-    global teped
+    global temp_plasma_pedestal_kev
     global tesep
     global alphan
     global alphat
@@ -10773,7 +10773,7 @@ def main(args=None):
         "radius_plasma_pedestal_temp_norm"
     ].get_scan(scan)
     tbeta = m_file.data["tbeta"].get_scan(scan)
-    teped = m_file.data["teped"].get_scan(scan)
+    temp_plasma_pedestal_kev = m_file.data["temp_plasma_pedestal_kev"].get_scan(scan)
     tesep = m_file.data["tesep"].get_scan(scan)
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)

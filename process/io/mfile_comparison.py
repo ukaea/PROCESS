@@ -126,7 +126,7 @@ BASELINE_LIST = [
     "dnla_gw",
     "tesep",
     "nd_plasma_separatrix_electron",
-    "teped",
+    "temp_plasma_pedestal_kev",
     "nd_plasma_pedestal_electron",
     "zeff",
     "nd_impurities",

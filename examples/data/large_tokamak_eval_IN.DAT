@@ -300,7 +300,7 @@ plasma_res_factor = 0.7 * plasma resistivity pre-factor
 radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`ipedestal==1`)
 radius_plasma_pedestal_temp_norm  = 0.94 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
-teped    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')
+temp_plasma_pedestal_kev    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')
 tesep    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
 i_confinement_time      = 34 * switch for energy confinement time scaling law (see description in `tauscl`)
 i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
