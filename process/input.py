@@ -2166,7 +2166,9 @@ INPUT_VARIABLES = {
     "itart": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "itartpf": InputVariable(data_structure.physics_variables, int, choices=[0, 1]),
     "itcycl": InputVariable(data_structure.pulse_variables, int, range=(1, 3)),
-    "iwalld": InputVariable(data_structure.physics_variables, int, range=(1, 2)),
+    "i_pflux_fw_neutron": InputVariable(
+        data_structure.physics_variables, int, range=(1, 2)
+    ),
     "lsa": InputVariable(data_structure.cost_variables, int, range=(1, 4)),
     "m_res": InputVariable(data_structure.stellarator_variables, int, range=(1, 10)),
     "n_tf_wp_layers": InputVariable(

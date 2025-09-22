@@ -269,7 +269,7 @@ i_plasma_ignited   = 1 * switch for ignition assumption; Obviously; i_plasma_ign
 ipedestal = 0 * switch for pedestal profiles;
 i_rad_loss = 1 * switch for radiation loss term usage in power balance (see User Guide);
 i_confinement_time      = 38 * switch for energy confinement time scaling law (see description in `tauscl`)
-iwalld   = 1 * switch for neutron wall load calculation;
+i_pflux_fw_neutron   = 1 * switch for neutron wall load calculation;
 kappa    = 1.001 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
 f_nd_alpha_electron = 0.048598535626890565 * thermal alpha density/electron density (`iteration variable 109`)
 rmajor   = 22.541131410425415 * plasma major radius (m) (`iteration variable 3`)
