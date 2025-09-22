@@ -150,7 +150,7 @@ def constraint_equation_1():
                 + data_structure.physics_variables.nd_ions_total
                 * data_structure.physics_variables.tin
             )
-            / data_structure.physics_variables.btot**2
+            / data_structure.physics_variables.b_plasma_total**2
         )
         / data_structure.physics_variables.beta
     )
@@ -801,7 +801,7 @@ def constraint_equation_24():
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
     b_plasma_toroidal_on_axis: toroidal field
-    btot: total field
+    b_plasma_total: total field
     """
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
@@ -861,7 +861,7 @@ def constraint_equation_24():
             (
                 data_structure.physics_variables.beta
                 * (
-                    data_structure.physics_variables.btot
+                    data_structure.physics_variables.b_plasma_total
                     / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2
@@ -875,7 +875,7 @@ def constraint_equation_24():
             - (
                 data_structure.physics_variables.beta
                 * (
-                    data_structure.physics_variables.btot
+                    data_structure.physics_variables.b_plasma_total
                     / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2

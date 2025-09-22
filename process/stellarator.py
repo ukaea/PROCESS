@@ -4237,7 +4237,7 @@ class Stellarator:
         self.plasma_profile.run()
 
         #  Total field
-        physics_variables.btot = np.sqrt(
+        physics_variables.b_plasma_total = np.sqrt(
             physics_variables.b_plasma_toroidal_on_axis**2
             + physics_variables.b_plasma_poloidal_average**2
         )
@@ -4260,13 +4260,13 @@ class Stellarator:
                 physics_variables.dene * physics_variables.ten
                 + physics_variables.nd_ions_total * physics_variables.tin
             )
-            / physics_variables.btot**2
+            / physics_variables.b_plasma_total**2
         )
         physics_variables.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
-            * physics_variables.btot
-            * physics_variables.btot
+            * physics_variables.b_plasma_total
+            * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
@@ -4298,7 +4298,7 @@ class Stellarator:
 
         #  Poloidal physics_variables.beta
 
-        # beta_poloidal = physics_variables.beta * ( physics_variables.btot/physics_variables.b_plasma_poloidal_average )**2 # Dont need this I think.
+        # beta_poloidal = physics_variables.beta * ( physics_variables.b_plasma_total/physics_variables.b_plasma_poloidal_average )**2 # Dont need this I think.
 
         #  Perform auxiliary power calculations
 

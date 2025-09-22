@@ -3019,7 +3019,7 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
         f"Toroidal field at $R_0$, $B_{{T}}$: {mfile_data.data['b_plasma_toroidal_on_axis'].get_scan(scan):.4f} T                  \n"
         f"Average poloidal field, $B_{{p}}$: {mfile_data.data['b_plasma_poloidal_average'].get_scan(scan):.4f} T              \n"
-        f"Total field, $B_{{tot}}$: {mfile_data.data['btot'].get_scan(scan):.4f} T                \n"
+        f"Total field, $B_{{tot}}$: {mfile_data.data['b_plasma_total'].get_scan(scan):.4f} T                \n"
         f"Vertical field, $B_{{vert}}$: {mfile_data.data['bvert'].get_scan(scan):.4f} T"
     )
 
