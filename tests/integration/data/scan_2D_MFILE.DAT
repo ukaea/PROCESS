@@ -402,7 +402,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3042E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7084E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -1565,7 +1565,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3285E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7227E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -2728,7 +2728,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3475E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7338E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -3891,7 +3891,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3196E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01      
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7174E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -5054,7 +5054,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3174E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01      
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7161E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -6217,7 +6217,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2961E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01      
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7036E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -7380,7 +7380,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2701E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6883E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -8543,7 +8543,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2767E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01      
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6922E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -9706,7 +9706,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2657E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6857E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -10869,7 +10869,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2576E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6809E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -12032,7 +12032,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2772E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01      
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6925E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -13195,7 +13195,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2722E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01        
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6895E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -14358,7 +14358,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2607E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6827E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -15521,7 +15521,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.2841E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01        
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.6965E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -16684,7 +16684,7 @@
  Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3087E+19 OP 
  Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
  Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01        
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
  Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7110E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
@@ -17885,7 +17885,7 @@ radius_plasma_pedestal_temp_norm = 0.94
 tbeta = 2.0
 
 * Electron temperature of pedestal (kev) (ipedestal=1)
-teped = 5.5
+temp_plasma_pedestal_kev = 5.5
 
 * Electron temperature at separatrix (kev) (ipedestal=1)
 tesep = 0.1

@@ -409,7 +409,7 @@ radius_plasma_pedestal_temp_norm = 0.94
 tbeta = 2.0
 
 * Electron temperature of pedestal (kev) (ipedestal=1)
-teped = 5.5
+temp_plasma_pedestal_kev = 5.5
 
 * Electron temperature at separatrix (kev) (ipedestal=1)
 tesep = 0.1

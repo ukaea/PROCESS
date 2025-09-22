@@ -414,12 +414,12 @@ def check_process(inputs):  # noqa: ARG001
     ):
         # Temperature checks
         if (
-            data_structure.physics_variables.teped
+            data_structure.physics_variables.temp_plasma_pedestal_kev
             < data_structure.physics_variables.tesep
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
-                teped=data_structure.physics_variables.teped,
+                temp_plasma_pedestal_kev=data_structure.physics_variables.temp_plasma_pedestal_kev,
                 tesep=data_structure.physics_variables.tesep,
             )
 
@@ -428,14 +428,14 @@ def check_process(inputs):  # noqa: ARG001
             <= 1e-7
         ) and (
             (
-                data_structure.physics_variables.teped
+                data_structure.physics_variables.temp_plasma_pedestal_kev
                 - data_structure.physics_variables.tesep
             )
             >= 1e-7
         ):
             warn(
-                f"Temperature pedestal is at plasma edge, but teped "
-                f"({data_structure.physics_variables.teped}) differs from tesep "
+                f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
+                f"({data_structure.physics_variables.temp_plasma_pedestal_kev}) differs from tesep "
                 f"({data_structure.physics_variables.tesep})",
                 stacklevel=2,
             )
@@ -447,30 +447,30 @@ def check_process(inputs):  # noqa: ARG001
         # (which will only have an effect if this is an optimisation run)
         if (
             data_structure.physics_variables.te
-            <= data_structure.physics_variables.teped
+            <= data_structure.physics_variables.temp_plasma_pedestal_kev
         ):
             warn(
                 f"Volume-averaged temperature ({data_structure.physics_variables.te}) has been "
-                f"forced to exceed input pedestal height ({data_structure.physics_variables.teped}). "
-                "Changing to te = teped*1.001",
+                f"forced to exceed input pedestal height ({data_structure.physics_variables.temp_plasma_pedestal_kev}). "
+                "Changing to te = temp_plasma_pedestal_kev*1.001",
                 stacklevel=2,
             )
             data_structure.physics_variables.te = (
-                data_structure.physics_variables.teped * 1.001
+                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
             )
 
         if (
             data_structure.numerics.ioptimz >= 0
             and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
             and data_structure.numerics.boundl[3]
-            < data_structure.physics_variables.teped * 1.001
+            < data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
         ):
             warn(
-                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped",
+                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > temp_plasma_pedestal_kev",
                 stacklevel=2,
             )
             data_structure.numerics.boundl[3] = (
-                data_structure.physics_variables.teped * 1.001
+                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
             )
             data_structure.numerics.boundu[3] = max(
                 data_structure.numerics.boundu[3], data_structure.numerics.boundl[3]

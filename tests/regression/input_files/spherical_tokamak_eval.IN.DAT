@@ -287,7 +287,7 @@ i_pfirsch_schluter_current = 1 * switch for Pfirsch-Schlüter current scaling (i
 radius_plasma_pedestal_density_norm  = 0.95 * r/a of density pedestal (`ipedestal==1`)
 radius_plasma_pedestal_temp_norm  = 0.925 * r/a of temperature pedestal (`ipedestal==1`)
 tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
-teped    = 4.5 * electron temperature of pedestal (keV) (`ipedestal==1`)
+temp_plasma_pedestal_kev    = 4.5 * electron temperature of pedestal (keV) (`ipedestal==1`)
 tesep    = 0.125 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
 i_plasma_geometry = 0 * switch for plasma elongation and triangularity calculations;
 itart    = 1 * switch for spherical tokamak (ST) models;

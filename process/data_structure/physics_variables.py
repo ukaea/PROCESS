@@ -688,8 +688,8 @@ tbeta: float = None
 """temperature profile index beta  (`ipedestal==1)"""
 
 
-teped: float = None
-"""electron temperature of pedestal (keV) (`ipedestal==1`)"""
+temp_plasma_pedestal_kev: float = None
+"""Plasma electron temperature of pedestal (keV) (`ipedestal==1`)"""
 
 
 tesep: float = None
@@ -1457,7 +1457,7 @@ def init_physics_variables():
     global radius_plasma_pedestal_density_norm
     global radius_plasma_pedestal_temp_norm
     global tbeta
-    global teped
+    global temp_plasma_pedestal_kev
     global tesep
     global i_beta_norm_max
     global i_rad_loss
@@ -1704,7 +1704,7 @@ def init_physics_variables():
     radius_plasma_pedestal_density_norm = 1.0
     radius_plasma_pedestal_temp_norm = 1.0
     tbeta = 2.0
-    teped = 1.0
+    temp_plasma_pedestal_kev = 1.0
     tesep = 0.1
     i_beta_norm_max = 1
     i_rad_loss = 1

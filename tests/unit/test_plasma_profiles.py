@@ -73,7 +73,7 @@ class TeProfileParam(NamedTuple):
     tesep: float = 0.0
     ipedestal: float = 0.0
     alphat: float = 0.0
-    teped: float = 0.0
+    temp_plasma_pedestal_kev: float = 0.0
     expected_teprofile: Any = np.array
 
 
@@ -86,7 +86,7 @@ class TeProfileParam(NamedTuple):
             tesep=0.10000000000000001,
             ipedestal=1,
             alphat=1.45,
-            teped=5.5,
+            temp_plasma_pedestal_kev=5.5,
             expected_teprofile=[
                 18.85,
                 18.739472621498333,
@@ -171,7 +171,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     nd_plasma_electrons_vol_avg: float = 0.0
 
-    teped: float = 0.0
+    temp_plasma_pedestal_kev: float = 0.0
 
     alphan: float = 0.0
 
@@ -239,7 +239,7 @@ class PlasmaProfilesParam(NamedTuple):
             ti=12.9,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
-            teped=5.5,
+            temp_plasma_pedestal_kev=5.5,
             alphan=1,
             te=13.07,
             rho_ne_max=0.0,
@@ -284,7 +284,7 @@ class PlasmaProfilesParam(NamedTuple):
             ti=13.07,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
-            teped=5.5,
+            temp_plasma_pedestal_kev=5.5,
             alphan=1,
             te=13.07,
             rho_ne_max=0.0,
@@ -391,7 +391,7 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.nd_plasma_electrons_vol_avg,
     )
 
-    monkeypatch.setattr(physics_variables, "teped", plasmaprofilesparam.teped)
+    monkeypatch.setattr(physics_variables, "temp_plasma_pedestal_kev", plasmaprofilesparam.temp_plasma_pedestal_kev)
 
     monkeypatch.setattr(physics_variables, "alphan", plasmaprofilesparam.alphan)
 
