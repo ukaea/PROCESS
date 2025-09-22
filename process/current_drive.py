@@ -57,7 +57,7 @@ class NeutralBeam:
             physics_variables.f_nd_alpha_electron,
             physics_variables.f_nd_plasma_carbon_electron,
             physics_variables.f_nd_plasma_oxygen_electron,
-            physics_variables.rnfene,
+            physics_variables.f_nd_plasma_iron_argon_electron,
         )
 
         # Calculate number of decay lengths to centre
@@ -141,7 +141,7 @@ class NeutralBeam:
             physics_variables.f_nd_alpha_electron,
             physics_variables.f_nd_plasma_carbon_electron,
             physics_variables.f_nd_plasma_oxygen_electron,
-            physics_variables.rnfene,
+            physics_variables.f_nd_plasma_iron_argon_electron,
         )
 
         #  Calculate number of decay lengths to centre

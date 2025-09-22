@@ -3335,7 +3335,7 @@ class Physics:
                 impurity_radiation.element2index("O_")
             ]
         )
-        physics_variables.rnfene = (
+        physics_variables.f_nd_plasma_iron_argon_electron = (
             impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("Fe")
             ]
