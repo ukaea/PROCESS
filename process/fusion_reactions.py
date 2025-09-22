@@ -658,7 +658,7 @@ def fusion_rate_integral(
 
     # Set each point in the desnity profile as a fraction of the volume averaged desnity
     density_profile_normalised = (
-        1.0 / physics_variables.dene
+        1.0 / physics_variables.nd_plasma_electrons_vol_avg
     ) * plasma_profile.neprofile.profile_y
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
@@ -856,7 +856,7 @@ def beam_fusion(
     b_plasma_poloidal_average: float,
     b_plasma_toroidal_on_axis: float,
     c_beam_total: float,
-    dene: float,
+    nd_plasma_electrons_vol_avg: float,
     nd_fuel_ions: float,
     ion_electron_coulomb_log: float,
     e_beam_kev: float,
@@ -881,7 +881,7 @@ def beam_fusion(
                 b_plasma_poloidal_average (float): Poloidal field (T).
                 b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
                 c_beam_total (float): Neutral beam current (A).
-                dene (float): Electron density (m^-3).
+                nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
                 nd_fuel_ions (float): Fuel ion density (m^-3).
                 ion_electron_coulomb_log (float): Ion-electron coulomb logarithm.
                 e_beam_kev (float): Neutral beam energy (keV).
@@ -927,7 +927,7 @@ def beam_fusion(
             constants.M_DEUTERON_AMU * (1.0 - f_beam_tritium)
             + (constants.M_TRITON_AMU * f_beam_tritium)
         )
-        * (ten**1.5 / dene)
+        * (ten**1.5 / nd_plasma_electrons_vol_avg)
         / ion_electron_coulomb_log
     )
 

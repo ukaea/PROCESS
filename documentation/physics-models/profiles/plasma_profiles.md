@@ -232,7 +232,7 @@ The graph below is for a standard pedestal profile. You can vary its attributes 
 !!! warning " Un-realistic profiles"
 
     If setting `ipedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$.
-    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\mathtt{dene})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
+    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\mathtt{nd_plasma_electrons_vol_avg})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
 
 --------
 

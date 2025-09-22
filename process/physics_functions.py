@@ -219,7 +219,7 @@ def psync_albajar_fidone(
 def fast_alpha_beta(
     b_plasma_poloidal_average: float,
     b_plasma_toroidal_on_axis: float,
-    dene: float,
+    nd_plasma_electrons_vol_avg: float,
     nd_fuel_ions: float,
     nd_ions_total: float,
     ten: float,
@@ -236,7 +236,7 @@ def fast_alpha_beta(
     Parameters:
         b_plasma_poloidal_average (float): Poloidal field (T).
         b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
-        dene (float): Electron density (m^-3).
+        nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
         nd_fuel_ions (float): Fuel ion density (m^-3).
         nd_ions_total (float): Total ion density (m^-3).
         ten (float): Density-weighted electron temperature (keV).
@@ -268,7 +268,7 @@ def fast_alpha_beta(
             2.0
             * constants.RMU0
             * constants.KILOELECTRON_VOLT
-            * (dene * ten + nd_ions_total * tin)
+            * (nd_plasma_electrons_vol_avg * ten + nd_ions_total * tin)
             / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
         )
 
@@ -276,7 +276,10 @@ def fast_alpha_beta(
         # IPDG89 fast alpha scaling
         if i_beta_fast_alpha == 0:
             fact = min(
-                0.3, 0.29 * (nd_fuel_ions / dene) ** 2 * ((ten + tin) / 20.0 - 0.37)
+                0.3,
+                0.29
+                * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
+                * ((ten + tin) / 20.0 - 0.37),
             )
 
         # Modified scaling, D J Ward
@@ -284,7 +287,7 @@ def fast_alpha_beta(
             fact = min(
                 0.30,
                 0.26
-                * (nd_fuel_ions / dene) ** 2
+                * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
                 * np.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
             )
 

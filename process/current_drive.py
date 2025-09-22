@@ -53,7 +53,7 @@ class NeutralBeam:
         sigstop = self.sigbeam(
             current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
             physics_variables.te,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.f_nd_alpha_electron,
             physics_variables.rncne,
             physics_variables.rnone,
@@ -62,11 +62,13 @@ class NeutralBeam:
 
         # Calculate number of decay lengths to centre
         current_drive_variables.n_beam_decay_lengths_core = (
-            dpath * physics_variables.dene * sigstop
+            dpath * physics_variables.nd_plasma_electrons_vol_avg * sigstop
         )
 
         # Shine-through fraction of beam
-        fshine = np.exp(-2.0 * dpath * physics_variables.dene * sigstop)
+        fshine = np.exp(
+            -2.0 * dpath * physics_variables.nd_plasma_electrons_vol_avg * sigstop
+        )
         fshine = max(fshine, 1e-20)
 
         # Deuterium and tritium beam densities
@@ -80,7 +82,7 @@ class NeutralBeam:
             physics_variables.m_beam_amu,
             current_drive_variables.e_beam_kev,
             physics_variables.ten,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
             physics_variables.zeffai,
@@ -93,7 +95,7 @@ class NeutralBeam:
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.aspect,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             current_drive_variables.e_beam_kev,
             physics_variables.rmajor,
             physics_variables.ten,
@@ -135,7 +137,7 @@ class NeutralBeam:
         sigstop = self.sigbeam(
             current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
             physics_variables.te,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.f_nd_alpha_electron,
             physics_variables.rncne,
             physics_variables.rnone,
@@ -166,7 +168,7 @@ class NeutralBeam:
             physics_variables.m_beam_amu,
             current_drive_variables.e_beam_kev,
             physics_variables.ten,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
             physics_variables.zeffai,
@@ -180,7 +182,7 @@ class NeutralBeam:
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.aspect,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_electron_line,
             current_drive_variables.e_beam_kev,
             current_drive_variables.f_radius_beam_tangency_rmajor,
@@ -199,7 +201,7 @@ class NeutralBeam:
         alphan,
         alphat,
         aspect,
-        dene,
+        nd_plasma_electrons_vol_avg,
         nd_electron_line,
         e_beam_kev,
         f_radius_beam_tangency_rmajor,
@@ -217,7 +219,7 @@ class NeutralBeam:
         alphan  : input real : density profile factor
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
-        dene    : input real : volume averaged electron density (m**-3)
+        nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
         nd_electron_line    : input real : line averaged electron density (m**-3)
         e_beam_kev  : input real : neutral beam energy (keV)
         f_radius_beam_tangency_rmajor  : input real : R_tangent / R_major for neutral beam injection
@@ -241,7 +243,7 @@ class NeutralBeam:
         bbd = 1.0
 
         #  Volume averaged electron density (10**20 m**-3)
-        dene20 = dene / 1e20
+        dene20 = nd_plasma_electrons_vol_avg / 1e20
 
         #  Line averaged electron density (10**20 m**-3)
         dnla20 = nd_electron_line / 1e20
@@ -325,7 +327,18 @@ class NeutralBeam:
         #  Current drive efficiency (A/W)
         return gamnb / (dene20 * rmajor)
 
-    def etanb(self, m_beam_amu, alphan, alphat, aspect, dene, ebeam, rmajor, ten, zeff):
+    def etanb(
+        self,
+        m_beam_amu,
+        alphan,
+        alphat,
+        aspect,
+        nd_plasma_electrons_vol_avg,
+        ebeam,
+        rmajor,
+        ten,
+        zeff,
+    ):
         """Routine to find neutral beam current drive efficiency
         using the ITER 1990 formulation
         author: P J Knight, CCFE, Culham Science Centre
@@ -333,7 +346,7 @@ class NeutralBeam:
         alphan  : input real : density profile factor
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
-        dene    : input real : volume averaged electron density (m**-3)
+        nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
         ebeam  : input real : neutral beam energy (keV)
         rmajor  : input real : plasma major radius (m)
         ten     : input real : density weighted average electron temp. (keV)
@@ -347,7 +360,7 @@ class NeutralBeam:
         zbeam = 1.0
         bbd = 1.0
 
-        dene20 = 1e-20 * dene
+        dene20 = 1e-20 * nd_plasma_electrons_vol_avg
 
         # Ratio of E_beam/E_crit
         xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
@@ -709,7 +722,7 @@ class ElectronCyclotron:
         te: float,
         zeff: float,
         rmajor: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
         b_plasma_toroidal_on_axis: float,
         n_ecrh_harmonic: int,
         i_ecrh_wave_mode: int,
@@ -727,8 +740,8 @@ class ElectronCyclotron:
         :type zeff: float
         :param rmajor: Major radius of the plasma in meters.
         :type rmajor: float
-        :param dene: Volume averaged electron density in m^-3.
-        :type dene: float
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density in m^-3.
+        :type nd_plasma_electrons_vol_avg: float
         :param b_plasma_toroidal_on_axis: Toroidal magnetic field in Tesla.
         :type b_plasma_toroidal_on_axis: float
         :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
@@ -761,7 +774,7 @@ class ElectronCyclotron:
             1
             / (2 * np.pi)
             * np.sqrt(
-                (dene / 1.0e19)
+                (nd_plasma_electrons_vol_avg / 1.0e19)
                 * constants.ELECTRON_CHARGE**2
                 / (constants.ELECTRON_MASS * constants.EPSILON0)
             )
@@ -772,7 +785,7 @@ class ElectronCyclotron:
         xi_CD *= 4.8e0 / (2 + zeff)  # Zeff correction
 
         # ECCD efficiency
-        eta_cd = xi_CD * te / (3.27e0 * rmajor * (dene / 1.0e19))
+        eta_cd = xi_CD * te / (3.27e0 * rmajor * (nd_plasma_electrons_vol_avg / 1.0e19))
 
         # Determine the cut-off frequency based on wave mode
         if i_ecrh_wave_mode == 0:  # O-mode case
@@ -872,8 +885,8 @@ class IonCyclotron:
         :type zeff: float
         :param rmajor: Major radius of the plasma in meters.
         :type rmajor: float
-        :param dene: Volume averaged electron density in 1x10^20 m^-3.
-        :type dene: float
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density in 1x10^20 m^-3.
+        :type nd_plasma_electrons_vol_avg: float
 
         :return: The calculated ion cyclotron heating efficiency in A/W.
         :rtype: float
@@ -1293,7 +1306,7 @@ class CurrentDrive:
 
         if current_drive_variables.i_hcd_calculations != 0:
             # Put electron density in desired units (10^-20 m-3)
-            dene20 = physics_variables.dene * 1.0e-20
+            dene20 = physics_variables.nd_plasma_electrons_vol_avg * 1.0e-20
 
             # Calculate current drive efficiencies
             # ==============================================================
@@ -1350,7 +1363,7 @@ class CurrentDrive:
                     te=physics_variables.te,
                     zeff=physics_variables.zeff,
                     rmajor=physics_variables.rmajor,
-                    dene=physics_variables.dene,
+                    nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
                     b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
                     n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
                     i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,

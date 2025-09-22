@@ -244,7 +244,7 @@ i_density_limit = 7
 * JUSTIFICATION: Enforce Greenwald limit
 
 ixc = 6
-dene = 1.5E+20
+nd_plasma_electrons_vol_avg = 1.5E+20
 boundl(6) = 0.5E+20
 boundu(6) = 5.0E+20
 * DESCRIPTION: Average electron density (/m3)
@@ -831,7 +831,7 @@ boundu(97) = 1.0
 * JUSTIFICATION: Not yet set
 
 *prn1 = 
-* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal==1`) (default =  0.285)
+* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/nd_plasma_electrons_vol_avg if `ipedestal==1`) (default =  0.285)
 * JUSTIFICATION: Not yet set
 
 *tdiv = 

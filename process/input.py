@@ -144,7 +144,7 @@ INPUT_VARIABLES = {
     "f_r_conducting_wall": InputVariable(
         data_structure.physics_variables, float, range=(1.0, 3.0)
     ),
-    "dene": InputVariable(
+    "nd_plasma_electrons_vol_avg": InputVariable(
         data_structure.physics_variables, float, range=(1.0e18, 1.0e22)
     ),
     "beta_norm_max": InputVariable(

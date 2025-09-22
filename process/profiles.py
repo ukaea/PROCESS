@@ -206,9 +206,9 @@ class NeProfile(Profile):
 
         if ncore < 0.0:
             # Allows solver to continue and
-            # warns the user to raise the lower bound on dene if the run did not converge
+            # warns the user to raise the lower bound on nd_plasma_electrons_vol_avg if the run did not converge
             logger.error(
-                "ncore is going negative when solving. Please raise the value of dene and or its lower limit."
+                "ncore is going negative when solving. Please raise the value of nd_plasma_electrons_vol_avg and or its lower limit."
             )
             ncore = 1.0e-6
         return ncore
@@ -217,7 +217,7 @@ class NeProfile(Profile):
         """Calculates and sets physics variables required for the profile."""
 
         if physics_variables.ipedestal == 0:
-            physics_variables.ne0 = physics_variables.dene * (
+            physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
                 1.0 + physics_variables.alphan
             )
         elif physics_variables.ipedestal == 1:
@@ -225,12 +225,12 @@ class NeProfile(Profile):
                 physics_variables.rhopedn,
                 physics_variables.neped,
                 physics_variables.nesep,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.alphan,
             )
         physics_variables.ni0 = (
             physics_variables.nd_ions_total
-            / physics_variables.dene
+            / physics_variables.nd_plasma_electrons_vol_avg
             * physics_variables.ne0
         )
 

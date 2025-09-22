@@ -397,7 +397,7 @@ var_dicts = {
         description="Electron energy confinement time (sec)",
         units="s",
     ),
-    "dene": VariableMetadata(
+    "nd_plasma_electrons_vol_avg": VariableMetadata(
         latex=r"$n_e$",
         description="Volume-averaged electron density (/m3)",
         units="m-3",

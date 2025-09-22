@@ -133,7 +133,7 @@ class ProcessTracker:
         "Physics.p_plasma_loss_mw",
         "Physics.kappa95",
         "Physics.neped",
-        "Physics.dene",
+        "Physics.nd_plasma_electrons_vol_avg",
         "Physics.p_plasma_rad_mw",
         "Physics.ne0",
         "Physics.f_c_plasma_auxiliary",

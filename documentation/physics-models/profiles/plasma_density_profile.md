@@ -28,7 +28,7 @@ This function calculates the core electron density for a pedestalsied profile (`
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
 | Pedestal value                   | `neped`, $n_{\text{ped}}$ |
 | Separatrix value                 | `nesep`, $n_{\text{sep}}$ |
-| Average density             | `dene`, $\langle n \rangle$ |
+| Average density             | `nd_plasma_electrons_vol_avg`, $\langle n \rangle$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
 
 $$
@@ -38,7 +38,7 @@ n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n_{\text{e}} \rangle (1+\
 \rho_{\text{ped,n}}^2\right)\right]
 $$
 
-If `ncore` is returned as being less than 0, it is forced into a state of `ncore = 1E-6` in order to help convergence. This will also give a warning to the user to raise the lower bound of the average electron density `dene`.
+If `ncore` is returned as being less than 0, it is forced into a state of `ncore = 1E-6` in order to help convergence. This will also give a warning to the user to raise the lower bound of the average electron density `nd_plasma_electrons_vol_avg`.
 
 ##### Derivation
 

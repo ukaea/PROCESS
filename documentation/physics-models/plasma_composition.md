@@ -59,7 +59,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 1. **Alpha Ash Portion Calculation**
 
-    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`dene`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
+    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`nd_plasma_electrons_vol_avg`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
         - `f_nd_alpha_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$
@@ -88,7 +88,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 3. **Beam Hot Ion Component**
 
-    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`dene`) and the beam ion to electron ratio (`f_nd_beam_electron`). If the plasma is ignited, set it to zero.
+    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`nd_plasma_electrons_vol_avg`) and the beam ion to electron ratio (`f_nd_beam_electron`). If the plasma is ignited, set it to zero.
         - `f_nd_beam_electron` can be set as an iteration variable (`ixc = 7`) or set directly.
 
     $$
