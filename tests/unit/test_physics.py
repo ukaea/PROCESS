@@ -369,7 +369,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     alphan: Any = None
 
-    rhopedt: Any = None
+    radius_plasma_pedestal_temp_norm: Any = None
 
     alphat: Any = None
 
@@ -404,7 +404,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             tbeta=2,
             ne0=1.054474759840606e20,
             alphan=1,
-            rhopedt=0.9400000000000001,
+            radius_plasma_pedestal_temp_norm=0.9400000000000001,
             alphat=1.45,
             expected_bfs=0.4110838247346975,
         ),
@@ -448,7 +448,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     monkeypatch.setattr(physics_variables, "zeff", bootstrapfractionsauterparam.zeff)
 
     monkeypatch.setattr(
-        physics_variables, "radius_plasma_pedestal_density_norm", bootstrapfractionsauterparam.radius_plasma_pedestal_density_norm
+        physics_variables,
+        "radius_plasma_pedestal_density_norm",
+        bootstrapfractionsauterparam.radius_plasma_pedestal_density_norm,
     )
 
     monkeypatch.setattr(
@@ -510,7 +512,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     )
 
     monkeypatch.setattr(
-        physics_variables, "rhopedt", bootstrapfractionsauterparam.rhopedt
+        physics_variables,
+        "radius_plasma_pedestal_temp_norm",
+        bootstrapfractionsauterparam.radius_plasma_pedestal_temp_norm,
     )
 
     monkeypatch.setattr(

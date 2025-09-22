@@ -4836,8 +4836,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Temperature pedestal r/a location",
-                "(rhopedt)",
-                physics_variables.rhopedt,
+                "(radius_plasma_pedestal_temp_norm)",
+                physics_variables.radius_plasma_pedestal_temp_norm,
             )
 
             po.ovarrf(

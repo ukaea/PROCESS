@@ -398,7 +398,7 @@ nd_plasma_separatrix_electron = 0.2e20
 radius_plasma_pedestal_density_norm = 0.94
 
 * R/a of temperature pedestal (ipedestal=1)
-rhopedt = 0.94
+radius_plasma_pedestal_temp_norm = 0.94
 
 * Temperature profile index beta (ipedestal=1)
 tbeta = 2.0

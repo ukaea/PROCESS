@@ -114,7 +114,7 @@ A table of the input variables can be found below
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
 | Normalised plasma radii            | `profile_x` |
-| Pedestal radius (r/a)            | `rhopedt`, $\rho_{\text{ped,T}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
 | Core density                | `te0`, $T_{\text{e0}}$ |
 | Pedestal value                   | `teped`, $T_{\text{ped}}$ |
 | Separatrix value                 | `tesep`, $T_{\text{sep}}$ |

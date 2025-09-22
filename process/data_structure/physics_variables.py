@@ -672,8 +672,8 @@ radius_plasma_pedestal_density_norm: float = None
 """Normalised radius of density pedestal (`ipedestal==1`)"""
 
 
-rhopedt: float = None
-"""r/a of temperature pedestal (`ipedestal==1`)"""
+radius_plasma_pedestal_temp_norm: float = None
+"""Normalised radius of temperature pedestal (`ipedestal==1`)"""
 
 
 rho_te_max: float = None
@@ -1455,7 +1455,7 @@ def init_physics_variables():
     global nd_plasma_separatrix_electron_eich_max
     global plasma_res_factor
     global radius_plasma_pedestal_density_norm
-    global rhopedt
+    global radius_plasma_pedestal_temp_norm
     global tbeta
     global teped
     global tesep
@@ -1702,7 +1702,7 @@ def init_physics_variables():
     nd_plasma_separatrix_electron_eich_max = 0.0
     plasma_res_factor = 1.0
     radius_plasma_pedestal_density_norm = 1.0
-    rhopedt = 1.0
+    radius_plasma_pedestal_temp_norm = 1.0
     tbeta = 2.0
     teped = 1.0
     tesep = 0.1

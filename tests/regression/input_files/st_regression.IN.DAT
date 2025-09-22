@@ -538,7 +538,7 @@ boundu(154) = 0.99
 * Temperature *          
 *-------------*
 
-rhopedt = 0.925
+radius_plasma_pedestal_temp_norm = 0.925
 * DESCRIPTION:   r/a of Temperature Pedestal (ipedestal==1)
 * JUSTIFICATION: 
 
