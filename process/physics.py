@@ -2425,11 +2425,12 @@ class Physics:
                 physics_variables.f_p_div_lower
                 * physics_variables.p_plasma_separatrix_mw
             )
-            physics_variables.pdivu = (
+            physics_variables.p_div_upper_separatrix_mw = (
                 1.0e0 - physics_variables.f_p_div_lower
             ) * physics_variables.p_plasma_separatrix_mw
             physics_variables.pdivmax = max(
-                physics_variables.p_div_lower_separatrix_mw, physics_variables.pdivu
+                physics_variables.p_div_lower_separatrix_mw,
+                physics_variables.p_div_upper_separatrix_mw,
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
