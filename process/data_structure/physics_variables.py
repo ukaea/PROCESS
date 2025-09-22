@@ -895,8 +895,8 @@ p_plasma_separatrix_mw: float = None
 """power to conducted to the divertor region (MW)"""
 
 
-pdivl: float = None
-"""power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
+p_div_lower_separatrix_mw: float = None
+"""Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
 
 
 pdivu: float = None
@@ -1496,7 +1496,7 @@ def init_physics_variables():
     global p_dd_total_mw
     global p_dhe3_total_mw
     global p_plasma_separatrix_mw
-    global pdivl
+    global p_div_lower_separatrix_mw
     global pdivu
     global pdivmax
     global p_dt_total_mw
@@ -1743,7 +1743,7 @@ def init_physics_variables():
     p_dd_total_mw = 0.0
     p_dhe3_total_mw = 0.0
     p_plasma_separatrix_mw = 0.0
-    pdivl = 0.0
+    p_div_lower_separatrix_mw = 0.0
     pdivu = 0.0
     pdivmax = 0.0
     p_dt_total_mw = 0.0
