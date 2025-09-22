@@ -853,7 +853,7 @@ def set_fusion_powers(
 def beam_fusion(
     beamfus0: float,
     betbm0: float,
-    bp: float,
+    b_plasma_poloidal_average: float,
     bt: float,
     c_beam_total: float,
     dene: float,
@@ -878,7 +878,7 @@ def beam_fusion(
             Parameters:
                 beamfus0 (float): Multiplier for beam-background fusion calculation.
                 betbm0 (float): Leading coefficient for neutral beam beta fraction.
-                bp (float): Poloidal field (T).
+                b_plasma_poloidal_average (float): Poloidal field (T).
                 bt (float): Toroidal field on axis (T).
                 c_beam_total (float): Neutral beam current (A).
                 dene (float): Electron density (m^-3).
@@ -979,7 +979,7 @@ def beam_fusion(
         * (2 / 3)
         * hot_beam_density
         * beam_deposited_energy
-        / (bt**2 + bp**2)
+        / (bt**2 + b_plasma_poloidal_average**2)
     )
 
     return beta_beam, hot_beam_density, p_beam_alpha_mw

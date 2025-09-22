@@ -59,7 +59,7 @@ class Divertor:
                 pv.rminor,
                 pv.aspect,
                 pv.bt,
-                pv.bp,
+                pv.b_plasma_poloidal_average,
                 pv.p_plasma_separatrix_mw,
                 dv.f_div_flux_expansion,
                 pv.nesep,
@@ -215,7 +215,7 @@ class Divertor:
         rminor: float,
         aspect: float,
         bt: float,
-        bp: float,
+        b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         f_div_flux_expansion: float,
         nesep: float,
@@ -245,8 +245,8 @@ class Divertor:
         :param bt: toroidal field (T)
         :type bt: float
 
-        :param bp: poloidal field (T)
-        :type bp: float
+        :param b_plasma_poloidal_average: poloidal field (T)
+        :type b_plasma_poloidal_average: float
 
         :param p_plasma_separatrix_mw: power to divertor (MW)
         :type p_plasma_separatrix_mw: float
@@ -285,7 +285,7 @@ class Divertor:
         r_omp = rmajor + rminor
 
         # B fields on midplane
-        Bp_omp = -bp * rmajor / r_omp
+        Bp_omp = -b_plasma_poloidal_average * rmajor / r_omp
 
         Bt_omp = -bt * rmajor / r_omp
 
@@ -294,7 +294,7 @@ class Divertor:
             1.35
             * p_plasma_separatrix_mw**-0.02
             * rmajor**0.04
-            * bp**-0.92
+            * b_plasma_poloidal_average**-0.92
             * aspect**0.42
         )
 
@@ -304,7 +304,7 @@ class Divertor:
             * (nesep / 1e19) ** -0.02
             * p_plasma_separatrix_mw**-0.21
             * rmajor**0.71
-            * bp**-0.82
+            * b_plasma_poloidal_average**-0.82
         )
 
         # SOL width

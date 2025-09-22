@@ -281,8 +281,8 @@ betbm0: float = None
 """leading coefficient for NB beta fraction"""
 
 
-bp: float = None
-"""poloidal field (T)"""
+b_plasma_poloidal_average: float = None
+"""Plasma poloidal field (T)"""
 
 
 bt: float = None
@@ -1376,7 +1376,7 @@ def init_physics_variables():
     global e_plasma_beta_thermal
     global beta_norm_toroidal
     global betbm0
-    global bp
+    global b_plasma_poloidal_average
     global bt
     global btot
     global burnup
@@ -1623,7 +1623,7 @@ def init_physics_variables():
     e_plasma_beta_thermal = 0.0
     beta_norm_toroidal = 0.0
     betbm0 = 1.5
-    bp = 0.0
+    b_plasma_poloidal_average = 0.0
     bt = 5.68
     btot = 0.0
     burnup = 0.0

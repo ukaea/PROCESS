@@ -1166,7 +1166,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
 
     monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
 
-    bp, qstar, plasma_current = physics.calculate_plasma_current(
+    b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
         alphaj=plasmacurrentparam.alphaj,
         alphap=plasmacurrentparam.alphap,
@@ -1187,7 +1187,7 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         plasmacurrentparam.expected_normalised_total_beta
     )
 
-    assert bp == pytest.approx(plasmacurrentparam.expected_bp)
+    assert b_plasma_poloidal_average == pytest.approx(plasmacurrentparam.expected_bp)
 
     assert qstar == pytest.approx(plasmacurrentparam.expected_qstar)
 

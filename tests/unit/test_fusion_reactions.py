@@ -17,7 +17,7 @@ class SetFusionPowersParam(NamedTuple):
 
     i_beta_fast_alpha: Any = None
 
-    bp: Any = None
+    b_plasma_poloidal_average: Any = None
 
     bt: Any = None
 
