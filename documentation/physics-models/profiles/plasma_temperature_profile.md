@@ -24,7 +24,7 @@ A list of input parameters for calculating the core plasma temperature can be fo
 |----------------------------------|-----------|
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,T}}$ |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $T_{\text{ped}}$ |
-| Separatrix value                 | `nesep`, $T_{\text{sep}}$ |
+| Separatrix value                 | `nd_plasma_separatrix_electron`, $T_{\text{sep}}$ |
 | Average temperature             | `nd_plasma_electrons_vol_avg`, $\langle T_\text{e} \rangle$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_T$ |
 | Profile index/ peaking parameter | `tbeta`, $\beta_T$ |

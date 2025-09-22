@@ -504,7 +504,7 @@ boundu(152) = 0.1
 * DESCRIPTION:   Electron density of pedestal [m-3] (ipedestal=1)(default = 4.0E19)
 * JUSTIFICATION: Not set, used as a fraction of greenwald instead
 
-*nesep =  
+*nd_plasma_separatrix_electron =  
 * DESCRIPTION:   electron density at separatrix [m-3] (ipedestal=1)(default = 3.0E19)
 * JUSTIFICATION: Not set, assumed default
 
@@ -831,7 +831,7 @@ boundu(97) = 1.0
 * JUSTIFICATION: Not yet set
 
 *prn1 = 
-* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/nd_plasma_electrons_vol_avg if `ipedestal==1`) (default =  0.285)
+* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `ipedestal==1`) (default =  0.285)
 * JUSTIFICATION: Not yet set
 
 *tdiv = 

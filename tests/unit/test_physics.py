@@ -357,7 +357,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     q95: Any = None
 
-    nesep: Any = None
+    nd_plasma_separatrix_electron: Any = None
 
     te0: Any = None
 
@@ -398,7 +398,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             te=12.570861186498382,
             rmajor=8,
             q95=3.5,
-            nesep=3.6992211545476006e19,
+            nd_plasma_separatrix_electron=3.6992211545476006e19,
             te0=25.986118047669795,
             nd_plasma_pedestal_electron=6.2886759627309195e19,
             tbeta=2,
@@ -487,7 +487,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsauterparam.q95)
 
-    monkeypatch.setattr(physics_variables, "nesep", bootstrapfractionsauterparam.nesep)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_separatrix_electron",
+        bootstrapfractionsauterparam.nd_plasma_separatrix_electron,
+    )
 
     monkeypatch.setattr(physics_variables, "te0", bootstrapfractionsauterparam.te0)
 

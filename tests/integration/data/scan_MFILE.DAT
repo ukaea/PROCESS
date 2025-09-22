@@ -258,7 +258,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -1253,7 +1253,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -2248,7 +2248,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01     
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -3243,7 +3243,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -4238,7 +4238,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -5233,7 +5233,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -6228,7 +6228,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -7223,7 +7223,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -8218,7 +8218,7 @@
  Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01        
  Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      3.8185E+00    
  Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.2825E+19    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.2825E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -9247,7 +9247,7 @@ ifispact = 0 * Switch for neutronics calculations;
 ipedestal = 1 * Switch for pedestal profiles;
 fgwped = 0.85 * fraction of Greenwald density to set as pedestal-top density
 nd_plasma_pedestal_electron    = 0.678e20 * Electron density of pedestal (/m3) (ipedestal=1) INITIAL VALUE
-nesep    = 0.2e20 * Electron density at separatrix (/m3) (ipedestal=1)
+nd_plasma_separatrix_electron    = 0.2e20 * Electron density at separatrix (/m3) (ipedestal=1)
 rhopedn  = 0.94 * R/a of density pedestal (ipedestal=1)
 rhopedt  = 0.94 * R/a of temperature pedestal (ipedestal=1)
 tbeta    = 2.0 * Temperature profile index beta  (ipedestal=1)

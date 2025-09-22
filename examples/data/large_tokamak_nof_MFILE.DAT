@@ -342,7 +342,7 @@
  Temperature_pedestal_r/a_location________________________________________ (rhopedt)______________________ 9.40000000000000058e-01
  Electron_temp._pedestal_height_(keV)_____________________________________ (teped)________________________ 5.50000000000000000e+00
  Electron_temp._at_separatrix_(keV)_______________________________________ (tesep)________________________ 1.00000000000000006e-01
- Electron_density_at_separatrix_(/m3)_____________________________________ (nesep)________________________ 3.92257537806191739e+19
+ Electron_density_at_separatrix_(/m3)_____________________________________ (nd_plasma_separatrix_electron)________________________ 3.92257537806191739e+19
  Electron_density_at_separatrix_/_nGW_____________________________________ (fgwsep_out)___________________ 5.00000000000000000e-01
  Temperature_profile_index________________________________________________ (alphat)_______________________ 1.44999999999999996e+00
  Temperature_profile_index_beta___________________________________________ (tbeta)________________________ 2.00000000000000000e+00
@@ -1596,7 +1596,7 @@ fgwsep = 0.5
 nd_plasma_pedestal_electron = 0.5e20
 
 * Electron density at separatrix [m-3] (ipedestal=1) - initial value
-nesep = 0.2e20
+nd_plasma_separatrix_electron = 0.2e20
 
 * R/a of density pedestal (ipedestal=1)
 rhopedn = 0.94

@@ -481,15 +481,15 @@ def check_process(inputs):  # noqa: ARG001
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any()
         ):
-            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nesep.
+            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
             if (
                 data_structure.physics_variables.nd_plasma_pedestal_electron
-                < data_structure.physics_variables.nesep
+                < data_structure.physics_variables.nd_plasma_separatrix_electron
             ):
                 raise ProcessValidationError(
                     "Density pedestal is lower than separatrix density",
                     nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
-                    nesep=data_structure.physics_variables.nesep,
+                    nd_plasma_separatrix_electron=data_structure.physics_variables.nd_plasma_separatrix_electron,
                 )
 
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
@@ -498,7 +498,7 @@ def check_process(inputs):  # noqa: ARG001
                 abs(data_structure.physics_variables.rhopedn - 1.0) <= 1e-7
                 and (
                     data_structure.physics_variables.nd_plasma_pedestal_electron
-                    - data_structure.physics_variables.nesep
+                    - data_structure.physics_variables.nd_plasma_separatrix_electron
                 )
                 >= 1e-7
             ):
@@ -506,7 +506,7 @@ def check_process(inputs):  # noqa: ARG001
                     "Density pedestal is at plasma edge "
                     f"({data_structure.physics_variables.rhopedn = }), but nd_plasma_pedestal_electron "
                     f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
-                    f"nesep ({data_structure.physics_variables.nesep})",
+                    f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
                     stacklevel=2,
                 )
 

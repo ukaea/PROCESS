@@ -79,7 +79,7 @@ class TestDivertor:
         b_plasma_poloidal_average = 0.09595
         p_plasma_separatrix_mw = 1.0e2
         f_div_flux_expansion = 2
-        nesep = 1.0e19
+        nd_plasma_separatrix_electron = 1.0e19
         deg_div_field_plate = 5.0
         rad_fraction_sol = 8.0e-1
         f_p_div_lower = 1.0
@@ -94,7 +94,7 @@ class TestDivertor:
             b_plasma_poloidal_average,
             p_plasma_separatrix_mw,
             f_div_flux_expansion,
-            nesep,
+            nd_plasma_separatrix_electron,
             deg_div_field_plate,
             rad_fraction_sol,
             f_p_div_lower,
