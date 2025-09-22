@@ -506,7 +506,7 @@ def calculate_current_coefficient_hastie(
     delta95: float,
     eps: float,
     kappa95: float,
-    p0: float,
+    pres_plasma_on_axis: float,
     rmu0: float,
 ) -> float:
     """
@@ -519,7 +519,7 @@ def calculate_current_coefficient_hastie(
     - delta95: float, the plasma triangularity 95%
     - eps: float, the inverse aspect ratio
     - kappa95: float, the plasma elongation 95%
-    - p0: float, the central plasma pressure (Pa)
+    - pres_plasma_on_axis: float, the central plasma pressure (Pa)
     - rmu0: float, the vacuum permeability (H/m)
 
     Returns:
@@ -540,7 +540,7 @@ def calculate_current_coefficient_hastie(
     nu = alphap
 
     # Central plasma beta
-    beta0 = 2.0 * rmu0 * p0 / (b_plasma_toroidal_on_axis**2)
+    beta0 = 2.0 * rmu0 * pres_plasma_on_axis / (b_plasma_toroidal_on_axis**2)
 
     # Plasma internal inductance
     lamp1 = 1.0 + lamda
@@ -1620,7 +1620,7 @@ class Physics:
             physics_variables.i_plasma_current,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.p0,
+            physics_variables.pres_plasma_on_axis,
             physics_variables.len_plasma_poloidal,
             physics_variables.q95,
             physics_variables.rmajor,
@@ -2003,7 +2003,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
-                core_pressure=physics_variables.p0,
+                core_pressure=physics_variables.pres_plasma_on_axis,
                 average_pressure=physics_variables.pres_plasma_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
@@ -2592,7 +2592,7 @@ class Physics:
         physics_variables.beta_norm_max_thloreus = (
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
-                p0=physics_variables.p0,
+                pres_plasma_on_axis=physics_variables.pres_plasma_on_axis,
                 pres_plasma_vol_avg=physics_variables.pres_plasma_vol_avg,
             )
         )
@@ -2935,15 +2935,15 @@ class Physics:
 
     @staticmethod
     def calculate_beta_norm_max_thloreus(
-        c_beta: float, p0: float, pres_plasma_vol_avg: float
+        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
     ) -> float:
         """
         Calculate the E. Tholerus normalized beta upper limit.
 
         :param c_beta: Pressure peaking factor coefficient.
         :type c_beta: float
-        :param p0: Central plasma pressure (Pa).
-        :type p0: float
+        :param pres_plasma_on_axis: Central plasma pressure (Pa).
+        :type pres_plasma_on_axis: float
         :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
         :type pres_plasma_vol_avg: float
 
@@ -2960,8 +2960,8 @@ class Physics:
               Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
         """
         return 3.7 + (
-            (c_beta / (p0 / pres_plasma_vol_avg))
-            * (12.5 - 3.5 * (p0 / pres_plasma_vol_avg))
+            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
+            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
         )
 
     @staticmethod
@@ -3653,7 +3653,7 @@ class Physics:
         i_plasma_current: int,
         kappa: float,
         kappa95: float,
-        p0: float,
+        pres_plasma_on_axis: float,
         len_plasma_poloidal: float,
         q95: float,
         rmajor: float,
@@ -3680,7 +3680,7 @@ class Physics:
                 9 = FIESTA ST scaling
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
-            p0 (float): Central plasma pressure (Pa).
+            pres_plasma_on_axis (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
             ind_plasma_internal_norm (float): Plasma normalised internal inductance.
@@ -3757,7 +3757,7 @@ class Physics:
                 triang95,
                 eps,
                 kappa95,
-                p0,
+                pres_plasma_on_axis,
                 constants.RMU0,
             )
 
@@ -4584,8 +4584,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Plasma pressure on axis (Pa)",
-            "(p0)",
-            physics_variables.p0,
+            "(pres_plasma_on_axis)",
+            physics_variables.pres_plasma_on_axis,
             "OP ",
         )
         po.ovarre(
