@@ -217,7 +217,7 @@ def psync_albajar_fidone(
 
 
 def fast_alpha_beta(
-    bp: float,
+    b_plasma_poloidal_average: float,
     bt: float,
     dene: float,
     nd_fuel_ions: float,
@@ -234,7 +234,7 @@ def fast_alpha_beta(
     This function computes the fast alpha beta contribution based on the provided plasma parameters.
 
     Parameters:
-        bp (float): Poloidal field (T).
+        b_plasma_poloidal_average (float): Poloidal field (T).
         bt (float): Toroidal field on axis (T).
         dene (float): Electron density (m^-3).
         nd_fuel_ions (float): Fuel ion density (m^-3).
@@ -269,7 +269,7 @@ def fast_alpha_beta(
             * constants.RMU0
             * constants.KILOELECTRON_VOLT
             * (dene * ten + nd_ions_total * tin)
-            / (bt**2 + bp**2)
+            / (bt**2 + b_plasma_poloidal_average**2)
         )
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
