@@ -55,7 +55,7 @@ class NeutralBeam:
             physics_variables.te,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.f_nd_alpha_electron,
-            physics_variables.rncne,
+            physics_variables.f_nd_plasma_carbon_electron,
             physics_variables.f_nd_plasma_oxygen_electron,
             physics_variables.rnfene,
         )
@@ -139,7 +139,7 @@ class NeutralBeam:
             physics_variables.te,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.f_nd_alpha_electron,
-            physics_variables.rncne,
+            physics_variables.f_nd_plasma_carbon_electron,
             physics_variables.f_nd_plasma_oxygen_electron,
             physics_variables.rnfene,
         )
