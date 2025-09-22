@@ -166,7 +166,7 @@ lablcc: list[str] = None
 * (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
 * (70) ensure that teomp = separatrix temperature in the pedestal profile,
 (itv 119 (tesep))
-* (71) ensure that neomp = separatrix density (nesep) x neratio
+* (71) ensure that neomp = separatrix density (nd_plasma_separatrix_electron) x neratio
 * (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)
 * (73) Psep >= Plh + Paux (itv 137 (fplhsep))
 * (74) TFC quench < temp_croco_quench_max (itv 141 (ftemp_croco_quench_max))
@@ -337,7 +337,7 @@ lablxc: list[str] = None
 * (139) copper_thick : thickness of copper layer in tape (m)
 * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
 * (141) ftemp_croco_quench_max : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)
-* (142) nesep : electron density at separatrix [m-3]
+* (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
 * (143) f_copperA_m2 : TF coil current / copper area < Maximum value
 * (144) fnesep : Eich critical electron density at separatrix
 * (145) fgwped :  fraction of Greenwald density to set as pedestal-top density

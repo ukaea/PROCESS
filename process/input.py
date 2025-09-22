@@ -1262,7 +1262,9 @@ INPUT_VARIABLES = {
     "nd_plasma_pedestal_electron": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1e21)
     ),
-    "nesep": InputVariable(data_structure.physics_variables, float, range=(0.0, 1e21)),
+    "nd_plasma_separatrix_electron": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1e21)
+    ),
     "nflutfmax": InputVariable(
         data_structure.constraint_variables, float, range=(1e20, 1e24)
     ),

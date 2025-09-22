@@ -141,7 +141,7 @@ class ProcessTracker:
         "Physics.t_energy_confinement",
         "Physics.te0",
         "Physics.p_plasma_separatrix_mw",
-        "Physics.nesep",
+        "Physics.nd_plasma_separatrix_electron",
         "Physics.vol_plasma",
         "Physics.a_plasma_surface",
         "HeatTransport.p_plant_electric_net_mw",

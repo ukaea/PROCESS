@@ -580,7 +580,7 @@ class ElectronCyclotron:
             physics_variables.rhopedn,
             physics_variables.ne0,
             physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nesep,
+            physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
         )
 
@@ -1008,7 +1008,7 @@ class LowerHybrid:
             physics_variables.rhopedn,
             physics_variables.ne0,
             physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nesep,
+            physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
         )
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
@@ -1134,7 +1134,7 @@ class LowerHybrid:
             physics_variables.rhopedn,
             physics_variables.ne0,
             physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nesep,
+            physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
         )
 

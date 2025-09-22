@@ -391,7 +391,7 @@ fgwsep = 0.5
 nd_plasma_pedestal_electron = 0.5e20
 
 * Electron density at separatrix [m-3] (ipedestal=1) - initial value
-nesep = 0.2e20
+nd_plasma_separatrix_electron = 0.2e20
 
 * R/a of density pedestal (ipedestal=1)
 rhopedn = 0.94

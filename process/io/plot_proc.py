@@ -3589,9 +3589,9 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(rhopedn, 1)
-        neesep = nesep + (nd_plasma_pedestal_electron - nesep) * (1 - rhosep) / (
-            1 - min(0.9999, rhopedn)
-        )
+        neesep = nd_plasma_separatrix_electron + (
+            nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+        ) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
         nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
@@ -3657,7 +3657,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
         r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
         f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
-        rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
+        rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
         rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
     ))
 
@@ -3979,9 +3979,9 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
                     * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
                 )
             else:
-                ne[q] = nesep + (nd_plasma_pedestal_electron - nesep) * (1 - rho[q]) / (
-                    1 - min(0.9999, rhopedn)
-                )
+                ne[q] = nd_plasma_separatrix_electron + (
+                    nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+                ) * (1 - rho[q]) / (1 - min(0.9999, rhopedn))
 
             if rho[q] <= rhopedt:
                 te[q] = (
@@ -10722,7 +10722,7 @@ def main(args=None):
     # Pedestal profile parameters
     global ipedestal
     global nd_plasma_pedestal_electron
-    global nesep
+    global nd_plasma_separatrix_electron
     global rhopedn
     global rhopedt
     global tbeta
@@ -10744,7 +10744,9 @@ def main(args=None):
     nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
         scan
     )
-    nesep = m_file.data["nesep"].get_scan(scan)
+    nd_plasma_separatrix_electron = m_file.data[
+        "nd_plasma_separatrix_electron"
+    ].get_scan(scan)
     rhopedn = m_file.data["rhopedn"].get_scan(scan)
     rhopedt = m_file.data["rhopedt"].get_scan(scan)
     tbeta = m_file.data["tbeta"].get_scan(scan)

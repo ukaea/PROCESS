@@ -1958,14 +1958,14 @@ def constraint_equation_76():
     )
 
     cc = (
-        data_structure.physics_variables.nesep
+        data_structure.physics_variables.nd_plasma_separatrix_electron
         / data_structure.physics_variables.nesep_crit
         - 1.0 * data_structure.constraint_variables.fnesep
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.nesep,
-        data_structure.physics_variables.nesep * cc,
+        data_structure.physics_variables.nd_plasma_separatrix_electron,
+        data_structure.physics_variables.nd_plasma_separatrix_electron * cc,
     )
 
 

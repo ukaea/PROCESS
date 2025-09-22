@@ -14,7 +14,7 @@ class ProfileParam(NamedTuple):
 
 
 class NeProfileParam(NamedTuple):
-    nesep: float = 0.0
+    nd_plasma_separatrix_electron: float = 0.0
     ipedestal: float = 0.0
     ne0: float = 0.0
     nd_plasma_pedestal_electron: float = 0.0
@@ -27,7 +27,7 @@ class NeProfileParam(NamedTuple):
     "neprofileparam",
     (
         NeProfileParam(
-            nesep=3.6421334486704804e19,
+            nd_plasma_separatrix_electron=3.6421334486704804e19,
             ipedestal=1,
             ne0=0.0,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
@@ -141,7 +141,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     p0: float = 0.0
 
-    nesep: float = 0.0
+    nd_plasma_separatrix_electron: float = 0.0
 
     tesep: float = 0.0
 
@@ -224,7 +224,7 @@ class PlasmaProfilesParam(NamedTuple):
             tbeta=2,
             te0=0.0,
             p0=0.0,
-            nesep=3.6421334486704804e19,
+            nd_plasma_separatrix_electron=3.6421334486704804e19,
             tesep=0.10000000000000001,
             pcoef=0.0,
             ipedestal=1,
@@ -269,7 +269,7 @@ class PlasmaProfilesParam(NamedTuple):
             tbeta=2,
             te0=27.369013322953624,
             p0=868071.46874220832,
-            nesep=3.6421334486704804e19,
+            nd_plasma_separatrix_electron=3.6421334486704804e19,
             tesep=0.10000000000000001,
             pcoef=1.1110842637642833,
             ipedestal=1,
@@ -337,7 +337,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "p0", plasmaprofilesparam.p0)
 
-    monkeypatch.setattr(physics_variables, "nesep", plasmaprofilesparam.nesep)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_separatrix_electron",
+        plasmaprofilesparam.nd_plasma_separatrix_electron,
+    )
 
     monkeypatch.setattr(physics_variables, "tesep", plasmaprofilesparam.tesep)
 

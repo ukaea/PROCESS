@@ -470,7 +470,7 @@ density set manually using nd_plasma_pedestal_electron (`ipedestal==1`).
 
 fgwsep: float = None
 """fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-density set manually using nesep (`ipedestal==1`).
+density set manually using nd_plasma_separatrix_electron (`ipedestal==1`).
 (`iteration variable 152`)
 """
 
@@ -652,7 +652,7 @@ nd_plasma_pedestal_electron: float = None
 """electron density of pedestal [m-3] (`ipedestal==1)"""
 
 
-nesep: float = None
+nd_plasma_separatrix_electron: float = None
 """electron density at separatrix [m-3] (`ipedestal==1)"""
 
 
@@ -1450,7 +1450,7 @@ def init_physics_variables():
     global ipedestal
     global i_pfirsch_schluter_current
     global nd_plasma_pedestal_electron
-    global nesep
+    global nd_plasma_separatrix_electron
     global alpha_crit
     global nesep_crit
     global plasma_res_factor
@@ -1697,7 +1697,7 @@ def init_physics_variables():
     ipedestal = 1
     i_pfirsch_schluter_current = 0
     nd_plasma_pedestal_electron = 4.0e19
-    nesep = 3.0e19
+    nd_plasma_separatrix_electron = 3.0e19
     alpha_crit = 0.0
     nesep_crit = 0.0
     plasma_res_factor = 1.0

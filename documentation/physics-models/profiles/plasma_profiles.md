@@ -140,7 +140,7 @@ respectively. The density and temperature peaking parameters $\alpha_n$ and a
 $\alpha_T$ as well as the second exponent $\beta_T$ (input parameter
 `tbeta`, not to be confused with the plasma beta) in the temperature
 profile can be chosen by the user, as can the pedestal heights and the values
-at the separatrix (`nd_plasma_pedestal_electron, nesep` for the electron density, and
+at the separatrix (`nd_plasma_pedestal_electron, nd_plasma_separatrix_electron` for the electron density, and
 `teped, tesep` for the electron temperature); the ion equivalents are
 scaled from the electron values by the ratio of the volume-averaged values).
 
@@ -159,7 +159,7 @@ A table of the the associated variables can be seen below
 | Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped},n}$ |   `rhopedt`, $\rho_{\text{ped},T}$   |  
 | Plasma centre value              | `ne0`, $n_0$      |           `te0`, $T_0$       |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$    |       `teped`, $T_{\text{ped}}$     |
-| Separatrix value                 | `nesep`, $n_{\text{sep}}$   |        `tesep`, $T_{\text{sep}}$     |
+| Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$   |        `tesep`, $T_{\text{sep}}$     |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$  |       `alphat`, $\alpha_T$    |
 | Profile index $\beta$            |           |                 `tbeta`, $\beta_T$     |
 
@@ -646,7 +646,7 @@ and `ixc = 152` respectively
 
 This constraint can be activated by stating `icc = 81` in the input file
 
-To prevent unrealistic profiles when iterating the values of `ne0, nesep, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `ne0` is always higher that `nd_plasma_pedestal_electron` to get a converged solution. This can be scaled with `fne0`
+To prevent unrealistic profiles when iterating the values of `ne0, nd_plasma_separatrix_electron, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `ne0` is always higher that `nd_plasma_pedestal_electron` to get a converged solution. This can be scaled with `fne0`
 
 -------
 
@@ -674,7 +674,7 @@ $$
 
 Where $A$ is the plasma aspect ratio, $P_{\text{sep}}$ is the power crossing the separatrix and is the heating power minus the radiated power in this case, $n_{\text{GW}}$ is the Greenwald density limit.
 
-The value of `nesep` is check to make sure that it does not go higher than $n_{\text{sep}}^{\text{crit}}$. This can be scaled with `fnesep`
+The value of `nd_plasma_separatrix_electron` is check to make sure that it does not go higher than $n_{\text{sep}}^{\text{crit}}$. This can be scaled with `fnesep`
 
 [^1]: M. Bernert et al. Plasma Phys. Control. Fus. **57** (2015) 014038
 [^2]: N.A. Uckan and ITER Physics Group, 'ITER Physics Design Guidelines: 1989',

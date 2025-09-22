@@ -62,7 +62,7 @@ class Divertor:
                 pv.b_plasma_poloidal_average,
                 pv.p_plasma_separatrix_mw,
                 dv.f_div_flux_expansion,
-                pv.nesep,
+                pv.nd_plasma_separatrix_electron,
                 dv.deg_div_field_plate,
                 pv.rad_fraction_sol,
                 pv.f_p_div_lower,
@@ -218,7 +218,7 @@ class Divertor:
         b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         f_div_flux_expansion: float,
-        nesep: float,
+        nd_plasma_separatrix_electron: float,
         deg_div_field_plate: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
@@ -254,8 +254,8 @@ class Divertor:
         :param f_div_flux_expansion: plasma flux expansion in divertor
         :type f_div_flux_expansion: float
 
-        :param nesep: electron density at separatrix (m-3)
-        :type nesep: float
+        :param nd_plasma_separatrix_electron: electron density at separatrix (m-3)
+        :type nd_plasma_separatrix_electron: float
 
         :param deg_div_field_plate: field line angle wrt divertor target plate (degrees)
         :type deg_div_field_plate: float
@@ -301,7 +301,7 @@ class Divertor:
         # Spreading factor
         spread_fact = (
             0.12
-            * (nesep / 1e19) ** -0.02
+            * (nd_plasma_separatrix_electron / 1e19) ** -0.02
             * p_plasma_separatrix_mw**-0.21
             * rmajor**0.71
             * b_plasma_poloidal_average**-0.82

@@ -353,7 +353,12 @@ ITERATION_VARIABLES = {
     141: IterationVariable(
         "ftemp_croco_quench_max", data_structure.constraint_variables, 0.001, 1.0
     ),
-    142: IterationVariable("nesep", data_structure.physics_variables, 1.0e17, 1.0e20),
+    142: IterationVariable(
+        "nd_plasma_separatrix_electron",
+        data_structure.physics_variables,
+        1.0e17,
+        1.0e20,
+    ),
     143: IterationVariable("f_coppera_m2", data_structure.rebco_variables, 0.001, 1.0),
     144: IterationVariable("fnesep", data_structure.constraint_variables, 0.001, 1.0),
     145: IterationVariable("fgwped", data_structure.physics_variables, 0.1, 0.9),

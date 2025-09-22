@@ -113,13 +113,13 @@ class PlasmaProfile:
             or physics_variables.teped != 0.0
             or physics_variables.tesep != 0.0
             or physics_variables.nd_plasma_pedestal_electron != 0.0
-            or physics_variables.nesep != 0.0
+            or physics_variables.nd_plasma_separatrix_electron != 0.0
             or physics_variables.tbeta != 2.0
         ):
             logger.error(
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
-                "'rhopedt', 'rhopedn', 'teped', 'tesep', 'nd_plasma_pedestal_electron', 'nesep', "
+                "'rhopedt', 'rhopedn', 'teped', 'tesep', 'nd_plasma_pedestal_electron', 'nd_plasma_separatrix_electron', "
                 "and 'tbeta' have all been reset to L-Mode appropriate values"
             )
 
@@ -128,7 +128,7 @@ class PlasmaProfile:
             physics_variables.teped = 0.0e0
             physics_variables.tesep = 0.0e0
             physics_variables.nd_plasma_pedestal_electron = 0.0e0
-            physics_variables.nesep = 0.0e0
+            physics_variables.nd_plasma_separatrix_electron = 0.0e0
             physics_variables.tbeta = 2.0e0
 
         # Re-caluclate core and profile values
@@ -229,7 +229,8 @@ class PlasmaProfile:
 
         divertor_variables.prn1 = max(
             0.01e0,
-            physics_variables.nesep / physics_variables.nd_plasma_electrons_vol_avg,
+            physics_variables.nd_plasma_separatrix_electron
+            / physics_variables.nd_plasma_electrons_vol_avg,
         )  # Preventing division by zero later
 
     def calculate_profile_factors(self) -> None:

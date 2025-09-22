@@ -1708,7 +1708,7 @@ class Physics:
             )
 
         if (physics_variables.ipedestal == 1) and (physics_variables.fgwsep >= 0e0):
-            physics_variables.nesep = (
+            physics_variables.nd_plasma_separatrix_electron = (
                 physics_variables.fgwsep
                 * 1.0e14
                 * physics_variables.plasma_current
@@ -2783,7 +2783,7 @@ class Physics:
                     f"reinke t and fz, physics = {physics_variables.tesep} , {reinke_variables.fzmin}"
                 ),
             )
-            # fsep = physics_variables.nesep / physics_variables.nd_plasma_electrons_vol_avg
+            # fsep = physics_variables.nd_plasma_separatrix_electron / physics_variables.nd_plasma_electrons_vol_avg
             fgw = (
                 physics_variables.dlimit(7)
                 / physics_variables.nd_plasma_electrons_vol_avg
@@ -4812,7 +4812,10 @@ class Physics:
                 physics_variables.nd_plasma_pedestal_electron
                 / physics_variables.dlimit[6]
             )
-            fgwsep_out = physics_variables.nesep / physics_variables.dlimit[6]
+            fgwsep_out = (
+                physics_variables.nd_plasma_separatrix_electron
+                / physics_variables.dlimit[6]
+            )
             if physics_variables.fgwped >= 0e0:
                 physics_variables.fgwped = (
                     physics_variables.nd_plasma_pedestal_electron
@@ -4820,7 +4823,8 @@ class Physics:
                 )
             if physics_variables.fgwsep >= 0e0:
                 physics_variables.fgwsep = (
-                    physics_variables.nesep / physics_variables.dlimit[6]
+                    physics_variables.nd_plasma_separatrix_electron
+                    / physics_variables.dlimit[6]
                 )
 
             po.ovarre(
@@ -4861,8 +4865,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Electron density at separatrix (/m3)",
-                "(nesep)",
-                physics_variables.nesep,
+                "(nd_plasma_separatrix_electron)",
+                physics_variables.nd_plasma_separatrix_electron,
             )
             po.ovarre(
                 self.outfile,
@@ -4871,7 +4875,7 @@ class Physics:
                 fgwsep_out,
             )
 
-        # Issue 558 - addition of constraint 76 to limit the value of nesep, in proportion with the ballooning parameter and Greenwald density
+        # Issue 558 - addition of constraint 76 to limit the value of nd_plasma_separatrix_electron, in proportion with the ballooning parameter and Greenwald density
         if 76 in numerics.icc:
             po.ovarre(
                 self.outfile,

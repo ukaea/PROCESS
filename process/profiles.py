@@ -110,7 +110,7 @@ class NeProfile(Profile):
             physics_variables.rhopedn,
             physics_variables.ne0,
             physics_variables.nd_plasma_pedestal_electron,
-            physics_variables.nesep,
+            physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
         )
         self.integrate_profile_y()
@@ -224,7 +224,7 @@ class NeProfile(Profile):
             physics_variables.ne0 = self.ncore(
                 physics_variables.rhopedn,
                 physics_variables.nd_plasma_pedestal_electron,
-                physics_variables.nesep,
+                physics_variables.nd_plasma_separatrix_electron,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.alphan,
             )
