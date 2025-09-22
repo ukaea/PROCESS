@@ -2759,7 +2759,7 @@ class Physics:
             physics_variables.plomw = physics_variables.flo * physics_variables.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
-        physics_variables.total_loss_power = 1e6 * (
+        physics_variables.p_plasma_heating_total_mw = 1e6 * (
             physics_variables.f_p_alpha_plasma_deposited
             * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
@@ -2769,7 +2769,7 @@ class Physics:
         physics_variables.f_p_plasma_separatrix_rad = (
             1.0e6
             * physics_variables.p_plasma_rad_mw
-            / physics_variables.total_loss_power
+            / physics_variables.p_plasma_heating_total_mw
         )
         physics_variables.rad_fraction_total = (
             physics_variables.f_p_plasma_separatrix_rad

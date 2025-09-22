@@ -28,7 +28,7 @@ e_plasma_beta: float = None
 """[J]"""
 
 
-total_loss_power: float = None
+p_plasma_heating_total_mw: float = None
 """[W]"""
 
 
@@ -1292,7 +1292,7 @@ def init_physics_module():
     global err243
     global f_p_plasma_separatrix_rad
     global e_plasma_beta
-    global total_loss_power
+    global p_plasma_heating_total_mw
     global t_energy_confinement_beta
     global ptarmw
     global lambdaio
@@ -1319,7 +1319,7 @@ def init_physics_module():
     err243 = 0
     f_p_plasma_separatrix_rad = 0.0
     e_plasma_beta = 0.0
-    total_loss_power = 0.0
+    p_plasma_heating_total_mw = 0.0
     t_energy_confinement_beta = 0.0
     ptarmw = 0.0
     lambdaio = 0.0
