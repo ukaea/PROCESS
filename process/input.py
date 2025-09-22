@@ -124,7 +124,9 @@ INPUT_VARIABLES = {
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "betbm0": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
-    "bt": InputVariable(data_structure.physics_variables, float, range=(0.0, 30.0)),
+    "b_plasma_toroidal_on_axis": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 30.0)
+    ),
     "burnup_in": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),

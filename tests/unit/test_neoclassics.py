@@ -28,7 +28,7 @@ class InitNeoclassicsParam(NamedTuple):
     nd_alphas: Any = None
     rminor: Any = None
     rmajor: Any = None
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
     te: Any = None
     ti: Any = None
     dene: Any = None
@@ -77,7 +77,7 @@ class InitNeoclassicsParam(NamedTuple):
             nd_alphas=2.9820384000000004e19,
             rminor=1.7993820274145451,
             rmajor=22.16,
-            bt=5.2400000000000002,
+            b_plasma_toroidal_on_axis=5.2400000000000002,
             te=6.0190000000000001,
             ti=5.7180500000000007,
             dene=2.07086e20,
@@ -985,7 +985,11 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     monkeypatch.setattr(physics_variables, "nd_alphas", initneoclassicsparam.nd_alphas)
     monkeypatch.setattr(physics_variables, "rminor", initneoclassicsparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", initneoclassicsparam.rmajor)
-    monkeypatch.setattr(physics_variables, "bt", initneoclassicsparam.bt)
+    monkeypatch.setattr(
+        physics_variables,
+        "b_plasma_toroidal_on_axis",
+        initneoclassicsparam.b_plasma_toroidal_on_axis,
+    )
     monkeypatch.setattr(physics_variables, "te", initneoclassicsparam.te)
     monkeypatch.setattr(physics_variables, "ti", initneoclassicsparam.ti)
     monkeypatch.setattr(physics_variables, "dene", initneoclassicsparam.dene)

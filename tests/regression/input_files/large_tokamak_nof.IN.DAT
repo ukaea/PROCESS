@@ -179,9 +179,9 @@ t_burn_min = 7200.0
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3

@@ -58,7 +58,7 @@ class Divertor:
                 pv.rmajor,
                 pv.rminor,
                 pv.aspect,
-                pv.bt,
+                pv.b_plasma_toroidal_on_axis,
                 pv.b_plasma_poloidal_average,
                 pv.p_plasma_separatrix_mw,
                 dv.f_div_flux_expansion,
@@ -214,7 +214,7 @@ class Divertor:
         rmajor: float,
         rminor: float,
         aspect: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         f_div_flux_expansion: float,
@@ -242,8 +242,8 @@ class Divertor:
         :param aspect: tokamak aspect ratio
         :type aspect: float
 
-        :param bt: toroidal field (T)
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: toroidal field (T)
+        :type b_plasma_toroidal_on_axis: float
 
         :param b_plasma_poloidal_average: poloidal field (T)
         :type b_plasma_poloidal_average: float
@@ -287,7 +287,7 @@ class Divertor:
         # B fields on midplane
         Bp_omp = -b_plasma_poloidal_average * rmajor / r_omp
 
-        Bt_omp = -bt * rmajor / r_omp
+        Bt_omp = -b_plasma_toroidal_on_axis * rmajor / r_omp
 
         # Eich scaling for lambda_q
         lambda_eich = (

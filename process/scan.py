@@ -69,7 +69,7 @@ SCAN_VARIABLES = {
     25: ScanVariable("kappa", "Plasma_elongation"),
     26: ScanVariable("triang", "Plasma_triangularity"),
     27: ScanVariable("tbrmin", "Min_tritium_breed._ratio"),
-    28: ScanVariable("bt", "Tor._field_on_axis_(T)"),
+    28: ScanVariable("b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)"),
     29: ScanVariable("coreradius", "Core_radius"),
     31: ScanVariable(
         "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit"
@@ -96,7 +96,7 @@ SCAN_VARIABLES = {
     56: ScanVariable(
         "p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw"
     ),
-    57: ScanVariable("boundl(2)", "bt minimum"),
+    57: ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
     60: ScanVariable(
@@ -988,7 +988,7 @@ class Scan:
             case 27:
                 constraint_variables.tbrmin = swp[iscn - 1]
             case 28:
-                physics_variables.bt = swp[iscn - 1]
+                physics_variables.b_plasma_toroidal_on_axis = swp[iscn - 1]
             case 29:
                 impurity_radiation_module.coreradius = swp[iscn - 1]
             case 31:

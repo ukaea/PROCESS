@@ -19,7 +19,7 @@ class SetFusionPowersParam(NamedTuple):
 
     b_plasma_poloidal_average: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
     dene: Any = None
 

@@ -197,9 +197,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3

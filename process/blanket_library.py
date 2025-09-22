@@ -1412,7 +1412,7 @@ class BlanketLibrary:
         # IB
         if fwbs_variables.i_blkt_inboard == 1:
             fwbs_variables.b_mag_blkt[0] = (
-                physics_variables.bt
+                physics_variables.b_plasma_toroidal_on_axis
                 * physics_variables.rmajor
                 / (
                     physics_variables.rmajor
@@ -1423,7 +1423,7 @@ class BlanketLibrary:
         # We do not use this if there is no IB blanket, but will use edge as fill value
         if fwbs_variables.i_blkt_inboard == 0:
             fwbs_variables.b_mag_blkt[0] = (
-                physics_variables.bt
+                physics_variables.b_plasma_toroidal_on_axis
                 * physics_variables.rmajor
                 / (
                     physics_variables.rmajor
@@ -1432,7 +1432,7 @@ class BlanketLibrary:
             )
         # OB
         fwbs_variables.b_mag_blkt[1] = (
-            physics_variables.bt
+            physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.rmajor
             / (
                 physics_variables.rmajor

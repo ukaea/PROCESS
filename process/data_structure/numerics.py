@@ -198,7 +198,7 @@ ixc: list[int] = None
 lablxc: list[str] = None
 """Labels describing iteration variables<UL>
 * ( 1) aspect
-* ( 2) bt
+* ( 2) b_plasma_toroidal_on_axis
 * ( 3) rmajor
 * ( 4) te
 * ( 5) beta

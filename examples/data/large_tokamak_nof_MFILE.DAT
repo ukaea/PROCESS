@@ -267,7 +267,7 @@
  On-axis_plasma_current_density_(A/m2)____________________________________ (j_plasma_0)___________________ 9.12612438525533536e+05 OP
  Plasma_normalised_internal_inductance____________________________________ (ind_plasma_internal_norm)_____ 1.32659577813800511e+00 OP
  Vertical_field_at_plasma_(T)_____________________________________________ (bvert)________________________ -7.86903260900883805e-01 OP
- Vacuum_toroidal_field_at_R_(T)___________________________________________ (bt)___________________________ 4.74298390424727412e+00
+ Vacuum_toroidal_field_at_R_(T)___________________________________________ (b_plasma_toroidal_on_axis)___________________________ 4.74298390424727412e+00
  Average_poloidal_field_(T)_______________________________________________ (b_plasma_poloidal_average)___________________________ 9.14570852324388062e-01 OP
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)______________________________________ (btot)_________________________ 4.83035569703412992e+00 OP
  Safety_factor_on_axis____________________________________________________ (q0)___________________________ 1.00000000000000000e+00
@@ -1397,9 +1397,9 @@ t_burn_min = 7200.0
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3

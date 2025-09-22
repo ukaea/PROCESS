@@ -335,7 +335,7 @@ def test_tf_global_geometry(
 
 
 @pytest.mark.parametrize(
-    "n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected",
+    "n_tf_coils, b_plasma_toroidal_on_axis, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected",
     [
         (
             16,  # Number of TF coils
@@ -366,11 +366,21 @@ def test_tf_global_geometry(
     ],
 )
 def test_tf_current(
-    tfcoil, n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total, expected
+    tfcoil,
+    n_tf_coils,
+    b_plasma_toroidal_on_axis,
+    rmajor,
+    r_b_tf_inboard_peak,
+    a_tf_inboard_total,
+    expected,
 ):
     """Test the tf_current method."""
     result = tfcoil.tf_current(
-        n_tf_coils, bt, rmajor, r_b_tf_inboard_peak, a_tf_inboard_total
+        n_tf_coils,
+        b_plasma_toroidal_on_axis,
+        rmajor,
+        r_b_tf_inboard_peak,
+        a_tf_inboard_total,
     )
     assert result == expected
 
@@ -410,7 +420,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     rmajor: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
     itart: Any = None
 
@@ -479,7 +489,7 @@ class TfFieldAndForceParam(NamedTuple):
         TfFieldAndForceParam(
             rminor=0.97142857142857153,
             rmajor=1.7000000000000002,
-            bt=3,
+            b_plasma_toroidal_on_axis=3,
             itart=1,
             r_tf_outboard_mid=4.1688435714285719,
             r_vv_inboard_out=0.20483000000000001,
@@ -514,7 +524,7 @@ class TfFieldAndForceParam(NamedTuple):
         TfFieldAndForceParam(
             rminor=0.97142857142857153,
             rmajor=1.7000000000000002,
-            bt=3,
+            b_plasma_toroidal_on_axis=3,
             itart=1,
             r_tf_outboard_mid=4.1868435714285717,
             r_vv_inboard_out=0.20483000000000001,
@@ -571,7 +581,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
             n_tf_coils=tffieldandforceparam.n_tf_coils,
             dr_tf_plasma_case=tffieldandforceparam.dr_tf_plasma_case,
             rmajor=tffieldandforceparam.rmajor,
-            bt=tffieldandforceparam.bt,
+            b_plasma_toroidal_on_axis=tffieldandforceparam.b_plasma_toroidal_on_axis,
             r_cp_top=tffieldandforceparam.r_cp_top,
             itart=tffieldandforceparam.itart,
             i_cp_joints=tffieldandforceparam.i_cp_joints,

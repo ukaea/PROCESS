@@ -187,13 +187,16 @@ def calculate_volt_second_requirements(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_beta_limit(
-    bt: float, beta_norm_max: float, plasma_current: float, rminor: float
+    b_plasma_toroidal_on_axis: float,
+    beta_norm_max: float,
+    plasma_current: float,
+    rminor: float,
 ) -> float:
     """
     Calculate the beta scaling limit.
 
-    :param bt: Toroidal B-field on plasma axis [T].
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
+    :type b_plasma_toroidal_on_axis: float
     :param beta_norm_max: Troyon-like g coefficient.
     :type beta_norm_max: float
     :param plasma_current: Plasma current [A].
@@ -225,7 +228,12 @@ def calculate_beta_limit(
     """
 
     # Multiplied by 0.01 to convert from % to fraction
-    return 0.01 * beta_norm_max * (plasma_current / 1.0e6) / (rminor * bt)
+    return (
+        0.01
+        * beta_norm_max
+        * (plasma_current / 1.0e6)
+        / (rminor * b_plasma_toroidal_on_axis)
+    )
 
 
 # -----------------------------------------------------
@@ -295,7 +303,7 @@ def calculate_poloidal_field(
     q95: float,
     aspect: float,
     eps: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa: float,
     delta: float,
     perim: float,
@@ -310,7 +318,7 @@ def calculate_poloidal_field(
     - q95: float, 95% flux surface safety factor
     - aspect: float, plasma aspect ratio
     - eps: float, inverse aspect ratio
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - kappa: float, plasma elongation
     - delta: float, plasma triangularity
     - perim: float, plasma perimeter (m)
@@ -340,7 +348,7 @@ def calculate_poloidal_field(
     # Transform q95 to qbar
     qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
-    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+    return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 def calculate_current_coefficient_peng(
@@ -374,7 +382,7 @@ def calculate_plasma_current_peng(
     aspect: float,
     eps: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa: float,
     delta: float,
 ) -> float:
@@ -386,7 +394,7 @@ def calculate_plasma_current_peng(
     - aspect: float, plasma aspect ratio
     - eps: float, inverse aspect ratio
     - rminor: float, plasma minor radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - kappa: float, plasma elongation
     - delta: float, plasma triangularity
 
@@ -416,7 +424,7 @@ def calculate_plasma_current_peng(
 
     return (
         rminor
-        * bt
+        * b_plasma_toroidal_on_axis
         / qbar
         * 5.0
         * kappa
@@ -494,7 +502,7 @@ def calculate_current_coefficient_todd(
 def calculate_current_coefficient_hastie(
     alphaj: float,
     alphap: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     delta95: float,
     eps: float,
     kappa95: float,
@@ -507,7 +515,7 @@ def calculate_current_coefficient_hastie(
     Parameters:
     - alphaj: float, the current profile index
     - alphap: float, the pressure profile index
-    - bt: float, the toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
     - delta95: float, the plasma triangularity 95%
     - eps: float, the inverse aspect ratio
     - kappa95: float, the plasma elongation 95%
@@ -532,7 +540,7 @@ def calculate_current_coefficient_hastie(
     nu = alphap
 
     # Central plasma beta
-    beta0 = 2.0 * rmu0 * p0 / (bt**2)
+    beta0 = 2.0 * rmu0 * p0 / (b_plasma_toroidal_on_axis**2)
 
     # Plasma internal inductance
     lamp1 = 1.0 + lamda
@@ -640,7 +648,7 @@ def _nevins_integral(
     y: float,
     dene: float,
     te: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rminor: float,
     rmajor: float,
     zeff: float,
@@ -657,7 +665,7 @@ def _nevins_integral(
     - y: float, abscissa of integration, normalized minor radius
     - dene: float, volume averaged electron density (/m^3)
     - te: float, volume averaged electron temperature (keV)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - rminor: float, plasma minor radius (m)
     - rmajor: float, plasma major radius (m)
     - zeff: float, plasma effective charge
@@ -685,7 +693,11 @@ def _nevins_integral(
 
     # Compute average electron beta
     betae = (
-        dene * te * 1.0e3 * constants.ELECTRON_CHARGE / (bt**2 / (2.0 * constants.RMU0))
+        dene
+        * te
+        * 1.0e3
+        * constants.ELECTRON_CHARGE
+        / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
     )
 
     nabla = rminor * np.sqrt(y) / rmajor
@@ -951,7 +963,7 @@ def _calculate_l31_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     triang: float,
     ne: np.ndarray,
     ni: np.ndarray,
@@ -969,7 +981,7 @@ def _calculate_l31_coefficient(
     - radial_elements: np.ndarray, radial element indexes in range 2 to nr
     - number_of_elements: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
     - ne: np.ndarray, electron density profile (/m^3)
     - ni: np.ndarray, ion density profile (/m^3)
@@ -1021,7 +1033,7 @@ def _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         ne,
         ni,
         tempe,
@@ -1036,7 +1048,7 @@ def _calculate_l31_32_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     triang: float,
     ne: np.ndarray,
     ni: np.ndarray,
@@ -1054,7 +1066,7 @@ def _calculate_l31_32_coefficient(
     - radial_elements: np.ndarray, radial element indexes in range 2 to nr
     - number_of_elements: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
     - ne: np.ndarray, electron density profile (/m^3)
     - ni: np.ndarray, ion density profile (/m^3)
@@ -1148,12 +1160,19 @@ def _calculate_l31_32_coefficient(
 
     # Corrections suggested by Fable, 15/05/2015
     return _beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        b_plasma_toroidal_on_axis,
+        ne,
+        tempe,
+        inverse_q,
+        rho,
     ) * (big_f32ee_teff + big_f32ei_teff) + _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         triang,
         ne,
         ni,
@@ -1164,12 +1183,19 @@ def _calculate_l31_32_coefficient(
         zeff,
         sqeps,
     ) * _beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        b_plasma_toroidal_on_axis,
+        ne,
+        tempe,
+        inverse_q,
+        rho,
     ) / _beta_poloidal_total_sauter(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         ne,
         ni,
         tempe,
@@ -1184,7 +1210,7 @@ def _calculate_l34_alpha_31_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     triang: float,
     inverse_q: np.ndarray,
     sqeps: np.ndarray,
@@ -1204,7 +1230,7 @@ def _calculate_l34_alpha_31_coefficient(
     - radial_elements: np.ndarray, radial element indexes in range 2 to nr
     - number_of_elements: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
     - inverse_q: np.ndarray, inverse safety factor profile
     - sqeps: np.ndarray, square root of inverse aspect ratio profile
@@ -1279,7 +1305,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             ni,
             tempe,
@@ -1291,7 +1317,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             tempe,
             inverse_q,
@@ -1301,7 +1327,7 @@ def _calculate_l34_alpha_31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         triang,
         ne,
         ni,
@@ -1317,7 +1343,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             tempe,
             inverse_q,
@@ -1327,7 +1353,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             ni,
             tempe,
@@ -1343,7 +1369,7 @@ def _beta_poloidal_sauter(
     radial_elements: np.ndarray,
     nr: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     ne: np.ndarray,
     tempe: np.ndarray,
     inverse_q: np.ndarray,
@@ -1356,7 +1382,7 @@ def _beta_poloidal_sauter(
     - radial_elements: np.ndarray, radial element indexes in range 1 to nr
     - nr: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - ne: np.ndarray, electron density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
     - inverse_q: np.ndarray, inverse safety factor profile
@@ -1380,7 +1406,7 @@ def _beta_poloidal_sauter(
         * (
             rmajor
             / (
-                bt
+                b_plasma_toroidal_on_axis
                 * rho[radial_elements - 1]
                 * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             )
@@ -1394,7 +1420,7 @@ def _beta_poloidal_total_sauter(
     radial_elements: np.ndarray,
     nr: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     ne: np.ndarray,
     ni: np.ndarray,
     tempe: np.ndarray,
@@ -1409,7 +1435,7 @@ def _beta_poloidal_total_sauter(
     - radial_elements: np.ndarray, radial element indexes in range 1 to nr
     - nr: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - ne: np.ndarray, electron density profile (/m^3)
     - ni: np.ndarray, ion density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
@@ -1448,7 +1474,7 @@ def _beta_poloidal_total_sauter(
         * (
             rmajor
             / (
-                bt
+                b_plasma_toroidal_on_axis
                 * rho[radial_elements - 1]
                 * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             )
@@ -1589,7 +1615,7 @@ class Physics:
         ) = self.calculate_plasma_current(
             physics_variables.alphaj,
             physics_variables.alphap,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.eps,
             physics_variables.i_plasma_current,
             physics_variables.kappa,
@@ -1693,7 +1719,8 @@ class Physics:
 
         # Calculate total magnetic field [T]
         physics_variables.btot = np.sqrt(
-            physics_variables.bt**2 + physics_variables.b_plasma_poloidal_average**2
+            physics_variables.b_plasma_toroidal_on_axis**2
+            + physics_variables.b_plasma_poloidal_average**2
         )
 
         # ============================================
@@ -1703,7 +1730,9 @@ class Physics:
         # -----------------------------------------------------
 
         physics_variables.beta_toroidal = (
-            physics_variables.beta * physics_variables.btot**2 / physics_variables.bt**2
+            physics_variables.beta
+            * physics_variables.btot**2
+            / physics_variables.b_plasma_toroidal_on_axis**2
         )
 
         # Calculate physics_variables.beta poloidal [-]
@@ -1730,18 +1759,20 @@ class Physics:
         )
         physics_variables.beta_thermal_toroidal = (
             physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.bt) ** 2
+            * (physics_variables.btot / physics_variables.b_plasma_toroidal_on_axis)
+            ** 2
         )
         physics_variables.beta_norm_thermal = (
             1.0e8
             * physics_variables.beta_thermal
             * physics_variables.rminor
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.plasma_current
         )
         physics_variables.beta_norm_toroidal = (
             physics_variables.beta_norm_total
-            * (physics_variables.btot / physics_variables.bt) ** 2
+            * (physics_variables.btot / physics_variables.b_plasma_toroidal_on_axis)
+            ** 2
         )
         physics_variables.beta_norm_poloidal = (
             physics_variables.beta_norm_total
@@ -1896,7 +1927,7 @@ class Physics:
                 physics_variables.alphan,
                 physics_variables.alphat,
                 physics_variables.beta_toroidal,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.dene,
                 physics_variables.plasma_current,
                 physics_variables.q95,
@@ -2143,7 +2174,7 @@ class Physics:
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
                 physics_variables.b_plasma_poloidal_average,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
                 physics_variables.dene,
                 physics_variables.nd_fuel_ions,
@@ -2219,7 +2250,7 @@ class Physics:
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
             physics_variables.b_plasma_poloidal_average,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.dene,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
@@ -2280,7 +2311,7 @@ class Physics:
             self.plasma_profile,
             physics_variables.ne0,
             physics_variables.rminor,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.aspect,
             physics_variables.alphan,
             physics_variables.alphat,
@@ -2329,7 +2360,7 @@ class Physics:
         # Calculate L- to H-mode power threshold for different scalings
         physics_variables.l_h_threshold_powers = l_h_threshold_power(
             physics_variables.nd_electron_line,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.kappa,
@@ -2402,7 +2433,7 @@ class Physics:
             physics_variables.dlimit,
             physics_variables.dnelimt,
         ) = self.calculate_density_limit(
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.i_density_limit,
             physics_variables.p_plasma_separatrix_mw,
             current_drive_variables.p_hcd_injected_total_mw,
@@ -2429,7 +2460,7 @@ class Physics:
             physics_variables.m_fuel_amu,
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_ions_total,
             physics_variables.dene,
             physics_variables.nd_electron_line,
@@ -2581,7 +2612,7 @@ class Physics:
 
         # calculate_beta_limit() returns the beta_max for beta
         physics_variables.beta_max = calculate_beta_limit(
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.beta_norm_max,
             physics_variables.plasma_current,
             physics_variables.rminor,
@@ -2744,7 +2775,7 @@ class Physics:
             fgw = physics_variables.dlimit(7) / physics_variables.dene
             # calculate separatrix temperature, if Reinke criterion is used
             physics_variables.tesep = reinke_tsep(
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 constraint_variables.fl_h_threshold,
                 physics_variables.q95,
                 physics_variables.rmajor,
@@ -2975,7 +3006,7 @@ class Physics:
 
     @staticmethod
     def calculate_density_limit(
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         i_density_limit: int,
         p_plasma_separatrix_mw: float,
         p_hcd_injected_total_mw: float,
@@ -2992,7 +3023,7 @@ class Physics:
         Calculate the density limit using various models.
 
         Args:
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             i_density_limit (int): Switch denoting which formula to enforce.
             p_plasma_separatrix_mw (float): Power flowing to the edge plasma via charged particles (MW).
             p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
@@ -3042,14 +3073,24 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[0] = (1.54e20 * p_perp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45) / prn1
+        dlimit[0] = (
+            1.54e20
+            * p_perp**0.43
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.45
+        ) / prn1
 
         # Borrass density limit model for ITER (I)
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlimit[1] = (1.8e20 * p_perp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22) / prn1
+        dlimit[1] = (
+            1.8e20
+            * p_perp**0.53
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.22
+        ) / prn1
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
@@ -3057,7 +3098,12 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlimit[2] = (0.5e20 * p_perp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09) / prn1
+        dlimit[2] = (
+            0.5e20
+            * p_perp**0.57
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.09
+        ) / prn1
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -3080,12 +3126,17 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[4] = (0.237e20 * bt * np.sqrt(p_plasma_separatrix_mw) / rmajor) / prn1
+        dlimit[4] = (
+            0.237e20
+            * b_plasma_toroidal_on_axis
+            * np.sqrt(p_plasma_separatrix_mw)
+            / rmajor
+        ) / prn1
 
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
 
-        dlimit[5] = 3.0e20 * bt / (rmajor * qcyl)
+        dlimit[5] = 3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
 
         # Greenwald limit
 
@@ -3572,7 +3623,7 @@ class Physics:
     def calculate_plasma_current(
         alphaj: float,
         alphap: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         eps: float,
         i_plasma_current: int,
         kappa: float,
@@ -3590,7 +3641,7 @@ class Physics:
         Args:
             alphaj (float): Current profile index.
             alphap (float): Pressure profile index.
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             eps (float): Inverse aspect ratio.
             i_plasma_current (int): Current scaling model to use.
                 1 = Peng analytic fit
@@ -3653,7 +3704,7 @@ class Physics:
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
             plasma_current = 1.0e6 * calculate_plasma_current_peng(
-                q95, aspect_ratio, eps, rminor, bt, kappa, triang
+                q95, aspect_ratio, eps, rminor, b_plasma_toroidal_on_axis, kappa, triang
             )
 
         # Simple ITER scaling (simply the cylindrical case)
@@ -3675,7 +3726,14 @@ class Physics:
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
             fq = calculate_current_coefficient_hastie(
-                alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.RMU0
+                alphaj,
+                alphap,
+                b_plasma_toroidal_on_axis,
+                triang95,
+                eps,
+                kappa95,
+                p0,
+                constants.RMU0,
             )
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
@@ -3698,7 +3756,7 @@ class Physics:
                 * rminor**2
                 / (rmajor * q95)
                 * fq
-                * bt
+                * b_plasma_toroidal_on_axis
             )
         # i_plasma_current == 2 case covered above
 
@@ -3706,14 +3764,18 @@ class Physics:
         qstar = (
             5.0e6
             * rminor**2
-            / (rmajor * plasma_current / bt)
+            / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
             * 0.5
             * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
         )
 
         # Normalised beta from Troyon beta limit
         physics_variables.beta_norm_total = (
-            1.0e8 * physics_variables.beta * rminor * bt / plasma_current
+            1.0e8
+            * physics_variables.beta
+            * rminor
+            * b_plasma_toroidal_on_axis
+            / plasma_current
         )
 
         # Calculate the poloidal field generated by the plasma current
@@ -3723,7 +3785,7 @@ class Physics:
             q95,
             aspect_ratio,
             eps,
-            bt,
+            b_plasma_toroidal_on_axis,
             kappa,
             triang,
             len_plasma_poloidal,
@@ -3794,7 +3856,7 @@ class Physics:
             / (4.0e0 * np.pi**1.5e0 * constants.EPSILON0**2)
             * physics_variables.vol_plasma**2
             * physics_variables.rmajor**2
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             * np.sqrt(physics_variables.eps)
             * physics_variables.nd_electron_line**3
             * physics_variables.kappa
@@ -3813,7 +3875,7 @@ class Physics:
             )
         ) / (
             constants.ELECTRON_CHARGE
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.eps
             * physics_variables.rmajor
         )
@@ -3823,7 +3885,10 @@ class Physics:
             / 3.0e0
             * constants.RMU0
             * physics_variables.e_plasma_beta
-            / (physics_variables.vol_plasma * physics_variables.bt**2)
+            / (
+                physics_variables.vol_plasma
+                * physics_variables.b_plasma_toroidal_on_axis**2
+            )
         )
 
         po.oheadr(self.outfile, "Plasma")
@@ -4111,8 +4176,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Vacuum toroidal field at R (T)",
-                "(bt)",
-                physics_variables.bt,
+                "(b_plasma_toroidal_on_axis)",
+                physics_variables.b_plasma_toroidal_on_axis,
             )
             po.ovarrf(
                 self.outfile,
@@ -4124,7 +4189,7 @@ class Physics:
 
             po.ovarrf(
                 self.outfile,
-                "Total field (sqrt(b_plasma_poloidal_average^2 + bt^2)) (T)",
+                "Total field (sqrt(b_plasma_poloidal_average^2 + b_plasma_toroidal_on_axis^2)) (T)",
                 "(btot)",
                 physics_variables.btot,
                 "OP ",
@@ -5490,7 +5555,10 @@ class Physics:
                 "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
                 "(pdivmaxbt/qar)",
                 (
-                    (physics_variables.pdivmax * physics_variables.bt)
+                    (
+                        physics_variables.pdivmax
+                        * physics_variables.b_plasma_toroidal_on_axis
+                    )
                     / (
                         physics_variables.q95
                         * physics_variables.aspect
@@ -5513,7 +5581,10 @@ class Physics:
                 "Psep Bt / qAR ratio (MWT/m)",
                 "(pdivtbt_over_qar)",
                 (
-                    (physics_variables.p_plasma_separatrix_mw * physics_variables.bt)
+                    (
+                        physics_variables.p_plasma_separatrix_mw
+                        * physics_variables.b_plasma_toroidal_on_axis
+                    )
                     / (
                         physics_variables.q95
                         * physics_variables.aspect
@@ -5679,12 +5750,16 @@ class Physics:
             )
             po.oblnkl(self.outfile)
             if physics_variables.i_l_h_threshold in [9, 10, 11]:
-                if (physics_variables.bt < 0.78e0) or (physics_variables.bt > 7.94e0):
+                if (physics_variables.b_plasma_toroidal_on_axis < 0.78e0) or (
+                    physics_variables.b_plasma_toroidal_on_axis > 7.94e0
+                ):
                     po.ocmmnt(
                         self.outfile,
-                        "(bt outside Snipes 2000 fitted range)",
+                        "(b_plasma_toroidal_on_axis outside Snipes 2000 fitted range)",
                     )
-                    logger.warning("bt outside Snipes 2000 fitted range")
+                    logger.warning(
+                        "b_plasma_toroidal_on_axis outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.rminor < 0.15e0) or (
                     physics_variables.rminor > 1.15e0
@@ -6439,7 +6514,7 @@ class Physics:
                 physics_variables.m_fuel_amu,
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.nd_electron_line,
@@ -6481,7 +6556,7 @@ class Physics:
     def bootstrap_fraction_iter89(
         aspect: float,
         beta: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         plasma_current: float,
         q95: float,
         q0: float,
@@ -6494,7 +6569,7 @@ class Physics:
         Args:
             aspect (float): Plasma aspect ratio.
             beta (float): Plasma total beta.
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             plasma_current (float): Plasma current (A).
             q95 (float): Safety factor at 95% surface.
             q0 (float): Central safety factor.
@@ -6520,7 +6595,7 @@ class Physics:
         b_pa = (plasma_current / 1e6) / (5 * average_a)
 
         # Calculate the poloidal beta for bootstrap current
-        betapbs = beta * (bt / b_pa) ** 2
+        betapbs = beta * (b_plasma_toroidal_on_axis / b_pa) ** 2
 
         # Ensure betapbs is positive
         if betapbs <= 0.0:
@@ -6641,7 +6716,7 @@ class Physics:
         alphan: float,
         alphat: float,
         beta_toroidal: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         dene: float,
         plasma_current: float,
         q95: float,
@@ -6658,7 +6733,7 @@ class Physics:
             alphan (float): Density profile index.
             alphat (float): Temperature profile index.
             beta_toroidal (float): Toroidal plasma beta.
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             dene (float): Electron density (/m3).
             plasma_current (float): Plasma current (A).
             q0 (float): Central safety factor.
@@ -6693,7 +6768,7 @@ class Physics:
             * physics_variables.te0
             * 1.0e3
             * constants.ELECTRON_CHARGE
-            / (bt**2 / (2.0 * constants.RMU0))
+            / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
         )
 
         # Call integration routine using definite integral routine from scipy
@@ -6703,7 +6778,7 @@ class Physics:
                 y,
                 dene,
                 te,
-                bt,
+                b_plasma_toroidal_on_axis,
                 rminor,
                 rmajor,
                 zeff,
@@ -6719,7 +6794,7 @@ class Physics:
 
         # Calculate bootstrap current and fraction
 
-        aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
+        aibs = 2.5 * betae0 * rmajor * b_plasma_toroidal_on_axis * q95 * ainteg
         return 1.0e6 * aibs / plasma_current
 
     @staticmethod
@@ -6820,7 +6895,7 @@ class Physics:
                     radial_elements,
                     nr,
                     physics_variables.rmajor,
-                    physics_variables.bt,
+                    physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
                     ne,
                     ni,
@@ -6836,7 +6911,7 @@ class Physics:
                     radial_elements,
                     nr,
                     physics_variables.rmajor,
-                    physics_variables.bt,
+                    physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
                     ne,
                     ni,
@@ -6852,7 +6927,7 @@ class Physics:
                     radial_elements,
                     nr,
                     physics_variables.rmajor,
-                    physics_variables.bt,
+                    physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
                     inverse_q,
                     sqeps,
@@ -6869,7 +6944,7 @@ class Physics:
             )
             * 1.0e6
             * (
-                -physics_variables.bt
+                -physics_variables.b_plasma_toroidal_on_axis
                 / (0.2 * np.pi * physics_variables.rmajor)
                 * rho[radial_elements - 1]
                 * inverse_q[radial_elements - 1]
@@ -7363,7 +7438,7 @@ class Physics:
                 physics_variables.m_fuel_amu,
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_ions_total,
                 physics_variables.dene,
                 physics_variables.nd_electron_line,
@@ -7419,7 +7494,7 @@ class Physics:
         m_fuel_amu: float,
         p_alpha_total_mw: float,
         aspect: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         nd_ions_total: float,
         dene: float,
         nd_electron_line: float,
@@ -7448,7 +7523,7 @@ class Physics:
         :param m_fuel_amu: Average mass of fuel (amu)
         :param p_alpha_total_mw: Alpha particle power (MW)
         :param aspect: Aspect ratio
-        :param bt: Toroidal field on axis (T)
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
         :param nd_ions_total: Total ion density (/m3)
         :param dene: Volume averaged electron density (/m3)
         :param nd_electron_line: Line-averaged electron density (/m3)
@@ -7569,7 +7644,7 @@ class Physics:
         # Shimomura (S) optimized H-mode scaling
         elif i_confinement_time == 4:
             t_electron_confinement = confinement.shimomura_confinement_time(
-                rmajor, rminor, bt, kappa95, m_fuel_amu
+                rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
             )
 
         # ========================================================================
@@ -7577,7 +7652,14 @@ class Physics:
         # Kaye-Goldston scaling (L-mode)
         elif i_confinement_time == 5:
             t_electron_confinement = confinement.kaye_goldston_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                b_plasma_toroidal_on_axis,
+                m_fuel_amu,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -7585,7 +7667,14 @@ class Physics:
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
             t_electron_confinement = confinement.iter_89p_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                b_plasma_toroidal_on_axis,
+                m_fuel_amu,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -7593,7 +7682,14 @@ class Physics:
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif i_confinement_time == 7:
             t_electron_confinement = confinement.iter_89_0_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                b_plasma_toroidal_on_axis,
+                m_fuel_amu,
+                p_plasma_loss_mw,
             )
         # ========================================================================
 
@@ -7607,7 +7703,7 @@ class Physics:
                 pcur,
                 zeff,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7624,7 +7720,15 @@ class Physics:
         # T-10 scaling (L-mode)
         elif i_confinement_time == 10:
             t_electron_confinement = confinement.t10_confinement_time(
-                dnla20, rmajor, qstar, bt, rminor, kappa95, p_plasma_loss_mw, zeff, pcur
+                dnla20,
+                rmajor,
+                qstar,
+                b_plasma_toroidal_on_axis,
+                rminor,
+                kappa95,
+                p_plasma_loss_mw,
+                zeff,
+                pcur,
             )
 
         # ========================================================================
@@ -7637,7 +7741,7 @@ class Physics:
                 m_fuel_amu,
                 n20,
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 rmajor,
                 qstar,
                 zeff,
@@ -7651,7 +7755,7 @@ class Physics:
             t_electron_confinement = confinement.kaye_big_confinement_time(
                 rmajor,
                 rminor,
-                bt,
+                b_plasma_toroidal_on_axis,
                 kappa95,
                 pcur,
                 n20,
@@ -7669,7 +7773,7 @@ class Physics:
                 rminor,
                 kappa,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 m_fuel_amu,
                 p_plasma_loss_mw,
             )
@@ -7685,7 +7789,7 @@ class Physics:
                     rminor,
                     kappa,
                     dnla20,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     m_fuel_amu,
                     p_plasma_loss_mw,
                 ),
@@ -7695,7 +7799,7 @@ class Physics:
                     rminor,
                     kappa,
                     dnla20,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     m_fuel_amu,
                     p_plasma_loss_mw,
                 ),
@@ -7711,7 +7815,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7725,7 +7829,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 m_fuel_amu,
             )
@@ -7740,7 +7844,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7754,7 +7858,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7768,7 +7872,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 m_fuel_amu,
                 p_plasma_loss_mw,
             )
@@ -7779,7 +7883,7 @@ class Physics:
         elif i_confinement_time == 20:
             t_electron_confinement = confinement.iter_h90_p_amended_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 m_fuel_amu,
                 rmajor,
                 p_plasma_loss_mw,
@@ -7794,7 +7898,7 @@ class Physics:
                 rmajor,
                 rminor,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7803,7 +7907,7 @@ class Physics:
         # Gyro-reduced Bohm scaling
         elif i_confinement_time == 22:
             t_electron_confinement = confinement.gyro_reduced_bohm_confinement_time(
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
                 rminor,
@@ -7819,7 +7923,7 @@ class Physics:
                     rmajor,
                     rminor,
                     dnla20,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     p_plasma_loss_mw,
                     q95,
                 )
@@ -7831,7 +7935,7 @@ class Physics:
         elif i_confinement_time == 24:
             t_electron_confinement = confinement.iter_93h_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 m_fuel_amu,
                 rmajor,
@@ -7850,7 +7954,7 @@ class Physics:
         elif i_confinement_time == 26:
             t_electron_confinement = confinement.iter_h97p_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
                 rmajor,
@@ -7865,7 +7969,7 @@ class Physics:
         elif i_confinement_time == 27:
             t_electron_confinement = confinement.iter_h97p_elmy_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
                 rmajor,
@@ -7880,7 +7984,7 @@ class Physics:
         elif i_confinement_time == 28:
             t_electron_confinement = confinement.iter_96p_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 kappa95,
                 rmajor,
                 aspect,
@@ -7896,7 +8000,7 @@ class Physics:
         elif i_confinement_time == 29:
             t_electron_confinement = confinement.valovic_elmy_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 m_fuel_amu,
                 rmajor,
@@ -7912,7 +8016,7 @@ class Physics:
         elif i_confinement_time == 30:
             t_electron_confinement = confinement.kaye_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 kappa,
                 rmajor,
                 aspect,
@@ -7928,7 +8032,7 @@ class Physics:
         elif i_confinement_time == 31:
             t_electron_confinement = confinement.iter_pb98py_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7943,7 +8047,7 @@ class Physics:
         elif i_confinement_time == 32:
             t_electron_confinement = confinement.iter_ipb98y_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7958,7 +8062,7 @@ class Physics:
         elif i_confinement_time == 33:
             t_electron_confinement = confinement.iter_ipb98y1_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7973,7 +8077,7 @@ class Physics:
         elif i_confinement_time == 34:
             t_electron_confinement = confinement.iter_ipb98y2_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7988,7 +8092,7 @@ class Physics:
         elif i_confinement_time == 35:
             t_electron_confinement = confinement.iter_ipb98y3_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8003,7 +8107,7 @@ class Physics:
         elif i_confinement_time == 36:
             t_electron_confinement = confinement.iter_ipb98y4_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8022,7 +8126,7 @@ class Physics:
                 rminor,
                 rmajor,
                 dnla19,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 iotabar,
             )
@@ -8037,7 +8141,7 @@ class Physics:
                 rminor,
                 rmajor,
                 dnla19,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 iotabar,
             )
@@ -8048,7 +8152,7 @@ class Physics:
         elif i_confinement_time == 39:
             t_electron_confinement = confinement.ds03_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8066,7 +8170,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 dnla19,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -8076,7 +8180,7 @@ class Physics:
         elif i_confinement_time == 41:
             t_electron_confinement = confinement.petty08_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8090,7 +8194,7 @@ class Physics:
         elif i_confinement_time == 42:
             t_electron_confinement = confinement.lang_high_density_confinement_time(
                 plasma_current,
-                bt,
+                b_plasma_toroidal_on_axis,
                 nd_electron_line,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8108,7 +8212,7 @@ class Physics:
         elif i_confinement_time == 43:
             t_electron_confinement = confinement.hubbard_nominal_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
             )
@@ -8119,7 +8223,7 @@ class Physics:
         elif i_confinement_time == 44:
             t_electron_confinement = confinement.hubbard_lower_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
             )
@@ -8130,7 +8234,7 @@ class Physics:
         elif i_confinement_time == 45:
             t_electron_confinement = confinement.hubbard_upper_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
             )
@@ -8141,7 +8245,7 @@ class Physics:
         elif i_confinement_time == 46:
             t_electron_confinement = confinement.menard_nstx_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8157,7 +8261,7 @@ class Physics:
             t_electron_confinement = (
                 confinement.menard_nstx_petty08_hybrid_confinement_time(
                     pcur,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     dnla19,
                     p_plasma_loss_mw,
                     rmajor,
@@ -8173,7 +8277,7 @@ class Physics:
         elif i_confinement_time == 48:
             t_electron_confinement = confinement.nstx_gyro_bohm_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 rmajor,
                 dnla20,
@@ -8185,7 +8289,7 @@ class Physics:
         elif i_confinement_time == 49:
             t_electron_confinement = confinement.itpa20_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8201,7 +8305,7 @@ class Physics:
         elif i_confinement_time == 50:
             t_electron_confinement = confinement.itpa20_il_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
                 physics_variables.m_ions_total_amu,
@@ -8353,7 +8457,7 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 def l_h_threshold_power(
     nd_electron_line: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rmajor: float,
     rminor: float,
     kappa: float,
@@ -8367,8 +8471,8 @@ def l_h_threshold_power(
 
     :param nd_electron_line: Line-averaged electron density (/m3)
     :type nd_electron_line: float
-    :param bt: Toroidal field on axis (T)
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius (m)
     :type rmajor: float
     :param rminor: Plasma minor radius (m)
@@ -8396,25 +8500,35 @@ def l_h_threshold_power(
     # Fit to 1996 H-mode power threshold database: nominal
 
     # i_l_h_threshold = 1
-    iterdd = transition.calculate_iter1996_nominal(dnla20, bt, rmajor)
+    iterdd = transition.calculate_iter1996_nominal(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # Fit to 1996 H-mode power threshold database: upper bound
     # i_l_h_threshold = 2
-    iterdd_ub = transition.calculate_iter1996_upper(dnla20, bt, rmajor)
+    iterdd_ub = transition.calculate_iter1996_upper(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # Fit to 1996 H-mode power threshold database: lower bound
     # i_l_h_threshold = 3
-    iterdd_lb = transition.calculate_iter1996_lower(dnla20, bt, rmajor)
+    iterdd_lb = transition.calculate_iter1996_lower(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # ========================================================================
 
     # Snipes 1997 ITER H-mode power threshold
 
     # i_l_h_threshold = 4
-    snipes_1997 = transition.calculate_snipes1997_iter(dnla20, bt, rmajor)
+    snipes_1997 = transition.calculate_snipes1997_iter(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # i_l_h_threshold = 5
-    snipes_1997_kappa = transition.calculate_snipes1997_kappa(dnla20, bt, rmajor, kappa)
+    snipes_1997_kappa = transition.calculate_snipes1997_kappa(
+        dnla20, b_plasma_toroidal_on_axis, rmajor, kappa
+    )
 
     # ========================================================================
 
@@ -8423,17 +8537,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 6
     martin_nominal = transition.calculate_martin08_nominal(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
     )
 
     # i_l_h_threshold = 7
     martin_ub = transition.calculate_martin08_upper(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
     )
 
     # i_l_h_threshold = 8
     martin_lb = transition.calculate_martin08_lower(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
     )
 
     # ========================================================================
@@ -8443,17 +8557,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 9
     snipes_2000 = transition.calculate_snipes2000_nominal(
-        dnla20, bt, rmajor, rminor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 10
     snipes_2000_ub = transition.calculate_snipes2000_upper(
-        dnla20, bt, rmajor, rminor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 11
     snipes_2000_lb = transition.calculate_snipes2000_lower(
-        dnla20, bt, rmajor, rminor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
     )
 
     # ========================================================================
@@ -8463,17 +8577,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 12
     snipes_2000_cd = transition.calculate_snipes2000_closed_divertor_nominal(
-        dnla20, bt, rmajor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 13
     snipes_2000_cd_ub = transition.calculate_snipes2000_closed_divertor_upper(
-        dnla20, bt, rmajor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 14
     snipes_2000_cd_lb = transition.calculate_snipes2000_closed_divertor_lower(
-        dnla20, bt, rmajor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
     )
 
     # ========================================================================
@@ -8494,7 +8608,9 @@ def l_h_threshold_power(
     # Hubbard et al. 2017 L-I threshold scaling
 
     # i_l_h_threshold = 18
-    hubbard_2017 = transition.calculate_hubbard2017(dnla20, a_plasma_surface, bt)
+    hubbard_2017 = transition.calculate_hubbard2017(
+        dnla20, a_plasma_surface, b_plasma_toroidal_on_axis
+    )
 
     # ========================================================================
 
@@ -8502,17 +8618,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 19
     martin_nominal_aspect = transition.calculate_martin08_aspect_nominal(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
     )
 
     # i_l_h_threshold = 20
     martin_ub_aspect = transition.calculate_martin08_aspect_upper(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
     )
 
     # i_l_h_threshold = 21
     martin_lb_aspect = transition.calculate_martin08_aspect_lower(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
     )
 
     # ========================================================================
@@ -8542,10 +8658,10 @@ def l_h_threshold_power(
     ]
 
 
-def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
+def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, lhat):
     """Function for calculating upstream temperature(keV) in Reinke model
     author: H Lux, CCFE/UKAEA
-    bt      : input real : toroidal field on axis (T)
+    b_plasma_toroidal_on_axis      : input real : toroidal field on axis (T)
     flh     : input real : fraction of Psep/P_LH
     qstar   : input real : safety factor similar to q95 (see #707)
     rmajor  : input real : major radius (m)
@@ -8561,7 +8677,13 @@ def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
     kappa_0 = 2.0e3  # Stangeby W/m/eV^(7/2)
 
     return (
-        (bt**0.72 * flh**0.29 * fgw**0.21 * qstar**0.08 * rmajor**0.33)
+        (
+            b_plasma_toroidal_on_axis**0.72
+            * flh**0.29
+            * fgw**0.21
+            * qstar**0.08
+            * rmajor**0.33
+        )
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )

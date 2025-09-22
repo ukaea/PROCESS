@@ -710,7 +710,7 @@ class ElectronCyclotron:
         zeff: float,
         rmajor: float,
         dene: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         n_ecrh_harmonic: int,
         i_ecrh_wave_mode: int,
     ) -> float:
@@ -729,8 +729,8 @@ class ElectronCyclotron:
         :type rmajor: float
         :param dene: Volume averaged electron density in m^-3.
         :type dene: float
-        :param bt: Toroidal magnetic field in Tesla.
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field in Tesla.
+        :type b_plasma_toroidal_on_axis: float
         :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
         :type n_ecrh_harmonic: int
         :param i_ecrh_wave_mode: Wave mode switch (0 for O-mode, 1 for X-mode).
@@ -748,7 +748,13 @@ class ElectronCyclotron:
         """
 
         # Cyclotron frequency
-        fc = 1 / (2 * np.pi) * constants.ELECTRON_CHARGE * bt / constants.ELECTRON_MASS
+        fc = (
+            1
+            / (2 * np.pi)
+            * constants.ELECTRON_CHARGE
+            * b_plasma_toroidal_on_axis
+            / constants.ELECTRON_MASS
+        )
 
         # Plasma frequency
         fp = (
@@ -897,7 +903,7 @@ class ElectronBernstein:
         te: float,
         rmajor: float,
         dene20: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         n_ecrh_harmonic: int,
         xi_ebw: float,
     ) -> float:
@@ -913,8 +919,8 @@ class ElectronBernstein:
         :type rmajor: float
         :param dene20: Volume averaged electron density in units of 10^20 m^-3.
         :type dene20: float
-        :param bt: Toroidal magnetic field in Tesla.
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: Toroidal magnetic field in Tesla.
+        :type b_plasma_toroidal_on_axis: float
         :param n_ecrh_harmonic: Cyclotron harmonic number (fundamental used as default).
         :type n_ecrh_harmonic: int
         :param xi_ebw: Scaling factor for EBW efficiency.
@@ -947,7 +953,7 @@ class ElectronBernstein:
             / (2.0e0 * np.pi)
             * n_ecrh_harmonic
             * constants.ELECTRON_CHARGE
-            * bt
+            * b_plasma_toroidal_on_axis
             / constants.ELECTRON_MASS
         )
 
@@ -1002,7 +1008,7 @@ class LowerHybrid:
             physics_variables.tbeta,
         )
         blocal = (
-            physics_variables.bt
+            physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.rmajor
             / (physics_variables.rmajor - rpenet)
         )  # Calculated on inboard side
@@ -1134,7 +1140,7 @@ class LowerHybrid:
         #  Local toroidal field (evaluated at the inboard region of the flux surface)
 
         blocal = (
-            physics_variables.bt
+            physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.rmajor
             / (physics_variables.rmajor - rratio * physics_variables.rminor)
         )
@@ -1335,7 +1341,7 @@ class CurrentDrive:
                     te=physics_variables.te,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
-                    bt=physics_variables.bt,
+                    b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
                     n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
                     xi_ebw=current_drive_variables.xi_ebw,
                 )
@@ -1345,7 +1351,7 @@ class CurrentDrive:
                     zeff=physics_variables.zeff,
                     rmajor=physics_variables.rmajor,
                     dene=physics_variables.dene,
-                    bt=physics_variables.bt,
+                    b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
                     n_ecrh_harmonic=current_drive_variables.n_ecrh_harmonic,
                     i_ecrh_wave_mode=current_drive_variables.i_ecrh_wave_mode,
                 )

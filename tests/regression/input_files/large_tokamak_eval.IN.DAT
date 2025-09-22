@@ -281,7 +281,7 @@ alphat   = 1.45 * temperature profile index
 i_alphaj = 1 * Current profile index selection (0 = user input)
 aspect   = 3.0 * aspect ratio (`iteration variable 1`)
 beta     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
-bt       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
+b_plasma_toroidal_on_axis       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
 dene     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
 fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix

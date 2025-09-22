@@ -88,7 +88,7 @@ def test_liquid_breeder_properties_part_1(monkeypatch, blanket_library_fixture):
     """
     # Set var values
     monkeypatch.setattr(fwbs, "a_bz_liq", 0.2)
-    monkeypatch.setattr(pv, "bt", 6.0)
+    monkeypatch.setattr(pv, "b_plasma_toroidal_on_axis", 6.0)
     monkeypatch.setattr(pv, "rmajor", 8.0)
     monkeypatch.setattr(pv, "aspect", 3.0)
     monkeypatch.setattr(bv, "dr_blkt_inboard", 0.1)
@@ -133,7 +133,7 @@ def test_liquid_breeder_properties_part_2(monkeypatch, blanket_library_fixture):
     """
     # Set var values
     monkeypatch.setattr(fwbs, "a_bz_liq", 0.2)
-    monkeypatch.setattr(pv, "bt", 6.0)
+    monkeypatch.setattr(pv, "b_plasma_toroidal_on_axis", 6.0)
     monkeypatch.setattr(pv, "rmajor", 8.0)
     monkeypatch.setattr(pv, "aspect", 3.0)
     monkeypatch.setattr(bv, "dr_blkt_inboard", 0.0)
@@ -155,7 +155,7 @@ def test_liquid_breeder_properties_part_3(monkeypatch, blanket_library_fixture):
     """
     # Set var values
     monkeypatch.setattr(fwbs, "a_bz_liq", 0.2)
-    monkeypatch.setattr(pv, "bt", 6.0)
+    monkeypatch.setattr(pv, "b_plasma_toroidal_on_axis", 6.0)
     monkeypatch.setattr(pv, "rmajor", 8.0)
     monkeypatch.setattr(pv, "aspect", 3.0)
     monkeypatch.setattr(bv, "dr_blkt_inboard", 0.1)

@@ -20,7 +20,7 @@ var_dicts = {
     "p_cryo_plant_electric_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
-    "bt": VariableMetadata(
+    "b_plasma_toroidal_on_axis": VariableMetadata(
         latex=r"$B_\mathrm{T}$ [$T$]", description="Toroidal magnetic field", units="T"
     ),
     "dr_tf_inboard": VariableMetadata(

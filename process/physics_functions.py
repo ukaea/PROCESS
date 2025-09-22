@@ -25,7 +25,7 @@ def calculate_radiation_powers(
     plasma_profile: PlasmaProfile,
     ne0: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     aspect: float,
     alphan: float,
     alphat: float,
@@ -49,8 +49,8 @@ def calculate_radiation_powers(
     :type ne0: float
     :param rminor: Minor radius of the plasma (m).
     :type rminor: float
-    :param bt: Toroidal magnetic field (T).
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field (T).
+    :type b_plasma_toroidal_on_axis: float
     :param aspect: Aspect ratio of the plasma.
     :type aspect: float
     :param alphan: Alpha parameter for density profile.
@@ -95,7 +95,7 @@ def calculate_radiation_powers(
     pden_plasma_sync_mw = psync_albajar_fidone(
         ne0,
         rminor,
-        bt,
+        b_plasma_toroidal_on_axis,
         aspect,
         alphan,
         alphat,
@@ -126,7 +126,7 @@ def calculate_radiation_powers(
 def psync_albajar_fidone(
     ne0: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     aspect: float,
     alphan: float,
     alphat: float,
@@ -147,8 +147,8 @@ def psync_albajar_fidone(
     :type ne0: float
     :param rminor: Minor radius of the plasma (m).
     :type rminor: float
-    :param bt: Toroidal magnetic field (T).
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field (T).
+    :type b_plasma_toroidal_on_axis: float
     :param aspect: Aspect ratio of the plasma.
     :type aspect: float
     :param alphan: Alpha parameter for density profile.
@@ -183,7 +183,7 @@ def psync_albajar_fidone(
 
     ne0_20 = 1.0e-20 * ne0
 
-    p_a0 = 6.04e3 * (rminor * ne0_20) / bt
+    p_a0 = 6.04e3 * (rminor * ne0_20) / b_plasma_toroidal_on_axis
 
     g_function = 0.93 * (1.0 + 0.85 * np.exp(-0.82 * aspect))
 
@@ -202,7 +202,7 @@ def psync_albajar_fidone(
         * rmajor
         * rminor**1.38
         * kappa**0.79
-        * bt**2.62
+        * b_plasma_toroidal_on_axis**2.62
         * ne0_20**0.38
         * te0
         * (16.0 + te0) ** 2.61
@@ -218,7 +218,7 @@ def psync_albajar_fidone(
 
 def fast_alpha_beta(
     b_plasma_poloidal_average: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     dene: float,
     nd_fuel_ions: float,
     nd_ions_total: float,
@@ -235,7 +235,7 @@ def fast_alpha_beta(
 
     Parameters:
         b_plasma_poloidal_average (float): Poloidal field (T).
-        bt (float): Toroidal field on axis (T).
+        b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
         dene (float): Electron density (m^-3).
         nd_fuel_ions (float): Fuel ion density (m^-3).
         nd_ions_total (float): Total ion density (m^-3).
@@ -269,7 +269,7 @@ def fast_alpha_beta(
             * constants.RMU0
             * constants.KILOELECTRON_VOLT
             * (dene * ten + nd_ions_total * tin)
-            / (bt**2 + b_plasma_poloidal_average**2)
+            / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
         )
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
