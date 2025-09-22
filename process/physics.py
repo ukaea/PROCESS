@@ -4886,8 +4886,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Critical electron density at separatrix (/m3)",
-                "(nesep_crit)",
-                physics_variables.nesep_crit,
+                "(nd_plasma_separatrix_electron_eich_max)",
+                physics_variables.nd_plasma_separatrix_electron_eich_max,
             )
 
         po.ovarrf(
