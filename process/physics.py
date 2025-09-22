@@ -2069,7 +2069,7 @@ class Physics:
                 zeff=physics_variables.zeff,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
-                rhopedn=physics_variables.rhopedn,
+                radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
                 nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
                 n_greenwald=physics_variables.dlimit[6],
                 teped=physics_variables.teped,
@@ -4787,8 +4787,8 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Density pedestal r/a location",
-                "(rhopedn)",
-                physics_variables.rhopedn,
+                "(radius_plasma_pedestal_density_norm)",
+                physics_variables.radius_plasma_pedestal_density_norm,
             )
             if physics_variables.fgwped >= 0e0:
                 po.ovarre(
@@ -7372,7 +7372,7 @@ class Physics:
         zeff: float,
         q95: float,
         q0: float,
-        rhopedn: float,
+        radius_plasma_pedestal_density_norm: float,
         nd_plasma_pedestal_electron: float,
         n_greenwald: float,
         teped: float,
@@ -7396,8 +7396,8 @@ class Physics:
         :type q95: float
         :param q0: Safety factor at the magnetic axis.
         :type q0: float
-        :param rhopedn: Normalised plasma radius of density pedestal.
-        :type rhopedn: float
+        :param radius_plasma_pedestal_density_norm: Normalised plasma radius of density pedestal.
+        :type radius_plasma_pedestal_density_norm: float
         :param nd_plasma_pedestal_electron: Electron number density at the pedestal [m^-3].
         :type nd_plasma_pedestal_electron: float
         :param n_greenwald: Greenwald density limit [m^-3].
@@ -7431,7 +7431,7 @@ class Physics:
             * tbeta**-0.0783
             * zeff**0.241
             * (q95 / q0) ** -0.103
-            * rhopedn**0.367
+            * radius_plasma_pedestal_density_norm**0.367
             * (nd_plasma_pedestal_electron / n_greenwald) ** -0.174
             * teped**0.0552
         )

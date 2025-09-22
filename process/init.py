@@ -495,7 +495,7 @@ def check_process(inputs):  # noqa: ARG001
             # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
             # but pedestal width = 0.
             if (
-                abs(data_structure.physics_variables.rhopedn - 1.0) <= 1e-7
+                abs(data_structure.physics_variables.radius_plasma_pedestal_density_norm - 1.0) <= 1e-7
                 and (
                     data_structure.physics_variables.nd_plasma_pedestal_electron
                     - data_structure.physics_variables.nd_plasma_separatrix_electron
@@ -504,7 +504,7 @@ def check_process(inputs):  # noqa: ARG001
             ):
                 warn(
                     "Density pedestal is at plasma edge "
-                    f"({data_structure.physics_variables.rhopedn = }), but nd_plasma_pedestal_electron "
+                    f"({data_structure.physics_variables.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
                     f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
                     f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
                     stacklevel=2,

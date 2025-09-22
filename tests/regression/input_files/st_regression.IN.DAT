@@ -478,7 +478,7 @@ ipedestal= 1
 * Density *          
 *---------*
 
-rhopedn = 0.95  
+radius_plasma_pedestal_density_norm = 0.95  
 * DESCRIPTION:   r/a of Density Pedestal (ipedestal==1)
 * JUSTIFICATION: 
 

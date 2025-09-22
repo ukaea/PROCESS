@@ -156,7 +156,7 @@ A table of the the associated variables can be seen below
 
 | Profile parameter                | Density   |        Temperature |
 |----------------------------------|-----------|-------------|
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped},n}$ |   `rhopedt`, $\rho_{\text{ped},T}$   |  
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped},n}$ |   `rhopedt`, $\rho_{\text{ped},T}$   |  
 | Plasma centre value              | `ne0`, $n_0$      |           `te0`, $T_0$       |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$    |       `teped`, $T_{\text{ped}}$     |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$   |        `tesep`, $T_{\text{sep}}$     |

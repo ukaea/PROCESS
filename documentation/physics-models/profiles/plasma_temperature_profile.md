@@ -22,7 +22,7 @@ A list of input parameters for calculating the core plasma temperature can be fo
 
 | Profile parameter / Input               | Temperature   |
 |----------------------------------|-----------|
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,T}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,T}}$ |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $T_{\text{ped}}$ |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $T_{\text{sep}}$ |
 | Average temperature             | `nd_plasma_electrons_vol_avg`, $\langle T_\text{e} \rangle$ |
@@ -130,7 +130,7 @@ $$
 The central temperature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $T_{\text{ped}}$.
 If it is less than a logger warning is pushed to the terminal at runtime.
 
-Values of the profile temperature are then assigned based on the density function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
+Values of the profile temperature are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
 
 $$\begin{aligned}
 \mbox{Temperature:} \ \ T(\rho) = \left\{

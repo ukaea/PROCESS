@@ -668,8 +668,8 @@ plasma_res_factor: float = None
 """plasma resistivity pre-factor"""
 
 
-rhopedn: float = None
-"""r/a of density pedestal (`ipedestal==1`)"""
+radius_plasma_pedestal_density_norm: float = None
+"""Normalised radius of density pedestal (`ipedestal==1`)"""
 
 
 rhopedt: float = None
@@ -1454,7 +1454,7 @@ def init_physics_variables():
     global alpha_crit
     global nd_plasma_separatrix_electron_eich_max
     global plasma_res_factor
-    global rhopedn
+    global radius_plasma_pedestal_density_norm
     global rhopedt
     global tbeta
     global teped
@@ -1701,7 +1701,7 @@ def init_physics_variables():
     alpha_crit = 0.0
     nd_plasma_separatrix_electron_eich_max = 0.0
     plasma_res_factor = 1.0
-    rhopedn = 1.0
+    radius_plasma_pedestal_density_norm = 1.0
     rhopedt = 1.0
     tbeta = 2.0
     teped = 1.0
