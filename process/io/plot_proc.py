@@ -10358,6 +10358,7 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
 
 
 def main_plot(
+    fig0,
     fig1,
     fig2,
     fig3,
@@ -10410,6 +10411,9 @@ def main_plot(
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
+
+    plot_0 = fig0.add_subplot(111)
+    plot_cover_page(plot_0, m_file_data, scan, fig0, colour_scheme)
 
     # Plot header info
     plot_1 = fig1.add_subplot(231)
@@ -10560,7 +10564,6 @@ def main_plot(
 
     plot_33 = fig18.add_subplot(111, aspect="equal")
     plot_main_power_flow(plot_33, m_file_data, scan, fig18)
-
 
 
 def main(args=None):
@@ -10837,6 +10840,7 @@ def main(args=None):
     # scan = scan
 
     # create main plot
+    page0 = plt.figure(figsize=(12, 9), dpi=80)
     page1 = plt.figure(figsize=(12, 9), dpi=80)
     page2 = plt.figure(figsize=(12, 9), dpi=80)
     page3 = plt.figure(figsize=(12, 9), dpi=80)
@@ -10858,6 +10862,7 @@ def main(args=None):
 
     # run main_plot
     main_plot(
+        page0,
         page1,
         page2,
         page3,
@@ -10884,6 +10889,7 @@ def main(args=None):
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
+        pdf.savefig(page0)
         pdf.savefig(page1)
         pdf.savefig(page2)
         pdf.savefig(page3)
@@ -10907,6 +10913,7 @@ def main(args=None):
     if args.show:
         plt.show(block=True)
 
+    plt.close(page0)
     plt.close(page1)
     plt.close(page2)
     plt.close(page3)
