@@ -1697,11 +1697,13 @@ class Physics:
 
         # Calculate density and temperature profile quantities
         # If physics_variables.ipedestal = 1 then set pedestal density to
-        #   physics_variables.fgwped * Greenwald density limit
+        #   physics_variables.f_nd_plasma_pedestal_greenwald * Greenwald density limit
         # Note: this used to be done before plasma current
-        if (physics_variables.ipedestal == 1) and (physics_variables.fgwped >= 0e0):
+        if (physics_variables.ipedestal == 1) and (
+            physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0
+        ):
             physics_variables.nd_plasma_pedestal_electron = (
-                physics_variables.fgwped
+                physics_variables.f_nd_plasma_pedestal_greenwald
                 * 1.0e14
                 * physics_variables.plasma_current
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
@@ -4791,7 +4793,7 @@ class Physics:
                 "(radius_plasma_pedestal_density_norm)",
                 physics_variables.radius_plasma_pedestal_density_norm,
             )
-            if physics_variables.fgwped >= 0e0:
+            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",
@@ -4807,7 +4809,7 @@ class Physics:
                     physics_variables.nd_plasma_pedestal_electron,
                 )
 
-            # This code is ODD# Don't change it# No explanation why fgwped and physics_variables.fgwsep
+            # This code is ODD# Don't change it# No explanation why f_nd_plasma_pedestal_greenwald and physics_variables.fgwsep
             # must be assigned to their exisiting values#
             fgwped_out = (
                 physics_variables.nd_plasma_pedestal_electron
@@ -4817,8 +4819,8 @@ class Physics:
                 physics_variables.nd_plasma_separatrix_electron
                 / physics_variables.dlimit[6]
             )
-            if physics_variables.fgwped >= 0e0:
-                physics_variables.fgwped = (
+            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
+                physics_variables.f_nd_plasma_pedestal_greenwald = (
                     physics_variables.nd_plasma_pedestal_electron
                     / physics_variables.dlimit[6]
                 )

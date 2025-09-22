@@ -340,7 +340,7 @@ lablxc: list[str] = None
 * (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
 * (143) f_copperA_m2 : TF coil current / copper area < Maximum value
 * (144) fnesep : Eich critical electron density at separatrix
-* (145) fgwped :  fraction of Greenwald density to set as pedestal-top density
+* (145) f_nd_plasma_pedestal_greenwald :  fraction of Greenwald density to set as pedestal-top density
 * (146) fc_tf_turn_max : F-value for TF coil current per turn limit (constraint equation 77)
 * (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
 * (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion

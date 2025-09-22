@@ -479,7 +479,7 @@ def check_process(inputs):  # noqa: ARG001
         # Density checks
         # Case where pedestal density is set manually
         if (
-            data_structure.physics_variables.fgwped < 0
+            data_structure.physics_variables.f_nd_plasma_pedestal_greenwald < 0
             or not (
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any()
@@ -532,7 +532,7 @@ def check_process(inputs):  # noqa: ARG001
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any():
                 warn(
-                    "nd_plasma_pedestal_electron set with fgwped without constraint eq 81 (nd_plasma_pedestal_electron<ne0)",
+                    "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<ne0)",
                     stacklevel=2,
                 )
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
@@ -557,14 +557,14 @@ def check_process(inputs):  # noqa: ARG001
             "Cannot use Psep/R and PsepB/qAR constraint equations at the same time"
         )
 
-    # if lower bound of fgwped < fgwsep
+    # if lower bound of f_nd_plasma_pedestal_greenwald < fgwsep
     if (
         data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
     ).any() and data_structure.numerics.boundl[
         144
     ] < data_structure.physics_variables.fgwsep:
         raise ProcessValidationError(
-            "Set lower bound of iteration variable 145, fgwped, to be greater than fgwsep",
+            "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald, to be greater than fgwsep",
             boundl_145=data_structure.numerics.boundl[144],
             fgwsep=data_structure.physics_variables.fgwsep,
         )

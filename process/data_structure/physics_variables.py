@@ -461,7 +461,7 @@ load calculation (`i_pflux_fw_neutron=1`)
 """
 
 
-fgwped: float = None
+f_nd_plasma_pedestal_greenwald: float = None
 """fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
 density set manually using nd_plasma_pedestal_electron (`ipedestal==1`).
 (`iteration variable 145`)
@@ -1417,7 +1417,7 @@ def init_physics_variables():
     global f_deuterium
     global f_p_div_lower
     global ffwal
-    global fgwped
+    global f_nd_plasma_pedestal_greenwald
     global fgwsep
     global f_helium3
     global figmer
@@ -1664,7 +1664,7 @@ def init_physics_variables():
     f_deuterium = 0.5
     f_p_div_lower = 1.0
     ffwal = 0.92
-    fgwped = 0.85
+    f_nd_plasma_pedestal_greenwald = 0.85
     fgwsep = 0.50
     f_helium3 = 0.0
     figmer = 0.0
