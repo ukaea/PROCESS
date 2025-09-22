@@ -386,7 +386,7 @@ class PFCoil:
                         )
 
                 # Vertical field (T)
-                pv.bvert = (
+                pv.b_plasma_vertical = (
                     -1.0e-7
                     * pv.plasma_current
                     / pv.rmajor
@@ -506,7 +506,7 @@ class PFCoil:
                     )
                 )
 
-                pv.bvert = bzin[0]
+                pv.b_plasma_vertical = bzin[0]
 
                 ssqef, pfcoil_variables.ccls0 = self.efc(
                     npts0,

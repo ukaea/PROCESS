@@ -337,7 +337,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6569E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9385E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2165E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3401E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3401E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6462E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.2714E+00    
@@ -1500,7 +1500,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6633E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8709E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1985E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3404E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3404E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.1000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6796E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.1733E+00    
@@ -2663,7 +2663,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6683E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8062E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1810E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3354E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3354E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.0000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.7056E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.0752E+00    
@@ -3826,7 +3826,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6609E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8186E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1844E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3410E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3410E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.0000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6673E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.0746E+00    
@@ -4989,7 +4989,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6604E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8760E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1999E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3571E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3571E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.1000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6644E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.1731E+00    
@@ -6152,7 +6152,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6548E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9423E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2175E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3617E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3617E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6351E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.2712E+00    
@@ -7315,7 +7315,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6479E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9545E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2207E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3684E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3684E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.5994E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.2706E+00    
@@ -8478,7 +8478,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6497E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8947E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2048E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3564E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3564E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.1000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6085E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.1721E+00    
@@ -9641,7 +9641,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6468E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8429E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1909E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3335E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3335E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.0000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.5934E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.0733E+00    
@@ -10804,7 +10804,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6447E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8466E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1919E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3508E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3508E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.0000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.5823E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.0731E+00    
@@ -11967,7 +11967,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6498E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8944E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2048E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3786E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3786E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.1000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6092E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.1722E+00    
@@ -13130,7 +13130,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6485E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9535E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2204E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.3919E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.3919E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6023E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.2707E+00    
@@ -14293,7 +14293,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6455E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9590E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2219E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4071E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.4071E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.5865E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.2704E+00    
@@ -15456,7 +15456,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6516E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8912E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2039E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4046E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.4046E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.1000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6187E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.1723E+00    
@@ -16619,7 +16619,7 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6581E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.8235E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.1857E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4025E-01    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical)_______________________     -7.4025E-01    
  Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.0000E+00    
  Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6524E-01    
  Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.0743E+00    
