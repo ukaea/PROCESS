@@ -567,7 +567,7 @@ class ElectronCyclotron:
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rrr,
             physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.temp_plasma_pedestal_kev,
             physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,
@@ -1014,7 +1014,7 @@ class LowerHybrid:
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
             physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.temp_plasma_pedestal_kev,
             physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,
@@ -1066,7 +1066,10 @@ class LowerHybrid:
         AEA FUS 172: Physics Assessment for the European Reactor Study
         """
         #  Correction to refractive index (kept within valid bounds)
-        drfind = min(0.7e0, max(0.1e0, 12.5e0 / physics_variables.te0))
+        drfind = min(
+            0.7e0,
+            max(0.1e0, 12.5e0 / physics_variables.temp_plasma_electron_on_axis_kev),
+        )
 
         #  Use Newton-Raphson method to establish the correct minor radius
         #  ratio. g is calculated as a function of r / r_minor, where g is
@@ -1143,7 +1146,7 @@ class LowerHybrid:
         tlocal = self.plasma_profile.teprofile.calculate_profile_y(
             rratio,
             physics_variables.radius_plasma_pedestal_temp_norm,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.temp_plasma_pedestal_kev,
             physics_variables.temp_plasma_separatrix_kev,
             physics_variables.alphat,

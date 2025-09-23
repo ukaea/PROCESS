@@ -3561,8 +3561,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Operating point: Peak temperature",
-            "(te0)",
-            physics_variables.te0,
+            "(temp_plasma_electron_on_axis_kev)",
+            physics_variables.temp_plasma_electron_on_axis_kev,
         )
 
         po.ovarre(self.outfile, "Ignition point: bfield (T)", "(bt_ecrh)", bt_ecrh)
@@ -4466,7 +4466,7 @@ class Stellarator:
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.tbeta,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.f_sync_reflect,
             physics_variables.rmajor,
             physics_variables.kappa,
@@ -5046,7 +5046,7 @@ class Stellarator:
                 3
                 * physics_variables.ne0
                 * constants.ELECTRON_CHARGE
-                * physics_variables.te0
+                * physics_variables.temp_plasma_electron_on_axis_kev
                 * 1e3
                 * physics_variables.alphat
                 * impurity_radiation_module.radius_plasma_core_norm
@@ -5380,10 +5380,26 @@ class Neoclassics:
 
     def init_profile_values_from_PROCESS(self, rho):
         """Initializes the profile_values object from PROCESS' parabolic profiles"""
-        tempe = physics_variables.te0 * (1 - rho**2) ** physics_variables.alphat * KEV
-        tempT = physics_variables.ti0 * (1 - rho**2) ** physics_variables.alphat * KEV
-        tempD = physics_variables.ti0 * (1 - rho**2) ** physics_variables.alphat * KEV
-        tempa = physics_variables.ti0 * (1 - rho**2) ** physics_variables.alphat * KEV
+        tempe = (
+            physics_variables.temp_plasma_electron_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
+        tempT = (
+            physics_variables.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
+        tempD = (
+            physics_variables.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
+        tempa = (
+            physics_variables.temp_plasma_ion_on_axis_kev
+            * (1 - rho**2) ** physics_variables.alphat
+            * KEV
+        )
 
         dense = physics_variables.ne0 * (1 - rho**2) ** physics_variables.alphan
         densT = (
@@ -5407,7 +5423,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.te0
+            * physics_variables.temp_plasma_electron_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -5417,7 +5433,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.ti0
+            * physics_variables.temp_plasma_ion_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -5427,7 +5443,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.ti0
+            * physics_variables.temp_plasma_ion_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat
@@ -5437,7 +5453,7 @@ class Neoclassics:
             -2.0
             * 1.0
             / physics_variables.rminor
-            * physics_variables.ti0
+            * physics_variables.temp_plasma_ion_on_axis_kev
             * rho
             * (1.0 - rho**2) ** (physics_variables.alphat - 1.0)
             * physics_variables.alphat

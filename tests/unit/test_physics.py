@@ -158,7 +158,7 @@ def test_bootstrap_fraction_iter89(bootstrapfractioniter89param, physics):
 
 
 class BootstrapFractionNevinsParam(NamedTuple):
-    te0: Any = None
+    temp_plasma_electron_on_axis_kev: Any = None
 
     ne0: Any = None
 
@@ -193,7 +193,7 @@ class BootstrapFractionNevinsParam(NamedTuple):
     "bootstrapfractionnevinsparam",
     (
         BootstrapFractionNevinsParam(
-            te0=24.402321098330372,
+            temp_plasma_electron_on_axis_kev=24.402321098330372,
             ne0=8.515060981068918e19,
             alphan=1.0,
             beta_toroidal=0.03,
@@ -224,7 +224,11 @@ def test_bootstrap_fraction_nevins(bootstrapfractionnevinsparam, monkeypatch, ph
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "te0", bootstrapfractionnevinsparam.te0)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_on_axis_kev",
+        bootstrapfractionnevinsparam.temp_plasma_electron_on_axis_kev,
+    )
 
     monkeypatch.setattr(physics_variables, "ne0", bootstrapfractionnevinsparam.ne0)
 
@@ -359,7 +363,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     nd_plasma_separatrix_electron: Any = None
 
-    te0: Any = None
+    temp_plasma_electron_on_axis_kev: Any = None
 
     nd_plasma_pedestal_electron: Any = None
 
@@ -399,7 +403,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             rmajor=8,
             q95=3.5,
             nd_plasma_separatrix_electron=3.6992211545476006e19,
-            te0=25.986118047669795,
+            temp_plasma_electron_on_axis_kev=25.986118047669795,
             nd_plasma_pedestal_electron=6.2886759627309195e19,
             tbeta=2,
             ne0=1.054474759840606e20,
@@ -507,7 +511,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.nd_plasma_separatrix_electron,
     )
 
-    monkeypatch.setattr(physics_variables, "te0", bootstrapfractionsauterparam.te0)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_on_axis_kev",
+        bootstrapfractionsauterparam.temp_plasma_electron_on_axis_kev,
+    )
 
     monkeypatch.setattr(
         physics_variables,
