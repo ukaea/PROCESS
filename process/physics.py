@@ -4037,9 +4037,23 @@ class Physics:
             )
             po.ovarre(
                 self.outfile,
-                "Plasma volume (m3)",
+                "Total plasma volume (m3)",
                 "(vol_plasma)",
                 physics_variables.vol_plasma,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Core region plasma volume (m3)",
+                "(vol_plasma_core)",
+                physics_variables.vol_plasma_core,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Edge region plasma volume (m3)",
+                "(vol_plasma_edge)",
+                physics_variables.vol_plasma_edge,
                 "OP ",
             )
 

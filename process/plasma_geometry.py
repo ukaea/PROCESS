@@ -3,7 +3,11 @@ import logging
 import numpy as np
 
 from process import constants
-from process.data_structure import build_variables, physics_variables
+from process.data_structure import (
+    build_variables,
+    impurity_radiation_module,
+    physics_variables,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -277,6 +281,26 @@ class PlasmaGeom:
                 physics_variables.plasma_square,
             )
 
+            (
+                _,
+                _,
+                _,
+                physics_variables.vol_plasma_core,
+            ) = self.sauter_geometry(
+                (
+                    physics_variables.rminor
+                    * impurity_radiation_module.radius_plasma_core_norm
+                ),
+                physics_variables.rmajor,
+                physics_variables.kappa,
+                physics_variables.triang,
+                physics_variables.plasma_square,
+            )
+
+            physics_variables.vol_plasma_edge = (
+                physics_variables.vol_plasma - physics_variables.vol_plasma_core
+            )
+
         else:
             #  Poloidal perimeter
             physics_variables.len_plasma_poloidal = self.plasma_poloidal_perimeter(
@@ -294,6 +318,26 @@ class PlasmaGeom:
                     xo,
                     thetao,
                 )
+            )
+
+            #  Volume
+            physics_variables.vol_plasma_core = (
+                physics_variables.f_vol_plasma
+                * self.plasma_volume(
+                    physics_variables.rmajor,
+                    (
+                        physics_variables.rminor
+                        * impurity_radiation_module.radius_plasma_core_norm
+                    ),
+                    xi,
+                    thetai,
+                    xo,
+                    thetao,
+                )
+            )
+
+            physics_variables.vol_plasma_edge = (
+                physics_variables.vol_plasma - physics_variables.vol_plasma_core
             )
 
             #  Cross-sectional area
