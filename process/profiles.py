@@ -288,17 +288,18 @@ class TeProfile(Profile):
         if physics_variables.ipedestal == 0:
             self.profile_y = t0 * (1 - rho**2) ** alphat
 
-        if t0 < teped:
-            logger.info(
-                f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
+            if t0 < teped:
+                logger.info(
+                    f"TPROFILE: temperature pedestal is higher than core temperature. {teped = }, {t0 = }"
+                )
+        else:
+            rho_index = rho <= rhopedt
+            self.profile_y[rho_index] = (
+                teped + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
             )
-        rho_index = rho <= rhopedt
-        self.profile_y[rho_index] = (
-            teped + (t0 - teped) * (1 - (rho[rho_index] / rhopedt) ** tbeta) ** alphat
-        )
-        self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
-            1 - rhopedt
-        )
+            self.profile_y[~rho_index] = tesep + (teped - tesep) * (1 - rho[~rho_index]) / (
+                1 - rhopedt
+            )
 
     @staticmethod
     def tcore(
