@@ -19,10 +19,10 @@ def neoclassics():
 
 class InitNeoclassicsParam(NamedTuple):
     ne0: Any = None
-    te0: Any = None
+    temp_plasma_electron_on_axis_kev: Any = None
     alphan: Any = None
     alphat: Any = None
-    ti0: Any = None
+    temp_plasma_ion_on_axis_kev: Any = None
     ni0: Any = None
     f_deuterium: Any = None
     nd_alphas: Any = None
@@ -68,10 +68,10 @@ class InitNeoclassicsParam(NamedTuple):
     (
         InitNeoclassicsParam(
             ne0=2.7956610000000002e20,
-            te0=13.241800000000001,
+            temp_plasma_electron_on_axis_kev=13.241800000000001,
             alphan=0.35000000000000003,
             alphat=1.2,
-            ti0=12.579710000000002,
+            temp_plasma_ion_on_axis_kev=12.579710000000002,
             ni0=2.3930858160000005e20,
             f_deuterium=0.5,
             nd_alphas=2.9820384000000004e19,
@@ -974,10 +974,18 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
     monkeypatch.setattr(physics_variables, "ne0", initneoclassicsparam.ne0)
-    monkeypatch.setattr(physics_variables, "te0", initneoclassicsparam.te0)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_on_axis_kev",
+        initneoclassicsparam.temp_plasma_electron_on_axis_kev,
+    )
     monkeypatch.setattr(physics_variables, "alphan", initneoclassicsparam.alphan)
     monkeypatch.setattr(physics_variables, "alphat", initneoclassicsparam.alphat)
-    monkeypatch.setattr(physics_variables, "ti0", initneoclassicsparam.ti0)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_ion_on_axis_kev",
+        initneoclassicsparam.temp_plasma_ion_on_axis_kev,
+    )
     monkeypatch.setattr(physics_variables, "ni0", initneoclassicsparam.ni0)
     monkeypatch.setattr(
         physics_variables, "f_deuterium", initneoclassicsparam.f_deuterium

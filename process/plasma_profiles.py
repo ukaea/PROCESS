@@ -166,9 +166,12 @@ class PlasmaProfile:
 
         #  Central values for temperature (keV) and density (m**-3)
 
-        physics_variables.te0 = physics_variables.te * (1.0 + physics_variables.alphat)
-        physics_variables.ti0 = physics_variables.temp_plasma_ion_vol_avg_kev * (
+        physics_variables.temp_plasma_electron_on_axis_kev = physics_variables.te * (
             1.0 + physics_variables.alphat
+        )
+        physics_variables.temp_plasma_ion_on_axis_kev = (
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            * (1.0 + physics_variables.alphat)
         )
 
         physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
@@ -259,8 +262,9 @@ class PlasmaProfile:
 
         physics_variables.pres_plasma_on_axis = (
             (
-                physics_variables.ne0 * physics_variables.te0
-                + physics_variables.ni0 * physics_variables.ti0
+                physics_variables.ne0
+                * physics_variables.temp_plasma_electron_on_axis_kev
+                + physics_variables.ni0 * physics_variables.temp_plasma_ion_on_axis_kev
             )
             * 1.0e3
             * constants.ELECTRON_CHARGE
@@ -318,10 +322,10 @@ class PlasmaProfile:
                     * physics_variables.alphat
                     * (-1.0 + 2.0 * physics_variables.alphat)
                     ** (0.5e0 - physics_variables.alphat)
-                    * physics_variables.te0
+                    * physics_variables.temp_plasma_electron_on_axis_kev
                 )
                 te_max = (
-                    physics_variables.te0
+                    physics_variables.temp_plasma_electron_on_axis_kev
                     * (1 - rho_te_max**2) ** physics_variables.alphat
                 )
 
@@ -335,10 +339,10 @@ class PlasmaProfile:
                     * physics_variables.alphat
                     * rho_te_max
                     * (1 - rho_te_max**2) ** (-1.0 + physics_variables.alphat)
-                    * physics_variables.te0
+                    * physics_variables.temp_plasma_electron_on_axis_kev
                 )
                 te_max = (
-                    physics_variables.te0
+                    physics_variables.temp_plasma_electron_on_axis_kev
                     * (1 - rho_te_max**2) ** physics_variables.alphat
                 )
             else:

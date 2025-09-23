@@ -1204,7 +1204,7 @@ te: float = None
 """volume averaged electron temperature (keV) (`iteration variable 4`)"""
 
 
-te0: float = None
+temp_plasma_electron_on_axis_kev: float = None
 """central electron temperature (keV)"""
 
 
@@ -1216,7 +1216,7 @@ temp_plasma_ion_vol_avg_kev: float = None
 """volume averaged ion temperature (keV). N.B. calculated from te if `f_temp_plasma_ion_electron > 0.0`"""
 
 
-ti0: float = None
+temp_plasma_ion_on_axis_kev: float = None
 """central ion temperature (keV)"""
 
 
@@ -1568,10 +1568,10 @@ def init_physics_variables():
     global t_alpha_confinement
     global f_alpha_energy_confinement
     global te
-    global te0
+    global temp_plasma_electron_on_axis_kev
     global ten
     global temp_plasma_ion_vol_avg_kev
-    global ti0
+    global temp_plasma_ion_on_axis_kev
     global tin
     global f_temp_plasma_ion_electron
     global triang
@@ -1815,10 +1815,10 @@ def init_physics_variables():
     t_alpha_confinement = 0.0
     f_alpha_energy_confinement = 0.0
     te = 12.9
-    te0 = 0.0
+    temp_plasma_electron_on_axis_kev = 0.0
     ten = 0.0
     temp_plasma_ion_vol_avg_kev = 12.9
-    ti0 = 0.0
+    temp_plasma_ion_on_axis_kev = 0.0
     tin = 0.0
     f_temp_plasma_ion_electron = 1.0
     triang = 0.36

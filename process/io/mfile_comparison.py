@@ -120,7 +120,7 @@ BASELINE_LIST = [
     "thermal_beta",
     "thermal_poloidal_beta",
     "te",
-    "te0",
+    "temp_plasma_electron_on_axis_kev",
     "nd_plasma_electrons_vol_avg",
     "ne0",
     "dnla_gw",

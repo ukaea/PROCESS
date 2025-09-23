@@ -2342,7 +2342,7 @@ class Physics:
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.tbeta,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.f_sync_reflect,
             physics_variables.rmajor,
             physics_variables.kappa,
@@ -4552,8 +4552,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Electron temperature on axis (keV)",
-            "(te0)",
-            physics_variables.te0,
+            "(temp_plasma_electron_on_axis_kev)",
+            physics_variables.temp_plasma_electron_on_axis_kev,
             "OP ",
         )
         po.ovarrf(
@@ -4565,8 +4565,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Ion temperature on axis (keV)",
-            "(ti0)",
-            physics_variables.ti0,
+            "(temp_plasma_ion_on_axis_kev)",
+            physics_variables.temp_plasma_ion_on_axis_kev,
             "OP ",
         )
         po.ovarrf(
@@ -6813,7 +6813,7 @@ class Physics:
 
         betae0 = (
             physics_variables.ne0
-            * physics_variables.te0
+            * physics_variables.temp_plasma_electron_on_axis_kev
             * 1.0e3
             * constants.ELECTRON_CHARGE
             / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))

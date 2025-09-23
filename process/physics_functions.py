@@ -30,7 +30,7 @@ def calculate_radiation_powers(
     alphan: float,
     alphat: float,
     tbeta: float,
-    te0: float,
+    temp_plasma_electron_on_axis_kev: float,
     f_sync_reflect: float,
     rmajor: float,
     kappa: float,
@@ -59,8 +59,8 @@ def calculate_radiation_powers(
     :type alphat: float
     :param tbeta: Beta parameter for temperature profile.
     :type tbeta: float
-    :param te0: Central electron temperature (keV).
-    :type te0: float
+    :param temp_plasma_electron_on_axis_kev: Central electron temperature (keV).
+    :type temp_plasma_electron_on_axis_kev: float
     :param f_sync_reflect: Fraction of synchrotron radiation reflected.
     :type f_sync_reflect: float
     :param rmajor: Major radius of the plasma (m).
@@ -100,7 +100,7 @@ def calculate_radiation_powers(
         alphan,
         alphat,
         tbeta,
-        te0,
+        temp_plasma_electron_on_axis_kev,
         f_sync_reflect,
         rmajor,
         kappa,
@@ -131,7 +131,7 @@ def psync_albajar_fidone(
     alphan: float,
     alphat: float,
     tbeta: float,
-    te0: float,
+    temp_plasma_electron_on_axis_kev: float,
     f_sync_reflect: float,
     rmajor: float,
     kappa: float,
@@ -157,8 +157,8 @@ def psync_albajar_fidone(
     :type alphat: float
     :param tbeta: Beta parameter for temperature profile.
     :type tbeta: float
-    :param te0: Central electron temperature (keV).
-    :type te0: float
+    :param temp_plasma_electron_on_axis_kev: Central electron temperature (keV).
+    :type temp_plasma_electron_on_axis_kev: float
     :param f_sync_reflect: Fraction of synchrotron radiation reflected.
     :type f_sync_reflect: float
     :param rmajor: Major radius of the plasma (m).
@@ -194,7 +194,12 @@ def psync_albajar_fidone(
         * (tbeta**1.53 + 1.87 * alphat - 0.16) ** -1.33
     )
 
-    dum = (1.0 + 0.12 * (te0 / p_a0**0.41) * (1.0 - f_sync_reflect) ** 0.41) ** -1.51
+    dum = (
+        1.0
+        + 0.12
+        * (temp_plasma_electron_on_axis_kev / p_a0**0.41)
+        * (1.0 - f_sync_reflect) ** 0.41
+    ) ** -1.51
 
     p_sync_mw = (
         3.84e-8
@@ -204,8 +209,8 @@ def psync_albajar_fidone(
         * kappa**0.79
         * b_plasma_toroidal_on_axis**2.62
         * ne0_20**0.38
-        * te0
-        * (16.0 + te0) ** 2.61
+        * temp_plasma_electron_on_axis_kev
+        * (16.0 + temp_plasma_electron_on_axis_kev) ** 2.61
         * dum
         * g_function
         * k_function

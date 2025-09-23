@@ -6812,9 +6812,9 @@ def plot_physics_info(axis, mfile_data, scan):
         "nd_plasma_electrons_vol_avg"
     ].get_scan(scan)
 
-    tepeak = mfile_data.data["te0"].get_scan(scan) / mfile_data.data["te"].get_scan(
+    tepeak = mfile_data.data["temp_plasma_electron_on_axis_kev"].get_scan(
         scan
-    )
+    ) / mfile_data.data["te"].get_scan(scan)
 
     nepeak = mfile_data.data["ne0"].get_scan(scan) / mfile_data.data[
         "nd_plasma_electrons_vol_avg"
@@ -10784,7 +10784,7 @@ def main(args=None):
     nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
         scan
     )
-    te0 = m_file.data["te0"].get_scan(scan)
+    te0 = m_file.data["temp_plasma_electron_on_axis_kev"].get_scan(scan)
     ti = m_file.data["temp_plasma_ion_vol_avg_kev"].get_scan(scan)
     te = m_file.data["te"].get_scan(scan)
     fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
