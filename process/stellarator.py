@@ -134,21 +134,21 @@ class Stellarator:
             self.costs.output()
             self.availability.run(output=True)
             self.physics.outplas()
-            self.stheat(True)
-            self.stphys(True)
-            self.stopt(True)
+            self.st_heat(True)
+            self.st_phys(True)
+            self.st_opt(True)
 
             # As stopt changes dene, te and bt, stphys needs two calls
             # to correct for larger changes (it is only consistent after
             # two or three fix point iterations) call stphys here again, just to be sure.
             # This can be removed once the bad practice in stopt is removed!
-            self.stphys(False)
+            self.st_phys(False)
 
-            self.stdiv(True)
-            self.stbild(True)
-            self.stcoil(True)
-            self.ststrc(True)
-            self.stfwbs(True)
+            self.st_div(True)
+            self.st_bild(True)
+            self.st_coil(True)
+            self.st_strc(True)
+            self.st_fwbs(True)
 
             self.power.tfpwr(output=True)
             self.buildings.run(output=True)
@@ -158,15 +158,15 @@ class Stellarator:
 
             return
 
-        self.stnewconfig()
-        self.stgeom()
-        self.stphys(False)
-        self.stopt(False)
-        self.stcoil(False)
-        self.stbild(False)
-        self.ststrc(False)
-        self.stfwbs(False)
-        self.stdiv(False)
+        self.st_new_config()
+        self.st_geom()
+        self.st_phys(False)
+        self.st_opt(False)
+        self.st_coil(False)
+        self.st_bild(False)
+        self.st_strc(False)
+        self.st_fwbs(False)
+        self.st_div(False)
 
         self.power.tfpwr(output=False)
         self.power.component_thermal_powers()
@@ -193,7 +193,7 @@ class Stellarator:
 
         st.first_call = False
 
-    def stnewconfig(self):
+    def st_new_config(self):
         """author: J Lion, IPP Greifswald
         Routine to initialise the stellarator configuration
 
@@ -211,7 +211,7 @@ class Stellarator:
         )
 
         # This section should be remove, it prevents from manual change of the aspect ratio.
-        # Now the aspect ration from the input is compared to the reference value,
+        # Now the aspect ratio from the input is compared to the reference value,
         # in the same way as during iteration of aspect variable.
 
         # # If physics_variables.aspect ratio is not in numerics.ixc set it to default value
@@ -271,7 +271,7 @@ class Stellarator:
                            + stellarator_configuration.stella_config_rminor_ref )
                            / stellarator_configuration.stella_config_coil_rminor)
 
-    def stgeom(self):
+    def st_geom(self):
         """
                 author: J Lion, IPP Greifswald
         Routine to calculate the plasma volume and surface area for
@@ -309,14 +309,14 @@ class Stellarator:
             0.5e0 * physics_variables.a_plasma_surface
         )  # Used only in the divertor model; approximate as for tokamaks
 
-    def stopt(self, output: bool):
+    def st_opt(self, output: bool):
         """Routine to reiterate the physics loop
         author: J Lion, IPP Greifswald
         None
         This routine reiterates some physics modules.
         """
 
-        physics_variables.dnelimt = self.stdlim(
+        physics_variables.dnelimt = self.st_sudo_density_limit(
             physics_variables.bt,
             physics_variables.p_plasma_loss_mw,
             physics_variables.rmajor,
@@ -325,7 +325,7 @@ class Stellarator:
 
         # Calculates the ECRH parameters
 
-        ne0_max_ECRH, bt_ecrh = self.stdlim_ecrh(
+        ne0_max_ECRH, bt_ecrh = self.st_d_limit_ecrh(
             stellarator_variables.max_gyrotron_frequency, physics_variables.bt
         )
 
@@ -333,7 +333,7 @@ class Stellarator:
         bt_ecrh = min(physics_variables.bt, bt_ecrh)
 
         if output:
-            self.stopt_output(
+            self.st_opt_output(
                 stellarator_variables.max_gyrotron_frequency,
                 physics_variables.bt,
                 bt_ecrh,
@@ -341,7 +341,7 @@ class Stellarator:
                 stellarator_variables.te0_ecrh_achievable,
             )
 
-    def stbild(self, output: bool):
+    def st_bild(self, output: bool):
         """
                 Routine to determine the build of a stellarator machine
         author: P J Knight, CCFE, Culham Science Centre
@@ -781,7 +781,7 @@ class Stellarator:
                 build_variables.dr_tf_outboard,
             )
 
-    def ststrc(self, output):
+    def st_strc(self, output):
         """
                 Routine to calculate the structural masses for a stellarator
         author: P J Knight, CCFE, Culham Science Centre
@@ -871,7 +871,7 @@ class Stellarator:
                 structure_variables.coldmass,
             )
 
-    def stdiv(self, output: bool):
+    def st_div(self, output: bool):
         """Routine to call the stellarator divertor model
         author: P J Knight, CCFE, Culham Science Centre
         author: F Warmer, IPP Greifswald
@@ -1119,7 +1119,7 @@ class Stellarator:
         # blktlife calculation left entierly to availability
         # Cannot find calculation for vvhemax in CCFE blanket
 
-    def stfwbs(self, output: bool):
+    def st_fwbs(self, output: bool):
         """Routine to calculate first wall, blanket and shield properties
         for a stellarator
         author: P J Knight, CCFE, Culham Science Centre
@@ -2549,7 +2549,7 @@ class Stellarator:
             p_tf_nuclear_heat_mw,
         )
 
-    def stcoil(self, output: bool):
+    def st_coil(self, output: bool):
         """Routine that performs the calculations for stellarator coils
         author: J Lion, IPP Greifswald
         outfile : input integer : output file unit
@@ -2627,7 +2627,7 @@ class Stellarator:
             # Temperature margin is implemented in the jcrit_vector definition, 
             # direct margin is implemented after jcrit is defined (equation below)
             # jcrit for this bmax:
-            jcrit_vector[k] = self.jcrit_frommaterial(
+            jcrit_vector[k] = self.jcrit_from_material(
                 b_max_k[k],
                 tfcoil_variables.tftmp + tfcoil_variables.tmargmin,
                 tfcoil_variables.i_tf_sc_mat,
@@ -3060,7 +3060,7 @@ class Stellarator:
         # Bref = 3;
         # Iref = 1.3*50;
         # aref = 0.92;
-        # \[Tau]ref = 1.;
+        # \[Tau]ref = 3.;
         # Rref = 5.2;
         # dref = 14*10^-3;
 
@@ -3069,23 +3069,17 @@ class Stellarator:
         # Replacing with the actual quench time.
         # MN/m^3
         f_vv_actual = (
-            2.54e6
-            * (3e0 * 1.3e0 * 50e0 * 0.92e0**2e0)
-            / (1e0 * 5.2e0 * 0.014e0)
+            2.54
+            * (3e0 / physics_variables.bt
+               * 1.3e6 * 50e0 / tfcoil_variables.c_tf_total
+               * 0.92e0**2e0 / physics_variables.rminor**2
+               ) **(-1)
             * (
-                physics_variables.bt
-                * tfcoil_variables.c_tf_total
-                * physics_variables.rminor**2
-                / (
-                    (build_variables.dr_vv_inboard + build_variables.dr_vv_outboard)
-                    / 2
-                    * tfcoil_variables.tdmptf
-                    * rad_vv
-                )
-            )
-            ** (-1)
-        )
-
+                   3e0 / tfcoil_variables.tdmptf
+                   * 5.2e0 / rad_vv
+                   * 0.014e0 / ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
+              )
+        ) 
 
         # This is not correct - it gives pressure on the vv wall, not stress
         # N/m^2
@@ -3101,12 +3095,18 @@ class Stellarator:
         a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
         zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
 
-        sctfcoil_module.vv_stress_quench =  zeta * f_vv_actual * rad_vv_in
+        # print('dump time: ', tfcoil_variables.tdmptf)
+        # print('toroidal stress: ', zeta1 * f_vv_actual  * rad_vv_in)
+        # print('z stress: ', zeta2 * f_vv_actual  * rad_vv_in)
+        # print('total stress: ', zeta * f_vv_actual  * rad_vv_in)
+
+        sctfcoil_module.vv_stress_quench =  zeta * f_vv_actual * 1e6 * rad_vv_in
 
         # the conductor fraction is meant of the cable space#
         # This is the old routine which is being replaced for now by the new one below
         #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,   tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
+        # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,
+        #    tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
 
         vd = self.u_max_protect_v(
             tfcoil_variables.e_tf_magnetic_stored_total_gj
@@ -3118,9 +3118,9 @@ class Stellarator:
 
         # comparison
         # the new quench protection routine, see #1047
-        tfcoil_variables.jwdgpro = self.j_max_protect_am2(
+        tfcoil_variables.jwdgpro = self.calculate_quench_protection_current_density(
             tau_quench=tfcoil_variables.tdmptf,
-            t_detect=0.0e0,
+            t_detect=tfcoil_variables.t_tf_quench_detection,
             fcu=tfcoil_variables.fcutfsu,
             fcond=1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             temp=tfcoil_variables.tftmp,
@@ -3128,8 +3128,6 @@ class Stellarator:
             aturn=tfcoil_variables.t_turn_tf**2,
         )
 
-        # print *, "Jmax, comparison: ", jwdgpro, "  ", jwdgpro2,"  ",j_tf_wp/jwdgpro, "   , tfcoil_variables.tdmptf: ",tdmptf, " tfcoil_variables.fcutfsu: ",fcutfsu
-        # print *, "a_tf_turn_cable_space_no_void: ", tfcoil_variables.a_tf_turn_cable_space_no_void
         # Also give the copper area for REBCO quench calculations:
         rebco_variables.coppera_m2 = (
             coilcurrent
@@ -3221,7 +3219,7 @@ class Stellarator:
         ####################################
 
         if output:
-            self.stcoil_output(
+            self.st_coil_output(
                 a_tf_wp_no_insulation,
                 centering_force_avg_mn,
                 centering_force_max_mn,
@@ -3259,7 +3257,15 @@ class Stellarator:
         return 2 * tfes / (tdump * aio)
 
     @staticmethod
-    def j_max_protect_am2(tau_quench, t_detect, fcu, fcond, temp, acs, aturn):
+    def calculate_quench_protection_current_density(tau_quench, t_detect, fcu, fcond, temp, acs, aturn):
+        """
+        Calculates the current density limited by the protection limit.
+
+        Simplified 0-D adiabatic heat balance "hotspot criterion" model.
+
+        This is slightly diffrent that tokamak version (also diffrent from the stellarator paper). 
+        We skip the superconduc6tor contribution (this should be more conservative in theory). 
+        """
         temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
         q_cu_array_sa2m4 = [
             1.08514e17,
@@ -3302,7 +3308,7 @@ class Stellarator:
             * (fcu**2 * fcond**2 * q_cu + fcu * fcond * (1 - fcond) * q_he)
         )
 
-    def jcrit_frommaterial(
+    def jcrit_from_material(
         self,
         bmax,
         thelium,
@@ -3317,9 +3323,9 @@ class Stellarator:
         jwp,
     ):
         strain = -0.005  # for now a small value
-        fhe = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
+        f_he = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
-        fcu = fcutfsu  # fcutfsu is a global variable. Is the copper fraction
+        f_tf_conductor_copper = fcutfsu  # fcutfsu is a global variable. Is the copper fraction
         # of a cable conductor.
 
         if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
@@ -3338,7 +3344,7 @@ class Stellarator:
                 ) = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
 
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0 - fcu) * (1.0e0 - fhe)
+            j_crit_cable = j_crit_sc * (1.0 - f_tf_conductor_copper) * (1.0e0 - f_he)
 
             # This is needed right now. Can we change it later?
             j_crit_sc = max(1.0e-9, j_crit_sc)
@@ -3353,14 +3359,14 @@ class Stellarator:
             #  composition that does not require a user-defined copper fraction,
             #  so this is irrelevant in this model
 
-            jstrand = jwp / (1 - fhe)
+            jstrand = jwp / (1 - f_he)
             #  jstrand = 0  # as far as I can tell this will always be 0
             #  because jwp was never set in fortran (so 0)
 
             j_crit_cable, tmarg = superconductors.bi2212(
                 bmax, jstrand, thelium, fhts
             )  # bi2212 outputs j_crit_cable
-            j_crit_sc = j_crit_cable / (1 - fcu)
+            j_crit_sc = j_crit_cable / (1 - f_tf_conductor_copper)
             tcrit = thelium + tmarg
         elif i_tf_sc_mat == 3:  # NbTi data
             bc20m = 15.0
@@ -3380,7 +3386,7 @@ class Stellarator:
                 # I dont need tcrit here so dont use it.
 
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
+            j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
 
             # This is needed right now. Can we change it later?
             j_crit_sc = max(1.0e-9, j_crit_sc)
@@ -3392,7 +3398,7 @@ class Stellarator:
                 thelium, bmax, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
+            j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
         elif i_tf_sc_mat == 5:  # WST Nb3Sn parameterisation
             bc20m = 32.97
             tc0m = 16.06
@@ -3408,14 +3414,14 @@ class Stellarator:
                 tc0m,
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
+            j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
         elif (
             i_tf_sc_mat == 6
         ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
             j_crit_sc, validity = superconductors.jcrit_rebco(thelium, bmax, 0)
             j_crit_sc = max(1.0e-9, j_crit_sc)
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
+            j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
 
         elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
             bc20m = b_crit_upper_nbti
@@ -3424,7 +3430,7 @@ class Stellarator:
                 thelium, bmax, strain, bc20m, tc0m
             )
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
+            j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
         elif i_tf_sc_mat == 8:
             bc20m = 429
             tc0m = 185
@@ -3433,7 +3439,7 @@ class Stellarator:
             )
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1 - fcu) * (1 - fhe)
+            j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
         else:
             raise ProcessValueError(
                 "Illegal value for i_pf_superconductor", i_tf_sc_mat=i_tf_sc_mat
@@ -3561,7 +3567,7 @@ class Stellarator:
 
         return x
 
-    def stopt_output(
+    def st_opt_output(
         self, max_gyrotron_frequency, bt, bt_ecrh, ne0_max_ECRH, te0_ecrh_achievable
     ):
         po.oheadr(self.outfile, "ECRH Ignition at lower values. Information:")
@@ -3637,7 +3643,7 @@ class Stellarator:
         te_old = copy(physics_variables.te)
         # Volume averaged physics_variables.te from te0_achievable
         physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
-        ne0_max, bt_ecrh_max = self.stdlim_ecrh(
+        ne0_max, bt_ecrh_max = self.st_d_limit_ecrh(
             gyro_frequency_max, physics_variables.bt
         )
         # Now go to point where ECRH is still available
@@ -3651,8 +3657,8 @@ class Stellarator:
         bt_old = copy(physics_variables.bt)
         physics_variables.bt = min(bt_ecrh_max, physics_variables.bt)
 
-        self.stphys(False)
-        self.stphys(
+        self.st_phys(False)
+        self.st_phys(
             False
         )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
 
@@ -3667,12 +3673,12 @@ class Stellarator:
         physics_variables.dene = dene_old
         physics_variables.bt = bt_old
 
-        self.stphys(False)
-        self.stphys(False)
+        self.st_phys(False)
+        self.st_phys(False)
 
         return powerht_out, pscalingmw_out
 
-    def stdlim(self, bt, powht, rmajor, rminor):
+    def st_sudo_density_limit(self, bt, powht, rmajor, rminor):
         """Routine to calculate the Sudo density limit in a stellarator
         author: P J Knight, CCFE, Culham Science Centre
         bt     : input real : Toroidal field on axis (T)
@@ -3712,7 +3718,7 @@ class Stellarator:
 
         return dlimit
 
-    def stcoil_output(
+    def st_coil_output(
         self,
         a_tf_wp_no_insulation,
         centering_force_avg_mn,
@@ -4202,7 +4208,7 @@ class Stellarator:
             stellarator_variables.hportamax,
         )
 
-    def stdlim_ecrh(self, gyro_frequency_max, bt_input):
+    def st_d_limit_ecrh(self, gyro_frequency_max, bt_input):
         """Routine to calculate the density limit due to an ECRH heating scheme on axis
         depending on an assumed maximal available gyrotron frequency.
         author: J Lion, IPP Greifswald
@@ -4232,7 +4238,7 @@ class Stellarator:
 
         return dlimit_ecrh, bt_max
 
-    def stphys(self, output):
+    def st_phys(self, output):
         """Routine to calculate stellarator plasma physics information
         author: P J Knight, CCFE, Culham Science Centre
         author: F Warmer, IPP Greifswald
@@ -4315,7 +4321,7 @@ class Stellarator:
 
         #  Perform auxiliary power calculations
 
-        self.stheat(False)
+        self.st_heat(False)
 
         #  Calculate fusion power
 
@@ -4708,7 +4714,7 @@ class Stellarator:
         ) = self.calc_neoclassics()
 
         if output:
-            self.stphys_output(
+            self.st_phys_output(
                 q_PROCESS,
                 total_q_neo_e,
                 dmdt_neo_fuel_from_e,
@@ -4731,7 +4737,7 @@ class Stellarator:
                 physics_variables.dnelimt,
             )
 
-    def stphys_output(
+    def st_phys_output(
         self,
         q_PROCESS,
         total_q_neo_e,
@@ -5066,7 +5072,7 @@ class Stellarator:
 
         return nominator / denominator
 
-    def stheat(self, output: bool):
+    def st_heat(self, output: bool):
         """Routine to calculate the auxiliary heating power
         in a stellarator
         author: P J Knight, CCFE, Culham Science Centre
