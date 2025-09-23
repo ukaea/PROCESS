@@ -29,6 +29,7 @@ from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
 
 import process.confinement_time as confine
+import process.constants as constants
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.data_structure import physics_variables
@@ -9846,6 +9847,348 @@ def plot_fw_90_deg_pipe_bend(ax, m_file_data, scan):
     )
 
 
+def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
+    # Plot the fusion rate profiles on the given axis
+    fusrat_plasma_dt_profile = []
+    fusrat_plasma_dd_triton_profile = []
+    fusrat_plasma_dd_helion_profile = []
+    fusrat_plasma_dhe3_profile = []
+
+    fusrat_plasma_dt_profile = [
+        mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    fusrat_plasma_dd_triton_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_triton_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    fusrat_plasma_dd_helion_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_helion_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    fusrat_plasma_dhe3_profile = [
+        mfile_data.data[f"fusrat_plasma_dhe3_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    fusrat_plasma_total_profile = [
+        fusrat_plasma_dt_profile[i]
+        + fusrat_plasma_dd_triton_profile[i]
+        + fusrat_plasma_dd_helion_profile[i]
+        + fusrat_plasma_dhe3_profile[i]
+        for i in range(len(fusrat_plasma_dt_profile))
+    ]
+
+    axis.spines["left"].set_color("red")
+    axis.yaxis.label.set_color("black")
+    axis.tick_params(axis="y", colors="red")
+
+    # Plot fusion rates (dashed lines, left axis) with axis color and different linestyles
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+        fusrat_plasma_dt_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="-",
+        label=r"$\mathrm{D-T}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
+        fusrat_plasma_dd_triton_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle=":",
+        label=r"$\mathrm{D-D \ Triton}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
+        fusrat_plasma_dd_helion_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="-.",
+        label=r"$\mathrm{D-D \ Helion}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
+        fusrat_plasma_dhe3_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="--",
+        label=r"$\mathrm{D-3He}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+        fusrat_plasma_total_profile,
+        color=axis.spines["left"].get_edgecolor(),
+        linestyle="None",
+        marker="d",
+        markersize=1,
+        label=r"Total",
+    )
+
+    # Plot fusion power (solid lines, right axis) with axis color and different linestyles
+    ax2 = axis.twinx()
+    ax2.spines["right"].set_color("blue")
+    ax2.yaxis.label.set_color("black")
+    ax2.tick_params(axis="y", colors="blue")
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dt_profile)),
+        np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="-",
+    )
+
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_triton_profile)),
+        np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle=":",
+    )
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dd_helion_profile)),
+        np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="-.",
+    )
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_dhe3_profile)),
+        np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY,
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="--",
+    )
+    ax2.plot(
+        np.linspace(0, 1, len(fusrat_plasma_total_profile)),
+        (
+            np.array(fusrat_plasma_dhe3_profile) * constants.D_HELIUM_ENERGY
+            + np.array(fusrat_plasma_dd_helion_profile) * constants.DD_HELIUM_ENERGY
+            + np.array(fusrat_plasma_dd_triton_profile) * constants.DD_TRITON_ENERGY
+            + np.array(fusrat_plasma_dt_profile) * constants.D_T_ENERGY
+        ),
+        color=ax2.spines["right"].get_edgecolor(),
+        linestyle="None",
+        marker="d",
+        markersize=1,
+        label=r"Total",
+    )
+
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.set_ylabel("Fusion Rate [reactions/second]")
+    axis.legend(
+        loc="lower left", edgecolor="black", facecolor="white", labelcolor="black"
+    )
+    axis.set_yscale("log")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.minorticks_on()
+    axis.set_ylim([1e10, 1e19])
+    axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
+    axis.yaxis.set_minor_locator(
+        plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
+    )
+    axis.tick_params(axis="y", which="minor", colors="red")
+
+    ax2.set_title("Fusion Rate and Fusion Power Profiles")
+    ax2.set_ylabel("Fusion Power [W]")
+    ax2.set_yscale("log")
+    ax2.minorticks_on()
+    ax2.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
+    ax2.yaxis.set_minor_locator(
+        plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
+    )
+    ax2.tick_params(axis="y", which="minor", colors="blue")
+
+    # =================================================
+
+    # Add plasma volume, areas and shaping information
+    textstr_general = (
+        f"Total fusion rate: {mfile_data.data['fusrat_total'].get_scan(scan):.4e} reactions/s\n"
+        f"Total fusion rate density: {mfile_data.data['fusden_total'].get_scan(scan):.4e} reactions/m3/s\n"
+        f"Plasma fusion rate density: {mfile_data.data['fusden_plasma'].get_scan(scan):.4e} reactions/m3/s\n"
+    )
+
+    axis.text(
+        0.05,
+        0.85,
+        textstr_general,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # ============================================================================
+
+    textstr_dt = (
+        f"Total fusion power: {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Plasma fusion power: {mfile_data.data['p_plasma_dt_mw'].get_scan(scan):.2f} MW                     \n"
+        f"Beam fusion power: {mfile_data.data['p_beam_dt_mw'].get_scan(scan):.2f} MW\n"
+    )
+
+    axis.text(
+        0.05,
+        0.75,
+        textstr_dt,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.24,
+        0.8,
+        "$\\text{D - T}$",
+        fontsize=20,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =================================================
+
+    textstr_dd = (
+        f"Total fusion power: {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Tritium branching ratio: {mfile_data.data['f_dd_branching_trit'].get_scan(scan):.4f}                      \n"
+    )
+
+    axis.text(
+        0.05,
+        0.65,
+        textstr_dd,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.22,
+        0.685,
+        "$\\text{D - D}$",
+        fontsize=20,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =================================================
+
+    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW                                 \n\n"
+
+    axis.text(
+        0.05,
+        0.55,
+        textstr_dhe3,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "lightyellow",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.21,
+        0.59,
+        "$\\text{D - 3He}$",
+        fontsize=20,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =================================================
+
+    textstr_alpha = (
+        f"Total power: {mfile_data.data['p_alpha_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Plasma power: {mfile_data.data['p_plasma_alpha_mw'].get_scan(scan):.2f} MW\n"
+        f"Beam power: {mfile_data.data['p_beam_alpha_mw'].get_scan(scan):.2f} MW\n\n"
+        f"Rate density total: {mfile_data.data['fusden_alpha_total'].get_scan(scan):.4e} particles/m3/sec\n"
+        f"Rate density, plasma: {mfile_data.data['fusden_plasma_alpha'].get_scan(scan):.4e} particles/m3/sec\n\n"
+        f"Total power density: {mfile_data.data['pden_alpha_total_mw'].get_scan(scan):.4e} MW/m3\n"
+        f"Plasma power density: {mfile_data.data['pden_plasma_alpha_mw'].get_scan(scan):.4e} MW/m3\n\n"
+        f"Power per unit volume transferred to electrons: {mfile_data.data['f_pden_alpha_electron_mw'].get_scan(scan):.4e} MW/m3\n"
+        f"Power per unit volume transferred to ions: {mfile_data.data['f_pden_alpha_ions_mw'].get_scan(scan):.4e} MW/m3\n\n"
+    )
+
+    axis.text(
+        0.05,
+        0.25,
+        textstr_alpha,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.35,
+        0.45,
+        "$\\alpha$",
+        fontsize=22,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+    # =================================================
+
+    textstr_neutron = (
+        f"Total power: {mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Plasma power: {mfile_data.data['p_plasma_neutron_mw'].get_scan(scan):.2f} MW\n"
+        f"Beam power: {mfile_data.data['p_beam_neutron_mw'].get_scan(scan):.2f} MW\n\n"
+        f"Total power density: {mfile_data.data['pden_neutron_total_mw'].get_scan(scan):.4e} MW/m3\n"
+        f"Plasma power density: {mfile_data.data['pden_plasma_neutron_mw'].get_scan(scan):.4e} MW/m3\n"
+    )
+
+    axis.text(
+        0.05,
+        0.1,
+        textstr_neutron,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.25,
+        0.2,
+        "$n$",
+        fontsize=20,
+        verticalalignment="top",
+        transform=fig.transFigure,
+    )
+
+
 def main_plot(
     fig1,
     fig2,
@@ -9864,6 +10207,7 @@ def main_plot(
     fig15,
     fig16,
     fig17,
+    fig18,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -9957,94 +10301,97 @@ def main_plot(
     plot_13.set_position([0.7, 0.125, 0.25, 0.15])
     plot_qprofile(plot_13, demo_ranges, m_file_data, scan)
 
+    plot_14 = fig5.add_subplot(122)
+    plot_fusion_rate_profiles(plot_14, fig5, m_file_data, scan)
+
     # Plot poloidal cross-section
-    plot_14 = fig5.add_subplot(121, aspect="equal")
-    poloidal_cross_section(plot_14, m_file_data, scan, demo_ranges, colour_scheme)
+    plot_15 = fig6.add_subplot(121, aspect="equal")
+    poloidal_cross_section(plot_15, m_file_data, scan, demo_ranges, colour_scheme)
 
     # Plot toroidal cross-section
-    plot_15 = fig5.add_subplot(122, aspect="equal")
-    toroidal_cross_section(plot_15, m_file_data, scan, demo_ranges, colour_scheme)
+    plot_16 = fig6.add_subplot(122, aspect="equal")
+    toroidal_cross_section(plot_16, m_file_data, scan, demo_ranges, colour_scheme)
     # fig4.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
 
     # Plot color key
-    plot_16 = fig5.add_subplot(222)
-    plot_16.set_position([0.5, 0.5, 0.5, 0.5])
-    color_key(plot_16, m_file_data, scan, colour_scheme)
+    plot_17 = fig6.add_subplot(222)
+    plot_17.set_position([0.5, 0.5, 0.5, 0.5])
+    color_key(plot_17, m_file_data, scan, colour_scheme)
 
-    plot_17 = fig6.add_subplot(211)
-    plot_17.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
-    plot_radial_build(plot_17, m_file_data, colour_scheme)
+    plot_18 = fig7.add_subplot(211)
+    plot_18.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
+    plot_radial_build(plot_18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    plot_175 = fig7.add_subplot(211)
-    plot_175.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
+    plot_185 = fig8.add_subplot(211)
+    plot_185.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
 
-    plot_17 = fig7.add_subplot(212)
-    plot_17.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
-    plot_upper_vertical_build(plot_175, m_file_data, colour_scheme)
-    plot_lower_vertical_build(plot_17, m_file_data, colour_scheme)
+    plot_18 = fig8.add_subplot(212)
+    plot_18.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
+    plot_upper_vertical_build(plot_185, m_file_data, colour_scheme)
+    plot_lower_vertical_build(plot_18, m_file_data, colour_scheme)
 
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_19 = fig8.add_subplot(231, aspect="equal")
+        plot_19 = fig9.add_subplot(231, aspect="equal")
         plot_19.set_position([
             0.025,
             0.5,
             0.45,
             0.45,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig8)
+        plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig9)
 
         # TF coil turn structure
-        plot_20 = fig8.add_subplot(325, aspect="equal")
+        plot_20 = fig9.add_subplot(325, aspect="equal")
         plot_20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_20, fig8, m_file_data, scan)
+        plot_tf_turn(plot_20, fig9, m_file_data, scan)
     else:
-        plot_19 = fig8.add_subplot(211, aspect="equal")
+        plot_19 = fig9.add_subplot(211, aspect="equal")
         plot_19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(plot_19, m_file_data, scan, fig8)
 
-    plot_21 = fig9.add_subplot(111, aspect="equal")
+    plot_21 = fig10.add_subplot(111, aspect="equal")
     plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
 
-    axes = fig10.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig11.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_23 = fig11.add_subplot(221)
+    plot_23 = fig12.add_subplot(221)
     plot_bootstrap_comparison(plot_23, m_file_data, scan)
 
-    plot_24 = fig11.add_subplot(224)
+    plot_24 = fig12.add_subplot(224)
     plot_h_threshold_comparison(plot_24, m_file_data, scan)
 
-    plot_25 = fig12.add_subplot(221)
+    plot_25 = fig13.add_subplot(221)
     plot_density_limit_comparison(plot_25, m_file_data, scan)
 
-    plot_26 = fig12.add_subplot(224)
+    plot_26 = fig13.add_subplot(224)
     plot_confinement_time_comparison(plot_26, m_file_data, scan)
 
-    plot_27 = fig13.add_subplot(111)
+    plot_27 = fig14.add_subplot(111)
     plot_current_profiles_over_time(plot_27, m_file_data, scan)
 
-    plot_28 = fig14.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_28, fig14, m_file_data, scan)
+    plot_28 = fig15.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_28, fig15, m_file_data, scan)
 
-    plot_29 = fig14.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_29, fig14, m_file_data, scan)
+    plot_29 = fig15.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_29, fig15, m_file_data, scan)
 
-    plot_30 = fig15.add_subplot(221, aspect="equal")
+    plot_30 = fig16.add_subplot(221, aspect="equal")
     plot_first_wall_top_down_cross_section(plot_30, m_file_data, scan)
 
-    plot_31 = fig15.add_subplot(122)
+    plot_31 = fig16.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
 
-    plot_32 = fig15.add_subplot(337)
+    plot_32 = fig16.add_subplot(337)
     plot_fw_90_deg_pipe_bend(plot_32, m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig16, m_file_data, scan)
+    plot_blkt_pipe_bends(fig17, m_file_data, scan)
 
-    plot_33 = fig17.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_33, m_file_data, scan, fig17)
+    plot_33 = fig18.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_33, m_file_data, scan, fig18)
 
 
 def main(args=None):
@@ -10338,6 +10685,7 @@ def main(args=None):
     page15 = plt.figure(figsize=(12, 9), dpi=80)
     page16 = plt.figure(figsize=(12, 9), dpi=80)
     page17 = plt.figure(figsize=(12, 9), dpi=80)
+    page18 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -10358,6 +10706,7 @@ def main(args=None):
         page15,
         page16,
         page17,
+        page18,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -10383,6 +10732,7 @@ def main(args=None):
         pdf.savefig(page15)
         pdf.savefig(page16)
         pdf.savefig(page17)
+        pdf.savefig(page18)
 
     # show fig if option used
     if args.show:
@@ -10405,6 +10755,7 @@ def main(args=None):
     plt.close(page15)
     plt.close(page16)
     plt.close(page17)
+    plt.close(page18)
 
 
 if __name__ == "__main__":
