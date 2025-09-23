@@ -48,10 +48,9 @@ from process.physics import (
 )
 from process.power import init_heat_transport_variables, init_pf_power_variables
 from process.scan import init_scan_module
-from process.stellarator import (
-    init_stellarator_module,
-    init_stellarator_variables,
-    stinit,
+from process.stellarator.initialization import init_stellarator_module, init_stellarator_variables
+from process.stellarator.initialization import (
+    st_init,
 )
 from process.superconducting_tf_coil import init_sctfcoil_module
 from process.tf_coil import init_tfcoil_variables
@@ -86,7 +85,7 @@ def init_process():
     set_device_type()
 
     # Initialise the Stellarator
-    stinit()
+    st_init()
 
     # Check input data for errors/ambiguities
     check_process(inputs)

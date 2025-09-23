@@ -95,7 +95,8 @@ from process.power import Power
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
-from process.stellarator import Neoclassics, Stellarator
+from process.stellarator.neoclassics import Neoclassics
+from process.stellarator.stellarator import Stellarator
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
