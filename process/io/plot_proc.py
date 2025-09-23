@@ -564,7 +564,7 @@ def plot_main_power_flow(
 
     # Load the alpha particle image
     alpha = mpimg.imread(
-        resources.path("process.io", "alpha_particle.PNG")
+        resources.path("process.io", "alpha_particle.png")
     )  # Use importlib.resources to locate the image
 
     # Display the alpha particle image over the figure, not the axes
@@ -2785,7 +2785,7 @@ def plot_main_plasma_information(
 
     # Load the neutron image
     with resources.path(
-        "process.io", "alpha_particle.PNG"
+        "process.io", "alpha_particle.png"
     ) as alpha_particle_image_path:
         # Use importlib.resources to locate the image
         alpha_particle = mpimg.imread(alpha_particle_image_path.open("rb"))

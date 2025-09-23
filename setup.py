@@ -23,6 +23,7 @@ setup_kwargs = {
     "package_data": {
         "process": ["data/lz_non_corona_14_elements/*"],
         "process.data.impuritydata": ["*"],
+        "process.io": ["*.png"],
     },
     "test_suite": "pytest",
     "python_requires": ">=3.10",
