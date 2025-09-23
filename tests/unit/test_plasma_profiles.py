@@ -167,7 +167,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     nd_plasma_pedestal_electron: float = 0.0
 
-    ti: float = 0.0
+    temp_plasma_ion_vol_avg_kev: float = 0.0
 
     radius_plasma_pedestal_density_norm: float = 0.0
 
@@ -238,7 +238,7 @@ class PlasmaProfilesParam(NamedTuple):
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
-            ti=12.9,
+            temp_plasma_ion_vol_avg_kev=12.9,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
             temp_plasma_pedestal_kev=5.5,
@@ -283,7 +283,7 @@ class PlasmaProfilesParam(NamedTuple):
             alphat=1.45,
             nd_ions_total=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
-            ti=13.07,
+            temp_plasma_ion_vol_avg_kev=13.07,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             nd_plasma_electrons_vol_avg=7.983e19,
             temp_plasma_pedestal_kev=5.5,
@@ -393,7 +393,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.nd_plasma_pedestal_electron,
     )
 
-    monkeypatch.setattr(physics_variables, "ti", plasmaprofilesparam.ti)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_ion_vol_avg_kev",
+        plasmaprofilesparam.temp_plasma_ion_vol_avg_kev,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -462,4 +466,6 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.expected_nd_electron_line
     )
 
-    assert physics_variables.ti == pytest.approx(plasmaprofilesparam.expected_ti)
+    assert physics_variables.temp_plasma_ion_vol_avg_kev == pytest.approx(
+        plasmaprofilesparam.expected_ti
+    )

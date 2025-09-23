@@ -1212,7 +1212,7 @@ ten: float = None
 """density weighted average electron temperature (keV)"""
 
 
-ti: float = None
+temp_plasma_ion_vol_avg_kev: float = None
 """volume averaged ion temperature (keV). N.B. calculated from te if `f_temp_plasma_ion_electron > 0.0`"""
 
 
@@ -1225,7 +1225,7 @@ tin: float = None
 
 
 f_temp_plasma_ion_electron: float = None
-"""ion temperature / electron temperature(used to calculate ti if `f_temp_plasma_ion_electron > 0.0`"""
+"""ion temperature / electron temperature(used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 
 
 triang: float = None
@@ -1570,7 +1570,7 @@ def init_physics_variables():
     global te
     global te0
     global ten
-    global ti
+    global temp_plasma_ion_vol_avg_kev
     global ti0
     global tin
     global f_temp_plasma_ion_electron
@@ -1817,7 +1817,7 @@ def init_physics_variables():
     te = 12.9
     te0 = 0.0
     ten = 0.0
-    ti = 12.9
+    temp_plasma_ion_vol_avg_kev = 12.9
     ti0 = 0.0
     tin = 0.0
     f_temp_plasma_ion_electron = 1.0

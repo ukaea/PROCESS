@@ -406,5 +406,7 @@ class TeProfile(Profile):
             )
 
         physics_variables.ti0 = (
-            physics_variables.ti / physics_variables.te * physics_variables.te0
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            / physics_variables.te
+            * physics_variables.te0
         )

@@ -34,7 +34,15 @@ logger = logging.getLogger(__name__)
 
 
 @nb.jit(nopython=True, cache=True)
-def rether(alphan, alphat, nd_plasma_electrons_vol_avg, dlamie, te, ti, zeffai):
+def rether(
+    alphan,
+    alphat,
+    nd_plasma_electrons_vol_avg,
+    dlamie,
+    te,
+    temp_plasma_ion_vol_avg_kev,
+    zeffai,
+):
     """Routine to find the equilibration power between the
     ions and electrons
     author: P J Knight, CCFE, Culham Science Centre
@@ -43,7 +51,7 @@ def rether(alphan, alphat, nd_plasma_electrons_vol_avg, dlamie, te, ti, zeffai):
     nd_plasma_electrons_vol_avg   : input real :  electron density (/m3)
     dlamie : input real :  ion-electron coulomb logarithm
     te     : input real :  electron temperature (keV)
-    ti     : input real :  ion temperature (keV)
+    temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
     zeffai : input real :  mass weighted plasma effective charge
     pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
@@ -55,7 +63,7 @@ def rether(alphan, alphat, nd_plasma_electrons_vol_avg, dlamie, te, ti, zeffai):
     )
     conie = 2.42165e-41 * dlamie * nd_plasma_electrons_vol_avg**2 * zeffai * profie
 
-    return conie * (ti - te) / (te**1.5)
+    return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
 
 @nb.jit(nopython=True, cache=True)
@@ -2161,7 +2169,9 @@ class Physics:
         # Calculate fusion power + components
 
         fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
-        fusion_reactions.deuterium_branching(physics_variables.ti)
+        fusion_reactions.deuterium_branching(
+            physics_variables.temp_plasma_ion_vol_avg_kev
+        )
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
@@ -2317,7 +2327,7 @@ class Physics:
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
             physics_variables.te,
-            physics_variables.ti,
+            physics_variables.temp_plasma_ion_vol_avg_kev,
             physics_variables.zeffai,
         )
 
@@ -4546,7 +4556,12 @@ class Physics:
             physics_variables.te0,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Ion temperature (keV)", "(ti)", physics_variables.ti)
+        po.ovarrf(
+            self.outfile,
+            "Ion temperature (keV)",
+            "(temp_plasma_ion_vol_avg_kev)",
+            physics_variables.temp_plasma_ion_vol_avg_kev,
+        )
         po.ovarrf(
             self.outfile,
             "Ion temperature on axis (keV)",
@@ -6875,7 +6890,9 @@ class Physics:
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
-        tempi = (physics_variables.ti / physics_variables.te) * tempe
+        tempi = (
+            physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te
+        ) * tempe
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
