@@ -140,7 +140,7 @@ python process/io/plot_radial_build.py -f path/to/MFILE.DAT
 
 ### Interactive Sankey diagram
 
-`plot_plotly_sankey` is to plot and interactive `.html` Sankey diagram for looking at the plants power balance. It can be run as follows:
+`plot_plotly_sankey` is to plot an interactive `.html` Sankey diagram for looking at the plants power balance. It can be run as follows:
 
 ```bash
 python process/io/plot_plotly_sankey.py -m path/to/MFILE.DAT
