@@ -73,7 +73,12 @@ from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
-from process.io import mfile, plot_proc, plot_radial_build, plot_sankey
+from process.io import (
+    mfile,
+    plot_plotly_sankey,
+    plot_proc,
+    plot_radial_build,
+)
 from process.io import obsolete_vars as ov
 
 # For VaryRun
@@ -244,7 +249,9 @@ class Process:
             if mfile_path.exists():
                 plot_proc.main(args=["-f", mfile_str])
                 plot_radial_build.main(args=["-f", mfile_str, "-nm"])
-                plot_sankey.main(args=["-m", mfile_str])
+
+                plot_plotly_sankey.main(args=["-m", mfile_str])
+
             else:
                 logger.error("mfile to be used for plotting doesn't exist")
 
