@@ -281,7 +281,7 @@ f_temp_plasma_ion_electron = 1.0
 * DESCRIPTION:   Ion Temperature / Electron Temperature
 * JUSTIFICATION: Default value
 
-*ti =   
+*temp_plasma_ion_vol_avg_kev =   
 * DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from te if f_temp_plasma_ion_electron > 0.0
 * JUSTIFICATION: Calculated in-situ as f_temp_plasma_ion_electron >0
 

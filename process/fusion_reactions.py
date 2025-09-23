@@ -645,7 +645,7 @@ def fusion_rate_integral(
     # Since the electron temperature profile is only calculated directly, we scale the ion temperature
     # profile by the ratio of the volume averaged ion to electron temperature
     ion_temperature_profile = (
-        physics_variables.ti / physics_variables.te
+        physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te
     ) * plasma_profile.teprofile.profile_y
 
     # Number of fusion reactions per unit volume per particle volume density (m^3/s)
@@ -994,7 +994,7 @@ def beamcalc(
     beam_slow_time: float,
     f_beam_tritium: float,
     c_beam_total: float,
-    ti: float,
+    temp_plasma_ion_vol_avg_kev: float,
     vol_plasma: float,
     svdt: float,
 ) -> tuple[float, float, float, float]:
@@ -1014,7 +1014,7 @@ def beamcalc(
         beam_slow_time (float): Beam ion slowing down time on electrons (s).
         f_beam_tritium (float): Beam tritium fraction (0.0 = deuterium beam).
         c_beam_total (float): Beam current (A).
-        ti (float): Thermal ion temperature (keV).
+        temp_plasma_ion_vol_avg_kev (float): Thermal ion temperature (keV).
         vol_plasma (float): Plasma volume (m^3).
         svdt (float): Profile averaged <sigma v> for D-T (m^3/s).
 
@@ -1157,10 +1157,20 @@ def beamcalc(
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
-        deuterium_beam_density, nt, hot_deuterium_rate, vol_plasma, ti, svdt
+        deuterium_beam_density,
+        nt,
+        hot_deuterium_rate,
+        vol_plasma,
+        temp_plasma_ion_vol_avg_kev,
+        svdt,
     )
     tritium_beam_alpha_power = alpha_power_beam(
-        tritium_beam_density, nd, hot_tritium_rate, vol_plasma, ti, svdt
+        tritium_beam_density,
+        nd,
+        hot_tritium_rate,
+        vol_plasma,
+        temp_plasma_ion_vol_avg_kev,
+        svdt,
     )
 
     return (
@@ -1217,7 +1227,7 @@ def alpha_power_beam(
     plasma_ion_desnity: float,
     sigv: float,
     vol_plasma: float,
-    ti: float,
+    temp_plasma_ion_vol_avg_kev: float,
     sigmav_dt: float,
 ) -> float:
     """
@@ -1231,7 +1241,7 @@ def alpha_power_beam(
         plasma_ion_desnity (float): Thermal ion density (m^-3).
         sigv (float): Hot beam fusion reaction rate (m^3/s).
         vol_plasma (float): Plasma volume (m^3).
-        ti (float): Thermal ion temperature (keV).
+        temp_plasma_ion_vol_avg_kev (float): Thermal ion temperature (keV).
         sigmav_dt (float): Profile averaged <sigma v> for D-T (m^3/s).
 
     Returns:
@@ -1251,7 +1261,8 @@ def alpha_power_beam(
     ratio = (
         sigmav_dt
         / bosch_hale_reactivity(
-            np.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
+            np.array([temp_plasma_ion_vol_avg_kev]),
+            BoschHaleConstants(**REACTION_CONSTANTS_DT),
         ).item()
     )
 

@@ -1729,7 +1729,9 @@ INPUT_VARIABLES = {
     "dx_tf_turn_steel": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "ti": InputVariable(data_structure.physics_variables, float, range=(5.0, 50.0)),
+    "temp_plasma_ion_vol_avg_kev": InputVariable(
+        data_structure.physics_variables, float, range=(5.0, 50.0)
+    ),
     "dx_tf_wp_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),

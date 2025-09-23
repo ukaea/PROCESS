@@ -81,7 +81,7 @@ class PlasmaProfile:
         #  (input value used directly if f_temp_plasma_ion_electron=0.0)
 
         if physics_variables.f_temp_plasma_ion_electron > 0.0e0:
-            physics_variables.ti = (
+            physics_variables.temp_plasma_ion_vol_avg_kev = (
                 physics_variables.f_temp_plasma_ion_electron * physics_variables.te
             )
 
@@ -160,12 +160,16 @@ class PlasmaProfile:
         #  Density-weighted temperatures
 
         physics_variables.ten = physics_variables.te * physics_variables.pcoef
-        physics_variables.tin = physics_variables.ti * physics_variables.pcoef
+        physics_variables.tin = (
+            physics_variables.temp_plasma_ion_vol_avg_kev * physics_variables.pcoef
+        )
 
         #  Central values for temperature (keV) and density (m**-3)
 
         physics_variables.te0 = physics_variables.te * (1.0 + physics_variables.alphat)
-        physics_variables.ti0 = physics_variables.ti * (1.0 + physics_variables.alphat)
+        physics_variables.ti0 = physics_variables.temp_plasma_ion_vol_avg_kev * (
+            1.0 + physics_variables.alphat
+        )
 
         physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
             1.0 + physics_variables.alphan
@@ -214,7 +218,9 @@ class PlasmaProfile:
         #  Density-weighted temperatures
         physics_variables.ten = integ1 / integ2
         physics_variables.tin = (
-            physics_variables.ti / physics_variables.te * physics_variables.ten
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            / physics_variables.te
+            * physics_variables.ten
         )
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature

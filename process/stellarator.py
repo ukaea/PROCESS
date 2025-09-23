@@ -4311,7 +4311,9 @@ class Stellarator:
         #  Calculate fusion power
 
         fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
-        fusion_reactions.deuterium_branching(physics_variables.ti)
+        fusion_reactions.deuterium_branching(
+            physics_variables.temp_plasma_ion_vol_avg_kev
+        )
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
@@ -4450,7 +4452,7 @@ class Stellarator:
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
             physics_variables.te,
-            physics_variables.ti,
+            physics_variables.temp_plasma_ion_vol_avg_kev,
             physics_variables.zeffai,
         )
 
@@ -5599,9 +5601,9 @@ class Neoclassics:
         temp = (
             np.array([
                 physics_variables.te,
-                physics_variables.ti,
-                physics_variables.ti,
-                physics_variables.ti,
+                physics_variables.temp_plasma_ion_vol_avg_kev,
+                physics_variables.temp_plasma_ion_vol_avg_kev,
+                physics_variables.temp_plasma_ion_vol_avg_kev,
             ])
             * KEV
         )

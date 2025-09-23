@@ -10785,7 +10785,7 @@ def main(args=None):
         scan
     )
     te0 = m_file.data["te0"].get_scan(scan)
-    ti = m_file.data["ti"].get_scan(scan)
+    ti = m_file.data["temp_plasma_ion_vol_avg_kev"].get_scan(scan)
     te = m_file.data["te"].get_scan(scan)
     fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
     fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)

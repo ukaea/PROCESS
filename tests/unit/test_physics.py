@@ -327,7 +327,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     temp_plasma_separatrix_kev: Any = None
 
-    ti: Any = None
+    temp_plasma_ion_vol_avg_kev: Any = None
 
     triang: Any = None
 
@@ -383,7 +383,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             nd_ions_total=7.1297522422781575e19,
             rminor=2.6666666666666665,
             temp_plasma_separatrix_kev=0.10000000000000001,
-            ti=12.570861186498382,
+            temp_plasma_ion_vol_avg_kev=12.570861186498382,
             triang=0.5,
             q0=1,
             m_fuel_amu=2.5,
@@ -437,7 +437,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.temp_plasma_separatrix_kev,
     )
 
-    monkeypatch.setattr(physics_variables, "ti", bootstrapfractionsauterparam.ti)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_ion_vol_avg_kev",
+        bootstrapfractionsauterparam.temp_plasma_ion_vol_avg_kev,
+    )
 
     monkeypatch.setattr(
         physics_variables, "triang", bootstrapfractionsauterparam.triang
