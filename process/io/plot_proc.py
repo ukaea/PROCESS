@@ -59,6 +59,7 @@ from process.geometry.vacuum_vessel_geometry import (
     vacuum_vessel_geometry_single_null,
 )
 from process.impurity_radiation import read_impurity_file
+from process.io.mfile import MFileErrorClass
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
@@ -7027,7 +7028,9 @@ def plot_header(axis, mfile_data, scan):
         (f"!{mfile_data.data['date'].get_scan(-1)}", "Date:", ""),
         (f"!{mfile_data.data['time'].get_scan(-1)}", "Time:", ""),
         (f"!{mfile_data.data['username'].get_scan(-1)}", "User:", ""),
-        (
+        ("!Evaluation", "Run type", "")
+        if isinstance(mfile_data.data["minmax"], MFileErrorClass)
+        else (
             f"!{OBJECTIVE_NAMES[abs(int(mfile_data.data['minmax'].get_scan(-1)))]}",
             "Optimising:",
             "",
