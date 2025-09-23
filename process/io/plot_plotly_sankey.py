@@ -399,7 +399,7 @@ def plot_power_balance_sankey(m_file):
     # Strip 'MFILE' from the filename for the HTML output
     # Remove the character before "MFILE" and "MFILE" itself from the filename
     html_output_path = pathlib.Path(
-        re.sub(r"(.)?MFILE", r"\1_plotly_sankey", m_file.filename)
+        re.sub(r"(.)?[ \.\_]?MFILE", r"\1_plotly_sankey", m_file.filename)
     ).with_suffix(".html")
     fig.write_html(str(html_output_path))
     print(f"Interactive Sankey diagram saved to {html_output_path}")
