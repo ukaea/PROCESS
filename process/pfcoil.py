@@ -320,6 +320,14 @@ class PFCoil:
                     rref=pfcoil_variables.rref,
                 )
 
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
+                        r_pf_coil_middle_group_array[group, coil]
+                    )
+                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
+                        z_pf_coil_middle_group_array[group, coil]
+                    )
+
             else:
                 raise ProcessValueError(
                     "Illegal i_pf_location value",
