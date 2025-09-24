@@ -812,6 +812,9 @@ pres_plasma_electron_profile: list[float] = None
 pres_plasma_ion_total_profile: list[float] = None
 """Profile of ion pressure in plasma (Pa)"""
 
+pres_plasma_fuel_profile: list[float] = None
+"""Profile of fuel pressure in plasma (Pa)"""
+
 j_plasma_on_axis: float = None
 """Central plasma current density (A/m2)"""
 
@@ -1483,6 +1486,7 @@ def init_physics_variables():
     global pres_plasma_on_axis
     global pres_plasma_electron_profile
     global pres_plasma_ion_total_profile
+    global pres_plasma_fuel_profile
     global j_plasma_on_axis
     global f_dd_branching_trit
     global pden_plasma_alpha_mw
@@ -1732,6 +1736,7 @@ def init_physics_variables():
     pres_plasma_on_axis = 0.0
     pres_plasma_electron_profile = []
     pres_plasma_ion_total_profile = []
+    pres_plasma_fuel_profile = []
     j_plasma_on_axis = 0.0
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0

@@ -3671,6 +3671,35 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         verticalalignment="top",
         bbox=props_density,
     )
+
+    textstr_ions = "\n".join((
+        r"$\langle n_{\text{ions-total}} \rangle $: "
+        f"{mfile_data.data['nd_ions_total'].get_scan(scan):.3e} m$^{{-3}}$",
+        r"$\langle n_{\text{fuel}} \rangle $: "
+        f"{mfile_data.data['nd_fuel_ions'].get_scan(scan):.3e} m$^{{-3}}$",
+        r"$\langle n_{\text{alpha}} \rangle $: "
+        f"{mfile_data.data['nd_alphas'].get_scan(scan):.3e} m$^{{-3}}$",
+        r"$\langle n_{\text{impurities}} \rangle $: "
+        f"{mfile_data.data['nd_impurities'].get_scan(scan):.3e} m$^{{-3}}$",
+        r"$\langle n_{\text{protons}} \rangle $:"
+        f"{mfile_data.data['nd_protons'].get_scan(scan):.3e} m$^{{-3}}$",
+    ))
+
+    prof.text(
+        1.2,
+        -0.725,
+        textstr_ions,
+        fontsize=9,
+        verticalalignment="bottom",
+        horizontalalignment="left",
+        transform=prof.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 0.5,
+        },
+    )
+
     prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     # ---
@@ -10419,8 +10448,13 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
         for i in range(500)
     ]
+    pres_plasma_profile_fuel = [
+        mfile_data.data[f"pres_plasma_fuel_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
     pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
+    pres_plasma_profile_fuel_kpa = [p / 1000.0 for p in pres_plasma_profile_fuel]
     pres_plasma_profile_total_kpa = [
         e + i
         for e, i in zip(
@@ -10439,6 +10473,12 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         pres_plasma_profile_ion_kpa,
         color="Red",
         label="Ion-total",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(pres_plasma_profile_fuel_kpa)),
+        pres_plasma_profile_fuel_kpa,
+        color="orange",
+        label="Fuel",
     )
     axis.plot(
         np.linspace(0, 1, len(pres_plasma_profile_total_kpa)),
@@ -10467,8 +10507,13 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
         for i in range(500)
     ]
+    pres_plasma_profile_fuel = [
+        mfile_data.data[f"pres_plasma_fuel_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
     pres_plasma_profile_kpa = np.array(pres_plasma_profile) / 1000.0
     pres_plasma_profile_ion_kpa = np.array(pres_plasma_profile_ion) / 1000.0
+    pres_plasma_profile_fuel_kpa = np.array(pres_plasma_profile_fuel) / 1000.0
     pres_plasma_profile_total_kpa = (
         pres_plasma_profile_kpa + pres_plasma_profile_ion_kpa
     )
@@ -10480,12 +10525,14 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
     grad_electron = np.gradient(pres_plasma_profile_kpa, rho)
     grad_ion = np.gradient(pres_plasma_profile_ion_kpa, rho)
     grad_total = np.gradient(pres_plasma_profile_total_kpa, rho)
+    grad_fuel = np.gradient(pres_plasma_profile_fuel_kpa, rho)
 
-    axis.plot(rho, grad_electron, color="blue", label="Electron dP/dr")
-    axis.plot(rho, grad_ion, color="orange", label="Ion dP/dr")
-    axis.plot(rho, grad_total, color="green", label="Total dP/dr")
+    axis.plot(rho, grad_electron, color="blue", label="Electron")
+    axis.plot(rho, grad_ion, color="red", label="Ion")
+    axis.plot(rho, grad_total, color="green", label="Total")
+    axis.plot(rho, grad_fuel, color="orange", label="Fuel")
     axis.set_xlabel("$\\rho$ [r/a]")
-    axis.set_ylabel("dP/dr [kPa / (r/a)]")
+    axis.set_ylabel("$dP/dr$ [kPa / m]")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Plasma Pressure Gradient Profiles")
@@ -10554,159 +10601,146 @@ def main_plot(
     plot_cover_page(plot_0, m_file_data, scan, fig0, colour_scheme)
 
     # Plot header info
-    plot_1 = fig1.add_subplot(231)
-    plot_header(plot_1, m_file_data, scan)
+    plot_header(fig1.add_subplot(231), m_file_data, scan)
 
     # Geometry
-    plot_2 = fig1.add_subplot(232)
-    plot_geometry_info(plot_2, m_file_data, scan)
+    plot_geometry_info(fig1.add_subplot(232), m_file_data, scan)
 
     # Physics
-    plot_3 = fig1.add_subplot(233)
-    plot_physics_info(plot_3, m_file_data, scan)
+    plot_physics_info(fig1.add_subplot(233), m_file_data, scan)
 
     # Magnetics
-    plot_4 = fig1.add_subplot(234)
-    plot_magnetics_info(plot_4, m_file_data, scan)
+    plot_magnetics_info(fig1.add_subplot(234), m_file_data, scan)
 
     # power/flow economics
-    plot_5 = fig1.add_subplot(235)
-    plot_power_info(plot_5, m_file_data, scan)
+    plot_power_info(fig1.add_subplot(235), m_file_data, scan)
 
     # Current drive
-    plot_6 = fig1.add_subplot(236)
-    plot_current_drive_info(plot_6, m_file_data, scan)
+    plot_current_drive_info(fig1.add_subplot(236), m_file_data, scan)
     fig1.subplots_adjust(wspace=0.25, hspace=0.25)
 
-    plot_7 = fig2.add_subplot(121)
-    plot_7.set_position([0.175, 0.1, 0.35, 0.8])  # Move plot slightly to the right
-    plot_iteration_variables(plot_7, m_file_data, scan)
+    ax7 = fig2.add_subplot(121)
+    ax7.set_position([0.175, 0.1, 0.35, 0.8])  # Move plot slightly to the right
+    plot_iteration_variables(ax7, m_file_data, scan)
 
     # Plot main plasma information
-    plot_8 = fig3.add_subplot(111, aspect="equal")
-    plot_main_plasma_information(plot_8, m_file_data, scan, colour_scheme, fig3)
+    plot_main_plasma_information(
+        fig3.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme, fig3
+    )
 
     # Plot density profiles
-    plot_9 = fig4.add_subplot(231)  # , aspect= 0.05)
-    plot_9.set_position([0.075, 0.55, 0.25, 0.4])
-    plot_n_profiles(plot_9, demo_ranges, m_file_data, scan)
+    ax9 = fig4.add_subplot(231)
+    ax9.set_position([0.075, 0.55, 0.25, 0.4])
+    plot_n_profiles(ax9, demo_ranges, m_file_data, scan)
 
     # Plot temperature profiles
-    plot_10 = fig4.add_subplot(232)
-    plot_10.set_position([0.375, 0.55, 0.25, 0.4])
-    plot_t_profiles(plot_10, demo_ranges, m_file_data, scan)
+    ax10 = fig4.add_subplot(232)
+    ax10.set_position([0.375, 0.55, 0.25, 0.4])
+    plot_t_profiles(ax10, demo_ranges, m_file_data, scan)
 
     # Plot impurity profiles
-    plot_11 = fig4.add_subplot(233)
-    plot_11.set_position([0.7, 0.45, 0.25, 0.5])
-    plot_radprofile(plot_11, m_file_data, scan, imp, demo_ranges)
+    ax11 = fig4.add_subplot(233)
+    ax11.set_position([0.7, 0.45, 0.25, 0.5])
+    plot_radprofile(ax11, m_file_data, scan, imp, demo_ranges)
 
     # Plot current density profile
-    plot_12 = fig4.add_subplot(4, 3, 10)
-    plot_12.set_position([0.075, 0.125, 0.25, 0.15])
-    plot_jprofile(plot_12)
+    ax12 = fig4.add_subplot(4, 3, 10)
+    ax12.set_position([0.075, 0.125, 0.25, 0.15])
+    plot_jprofile(ax12)
 
     # Plot q profile
-    plot_13 = fig4.add_subplot(4, 3, 12)
-    plot_13.set_position([0.7, 0.125, 0.25, 0.15])
-    plot_qprofile(plot_13, demo_ranges, m_file_data, scan)
+    ax13 = fig4.add_subplot(4, 3, 12)
+    ax13.set_position([0.7, 0.125, 0.25, 0.15])
+    plot_qprofile(ax13, demo_ranges, m_file_data, scan)
 
-    plot_14 = fig5.add_subplot(122)
-    plot_fusion_rate_profiles(plot_14, fig5, m_file_data, scan)
+    plot_fusion_rate_profiles(fig5.add_subplot(122), fig5, m_file_data, scan)
+
+    plot_plasma_pressure_profiles(fig6.add_subplot(222), m_file_data, scan)
+    plot_plasma_pressure_gradient_profiles(fig6.add_subplot(224), m_file_data, scan)
 
     # Plot poloidal cross-section
-    plot_15 = fig6.add_subplot(121, aspect="equal")
-    poloidal_cross_section(plot_15, m_file_data, scan, demo_ranges, colour_scheme)
+    poloidal_cross_section(
+        fig7.add_subplot(121, aspect="equal"),
+        m_file_data,
+        scan,
+        demo_ranges,
+        colour_scheme,
+    )
 
     # Plot toroidal cross-section
-    plot_16 = fig6.add_subplot(122, aspect="equal")
-    toroidal_cross_section(plot_16, m_file_data, scan, demo_ranges, colour_scheme)
-    # fig4.subplots_adjust(bottom=-0.2, top = 0.9, left = 0.1, right = 0.9)
+    toroidal_cross_section(
+        fig7.add_subplot(122, aspect="equal"),
+        m_file_data,
+        scan,
+        demo_ranges,
+        colour_scheme,
+    )
 
     # Plot color key
-    plot_17 = fig6.add_subplot(222)
-    plot_17.set_position([0.5, 0.5, 0.5, 0.5])
-    color_key(plot_17, m_file_data, scan, colour_scheme)
+    ax17 = fig7.add_subplot(222)
+    ax17.set_position([0.5, 0.5, 0.5, 0.5])
+    color_key(ax17, m_file_data, scan, colour_scheme)
 
-    plot_18 = fig7.add_subplot(211)
-    plot_18.set_position([0.1, 0.33, 0.8, 0.6])  # x0, y0, width, height (2/3 vertical)
-    plot_radial_build(plot_18, m_file_data, colour_scheme)
+    ax18 = fig8.add_subplot(211)
+    ax18.set_position([0.1, 0.33, 0.8, 0.6])
+    plot_radial_build(ax18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    plot_185 = fig8.add_subplot(211)
-    plot_185.set_position([0.1, 0.61, 0.8, 0.32])  # x0, y0, width, height
+    ax185 = fig9.add_subplot(211)
+    ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    plot_18 = fig8.add_subplot(212)
-    plot_18.set_position([0.1, 0.13, 0.8, 0.32])  # x0, y0, width, height
-    plot_upper_vertical_build(plot_185, m_file_data, colour_scheme)
-    plot_lower_vertical_build(plot_18, m_file_data, colour_scheme)
+    ax18b = fig9.add_subplot(212)
+    ax18b.set_position([0.1, 0.13, 0.8, 0.32])
+    plot_upper_vertical_build(ax185, m_file_data, colour_scheme)
+    plot_lower_vertical_build(ax18b, m_file_data, colour_scheme)
 
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_19 = fig9.add_subplot(231, aspect="equal")
-        plot_19.set_position([
-            0.025,
-            0.5,
-            0.45,
-            0.45,
-        ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig9)
+        ax19 = fig10.add_subplot(231, aspect="equal")
+        ax19.set_position([0.025, 0.5, 0.45, 0.45])
+        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig10)
 
         # TF coil turn structure
-        plot_20 = fig9.add_subplot(325, aspect="equal")
-        plot_20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_20, fig9, m_file_data, scan)
+        ax20 = fig10.add_subplot(325, aspect="equal")
+        ax20.set_position([0.025, 0.1, 0.3, 0.3])
+        plot_tf_turn(ax20, fig10, m_file_data, scan)
     else:
-        plot_19 = fig9.add_subplot(211, aspect="equal")
-        plot_19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(plot_19, m_file_data, scan, fig8)
+        ax19 = fig10.add_subplot(211, aspect="equal")
+        ax19.set_position([0.06, 0.55, 0.675, 0.4])
+        plot_resistive_tf_wp(ax19, m_file_data, scan, fig9)
 
-    plot_21 = fig10.add_subplot(111, aspect="equal")
-    plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
+    plot_tf_coil_structure(
+        fig11.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+    )
 
-    axes = fig11.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig12.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_23 = fig12.add_subplot(221)
-    plot_bootstrap_comparison(plot_23, m_file_data, scan)
+    plot_bootstrap_comparison(fig13.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig13.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig14.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig14.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig15.add_subplot(111), m_file_data, scan)
 
-    plot_24 = fig12.add_subplot(224)
-    plot_h_threshold_comparison(plot_24, m_file_data, scan)
+    plot_cs_coil_structure(
+        fig16.add_subplot(121, aspect="equal"), fig16, m_file_data, scan
+    )
+    plot_cs_turn_structure(
+        fig16.add_subplot(224, aspect="equal"), fig16, m_file_data, scan
+    )
 
-    plot_25 = fig13.add_subplot(221)
-    plot_density_limit_comparison(plot_25, m_file_data, scan)
+    plot_first_wall_top_down_cross_section(
+        fig17.add_subplot(221, aspect="equal"), m_file_data, scan
+    )
+    plot_first_wall_poloidal_cross_section(fig17.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig17.add_subplot(337), m_file_data, scan)
 
-    plot_26 = fig13.add_subplot(224)
-    plot_confinement_time_comparison(plot_26, m_file_data, scan)
+    plot_blkt_pipe_bends(fig18, m_file_data, scan)
 
-    plot_27 = fig14.add_subplot(111)
-    plot_current_profiles_over_time(plot_27, m_file_data, scan)
-
-    plot_28 = fig15.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_28, fig15, m_file_data, scan)
-
-    plot_29 = fig15.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_29, fig15, m_file_data, scan)
-
-    plot_30 = fig16.add_subplot(221, aspect="equal")
-    plot_first_wall_top_down_cross_section(plot_30, m_file_data, scan)
-
-    plot_31 = fig16.add_subplot(122)
-    plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
-
-    plot_32 = fig16.add_subplot(337)
-    plot_fw_90_deg_pipe_bend(plot_32, m_file_data, scan)
-
-    plot_blkt_pipe_bends(fig17, m_file_data, scan)
-
-    plot_33 = fig18.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_33, m_file_data, scan, fig18)
-
-    plot_34 = fig19.add_subplot(222)
-    plot_plasma_pressure_profiles(plot_34, m_file_data, scan)
-    plot_35 = fig19.add_subplot(224)
-    plot_plasma_pressure_gradient_profiles(plot_35, m_file_data, scan)
+    plot_main_power_flow(
+        fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
+    )
 
 
 def main(args=None):
