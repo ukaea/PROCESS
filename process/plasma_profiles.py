@@ -256,6 +256,10 @@ class PlasmaProfile:
             * constants.ELECTRON_CHARGE
         )
 
+        physics_variables.pres_plasma_electron_profile = self.neprofile.profile_y * (
+            self.teprofile.profile_y * constants.KILOELECTRON_VOLT
+        )
+
         #  Pressure profile index (N.B. no pedestal effects included here)
         #  N.B. p0 is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
