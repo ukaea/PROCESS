@@ -10413,6 +10413,26 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     inset_ax.axis("off")
 
 
+def plot_plasma_pressure_profiles(axis, mfile_data, scan):
+    # Plot the plasma pressure profiles on the given axis
+    pres_plasma_profile = [
+        mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
+    axis.plot(
+        np.linspace(0, 1, len(pres_plasma_profile_kpa)),
+        pres_plasma_profile_kpa,
+        color="blue",
+        label="Electron",
+    )
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("Pressure [kPa]")
+    axis.set_title("Plasma Pressure Profiles")
+    axis.grid(True, linestyle="--", alpha=0.5)
+    axis.legend()
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10433,6 +10453,7 @@ def main_plot(
     fig16,
     fig17,
     fig18,
+    fig19,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10620,6 +10641,9 @@ def main_plot(
 
     plot_33 = fig18.add_subplot(111, aspect="equal")
     plot_main_power_flow(plot_33, m_file_data, scan, fig18)
+
+    plot_34 = fig19.add_subplot(122)
+    plot_plasma_pressure_profiles(plot_34, m_file_data, scan)
 
 
 def main(args=None):
@@ -10929,6 +10953,7 @@ def main(args=None):
     page16 = plt.figure(figsize=(12, 9), dpi=80)
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
+    page19 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -10951,6 +10976,7 @@ def main(args=None):
         page16,
         page17,
         page18,
+        page19,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -10978,6 +11004,7 @@ def main(args=None):
         pdf.savefig(page16)
         pdf.savefig(page17)
         pdf.savefig(page18)
+        pdf.savefig(page19)
 
     # show fig if option used
     if args.show:
@@ -11002,6 +11029,7 @@ def main(args=None):
     plt.close(page16)
     plt.close(page17)
     plt.close(page18)
+    plt.close(page19)
 
 
 if __name__ == "__main__":
