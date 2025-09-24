@@ -133,7 +133,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     temp_plasma_electron_density_weighted_kev: float = 0.0
 
-    tin: float = 0.0
+    temp_plasma_ion_density_weighted_kev: float = 0.0
 
     alphap: float = 0.0
 
@@ -221,7 +221,7 @@ class PlasmaProfilesParam(NamedTuple):
             prn1=0.40000000000000002,
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
             temp_plasma_electron_density_weighted_kev=0.0,
-            tin=0.0,
+            temp_plasma_ion_density_weighted_kev=0.0,
             alphap=0.0,
             tbeta=2,
             temp_plasma_electron_on_axis_kev=0.0,
@@ -266,7 +266,7 @@ class PlasmaProfilesParam(NamedTuple):
             prn1=0.45623618297262686,
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
             temp_plasma_electron_density_weighted_kev=14.521871327399182,
-            tin=14.521871327399182,
+            temp_plasma_ion_density_weighted_kev=14.521871327399182,
             alphap=2.4500000000000002,
             tbeta=2,
             temp_plasma_electron_on_axis_kev=27.369013322953624,
@@ -337,7 +337,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.temp_plasma_electron_density_weighted_kev,
     )
 
-    monkeypatch.setattr(physics_variables, "tin", plasmaprofilesparam.tin)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_ion_density_weighted_kev",
+        plasmaprofilesparam.temp_plasma_ion_density_weighted_kev,
+    )
 
     monkeypatch.setattr(physics_variables, "alphap", plasmaprofilesparam.alphap)
 
@@ -456,7 +460,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.expected_ten
     )
 
-    assert physics_variables.tin == pytest.approx(plasmaprofilesparam.expected_tin)
+    assert physics_variables.temp_plasma_ion_density_weighted_kev == pytest.approx(
+        plasmaprofilesparam.expected_tin
+    )
 
     assert physics_variables.alphap == pytest.approx(
         plasmaprofilesparam.expected_alphap

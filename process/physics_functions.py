@@ -228,7 +228,7 @@ def fast_alpha_beta(
     nd_fuel_ions: float,
     nd_ions_total: float,
     temp_plasma_electron_density_weighted_kev: float,
-    tin: float,
+    temp_plasma_ion_density_weighted_kev: float,
     pden_alpha_total_mw: float,
     pden_plasma_alpha_mw: float,
     i_beta_fast_alpha: int,
@@ -245,7 +245,7 @@ def fast_alpha_beta(
         nd_fuel_ions (float): Fuel ion density (m^-3).
         nd_ions_total (float): Total ion density (m^-3).
         temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
-        tin (float): Density-weighted ion temperature (keV).
+        temp_plasma_ion_density_weighted_kev (float): Density-weighted ion temperature (keV).
         pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
         pden_plasma_alpha_mw (float): Alpha power per unit volume just from plasma (MW/m^3).
         i_beta_fast_alpha (int): Switch for fast alpha pressure method.
@@ -275,7 +275,7 @@ def fast_alpha_beta(
             * constants.KILOELECTRON_VOLT
             * (
                 nd_plasma_electrons_vol_avg * temp_plasma_electron_density_weighted_kev
-                + nd_ions_total * tin
+                + nd_ions_total * temp_plasma_ion_density_weighted_kev
             )
             / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
         )
@@ -287,7 +287,14 @@ def fast_alpha_beta(
                 0.3,
                 0.29
                 * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
-                * ((temp_plasma_electron_density_weighted_kev + tin) / 20.0 - 0.37),
+                * (
+                    (
+                        temp_plasma_electron_density_weighted_kev
+                        + temp_plasma_ion_density_weighted_kev
+                    )
+                    / 20.0
+                    - 0.37
+                ),
             )
 
         # Modified scaling, D J Ward
@@ -300,7 +307,11 @@ def fast_alpha_beta(
                     max(
                         0.0,
                         (
-                            (temp_plasma_electron_density_weighted_kev + tin) / 20.0
+                            (
+                                temp_plasma_electron_density_weighted_kev
+                                + temp_plasma_ion_density_weighted_kev
+                            )
+                            / 20.0
                             - 0.65
                         ),
                     )

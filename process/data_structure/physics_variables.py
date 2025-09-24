@@ -1220,7 +1220,7 @@ temp_plasma_ion_on_axis_kev: float = None
 """central ion temperature (keV)"""
 
 
-tin: float = None
+temp_plasma_ion_density_weighted_kev: float = None
 """density weighted average ion temperature (keV)"""
 
 
@@ -1572,7 +1572,7 @@ def init_physics_variables():
     global temp_plasma_electron_density_weighted_kev
     global temp_plasma_ion_vol_avg_kev
     global temp_plasma_ion_on_axis_kev
-    global tin
+    global temp_plasma_ion_density_weighted_kev
     global f_temp_plasma_ion_electron
     global triang
     global triang95
@@ -1819,7 +1819,7 @@ def init_physics_variables():
     temp_plasma_electron_density_weighted_kev = 0.0
     temp_plasma_ion_vol_avg_kev = 12.9
     temp_plasma_ion_on_axis_kev = 0.0
-    tin = 0.0
+    temp_plasma_ion_density_weighted_kev = 0.0
     f_temp_plasma_ion_electron = 1.0
     triang = 0.36
     triang95 = 0.24

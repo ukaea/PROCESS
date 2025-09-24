@@ -311,7 +311,7 @@ The density weighted temperatures are set:
 
 $$\begin{aligned}
 \mathtt{temp_plasma_electron_density_weighted_kev} = \mathtt{pcoef} \times T_\text{e} \\
-\mathtt{tin} = \mathtt{pcoef}\times T_\text{i}
+\mathtt{temp_plasma_ion_density_weighted_kev} = \mathtt{pcoef}\times T_\text{i}
 \end{aligned}$$
 
 ------
@@ -588,7 +588,7 @@ The density and temperature profile runner function [`TeProfile/NeProfile.run()`
 
 $$
 \mathtt{temp_plasma_electron_density_weighted_kev} = \frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
-\mathtt{tin} = \mathtt{temp_plasma_electron_density_weighted_kev}\times \frac{T_\text{i}}{T_\text{e}}
+\mathtt{temp_plasma_ion_density_weighted_kev} = \mathtt{temp_plasma_electron_density_weighted_kev}\times \frac{T_\text{i}}{T_\text{e}}
 $$
 
 The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html) integration.
