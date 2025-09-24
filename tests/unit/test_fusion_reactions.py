@@ -37,7 +37,7 @@ class SetFusionPowersParam(NamedTuple):
 
     temp_plasma_electron_density_weighted_kev: Any = None
 
-    tin: Any = None
+    temp_plasma_ion_density_weighted_kev: Any = None
 
     vol_plasma: Any = None
 

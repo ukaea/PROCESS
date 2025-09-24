@@ -26,7 +26,7 @@ class PlasmaProfile:
         run(): Subroutine to execute PlasmaProfile functions.
         parameterise_plasma(): Initializes the density and temperature profile averages and peak values.
         parabolic_paramterisation(): Parameterizes plasma profiles in the case where i_plasma_pedestal=0.
-        pedestal_parameterisation(): Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and tin.
+        pedestal_parameterisation(): Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
         calculate_profile_factors(): Calculate and set the central pressure (pres_plasma_on_axis) using the ideal gas law and the pressure profile index (alphap).
         calculate_parabolic_profile_factors(): The gradient information for i_plasma_pedestal = 0.
     """
@@ -162,7 +162,7 @@ class PlasmaProfile:
         physics_variables.temp_plasma_electron_density_weighted_kev = (
             physics_variables.te * physics_variables.pcoef
         )
-        physics_variables.tin = (
+        physics_variables.temp_plasma_ion_density_weighted_kev = (
             physics_variables.temp_plasma_ion_vol_avg_kev * physics_variables.pcoef
         )
 
@@ -185,9 +185,9 @@ class PlasmaProfile:
 
     def pedestal_parameterisation(self) -> None:
         """
-        Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and tin.
+        Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
 
-        This routine instances temperature and density profiles and integrates them to calculate the values of the physics variables `temp_plasma_electron_density_weighted_kev` and `tin`.
+        This routine instances temperature and density profiles and integrates them to calculate the values of the physics variables `temp_plasma_electron_density_weighted_kev` and `temp_plasma_ion_density_weighted_kev`.
 
         Args:
             None
@@ -222,7 +222,7 @@ class PlasmaProfile:
         physics_variables.integ2 = integ2
         #  Density-weighted temperatures
         physics_variables.temp_plasma_electron_density_weighted_kev = integ1 / integ2
-        physics_variables.tin = (
+        physics_variables.temp_plasma_ion_density_weighted_kev = (
             physics_variables.temp_plasma_ion_vol_avg_kev
             / physics_variables.te
             * physics_variables.temp_plasma_electron_density_weighted_kev
