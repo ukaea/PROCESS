@@ -81,7 +81,7 @@ class NeutralBeam:
         f_p_beam_injected_ions = self.cfnbi(
             physics_variables.m_beam_amu,
             current_drive_variables.e_beam_kev,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
@@ -98,7 +98,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             current_drive_variables.e_beam_kev,
             physics_variables.rmajor,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.zeff,
         )
 
@@ -167,7 +167,7 @@ class NeutralBeam:
         f_p_beam_injected_ions = self.cfnbi(
             physics_variables.m_beam_amu,
             current_drive_variables.e_beam_kev,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
@@ -189,7 +189,7 @@ class NeutralBeam:
             fshine,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.zeff,
         )
 
@@ -208,7 +208,7 @@ class NeutralBeam:
         fshine,
         rmajor,
         rminor,
-        ten,
+        temp_plasma_electron_density_weighted_kev,
         zeff,
     ):
         """Routine to find neutral beam current drive efficiency
@@ -226,7 +226,7 @@ class NeutralBeam:
         fshine  : input real : shine-through fraction of beam
         rmajor  : input real : plasma major radius (m)
         rminor  : input real : plasma minor radius (m)
-        ten     : input real : density weighted average electron temperature (keV)
+        temp_plasma_electron_density_weighted_kev     : input real : density weighted average electron temperature (keV)
         zeff    : input real : plasma effective charge
         This routine calculates the current drive efficiency in A/W of
         a neutral beam system, based on the 1990 ITER model,
@@ -249,8 +249,8 @@ class NeutralBeam:
         dnla20 = nd_electron_line / 1e20
 
         #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
-        #  N.B. ten is in keV
-        ecrit = 0.01 * m_beam_amu * ten
+        #  N.B. temp_plasma_electron_density_weighted_kev is in keV
+        ecrit = 0.01 * m_beam_amu * temp_plasma_electron_density_weighted_kev
 
         #  Beam energy in MeV
         ebmev = e_beam_kev / 1e3
@@ -316,7 +316,7 @@ class NeutralBeam:
             5.0
             * abd
             * 0.1
-            * ten
+            * temp_plasma_electron_density_weighted_kev
             * (1.0 - fshine)
             * f_radius_beam_tangency_rmajor
             * j0
@@ -336,7 +336,7 @@ class NeutralBeam:
         nd_plasma_electrons_vol_avg,
         ebeam,
         rmajor,
-        ten,
+        temp_plasma_electron_density_weighted_kev,
         zeff,
     ):
         """Routine to find neutral beam current drive efficiency
@@ -349,7 +349,7 @@ class NeutralBeam:
         nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
         ebeam  : input real : neutral beam energy (keV)
         rmajor  : input real : plasma major radius (m)
-        ten     : input real : density weighted average electron temp. (keV)
+        temp_plasma_electron_density_weighted_kev     : input real : density weighted average electron temp. (keV)
         zeff    : input real : plasma effective charge
         This routine calculates the current drive efficiency of
         a neutral beam system, based on the 1990 ITER model.
@@ -363,7 +363,9 @@ class NeutralBeam:
         dene20 = 1e-20 * nd_plasma_electrons_vol_avg
 
         # Ratio of E_beam/E_crit
-        xjs = ebeam / (bbd * 10.0 * m_beam_amu * ten)
+        xjs = ebeam / (
+            bbd * 10.0 * m_beam_amu * temp_plasma_electron_density_weighted_kev
+        )
         xj = np.sqrt(xjs)
 
         yj = 0.8 * zeff / m_beam_amu
@@ -381,7 +383,14 @@ class NeutralBeam:
             * (1.0 - 0.2e-3 * ebeam + 0.09e-6 * ebeam**2)
         )
 
-        return abd * (5.0 / rmajor) * (0.1 * ten / dene20) * rjfunc / 0.2 * ffac
+        return (
+            abd
+            * (5.0 / rmajor)
+            * (0.1 * temp_plasma_electron_density_weighted_kev / dene20)
+            * rjfunc
+            / 0.2
+            * ffac
+        )
 
     def sigbeam(self, eb, te, ne, rnhe, rnc, rno, rnfe):
         """Calculates the stopping cross-section for a hydrogen
@@ -686,7 +695,7 @@ class ElectronCyclotron:
 
     def electron_cyclotron_fenstermacher(
         self,
-        ten: float,
+        temp_plasma_electron_density_weighted_kev: float,
         rmajor: float,
         dene20: float,
         dlamee: float,
@@ -694,8 +703,8 @@ class ElectronCyclotron:
         """
         Routine to calculate Fenstermacher Electron Cyclotron heating efficiency.
 
-        :param ten: Density weighted average electron temperature keV.
-        :type ten: float
+        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature keV.
+        :type temp_plasma_electron_density_weighted_kev: float
         :param zeff: Plasma effective charge.
         :type zeff: float
         :param rmajor: Major radius of the plasma in meters.
@@ -715,7 +724,9 @@ class ElectronCyclotron:
 
         """
 
-        return (0.21e0 * ten) / (rmajor * dene20 * dlamee)
+        return (0.21e0 * temp_plasma_electron_density_weighted_kev) / (
+            rmajor * dene20 * dlamee
+        )
 
     def electron_cyclotron_freethy(
         self,
@@ -871,7 +882,11 @@ class IonCyclotron:
         self.plasma_profile = plasma_profile
 
     def ion_cyclotron_ipdg89(
-        self, ten: float, zeff: float, rmajor: float, dene20: float
+        self,
+        temp_plasma_electron_density_weighted_kev: float,
+        zeff: float,
+        rmajor: float,
+        dene20: float,
     ) -> float:
         """
         Routine to calculate IPDG89 Ion Cyclotron heating efficiency.
@@ -879,8 +894,8 @@ class IonCyclotron:
         This function computes the ion cyclotron heating efficiency based on
         the electron temperature, effective charge, major radius, and electron density.
 
-        :param ten: Density weighted average electron temperature keV.
-        :type ten: float
+        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature keV.
+        :type temp_plasma_electron_density_weighted_kev: float
         :param zeff: Plasma effective charge.
         :type zeff: float
         :param rmajor: Major radius of the plasma in meters.
@@ -903,7 +918,10 @@ class IonCyclotron:
         - T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
         """
 
-        return ((0.63e0 * 0.1e0 * ten) / (2.0e0 + zeff)) / (rmajor * dene20)
+        return (
+            (0.63e0 * 0.1e0 * temp_plasma_electron_density_weighted_kev)
+            / (2.0e0 + zeff)
+        ) / (rmajor * dene20)
 
 
 class ElectronBernstein:
@@ -1321,14 +1339,14 @@ class CurrentDrive:
                 )
                 * current_drive_variables.feffcd,
                 2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
-                    ten=physics_variables.ten,
+                    temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
                     zeff=physics_variables.zeff,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                 )
                 * current_drive_variables.feffcd,
                 3: lambda: self.electron_cyclotron.electron_cyclotron_fenstermacher(
-                    ten=physics_variables.ten,
+                    temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                     dlamee=physics_variables.dlamee,

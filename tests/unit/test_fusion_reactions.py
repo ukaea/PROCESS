@@ -35,7 +35,7 @@ class SetFusionPowersParam(NamedTuple):
 
     pden_non_alpha_charged_mw: Any = None
 
-    ten: Any = None
+    temp_plasma_electron_density_weighted_kev: Any = None
 
     tin: Any = None
 

@@ -2280,7 +2280,7 @@ class PohmParam(NamedTuple):
 
     rminor: Any = None
 
-    ten: Any = None
+    temp_plasma_electron_density_weighted_kev: Any = None
 
     vol_plasma: Any = None
 
@@ -2306,7 +2306,7 @@ class PohmParam(NamedTuple):
             plasma_current=18398455.678867526,
             rmajor=8,
             rminor=2.6666666666666665,
-            ten=12.626131115905864,
+            temp_plasma_electron_density_weighted_kev=12.626131115905864,
             vol_plasma=1888.1711539956691,
             zeff=2.0909945616489103,
             expected_pden_plasma_ohmic_mw=0.0004062519138005805,
@@ -2346,7 +2346,7 @@ def test_pohm(pohmparam, monkeypatch, physics):
         plasma_current=pohmparam.plasma_current,
         rmajor=pohmparam.rmajor,
         rminor=pohmparam.rminor,
-        ten=pohmparam.ten,
+        temp_plasma_electron_density_weighted_kev=pohmparam.temp_plasma_electron_density_weighted_kev,
         vol_plasma=pohmparam.vol_plasma,
         zeff=pohmparam.zeff,
     )
@@ -2512,7 +2512,7 @@ class ConfinementTimeParam(NamedTuple):
 
     te: Any = None
 
-    ten: Any = None
+    temp_plasma_electron_density_weighted_kev: Any = None
 
     tin: Any = None
 
@@ -2571,7 +2571,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2613,7 +2613,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2655,7 +2655,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2697,7 +2697,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2739,7 +2739,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2781,7 +2781,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2823,7 +2823,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2865,7 +2865,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2907,7 +2907,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2949,7 +2949,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -2991,7 +2991,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -3033,7 +3033,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -3075,7 +3075,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -3117,7 +3117,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -3159,7 +3159,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -3201,7 +3201,7 @@ class ConfinementTimeParam(NamedTuple):
             rmajor=8,
             rminor=2.6666666666666665,
             te=12.437097421317889,
-            ten=13.745148298980761,
+            temp_plasma_electron_density_weighted_kev=13.745148298980761,
             tin=13.745148298980761,
             vol_plasma=1888.1711539956691,
             a_plasma_poloidal=38.39822223637151,
@@ -3280,7 +3280,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         qstar=confinementtimeparam.qstar,
         rmajor=confinementtimeparam.rmajor,
         rminor=confinementtimeparam.rminor,
-        ten=confinementtimeparam.ten,
+        temp_plasma_electron_density_weighted_kev=confinementtimeparam.temp_plasma_electron_density_weighted_kev,
         tin=confinementtimeparam.tin,
         vol_plasma=confinementtimeparam.vol_plasma,
         zeff=confinementtimeparam.zeff,

@@ -2210,7 +2210,7 @@ class Physics:
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
-                physics_variables.ten,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.tin,
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
@@ -2280,7 +2280,7 @@ class Physics:
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.tin,
             physics_variables.pden_alpha_total_mw,
             physics_variables.pden_plasma_alpha_mw,
@@ -2378,7 +2378,7 @@ class Physics:
             physics_variables.plasma_current,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.vol_plasma,
             physics_variables.zeff,
         )
@@ -2503,7 +2503,7 @@ class Physics:
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.tin,
             physics_variables.q95,
             physics_variables.qstar,
@@ -3583,7 +3583,7 @@ class Physics:
         plasma_current: float,
         rmajor: float,
         rminor: float,
-        ten: float,
+        temp_plasma_electron_density_weighted_kev: float,
         vol_plasma: float,
         zeff: float,
     ) -> tuple[float, float, float, float]:
@@ -3596,7 +3596,7 @@ class Physics:
             plasma_current (float): Plasma current (A).
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
-            ten (float): Density weighted average electron temperature (keV).
+            temp_plasma_electron_density_weighted_kev (float): Density weighted average electron temperature (keV).
             vol_plasma (float): Plasma volume (m^3).
             zeff (float): Plasma effective charge.
 
@@ -3614,7 +3614,7 @@ class Physics:
 
         """
         # Density weighted electron temperature in 10 keV units
-        t10 = ten / 10.0
+        t10 = temp_plasma_electron_density_weighted_kev / 10.0
 
         # Plasma resistance, from loop voltage calculation in ITER Physics Design Guidelines: 1989
         res_plasma = (
@@ -4572,8 +4572,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Electron temp., density weighted (keV)",
-            "(ten)",
-            physics_variables.ten,
+            "(temp_plasma_electron_density_weighted_kev)",
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             "OP ",
         )
         po.ovarre(
@@ -6578,7 +6578,7 @@ class Physics:
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.ten,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.tin,
                 physics_variables.q95,
                 physics_variables.qstar,
@@ -7507,7 +7507,7 @@ class Physics:
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.ten,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.tin,
                 physics_variables.q95,
                 physics_variables.qstar,
@@ -7563,7 +7563,7 @@ class Physics:
         pden_plasma_core_rad_mw: float,
         rmajor: float,
         rminor: float,
-        ten: float,
+        temp_plasma_electron_density_weighted_kev: float,
         tin: float,
         q95: float,
         qstar: float,
@@ -7594,7 +7594,7 @@ class Physics:
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
         :param rminor: Plasma minor radius (m)
-        :param ten: Density weighted average electron temperature (keV)
+        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature (keV)
         :param tin: Density weighted average ion temperature (keV)
         :param vol_plasma: Plasma volume (m3)
         :param a_plasma_poloidal: Plasma cross-sectional area (m2)
@@ -7689,7 +7689,13 @@ class Physics:
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif i_confinement_time == 3:
             t_electron_confinement = confinement.merezhkin_muhkovatov_confinement_time(
-                rmajor, rminor, kappa95, qstar, dnla20, m_fuel_amu, ten
+                rmajor,
+                rminor,
+                kappa95,
+                qstar,
+                dnla20,
+                m_fuel_amu,
+                temp_plasma_electron_density_weighted_kev,
             )
 
         # ========================================================================
@@ -8383,7 +8389,7 @@ class Physics:
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
-        # (here, tin and ten are in keV, and pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
+        # (here, tin and temp_plasma_electron_density_weighted_kev are in keV, and pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
 
         # The transport losses is just the electron and ion thermal energies divided by the confinement time.
         pden_ion_transport_loss_mw = (
@@ -8397,11 +8403,13 @@ class Physics:
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
             * nd_plasma_electrons_vol_avg
-            * ten
+            * temp_plasma_electron_density_weighted_kev
             / t_electron_energy_confinement
         )
 
-        ratio = (nd_ions_total / nd_plasma_electrons_vol_avg) * (tin / ten)
+        ratio = (nd_ions_total / nd_plasma_electrons_vol_avg) * (
+            tin / temp_plasma_electron_density_weighted_kev
+        )
 
         # Global energy confinement time
 

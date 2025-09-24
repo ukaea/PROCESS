@@ -4261,7 +4261,8 @@ class Stellarator:
             * constants.RMU0
             * constants.ELECTRON_CHARGE
             * (
-                physics_variables.nd_plasma_electrons_vol_avg * physics_variables.ten
+                physics_variables.nd_plasma_electrons_vol_avg
+                * physics_variables.temp_plasma_electron_density_weighted_kev
                 + physics_variables.nd_ions_total * physics_variables.tin
             )
             / physics_variables.b_plasma_total**2
@@ -4352,7 +4353,7 @@ class Stellarator:
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
-                physics_variables.ten,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.tin,
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
@@ -4410,7 +4411,7 @@ class Stellarator:
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.tin,
             physics_variables.pden_alpha_total_mw,
             physics_variables.pden_plasma_alpha_mw,
@@ -4617,7 +4618,7 @@ class Stellarator:
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.tin,
             stellarator_variables.iotabar,
             physics_variables.qstar,
