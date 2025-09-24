@@ -4611,6 +4611,14 @@ class Physics:
             "OP ",
         )
 
+        for i in range(len(physics_variables.pres_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Electron pressure at point {i}",
+                f"pres_plasma_electron_profile{i}",
+                physics_variables.pres_plasma_electron_profile[i],
+            )
+
         if stellarator_variables.istell == 0:
             po.ovarre(
                 self.outfile,
