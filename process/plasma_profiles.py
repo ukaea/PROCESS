@@ -279,11 +279,24 @@ class PlasmaProfile:
             * constants.ELECTRON_CHARGE
         )
 
+        # Electron pressure profile (Pa)
         physics_variables.pres_plasma_electron_profile = self.neprofile.profile_y * (
             self.teprofile.profile_y * constants.KILOELECTRON_VOLT
         )
+
+        # Total ion pressure profile (Pa)
         physics_variables.pres_plasma_ion_total_profile = (
             physics_variables.nd_ions_total
+            * (self.neprofile.profile_y / physics_variables.dene)
+        ) * (
+            self.teprofile.profile_y
+            * constants.KILOELECTRON_VOLT
+            * physics_variables.tratio
+        )
+
+        # Total ion pressure profile (Pa)
+        physics_variables.pres_plasma_fuel_profile = (
+            physics_variables.nd_fuel_ions
             * (self.neprofile.profile_y / physics_variables.dene)
         ) * (
             self.teprofile.profile_y
