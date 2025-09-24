@@ -220,7 +220,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -1215,7 +1215,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -2210,7 +2210,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -3205,7 +3205,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -4200,7 +4200,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -5195,7 +5195,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -6190,7 +6190,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -7185,7 +7185,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 
@@ -8180,7 +8180,7 @@
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.7893E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2283E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.7893E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3779E+01    
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3779E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      7.1137E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      9.3569E+19 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      7.8780E+19 OP 

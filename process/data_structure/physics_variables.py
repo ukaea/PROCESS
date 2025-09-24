@@ -1208,7 +1208,7 @@ temp_plasma_electron_on_axis_kev: float = None
 """central electron temperature (keV)"""
 
 
-ten: float = None
+temp_plasma_electron_density_weighted_kev: float = None
 """density weighted average electron temperature (keV)"""
 
 
@@ -1569,7 +1569,7 @@ def init_physics_variables():
     global f_alpha_energy_confinement
     global te
     global temp_plasma_electron_on_axis_kev
-    global ten
+    global temp_plasma_electron_density_weighted_kev
     global temp_plasma_ion_vol_avg_kev
     global temp_plasma_ion_on_axis_kev
     global tin
@@ -1816,7 +1816,7 @@ def init_physics_variables():
     f_alpha_energy_confinement = 0.0
     te = 12.9
     temp_plasma_electron_on_axis_kev = 0.0
-    ten = 0.0
+    temp_plasma_electron_density_weighted_kev = 0.0
     temp_plasma_ion_vol_avg_kev = 12.9
     temp_plasma_ion_on_axis_kev = 0.0
     tin = 0.0

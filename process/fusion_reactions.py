@@ -864,7 +864,7 @@ def beam_fusion(
     f_tritium_plasma: float,
     f_beam_tritium: float,
     sigmav_dt_average: float,
-    ten: float,
+    temp_plasma_electron_density_weighted_kev: float,
     tin: float,
     vol_plasma: float,
     zeffai: float,
@@ -889,7 +889,7 @@ def beam_fusion(
                 f_tritium_plasma (float): Tritium fraction of main plasma.
                 f_beam_tritium (float): Tritium fraction of neutral beam.
                 sigmav_dt_average (float): Profile averaged <sigma v> for D-T (m^3/s).
-                ten (float): Density-weighted electron temperature (keV).
+                temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
                 tin (float): Density-weighted ion temperature (keV).
                 vol_plasma (float): Plasma volume (m^3).
                 zeffai (float): Mass weighted plasma effective charge.
@@ -927,7 +927,7 @@ def beam_fusion(
             constants.M_DEUTERON_AMU * (1.0 - f_beam_tritium)
             + (constants.M_TRITON_AMU * f_beam_tritium)
         )
-        * (ten**1.5 / nd_plasma_electrons_vol_avg)
+        * (temp_plasma_electron_density_weighted_kev**1.5 / nd_plasma_electrons_vol_avg)
         / ion_electron_coulomb_log
     )
 
@@ -937,7 +937,7 @@ def beam_fusion(
     critical_energy_deuterium = (
         14.8
         * constants.M_DEUTERON_AMU
-        * ten
+        * temp_plasma_electron_density_weighted_kev
         * zeffai ** (2 / 3)
         * (ion_electron_coulomb_log + 4.0)
         / ion_electron_coulomb_log

@@ -227,7 +227,7 @@ def fast_alpha_beta(
     nd_plasma_electrons_vol_avg: float,
     nd_fuel_ions: float,
     nd_ions_total: float,
-    ten: float,
+    temp_plasma_electron_density_weighted_kev: float,
     tin: float,
     pden_alpha_total_mw: float,
     pden_plasma_alpha_mw: float,
@@ -244,7 +244,7 @@ def fast_alpha_beta(
         nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
         nd_fuel_ions (float): Fuel ion density (m^-3).
         nd_ions_total (float): Total ion density (m^-3).
-        ten (float): Density-weighted electron temperature (keV).
+        temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
         tin (float): Density-weighted ion temperature (keV).
         pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
         pden_plasma_alpha_mw (float): Alpha power per unit volume just from plasma (MW/m^3).
@@ -273,7 +273,10 @@ def fast_alpha_beta(
             2.0
             * constants.RMU0
             * constants.KILOELECTRON_VOLT
-            * (nd_plasma_electrons_vol_avg * ten + nd_ions_total * tin)
+            * (
+                nd_plasma_electrons_vol_avg * temp_plasma_electron_density_weighted_kev
+                + nd_ions_total * tin
+            )
             / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
         )
 
@@ -284,7 +287,7 @@ def fast_alpha_beta(
                 0.3,
                 0.29
                 * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
-                * ((ten + tin) / 20.0 - 0.37),
+                * ((temp_plasma_electron_density_weighted_kev + tin) / 20.0 - 0.37),
             )
 
         # Modified scaling, D J Ward
@@ -293,7 +296,15 @@ def fast_alpha_beta(
                 0.30,
                 0.26
                 * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
-                * np.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
+                * np.sqrt(
+                    max(
+                        0.0,
+                        (
+                            (temp_plasma_electron_density_weighted_kev + tin) / 20.0
+                            - 0.65
+                        ),
+                    )
+                ),
             )
 
         fact = max(fact, 0.0)

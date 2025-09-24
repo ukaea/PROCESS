@@ -66,7 +66,7 @@ ITER Documentation Series No.10, IAEA/ITER/DS/10, IAEA, Vienna, 1990
 | $\mathtt{dene20}$, $n_{\text{e,20}}$    | Volume averaged electron density ($10^{20} \text{m}^{-3}$)                  |
 | $\mathtt{ebeam}$   | Neutral beam energy ($\text{keV}$)                                 |
 | $\mathtt{rmajor}$, R  | Plasma major radius ($\text{m}$)                                   |
-| $\mathtt{ten}$     | Density weighted average electron temperature ($\text{keV}$)       |
+| $\mathtt{temp_plasma_electron_density_weighted_kev}$     | Density weighted average electron temperature ($\text{keV}$)       |
 | $\mathtt{zeff}$, $Z_{\text{eff}}$    | Plasma effective charge                                   |
 
 | Output  | Description                                               |
@@ -120,7 +120,7 @@ $$
 $$
 
 $$
-\text{Current drive efficiency [A/W]} = \mathtt{abd} \times\frac{5}{R_0} \times0.1\frac{\mathtt{ten}}{n_{\text{e},20}} \times \frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
+\text{Current drive efficiency [A/W]} = \mathtt{abd} \times\frac{5}{R_0} \times0.1\frac{\mathtt{temp_plasma_electron_density_weighted_kev}}{n_{\text{e},20}} \times \frac{\mathtt{rjfunc}}{0.2}\mathtt{ffac}
 $$
 
         

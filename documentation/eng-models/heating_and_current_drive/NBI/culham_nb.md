@@ -77,7 +77,7 @@ plus correction terms outlined in Culham Report AEA FUS 172.
 |  $\mathtt{fshine}$      |  shine-through fraction of beam                             |
 |  $\mathtt{rmajor}$, $R$      |  plasma major radius $(\text{m})$                              |
 |  $\mathtt{rminor}$, $a$      |  plasma minor radius $(\text{m})$                             |
-|  $\mathtt{ten}$      |    density weighted average electron temperature $(\text{keV})$                             |
+|  $\mathtt{temp_plasma_electron_density_weighted_kev}$      |    density weighted average electron temperature $(\text{keV})$                             |
 |  $\mathtt{zeff}$, $Z_{\text{eff}}$     |   plasma effective charge                            |
 
 
@@ -105,10 +105,10 @@ $$
 $$
 
 Critical energy ($\text{MeV}$) (power to electrons = power to ions) (IPDG89)
-N.B. ten is in keV
+N.B. temp_plasma_electron_density_weighted_kev is in keV
 
 $$
-\mathtt{ecrit} = 0.01 \times \mathtt{m_beam_amu} \times \mathtt{ten}
+\mathtt{ecrit} = 0.01 \times \mathtt{m_beam_amu} \times \mathtt{temp_plasma_electron_density_weighted_kev}
 $$
 
 Beam energy in MeV
@@ -213,7 +213,7 @@ $$
 Normalised current drive efficiency ($\text{A/W} \text{m}^{2}$) (IPDG89)
 
 $$
-\mathtt{gamnb} = 5.0 \times \mathtt{abd} \times 0.1 \times \mathtt{ten} \times (1.0 - \mathtt{fshine}) \times \mathtt{f_radius_beam_tangency_rmajor} \times \frac{\mathtt{j0}}{0.2} \times \mathtt{ffac}
+\mathtt{gamnb} = 5.0 \times \mathtt{abd} \times 0.1 \times \mathtt{temp_plasma_electron_density_weighted_kev} \times (1.0 - \mathtt{fshine}) \times \mathtt{f_radius_beam_tangency_rmajor} \times \frac{\mathtt{j0}}{0.2} \times \mathtt{ffac}
 $$
 
 Current drive efficiency (A/W)

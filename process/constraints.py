@@ -146,7 +146,7 @@ def constraint_equation_1():
             * constants.ELECTRON_CHARGE
             * (
                 data_structure.physics_variables.nd_plasma_electrons_vol_avg
-                * data_structure.physics_variables.ten
+                * data_structure.physics_variables.temp_plasma_electron_density_weighted_kev
                 + data_structure.physics_variables.nd_ions_total
                 * data_structure.physics_variables.tin
             )

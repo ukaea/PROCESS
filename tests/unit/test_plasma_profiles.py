@@ -131,7 +131,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     radius_plasma_pedestal_temp_norm: float = 0.0
 
-    ten: float = 0.0
+    temp_plasma_electron_density_weighted_kev: float = 0.0
 
     tin: float = 0.0
 
@@ -220,7 +220,7 @@ class PlasmaProfilesParam(NamedTuple):
         PlasmaProfilesParam(
             prn1=0.40000000000000002,
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
-            ten=0.0,
+            temp_plasma_electron_density_weighted_kev=0.0,
             tin=0.0,
             alphap=0.0,
             tbeta=2,
@@ -265,7 +265,7 @@ class PlasmaProfilesParam(NamedTuple):
         PlasmaProfilesParam(
             prn1=0.45623618297262686,
             radius_plasma_pedestal_temp_norm=0.94000000000000006,
-            ten=14.521871327399182,
+            temp_plasma_electron_density_weighted_kev=14.521871327399182,
             tin=14.521871327399182,
             alphap=2.4500000000000002,
             tbeta=2,
@@ -331,7 +331,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.radius_plasma_pedestal_temp_norm,
     )
 
-    monkeypatch.setattr(physics_variables, "ten", plasmaprofilesparam.ten)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_density_weighted_kev",
+        plasmaprofilesparam.temp_plasma_electron_density_weighted_kev,
+    )
 
     monkeypatch.setattr(physics_variables, "tin", plasmaprofilesparam.tin)
 
@@ -448,7 +452,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     assert divertor_variables.prn1 == pytest.approx(plasmaprofilesparam.expected_prn1)
 
-    assert physics_variables.ten == pytest.approx(plasmaprofilesparam.expected_ten)
+    assert physics_variables.temp_plasma_electron_density_weighted_kev == pytest.approx(
+        plasmaprofilesparam.expected_ten
+    )
 
     assert physics_variables.tin == pytest.approx(plasmaprofilesparam.expected_tin)
 

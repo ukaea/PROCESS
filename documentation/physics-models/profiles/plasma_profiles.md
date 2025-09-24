@@ -310,7 +310,7 @@ $\blacksquare$
 The density weighted temperatures are set:
 
 $$\begin{aligned}
-\mathtt{ten} = \mathtt{pcoef} \times T_\text{e} \\
+\mathtt{temp_plasma_electron_density_weighted_kev} = \mathtt{pcoef} \times T_\text{e} \\
 \mathtt{tin} = \mathtt{pcoef}\times T_\text{i}
 \end{aligned}$$
 
@@ -587,8 +587,8 @@ The density and temperature profile runner function [`TeProfile/NeProfile.run()`
  Density weighted temperatures are thus set as such
 
 $$
-\mathtt{ten} = \frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
-\mathtt{tin} = \mathtt{ten}\times \frac{T_\text{i}}{T_\text{e}}
+\mathtt{temp_plasma_electron_density_weighted_kev} = \frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
+\mathtt{tin} = \mathtt{temp_plasma_electron_density_weighted_kev}\times \frac{T_\text{i}}{T_\text{e}}
 $$
 
 The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html) integration.
@@ -596,7 +596,7 @@ The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.
 Set profile factor which is the ratio of density-weighted to volume-averaged temperature
 
 $$
-\mathtt{pcoef} = \frac{\mathtt{ten}}{T_\text{e}}
+\mathtt{pcoef} = \frac{\mathtt{temp_plasma_electron_density_weighted_kev}}{T_\text{e}}
 $$
 
 Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
