@@ -10419,17 +10419,82 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(500)
     ]
+    pres_plasma_profile_ion = [
+        mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
     pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
+    pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
+    pres_plasma_profile_total_kpa = [
+        e + i
+        for e, i in zip(
+            pres_plasma_profile_kpa, pres_plasma_profile_ion_kpa, strict=False
+        )
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(pres_plasma_profile_kpa)),
         pres_plasma_profile_kpa,
         color="blue",
         label="Electron",
     )
+    axis.plot(
+        np.linspace(0, 1, len(pres_plasma_profile_ion_kpa)),
+        pres_plasma_profile_ion_kpa,
+        color="Red",
+        label="Ion-total",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(pres_plasma_profile_total_kpa)),
+        pres_plasma_profile_total_kpa,
+        color="green",
+        label="Total",
+    )
     axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("Pressure [kPa]")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Plasma Pressure Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.set_ylim(bottom=0)
+    axis.legend()
+
+
+def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
+    # Get the plasma pressure profiles
+    pres_plasma_profile = [
+        mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    pres_plasma_profile_ion = [
+        mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    pres_plasma_profile_kpa = np.array(pres_plasma_profile) / 1000.0
+    pres_plasma_profile_ion_kpa = np.array(pres_plasma_profile_ion) / 1000.0
+    pres_plasma_profile_total_kpa = (
+        pres_plasma_profile_kpa + pres_plasma_profile_ion_kpa
+    )
+
+    # Calculate the normalized radius
+    rho = np.linspace(0, 1, len(pres_plasma_profile_kpa))
+
+    # Compute gradients using numpy.gradient
+    grad_electron = np.gradient(pres_plasma_profile_kpa, rho)
+    grad_ion = np.gradient(pres_plasma_profile_ion_kpa, rho)
+    grad_total = np.gradient(pres_plasma_profile_total_kpa, rho)
+
+    axis.plot(rho, grad_electron, color="blue", label="Electron dP/dr")
+    axis.plot(rho, grad_ion, color="orange", label="Ion dP/dr")
+    axis.plot(rho, grad_total, color="green", label="Total dP/dr")
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("dP/dr [kPa / (r/a)]")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    axis.set_title("Plasma Pressure Gradient Profiles")
+    axis.grid(True, linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
     axis.legend()
 
 
@@ -10642,8 +10707,10 @@ def main_plot(
     plot_33 = fig18.add_subplot(111, aspect="equal")
     plot_main_power_flow(plot_33, m_file_data, scan, fig18)
 
-    plot_34 = fig19.add_subplot(122)
+    plot_34 = fig19.add_subplot(222)
     plot_plasma_pressure_profiles(plot_34, m_file_data, scan)
+    plot_35 = fig19.add_subplot(224)
+    plot_plasma_pressure_gradient_profiles(plot_35, m_file_data, scan)
 
 
 def main(args=None):
