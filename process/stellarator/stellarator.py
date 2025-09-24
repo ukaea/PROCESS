@@ -9,7 +9,7 @@ import process.physics_functions as physics_funcs
 from process.stellarator.build import st_build
 from process.stellarator.denisty_limits import st_denisty_limits, st_d_limit_ecrh
 from process.stellarator.divertor import st_div
-from process.stellarator.coils import st_coil
+from process.stellarator.coils.st_coil import st_coil
 from process import (
     process_output as po,
 )

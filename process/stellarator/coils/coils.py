@@ -1,0 +1,334 @@
+import numpy as np
+
+import process.superconductors as superconductors
+from process.exceptions import ProcessValueError
+
+from process.fortran import (
+    error_handling,
+    stellarator_configuration,
+)
+
+
+def max_dump_voltage(tf_energy_stored:float , t_dump:float, current:float) -> float:
+    """
+    return: Max volatage during fast discharge of TF coil (V)
+    tf_energy_stored : Energy stored in one TF coil (J)
+    t_dump : Dump time (sec)
+    current : Operating current (A)
+    """
+    return 2 * (tf_energy_stored / t_dump) / current
+
+
+def calculate_quench_protection_current_density(tau_quench, t_detect, f_cu, f_cond, temp, a_cable, a_turn):
+    """
+    Calculates the current density limited by the protection limit.
+
+    Simplified 0-D adiabatic heat balance "hotspot criterion" model.
+
+    This is slightly diffrent that tokamak version (also diffrent from the stellarator paper). 
+    We skip the superconduc6tor contribution (this should be more conservative in theory). 
+    """
+    temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
+    q_cu_array_sa2m4 = [
+        1.08514e17,
+        1.12043e17,
+        1.12406e17,
+        1.05940e17,
+        9.49741e16,
+        8.43757e16,
+        7.56346e16,
+        6.85924e16,
+        6.28575e16,
+        5.81004e16,
+        5.40838e16,
+        5.06414e16,
+        4.76531e16,
+    ]
+    q_he_array_sa2m4 = [
+        3.44562e16,
+        9.92398e15,
+        4.90462e15,
+        2.41524e15,
+        1.26368e15,
+        7.51617e14,
+        5.01632e14,
+        3.63641e14,
+        2.79164e14,
+        2.23193e14,
+        1.83832e14,
+        1.54863e14,
+        1.32773e14,
+    ]
+
+    q_he = np.interp(temp, temp_k, q_he_array_sa2m4)
+    q_cu = np.interp(temp, temp_k, q_cu_array_sa2m4)
+
+    # This leaves out the contribution from the superconductor fraction for now
+    return (a_cable / a_turn) * np.sqrt(
+        1
+        / (0.5 * tau_quench + t_detect)
+        * (f_cu**2 * f_cond**2 * q_cu + f_cu * f_cond * (1 - f_cond) * q_he)
+    )
+
+
+def jcrit_from_material(
+    b_max,
+    t_helium,
+    i_tf_sc_mat,
+    b_crit_upper_nbti,
+    b_crit_sc,
+    f_cu_tf_su,
+    f_hts,
+    t_crit_nbti,
+    t_crit_sc,
+    f_a_tf_turn_cable_space_extra_void,
+    j_wp,
+):
+    strain = -0.005  # for now a small value
+    f_he = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
+
+    f_tf_conductor_copper = f_cu_tf_su  # fcutfsu is a global variable. Is the copper fraction
+    # of a cable conductor.
+
+    if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
+        bc20m = 32.97  # these are values taken from sctfcoil.f90
+        tc0m = 16.06
+
+        #  j_crit_sc returned by itersc is the critical current density in the
+        #  superconductor - not the whole strand, which contains copper
+        if b_max > bc20m:
+            j_crit_sc = 1.0e-9  # Set to a small nonzero value
+        else:
+            (
+                j_crit_sc,
+                bcrit,
+                tcrit,
+            ) = superconductors.itersc(t_helium, b_max, strain, bc20m, tc0m)
+
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0 - f_tf_conductor_copper) * (1.0e0 - f_he)
+
+        # This is needed right now. Can we change it later?
+        j_crit_sc = max(1.0e-9, j_crit_sc)
+        j_crit_cable = max(1.0e-9, j_crit_cable)
+
+    elif i_tf_sc_mat == 2:
+        # Bi-2212 high temperature superconductor parameterization
+        #  Current density in a strand of Bi-2212 conductor
+        #  N.B. jcrit returned by bi2212 is the critical current density
+        #  in the strand, not just the superconducting portion.
+        #  The parameterization for j_crit_cable assumes a particular strand
+        #  composition that does not require a user-defined copper fraction,
+        #  so this is irrelevant in this model
+
+        jstrand = j_wp / (1 - f_he)
+        #  jstrand = 0  # as far as I can tell this will always be 0
+        #  because jwp was never set in fortran (so 0)
+
+        j_crit_cable, tmarg = superconductors.bi2212(
+            b_max, jstrand, t_helium, f_hts
+        )  # bi2212 outputs j_crit_cable
+        j_crit_sc = j_crit_cable / (1 - f_tf_conductor_copper)
+        tcrit = t_helium + tmarg
+    elif i_tf_sc_mat == 3:  # NbTi data
+        bc20m = 15.0
+        tc0m = 9.3
+        c0 = 1.0
+
+        if b_max > bc20m:
+            j_crit_sc = 1.0e-9  # Set to a small nonzero value
+        else:
+            j_crit_sc, tcrit = superconductors.jcrit_nbti(
+                t_helium,
+                b_max,
+                c0,
+                bc20m,
+                tc0m,
+            )
+            # I dont need tcrit here so dont use it.
+
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+
+        # This is needed right now. Can we change it later?
+        j_crit_sc = max(1.0e-9, j_crit_sc)
+        j_crit_cable = max(1.0e-9, j_crit_cable)
+    elif i_tf_sc_mat == 4:  # As (1), but user-defined parameters
+        bc20m = b_crit_sc
+        tc0m = t_crit_sc
+        j_crit_sc, bcrit, tcrit = superconductors.itersc(
+            t_helium, b_max, strain, bc20m, tc0m
+        )
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+    elif i_tf_sc_mat == 5:  # WST Nb3Sn parameterisation
+        bc20m = 32.97
+        tc0m = 16.06
+
+        #  j_crit_sc returned by itersc is the critical current density in the
+        #  superconductor - not the whole strand, which contains copper
+
+        j_crit_sc, bcrit, tcrit = superconductors.western_superconducting_nb3sn(
+            t_helium,
+            b_max,
+            strain,
+            bc20m,
+            tc0m,
+        )
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+    elif (
+        i_tf_sc_mat == 6
+    ):  # ! "REBCO" 2nd generation HTS superconductor in CrCo strand
+        j_crit_sc, validity = superconductors.jcrit_rebco(t_helium, b_max, 0)
+        j_crit_sc = max(1.0e-9, j_crit_sc)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+
+    elif i_tf_sc_mat == 7:  # Durham Ginzburg-Landau Nb-Ti parameterisation
+        bc20m = b_crit_upper_nbti
+        tc0m = t_crit_nbti
+        j_crit_sc, bcrit, tcrit = superconductors.gl_nbti(
+            t_helium, b_max, strain, bc20m, tc0m
+        )
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+    elif i_tf_sc_mat == 8:
+        bc20m = 429
+        tc0m = 185
+        j_crit_sc, bcrit, tcrit = superconductors.gl_rebco(
+            t_helium, b_max, strain, bc20m, tc0m
+        )
+        # A0 calculated for tape cross section already
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1 - f_tf_conductor_copper) * (1 - f_he)
+    else:
+        raise ProcessValueError(
+            "Illegal value for i_pf_superconductor", i_tf_sc_mat=i_tf_sc_mat
+        )
+
+    return j_crit_sc * 1e-6
+
+
+def intersect(x1, y1, x2, y2, xin):
+        """Routine to find the x (abscissa) intersection point of two curves
+        each defined by tabulated (x,y) values
+        author: P J Knight, CCFE, Culham Science Centre
+        x1(1:n1) : input real array : x values for first curve
+        y1(1:n1) : input real array : y values for first curve
+        n1       : input integer : length of arrays x1, y1
+        x2(1:n2) : input real array : x values for first curve
+        y2(1:n2) : input real array : y values for first curve
+        n2       : input integer : length of arrays x2, y2
+        x        : input/output real : initial x value guess on entry;
+        x value at point of intersection on exit
+        This routine estimates the x point (abscissa) at which two curves
+        defined by tabulated (x,y) values intersect, using simple
+        linear interpolation and the Newton-Raphson method.
+        The routine will stop with an error message if no crossing point
+        is found within the x ranges of the two curves.
+        None
+        """
+        x = xin
+        n1 = len(x1)
+        n2 = len(x2)
+
+        xmin = max(np.amin(x1), np.amin(x2))
+        xmax = min(np.max(x1), np.amax(x2))
+
+        if xmin >= xmax:
+            error_handling.fdiags[0] = np.amin(x1)
+            error_handling.fdiags[1] = np.amin(x2)
+            error_handling.fdiags[2] = np.amax(x1)
+            error_handling.fdiags[3] = np.amax(x2)
+            error_handling.report_error(111)
+
+        #  Ensure input guess for x is within this range
+
+        if x < xmin:
+            x = xmin
+        elif x > xmax:
+            x = xmax
+
+        #  Find overall y range, and set tolerance
+        #  in final difference in y values
+
+        ymin = min(np.amin(y1), np.amin(y2))
+        ymax = max(np.max(y1), np.max(y2))
+
+        epsy = 1.0e-6 * (ymax - ymin)
+
+        #  Finite difference dx
+
+        dx = 0.01e0 / max(n1, n2) * (xmax - xmin)
+
+        for _i in range(100):
+            #  Find difference in y values at x
+
+            y01 = np.interp(x, x1, y1)
+            y02 = np.interp(x, x2, y2)
+            y = y01 - y02
+
+            if abs(y) < epsy:
+                break
+
+            #  Find difference in y values at x+dx
+
+            y01 = np.interp(x + dx, x1, y1)
+            y02 = np.interp(x + dx, x2, y2)
+            yright = y01 - y02
+
+            #  Find difference in y values at x-dx
+
+            y01 = np.interp(x - dx, x1, y1)
+            y02 = np.interp(x - dx, x2, y2)
+            yleft = y01 - y02
+
+            #  Adjust x using Newton-Raphson method
+
+            x = x - 2.0e0 * dx * y / (yright - yleft)
+
+            if x < xmin:
+                error_handling.fdiags[0] = x
+                error_handling.fdiags[1] = xmin
+                error_handling.report_error(112)
+                x = xmin
+                break
+
+            if x > xmax:
+                error_handling.fdiags[0] = x
+                error_handling.fdiags[1] = xmax
+                error_handling.report_error(113)
+                x = xmax
+                break
+        else:
+            error_handling.report_error(114)
+
+        return x
+
+
+def bmax_from_awp(
+    wp_width_radial, current, n_tf_coils, r_coil_major, r_coil_minor
+):
+    """Returns a fitted function for bmax for stellarators
+
+    author: J Lion, IPP Greifswald
+    Returns a fitted function for bmax in dependece
+    of the winding pack. The stellarator type config
+    is taken from the parent scope.
+    """
+
+    return (
+        2e-1
+        * current
+        * n_tf_coils
+        / (r_coil_major - r_coil_minor)
+        * (
+            stellarator_configuration.stella_config_a1
+            + stellarator_configuration.stella_config_a2
+            * r_coil_major
+            / wp_width_radial
+        )
+    )
+
+
