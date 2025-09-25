@@ -8394,11 +8394,11 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
     dz_cs = mfile_data.data["dz_cs_full"].get_scan(scan)
     dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
     r_cs_current_filaments_array = [
-        mfile_data.data[f"r_cs_current_filaments{i}"].get_scan(scan)
+        mfile_data.data[f"r_pf_cs_current_filaments{i}"].get_scan(scan)
         for i in range(pfcoil_variables.NFIXMX)
     ]
     z_cs_current_filaments_array = [
-        mfile_data.data[f"z_cs_current_filaments{i}"].get_scan(scan)
+        mfile_data.data[f"z_pf_cs_current_filaments{i}"].get_scan(scan)
         for i in range(pfcoil_variables.NFIXMX)
     ]
 
@@ -8640,7 +8640,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         z_cs_current_filaments_array,
         "bo",
         markersize=2,
-        label="CS Flux Filaments",
+        label="CS, PF and Plasma Current Filaments",
     )
 
     axis.plot(0, 0, marker="o", color="red", markersize=8)

@@ -35,13 +35,13 @@ sig_hoop: float = None
 
 axial_force: float = None
 
-r_cs_current_filaments: list[float] = None
+r_pf_cs_current_filaments: list[float] = None
 """array of radial positions of current filaments in central solenoid"""
 
-z_cs_current_filaments: list[float] = None
+z_pf_cs_current_filaments: list[float] = None
 """array of vertical positions of current filaments in central solenoid"""
 
-c_cs_current_filaments: list[float] = None
+c_pf_cs_current_filaments: list[float] = None
 """array of current in filaments in central solenoid"""
 
 xind: list[float] = None
@@ -571,9 +571,9 @@ def init_pfcoil_module():
     global sig_axial
     global sig_hoop
     global axial_force
-    global r_cs_current_filaments
-    global z_cs_current_filaments
-    global c_cs_current_filaments
+    global r_pf_cs_current_filaments
+    global z_pf_cs_current_filaments
+    global c_pf_cs_current_filaments
     global xind
     global r_pf_coil_middle_group_array
     global z_pf_coil_middle_group_array
@@ -592,9 +592,9 @@ def init_pfcoil_module():
     sig_hoop = 0.0
     axial_force = 0.0
 
-    r_cs_current_filaments = np.zeros(NFIXMX)
-    z_cs_current_filaments = np.zeros(NFIXMX)
-    c_cs_current_filaments = np.zeros(NFIXMX)
+    r_pf_cs_current_filaments = np.zeros(NFIXMX)
+    z_pf_cs_current_filaments = np.zeros(NFIXMX)
+    c_pf_cs_current_filaments = np.zeros(NFIXMX)
     xind = np.zeros(NFIXMX)
     r_pf_coil_middle_group_array = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
     z_pf_coil_middle_group_array = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
