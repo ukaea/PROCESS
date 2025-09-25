@@ -9958,23 +9958,27 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     fusrat_plasma_dd_helion_profile = []
     fusrat_plasma_dhe3_profile = []
 
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
     fusrat_plasma_dt_profile = [
         mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
 
     fusrat_plasma_dd_triton_profile = [
         mfile_data.data[f"fusrat_plasma_dd_triton_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
 
     fusrat_plasma_dd_helion_profile = [
         mfile_data.data[f"fusrat_plasma_dd_helion_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     fusrat_plasma_dhe3_profile = [
         mfile_data.data[f"fusrat_plasma_dhe3_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
 
     fusrat_plasma_total_profile = [
@@ -10441,17 +10445,21 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
 
 def plot_plasma_pressure_profiles(axis, mfile_data, scan):
     # Plot the plasma pressure profiles on the given axis
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
     pres_plasma_profile = [
         mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_ion = [
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_fuel = [
         mfile_data.data[f"pres_plasma_fuel_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
@@ -10500,17 +10508,21 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
 
 def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
     # Get the plasma pressure profiles
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
     pres_plasma_profile = [
         mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_ion = [
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_fuel = [
         mfile_data.data[f"pres_plasma_fuel_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_kpa = np.array(pres_plasma_profile) / 1000.0
     pres_plasma_profile_ion_kpa = np.array(pres_plasma_profile_ion) / 1000.0
@@ -10545,14 +10557,18 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
 def plot_plasma_poloidal_pressure_contours(axis, mfile_data, scan):
     # Plot plasma poloidal pressure contours inside the plasma boundary
 
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
     # Get pressure profile (function of normalized radius rho, 0..1)
     pres_plasma_electron_profile = [
         mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_ion = [
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(n_plasma_profile_elements)
     ]
 
     # Convert pressure to kPa
