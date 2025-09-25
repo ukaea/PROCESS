@@ -4538,6 +4538,12 @@ class Physics:
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
             self.outfile,
+            "Number of radial points in plasma profiles",
+            "(n_plasma_profile_elements)",
+            physics_variables.n_plasma_profile_elements,
+        )
+        po.ovarrf(
+            self.outfile,
             "Volume averaged electron temperature (keV)",
             "(temp_plasma_electron_vol_avg_kev)",
             physics_variables.temp_plasma_electron_vol_avg_kev,
