@@ -3040,6 +3040,20 @@ class PFCoil:
                     "(j_cs_flat_top_end)",
                     pfcoil_variables.j_cs_flat_top_end,
                 )
+                for i in range(len(pfcoil_variables.r_cs_current_filaments)):
+                    op.ovarre(
+                        self.mfile,
+                        f"Radial position of CS filament {i}",
+                        f"r_cs_current_filaments{i}",
+                        pfcoil_variables.r_cs_current_filaments[i],
+                    )
+                for i in range(len(pfcoil_variables.z_cs_current_filaments)):
+                    op.ovarre(
+                        self.mfile,
+                        f"Radial position of CS filament {i}",
+                        f"z_cs_current_filaments{i}",
+                        pfcoil_variables.z_cs_current_filaments[i],
+                    )
                 op.oblnkl(self.outfile)
                 # MDK add bv.dr_cs, bv.dr_bore and bv.dr_cs_tf_gap as they can be iteration variables
                 op.ovarre(self.outfile, "CS inside radius (m)", "(dr_bore)", bv.dr_bore)
