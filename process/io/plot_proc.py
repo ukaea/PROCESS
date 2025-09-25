@@ -6491,15 +6491,21 @@ def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
         )
     )
 
+    # Get axis height for fontsize scaling
+    bbox = axis.get_window_extent().transformed(axis.figure.dpi_scale_trans.inverted())
+    axis_height = bbox.height
+
     for i in range(len(coils_r)):
         axis.plot(r_points[i], z_points[i], color="black")
+        # Scale fontsize relative to axis height and coil size
+        fontsize = max(6, axis_height * abs(coils_dr[i] * coils_dz[i]) * 1.5)
         axis.text(
             coils_r[i],
             coils_z[i] - 0.05,
             coil_text[i],
             ha="center",
             va="center",
-            fontsize=8.5 * abs(coils_dr[i] * coils_dz[i]),
+            fontsize=fontsize,
         )
     axis.add_patch(
         patches.Rectangle(
@@ -10205,7 +10211,154 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     )
 
 
+def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
+    """
+    Plots a cover page for the PROCESS run, including run title, date, user, and summary info.
+
+    Args:
+        axis (plt.Axes): The matplotlib axis object to plot on.
+        mfile_data (mf.MFile): The MFILE data object containing run info.
+        scan (int): The scan number to use for extracting data.
+        fig (plt.Figure): The matplotlib figure object for additional annotations.
+    """
+    axis.axis("off")
+    title = mfile_data.data["runtitle"].get_scan(-1)
+    date = mfile_data.data["date"].get_scan(-1)
+    time = mfile_data.data["time"].get_scan(-1)
+    user = mfile_data.data["username"].get_scan(-1)
+    procver = mfile_data.data["procver"].get_scan(-1)
+    tagno = mfile_data.data["tagno"].get_scan(-1)
+    branch_name = mfile_data.data["branch_name"].get_scan(-1)
+    fileprefix = mfile_data.data["fileprefix"].get_scan(-1)
+    optmisation_switch = mfile_data.data["ioptimz"].get_scan(-1)
+    minmax_switch = mfile_data.data["minmax"].get_scan(-1)
+    ifail = mfile_data.data["ifail"].get_scan(-1)
+    nvars = mfile_data.data["nvar"].get_scan(-1)
+    # Objective_function_name
+    objf_name = mfile_data.data["objf_name"].get_scan(-1)
+    # Square_root_of_the_sum_of_squares_of_the_constraint_residuals
+    sqsumsq = mfile_data.data["sqsumsq"].get_scan(-1)
+    # VMCON_convergence_parameter
+    convergence_parameter = mfile_data.data["convergence_parameter"].get_scan(-1)
+    # Number_of_optimising_solver_iterations
+    nviter = mfile_data.data["nviter"].get_scan(-1)
+
+    # Objective name with minimising/maximising
+    if minmax_switch >= 0:
+        objective_text = f"• Minimising {objf_name}"
+    else:
+        objective_text = f"• Maximising {objf_name}"
+
+    axis.text(
+        0.1,
+        0.85,
+        "PROCESS Run Summary",
+        fontsize=28,
+        ha="left",
+        va="center",
+        transform=fig.transFigure,
+    )
+
+    # Box 1: Run Info
+    run_info = (
+        f"• Run Title: {title}\n"
+        f"• Date: {date}   Time: {time}\n"
+        f"• User: {user}\n"
+        f"• PROCESS Version: {procver}"
+    )
+    axis.text(
+        0.1,
+        0.72,
+        run_info,
+        fontsize=16,
+        ha="left",
+        va="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#e0f7fa",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Box 2: File/Branch Info
+    # Wrap the whole "Branch Name: ..." line if too long
+    max_line_len = 60
+    branch_line = f"• Branch Name: {branch_name}"
+    if isinstance(branch_line, str) and len(branch_line) > max_line_len:
+        # Insert a newline every max_line_len characters
+        branch_line = "\n".join([
+            branch_line[i : i + max_line_len]
+            for i in range(0, len(branch_line), max_line_len)
+        ])
+
+    file_info = f"• Tag Number: {tagno}\n{branch_line}\n• File Prefix: {fileprefix}"
+    axis.text(
+        0.1,
+        0.57,
+        file_info,
+        fontsize=14,
+        ha="left",
+        va="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#fffde7",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Box 3: Run Settings
+    settings_info = (
+        f"• Optimisation Switch: {int(optmisation_switch)}\n"
+        f"• Figure of Merit Switch (minmax): {int(minmax_switch)}\n"
+        f"• Fail Status (ifail): {int(ifail)}\n"
+        f"• Number of Iteration Variables: {int(nvars)}\n"
+        f"{objective_text}\n"
+        f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
+        f"• Convergence Parameter: {convergence_parameter}\n"
+        f"• Solver Iterations: {int(nviter)}"
+    )
+    axis.text(
+        0.1,
+        0.41,
+        settings_info,
+        fontsize=14,
+        ha="left",
+        va="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#f3e5f5",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.text(
+        0.1,
+        0.15,
+        "For more information, see the following pages.",
+        fontsize=12,
+        ha="left",
+        va="center",
+        transform=fig.transFigure,
+        color="gray",
+    )
+
+    # Add a small poloidal cross-section inset on the cover page
+    inset_ax = fig.add_axes([0.55, 0.2, 0.55, 0.55], aspect="equal")
+    poloidal_cross_section(
+        inset_ax, mfile_data, scan, demo_ranges=False, colour_scheme=colour_scheme
+    )
+    inset_ax.set_title("")  # Remove the plot title
+    inset_ax.axis("off")
+
+
 def main_plot(
+    fig0,
     fig1,
     fig2,
     fig3,
@@ -10258,6 +10411,9 @@ def main_plot(
 
     # Setup params for text plots
     plt.rcParams.update({"font.size": 8})
+
+    plot_0 = fig0.add_subplot(111)
+    plot_cover_page(plot_0, m_file_data, scan, fig0, colour_scheme)
 
     # Plot header info
     plot_1 = fig1.add_subplot(231)
@@ -10684,6 +10840,7 @@ def main(args=None):
     # scan = scan
 
     # create main plot
+    page0 = plt.figure(figsize=(12, 9), dpi=80)
     page1 = plt.figure(figsize=(12, 9), dpi=80)
     page2 = plt.figure(figsize=(12, 9), dpi=80)
     page3 = plt.figure(figsize=(12, 9), dpi=80)
@@ -10705,6 +10862,7 @@ def main(args=None):
 
     # run main_plot
     main_plot(
+        page0,
         page1,
         page2,
         page3,
@@ -10731,6 +10889,7 @@ def main(args=None):
 
     # with bpdf.PdfPages(args.o) as pdf:
     with bpdf.PdfPages(args.f + "SUMMARY.pdf") as pdf:
+        pdf.savefig(page0)
         pdf.savefig(page1)
         pdf.savefig(page2)
         pdf.savefig(page3)
@@ -10754,6 +10913,7 @@ def main(args=None):
     if args.show:
         plt.show(block=True)
 
+    plt.close(page0)
     plt.close(page1)
     plt.close(page2)
     plt.close(page3)
