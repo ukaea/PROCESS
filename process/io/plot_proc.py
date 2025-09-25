@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle, Rectangle
 from matplotlib.path import Path
+from scipy.interpolate import interp1d
 
 import process.confinement_time as confine
 import process.constants as constants
@@ -10545,6 +10546,121 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
     axis.legend()
 
 
+def plot_plasma_poloidal_pressure_contours(axis, mfile_data, scan):
+    # Plot plasma poloidal pressure contours inside the plasma boundary
+
+    # Get pressure profile (function of normalized radius rho, 0..1)
+    pres_plasma_electron_profile = [
+        mfile_data.data[f"pres_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    pres_plasma_profile_ion = [
+        mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    # Convert pressure to kPa
+    pres_plasma_electron_profile_kpa = [
+        p / 1000.0 for p in pres_plasma_electron_profile
+    ]
+    pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
+    pres_plasma_profile = [
+        e + i
+        for e, i in zip(
+            pres_plasma_electron_profile_kpa, pres_plasma_profile_ion_kpa, strict=False
+        )
+    ]
+
+    # Get plasma geometry and boundary
+    pg = plasma_geometry(
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
+        square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    # Create a grid of (R, Z) points inside the plasma boundary
+    n_rho = 500
+    n_theta = 720
+    rho = np.linspace(0, 1, n_rho)
+    theta = np.linspace(0, 2 * np.pi, n_theta)
+    rho_grid, theta_grid = np.meshgrid(rho, theta)
+
+    # Map (rho, theta) to (R, Z) using plasma boundary shape
+    # For each theta, get boundary (R, Z), then scale by rho
+    boundary_r = pg.rs
+    boundary_z = pg.zs
+    # Interpolate boundary for all theta
+    boundary_theta = np.arctan2(boundary_z - pg.zs.mean(), boundary_r - pg.rs.mean())
+    # Ensure boundary_theta is monotonic and covers [0, 2pi]
+    boundary_theta = np.unwrap(boundary_theta)
+    # Sort boundary_theta and corresponding r/z for monotonic interpolation
+    sort_idx = np.argsort(boundary_theta)
+    boundary_theta = boundary_theta[sort_idx]
+    boundary_r = boundary_r[sort_idx]
+    boundary_z = boundary_z[sort_idx]
+    # Extend boundary to cover full [0, 2pi] if needed
+    if boundary_theta[0] > 0 or boundary_theta[-1] < 2 * np.pi:
+        boundary_theta = np.concatenate(([0], boundary_theta, [2 * np.pi]))
+        boundary_r = np.concatenate(([boundary_r[0]], boundary_r, [boundary_r[-1]]))
+        boundary_z = np.concatenate(([boundary_z[0]], boundary_z, [boundary_z[-1]]))
+    f_r = interp1d(
+        boundary_theta,
+        boundary_r,
+        kind="linear",
+        fill_value="extrapolate",
+        assume_sorted=True,
+    )
+    f_z = interp1d(
+        boundary_theta,
+        boundary_z,
+        kind="linear",
+        fill_value="extrapolate",
+        assume_sorted=True,
+    )
+    # For each (theta, rho), get boundary (R, Z), then scale by rho
+    # Use the boundary center for scaling, not mean, to avoid vertical offset
+    r_center = rmajor
+    z_center = pg.zs.mean()
+    r_grid = r_center + (f_r(theta_grid) - r_center) * rho_grid
+    z_grid = z_center + (f_z(theta_grid) - z_center) * rho_grid
+
+    # Interpolate pressure profile for each rho
+    pressure_grid = np.interp(
+        rho_grid, np.linspace(0, 1, len(pres_plasma_profile)), pres_plasma_profile
+    )
+
+    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
+    # Plot filled contour
+    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
+    c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
+
+    # Overlay plasma boundary
+    axis.plot(pg.rs, pg.zs, color="black", linewidth=2, label="Plasma Boundary")
+
+    # Add colorbar for pressure (now in kPa)
+    # You can control the location using the 'location' argument ('left', 'right', 'top', 'bottom')
+    # For more control, use 'ax' or 'fraction', 'pad', etc.
+    # Example: location="right", pad=0.05, fraction=0.05
+    axis.figure.colorbar(
+        c, ax=axis, label="Pressure [kPa]", location="left", anchor=(-0.25, 0.5)
+    )
+
+    axis.set_aspect("equal")
+    axis.set_xlabel("R [m]")
+    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    axis.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Plasma Poloidal Pressure Contours")
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10661,6 +10777,11 @@ def main_plot(
 
     plot_plasma_pressure_profiles(fig6.add_subplot(222), m_file_data, scan)
     plot_plasma_pressure_gradient_profiles(fig6.add_subplot(224), m_file_data, scan)
+    # Currently only works with Sauter geometry as plasma has a closed surface
+    if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
+        plot_plasma_poloidal_pressure_contours(
+            fig6.add_subplot(121, aspect="equal"), m_file_data, scan
+        )
 
     # Plot poloidal cross-section
     poloidal_cross_section(
