@@ -35,7 +35,8 @@ sig_hoop: float = None
 
 axial_force: float = None
 
-rfxf: list[float] = None
+r_cs_current_filaments: list[float] = None
+"""array of radial positions of current filaments in central solenoid"""
 
 zfxf: list[float] = None
 
@@ -568,7 +569,7 @@ def init_pfcoil_module():
     global sig_axial
     global sig_hoop
     global axial_force
-    global rfxf
+    global r_cs_current_filaments
     global zfxf
     global cfxf
     global xind
@@ -589,7 +590,7 @@ def init_pfcoil_module():
     sig_hoop = 0.0
     axial_force = 0.0
 
-    rfxf = np.zeros(NFIXMX)
+    r_cs_current_filaments = np.zeros(NFIXMX)
     zfxf = np.zeros(NFIXMX)
     cfxf = np.zeros(NFIXMX)
     xind = np.zeros(NFIXMX)
