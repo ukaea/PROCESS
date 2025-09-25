@@ -1237,8 +1237,13 @@ triang95: float = None
 
 
 vol_plasma: float = None
-"""plasma volume (m3)"""
+"""Total plasma volume (m3)"""
 
+vol_plasma_core: float = None
+"""Core plasma volume (m3)"""
+
+vol_plasma_edge: float = None
+"""Edge plasma volume (m3)"""
 
 vs_plasma_burn_required: float = None
 """V-s needed during flat-top (heat + burn times) (Wb)"""
@@ -1581,6 +1586,8 @@ def init_physics_variables():
     global triang
     global triang95
     global vol_plasma
+    global vol_plasma_core
+    global vol_plasma_edge
     global vs_plasma_burn_required
     global vs_plasma_ramp_required
     global v_plasma_loop_burn
@@ -1829,6 +1836,8 @@ def init_physics_variables():
     triang = 0.36
     triang95 = 0.24
     vol_plasma = 0.0
+    vol_plasma_core = 0.0
+    vol_plasma_edge = 0.0
     vs_plasma_burn_required = 0.0
     vs_plasma_ramp_required = 0.0
     v_plasma_loop_burn = 0.0

@@ -524,9 +524,11 @@ class ImpurityRadiation:
         self.pimp_profile = np.zeros(self.plasma_profile.profile_size)
         self.pden_impurity_rad_profile = np.zeros(self.plasma_profile.profile_size)
         self.pden_impurity_core_rad_profile = np.zeros(self.plasma_profile.profile_size)
+        self.pden_impurity_rad_edge_profile = np.zeros(self.plasma_profile.profile_size)
 
         self.pden_impurity_rad_total_mw = 0.0
         self.pden_impurity_core_rad_total_mw = 0.0
+        self.pden_impurity_rad_edge_total_mw = 0.0
 
     def map_imprad_profile(self):
         """Map imprad_profile() over each impurity element index."""
@@ -565,14 +567,23 @@ class ImpurityRadiation:
         the values.
         """
 
-        pden_impurity_rad_total = self.pimp_profile * self.rho
-        pden_impurity_core_rad_total = self.pimp_profile * (
-            self.rho
-            * fradcore(
-                self.rho,
-                impurity_radiation_module.radius_plasma_core_norm,
-                impurity_radiation_module.f_p_plasma_core_rad_reduction,
-            )
+        # Core region radiation profile
+        fradcore_profile = fradcore(
+            self.rho,
+            impurity_radiation_module.radius_plasma_core_norm,
+            impurity_radiation_module.f_p_plasma_core_rad_reduction,
+        )
+        pden_impurity_core_rad_total = self.pimp_profile * fradcore_profile
+
+        # Edge region radiation profile
+        fradedge_profile = np.zeros_like(self.rho)
+        edge_mask = self.rho >= impurity_radiation_module.radius_plasma_core_norm
+        fradedge_profile[edge_mask] = 1.0  # Edge region gets full value
+        pden_impurity_rad_edge_total = self.pimp_profile * fradedge_profile
+
+        # Total radiation profile (core + edge)
+        pden_impurity_rad_total = (
+            pden_impurity_core_rad_total + pden_impurity_rad_edge_total
         )
 
         self.pden_impurity_rad_profile = np.add(
@@ -580,6 +591,9 @@ class ImpurityRadiation:
         )
         self.pden_impurity_core_rad_profile = np.add(
             self.pden_impurity_core_rad_profile, pden_impurity_core_rad_total
+        )
+        self.pden_impurity_rad_edge_profile = np.add(
+            self.pden_impurity_rad_edge_profile, pden_impurity_rad_edge_total
         )
 
     def integrate_radiation_loss_profiles(self):
@@ -592,6 +606,9 @@ class ImpurityRadiation:
         )
         self.pden_impurity_core_rad_total_mw = 2.0e-6 * integrate.simpson(
             self.pden_impurity_core_rad_profile, x=self.rho, dx=self.rhodx
+        )
+        self.pden_impurity_rad_edge_total_mw = 2.0e-6 * integrate.simpson(
+            self.pden_impurity_rad_edge_profile, x=self.rho, dx=self.rhodx
         )
 
     def calculate_imprad(self):
