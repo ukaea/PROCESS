@@ -168,17 +168,13 @@ class PFCoil:
         # if present
         if bv.iohcl == 0:
             pfcoil_variables.nfxf = 0
-            ioheof = 0.0e0
+            c_cs_flat_top_end = 0.0e0
         else:
             pfcoil_variables.nfxf = 2 * pfcoil_variables.n_cs_current_filaments
 
             # total Central Solenoid current at EOF
-            ioheof = (
-                -bv.z_tf_inside_half
-                * pfcoil_variables.f_z_cs_tf_internal
-                * bv.dr_cs
-                * 2.0e0
-                * pfcoil_variables.j_cs_flat_top_end
+            c_cs_flat_top_end = -(
+                pfcoil_variables.a_cs_poloidal * pfcoil_variables.j_cs_flat_top_end
             )
 
             if pfcoil_variables.nfxf > pfcoil_variables.NFIXMX:
@@ -207,7 +203,7 @@ class PFCoil:
                     nng + pfcoil_variables.n_cs_current_filaments
                 ] = -pfcoil_variables.z_cs_current_filaments[nng]
                 pfcoil_variables.cfxf[nng] = (
-                    -ioheof
+                    -c_cs_flat_top_end
                     / pfcoil_variables.nfxf
                     * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
                 )
@@ -624,8 +620,9 @@ class PFCoil:
             dics = csflux / ddics
 
             pfcoil_variables.f_j_cs_start_end_flat_top = (
-                (-ioheof * pfcoil_variables.f_j_cs_start_pulse_end_flat_top) + dics
-            ) / ioheof
+                (-c_cs_flat_top_end * pfcoil_variables.f_j_cs_start_pulse_end_flat_top)
+                + dics
+            ) / c_cs_flat_top_end
             if np.abs(pfcoil_variables.f_j_cs_start_end_flat_top) > 1.0:
                 logger.warning(
                     "Ratio of central solenoid overall current density at "
@@ -686,14 +683,16 @@ class PFCoil:
                 ncl = ncl + 1
 
         # Current in Central Solenoid as a function of time
-        # N.B. If the Central Solenoid is not present then ioheof is zero.
+        # N.B. If the Central Solenoid is not present then c_cs_flat_top_end is zero.
         pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ncl] = (
-            -1.0e-6 * ioheof * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
+            -1.0e-6
+            * c_cs_flat_top_end
+            * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
         )
         pfcoil_variables.c_pf_cs_coil_flat_top_ma[ncl] = (
-            1.0e-6 * ioheof * pfcoil_variables.f_j_cs_start_end_flat_top
+            1.0e-6 * c_cs_flat_top_end * pfcoil_variables.f_j_cs_start_end_flat_top
         )
-        pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * ioheof
+        pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * c_cs_flat_top_end
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
@@ -3942,11 +3941,11 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
+            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
             # Copper area = (area of coil - area of steel)*(1- void fraction)*
             # (fraction of copper in strands)
-            # rcv.copperaoh_m2 = ioheof / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
+            # rcv.copperaoh_m2 = c_cs_flat_top_end / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
 
         elif isumat == 7:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
@@ -3959,7 +3958,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
+            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
 
         elif isumat == 8:
             # Durham Ginzburg-Landau critical surface model for REBCO
@@ -3973,9 +3972,9 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
+            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = ioheof / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
+            # rcv.copperaoh_m2 = c_cs_flat_top_end / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
 
         elif isumat == 9:
             # Hazelton experimental data + Zhai conceptual model for REBCO
@@ -3995,9 +3994,9 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
+            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
             # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = ioheof / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
+            # rcv.copperaoh_m2 = c_cs_flat_top_end / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
 
         else:
             # Error condition
