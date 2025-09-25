@@ -2005,7 +2005,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(pfcoil_variables, "nfxf", 14)
     monkeypatch.setattr(
         pfcoil_variables,
-        "rfxf",
+        "r_cs_current_filaments",
         np.array((
             6.2732560483870969,
             6.2732560483870969,
