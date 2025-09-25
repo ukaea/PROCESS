@@ -17,7 +17,7 @@ from process import constants
 from process.cs_fatigue import CsFatigue
 from process.data_structure import build_variables as bv
 from process.data_structure import fwbs_variables as fwbsv
-from process.data_structure import pfcoil_variables
+from process.data_structure import pfcoil_variables, superconducting_tf_coil_variables
 from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
@@ -46,7 +46,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     """
 
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(bv, "hpfdif", 0.0)
+    monkeypatch.setattr(bv, "dz_tf_upper_lower_midplane", 0.0)
     monkeypatch.setattr(bv, "z_tf_top", 4.0)  # guess
     monkeypatch.setattr(bv, "z_tf_inside_half", 8.8)
     monkeypatch.setattr(bv, "dr_cs", 0.65)
@@ -55,7 +55,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(bv, "r_tf_outboard_mid", 1.66e1)
     monkeypatch.setattr(bv, "dr_bore", 2.15)
     monkeypatch.setattr(fwbsv, "den_steel", 7.8e3)
-    monkeypatch.setattr(pfcoil_variables, "rpf1", 0.0)
+    monkeypatch.setattr(pfcoil_variables, "dr_pf_cs_middle_offset", 0.0)
     monkeypatch.setattr(pfcoil_variables, "m_pf_coil_structure_total", 0.0)
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coil_flat_top_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 0)
@@ -85,7 +85,8 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(
         pfcoil_variables, "c_pf_cs_coil_pulse_start_ma", np.full(22, 0.0)
     )
-    monkeypatch.setattr(pfcoil_variables, "routr", 1.5)
+    monkeypatch.setattr(pfcoil_variables, "dr_pf_tf_outboard_out_offset", 1.5)
+    monkeypatch.setattr(superconducting_tf_coil_variables, "r_tf_outboard_out", 10.0)
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfcoil_variables, "rpf2", -1.825)
@@ -122,7 +123,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "fcupfsu", 6.900e-1)
     monkeypatch.setattr(pfcoil_variables, "j_cs_pulse_start", 1.693e7)
     monkeypatch.setattr(pfcoil_variables, "j_pf_wp_critical", np.full(22, 0.0))
-    monkeypatch.setattr(pfcoil_variables, "i_sup_pf_shape", 0)
+    monkeypatch.setattr(pfcoil_variables, "i_r_pf_outside_tf_placement", 0)
     monkeypatch.setattr(pfcoil_variables, "rref", np.full(10, 7.0))
     monkeypatch.setattr(pfcoil_variables, "i_pf_current", 1)
     monkeypatch.setattr(pfcoil_variables, "ccl0_ma", np.full(10, 0.0))
@@ -378,7 +379,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     # This 2D array argument discovered via gdb prints as a 1D array, therefore
     # needs to be reshaped into its original 2D. Fortran ordering is essential
     # when passing greater-than-1D arrays from Python to Fortran
-    rcls = np.reshape(
+    r_pf_coil_middle_group_array = np.reshape(
         [
             6.7651653417201345,
             6.7651653417201345,
@@ -404,7 +405,7 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         (10, 2),
         order="F",
     )
-    zcls = np.reshape(
+    z_pf_coil_middle_group_array = np.reshape(
         [
             9.8904697261474404,
             -11.124884737289973,
@@ -447,8 +448,8 @@ def test_efc(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
         cfix,
         n_pf_coil_groups,
         n_pf_coils_in_group,
-        rcls,
-        zcls,
+        r_pf_coil_middle_group_array,
+        z_pf_coil_middle_group_array,
         alfa,
         bfix,
         gmat,
@@ -519,7 +520,7 @@ def test_mtrx(pfcoil: PFCoil):
     bzin = np.zeros(nptsmx)
     n_pf_coil_groups = 4
     n_pf_coils_in_group = np.array([1, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0])
-    rcls = np.reshape(
+    r_pf_coil_middle_group_array = np.reshape(
         [
             0,
             0,
@@ -545,7 +546,7 @@ def test_mtrx(pfcoil: PFCoil):
         (10, 2),
         order="F",
     )
-    zcls = np.reshape(
+    z_pf_coil_middle_group_array = np.reshape(
         [
             0,
             0,
@@ -659,8 +660,8 @@ def test_mtrx(pfcoil: PFCoil):
         bzin,
         n_pf_coil_groups,
         n_pf_coils_in_group,
-        rcls,
-        zcls,
+        r_pf_coil_middle_group_array,
+        z_pf_coil_middle_group_array,
         alfa,
         bfix,
         int(pfcoil_variables.N_PF_COILS_IN_GROUP_MAX),

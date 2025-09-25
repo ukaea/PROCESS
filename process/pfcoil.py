@@ -14,7 +14,11 @@ from process.data_structure import build_variables as bv
 from process.data_structure import constraint_variables as ctv
 from process.data_structure import cs_fatigue_variables as csfv
 from process.data_structure import fwbs_variables as fwbsv
-from process.data_structure import numerics, pfcoil_variables
+from process.data_structure import (
+    numerics,
+    pfcoil_variables,
+    superconducting_tf_coil_variables,
+)
 from process.data_structure import physics_variables as pv
 from process.data_structure import rebco_variables as rcv
 from process.data_structure import tfcoil_variables as tfv
@@ -212,97 +216,125 @@ class PFCoil:
         # Scale PF coil locations
         signn[0] = 1.0e0
         signn[1] = -1.0e0
-        pfcoil_variables.rclsnorm = (
-            bv.r_tf_outboard_mid + 0.5e0 * bv.dr_tf_outboard + pfcoil_variables.routr
+        pfcoil_variables.r_pf_outside_tf_midplane = (
+            superconducting_tf_coil_variables.r_tf_outboard_out
+            + pfcoil_variables.dr_pf_tf_outboard_out_offset
         )
 
         # Place the PF coils:
 
-        # N.B. Problems here if k=n_pf_coils_in_group(group) is greater than 2.
-        for j in range(pfcoil_variables.n_pf_coil_groups):
-            if pfcoil_variables.i_pf_location[j] == 1:
+        # N.B. Problems here if coil=n_pf_coils_in_group(group) is greater than 2.
+        for group in range(pfcoil_variables.n_pf_coil_groups):
+            if pfcoil_variables.i_pf_location[group] == 1:
                 # PF coil is stacked on top of the Central Solenoid
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.rcls[j, k] = (
-                        pfcoil_variables.r_cs_middle + pfcoil_variables.rpf1
+                # Use a helper function to compute r_pf_coil_middle_group_array and
+                # z_pf_coil_middle_group_array arrays for this group
+
+                r_pf_coil_middle_group_array, z_pf_coil_middle_group_array = (
+                    self.place_pf_above_cs(
+                        n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                        n_pf_group=group,
+                        r_cs_middle=pfcoil_variables.r_cs_middle,
+                        dr_pf_cs_middle_offset=pfcoil_variables.dr_pf_cs_middle_offset,
+                        z_tf_inside_half=bv.z_tf_inside_half,
+                        dr_tf_inboard=bv.dr_tf_inboard,
+                        z_cs_coil_upper=pfcoil_variables.dz_cs_full / 2,
+                    )
+                )
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
+                        r_pf_coil_middle_group_array[group, coil]
+                    )
+                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
+                        z_pf_coil_middle_group_array[group, coil]
                     )
 
-                    # Z coordinate of coil enforced so as not
-                    # to occupy the same space as the Central Solenoid
-                    pfcoil_variables.zcls[j, k] = signn[k] * (
-                        bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal
-                        + 0.1e0
-                        + 0.5e0
-                        * (
-                            bv.z_tf_inside_half
-                            * (1.0e0 - pfcoil_variables.f_z_cs_tf_internal)
-                            + bv.dr_tf_inboard
-                            + 0.1e0
-                        )
-                    )
+            # =========================================================================
 
-            elif pfcoil_variables.i_pf_location[j] == 2:
+            elif pfcoil_variables.i_pf_location[group] == 2:
                 # PF coil is on top of the TF coil
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.rcls[j, k] = (
-                        pv.rmajor + pfcoil_variables.rpf2 * pv.triang * pv.rminor
-                    )
-                    if pv.itart == 1 and pv.itartpf == 0:
-                        pfcoil_variables.zcls[j, k] = (
-                            bv.z_tf_inside_half - pfcoil_variables.zref[j]
-                        ) * signn[k]
-                    else:
-                        # pfcoil_variables.zcls(j,k) = (bv.z_tf_inside_half + bv.dr_tf_inboard + 0.86e0) * signn(k)
-                        if top_bottom == 1:  # this coil is above midplane
-                            pfcoil_variables.zcls[j, k] = bv.z_tf_top + 0.86e0
-                            top_bottom = -1
-                        else:  # this coil is below midplane
-                            pfcoil_variables.zcls[j, k] = -1.0e0 * (
-                                bv.z_tf_top - 2.0e0 * bv.hpfdif + 0.86e0
-                            )
-                            top_bottom = 1
+                (
+                    r_pf_coil_middle_group_array,
+                    z_pf_coil_middle_group_array,
+                    top_bottom,
+                ) = self.place_pf_above_tf(
+                    n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                    n_pf_group=group,
+                    rmajor=pv.rmajor,
+                    triang=pv.triang,
+                    rminor=pv.rminor,
+                    itart=pv.itart,
+                    itartpf=pv.itartpf,
+                    z_tf_inside_half=bv.z_tf_inside_half,
+                    dz_tf_upper_lower_midplane=bv.dz_tf_upper_lower_midplane,
+                    z_tf_top=bv.z_tf_top,
+                    top_bottom=top_bottom,
+                    rpf2=pfcoil_variables.rpf2,
+                    zref=pfcoil_variables.zref,
+                )
 
-            elif pfcoil_variables.i_pf_location[j] == 3:
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
+                        r_pf_coil_middle_group_array[group, coil]
+                    )
+                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
+                        z_pf_coil_middle_group_array[group, coil]
+                    )
+            # =========================================================================
+
+            elif pfcoil_variables.i_pf_location[group] == 3:
                 # PF coil is radially outside the TF coil
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.zcls[j, k] = (
-                        pv.rminor * pfcoil_variables.zref[j] * signn[k]
-                    )
-                    # Coil radius follows TF coil curve for SC TF (D-shape)
-                    # otherwise stacked for resistive TF (rectangle-shape)
-                    if tfv.i_tf_sup != 1 or pfcoil_variables.i_sup_pf_shape == 1:
-                        pfcoil_variables.rcls[j, k] = pfcoil_variables.rclsnorm
-                    else:
-                        pfcoil_variables.rcls[j, k] = math.sqrt(
-                            pfcoil_variables.rclsnorm**2
-                            - pfcoil_variables.zcls[j, k] ** 2
-                        )
-                        try:
-                            assert pfcoil_variables.rcls[j, k] < np.inf
-                        except AssertionError:
-                            logger.exception(
-                                "Element of pfcoil_variables.rcls is inf. Kludging to 1e10."
-                            )
-                            pfcoil_variables.rcls[j, k] = 1e10
+                (
+                    r_pf_coil_middle_group_array,
+                    z_pf_coil_middle_group_array,
+                ) = self.place_pf_outside_tf(
+                    n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                    n_pf_group=group,
+                    rminor=pv.rminor,
+                    zref=pfcoil_variables.zref,
+                    i_tf_shape=tfv.i_tf_shape,
+                    i_r_pf_outside_tf_placement=pfcoil_variables.i_r_pf_outside_tf_placement,
+                    r_pf_outside_tf_midplane=pfcoil_variables.r_pf_outside_tf_midplane,
+                )
 
-            elif pfcoil_variables.i_pf_location[j] == 4:
-                # PF coil is in general location
-                # See issue 1418
-                # https://git.ccfe.ac.uk/process/process/-/issues/1418
-                for k in range(pfcoil_variables.n_pf_coils_in_group[j]):
-                    pfcoil_variables.zcls[j, k] = (
-                        pv.rminor * pfcoil_variables.zref[j] * signn[k]
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
+                        r_pf_coil_middle_group_array[group, coil]
                     )
-                    pfcoil_variables.rcls[j, k] = (
-                        pv.rminor * pfcoil_variables.rref[j] + pv.rmajor
+                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
+                        z_pf_coil_middle_group_array[group, coil]
+                    )
+
+            # =========================================================================
+
+            elif pfcoil_variables.i_pf_location[group] == 4:
+                (
+                    r_pf_coil_middle_group_array,
+                    z_pf_coil_middle_group_array,
+                ) = self.place_pf_generally(
+                    n_pf_coils_in_group=pfcoil_variables.n_pf_coils_in_group,
+                    n_pf_group=group,
+                    rminor=pv.rminor,
+                    rmajor=pv.rmajor,
+                    zref=pfcoil_variables.zref,
+                    rref=pfcoil_variables.rref,
+                )
+
+                for coil in range(pfcoil_variables.n_pf_coils_in_group[group]):
+                    pfcoil_variables.r_pf_coil_middle_group_array[group, coil] = (
+                        r_pf_coil_middle_group_array[group, coil]
+                    )
+                    pfcoil_variables.z_pf_coil_middle_group_array[group, coil] = (
+                        z_pf_coil_middle_group_array[group, coil]
                     )
 
             else:
                 raise ProcessValueError(
                     "Illegal i_pf_location value",
-                    j=j,
-                    i_pf_location=pfcoil_variables.i_pf_location[j],
+                    group=group,
+                    i_pf_location=pfcoil_variables.i_pf_location[group],
                 )
+            # =========================================================================
 
         # Allocate current to the PF coils:
         # "Flux swing coils" participate in cancellation of the CS
@@ -347,8 +379,8 @@ class PFCoil:
                 pfcoil_variables.cfxf,
                 pfcoil_variables.n_pf_coil_groups,
                 pfcoil_variables.n_pf_coils_in_group,
-                pfcoil_variables.rcls,
-                pfcoil_variables.zcls,
+                pfcoil_variables.r_pf_coil_middle_group_array,
+                pfcoil_variables.z_pf_coil_middle_group_array,
                 pfcoil_variables.alfapf,
                 bfix,
                 gmat,
@@ -416,12 +448,12 @@ class PFCoil:
                         pfcoil_variables.ccls[i] = 0.0e0
                         nfxf0 = nfxf0 + pfcoil_variables.n_pf_coils_in_group[i]
                         for ccount in range(pfcoil_variables.n_pf_coils_in_group[i]):
-                            pfcoil_variables.rfxf[nocoil] = pfcoil_variables.rcls[
-                                i, ccount
-                            ]
-                            pfcoil_variables.zfxf[nocoil] = pfcoil_variables.zcls[
-                                i, ccount
-                            ]
+                            pfcoil_variables.rfxf[nocoil] = (
+                                pfcoil_variables.r_pf_coil_middle_group_array[i, ccount]
+                            )
+                            pfcoil_variables.zfxf[nocoil] = (
+                                pfcoil_variables.z_pf_coil_middle_group_array[i, ccount]
+                            )
                             pfcoil_variables.cfxf[nocoil] = pfcoil_variables.ccls[i]
                             nocoil = nocoil + 1
 
@@ -435,17 +467,19 @@ class PFCoil:
                             * (
                                 1.0e0
                                 - (pv.kappa * pv.rminor)
-                                / abs(pfcoil_variables.zcls[i, 0])
+                                / abs(
+                                    pfcoil_variables.z_pf_coil_middle_group_array[i, 0]
+                                )
                             )
                         )
                         nfxf0 = nfxf0 + pfcoil_variables.n_pf_coils_in_group[i]
                         for ccount in range(pfcoil_variables.n_pf_coils_in_group[i]):
-                            pfcoil_variables.rfxf[nocoil] = pfcoil_variables.rcls[
-                                i, ccount
-                            ]
-                            pfcoil_variables.zfxf[nocoil] = pfcoil_variables.zcls[
-                                i, ccount
-                            ]
+                            pfcoil_variables.rfxf[nocoil] = (
+                                pfcoil_variables.r_pf_coil_middle_group_array[i, ccount]
+                            )
+                            pfcoil_variables.zfxf[nocoil] = (
+                                pfcoil_variables.z_pf_coil_middle_group_array[i, ccount]
+                            )
                             pfcoil_variables.cfxf[nocoil] = pfcoil_variables.ccls[i]
                             nocoil = nocoil + 1
 
@@ -474,18 +508,26 @@ class PFCoil:
 
                 for ccount in range(ngrp0):
                     ncls0[ccount] = 2
-                    pfcoil_variables.rcls0[ccount, 0] = pfcoil_variables.rcls[
-                        pcls0[ccount] - 1, 0
-                    ]
-                    pfcoil_variables.rcls0[ccount, 1] = pfcoil_variables.rcls[
-                        pcls0[ccount] - 1, 1
-                    ]
-                    pfcoil_variables.zcls0[ccount, 0] = pfcoil_variables.zcls[
-                        pcls0[ccount] - 1, 0
-                    ]
-                    pfcoil_variables.zcls0[ccount, 1] = pfcoil_variables.zcls[
-                        pcls0[ccount] - 1, 1
-                    ]
+                    pfcoil_variables.rcls0[ccount, 0] = (
+                        pfcoil_variables.r_pf_coil_middle_group_array[
+                            pcls0[ccount] - 1, 0
+                        ]
+                    )
+                    pfcoil_variables.rcls0[ccount, 1] = (
+                        pfcoil_variables.r_pf_coil_middle_group_array[
+                            pcls0[ccount] - 1, 1
+                        ]
+                    )
+                    pfcoil_variables.zcls0[ccount, 0] = (
+                        pfcoil_variables.z_pf_coil_middle_group_array[
+                            pcls0[ccount] - 1, 0
+                        ]
+                    )
+                    pfcoil_variables.zcls0[ccount, 1] = (
+                        pfcoil_variables.z_pf_coil_middle_group_array[
+                            pcls0[ccount] - 1, 1
+                        ]
+                    )
 
                 npts0 = 1
                 rpts[0] = pv.rmajor
@@ -596,8 +638,12 @@ class PFCoil:
         ncl = 0
         for nng in range(pfcoil_variables.n_pf_coil_groups):
             for ng2 in range(pfcoil_variables.n_pf_coils_in_group[nng]):
-                pfcoil_variables.r_pf_coil_middle[ncl] = pfcoil_variables.rcls[nng, ng2]
-                pfcoil_variables.z_pf_coil_middle[ncl] = pfcoil_variables.zcls[nng, ng2]
+                pfcoil_variables.r_pf_coil_middle[ncl] = (
+                    pfcoil_variables.r_pf_coil_middle_group_array[nng, ng2]
+                )
+                pfcoil_variables.z_pf_coil_middle[ncl] = (
+                    pfcoil_variables.z_pf_coil_middle_group_array[nng, ng2]
+                )
 
                 # Currents at different times:
 
@@ -1023,6 +1069,274 @@ class PFCoil:
             pfcoil_variables.n_pf_cs_plasma_circuits - 1, 5
         ] = 0.0e0
 
+    def place_pf_above_cs(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        r_cs_middle: float,
+        dr_pf_cs_middle_offset: float,
+        z_tf_inside_half: float,
+        dr_tf_inboard: float,
+        z_cs_coil_upper: float,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Calculate the placement of PF coils stacked above the Central Solenoid.
+
+        :param n_pf_coils_in_group: Array containing the number of coils in each PF group.
+        :type n_pf_coils_in_group: np.ndarray
+        :param n_pf_group: Index of the PF coil group.
+        :type n_pf_group: int
+        :param r_cs_middle: Radial coordinate of CS coil centre (m).
+        :type r_cs_middle: float
+        :param dr_pf_cs_middle_offset: Radial offset for PF coil placement (m).
+        :type dr_pf_cs_middle_offset: float
+        :param z_tf_inside_half: Half-height of the TF bore (m).
+        :type z_tf_inside_half: float
+        :param dr_tf_inboard: Thickness of the TF inboard leg (m).
+        :type dr_tf_inboard: float
+        :param z_cs_coil_upper: Upper z coordinate of the CS coil (m).
+        :type z_cs_coil_upper: float
+        :return: Tuple of arrays containing the radial and vertical coordinates of PF coils in the group.
+        :rtype: tuple[np.ndarray, np.ndarray]
+        """
+
+        # Initialise as empty arrays; will be resized in the loop
+        r_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+        z_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            # Positions PF coil directly above centre of CS with offset from dr_pf_cs_middle_offset
+            r_pf_coil_middle_group_array[n_pf_group, coil] = (
+                r_cs_middle + dr_pf_cs_middle_offset
+            )
+
+            # Z coordinate of coil enforced so as not
+            # to occupy the same space as the Central Solenoid
+            # Set sign: +1 for coil 0, -1 for coil 1
+            sign = 1.0 if coil == 0 else -1.0
+            z_pf_coil_middle_group_array[n_pf_group, coil] = sign * (
+                z_cs_coil_upper
+                + 0.1e0
+                + 0.5e0 * ((z_tf_inside_half - z_cs_coil_upper) + dr_tf_inboard + 0.1e0)
+            )
+        return r_pf_coil_middle_group_array, z_pf_coil_middle_group_array
+
+    def place_pf_above_tf(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        rmajor: float,
+        triang: float,
+        rminor: float,
+        itart: int,
+        itartpf: int,
+        z_tf_inside_half: float,
+        dz_tf_upper_lower_midplane: float,
+        z_tf_top: float,
+        top_bottom: int,
+        rpf2: float,
+        zref: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray, int]:
+        """
+        Calculates and places poloidal field (PF) coils above the toroidal field (TF) coils for a given group.
+
+        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
+        :type n_pf_coils_in_group: np.ndarray
+        :param n_pf_group: Index of the PF coil group to process.
+        :type n_pf_group: int
+        :param rmajor: Major radius of the device.
+        :type rmajor: float
+        :param triang: Triangularity parameter for coil placement.
+        :type triang: float
+        :param rminor: Minor radius of the device.
+        :type rminor: float
+        :param itart: Flag indicating ST configuration.
+        :type itart: int
+        :param itartpf: Flag indicating PF coil configuration for ST.
+        :type itartpf: int
+        :param z_tf_inside_half: Half-height of the TF coil inside region.
+        :type z_tf_inside_half: float
+        :param dz_tf_upper_lower_midplane: Height difference parameter for PF coil placement.
+        :type dz_tf_upper_lower_midplane: float
+        :param z_tf_top: Top z-coordinate of the TF coil.
+        :type z_tf_top: float
+        :param top_bottom: Indicator for coil placement above (+1) or below (-1) the midplane.
+        :type top_bottom: int
+        :param rpf2: Radial offset parameter for PF coil placement.
+        :type rpf2: float
+        :param zref: Array of reference z-coordinates for PF coil placement.
+        :type zref: np.ndarray
+
+        :returns: Tuple containing arrays of radial and vertical positions of PF coil middles for the specified group,
+                  and the updated top_bottom indicator.
+        :rtype: tuple[np.ndarray, np.ndarray, int]
+        """
+        # Initialise as empty arrays; will be resized in the loop
+        r_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+        z_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            # Place PF coils at radius determined by rmajor, triang and rminor
+            r_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rmajor + rpf2 * triang * rminor
+            )
+
+            # Set sign: +1 for coil 0, -1 for coil 1
+            sign = 1.0 if coil == 0 else -1.0
+            if itart == 1 and itartpf == 0:
+                z_pf_coil_middle_group_array[n_pf_group, coil] = (
+                    z_tf_inside_half - zref[n_pf_group]
+                ) * sign
+            else:
+                if top_bottom == 1:  # this coil is above midplane
+                    z_pf_coil_middle_group_array[n_pf_group, coil] = z_tf_top + 0.86e0
+                    top_bottom = -1
+                else:  # this coil is below midplane
+                    z_pf_coil_middle_group_array[n_pf_group, coil] = -1.0e0 * (
+                        z_tf_top - dz_tf_upper_lower_midplane + 0.86e0
+                    )
+                    top_bottom = 1
+
+        return r_pf_coil_middle_group_array, z_pf_coil_middle_group_array, top_bottom
+
+    def place_pf_outside_tf(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        rminor: float,
+        zref: np.ndarray,
+        i_tf_shape: int,
+        i_r_pf_outside_tf_placement: int,
+        r_pf_outside_tf_midplane: float,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Calculates the radial and vertical positions of poloidal field (PF) coils placed outside the toroidal field (TF) coil.
+
+        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
+        :type n_pf_coils_in_group: np.ndarray
+        :param n_pf_group: Index of the PF coil group to process.
+        :type n_pf_group: int
+        :param rminor: Minor radius of the device.
+        :type rminor: float
+        :param zref: Reference vertical positions for each PF coil group.
+        :type zref: np.ndarray
+        :param i_tf_shape: Integer flag indicating TF coil shape (2 for picture frame, others for D-shape).
+        :type i_tf_shape: int
+        :param i_r_pf_outside_tf_placement: Placement switch for PF coil radius (1 for constant/stacked, 0 for following TF curve).
+        :type i_r_pf_outside_tf_placement: int
+        :param r_pf_outside_tf_midplane: Radial position of PF coil at the midplane.
+        :type r_pf_outside_tf_midplane: float
+
+        :returns: Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
+        :rtype: tuple[np.ndarray, np.ndarray]
+        """
+
+        # Initialise as empty arrays; will be resized in the loop
+        r_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+        z_pf_coil_middle_group_array = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+
+        # PF coil is radially outside the TF coil
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            sign = 1.0 if coil == 0 else -1.0
+
+            z_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rminor * zref[n_pf_group] * sign
+            )
+            # Coil radius is constant / stacked for picture frame TF or if placement switch is set
+            if i_tf_shape == 2 or i_r_pf_outside_tf_placement == 1:
+                r_pf_coil_middle_group_array[n_pf_group, coil] = (
+                    r_pf_outside_tf_midplane
+                )
+            else:
+                # Coil radius follows TF coil curve for TF (D-shape)
+                r_pf_coil_middle_group_array[n_pf_group, coil] = math.sqrt(
+                    r_pf_outside_tf_midplane**2
+                    - z_pf_coil_middle_group_array[n_pf_group, coil] ** 2
+                )
+                try:
+                    assert r_pf_coil_middle_group_array[n_pf_group, coil] < np.inf
+                except AssertionError:
+                    logger.exception(
+                        "Element of pfcoil_variables.r_pf_coil_middle_group_array is inf. Kludging to 1e10."
+                    )
+                    r_pf_coil_middle_group_array[n_pf_group, coil] = 1e10
+        return (
+            r_pf_coil_middle_group_array,
+            z_pf_coil_middle_group_array,
+        )
+
+    def place_pf_generally(
+        self,
+        n_pf_coils_in_group: np.ndarray,
+        n_pf_group: int,
+        rminor: float,
+        rmajor: float,
+        zref: np.ndarray,
+        rref: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Calculates the radial and vertical positions of poloidal field (PF) coils placed in a general location.
+
+        :param n_pf_coils_in_group: Array containing the number of PF coils in each group.
+        :type n_pf_coils_in_group: numpy.ndarray
+        :param n_pf_group: Index of the PF coil group to process.
+        :type n_pf_group: int
+        :param rminor: Minor radius of the device.
+        :type rminor: float
+        :param rmajor: Major radius of the device.
+        :type rmajor: float
+        :param zref: Reference vertical positions for each PF coil group.
+        :type zref: numpy.ndarray
+        :param rref: Reference radial positions for each PF coil group.
+        :type rref: numpy.ndarray
+
+        :returns: Tuple containing arrays of radial and vertical positions of PF coil centers for the specified group.
+        :rtype: tuple[numpy.ndarray, numpy.ndarray]
+        """
+        r_pf_coil_middle_group_array: np.ndarray = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+        z_pf_coil_middle_group_array: np.ndarray = np.zeros((
+            pfcoil_variables.n_pf_coil_groups,
+            pfcoil_variables.N_PF_COILS_IN_GROUP_MAX,
+        ))
+
+        for coil in range(n_pf_coils_in_group[n_pf_group]):
+            sign: float = 1.0 if coil == 0 else -1.0
+
+            # Place as mutiples of minor radius from the midplane
+            z_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rminor * zref[n_pf_group] * sign
+            )
+            # Place as multiples of minor radius from the plasma centre
+            r_pf_coil_middle_group_array[n_pf_group, coil] = (
+                rminor * rref[n_pf_group] + rmajor
+            )
+        return (
+            r_pf_coil_middle_group_array,
+            z_pf_coil_middle_group_array,
+        )
+
     def efc(
         self,
         npts,
@@ -1036,8 +1350,8 @@ class PFCoil:
         cfix,
         n_pf_coil_groups,
         n_pf_coils_in_group,
-        rcls,
-        zcls,
+        r_pf_coil_middle_group_array,
+        z_pf_coil_middle_group_array,
         alfa,
         bfix,
         gmat,
@@ -1078,10 +1392,10 @@ class PFCoil:
         :type n_pf_coil_groups: int
         :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
         :type n_pf_coils_in_group: np.ndarray
-        :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
-        :type rcls: np.ndarray
-        :param zcls: coords R(i,j), Z(i,j) of coil j in group i (m)
-        :type zcls: np.ndarray
+        :param r_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
+        :type r_pf_coil_middle_group_array: np.ndarray
+        :param z_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
+        :type z_pf_coil_middle_group_array: np.ndarray
         :param alfa: smoothing parameter (0 = no smoothing, 1.0D-9 = large
         smoothing)
         :type alfa: float
@@ -1126,8 +1440,8 @@ class PFCoil:
             bzin,
             int(n_pf_coil_groups),
             n_pf_coils_in_group,
-            rcls,
-            zcls,
+            r_pf_coil_middle_group_array,
+            z_pf_coil_middle_group_array,
             alfa,
             bfix,
             int(pfcoil_variables.N_PF_COILS_IN_GROUP_MAX),
@@ -1156,19 +1470,19 @@ class PFCoil:
             for i in range(pfcoil_variables.n_pf_coil_groups):
                 for ii in range(pfcoil_variables.n_pf_coil_groups):
                     for ij in range(pfcoil_variables.n_pf_coils_in_group[ii]):
-                        if pfcoil_variables.rcls[
+                        if pfcoil_variables.r_pf_coil_middle_group_array[
                             ii, ij
                         ] <= (  # Outboard TF coil collision
-                            pfcoil_variables.rclsnorm
-                            - pfcoil_variables.routr
+                            pfcoil_variables.r_pf_outside_tf_midplane
+                            - pfcoil_variables.dr_pf_tf_outboard_out_offset
                             + pfcoil_variables.r_pf_coil_middle[i]
-                        ) and pfcoil_variables.rcls[ii, ij] >= (
+                        ) and pfcoil_variables.r_pf_coil_middle_group_array[ii, ij] >= (
                             bv.r_tf_outboard_mid
                             - (0.5 * bv.dr_tf_outboard)
                             - pfcoil_variables.r_pf_coil_middle[i]
                         ):
                             pf_tf_collision += 1
-                        if pfcoil_variables.rcls[
+                        if pfcoil_variables.r_pf_coil_middle_group_array[
                             ii, ij
                         ] <= (  # Inboard TF coil collision
                             bv.dr_bore
@@ -1177,7 +1491,7 @@ class PFCoil:
                             + bv.dr_cs_tf_gap
                             + bv.dr_tf_inboard
                             + pfcoil_variables.r_pf_coil_middle[i]
-                        ) and pfcoil_variables.rcls[ii, ij] >= (
+                        ) and pfcoil_variables.r_pf_coil_middle_group_array[ii, ij] >= (
                             bv.dr_bore
                             + bv.dr_cs
                             + bv.dr_cs_precomp
@@ -1186,9 +1500,11 @@ class PFCoil:
                         ):
                             pf_tf_collision += 1
                         if (  # Vertical TF coil collision
-                            abs(pfcoil_variables.zcls[ii, ij])
+                            abs(pfcoil_variables.z_pf_coil_middle_group_array[ii, ij])
                             <= bv.z_tf_top + pfcoil_variables.r_pf_coil_middle[i]
-                            and abs(pfcoil_variables.zcls[ii, ij])
+                            and abs(
+                                pfcoil_variables.z_pf_coil_middle_group_array[ii, ij]
+                            )
                             >= bv.z_tf_top
                             - (0.5 * bv.dr_tf_outboard)
                             - pfcoil_variables.r_pf_coil_middle[i]
@@ -3947,8 +4263,8 @@ def mtrx(
     bzin,
     n_pf_coil_groups,
     n_pf_coils_in_group,
-    rcls,
-    zcls,
+    r_pf_coil_middle_group_array,
+    z_pf_coil_middle_group_array,
     alfa,
     bfix,
     n_pf_coils_in_group_max,
@@ -3983,10 +4299,10 @@ def mtrx(
     :type n_pf_coil_groups: int
     :param n_pf_coils_in_group: number of coils in each group, each value <= n_pf_coils_in_group_max
     :type n_pf_coils_in_group: numpy.ndarray
-    :param rcls: coords R(i,j), Z(i,j) of coil j in group i (m)
-    :type rcls: numpy.ndarray
-    :param zcls: coords R(i,j), Z(i,j) of coil j in group i (m)
-    :type zcls: numpy.ndarray
+    :param r_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
+    :type r_pf_coil_middle_group_array: numpy.ndarray
+    :param z_pf_coil_middle_group_array: coords R(i,j), Z(i,j) of coil j in group i (m)
+    :type z_pf_coil_middle_group_array: numpy.ndarray
     :param alfa: smoothing parameter (0 = no smoothing, 1.0D-9 = large
     smoothing)
     :type alfa: float
@@ -4010,7 +4326,11 @@ def mtrx(
             nc = n_pf_coils_in_group[j]
 
             _, gmat[i, j], gmat[i + npts, j], _ = bfield(
-                rcls[j, :nc], zcls[j, :nc], cc[:nc], rpts[i], zpts[i]
+                r_pf_coil_middle_group_array[j, :nc],
+                z_pf_coil_middle_group_array[j, :nc],
+                cc[:nc],
+                rpts[i],
+                zpts[i],
             )
 
     # Add constraint equations

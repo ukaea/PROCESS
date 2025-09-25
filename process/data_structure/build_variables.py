@@ -153,7 +153,7 @@ z_tf_inside_half: float = None
 """maximum (half-)height of TF coil (inside edge) (m)"""
 
 
-hpfdif: float = None
+dz_tf_upper_lower_midplane: float = None
 """difference in distance from midplane of upper and lower portions of TF
 legs (non-zero for single-null devices) (m)
 """
@@ -443,7 +443,7 @@ def init_build_variables():
     global gapomin
     global dr_shld_vv_gap_outboard
     global z_tf_inside_half
-    global hpfdif
+    global dz_tf_upper_lower_midplane
     global z_tf_top
     global hr1
     global iohcl
@@ -538,7 +538,7 @@ def init_build_variables():
     gapomin = 0.234
     dr_shld_vv_gap_outboard = 0.0
     z_tf_inside_half = 0.0
-    hpfdif = 0.0
+    dz_tf_upper_lower_midplane = 0.0
     z_tf_top = 0.0
     hr1 = 0.0
     iohcl = 1
