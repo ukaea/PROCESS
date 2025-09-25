@@ -1683,11 +1683,17 @@ class PFCoil:
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
-        bmaxoh2 = self.bfmax(
-            pfcoil_variables.j_cs_flat_top_end,
-            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+        bmaxoh2 = self.calculate_cs_peak_field(
+            j_cs=pfcoil_variables.j_cs_flat_top_end,
+            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
         )
 
         # Peak field due to other PF coils plus plasma
@@ -1702,11 +1708,17 @@ class PFCoil:
 
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfcoil_variables.b_cs_peak_pulse_start = self.bfmax(
-            pfcoil_variables.j_cs_pulse_start,
-            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+        pfcoil_variables.b_cs_peak_pulse_start = self.calculate_cs_peak_field(
+            j_cs=pfcoil_variables.j_cs_pulse_start,
+            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
         )
         timepoint = 2
         bri, bro, bzi, bzo = self.peakb(pfcoil_variables.n_cs_pf_coils, 99, timepoint)
@@ -2193,34 +2205,41 @@ class PFCoil:
 
         return bri, bro, bzi, bzo
 
-    def bfmax(self, rj, a, b, h):
-        """Calculates the maximum field of a solenoid.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        This routine calculates the peak field (T) at a solenoid's
-        inner radius, using fits taken from the figure
-        on p.22 of M. Wilson's book Superconducting Magnets,
-        Clarendon Press, Oxford, N.Y., 1983
-
-        :param rj: overall current density (A/m2)
-        :type rj: float
-        :param a: solenoid inner radius (m)
-        :type a: float
-        :param b: solenoid outer radius (m)
-        :type b: float
-        :param h: solenoid half height (m)
-        :type h: float
-        :return bfmax: maximum field of solenoid
-        :rtype: float
+    def calculate_cs_peak_field(
+        self,
+        j_cs: float,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        dz_cs_half: float,
+    ) -> float:
         """
-        beta = h / a
-        alpha = b / a
+        Calculates the maximum field of a solenoid.
+
+        :param j_cs: Overall current density (A/m²)
+        :type j_cs: float
+        :param r_cs_inner: Solenoid inner radius (m)
+        :type r_cs_inner: float
+        :param r_cs_outer: Solenoid outer radius (m)
+        :type r_cs_outer: float
+        :param dz_cs_half: Solenoid half height (m)
+        :type dz_cs_half: float
+        :return: Maximum field of solenoid (T)
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - Fits are taken from the figure on p.22 of M. Wilson's book
+            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983.
+        """
+        beta = dz_cs_half / r_cs_inner
+        alpha = r_cs_outer / r_cs_inner
 
         # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
         b0 = (
-            rj
+            j_cs
             * constants.RMU0
-            * h
+            * dz_cs_half
             * math.log(
                 (alpha + math.sqrt(alpha**2 + beta**2))
                 / (1.0 + math.sqrt(1.0 + beta**2))
@@ -2228,33 +2247,33 @@ class PFCoil:
         )
 
         if beta > 3.0:
-            b1 = constants.RMU0 * rj * (b - a)
+            b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
             f = (3.0 / beta) ** 2
-            bfmax = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+            b_cs_peak = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
 
         elif beta > 2.0:
             rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
                 0.01 - (beta - 2.0) * 0.0045
             )
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
         elif beta > 1.0:
             rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
         elif beta > 0.75:
             rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
                 0.2 * (beta - 0.75) - 0.05
             )
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
         else:
             rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
                 0.6 * (beta - 0.5) - 0.20
             )
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
-        return bfmax
+        return b_cs_peak
 
     def vsec(self):
         """Calculation of volt-second capability of PF system.
