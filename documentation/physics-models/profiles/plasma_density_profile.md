@@ -118,7 +118,7 @@ A table of the input variables can be found below
 |----------------------------------|-----------|
 | Normalized plasma radii            | `profile_x` |
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,n}}$ |
-| Core density                | `ne0`, $n_{\text{e0}}$ |
+| Core density                | `nd_plasma_electron_on_axis`, $n_{\text{e0}}$ |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |

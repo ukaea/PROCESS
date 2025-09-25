@@ -2001,7 +2001,7 @@ class Physics:
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
                 ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
-                core_density=physics_variables.ne0,
+                core_density=physics_variables.nd_plasma_electron_on_axis,
                 average_density=physics_variables.nd_plasma_electrons_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
@@ -2335,7 +2335,7 @@ class Physics:
 
         radpwrdata = physics_funcs.calculate_radiation_powers(
             self.plasma_profile,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.rminor,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.aspect,
@@ -4585,8 +4585,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Electron number density on axis (/m3)",
-            "(ne0)",
-            physics_variables.ne0,
+            "(nd_plasma_electron_on_axis)",
+            physics_variables.nd_plasma_electron_on_axis,
             "OP ",
         )
         po.ovarre(
@@ -4801,7 +4801,10 @@ class Physics:
         )
 
         if physics_variables.i_plasma_pedestal >= 1:
-            if physics_variables.ne0 < physics_variables.nd_plasma_pedestal_electron:
+            if (
+                physics_variables.nd_plasma_electron_on_axis
+                < physics_variables.nd_plasma_pedestal_electron
+            ):
                 logger.error("Central density is less than pedestal density")
 
             po.ocmmnt(self.outfile, "Pedestal profiles are used.")
@@ -6812,7 +6815,7 @@ class Physics:
         # So that it is compatible with all profiles
 
         betae0 = (
-            physics_variables.ne0
+            physics_variables.nd_plasma_electron_on_axis
             * physics_variables.temp_plasma_electron_on_axis_kev
             * 1.0e3
             * constants.ELECTRON_CHARGE

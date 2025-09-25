@@ -135,7 +135,7 @@ class ProcessTracker:
         "Physics.nd_plasma_pedestal_electron",
         "Physics.nd_plasma_electrons_vol_avg",
         "Physics.p_plasma_rad_mw",
-        "Physics.ne0",
+        "Physics.nd_plasma_electron_on_axis",
         "Physics.f_c_plasma_auxiliary",
         "Physics.nd_impurities",
         "Physics.t_energy_confinement",

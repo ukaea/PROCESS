@@ -2755,7 +2755,7 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
 class StCalcEffChiParam(NamedTuple):
     temp_plasma_electron_on_axis_kev: Any = None
 
-    ne0: Any = None
+    nd_plasma_electron_on_axis: Any = None
 
     f_p_alpha_plasma_deposited: Any = None
 
@@ -2787,7 +2787,7 @@ class StCalcEffChiParam(NamedTuple):
     (
         StCalcEffChiParam(
             temp_plasma_electron_on_axis_kev=19.108573496973477,
-            ne0=3.4479000000000007e20,
+            nd_plasma_electron_on_axis=3.4479000000000007e20,
             f_p_alpha_plasma_deposited=0.95000000000000007,
             pden_alpha_total_mw=1.2629524018077414,
             pden_plasma_core_rad_mw=0.10762698429338043,
@@ -2804,7 +2804,7 @@ class StCalcEffChiParam(NamedTuple):
         ),
         StCalcEffChiParam(
             temp_plasma_electron_on_axis_kev=17.5,
-            ne0=3.4479000000000007e20,
+            nd_plasma_electron_on_axis=3.4479000000000007e20,
             f_p_alpha_plasma_deposited=0.95000000000000007,
             pden_alpha_total_mw=1.0570658694225301,
             pden_plasma_core_rad_mw=0.1002475669217598,
@@ -2840,7 +2840,11 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
         stcalceffchiparam.temp_plasma_electron_on_axis_kev,
     )
 
-    monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electron_on_axis",
+        stcalceffchiparam.nd_plasma_electron_on_axis,
+    )
 
     monkeypatch.setattr(
         physics_variables,

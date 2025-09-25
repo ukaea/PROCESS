@@ -171,7 +171,7 @@ foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* nd_plasma_pedestal_electron<ne0 *
+* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
 
 icc = 81

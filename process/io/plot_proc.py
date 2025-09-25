@@ -6816,9 +6816,9 @@ def plot_physics_info(axis, mfile_data, scan):
         scan
     ) / mfile_data.data["te"].get_scan(scan)
 
-    nepeak = mfile_data.data["ne0"].get_scan(scan) / mfile_data.data[
-        "nd_plasma_electrons_vol_avg"
-    ].get_scan(scan)
+    nepeak = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
+        scan
+    ) / mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
@@ -10779,7 +10779,7 @@ def main(args=None):
     )
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
-    ne0 = m_file.data["ne0"].get_scan(scan)
+    ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
     nd_fuel_ions = m_file.data["nd_fuel_ions"].get_scan(scan)
     nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
         scan

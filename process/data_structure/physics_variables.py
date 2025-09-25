@@ -791,7 +791,7 @@ kappa_ipb: float = None
 """Separatrix elongation calculated for IPB scalings"""
 
 
-ne0: float = None
+nd_plasma_electron_on_axis: float = None
 """central electron density (/m3)"""
 
 
@@ -1472,7 +1472,7 @@ def init_physics_variables():
     global kappa
     global kappa95
     global kappa_ipb
-    global ne0
+    global nd_plasma_electron_on_axis
     global ni0
     global m_s_limit
     global pres_plasma_on_axis
@@ -1719,7 +1719,7 @@ def init_physics_variables():
     kappa = 1.792
     kappa95 = 1.6
     kappa_ipb = 0.0
-    ne0 = 0.0
+    nd_plasma_electron_on_axis = 0.0
     ni0 = 0.0
     m_s_limit = 0.3
     pres_plasma_on_axis = 0.0

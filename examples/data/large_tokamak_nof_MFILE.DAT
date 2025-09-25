@@ -301,7 +301,7 @@
  Ion_temperature_on_axis_(keV)____________________________________________ (temp_plasma_ion_on_axis_kev)__________________________ 2.72635735563331849e+01 OP
  Electron_temp.,_density_weighted_(keV)___________________________________ (temp_plasma_electron_density_weighted_kev)__________________________ 1.44360335891099503e+01 OP
  Volume_averaged_electron_number_density_(/m3)____________________________ (nd_plasma_electrons_vol_avg)_________________________ 8.50078961768999158e+19
- Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.11814263037413868e+20 OP
+ Electron_number_density_on_axis_(/m3)____________________________________ (nd_plasma_electron_on_axis)__________________________ 1.11814263037413868e+20 OP
  Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_________________________ 9.41418090734859715e+19 OP
  Plasma_pressure_on_axis_(Pa)_____________________________________________ (pres_plasma_on_axis)___________________________ 9.10652371594472905e+05 OP
  Volume_averaged_plasma_pressure_(Pa)_____________________________________ (pres_plasma_vol_avg)_____________ 2.63957209157818230e+05 OP
@@ -1347,7 +1347,7 @@ icc = 72
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* nd_plasma_pedestal_electron<ne0 *
+* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
 
 icc = 81
