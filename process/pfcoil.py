@@ -197,15 +197,15 @@ class PFCoil:
                 pfcoil_variables.r_cs_current_filaments[
                     nng + pfcoil_variables.n_cs_current_filaments
                 ] = pfcoil_variables.r_cs_current_filaments[nng]
-                pfcoil_variables.zfxf[nng] = (
+                pfcoil_variables.z_cs_current_filaments[nng] = (
                     bv.z_tf_inside_half
                     * pfcoil_variables.f_z_cs_tf_internal
                     / pfcoil_variables.n_cs_current_filaments
                     * ((nng + 1) - 0.5e0)
                 )
-                pfcoil_variables.zfxf[
+                pfcoil_variables.z_cs_current_filaments[
                     nng + pfcoil_variables.n_cs_current_filaments
-                ] = -pfcoil_variables.zfxf[nng]
+                ] = -pfcoil_variables.z_cs_current_filaments[nng]
                 pfcoil_variables.cfxf[nng] = (
                     -ioheof
                     / pfcoil_variables.nfxf
@@ -377,7 +377,7 @@ class PFCoil:
                 bzin,
                 pfcoil_variables.nfxf,
                 pfcoil_variables.r_cs_current_filaments,
-                pfcoil_variables.zfxf,
+                pfcoil_variables.z_cs_current_filaments,
                 pfcoil_variables.cfxf,
                 pfcoil_variables.n_pf_coil_groups,
                 pfcoil_variables.n_pf_coils_in_group,
@@ -453,7 +453,7 @@ class PFCoil:
                             pfcoil_variables.r_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.r_pf_coil_middle_group_array[i, ccount]
                             )
-                            pfcoil_variables.zfxf[nocoil] = (
+                            pfcoil_variables.z_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.z_pf_coil_middle_group_array[i, ccount]
                             )
                             pfcoil_variables.cfxf[nocoil] = pfcoil_variables.ccls[i]
@@ -479,7 +479,7 @@ class PFCoil:
                             pfcoil_variables.r_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.r_pf_coil_middle_group_array[i, ccount]
                             )
-                            pfcoil_variables.zfxf[nocoil] = (
+                            pfcoil_variables.z_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.z_pf_coil_middle_group_array[i, ccount]
                             )
                             pfcoil_variables.cfxf[nocoil] = pfcoil_variables.ccls[i]
@@ -560,7 +560,7 @@ class PFCoil:
                     bzin,
                     nfxf0,
                     pfcoil_variables.r_cs_current_filaments,
-                    pfcoil_variables.zfxf,
+                    pfcoil_variables.z_cs_current_filaments,
                     pfcoil_variables.cfxf,
                     ngrp0,
                     ncls0,
@@ -2111,7 +2111,7 @@ class PFCoil:
                     pfcoil_variables.r_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.r_pf_coil_middle[jj - 1]
                     )
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.z_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
                     )
                     pfcoil_variables.cfxf[kk - 1] = (
@@ -2123,7 +2123,7 @@ class PFCoil:
                     pfcoil_variables.r_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.r_pf_coil_middle[jj - 1]
                     )
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.z_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
                     )
                     pfcoil_variables.cfxf[kk - 1] = (
@@ -2135,7 +2135,7 @@ class PFCoil:
                     pfcoil_variables.r_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.r_pf_coil_middle[jj - 1]
                     )
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.z_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
                     )
                     pfcoil_variables.cfxf[kk - 1] = (
@@ -2147,7 +2147,7 @@ class PFCoil:
                     pfcoil_variables.r_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.r_pf_coil_middle[jj - 1]
                     )
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.z_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
                     )
                     pfcoil_variables.cfxf[kk - 1] = (
@@ -2162,9 +2162,9 @@ class PFCoil:
                     pfcoil_variables.r_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.r_pf_coil_middle[jj - 1]
                     )
-                    pfcoil_variables.zfxf[kk - 1] = pfcoil_variables.z_pf_coil_middle[
-                        jj - 1
-                    ]
+                    pfcoil_variables.z_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.z_pf_coil_middle[jj - 1]
+                    )
                     pfcoil_variables.cfxf[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
                         * pfcoil_variables.waves[jj - 1, it - 1]
@@ -2175,21 +2175,21 @@ class PFCoil:
         if it > 2:
             kk = kk + 1
             pfcoil_variables.r_cs_current_filaments[kk - 1] = pv.rmajor
-            pfcoil_variables.zfxf[kk - 1] = 0.0e0
+            pfcoil_variables.z_cs_current_filaments[kk - 1] = 0.0e0
             pfcoil_variables.cfxf[kk - 1] = pv.plasma_current
 
         # Calculate the field at the inner and outer edges
         # of the coil of interest
         pfcoil_variables.xind[:kk], bri, bzi, psi = bfield(
             pfcoil_variables.r_cs_current_filaments[:kk],
-            pfcoil_variables.zfxf[:kk],
+            pfcoil_variables.z_cs_current_filaments[:kk],
             pfcoil_variables.cfxf[:kk],
             pfcoil_variables.r_pf_coil_inner[i - 1],
             pfcoil_variables.z_pf_coil_middle[i - 1],
         )
         pfcoil_variables.xind[:kk], bro, bzo, psi = bfield(
             pfcoil_variables.r_cs_current_filaments[:kk],
-            pfcoil_variables.zfxf[:kk],
+            pfcoil_variables.z_cs_current_filaments[:kk],
             pfcoil_variables.cfxf[:kk],
             pfcoil_variables.r_pf_coil_outer[i - 1],
             pfcoil_variables.z_pf_coil_middle[i - 1],
