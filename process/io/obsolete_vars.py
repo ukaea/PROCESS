@@ -425,6 +425,9 @@ OBS_VARS = {
     "tdmptf": "t_tf_superconductor_quench",
     "tmaxpro": "temp_tf_conductor_quench_max",
     "coreradiationfraction": "f_p_plasma_core_rad_reduction",
+    "routr": "dr_pf_tf_outboard_out_offset",
+    "rpf1": "dr_pf_cs_middle_offset",
+    "i_sup_pf_shape": "i_r_pf_outside_tf_placement",
 }
 
 OBS_VARS_HELP = {

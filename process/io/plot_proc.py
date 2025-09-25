@@ -8764,6 +8764,9 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
     dr_tf_outboard = mfile_data.data["dr_tf_outboard"].get_scan(scan)
     len_tf_coil = mfile_data.data["len_tf_coil"].get_scan(scan)
+    dz_tf_upper_lower_midplane = mfile_data.data["dz_tf_upper_lower_midplane"].get_scan(
+        scan
+    )
 
     # Plot the points as black dots, number them, and connect them with lines
     xs = [x1, x2, x3, x4, x5]
@@ -9036,11 +9039,24 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     # ==============================================================
 
-    # Add a label for the inboard thickness
+    # Add a label for the length of the coil
     axis.text(
         (r_tf_outboard_in + 2 * dr_tf_outboard),
         0.0,
         rf"Length of coil = {len_tf_coil:.3f} m",
+        fontsize=7,
+        color="black",
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    # ==============================================================
+
+    # Add a label for the length of the coil
+    axis.text(
+        (r_tf_outboard_in + 2 * dr_tf_outboard),
+        -1.0,
+        f"$\\Delta Z$ upper and lower to midplane = {dz_tf_upper_lower_midplane:.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",

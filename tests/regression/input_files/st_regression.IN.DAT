@@ -1865,7 +1865,7 @@ i_pf_location = 2,3,3,4
 * JUSTIFICATION: Design choice, one above x-point and two outboard
 
 
-i_sup_pf_shape = 1
+i_r_pf_outside_tf_placement = 1
 * DESCRIPTION:   Switch for the placement of i_pf_location = 3 (outboard) PF coils
 *  when the TF coils are superconducting (i_tf_sup = 1)
 *  =0 (Default) Outboard PF coils follow TF shape
@@ -1874,12 +1874,12 @@ i_sup_pf_shape = 1
 *  winding surface
 * JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
-*routr =  
+*dr_pf_tf_outboard_out_offset =  
 * DESCRIPTION:  Radial distance (m) from outboard TF coil leg to centre of i_pf_location=3 PF coils
 * (default = 1.5) 
 * JUSTIFICATION: Not used, no i_pf_location = 3 coils
 
-*rpf1 =  
+*dr_pf_cs_middle_offset =  
 * DESCRIPTION:  offset (m) of radial position of i_pf_location=1 PF coils from being directly above
 * the central solenoid
 * JUSTIFICATION: Not used, no i_pf_location = 1 coils

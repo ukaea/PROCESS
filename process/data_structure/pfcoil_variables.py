@@ -43,9 +43,11 @@ cfxf: list[float] = None
 
 xind: list[float] = None
 
-rcls: list[float] = None
+r_pf_coil_middle_group_array: list[float] = None
+"""2D array of PF coil middle radii, indexed by group and coil in group"""
 
-zcls: list[float] = None
+z_pf_coil_middle_group_array: list[float] = None
+"""2D array of PF coil middle heights, indexed by group and coil in group"""
 
 ccls: list[float] = None
 
@@ -245,9 +247,8 @@ center (equilibrium coils)
 """
 
 
-i_sup_pf_shape: int = None
+i_r_pf_outside_tf_placement: int = None
 """Switch for the placement of Location 3 (outboard) PF coils
-when the TF coils are superconducting (i_tf_sup = 1)
 - =0 (Default) Outboard PF coils follow TF shape
 in an ellipsoidal winding surface
 - =1 Outboard PF coils all have same radius, cylindrical
@@ -379,7 +380,7 @@ dz_cs_full: float = None
 """Full height of the central solenoid (m)"""
 
 
-routr: float = None
+dr_pf_tf_outboard_out_offset: float = None
 """radial distance (m) from outboard TF coil leg to centre of `i_pf_location=3` PF coils"""
 
 
@@ -387,7 +388,7 @@ r_pf_coil_middle: list[float] = None
 """radius of PF coil i (m)"""
 
 
-rpf1: float = None
+dr_pf_cs_middle_offset: float = None
 """offset (m) of radial position of `i_pf_location=1` PF coils from being directly above
 the central solenoid
 """
@@ -571,8 +572,8 @@ def init_pfcoil_module():
     global zfxf
     global cfxf
     global xind
-    global rcls
-    global zcls
+    global r_pf_coil_middle_group_array
+    global z_pf_coil_middle_group_array
     global ccls
     global ccl0
     global bpf2
@@ -592,8 +593,8 @@ def init_pfcoil_module():
     zfxf = np.zeros(NFIXMX)
     cfxf = np.zeros(NFIXMX)
     xind = np.zeros(NFIXMX)
-    rcls = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
-    zcls = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
+    r_pf_coil_middle_group_array = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
+    z_pf_coil_middle_group_array = np.zeros((N_PF_GROUPS_MAX, N_PF_COILS_IN_GROUP_MAX))
     ccls = np.zeros(N_PF_GROUPS_MAX)
     ccl0 = np.zeros(N_PF_GROUPS_MAX)
     bpf2 = np.zeros(NGC2)
@@ -634,7 +635,7 @@ def init_pfcoil_variables():
     global j_crit_str_cs
     global j_crit_str_pf
     global i_pf_current
-    global i_sup_pf_shape
+    global i_r_pf_outside_tf_placement
     global j_cs_conductor_critical_pulse_start
     global j_cs_conductor_critical_flat_top_end
     global jcableoh_bop
@@ -664,9 +665,9 @@ def init_pfcoil_variables():
     global j_pf_wp_critical
     global r_cs_middle
     global dz_cs_full
-    global routr
+    global dr_pf_tf_outboard_out_offset
     global r_pf_coil_middle
-    global rpf1
+    global dr_pf_cs_middle_offset
     global rpf2
     global rref
     global s_shear_cs_peak
@@ -736,7 +737,7 @@ def init_pfcoil_variables():
     j_crit_str_cs = 0.0
     j_crit_str_pf = 0.0
     i_pf_current = 1
-    i_sup_pf_shape = 0
+    i_r_pf_outside_tf_placement = 0
     j_cs_conductor_critical_pulse_start = 0.0
     j_cs_conductor_critical_flat_top_end = 0.0
     jcableoh_bop = 0.0
@@ -766,9 +767,9 @@ def init_pfcoil_variables():
     j_pf_wp_critical = np.zeros(NGC2)
     r_cs_middle = 0.0
     dz_cs_full = 0.0
-    routr = 1.5
+    dr_pf_tf_outboard_out_offset = 1.5
     r_pf_coil_middle = np.zeros(NGC2)
-    rpf1 = 0.0
+    dr_pf_cs_middle_offset = 0.0
     rpf2 = -1.63
     rref = np.full(N_PF_GROUPS_MAX, 7.0)
     s_shear_cs_peak = 0.0
