@@ -295,7 +295,7 @@ class Stellarator:
             physics_variables.b_plasma_toroidal_on_axis,
         )
 
-        ne0_max_ECRH = min(physics_variables.ne0, ne0_max_ECRH)
+        ne0_max_ECRH = min(physics_variables.nd_plasma_electron_on_axis, ne0_max_ECRH)
         bt_ecrh = min(physics_variables.b_plasma_toroidal_on_axis, bt_ecrh)
 
         if output:
@@ -3555,8 +3555,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Operating point: Peak density",
-            "(ne0)",
-            physics_variables.ne0,
+            "(nd_plasma_electron_on_axis)",
+            physics_variables.nd_plasma_electron_on_axis,
         )
         po.ovarre(
             self.outfile,
@@ -4461,7 +4461,7 @@ class Stellarator:
         #  Calculate radiation power
         radpwr_data = physics_funcs.calculate_radiation_powers(
             self.plasma_profile,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.rminor,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.aspect,
@@ -5046,7 +5046,7 @@ class Stellarator:
         denominator = (
             (
                 3
-                * physics_variables.ne0
+                * physics_variables.nd_plasma_electron_on_axis
                 * constants.ELECTRON_CHARGE
                 * physics_variables.temp_plasma_electron_on_axis_kev
                 * 1e3
@@ -5403,7 +5403,10 @@ class Neoclassics:
             * KEV
         )
 
-        dense = physics_variables.ne0 * (1 - rho**2) ** physics_variables.alphan
+        dense = (
+            physics_variables.nd_plasma_electron_on_axis
+            * (1 - rho**2) ** physics_variables.alphan
+        )
         densT = (
             (1 - physics_variables.f_deuterium)
             * physics_variables.ni0
@@ -5467,7 +5470,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.ne0
+            * physics_variables.nd_plasma_electron_on_axis
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
         )

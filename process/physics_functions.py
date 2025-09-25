@@ -23,7 +23,7 @@ class RadpwrData:
 
 def calculate_radiation_powers(
     plasma_profile: PlasmaProfile,
-    ne0: float,
+    nd_plasma_electron_on_axis: float,
     rminor: float,
     b_plasma_toroidal_on_axis: float,
     aspect: float,
@@ -45,8 +45,8 @@ def calculate_radiation_powers(
 
     :param plasma_profile: The parameterized temperature and density profiles of the plasma.
     :type plasma_profile: PlasmaProfile
-    :param ne0: Central electron density (m^-3).
-    :type ne0: float
+    :param nd_plasma_electron_on_axis: Central electron density (m^-3).
+    :type nd_plasma_electron_on_axis: float
     :param rminor: Minor radius of the plasma (m).
     :type rminor: float
     :param b_plasma_toroidal_on_axis: Toroidal magnetic field (T).
@@ -93,7 +93,7 @@ def calculate_radiation_powers(
 
     # Synchrotron radiation power/volume; assumed to be from core only.
     pden_plasma_sync_mw = psync_albajar_fidone(
-        ne0,
+        nd_plasma_electron_on_axis,
         rminor,
         b_plasma_toroidal_on_axis,
         aspect,
@@ -124,7 +124,7 @@ def calculate_radiation_powers(
 
 
 def psync_albajar_fidone(
-    ne0: float,
+    nd_plasma_electron_on_axis: float,
     rminor: float,
     b_plasma_toroidal_on_axis: float,
     aspect: float,
@@ -143,8 +143,8 @@ def psync_albajar_fidone(
     This function computes the synchrotron radiation power density for the plasma based on
     the plasma shape, major and minor radii, electron density, and temperature profiles.
 
-    :param ne0: Central electron density (m^-3).
-    :type ne0: float
+    :param nd_plasma_electron_on_axis: Central electron density (m^-3).
+    :type nd_plasma_electron_on_axis: float
     :param rminor: Minor radius of the plasma (m).
     :type rminor: float
     :param b_plasma_toroidal_on_axis: Toroidal magnetic field (T).
@@ -181,7 +181,7 @@ def psync_albajar_fidone(
 
     # Variable names are created to closely match those from the reference papers.
 
-    ne0_20 = 1.0e-20 * ne0
+    ne0_20 = 1.0e-20 * nd_plasma_electron_on_axis
 
     p_a0 = 6.04e3 * (rminor * ne0_20) / b_plasma_toroidal_on_axis
 

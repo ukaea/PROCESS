@@ -176,8 +176,9 @@ class PlasmaProfile:
             * (1.0 + physics_variables.alphat)
         )
 
-        physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
-            1.0 + physics_variables.alphan
+        physics_variables.nd_plasma_electron_on_axis = (
+            physics_variables.nd_plasma_electrons_vol_avg
+            * (1.0 + physics_variables.alphan)
         )
         physics_variables.ni0 = physics_variables.nd_ions_total * (
             1.0 + physics_variables.alphan
@@ -267,7 +268,7 @@ class PlasmaProfile:
 
         physics_variables.pres_plasma_on_axis = (
             (
-                physics_variables.ne0
+                physics_variables.nd_plasma_electron_on_axis
                 * physics_variables.temp_plasma_electron_on_axis_kev
                 + physics_variables.ni0 * physics_variables.temp_plasma_ion_on_axis_kev
             )
@@ -365,10 +366,10 @@ class PlasmaProfile:
                     * physics_variables.alphan
                     * (-1.0 + 2.0 * physics_variables.alphan)
                     ** (0.5 - physics_variables.alphan)
-                    * physics_variables.ne0
+                    * physics_variables.nd_plasma_electron_on_axis
                 )
                 ne_max = (
-                    physics_variables.ne0
+                    physics_variables.nd_plasma_electron_on_axis
                     * (1e0 - rho_ne_max**2) ** physics_variables.alphan
                 )
             elif physics_variables.alphan <= 1.0 and physics_variables.alphan > 0.0:
@@ -381,10 +382,10 @@ class PlasmaProfile:
                     * physics_variables.alphan
                     * rho_ne_max
                     * (1 - rho_ne_max**2) ** (-1.0 + physics_variables.alphan)
-                    * physics_variables.ne0
+                    * physics_variables.nd_plasma_electron_on_axis
                 )
                 ne_max = (
-                    physics_variables.ne0
+                    physics_variables.nd_plasma_electron_on_axis
                     * (1 - rho_ne_max**2) ** physics_variables.alphan
                 )
             else:

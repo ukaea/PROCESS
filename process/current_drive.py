@@ -587,7 +587,7 @@ class ElectronCyclotron:
         dlocal = 1.0e-20 * self.plasma_profile.neprofile.calculate_profile_y(
             rrr,
             physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
@@ -1024,7 +1024,7 @@ class LowerHybrid:
         dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
             physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
@@ -1153,7 +1153,7 @@ class LowerHybrid:
         dlocal = 1.0e-19 * self.plasma_profile.neprofile.calculate_profile_y(
             rratio,
             physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,

@@ -108,7 +108,7 @@ class NeProfile(Profile):
         self.calculate_profile_y(
             self.profile_x,
             physics_variables.radius_plasma_pedestal_density_norm,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.nd_plasma_pedestal_electron,
             physics_variables.nd_plasma_separatrix_electron,
             physics_variables.alphan,
@@ -234,11 +234,12 @@ class NeProfile(Profile):
         """Calculates and sets physics variables required for the profile."""
 
         if physics_variables.i_plasma_pedestal == 0:
-            physics_variables.ne0 = physics_variables.nd_plasma_electrons_vol_avg * (
-                1.0 + physics_variables.alphan
+            physics_variables.nd_plasma_electron_on_axis = (
+                physics_variables.nd_plasma_electrons_vol_avg
+                * (1.0 + physics_variables.alphan)
             )
         elif physics_variables.i_plasma_pedestal == 1:
-            physics_variables.ne0 = self.ncore(
+            physics_variables.nd_plasma_electron_on_axis = self.ncore(
                 physics_variables.radius_plasma_pedestal_density_norm,
                 physics_variables.nd_plasma_pedestal_electron,
                 physics_variables.nd_plasma_separatrix_electron,
@@ -248,7 +249,7 @@ class NeProfile(Profile):
         physics_variables.ni0 = (
             physics_variables.nd_ions_total
             / physics_variables.nd_plasma_electrons_vol_avg
-            * physics_variables.ne0
+            * physics_variables.nd_plasma_electron_on_axis
         )
 
 

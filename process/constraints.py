@@ -2075,19 +2075,19 @@ def constraint_equation_81():
     author: S Kahn, Culham Science Centre
     args : output structure : residual error; constraint value;
     residual error in physical units; output string; units string
-    Lower limit ne0 > nd_plasma_pedestal_electron
+    Lower limit nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
     !#=# physics
-    !#=#=# ne0, nd_plasma_pedestal_electron
+    !#=#=# nd_plasma_electron_on_axis, nd_plasma_pedestal_electron
     Logic change during pre-factoring: err, symbol, units will be
     assigned only if present.
-    fne0  : input : F-value for constraint on ne0 > nd_plasma_pedestal_electron
-    ne0   : input : Central electron density [m-3]
+    fne0  : input : F-value for constraint on nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
+    nd_plasma_electron_on_axis   : input : Central electron density [m-3]
     nd_plasma_pedestal_electron : input : Electron density at pedestal [m-3]
     """
     cc = (
         1.0
         - data_structure.physics_variables.fne0
-        * data_structure.physics_variables.ne0
+        * data_structure.physics_variables.nd_plasma_electron_on_axis
         / data_structure.physics_variables.nd_plasma_pedestal_electron
     )
     return ConstraintResult(

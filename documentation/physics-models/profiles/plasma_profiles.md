@@ -32,7 +32,7 @@ be described as 1/2-D.  The relevant profile index variables are
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
-| Plasma centre value              | `ne0`, $n_0$         | `temp_plasma_electron_on_axis_kev`, $T_0$        |  `j_plasma_0`, $J_0$        |
+| Plasma centre value              | `nd_plasma_electron_on_axis`, $n_0$         | `temp_plasma_electron_on_axis_kev`, $T_0$        |  `j_plasma_0`, $J_0$        |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ | `alphat`, $\alpha_T$    |  `alphaj`, $\alpha_J$    |
 
 ???+ note "Plasma current profile"
@@ -157,7 +157,7 @@ A table of the the associated variables can be seen below
 | Profile parameter                | Density   |        Temperature |
 |----------------------------------|-----------|-------------|
 | Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped},n}$ |   `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped},T}$   |  
-| Plasma centre value              | `ne0`, $n_0$      |           `temp_plasma_electron_on_axis_kev`, $T_0$       |
+| Plasma centre value              | `nd_plasma_electron_on_axis`, $n_0$      |           `temp_plasma_electron_on_axis_kev`, $T_0$       |
 | Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$    |       `temp_plasma_pedestal_kev`, $T_{\text{ped}}$     |
 | Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$   |        `temp_plasma_separatrix_kev`, $T_{\text{sep}}$     |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$  |       `alphat`, $\alpha_T$    |
@@ -384,7 +384,7 @@ $$\begin{aligned}
 \end{aligned}$$
 
 $$\begin{aligned}
-\mathtt{ne0} = n_{\text{e}} \times (\alpha_n+1) \\
+\mathtt{nd_plasma_electron_on_axis} = n_{\text{e}} \times (\alpha_n+1) \\
 \mathtt{ni0} = \mathtt{nd_ions_total} \times (\alpha_n+1)
 \end{aligned}$$
 
@@ -395,7 +395,7 @@ $$\begin{aligned}
 The central plasma pressure is calculated from the ideal gas law.
 
 $$
-p_0 = (\mathtt{ne0} \times \mathtt{temp_plasma_electron_on_axis_kev}+\mathtt{ni0}\times \mathtt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
+p_0 = (\mathtt{nd_plasma_electron_on_axis} \times \mathtt{temp_plasma_electron_on_axis_kev}+\mathtt{ni0}\times \mathtt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
 $$
 
 With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.
@@ -646,7 +646,7 @@ and `ixc = 152` respectively
 
 This constraint can be activated by stating `icc = 81` in the input file
 
-To prevent unrealistic profiles when iterating the values of `ne0, nd_plasma_separatrix_electron, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `ne0` is always higher that `nd_plasma_pedestal_electron` to get a converged solution. This can be scaled with `fne0`
+To prevent unrealistic profiles when iterating the values of `nd_plasma_electron_on_axis, nd_plasma_separatrix_electron, nd_plasma_pedestal_electron` etc, this constraint ensures that the value of `nd_plasma_electron_on_axis` is always higher that `nd_plasma_pedestal_electron` to get a converged solution. This can be scaled with `fne0`
 
 -------
 

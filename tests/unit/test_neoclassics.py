@@ -18,7 +18,7 @@ def neoclassics():
 
 
 class InitNeoclassicsParam(NamedTuple):
-    ne0: Any = None
+    nd_plasma_electron_on_axis: Any = None
     temp_plasma_electron_on_axis_kev: Any = None
     alphan: Any = None
     alphat: Any = None
@@ -67,7 +67,7 @@ class InitNeoclassicsParam(NamedTuple):
     "initneoclassicsparam",
     (
         InitNeoclassicsParam(
-            ne0=2.7956610000000002e20,
+            nd_plasma_electron_on_axis=2.7956610000000002e20,
             temp_plasma_electron_on_axis_kev=13.241800000000001,
             alphan=0.35000000000000003,
             alphat=1.2,
@@ -973,7 +973,11 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
     :param monkeypatch: pytest fixture used to mock module/class variables
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
-    monkeypatch.setattr(physics_variables, "ne0", initneoclassicsparam.ne0)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electron_on_axis",
+        initneoclassicsparam.nd_plasma_electron_on_axis,
+    )
     monkeypatch.setattr(
         physics_variables,
         "temp_plasma_electron_on_axis_kev",

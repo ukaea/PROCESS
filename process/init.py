@@ -517,7 +517,7 @@ def check_process(inputs):  # noqa: ARG001
                     stacklevel=2,
                 )
 
-        # Issue #862 : Variable ne0/nd_plasma_pedestal_electron ratio without constraint eq 81 (ne0>nd_plasma_pedestal_electron)
+        # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron ratio without constraint eq 81 (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
             data_structure.numerics.ioptimz >= 0
@@ -532,12 +532,12 @@ def check_process(inputs):  # noqa: ARG001
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any():
                 warn(
-                    "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<ne0)",
+                    "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
                 warn(
-                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<ne0)",
+                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
 

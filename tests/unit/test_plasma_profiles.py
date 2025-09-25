@@ -16,7 +16,7 @@ class ProfileParam(NamedTuple):
 class NeProfileParam(NamedTuple):
     nd_plasma_separatrix_electron: float = 0.0
     i_plasma_pedestal: float = 0.0
-    ne0: float = 0.0
+    nd_plasma_electron_on_axis: float = 0.0
     nd_plasma_pedestal_electron: float = 0.0
     radius_plasma_pedestal_density_norm: float = 0.0
     alphan: float = 0.0
@@ -29,7 +29,7 @@ class NeProfileParam(NamedTuple):
         NeProfileParam(
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             i_plasma_pedestal=1,
-            ne0=0.0,
+            nd_plasma_electron_on_axis=0.0,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
             alphan=1,
@@ -153,7 +153,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     ni0: float = 0.0
 
-    ne0: float = 0.0
+    nd_plasma_electron_on_axis: float = 0.0
 
     temp_plasma_ion_on_axis_kev: float = 0.0
 
@@ -231,7 +231,7 @@ class PlasmaProfilesParam(NamedTuple):
             pcoef=0.0,
             i_plasma_pedestal=1,
             ni0=0.0,
-            ne0=0.0,
+            nd_plasma_electron_on_axis=0.0,
             temp_plasma_ion_on_axis_kev=0.0,
             f_temp_plasma_ion_electron=1,
             nd_electron_line=0.0,
@@ -276,7 +276,7 @@ class PlasmaProfilesParam(NamedTuple):
             pcoef=1.1110842637642833,
             i_plasma_pedestal=1,
             ni0=9.210720071916929e19,
-            ne0=1.0585658890823703e20,
+            nd_plasma_electron_on_axis=1.0585658890823703e20,
             temp_plasma_ion_on_axis_kev=27.369013322953624,
             f_temp_plasma_ion_electron=1,
             nd_electron_line=8.8687354645836431e19,
@@ -379,7 +379,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "ni0", plasmaprofilesparam.ni0)
 
-    monkeypatch.setattr(physics_variables, "ne0", plasmaprofilesparam.ne0)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electron_on_axis",
+        plasmaprofilesparam.nd_plasma_electron_on_axis,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -480,7 +484,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     assert physics_variables.ni0 == pytest.approx(plasmaprofilesparam.expected_ni0)
 
-    assert physics_variables.ne0 == pytest.approx(plasmaprofilesparam.expected_ne0)
+    assert physics_variables.nd_plasma_electron_on_axis == pytest.approx(
+        plasmaprofilesparam.expected_ne0
+    )
 
     assert physics_variables.temp_plasma_ion_on_axis_kev == pytest.approx(
         plasmaprofilesparam.expected_ti0
