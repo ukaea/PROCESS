@@ -186,30 +186,18 @@ class PFCoil:
 
             # Symmetric up/down Central Solenoid : Find (R,Z) and current of each filament at BOP
 
-            for nng in range(pfcoil_variables.n_cs_current_filaments):
-                pfcoil_variables.r_cs_current_filaments[nng] = (
-                    pfcoil_variables.r_cs_middle
-                )
-                pfcoil_variables.r_cs_current_filaments[
-                    nng + pfcoil_variables.n_cs_current_filaments
-                ] = pfcoil_variables.r_cs_current_filaments[nng]
-                pfcoil_variables.z_cs_current_filaments[nng] = (
-                    bv.z_tf_inside_half
-                    * pfcoil_variables.f_z_cs_tf_internal
-                    / pfcoil_variables.n_cs_current_filaments
-                    * ((nng + 1) - 0.5e0)
-                )
-                pfcoil_variables.z_cs_current_filaments[
-                    nng + pfcoil_variables.n_cs_current_filaments
-                ] = -pfcoil_variables.z_cs_current_filaments[nng]
-                pfcoil_variables.c_cs_current_filaments[nng] = (
-                    -c_cs_flat_top_end
-                    / pfcoil_variables.nfxf
-                    * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
-                )
-                pfcoil_variables.c_cs_current_filaments[
-                    nng + pfcoil_variables.n_cs_current_filaments
-                ] = pfcoil_variables.c_cs_current_filaments[nng]
+            (
+                pfcoil_variables.r_cs_current_filaments,
+                pfcoil_variables.z_cs_current_filaments,
+                pfcoil_variables.c_cs_current_filaments,
+            ) = self.place_cs_filaments(
+                n_cs_current_filaments=pfcoil_variables.n_cs_current_filaments,
+                r_cs_middle=pfcoil_variables.r_cs_middle,
+                z_cs_inside_half=pfcoil_variables.dz_cs_full / 2,
+                c_cs_flat_top_end=c_cs_flat_top_end,
+                f_j_cs_start_pulse_end_flat_top=pfcoil_variables.f_j_cs_start_pulse_end_flat_top,
+                nfxf=pfcoil_variables.nfxf,
+            )
 
         # Scale PF coil locations
         signn[0] = 1.0e0
@@ -1073,6 +1061,70 @@ class PFCoil:
         pfcoil_variables.c_pf_coil_turn[
             pfcoil_variables.n_pf_cs_plasma_circuits - 1, 5
         ] = 0.0e0
+
+    def place_cs_filaments(
+        self,
+        n_cs_current_filaments: int,
+        r_cs_middle: float,
+        z_cs_inside_half: float,
+        c_cs_flat_top_end: float,
+        f_j_cs_start_pulse_end_flat_top: float,
+        nfxf: int,
+    ):
+        """
+        Places central solenoid (CS) filaments and assigns their positions and currents.
+
+        This function calculates the radial (R) and vertical (Z) positions, as well as the current values,
+        for a set of CS filaments based on the provided parameters. Each filament is placed symmetrically
+        about the midplane, and currents are assigned according to the flat-top end current and scaling factors.
+
+        :param n_cs_current_filaments: Number of CS current filaments to place (per side).
+        :type n_cs_current_filaments: int
+        :param r_cs_middle: Radial coordinate of the middle of the CS.
+        :type r_cs_middle: float
+        :param z_cs_inside_half: Half-height of the CS in the vertical (Z) direction.
+        :type z_cs_inside_half: float
+        :param c_cs_flat_top_end: Flat-top end current for the CS.
+        :type c_cs_flat_top_end: float
+        :param f_j_cs_start_pulse_end_flat_top: Scaling factor for the CS current at the start of the pulse and flat-top end.
+        :type f_j_cs_start_pulse_end_flat_top: float
+        :param nfxf: Number of flux loops or scaling factor for current distribution.
+        :type nfxf: int
+
+        :returns: Tuple containing:
+            - r_cs_current_filaments (list of float): Radial positions of the CS filaments.
+            - z_cs_current_filaments (list of float): Vertical positions of the CS filaments.
+            - c_cs_current_filaments (list of float): Current values assigned to each CS filament.
+        :rtype: tuple[list[float], list[float], list[float]]
+        """
+        r_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+        z_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+        c_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+
+        for filament in range(n_cs_current_filaments):
+            # Set the R coordinate of the filaments
+            r_cs_current_filaments[filament] = r_cs_middle
+            r_cs_current_filaments[filament + n_cs_current_filaments] = (
+                r_cs_current_filaments[filament]
+            )
+
+            # Set the Z cordinate of the filaments
+            z_cs_current_filaments[filament] = (
+                z_cs_inside_half / n_cs_current_filaments * ((filament + 1) - 0.5e0)
+            )
+            z_cs_current_filaments[
+                filament + n_cs_current_filaments
+            ] = -z_cs_current_filaments[filament]
+
+            # Assign currents to the filaments
+            c_cs_current_filaments[filament] = (
+                -c_cs_flat_top_end / nfxf * f_j_cs_start_pulse_end_flat_top
+            )
+            c_cs_current_filaments[filament + n_cs_current_filaments] = (
+                c_cs_current_filaments[filament]
+            )
+
+        return r_cs_current_filaments, z_cs_current_filaments, c_cs_current_filaments
 
     def place_pf_above_cs(
         self,
