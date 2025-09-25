@@ -170,7 +170,7 @@ class PFCoil:
             pfcoil_variables.nfxf = 0
             ioheof = 0.0e0
         else:
-            pfcoil_variables.nfxf = 2 * pfcoil_variables.nfxfh
+            pfcoil_variables.nfxf = 2 * pfcoil_variables.n_cs_current_filaments
 
             # total Central Solenoid current at EOF
             ioheof = (
@@ -190,26 +190,26 @@ class PFCoil:
 
             # Symmetric up/down Central Solenoid : Find (R,Z) and current of each filament at BOP
 
-            for nng in range(pfcoil_variables.nfxfh):
+            for nng in range(pfcoil_variables.n_cs_current_filaments):
                 pfcoil_variables.rfxf[nng] = pfcoil_variables.r_cs_middle
-                pfcoil_variables.rfxf[nng + pfcoil_variables.nfxfh] = (
+                pfcoil_variables.rfxf[nng + pfcoil_variables.n_cs_current_filaments] = (
                     pfcoil_variables.rfxf[nng]
                 )
                 pfcoil_variables.zfxf[nng] = (
                     bv.z_tf_inside_half
                     * pfcoil_variables.f_z_cs_tf_internal
-                    / pfcoil_variables.nfxfh
+                    / pfcoil_variables.n_cs_current_filaments
                     * ((nng + 1) - 0.5e0)
                 )
                 pfcoil_variables.zfxf[
-                    nng + pfcoil_variables.nfxfh
+                    nng + pfcoil_variables.n_cs_current_filaments
                 ] = -pfcoil_variables.zfxf[nng]
                 pfcoil_variables.cfxf[nng] = (
                     -ioheof
                     / pfcoil_variables.nfxf
                     * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
                 )
-                pfcoil_variables.cfxf[nng + pfcoil_variables.nfxfh] = (
+                pfcoil_variables.cfxf[nng + pfcoil_variables.n_cs_current_filaments] = (
                     pfcoil_variables.cfxf[nng]
                 )
 

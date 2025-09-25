@@ -281,7 +281,7 @@ n_pf_coils_in_group: list[float] = None
 """number of PF coils in group j"""
 
 
-nfxfh: int = None
+n_cs_current_filaments: int = None
 """number of filaments the top and bottom of the central solenoid should be broken
 into during scaling (5 - 10 is good)
 """
@@ -642,7 +642,7 @@ def init_pfcoil_variables():
     global jcableoh_eof
     global n_pf_cs_plasma_circuits
     global n_pf_coils_in_group
-    global nfxfh
+    global n_cs_current_filaments
     global n_pf_coil_groups
     global n_cs_pf_coils
     global f_z_cs_tf_internal
@@ -744,7 +744,7 @@ def init_pfcoil_variables():
     jcableoh_eof = 0.0
     n_pf_cs_plasma_circuits = 0
     n_pf_coils_in_group = np.array([1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-    nfxfh = 7
+    n_cs_current_filaments = 7
     n_pf_coil_groups = 3
     n_cs_pf_coils = 0
     f_z_cs_tf_internal = 0.71
