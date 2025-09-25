@@ -4203,8 +4203,8 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "Vertical field at plasma (T)",
-                    "(b_plasma_vertical)",
-                    physics_variables.b_plasma_vertical,
+                    "(b_plasma_vertical_required)",
+                    physics_variables.b_plasma_vertical_required,
                     "OP ",
                 )
 
