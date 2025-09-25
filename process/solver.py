@@ -218,7 +218,9 @@ class Vmcon(_Solver):
                 qsp_options={"eps_rel": 1e-1, "adaptive_rho_interval": 25},
                 initial_B=bb,
                 callback=_solver_callback,
-                additional_convergence=_ineq_cons_satisfied,
+                additional_convergence=_ineq_cons_satisfied
+                if numerics.force_vmcon_inequality_satisfication
+                else None,
             )
         except VMCONConvergenceException as e:
             if isinstance(e, LineSearchConvergenceException):
