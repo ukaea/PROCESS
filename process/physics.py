@@ -8561,3 +8561,36 @@ def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
+
+
+def calculate_debye_length(
+    temp_plasma_electron_kev: float,
+    nd_plasma_electron: float,
+) -> float:
+    """
+    Calculate the Debye length for a plasma.
+
+    :param temp_plasma_electron_kev: Electron temperature in keV.
+    :type temp_plasma_electron_kev: float
+    :param nd_plasma_electron: Electron number density (/m^3).
+    :type nd_plasma_electron: float
+
+    :returns: Debye length in meters.
+    :rtype: float
+    """
+    return (
+        (constants.EPSILON0 * temp_plasma_electron_kev)
+        / (nd_plasma_electron * constants.ELECTRON_CHARGE**2)
+    ) ** 0.5
+
+
+def calculate_debye_length_profile(
+    temp_plasma_electron_profile_kev: np.ndarray,
+    nd_plasma_electron_profile: np.ndarray,
+) -> np.ndarray:
+    """
+    Calculate the Debye length profile for a plasma.
+    """
+    return calculate_debye_length(
+        temp_plasma_electron_profile_kev, nd_plasma_electron_profile
+    )
