@@ -88,7 +88,7 @@ class StgeomParam(NamedTuple):
 
     a_plasma_poloidal: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
     stella_config_vol_plasma: Any = None
 
@@ -118,7 +118,7 @@ class StgeomParam(NamedTuple):
             a_plasma_surface_outboard=0,
             vol_plasma=0,
             a_plasma_poloidal=0,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
@@ -136,7 +136,7 @@ class StgeomParam(NamedTuple):
             a_plasma_surface_outboard=962.68206568287667,
             vol_plasma=1385.2745877380669,
             a_plasma_poloidal=10.001590778710231,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             stella_config_vol_plasma=1422.6300000000001,
             stella_config_plasma_surface=1960,
             f_r=0.99099099099099097,
@@ -183,7 +183,11 @@ def test_stgeom(stgeomparam, monkeypatch, stellarator):
         physics_variables, "a_plasma_poloidal", stgeomparam.a_plasma_poloidal
     )
 
-    monkeypatch.setattr(physics_variables, "bt", stgeomparam.bt)
+    monkeypatch.setattr(
+        physics_variables,
+        "b_plasma_toroidal_on_axis",
+        stgeomparam.b_plasma_toroidal_on_axis,
+    )
 
     monkeypatch.setattr(
         stellarator_configuration,
@@ -2615,13 +2619,13 @@ def test_intersect(intersectparam, stellarator):
 
 
 class StdlimParam(NamedTuple):
-    dene: Any = None
+    nd_plasma_electrons_vol_avg: Any = None
 
     nd_electron_line: Any = None
 
     dnelimt: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
     powht: Any = None
 
@@ -2638,10 +2642,10 @@ class StdlimParam(NamedTuple):
     "stdlimparam",
     (
         StdlimParam(
-            dene=2.0914e20,
+            nd_plasma_electrons_vol_avg=2.0914e20,
             nd_electron_line=2.357822619799476e20,
             dnelimt=0,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             powht=432.20449197454559,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -2649,10 +2653,10 @@ class StdlimParam(NamedTuple):
             expected_dlimit=1.2918765671497731e20,
         ),
         StdlimParam(
-            dene=2.0914e20,
+            nd_plasma_electrons_vol_avg=2.0914e20,
             nd_electron_line=2.357822619799476e20,
             dnelimt=1.2918765671497731e20,
-            bt=5.5,
+            b_plasma_toroidal_on_axis=5.5,
             powht=431.98698920075435,
             rmajor=22,
             rminor=1.7842660178426601,
@@ -2674,7 +2678,11 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "dene", stdlimparam.dene)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electrons_vol_avg",
+        stdlimparam.nd_plasma_electrons_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables, "nd_electron_line", stdlimparam.nd_electron_line
@@ -2683,7 +2691,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     monkeypatch.setattr(physics_variables, "dnelimt", stdlimparam.dnelimt)
 
     dlimit = stellarator.stdlim(
-        bt=stdlimparam.bt,
+        b_plasma_toroidal_on_axis=stdlimparam.b_plasma_toroidal_on_axis,
         powht=stdlimparam.powht,
         rmajor=stdlimparam.rmajor,
         rminor=stdlimparam.rminor,
@@ -2695,7 +2703,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
 
 
 class StdlimEcrhParam(NamedTuple):
-    ipedestal: Any = None
+    i_plasma_pedestal: Any = None
 
     bt_input: Any = None
 
@@ -2710,7 +2718,7 @@ class StdlimEcrhParam(NamedTuple):
     "stdlimecrhparam",
     (
         StdlimEcrhParam(
-            ipedestal=0,
+            i_plasma_pedestal=0,
             bt_input=6.9100000000000001,
             gyro_frequency_max=400000000000,
             expected_dlimit_ecrh=4.6472737339514113e20,
@@ -2731,7 +2739,9 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "ipedestal", stdlimecrhparam.ipedestal)
+    monkeypatch.setattr(
+        physics_variables, "i_plasma_pedestal", stdlimecrhparam.i_plasma_pedestal
+    )
 
     dlimit_ecrh, bt_max = stellarator.stdlim_ecrh(
         bt_input=stdlimecrhparam.bt_input,
@@ -2743,9 +2753,9 @@ def test_stdlim_ecrh(stdlimecrhparam, monkeypatch, stellarator):
 
 
 class StCalcEffChiParam(NamedTuple):
-    te0: Any = None
+    temp_plasma_electron_on_axis_kev: Any = None
 
-    ne0: Any = None
+    nd_plasma_electron_on_axis: Any = None
 
     f_p_alpha_plasma_deposited: Any = None
 
@@ -2776,8 +2786,8 @@ class StCalcEffChiParam(NamedTuple):
     "stcalceffchiparam",
     (
         StCalcEffChiParam(
-            te0=19.108573496973477,
-            ne0=3.4479000000000007e20,
+            temp_plasma_electron_on_axis_kev=19.108573496973477,
+            nd_plasma_electron_on_axis=3.4479000000000007e20,
             f_p_alpha_plasma_deposited=0.95000000000000007,
             pden_alpha_total_mw=1.2629524018077414,
             pden_plasma_core_rad_mw=0.10762698429338043,
@@ -2793,8 +2803,8 @@ class StCalcEffChiParam(NamedTuple):
             # expected_output=0.26206561772729992, used old e_
         ),
         StCalcEffChiParam(
-            te0=17.5,
-            ne0=3.4479000000000007e20,
+            temp_plasma_electron_on_axis_kev=17.5,
+            nd_plasma_electron_on_axis=3.4479000000000007e20,
             f_p_alpha_plasma_deposited=0.95000000000000007,
             pden_alpha_total_mw=1.0570658694225301,
             pden_plasma_core_rad_mw=0.1002475669217598,
@@ -2824,9 +2834,17 @@ def test_st_calc_eff_chi(stcalceffchiparam, monkeypatch, stellarator):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(physics_variables, "te0", stcalceffchiparam.te0)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_on_axis_kev",
+        stcalceffchiparam.temp_plasma_electron_on_axis_kev,
+    )
 
-    monkeypatch.setattr(physics_variables, "ne0", stcalceffchiparam.ne0)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electron_on_axis",
+        stcalceffchiparam.nd_plasma_electron_on_axis,
+    )
 
     monkeypatch.setattr(
         physics_variables,

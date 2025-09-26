@@ -59,7 +59,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 1. **Alpha Ash Portion Calculation**
 
-    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`dene`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
+    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`nd_plasma_electrons_vol_avg`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
         - `f_nd_alpha_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$
@@ -88,7 +88,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 3. **Beam Hot Ion Component**
 
-    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`dene`) and the beam ion to electron ratio (`f_nd_beam_electron`). If the plasma is ignited, set it to zero.
+    - Calculate the number density of beam ions (`nd_beam_ions`), using the electron density (`nd_plasma_electrons_vol_avg`) and the beam ion to electron ratio (`f_nd_beam_electron`). If the plasma is ignited, set it to zero.
         - `f_nd_beam_electron` can be set as an iteration variable (`ixc = 7`) or set directly.
 
     $$
@@ -151,7 +151,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     - Set global impurity fraction variables for other routines.
 
     $$
-    \mathtt{rncne} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \mathtt{rnone} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \mathtt{rnfene} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
+    \mathtt{f_nd_plasma_carbon_electron} = \frac{n_{\text{C}}}{n_{\text{e}}}, \quad \mathtt{f_nd_plasma_oxygen_electron} = \frac{n_{\text{O}}}{n_{\text{e}}} \quad \mathtt{f_nd_plasma_iron_argon_electron} = \frac{n_{\text{Fe}}+ n_{\text{Ar}}}{n_{\text{e}}}
     $$
 
     The variable above are set as global physics variables to be used in the [`sigbeam()`](../eng-models/heating_and_current_drive/NBI/nbi_overview.md#beam-stopping-cross-section--sigbeam) routine, which calculates the beam stopping cross-section.
