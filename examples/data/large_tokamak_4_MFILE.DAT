@@ -361,7 +361,7 @@
  Limit_on_thermal_beta___________________________________________________ (betalim)_____________________      5.7842E-02    
  Plasma_thermal_energy_(J)_______________________________________________ ______________________________      9.5431E+08 OP 
  Total_plasma_internal_energy_(J)________________________________________ (e_plasma_beta)      1.0913E+09 OP 
- Electron_temperature_(keV)______________________________________________ (temp_plasma_electron_vol_avg_keV)__________________________      1.2489E+01 ITV
+ Electron_temperature_(keV)______________________________________________ (temp_plasma_electron_vol_avg_kev)__________________________      1.2489E+01 ITV
  Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.5758E+01    
  Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2489E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (temp_plasma_ion_on_axis_kev)_________________________      2.5758E+01    
@@ -1397,10 +1397,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* temp_plasma_electron_vol_avg_keV [keV]
+* temp_plasma_electron_vol_avg_kev [keV]
 ixc = 4
 boundu(4) = 100.0
-temp_plasma_electron_vol_avg_keV = 12.0
+temp_plasma_electron_vol_avg_kev = 12.0
 
 * h factor
 ixc = 10

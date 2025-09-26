@@ -214,7 +214,7 @@ class FusionReactionRate:
             bosch_hale_reactivity(
                 (
                     physics_variables.temp_plasma_ion_vol_avg_kev
-                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
                 )
                 * self.plasma_profile.teprofile.profile_y,
                 dt,
@@ -314,7 +314,7 @@ class FusionReactionRate:
             bosch_hale_reactivity(
                 (
                     physics_variables.temp_plasma_ion_vol_avg_kev
-                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
                 )
                 * self.plasma_profile.teprofile.profile_y,
                 dhe3,
@@ -405,7 +405,7 @@ class FusionReactionRate:
             bosch_hale_reactivity(
                 (
                     physics_variables.temp_plasma_ion_vol_avg_kev
-                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
                 )
                 * self.plasma_profile.teprofile.profile_y,
                 dd1,
@@ -499,7 +499,7 @@ class FusionReactionRate:
             bosch_hale_reactivity(
                 (
                     physics_variables.temp_plasma_ion_vol_avg_kev
-                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
                 )
                 * self.plasma_profile.teprofile.profile_y,
                 dd2,
@@ -670,7 +670,7 @@ def fusion_rate_integral(
     # profile by the ratio of the volume averaged ion to electron temperature
     ion_temperature_profile = (
         physics_variables.temp_plasma_ion_vol_avg_kev
-        / physics_variables.temp_plasma_electron_vol_avg_keV
+        / physics_variables.temp_plasma_electron_vol_avg_kev
     ) * plasma_profile.teprofile.profile_y
 
     # Number of fusion reactions per unit volume per particle volume density (m^3/s)

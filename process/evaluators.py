@@ -65,7 +65,7 @@ class Evaluators:
             logger.debug(f"{numerics.nviter = }")
             logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
             logger.debug(f"{(numerics.nviter % 2) - 1 = }")
-            logger.debug(f"{pv.temp_plasma_electron_vol_avg_keV = }")
+            logger.debug(f"{pv.temp_plasma_electron_vol_avg_kev = }")
             logger.debug(f"{cv.coe = }")
             logger.debug(f"{pv.rmajor = }")
             logger.debug(f"{pv.p_fusion_total_mw = }")
