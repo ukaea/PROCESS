@@ -4434,6 +4434,12 @@ class Physics:
         po.osubhd(self.outfile, "Temperature and Density (volume averaged) :")
         po.ovarrf(
             self.outfile,
+            "Number of radial points in plasma profiles",
+            "(n_plasma_profile_elements)",
+            physics_variables.n_plasma_profile_elements,
+        )
+        po.ovarrf(
+            self.outfile,
             "Volume averaged electron temperature (keV)",
             "(te)",
             physics_variables.te,
@@ -4501,6 +4507,28 @@ class Physics:
             physics_variables.vol_avg_pressure,
             "OP ",
         )
+
+        for i in range(len(physics_variables.pres_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Electron pressure at point {i}",
+                f"pres_plasma_electron_profile{i}",
+                physics_variables.pres_plasma_electron_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_ion_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Ion pressure at point {i}",
+                f"pres_plasma_ion_total_profile{i}",
+                physics_variables.pres_plasma_ion_total_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_fuel_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Fuel pressure at point {i}",
+                f"pres_plasma_fuel_profile{i}",
+                physics_variables.pres_plasma_fuel_profile[i],
+            )
 
         if stellarator_variables.istell == 0:
             po.ovarre(

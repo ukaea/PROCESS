@@ -806,10 +806,20 @@ m_s_limit: float = None
 p0: float = None
 """central total plasma pressure (Pa)"""
 
+pres_plasma_electron_profile: list[float] = None
+"""Profile of electron pressure in plasma (Pa)"""
+
+pres_plasma_ion_total_profile: list[float] = None
+"""Profile of ion pressure in plasma (Pa)"""
+
+pres_plasma_fuel_profile: list[float] = None
+"""Profile of fuel pressure in plasma (Pa)"""
 
 j_plasma_0: float = None
 """Central plasma current density (A/m2)"""
 
+n_plasma_profile_elements: int = None
+"""Number of elements in plasma profile"""
 
 vol_avg_pressure: float = None
 """Volume averaged plasma pressure (Pa)"""
@@ -1480,7 +1490,11 @@ def init_physics_variables():
     global ni0
     global m_s_limit
     global p0
+    global pres_plasma_electron_profile
+    global pres_plasma_ion_total_profile
+    global pres_plasma_fuel_profile
     global j_plasma_0
+    global n_plasma_profile_elements
     global f_dd_branching_trit
     global pden_plasma_alpha_mw
     global pden_alpha_total_mw
@@ -1728,7 +1742,11 @@ def init_physics_variables():
     ni0 = 0.0
     m_s_limit = 0.3
     p0 = 0.0
+    pres_plasma_electron_profile = []
+    pres_plasma_ion_total_profile = []
+    pres_plasma_fuel_profile = []
     j_plasma_0 = 0.0
+    n_plasma_profile_elements = 0
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
     pden_alpha_total_mw = 0.0
