@@ -10270,6 +10270,22 @@ def plot_plasma_debroglie_profile(axis, mfile_data, scan):
     )
 
 
+def plot_plasma_frequencies_profile(axis, mfile_data, scan):
+    """Plot the plasma frequencies profile on the given axis."""
+    freq_plasma_electron_profile = [
+        mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_profile)),
+        freq_plasma_electron_profile,
+        color="cyan",
+        linestyle="-",
+        label=r"$\omega_{pe} electron$",
+    )
+
+
 def main_plot(
     fig1,
     fig2,
@@ -10503,6 +10519,16 @@ def main_plot(
     plot_36.set_xlim([0, 1.025])
     plot_36.minorticks_on()
     plot_36.legend()
+
+    plot_37 = fig19.add_subplot(224)
+    plot_plasma_frequencies_profile(plot_37, m_file_data, scan)
+    plot_37.set_ylabel("Frequency [Hz]")
+    plot_37.set_xlabel("$\\rho \\ [r/a]$")
+    plot_37.set_yscale("log")
+    plot_37.grid(True, which="both", linestyle="--", alpha=0.5)
+    plot_37.set_xlim([0, 1.025])
+    plot_37.minorticks_on()
+    plot_37.legend()
 
 
 def main(args=None):

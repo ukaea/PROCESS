@@ -2784,6 +2784,12 @@ class Physics:
             )
         )
 
+        physics_variables.freq_plasma_electron_profile = calculate_plasma_frequency(
+            nd_particle=self.plasma_profile.neprofile.profile_y,
+            m_particle=constants.ELECTRON_MASS,
+            Z_particle=1.0,
+        )
+
         physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
             calculate_coulomb_log_from_impact(
                 impact_param_max=physics_variables.debye_length_profile[i],
@@ -5061,6 +5067,14 @@ class Physics:
                 f"plasma_coulomb_log_electron_electron_profile{i}",
                 physics_variables.plasma_coulomb_log_electron_electron_profile[i],
             )
+        for i in range(len(physics_variables.freq_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron frequency at point {i}",
+                f"freq_plasma_electron_profile{i}",
+                physics_variables.freq_plasma_electron_profile[i],
+            )
+
         po.ovarre(
             self.outfile,
             "D-T fusion power: plasma (MW)",
