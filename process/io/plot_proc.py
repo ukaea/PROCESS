@@ -10222,9 +10222,18 @@ def plot_debye_length_profile(axis, mfile_data, scan):
 
 def plot_plasma_particle_velocities(axis, mfile_data, scan):
     """Plot the plasma particle velocities on the given axis."""
-    v_thermal_e_profile = [
-        mfile_data.data[f"v_thermal_e_profile{i}"].get_scan(scan) for i in range(500)
+    vel_plasma_electron_profile = [
+        mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
     ]
+
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_electron_profile)),
+        vel_plasma_electron_profile,
+        color="orange",
+        linestyle="-",
+        label=r"$v_{e}$",
+    )
 
 
 def main_plot(
@@ -10440,6 +10449,15 @@ def main_plot(
     plot_34.grid(True, which="both", linestyle="--", alpha=0.5)
     plot_34.set_xlim([0, 1.025])
     plot_34.minorticks_on()
+
+    plot_35 = fig19.add_subplot(222)
+    plot_plasma_particle_velocities(plot_35, m_file_data, scan)
+    plot_35.set_ylabel("Velocity [m/s]")
+    plot_35.set_xlabel("$\\rho \\ [r/a]$")
+    plot_35.set_yscale("log")
+    plot_35.grid(True, which="both", linestyle="--", alpha=0.5)
+    plot_35.set_xlim([0, 1.025])
+    plot_35.minorticks_on()
 
 
 def main(args=None):

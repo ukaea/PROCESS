@@ -5012,6 +5012,13 @@ class Physics:
                 f"debye_length_profile{i}",
                 physics_variables.debye_length_profile[i],
             )
+        for i in range(len(physics_variables.vel_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Electron plasma velocity at point {i}",
+                f"vel_plasma_electron_profile{i}",
+                physics_variables.vel_plasma_electron_profile[i],
+            )
         po.ovarre(
             self.outfile,
             "D-T fusion power: plasma (MW)",
@@ -8626,7 +8633,6 @@ def calculate_relativistic_particle_speed(e_kinetic: float, mass: float) -> floa
     :rtype: float
     """
     return (
-        constants.SPEED_OF_LIGHT
-        * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_OF_LIGHT**2)) + 1) ** 2))
-        ** 0.5
+        constants.SPEED_LIGHT
+        * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_LIGHT**2)) + 1) ** 2)) ** 0.5
     )

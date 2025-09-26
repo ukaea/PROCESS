@@ -341,6 +341,9 @@ dlamie: float = None
 debye_length_profile: list[float] = None
 """Debye length profile (m)"""
 
+vel_plasma_electron_profile: list[float] = None
+"""electron plasma velocity profile (m/s)"""
+
 
 dlimit: list[float] = None
 """density limit (/m3) as calculated using various models"""
@@ -1398,6 +1401,7 @@ def init_physics_variables():
     global dlamee
     global dlamie
     global debye_length_profile
+    global vel_plasma_electron_profile
     global dlimit
     global nd_alphas
     global nd_beam_ions
@@ -1647,6 +1651,7 @@ def init_physics_variables():
     dlamee = 0.0
     dlamie = 0.0
     debye_length_profile = []
+    vel_plasma_electron_profile = []
     dlimit = np.zeros(8, dtype=np.float64)
     nd_alphas = 0.0
     nd_beam_ions = 0.0
