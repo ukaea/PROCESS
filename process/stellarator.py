@@ -5409,12 +5409,12 @@ class Neoclassics:
         )
         densT = (
             (1 - physics_variables.f_deuterium)
-            * physics_variables.ni0
+            * physics_variables.nd_plasma_ions_on_axis_kev
             * (1 - rho**2) ** physics_variables.alphan
         )
         densD = (
             physics_variables.f_deuterium
-            * physics_variables.ni0
+            * physics_variables.nd_plasma_ions_on_axis_kev
             * (1 - rho**2) ** physics_variables.alphan
         )
         densa = (
@@ -5480,7 +5480,7 @@ class Neoclassics:
             / physics_variables.rminor
             * rho
             * (1 - physics_variables.f_deuterium)
-            * physics_variables.ni0
+            * physics_variables.nd_plasma_ions_on_axis_kev
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
         )
@@ -5490,7 +5490,7 @@ class Neoclassics:
             / physics_variables.rminor
             * rho
             * physics_variables.f_deuterium
-            * physics_variables.ni0
+            * physics_variables.nd_plasma_ions_on_axis_kev
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
         )
