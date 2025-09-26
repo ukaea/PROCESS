@@ -385,7 +385,7 @@ $$\begin{aligned}
 
 $$\begin{aligned}
 \mathtt{nd_plasma_electron_on_axis} = n_{\text{e}} \times (\alpha_n+1) \\
-\mathtt{ni0} = \mathtt{nd_ions_total} \times (\alpha_n+1)
+\mathtt{nd_plasma_ions_on_axis_kev} = \mathtt{nd_ions_total} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----
@@ -395,7 +395,7 @@ $$\begin{aligned}
 The central plasma pressure is calculated from the ideal gas law.
 
 $$
-p_0 = (\mathtt{nd_plasma_electron_on_axis} \times \mathtt{temp_plasma_electron_on_axis_kev}+\mathtt{ni0}\times \mathtt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
+p_0 = (\mathtt{nd_plasma_electron_on_axis} \times \mathtt{temp_plasma_electron_on_axis_kev}+\mathtt{nd_plasma_ions_on_axis_kev}\times \mathtt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
 $$
 
 With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.

@@ -23,7 +23,7 @@ class InitNeoclassicsParam(NamedTuple):
     alphan: Any = None
     alphat: Any = None
     temp_plasma_ion_on_axis_kev: Any = None
-    ni0: Any = None
+    nd_plasma_ions_on_axis_kev: Any = None
     f_deuterium: Any = None
     nd_alphas: Any = None
     rminor: Any = None
@@ -72,7 +72,7 @@ class InitNeoclassicsParam(NamedTuple):
             alphan=0.35000000000000003,
             alphat=1.2,
             temp_plasma_ion_on_axis_kev=12.579710000000002,
-            ni0=2.3930858160000005e20,
+            nd_plasma_ions_on_axis_kev=2.3930858160000005e20,
             f_deuterium=0.5,
             nd_alphas=2.9820384000000004e19,
             rminor=1.7993820274145451,
@@ -990,7 +990,11 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
         "temp_plasma_ion_on_axis_kev",
         initneoclassicsparam.temp_plasma_ion_on_axis_kev,
     )
-    monkeypatch.setattr(physics_variables, "ni0", initneoclassicsparam.ni0)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_ions_on_axis_kev",
+        initneoclassicsparam.nd_plasma_ions_on_axis_kev,
+    )
     monkeypatch.setattr(
         physics_variables, "f_deuterium", initneoclassicsparam.f_deuterium
     )
