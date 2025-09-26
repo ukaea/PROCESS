@@ -2777,6 +2777,13 @@ class Physics:
             )
         )
 
+        physics_variables.len_plasma_electron_debroglie_profile = (
+            calculate_debroglie_wavelength(
+                mass=constants.ELECTRON_MASS,
+                velocity=physics_variables.vel_plasma_electron_profile,
+            )
+        )
+
         physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
             calculate_coulomb_log_from_impact(
                 impact_param_max=physics_variables.debye_length_profile[i],
@@ -5037,6 +5044,13 @@ class Physics:
                 f"Electron plasma velocity at point {i}",
                 f"vel_plasma_electron_profile{i}",
                 physics_variables.vel_plasma_electron_profile[i],
+            )
+        for i in range(len(physics_variables.len_plasma_electron_debroglie_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Electron de Broglie wavelength at point {i}",
+                f"len_plasma_electron_debroglie_profile{i}",
+                physics_variables.len_plasma_electron_debroglie_profile[i],
             )
         for i in range(
             len(physics_variables.plasma_coulomb_log_electron_electron_profile)

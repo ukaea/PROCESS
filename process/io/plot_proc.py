@@ -10216,7 +10216,7 @@ def plot_debye_length_profile(axis, mfile_data, scan):
         debye_length_profile,
         color="purple",
         linestyle="-",
-        label=r"$\lambda_{Debye}$",
+        label=r"$\lambda_{Debye} electron$",
     )
 
 
@@ -10251,6 +10251,22 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         color="blue",
         linestyle="-",
         label=r"$ln \Lambda_{ee}$",
+    )
+
+
+def plot_plasma_debroglie_profile(axis, mfile_data, scan):
+    """Plot the plasma de Broglie wavelength profile on the given axis."""
+    len_plasma_electron_debroglie_profile = [
+        mfile_data.data[f"len_plasma_electron_debroglie_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_electron_debroglie_profile)),
+        len_plasma_electron_debroglie_profile,
+        color="green",
+        linestyle="-",
+        label=r"$\lambda_{dB} electron$",
     )
 
 
@@ -10461,12 +10477,14 @@ def main_plot(
 
     plot_34 = fig19.add_subplot(221)
     plot_debye_length_profile(plot_34, m_file_data, scan)
-    plot_34.set_ylabel("Debye Length [m]")
+    plot_plasma_debroglie_profile(plot_34, m_file_data, scan)
+    plot_34.set_ylabel("Length [m]")
     plot_34.set_xlabel("$\\rho \\ [r/a]$")
     plot_34.set_yscale("log")
     plot_34.grid(True, which="both", linestyle="--", alpha=0.5)
     plot_34.set_xlim([0, 1.025])
     plot_34.minorticks_on()
+    plot_34.legend()
 
     plot_35 = fig19.add_subplot(222)
     plot_plasma_particle_velocities(plot_35, m_file_data, scan)
