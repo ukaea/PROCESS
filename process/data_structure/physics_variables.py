@@ -338,6 +338,9 @@ dlamee: float = None
 dlamie: float = None
 """ion-electron coulomb logarithm"""
 
+debye_length_profile: list[float] = None
+"""Debye length profile (m)"""
+
 
 dlimit: list[float] = None
 """density limit (/m3) as calculated using various models"""
@@ -1394,6 +1397,7 @@ def init_physics_variables():
     global nd_fuel_ions
     global dlamee
     global dlamie
+    global debye_length_profile
     global dlimit
     global nd_alphas
     global nd_beam_ions
@@ -1642,6 +1646,7 @@ def init_physics_variables():
     nd_fuel_ions = 0.0
     dlamee = 0.0
     dlamie = 0.0
+    debye_length_profile = []
     dlimit = np.zeros(8, dtype=np.float64)
     nd_alphas = 0.0
     nd_beam_ions = 0.0
