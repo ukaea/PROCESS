@@ -429,6 +429,22 @@ OBS_VARS = {
     "rpf1": "dr_pf_cs_middle_offset",
     "i_sup_pf_shape": "i_r_pf_outside_tf_placement",
     "nfxfh": "n_cs_current_filaments",
+    "bt": "b_plasma_toroidal_on_axis",
+    "dene": "nd_plasma_electrons_vol_avg",
+    "fgwped": "f_nd_plasma_pedestal_greenwald",
+    "fgwsep": "f_nd_plasma_separatrix_greenwald",
+    "neped": "nd_plasma_pedestal_electrons",
+    "nesep": "nd_plasma_separatrix_electron",
+    "rhopedn": "radius_plasma_pedestal_density_norm",
+    "rhopedt": "radius_plasma_pedestal_temp_norm",
+    "taumax": "t_plasma_energy_confinement_max",
+    "te": "temp_plasma_electron_vol_avg_kev",
+    "teped": "temp_plasma_pedestal_kev",
+    "tesep": "temp_plasma_separatrix_kev",
+    "ti": "temp_plasma_ion_vol_avg_kev",
+    "tratio": "f_temp_plasma_ion_electron",
+    "ipedestal": "i_plasma_pedestal",
+    "iwalld": "i_pflux_fw_neutron",
 }
 
 OBS_VARS_HELP = {
