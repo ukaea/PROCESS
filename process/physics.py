@@ -2764,6 +2764,11 @@ class Physics:
                 ),
             )
 
+        physics_variables.debye_length_profile = calculate_debye_length(
+            temp_plasma_electron_kev=self.plasma_profile.teprofile.profile_y,
+            nd_plasma_electron=self.plasma_profile.neprofile.profile_y,
+        )
+
     @staticmethod
     def calculate_current_profile_index_wesson(qstar: float, q0: float) -> float:
         """
@@ -4991,6 +4996,13 @@ class Physics:
                 f"D-3He fusion rate at point {i}",
                 f"fusrat_plasma_dhe3_profile{i}",
                 physics_variables.fusrat_plasma_dhe3_profile[i],
+            )
+        for i in range(len(physics_variables.debye_length_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Debye length at point {i}",
+                f"debye_length_profile{i}",
+                physics_variables.debye_length_profile[i],
             )
         po.ovarre(
             self.outfile,
@@ -8579,18 +8591,6 @@ def calculate_debye_length(
     :rtype: float
     """
     return (
-        (constants.EPSILON0 * temp_plasma_electron_kev)
+        (constants.EPSILON0 * temp_plasma_electron_kev * constants.KILOELECTRON_VOLT)
         / (nd_plasma_electron * constants.ELECTRON_CHARGE**2)
     ) ** 0.5
-
-
-def calculate_debye_length_profile(
-    temp_plasma_electron_profile_kev: np.ndarray,
-    nd_plasma_electron_profile: np.ndarray,
-) -> np.ndarray:
-    """
-    Calculate the Debye length profile for a plasma.
-    """
-    return calculate_debye_length(
-        temp_plasma_electron_profile_kev, nd_plasma_electron_profile
-    )
