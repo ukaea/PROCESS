@@ -10220,6 +10220,13 @@ def plot_debye_length_profile(axis, mfile_data, scan):
     )
 
 
+def plot_plasma_particle_velocities(axis, mfile_data, scan):
+    """Plot the plasma particle velocities on the given axis."""
+    v_thermal_e_profile = [
+        mfile_data.data[f"v_thermal_e_profile{i}"].get_scan(scan) for i in range(500)
+    ]
+
+
 def main_plot(
     fig1,
     fig2,

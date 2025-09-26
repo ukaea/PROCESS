@@ -2769,6 +2769,14 @@ class Physics:
             nd_plasma_electron=self.plasma_profile.neprofile.profile_y,
         )
 
+        physics_variables.vel_plasma_electron_profile = (
+            calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.ELECTRON_MASS,
+            )
+        )
+
     @staticmethod
     def calculate_current_profile_index_wesson(qstar: float, q0: float) -> float:
         """
@@ -8594,3 +8602,31 @@ def calculate_debye_length(
         (constants.EPSILON0 * temp_plasma_electron_kev * constants.KILOELECTRON_VOLT)
         / (nd_plasma_electron * constants.ELECTRON_CHARGE**2)
     ) ** 0.5
+
+
+def calculate_lorentz_factor(velocity: float) -> float:
+    """
+    Calculate the Lorentz factor for a given velocity.
+    :param velocity: Velocity in m/s.
+    :type velocity: float
+    :returns: Lorentz factor (dimensionless).
+    :rtype: float
+    """
+    return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
+
+
+def calculate_relativistic_particle_speed(e_kinetic: float, mass: float) -> float:
+    """
+    Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
+    :param e_kinetic: Kinetic energy in Joules.
+    :type e_kinetic: float
+    :param mass: Mass of the particle in kg.
+    :type mass: float
+    :returns: Speed of the particle in m/s.
+    :rtype: float
+    """
+    return (
+        constants.SPEED_OF_LIGHT
+        * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_OF_LIGHT**2)) + 1) ** 2))
+        ** 0.5
+    )
