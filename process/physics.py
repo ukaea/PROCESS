@@ -2777,6 +2777,25 @@ class Physics:
             )
         )
 
+        physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
+            calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.debye_length_profile[i],
+                impact_param_min=max(
+                    calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
+                        * constants.KILOELECTRON_VOLT,
+                    ),
+                    calculate_debroglie_wavelength(
+                        mass=constants.ELECTRON_MASS,
+                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.debye_length_profile))
+        ])
+
     @staticmethod
     def calculate_current_profile_index_wesson(qstar: float, q0: float) -> float:
         """
@@ -5018,6 +5037,15 @@ class Physics:
                 f"Electron plasma velocity at point {i}",
                 f"vel_plasma_electron_profile{i}",
                 physics_variables.vel_plasma_electron_profile[i],
+            )
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron Coulomb log at point {i}",
+                f"plasma_coulomb_log_electron_electron_profile{i}",
+                physics_variables.plasma_coulomb_log_electron_electron_profile[i],
             )
         po.ovarre(
             self.outfile,

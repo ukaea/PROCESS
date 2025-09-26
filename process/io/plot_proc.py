@@ -10236,6 +10236,24 @@ def plot_plasma_particle_velocities(axis, mfile_data, scan):
     )
 
 
+def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
+    """Plot the plasma coloumb logarithms on the given axis."""
+    plasma_coulomb_log_electron_electron_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(500)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
+        plasma_coulomb_log_electron_electron_profile,
+        color="green",
+        linestyle="-",
+        label=r"$\log \Lambda_{ee}$",
+    )
+
+
 def main_plot(
     fig1,
     fig2,
@@ -10458,6 +10476,9 @@ def main_plot(
     plot_35.grid(True, which="both", linestyle="--", alpha=0.5)
     plot_35.set_xlim([0, 1.025])
     plot_35.minorticks_on()
+
+    plot_36 = fig19.add_subplot(223)
+    plot_plasma_coloumb_logarithms(plot_36, m_file_data, scan)
 
 
 def main(args=None):

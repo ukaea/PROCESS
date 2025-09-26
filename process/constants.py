@@ -283,6 +283,9 @@ UMASS = 1.660538921e-27
 EPSILON0 = 8.85418781e-12
 """permittivity of free space [Farad/m]"""
 
+PLANCK_CONSTANT = 6.62607015e-34
+"""Planck's constant [J.s]"""
+
 CPH2O = 4180.0
 """specific heat capacity of water (J/kg/K)"""
 
