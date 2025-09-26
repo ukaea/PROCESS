@@ -182,8 +182,8 @@ class PlasmaProfile:
             physics_variables.nd_plasma_electrons_vol_avg
             * (1.0 + physics_variables.alphan)
         )
-        physics_variables.nd_plasma_ions_on_axis_kev = (
-            physics_variables.nd_ions_total * (1.0 + physics_variables.alphan)
+        physics_variables.nd_plasma_ions_on_axis = physics_variables.nd_ions_total * (
+            1.0 + physics_variables.alphan
         )
 
     def pedestal_parameterisation(self) -> None:
@@ -272,7 +272,7 @@ class PlasmaProfile:
             (
                 physics_variables.nd_plasma_electron_on_axis
                 * physics_variables.temp_plasma_electron_on_axis_kev
-                + physics_variables.nd_plasma_ions_on_axis_kev
+                + physics_variables.nd_plasma_ions_on_axis
                 * physics_variables.temp_plasma_ion_on_axis_kev
             )
             * 1.0e3
