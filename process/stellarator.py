@@ -3612,9 +3612,11 @@ class Stellarator:
         Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
         Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
         """
-        te_old = copy(physics_variables.te)
+        te_old = copy(physics_variables.temp_plasma_electron_vol_avg_keV)
         # Volume averaged physics_variables.te from te0_achievable
-        physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
+        physics_variables.temp_plasma_electron_vol_avg_keV = te0_available / (
+            1.0e0 + physics_variables.alphat
+        )
         ne0_max, bt_ecrh_max = self.stdlim_ecrh(
             gyro_frequency_max, physics_variables.b_plasma_toroidal_on_axis
         )
@@ -3643,7 +3645,7 @@ class Stellarator:
 
         # Reverse it and do it again because anything more efficiently isn't suitable with the current implementation
         # This is bad practice but seems to be necessary as of now:
-        physics_variables.te = te_old
+        physics_variables.temp_plasma_electron_vol_avg_keV = te_old
         physics_variables.nd_plasma_electrons_vol_avg = dene_old
         physics_variables.b_plasma_toroidal_on_axis = bt_old
 
@@ -4453,7 +4455,7 @@ class Stellarator:
             physics_variables.alphat,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
-            physics_variables.te,
+            physics_variables.temp_plasma_electron_vol_avg_keV,
             physics_variables.temp_plasma_ion_vol_avg_kev,
             physics_variables.zeffai,
         )
@@ -4657,7 +4659,7 @@ class Stellarator:
         ) = self.physics.phyaux(
             physics_variables.aspect,
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.te,
+            physics_variables.temp_plasma_electron_vol_avg_keV,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
@@ -5621,7 +5623,7 @@ class Neoclassics:
         """Calculates the collision frequency"""
         temp = (
             np.array([
-                physics_variables.te,
+                physics_variables.temp_plasma_electron_vol_avg_keV,
                 physics_variables.temp_plasma_ion_vol_avg_kev,
                 physics_variables.temp_plasma_ion_vol_avg_kev,
                 physics_variables.temp_plasma_ion_vol_avg_kev,

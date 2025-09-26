@@ -501,7 +501,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         bootstrapfractionsauterparam.nd_plasma_electrons_vol_avg,
     )
 
-    monkeypatch.setattr(physics_variables, "te", bootstrapfractionsauterparam.te)
+    monkeypatch.setattr(
+        physics_variables,
+        "temp_plasma_electron_vol_avg_keV",
+        bootstrapfractionsauterparam.te,
+    )
 
     monkeypatch.setattr(
         physics_variables, "rmajor", bootstrapfractionsauterparam.rmajor
@@ -1840,7 +1844,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "m_beam_amu", plasmacompositionparam.m_beam_amu
     )
 
-    monkeypatch.setattr(physics_variables, "te", plasmacompositionparam.te)
+    monkeypatch.setattr(
+        physics_variables, "temp_plasma_electron_vol_avg_keV", plasmacompositionparam.te
+    )
 
     monkeypatch.setattr(
         physics_variables,

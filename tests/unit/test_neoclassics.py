@@ -1006,7 +1006,9 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
         "b_plasma_toroidal_on_axis",
         initneoclassicsparam.b_plasma_toroidal_on_axis,
     )
-    monkeypatch.setattr(physics_variables, "te", initneoclassicsparam.te)
+    monkeypatch.setattr(
+        physics_variables, "temp_plasma_electron_vol_avg_keV", initneoclassicsparam.te
+    )
     monkeypatch.setattr(
         physics_variables, "temp_plasma_ion_vol_avg_kev", initneoclassicsparam.ti
     )

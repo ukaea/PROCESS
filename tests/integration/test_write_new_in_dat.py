@@ -20,7 +20,7 @@ def test_write_new_in_dat(temp_data, mfile_name):
     new_in_dat_path = temp_data / "new_IN.DAT"
     # Get final value of te and f_nd_impurity_electrons(13) optimisation parameters
     mfile = MFile(mfile_path)
-    te_exp = mfile.data["te"].get_scan(-1)
+    te_exp = mfile.data["temp_plasma_electron_vol_avg_keV"].get_scan(-1)
     fimp13_exp = mfile.data["f_nd_impurity_electrons(13)"].get_scan(-1)
 
     # Write new IN.DAT then inspect value in new input file
@@ -28,7 +28,7 @@ def test_write_new_in_dat(temp_data, mfile_name):
         args=["-f", str(mfile_path), "-i", str(in_dat_path), "-o", str(new_in_dat_path)]
     )
     in_dat = InDat(str(new_in_dat_path))
-    te_obs = in_dat.data["te"].get_value
+    te_obs = in_dat.data["temp_plasma_electron_vol_avg_keV"].get_value
     fimp13_obs = in_dat.data["f_nd_impurity_electrons"].get_value[12]
 
     # Assert mfile values are now the same as IN.DAT value

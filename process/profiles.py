@@ -394,20 +394,21 @@ class TeProfile(Profile):
         """
         if physics_variables.i_plasma_pedestal == 0:
             physics_variables.temp_plasma_electron_on_axis_kev = (
-                physics_variables.te * (1.0 + physics_variables.alphat)
+                physics_variables.temp_plasma_electron_vol_avg_keV
+                * (1.0 + physics_variables.alphat)
             )
         elif physics_variables.i_plasma_pedestal == 1:
             physics_variables.temp_plasma_electron_on_axis_kev = self.tcore(
                 physics_variables.radius_plasma_pedestal_temp_norm,
                 physics_variables.temp_plasma_pedestal_kev,
                 physics_variables.temp_plasma_separatrix_kev,
-                physics_variables.te,
+                physics_variables.temp_plasma_electron_vol_avg_keV,
                 physics_variables.alphat,
                 physics_variables.tbeta,
             )
 
         physics_variables.temp_plasma_ion_on_axis_kev = (
             physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.te
+            / physics_variables.temp_plasma_electron_vol_avg_keV
             * physics_variables.temp_plasma_electron_on_axis_kev
         )

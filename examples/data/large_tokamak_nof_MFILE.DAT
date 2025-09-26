@@ -294,7 +294,7 @@
  Normalised_poloidal_beta_________________________________________________ (beta_norm_poloidal)___________ 9.02459671781439425e+01 OP
  Plasma_thermal_energy_derived_from_thermal_beta_(J)______________________ (e_plasma_beta_thermal)________ 1.03827502322068346e+09 OP
  Plasma_thermal_energy_derived_from_the_total_beta_(J)____________________ (e_plasma_beta)________________ 1.17875492816378212e+09 OP
- Volume_averaged_electron_temperature_(keV)_______________________________ (te)___________________________ 1.30315794262759219e+01
+ Volume_averaged_electron_temperature_(keV)_______________________________ (temp_plasma_electron_vol_avg_keV)___________________________ 1.30315794262759219e+01
  Ratio_of_ion_to_electron_volume-averaged_temperature_____________________ (f_temp_plasma_ion_electron)_______________________ 1.00000000000000000e+00 IP
  Electron_temperature_on_axis_(keV)_______________________________________ (temp_plasma_electron_on_axis_kev)__________________________ 2.72635735563331849e+01 OP
  Ion_temperature_(keV)____________________________________________________ (temp_plasma_ion_vol_avg_kev)___________________________ 1.30315794262759219e+01
@@ -1407,10 +1407,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* te [keV]
+* temp_plasma_electron_vol_avg_keV [keV]
 ixc = 4
 boundu(4) = 100.0
-te = 12.0
+temp_plasma_electron_vol_avg_keV = 12.0
 
 * h factor
 ixc = 10

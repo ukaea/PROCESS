@@ -1607,12 +1607,12 @@ class Physics:
         physics_variables.dlamee = (
             31.0
             - (np.log(physics_variables.nd_plasma_electrons_vol_avg) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
+            + np.log(physics_variables.temp_plasma_electron_vol_avg_keV * 1000.0)
         )
         physics_variables.dlamie = (
             31.3
             - (np.log(physics_variables.nd_plasma_electrons_vol_avg) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
+            + np.log(physics_variables.temp_plasma_electron_vol_avg_keV * 1000.0)
         )
 
         # Calculate plasma current
@@ -1958,7 +1958,7 @@ class Physics:
                 physics_variables.q0,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.te,
+                physics_variables.temp_plasma_electron_vol_avg_keV,
                 physics_variables.zeff,
             )
         )
@@ -2326,7 +2326,7 @@ class Physics:
             physics_variables.alphat,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
-            physics_variables.te,
+            physics_variables.temp_plasma_electron_vol_avg_keV,
             physics_variables.temp_plasma_ion_vol_avg_kev,
             physics_variables.zeffai,
         )
@@ -2559,7 +2559,7 @@ class Physics:
         ) = self.phyaux(
             physics_variables.aspect,
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.te,
+            physics_variables.temp_plasma_electron_vol_avg_keV,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
@@ -3262,7 +3262,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 znimp += impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
+                    imp, np.array([physics_variables.temp_plasma_electron_vol_avg_keV])
                 ).squeeze() * (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * physics_variables.nd_plasma_electrons_vol_avg
@@ -3364,7 +3364,7 @@ class Physics:
             physics_variables.zeff += (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
+                    imp, np.array([physics_variables.temp_plasma_electron_vol_avg_keV])
                 ).squeeze()
                 ** 2
             )
@@ -3390,7 +3390,7 @@ class Physics:
             pc = physics_variables.pcoef
 
         physics_variables.f_alpha_electron = 0.88155 * np.exp(
-            -physics_variables.te * pc / 67.4036
+            -physics_variables.temp_plasma_electron_vol_avg_keV * pc / 67.4036
         )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
@@ -3471,7 +3471,8 @@ class Physics:
                 physics_variables.zeffai += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
-                        imp, np.array([physics_variables.te])
+                        imp,
+                        np.array([physics_variables.temp_plasma_electron_vol_avg_keV]),
                     ).squeeze()
                     ** 2
                     / impurity_radiation_module.m_impurity_amu_array[imp]
@@ -4539,8 +4540,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Volume averaged electron temperature (keV)",
-            "(te)",
-            physics_variables.te,
+            "(temp_plasma_electron_vol_avg_keV)",
+            physics_variables.temp_plasma_electron_vol_avg_keV,
         )
         po.ovarrf(
             self.outfile,
@@ -6894,7 +6895,8 @@ class Physics:
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
         tempi = (
-            physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            / physics_variables.temp_plasma_electron_vol_avg_keV
         ) * tempe
 
         # Flat Zeff profile assumed

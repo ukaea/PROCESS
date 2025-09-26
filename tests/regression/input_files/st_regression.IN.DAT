@@ -271,7 +271,7 @@ boundu(109) = 1.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 ixc = 4 
-te = 15.0
+temp_plasma_electron_vol_avg_keV = 15.0
 boundl(4) = 5.0
 boundu(4) = 25.0
 * DESCRIPTION:   Volume averaged electron temperature (keV)
@@ -282,7 +282,7 @@ f_temp_plasma_ion_electron = 1.0
 * JUSTIFICATION: Default value
 
 *temp_plasma_ion_vol_avg_kev =   
-* DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from te if f_temp_plasma_ion_electron > 0.0
+* DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_keV if f_temp_plasma_ion_electron > 0.0
 * JUSTIFICATION: Calculated in-situ as f_temp_plasma_ion_electron >0
 
 
