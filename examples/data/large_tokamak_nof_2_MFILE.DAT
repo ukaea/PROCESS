@@ -222,7 +222,7 @@
  Normalised_poloidal_beta_________________________________________________ (beta_norm_poloidal)___________ 1.17065528061213271e+02 OP
  Plasma_thermal_energy_derived_from_thermal_beta_(J)______________________ (e_plasma_beta_thermal)________ 9.14291403251801372e+08 OP
  Plasma_thermal_energy_derived_from_the_total_beta_(J)____________________ (e_plasma_beta)________________ 1.05534071032211077e+09 OP
- Volume_averaged_electron_temperature_(keV)_______________________________ (temp_plasma_electron_vol_avg_keV)___________________________ 1.22213835283789436e+01
+ Volume_averaged_electron_temperature_(keV)_______________________________ (temp_plasma_electron_vol_avg_kev)___________________________ 1.22213835283789436e+01
  Ratio_of_ion_to_electron_volume-averaged_temperature_____________________ (f_temp_plasma_ion_electron)_______________________ 1.00000000000000000e+00 IP
  Electron_temperature_on_axis_(keV)_______________________________________ (temp_plasma_electron_on_axis_kev)__________________________ 2.50171046225989251e+01 OP
  Ion_temperature_(keV)____________________________________________________ (temp_plasma_ion_vol_avg_kev)___________________________ 1.22213835283789436e+01
@@ -1186,7 +1186,7 @@ ixc = 2 * b_plasma_toroidal_on_axis
 ixc = 3 * rmajor
 boundl(3) = 8.0
 boundu(3) = 9.0
-ixc = 4 * temp_plasma_electron_vol_avg_keV
+ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundu(4) = 100.0
 ixc = 5 * beta
 ixc = 6 * nd_plasma_electrons_vol_avg
@@ -1491,7 +1491,7 @@ f_nd_alpha_electron   = 0.060238763988650204 * thermal alpha density/electron de
 rmajor   = 8.0 * plasma major radius (m) (`iteration variable 3`)
 i_single_null = 1 * switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * synchrotron wall reflectivity factor
-temp_plasma_electron_vol_avg_keV       = 12.221383528378944 * volume averaged electron temperature (keV) (`iteration variable 4`)
+temp_plasma_electron_vol_avg_kev       = 12.221383528378944 * volume averaged electron temperature (keV) (`iteration variable 4`)
 triang   = 0.5 * plasma separatrix triangularity (calculated if `ishape = 1; 3-5 or 7`)
 
 *----------------------Power-----------------------*

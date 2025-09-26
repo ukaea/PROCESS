@@ -1677,7 +1677,7 @@ INPUT_VARIABLES = {
     "t_tf_superconductor_quench": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),
-    "temp_plasma_electron_vol_avg_keV": InputVariable(
+    "temp_plasma_electron_vol_avg_kev": InputVariable(
         data_structure.physics_variables, float, range=(1.0, 200.0)
     ),
     "te0_ecrh_achievable": InputVariable(

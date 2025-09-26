@@ -3786,10 +3786,10 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         )
         prof.minorticks_on()
 
-    te = mfile_data.data["temp_plasma_electron_vol_avg_keV"].get_scan(scan)
+    te = mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['temp_plasma_electron_vol_avg_keV'].get_scan(scan):.3f} keV",
+        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['temp_plasma_electron_vol_avg_kev'].get_scan(scan):.3f} keV",
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
@@ -6814,7 +6814,7 @@ def plot_physics_info(axis, mfile_data, scan):
 
     tepeak = mfile_data.data["temp_plasma_electron_on_axis_kev"].get_scan(
         scan
-    ) / mfile_data.data["temp_plasma_electron_vol_avg_keV"].get_scan(scan)
+    ) / mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
 
     nepeak = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
         scan
@@ -10786,7 +10786,7 @@ def main(args=None):
     )
     te0 = m_file.data["temp_plasma_electron_on_axis_kev"].get_scan(scan)
     ti = m_file.data["temp_plasma_ion_vol_avg_kev"].get_scan(scan)
-    te = m_file.data["temp_plasma_electron_vol_avg_keV"].get_scan(scan)
+    te = m_file.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
     fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
     f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(

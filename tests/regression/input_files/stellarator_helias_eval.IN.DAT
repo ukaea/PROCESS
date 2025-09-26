@@ -33,7 +33,7 @@ icc = 67 * Simple Radiation Wall load limit
 ixc = 3 * rmajor
 boundl(3) = 2.
 boundu(3) = 25.
-ixc = 4 * temp_plasma_electron_vol_avg_keV
+ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundl(4) = 2.
 boundu(4) = 19.5
 
@@ -274,7 +274,7 @@ kappa    = 1.001 * plasma separatrix elongation (calculated if `i_plasma_geometr
 f_nd_alpha_electron = 0.048598535626890565 * thermal alpha density/electron density (`iteration variable 109`)
 rmajor   = 22.541131410425415 * plasma major radius (m) (`iteration variable 3`)
 f_sync_reflect = 0.6 * synchrotron wall reflectivity factor
-temp_plasma_electron_vol_avg_keV       = 7.374569057199403 * volume averaged electron temperature (keV) (`iteration variable 4`)
+temp_plasma_electron_vol_avg_kev       = 7.374569057199403 * volume averaged electron temperature (keV) (`iteration variable 4`)
 f_temp_plasma_ion_electron   = 0.95 * ion temperature / electron temperature(used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0;0`
 
 *----------------------Power-----------------------*

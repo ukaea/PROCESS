@@ -83,7 +83,7 @@ class PlasmaProfile:
         if physics_variables.f_temp_plasma_ion_electron > 0.0e0:
             physics_variables.temp_plasma_ion_vol_avg_kev = (
                 physics_variables.f_temp_plasma_ion_electron
-                * physics_variables.temp_plasma_electron_vol_avg_keV
+                * physics_variables.temp_plasma_electron_vol_avg_kev
             )
 
         # Parabolic profile case
@@ -161,7 +161,7 @@ class PlasmaProfile:
         #  Density-weighted temperatures
 
         physics_variables.temp_plasma_electron_density_weighted_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_keV * physics_variables.pcoef
+            physics_variables.temp_plasma_electron_vol_avg_kev * physics_variables.pcoef
         )
         physics_variables.temp_plasma_ion_density_weighted_kev = (
             physics_variables.temp_plasma_ion_vol_avg_kev * physics_variables.pcoef
@@ -170,7 +170,7 @@ class PlasmaProfile:
         #  Central values for temperature (keV) and density (m**-3)
 
         physics_variables.temp_plasma_electron_on_axis_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_keV
+            physics_variables.temp_plasma_electron_vol_avg_kev
             * (1.0 + physics_variables.alphat)
         )
         physics_variables.temp_plasma_ion_on_axis_kev = (
@@ -227,7 +227,7 @@ class PlasmaProfile:
         physics_variables.temp_plasma_electron_density_weighted_kev = integ1 / integ2
         physics_variables.temp_plasma_ion_density_weighted_kev = (
             physics_variables.temp_plasma_ion_vol_avg_kev
-            / physics_variables.temp_plasma_electron_vol_avg_keV
+            / physics_variables.temp_plasma_electron_vol_avg_kev
             * physics_variables.temp_plasma_electron_density_weighted_kev
         )
         #  Profile factor; ratio of density-weighted to volume-averaged
@@ -235,7 +235,7 @@ class PlasmaProfile:
 
         physics_variables.pcoef = (
             physics_variables.temp_plasma_electron_density_weighted_kev
-            / physics_variables.temp_plasma_electron_vol_avg_keV
+            / physics_variables.temp_plasma_electron_vol_avg_kev
         )
 
         #  Line-averaged electron density

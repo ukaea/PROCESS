@@ -160,8 +160,8 @@ icc = 9 * Fusion power upper limit
 
 *---------------Iteration Variables----------------*
 * Used to solve equality constraints
-ixc = 4 * temp_plasma_electron_vol_avg_keV
+ixc = 4 * temp_plasma_electron_vol_avg_kev
 ixc = 6 * nd_plasma_electrons_vol_avg
 ...
 ```
-The beta and plasma power balance equality constraints are recommended to ensure model consistency, and the `temp_plasma_electron_vol_avg_keV` and `nd_plasma_electrons_vol_avg` iteration variables used to solve them.
+The beta and plasma power balance equality constraints are recommended to ensure model consistency, and the `temp_plasma_electron_vol_avg_kev` and `nd_plasma_electrons_vol_avg` iteration variables used to solve them.

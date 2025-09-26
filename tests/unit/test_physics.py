@@ -503,7 +503,7 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
 
     monkeypatch.setattr(
         physics_variables,
-        "temp_plasma_electron_vol_avg_keV",
+        "temp_plasma_electron_vol_avg_kev",
         bootstrapfractionsauterparam.te,
     )
 
@@ -1845,7 +1845,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "temp_plasma_electron_vol_avg_keV", plasmacompositionparam.te
+        physics_variables, "temp_plasma_electron_vol_avg_kev", plasmacompositionparam.te
     )
 
     monkeypatch.setattr(

@@ -49,7 +49,7 @@ var_dicts = {
         description="Alpha particle heating fraction",
         units="",
     ),
-    "temp_plasma_electron_vol_avg_keV": VariableMetadata(
+    "temp_plasma_electron_vol_avg_kev": VariableMetadata(
         latex=r"$\left< T_\mathrm{e} \right>$",
         description="Average electron temperature",
         units="keV",

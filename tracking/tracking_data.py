@@ -121,7 +121,7 @@ class ProcessTracker:
         "Physics.rminor",
         "Physics.rmajor",
         "Physics.q95",
-        "Physics.temp_plasma_electron_vol_avg_keV",
+        "Physics.temp_plasma_electron_vol_avg_kev",
         "Physics.beta",
         "Physics.f_c_plasma_inductive",
         "Physics.zeff",
