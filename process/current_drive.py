@@ -52,7 +52,7 @@ class NeutralBeam:
         # Calculate beam stopping cross-section
         sigstop = self.sigbeam(
             current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.te,
+            physics_variables.temp_plasma_electron_vol_avg_keV,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.f_nd_alpha_electron,
             physics_variables.f_nd_plasma_carbon_electron,
@@ -136,7 +136,7 @@ class NeutralBeam:
 
         sigstop = self.sigbeam(
             current_drive_variables.e_beam_kev / physics_variables.m_beam_amu,
-            physics_variables.te,
+            physics_variables.temp_plasma_electron_vol_avg_keV,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.f_nd_alpha_electron,
             physics_variables.f_nd_plasma_carbon_electron,
@@ -1335,7 +1335,9 @@ class CurrentDrive:
             # Define a dictionary of lambda functions for current drive efficiency models
             hcd_models = {
                 1: lambda: self.lower_hybrid.lower_hybrid_fenstermacher(
-                    physics_variables.te, physics_variables.rmajor, dene20
+                    physics_variables.temp_plasma_electron_vol_avg_keV,
+                    physics_variables.rmajor,
+                    dene20,
                 )
                 * current_drive_variables.feffcd,
                 2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
@@ -1353,7 +1355,7 @@ class CurrentDrive:
                 )
                 * current_drive_variables.feffcd,
                 4: lambda: self.lower_hybrid.lower_hybrid_ehst(
-                    te=physics_variables.te,
+                    te=physics_variables.temp_plasma_electron_vol_avg_keV,
                     beta=physics_variables.beta,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
@@ -1372,7 +1374,7 @@ class CurrentDrive:
                 10: lambda: current_drive_variables.eta_cd_norm_ecrh
                 / (dene20 * physics_variables.rmajor),
                 12: lambda: self.electron_bernstein.electron_bernstein_freethy(
-                    te=physics_variables.te,
+                    te=physics_variables.temp_plasma_electron_vol_avg_keV,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                     b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
@@ -1381,7 +1383,7 @@ class CurrentDrive:
                 )
                 * current_drive_variables.feffcd,
                 13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
-                    te=physics_variables.te,
+                    te=physics_variables.temp_plasma_electron_vol_avg_keV,
                     zeff=physics_variables.zeff,
                     rmajor=physics_variables.rmajor,
                     nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,

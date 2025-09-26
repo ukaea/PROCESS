@@ -443,7 +443,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(physics_variables, "alphan", plasmaprofilesparam.alphan)
 
-    monkeypatch.setattr(physics_variables, "te", plasmaprofilesparam.te)
+    monkeypatch.setattr(
+        physics_variables, "temp_plasma_electron_vol_avg_keV", plasmaprofilesparam.te
+    )
 
     monkeypatch.setattr(physics_variables, "rho_ne_max", plasmaprofilesparam.rho_ne_max)
 

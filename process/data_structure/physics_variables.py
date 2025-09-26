@@ -1200,7 +1200,7 @@ f_alpha_energy_confinement: float = None
 """alpha particle to energy confinement time ratio"""
 
 
-te: float = None
+temp_plasma_electron_vol_avg_keV: float = None
 """volume averaged electron temperature (keV) (`iteration variable 4`)"""
 
 
@@ -1213,7 +1213,7 @@ temp_plasma_electron_density_weighted_kev: float = None
 
 
 temp_plasma_ion_vol_avg_kev: float = None
-"""volume averaged ion temperature (keV). N.B. calculated from te if `f_temp_plasma_ion_electron > 0.0`"""
+"""volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_keV if `f_temp_plasma_ion_electron > 0.0`"""
 
 
 temp_plasma_ion_on_axis_kev: float = None
@@ -1567,7 +1567,7 @@ def init_physics_variables():
     global t_ion_energy_confinement
     global t_alpha_confinement
     global f_alpha_energy_confinement
-    global te
+    global temp_plasma_electron_vol_avg_keV
     global temp_plasma_electron_on_axis_kev
     global temp_plasma_electron_density_weighted_kev
     global temp_plasma_ion_vol_avg_kev
@@ -1814,7 +1814,7 @@ def init_physics_variables():
     t_ion_energy_confinement = 0.0
     t_alpha_confinement = 0.0
     f_alpha_energy_confinement = 0.0
-    te = 12.9
+    temp_plasma_electron_vol_avg_keV = 12.9
     temp_plasma_electron_on_axis_kev = 0.0
     temp_plasma_electron_density_weighted_kev = 0.0
     temp_plasma_ion_vol_avg_kev = 12.9

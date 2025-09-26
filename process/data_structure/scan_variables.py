@@ -43,7 +43,7 @@ nsweep: int = None
 <LI> 6  pflux_fw_neutron_max_mw
 <LI> 7  beamfus0
 <LI> 8  fbig_q_plasma_min
-<LI> 9  te
+<LI> 9  temp_plasma_electron_vol_avg_keV
 <LI> 10 boundu(15: fvs_plasma_total_required)
 <LI> 11 beta_norm_max
 <LI> 12 f_c_plasma_bootstrap_max

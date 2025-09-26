@@ -212,7 +212,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dt_profile = (
             bosch_hale_reactivity(
-                (physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dt,
             )
@@ -309,7 +312,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dhe3_profile = (
             bosch_hale_reactivity(
-                (physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dhe3,
             )
@@ -397,7 +403,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dd_helion_profile = (
             bosch_hale_reactivity(
-                (physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dd1,
             )
@@ -488,7 +497,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dd_triton_profile = (
             bosch_hale_reactivity(
-                (physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_keV
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dd2,
             )
@@ -657,7 +669,8 @@ def fusion_rate_integral(
     # Since the electron temperature profile is only calculated directly, we scale the ion temperature
     # profile by the ratio of the volume averaged ion to electron temperature
     ion_temperature_profile = (
-        physics_variables.temp_plasma_ion_vol_avg_kev / physics_variables.te
+        physics_variables.temp_plasma_ion_vol_avg_kev
+        / physics_variables.temp_plasma_electron_vol_avg_keV
     ) * plasma_profile.teprofile.profile_y
 
     # Number of fusion reactions per unit volume per particle volume density (m^3/s)

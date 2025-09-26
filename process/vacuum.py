@@ -459,7 +459,7 @@ class Vacuum:
 
                 else:
                     logger.error(
-                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.te=}"
+                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.temp_plasma_electron_vol_avg_keV=}"
                     )
 
                 theta = math.pi / ntf

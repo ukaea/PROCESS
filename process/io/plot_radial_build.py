@@ -149,7 +149,7 @@ def main(args=None):
         "pflux_fw_neutron_max_mw",
         "beamfus0",
         "fbig_q_plasma_min",
-        "te",
+        "temp_plasma_electron_vol_avg_keV",
         "boundu(15)",
         "beta_norm_max",
         "f_c_plasma_bootstrap_max",

@@ -446,7 +446,7 @@ def check_process(inputs):  # noqa: ARG001
         # temperature. Prevent this by adjusting te, and its lower bound
         # (which will only have an effect if this is an optimisation run)
         if (
-            data_structure.physics_variables.te
+            data_structure.physics_variables.temp_plasma_electron_vol_avg_keV
             <= data_structure.physics_variables.temp_plasma_pedestal_kev
         ):
             warn(
@@ -455,7 +455,7 @@ def check_process(inputs):  # noqa: ARG001
                 "Changing to te = temp_plasma_pedestal_kev*1.001",
                 stacklevel=2,
             )
-            data_structure.physics_variables.te = (
+            data_structure.physics_variables.temp_plasma_electron_vol_avg_keV = (
                 data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
             )
 
@@ -466,7 +466,7 @@ def check_process(inputs):  # noqa: ARG001
             < data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
         ):
             warn(
-                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > temp_plasma_pedestal_kev",
+                "Lower limit of volume averaged electron temperature (temp_plasma_electron_vol_avg_keV) has been raised to ensure temp_plasma_electron_vol_avg_keV > temp_plasma_pedestal_kev",
                 stacklevel=2,
             )
             data_structure.numerics.boundl[3] = (

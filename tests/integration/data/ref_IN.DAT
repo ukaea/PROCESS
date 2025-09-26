@@ -31,7 +31,7 @@ ixc= 2 * b_plasma_toroidal_on_axis
 boundu(2) = 20.0
 ixc = 3 * rmajor
 boundu(3) = 13
-ixc = 4 * te
+ixc = 4 * temp_plasma_electron_vol_avg_keV
 boundu(4) = 150.0
 ixc = 5 * beta
 ixc = 6 * nd_plasma_electrons_vol_avg
@@ -284,7 +284,7 @@ q0       = 1.0 * Safety factor on axis
 rmajor   = 9.072 * Plasma major radius (m) (iteration variable 3)
 i_single_null    = 1 * Switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * Synchrotron wall reflectivity factor
-te       = 13.07 * Volume averaged electron temperature (kev)
+temp_plasma_electron_vol_avg_keV       = 13.07 * Volume averaged electron temperature (kev)
 *zfear    = 1 * High-z impurity switch; 0=iron; 1=argon
 plasma_res_factor = 0.66 * plasma resistivity pre-factor
 
@@ -334,7 +334,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
 
                      b_plasma_toroidal_on_axis            =   5.3292E+00
                      rmajor        =   8.8901E+00
-                     te             =  1.2330E+01
+                     temp_plasma_electron_vol_avg_keV             =  1.2330E+01
                      beta           =  3.1421E-02
                      nd_plasma_electrons_vol_avg           =  7.4321E+19
                      fdene          =  1.2000E+00

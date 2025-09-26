@@ -200,7 +200,7 @@ lablxc: list[str] = None
 * ( 1) aspect
 * ( 2) b_plasma_toroidal_on_axis
 * ( 3) rmajor
-* ( 4) te
+* ( 4) temp_plasma_electron_vol_avg_keV
 * ( 5) beta
 * ( 6) nd_plasma_electrons_vol_avg
 * ( 7) f_nd_beam_electron
