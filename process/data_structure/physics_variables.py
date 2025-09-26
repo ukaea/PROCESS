@@ -795,7 +795,7 @@ nd_plasma_electron_on_axis: float = None
 """central electron density (/m3)"""
 
 
-nd_plasma_ions_on_axis_kev: float = None
+nd_plasma_ions_on_axis: float = None
 """central ion density (/m3)"""
 
 
@@ -1473,7 +1473,7 @@ def init_physics_variables():
     global kappa95
     global kappa_ipb
     global nd_plasma_electron_on_axis
-    global nd_plasma_ions_on_axis_kev
+    global nd_plasma_ions_on_axis
     global m_s_limit
     global pres_plasma_on_axis
     global j_plasma_on_axis
@@ -1720,7 +1720,7 @@ def init_physics_variables():
     kappa95 = 1.6
     kappa_ipb = 0.0
     nd_plasma_electron_on_axis = 0.0
-    nd_plasma_ions_on_axis_kev = 0.0
+    nd_plasma_ions_on_axis = 0.0
     m_s_limit = 0.3
     pres_plasma_on_axis = 0.0
     j_plasma_on_axis = 0.0
