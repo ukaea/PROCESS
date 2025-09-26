@@ -292,7 +292,7 @@ class PlasmaProfile:
 
         # Central plasma current density (A/m^2)
         # Assumes a parabolic profile for the current density
-        physics_variables.j_plasma_0 = (
+        physics_variables.j_plasma_on_axis = (
             (physics_variables.plasma_current)
             * 2
             / (

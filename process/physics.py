@@ -4196,8 +4196,8 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "On-axis plasma current density (A/m2)",
-                    "(j_plasma_0)",
-                    physics_variables.j_plasma_0,
+                    "(j_plasma_on_axis)",
+                    physics_variables.j_plasma_on_axis,
                     "OP ",
                 )
                 po.ovarrf(

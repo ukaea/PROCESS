@@ -264,7 +264,7 @@
  Plasma_current_scaling_law_used_________________________________________ (i_plasma_current)____________              4    
  Plasma_current_(MA)______________________________________________________ (plasma_current_MA)____________ 1.75262350092394996e+01 OP
  Current_density_profile_factor___________________________________________ (alphaj)_______________________ 2.37999298978303386e+00 OP
- On-axis_plasma_current_density_(A/m2)____________________________________ (j_plasma_0)___________________ 9.12612438525533536e+05 OP
+ On-axis_plasma_current_density_(A/m2)____________________________________ (j_plasma_on_axis)___________________ 9.12612438525533536e+05 OP
  Plasma_normalised_internal_inductance____________________________________ (ind_plasma_internal_norm)_____ 1.32659577813800511e+00 OP
  Vertical_field_at_plasma_(T)_____________________________________________ (b_plasma_vertical_required)________________________ -7.86903260900883805e-01 OP
  Vacuum_toroidal_field_at_R_(T)___________________________________________ (b_plasma_toroidal_on_axis)___________________________ 4.74298390424727412e+00
