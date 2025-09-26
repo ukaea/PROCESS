@@ -32,7 +32,7 @@ be described as 1/2-D.  The relevant profile index variables are
 
 | Profile parameter                | Density   | Temperature | Current  |
 |----------------------------------|-----------|-------------|----------------|
-| Plasma centre value              | `nd_plasma_electron_on_axis`, $n_0$         | `temp_plasma_electron_on_axis_kev`, $T_0$        |  `j_plasma_0`, $J_0$        |
+| Plasma centre value              | `nd_plasma_electron_on_axis`, $n_0$         | `temp_plasma_electron_on_axis_kev`, $T_0$        |  `j_plasma_on_axis`, $J_0$        |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ | `alphat`, $\alpha_T$    |  `alphaj`, $\alpha_J$    |
 
 ???+ note "Plasma current profile"
