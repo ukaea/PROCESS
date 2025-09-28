@@ -2787,7 +2787,7 @@ class Physics:
         physics_variables.freq_plasma_electron_profile = calculate_plasma_frequency(
             nd_particle=self.plasma_profile.neprofile.profile_y,
             m_particle=constants.ELECTRON_MASS,
-            Z_particle=1.0,
+            z_particle=1.0,
         )
 
         physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
@@ -2802,6 +2802,44 @@ class Physics:
                     ),
                     calculate_debroglie_wavelength(
                         mass=constants.ELECTRON_MASS,
+                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.debye_length_profile))
+        ])
+
+        physics_variables.plasma_coulomb_log_electron_deuteron_profile = np.array([
+            calculate_coulomb_log_from_impact(
+                impact_param_max=calculate_debye_length(
+                    temp_plasma_electron_kev=(
+                        (
+                            self.plasma_profile.teprofile.profile_y[i]
+                            * physics_variables.tratio
+                            * self.plasma_profile.teprofile.profile_y[i]
+                        )
+                        / (
+                            self.plasma_profile.teprofile.profile_y[i]
+                            + (
+                                physics_variables.tratio
+                                * self.plasma_profile.teprofile.profile_y[i]
+                            )
+                        )
+                    ),
+                    nd_plasma_electron=self.plasma_profile.neprofile.profile_y[i],
+                ),
+                impact_param_min=max(
+                    calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
+                        * constants.KILOELECTRON_VOLT,
+                    ),
+                    calculate_debroglie_wavelength(
+                        mass=(
+                            (constants.ELECTRON_MASS * constants.DEUTERON_MASS)
+                            / (constants.ELECTRON_MASS + constants.DEUTERON_MASS)
+                        ),
                         velocity=physics_variables.vel_plasma_electron_profile[i],
                     ),
                 ),
@@ -5067,6 +5105,17 @@ class Physics:
                 f"plasma_coulomb_log_electron_electron_profile{i}",
                 physics_variables.plasma_coulomb_log_electron_electron_profile[i],
             )
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_deuteron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-deuteron Coulomb log at point {i}",
+                f"plasma_coulomb_log_electron_deuteron_profile{i}",
+                physics_variables.plasma_coulomb_log_electron_deuteron_profile[i],
+                physics_variables.plasma_coulomb_log_electron_electron_profile[i],
+            )
+
         for i in range(len(physics_variables.freq_plasma_electron_profile)):
             po.ovarre(
                 self.mfile,
@@ -8733,7 +8782,7 @@ def calculate_debroglie_wavelength(mass: float, velocity: float) -> float:
 
 
 def calculate_plasma_frequency(
-    nd_particle: float, m_particle: float, Z_particle: float
+    nd_particle: float, m_particle: float, z_particle: float
 ) -> float:
     """
     Calculate the plasma frequency for a particle species.
@@ -8750,7 +8799,7 @@ def calculate_plasma_frequency(
     """
     return (
         (
-            (nd_particle * Z_particle**2 * constants.ELECTRON_CHARGE**2)
+            (nd_particle * z_particle**2 * constants.ELECTRON_CHARGE**2)
             / (m_particle * constants.EPSILON0)
         )
         ** 0.5

@@ -10216,7 +10216,7 @@ def plot_debye_length_profile(axis, mfile_data, scan):
         debye_length_profile,
         color="purple",
         linestyle="-",
-        label=r"$\lambda_{Debye} electron$",
+        label=r"$\lambda_{Debye} \ electron$",
     )
 
 
@@ -10245,12 +10245,27 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         for i in range(500)
     ]
 
+    plasma_coulomb_log_electron_deuteron_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_deuteron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(500)
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
         plasma_coulomb_log_electron_electron_profile,
         color="blue",
         linestyle="-",
-        label=r"$ln \Lambda_{ee}$",
+        label=r"$ln \Lambda_{e-e}$",
+    )
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_deuteron_profile)),
+        plasma_coulomb_log_electron_deuteron_profile,
+        color="grey",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-D}$",
     )
 
 
@@ -10266,7 +10281,7 @@ def plot_plasma_debroglie_profile(axis, mfile_data, scan):
         len_plasma_electron_debroglie_profile,
         color="green",
         linestyle="-",
-        label=r"$\lambda_{dB} electron$",
+        label=r"$\lambda_{deBroglie} \ electron$",
     )
 
 
