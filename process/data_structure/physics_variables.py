@@ -344,17 +344,32 @@ debye_length_profile: list[float] = None
 vel_plasma_electron_profile: list[float] = None
 """electron plasma velocity profile (m/s)"""
 
+vel_plasma_deuteron_profile: list[float] = None
+"""deuteron plasma velocity profile (m/s)"""
+
+vel_plasma_triton_profile: list[float] = None
+"""triton plasma velocity profile (m/s)"""
+
 plasma_coulomb_log_electron_electron_profile: float = None
 """electron-electron coulomb logarithm profile"""
 
 plasma_coulomb_log_electron_deuteron_profile: float = None
 """electron-deuteron coulomb logarithm profile"""
 
+plasma_coulomb_log_electron_alpha_profile: float = None
+"""electron-alpha coulomb logarithm profile"""
+
 len_plasma_electron_debroglie_profile: list[float] = None
 """electron de Broglie wavelength profile (m)"""
 
 freq_plasma_electron_profile: list[float] = None
 """electron plasma frequency profile (Hz)"""
+
+freq_plasma_deuteron_profile: list[float] = None
+"""deuteron plasma frequency profile (Hz)"""
+
+freq_plasma_triton_profile: list[float] = None
+"""triton plasma frequency profile (Hz)"""
 
 t_plasma_electron_electron_collision_profile: list[float] = None
 """electron-electron collision time profile (s)"""
@@ -1416,10 +1431,16 @@ def init_physics_variables():
     global dlamie
     global debye_length_profile
     global vel_plasma_electron_profile
+    global vel_plasma_deuteron_profile
+    global vel_plasma_triton_profile
     global plasma_coulomb_log_electron_electron_profile
     global plasma_coulomb_log_electron_deuteron_profile
+    global plasma_coulomb_log_electron_triton_profile
+    global plasma_coulomb_log_electron_alpha_profile
     global len_plasma_electron_debroglie_profile
     global freq_plasma_electron_profile
+    global freq_plasma_deuteron_profile
+    global freq_plasma_triton_profile
     global t_plasma_electron_electron_collision_profile
     global dlimit
     global nd_alphas
@@ -1671,10 +1692,16 @@ def init_physics_variables():
     dlamie = 0.0
     debye_length_profile = []
     vel_plasma_electron_profile = []
+    vel_plasma_deuteron_profile = []
+    vel_plasma_triton_profile = []
     plasma_coulomb_log_electron_electron_profile = []
     plasma_coulomb_log_electron_deuteron_profile = []
+    plasma_coulomb_log_electron_triton_profile = []
+    plasma_coulomb_log_electron_alpha_profile = []
     len_plasma_electron_debroglie_profile = []
     freq_plasma_electron_profile = []
+    freq_plasma_deuteron_profile = []
+    freq_plasma_triton_profile = []
     t_plasma_electron_electron_collision_profile = []
     dlimit = np.zeros(8, dtype=np.float64)
     nd_alphas = 0.0

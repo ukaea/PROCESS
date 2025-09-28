@@ -10227,12 +10227,36 @@ def plot_plasma_particle_velocities(axis, mfile_data, scan):
         for i in range(500)
     ]
 
+    vel_plasma_deuteron_profile = [
+        mfile_data.data[f"vel_plasma_deuteron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    vel_plasma_triton_profile = [
+        mfile_data.data[f"vel_plasma_triton_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
     axis.plot(
         np.linspace(0, 1, len(vel_plasma_electron_profile)),
         vel_plasma_electron_profile,
         color="orange",
         linestyle="-",
         label=r"$v_{e}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_deuteron_profile)),
+        vel_plasma_deuteron_profile,
+        color="green",
+        linestyle="-",
+        label=r"$v_{D}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_triton_profile)),
+        vel_plasma_triton_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$v_{T}$",
     )
 
 
@@ -10291,13 +10315,73 @@ def plot_plasma_frequencies_profile(axis, mfile_data, scan):
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(500)
     ]
+    freq_plasma_deuteron_profile = [
+        mfile_data.data[f"freq_plasma_deuteron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+    freq_plasma_triton_profile = [
+        mfile_data.data[f"freq_plasma_triton_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    t_plasma_electron_electron_collision_profile = [
+        mfile_data.data[f"t_plasma_electron_electron_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(500)
+    ]
 
     axis.plot(
         np.linspace(0, 1, len(freq_plasma_electron_profile)),
         freq_plasma_electron_profile,
         color="cyan",
         linestyle="-",
-        label=r"$\omega_{pe} electron$",
+        label=r"$\omega_{plasma} \ e$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_profile)),
+        1 / np.array(t_plasma_electron_electron_collision_profile),
+        color="cyan",
+        linestyle="-",
+        label=r"$\nu_{e-e}$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_deuteron_profile)),
+        freq_plasma_deuteron_profile,
+        color="magenta",
+        linestyle="-",
+        label=r"$\omega_{plasma} \ D$",
+    )
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_triton_profile)),
+        freq_plasma_triton_profile,
+        color="brown",
+        linestyle="-",
+        label=r"$\omega_{plasma} \ T$",
+    )
+
+
+def plot_plasma_mean_free_path_profile(axis, mfile_data, scan):
+    """Plot the plasma mean free path profile on the given axis."""
+    t_plasma_electron_electron_collision_profile = [
+        mfile_data.data[f"t_plasma_electron_electron_collision_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(500)
+    ]
+
+    vel_plasma_electron_profile = [
+        mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(vel_plasma_electron_profile)),
+        np.array(vel_plasma_electron_profile)
+        * np.array(t_plasma_electron_electron_collision_profile),
+        color="black",
+        linestyle="-",
+        label=r"$\lambda_{mfp} \ e$",
     )
 
 
@@ -10509,6 +10593,7 @@ def main_plot(
     plot_34 = fig19.add_subplot(221)
     plot_debye_length_profile(plot_34, m_file_data, scan)
     plot_plasma_debroglie_profile(plot_34, m_file_data, scan)
+    plot_plasma_mean_free_path_profile(plot_34, m_file_data, scan)
     plot_34.set_ylabel("Length [m]")
     plot_34.set_xlabel("$\\rho \\ [r/a]$")
     plot_34.set_yscale("log")
@@ -10521,10 +10606,11 @@ def main_plot(
     plot_plasma_particle_velocities(plot_35, m_file_data, scan)
     plot_35.set_ylabel("Velocity [m/s]")
     plot_35.set_xlabel("$\\rho \\ [r/a]$")
+    plot_35.minorticks_on()
     plot_35.set_yscale("log")
     plot_35.grid(True, which="both", linestyle="--", alpha=0.5)
     plot_35.set_xlim([0, 1.025])
-    plot_35.minorticks_on()
+    plot_35.legend()
 
     plot_36 = fig19.add_subplot(223)
     plot_plasma_coloumb_logarithms(plot_36, m_file_data, scan)

@@ -2777,6 +2777,24 @@ class Physics:
             )
         )
 
+        physics_variables.vel_plasma_deuteron_profile = (
+            calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * physics_variables.tratio
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.DEUTERON_MASS,
+            )
+        )
+
+        physics_variables.vel_plasma_triton_profile = (
+            calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * physics_variables.tratio
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.TRITON_MASS,
+            )
+        )
+
         physics_variables.len_plasma_electron_debroglie_profile = (
             calculate_debroglie_wavelength(
                 mass=constants.ELECTRON_MASS,
@@ -2787,6 +2805,26 @@ class Physics:
         physics_variables.freq_plasma_electron_profile = calculate_plasma_frequency(
             nd_particle=self.plasma_profile.neprofile.profile_y,
             m_particle=constants.ELECTRON_MASS,
+            z_particle=1.0,
+        )
+
+        physics_variables.freq_plasma_deuteron_profile = calculate_plasma_frequency(
+            nd_particle=(
+                self.plasma_profile.neprofile.profile_y
+                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+                * physics_variables.f_deuterium
+            ),
+            m_particle=constants.DEUTERON_MASS,
+            z_particle=1.0,
+        )
+
+        physics_variables.freq_plasma_triton_profile = calculate_plasma_frequency(
+            nd_particle=(
+                self.plasma_profile.neprofile.profile_y
+                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+                * physics_variables.f_tritium
+            ),
+            m_particle=constants.TRITON_MASS,
             z_particle=1.0,
         )
 
@@ -2846,6 +2884,16 @@ class Physics:
             )
             for i in range(len(physics_variables.debye_length_profile))
         ])
+
+        # Caculate electron-electron collision time profile
+        physics_variables.t_plasma_electron_electron_collision_profile = calculate_plasma_collision_time(
+            m_particle=constants.ELECTRON_MASS,
+            e_particle=self.plasma_profile.teprofile.profile_y
+            * constants.KILOELECTRON_VOLT,
+            nd_target=self.plasma_profile.neprofile.profile_y,
+            z_target=1.0,
+            coulomb_log=physics_variables.plasma_coulomb_log_electron_electron_profile,
+        )
 
     @staticmethod
     def calculate_current_profile_index_wesson(qstar: float, q0: float) -> float:
@@ -5089,6 +5137,20 @@ class Physics:
                 f"vel_plasma_electron_profile{i}",
                 physics_variables.vel_plasma_electron_profile[i],
             )
+        for i in range(len(physics_variables.vel_plasma_deuteron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Deuteron plasma velocity at point {i}",
+                f"vel_plasma_deuteron_profile{i}",
+                physics_variables.vel_plasma_deuteron_profile[i],
+            )
+        for i in range(len(physics_variables.vel_plasma_triton_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Triton plasma velocity at point {i}",
+                f"vel_plasma_triton_profile{i}",
+                physics_variables.vel_plasma_triton_profile[i],
+            )
         for i in range(len(physics_variables.len_plasma_electron_debroglie_profile)):
             po.ovarre(
                 self.mfile,
@@ -5113,7 +5175,16 @@ class Physics:
                 f"Electron-deuteron Coulomb log at point {i}",
                 f"plasma_coulomb_log_electron_deuteron_profile{i}",
                 physics_variables.plasma_coulomb_log_electron_deuteron_profile[i],
-                physics_variables.plasma_coulomb_log_electron_electron_profile[i],
+            )
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_alpha_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-alpha Coulomb log at point {i}",
+                f"plasma_coulomb_log_electron_alpha_profile{i}",
+                physics_variables.plasma_coulomb_log_electron_alpha_profile[i],
             )
 
         for i in range(len(physics_variables.freq_plasma_electron_profile)):
@@ -5123,7 +5194,29 @@ class Physics:
                 f"freq_plasma_electron_profile{i}",
                 physics_variables.freq_plasma_electron_profile[i],
             )
-
+        for i in range(len(physics_variables.freq_plasma_deuteron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma deuteron frequency at point {i}",
+                f"freq_plasma_deuteron_profile{i}",
+                physics_variables.freq_plasma_deuteron_profile[i],
+            )
+        for i in range(len(physics_variables.freq_plasma_triton_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma triton frequency at point {i}",
+                f"freq_plasma_triton_profile{i}",
+                physics_variables.freq_plasma_triton_profile[i],
+            )
+        for i in range(
+            len(physics_variables.t_plasma_electron_electron_collision_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron-electron collision time at point {i}",
+                f"t_plasma_electron_electron_collision_profile{i}",
+                physics_variables.t_plasma_electron_electron_collision_profile[i],
+            )
         po.ovarre(
             self.outfile,
             "D-T fusion power: plasma (MW)",
@@ -8804,3 +8897,25 @@ def calculate_plasma_frequency(
         )
         ** 0.5
     ) / (2 * np.pi)
+
+
+def calculate_plasma_collision_time(
+    m_particle: float,
+    e_particle: float,
+    nd_target: float,
+    z_target: float,
+    coulomb_log: float,
+) -> float:
+    """
+    Calculate the electron collision time in a plasma.
+    :param temp_plasma_electron_kev: Electron temperature in keV.
+    :param nd_plasma_electron: Electron number density (/m^3).
+    :param coulomb_log: Coulomb logarithm (dimensionless).
+    :returns: Electron collision time in seconds.
+    :rtype: float
+    """
+    return (
+        ((12 * np.pi**1.5) / np.sqrt(2))
+        * (constants.EPSILON0**2 * np.sqrt(m_particle) * e_particle**1.5)
+        / (nd_target * z_target**2 * constants.ELECTRON_CHARGE**4 * coulomb_log)
+    )
