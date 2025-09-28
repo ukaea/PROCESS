@@ -356,6 +356,9 @@ len_plasma_electron_debroglie_profile: list[float] = None
 freq_plasma_electron_profile: list[float] = None
 """electron plasma frequency profile (Hz)"""
 
+t_plasma_electron_electron_collision_profile: list[float] = None
+"""electron-electron collision time profile (s)"""
+
 dlimit: list[float] = None
 """density limit (/m3) as calculated using various models"""
 
@@ -1417,6 +1420,7 @@ def init_physics_variables():
     global plasma_coulomb_log_electron_deuteron_profile
     global len_plasma_electron_debroglie_profile
     global freq_plasma_electron_profile
+    global t_plasma_electron_electron_collision_profile
     global dlimit
     global nd_alphas
     global nd_beam_ions
@@ -1671,6 +1675,7 @@ def init_physics_variables():
     plasma_coulomb_log_electron_deuteron_profile = []
     len_plasma_electron_debroglie_profile = []
     freq_plasma_electron_profile = []
+    t_plasma_electron_electron_collision_profile = []
     dlimit = np.zeros(8, dtype=np.float64)
     nd_alphas = 0.0
     nd_beam_ions = 0.0
