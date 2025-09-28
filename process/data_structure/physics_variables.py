@@ -347,6 +347,9 @@ vel_plasma_electron_profile: list[float] = None
 plasma_coulomb_log_electron_electron_profile: float = None
 """electron-electron coulomb logarithm profile"""
 
+plasma_coulomb_log_electron_deuteron_profile: float = None
+"""electron-deuteron coulomb logarithm profile"""
+
 len_plasma_electron_debroglie_profile: list[float] = None
 """electron de Broglie wavelength profile (m)"""
 
@@ -1411,6 +1414,7 @@ def init_physics_variables():
     global debye_length_profile
     global vel_plasma_electron_profile
     global plasma_coulomb_log_electron_electron_profile
+    global plasma_coulomb_log_electron_deuteron_profile
     global len_plasma_electron_debroglie_profile
     global freq_plasma_electron_profile
     global dlimit
@@ -1664,6 +1668,7 @@ def init_physics_variables():
     debye_length_profile = []
     vel_plasma_electron_profile = []
     plasma_coulomb_log_electron_electron_profile = []
+    plasma_coulomb_log_electron_deuteron_profile = []
     len_plasma_electron_debroglie_profile = []
     freq_plasma_electron_profile = []
     dlimit = np.zeros(8, dtype=np.float64)
