@@ -232,7 +232,7 @@ The graph below is for a standard pedestal profile. You can vary its attributes 
 !!! warning " Un-realistic profiles"
 
     If setting `i_plasma_pedestal == 1` it is highly recommended to make sure constraint equation 81 (icc=81) is active. This enforces solutions in which $n_0$ has to be greater than $n_{\text{ped}}$.
-    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\mathtt{nd_plasma_electrons_vol_avg})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
+    Negative $n_0$ values can also arise during iteration, so it is important to be weary on how low the lower bound for $n_{\text{e}} (\texttt{nd_plasma_electrons_vol_avg})$ is set. More info can be found [here](plasma_profiles.md#pedestal-density-upper-limit)
 
 --------
 
@@ -255,7 +255,7 @@ This function is used to run the appropriate function relating to the calculatio
 The input variable `f_temp_plasma_ion_electron` can be used to define the ratio between the volume averaged ion and electron temperatures. By default it is set so that the volume averaged ion and electron temperatures are equal. The value of $T_{\text{i}}$ is set such that:
 
 $$
-T_{\text{i}} = \mathtt{f_temp_plasma_ion_electron}\times T_{\text{e}}
+T_{\text{i}} = \texttt{f_temp_plasma_ion_electron}\times T_{\text{e}}
 $$
 
 Depending on the value of `i_plasma_pedestal` different functions will be ran, the different run cases are given below:
@@ -271,7 +271,7 @@ The density and temperature profile runner function [`TeProfile/NeProfile.run()`
 Ratio of density-weighted to volume-averaged temperature factor is calculated:
 
 $$
-\mathtt{pcoef} = \frac{(1+\alpha_n)(1+\alpha_T)}{(1+\alpha_T + \alpha_n)}
+\texttt{pcoef} = \frac{(1+\alpha_n)(1+\alpha_T)}{(1+\alpha_T + \alpha_n)}
 $$
 
 --------
@@ -282,23 +282,23 @@ The line averaged density is then calculated for the profile paramaters
 Line averaged electron density is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds
 
 $$
-\mathtt{nd_electron_line}\  | \ \bar{n_{\text{e}}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
 $$
 
 This can be more easily represented in radial coordinates and returning $\rho = \frac{r}{a}$
 
 $$
-\mathtt{nd_electron_line} \  | \ \bar{n_{\text{e}}} = \frac{\int^a_0 n_0(1-r^2/a^2)^{\alpha_n} \ dr}{a}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{\int^a_0 n_0(1-r^2/a^2)^{\alpha_n} \ dr}{a}
 $$
 
 $$
-\mathtt{nd_electron_line} \  | \ \bar{n_{\text{e}}} = \frac{\left[\frac{an_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}\right]}{a}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{\left[\frac{an_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}\right]}{a}
 $$
 
 $\Gamma$ is the [gamma function](https://en.wikipedia.org/wiki/Gamma_function) and is calculated in the code with [scipy.special.gamma()](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gamma.html)
 
 $$
-\mathtt{nd_electron_line} / \bar{n_{\text{e}}} = \frac{n_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{n_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}
 $$
 
 This is in agreement with the derivation from the ITER Physics Design 1989 [^2]
@@ -310,8 +310,8 @@ $\blacksquare$
 The density weighted temperatures are set:
 
 $$\begin{aligned}
-\mathtt{temp_plasma_electron_density_weighted_kev} = \mathtt{pcoef} \times T_\text{e} \\
-\mathtt{temp_plasma_ion_density_weighted_kev} = \mathtt{pcoef}\times T_\text{i}
+\texttt{temp_plasma_electron_density_weighted_kev} = \texttt{pcoef} \times T_\text{e} \\
+\texttt{temp_plasma_ion_density_weighted_kev} = \texttt{pcoef}\times T_\text{i}
 \end{aligned}$$
 
 ------
@@ -379,13 +379,13 @@ $\blacksquare$
 The core values for the temperature and density are then calculated for the electrons and ions
 
 $$\begin{aligned}
-\mathtt{temp_plasma_electron_on_axis_kev} = T_\text{e} \times (\alpha_T+1) \\
-\mathtt{temp_plasma_ion_on_axis_kev} = T_\text{i} \times (\alpha_T+1)
+\texttt{temp_plasma_electron_on_axis_kev} = T_\text{e} \times (\alpha_T+1) \\
+\texttt{temp_plasma_ion_on_axis_kev} = T_\text{i} \times (\alpha_T+1)
 \end{aligned}$$
 
 $$\begin{aligned}
-\mathtt{nd_plasma_electron_on_axis} = n_{\text{e}} \times (\alpha_n+1) \\
-\mathtt{nd_plasma_ions_on_axis} = \mathtt{nd_ions_total} \times (\alpha_n+1)
+\texttt{nd_plasma_electron_on_axis} = n_{\text{e}} \times (\alpha_n+1) \\
+\texttt{nd_plasma_ions_on_axis} = \texttt{nd_ions_total} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----
@@ -395,7 +395,8 @@ $$\begin{aligned}
 The central plasma pressure is calculated from the ideal gas law.
 
 $$
-p_0 = (\mathtt{nd_plasma_electron_on_axis} \times \mathtt{temp_plasma_electron_on_axis_kev}+\mathtt{nd_plasma_ions_on_axis}\times \mathtt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
+p_0 = (\texttt{nd_plasma_electron_on_axis} \times \texttt{temp_plasma_electron_on_axis_kev}\\
++\texttt{nd_plasma_ions_on_axis}\times \texttt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
 $$
 
 With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.
@@ -461,7 +462,7 @@ $$
 The positive root for the 2nd derivative above:
 
 $$
-\mathtt{rho\_te\_max} = \frac{1}{\sqrt{2{\alpha_T} - 1}}
+\texttt{rho_te_max} = \frac{1}{\sqrt{2{\alpha_T} - 1}}
 $$
 
 Substituting the root above into the first derivative as $\rho$ to get the minima or maxima gradient value:
@@ -477,28 +478,28 @@ $$
 Simplify fully:
 
 $$
-\mathtt{dtdrho\_max}= -T_0\alpha_T(2^{\alpha_T})(-1+\alpha_T)^{(-1+\alpha_T)} (-1+2\alpha_T)^{(-0.5-\alpha_T)}
+\texttt{dtdrho_max}= -T_0\alpha_T(2^{\alpha_T})(-1+\alpha_T)^{(-1+\alpha_T)} (-1+2\alpha_T)^{(-0.5-\alpha_T)}
 $$
 
 Find the temperature on the profile where the gradient change is largest by substituting into the original profile function:
 
 $$
-\mathtt{te\_max} = T_0\left(1-\mathtt{rho\_te\_max}^2\right)^{\alpha_T}
+\texttt{te_max} = T_0\left(1-\texttt{rho_te_max}^2\right)^{\alpha_T}
 $$
 
 This solution for the profile gradient only holds true if $\alpha_T \ge 1$.
 
 In the region $0 \le \alpha_T \le 1$ when substituting the roots of the second derivative into the first derivative the function diverges into the complex number solution space.
 
-To overcome this we can assume the second derivative root to be a value. In this case we assume a default value of $\mathtt{rho\_te\_max}$ = 0.9.
+To overcome this we can assume the second derivative root to be a value. In this case we assume a default value of $\texttt{rho_te_max}$ = 0.9.
 Then we just substitute this value into the first derivative to
 
 $$
 -2T_0\alpha_T(0.9)(1-(0.9)^2)^{-1+\alpha_T}
 $$
 
-The value of $\mathtt{rho\_te\_max}$ can be manually changed in the code depending on the derivative profile required.
-You can use the slider in the graph below to experiment with the value of $\mathtt{rho\_te\_max}$ and how this changes the profile solutions.
+The value of $\texttt{rho_te_max}$ can be manually changed in the code depending on the derivative profile required.
+You can use the slider in the graph below to experiment with the value of $\texttt{rho_te_max}$ and how this changes the profile solutions.
 
 <!DOCTYPE html>
 <html lang="en">
@@ -567,7 +568,7 @@ You can use the slider in the graph below to experiment with the value of $\math
 We can now set the normalised gradient length:
 
 $$
-\mathtt{gradient\_length\_te} = -(\mathtt{dtdrho\_max})a \times \frac{\mathtt{rho\_te\_max}}{\mathtt{te\_max}}
+\texttt{gradient\_length\_te} = -(\texttt{dtdrho\_max})a \times \frac{\texttt{rho\_te\_max}}{\texttt{te\_max}}
 $$
 
 !!! note "Temperature & Density Case"
@@ -587,8 +588,10 @@ The density and temperature profile runner function [`TeProfile/NeProfile.run()`
  Density weighted temperatures are thus set as such
 
 $$
-\mathtt{temp_plasma_electron_density_weighted_kev} = \frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
-\mathtt{temp_plasma_ion_density_weighted_kev} = \mathtt{temp_plasma_electron_density_weighted_kev}\times \frac{T_\text{i}}{T_\text{e}}
+\texttt{temp_plasma_electron_density_weighted_kev} = \\
+\frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
+\texttt{temp_plasma_ion_density_weighted_kev} = \\
+\texttt{temp_plasma_electron_density_weighted_kev}\times \frac{T_\text{i}}{T_\text{e}}
 $$
 
 The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html) integration.
@@ -596,19 +599,19 @@ The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.
 Set profile factor which is the ratio of density-weighted to volume-averaged temperature
 
 $$
-\mathtt{pcoef} = \frac{\mathtt{temp_plasma_electron_density_weighted_kev}}{T_\text{e}}
+\texttt{pcoef} = \frac{\texttt{temp_plasma_electron_density_weighted_kev}}{T_\text{e}}
 $$
 
 Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
 
 $$
-\mathtt{nd_electron_line} = \int_0^1{n(\rho) \ d\rho}
+\texttt{nd_electron_line} = \int_0^1{n(\rho) \ d\rho}
 $$
 
 A divertor variable `prn1` is set to be equal to the separatrix density over the mean density:
 
 $$
-\mathtt{prn1} = \frac{n_{\text{e,sep}}}{n_{\text{e}}}
+\texttt{prn1} = \frac{n_{\text{e,sep}}}{n_{\text{e}}}
 $$
 
 --------
@@ -628,16 +631,16 @@ The same function is run from the `i_plasma_pedestal == 0 ` profile case, found 
 By default, the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ are set as fractions of the [Greenwald](https://wiki.fusion.ciemat.es/wiki/Greenwald_limit) limit such as:
 
 $$
-n_{\text{ped}} = \mathtt{f_nd_plasma_pedestal_greenwald} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+n_{\text{ped}} = \overbrace{f_{\text{GW,ped}}}^{\texttt{f_nd_plasma_pedestal_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
 $$
 
 $$
-n_{\text{sep}} = \mathtt{f_nd_plasma_separatrix_greenwald} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
+n_{\text{sep}} = \overbrace{f_{\text{GW,sep}}}^{\texttt{f_nd_plasma_separatrix_greenwald}} \times \frac{I_p [\text{A}]}{\pi a^2 [\text{m}^2]} \times 10^{14}
 $$
 
-To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\mathtt{f_nd_plasma_pedestal_greenwald}$ or $\mathtt{f_nd_plasma_separatrix_greenwald}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
+To set the values of $n_{\text{ped}}$ and $n_{\text{sep}}$ directly, the user can input the value of $\texttt{f_nd_plasma_pedestal_greenwald}$ or $\texttt{f_nd_plasma_separatrix_greenwald}$ to be less than 0.0 (i.e negative) to prevent the Greenwald fraction value being set.
 
-$\mathtt{f_nd_plasma_pedestal_greenwald}$ and $\mathtt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
+$\texttt{f_nd_plasma_pedestal_greenwald}$ and $\texttt{f_nd_plasma_separatrix_greenwald}$ can be set as iteration variables respectively by using `ixc = 45`
 and `ixc = 152` respectively
 
 ------

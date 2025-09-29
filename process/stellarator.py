@@ -4306,8 +4306,6 @@ class Stellarator:
 
         #  Poloidal physics_variables.beta
 
-        # beta_poloidal = physics_variables.beta * ( physics_variables.b_plasma_total/physics_variables.b_plasma_poloidal_average )**2 # Dont need this I think.
-
         #  Perform auxiliary power calculations
 
         self.stheat(False)

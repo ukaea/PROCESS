@@ -2798,7 +2798,6 @@ class Physics:
                     f"reinke t and fz, physics = {physics_variables.temp_plasma_separatrix_kev} , {reinke_variables.fzmin}"
                 ),
             )
-            # fsep = physics_variables.nd_plasma_separatrix_electron / physics_variables.nd_plasma_electrons_vol_avg
             fgw = (
                 physics_variables.dlimit[6]
                 / physics_variables.nd_plasma_electrons_vol_avg
