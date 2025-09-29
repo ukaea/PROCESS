@@ -2800,7 +2800,7 @@ class Physics:
             )
             # fsep = physics_variables.nd_plasma_separatrix_electron / physics_variables.nd_plasma_electrons_vol_avg
             fgw = (
-                physics_variables.dlimit(7)
+                physics_variables.dlimit[6]
                 / physics_variables.nd_plasma_electrons_vol_avg
             )
             # calculate separatrix temperature, if Reinke criterion is used
