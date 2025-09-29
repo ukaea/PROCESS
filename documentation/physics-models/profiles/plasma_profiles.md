@@ -568,7 +568,7 @@ You can use the slider in the graph below to experiment with the value of $\text
 We can now set the normalised gradient length:
 
 $$
-\texttt{gradient\_length\_te} = -(\texttt{dtdrho\_max})a \times \frac{\texttt{rho\_te\_max}}{\texttt{te\_max}}
+\texttt{gradient_length_te} = -(\texttt{dtdrho_max})a \times \frac{\texttt{rho_te_max}}{\texttt{te_max}}
 $$
 
 !!! note "Temperature & Density Case"
