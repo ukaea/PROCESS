@@ -3054,7 +3054,7 @@ class PFCoil:
                 for i in range(len(pfcoil_variables.z_pf_cs_current_filaments)):
                     op.ovarre(
                         self.mfile,
-                        f"Radial position of CS filament {i}",
+                        f"Vertical position of CS filament {i}",
                         f"z_pf_cs_current_filaments{i}",
                         pfcoil_variables.z_pf_cs_current_filaments[i],
                     )
@@ -4014,13 +4014,6 @@ class PFCoil:
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-            # The CS coil current at EOF
-            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-            # The CS coil current/copper area calculation for quench protection
-            # Copper area = (area of coil - area of steel)*(1- void fraction)*
-            # (fraction of copper in strands)
-            # rcv.copperaoh_m2 = c_cs_flat_top_end / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
-
         elif isumat == 7:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
             bc20m = tfv.b_crit_upper_nbti
@@ -4045,11 +4038,6 @@ class PFCoil:
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-            # The CS coil current at EOF
-            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-            # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = c_cs_flat_top_end / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
-
         elif isumat == 9:
             # Hazelton experimental data + Zhai conceptual model for REBCO
             bc20m = 138
@@ -4066,11 +4054,6 @@ class PFCoil:
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
-
-            # The CS coil current at EOF
-            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-            # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = c_cs_flat_top_end / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
 
         else:
             # Error condition
