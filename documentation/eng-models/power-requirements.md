@@ -19,15 +19,43 @@ $$
 #### Superconducting TF coil power requirements | `superconducting_tf_power_iter_1988()`
 
 
-Some details of the auxiliary systems are as follows.
+The electrical power requirements for the superconducting TF coils are as follows:
 
-`tfcpwr` calculates the TF coil power conversion system parameters.  Only the steady-state power consumption for a superconducting TFC system is described here.
+1. Calculate the cross-sectional areas of the TF bus by taking.
 
-The TF current is carried from the power supplies to the reactor by room-temperature aluminium busbars, organised in $N_{circuit}$ circuits.  The total length of the busbars is (somehwat arbitrarily) given by
+    $$
+    A_{\text{bus}} = \frac{\overbrace{I_{\text{TF,turn}}}^{\texttt{c_tf_turn_ka}}}{J_{\text{TF,design}}}
+    $$
 
-$$
-L_bus = 8 \pi R_0 + (1 + N_{circuit}) (12 R_0 + 80) 
-$$
+2. The total bus length is defined as  
+
+    $$
+    L_{\text{TF,bus}} = 8 \pi R_0 + (1 + N_{\text{circuit}}) (12 R_0 + 80) 
+    $$
+
+3. The total resistance of the bus bar is calculated
+
+    $$
+    \Omega_{\text{TF,bus}} = \frac{\overbrace{\rho_{\text{TF,bus}}}^{\texttt{rho_tf_bus}}}{L_{\text{TF,bus}}}{A_{\text{TF,bus}}}
+    $$
+
+4. The total voltage drop across the busbar is given by:
+
+    $$
+    V_{\text{TF,bus}} = I_{\text{TF,turn}} \times \Omega_{\text{TF,bus}}
+    $$
+
+5. The total impedance of the circuit is given by:
+
+    $$
+    Z_{\text{TF,total}} = \Omega_{\text{TF,bus}} + \frac{L_{\text{TF,total}}}{t_{\text{TF,charge}}}
+    $$
+
+6. The charging voltage is thus:
+
+    $$
+    V_{\text{TF,charge}} = I_{\text{TF,turn}} \times L_{\text{TF,total}}
+    $$
 
 The resistivity of the busbar is 2.62e-8 ohm.m (0.0262 ohm.mm²/m) (hard-coded).
 
