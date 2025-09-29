@@ -210,7 +210,7 @@ rmajor = 8.0
 * temp_plasma_electron_vol_avg_keV [keV]
 ixc = 4
 boundu(4) = 100.0
-temp_plasma_electron_vol_avg_keV = 12.0
+temp_plasma_electron_vol_avg_kev = 12.0
 
 * h factor
 ixc = 10
