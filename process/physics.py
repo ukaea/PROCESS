@@ -4831,7 +4831,6 @@ class Physics:
                     physics_variables.nd_plasma_pedestal_electron,
                 )
 
-            # This code is ODD# Don't change it# No explanation why f_nd_plasma_pedestal_greenwald and physics_variables.f_nd_plasma_separatrix_greenwald
             # must be assigned to their exisiting values#
             fgwped_out = (
                 physics_variables.nd_plasma_pedestal_electron
