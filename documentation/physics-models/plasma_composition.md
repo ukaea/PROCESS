@@ -36,7 +36,7 @@ using input array `f_nd_impurity_electrons(1,...,14)`. The available species alo
 As stated above, the number density fractions for hydrogen (all isotopes) and
 helium should not be set, as they are calculated by the code. This is to ensure 
 plasma quasi-neutrality taking into account the fuel ratios
-`f_plasma_fuel_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
+`f_plasma_fuel_deuterium`, `f_plasma_fuel_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
 be input by the user or selected as an iteration variable.
 
 !!! note "Location of impurities"

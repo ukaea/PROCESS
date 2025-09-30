@@ -716,7 +716,7 @@ INPUT_VARIABLES = {
     "f_t_turn_tf": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "f_tritium": InputVariable(
+    "f_plasma_fuel_tritium": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "f_beam_tritium": InputVariable(

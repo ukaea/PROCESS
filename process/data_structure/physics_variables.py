@@ -501,7 +501,7 @@ fne0: float = None
 """
 
 
-f_tritium: float = None
+f_plasma_fuel_tritium: float = None
 """tritium fuel fraction"""
 
 
@@ -1425,7 +1425,7 @@ def init_physics_variables():
     global fplhsep
     global fp_plasma_separatrix_min_mw
     global fne0
-    global f_tritium
+    global f_plasma_fuel_tritium
     global fusden_total
     global fusrat_total
     global fusrat_plasma_dt_profile
@@ -1672,7 +1672,7 @@ def init_physics_variables():
     fplhsep = 1.0
     fp_plasma_separatrix_min_mw = 1.0
     fne0 = 1.0
-    f_tritium = 0.5
+    f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
     fusrat_plasma_dt_profile = []

@@ -4351,7 +4351,7 @@ class Stellarator:
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
                 physics_variables.f_plasma_fuel_deuterium,
-                physics_variables.f_tritium,
+                physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
