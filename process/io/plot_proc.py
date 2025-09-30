@@ -10776,11 +10776,35 @@ def plot_beta_profiles(axis, mfile_data, scan):
         for i in range(2 * n_plasma_profile_elements)
     ]
 
+    beta_poloidal_profile = [
+        mfile_data.data[f"beta_poloidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    beta_total_profile = [
+        mfile_data.data[f"beta_total_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
     axis.plot(
         np.linspace(-1, 1, 2 * n_plasma_profile_elements),
         beta_plasma_toroidal_profile,
         color="blue",
         label="Beta Toroidal",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_poloidal_profile,
+        color="red",
+        label="Beta Poloidal",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_total_profile,
+        color="green",
+        label="Beta Total",
     )
 
     axis.set_xlabel("$\\rho$ [r/a]")
@@ -10791,6 +10815,7 @@ def plot_beta_profiles(axis, mfile_data, scan):
     axis.legend()
     axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
     axis.grid(True, linestyle="--", alpha=0.5)
+    axis.set_ylim(bottom=0, top=1.5)
 
 
 def main_plot(

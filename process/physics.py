@@ -1790,6 +1790,22 @@ class Physics:
             for i in range(len(physics_variables.b_plasma_toroidal_profile))
         ])
 
+        physics_variables.beta_poloidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_poloidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_poloidal_profile))
+        ])
+
+        physics_variables.beta_total_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_total_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_total_profile))
+        ])
+
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.beta_poloidal = calculate_poloidal_beta(
             physics_variables.b_plasma_total,
@@ -3885,7 +3901,8 @@ class Physics:
 
         Plasma beta is the ratio of plasma pressure to magnetic pressure.
         """
-
+        if b_field == 0:
+            return 0.0
         return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
     def calculate_poloidal_field_profile(
@@ -4499,7 +4516,20 @@ class Physics:
                 f"beta_toroidal_profile{i}",
                 physics_variables.beta_toroidal_profile[i],
             )
-
+        for i in range(len(physics_variables.beta_poloidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta poloidal profile at point {i}",
+                f"beta_poloidal_profile{i}",
+                physics_variables.beta_poloidal_profile[i],
+            )
+        for i in range(len(physics_variables.beta_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta total profile at point {i}",
+                f"beta_total_profile{i}",
+                physics_variables.beta_total_profile[i],
+            )
         po.ovarre(
             self.outfile,
             "Fast alpha beta",
