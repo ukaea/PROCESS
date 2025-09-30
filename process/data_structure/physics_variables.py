@@ -448,7 +448,7 @@ f_alpha_ion: float = None
 """fraction of alpha power to ions"""
 
 
-f_deuterium: float = None
+f_plasma_fuel_deuterium: float = None
 """deuterium fuel fraction"""
 
 
@@ -1431,7 +1431,7 @@ def init_physics_variables():
     global f_alpha_electron
     global f_p_alpha_plasma_deposited
     global f_alpha_ion
-    global f_deuterium
+    global f_plasma_fuel_deuterium
     global f_p_div_lower
     global ffwal
     global f_nd_plasma_pedestal_greenwald
@@ -1684,7 +1684,7 @@ def init_physics_variables():
     f_alpha_electron = 0.0
     f_p_alpha_plasma_deposited = 0.95
     f_alpha_ion = 0.0
-    f_deuterium = 0.5
+    f_plasma_fuel_deuterium = 0.5
     f_p_div_lower = 1.0
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85

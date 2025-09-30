@@ -4350,7 +4350,7 @@ class Stellarator:
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
-                physics_variables.f_deuterium,
+                physics_variables.f_plasma_fuel_deuterium,
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
@@ -5408,12 +5408,12 @@ class Neoclassics:
             * (1 - rho**2) ** physics_variables.alphan
         )
         densT = (
-            (1 - physics_variables.f_deuterium)
+            (1 - physics_variables.f_plasma_fuel_deuterium)
             * physics_variables.nd_plasma_ions_on_axis
             * (1 - rho**2) ** physics_variables.alphan
         )
         densD = (
-            physics_variables.f_deuterium
+            physics_variables.f_plasma_fuel_deuterium
             * physics_variables.nd_plasma_ions_on_axis
             * (1 - rho**2) ** physics_variables.alphan
         )
@@ -5479,7 +5479,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * (1 - physics_variables.f_deuterium)
+            * (1 - physics_variables.f_plasma_fuel_deuterium)
             * physics_variables.nd_plasma_ions_on_axis
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
@@ -5489,7 +5489,7 @@ class Neoclassics:
             * 1.0
             / physics_variables.rminor
             * rho
-            * physics_variables.f_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
             * physics_variables.nd_plasma_ions_on_axis
             * (1.0 - rho**2) ** (physics_variables.alphan - 1.0)
             * physics_variables.alphan
@@ -5630,8 +5630,9 @@ class Neoclassics:
         )
         density = np.array([
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_fuel_ions * physics_variables.f_deuterium,
-            physics_variables.nd_fuel_ions * (1 - physics_variables.f_deuterium),
+            physics_variables.nd_fuel_ions * physics_variables.f_plasma_fuel_deuterium,
+            physics_variables.nd_fuel_ions
+            * (1 - physics_variables.f_plasma_fuel_deuterium),
             physics_variables.nd_alphas,
         ])
 

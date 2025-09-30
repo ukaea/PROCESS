@@ -159,7 +159,7 @@ INPUT_VARIABLES = {
     "f_p_div_lower": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
-    "f_deuterium": InputVariable(
+    "f_plasma_fuel_deuterium": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "ffwal": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),

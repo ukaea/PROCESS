@@ -55,7 +55,7 @@ profiles
 ## Setting of plasma fuel composition
 
 The fractional composition of the 'fuel' ions ($\text{D}$, $\text{T}$ and $^3\text{He}$) is
-controlled using the three variables `f_deuterium`, `f_tritium` and `f_helium3`, respectively.
+controlled using the three variables `f_plasma_fuel_deuterium`, `f_tritium` and `f_helium3`, respectively.
 More information about setting seeded impurities and simulating first wall sputtering can be found in the [composition and impurities section](../plasma_composition.md).
 
 It is also possible to optimise on the deuterium-tritium fuel mixture ratio. For this, `f_tritium` **must** be set as an iteration variable with `ixc = 173`. More info can be found [here](#fuel-ions-mixture-self-consistency).

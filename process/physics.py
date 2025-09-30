@@ -2206,7 +2206,7 @@ class Physics:
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
-                physics_variables.f_deuterium,
+                physics_variables.f_plasma_fuel_deuterium,
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
@@ -3298,7 +3298,7 @@ class Physics:
             impurity_radiation.element2index("H_")
         ] = (
             physics_variables.nd_protons
-            + (physics_variables.f_deuterium + physics_variables.f_tritium)
+            + (physics_variables.f_plasma_fuel_deuterium + physics_variables.f_tritium)
             * physics_variables.nd_fuel_ions
             + physics_variables.nd_beam_ions
         ) / physics_variables.nd_plasma_electrons_vol_avg
@@ -3401,7 +3401,7 @@ class Physics:
 
         # Average atomic masses of injected fuel species
         physics_variables.m_fuel_amu = (
-            (constants.M_DEUTERON_AMU * physics_variables.f_deuterium)
+            (constants.M_DEUTERON_AMU * physics_variables.f_plasma_fuel_deuterium)
             + (constants.M_TRITON_AMU * physics_variables.f_tritium)
             + (constants.M_HELION_AMU * physics_variables.f_helium3)
         )
@@ -3441,7 +3441,7 @@ class Physics:
         # Sum of (Zi^2*n_i) / m_i
         physics_variables.zeffai = (
             (
-                physics_variables.f_deuterium
+                physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_fuel_ions
                 / constants.M_DEUTERON_AMU
             )
@@ -5060,8 +5060,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Deuterium fuel fraction",
-            "(f_deuterium)",
-            physics_variables.f_deuterium,
+            "(f_plasma_fuel_deuterium)",
+            physics_variables.f_plasma_fuel_deuterium,
         )
         po.ovarrf(
             self.outfile,

@@ -268,7 +268,7 @@ def fast_alpha_beta(
     """
 
     # Determine average fast alpha density
-    if physics_variables.f_deuterium < 1.0:
+    if physics_variables.f_plasma_fuel_deuterium < 1.0:
         beta_thermal = (
             2.0
             * constants.RMU0

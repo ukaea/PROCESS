@@ -368,7 +368,7 @@ lablxc: list[str] = None
 * (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
 * (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
 * (172) dx_tf_side_case_min : TF side case thickness [m]
-* (173) f_deuterium : Deuterium fraction in fuel
+* (173) f_plasma_fuel_deuterium : Deuterium fraction in fuel
 * (174) EMPTY : Description
 * (175) EMPTY : Description
 """

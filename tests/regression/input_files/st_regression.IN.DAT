@@ -622,7 +622,7 @@ boundu(28) = 1.0
 * DESCRIPTION:   Seeded f_nd_protium_electrons density / electron density (default = 0.0)
 * JUSTIFICATION: Not used, no f_nd_protium_electrons seeding.
 
-*f_deuterium = 
+*f_plasma_fuel_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 

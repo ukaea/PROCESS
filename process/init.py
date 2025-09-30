@@ -368,7 +368,7 @@ def check_process(inputs):  # noqa: ARG001
     if (
         abs(
             1.0
-            - data_structure.physics_variables.f_deuterium
+            - data_structure.physics_variables.f_plasma_fuel_deuterium
             - data_structure.physics_variables.f_tritium
             - data_structure.physics_variables.f_helium3
         )
@@ -376,7 +376,7 @@ def check_process(inputs):  # noqa: ARG001
     ):
         raise ProcessValidationError(
             "Fuel ion fractions do not sum to 1.0",
-            f_deuterium=data_structure.physics_variables.f_deuterium,
+            f_plasma_fuel_deuterium=data_structure.physics_variables.f_plasma_fuel_deuterium,
             f_tritium=data_structure.physics_variables.f_tritium,
             f_helium3=data_structure.physics_variables.f_helium3,
         )

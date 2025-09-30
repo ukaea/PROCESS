@@ -219,7 +219,7 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dt,
             )
-            * physics_variables.f_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
             * physics_variables.f_tritium
             * (
                 self.plasma_profile.neprofile.profile_y
@@ -248,7 +248,10 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (
+                physics_variables.f_plasma_fuel_deuterium
+                * physics_variables.nd_fuel_ions
+            )
             * (physics_variables.f_tritium * physics_variables.nd_fuel_ions)
         )
 
@@ -319,7 +322,7 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dhe3,
             )
-            * physics_variables.f_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
             * physics_variables.f_helium3
             * (
                 self.plasma_profile.neprofile.profile_y
@@ -338,7 +341,10 @@ class FusionReactionRate:
         fusion_power_density = (
             sigmav
             * reaction_energy
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (
+                physics_variables.f_plasma_fuel_deuterium
+                * physics_variables.nd_fuel_ions
+            )
             * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
         )
 
@@ -410,8 +416,8 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dd1,
             )
-            * physics_variables.f_deuterium
-            * physics_variables.f_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
@@ -432,8 +438,14 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * (1.0 - self.f_dd_branching_trit)
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (
+                physics_variables.f_plasma_fuel_deuterium
+                * physics_variables.nd_fuel_ions
+            )
+            * (
+                physics_variables.f_plasma_fuel_deuterium
+                * physics_variables.nd_fuel_ions
+            )
         )
 
         # Power densities for different particles [MW/m^3]
@@ -504,8 +516,8 @@ class FusionReactionRate:
                 * self.plasma_profile.teprofile.profile_y,
                 dd2,
             )
-            * physics_variables.f_deuterium
-            * physics_variables.f_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
+            * physics_variables.f_plasma_fuel_deuterium
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
@@ -526,8 +538,14 @@ class FusionReactionRate:
             sigmav
             * reaction_energy
             * self.f_dd_branching_trit
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
-            * (physics_variables.f_deuterium * physics_variables.nd_fuel_ions)
+            * (
+                physics_variables.f_plasma_fuel_deuterium
+                * physics_variables.nd_fuel_ions
+            )
+            * (
+                physics_variables.f_plasma_fuel_deuterium
+                * physics_variables.nd_fuel_ions
+            )
         )
 
         # Power densities for different particles [MW/m^3]
