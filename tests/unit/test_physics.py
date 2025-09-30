@@ -1218,7 +1218,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         plasmacurrentparam.beta_norm_total,
     )
 
-    monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
+    monkeypatch.setattr(
+        physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta
+    )
 
     b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,

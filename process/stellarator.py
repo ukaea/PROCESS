@@ -4256,7 +4256,7 @@ class Stellarator:
 
         #  Set physics_variables.beta as a consequence:
         #  This replaces constraint equation 1 as it is just an equality.
-        physics_variables.beta = (
+        physics_variables.beta_total_vol_avg = (
             physics_variables.beta_fast_alpha
             + physics_variables.beta_beam
             + 2.0e3
@@ -4272,7 +4272,7 @@ class Stellarator:
         )
         physics_variables.e_plasma_beta = (
             1.5e0
-            * physics_variables.beta
+            * physics_variables.beta_total_vol_avg
             * physics_variables.b_plasma_total
             * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)

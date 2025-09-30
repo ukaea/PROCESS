@@ -350,7 +350,7 @@ This constraint can be activated by stating `icc = 1` in the input file.
 Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\mathtt{beta}$ is consistent in value with the rest of the physics parameters
 
 $$
-\mathtt{beta} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
+\mathtt{beta_total_vol_avg} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
 $$
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**

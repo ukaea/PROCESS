@@ -25,8 +25,8 @@ neqns = 3
 * Beta consistency *
 *------------------*
 icc = 1
-ixc = 5 * beta
-beta = 0.03
+ixc = 5 * beta_total_vol_avg
+beta_total_vol_avg = 0.03
 
 * Global power balance *
 *----------------------*
