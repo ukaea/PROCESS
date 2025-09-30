@@ -1696,6 +1696,19 @@ class Physics:
             physics_variables.bt**2 + physics_variables.bp**2
         )
 
+        # Calculate the toroidal field across the plasma
+        # Calculate the toroidal field profile across the plasma (1/R dependence)
+        rho = np.linspace(
+            physics_variables.rmajor - physics_variables.rminor,
+            physics_variables.rmajor + physics_variables.rminor,
+            physics_variables.n_plasma_profile_elements,
+        )
+        # Avoid division by zero at the magnetic axis
+        rho = np.where(rho == 0, 1e-10, rho)
+        physics_variables.b_plasma_toroidal_profile = (
+            physics_variables.rmajor * physics_variables.bt / rho
+        )
+
         # ============================================
 
         # -----------------------------------------------------
@@ -4110,6 +4123,13 @@ class Physics:
                 "(bt)",
                 physics_variables.bt,
             )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Toroidal field in plasma at point {i}",
+                    f"b_plasma_toroidal_profile{i}",
+                    physics_variables.b_plasma_toroidal_profile[i],
+                )
             po.ovarrf(
                 self.outfile,
                 "Average poloidal field (T)",
