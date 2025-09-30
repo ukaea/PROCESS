@@ -116,7 +116,9 @@ INPUT_VARIABLES = {
     "beamfus0": InputVariable(
         data_structure.physics_variables, float, range=(0.01, 10.0)
     ),
-    "beta": InputVariable(data_structure.physics_variables, float, range=(0.0, 1.0)),
+    "beta_total_vol_avg": InputVariable(
+        data_structure.physics_variables, float, range=(0.0, 1.0)
+    ),
     "beta_max": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),

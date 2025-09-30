@@ -1742,7 +1742,7 @@ class Physics:
         # -----------------------------------------------------
 
         physics_variables.beta_toroidal = (
-            physics_variables.beta
+            physics_variables.beta_total_vol_avg
             * physics_variables.b_plasma_total**2
             / physics_variables.b_plasma_toroidal_on_axis**2
         )
@@ -1751,11 +1751,11 @@ class Physics:
         physics_variables.beta_poloidal = calculate_poloidal_beta(
             physics_variables.b_plasma_total,
             physics_variables.b_plasma_poloidal_average,
-            physics_variables.beta,
+            physics_variables.beta_total_vol_avg,
         )
 
         physics_variables.beta_thermal = (
-            physics_variables.beta
+            physics_variables.beta_total_vol_avg
             - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         )
@@ -1821,7 +1821,7 @@ class Physics:
         # Plasma thermal energy derived from the total beta
         physics_variables.e_plasma_beta = (
             1.5e0
-            * physics_variables.beta
+            * physics_variables.beta_total_vol_avg
             * physics_variables.b_plasma_total
             * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
@@ -1893,13 +1893,15 @@ class Physics:
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
         current_drive_variables.f_c_plasma_diamagnetic_hender = (
-            diamagnetic_fraction_hender(physics_variables.beta)
+            diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
         )
 
         # SCENE scaling for diamagnetic current
         current_drive_variables.f_c_plasma_diamagnetic_scene = (
             diamagnetic_fraction_scene(
-                physics_variables.beta, physics_variables.q95, physics_variables.q0
+                physics_variables.beta_total_vol_avg,
+                physics_variables.q95,
+                physics_variables.q0,
             )
         )
 
@@ -1918,7 +1920,7 @@ class Physics:
 
         # Pfirsch-Schlüter scaling for diamagnetic current
         current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(
-            physics_variables.beta
+            physics_variables.beta_total_vol_avg
         )
 
         if physics_variables.i_pfirsch_schluter_current == 1:
@@ -1935,7 +1937,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_iter89(
                 physics_variables.aspect,
-                physics_variables.beta,
+                physics_variables.beta_total_vol_avg,
                 physics_variables.b_plasma_total,
                 physics_variables.plasma_current,
                 physics_variables.q95,
@@ -3817,7 +3819,7 @@ class Physics:
         # Normalised beta from Troyon beta limit
         physics_variables.beta_norm_total = (
             1.0e8
-            * physics_variables.beta
+            * physics_variables.beta_total_vol_avg
             * rminor
             * b_plasma_toroidal_on_axis
             / plasma_current
@@ -4336,7 +4338,12 @@ class Physics:
                 "OP ",
             )
 
-        po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
+        po.ovarre(
+            self.outfile,
+            "Total plasma beta",
+            "(beta)",
+            physics_variables.beta_total_vol_avg,
+        )
         if physics_variables.i_beta_component == 0:
             po.ovarrf(
                 self.outfile,

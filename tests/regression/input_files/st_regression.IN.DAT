@@ -310,7 +310,7 @@ icc = 24
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
 
 ixc = 5
-beta = 0.2
+beta_total_vol_avg = 0.2
 boundl(5) = 0.01
 boundu(5) = 1.0
 * DESCRIPTION:   Total Plasma Beta, 

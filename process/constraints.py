@@ -127,7 +127,7 @@ def constraint_equation_1():
 
     author: J Morris
 
-    beta: total plasma beta
+    beta_total_vol_avg: total plasma beta
     beta_{ft}: fast alpha beta component
     beta_{NBI}: neutral beam beta component
     n_e: electron density [/m3]
@@ -152,12 +152,14 @@ def constraint_equation_1():
             )
             / data_structure.physics_variables.b_plasma_total**2
         )
-        / data_structure.physics_variables.beta
+        / data_structure.physics_variables.beta_total_vol_avg
     )
     return ConstraintResult(
         normalised_residual=cc,
-        constraint_value=(data_structure.physics_variables.beta * (1.0 - cc)),
-        constraint_error=(data_structure.physics_variables.beta * cc),
+        constraint_value=(
+            data_structure.physics_variables.beta_total_vol_avg * (1.0 - cc)
+        ),
+        constraint_error=(data_structure.physics_variables.beta_total_vol_avg * cc),
     )
 
 
@@ -798,7 +800,7 @@ def constraint_equation_24():
     - 1 use stellarator model
     fbeta_max: f-value for beta limit
     beta_max: allowable beta
-    beta: total plasma beta (calculated if i_plasma_pedestal =3)
+    beta_total_vol_avg: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
     b_plasma_toroidal_on_axis: toroidal field
@@ -810,21 +812,21 @@ def constraint_equation_24():
         or data_structure.stellarator_variables.istell != 0
     ):
         cc = (
-            data_structure.physics_variables.beta
+            data_structure.physics_variables.beta_total_vol_avg
             / data_structure.physics_variables.beta_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
         con = data_structure.physics_variables.beta_max
         err = (
             data_structure.physics_variables.beta_max
-            - data_structure.physics_variables.beta
+            - data_structure.physics_variables.beta_total_vol_avg
             / data_structure.constraint_variables.fbeta_max
         )
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
     elif data_structure.physics_variables.i_beta_component == 1:
         cc = (
             (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
                 - data_structure.physics_variables.beta_beam
             )
@@ -835,7 +837,7 @@ def constraint_equation_24():
         err = (
             data_structure.physics_variables.beta_max
             - (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
                 - data_structure.physics_variables.beta_beam
             )
@@ -845,7 +847,7 @@ def constraint_equation_24():
     elif data_structure.physics_variables.i_beta_component == 2:
         cc = (
             (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
             )
             / data_structure.physics_variables.beta_max
@@ -853,14 +855,14 @@ def constraint_equation_24():
         )
         con = data_structure.physics_variables.beta_max * (1.0 - cc)
         err = (
-            data_structure.physics_variables.beta
+            data_structure.physics_variables.beta_total_vol_avg
             - data_structure.physics_variables.beta_fast_alpha
         ) * cc
     # Beta limit applies to toroidal beta
     elif data_structure.physics_variables.i_beta_component == 3:
         cc = (
             (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 * (
                     data_structure.physics_variables.b_plasma_total
                     / data_structure.physics_variables.b_plasma_toroidal_on_axis
@@ -874,7 +876,7 @@ def constraint_equation_24():
         err = (
             data_structure.physics_variables.beta_max
             - (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 * (
                     data_structure.physics_variables.b_plasma_total
                     / data_structure.physics_variables.b_plasma_toroidal_on_axis

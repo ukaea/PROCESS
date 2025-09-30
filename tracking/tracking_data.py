@@ -122,7 +122,7 @@ class ProcessTracker:
         "Physics.rmajor",
         "Physics.q95",
         "Physics.temp_plasma_electron_vol_avg_kev",
-        "Physics.beta",
+        "Physics.beta_total_vol_avg",
         "Physics.f_c_plasma_inductive",
         "Physics.zeff",
         "Physics.b_plasma_toroidal_on_axis",

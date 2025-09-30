@@ -213,8 +213,8 @@ beamfus0: float = None
 """multiplier for beam-background fusion calculation"""
 
 
-beta: float = None
-"""total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
+beta_total_vol_avg: float = None
+"""Volume averaged total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
 
 
 beta_fast_alpha: float = None
@@ -1375,7 +1375,7 @@ def init_physics_variables():
     global alphat
     global aspect
     global beamfus0
-    global beta
+    global beta_total_vol_avg
     global beta_fast_alpha
     global beta_max
     global beta_min
@@ -1628,7 +1628,7 @@ def init_physics_variables():
     alphat = 0.5
     aspect = 2.907
     beamfus0 = 1.0
-    beta = 0.042
+    beta_total_vol_avg = 0.042
     beta_fast_alpha = 0.0
     beta_max = 0.0
     beta_min = 0.0
