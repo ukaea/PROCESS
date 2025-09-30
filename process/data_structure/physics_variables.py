@@ -288,6 +288,9 @@ bp: float = None
 bt: float = None
 """toroidal field on axis (T) (`iteration variable 2`)"""
 
+b_plasma_toroidal_profile: list[float] = None
+"""toroidal field profile in plasma (T)"""
+
 
 btot: float = None
 """total toroidal + poloidal field (T)"""
@@ -1395,6 +1398,7 @@ def init_physics_variables():
     global betbm0
     global bp
     global bt
+    global b_plasma_toroidal_profile
     global btot
     global burnup
     global burnup_in
@@ -1648,6 +1652,7 @@ def init_physics_variables():
     betbm0 = 1.5
     bp = 0.0
     bt = 5.68
+    b_plasma_toroidal_profile = []
     btot = 0.0
     burnup = 0.0
     burnup_in = 0.0
