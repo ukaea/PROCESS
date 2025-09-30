@@ -1749,6 +1749,15 @@ class Physics:
             physics_variables.rmajor * physics_variables.bt / rho
         )
 
+        physics_variables.b_plasma_poloidal_profile = (
+            self.calculate_poloidal_field_profile(
+                j_plasma_on_axis=physics_variables.j_plasma_0,
+                alphaj=physics_variables.alphaj,
+                n_profile_elements=physics_variables.n_plasma_profile_elements,
+                rminor=physics_variables.rminor,
+            )
+        )
+
         # ============================================
 
         # -----------------------------------------------------
@@ -3873,6 +3882,46 @@ class Physics:
 
         return 2 * constants.RMU0 * pres_plasma / (b_field**2)
 
+    def calculate_poloidal_field_profile(
+        self,
+        j_plasma_on_axis: float,
+        alphaj: float,
+        n_profile_elements: int,
+        rminor: float,
+    ) -> np.ndarray:
+        """
+        This method uses Ampère's law and the circular plasma approximation with a parabolic current profile
+        to compute the poloidal magnetic field profile.
+
+        :param float j_plasma_on_axis: On-axis plasma current density (A/m^2).
+        :param float alphaj: Current profile index (dimensionless).
+        :param int n_profile_elements: Number of radial profile elements (half the total number of points across the diameter).
+        :param float rminor: Plasma minor radius (m).
+
+        :returns: Poloidal magnetic field profile (T) across the full plasma diameter (length 2 * n_profile_elements).
+        :rtype: numpy.ndarray
+
+        """
+        n_profile_elements = n_profile_elements // 2
+        rho = np.linspace(
+            0, rminor, n_profile_elements
+        )  # Normalized minor radius (0 to 1)
+        r = rho * rminor
+
+        j_plasma_profile = j_plasma_on_axis * (1 - (rho / rminor) ** 2) ** alphaj
+
+        integrand = 2 * np.pi * (r * j_plasma_profile)  # dI/dr'
+        dr = r[1] - r[0]
+        c_enclosed = np.cumsum(integrand * dr)  # cumulative current
+
+        # Poloidal field (avoid division by zero at axis)
+        b_poloidal = np.zeros_like(r)
+        mask = rho > 0
+        b_poloidal[mask] = constants.RMU0 / (2 * np.pi * r[mask]) * c_enclosed[mask]
+
+        # Mirror the b_poloidal profile and concatenate to match the doubled toroidal field profile
+        return np.concatenate([b_poloidal[::-1], b_poloidal])
+
     def outtim(self):
         po.oheadr(self.outfile, "Times")
 
@@ -4264,6 +4313,13 @@ class Physics:
                     f"Toroidal field in plasma at point {i}",
                     f"b_plasma_toroidal_profile{i}",
                     physics_variables.b_plasma_toroidal_profile[i],
+                )
+            for i in range(len(physics_variables.b_plasma_poloidal_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Poloidal field in plasma at point {i}",
+                    f"b_plasma_poloidal_profile{i}",
+                    physics_variables.b_plasma_poloidal_profile[i],
                 )
             po.ovarrf(
                 self.outfile,

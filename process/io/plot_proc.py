@@ -10708,6 +10708,11 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         for i in range(n_plasma_profile_elements)
     ]
 
+    b_plasma_poloidal_profile = [
+        mfile_data.data[f"b_plasma_poloidal_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
     # Get major and minor radius for x-axis in metres
     rmajor = mfile_data.data["rmajor"].get_scan(scan)
     rminor = mfile_data.data["rminor"].get_scan(scan)
@@ -10723,6 +10728,13 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         b_plasma_toroidal_profile,
         color="blue",
         label="Toroidal B-field [T]",
+    )
+
+    axis.plot(
+        x_range_plasma,
+        b_plasma_poloidal_profile,
+        color="red",
+        label="Poloidal B-field [T]",
     )
 
     # Plot plasma on top of magnetic field, displaced vertically by bt
