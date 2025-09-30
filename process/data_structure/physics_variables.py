@@ -288,6 +288,9 @@ b_plasma_poloidal_average: float = None
 b_plasma_toroidal_on_axis: float = None
 """Plasma toroidal field on axis (T) (`iteration variable 2`)"""
 
+b_plasma_toroidal_profile: list[float] = None
+"""toroidal field profile in plasma (T)"""
+
 
 b_plasma_total: float = None
 """Sum of plasma total toroidal + poloidal field (T)"""
@@ -1391,6 +1394,7 @@ def init_physics_variables():
     global betbm0
     global b_plasma_poloidal_average
     global b_plasma_toroidal_on_axis
+    global b_plasma_toroidal_profile
     global b_plasma_total
     global burnup
     global burnup_in
@@ -1643,6 +1647,7 @@ def init_physics_variables():
     betbm0 = 1.5
     b_plasma_poloidal_average = 0.0
     b_plasma_toroidal_on_axis = 5.68
+    b_plasma_toroidal_profile = []
     b_plasma_total = 0.0
     burnup = 0.0
     burnup_in = 0.0
