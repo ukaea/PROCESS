@@ -2207,7 +2207,7 @@ class Physics:
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
                 physics_variables.f_plasma_fuel_deuterium,
-                physics_variables.f_tritium,
+                physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
@@ -3298,7 +3298,10 @@ class Physics:
             impurity_radiation.element2index("H_")
         ] = (
             physics_variables.nd_protons
-            + (physics_variables.f_plasma_fuel_deuterium + physics_variables.f_tritium)
+            + (
+                physics_variables.f_plasma_fuel_deuterium
+                + physics_variables.f_plasma_fuel_tritium
+            )
             * physics_variables.nd_fuel_ions
             + physics_variables.nd_beam_ions
         ) / physics_variables.nd_plasma_electrons_vol_avg
@@ -3402,7 +3405,7 @@ class Physics:
         # Average atomic masses of injected fuel species
         physics_variables.m_fuel_amu = (
             (constants.M_DEUTERON_AMU * physics_variables.f_plasma_fuel_deuterium)
-            + (constants.M_TRITON_AMU * physics_variables.f_tritium)
+            + (constants.M_TRITON_AMU * physics_variables.f_plasma_fuel_tritium)
             + (constants.M_HELION_AMU * physics_variables.f_helium3)
         )
 
@@ -3446,7 +3449,7 @@ class Physics:
                 / constants.M_DEUTERON_AMU
             )
             + (
-                physics_variables.f_tritium
+                physics_variables.f_plasma_fuel_tritium
                 * physics_variables.nd_fuel_ions
                 / constants.M_TRITON_AMU
             )
@@ -5066,8 +5069,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Tritium fuel fraction",
-            "(f_tritium)",
-            physics_variables.f_tritium,
+            "(f_plasma_fuel_tritium)",
+            physics_variables.f_plasma_fuel_tritium,
         )
         po.ovarrf(
             self.outfile,

@@ -626,7 +626,7 @@ boundu(28) = 1.0
 * DESCRIPTION:   Deuterium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*f_tritium = 
+*f_plasma_fuel_tritium = 
 * DESCRIPTION:   Tritium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 

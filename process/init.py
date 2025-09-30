@@ -369,7 +369,7 @@ def check_process(inputs):  # noqa: ARG001
         abs(
             1.0
             - data_structure.physics_variables.f_plasma_fuel_deuterium
-            - data_structure.physics_variables.f_tritium
+            - data_structure.physics_variables.f_plasma_fuel_tritium
             - data_structure.physics_variables.f_helium3
         )
         > 1e-6
@@ -377,12 +377,12 @@ def check_process(inputs):  # noqa: ARG001
         raise ProcessValidationError(
             "Fuel ion fractions do not sum to 1.0",
             f_plasma_fuel_deuterium=data_structure.physics_variables.f_plasma_fuel_deuterium,
-            f_tritium=data_structure.physics_variables.f_tritium,
+            f_plasma_fuel_tritium=data_structure.physics_variables.f_plasma_fuel_tritium,
             f_helium3=data_structure.physics_variables.f_helium3,
         )
 
     if (
-        data_structure.physics_variables.f_tritium < 1.0e-3
+        data_structure.physics_variables.f_plasma_fuel_tritium < 1.0e-3
     ):  # tritium fraction is negligible
         data_structure.buildings_variables.triv = 0.0
         data_structure.heat_transport_variables.p_tritium_plant_electric_mw = 0.0

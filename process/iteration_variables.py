@@ -424,7 +424,9 @@ ITERATION_VARIABLES = {
     172: IterationVariable(
         "dx_tf_side_case_min", data_structure.tfcoil_variables, 0.001, 1.0
     ),
-    173: IterationVariable("f_tritium", data_structure.physics_variables, 0.000, 1.000),
+    173: IterationVariable(
+        "f_plasma_fuel_tritium", data_structure.physics_variables, 0.000, 1.000
+    ),
     174: IterationVariable("triang", data_structure.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", data_structure.physics_variables, 0.00, 10.00),
 }

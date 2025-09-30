@@ -2874,7 +2874,7 @@ def plot_main_plasma_information(
     textstr_reactions = (
         f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
         f"Fuel mixture: \n"
-        f"|  D: {mfile_data.data['f_plasma_fuel_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
+        f"|  D: {mfile_data.data['f_plasma_fuel_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_plasma_fuel_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
         f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"

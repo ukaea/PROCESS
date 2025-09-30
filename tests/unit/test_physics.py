@@ -1360,7 +1360,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     m_fuel_amu: Any = None
 
-    f_tritium: Any = None
+    f_plasma_fuel_tritium: Any = None
 
     nd_fuel_ions: Any = None
 
@@ -1526,7 +1526,7 @@ class PlasmaCompositionParam(NamedTuple):
             i_plasma_ignited=0,
             f_alpha_electron=0,
             m_fuel_amu=0,
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             nd_fuel_ions=0,
             m_ions_total_amu=0,
             nd_ions_total=0,
@@ -1644,7 +1644,7 @@ class PlasmaCompositionParam(NamedTuple):
             i_plasma_ignited=0,
             f_alpha_electron=0.6845930883190634,
             m_fuel_amu=2.5,
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             nd_fuel_ions=5.8589175702454272e19,
             m_ions_total_amu=2.7395439636787726,
             nd_ions_total=6.6125550702454276e19,
@@ -1767,7 +1767,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_tritium", plasmacompositionparam.f_tritium
+        physics_variables,
+        "f_plasma_fuel_tritium",
+        plasmacompositionparam.f_plasma_fuel_tritium,
     )
 
     monkeypatch.setattr(
