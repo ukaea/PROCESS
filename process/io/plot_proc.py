@@ -10763,7 +10763,7 @@ def plot_beta_profiles(axis, mfile_data, scan):
         color="blue",
         label="Beta Toroidal",
     )
-    
+
     axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("$\\beta$ [%]")
     axis.minorticks_on()
@@ -10772,7 +10772,6 @@ def plot_beta_profiles(axis, mfile_data, scan):
     axis.legend()
     axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
     axis.grid(True, linestyle="--", alpha=0.5)
-    
 
 
 def main_plot(
@@ -10987,7 +10986,6 @@ def main_plot(
     )
 
     plot_beta_profiles(fig20.add_subplot(221), m_file_data, scan)
-    
 
 
 def main(args=None):
