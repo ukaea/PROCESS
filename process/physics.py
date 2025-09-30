@@ -1741,7 +1741,7 @@ class Physics:
         # Beta Components
         # -----------------------------------------------------
 
-        physics_variables.beta_toroidal = (
+        physics_variables.beta_toroidal_vol_avg = (
             physics_variables.beta_total_vol_avg
             * physics_variables.b_plasma_total**2
             / physics_variables.b_plasma_toroidal_on_axis**2
@@ -1952,7 +1952,7 @@ class Physics:
             * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
                 physics_variables.alphat,
-                physics_variables.beta_toroidal,
+                physics_variables.beta_toroidal_vol_avg,
                 physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.plasma_current,
@@ -4384,9 +4384,9 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Total toroidal beta",
-            "(beta_toroidal)",
-            physics_variables.beta_toroidal,
+            "Volume averaged toroidal beta",
+            "(beta_toroidal_vol_avg)",
+            physics_variables.beta_toroidal_vol_avg,
             "OP ",
         )
         po.ovarre(
