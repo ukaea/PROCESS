@@ -806,6 +806,9 @@ m_s_limit: float = None
 p0: float = None
 """central total plasma pressure (Pa)"""
 
+pres_plasma_total_profile: list[float] = None
+"""Profile of total pressure in plasma (Pa)"""
+
 pres_plasma_electron_profile: list[float] = None
 """Profile of electron pressure in plasma (Pa)"""
 
@@ -1490,6 +1493,7 @@ def init_physics_variables():
     global ni0
     global m_s_limit
     global p0
+    global pres_plasma_total_profile
     global pres_plasma_electron_profile
     global pres_plasma_ion_total_profile
     global pres_plasma_fuel_profile
@@ -1742,6 +1746,7 @@ def init_physics_variables():
     ni0 = 0.0
     m_s_limit = 0.3
     p0 = 0.0
+    pres_plasma_total_profile = []
     pres_plasma_electron_profile = []
     pres_plasma_ion_total_profile = []
     pres_plasma_fuel_profile = []
