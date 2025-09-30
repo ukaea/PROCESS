@@ -247,6 +247,9 @@ beta_toroidal: float = None
 beta_toroidal_profile: list[float] = None
 """toroidal beta profile"""
 
+beta_poloidal_profile: list[float] = None
+"""poloidal beta profile"""
+
 
 beta_thermal: float = None
 """thermal beta"""
@@ -1393,6 +1396,7 @@ def init_physics_variables():
     global beta_poloidal_eps
     global beta_toroidal
     global beta_toroidal_profile
+    global beta_poloidal_profile
     global beta_thermal
     global beta_thermal_poloidal
     global beta_thermal_toroidal
@@ -1649,6 +1653,7 @@ def init_physics_variables():
     beta_poloidal_eps = 0.0
     beta_toroidal = 0.0
     beta_toroidal_profile = []
+    beta_poloidal_profile = []
     beta_thermal = 0.0
     beta_thermal_poloidal = 0.0
     beta_thermal_toroidal = 0.0
