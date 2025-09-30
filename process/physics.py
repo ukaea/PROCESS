@@ -3235,7 +3235,8 @@ class Physics:
             physics_variables.nd_protons = max(
                 physics_variables.f_nd_protium_electrons
                 * physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
+                physics_variables.nd_alphas
+                * (physics_variables.f_plasma_fuel_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.nd_protons = max(
@@ -3287,8 +3288,10 @@ class Physics:
 
         # Fuel ion density, nd_fuel_ions
         # For D-T-He3 mix, nd_fuel_ions = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
-        # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_helium3*nd_fuel_ions
-        physics_variables.nd_fuel_ions = znfuel / (1.0 + physics_variables.f_helium3)
+        # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_plasma_fuel_helium3*nd_fuel_ions
+        physics_variables.nd_fuel_ions = znfuel / (
+            1.0 + physics_variables.f_plasma_fuel_helium3
+        )
 
         # ======================================================================
 
@@ -3309,7 +3312,7 @@ class Physics:
         impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("He")
         ] = (
-            physics_variables.f_helium3
+            physics_variables.f_plasma_fuel_helium3
             * physics_variables.nd_fuel_ions
             / physics_variables.nd_plasma_electrons_vol_avg
             + physics_variables.f_nd_alpha_electron
@@ -3406,7 +3409,7 @@ class Physics:
         physics_variables.m_fuel_amu = (
             (constants.M_DEUTERON_AMU * physics_variables.f_plasma_fuel_deuterium)
             + (constants.M_TRITON_AMU * physics_variables.f_plasma_fuel_tritium)
-            + (constants.M_HELION_AMU * physics_variables.f_helium3)
+            + (constants.M_HELION_AMU * physics_variables.f_plasma_fuel_helium3)
         )
 
         # ======================================================================
@@ -3455,7 +3458,7 @@ class Physics:
             )
             + (
                 4.0
-                * physics_variables.f_helium3
+                * physics_variables.f_plasma_fuel_helium3
                 * physics_variables.nd_fuel_ions
                 / constants.M_HELION_AMU
             )
@@ -5075,8 +5078,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "3-Helium fuel fraction",
-            "(f_helium3)",
-            physics_variables.f_helium3,
+            "(f_plasma_fuel_helium3)",
+            physics_variables.f_plasma_fuel_helium3,
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -6961,7 +6964,7 @@ class Physics:
         amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_helium3)
+        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
 
         # Prevent division by zero
         if ne[nr - 1] == 0.0:

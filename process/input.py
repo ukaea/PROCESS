@@ -169,7 +169,7 @@ INPUT_VARIABLES = {
     "f_nd_plasma_separatrix_greenwald": InputVariable(
         data_structure.physics_variables, float, range=(-1.0, 5.0)
     ),
-    "f_helium3": InputVariable(
+    "f_plasma_fuel_helium3": InputVariable(
         data_structure.physics_variables, float, range=(-1.0, 5.0)
     ),
     # TODO: does f_nd_impurity_electrons require an additional range?

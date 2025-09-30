@@ -3073,7 +3073,7 @@ class Costs:
                 * heat_transport_variables.p_plant_electric_net_mw
                 / 1200.0e0
                 + 1.0e-6
-                * physics_variables.f_helium3
+                * physics_variables.f_plasma_fuel_helium3
                 * physics_variables.wtgpd
                 * 1.0e-3
                 * cost_variables.uche3

@@ -478,7 +478,7 @@ density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`
 """
 
 
-f_helium3: float = None
+f_plasma_fuel_helium3: float = None
 """helium-3 fuel fraction"""
 
 
@@ -1436,7 +1436,7 @@ def init_physics_variables():
     global ffwal
     global f_nd_plasma_pedestal_greenwald
     global f_nd_plasma_separatrix_greenwald
-    global f_helium3
+    global f_plasma_fuel_helium3
     global figmer
     global fkzohm
     global fplhsep
@@ -1689,7 +1689,7 @@ def init_physics_variables():
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
     f_nd_plasma_separatrix_greenwald = 0.50
-    f_helium3 = 0.0
+    f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
     fplhsep = 1.0
