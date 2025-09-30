@@ -18,7 +18,9 @@ def run_and_move_tracked_files(arguments):
     tracking_dir = Path(__file__).parent
     for file_path in input_files:
         try:
-            subprocess.run(f"process -i {file_path}", shell=True, check=True)
+            subprocess.run(
+                f"process -i {file_path} {arguments.options}", shell=True, check=True
+            )
         except subprocess.CalledProcessError:
             continue
         created_mfile = file_path.with_name(
@@ -57,7 +59,8 @@ if __name__ == "__main__":
 
     # Run command
     subparser_run = subparsers.add_parser("run")
-    subparser_run.add_argument("input_locs", type=str)
+    subparser_run.add_argument("input_locs", type=Path)
+    subparser_run.add_argument("--options", type=str, default="")
 
     # Tracking command
     subparser_trk = subparsers.add_parser("track")
