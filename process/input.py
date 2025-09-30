@@ -2239,7 +2239,9 @@ INPUT_VARIABLES = {
     "n_pf_coils_in_group": InputVariable(
         data_structure.pfcoil_variables, int, array=True
     ),
-    "nfxfh": InputVariable(data_structure.pfcoil_variables, int, array=True),
+    "n_cs_current_filaments": InputVariable(
+        data_structure.pfcoil_variables, int, array=True
+    ),
     "n_pf_coil_groups": InputVariable(
         data_structure.pfcoil_variables,
         int,

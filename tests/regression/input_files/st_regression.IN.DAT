@@ -1670,7 +1670,7 @@ i_pf_conductor = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*nfxfh =  
+*n_cs_current_filaments =  
 * DESCRIPTION:   Number of filaments the top and bottom of the central solenoid should be broken
 *into during scaling (5 - 10 is good)
 * JUSTIFICATION: Not yet set.

@@ -30,6 +30,7 @@ from matplotlib.path import Path
 
 import process.confinement_time as confine
 import process.constants as constants
+import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.data_structure import physics_variables
@@ -8398,6 +8399,14 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
     dz_cs_full = mfile_data.data["dz_cs_full"].get_scan(scan)
     dz_cs = mfile_data.data["dz_cs_full"].get_scan(scan)
     dr_bore = mfile_data.data["dr_bore"].get_scan(scan)
+    r_cs_current_filaments_array = [
+        mfile_data.data[f"r_pf_cs_current_filaments{i}"].get_scan(scan)
+        for i in range(pfcoil_variables.NFIXMX)
+    ]
+    z_cs_current_filaments_array = [
+        mfile_data.data[f"z_pf_cs_current_filaments{i}"].get_scan(scan)
+        for i in range(pfcoil_variables.NFIXMX)
+    ]
 
     # Plot the right side of the CS
     right_cs = patches.Rectangle(
@@ -8407,7 +8416,6 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         edgecolor="black",
         facecolor=SOLENOID_COLOUR[colour_scheme - 1],
         lw=1.5,
-        label="CS Coil",
     )
     axis.add_patch(right_cs)
 
@@ -8419,7 +8427,6 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         edgecolor="black",
         facecolor="lightgrey",
         lw=1.0,
-        label="Bore",
     )
     axis.add_patch(bore_rect)
 
@@ -8430,7 +8437,6 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         edgecolor="black",
         facecolor=SOLENOID_COLOUR[colour_scheme - 1],
         lw=1.5,
-        label="CS Coil",
     )
     axis.add_patch(left_cs)
 
@@ -8614,7 +8620,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
-        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n\n"
     )
 
     axis.text(
@@ -8633,15 +8639,24 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         },
     )
 
-    axis.plot(0, 0, marker="o", color="red", markersize=8, label="Center (0,0)")
+    # Plot the current filament points as blue dots and label them
+
+    axis.plot(
+        r_cs_current_filaments_array,
+        z_cs_current_filaments_array,
+        "bo",
+        markersize=2,
+        label="CS, PF and Plasma Current Filaments",
+    )
+
+    axis.plot(0, 0, marker="o", color="red", markersize=8)
 
     axis.set_xlabel("R [m]")
     axis.set_ylabel("Z [m]")
     axis.set_title("Central Solenoid Poloidal Cross-Section")
     axis.grid(True, linestyle="--", alpha=0.3)
     axis.minorticks_on()
-    axis.set_xlim(-((dr_bore + dr_cs) * 1.2), (dr_bore + dr_cs) * 1.2)
-    axis.set_ylim(-(dz_cs / 2) * 1.2, (dz_cs / 2) * 1.2)
+    axis.legend()
 
 
 def plot_cs_turn_structure(axis, fig, mfile_data, scan):
