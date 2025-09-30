@@ -61,7 +61,7 @@ DEFAULT_COMPARE_PARAMS = [
     "plasma_current_MA",
     "b_plasma_toroidal_on_axis",
     "q95",
-    "beta_poloidal",
+    "beta_poloidal_vol_avg",
     "temp_plasma_electron_vol_avg_kev",
     "nd_plasma_electrons_vol_avg",
     "hfact",

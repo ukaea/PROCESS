@@ -405,7 +405,7 @@ def constraint_equation_6():
     cc = (
         (
             data_structure.physics_variables.eps
-            * data_structure.physics_variables.beta_poloidal
+            * data_structure.physics_variables.beta_poloidal_vol_avg
         )
         / data_structure.physics_variables.beta_poloidal_eps_max
         - 1.0 * data_structure.constraint_variables.fbeta_poloidal_eps
@@ -415,7 +415,7 @@ def constraint_equation_6():
         data_structure.physics_variables.beta_poloidal_eps_max * (1.0 - cc),
         (
             data_structure.physics_variables.eps
-            * data_structure.physics_variables.beta_poloidal
+            * data_structure.physics_variables.beta_poloidal_vol_avg
         )
         * cc,
     )
@@ -1389,14 +1389,14 @@ def constraint_equation_48():
     beta_poloidal: poloidal beta
     """
     cc = (
-        data_structure.physics_variables.beta_poloidal
+        data_structure.physics_variables.beta_poloidal_vol_avg
         / data_structure.constraint_variables.beta_poloidal_max
         - 1.0 * data_structure.constraint_variables.fbeta_poloidal
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.beta_poloidal_max * (1.0 - cc),
-        data_structure.physics_variables.beta_poloidal * cc,
+        data_structure.physics_variables.beta_poloidal_vol_avg * cc,
     )
 
 
