@@ -168,17 +168,13 @@ class PFCoil:
         # if present
         if bv.iohcl == 0:
             pfcoil_variables.nfxf = 0
-            ioheof = 0.0e0
+            c_cs_flat_top_end = 0.0e0
         else:
-            pfcoil_variables.nfxf = 2 * pfcoil_variables.nfxfh
+            pfcoil_variables.nfxf = 2 * pfcoil_variables.n_cs_current_filaments
 
             # total Central Solenoid current at EOF
-            ioheof = (
-                -bv.z_tf_inside_half
-                * pfcoil_variables.f_z_cs_tf_internal
-                * bv.dr_cs
-                * 2.0e0
-                * pfcoil_variables.j_cs_flat_top_end
+            c_cs_flat_top_end = -(
+                pfcoil_variables.a_cs_poloidal * pfcoil_variables.j_cs_flat_top_end
             )
 
             if pfcoil_variables.nfxf > pfcoil_variables.NFIXMX:
@@ -190,28 +186,18 @@ class PFCoil:
 
             # Symmetric up/down Central Solenoid : Find (R,Z) and current of each filament at BOP
 
-            for nng in range(pfcoil_variables.nfxfh):
-                pfcoil_variables.rfxf[nng] = pfcoil_variables.r_cs_middle
-                pfcoil_variables.rfxf[nng + pfcoil_variables.nfxfh] = (
-                    pfcoil_variables.rfxf[nng]
-                )
-                pfcoil_variables.zfxf[nng] = (
-                    bv.z_tf_inside_half
-                    * pfcoil_variables.f_z_cs_tf_internal
-                    / pfcoil_variables.nfxfh
-                    * ((nng + 1) - 0.5e0)
-                )
-                pfcoil_variables.zfxf[
-                    nng + pfcoil_variables.nfxfh
-                ] = -pfcoil_variables.zfxf[nng]
-                pfcoil_variables.cfxf[nng] = (
-                    -ioheof
-                    / pfcoil_variables.nfxf
-                    * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
-                )
-                pfcoil_variables.cfxf[nng + pfcoil_variables.nfxfh] = (
-                    pfcoil_variables.cfxf[nng]
-                )
+            (
+                pfcoil_variables.r_pf_cs_current_filaments,
+                pfcoil_variables.z_pf_cs_current_filaments,
+                pfcoil_variables.c_pf_cs_current_filaments,
+            ) = self.place_cs_filaments(
+                n_cs_current_filaments=pfcoil_variables.n_cs_current_filaments,
+                r_cs_middle=pfcoil_variables.r_cs_middle,
+                z_cs_inside_half=pfcoil_variables.dz_cs_full / 2,
+                c_cs_flat_top_end=c_cs_flat_top_end,
+                f_j_cs_start_pulse_end_flat_top=pfcoil_variables.f_j_cs_start_pulse_end_flat_top,
+                nfxf=pfcoil_variables.nfxf,
+            )
 
         # Scale PF coil locations
         signn[0] = 1.0e0
@@ -374,9 +360,9 @@ class PFCoil:
                 brin,
                 bzin,
                 pfcoil_variables.nfxf,
-                pfcoil_variables.rfxf,
-                pfcoil_variables.zfxf,
-                pfcoil_variables.cfxf,
+                pfcoil_variables.r_pf_cs_current_filaments,
+                pfcoil_variables.z_pf_cs_current_filaments,
+                pfcoil_variables.c_pf_cs_current_filaments,
                 pfcoil_variables.n_pf_coil_groups,
                 pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.r_pf_coil_middle_group_array,
@@ -448,13 +434,15 @@ class PFCoil:
                         pfcoil_variables.ccls[i] = 0.0e0
                         nfxf0 = nfxf0 + pfcoil_variables.n_pf_coils_in_group[i]
                         for ccount in range(pfcoil_variables.n_pf_coils_in_group[i]):
-                            pfcoil_variables.rfxf[nocoil] = (
+                            pfcoil_variables.r_pf_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.r_pf_coil_middle_group_array[i, ccount]
                             )
-                            pfcoil_variables.zfxf[nocoil] = (
+                            pfcoil_variables.z_pf_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.z_pf_coil_middle_group_array[i, ccount]
                             )
-                            pfcoil_variables.cfxf[nocoil] = pfcoil_variables.ccls[i]
+                            pfcoil_variables.c_pf_cs_current_filaments[nocoil] = (
+                                pfcoil_variables.ccls[i]
+                            )
                             nocoil = nocoil + 1
 
                     elif pfcoil_variables.i_pf_location[i] == 2:
@@ -474,13 +462,15 @@ class PFCoil:
                         )
                         nfxf0 = nfxf0 + pfcoil_variables.n_pf_coils_in_group[i]
                         for ccount in range(pfcoil_variables.n_pf_coils_in_group[i]):
-                            pfcoil_variables.rfxf[nocoil] = (
+                            pfcoil_variables.r_pf_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.r_pf_coil_middle_group_array[i, ccount]
                             )
-                            pfcoil_variables.zfxf[nocoil] = (
+                            pfcoil_variables.z_pf_cs_current_filaments[nocoil] = (
                                 pfcoil_variables.z_pf_coil_middle_group_array[i, ccount]
                             )
-                            pfcoil_variables.cfxf[nocoil] = pfcoil_variables.ccls[i]
+                            pfcoil_variables.c_pf_cs_current_filaments[nocoil] = (
+                                pfcoil_variables.ccls[i]
+                            )
                             nocoil = nocoil + 1
 
                     elif pfcoil_variables.i_pf_location[i] == 3:
@@ -557,9 +547,9 @@ class PFCoil:
                     brin,
                     bzin,
                     nfxf0,
-                    pfcoil_variables.rfxf,
-                    pfcoil_variables.zfxf,
-                    pfcoil_variables.cfxf,
+                    pfcoil_variables.r_pf_cs_current_filaments,
+                    pfcoil_variables.z_pf_cs_current_filaments,
+                    pfcoil_variables.c_pf_cs_current_filaments,
                     ngrp0,
                     ncls0,
                     pfcoil_variables.rcls0,
@@ -622,8 +612,9 @@ class PFCoil:
             dics = csflux / ddics
 
             pfcoil_variables.f_j_cs_start_end_flat_top = (
-                (-ioheof * pfcoil_variables.f_j_cs_start_pulse_end_flat_top) + dics
-            ) / ioheof
+                (-c_cs_flat_top_end * pfcoil_variables.f_j_cs_start_pulse_end_flat_top)
+                + dics
+            ) / c_cs_flat_top_end
             if np.abs(pfcoil_variables.f_j_cs_start_end_flat_top) > 1.0:
                 logger.warning(
                     "Ratio of central solenoid overall current density at "
@@ -684,14 +675,16 @@ class PFCoil:
                 ncl = ncl + 1
 
         # Current in Central Solenoid as a function of time
-        # N.B. If the Central Solenoid is not present then ioheof is zero.
+        # N.B. If the Central Solenoid is not present then c_cs_flat_top_end is zero.
         pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ncl] = (
-            -1.0e-6 * ioheof * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
+            -1.0e-6
+            * c_cs_flat_top_end
+            * pfcoil_variables.f_j_cs_start_pulse_end_flat_top
         )
         pfcoil_variables.c_pf_cs_coil_flat_top_ma[ncl] = (
-            1.0e-6 * ioheof * pfcoil_variables.f_j_cs_start_end_flat_top
+            1.0e-6 * c_cs_flat_top_end * pfcoil_variables.f_j_cs_start_end_flat_top
         )
-        pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * ioheof
+        pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * c_cs_flat_top_end
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
@@ -1068,6 +1061,74 @@ class PFCoil:
         pfcoil_variables.c_pf_coil_turn[
             pfcoil_variables.n_pf_cs_plasma_circuits - 1, 5
         ] = 0.0e0
+
+    def place_cs_filaments(
+        self,
+        n_cs_current_filaments: int,
+        r_cs_middle: float,
+        z_cs_inside_half: float,
+        c_cs_flat_top_end: float,
+        f_j_cs_start_pulse_end_flat_top: float,
+        nfxf: int,
+    ):
+        """
+        Places central solenoid (CS) filaments and assigns their positions and currents.
+
+        This function calculates the radial (R) and vertical (Z) positions, as well as the current values,
+        for a set of CS filaments based on the provided parameters. Each filament is placed symmetrically
+        about the midplane, and currents are assigned according to the flat-top end current and scaling factors.
+
+        :param n_cs_current_filaments: Number of CS current filaments to place (per side).
+        :type n_cs_current_filaments: int
+        :param r_cs_middle: Radial coordinate of the middle of the CS.
+        :type r_cs_middle: float
+        :param z_cs_inside_half: Half-height of the CS in the vertical (Z) direction.
+        :type z_cs_inside_half: float
+        :param c_cs_flat_top_end: Flat-top end current for the CS.
+        :type c_cs_flat_top_end: float
+        :param f_j_cs_start_pulse_end_flat_top: Scaling factor for the CS current at the start of the pulse and flat-top end.
+        :type f_j_cs_start_pulse_end_flat_top: float
+        :param nfxf: Number of flux loops or scaling factor for current distribution.
+        :type nfxf: int
+
+        :returns: Tuple containing:
+            - r_pf_cs_current_filaments (list of float): Radial positions of the CS filaments.
+            - z_pf_cs_current_filaments (list of float): Vertical positions of the CS filaments.
+            - c_pf_cs_current_filaments (list of float): Current values assigned to each CS filament.
+        :rtype: tuple[list[float], list[float], list[float]]
+        """
+        r_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+        z_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+        c_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+
+        for filament in range(n_cs_current_filaments):
+            # Set the R coordinate of the filaments
+            r_pf_cs_current_filaments[filament] = r_cs_middle
+            r_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
+                r_pf_cs_current_filaments[filament]
+            )
+
+            # Set the Z cordinate of the filaments
+            z_pf_cs_current_filaments[filament] = (
+                z_cs_inside_half / n_cs_current_filaments * ((filament + 1) - 0.5e0)
+            )
+            z_pf_cs_current_filaments[
+                filament + n_cs_current_filaments
+            ] = -z_pf_cs_current_filaments[filament]
+
+            # Assign currents to the filaments
+            c_pf_cs_current_filaments[filament] = (
+                -c_cs_flat_top_end / nfxf * f_j_cs_start_pulse_end_flat_top
+            )
+            c_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
+                c_pf_cs_current_filaments[filament]
+            )
+
+        return (
+            r_pf_cs_current_filaments,
+            z_pf_cs_current_filaments,
+            c_pf_cs_current_filaments,
+        )
 
     def place_pf_above_cs(
         self,
@@ -1683,11 +1744,17 @@ class PFCoil:
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
-        bmaxoh2 = self.bfmax(
-            pfcoil_variables.j_cs_flat_top_end,
-            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+        bmaxoh2 = self.calculate_cs_peak_field(
+            j_cs=pfcoil_variables.j_cs_flat_top_end,
+            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
         )
 
         # Peak field due to other PF coils plus plasma
@@ -1702,11 +1769,17 @@ class PFCoil:
 
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfcoil_variables.b_cs_peak_pulse_start = self.bfmax(
-            pfcoil_variables.j_cs_pulse_start,
-            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+        pfcoil_variables.b_cs_peak_pulse_start = self.calculate_cs_peak_field(
+            j_cs=pfcoil_variables.j_cs_pulse_start,
+            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
         )
         timepoint = 2
         bri, bro, bzi, bzo = self.peakb(pfcoil_variables.n_cs_pf_coils, 99, timepoint)
@@ -2065,7 +2138,7 @@ class PFCoil:
 
                 # Current in each filament representing part of the Central Solenoid
                 for iohc in range(pfcoil_variables.nfxf):
-                    pfcoil_variables.cfxf[iohc] = (
+                    pfcoil_variables.c_pf_cs_current_filaments[iohc] = (
                         pfcoil_variables.waves[
                             pfcoil_variables.n_cs_pf_coils - 1, it - 1
                         ]
@@ -2094,49 +2167,49 @@ class PFCoil:
                         pfcoil_variables.z_pf_coil_upper[jj - 1]
                         - pfcoil_variables.z_pf_coil_lower[jj - 1]
                     )
-                    pfcoil_variables.rfxf[kk - 1] = pfcoil_variables.r_pf_coil_middle[
-                        jj - 1
-                    ]
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.r_pf_coil_middle[jj - 1]
+                    )
+                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
                     )
-                    pfcoil_variables.cfxf[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
                         * pfcoil_variables.waves[jj - 1, it - 1]
                         * 0.25e6
                     )
                     kk = kk + 1
-                    pfcoil_variables.rfxf[kk - 1] = pfcoil_variables.r_pf_coil_middle[
-                        jj - 1
-                    ]
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.r_pf_coil_middle[jj - 1]
+                    )
+                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
                     )
-                    pfcoil_variables.cfxf[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
                         * pfcoil_variables.waves[jj - 1, it - 1]
                         * 0.25e6
                     )
                     kk = kk + 1
-                    pfcoil_variables.rfxf[kk - 1] = pfcoil_variables.r_pf_coil_middle[
-                        jj - 1
-                    ]
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.r_pf_coil_middle[jj - 1]
+                    )
+                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
                     )
-                    pfcoil_variables.cfxf[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
                         * pfcoil_variables.waves[jj - 1, it - 1]
                         * 0.25e6
                     )
                     kk = kk + 1
-                    pfcoil_variables.rfxf[kk - 1] = pfcoil_variables.r_pf_coil_middle[
-                        jj - 1
-                    ]
-                    pfcoil_variables.zfxf[kk - 1] = (
+                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.r_pf_coil_middle[jj - 1]
+                    )
+                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
                     )
-                    pfcoil_variables.cfxf[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
                         * pfcoil_variables.waves[jj - 1, it - 1]
                         * 0.25e6
@@ -2145,13 +2218,13 @@ class PFCoil:
                 else:
                     # Field from different coil
                     kk = kk + 1
-                    pfcoil_variables.rfxf[kk - 1] = pfcoil_variables.r_pf_coil_middle[
-                        jj - 1
-                    ]
-                    pfcoil_variables.zfxf[kk - 1] = pfcoil_variables.z_pf_coil_middle[
-                        jj - 1
-                    ]
-                    pfcoil_variables.cfxf[kk - 1] = (
+                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.r_pf_coil_middle[jj - 1]
+                    )
+                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
+                        pfcoil_variables.z_pf_coil_middle[jj - 1]
+                    )
+                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
                         * pfcoil_variables.waves[jj - 1, it - 1]
                         * 1.0e6
@@ -2160,23 +2233,23 @@ class PFCoil:
         # Plasma contribution
         if it > 2:
             kk = kk + 1
-            pfcoil_variables.rfxf[kk - 1] = pv.rmajor
-            pfcoil_variables.zfxf[kk - 1] = 0.0e0
-            pfcoil_variables.cfxf[kk - 1] = pv.plasma_current
+            pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = pv.rmajor
+            pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = 0.0e0
+            pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = pv.plasma_current
 
         # Calculate the field at the inner and outer edges
         # of the coil of interest
         pfcoil_variables.xind[:kk], bri, bzi, psi = bfield(
-            pfcoil_variables.rfxf[:kk],
-            pfcoil_variables.zfxf[:kk],
-            pfcoil_variables.cfxf[:kk],
+            pfcoil_variables.r_pf_cs_current_filaments[:kk],
+            pfcoil_variables.z_pf_cs_current_filaments[:kk],
+            pfcoil_variables.c_pf_cs_current_filaments[:kk],
             pfcoil_variables.r_pf_coil_inner[i - 1],
             pfcoil_variables.z_pf_coil_middle[i - 1],
         )
         pfcoil_variables.xind[:kk], bro, bzo, psi = bfield(
-            pfcoil_variables.rfxf[:kk],
-            pfcoil_variables.zfxf[:kk],
-            pfcoil_variables.cfxf[:kk],
+            pfcoil_variables.r_pf_cs_current_filaments[:kk],
+            pfcoil_variables.z_pf_cs_current_filaments[:kk],
+            pfcoil_variables.c_pf_cs_current_filaments[:kk],
             pfcoil_variables.r_pf_coil_outer[i - 1],
             pfcoil_variables.z_pf_coil_middle[i - 1],
         )
@@ -2193,34 +2266,41 @@ class PFCoil:
 
         return bri, bro, bzi, bzo
 
-    def bfmax(self, rj, a, b, h):
-        """Calculates the maximum field of a solenoid.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        This routine calculates the peak field (T) at a solenoid's
-        inner radius, using fits taken from the figure
-        on p.22 of M. Wilson's book Superconducting Magnets,
-        Clarendon Press, Oxford, N.Y., 1983
-
-        :param rj: overall current density (A/m2)
-        :type rj: float
-        :param a: solenoid inner radius (m)
-        :type a: float
-        :param b: solenoid outer radius (m)
-        :type b: float
-        :param h: solenoid half height (m)
-        :type h: float
-        :return bfmax: maximum field of solenoid
-        :rtype: float
+    def calculate_cs_peak_field(
+        self,
+        j_cs: float,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        dz_cs_half: float,
+    ) -> float:
         """
-        beta = h / a
-        alpha = b / a
+        Calculates the maximum field of a solenoid.
+
+        :param j_cs: Overall current density (A/m²)
+        :type j_cs: float
+        :param r_cs_inner: Solenoid inner radius (m)
+        :type r_cs_inner: float
+        :param r_cs_outer: Solenoid outer radius (m)
+        :type r_cs_outer: float
+        :param dz_cs_half: Solenoid half height (m)
+        :type dz_cs_half: float
+        :return: Maximum field of solenoid (T)
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - Fits are taken from the figure on p.22 of M. Wilson's book
+            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983.
+        """
+        beta = dz_cs_half / r_cs_inner
+        alpha = r_cs_outer / r_cs_inner
 
         # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
         b0 = (
-            rj
+            j_cs
             * constants.RMU0
-            * h
+            * dz_cs_half
             * math.log(
                 (alpha + math.sqrt(alpha**2 + beta**2))
                 / (1.0 + math.sqrt(1.0 + beta**2))
@@ -2228,33 +2308,33 @@ class PFCoil:
         )
 
         if beta > 3.0:
-            b1 = constants.RMU0 * rj * (b - a)
+            b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
             f = (3.0 / beta) ** 2
-            bfmax = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+            b_cs_peak = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
 
         elif beta > 2.0:
             rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
                 0.01 - (beta - 2.0) * 0.0045
             )
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
         elif beta > 1.0:
             rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
         elif beta > 0.75:
             rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
                 0.2 * (beta - 0.75) - 0.05
             )
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
         else:
             rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
                 0.6 * (beta - 0.5) - 0.20
             )
-            bfmax = rat * b0
+            b_cs_peak = rat * b0
 
-        return bfmax
+        return b_cs_peak
 
     def vsec(self):
         """Calculation of volt-second capability of PF system.
@@ -2964,6 +3044,20 @@ class PFCoil:
                     "(j_cs_flat_top_end)",
                     pfcoil_variables.j_cs_flat_top_end,
                 )
+                for i in range(len(pfcoil_variables.r_pf_cs_current_filaments)):
+                    op.ovarre(
+                        self.mfile,
+                        f"Radial position of CS filament {i}",
+                        f"r_pf_cs_current_filaments{i}",
+                        pfcoil_variables.r_pf_cs_current_filaments[i],
+                    )
+                for i in range(len(pfcoil_variables.z_pf_cs_current_filaments)):
+                    op.ovarre(
+                        self.mfile,
+                        f"Vertical position of CS filament {i}",
+                        f"z_pf_cs_current_filaments{i}",
+                        pfcoil_variables.z_pf_cs_current_filaments[i],
+                    )
                 op.oblnkl(self.outfile)
                 # MDK add bv.dr_cs, bv.dr_bore and bv.dr_cs_tf_gap as they can be iteration variables
                 op.ovarre(self.outfile, "CS inside radius (m)", "(dr_bore)", bv.dr_bore)
@@ -3920,13 +4014,6 @@ class PFCoil:
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-            # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-            # The CS coil current/copper area calculation for quench protection
-            # Copper area = (area of coil - area of steel)*(1- void fraction)*
-            # (fraction of copper in strands)
-            # rcv.copperaoh_m2 = ioheof / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
-
         elif isumat == 7:
             # Durham Ginzburg-Landau critical surface model for Nb-Ti
             bc20m = tfv.b_crit_upper_nbti
@@ -3938,7 +4025,7 @@ class PFCoil:
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
             # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
+            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
 
         elif isumat == 8:
             # Durham Ginzburg-Landau critical surface model for REBCO
@@ -3950,11 +4037,6 @@ class PFCoil:
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
-
-            # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-            # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = ioheof / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
 
         elif isumat == 9:
             # Hazelton experimental data + Zhai conceptual model for REBCO
@@ -3972,11 +4054,6 @@ class PFCoil:
             # A0 calculated for tape cross section already
             # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
             j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
-
-            # The CS coil current at EOF
-            # ioheof = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-            # The CS coil current/copper area calculation for quench protection
-            # rcv.copperaoh_m2 = ioheof / (pfcoil_variables.awpoh * (1.0 - pfcoil_variables.f_a_cs_void) * pfcoil_variables.fcuohsu)
 
         else:
             # Error condition

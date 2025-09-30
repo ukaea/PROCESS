@@ -428,6 +428,7 @@ OBS_VARS = {
     "routr": "dr_pf_tf_outboard_out_offset",
     "rpf1": "dr_pf_cs_middle_offset",
     "i_sup_pf_shape": "i_r_pf_outside_tf_placement",
+    "nfxfh": "n_cs_current_filaments",
 }
 
 OBS_VARS_HELP = {
