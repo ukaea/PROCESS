@@ -233,7 +233,7 @@ beta_beam: float = None
 """neutral beam beta component"""
 
 
-beta_poloidal: float = None
+beta_poloidal_vol_avg: float = None
 """poloidal beta"""
 
 
@@ -1380,7 +1380,7 @@ def init_physics_variables():
     global beta_max
     global beta_min
     global beta_beam
-    global beta_poloidal
+    global beta_poloidal_vol_avg
     global beta_poloidal_eps
     global beta_toroidal_vol_avg
     global beta_thermal
@@ -1633,7 +1633,7 @@ def init_physics_variables():
     beta_max = 0.0
     beta_min = 0.0
     beta_beam = 0.0
-    beta_poloidal = 0.0
+    beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
     beta_toroidal_vol_avg = 0.0
     beta_thermal = 0.0

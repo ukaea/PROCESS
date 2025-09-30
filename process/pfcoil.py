@@ -409,7 +409,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.beta_poloidal
+                        + pv.beta_poloidal_vol_avg
                         + (pv.ind_plasma_internal_norm / 2.0e0)
                         - 1.5e0
                     )
@@ -531,7 +531,7 @@ class PFCoil:
                     / pv.rmajor
                     * (
                         math.log(8.0e0 * pv.aspect)
-                        + pv.beta_poloidal
+                        + pv.beta_poloidal_vol_avg
                         + (pv.ind_plasma_internal_norm / 2.0e0)
                         - 1.5e0
                     )

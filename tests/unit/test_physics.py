@@ -618,7 +618,9 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     """
 
     monkeypatch.setattr(
-        physics_variables, "beta_poloidal", bootstrapfractionsakaiparam.beta_poloidal
+        physics_variables,
+        "beta_poloidal_vol_avg",
+        bootstrapfractionsakaiparam.beta_poloidal,
     )
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsakaiparam.q95)

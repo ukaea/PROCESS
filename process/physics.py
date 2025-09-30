@@ -1748,7 +1748,7 @@ class Physics:
         )
 
         # Calculate physics_variables.beta poloidal [-]
-        physics_variables.beta_poloidal = calculate_poloidal_beta(
+        physics_variables.beta_poloidal_vol_avg = calculate_poloidal_beta(
             physics_variables.b_plasma_total,
             physics_variables.b_plasma_poloidal_average,
             physics_variables.beta_total_vol_avg,
@@ -1761,7 +1761,7 @@ class Physics:
         )
 
         physics_variables.beta_poloidal_eps = (
-            physics_variables.beta_poloidal * physics_variables.eps
+            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
         )
 
         physics_variables.beta_thermal_poloidal = (
@@ -1988,7 +1988,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_sakai = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sakai(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 alphan=physics_variables.alphan,
@@ -2001,7 +2001,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_aries = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.nd_plasma_electron_on_axis,
                 average_density=physics_variables.nd_plasma_electrons_vol_avg,
@@ -2012,7 +2012,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_andrade = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 core_pressure=physics_variables.pres_plasma_on_axis,
                 average_pressure=physics_variables.pres_plasma_vol_avg,
                 inverse_aspect=physics_variables.eps,
@@ -2021,7 +2021,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 current_index=physics_variables.alphaj,
                 inverse_aspect=physics_variables.eps,
@@ -2030,7 +2030,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 density_index=physics_variables.alphan,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2040,7 +2040,7 @@ class Physics:
         current_drive_variables.bscf_gi_i = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_I(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2053,7 +2053,7 @@ class Physics:
         current_drive_variables.bscf_gi_ii = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_II(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2064,7 +2064,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_sugiyama_l_mode(
                 eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 zeff=physics_variables.zeff,
@@ -2076,7 +2076,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_sugiyama_h_mode(
                 eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 tbeta=physics_variables.tbeta,
@@ -4378,8 +4378,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total poloidal beta",
-            "(beta_poloidal)",
-            physics_variables.beta_poloidal,
+            "(beta_poloidal_vol_avg)",
+            physics_variables.beta_poloidal_vol_avg,
             "OP ",
         )
         po.ovarre(
