@@ -10695,6 +10695,56 @@ def plot_plasma_poloidal_pressure_contours(
     axis.set_title("Plasma Poloidal Pressure Contours")
 
 
+def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
+    # Plot magnetic field profiles inside the plasma boundary
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    # Get toroidal magnetic field profile (in Tesla)
+    b_plasma_toroidal_profile = [
+        mfile_data.data[f"b_plasma_toroidal_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    # Get major and minor radius for x-axis in metres
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+
+    # X-axis: radial position in metres across plasma
+    x_range_plasma = np.linspace(
+        rmajor - rminor, rmajor + rminor, len(b_plasma_toroidal_profile)
+    )
+
+    # Plot magnetic field first (background)
+    axis.plot(
+        x_range_plasma,
+        b_plasma_toroidal_profile,
+        color="blue",
+        label="Toroidal B-field [T]",
+    )
+
+    # Plot plasma on top of magnetic field, displaced vertically by bt
+    plot_plasma(axis, mfile_data, scan, colour_scheme=1)
+
+    # Plot plasma centre dot
+    axis.plot(rmajor, 0, marker="o", color="red", markersize=8, label="Plasma Centre")
+
+    # Plot vertical lines at plasma edge
+    axis.axvline(
+        rmajor - rminor, color="green", linestyle="--", linewidth=1, label="Plasma Edge"
+    )
+    axis.axvline(rmajor + rminor, color="green", linestyle="--", linewidth=1)
+    axis.set_xlabel("Radial Position [m]")
+    axis.set_ylabel("Toroidal Magnetic Field [T]")
+    axis.set_title("Toroidal Magnetic Field Profile in Plasma")
+    axis.grid(True, linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+    axis.set_xlim(rmajor - 1.25 * rminor, rmajor + 1.25 * rminor)
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10716,6 +10766,7 @@ def main_plot(
     fig17,
     fig18,
     fig19,
+    fig20,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10899,6 +10950,10 @@ def main_plot(
 
     plot_main_power_flow(
         fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
+    )
+
+    plot_magnetic_fields_in_plasma(
+        fig20.add_subplot(111, aspect="equal"), m_file_data, scan
     )
 
 
@@ -11210,6 +11265,7 @@ def main(args=None):
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
     page19 = plt.figure(figsize=(12, 9), dpi=80)
+    page20 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11233,6 +11289,7 @@ def main(args=None):
         page17,
         page18,
         page19,
+        page20,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11261,6 +11318,7 @@ def main(args=None):
         pdf.savefig(page17)
         pdf.savefig(page18)
         pdf.savefig(page19)
+        pdf.savefig(page20)
 
     # show fig if option used
     if args.show:
@@ -11286,6 +11344,7 @@ def main(args=None):
     plt.close(page17)
     plt.close(page18)
     plt.close(page19)
+    plt.close(page20)
 
 
 if __name__ == "__main__":
