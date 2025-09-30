@@ -245,7 +245,7 @@ beta_toroidal_vol_avg: float = None
 """Volume averaged toroidal beta"""
 
 
-beta_thermal: float = None
+beta_thermal_vol_avg: float = None
 """thermal beta"""
 
 
@@ -1383,7 +1383,7 @@ def init_physics_variables():
     global beta_poloidal_vol_avg
     global beta_poloidal_eps
     global beta_toroidal_vol_avg
-    global beta_thermal
+    global beta_thermal_vol_avg
     global beta_thermal_poloidal
     global beta_thermal_toroidal
     global beta_norm_total
@@ -1636,7 +1636,7 @@ def init_physics_variables():
     beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
     beta_toroidal_vol_avg = 0.0
-    beta_thermal = 0.0
+    beta_thermal_vol_avg = 0.0
     beta_thermal_poloidal = 0.0
     beta_thermal_toroidal = 0.0
     beta_norm_total = 0.0

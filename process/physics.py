@@ -1754,7 +1754,7 @@ class Physics:
             physics_variables.beta_total_vol_avg,
         )
 
-        physics_variables.beta_thermal = (
+        physics_variables.beta_thermal_vol_avg = (
             physics_variables.beta_total_vol_avg
             - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
@@ -1765,7 +1765,7 @@ class Physics:
         )
 
         physics_variables.beta_thermal_poloidal = (
-            physics_variables.beta_thermal
+            physics_variables.beta_thermal_vol_avg
             * (
                 physics_variables.b_plasma_total
                 / physics_variables.b_plasma_poloidal_average
@@ -1773,7 +1773,7 @@ class Physics:
             ** 2
         )
         physics_variables.beta_thermal_toroidal = (
-            physics_variables.beta_thermal
+            physics_variables.beta_thermal_vol_avg
             * (
                 physics_variables.b_plasma_total
                 / physics_variables.b_plasma_toroidal_on_axis
@@ -1782,7 +1782,7 @@ class Physics:
         )
         physics_variables.beta_norm_thermal = (
             1.0e8
-            * physics_variables.beta_thermal
+            * physics_variables.beta_thermal_vol_avg
             * physics_variables.rminor
             * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.plasma_current
@@ -1806,12 +1806,12 @@ class Physics:
 
         physics_variables.f_beta_alpha_beam_thermal = (
             physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / physics_variables.beta_thermal
+        ) / physics_variables.beta_thermal_vol_avg
 
         # Plasma thermal energy derived from the thermal beta
         physics_variables.e_plasma_beta_thermal = (
             1.5e0
-            * physics_variables.beta_thermal
+            * physics_variables.beta_thermal_vol_avg
             * physics_variables.b_plasma_total
             * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
@@ -4413,9 +4413,9 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Thermal beta",
-            "(beta_thermal)",
-            physics_variables.beta_thermal,
+            "Volume averaged thermal beta",
+            "(beta_thermal_vol_avg)",
+            physics_variables.beta_thermal_vol_avg,
             "OP ",
         )
         po.ovarre(
