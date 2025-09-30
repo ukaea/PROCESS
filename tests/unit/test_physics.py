@@ -353,7 +353,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     a_plasma_poloidal: Any = None
 
-    f_helium3: Any = None
+    f_plasma_fuel_helium3: Any = None
 
     temp_plasma_pedestal_kev: Any = None
 
@@ -400,7 +400,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             b_plasma_toroidal_on_axis=5.326133750416047,
             plasma_current=16528278.760008096,
             a_plasma_poloidal=38.39822223637151,
-            f_helium3=0,
+            f_plasma_fuel_helium3=0,
             temp_plasma_pedestal_kev=5.5,
             nd_plasma_electrons_vol_avg=8.016748468651018e19,
             te=12.570861186498382,
@@ -486,7 +486,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
+        physics_variables,
+        "f_plasma_fuel_helium3",
+        bootstrapfractionsauterparam.f_plasma_fuel_helium3,
     )
 
     monkeypatch.setattr(
@@ -1406,7 +1408,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     nd_beam_ions: Any = None
 
-    f_helium3: Any = None
+    f_plasma_fuel_helium3: Any = None
 
     nd_alphas: Any = None
 
@@ -1549,7 +1551,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
-            f_helium3=0,
+            f_plasma_fuel_helium3=0,
             nd_alphas=0,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_protons=0,
@@ -1667,7 +1669,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
-            f_helium3=0,
+            f_plasma_fuel_helium3=0,
             nd_alphas=7.5e18,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_protons=7500000000000000,
@@ -1869,7 +1871,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_helium3", plasmacompositionparam.f_helium3
+        physics_variables,
+        "f_plasma_fuel_helium3",
+        plasmacompositionparam.f_plasma_fuel_helium3,
     )
 
     monkeypatch.setattr(

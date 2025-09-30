@@ -630,7 +630,7 @@ boundu(28) = 1.0
 * DESCRIPTION:   Tritium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*f_helium3 = 
+*f_plasma_fuel_helium3 = 
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 

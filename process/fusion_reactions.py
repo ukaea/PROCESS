@@ -323,7 +323,7 @@ class FusionReactionRate:
                 dhe3,
             )
             * physics_variables.f_plasma_fuel_deuterium
-            * physics_variables.f_helium3
+            * physics_variables.f_plasma_fuel_helium3
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
@@ -345,7 +345,7 @@ class FusionReactionRate:
                 physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_fuel_ions
             )
-            * (physics_variables.f_helium3 * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_plasma_fuel_helium3 * physics_variables.nd_fuel_ions)
         )
 
         # Power densities for different particles [MW/m^3]
