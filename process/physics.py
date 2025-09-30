@@ -4620,16 +4620,23 @@ class Physics:
         for i in range(len(physics_variables.pres_plasma_electron_profile)):
             po.ovarre(
                 self.mfile,
-                f"Electron pressure at point {i}",
+                f"Plasma electron pressure at point {i}",
                 f"pres_plasma_electron_profile{i}",
                 physics_variables.pres_plasma_electron_profile[i],
             )
         for i in range(len(physics_variables.pres_plasma_ion_total_profile)):
             po.ovarre(
                 self.mfile,
-                f"Ion pressure at point {i}",
+                f"Plasma ion pressure at point {i}",
                 f"pres_plasma_ion_total_profile{i}",
                 physics_variables.pres_plasma_ion_total_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma total pressure at point {i}",
+                f"pres_plasma_total_profile{i}",
+                physics_variables.pres_plasma_total_profile[i],
             )
         for i in range(len(physics_variables.pres_plasma_fuel_profile)):
             po.ovarre(
