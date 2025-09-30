@@ -90,7 +90,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coils_peak_ma", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "f_j_cs_start_end_flat_top", 2.654e-1)
     monkeypatch.setattr(pfcoil_variables, "rpf2", -1.825)
-    monkeypatch.setattr(pfcoil_variables, "nfxfh", 7)
+    monkeypatch.setattr(pfcoil_variables, "n_cs_current_filaments", 7)
     monkeypatch.setattr(pfcoil_variables, "b_pf_coil_peak", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "z_pf_coil_lower", np.full(22, 0.0))
     monkeypatch.setattr(pfcoil_variables, "m_pf_coil_conductor", np.full(22, 0.0))
@@ -2005,7 +2005,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     monkeypatch.setattr(pfcoil_variables, "nfxf", 14)
     monkeypatch.setattr(
         pfcoil_variables,
-        "rfxf",
+        "r_pf_cs_current_filaments",
         np.array((
             6.2732560483870969,
             6.2732560483870969,
@@ -2075,7 +2075,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfcoil_variables,
-        "zfxf",
+        "z_pf_cs_current_filaments",
         np.array((
             9.606146709677418,
             -11.141090021562032,
@@ -2145,7 +2145,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfcoil_variables,
-        "cfxf",
+        "c_pf_cs_current_filaments",
         np.array((
             15889161.548344759,
             18583102.707854092,
