@@ -244,6 +244,9 @@ beta_poloidal_eps: float = None
 beta_toroidal_vol_avg: float = None
 """Plasma volume averaged toroidal beta"""
 
+beta_toroidal_profile: list[float] = None
+"""toroidal beta profile"""
+
 
 beta_thermal_vol_avg: float = None
 """Plasma volume averaged thermal beta"""
@@ -1386,6 +1389,7 @@ def init_physics_variables():
     global beta_poloidal_vol_avg
     global beta_poloidal_eps
     global beta_toroidal_vol_avg
+    global beta_toroidal_profile
     global beta_thermal_vol_avg
     global beta_thermal_poloidal_vol_avg
     global beta_thermal_toroidal_vol_avg
@@ -1640,6 +1644,7 @@ def init_physics_variables():
     beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
     beta_toroidal_vol_avg = 0.0
+    beta_toroidal_profile = []
     beta_thermal_vol_avg = 0.0
     beta_thermal_poloidal_vol_avg = 0.0
     beta_thermal_toroidal_vol_avg = 0.0
