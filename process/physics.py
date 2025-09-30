@@ -3866,6 +3866,22 @@ class Physics:
 
         return b_plasma_poloidal_average, qstar, plasma_current
 
+    def calculate_plasma_beta(self, pres_plasma: float, b_field: float) -> float:
+        """
+        Calculate the plasma beta for a given pressure and field.
+
+        :param pres_plasma: Plasma pressure (in Pascals).
+        :type pres_plasma: float
+        :param b_field: Magnetic field strength (in Tesla).
+        :type b_field: float
+        :returns: The plasma beta (dimensionless).
+        :rtype: float
+
+        Plasma beta is the ratio of plasma pressure to magnetic pressure.
+        """
+
+        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
+
     def outtim(self):
         po.oheadr(self.outfile, "Times")
 
