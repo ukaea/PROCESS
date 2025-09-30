@@ -1753,9 +1753,15 @@ class Physics:
             self.calculate_poloidal_field_profile(
                 j_plasma_on_axis=physics_variables.j_plasma_0,
                 alphaj=physics_variables.alphaj,
-                n_profile_elements=physics_variables.n_plasma_profile_elements,
+                n_profile_elements=physics_variables.n_plasma_profile_elements * 2,
                 rminor=physics_variables.rminor,
             )
+        )
+
+        # Calculate the total magnetic field profile at each point by summing the squares of the toroidal and poloidal components
+        physics_variables.b_plasma_total_profile = np.sqrt(
+            np.square(physics_variables.b_plasma_toroidal_profile)
+            + np.square(physics_variables.b_plasma_poloidal_profile)
         )
 
         # ============================================
@@ -4320,6 +4326,13 @@ class Physics:
                     f"Poloidal field in plasma at point {i}",
                     f"b_plasma_poloidal_profile{i}",
                     physics_variables.b_plasma_poloidal_profile[i],
+                )
+            for i in range(len(physics_variables.b_plasma_total_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Total field in plasma at point {i}",
+                    f"b_plasma_total_profile{i}",
+                    physics_variables.b_plasma_total_profile[i],
                 )
             po.ovarrf(
                 self.outfile,
