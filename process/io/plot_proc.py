@@ -10745,6 +10745,36 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
     axis.set_xlim(rmajor - 1.25 * rminor, rmajor + 1.25 * rminor)
 
 
+def plot_beta_profiles(axis, mfile_data, scan):
+    # Plot the beta profiles on the given axis
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    beta_plasma_toroidal_profile = [
+        mfile_data.data[f"beta_toroidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_plasma_toroidal_profile,
+        color="blue",
+        label="Beta Toroidal",
+    )
+    
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("$\\beta$ [%]")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    axis.set_title("Beta Profile")
+    axis.legend()
+    axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
+    axis.grid(True, linestyle="--", alpha=0.5)
+    
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10953,8 +10983,11 @@ def main_plot(
     )
 
     plot_magnetic_fields_in_plasma(
-        fig20.add_subplot(111, aspect="equal"), m_file_data, scan
+        fig20.add_subplot(122, aspect="equal"), m_file_data, scan
     )
+
+    plot_beta_profiles(fig20.add_subplot(221), m_file_data, scan)
+    
 
 
 def main(args=None):

@@ -1737,10 +1737,11 @@ class Physics:
 
         # Calculate the toroidal field across the plasma
         # Calculate the toroidal field profile across the plasma (1/R dependence)
+        # Double element size to include both sides of the plasma
         rho = np.linspace(
             physics_variables.rmajor - physics_variables.rminor,
             physics_variables.rmajor + physics_variables.rminor,
-            physics_variables.n_plasma_profile_elements,
+            2 * physics_variables.n_plasma_profile_elements,
         )
         # Avoid division by zero at the magnetic axis
         rho = np.where(rho == 0, 1e-10, rho)
@@ -1759,6 +1760,20 @@ class Physics:
             * physics_variables.b_plasma_total**2
             / physics_variables.b_plasma_toroidal_on_axis**2
         )
+
+        # Mirror the pressure profiles to match the doubled toroidal field profile
+        pres_profile_total = np.concatenate([
+            physics_variables.pres_plasma_total_profile[::-1],
+            physics_variables.pres_plasma_total_profile,
+        ])
+
+        physics_variables.beta_toroidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_toroidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile))
+        ])
 
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.beta_poloidal = calculate_poloidal_beta(
@@ -4408,6 +4423,14 @@ class Physics:
             physics_variables.beta_toroidal,
             "OP ",
         )
+        for i in range(len(physics_variables.beta_toroidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta toroidal profile at point {i}",
+                f"beta_toroidal_profile{i}",
+                physics_variables.beta_toroidal_profile[i],
+            )
+
         po.ovarre(
             self.outfile,
             "Fast alpha beta",
