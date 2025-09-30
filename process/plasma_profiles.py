@@ -295,7 +295,13 @@ class PlasmaProfile:
             * physics_variables.tratio
         )
 
-        # Total ion pressure profile (Pa)
+        # Total pressure profile (Pa)
+        physics_variables.pres_plasma_total_profile = (
+            physics_variables.pres_plasma_electron_profile
+            + physics_variables.pres_plasma_ion_total_profile
+        )
+
+        # Fuel ion pressure profile (Pa)
         physics_variables.pres_plasma_fuel_profile = (
             physics_variables.nd_fuel_ions
             * (self.neprofile.profile_y / physics_variables.dene)
