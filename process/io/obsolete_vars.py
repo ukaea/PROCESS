@@ -129,7 +129,7 @@ OBS_VARS = {
     "vgap": "dz_xpoint_divertor",
     "ftritbm": "f_tritium_bream",
     "enbeam": "e_beam_kev",
-    "fdeut": "f_deuterium",
+    "fdeut": "f_plasma_fuel_deuterium",
     "ftrit": "f_tritium",
     "fhe3": "f_helium3",
     "falpha": "f_p_alpha_plasma_deposited",

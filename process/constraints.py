@@ -2371,16 +2371,16 @@ def constraint_equation_92():
     """Equation for checking is D/T ratio is consistent, and sums to 1.
     author: G Turkington, UKAEA
 
-    f_deuterium: fraction of deuterium ions
+    f_plasma_fuel_deuterium: fraction of deuterium ions
     f_tritium: fraction of tritium ions
     f_helium3: fraction of helium-3 ions
     """
-    f_deuterium = 1.0 - (
+    f_plasma_fuel_deuterium = 1.0 - (
         data_structure.physics_variables.f_tritium
         + data_structure.physics_variables.f_helium3
     )
     cc = 1.0 - (
-        f_deuterium
+        f_plasma_fuel_deuterium
         + data_structure.physics_variables.f_tritium
         + data_structure.physics_variables.f_helium3
     )
