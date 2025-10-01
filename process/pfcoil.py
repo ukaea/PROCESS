@@ -2237,14 +2237,14 @@ class PFCoil:
 
         # Calculate the field at the inner and outer edges
         # of the coil of interest
-        pfcoil_variables.xind[:kk], bri, bzi, psi = bfield(
+        pfcoil_variables.xind[:kk], bri, bzi, psi = calculate_b_field_at_point(
             r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
             z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
             c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
             r_test_point=pfcoil_variables.r_pf_coil_inner[i - 1],
             z_test_point=pfcoil_variables.z_pf_coil_middle[i - 1],
         )
-        pfcoil_variables.xind[:kk], bro, bzo, psi = bfield(
+        pfcoil_variables.xind[:kk], bro, bzo, psi = calculate_b_field_at_point(
             r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
             z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
             c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
@@ -2677,14 +2677,14 @@ class PFCoil:
 
                 reqv = rp * (1.0e0 + delzoh**2 / (24.0e0 * rp**2))
 
-                xcin, br, bz, psi = bfield(
+                xcin, br, bz, psi = calculate_b_field_at_point(
                     r_current_loop=rc,
                     z_current_loop=zc,
                     c_current_loop=cc,
                     r_test_point=reqv - deltar,
                     z_test_point=zp,
                 )
-                xcout, br, bz, psi = bfield(
+                xcout, br, bz, psi = calculate_b_field_at_point(
                     r_current_loop=rc,
                     z_current_loop=zc,
                     c_current_loop=cc,
@@ -2726,7 +2726,7 @@ class PFCoil:
             ncoils = ncoils + pfcoil_variables.n_pf_coils_in_group[i]
             rp = pfcoil_variables.r_pf_coil_middle[ncoils - 1]
             zp = pfcoil_variables.z_pf_coil_middle[ncoils - 1]
-            xc, br, bz, psi = bfield(
+            xc, br, bz, psi = calculate_b_field_at_point(
                 r_current_loop=rc,
                 z_current_loop=zc,
                 c_current_loop=cc,
@@ -2778,7 +2778,7 @@ class PFCoil:
                 ncoils = ncoils + pfcoil_variables.n_pf_coils_in_group[i]
                 rp = pfcoil_variables.r_pf_coil_middle[ncoils - 1]
                 zp = pfcoil_variables.z_pf_coil_middle[ncoils - 1]
-                xc, br, bz, psi = bfield(
+                xc, br, bz, psi = calculate_b_field_at_point(
                     r_current_loop=rc,
                     z_current_loop=zc,
                     c_current_loop=cc,
@@ -2821,7 +2821,7 @@ class PFCoil:
 
             rp = pfcoil_variables.r_pf_coil_middle[i]
             zp = pfcoil_variables.z_pf_coil_middle[i]
-            xc, br, bz, psi = bfield(
+            xc, br, bz, psi = calculate_b_field_at_point(
                 r_current_loop=rc,
                 z_current_loop=zc,
                 c_current_loop=cc,
@@ -4132,7 +4132,7 @@ class PFCoil:
 
 
 @numba.njit(cache=True)
-def bfield(
+def calculate_b_field_at_point(
     r_current_loop: np.ndarray,
     z_current_loop: np.ndarray,
     c_current_loop: np.ndarray,
@@ -4374,9 +4374,9 @@ def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
         return bfix
 
     for i in range(npts):
-        # bfield() only operates correctly on nfix slices of array
+        # calculate_b_field_at_point() only operates correctly on nfix slices of array
         # arguments, not entire arrays
-        _, brw, bzw, _ = bfield(
+        _, brw, bzw, _ = calculate_b_field_at_point(
             r_current_loop=rfix[:nfix],
             z_current_loop=zfix[:nfix],
             c_current_loop=cfix[:nfix],
@@ -4462,7 +4462,7 @@ def mtrx(
         for j in range(n_pf_coil_groups):
             nc = n_pf_coils_in_group[j]
 
-            _, gmat[i, j], gmat[i + npts, j], _ = bfield(
+            _, gmat[i, j], gmat[i + npts, j], _ = calculate_b_field_at_point(
                 r_current_loop=r_pf_coil_middle_group_array[j, :nc],
                 z_current_loop=z_pf_coil_middle_group_array[j, :nc],
                 c_current_loop=cc[:nc],
