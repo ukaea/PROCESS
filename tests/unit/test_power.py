@@ -230,7 +230,7 @@ class PfpwrParam(NamedTuple):
 
     ioptimz: Any = None
 
-    tim: Any = None
+    t_pulse_cumulative: Any = None
 
     intervallabel: Any = None
 
@@ -956,7 +956,7 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            tim=np.array(
+            t_pulse_cumulative=np.array(
                 np.array(
                     (
                         0,
@@ -1699,7 +1699,7 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            tim=np.array(
+            t_pulse_cumulative=np.array(
                 np.array(
                     (
                         0,
@@ -1865,7 +1865,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(numerics, "ioptimz", pfpwrparam.ioptimz)
 
-    monkeypatch.setattr(times_variables, "tim", pfpwrparam.tim)
+    monkeypatch.setattr(
+        times_variables, "t_pulse_cumulative", pfpwrparam.t_pulse_cumulative
+    )
 
     monkeypatch.setattr(
         times_variables, "t_current_ramp_up", pfpwrparam.t_current_ramp_up

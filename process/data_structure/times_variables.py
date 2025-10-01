@@ -24,7 +24,7 @@ t_between_pulse: float = None
 t_fusion_ramp: float = None
 """time for plasma temperature and density rise to full values (s)"""
 
-tim: list[float] = None
+t_pulse_cumulative: list[float] = None
 """array of time points during plasma pulse (s)"""
 
 timelabel: list[str] = None
@@ -62,7 +62,7 @@ def init_times_variables():
     global tdown
     global t_between_pulse
     global t_fusion_ramp
-    global tim
+    global t_pulse_cumulative
     global timelabel
     global intervallabel
     global t_current_ramp_up
@@ -78,7 +78,7 @@ def init_times_variables():
     tdown = 0.0
     t_between_pulse = 1800.0
     t_fusion_ramp = 10.0
-    tim = np.zeros(6, dtype=np.float64)
+    t_pulse_cumulative = np.zeros(6, dtype=np.float64)
     timelabel = ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
     intervallabel = [
         "t_precharge        ",

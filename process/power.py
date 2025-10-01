@@ -63,7 +63,7 @@ class Power:
         #  Bus length
         pfbusl = 8.0e0 * physics_variables.rmajor + 140.0e0
 
-        #  Find power requirements for PF coils at times_variables.tim(ktim)
+        #  Find power requirements for PF coils at times_variables.t_pulse_cumulative(ktim)
 
         #  PF coil resistive power requirements
         #  Bussing losses assume aluminium bussing with 100 A/cm**2
@@ -155,10 +155,10 @@ class Power:
                         / delktim
                     )
 
-                    #  Voltage in circuit jpf at time, times_variables.tim(3), due to changes in coil currents
+                    #  Voltage in circuit jpf at time, times_variables.t_pulse_cumulative(3), due to changes in coil currents
                     vpfi[jpf] = vpfi[jpf] + vpfij
 
-                    #  MVA in circuit jpf at time, times_variables.tim(3) due to changes in current
+                    #  MVA in circuit jpf at time, times_variables.t_pulse_cumulative(3) due to changes in current
                     powpfii[jpf] = (
                         powpfii[jpf]
                         + vpfij * pfcoil_variables.c_pf_coil_turn[jpf, 2] / 1.0e6
@@ -175,7 +175,7 @@ class Power:
                     # engx = engx + pfcoil_variables.ind_pf_cs_plasma_mutual(jpf,ipf)*pfcoil_variables.c_pf_coil_turn(ipf,5)
 
                 #  Stored magnetic energy of the poloidal field at each time
-                # 'time' is the time INDEX.  'tim' is the time.
+                # 'time' is the time INDEX.  't_pulse_cumulative' is the time.
                 for time in range(6):
                     poloidalenergy[time] = (
                         poloidalenergy[time]
@@ -186,8 +186,8 @@ class Power:
 
                 #   do time = 1,5
                 #     # Mean rate of change of stored energy between time and time+1
-                #     if(abs(times_variables.tim(time+1)-times_variables.tim(time)).gt.1.0e0) :
-                #         pf_power_variables.poloidalpower(time) = (poloidalenergy(time+1)-poloidalenergy(time)) / (times_variables.tim(time+1)-times_variables.tim(time))
+                #     if(abs(times_variables.t_pulse_cumulative(time+1)-times_variables.t_pulse_cumulative(time)).gt.1.0e0) :
+                #         pf_power_variables.poloidalpower(time) = (poloidalenergy(time+1)-poloidalenergy(time)) / (times_variables.t_pulse_cumulative(time+1)-times_variables.t_pulse_cumulative(time))
                 #     else:
                 #         # Flag when an interval is small or zero MDK 30/11/16
                 #         pf_power_variables.poloidalpower(time) = 9.9e9
@@ -197,7 +197,7 @@ class Power:
                 #   #engxpc = 0.5e0 * engx * pfcoil_variables.c_pf_coil_turn(jpf,5)
                 #   #ensxpf = ensxpf + engxpc
 
-                #  Resistive power in circuits at times times_variables.tim(3) and times_variables.tim(5) respectively (MW)
+                #  Resistive power in circuits at times times_variables.t_pulse_cumulative(3) and times_variables.t_pulse_cumulative(5) respectively (MW)
                 powpfr = (
                     powpfr
                     + pfcoil_variables.n_pf_coil_turns[jpf]
@@ -216,12 +216,21 @@ class Power:
 
         for time in range(5):
             # Stored magnetic energy of the poloidal field at each time
-            # 'time' is the time INDEX.  'tim' is the time.
+            # 'time' is the time INDEX.  't_pulse_cumulative' is the time.
             # Mean rate of change of stored energy between time and time+1
-            if abs(times_variables.tim[time + 1] - times_variables.tim[time]) > 1.0e0:
+            if (
+                abs(
+                    times_variables.t_pulse_cumulative[time + 1]
+                    - times_variables.t_pulse_cumulative[time]
+                )
+                > 1.0e0
+            ):
                 pf_power_variables.poloidalpower[time] = (
                     poloidalenergy[time + 1] - poloidalenergy[time]
-                ) / (times_variables.tim[time + 1] - times_variables.tim[time])
+                ) / (
+                    times_variables.t_pulse_cumulative[time + 1]
+                    - times_variables.t_pulse_cumulative[time]
+                )
             else:
                 # Flag when an interval is small or zero MDK 30/11/16
                 pf_power_variables.poloidalpower[time] = 9.9e9
@@ -237,9 +246,14 @@ class Power:
 
         # Mean power dissipated
         # The flat top duration (time 4 to 5) is the denominator, as this is the time when electricity is generated.
-        if times_variables.tim[4] - times_variables.tim[3] > 1.0e0:
+        if (
+            times_variables.t_pulse_cumulative[4]
+            - times_variables.t_pulse_cumulative[3]
+            > 1.0e0
+        ):
             pfpower = sum(pfdissipation[:]) / (
-                times_variables.tim[4] - times_variables.tim[3]
+                times_variables.t_pulse_cumulative[4]
+                - times_variables.t_pulse_cumulative[3]
             )
         else:
             # Give up when an interval is small or zero.
@@ -379,7 +393,7 @@ class Power:
         po.ocmmnt(self.outfile, "Energy stored in poloidal magnetic field :")
         po.oblnkl(self.outfile)
 
-        # write(self.outfile,50)(times_variables.tim(time),time=1,6)
+        # write(self.outfile,50)(times_variables.t_pulse_cumulative(time),time=1,6)
 
     def acpow(self, output: bool):
         """

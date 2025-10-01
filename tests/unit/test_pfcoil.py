@@ -10,7 +10,7 @@ from process.cs_fatigue import CsFatigue
 from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables
 from process.data_structure import tfcoil_variables as tfv
-from process.pfcoil import PFCoil, bfield, rsid
+from process.pfcoil import PFCoil, calculate_b_field_at_point, rsid
 
 
 @pytest.fixture
@@ -913,7 +913,7 @@ def test_rsid(pfcoil):
 def test_bfield():
     """Test bfield function.
 
-    bfield() requires specific arguments in order to work; these were discovered
+    calculate_b_field_at_point() requires specific arguments in order to work; these were discovered
     using gdb to break on the first subroutine call when running the baseline
     2018 IN.DAT.
 
@@ -991,7 +991,7 @@ def test_bfield():
     bz_exp = -0.3537283013510894
     psi_exp = 232.7112153010189
 
-    xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+    xc, br, bz, psi = calculate_b_field_at_point(rc, zc, cc, rp, zp)
 
     assert_array_almost_equal(xc, xc_exp)
     assert pytest.approx(br) == br_exp
@@ -1053,7 +1053,7 @@ def test_waveform(monkeypatch, pfcoil):
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
-    waveform() alters both c_pf_cs_coils_peak_ma and waves in the pfcoil_variables module, so
+    waveform() alters both c_pf_cs_coils_peak_ma and f_c_pf_cs_peak_time_array in the pfcoil_variables module, so
     these are asserted on.
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
@@ -1063,7 +1063,9 @@ def test_waveform(monkeypatch, pfcoil):
     ngc2 = 22
     monkeypatch.setattr(pfcoil_variables, "c_pf_cs_coils_peak_ma", np.zeros(ngc2))
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 7)
-    monkeypatch.setattr(pfcoil_variables, "waves", np.zeros((ngc2, 6), order="F"))
+    monkeypatch.setattr(
+        pfcoil_variables, "f_c_pf_cs_peak_time_array", np.zeros((ngc2, 6), order="F")
+    )
     monkeypatch.setattr(
         pfcoil_variables,
         "c_pf_cs_coil_pulse_start_ma",
@@ -1203,7 +1205,7 @@ def test_waveform(monkeypatch, pfcoil):
     pfcoil.waveform()
 
     assert_array_almost_equal(pfcoil_variables.c_pf_cs_coils_peak_ma, ric_exp)
-    assert_array_almost_equal(pfcoil_variables.waves, waves_exp)
+    assert_array_almost_equal(pfcoil_variables.f_c_pf_cs_peak_time_array, waves_exp)
 
 
 def test_vsec(pfcoil, monkeypatch):
