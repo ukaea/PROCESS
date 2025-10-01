@@ -136,12 +136,12 @@ class PFCoil:
         )
 
         # Set up array of times
-        tv.tim[0] = 0.0e0
-        tv.tim[1] = tv.t_precharge
-        tv.tim[2] = tv.tim[1] + tv.t_current_ramp_up
-        tv.tim[3] = tv.tim[2] + tv.t_fusion_ramp
-        tv.tim[4] = tv.tim[3] + tv.t_burn
-        tv.tim[5] = tv.tim[4] + tv.t_ramp_down
+        tv.t_pulse_cumulative[0] = 0.0e0
+        tv.t_pulse_cumulative[1] = tv.t_precharge
+        tv.t_pulse_cumulative[2] = tv.t_pulse_cumulative[1] + tv.t_current_ramp_up
+        tv.t_pulse_cumulative[3] = tv.t_pulse_cumulative[2] + tv.t_fusion_ramp
+        tv.t_pulse_cumulative[4] = tv.t_pulse_cumulative[3] + tv.t_burn
+        tv.t_pulse_cumulative[5] = tv.t_pulse_cumulative[4] + tv.t_ramp_down
 
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
@@ -3707,7 +3707,7 @@ class PFCoil:
         op.write(self.outfile, "\t" * 8 + "time (sec)")
         line = "\t\t"
         for k in range(6):
-            line += f"\t\t{tv.tim[k]:.2f}"
+            line += f"\t\t{tv.t_pulse_cumulative[k]:.2f}"
         op.write(self.outfile, line)
 
         line = "\t\t"

@@ -150,7 +150,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tfv, "bcritsc", 2.4e1)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
-    monkeypatch.setattr(tv, "tim", np.full(6, 0.0))
+    monkeypatch.setattr(tv, "t_pulse_cumulative", np.full(6, 0.0))
     monkeypatch.setattr(tv, "t_precharge", 5.0e2)
     monkeypatch.setattr(tv, "t_burn", 7.1263e-1)
     monkeypatch.setattr(tv, "t_current_ramp_up", 1.82538e2)
