@@ -107,7 +107,9 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", 2.5e-8)
     monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", np.full([22, 6], 0.0))
-    monkeypatch.setattr(pfcoil_variables, "waves", np.full([22, 6], 0.0))
+    monkeypatch.setattr(
+        pfcoil_variables, "f_c_pf_cs_peak_time_array", np.full([22, 6], 0.0)
+    )
     monkeypatch.setattr(
         pfcoil_variables, "ind_pf_cs_plasma_mutual", np.full([22, 22], 0.0)
     )
@@ -262,7 +264,9 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
 
     # Mocks for peak_b_field_at_pf_coil()
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(pfcoil_variables, "waves", np.full([22, 6], 0.0))
+    monkeypatch.setattr(
+        pfcoil_variables, "f_c_pf_cs_peak_time_array", np.full([22, 6], 0.0)
+    )
     monkeypatch.setattr(pfcoil_variables, "n_pf_coil_groups", 4)
     monkeypatch.setattr(
         pfcoil_variables,
@@ -2335,7 +2339,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfcoil_variables,
-        "waves",
+        "f_c_pf_cs_peak_time_array",
         np.array(
             [
                 [0.0, 1.0, 0.00457346, 0.00457346, 0.00457346, 0.0],

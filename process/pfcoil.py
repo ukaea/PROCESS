@@ -686,7 +686,7 @@ class PFCoil:
 
         # Set up coil current waveforms, normalised to the peak current in
         # each coil
-        self.waveform()  # sets c_pf_cs_coils_peak_ma(), waves()
+        self.waveform()  # sets c_pf_cs_coils_peak_ma(), f_c_pf_cs_peak_time_array()
 
         # Calculate PF coil geometry, current and number of turns
         # Dimensions are those of the winding pack, and exclude
@@ -1033,11 +1033,12 @@ class PFCoil:
         # user-provided waveforms etc. (c_pf_coil_turn_peak_input, f_j_cs_start_pulse_end_flat_top, f_j_cs_start_end_flat_top)
         for k in range(6):  # time points
             for i in range(pfcoil_variables.n_pf_cs_plasma_circuits - 1):
-                pfcoil_variables.c_pf_coil_turn[i, k] = pfcoil_variables.waves[
-                    i, k
-                ] * math.copysign(
-                    pfcoil_variables.c_pf_coil_turn_peak_input[i],
-                    pfcoil_variables.c_pf_cs_coils_peak_ma[i],
+                pfcoil_variables.c_pf_coil_turn[i, k] = (
+                    pfcoil_variables.f_c_pf_cs_peak_time_array[i, k]
+                    * math.copysign(
+                        pfcoil_variables.c_pf_coil_turn_peak_input[i],
+                        pfcoil_variables.c_pf_cs_coils_peak_ma[i],
+                    )
                 )
 
         # Plasma wave form
@@ -2108,7 +2109,7 @@ class PFCoil:
         if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
             # Peak field is to be calculated at the Central Solenoid itself,
             # so exclude its own contribution; its self field is
-            # dealt with externally using routine BFMAX
+            # dealt with externally using routine calculate_cs_peak_field()
             kk = 0
         else:
             # Check different times for maximum current
@@ -2156,7 +2157,7 @@ class PFCoil:
                 # Current in each filament representing part of the Central Solenoid
                 for iohc in range(pfcoil_variables.nfxf):
                     pfcoil_variables.c_pf_cs_current_filaments[iohc] = (
-                        pfcoil_variables.waves[
+                        pfcoil_variables.f_c_pf_cs_peak_time_array[
                             pfcoil_variables.n_cs_pf_coils - 1, t_b_field_peak - 1
                         ]
                         * pfcoil_variables.j_cs_flat_top_end
@@ -2192,7 +2193,9 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
+                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                            jj - 1, t_b_field_peak - 1
+                        ]
                         * 0.25e6
                     )
                     kk = kk + 1
@@ -2204,7 +2207,9 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
+                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                            jj - 1, t_b_field_peak - 1
+                        ]
                         * 0.25e6
                     )
                     kk = kk + 1
@@ -2216,7 +2221,9 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
+                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                            jj - 1, t_b_field_peak - 1
+                        ]
                         * 0.25e6
                     )
                     kk = kk + 1
@@ -2228,7 +2235,9 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
+                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                            jj - 1, t_b_field_peak - 1
+                        ]
                         * 0.25e6
                     )
 
@@ -2243,7 +2252,9 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
+                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                            jj - 1, t_b_field_peak - 1
+                        ]
                         * 1.0e6
                     )
 
@@ -3892,12 +3903,12 @@ class PFCoil:
 
         author: P J Knight, CCFE, Culham Science Centre
         This routine sets up the PF coil current waveforms.
-        waves[i,j] is the current in coil i, at time j,
+        f_c_pf_cs_peak_time_array[i,j] is the current in coil i, at time j,
         normalized to the peak current in that coil at any time.
         """
         nplas = pfcoil_variables.n_cs_pf_coils + 1
         for it in range(6):
-            pfcoil_variables.waves[nplas - 1, it] = 1.0e0
+            pfcoil_variables.f_c_pf_cs_peak_time_array[nplas - 1, it] = 1.0e0
 
         for ic in range(pfcoil_variables.n_cs_pf_coils):
             # Find where the peak current occurs
@@ -3938,24 +3949,24 @@ class PFCoil:
                 )
 
             # Set normalized current waveforms
-            pfcoil_variables.waves[ic, 0] = 0.0e0
-            pfcoil_variables.waves[ic, 1] = (
+            pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 0] = 0.0e0
+            pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 1] = (
                 pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
-            pfcoil_variables.waves[ic, 2] = (
+            pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 2] = (
                 pfcoil_variables.c_pf_cs_coil_flat_top_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
-            pfcoil_variables.waves[ic, 3] = (
+            pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 3] = (
                 pfcoil_variables.c_pf_cs_coil_flat_top_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
-            pfcoil_variables.waves[ic, 4] = (
+            pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 4] = (
                 pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic]
                 / pfcoil_variables.c_pf_cs_coils_peak_ma[ic]
             )
-            pfcoil_variables.waves[ic, 5] = 0.0e0
+            pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 5] = 0.0e0
 
     def superconpf(
         self, bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcritsc
