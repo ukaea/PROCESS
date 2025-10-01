@@ -816,7 +816,7 @@ class PFCoil:
                 if ij == 0:
                     # Index args +1ed
                     bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
-                        i + 1, iii + 1, it
+                        n_coil=i + 1, n_coil_group=iii + 1, t_b_field_peak=it
                     )  # returns b_pf_coil_peak, bpf2
 
                 # Issue 1871.  MDK
@@ -1758,7 +1758,9 @@ class PFCoil:
         # Peak field due to other PF coils plus plasma
         timepoint = 5
         bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
-            pfcoil_variables.n_cs_pf_coils, 99, timepoint
+            n_coil=pfcoil_variables.n_cs_pf_coils,
+            n_coil_group=99,
+            t_b_field_peak=timepoint,
         )
 
         pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
@@ -1783,7 +1785,9 @@ class PFCoil:
         )
         timepoint = 2
         bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
-            pfcoil_variables.n_cs_pf_coils, 99, timepoint
+            n_coil=pfcoil_variables.n_cs_pf_coils,
+            n_coil_group=99,
+            t_b_field_peak=timepoint,
         )
 
         pfcoil_variables.b_cs_peak_pulse_start = abs(
@@ -2075,23 +2079,33 @@ class PFCoil:
             dr_cs_full,
         )
 
-    def peak_b_field_at_pf_coil(self, i, ii, it):
-        """Calculates the peak field at a PF coil.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        i : input integer : coil number
-        ii : input integer : group number
-        it : input integer : time point at which field is highest
-        bri : output real : radial field at inner edge (T)
-        bro : output real : radial field at outer edge (T)
-        bzi : output real : vertical field at inner edge (T)
-        bzo : output real : vertical field at outer edge (T)
-        This routine calculates the peak magnetic field components
-        at the inner and outer edges of a given PF coil.
-        The calculation includes the effects from all the coils
-        and the plasma.
+    def peak_b_field_at_pf_coil(
+        self, n_coil: int, n_coil_group: int, t_b_field_peak: int
+    ) -> tuple[float, float, float, float]:
         """
-        if bv.iohcl != 0 and i == pfcoil_variables.n_cs_pf_coils:
+        Calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
+
+        :param n_coil: Coil number (1-based index)
+        :type n_coil: int
+        :param n_coil_group: Group number (1-based index)
+        :type n_coil_group: int
+        :param t_b_field_peak: Time point at which the field is highest
+        :type t_b_field_peak: int
+
+        :returns: Tuple containing:
+            - b_pf_inner_radial (float): Radial field at inner edge (T)
+            - b_pf_outer_radial (float): Radial field at outer edge (T)
+            - b_pf_inner_vertical (float): Vertical field at inner edge (T)
+            - b_pf_outer_vertical (float): Vertical field at outer edge (T)
+        :rtype: tuple[float, float, float, float]
+
+        :notes:
+            This routine calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
+            The calculation includes the effects from all the coils and the plasma.
+
+        :author: P J Knight, CCFE, Culham Science Centre
+        """
+        if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
             # Peak field is to be calculated at the Central Solenoid itself,
             # so exclude its own contribution; its self field is
             # dealt with externally using routine BFMAX
@@ -2100,31 +2114,32 @@ class PFCoil:
             # Check different times for maximum current
             if (
                 abs(
-                    pfcoil_variables.c_pf_cs_coil_pulse_start_ma[i - 1]
-                    - pfcoil_variables.c_pf_cs_coils_peak_ma[i - 1]
+                    pfcoil_variables.c_pf_cs_coil_pulse_start_ma[n_coil - 1]
+                    - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
                 )
                 < 1.0e-12
             ):
-                it = 2
+                t_b_field_peak = 2
             elif (
                 abs(
-                    pfcoil_variables.c_pf_cs_coil_flat_top_ma[i - 1]
-                    - pfcoil_variables.c_pf_cs_coils_peak_ma[i - 1]
+                    pfcoil_variables.c_pf_cs_coil_flat_top_ma[n_coil - 1]
+                    - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
                 )
                 < 1.0e-12
             ):
-                it = 4
+                t_b_field_peak = 4
             elif (
                 abs(
-                    pfcoil_variables.c_pf_cs_coil_pulse_end_ma[i - 1]
-                    - pfcoil_variables.c_pf_cs_coils_peak_ma[i - 1]
+                    pfcoil_variables.c_pf_cs_coil_pulse_end_ma[n_coil - 1]
+                    - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
                 )
                 < 1.0e-12
             ):
-                it = 5
+                t_b_field_peak = 5
             else:
                 raise ProcessValueError(
-                    "Illegal value of it; possible rounding error", it=it
+                    "Illegal value of it; possible rounding error",
+                    t_b_field_peak=t_b_field_peak,
                 )
 
             if bv.iohcl == 0:
@@ -2142,7 +2157,7 @@ class PFCoil:
                 for iohc in range(pfcoil_variables.nfxf):
                     pfcoil_variables.c_pf_cs_current_filaments[iohc] = (
                         pfcoil_variables.waves[
-                            pfcoil_variables.n_cs_pf_coils - 1, it - 1
+                            pfcoil_variables.n_cs_pf_coils - 1, t_b_field_peak - 1
                         ]
                         * pfcoil_variables.j_cs_flat_top_end
                         * sgn
@@ -2161,7 +2176,7 @@ class PFCoil:
             for _jjj in range(pfcoil_variables.n_pf_coils_in_group[iii]):
                 jj = jj + 1
                 # Radius, z-coordinate and current for each coil
-                if iii == ii - 1:
+                if iii == n_coil_group - 1:
                     # Self field from coil (Lyle's Method)
                     kk = kk + 1
 
@@ -2177,7 +2192,7 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, it - 1]
+                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
                         * 0.25e6
                     )
                     kk = kk + 1
@@ -2189,7 +2204,7 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, it - 1]
+                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
                         * 0.25e6
                     )
                     kk = kk + 1
@@ -2201,7 +2216,7 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, it - 1]
+                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
                         * 0.25e6
                     )
                     kk = kk + 1
@@ -2213,7 +2228,7 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, it - 1]
+                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
                         * 0.25e6
                     )
 
@@ -2228,12 +2243,12 @@ class PFCoil:
                     )
                     pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
                         pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.waves[jj - 1, it - 1]
+                        * pfcoil_variables.waves[jj - 1, t_b_field_peak - 1]
                         * 1.0e6
                     )
 
         # Plasma contribution
-        if it > 2:
+        if t_b_field_peak > 2:
             kk = kk + 1
             pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = pv.rmajor
             pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = 0.0e0
@@ -2241,32 +2256,46 @@ class PFCoil:
 
         # Calculate the field at the inner and outer edges
         # of the coil of interest
-        pfcoil_variables.xind[:kk], bri, bzi, psi = calculate_b_field_at_point(
-            r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
-            z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
-            c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
-            r_test_point=pfcoil_variables.r_pf_coil_inner[i - 1],
-            z_test_point=pfcoil_variables.z_pf_coil_middle[i - 1],
+        pfcoil_variables.xind[:kk], b_pf_inner_radial, b_pf_inner_vertical, psi = (
+            calculate_b_field_at_point(
+                r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
+                z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
+                c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
+                r_test_point=pfcoil_variables.r_pf_coil_inner[n_coil - 1],
+                z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
+            )
         )
-        pfcoil_variables.xind[:kk], bro, bzo, psi = calculate_b_field_at_point(
-            r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
-            z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
-            c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
-            r_test_point=pfcoil_variables.r_pf_coil_outer[i - 1],
-            z_test_point=pfcoil_variables.z_pf_coil_middle[i - 1],
+        pfcoil_variables.xind[:kk], b_pf_outer_radial, b_pf_outer_vertical, psi = (
+            calculate_b_field_at_point(
+                r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
+                z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
+                c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
+                r_test_point=pfcoil_variables.r_pf_coil_outer[n_coil - 1],
+                z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
+            )
         )
 
         # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
-        if (bv.iohcl != 0) and (i == pfcoil_variables.n_cs_pf_coils):
-            return bri, bro, bzi, bzo
+        if (bv.iohcl != 0) and (n_coil == pfcoil_variables.n_cs_pf_coils):
+            return (
+                b_pf_inner_radial,
+                b_pf_outer_radial,
+                b_pf_inner_vertical,
+                b_pf_outer_vertical,
+            )
 
-        bpfin = math.sqrt(bri**2 + bzi**2)
-        bpfout = math.sqrt(bro**2 + bzo**2)
-        for n in range(pfcoil_variables.n_pf_coils_in_group[ii - 1]):
-            pfcoil_variables.b_pf_coil_peak[i - 1 + n] = bpfin
-            pfcoil_variables.bpf2[i - 1 + n] = bpfout
+        bpfin = math.sqrt(b_pf_inner_radial**2 + b_pf_inner_vertical**2)
+        bpfout = math.sqrt(b_pf_outer_radial**2 + b_pf_outer_vertical**2)
+        for n in range(pfcoil_variables.n_pf_coils_in_group[n_coil_group - 1]):
+            pfcoil_variables.b_pf_coil_peak[n_coil - 1 + n] = bpfin
+            pfcoil_variables.bpf2[n_coil - 1 + n] = bpfout
 
-        return bri, bro, bzi, bzo
+        return (
+            b_pf_inner_radial,
+            b_pf_outer_radial,
+            b_pf_inner_vertical,
+            b_pf_outer_vertical,
+        )
 
     def calculate_cs_peak_field(
         self,
