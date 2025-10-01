@@ -991,7 +991,7 @@ def test_bfield():
     bz_exp = -0.3537283013510894
     psi_exp = 232.7112153010189
 
-    xc, br, bz, psi = calculate_b_field_at_point(rc, zc, cc, rp, zp)
+    xc, br, bz, psi = pfcoil.calculate_b_field_at_point(rc, zc, cc, rp, zp)
 
     assert_array_almost_equal(xc, xc_exp)
     assert pytest.approx(br) == br_exp

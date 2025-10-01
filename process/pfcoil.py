@@ -815,7 +815,7 @@ class PFCoil:
 
                 if ij == 0:
                     # Index args +1ed
-                    bri, bro, bzi, bzo = self.peakb(
+                    bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
                         i + 1, iii + 1, it
                     )  # returns b_pf_coil_peak, bpf2
 
@@ -1757,7 +1757,9 @@ class PFCoil:
 
         # Peak field due to other PF coils plus plasma
         timepoint = 5
-        bri, bro, bzi, bzo = self.peakb(pfcoil_variables.n_cs_pf_coils, 99, timepoint)
+        bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
+            pfcoil_variables.n_cs_pf_coils, 99, timepoint
+        )
 
         pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
 
@@ -1780,7 +1782,9 @@ class PFCoil:
             ],
         )
         timepoint = 2
-        bri, bro, bzi, bzo = self.peakb(pfcoil_variables.n_cs_pf_coils, 99, timepoint)
+        bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
+            pfcoil_variables.n_cs_pf_coils, 99, timepoint
+        )
 
         pfcoil_variables.b_cs_peak_pulse_start = abs(
             pfcoil_variables.b_cs_peak_pulse_start + bzi
@@ -2071,7 +2075,7 @@ class PFCoil:
             dr_cs_full,
         )
 
-    def peakb(self, i, ii, it):
+    def peak_b_field_at_pf_coil(self, i, ii, it):
         """Calculates the peak field at a PF coil.
 
         author: P J Knight, CCFE, Culham Science Centre

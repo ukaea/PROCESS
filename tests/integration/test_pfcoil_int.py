@@ -260,7 +260,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
     monkeypatch.setattr(constants, "den_copper", 8.9e3)
 
-    # Mocks for peakb()
+    # Mocks for peak_b_field_at_pf_coil()
     monkeypatch.setattr(bv, "iohcl", 1)
     monkeypatch.setattr(pfcoil_variables, "waves", np.full([22, 6], 0.0))
     monkeypatch.setattr(pfcoil_variables, "n_pf_coil_groups", 4)
@@ -1993,7 +1993,7 @@ def test_fixb(pfcoil: PFCoil):
 def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """Test peakb subroutine.
 
-    peakb() requires specific arguments in order to work; these were discovered
+    peak_b_field_at_pf_coil() requires specific arguments in order to work; these were discovered
     using gdb to break on the first subroutine call when running the baseline
     2018 IN.DAT.
     :param monkeypatch: mocking fixture
@@ -2555,7 +2555,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     bzi_exp = 1.049564e1
     bzo_exp = -6.438987
 
-    bri, bro, bzi, bzo = pfcoil.peakb(i, ii, it)
+    bri, bro, bzi, bzo = pfcoil.peak_b_field_at_pf_coil(i, ii, it)
 
     assert pytest.approx(bri) == bri_exp
     assert pytest.approx(bro) == bro_exp
