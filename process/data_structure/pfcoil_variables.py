@@ -484,8 +484,8 @@ vs_cs_pf_total_pulse: float = None
 """total flux swing for pulse (Wb)"""
 
 
-waves: list[float] = None
-"""used in current waveform of PF coils/central solenoid"""
+f_c_pf_cs_peak_time_array: list[float] = None
+"""PF, CS coil current relative to peak current at time points 1 to 6"""
 
 
 m_pf_coil_conductor_total: float = None
@@ -690,7 +690,7 @@ def init_pfcoil_variables():
     global vs_cs_ramp
     global vs_cs_pf_total_ramp
     global vs_cs_pf_total_pulse
-    global waves
+    global f_c_pf_cs_peak_time_array
     global m_pf_coil_conductor_total
     global m_pf_coil_structure_total
     global m_pf_coil_conductor
@@ -792,7 +792,7 @@ def init_pfcoil_variables():
     vs_cs_ramp = 0.0
     vs_cs_pf_total_ramp = 0.0
     vs_cs_pf_total_pulse = 0.0
-    waves = np.zeros((NGC2, 6))
+    f_c_pf_cs_peak_time_array = np.zeros((NGC2, 6))
     m_pf_coil_conductor_total = 0.0
     m_pf_coil_structure_total = 0.0
     m_pf_coil_conductor = np.zeros(NGC2)

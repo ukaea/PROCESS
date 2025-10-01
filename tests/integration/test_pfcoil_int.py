@@ -107,7 +107,9 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pfcoil_variables, "n_pf_cs_plasma_circuits", 8)
     monkeypatch.setattr(pfcoil_variables, "rho_pf_coil", 2.5e-8)
     monkeypatch.setattr(pfcoil_variables, "c_pf_coil_turn", np.full([22, 6], 0.0))
-    monkeypatch.setattr(pfcoil_variables, "waves", np.full([22, 6], 0.0))
+    monkeypatch.setattr(
+        pfcoil_variables, "f_c_pf_cs_peak_time_array", np.full([22, 6], 0.0)
+    )
     monkeypatch.setattr(
         pfcoil_variables, "ind_pf_cs_plasma_mutual", np.full([22, 22], 0.0)
     )
@@ -150,7 +152,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tfv, "bcritsc", 2.4e1)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
-    monkeypatch.setattr(tv, "tim", np.full(6, 0.0))
+    monkeypatch.setattr(tv, "t_pulse_cumulative", np.full(6, 0.0))
     monkeypatch.setattr(tv, "t_precharge", 5.0e2)
     monkeypatch.setattr(tv, "t_burn", 7.1263e-1)
     monkeypatch.setattr(tv, "t_current_ramp_up", 1.82538e2)
@@ -260,9 +262,11 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(tfv, "t_crit_nbti", 9.04)
     monkeypatch.setattr(constants, "den_copper", 8.9e3)
 
-    # Mocks for peakb()
+    # Mocks for peak_b_field_at_pf_coil()
     monkeypatch.setattr(bv, "iohcl", 1)
-    monkeypatch.setattr(pfcoil_variables, "waves", np.full([22, 6], 0.0))
+    monkeypatch.setattr(
+        pfcoil_variables, "f_c_pf_cs_peak_time_array", np.full([22, 6], 0.0)
+    )
     monkeypatch.setattr(pfcoil_variables, "n_pf_coil_groups", 4)
     monkeypatch.setattr(
         pfcoil_variables,
@@ -1993,7 +1997,7 @@ def test_fixb(pfcoil: PFCoil):
 def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     """Test peakb subroutine.
 
-    peakb() requires specific arguments in order to work; these were discovered
+    peak_b_field_at_pf_coil() requires specific arguments in order to work; these were discovered
     using gdb to break on the first subroutine call when running the baseline
     2018 IN.DAT.
     :param monkeypatch: mocking fixture
@@ -2335,7 +2339,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     )
     monkeypatch.setattr(
         pfcoil_variables,
-        "waves",
+        "f_c_pf_cs_peak_time_array",
         np.array(
             [
                 [0.0, 1.0, 0.00457346, 0.00457346, 0.00457346, 0.0],
@@ -2555,7 +2559,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     bzi_exp = 1.049564e1
     bzo_exp = -6.438987
 
-    bri, bro, bzi, bzo = pfcoil.peakb(i, ii, it)
+    bri, bro, bzi, bzo = pfcoil.peak_b_field_at_pf_coil(i, ii, it)
 
     assert pytest.approx(bri) == bri_exp
     assert pytest.approx(bro) == bro_exp
