@@ -82,11 +82,9 @@ class PFCoil:
             order="F",
         )
         pfcoil_variables.ccls0 = np.zeros(int(pfcoil_variables.N_PF_GROUPS_MAX / 2))
-        sigma, work2 = np.zeros((2, pfcoil_variables.N_PF_GROUPS_MAX))
-        rc, zc, cc, xc = np.zeros((4, pfcoil_variables.N_PF_COILS_IN_GROUP_MAX))
         brin, bzin, rpts, zpts = np.zeros((4, pfcoil_variables.NPTSMX))
         bfix, bvec = np.zeros((2, lrow1))
-        gmat, umat, vmat = np.zeros((3, lrow1, lcol1), order="F")
+        gmat, _, _ = np.zeros((3, lrow1, lcol1), order="F")
         signn = np.zeros(2)
         aturn = np.zeros(pfcoil_variables.NGC2)
 
@@ -2240,18 +2238,18 @@ class PFCoil:
         # Calculate the field at the inner and outer edges
         # of the coil of interest
         pfcoil_variables.xind[:kk], bri, bzi, psi = bfield(
-            pfcoil_variables.r_pf_cs_current_filaments[:kk],
-            pfcoil_variables.z_pf_cs_current_filaments[:kk],
-            pfcoil_variables.c_pf_cs_current_filaments[:kk],
-            pfcoil_variables.r_pf_coil_inner[i - 1],
-            pfcoil_variables.z_pf_coil_middle[i - 1],
+            r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
+            z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
+            c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
+            r_test_point=pfcoil_variables.r_pf_coil_inner[i - 1],
+            z_test_point=pfcoil_variables.z_pf_coil_middle[i - 1],
         )
         pfcoil_variables.xind[:kk], bro, bzo, psi = bfield(
-            pfcoil_variables.r_pf_cs_current_filaments[:kk],
-            pfcoil_variables.z_pf_cs_current_filaments[:kk],
-            pfcoil_variables.c_pf_cs_current_filaments[:kk],
-            pfcoil_variables.r_pf_coil_outer[i - 1],
-            pfcoil_variables.z_pf_coil_middle[i - 1],
+            r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
+            z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
+            c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
+            r_test_point=pfcoil_variables.r_pf_coil_outer[i - 1],
+            z_test_point=pfcoil_variables.z_pf_coil_middle[i - 1],
         )
 
         # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
@@ -2679,8 +2677,20 @@ class PFCoil:
 
                 reqv = rp * (1.0e0 + delzoh**2 / (24.0e0 * rp**2))
 
-                xcin, br, bz, psi = bfield(rc, zc, cc, reqv - deltar, zp)
-                xcout, br, bz, psi = bfield(rc, zc, cc, reqv + deltar, zp)
+                xcin, br, bz, psi = bfield(
+                    r_current_loop=rc,
+                    z_current_loop=zc,
+                    c_current_loop=cc,
+                    r_test_point=reqv - deltar,
+                    z_test_point=zp,
+                )
+                xcout, br, bz, psi = bfield(
+                    r_current_loop=rc,
+                    z_current_loop=zc,
+                    c_current_loop=cc,
+                    r_test_point=reqv + deltar,
+                    z_test_point=zp,
+                )
 
                 for ii in range(nplas):
                     xc[ii] = 0.5e0 * (xcin[ii] + xcout[ii])
@@ -2716,7 +2726,13 @@ class PFCoil:
             ncoils = ncoils + pfcoil_variables.n_pf_coils_in_group[i]
             rp = pfcoil_variables.r_pf_coil_middle[ncoils - 1]
             zp = pfcoil_variables.z_pf_coil_middle[ncoils - 1]
-            xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+            xc, br, bz, psi = bfield(
+                r_current_loop=rc,
+                z_current_loop=zc,
+                c_current_loop=cc,
+                r_test_point=rp,
+                z_test_point=zp,
+            )
             for ii in range(nplas):
                 xpfpl = xpfpl + xc[ii]
 
@@ -2762,7 +2778,13 @@ class PFCoil:
                 ncoils = ncoils + pfcoil_variables.n_pf_coils_in_group[i]
                 rp = pfcoil_variables.r_pf_coil_middle[ncoils - 1]
                 zp = pfcoil_variables.z_pf_coil_middle[ncoils - 1]
-                xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+                xc, br, bz, psi = bfield(
+                    r_current_loop=rc,
+                    z_current_loop=zc,
+                    c_current_loop=cc,
+                    r_test_point=rp,
+                    z_test_point=zp,
+                )
                 for ii in range(noh):
                     xohpf = xohpf + xc[ii]
 
@@ -2799,7 +2821,13 @@ class PFCoil:
 
             rp = pfcoil_variables.r_pf_coil_middle[i]
             zp = pfcoil_variables.z_pf_coil_middle[i]
-            xc, br, bz, psi = bfield(rc, zc, cc, rp, zp)
+            xc, br, bz, psi = bfield(
+                r_current_loop=rc,
+                z_current_loop=zc,
+                c_current_loop=cc,
+                r_test_point=rp,
+                z_test_point=zp,
+            )
             for k in range(pfcoil_variables.nef):
                 if k < i:
                     pfcoil_variables.ind_pf_cs_plasma_mutual[i, k] = (
@@ -4104,26 +4132,42 @@ class PFCoil:
 
 
 @numba.njit(cache=True)
-def bfield(rc, zc, cc, rp, zp):
-    """Calculate the field at a point due to currents in a number
-    of circular poloidal conductor loops.
-    author: P J Knight, CCFE, Culham Science Centre
-    author: D Strickler, ORNL
-    author: J Galambos, ORNL
-    nc : input integer : number of loops
-    rc(nc) : input real array : R coordinates of loops (m)
-    zc(nc) : input real array : Z coordinates of loops (m)
-    cc(nc) : input real array : Currents in loops (A)
-    xc(nc) : output real array : Mutual inductances (H)
-    rp, zp : input real : coordinates of point of interest (m)
-    br : output real : radial field component at (rp,zp) (T)
-    bz : output real : vertical field component at (rp,zp) (T)
-    psi : output real : poloidal flux at (rp,zp) (Wb)
-    This routine calculates the magnetic field components and
-    the poloidal flux at an (R,Z) point, given the locations
-    and currents of a set of conductor loops.
-    <P>The mutual inductances between the loops and a poloidal
-    filament at the (R,Z) point of interest is also found."""
+def bfield(
+    r_current_loop: np.ndarray,
+    z_current_loop: np.ndarray,
+    c_current_loop: np.ndarray,
+    r_test_point: float,
+    z_test_point: float,
+) -> tuple[np.ndarray, float, float, float]:
+    """
+    Calculate the magnetic field and mutual inductance at a point due to currents in circular poloidal conductor loops.
+    - P J Knight, CCFE, Culham Science Centre
+    - D Strickler, ORNL
+    - J Galambos, ORNL
+
+    :param r_current_loop: Array of R coordinates of current loops (m)
+    :type r_current_loop: np.ndarray
+    :param z_current_loop: Array of Z coordinates of current loops (m)
+    :type z_current_loop: np.ndarray
+    :param c_current_loop: Array of currents in loops (A)
+    :type c_current_loop: np.ndarray
+    :param r_test_point: R coordinate of the test point (m)
+    :type r_test_point: float
+    :param z_test_point: Z coordinate of the test point (m)
+    :type z_test_point: float
+
+    :returns: Tuple containing:
+        - ind_mutual_array: Mutual inductances (H) between each loop and the test point
+        - b_test_point_radial: Radial field component at the test point (T)
+        - b_test_point_vertical: Vertical field component at the test point (T)
+        - web_test_point_poloidal: Poloidal flux at the test point (Wb)
+    :rtype: tuple[np.ndarray, float, float, float]
+
+    :notes:
+        - This routine calculates the magnetic field components and the poloidal flux at a given (R, Z) point,
+        given the locations and currents of a set of conductor loops. The mutual inductances between the loops
+        and a poloidal filament at the (R, Z) point of interest are also computed.
+    """
 
     #  Elliptic integral coefficients
 
@@ -4146,16 +4190,18 @@ def bfield(rc, zc, cc, rp, zp):
     d3 = 0.04069697526
     d4 = 0.00526449639
 
-    nc = len(rc)
+    n_current_loops = len(r_current_loop)
 
-    xc = np.empty((nc,))
-    br = 0
-    bz = 0
-    psi = 0
+    ind_mutual_array = np.empty((n_current_loops,))
+    b_test_point_radial = 0
+    b_test_point_vertical = 0
+    web_test_point_poloidal = 0
 
-    for i in range(nc):
-        d = (rp + rc[i]) ** 2 + (zp - zc[i]) ** 2
-        s = 4.0 * rp * rc[i] / d
+    for i in range(n_current_loops):
+        d = (r_test_point + r_current_loop[i]) ** 2 + (
+            z_test_point - z_current_loop[i]
+        ) ** 2
+        s = 4.0 * r_test_point * r_current_loop[i] / d
 
         # Kludge: avoid s >= 1.0, a goes inf
         if s > 0.999999:
@@ -4164,9 +4210,9 @@ def bfield(rc, zc, cc, rp, zp):
         t = 1.0 - s
         a = np.log(1.0 / t)
 
-        dz = zp - zc[i]
+        dz = z_test_point - z_current_loop[i]
         zs = dz**2
-        dr = rp - rc[i]
+        dr = r_test_point - r_current_loop[i]
         sd = np.sqrt(d)
 
         if dr == 0.0:
@@ -4188,31 +4234,39 @@ def bfield(rc, zc, cc, rp, zp):
 
         #  Mutual inductances
 
-        xc[i] = 0.5 * constants.RMU0 * sd * ((2.0 - s) * xk - 2.0 * xe)
+        ind_mutual_array[i] = 0.5 * constants.RMU0 * sd * ((2.0 - s) * xk - 2.0 * xe)
 
         #  Radial, vertical fields
 
         brx = (
             constants.RMU0
-            * cc[i]
+            * c_current_loop[i]
             * dz
-            / (2 * np.pi * rp * sd)
-            * (-xk + (rc[i] ** 2 + rp**2 + zs) / (dr**2 + zs) * xe)
+            / (2 * np.pi * r_test_point * sd)
+            * (
+                -xk
+                + (r_current_loop[i] ** 2 + r_test_point**2 + zs) / (dr**2 + zs) * xe
+            )
         )
         bzx = (
             constants.RMU0
-            * cc[i]
+            * c_current_loop[i]
             / (2 * np.pi * sd)
-            * (xk + (rc[i] ** 2 - rp**2 - zs) / (dr**2 + zs) * xe)
+            * (xk + (r_current_loop[i] ** 2 - r_test_point**2 - zs) / (dr**2 + zs) * xe)
         )
 
         #  Sum fields, flux
 
-        br += brx
-        bz += bzx
-        psi += xc[i] * cc[i]
+        b_test_point_radial += brx
+        b_test_point_vertical += bzx
+        web_test_point_poloidal += ind_mutual_array[i] * c_current_loop[i]
 
-    return xc, br, bz, psi
+    return (
+        ind_mutual_array,
+        b_test_point_radial,
+        b_test_point_vertical,
+        web_test_point_poloidal,
+    )
 
 
 @numba.njit(cache=True)
@@ -4322,7 +4376,13 @@ def fixb(lrow1, npts, rpts, zpts, nfix, rfix, zfix, cfix):
     for i in range(npts):
         # bfield() only operates correctly on nfix slices of array
         # arguments, not entire arrays
-        _, brw, bzw, _ = bfield(rfix[:nfix], zfix[:nfix], cfix[:nfix], rpts[i], zpts[i])
+        _, brw, bzw, _ = bfield(
+            r_current_loop=rfix[:nfix],
+            z_current_loop=zfix[:nfix],
+            c_current_loop=cfix[:nfix],
+            r_test_point=rpts[i],
+            z_test_point=zpts[i],
+        )
         bfix[i] = brw
         bfix[npts + i] = bzw
 
@@ -4403,11 +4463,11 @@ def mtrx(
             nc = n_pf_coils_in_group[j]
 
             _, gmat[i, j], gmat[i + npts, j], _ = bfield(
-                r_pf_coil_middle_group_array[j, :nc],
-                z_pf_coil_middle_group_array[j, :nc],
-                cc[:nc],
-                rpts[i],
-                zpts[i],
+                r_current_loop=r_pf_coil_middle_group_array[j, :nc],
+                z_current_loop=z_pf_coil_middle_group_array[j, :nc],
+                c_current_loop=cc[:nc],
+                r_test_point=rpts[i],
+                z_test_point=zpts[i],
             )
 
     # Add constraint equations
