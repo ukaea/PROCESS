@@ -402,7 +402,7 @@ class PFCoil:
                         )
 
                 # Vertical field (T)
-                pv.bvert = (
+                pv.b_plasma_vertical_required = (
                     -1.0e-7
                     * pv.plasma_current
                     / pv.rmajor
@@ -536,7 +536,7 @@ class PFCoil:
                     )
                 )
 
-                pv.bvert = bzin[0]
+                pv.b_plasma_vertical_required = bzin[0]
 
                 ssqef, pfcoil_variables.ccls0 = self.efc(
                     npts0,
@@ -3654,7 +3654,7 @@ class PFCoil:
         )
         op.write(
             self.outfile,
-            "\t(MA)\t\t(A/m2)\t\t(A/m2)\t\tratio\t\t(kg)\t\t(kg)\t\t(T)",
+            "\t(MA)\t\t(A/m2)\t\t(A/m2)\t\f_temp_plasma_ion_electron\t\t(kg)\t\t(kg)\t\t(T)",
         )
 
         op.oblnkl(self.outfile)

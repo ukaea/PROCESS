@@ -92,7 +92,7 @@ It is recommended that <b>only one</b> of these two constraint equations is used
 | Input       | Description                          |
 | :---------- | :----------------------------------- |
 | $\mathtt{eb}$      | Beam energy $\left(\text{keV}/\text{amu}\right)$   |
-| $\mathtt{te}$, $T_{\text{e}}$       | Electron temperature $\left(\text{keV}\right)$   |
+| $\mathtt{temp_plasma_electron_vol_avg_kev}$, $T_{\text{e}}$       | Electron temperature $\left(\text{keV}\right)$   |
 | $\mathtt{ne}$, $n_{\text{e}}$       | Electron density $\left(10^{20}\text{m}^{-3}\right)$  |
 | $\mathtt{rnhe}$      | Alpha density / $n_{\text{e}}$   |
 | $\mathtt{rnc}$,        | Carbon density /$n_{\text{e}}$   |
@@ -142,7 +142,7 @@ Both the [ITER](./iter_nb.md) and [Culham](culham_nb.md) NBI models both use the
 | :---------- | :----------------------------------- |
 | $\mathtt{afast}$, $m_{\text{u,fast}}$      | Mass of fast particle (units of proton mass)   |
 | $\mathtt{efast}$, $E_{\text{fast}}$     | Energy of fast particle ($\text{keV}$)   |
-| $\mathtt{te}$, $T_{\text{e}}$       | Density weighted average electron temperature ($\text{keV}$)   |
+| $\mathtt{temp_plasma_electron_vol_avg_kev}$, $T_{\text{e}}$       | Density weighted average electron temperature ($\text{keV}$)   |
 | $\mathtt{ne}$, $n_{\text{e}}$       | Volume averaged electron density ($\text{m}^{-3}$)  |
 | $\mathtt{nd}$      | Deuterium beam density ($\text{m}^{-3}$)   |
 | $\mathtt{nt}$      | Tritium beam density ($\text{m}^{-3}$)   |

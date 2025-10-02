@@ -90,7 +90,7 @@ def objective_function(minmax: int) -> float:
         case 9:
             objective_metric = divertor_variables.pflux_div_heat_load_mw
         case 10:
-            objective_metric = physics_variables.bt
+            objective_metric = physics_variables.b_plasma_toroidal_on_axis
         case 11:
             objective_metric = current_drive_variables.p_hcd_injected_total_mw
         case 14:

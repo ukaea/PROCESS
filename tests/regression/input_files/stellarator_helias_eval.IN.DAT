@@ -33,7 +33,7 @@ icc = 67 * Simple Radiation Wall load limit
 ixc = 3 * rmajor
 boundl(3) = 2.
 boundu(3) = 25.
-ixc = 4 * te
+ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundl(4) = 2.
 boundu(4) = 19.5
 
@@ -261,21 +261,21 @@ alphat   = 1.2 * temperature profile index
 aspect   = 10.1 * aspect ratio (`iteration variable 1`)
 beta_max = 0.06 * Max allowable beta
 beta_min = 0.01 * allowable lower beta
-bt       = 4.734563638052739 * toroidal field on axis (T) (`iteration variable 2`)
-dene     = 1.631669195728548e+20 * electron density (/m3) (`iteration variable 6`)
+b_plasma_toroidal_on_axis       = 4.734563638052739 * toroidal field on axis (T) (`iteration variable 2`)
+nd_plasma_electrons_vol_avg     = 1.631669195728548e+20 * electron density (/m3) (`iteration variable 6`)
 f_p_alpha_plasma_deposited = 0.95 * Fraction of alpha power deposited in plasma; Default of 0;95 taken from https;//doi;org/10;1088/0029-5515/39/12/305;
 hfact    = 1.3 * H factor on energy confinement times; radiation corrected (`iteration variable 10`);
 i_plasma_ignited   = 1 * switch for ignition assumption; Obviously; i_plasma_ignited must be zero if current drive
-ipedestal = 0 * switch for pedestal profiles;
+i_plasma_pedestal = 0 * switch for pedestal profiles;
 i_rad_loss = 1 * switch for radiation loss term usage in power balance (see User Guide);
 i_confinement_time      = 38 * switch for energy confinement time scaling law (see description in `tauscl`)
-iwalld   = 1 * switch for neutron wall load calculation;
+i_pflux_fw_neutron   = 1 * switch for neutron wall load calculation;
 kappa    = 1.001 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
 f_nd_alpha_electron = 0.048598535626890565 * thermal alpha density/electron density (`iteration variable 109`)
 rmajor   = 22.541131410425415 * plasma major radius (m) (`iteration variable 3`)
 f_sync_reflect = 0.6 * synchrotron wall reflectivity factor
-te       = 7.374569057199403 * volume averaged electron temperature (keV) (`iteration variable 4`)
-tratio   = 0.95 * ion temperature / electron temperature(used to calculate ti if `tratio > 0;0`
+temp_plasma_electron_vol_avg_kev       = 7.374569057199403 * volume averaged electron temperature (keV) (`iteration variable 4`)
+f_temp_plasma_ion_electron   = 0.95 * ion temperature / electron temperature(used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0;0`
 
 *----------------------Power-----------------------*
 

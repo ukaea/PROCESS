@@ -23,14 +23,14 @@ class RadpwrData:
 
 def calculate_radiation_powers(
     plasma_profile: PlasmaProfile,
-    ne0: float,
+    nd_plasma_electron_on_axis: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     aspect: float,
     alphan: float,
     alphat: float,
     tbeta: float,
-    te0: float,
+    temp_plasma_electron_on_axis_kev: float,
     f_sync_reflect: float,
     rmajor: float,
     kappa: float,
@@ -45,12 +45,12 @@ def calculate_radiation_powers(
 
     :param plasma_profile: The parameterized temperature and density profiles of the plasma.
     :type plasma_profile: PlasmaProfile
-    :param ne0: Central electron density (m^-3).
-    :type ne0: float
+    :param nd_plasma_electron_on_axis: Central electron density (m^-3).
+    :type nd_plasma_electron_on_axis: float
     :param rminor: Minor radius of the plasma (m).
     :type rminor: float
-    :param bt: Toroidal magnetic field (T).
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field (T).
+    :type b_plasma_toroidal_on_axis: float
     :param aspect: Aspect ratio of the plasma.
     :type aspect: float
     :param alphan: Alpha parameter for density profile.
@@ -59,8 +59,8 @@ def calculate_radiation_powers(
     :type alphat: float
     :param tbeta: Beta parameter for temperature profile.
     :type tbeta: float
-    :param te0: Central electron temperature (keV).
-    :type te0: float
+    :param temp_plasma_electron_on_axis_kev: Central electron temperature (keV).
+    :type temp_plasma_electron_on_axis_kev: float
     :param f_sync_reflect: Fraction of synchrotron radiation reflected.
     :type f_sync_reflect: float
     :param rmajor: Major radius of the plasma (m).
@@ -93,14 +93,14 @@ def calculate_radiation_powers(
 
     # Synchrotron radiation power/volume; assumed to be from core only.
     pden_plasma_sync_mw = psync_albajar_fidone(
-        ne0,
+        nd_plasma_electron_on_axis,
         rminor,
-        bt,
+        b_plasma_toroidal_on_axis,
         aspect,
         alphan,
         alphat,
         tbeta,
-        te0,
+        temp_plasma_electron_on_axis_kev,
         f_sync_reflect,
         rmajor,
         kappa,
@@ -124,14 +124,14 @@ def calculate_radiation_powers(
 
 
 def psync_albajar_fidone(
-    ne0: float,
+    nd_plasma_electron_on_axis: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     aspect: float,
     alphan: float,
     alphat: float,
     tbeta: float,
-    te0: float,
+    temp_plasma_electron_on_axis_kev: float,
     f_sync_reflect: float,
     rmajor: float,
     kappa: float,
@@ -143,12 +143,12 @@ def psync_albajar_fidone(
     This function computes the synchrotron radiation power density for the plasma based on
     the plasma shape, major and minor radii, electron density, and temperature profiles.
 
-    :param ne0: Central electron density (m^-3).
-    :type ne0: float
+    :param nd_plasma_electron_on_axis: Central electron density (m^-3).
+    :type nd_plasma_electron_on_axis: float
     :param rminor: Minor radius of the plasma (m).
     :type rminor: float
-    :param bt: Toroidal magnetic field (T).
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal magnetic field (T).
+    :type b_plasma_toroidal_on_axis: float
     :param aspect: Aspect ratio of the plasma.
     :type aspect: float
     :param alphan: Alpha parameter for density profile.
@@ -157,8 +157,8 @@ def psync_albajar_fidone(
     :type alphat: float
     :param tbeta: Beta parameter for temperature profile.
     :type tbeta: float
-    :param te0: Central electron temperature (keV).
-    :type te0: float
+    :param temp_plasma_electron_on_axis_kev: Central electron temperature (keV).
+    :type temp_plasma_electron_on_axis_kev: float
     :param f_sync_reflect: Fraction of synchrotron radiation reflected.
     :type f_sync_reflect: float
     :param rmajor: Major radius of the plasma (m).
@@ -181,9 +181,9 @@ def psync_albajar_fidone(
 
     # Variable names are created to closely match those from the reference papers.
 
-    ne0_20 = 1.0e-20 * ne0
+    ne0_20 = 1.0e-20 * nd_plasma_electron_on_axis
 
-    p_a0 = 6.04e3 * (rminor * ne0_20) / bt
+    p_a0 = 6.04e3 * (rminor * ne0_20) / b_plasma_toroidal_on_axis
 
     g_function = 0.93 * (1.0 + 0.85 * np.exp(-0.82 * aspect))
 
@@ -194,7 +194,12 @@ def psync_albajar_fidone(
         * (tbeta**1.53 + 1.87 * alphat - 0.16) ** -1.33
     )
 
-    dum = (1.0 + 0.12 * (te0 / p_a0**0.41) * (1.0 - f_sync_reflect) ** 0.41) ** -1.51
+    dum = (
+        1.0
+        + 0.12
+        * (temp_plasma_electron_on_axis_kev / p_a0**0.41)
+        * (1.0 - f_sync_reflect) ** 0.41
+    ) ** -1.51
 
     p_sync_mw = (
         3.84e-8
@@ -202,10 +207,10 @@ def psync_albajar_fidone(
         * rmajor
         * rminor**1.38
         * kappa**0.79
-        * bt**2.62
+        * b_plasma_toroidal_on_axis**2.62
         * ne0_20**0.38
-        * te0
-        * (16.0 + te0) ** 2.61
+        * temp_plasma_electron_on_axis_kev
+        * (16.0 + temp_plasma_electron_on_axis_kev) ** 2.61
         * dum
         * g_function
         * k_function
@@ -217,13 +222,13 @@ def psync_albajar_fidone(
 
 
 def fast_alpha_beta(
-    bp: float,
-    bt: float,
-    dene: float,
+    b_plasma_poloidal_average: float,
+    b_plasma_toroidal_on_axis: float,
+    nd_plasma_electrons_vol_avg: float,
     nd_fuel_ions: float,
     nd_ions_total: float,
-    ten: float,
-    tin: float,
+    temp_plasma_electron_density_weighted_kev: float,
+    temp_plasma_ion_density_weighted_kev: float,
     pden_alpha_total_mw: float,
     pden_plasma_alpha_mw: float,
     i_beta_fast_alpha: int,
@@ -234,13 +239,13 @@ def fast_alpha_beta(
     This function computes the fast alpha beta contribution based on the provided plasma parameters.
 
     Parameters:
-        bp (float): Poloidal field (T).
-        bt (float): Toroidal field on axis (T).
-        dene (float): Electron density (m^-3).
+        b_plasma_poloidal_average (float): Poloidal field (T).
+        b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
+        nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
         nd_fuel_ions (float): Fuel ion density (m^-3).
         nd_ions_total (float): Total ion density (m^-3).
-        ten (float): Density-weighted electron temperature (keV).
-        tin (float): Density-weighted ion temperature (keV).
+        temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
+        temp_plasma_ion_density_weighted_kev (float): Density-weighted ion temperature (keV).
         pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
         pden_plasma_alpha_mw (float): Alpha power per unit volume just from plasma (MW/m^3).
         i_beta_fast_alpha (int): Switch for fast alpha pressure method.
@@ -268,15 +273,28 @@ def fast_alpha_beta(
             2.0
             * constants.RMU0
             * constants.KILOELECTRON_VOLT
-            * (dene * ten + nd_ions_total * tin)
-            / (bt**2 + bp**2)
+            * (
+                nd_plasma_electrons_vol_avg * temp_plasma_electron_density_weighted_kev
+                + nd_ions_total * temp_plasma_ion_density_weighted_kev
+            )
+            / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
         )
 
         # jlion: This "fact" model is heavily flawed for smaller temperatures! It is unphysical for a stellarator (high n low T)
         # IPDG89 fast alpha scaling
         if i_beta_fast_alpha == 0:
             fact = min(
-                0.3, 0.29 * (nd_fuel_ions / dene) ** 2 * ((ten + tin) / 20.0 - 0.37)
+                0.3,
+                0.29
+                * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
+                * (
+                    (
+                        temp_plasma_electron_density_weighted_kev
+                        + temp_plasma_ion_density_weighted_kev
+                    )
+                    / 20.0
+                    - 0.37
+                ),
             )
 
         # Modified scaling, D J Ward
@@ -284,8 +302,20 @@ def fast_alpha_beta(
             fact = min(
                 0.30,
                 0.26
-                * (nd_fuel_ions / dene) ** 2
-                * np.sqrt(max(0.0, ((ten + tin) / 20.0 - 0.65))),
+                * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
+                * np.sqrt(
+                    max(
+                        0.0,
+                        (
+                            (
+                                temp_plasma_electron_density_weighted_kev
+                                + temp_plasma_ion_density_weighted_kev
+                            )
+                            / 20.0
+                            - 0.65
+                        ),
+                    )
+                ),
             )
 
         fact = max(fact, 0.0)

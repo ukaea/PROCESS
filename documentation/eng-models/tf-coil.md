@@ -178,7 +178,7 @@ This function calculates the global geometry of the TF, it sets up the toroidal 
 
 ### TF coil currents | `tf_current()`
 
-This function calculates the required currents in the TF coils given a required $B_\mathrm{T}$ (`bt`) on the plasma. The below is simply deduced using [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law).
+This function calculates the required currents in the TF coils given a required $B_\mathrm{T}$ (`b_plasma_toroidal_on_axis`) on the plasma. The below is simply deduced using [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law).
 
 1. The peak field on the inboard TF coil is calculated:
 
@@ -193,7 +193,7 @@ This function calculates the required currents in the TF coils given a required 
     \\ R_{\text{TF,inboard-out}} - \mathrm{d}R_{\text{TF,plasma-case}} - \mathrm{d}x_{\text{TF,turn-insulation}} - \mathrm{d}x_{\text{TF,WP-insulation}}
     $$
 
-2. The total current flowing in the TF coil set is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`bt`) and the plasma geometric major radius $R_0$ (`rmajor`):
+2. The total current flowing in the TF coil set is calculated using the approximation of axisymmetry from the vacuum toroidal field at the plasma geometric centre $B_\mathrm{T}$ (`b_plasma_toroidal_on_axis`) and the plasma geometric major radius $R_0$ (`rmajor`):
 
     [Ampere's law](https://en.wikipedia.org/wiki/Amp%C3%A8re%27s_circuital_law) for a infinite current-carrying wire with a circular Amperian loop of radius, $R$ is:
 

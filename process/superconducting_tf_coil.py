@@ -97,7 +97,7 @@ class SuperconductingTFCoil(TFCoil):
             n_tf_coils=tfcoil_variables.n_tf_coils,
             dr_tf_plasma_case=tfcoil_variables.dr_tf_plasma_case,
             rmajor=physics_variables.rmajor,
-            bt=physics_variables.bt,
+            b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,
             r_cp_top=build_variables.r_cp_top,
             itart=physics_variables.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,

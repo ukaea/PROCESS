@@ -51,7 +51,7 @@ SCAN_VARIABLES = {
     6: ScanVariable("pflux_fw_neutron_max_mw", "Allow._wall_load_(MW/m2)"),
     7: ScanVariable("beamfus0", "Beam_bkgrd_multiplier"),
     8: ScanVariable("fbig_q_plasma_min", "Big_Q_f-value"),
-    9: ScanVariable("te", "Electron_temperature_keV"),
+    9: ScanVariable("temp_plasma_electron_vol_avg_kev", "Electron_temperature_keV"),
     10: ScanVariable("boundu(15)", "Volt-second_upper_bound"),
     11: ScanVariable("beta_norm_max", "Beta_coefficient"),
     12: ScanVariable("f_c_plasma_bootstrap_max", "Bootstrap_fraction"),
@@ -69,7 +69,7 @@ SCAN_VARIABLES = {
     25: ScanVariable("kappa", "Plasma_elongation"),
     26: ScanVariable("triang", "Plasma_triangularity"),
     27: ScanVariable("tbrmin", "Min_tritium_breed._ratio"),
-    28: ScanVariable("bt", "Tor._field_on_axis_(T)"),
+    28: ScanVariable("b_plasma_toroidal_on_axis", "Tor._field_on_axis_(T)"),
     29: ScanVariable("coreradius", "Core_radius"),
     31: ScanVariable(
         "f_alpha_energy_confinement_min", "t_alpha_confinement/taueff_lower_limit"
@@ -84,7 +84,7 @@ SCAN_VARIABLES = {
     45: ScanVariable(
         "temp_tf_superconductor_margin_min", "Minimum_allowable_temperature_margin"
     ),
-    46: ScanVariable("boundu(152)", "Max allowable fgwsep"),
+    46: ScanVariable("boundu(152)", "Max allowable f_nd_plasma_separatrix_greenwald"),
     48: ScanVariable("n_tf_wp_pancakes", "TF Coil - n_tf_wp_pancakes"),
     49: ScanVariable("n_tf_wp_layers", "TF Coil - n_tf_wp_layers"),
     50: ScanVariable("f_nd_impurity_electrons(13)", "Xenon fraction"),
@@ -96,7 +96,7 @@ SCAN_VARIABLES = {
     56: ScanVariable(
         "p_cryo_plant_electric_max_mw", "max allowable p_cryo_plant_electric_mw"
     ),
-    57: ScanVariable("boundl(2)", "bt minimum"),
+    57: ScanVariable("boundl(2)", "b_plasma_toroidal_on_axis minimum"),
     58: ScanVariable("dr_fw_plasma_gap_inboard", "Inboard FW-plasma sep gap"),
     59: ScanVariable("dr_fw_plasma_gap_outboard", "Outboard FW-plasma sep gap"),
     60: ScanVariable(
@@ -950,7 +950,7 @@ class Scan:
             case 8:
                 constraint_variables.fbig_q_plasma_min = swp[iscn - 1]
             case 9:
-                physics_variables.te = swp[iscn - 1]
+                physics_variables.temp_plasma_electron_vol_avg_kev = swp[iscn - 1]
             case 10:
                 numerics.boundu[14] = swp[iscn - 1]
             case 11:
@@ -988,7 +988,7 @@ class Scan:
             case 27:
                 constraint_variables.tbrmin = swp[iscn - 1]
             case 28:
-                physics_variables.bt = swp[iscn - 1]
+                physics_variables.b_plasma_toroidal_on_axis = swp[iscn - 1]
             case 29:
                 impurity_radiation_module.coreradius = swp[iscn - 1]
             case 31:

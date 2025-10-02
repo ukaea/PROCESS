@@ -34,16 +34,24 @@ logger = logging.getLogger(__name__)
 
 
 @nb.jit(nopython=True, cache=True)
-def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
+def rether(
+    alphan,
+    alphat,
+    nd_plasma_electrons_vol_avg,
+    dlamie,
+    te,
+    temp_plasma_ion_vol_avg_kev,
+    zeffai,
+):
     """Routine to find the equilibration power between the
     ions and electrons
     author: P J Knight, CCFE, Culham Science Centre
     alphan : input real :  density profile index
     alphat : input real :  temperature profile index
-    dene   : input real :  electron density (/m3)
+    nd_plasma_electrons_vol_avg   : input real :  electron density (/m3)
     dlamie : input real :  ion-electron coulomb logarithm
     te     : input real :  electron temperature (keV)
-    ti     : input real :  ion temperature (keV)
+    temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
     zeffai : input real :  mass weighted plasma effective charge
     pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
@@ -53,9 +61,9 @@ def rether(alphan, alphat, dene, dlamie, te, ti, zeffai):
     profie = (1.0 + alphan) ** 2 / (
         (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
     )
-    conie = 2.42165e-41 * dlamie * dene**2 * zeffai * profie
+    conie = 2.42165e-41 * dlamie * nd_plasma_electrons_vol_avg**2 * zeffai * profie
 
-    return conie * (ti - te) / (te**1.5)
+    return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
 
 @nb.jit(nopython=True, cache=True)
@@ -187,13 +195,16 @@ def calculate_volt_second_requirements(
 
 @nb.jit(nopython=True, cache=True)
 def calculate_beta_limit(
-    bt: float, beta_norm_max: float, plasma_current: float, rminor: float
+    b_plasma_toroidal_on_axis: float,
+    beta_norm_max: float,
+    plasma_current: float,
+    rminor: float,
 ) -> float:
     """
     Calculate the beta scaling limit.
 
-    :param bt: Toroidal B-field on plasma axis [T].
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal B-field on plasma axis [T].
+    :type b_plasma_toroidal_on_axis: float
     :param beta_norm_max: Troyon-like g coefficient.
     :type beta_norm_max: float
     :param plasma_current: Plasma current [A].
@@ -225,7 +236,12 @@ def calculate_beta_limit(
     """
 
     # Multiplied by 0.01 to convert from % to fraction
-    return 0.01 * beta_norm_max * (plasma_current / 1.0e6) / (rminor * bt)
+    return (
+        0.01
+        * beta_norm_max
+        * (plasma_current / 1.0e6)
+        / (rminor * b_plasma_toroidal_on_axis)
+    )
 
 
 # -----------------------------------------------------
@@ -295,7 +311,7 @@ def calculate_poloidal_field(
     q95: float,
     aspect: float,
     eps: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa: float,
     delta: float,
     perim: float,
@@ -310,7 +326,7 @@ def calculate_poloidal_field(
     - q95: float, 95% flux surface safety factor
     - aspect: float, plasma aspect ratio
     - eps: float, inverse aspect ratio
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - kappa: float, plasma elongation
     - delta: float, plasma triangularity
     - perim: float, plasma perimeter (m)
@@ -340,7 +356,7 @@ def calculate_poloidal_field(
     # Transform q95 to qbar
     qbar = q95 * 1.3e0 * (1.0e0 - physics_variables.eps) ** 0.6e0
 
-    return bt * (ff1 + ff2) / (2.0 * np.pi * qbar)
+    return b_plasma_toroidal_on_axis * (ff1 + ff2) / (2.0 * np.pi * qbar)
 
 
 def calculate_current_coefficient_peng(
@@ -374,7 +390,7 @@ def calculate_plasma_current_peng(
     aspect: float,
     eps: float,
     rminor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     kappa: float,
     delta: float,
 ) -> float:
@@ -386,7 +402,7 @@ def calculate_plasma_current_peng(
     - aspect: float, plasma aspect ratio
     - eps: float, inverse aspect ratio
     - rminor: float, plasma minor radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - kappa: float, plasma elongation
     - delta: float, plasma triangularity
 
@@ -416,7 +432,7 @@ def calculate_plasma_current_peng(
 
     return (
         rminor
-        * bt
+        * b_plasma_toroidal_on_axis
         / qbar
         * 5.0
         * kappa
@@ -494,11 +510,11 @@ def calculate_current_coefficient_todd(
 def calculate_current_coefficient_hastie(
     alphaj: float,
     alphap: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     delta95: float,
     eps: float,
     kappa95: float,
-    p0: float,
+    pres_plasma_on_axis: float,
     rmu0: float,
 ) -> float:
     """
@@ -507,11 +523,11 @@ def calculate_current_coefficient_hastie(
     Parameters:
     - alphaj: float, the current profile index
     - alphap: float, the pressure profile index
-    - bt: float, the toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, the toroidal field on axis (T)
     - delta95: float, the plasma triangularity 95%
     - eps: float, the inverse aspect ratio
     - kappa95: float, the plasma elongation 95%
-    - p0: float, the central plasma pressure (Pa)
+    - pres_plasma_on_axis: float, the central plasma pressure (Pa)
     - rmu0: float, the vacuum permeability (H/m)
 
     Returns:
@@ -532,7 +548,7 @@ def calculate_current_coefficient_hastie(
     nu = alphap
 
     # Central plasma beta
-    beta0 = 2.0 * rmu0 * p0 / (bt**2)
+    beta0 = 2.0 * rmu0 * pres_plasma_on_axis / (b_plasma_toroidal_on_axis**2)
 
     # Plasma internal inductance
     lamp1 = 1.0 + lamda
@@ -638,9 +654,9 @@ def calculate_current_coefficient_fiesta(
 @nb.jit(nopython=True, cache=True)
 def _nevins_integral(
     y: float,
-    dene: float,
+    nd_plasma_electrons_vol_avg: float,
     te: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rminor: float,
     rmajor: float,
     zeff: float,
@@ -655,9 +671,9 @@ def _nevins_integral(
 
     Parameters:
     - y: float, abscissa of integration, normalized minor radius
-    - dene: float, volume averaged electron density (/m^3)
+    - nd_plasma_electrons_vol_avg: float, volume averaged electron density (/m^3)
     - te: float, volume averaged electron temperature (keV)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - rminor: float, plasma minor radius (m)
     - rmajor: float, plasma major radius (m)
     - zeff: float, plasma effective charge
@@ -685,7 +701,11 @@ def _nevins_integral(
 
     # Compute average electron beta
     betae = (
-        dene * te * 1.0e3 * constants.ELECTRON_CHARGE / (bt**2 / (2.0 * constants.RMU0))
+        nd_plasma_electrons_vol_avg
+        * te
+        * 1.0e3
+        * constants.ELECTRON_CHARGE
+        / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
     )
 
     nabla = rminor * np.sqrt(y) / rmajor
@@ -951,7 +971,7 @@ def _calculate_l31_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     triang: float,
     ne: np.ndarray,
     ni: np.ndarray,
@@ -969,7 +989,7 @@ def _calculate_l31_coefficient(
     - radial_elements: np.ndarray, radial element indexes in range 2 to nr
     - number_of_elements: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
     - ne: np.ndarray, electron density profile (/m^3)
     - ni: np.ndarray, ion density profile (/m^3)
@@ -1021,7 +1041,7 @@ def _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         ne,
         ni,
         tempe,
@@ -1036,7 +1056,7 @@ def _calculate_l31_32_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     triang: float,
     ne: np.ndarray,
     ni: np.ndarray,
@@ -1054,7 +1074,7 @@ def _calculate_l31_32_coefficient(
     - radial_elements: np.ndarray, radial element indexes in range 2 to nr
     - number_of_elements: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
     - ne: np.ndarray, electron density profile (/m^3)
     - ni: np.ndarray, ion density profile (/m^3)
@@ -1148,12 +1168,19 @@ def _calculate_l31_32_coefficient(
 
     # Corrections suggested by Fable, 15/05/2015
     return _beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        b_plasma_toroidal_on_axis,
+        ne,
+        tempe,
+        inverse_q,
+        rho,
     ) * (big_f32ee_teff + big_f32ei_teff) + _calculate_l31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         triang,
         ne,
         ni,
@@ -1164,12 +1191,19 @@ def _calculate_l31_32_coefficient(
         zeff,
         sqeps,
     ) * _beta_poloidal_sauter(
-        radial_elements, number_of_elements, rmajor, bt, ne, tempe, inverse_q, rho
+        radial_elements,
+        number_of_elements,
+        rmajor,
+        b_plasma_toroidal_on_axis,
+        ne,
+        tempe,
+        inverse_q,
+        rho,
     ) / _beta_poloidal_total_sauter(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         ne,
         ni,
         tempe,
@@ -1184,7 +1218,7 @@ def _calculate_l34_alpha_31_coefficient(
     radial_elements: np.ndarray,
     number_of_elements: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     triang: float,
     inverse_q: np.ndarray,
     sqeps: np.ndarray,
@@ -1204,7 +1238,7 @@ def _calculate_l34_alpha_31_coefficient(
     - radial_elements: np.ndarray, radial element indexes in range 2 to nr
     - number_of_elements: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - triang: float, plasma triangularity
     - inverse_q: np.ndarray, inverse safety factor profile
     - sqeps: np.ndarray, square root of inverse aspect ratio profile
@@ -1279,7 +1313,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             ni,
             tempe,
@@ -1291,7 +1325,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             tempe,
             inverse_q,
@@ -1301,7 +1335,7 @@ def _calculate_l34_alpha_31_coefficient(
         radial_elements,
         number_of_elements,
         rmajor,
-        bt,
+        b_plasma_toroidal_on_axis,
         triang,
         ne,
         ni,
@@ -1317,7 +1351,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             tempe,
             inverse_q,
@@ -1327,7 +1361,7 @@ def _calculate_l34_alpha_31_coefficient(
             radial_elements,
             number_of_elements,
             rmajor,
-            bt,
+            b_plasma_toroidal_on_axis,
             ne,
             ni,
             tempe,
@@ -1343,7 +1377,7 @@ def _beta_poloidal_sauter(
     radial_elements: np.ndarray,
     nr: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     ne: np.ndarray,
     tempe: np.ndarray,
     inverse_q: np.ndarray,
@@ -1356,7 +1390,7 @@ def _beta_poloidal_sauter(
     - radial_elements: np.ndarray, radial element indexes in range 1 to nr
     - nr: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - ne: np.ndarray, electron density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
     - inverse_q: np.ndarray, inverse safety factor profile
@@ -1380,7 +1414,7 @@ def _beta_poloidal_sauter(
         * (
             rmajor
             / (
-                bt
+                b_plasma_toroidal_on_axis
                 * rho[radial_elements - 1]
                 * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             )
@@ -1394,7 +1428,7 @@ def _beta_poloidal_total_sauter(
     radial_elements: np.ndarray,
     nr: int,
     rmajor: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     ne: np.ndarray,
     ni: np.ndarray,
     tempe: np.ndarray,
@@ -1409,7 +1443,7 @@ def _beta_poloidal_total_sauter(
     - radial_elements: np.ndarray, radial element indexes in range 1 to nr
     - nr: int, maximum value of radial_elements
     - rmajor: float, plasma major radius (m)
-    - bt: float, toroidal field on axis (T)
+    - b_plasma_toroidal_on_axis: float, toroidal field on axis (T)
     - ne: np.ndarray, electron density profile (/m^3)
     - ni: np.ndarray, ion density profile (/m^3)
     - tempe: np.ndarray, electron temperature profile (keV)
@@ -1448,7 +1482,7 @@ def _beta_poloidal_total_sauter(
         * (
             rmajor
             / (
-                bt
+                b_plasma_toroidal_on_axis
                 * rho[radial_elements - 1]
                 * np.abs(inverse_q[radial_elements - 1] + 1.0e-4)
             )
@@ -1565,36 +1599,36 @@ class Physics:
             physics_variables.nd_fuel_ions,
             physics_variables.nd_alphas,
             physics_variables.vol_plasma,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
         )
 
         # Define coulomb logarithm
         # (collisions: ion-electron, electron-electron)
         physics_variables.dlamee = (
             31.0
-            - (np.log(physics_variables.dene) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
+            - (np.log(physics_variables.nd_plasma_electrons_vol_avg) / 2.0)
+            + np.log(physics_variables.temp_plasma_electron_vol_avg_kev * 1000.0)
         )
         physics_variables.dlamie = (
             31.3
-            - (np.log(physics_variables.dene) / 2.0)
-            + np.log(physics_variables.te * 1000.0)
+            - (np.log(physics_variables.nd_plasma_electrons_vol_avg) / 2.0)
+            + np.log(physics_variables.temp_plasma_electron_vol_avg_kev * 1000.0)
         )
 
         # Calculate plasma current
         (
-            physics_variables.bp,
+            physics_variables.b_plasma_poloidal_average,
             physics_variables.qstar,
             physics_variables.plasma_current,
         ) = self.calculate_plasma_current(
             physics_variables.alphaj,
             physics_variables.alphap,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.eps,
             physics_variables.i_plasma_current,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.p0,
+            physics_variables.pres_plasma_on_axis,
             physics_variables.len_plasma_poloidal,
             physics_variables.q95,
             physics_variables.rmajor,
@@ -1670,20 +1704,24 @@ class Physics:
         # ===================================================
 
         # Calculate density and temperature profile quantities
-        # If physics_variables.ipedestal = 1 then set pedestal density to
-        #   physics_variables.fgwped * Greenwald density limit
+        # If physics_variables.i_plasma_pedestal = 1 then set pedestal density to
+        #   physics_variables.f_nd_plasma_pedestal_greenwald * Greenwald density limit
         # Note: this used to be done before plasma current
-        if (physics_variables.ipedestal == 1) and (physics_variables.fgwped >= 0e0):
-            physics_variables.neped = (
-                physics_variables.fgwped
+        if (physics_variables.i_plasma_pedestal == 1) and (
+            physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0
+        ):
+            physics_variables.nd_plasma_pedestal_electron = (
+                physics_variables.f_nd_plasma_pedestal_greenwald
                 * 1.0e14
                 * physics_variables.plasma_current
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
             )
 
-        if (physics_variables.ipedestal == 1) and (physics_variables.fgwsep >= 0e0):
-            physics_variables.nesep = (
-                physics_variables.fgwsep
+        if (physics_variables.i_plasma_pedestal == 1) and (
+            physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0
+        ):
+            physics_variables.nd_plasma_separatrix_electron = (
+                physics_variables.f_nd_plasma_separatrix_greenwald
                 * 1.0e14
                 * physics_variables.plasma_current
                 / (np.pi * physics_variables.rminor * physics_variables.rminor)
@@ -1692,8 +1730,9 @@ class Physics:
         self.plasma_profile.run()
 
         # Calculate total magnetic field [T]
-        physics_variables.btot = np.sqrt(
-            physics_variables.bt**2 + physics_variables.bp**2
+        physics_variables.b_plasma_total = np.sqrt(
+            physics_variables.b_plasma_toroidal_on_axis**2
+            + physics_variables.b_plasma_poloidal_average**2
         )
 
         # ============================================
@@ -1703,12 +1742,16 @@ class Physics:
         # -----------------------------------------------------
 
         physics_variables.beta_toroidal = (
-            physics_variables.beta * physics_variables.btot**2 / physics_variables.bt**2
+            physics_variables.beta
+            * physics_variables.b_plasma_total**2
+            / physics_variables.b_plasma_toroidal_on_axis**2
         )
 
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.beta_poloidal = calculate_poloidal_beta(
-            physics_variables.btot, physics_variables.bp, physics_variables.beta
+            physics_variables.b_plasma_total,
+            physics_variables.b_plasma_poloidal_average,
+            physics_variables.beta,
         )
 
         physics_variables.beta_thermal = (
@@ -1723,26 +1766,42 @@ class Physics:
 
         physics_variables.beta_thermal_poloidal = (
             physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.bp) ** 2
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
         )
         physics_variables.beta_thermal_toroidal = (
             physics_variables.beta_thermal
-            * (physics_variables.btot / physics_variables.bt) ** 2
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
         )
         physics_variables.beta_norm_thermal = (
             1.0e8
             * physics_variables.beta_thermal
             * physics_variables.rminor
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.plasma_current
         )
         physics_variables.beta_norm_toroidal = (
             physics_variables.beta_norm_total
-            * (physics_variables.btot / physics_variables.bt) ** 2
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_toroidal_on_axis
+            )
+            ** 2
         )
         physics_variables.beta_norm_poloidal = (
             physics_variables.beta_norm_total
-            * (physics_variables.btot / physics_variables.bp) ** 2
+            * (
+                physics_variables.b_plasma_total
+                / physics_variables.b_plasma_poloidal_average
+            )
+            ** 2
         )
 
         physics_variables.f_beta_alpha_beam_thermal = (
@@ -1753,8 +1812,8 @@ class Physics:
         physics_variables.e_plasma_beta_thermal = (
             1.5e0
             * physics_variables.beta_thermal
-            * physics_variables.btot
-            * physics_variables.btot
+            * physics_variables.b_plasma_total
+            * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
@@ -1763,8 +1822,8 @@ class Physics:
         physics_variables.e_plasma_beta = (
             1.5e0
             * physics_variables.beta
-            * physics_variables.btot
-            * physics_variables.btot
+            * physics_variables.b_plasma_total
+            * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
@@ -1877,7 +1936,7 @@ class Physics:
             * self.bootstrap_fraction_iter89(
                 physics_variables.aspect,
                 physics_variables.beta,
-                physics_variables.btot,
+                physics_variables.b_plasma_total,
                 physics_variables.plasma_current,
                 physics_variables.q95,
                 physics_variables.q0,
@@ -1892,14 +1951,14 @@ class Physics:
                 physics_variables.alphan,
                 physics_variables.alphat,
                 physics_variables.beta_toroidal,
-                physics_variables.bt,
-                physics_variables.dene,
+                physics_variables.b_plasma_toroidal_on_axis,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.plasma_current,
                 physics_variables.q95,
                 physics_variables.q0,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.te,
+                physics_variables.temp_plasma_electron_vol_avg_kev,
                 physics_variables.zeff,
             )
         )
@@ -1942,8 +2001,8 @@ class Physics:
             * self.bootstrap_fraction_aries(
                 beta_poloidal=physics_variables.beta_poloidal,
                 ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
-                core_density=physics_variables.ne0,
-                average_density=physics_variables.dene,
+                core_density=physics_variables.nd_plasma_electron_on_axis,
+                average_density=physics_variables.nd_plasma_electrons_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -1952,8 +2011,8 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
-                core_pressure=physics_variables.p0,
-                average_pressure=physics_variables.vol_avg_pressure,
+                core_pressure=physics_variables.pres_plasma_on_axis,
+                average_pressure=physics_variables.pres_plasma_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -2022,10 +2081,10 @@ class Physics:
                 zeff=physics_variables.zeff,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
-                rhopedn=physics_variables.rhopedn,
-                neped=physics_variables.neped,
+                radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
+                nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
                 n_greenwald=physics_variables.dlimit[6],
-                teped=physics_variables.teped,
+                temp_plasma_pedestal_kev=physics_variables.temp_plasma_pedestal_kev,
             )
         )
 
@@ -2110,7 +2169,9 @@ class Physics:
         # Calculate fusion power + components
 
         fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
-        fusion_reactions.deuterium_branching(physics_variables.ti)
+        fusion_reactions.deuterium_branching(
+            physics_variables.temp_plasma_ion_vol_avg_kev
+        )
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
@@ -2138,10 +2199,10 @@ class Physics:
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
-                physics_variables.bp,
-                physics_variables.bt,
+                physics_variables.b_plasma_poloidal_average,
+                physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
@@ -2149,8 +2210,8 @@ class Physics:
                 physics_variables.f_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
-                physics_variables.ten,
-                physics_variables.tin,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
+                physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
@@ -2214,13 +2275,13 @@ class Physics:
         )
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
-            physics_variables.bp,
-            physics_variables.bt,
-            physics_variables.dene,
+            physics_variables.b_plasma_poloidal_average,
+            physics_variables.b_plasma_toroidal_on_axis,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_fuel_ions,
             physics_variables.nd_ions_total,
-            physics_variables.ten,
-            physics_variables.tin,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
+            physics_variables.temp_plasma_ion_density_weighted_kev,
             physics_variables.pden_alpha_total_mw,
             physics_variables.pden_plasma_alpha_mw,
             physics_variables.i_beta_fast_alpha,
@@ -2228,7 +2289,7 @@ class Physics:
 
         # Nominal mean neutron wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
-        if physics_variables.iwalld == 1:
+        if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_neutron_total_mw
@@ -2263,10 +2324,10 @@ class Physics:
         physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
-            physics_variables.te,
-            physics_variables.ti,
+            physics_variables.temp_plasma_electron_vol_avg_kev,
+            physics_variables.temp_plasma_ion_vol_avg_kev,
             physics_variables.zeffai,
         )
 
@@ -2274,14 +2335,14 @@ class Physics:
 
         radpwrdata = physics_funcs.calculate_radiation_powers(
             self.plasma_profile,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.rminor,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.aspect,
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.tbeta,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.f_sync_reflect,
             physics_variables.rmajor,
             physics_variables.kappa,
@@ -2317,7 +2378,7 @@ class Physics:
             physics_variables.plasma_current,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.vol_plasma,
             physics_variables.zeff,
         )
@@ -2325,7 +2386,7 @@ class Physics:
         # Calculate L- to H-mode power threshold for different scalings
         physics_variables.l_h_threshold_powers = l_h_threshold_power(
             physics_variables.nd_electron_line,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.kappa,
@@ -2370,15 +2431,16 @@ class Physics:
         # over the upper and lower divertor, where physics_variables.f_p_div_lower gives
         # the factor of power conducted to the lower divertor
         if physics_variables.n_divertors == 2:
-            physics_variables.pdivl = (
+            physics_variables.p_div_lower_separatrix_mw = (
                 physics_variables.f_p_div_lower
                 * physics_variables.p_plasma_separatrix_mw
             )
-            physics_variables.pdivu = (
+            physics_variables.p_div_upper_separatrix_mw = (
                 1.0e0 - physics_variables.f_p_div_lower
             ) * physics_variables.p_plasma_separatrix_mw
-            physics_variables.pdivmax = max(
-                physics_variables.pdivl, physics_variables.pdivu
+            physics_variables.p_div_separatrix_max_mw = max(
+                physics_variables.p_div_lower_separatrix_mw,
+                physics_variables.p_div_upper_separatrix_mw,
             )
 
         # Resistive diffusion time = current penetration time ~ mu0.a^2/resistivity
@@ -2398,7 +2460,7 @@ class Physics:
             physics_variables.dlimit,
             physics_variables.dnelimt,
         ) = self.calculate_density_limit(
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.i_density_limit,
             physics_variables.p_plasma_separatrix_mw,
             current_drive_variables.p_hcd_injected_total_mw,
@@ -2425,9 +2487,9 @@ class Physics:
             physics_variables.m_fuel_amu,
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_ions_total,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
@@ -2441,8 +2503,8 @@ class Physics:
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
-            physics_variables.tin,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
+            physics_variables.temp_plasma_ion_density_weighted_kev,
             physics_variables.q95,
             physics_variables.qstar,
             physics_variables.vol_plasma,
@@ -2496,8 +2558,8 @@ class Physics:
             physics_variables.f_alpha_energy_confinement,
         ) = self.phyaux(
             physics_variables.aspect,
-            physics_variables.dene,
-            physics_variables.te,
+            physics_variables.nd_plasma_electrons_vol_avg,
+            physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.nd_fuel_ions,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
@@ -2540,8 +2602,8 @@ class Physics:
         physics_variables.beta_norm_max_thloreus = (
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
-                p0=physics_variables.p0,
-                vol_avg_pressure=physics_variables.vol_avg_pressure,
+                pres_plasma_on_axis=physics_variables.pres_plasma_on_axis,
+                pres_plasma_vol_avg=physics_variables.pres_plasma_vol_avg,
             )
         )
 
@@ -2577,7 +2639,7 @@ class Physics:
 
         # calculate_beta_limit() returns the beta_max for beta
         physics_variables.beta_max = calculate_beta_limit(
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.beta_norm_max,
             physics_variables.plasma_current,
             physics_variables.rminor,
@@ -2588,7 +2650,7 @@ class Physics:
         # MDK
         # Nominal mean photon wall load on entire first wall area including divertor and beam holes
         # Note that 'a_fw_total' excludes these, so they have been added back in.
-        if physics_variables.iwalld == 1:
+        if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_plasma_rad_mw
@@ -2707,7 +2769,7 @@ class Physics:
             physics_variables.plomw = physics_variables.flo * physics_variables.ptarmw
 
         # Calculate some derived quantities that may not have been defined earlier
-        physics_variables.total_loss_power = 1e6 * (
+        physics_variables.p_plasma_heating_total_mw = 1e6 * (
             physics_variables.f_p_alpha_plasma_deposited
             * physics_variables.p_alpha_total_mw
             + physics_variables.p_non_alpha_charged_mw
@@ -2717,7 +2779,7 @@ class Physics:
         physics_variables.f_p_plasma_separatrix_rad = (
             1.0e6
             * physics_variables.p_plasma_rad_mw
-            / physics_variables.total_loss_power
+            / physics_variables.p_plasma_heating_total_mw
         )
         physics_variables.rad_fraction_total = (
             physics_variables.f_p_plasma_separatrix_rad
@@ -2733,14 +2795,16 @@ class Physics:
             po.write(
                 self.outfile,
                 (
-                    f"reinke t and fz, physics = {physics_variables.tesep} , {reinke_variables.fzmin}"
+                    f"reinke t and fz, physics = {physics_variables.temp_plasma_separatrix_kev} , {reinke_variables.fzmin}"
                 ),
             )
-            # fsep = physics_variables.nesep / physics_variables.dene
-            fgw = physics_variables.dlimit(7) / physics_variables.dene
+            fgw = (
+                physics_variables.dlimit[6]
+                / physics_variables.nd_plasma_electrons_vol_avg
+            )
             # calculate separatrix temperature, if Reinke criterion is used
-            physics_variables.tesep = reinke_tsep(
-                physics_variables.bt,
+            physics_variables.temp_plasma_separatrix_kev = reinke_tsep(
+                physics_variables.b_plasma_toroidal_on_axis,
                 constraint_variables.fl_h_threshold,
                 physics_variables.q95,
                 physics_variables.rmajor,
@@ -2880,17 +2944,17 @@ class Physics:
 
     @staticmethod
     def calculate_beta_norm_max_thloreus(
-        c_beta: float, p0: float, vol_avg_pressure: float
+        c_beta: float, pres_plasma_on_axis: float, pres_plasma_vol_avg: float
     ) -> float:
         """
         Calculate the E. Tholerus normalized beta upper limit.
 
         :param c_beta: Pressure peaking factor coefficient.
         :type c_beta: float
-        :param p0: Central plasma pressure (Pa).
-        :type p0: float
-        :param vol_avg_pressure: Volume-averaged plasma pressure (Pa).
-        :type vol_avg_pressure: float
+        :param pres_plasma_on_axis: Central plasma pressure (Pa).
+        :type pres_plasma_on_axis: float
+        :param pres_plasma_vol_avg: Volume-averaged plasma pressure (Pa).
+        :type pres_plasma_vol_avg: float
 
         :return: The E. Tholerus normalized beta upper limit.
         :rtype: float
@@ -2905,7 +2969,8 @@ class Physics:
               Nuclear Fusion, Aug. 2024, doi: https://doi.org/10.1088/1741-4326/ad6ea2.
         """
         return 3.7 + (
-            (c_beta / (p0 / vol_avg_pressure)) * (12.5 - 3.5 * (p0 / vol_avg_pressure))
+            (c_beta / (pres_plasma_on_axis / pres_plasma_vol_avg))
+            * (12.5 - 3.5 * (pres_plasma_on_axis / pres_plasma_vol_avg))
         )
 
     @staticmethod
@@ -2971,7 +3036,7 @@ class Physics:
 
     @staticmethod
     def calculate_density_limit(
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         i_density_limit: int,
         p_plasma_separatrix_mw: float,
         p_hcd_injected_total_mw: float,
@@ -2988,7 +3053,7 @@ class Physics:
         Calculate the density limit using various models.
 
         Args:
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             i_density_limit (int): Switch denoting which formula to enforce.
             p_plasma_separatrix_mw (float): Power flowing to the edge plasma via charged particles (MW).
             p_hcd_injected_total_mw (float): Power injected into the plasma (MW).
@@ -3038,14 +3103,24 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[0] = (1.54e20 * p_perp**0.43 * bt**0.31 / (q95 * rmajor) ** 0.45) / prn1
+        dlimit[0] = (
+            1.54e20
+            * p_perp**0.43
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.45
+        ) / prn1
 
         # Borrass density limit model for ITER (I)
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlimit[1] = (1.8e20 * p_perp**0.53 * bt**0.31 / (q95 * rmajor) ** 0.22) / prn1
+        dlimit[1] = (
+            1.8e20
+            * p_perp**0.53
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.22
+        ) / prn1
 
         # Borrass density limit model for ITER (II)
         # This applies to the density at the plasma edge, so must be scaled
@@ -3053,7 +3128,12 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlimit[2] = (0.5e20 * p_perp**0.57 * bt**0.31 / (q95 * rmajor) ** 0.09) / prn1
+        dlimit[2] = (
+            0.5e20
+            * p_perp**0.57
+            * b_plasma_toroidal_on_axis**0.31
+            / (q95 * rmajor) ** 0.09
+        ) / prn1
 
         # JET edge radiation density limit model
         # This applies to the density at the plasma edge, so must be scaled
@@ -3076,12 +3156,17 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[4] = (0.237e20 * bt * np.sqrt(p_plasma_separatrix_mw) / rmajor) / prn1
+        dlimit[4] = (
+            0.237e20
+            * b_plasma_toroidal_on_axis
+            * np.sqrt(p_plasma_separatrix_mw)
+            / rmajor
+        ) / prn1
 
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
 
-        dlimit[5] = 3.0e20 * bt / (rmajor * qcyl)
+        dlimit[5] = 3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
 
         # Greenwald limit
 
@@ -3131,7 +3216,8 @@ class Physics:
 
         # Alpha ash portion
         physics_variables.nd_alphas = (
-            physics_variables.dene * physics_variables.f_nd_alpha_electron
+            physics_variables.nd_plasma_electrons_vol_avg
+            * physics_variables.f_nd_alpha_electron
         )
 
         # ======================================================================
@@ -3143,12 +3229,14 @@ class Physics:
         # This will override the calculated value which is a minimum.
         if physics_variables.fusden_alpha_total < 1.0e-6:  # not calculated yet...
             physics_variables.nd_protons = max(
-                physics_variables.f_nd_protium_electrons * physics_variables.dene,
+                physics_variables.f_nd_protium_electrons
+                * physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.nd_protons = max(
-                physics_variables.f_nd_protium_electrons * physics_variables.dene,
+                physics_variables.f_nd_protium_electrons
+                * physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_alphas
                 * physics_variables.proton_rate_density
                 / physics_variables.fusden_alpha_total,
@@ -3160,7 +3248,8 @@ class Physics:
         # If ignited, prevent beam fusion effects
         if physics_variables.i_plasma_ignited == 0:
             physics_variables.nd_beam_ions = (
-                physics_variables.dene * physics_variables.f_nd_beam_electron
+                physics_variables.nd_plasma_electrons_vol_avg
+                * physics_variables.f_nd_beam_electron
             )
         else:
             physics_variables.nd_beam_ions = 0.0
@@ -3172,10 +3261,10 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 znimp += impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
+                    imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
                 ).squeeze() * (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * physics_variables.dene
+                    * physics_variables.nd_plasma_electrons_vol_avg
                 )
 
         # ======================================================================
@@ -3183,7 +3272,7 @@ class Physics:
         # Fuel portion - conserve charge neutrality
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
-            physics_variables.dene
+            physics_variables.nd_plasma_electrons_vol_avg
             - 2.0 * physics_variables.nd_alphas
             - physics_variables.nd_protons
             - physics_variables.nd_beam_ions
@@ -3208,14 +3297,14 @@ class Physics:
             + (physics_variables.f_deuterium + physics_variables.f_tritium)
             * physics_variables.nd_fuel_ions
             + physics_variables.nd_beam_ions
-        ) / physics_variables.dene
+        ) / physics_variables.nd_plasma_electrons_vol_avg
 
         impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("He")
         ] = (
             physics_variables.f_helium3
             * physics_variables.nd_fuel_ions
-            / physics_variables.dene
+            / physics_variables.nd_plasma_electrons_vol_avg
             + physics_variables.f_nd_alpha_electron
         )
 
@@ -3227,7 +3316,7 @@ class Physics:
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.nd_impurities += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
-                    * physics_variables.dene
+                    * physics_variables.nd_plasma_electrons_vol_avg
                 )
 
         # ======================================================================
@@ -3245,17 +3334,17 @@ class Physics:
 
         # Set some relative impurity density variables
         # for the benefit of other routines
-        physics_variables.rncne = (
+        physics_variables.f_nd_plasma_carbon_electron = (
             impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("C_")
             ]
         )
-        physics_variables.rnone = (
+        physics_variables.f_nd_plasma_oxygen_electron = (
             impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("O_")
             ]
         )
-        physics_variables.rnfene = (
+        physics_variables.f_nd_plasma_iron_argon_electron = (
             impurity_radiation_module.f_nd_impurity_electron_array[
                 impurity_radiation.element2index("Fe")
             ]
@@ -3274,7 +3363,7 @@ class Physics:
             physics_variables.zeff += (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
-                    imp, np.array([physics_variables.te])
+                    imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
                 ).squeeze()
                 ** 2
             )
@@ -3300,7 +3389,7 @@ class Physics:
             pc = physics_variables.pcoef
 
         physics_variables.f_alpha_electron = 0.88155 * np.exp(
-            -physics_variables.te * pc / 67.4036
+            -physics_variables.temp_plasma_electron_vol_avg_kev * pc / 67.4036
         )
         physics_variables.f_alpha_ion = 1.0 - physics_variables.f_alpha_electron
 
@@ -3333,7 +3422,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.m_ions_total_amu += (
-                    physics_variables.dene
+                    physics_variables.nd_plasma_electrons_vol_avg
                     * impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation_module.m_impurity_amu_array[imp]
                 )
@@ -3375,13 +3464,14 @@ class Physics:
                 * physics_variables.nd_beam_ions
                 / constants.M_TRITON_AMU
             )
-        ) / physics_variables.dene
+        ) / physics_variables.nd_plasma_electrons_vol_avg
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
                 physics_variables.zeffai += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
-                        imp, np.array([physics_variables.te])
+                        imp,
+                        np.array([physics_variables.temp_plasma_electron_vol_avg_kev]),
                     ).squeeze()
                     ** 2
                     / impurity_radiation_module.m_impurity_amu_array[imp]
@@ -3392,7 +3482,7 @@ class Physics:
     @staticmethod
     def phyaux(
         aspect: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
         te: float,
         nd_fuel_ions: float,
         fusden_total: float,
@@ -3407,7 +3497,7 @@ class Physics:
 
         Args:
             aspect (float): Plasma aspect ratio.
-            dene (float): Electron density (/m3).
+            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
             te (float): Volume avergaed electron temperature (keV).
             nd_fuel_ions (float): Fuel ion density (/m3).
             fusden_total (float): Fusion reaction rate from plasma and beams (/m3/s).
@@ -3434,7 +3524,7 @@ class Physics:
         """
         figmer = 1e-6 * plasma_current * aspect**sbar
 
-        ntau = t_energy_confinement * dene
+        ntau = t_energy_confinement * nd_plasma_electrons_vol_avg
         nTtau = ntau * te
 
         # Fusion reactions per second
@@ -3493,7 +3583,7 @@ class Physics:
         plasma_current: float,
         rmajor: float,
         rminor: float,
-        ten: float,
+        temp_plasma_electron_density_weighted_kev: float,
         vol_plasma: float,
         zeff: float,
     ) -> tuple[float, float, float, float]:
@@ -3506,7 +3596,7 @@ class Physics:
             plasma_current (float): Plasma current (A).
             rmajor (float): Major radius (m).
             rminor (float): Minor radius (m).
-            ten (float): Density weighted average electron temperature (keV).
+            temp_plasma_electron_density_weighted_kev (float): Density weighted average electron temperature (keV).
             vol_plasma (float): Plasma volume (m^3).
             zeff (float): Plasma effective charge.
 
@@ -3524,7 +3614,7 @@ class Physics:
 
         """
         # Density weighted electron temperature in 10 keV units
-        t10 = ten / 10.0
+        t10 = temp_plasma_electron_density_weighted_kev / 10.0
 
         # Plasma resistance, from loop voltage calculation in ITER Physics Design Guidelines: 1989
         res_plasma = (
@@ -3568,12 +3658,12 @@ class Physics:
     def calculate_plasma_current(
         alphaj: float,
         alphap: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         eps: float,
         i_plasma_current: int,
         kappa: float,
         kappa95: float,
-        p0: float,
+        pres_plasma_on_axis: float,
         len_plasma_poloidal: float,
         q95: float,
         rmajor: float,
@@ -3586,7 +3676,7 @@ class Physics:
         Args:
             alphaj (float): Current profile index.
             alphap (float): Pressure profile index.
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             eps (float): Inverse aspect ratio.
             i_plasma_current (int): Current scaling model to use.
                 1 = Peng analytic fit
@@ -3600,7 +3690,7 @@ class Physics:
                 9 = FIESTA ST scaling
             kappa (float): Plasma elongation.
             kappa95 (float): Plasma elongation at 95% surface.
-            p0 (float): Central plasma pressure (Pa).
+            pres_plasma_on_axis (float): Central plasma pressure (Pa).
             len_plasma_poloidal (float): Plasma perimeter length (m).
             q95 (float): Plasma safety factor at 95% flux (= q-bar for i_plasma_current=2).
             ind_plasma_internal_norm (float): Plasma normalised internal inductance.
@@ -3610,7 +3700,7 @@ class Physics:
             triang95 (float): Plasma triangularity at 95% surface.
 
         Returns:
-            Tuple[float, float, float,]: Tuple containing bp, qstar, plasma_current,
+            Tuple[float, float, float,]: Tuple containing b_plasma_poloidal_average, qstar, plasma_current,
 
         Raises:
             ValueError: If invalid value for i_plasma_current is provided.
@@ -3649,7 +3739,7 @@ class Physics:
         # Peng scaling for double null divertor; TARTs [STAR Code]
         elif i_plasma_current == 2:
             plasma_current = 1.0e6 * calculate_plasma_current_peng(
-                q95, aspect_ratio, eps, rminor, bt, kappa, triang
+                q95, aspect_ratio, eps, rminor, b_plasma_toroidal_on_axis, kappa, triang
             )
 
         # Simple ITER scaling (simply the cylindrical case)
@@ -3671,7 +3761,14 @@ class Physics:
         # Connor-Hastie asymptotically-correct expression
         elif i_plasma_current == 7:
             fq = calculate_current_coefficient_hastie(
-                alphaj, alphap, bt, triang95, eps, kappa95, p0, constants.RMU0
+                alphaj,
+                alphap,
+                b_plasma_toroidal_on_axis,
+                triang95,
+                eps,
+                kappa95,
+                pres_plasma_on_axis,
+                constants.RMU0,
             )
 
         # Sauter scaling allowing negative triangularity [FED May 2016]
@@ -3694,7 +3791,7 @@ class Physics:
                 * rminor**2
                 / (rmajor * q95)
                 * fq
-                * bt
+                * b_plasma_toroidal_on_axis
             )
         # i_plasma_current == 2 case covered above
 
@@ -3702,31 +3799,35 @@ class Physics:
         qstar = (
             5.0e6
             * rminor**2
-            / (rmajor * plasma_current / bt)
+            / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
             * 0.5
             * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
         )
 
         # Normalised beta from Troyon beta limit
         physics_variables.beta_norm_total = (
-            1.0e8 * physics_variables.beta * rminor * bt / plasma_current
+            1.0e8
+            * physics_variables.beta
+            * rminor
+            * b_plasma_toroidal_on_axis
+            / plasma_current
         )
 
         # Calculate the poloidal field generated by the plasma current
-        bp = calculate_poloidal_field(
+        b_plasma_poloidal_average = calculate_poloidal_field(
             i_plasma_current,
             plasma_current,
             q95,
             aspect_ratio,
             eps,
-            bt,
+            b_plasma_toroidal_on_axis,
             kappa,
             triang,
             len_plasma_poloidal,
             constants.RMU0,
         )
 
-        return bp, qstar, plasma_current
+        return b_plasma_poloidal_average, qstar, plasma_current
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -3790,7 +3891,7 @@ class Physics:
             / (4.0e0 * np.pi**1.5e0 * constants.EPSILON0**2)
             * physics_variables.vol_plasma**2
             * physics_variables.rmajor**2
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             * np.sqrt(physics_variables.eps)
             * physics_variables.nd_electron_line**3
             * physics_variables.kappa
@@ -3809,7 +3910,7 @@ class Physics:
             )
         ) / (
             constants.ELECTRON_CHARGE
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.eps
             * physics_variables.rmajor
         )
@@ -3819,7 +3920,10 @@ class Physics:
             / 3.0e0
             * constants.RMU0
             * physics_variables.e_plasma_beta
-            / (physics_variables.vol_plasma * physics_variables.bt**2)
+            / (
+                physics_variables.vol_plasma
+                * physics_variables.b_plasma_toroidal_on_axis**2
+            )
         )
 
         po.oheadr(self.outfile, "Plasma")
@@ -4092,37 +4196,37 @@ class Physics:
                 po.ovarrf(
                     self.outfile,
                     "On-axis plasma current density (A/m2)",
-                    "(j_plasma_0)",
-                    physics_variables.j_plasma_0,
+                    "(j_plasma_on_axis)",
+                    physics_variables.j_plasma_on_axis,
                     "OP ",
                 )
                 po.ovarrf(
                     self.outfile,
                     "Vertical field at plasma (T)",
-                    "(bvert)",
-                    physics_variables.bvert,
+                    "(b_plasma_vertical_required)",
+                    physics_variables.b_plasma_vertical_required,
                     "OP ",
                 )
 
             po.ovarrf(
                 self.outfile,
                 "Vacuum toroidal field at R (T)",
-                "(bt)",
-                physics_variables.bt,
+                "(b_plasma_toroidal_on_axis)",
+                physics_variables.b_plasma_toroidal_on_axis,
             )
             po.ovarrf(
                 self.outfile,
                 "Average poloidal field (T)",
-                "(bp)",
-                physics_variables.bp,
+                "(b_plasma_poloidal_average)",
+                physics_variables.b_plasma_poloidal_average,
                 "OP ",
             )
 
             po.ovarrf(
                 self.outfile,
-                "Total field (sqrt(bp^2 + bt^2)) (T)",
-                "(btot)",
-                physics_variables.btot,
+                "Total field (sqrt(b_plasma_poloidal_average^2 + b_plasma_toroidal_on_axis^2)) (T)",
+                "(b_plasma_total)",
+                physics_variables.b_plasma_total,
                 "OP ",
             )
 
@@ -4435,49 +4539,54 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Volume averaged electron temperature (keV)",
-            "(te)",
-            physics_variables.te,
+            "(temp_plasma_electron_vol_avg_kev)",
+            physics_variables.temp_plasma_electron_vol_avg_kev,
         )
         po.ovarrf(
             self.outfile,
             "Ratio of ion to electron volume-averaged temperature",
-            "(tratio)",
-            physics_variables.tratio,
+            "(f_temp_plasma_ion_electron)",
+            physics_variables.f_temp_plasma_ion_electron,
             "IP ",
         )
         po.ovarrf(
             self.outfile,
             "Electron temperature on axis (keV)",
-            "(te0)",
-            physics_variables.te0,
+            "(temp_plasma_electron_on_axis_kev)",
+            physics_variables.temp_plasma_electron_on_axis_kev,
             "OP ",
         )
-        po.ovarrf(self.outfile, "Ion temperature (keV)", "(ti)", physics_variables.ti)
+        po.ovarrf(
+            self.outfile,
+            "Ion temperature (keV)",
+            "(temp_plasma_ion_vol_avg_kev)",
+            physics_variables.temp_plasma_ion_vol_avg_kev,
+        )
         po.ovarrf(
             self.outfile,
             "Ion temperature on axis (keV)",
-            "(ti0)",
-            physics_variables.ti0,
+            "(temp_plasma_ion_on_axis_kev)",
+            physics_variables.temp_plasma_ion_on_axis_kev,
             "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Electron temp., density weighted (keV)",
-            "(ten)",
-            physics_variables.ten,
+            "(temp_plasma_electron_density_weighted_kev)",
+            physics_variables.temp_plasma_electron_density_weighted_kev,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Volume averaged electron number density (/m3)",
-            "(dene)",
-            physics_variables.dene,
+            "(nd_plasma_electrons_vol_avg)",
+            physics_variables.nd_plasma_electrons_vol_avg,
         )
         po.ovarre(
             self.outfile,
             "Electron number density on axis (/m3)",
-            "(ne0)",
-            physics_variables.ne0,
+            "(nd_plasma_electron_on_axis)",
+            physics_variables.nd_plasma_electron_on_axis,
             "OP ",
         )
         po.ovarre(
@@ -4490,15 +4599,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Plasma pressure on axis (Pa)",
-            "(p0)",
-            physics_variables.p0,
+            "(pres_plasma_on_axis)",
+            physics_variables.pres_plasma_on_axis,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Volume averaged plasma pressure (Pa)",
-            "(vol_avg_pressure)",
-            physics_variables.vol_avg_pressure,
+            "(pres_plasma_vol_avg)",
+            physics_variables.pres_plasma_vol_avg,
             "OP ",
         )
 
@@ -4687,48 +4796,58 @@ class Physics:
         po.ovarin(
             self.outfile,
             "Plasma profile model",
-            "(ipedestal)",
-            physics_variables.ipedestal,
+            "(i_plasma_pedestal)",
+            physics_variables.i_plasma_pedestal,
         )
 
-        if physics_variables.ipedestal >= 1:
-            if physics_variables.ne0 < physics_variables.neped:
+        if physics_variables.i_plasma_pedestal >= 1:
+            if (
+                physics_variables.nd_plasma_electron_on_axis
+                < physics_variables.nd_plasma_pedestal_electron
+            ):
                 logger.error("Central density is less than pedestal density")
 
             po.ocmmnt(self.outfile, "Pedestal profiles are used.")
             po.ovarrf(
                 self.outfile,
                 "Density pedestal r/a location",
-                "(rhopedn)",
-                physics_variables.rhopedn,
+                "(radius_plasma_pedestal_density_norm)",
+                physics_variables.radius_plasma_pedestal_density_norm,
             )
-            if physics_variables.fgwped >= 0e0:
+            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",
-                    "(neped)",
-                    physics_variables.neped,
+                    "(nd_plasma_pedestal_electron)",
+                    physics_variables.nd_plasma_pedestal_electron,
                     "OP ",
                 )
             else:
                 po.ovarre(
                     self.outfile,
                     "Electron density pedestal height (/m3)",
-                    "(neped)",
-                    physics_variables.neped,
+                    "(nd_plasma_pedestal_electron)",
+                    physics_variables.nd_plasma_pedestal_electron,
                 )
 
-            # This code is ODD# Don't change it# No explanation why fgwped and physics_variables.fgwsep
             # must be assigned to their exisiting values#
-            fgwped_out = physics_variables.neped / physics_variables.dlimit[6]
-            fgwsep_out = physics_variables.nesep / physics_variables.dlimit[6]
-            if physics_variables.fgwped >= 0e0:
-                physics_variables.fgwped = (
-                    physics_variables.neped / physics_variables.dlimit[6]
+            fgwped_out = (
+                physics_variables.nd_plasma_pedestal_electron
+                / physics_variables.dlimit[6]
+            )
+            fgwsep_out = (
+                physics_variables.nd_plasma_separatrix_electron
+                / physics_variables.dlimit[6]
+            )
+            if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
+                physics_variables.f_nd_plasma_pedestal_greenwald = (
+                    physics_variables.nd_plasma_pedestal_electron
+                    / physics_variables.dlimit[6]
                 )
-            if physics_variables.fgwsep >= 0e0:
-                physics_variables.fgwsep = (
-                    physics_variables.nesep / physics_variables.dlimit[6]
+            if physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0:
+                physics_variables.f_nd_plasma_separatrix_greenwald = (
+                    physics_variables.nd_plasma_separatrix_electron
+                    / physics_variables.dlimit[6]
                 )
 
             po.ovarre(
@@ -4740,37 +4859,37 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Temperature pedestal r/a location",
-                "(rhopedt)",
-                physics_variables.rhopedt,
+                "(radius_plasma_pedestal_temp_norm)",
+                physics_variables.radius_plasma_pedestal_temp_norm,
             )
 
             po.ovarrf(
                 self.outfile,
                 "Electron temp. pedestal height (keV)",
-                "(teped)",
-                physics_variables.teped,
+                "(temp_plasma_pedestal_kev)",
+                physics_variables.temp_plasma_pedestal_kev,
             )
             if 78 in numerics.icc:
                 po.ovarrf(
                     self.outfile,
                     "Electron temp. at separatrix (keV)",
-                    "(tesep)",
-                    physics_variables.tesep,
+                    "(temp_plasma_separatrix_kev)",
+                    physics_variables.temp_plasma_separatrix_kev,
                     "OP ",
                 )
             else:
                 po.ovarrf(
                     self.outfile,
                     "Electron temp. at separatrix (keV)",
-                    "(tesep)",
-                    physics_variables.tesep,
+                    "(temp_plasma_separatrix_kev)",
+                    physics_variables.temp_plasma_separatrix_kev,
                 )
 
             po.ovarre(
                 self.outfile,
                 "Electron density at separatrix (/m3)",
-                "(nesep)",
-                physics_variables.nesep,
+                "(nd_plasma_separatrix_electron)",
+                physics_variables.nd_plasma_separatrix_electron,
             )
             po.ovarre(
                 self.outfile,
@@ -4779,7 +4898,7 @@ class Physics:
                 fgwsep_out,
             )
 
-        # Issue 558 - addition of constraint 76 to limit the value of nesep, in proportion with the ballooning parameter and Greenwald density
+        # Issue 558 - addition of constraint 76 to limit the value of nd_plasma_separatrix_electron, in proportion with the ballooning parameter and Greenwald density
         if 76 in numerics.icc:
             po.ovarre(
                 self.outfile,
@@ -4790,8 +4909,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Critical electron density at separatrix (/m3)",
-                "(nesep_crit)",
-                physics_variables.nesep_crit,
+                "(nd_plasma_separatrix_electron_eich_max)",
+                physics_variables.nd_plasma_separatrix_electron_eich_max,
             )
 
         po.ovarrf(
@@ -5477,8 +5596,8 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Pdivt / R ratio (MW/m) (On peak divertor)",
-                "(pdivmax/physics_variables.rmajor)",
-                physics_variables.pdivmax / physics_variables.rmajor,
+                "(p_div_separatrix_max_mw/physics_variables.rmajor)",
+                physics_variables.p_div_separatrix_max_mw / physics_variables.rmajor,
                 "OP ",
             )
             po.ovarre(
@@ -5486,7 +5605,10 @@ class Physics:
                 "Pdivt Bt / qAR ratio (MWT/m) (On peak divertor)",
                 "(pdivmaxbt/qar)",
                 (
-                    (physics_variables.pdivmax * physics_variables.bt)
+                    (
+                        physics_variables.p_div_separatrix_max_mw
+                        * physics_variables.b_plasma_toroidal_on_axis
+                    )
                     / (
                         physics_variables.q95
                         * physics_variables.aspect
@@ -5509,7 +5631,10 @@ class Physics:
                 "Psep Bt / qAR ratio (MWT/m)",
                 "(pdivtbt_over_qar)",
                 (
-                    (physics_variables.p_plasma_separatrix_mw * physics_variables.bt)
+                    (
+                        physics_variables.p_plasma_separatrix_mw
+                        * physics_variables.b_plasma_toroidal_on_axis
+                    )
                     / (
                         physics_variables.q95
                         * physics_variables.aspect
@@ -5675,12 +5800,16 @@ class Physics:
             )
             po.oblnkl(self.outfile)
             if physics_variables.i_l_h_threshold in [9, 10, 11]:
-                if (physics_variables.bt < 0.78e0) or (physics_variables.bt > 7.94e0):
+                if (physics_variables.b_plasma_toroidal_on_axis < 0.78e0) or (
+                    physics_variables.b_plasma_toroidal_on_axis > 7.94e0
+                ):
                     po.ocmmnt(
                         self.outfile,
-                        "(bt outside Snipes 2000 fitted range)",
+                        "(b_plasma_toroidal_on_axis outside Snipes 2000 fitted range)",
                     )
-                    logger.warning("bt outside Snipes 2000 fitted range")
+                    logger.warning(
+                        "b_plasma_toroidal_on_axis outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.rminor < 0.15e0) or (
                     physics_variables.rminor > 1.15e0
@@ -6435,9 +6564,9 @@ class Physics:
                 physics_variables.m_fuel_amu,
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_ions_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_electron_line,
                 physics_variables.eps,
                 1.0,
@@ -6451,8 +6580,8 @@ class Physics:
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.ten,
-                physics_variables.tin,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
+                physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
@@ -6477,7 +6606,7 @@ class Physics:
     def bootstrap_fraction_iter89(
         aspect: float,
         beta: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         plasma_current: float,
         q95: float,
         q0: float,
@@ -6490,7 +6619,7 @@ class Physics:
         Args:
             aspect (float): Plasma aspect ratio.
             beta (float): Plasma total beta.
-            bt (float): Toroidal field on axis (T).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
             plasma_current (float): Plasma current (A).
             q95 (float): Safety factor at 95% surface.
             q0 (float): Central safety factor.
@@ -6516,7 +6645,7 @@ class Physics:
         b_pa = (plasma_current / 1e6) / (5 * average_a)
 
         # Calculate the poloidal beta for bootstrap current
-        betapbs = beta * (bt / b_pa) ** 2
+        betapbs = beta * (b_plasma_toroidal_on_axis / b_pa) ** 2
 
         # Ensure betapbs is positive
         if betapbs <= 0.0:
@@ -6637,8 +6766,8 @@ class Physics:
         alphan: float,
         alphat: float,
         beta_toroidal: float,
-        bt: float,
-        dene: float,
+        b_plasma_toroidal_on_axis: float,
+        nd_plasma_electrons_vol_avg: float,
         plasma_current: float,
         q95: float,
         q0: float,
@@ -6654,8 +6783,8 @@ class Physics:
             alphan (float): Density profile index.
             alphat (float): Temperature profile index.
             beta_toroidal (float): Toroidal plasma beta.
-            bt (float): Toroidal field on axis (T).
-            dene (float): Electron density (/m3).
+            b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
+            nd_plasma_electrons_vol_avg (float): Electron density (/m3).
             plasma_current (float): Plasma current (A).
             q0 (float): Central safety factor.
             q95 (float): Safety factor at 95% surface.
@@ -6685,11 +6814,11 @@ class Physics:
         # So that it is compatible with all profiles
 
         betae0 = (
-            physics_variables.ne0
-            * physics_variables.te0
+            physics_variables.nd_plasma_electron_on_axis
+            * physics_variables.temp_plasma_electron_on_axis_kev
             * 1.0e3
             * constants.ELECTRON_CHARGE
-            / (bt**2 / (2.0 * constants.RMU0))
+            / (b_plasma_toroidal_on_axis**2 / (2.0 * constants.RMU0))
         )
 
         # Call integration routine using definite integral routine from scipy
@@ -6697,9 +6826,9 @@ class Physics:
         ainteg, _ = integrate.quad(
             lambda y: _nevins_integral(
                 y,
-                dene,
+                nd_plasma_electrons_vol_avg,
                 te,
-                bt,
+                b_plasma_toroidal_on_axis,
                 rminor,
                 rmajor,
                 zeff,
@@ -6715,7 +6844,7 @@ class Physics:
 
         # Calculate bootstrap current and fraction
 
-        aibs = 2.5 * betae0 * rmajor * bt * q95 * ainteg
+        aibs = 2.5 * betae0 * rmajor * b_plasma_toroidal_on_axis * q95 * ainteg
         return 1.0e6 * aibs / plasma_current
 
     @staticmethod
@@ -6756,11 +6885,17 @@ class Physics:
 
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
-        ni = (physics_variables.nd_ions_total / physics_variables.dene) * ne
+        ni = (
+            physics_variables.nd_ions_total
+            / physics_variables.nd_plasma_electrons_vol_avg
+        ) * ne
 
         # Calculate electron and ion temperature profiles
         tempe = plasma_profile.teprofile.profile_y
-        tempi = (physics_variables.ti / physics_variables.te) * tempe
+        tempi = (
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            / physics_variables.temp_plasma_electron_vol_avg_kev
+        ) * tempe
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
@@ -6816,7 +6951,7 @@ class Physics:
                     radial_elements,
                     nr,
                     physics_variables.rmajor,
-                    physics_variables.bt,
+                    physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
                     ne,
                     ni,
@@ -6832,7 +6967,7 @@ class Physics:
                     radial_elements,
                     nr,
                     physics_variables.rmajor,
-                    physics_variables.bt,
+                    physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
                     ne,
                     ni,
@@ -6848,7 +6983,7 @@ class Physics:
                     radial_elements,
                     nr,
                     physics_variables.rmajor,
-                    physics_variables.bt,
+                    physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
                     inverse_q,
                     sqeps,
@@ -6865,7 +7000,7 @@ class Physics:
             )
             * 1.0e6
             * (
-                -physics_variables.bt
+                -physics_variables.b_plasma_toroidal_on_axis
                 / (0.2 * np.pi * physics_variables.rmajor)
                 * rho[radial_elements - 1]
                 * inverse_q[radial_elements - 1]
@@ -7263,10 +7398,10 @@ class Physics:
         zeff: float,
         q95: float,
         q0: float,
-        rhopedn: float,
-        neped: float,
+        radius_plasma_pedestal_density_norm: float,
+        nd_plasma_pedestal_electron: float,
         n_greenwald: float,
-        teped: float,
+        temp_plasma_pedestal_kev: float,
     ) -> float:
         """
         Calculate the bootstrap fraction using the H-mode scaling from the Sugiyama et al formula.
@@ -7287,14 +7422,14 @@ class Physics:
         :type q95: float
         :param q0: Safety factor at the magnetic axis.
         :type q0: float
-        :param rhopedn: Normalised plasma radius of density pedestal.
-        :type rhopedn: float
-        :param neped: Electron number density at the pedestal [m^-3].
-        :type neped: float
+        :param radius_plasma_pedestal_density_norm: Normalised plasma radius of density pedestal.
+        :type radius_plasma_pedestal_density_norm: float
+        :param nd_plasma_pedestal_electron: Electron number density at the pedestal [m^-3].
+        :type nd_plasma_pedestal_electron: float
         :param n_greenwald: Greenwald density limit [m^-3].
         :type n_greenwald: float
-        :param teped: Electron temperature at the pedestal [keV].
-        :type teped: float
+        :param temp_plasma_pedestal_kev: Electron temperature at the pedestal [keV].
+        :type temp_plasma_pedestal_kev: float
 
         :returns: The calculated bootstrap fraction.
         :rtype: float
@@ -7322,9 +7457,9 @@ class Physics:
             * tbeta**-0.0783
             * zeff**0.241
             * (q95 / q0) ** -0.103
-            * rhopedn**0.367
-            * (neped / n_greenwald) ** -0.174
-            * teped**0.0552
+            * radius_plasma_pedestal_density_norm**0.367
+            * (nd_plasma_pedestal_electron / n_greenwald) ** -0.174
+            * temp_plasma_pedestal_kev**0.0552
         )
 
     def find_other_h_factors(self, i_confinement_time: int) -> float:
@@ -7359,9 +7494,9 @@ class Physics:
                 physics_variables.m_fuel_amu,
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
-                physics_variables.bt,
+                physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_ions_total,
-                physics_variables.dene,
+                physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_electron_line,
                 physics_variables.eps,
                 hfact,
@@ -7375,8 +7510,8 @@ class Physics:
                 physics_variables.pden_plasma_core_rad_mw,
                 physics_variables.rmajor,
                 physics_variables.rminor,
-                physics_variables.ten,
-                physics_variables.tin,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
+                physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
@@ -7415,9 +7550,9 @@ class Physics:
         m_fuel_amu: float,
         p_alpha_total_mw: float,
         aspect: float,
-        bt: float,
+        b_plasma_toroidal_on_axis: float,
         nd_ions_total: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
         nd_electron_line: float,
         eps: float,
         hfact: float,
@@ -7431,8 +7566,8 @@ class Physics:
         pden_plasma_core_rad_mw: float,
         rmajor: float,
         rminor: float,
-        ten: float,
-        tin: float,
+        temp_plasma_electron_density_weighted_kev: float,
+        temp_plasma_ion_density_weighted_kev: float,
         q95: float,
         qstar: float,
         vol_plasma: float,
@@ -7444,9 +7579,9 @@ class Physics:
         :param m_fuel_amu: Average mass of fuel (amu)
         :param p_alpha_total_mw: Alpha particle power (MW)
         :param aspect: Aspect ratio
-        :param bt: Toroidal field on axis (T)
+        :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
         :param nd_ions_total: Total ion density (/m3)
-        :param dene: Volume averaged electron density (/m3)
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3)
         :param nd_electron_line: Line-averaged electron density (/m3)
         :param eps: Inverse aspect ratio
         :param hfact: H factor on energy confinement scalings
@@ -7462,8 +7597,8 @@ class Physics:
         :param qstar: Equivalent cylindrical edge safety factor
         :param rmajor: Plasma major radius (m)
         :param rminor: Plasma minor radius (m)
-        :param ten: Density weighted average electron temperature (keV)
-        :param tin: Density weighted average ion temperature (keV)
+        :param temp_plasma_electron_density_weighted_kev: Density weighted average electron temperature (keV)
+        :param temp_plasma_ion_density_weighted_kev: Density weighted average ion temperature (keV)
         :param vol_plasma: Plasma volume (m3)
         :param a_plasma_poloidal: Plasma cross-sectional area (m2)
         :param zeff: Plasma effective charge
@@ -7511,7 +7646,7 @@ class Physics:
         dnla19 = nd_electron_line * 1.0e-19
 
         # Volume averaged electron density in units of 10**20 m**-3
-        n20 = dene / 1.0e20
+        n20 = nd_plasma_electrons_vol_avg / 1.0e20
 
         # Plasma current in MA
         pcur = plasma_current / 1.0e6
@@ -7557,7 +7692,13 @@ class Physics:
         # Merezhkin-Mukhovatov (MM) OH/L-mode scaling
         elif i_confinement_time == 3:
             t_electron_confinement = confinement.merezhkin_muhkovatov_confinement_time(
-                rmajor, rminor, kappa95, qstar, dnla20, m_fuel_amu, ten
+                rmajor,
+                rminor,
+                kappa95,
+                qstar,
+                dnla20,
+                m_fuel_amu,
+                temp_plasma_electron_density_weighted_kev,
             )
 
         # ========================================================================
@@ -7565,7 +7706,7 @@ class Physics:
         # Shimomura (S) optimized H-mode scaling
         elif i_confinement_time == 4:
             t_electron_confinement = confinement.shimomura_confinement_time(
-                rmajor, rminor, bt, kappa95, m_fuel_amu
+                rmajor, rminor, b_plasma_toroidal_on_axis, kappa95, m_fuel_amu
             )
 
         # ========================================================================
@@ -7573,7 +7714,14 @@ class Physics:
         # Kaye-Goldston scaling (L-mode)
         elif i_confinement_time == 5:
             t_electron_confinement = confinement.kaye_goldston_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                b_plasma_toroidal_on_axis,
+                m_fuel_amu,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -7581,7 +7729,14 @@ class Physics:
         # ITER Power scaling - ITER 89-P (L-mode)
         elif i_confinement_time == 6:
             t_electron_confinement = confinement.iter_89p_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                b_plasma_toroidal_on_axis,
+                m_fuel_amu,
+                p_plasma_loss_mw,
             )
 
         # ========================================================================
@@ -7589,7 +7744,14 @@ class Physics:
         # ITER Offset linear scaling - ITER 89-O (L-mode)
         elif i_confinement_time == 7:
             t_electron_confinement = confinement.iter_89_0_confinement_time(
-                pcur, rmajor, rminor, kappa, dnla20, bt, m_fuel_amu, p_plasma_loss_mw
+                pcur,
+                rmajor,
+                rminor,
+                kappa,
+                dnla20,
+                b_plasma_toroidal_on_axis,
+                m_fuel_amu,
+                p_plasma_loss_mw,
             )
         # ========================================================================
 
@@ -7603,7 +7765,7 @@ class Physics:
                 pcur,
                 zeff,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7620,7 +7782,15 @@ class Physics:
         # T-10 scaling (L-mode)
         elif i_confinement_time == 10:
             t_electron_confinement = confinement.t10_confinement_time(
-                dnla20, rmajor, qstar, bt, rminor, kappa95, p_plasma_loss_mw, zeff, pcur
+                dnla20,
+                rmajor,
+                qstar,
+                b_plasma_toroidal_on_axis,
+                rminor,
+                kappa95,
+                p_plasma_loss_mw,
+                zeff,
+                pcur,
             )
 
         # ========================================================================
@@ -7633,7 +7803,7 @@ class Physics:
                 m_fuel_amu,
                 n20,
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 rmajor,
                 qstar,
                 zeff,
@@ -7647,7 +7817,7 @@ class Physics:
             t_electron_confinement = confinement.kaye_big_confinement_time(
                 rmajor,
                 rminor,
-                bt,
+                b_plasma_toroidal_on_axis,
                 kappa95,
                 pcur,
                 n20,
@@ -7665,7 +7835,7 @@ class Physics:
                 rminor,
                 kappa,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 m_fuel_amu,
                 p_plasma_loss_mw,
             )
@@ -7681,7 +7851,7 @@ class Physics:
                     rminor,
                     kappa,
                     dnla20,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     m_fuel_amu,
                     p_plasma_loss_mw,
                 ),
@@ -7691,7 +7861,7 @@ class Physics:
                     rminor,
                     kappa,
                     dnla20,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     m_fuel_amu,
                     p_plasma_loss_mw,
                 ),
@@ -7707,7 +7877,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7721,7 +7891,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 m_fuel_amu,
             )
@@ -7736,7 +7906,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7750,7 +7920,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7764,7 +7934,7 @@ class Physics:
                 rminor,
                 kappa95,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 m_fuel_amu,
                 p_plasma_loss_mw,
             )
@@ -7775,7 +7945,7 @@ class Physics:
         elif i_confinement_time == 20:
             t_electron_confinement = confinement.iter_h90_p_amended_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 m_fuel_amu,
                 rmajor,
                 p_plasma_loss_mw,
@@ -7790,7 +7960,7 @@ class Physics:
                 rmajor,
                 rminor,
                 dnla20,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -7799,7 +7969,7 @@ class Physics:
         # Gyro-reduced Bohm scaling
         elif i_confinement_time == 22:
             t_electron_confinement = confinement.gyro_reduced_bohm_confinement_time(
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
                 rminor,
@@ -7815,7 +7985,7 @@ class Physics:
                     rmajor,
                     rminor,
                     dnla20,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     p_plasma_loss_mw,
                     q95,
                 )
@@ -7827,7 +7997,7 @@ class Physics:
         elif i_confinement_time == 24:
             t_electron_confinement = confinement.iter_93h_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 m_fuel_amu,
                 rmajor,
@@ -7846,7 +8016,7 @@ class Physics:
         elif i_confinement_time == 26:
             t_electron_confinement = confinement.iter_h97p_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
                 rmajor,
@@ -7861,7 +8031,7 @@ class Physics:
         elif i_confinement_time == 27:
             t_electron_confinement = confinement.iter_h97p_elmy_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
                 rmajor,
@@ -7876,7 +8046,7 @@ class Physics:
         elif i_confinement_time == 28:
             t_electron_confinement = confinement.iter_96p_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 kappa95,
                 rmajor,
                 aspect,
@@ -7892,7 +8062,7 @@ class Physics:
         elif i_confinement_time == 29:
             t_electron_confinement = confinement.valovic_elmy_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 m_fuel_amu,
                 rmajor,
@@ -7908,7 +8078,7 @@ class Physics:
         elif i_confinement_time == 30:
             t_electron_confinement = confinement.kaye_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 kappa,
                 rmajor,
                 aspect,
@@ -7924,7 +8094,7 @@ class Physics:
         elif i_confinement_time == 31:
             t_electron_confinement = confinement.iter_pb98py_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7939,7 +8109,7 @@ class Physics:
         elif i_confinement_time == 32:
             t_electron_confinement = confinement.iter_ipb98y_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7954,7 +8124,7 @@ class Physics:
         elif i_confinement_time == 33:
             t_electron_confinement = confinement.iter_ipb98y1_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7969,7 +8139,7 @@ class Physics:
         elif i_confinement_time == 34:
             t_electron_confinement = confinement.iter_ipb98y2_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7984,7 +8154,7 @@ class Physics:
         elif i_confinement_time == 35:
             t_electron_confinement = confinement.iter_ipb98y3_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -7999,7 +8169,7 @@ class Physics:
         elif i_confinement_time == 36:
             t_electron_confinement = confinement.iter_ipb98y4_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8018,7 +8188,7 @@ class Physics:
                 rminor,
                 rmajor,
                 dnla19,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 iotabar,
             )
@@ -8033,7 +8203,7 @@ class Physics:
                 rminor,
                 rmajor,
                 dnla19,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 iotabar,
             )
@@ -8044,7 +8214,7 @@ class Physics:
         elif i_confinement_time == 39:
             t_electron_confinement = confinement.ds03_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8062,7 +8232,7 @@ class Physics:
                 rmajor,
                 physics_variables.kappa_ipb,
                 dnla19,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
             )
 
@@ -8072,7 +8242,7 @@ class Physics:
         elif i_confinement_time == 41:
             t_electron_confinement = confinement.petty08_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8086,7 +8256,7 @@ class Physics:
         elif i_confinement_time == 42:
             t_electron_confinement = confinement.lang_high_density_confinement_time(
                 plasma_current,
-                bt,
+                b_plasma_toroidal_on_axis,
                 nd_electron_line,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8104,7 +8274,7 @@ class Physics:
         elif i_confinement_time == 43:
             t_electron_confinement = confinement.hubbard_nominal_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
             )
@@ -8115,7 +8285,7 @@ class Physics:
         elif i_confinement_time == 44:
             t_electron_confinement = confinement.hubbard_lower_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
             )
@@ -8126,7 +8296,7 @@ class Physics:
         elif i_confinement_time == 45:
             t_electron_confinement = confinement.hubbard_upper_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla20,
                 p_plasma_loss_mw,
             )
@@ -8137,7 +8307,7 @@ class Physics:
         elif i_confinement_time == 46:
             t_electron_confinement = confinement.menard_nstx_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8153,7 +8323,7 @@ class Physics:
             t_electron_confinement = (
                 confinement.menard_nstx_petty08_hybrid_confinement_time(
                     pcur,
-                    bt,
+                    b_plasma_toroidal_on_axis,
                     dnla19,
                     p_plasma_loss_mw,
                     rmajor,
@@ -8169,7 +8339,7 @@ class Physics:
         elif i_confinement_time == 48:
             t_electron_confinement = confinement.nstx_gyro_bohm_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 rmajor,
                 dnla20,
@@ -8181,7 +8351,7 @@ class Physics:
         elif i_confinement_time == 49:
             t_electron_confinement = confinement.itpa20_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 dnla19,
                 p_plasma_loss_mw,
                 rmajor,
@@ -8197,7 +8367,7 @@ class Physics:
         elif i_confinement_time == 50:
             t_electron_confinement = confinement.itpa20_il_confinement_time(
                 pcur,
-                bt,
+                b_plasma_toroidal_on_axis,
                 p_plasma_loss_mw,
                 dnla19,
                 physics_variables.m_ions_total_amu,
@@ -8222,25 +8392,28 @@ class Physics:
 
         # Calculation of the transport power loss terms
         # Transport losses in Watts/m3 are 3/2 * n.e.T / tau , with T in eV
-        # (here, tin and ten are in keV, and pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
+        # (here, temp_plasma_ion_density_weighted_kev and temp_plasma_electron_density_weighted_kev are in keV, and pden_electron_transport_loss_mw and pden_ion_transport_loss_mw are in MW/m3)
 
         # The transport losses is just the electron and ion thermal energies divided by the confinement time.
         pden_ion_transport_loss_mw = (
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
             * nd_ions_total
-            * tin
+            * temp_plasma_ion_density_weighted_kev
             / t_ion_energy_confinement
         )
         pden_electron_transport_loss_mw = (
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
-            * dene
-            * ten
+            * nd_plasma_electrons_vol_avg
+            * temp_plasma_electron_density_weighted_kev
             / t_electron_energy_confinement
         )
 
-        ratio = (nd_ions_total / dene) * (tin / ten)
+        ratio = (nd_ions_total / nd_plasma_electrons_vol_avg) * (
+            temp_plasma_ion_density_weighted_kev
+            / temp_plasma_electron_density_weighted_kev
+        )
 
         # Global energy confinement time
 
@@ -8271,7 +8444,7 @@ class Physics:
         nd_fuel_ions: float,
         nd_alphas: float,
         vol_plasma: float,
-        dene: float,
+        nd_plasma_electrons_vol_avg: float,
     ) -> tuple[float, float, float, float, float]:
         """
         Calculate the plasma masses.
@@ -8288,8 +8461,8 @@ class Physics:
         :type nd_alphas: float
         :param vol_plasma: Plasma volume (m3).
         :type vol_plasma: float
-        :param dene: Volume averaged electron density (/m3).
-        :type dene: float
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3).
+        :type nd_plasma_electrons_vol_avg: float
 
         :returns: A tuple containing:
         :rtype: tuple[float, float, float, float, float]
@@ -8306,7 +8479,9 @@ class Physics:
 
         m_plasma_alpha = (nd_alphas * vol_plasma) * constants.ALPHA_MASS
 
-        m_plasma_electron = constants.ELECTRON_MASS * (dene * vol_plasma)
+        m_plasma_electron = constants.ELECTRON_MASS * (
+            nd_plasma_electrons_vol_avg * vol_plasma
+        )
 
         m_plasma = m_plasma_electron + m_plasma_ions_total
 
@@ -8319,7 +8494,7 @@ class Physics:
         )
 
 
-def calculate_poloidal_beta(btot, bp, beta):
+def calculate_poloidal_beta(b_plasma_total, b_plasma_poloidal_average, beta):
     """Calculates total poloidal beta
 
     Author: James Morris (UKAEA)
@@ -8327,11 +8502,11 @@ def calculate_poloidal_beta(btot, bp, beta):
     J.P. Freidberg, "Plasma physics and fusion energy", Cambridge University Press (2007)
     Page 270 ISBN 0521851076
 
-    :param btot: sum of the toroidal and poloidal fields (T)
-    :param bp: poloidal field (T)
+    :param b_plasma_total: sum of the toroidal and poloidal fields (T)
+    :param b_plasma_poloidal_average: poloidal field (T)
     :param beta: total plasma beta
     """
-    return beta * (btot / bp) ** 2
+    return beta * (b_plasma_total / b_plasma_poloidal_average) ** 2
 
 
 def res_diff_time(rmajor, res_plasma, kappa95):
@@ -8349,7 +8524,7 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 def l_h_threshold_power(
     nd_electron_line: float,
-    bt: float,
+    b_plasma_toroidal_on_axis: float,
     rmajor: float,
     rminor: float,
     kappa: float,
@@ -8363,8 +8538,8 @@ def l_h_threshold_power(
 
     :param nd_electron_line: Line-averaged electron density (/m3)
     :type nd_electron_line: float
-    :param bt: Toroidal field on axis (T)
-    :type bt: float
+    :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
+    :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius (m)
     :type rmajor: float
     :param rminor: Plasma minor radius (m)
@@ -8392,25 +8567,35 @@ def l_h_threshold_power(
     # Fit to 1996 H-mode power threshold database: nominal
 
     # i_l_h_threshold = 1
-    iterdd = transition.calculate_iter1996_nominal(dnla20, bt, rmajor)
+    iterdd = transition.calculate_iter1996_nominal(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # Fit to 1996 H-mode power threshold database: upper bound
     # i_l_h_threshold = 2
-    iterdd_ub = transition.calculate_iter1996_upper(dnla20, bt, rmajor)
+    iterdd_ub = transition.calculate_iter1996_upper(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # Fit to 1996 H-mode power threshold database: lower bound
     # i_l_h_threshold = 3
-    iterdd_lb = transition.calculate_iter1996_lower(dnla20, bt, rmajor)
+    iterdd_lb = transition.calculate_iter1996_lower(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # ========================================================================
 
     # Snipes 1997 ITER H-mode power threshold
 
     # i_l_h_threshold = 4
-    snipes_1997 = transition.calculate_snipes1997_iter(dnla20, bt, rmajor)
+    snipes_1997 = transition.calculate_snipes1997_iter(
+        dnla20, b_plasma_toroidal_on_axis, rmajor
+    )
 
     # i_l_h_threshold = 5
-    snipes_1997_kappa = transition.calculate_snipes1997_kappa(dnla20, bt, rmajor, kappa)
+    snipes_1997_kappa = transition.calculate_snipes1997_kappa(
+        dnla20, b_plasma_toroidal_on_axis, rmajor, kappa
+    )
 
     # ========================================================================
 
@@ -8419,17 +8604,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 6
     martin_nominal = transition.calculate_martin08_nominal(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
     )
 
     # i_l_h_threshold = 7
     martin_ub = transition.calculate_martin08_upper(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
     )
 
     # i_l_h_threshold = 8
     martin_lb = transition.calculate_martin08_lower(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu
     )
 
     # ========================================================================
@@ -8439,17 +8624,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 9
     snipes_2000 = transition.calculate_snipes2000_nominal(
-        dnla20, bt, rmajor, rminor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 10
     snipes_2000_ub = transition.calculate_snipes2000_upper(
-        dnla20, bt, rmajor, rminor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 11
     snipes_2000_lb = transition.calculate_snipes2000_lower(
-        dnla20, bt, rmajor, rminor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, rminor, m_ions_total_amu
     )
 
     # ========================================================================
@@ -8459,17 +8644,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 12
     snipes_2000_cd = transition.calculate_snipes2000_closed_divertor_nominal(
-        dnla20, bt, rmajor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 13
     snipes_2000_cd_ub = transition.calculate_snipes2000_closed_divertor_upper(
-        dnla20, bt, rmajor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
     )
 
     # i_l_h_threshold = 14
     snipes_2000_cd_lb = transition.calculate_snipes2000_closed_divertor_lower(
-        dnla20, bt, rmajor, m_ions_total_amu
+        dnla20, b_plasma_toroidal_on_axis, rmajor, m_ions_total_amu
     )
 
     # ========================================================================
@@ -8490,7 +8675,9 @@ def l_h_threshold_power(
     # Hubbard et al. 2017 L-I threshold scaling
 
     # i_l_h_threshold = 18
-    hubbard_2017 = transition.calculate_hubbard2017(dnla20, a_plasma_surface, bt)
+    hubbard_2017 = transition.calculate_hubbard2017(
+        dnla20, a_plasma_surface, b_plasma_toroidal_on_axis
+    )
 
     # ========================================================================
 
@@ -8498,17 +8685,17 @@ def l_h_threshold_power(
 
     # i_l_h_threshold = 19
     martin_nominal_aspect = transition.calculate_martin08_aspect_nominal(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
     )
 
     # i_l_h_threshold = 20
     martin_ub_aspect = transition.calculate_martin08_aspect_upper(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
     )
 
     # i_l_h_threshold = 21
     martin_lb_aspect = transition.calculate_martin08_aspect_lower(
-        dnla20, bt, a_plasma_surface, m_ions_total_amu, aspect
+        dnla20, b_plasma_toroidal_on_axis, a_plasma_surface, m_ions_total_amu, aspect
     )
 
     # ========================================================================
@@ -8538,10 +8725,10 @@ def l_h_threshold_power(
     ]
 
 
-def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
+def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, lhat):
     """Function for calculating upstream temperature(keV) in Reinke model
     author: H Lux, CCFE/UKAEA
-    bt      : input real : toroidal field on axis (T)
+    b_plasma_toroidal_on_axis      : input real : toroidal field on axis (T)
     flh     : input real : fraction of Psep/P_LH
     qstar   : input real : safety factor similar to q95 (see #707)
     rmajor  : input real : major radius (m)
@@ -8557,7 +8744,13 @@ def reinke_tsep(bt, flh, qstar, rmajor, eps, fgw, kappa, lhat):
     kappa_0 = 2.0e3  # Stangeby W/m/eV^(7/2)
 
     return (
-        (bt**0.72 * flh**0.29 * fgw**0.21 * qstar**0.08 * rmajor**0.33)
+        (
+            b_plasma_toroidal_on_axis**0.72
+            * flh**0.29
+            * fgw**0.21
+            * qstar**0.08
+            * rmajor**0.33
+        )
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )

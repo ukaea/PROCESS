@@ -21,14 +21,14 @@ $$
 
 #### Electron core density of a pedestalised profile | `ncore()`
 
-This function calculates the core electron density for a pedestalsied profile (`ipedestal == 1`). It takes in values of
+This function calculates the core electron density for a pedestalsied profile (`i_plasma_pedestal == 1`). It takes in values of
 
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
-| Pedestal value                   | `neped`, $n_{\text{ped}}$ |
-| Separatrix value                 | `nesep`, $n_{\text{sep}}$ |
-| Average density             | `dene`, $\langle n \rangle$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,n}}$ |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
+| Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$ |
+| Average density             | `nd_plasma_electrons_vol_avg`, $\langle n \rangle$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
 
 $$
@@ -38,7 +38,7 @@ n_0  =  \frac{1}{3\rho_{\text{ped,n}}^2}\left[3\langle n_{\text{e}} \rangle (1+\
 \rho_{\text{ped,n}}^2\right)\right]
 $$
 
-If `ncore` is returned as being less than 0, it is forced into a state of `ncore = 1E-6` in order to help convergence. This will also give a warning to the user to raise the lower bound of the average electron density `dene`.
+If `ncore` is returned as being less than 0, it is forced into a state of `ncore = 1E-6` in order to help convergence. This will also give a warning to the user to raise the lower bound of the average electron density `nd_plasma_electrons_vol_avg`.
 
 ##### Derivation
 
@@ -117,13 +117,13 @@ A table of the input variables can be found below
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
 | Normalized plasma radii            | `profile_x` |
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,n}}$ |
-| Core density                | `ne0`, $n_{\text{e0}}$ |
-| Pedestal value                   | `neped`, $n_{\text{ped}}$ |
-| Separatrix value                 | `nesep`, $n_{\text{sep}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,n}}$ |
+| Core density                | `nd_plasma_electron_on_axis`, $n_{\text{e0}}$ |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $n_{\text{ped}}$ |
+| Separatrix value                 | `nd_plasma_separatrix_electron`, $n_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_n$ |
 
-If `ipedestal == 0` then the original parabolic profile form is used
+If `i_plasma_pedestal == 0` then the original parabolic profile form is used
 
 $$
 n(\rho) = n_0(1 - \rho^2)^{\alpha_n}
@@ -132,7 +132,7 @@ $$
 The central density ($n_0$) is then checked to make sure it is not less than the pedestal density, $n_{\text{ped}}$.
 If it is less than a logger warning is pushed to the terminal at runtime.
 
-Values of the profile density are then assigned based on the density function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
+Values of the profile density are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
 
 $$\begin{aligned}
 \mbox{Density:} \ n(\rho) = \left\{

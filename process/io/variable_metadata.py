@@ -20,7 +20,7 @@ var_dicts = {
     "p_cryo_plant_electric_mw": VariableMetadata(
         latex=r"$P_\mathrm{cryo}$ [$MW$]", description="Cryogenic power", units="MW"
     ),
-    "bt": VariableMetadata(
+    "b_plasma_toroidal_on_axis": VariableMetadata(
         latex=r"$B_\mathrm{T}$ [$T$]", description="Toroidal magnetic field", units="T"
     ),
     "dr_tf_inboard": VariableMetadata(
@@ -49,7 +49,7 @@ var_dicts = {
         description="Alpha particle heating fraction",
         units="",
     ),
-    "te": VariableMetadata(
+    "temp_plasma_electron_vol_avg_kev": VariableMetadata(
         latex=r"$\left< T_\mathrm{e} \right>$",
         description="Average electron temperature",
         units="keV",
@@ -397,7 +397,7 @@ var_dicts = {
         description="Electron energy confinement time (sec)",
         units="s",
     ),
-    "dene": VariableMetadata(
+    "nd_plasma_electrons_vol_avg": VariableMetadata(
         latex=r"$n_e$",
         description="Volume-averaged electron density (/m3)",
         units="m-3",

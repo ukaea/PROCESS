@@ -40,9 +40,9 @@ icc = 11
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*
@@ -171,7 +171,7 @@ foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
 
 icc = 81
@@ -197,9 +197,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3
@@ -207,10 +207,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* te [keV]
+* temp_plasma_electron_vol_avg_keV [keV]
 ixc = 4
 boundu(4) = 100.0
-te = 12.0
+temp_plasma_electron_vol_avg_kev = 12.0
 
 * h factor
 ixc = 10
@@ -383,31 +383,31 @@ i_beta_fast_alpha = 1
 
 
 * Switch for pedestal profiles
-ipedestal = 1
+i_plasma_pedestal = 1
 
 * fraction of Greenwald density to set as separatrix density
-fgwsep = 0.5
+f_nd_plasma_separatrix_greenwald = 0.5
 
-* Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+* Electron density of pedestal [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_pedestal_electron = 0.5e20
 
-* Electron density at separatrix [m-3] (ipedestal=1) - initial value
-nesep = 0.2e20
+* Electron density at separatrix [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_separatrix_electron = 0.2e20
 
-* R/a of density pedestal (ipedestal=1)
-rhopedn = 0.94
+* R/a of density pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_density_norm = 0.94
 
-* R/a of temperature pedestal (ipedestal=1)
-rhopedt = 0.94
+* R/a of temperature pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_temp_norm = 0.94
 
-* Temperature profile index beta (ipedestal=1)
+* Temperature profile index beta (i_plasma_pedestal=1)
 tbeta = 2.0
 
-* Electron temperature of pedestal (kev) (ipedestal=1)
-teped = 5.5
+* Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
+temp_plasma_pedestal_kev = 5.5
 
-* Electron temperature at separatrix (kev) (ipedestal=1)
-tesep = 0.1
+* Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
+temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law
 i_confinement_time = 34

@@ -27,14 +27,14 @@ icc = 62 * f_alpha_energy_confinement_min
 
 *---------------Iteration Variables----------------*
 
-ixc= 2 * bt
+ixc= 2 * b_plasma_toroidal_on_axis
 boundu(2) = 20.0
 ixc = 3 * rmajor
 boundu(3) = 13
-ixc = 4 * te
+ixc = 4 * temp_plasma_electron_vol_avg_keV
 boundu(4) = 150.0
 ixc = 5 * beta
-ixc = 6 * dene
+ixc = 6 * nd_plasma_electrons_vol_avg
 ixc = 9 * fdene
 boundu(9) = 1.2
 ixc = 13 * dr_tf_inboard
@@ -253,7 +253,7 @@ f_a_cs_steel = 0.8
 alphan   = 1.00 * Density profile index
 alphat   = 1.45 * Temperature profile index
 aspect   = 3.1 * Aspect ratio (iteration variable 1)
-dene     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
+nd_plasma_electrons_vol_avg     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
 beta_norm_max   = 3.0 * (troyon-like) coefficient for beta scaling;
 fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
 f_c_plasma_non_inductive = 0.4434 * Fraction of the plasma current produced by
@@ -265,15 +265,15 @@ i_plasma_current    = 4 * Switch for plasma current scaling to use;
 i_density_limit   = 7 * Switch for density limit to enforce (constraint equation 5);
 i_beta_fast_alpha = 1 * Switch for fast alpha pressure calculation;
 ifispact = 0 * Switch for neutronics calculations;
-ipedestal = 1 * Switch for pedestal profiles;
-fgwped = 0.85 * fraction of Greenwald density to set as pedestal-top density
-neped    = 0.678e20 * Electron density of pedestal (/m3) (ipedestal=1) INITIAL VALUE
-nesep    = 0.2e20 * Electron density at separatrix (/m3) (ipedestal=1)
-rhopedn  = 0.94 * R/a of density pedestal (ipedestal=1)
-rhopedt  = 0.94 * R/a of temperature pedestal (ipedestal=1)
-tbeta    = 2.0 * Temperature profile index beta  (ipedestal=1)
-teped    = 5.5 * Electron temperature of pedestal (kev) (ipedestal=1)
-tesep    = 0.1 * Electron temperature at separatrix (kev) (ipedestal=1)
+i_plasma_pedestal = 1 * Switch for pedestal profiles;
+f_nd_plasma_pedestal_greenwald = 0.85 * fraction of Greenwald density to set as pedestal-top density
+nd_plasma_pedestal_electron    = 0.678e20 * Electron density of pedestal (/m3) (i_plasma_pedestal=1) INITIAL VALUE
+nd_plasma_separatrix_electron    = 0.2e20 * Electron density at separatrix (/m3) (i_plasma_pedestal=1)
+radius_plasma_pedestal_density_norm  = 0.94 * R/a of density pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_temp_norm  = 0.94 * R/a of temperature pedestal (i_plasma_pedestal=1)
+tbeta    = 2.0 * Temperature profile index beta  (i_plasma_pedestal=1)
+temp_plasma_pedestal_kev    = 5.5 * Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
+temp_plasma_separatrix_kev    = 0.1 * Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
 i_confinement_time      = 34 * Switch for energy confinement time scaling law
 i_plasma_geometry   = 0 * Switch for plasma cross-sectional shape calculation: use input kappa & triang
 *kappa = 1.7808
@@ -284,7 +284,7 @@ q0       = 1.0 * Safety factor on axis
 rmajor   = 9.072 * Plasma major radius (m) (iteration variable 3)
 i_single_null    = 1 * Switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * Synchrotron wall reflectivity factor
-te       = 13.07 * Volume averaged electron temperature (kev)
+temp_plasma_electron_vol_avg_keV       = 13.07 * Volume averaged electron temperature (kev)
 *zfear    = 1 * High-z impurity switch; 0=iron; 1=argon
 plasma_res_factor = 0.66 * plasma resistivity pre-factor
 
@@ -332,11 +332,11 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
 t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
 
 
-                     bt            =   5.3292E+00
+                     b_plasma_toroidal_on_axis            =   5.3292E+00
                      rmajor        =   8.8901E+00
-                     te             =  1.2330E+01
+                     temp_plasma_electron_vol_avg_keV             =  1.2330E+01
                      beta           =  3.1421E-02
-                     dene           =  7.4321E+19
+                     nd_plasma_electrons_vol_avg           =  7.4321E+19
                      fdene          =  1.2000E+00
                      oacdcp         =  8.6739E+06
                      dr_tf_inboard          =  1.2080E+00

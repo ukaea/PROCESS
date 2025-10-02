@@ -145,12 +145,12 @@ def constraint_equation_1():
             * constants.RMU0
             * constants.ELECTRON_CHARGE
             * (
-                data_structure.physics_variables.dene
-                * data_structure.physics_variables.ten
+                data_structure.physics_variables.nd_plasma_electrons_vol_avg
+                * data_structure.physics_variables.temp_plasma_electron_density_weighted_kev
                 + data_structure.physics_variables.nd_ions_total
-                * data_structure.physics_variables.tin
+                * data_structure.physics_variables.temp_plasma_ion_density_weighted_kev
             )
-            / data_structure.physics_variables.btot**2
+            / data_structure.physics_variables.b_plasma_total**2
         )
         / data_structure.physics_variables.beta
     )
@@ -166,7 +166,7 @@ def constraint_equation_2():
     """author: J. Morris
 
      i_rad_loss: switch for radiation loss term usage in power balance (see User Guide):
-    -  0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
+    -  0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
     -  1 total power lost is scaling power plus core radiation only
     -  2 total power lost is scaling power only, with no additional
         allowance for radiation. This is not recommended for power plant models.
@@ -296,7 +296,7 @@ def constraint_equation_4():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     i_rad_loss: switch for radiation loss term usage in power balance
-    - 0 total power lost is scaling power plus radiation (needed for ipedestal=2,3)
+    - 0 total power lost is scaling power plus radiation (needed for i_plasma_pedestal=2,3)
     - 1 total power lost is scaling power plus core radiation only
     - 2 total power lost is scaling power only, with no additional
         allowance for radiation. This is not recommended for power plant models.
@@ -352,7 +352,7 @@ def constraint_equation_5():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     fdene: f-value for density limit
-    dene: electron density (/m3)
+    nd_plasma_electrons_vol_avg: electron density (/m3)
     dnelimt: density limit (/m3)
     nd_electron_line: line averaged electron density (m-3)
 
@@ -379,13 +379,14 @@ def constraint_equation_5():
         )
 
     cc = (
-        data_structure.physics_variables.dene / data_structure.physics_variables.dnelimt
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg
+        / data_structure.physics_variables.dnelimt
         - 1.0 * data_structure.constraint_variables.fdene
     )
     return ConstraintResult(
         cc,
         data_structure.physics_variables.dnelimt * (1.0 - cc),
-        data_structure.physics_variables.dene * cc,
+        data_structure.physics_variables.nd_plasma_electrons_vol_avg * cc,
     )
 
 
@@ -797,11 +798,11 @@ def constraint_equation_24():
     - 1 use stellarator model
     fbeta_max: f-value for beta limit
     beta_max: allowable beta
-    beta: total plasma beta (calculated if ipedestal =3)
+    beta: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
-    bt: toroidal field
-    btot: total field
+    b_plasma_toroidal_on_axis: toroidal field
+    b_plasma_total: total field
     """
     # Include all beta components: relevant for both tokamaks and stellarators
     if (
@@ -861,8 +862,8 @@ def constraint_equation_24():
             (
                 data_structure.physics_variables.beta
                 * (
-                    data_structure.physics_variables.btot
-                    / data_structure.physics_variables.bt
+                    data_structure.physics_variables.b_plasma_total
+                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2
             )
@@ -875,8 +876,8 @@ def constraint_equation_24():
             - (
                 data_structure.physics_variables.beta
                 * (
-                    data_structure.physics_variables.btot
-                    / data_structure.physics_variables.bt
+                    data_structure.physics_variables.b_plasma_total
+                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2
             )
@@ -1736,7 +1737,7 @@ def constraint_equation_68():
     fpsepbqar: f-value for upper limit on psepbqar, maximum Psep*Bt/qAR limit
     psepbqarmax: maximum permitted value of ratio of Psep*Bt/qAR (MWT/m)
     p_plasma_separatrix_mw: Power to conducted to the divertor region (MW)
-    bt: toroidal field on axis (T) (iteration variable 2)
+    b_plasma_toroidal_on_axis: toroidal field on axis (T) (iteration variable 2)
     q95: safety factor q at 95% flux surface
     aspect: aspect ratio (iteration variable 1)
     rmajor: plasma major radius (m) (iteration variable 3)
@@ -1748,7 +1749,7 @@ def constraint_equation_68():
             (
                 (
                     data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.bt
+                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 / (
                     data_structure.constraint_variables.q95_fixed
@@ -1761,7 +1762,7 @@ def constraint_equation_68():
         )
         err = (
             data_structure.physics_variables.p_plasma_separatrix_mw
-            * data_structure.physics_variables.bt
+            * data_structure.physics_variables.b_plasma_toroidal_on_axis
         ) / (
             data_structure.constraint_variables.q95_fixed
             * data_structure.physics_variables.aspect
@@ -1772,7 +1773,7 @@ def constraint_equation_68():
             (
                 (
                     data_structure.physics_variables.p_plasma_separatrix_mw
-                    * data_structure.physics_variables.bt
+                    * data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 / (
                     data_structure.physics_variables.q95
@@ -1785,7 +1786,7 @@ def constraint_equation_68():
         )
         err = (
             data_structure.physics_variables.p_plasma_separatrix_mw
-            * data_structure.physics_variables.bt
+            * data_structure.physics_variables.b_plasma_toroidal_on_axis
         ) / (
             data_structure.physics_variables.q95
             * data_structure.physics_variables.aspect
@@ -1929,7 +1930,7 @@ def constraint_equation_76():
     Added for issue 558 with ref to http://iopscience.iop.org/article/10.1088/1741-4326/aaa340/pdf
 
     alpha_crit: critical ballooning parameter value
-    nesep_crit: critical electron density at separatrix [m-3]
+    nd_plasma_separatrix_electron_eich_max: critical electron density at separatrix [m-3]
     kappa: plasma separatrix elongation (calculated if i_plasma_geometry = 1-5, 7 or 9)
     triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
     aspect: aspect ratio (iteration variable 1)
@@ -1941,7 +1942,7 @@ def constraint_equation_76():
     data_structure.physics_variables.alpha_crit = (
         data_structure.physics_variables.kappa**1.2
     ) * (1.0 + 1.5 * data_structure.physics_variables.triang)
-    data_structure.physics_variables.nesep_crit = (
+    data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max = (
         5.9
         * data_structure.physics_variables.alpha_crit
         * (data_structure.physics_variables.aspect ** (-2.0 / 7.0))
@@ -1957,14 +1958,14 @@ def constraint_equation_76():
     )
 
     cc = (
-        data_structure.physics_variables.nesep
-        / data_structure.physics_variables.nesep_crit
+        data_structure.physics_variables.nd_plasma_separatrix_electron
+        / data_structure.physics_variables.nd_plasma_separatrix_electron_eich_max
         - 1.0 * data_structure.constraint_variables.fnesep
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.nesep,
-        data_structure.physics_variables.nesep * cc,
+        data_structure.physics_variables.nd_plasma_separatrix_electron,
+        data_structure.physics_variables.nd_plasma_separatrix_electron * cc,
     )
 
 
@@ -2074,20 +2075,20 @@ def constraint_equation_81():
     author: S Kahn, Culham Science Centre
     args : output structure : residual error; constraint value;
     residual error in physical units; output string; units string
-    Lower limit ne0 > neped
+    Lower limit nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
     !#=# physics
-    !#=#=# ne0, neped
+    !#=#=# nd_plasma_electron_on_axis, nd_plasma_pedestal_electron
     Logic change during pre-factoring: err, symbol, units will be
     assigned only if present.
-    fne0  : input : F-value for constraint on ne0 > neped
-    ne0   : input : Central electron density [m-3]
-    neped : input : Electron density at pedestal [m-3]
+    fne0  : input : F-value for constraint on nd_plasma_electron_on_axis > nd_plasma_pedestal_electron
+    nd_plasma_electron_on_axis   : input : Central electron density [m-3]
+    nd_plasma_pedestal_electron : input : Electron density at pedestal [m-3]
     """
     cc = (
         1.0
         - data_structure.physics_variables.fne0
-        * data_structure.physics_variables.ne0
-        / data_structure.physics_variables.neped
+        * data_structure.physics_variables.nd_plasma_electron_on_axis
+        / data_structure.physics_variables.nd_plasma_pedestal_electron
     )
     return ConstraintResult(
         cc,

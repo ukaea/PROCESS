@@ -73,7 +73,7 @@ class Vacuum:
                 buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
                 tfv.n_tf_coils,
                 tv.t_between_pulse,
-                pv.dene,
+                pv.nd_plasma_electrons_vol_avg,
                 pv.n_divertors,
                 qtorus,
                 gasld,
@@ -459,7 +459,7 @@ class Vacuum:
 
                 else:
                     logger.error(
-                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.te=}"
+                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.temp_plasma_electron_vol_avg_kev=}"
                     )
 
                 theta = math.pi / ntf

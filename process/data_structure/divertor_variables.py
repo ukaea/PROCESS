@@ -48,7 +48,7 @@ pflux_div_heat_load_max_mw: float = None
 """heat load limit (MW/m2)"""
 
 prn1: float = None
-"""n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal>=1`)"""
+"""n-scrape-off / n-average plasma; (input for `i_plasma_pedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `i_plasma_pedestal>=1`)"""
 
 tdiv: float = None
 """temperature at divertor (eV) (input for stellarator only, calculated for tokamaks)"""

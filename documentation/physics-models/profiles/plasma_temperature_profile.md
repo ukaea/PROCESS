@@ -22,10 +22,10 @@ A list of input parameters for calculating the core plasma temperature can be fo
 
 | Profile parameter / Input               | Temperature   |
 |----------------------------------|-----------|
-| Pedestal radius (r/a)            | `rhopedn`, $\rho_{\text{ped,T}}$ |
-| Pedestal value                   | `neped`, $T_{\text{ped}}$ |
-| Separatrix value                 | `nesep`, $T_{\text{sep}}$ |
-| Average temperature             | `dene`, $\langle T_\text{e} \rangle$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_density_norm`, $\rho_{\text{ped,T}}$ |
+| Pedestal value                   | `nd_plasma_pedestal_electron`, $T_{\text{ped}}$ |
+| Separatrix value                 | `nd_plasma_separatrix_electron`, $T_{\text{sep}}$ |
+| Average temperature             | `nd_plasma_electrons_vol_avg`, $\langle T_\text{e} \rangle$ |
 | Profile index/ peaking parameter | `alphan`, $\alpha_T$ |
 | Profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 
@@ -114,14 +114,14 @@ A table of the input variables can be found below
 | Profile parameter / Input               | Density   |
 |----------------------------------|-----------|
 | Normalised plasma radii            | `profile_x` |
-| Pedestal radius (r/a)            | `rhopedt`, $\rho_{\text{ped,T}}$ |
-| Core density                | `te0`, $T_{\text{e0}}$ |
-| Pedestal value                   | `teped`, $T_{\text{ped}}$ |
-| Separatrix value                 | `tesep`, $T_{\text{sep}}$ |
+| Pedestal radius (r/a)            | `radius_plasma_pedestal_temp_norm`, $\rho_{\text{ped,T}}$ |
+| Core density                | `temp_plasma_electron_on_axis_kev`, $T_{\text{e0}}$ |
+| Pedestal value                   | `temp_plasma_pedestal_kev`, $T_{\text{ped}}$ |
+| Separatrix value                 | `temp_plasma_separatrix_kev`, $T_{\text{sep}}$ |
 | Profile index/ peaking parameter | `alphat`, $\alpha_T$ |
 | 2nd profile index/ peaking parameter | `tbeta`, $\beta_T$ |
 
-If `ipedestal == 0` then the original parabolic profile form is used
+If `i_plasma_pedestal == 0` then the original parabolic profile form is used
 
 $$
 T(\rho) = T_0(1 - \rho^2)^{\alpha_T}
@@ -130,7 +130,7 @@ $$
 The central temperature ($T_0$) is then checked to make sure it is not less than the pedestal temperature, $T_{\text{ped}}$.
 If it is less than a logger warning is pushed to the terminal at runtime.
 
-Values of the profile temperature are then assigned based on the density function below across bounds from 0 to `rhopedn` and `rhopedn` to 1.  
+Values of the profile temperature are then assigned based on the density function below across bounds from 0 to `radius_plasma_pedestal_density_norm` and `radius_plasma_pedestal_density_norm` to 1.  
 
 $$\begin{aligned}
 \mbox{Temperature:} \ \ T(\rho) = \left\{
