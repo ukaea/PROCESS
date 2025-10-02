@@ -204,8 +204,10 @@ class Vmcon(_Solver):
             :return: True if inequality constraints satisfied
             :rtype: bool
             """
-            # Check all ineqs positive, i.e. satisfied
-            return bool(np.all(result.ie >= 0.0))
+            # negative constraint value = violated
+            # Check all ineqs are satisfied to within the tolerance
+            # E.g. the relative violations are no more than v=0-tolerance
+            return bool(np.all(result.ie >= -numerics.force_vmcon_inequality_tolerance))
 
         try:
             x, _, _, res = solve(
