@@ -288,11 +288,11 @@ class PlasmaProfile:
         # Total ion pressure profile (Pa)
         physics_variables.pres_plasma_ion_total_profile = (
             physics_variables.nd_ions_total
-            * (self.neprofile.profile_y / physics_variables.dene)
+            * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y
             * constants.KILOELECTRON_VOLT
-            * physics_variables.tratio
+            * physics_variables.f_temp_plasma_ion_electron
         )
 
         # Total pressure profile (Pa)
@@ -304,11 +304,11 @@ class PlasmaProfile:
         # Fuel ion pressure profile (Pa)
         physics_variables.pres_plasma_fuel_profile = (
             physics_variables.nd_fuel_ions
-            * (self.neprofile.profile_y / physics_variables.dene)
+            * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y
             * constants.KILOELECTRON_VOLT
-            * physics_variables.tratio
+            * physics_variables.f_temp_plasma_ion_electron
         )
 
         #  Pressure profile index (N.B. no pedestal effects included here)
