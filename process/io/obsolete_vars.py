@@ -433,7 +433,7 @@ OBS_VARS = {
     "dene": "nd_plasma_electrons_vol_avg",
     "fgwped": "f_nd_plasma_pedestal_greenwald",
     "fgwsep": "f_nd_plasma_separatrix_greenwald",
-    "neped": "nd_plasma_pedestal_electrons",
+    "neped": "nd_plasma_pedestal_electron",
     "nesep": "nd_plasma_separatrix_electron",
     "rhopedn": "radius_plasma_pedestal_density_norm",
     "rhopedt": "radius_plasma_pedestal_temp_norm",
