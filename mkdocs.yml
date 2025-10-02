@@ -9,7 +9,12 @@ nav:
           - Visual Studio Code: installation/vs-code.md
       - Usage:
           - Running PROCESS: usage/running-process.md
-          - Examples: usage/examples.md
+          - Examples:
+              - Introduction to Examples: usage/examples.md
+              - examples/examples.ipynb
+              - examples/scan.ipynb
+              - examples/plot_solutions.ipynb
+              - examples/single_model_evaluation.ipynb
           - Troubleshooting: usage/troubleshooting.md
           - Plotting: usage/plotting.md
           - Tracking: tracking.html
@@ -32,7 +37,7 @@ nav:
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-      # - Versioning: development/versioning.md
+                # - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
@@ -141,7 +146,7 @@ repo_name: UKAEA/PROCESS
 copyright: Copyright &copy; 2023 United Kingdom Atomic Energy Authority
 
 theme:
-  # name: readthedocs
+    # name: readthedocs
   name: material
   font:
     text: Roboto
@@ -149,7 +154,7 @@ theme:
     - navigation.tabs
     - navigation.footer
     - navigation.top
-      # - navigation.sections
+          # - navigation.sections
     - search.suggest
     - search.highlight
     - navigation.instant
@@ -212,6 +217,10 @@ plugins:
       caption_position: bottom
   - git-revision-date-localized:
       enable_creation_date: true
+  - mkdocs-jupyter:
+      execute: true
+      ignore: [scripts/**/*.py]
+
 #     - mkdocstrings:
 #           handlers:
 #               python:
