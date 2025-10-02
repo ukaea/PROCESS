@@ -37,6 +37,7 @@ class PFCoil:
         self.mfile = constants.MFILE  # mfile file unit
         pfcoil_variables.init_pfcoil_module()
         self.cs_fatigue = cs_fatigue
+        self.cs_coil = CSCoil(cs_fatigue)
 
     def run(self):
         """Run the PF coil model."""
@@ -50,7 +51,7 @@ class PFCoil:
 
     def output(self):
         """Output results to output file."""
-        self.output_cs_structure()
+        self.cs_coil.output_cs_structure()
         self.outpf()
         self.outvolt()
 
@@ -155,7 +156,7 @@ class PFCoil:
             pfcoil_variables.a_cs_poloidal,
             pfcoil_variables.dz_cs_full,
             pfcoil_variables.dr_cs_full,
-        ) = self.calculate_cs_geometry(
+        ) = self.cs_coil.calculate_cs_geometry(
             z_tf_inside_half=bv.z_tf_inside_half,
             f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
             dr_cs=bv.dr_cs,
@@ -188,7 +189,7 @@ class PFCoil:
                 pfcoil_variables.r_pf_cs_current_filaments,
                 pfcoil_variables.z_pf_cs_current_filaments,
                 pfcoil_variables.c_pf_cs_current_filaments,
-            ) = self.place_cs_filaments(
+            ) = self.cs_coil.place_cs_filaments(
                 n_cs_current_filaments=pfcoil_variables.n_cs_current_filaments,
                 r_cs_middle=pfcoil_variables.r_cs_middle,
                 z_cs_inside_half=pfcoil_variables.dz_cs_full / 2,
@@ -815,7 +816,7 @@ class PFCoil:
 
                 if ij == 0:
                     # Index args +1ed
-                    bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
+                    bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
                         n_coil=i + 1, n_coil_group=iii + 1, t_b_field_peak=it
                     )  # returns b_pf_coil_peak, bpf2
 
@@ -828,7 +829,7 @@ class PFCoil:
                     )
 
                     pfcoil_variables.j_pf_wp_critical[i], jstrand, jsc, tmarg = (
-                        self.superconpf(
+                        superconpf(
                             bmax,
                             pfcoil_variables.f_a_pf_coil_void[i],
                             pfcoil_variables.fcupfsu,
@@ -994,7 +995,7 @@ class PFCoil:
 
         # Find Central Solenoid information
         if bv.iohcl != 0:
-            self.ohcalc()
+            self.cs_coil.ohcalc()
 
         # Summation of weights and current
         pfcoil_variables.m_pf_coil_conductor_total = 0.0e0
@@ -1060,74 +1061,6 @@ class PFCoil:
         pfcoil_variables.c_pf_coil_turn[
             pfcoil_variables.n_pf_cs_plasma_circuits - 1, 5
         ] = 0.0e0
-
-    def place_cs_filaments(
-        self,
-        n_cs_current_filaments: int,
-        r_cs_middle: float,
-        z_cs_inside_half: float,
-        c_cs_flat_top_end: float,
-        f_j_cs_start_pulse_end_flat_top: float,
-        nfxf: int,
-    ):
-        """
-        Places central solenoid (CS) filaments and assigns their positions and currents.
-
-        This function calculates the radial (R) and vertical (Z) positions, as well as the current values,
-        for a set of CS filaments based on the provided parameters. Each filament is placed symmetrically
-        about the midplane, and currents are assigned according to the flat-top end current and scaling factors.
-
-        :param n_cs_current_filaments: Number of CS current filaments to place (per side).
-        :type n_cs_current_filaments: int
-        :param r_cs_middle: Radial coordinate of the middle of the CS.
-        :type r_cs_middle: float
-        :param z_cs_inside_half: Half-height of the CS in the vertical (Z) direction.
-        :type z_cs_inside_half: float
-        :param c_cs_flat_top_end: Flat-top end current for the CS.
-        :type c_cs_flat_top_end: float
-        :param f_j_cs_start_pulse_end_flat_top: Scaling factor for the CS current at the start of the pulse and flat-top end.
-        :type f_j_cs_start_pulse_end_flat_top: float
-        :param nfxf: Number of flux loops or scaling factor for current distribution.
-        :type nfxf: int
-
-        :returns: Tuple containing:
-            - r_pf_cs_current_filaments (list of float): Radial positions of the CS filaments.
-            - z_pf_cs_current_filaments (list of float): Vertical positions of the CS filaments.
-            - c_pf_cs_current_filaments (list of float): Current values assigned to each CS filament.
-        :rtype: tuple[list[float], list[float], list[float]]
-        """
-        r_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
-        z_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
-        c_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
-
-        for filament in range(n_cs_current_filaments):
-            # Set the R coordinate of the filaments
-            r_pf_cs_current_filaments[filament] = r_cs_middle
-            r_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
-                r_pf_cs_current_filaments[filament]
-            )
-
-            # Set the Z cordinate of the filaments
-            z_pf_cs_current_filaments[filament] = (
-                z_cs_inside_half / n_cs_current_filaments * ((filament + 1) - 0.5e0)
-            )
-            z_pf_cs_current_filaments[
-                filament + n_cs_current_filaments
-            ] = -z_pf_cs_current_filaments[filament]
-
-            # Assign currents to the filaments
-            c_pf_cs_current_filaments[filament] = (
-                -c_cs_flat_top_end / nfxf * f_j_cs_start_pulse_end_flat_top
-            )
-            c_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
-                c_pf_cs_current_filaments[filament]
-            )
-
-        return (
-            r_pf_cs_current_filaments,
-            z_pf_cs_current_filaments,
-            c_pf_cs_current_filaments,
-        )
 
     def place_pf_above_cs(
         self,
@@ -1623,761 +1556,6 @@ class PFCoil:
 
         return ccls
 
-    def ohcalc(self):
-        """Routine to perform calculations for the Central Solenoid.
-
-        author: P J Knight, CCFE, Culham Science Centre
-        """
-
-        (
-            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.z_pf_coil_lower[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_cs_middle,
-            pfcoil_variables.z_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
-            pfcoil_variables.a_cs_poloidal,
-            pfcoil_variables.dz_cs_full,
-            pfcoil_variables.dr_cs_full,
-        ) = self.calculate_cs_geometry(
-            z_tf_inside_half=bv.z_tf_inside_half,
-            f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
-            dr_cs=bv.dr_cs,
-            dr_bore=bv.dr_bore,
-        )
-
-        # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
-        if pfcoil_variables.j_cs_pulse_start > pfcoil_variables.j_cs_flat_top_end:
-            sgn = 1.0e0
-            pfcoil_variables.c_pf_cs_coils_peak_ma[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ] = (
-                sgn
-                * 1.0e-6
-                * pfcoil_variables.j_cs_pulse_start
-                * pfcoil_variables.a_cs_poloidal
-            )
-        else:
-            sgn = -1.0e0
-            pfcoil_variables.c_pf_cs_coils_peak_ma[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ] = (
-                sgn
-                * 1.0e-6
-                * pfcoil_variables.j_cs_flat_top_end
-                * pfcoil_variables.a_cs_poloidal
-            )
-
-        # Number of turns
-        pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1] = (
-            1.0e6
-            * abs(
-                pfcoil_variables.c_pf_cs_coils_peak_ma[
-                    pfcoil_variables.n_cs_pf_coils - 1
-                ]
-            )
-            / pfcoil_variables.c_pf_coil_turn_peak_input[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ]
-        )
-
-        # Turn vertical cross-sectionnal area
-        pfcoil_variables.a_cs_turn = (
-            pfcoil_variables.a_cs_poloidal
-            / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
-        )
-
-        # Depth/width of cs turn conduit
-        pfcoil_variables.dz_cs_turn = (
-            pfcoil_variables.a_cs_turn / pfcoil_variables.ld_ratio_cst
-        ) ** 0.5
-
-        # length of cs turn conduit
-        pfcoil_variables.dr_cs_turn = (
-            pfcoil_variables.ld_ratio_cst * pfcoil_variables.dz_cs_turn
-        )
-
-        # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
-        # Radius of curved outer corrner pfcoil_variables.r_out_cst = 3mm from literature
-        # pfcoil_variables.ld_ratio_cst = 70 / 22 from literature
-
-        # CS coil turn geometry calculation - stadium shape
-        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfcoil_variables.radius_cs_turn_cable_space = -(
-            (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn) / constants.PI
-        ) + math.sqrt(
-            (
-                (
-                    (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn)
-                    / constants.PI
-                )
-                ** 2
-            )
-            + (
-                (
-                    (pfcoil_variables.dr_cs_turn * pfcoil_variables.dz_cs_turn)
-                    - (4 - constants.PI) * (pfcoil_variables.r_out_cst**2)
-                    - (pfcoil_variables.a_cs_turn * pfcoil_variables.f_a_cs_steel)
-                )
-                / constants.PI
-            )
-        )
-
-        # Thickness of steel conduit in cs turn
-        csfv.t_structural_vertical = (
-            pfcoil_variables.dz_cs_turn / 2
-        ) - pfcoil_variables.radius_cs_turn_cable_space
-        # In this model the vertical and radial have the same thickness
-        csfv.t_structural_radial = csfv.t_structural_vertical
-        # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
-
-        # Non-steel area void fraction for coolant
-        pfcoil_variables.f_a_pf_coil_void[pfcoil_variables.n_cs_pf_coils - 1] = (
-            pfcoil_variables.f_a_cs_void
-        )
-
-        # Peak field at the End-Of-Flattop (EOF)
-        # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
-
-        # Peak field due to central Solenoid itself
-        bmaxoh2 = self.calculate_cs_peak_field(
-            j_cs=pfcoil_variables.j_cs_flat_top_end,
-            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-        )
-
-        # Peak field due to other PF coils plus plasma
-        timepoint = 5
-        bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
-            n_coil=pfcoil_variables.n_cs_pf_coils,
-            n_coil_group=99,
-            t_b_field_peak=timepoint,
-        )
-
-        pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
-
-        # Peak field on outboard side of central Solenoid
-        # (self-field is assumed to be zero - long solenoid approximation)
-        bohco = abs(bzo)
-
-        # Peak field at the Beginning-Of-Pulse (BOP)
-        # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfcoil_variables.b_cs_peak_pulse_start = self.calculate_cs_peak_field(
-            j_cs=pfcoil_variables.j_cs_pulse_start,
-            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-        )
-        timepoint = 2
-        bri, bro, bzi, bzo = self.peak_b_field_at_pf_coil(
-            n_coil=pfcoil_variables.n_cs_pf_coils,
-            n_coil_group=99,
-            t_b_field_peak=timepoint,
-        )
-
-        pfcoil_variables.b_cs_peak_pulse_start = abs(
-            pfcoil_variables.b_cs_peak_pulse_start + bzi
-        )
-
-        # Maximum field values
-        pfcoil_variables.b_pf_coil_peak[pfcoil_variables.n_cs_pf_coils - 1] = max(
-            pfcoil_variables.b_cs_peak_flat_top_end,
-            abs(pfcoil_variables.b_cs_peak_pulse_start),
-        )
-        pfcoil_variables.bpf2[pfcoil_variables.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
-
-        # Stress ==> cross-sectional area of supporting steel to use
-        if pfcoil_variables.i_pf_conductor == 0:
-            # Superconducting coil
-
-            # New calculation from M. N. Wilson for hoop stress
-            pfcoil_variables.sig_hoop = self.hoop_stress(
-                pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
-            )
-
-            # New calculation from Y. Iwasa for axial stress
-            pfcoil_variables.sig_axial, pfcoil_variables.axial_force = (
-                self.axial_stress()
-            )
-
-            # Allowable (hoop) stress (Pa) alstroh
-            # Now a user input
-            # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
-
-            # Calculation of CS fatigue
-            # this is only valid for pulsed reactor design
-            if pv.f_c_plasma_inductive > 0.0e-4:
-                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
-                    pfcoil_variables.sig_hoop,
-                    csfv.residual_sig_hoop,
-                    csfv.t_crack_vertical,
-                    csfv.t_structural_vertical,
-                    csfv.t_structural_radial,
-                )
-
-            # Now steel area fraction is iteration variable and constraint
-            # equation is used for Central Solenoid stress
-
-            # Area of steel in Central Solenoid
-            areaspf = pfcoil_variables.f_a_cs_steel * pfcoil_variables.a_cs_poloidal
-
-            if pfcoil_variables.i_cs_stress == 1:
-                pfcoil_variables.s_shear_cs_peak = max(
-                    abs(pfcoil_variables.sig_hoop - pfcoil_variables.sig_axial),
-                    abs(pfcoil_variables.sig_axial - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.sig_hoop),
-                )
-            else:
-                pfcoil_variables.s_shear_cs_peak = max(
-                    abs(pfcoil_variables.sig_hoop - 0.0e0),
-                    abs(0.0e0 - 0.0e0),
-                    abs(0.0e0 - pfcoil_variables.sig_hoop),
-                )
-
-            # Thickness of hypothetical steel cylinders assumed to encase the CS along
-            # its inside and outside edges; in reality, the steel is distributed
-            # throughout the conductor
-            pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = (
-                0.25e0
-                * areaspf
-                / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
-            )
-
-        else:
-            areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
-            pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = 0.0e0
-
-        # Weight of steel
-        pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
-            areaspf
-            * 2.0e0
-            * constants.PI
-            * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-            * fwbsv.den_steel
-        )
-
-        # Non-steel cross-sectional area
-        pfcoil_variables.awpoh = pfcoil_variables.a_cs_poloidal - areaspf
-
-        # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
-        # monotonically decreases
-
-        da = 0.0001e0  # 1 cm^2
-        if pfcoil_variables.awpoh < da:
-            pfcoil_variables.awpoh = da * da / (2.0e0 * da - pfcoil_variables.awpoh)
-
-        # Weight of conductor in central Solenoid
-        if pfcoil_variables.i_pf_conductor == 0:
-            pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
-                pfcoil_variables.awpoh
-                * (1.0e0 - pfcoil_variables.f_a_cs_void)
-                * 2.0e0
-                * constants.PI
-                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-                * tfv.dcond[pfcoil_variables.i_cs_superconductor - 1]
-            )
-        else:
-            pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
-                pfcoil_variables.awpoh
-                * (1.0e0 - pfcoil_variables.f_a_cs_void)
-                * 2.0e0
-                * constants.PI
-                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
-                * constants.den_copper
-            )
-
-        if pfcoil_variables.i_pf_conductor == 0:
-            # Allowable coil overall current density at EOF
-            # (superconducting coils only)
-
-            (
-                jcritwp,
-                pfcoil_variables.jcableoh_eof,
-                pfcoil_variables.j_cs_conductor_critical_flat_top_end,
-                tmarg1,
-            ) = self.superconpf(
-                pfcoil_variables.b_cs_peak_flat_top_end,
-                pfcoil_variables.f_a_cs_void,
-                pfcoil_variables.fcuohsu,
-                (
-                    abs(
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[
-                            pfcoil_variables.n_cs_pf_coils - 1
-                        ]
-                    )
-                    / pfcoil_variables.awpoh
-                )
-                * 1.0e6,
-                pfcoil_variables.i_cs_superconductor,
-                tfv.fhts,
-                tfv.str_cs_con_res,
-                tfv.tftmp,
-                tfv.bcritsc,
-                tfv.tcritsc,
-            )
-            # Strand critical current calculation for costing in $/kAm
-            # = superconducting filaments jc * (1 - strand copper fraction)
-            if pfcoil_variables.i_cs_superconductor in {2, 6, 8}:
-                pfcoil_variables.j_crit_str_cs = (
-                    pfcoil_variables.j_cs_conductor_critical_flat_top_end
-                )
-            else:
-                pfcoil_variables.j_crit_str_cs = (
-                    pfcoil_variables.j_cs_conductor_critical_flat_top_end
-                    * (1 - pfcoil_variables.fcuohsu)
-                )
-
-            pfcoil_variables.j_cs_critical_flat_top_end = (
-                jcritwp * pfcoil_variables.awpoh / pfcoil_variables.a_cs_poloidal
-            )
-
-            # Allowable coil overall current density at BOP
-
-            (
-                jcritwp,
-                pfcoil_variables.jcableoh_bop,
-                pfcoil_variables.j_cs_conductor_critical_pulse_start,
-                tmarg2,
-            ) = self.superconpf(
-                pfcoil_variables.b_cs_peak_pulse_start,
-                pfcoil_variables.f_a_cs_void,
-                pfcoil_variables.fcuohsu,
-                (
-                    abs(
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[
-                            pfcoil_variables.n_cs_pf_coils - 1
-                        ]
-                    )
-                    / pfcoil_variables.awpoh
-                )
-                * 1.0e6,
-                pfcoil_variables.i_cs_superconductor,
-                tfv.fhts,
-                tfv.str_cs_con_res,
-                tfv.tftmp,
-                tfv.bcritsc,
-                tfv.tcritsc,
-            )
-
-            pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1] = (
-                jcritwp * pfcoil_variables.awpoh / pfcoil_variables.a_cs_poloidal
-            )
-            pfcoil_variables.j_cs_critical_pulse_start = (
-                pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1]
-            )
-
-            pfcoil_variables.temp_cs_superconductor_margin = min(tmarg1, tmarg2)
-
-        else:
-            # Resistive power losses (non-superconducting coil)
-
-            pfcoil_variables.p_cs_resistive_flat_top = (
-                2.0e0
-                * constants.PI
-                * pfcoil_variables.r_cs_middle
-                * pfcoil_variables.rho_pf_coil
-                / (
-                    pfcoil_variables.a_cs_poloidal
-                    * (1.0e0 - pfcoil_variables.f_a_cs_void)
-                )
-                * (
-                    1.0e6
-                    * pfcoil_variables.c_pf_cs_coils_peak_ma[
-                        pfcoil_variables.n_cs_pf_coils - 1
-                    ]
-                )
-                ** 2
-            )
-            pfcoil_variables.p_pf_coil_resistive_total_flat_top = (
-                pfcoil_variables.p_pf_coil_resistive_total_flat_top
-                + pfcoil_variables.p_cs_resistive_flat_top
-            )
-
-    def calculate_cs_geometry(
-        self,
-        z_tf_inside_half: float,
-        f_z_cs_tf_internal: float,
-        dr_cs: float,
-        dr_bore: float,
-    ) -> tuple[float, float, float, float, float, float, float, float, float]:
-        """
-        Calculate the geometry of the Central Solenoid (CS) coil.
-
-        :param z_tf_inside_half: Half-height of the TF bore (m)
-        :type z_tf_inside_half: float
-        :param f_z_cs_tf_internal: Fractional height of CS relative to TF bore
-        :type f_z_cs_tf_internal: float
-        :param dr_cs: Thickness of the CS coil (m)
-        :type dr_cs: float
-        :param dr_bore: Radius of the TF bore (m)
-        :type dr_bore: float
-        :return: Tuple containing:
-            - z_cs_coil_upper: Upper Z coordinate of CS coil (m)
-            - z_cs_coil_lower: Lower Z coordinate of CS coil (m)
-            - r_cs_coil_middle: Radial coordinate of CS coil centre (m)
-            - z_cs_coil_middle: Z coordinate of CS coil centre (m)
-            - r_cs_coil_outer: Outer radius of CS coil (m)
-            - r_cs_coil_inner: Inner radius of CS coil (m)
-            - a_cs_poloidal: Total poloidal cross-sectional area of CS coil (m²)
-            - dz_cs_full: Full height of CS coil (m)
-        :rtype: tuple[float, float, float, float, float, float, float, float]
-        """
-
-        # Central Solenoid mean radius
-        r_cs_middle = dr_bore + (0.5e0 * dr_cs)
-
-        # Scale the CS height relative to TF bore height
-        z_cs_inside_half = z_tf_inside_half * f_z_cs_tf_internal
-
-        dz_cs_full = 2.0e0 * z_cs_inside_half  # Full height of CS coil
-
-        # Z coordinates of CS coil edges
-        z_cs_coil_upper = z_cs_inside_half
-        z_cs_coil_lower = -z_cs_coil_upper
-
-        # (R,Z) coordinates of coil centre
-        r_cs_coil_middle = r_cs_middle
-        z_cs_coil_middle = 0.0e0
-
-        # Radius of outer edge
-        r_cs_coil_outer = r_cs_middle + 0.5e0 * dr_cs
-
-        # Radius of inner edge
-        r_cs_coil_inner = r_cs_coil_outer - dr_cs
-
-        # Full radial thickness of CS coil
-        dr_cs_full = 2 * r_cs_coil_outer
-
-        # Total cross-sectional area
-        a_cs_poloidal = 2.0e0 * z_cs_inside_half * dr_cs
-
-        return (
-            z_cs_coil_upper,
-            z_cs_coil_lower,
-            r_cs_coil_middle,
-            r_cs_middle,
-            z_cs_coil_middle,
-            r_cs_coil_outer,
-            r_cs_coil_inner,
-            a_cs_poloidal,
-            dz_cs_full,
-            dr_cs_full,
-        )
-
-    def peak_b_field_at_pf_coil(
-        self, n_coil: int, n_coil_group: int, t_b_field_peak: int
-    ) -> tuple[float, float, float, float]:
-        """
-        Calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
-
-        :param n_coil: Coil number (1-based index)
-        :type n_coil: int
-        :param n_coil_group: Group number (1-based index)
-        :type n_coil_group: int
-        :param t_b_field_peak: Time point at which the field is highest
-        :type t_b_field_peak: int
-
-        :returns: Tuple containing:
-            - b_pf_inner_radial (float): Radial field at inner edge (T)
-            - b_pf_outer_radial (float): Radial field at outer edge (T)
-            - b_pf_inner_vertical (float): Vertical field at inner edge (T)
-            - b_pf_outer_vertical (float): Vertical field at outer edge (T)
-        :rtype: tuple[float, float, float, float]
-
-        :notes:
-            This routine calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
-            The calculation includes the effects from all the coils and the plasma.
-
-        :author: P J Knight, CCFE, Culham Science Centre
-        """
-        if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
-            # Peak field is to be calculated at the Central Solenoid itself,
-            # so exclude its own contribution; its self field is
-            # dealt with externally using routine calculate_cs_peak_field()
-            kk = 0
-        else:
-            # Check different times for maximum current
-            if (
-                abs(
-                    pfcoil_variables.c_pf_cs_coil_pulse_start_ma[n_coil - 1]
-                    - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
-                )
-                < 1.0e-12
-            ):
-                t_b_field_peak = 2
-            elif (
-                abs(
-                    pfcoil_variables.c_pf_cs_coil_flat_top_ma[n_coil - 1]
-                    - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
-                )
-                < 1.0e-12
-            ):
-                t_b_field_peak = 4
-            elif (
-                abs(
-                    pfcoil_variables.c_pf_cs_coil_pulse_end_ma[n_coil - 1]
-                    - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
-                )
-                < 1.0e-12
-            ):
-                t_b_field_peak = 5
-            else:
-                raise ProcessValueError(
-                    "Illegal value of it; possible rounding error",
-                    t_b_field_peak=t_b_field_peak,
-                )
-
-            if bv.iohcl == 0:
-                # No Central Solenoid
-                kk = 0
-            else:
-                sgn = (
-                    1.0
-                    if pfcoil_variables.j_cs_pulse_start
-                    > pfcoil_variables.j_cs_flat_top_end
-                    else -1.0
-                )
-
-                # Current in each filament representing part of the Central Solenoid
-                for iohc in range(pfcoil_variables.nfxf):
-                    pfcoil_variables.c_pf_cs_current_filaments[iohc] = (
-                        pfcoil_variables.f_c_pf_cs_peak_time_array[
-                            pfcoil_variables.n_cs_pf_coils - 1, t_b_field_peak - 1
-                        ]
-                        * pfcoil_variables.j_cs_flat_top_end
-                        * sgn
-                        * bv.dr_cs
-                        * pfcoil_variables.f_z_cs_tf_internal
-                        * bv.z_tf_inside_half
-                        / pfcoil_variables.nfxf
-                        * 2.0e0
-                    )
-
-                kk = pfcoil_variables.nfxf
-
-        # Non-Central Solenoid coils' contributions
-        jj = 0
-        for iii in range(pfcoil_variables.n_pf_coil_groups):
-            for _jjj in range(pfcoil_variables.n_pf_coils_in_group[iii]):
-                jj = jj + 1
-                # Radius, z-coordinate and current for each coil
-                if iii == n_coil_group - 1:
-                    # Self field from coil (Lyle's Method)
-                    kk = kk + 1
-
-                    dzpf = (
-                        pfcoil_variables.z_pf_coil_upper[jj - 1]
-                        - pfcoil_variables.z_pf_coil_lower[jj - 1]
-                    )
-                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.r_pf_coil_middle[jj - 1]
-                    )
-                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
-                    )
-                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
-                            jj - 1, t_b_field_peak - 1
-                        ]
-                        * 0.25e6
-                    )
-                    kk = kk + 1
-                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.r_pf_coil_middle[jj - 1]
-                    )
-                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
-                    )
-                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
-                            jj - 1, t_b_field_peak - 1
-                        ]
-                        * 0.25e6
-                    )
-                    kk = kk + 1
-                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.r_pf_coil_middle[jj - 1]
-                    )
-                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
-                    )
-                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
-                            jj - 1, t_b_field_peak - 1
-                        ]
-                        * 0.25e6
-                    )
-                    kk = kk + 1
-                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.r_pf_coil_middle[jj - 1]
-                    )
-                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
-                    )
-                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
-                            jj - 1, t_b_field_peak - 1
-                        ]
-                        * 0.25e6
-                    )
-
-                else:
-                    # Field from different coil
-                    kk = kk + 1
-                    pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.r_pf_coil_middle[jj - 1]
-                    )
-                    pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.z_pf_coil_middle[jj - 1]
-                    )
-                    pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
-                        pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
-                        * pfcoil_variables.f_c_pf_cs_peak_time_array[
-                            jj - 1, t_b_field_peak - 1
-                        ]
-                        * 1.0e6
-                    )
-
-        # Plasma contribution
-        if t_b_field_peak > 2:
-            kk = kk + 1
-            pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = pv.rmajor
-            pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = 0.0e0
-            pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = pv.plasma_current
-
-        # Calculate the field at the inner and outer edges
-        # of the coil of interest
-        pfcoil_variables.xind[:kk], b_pf_inner_radial, b_pf_inner_vertical, psi = (
-            calculate_b_field_at_point(
-                r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
-                z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
-                c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
-                r_test_point=pfcoil_variables.r_pf_coil_inner[n_coil - 1],
-                z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
-            )
-        )
-        pfcoil_variables.xind[:kk], b_pf_outer_radial, b_pf_outer_vertical, psi = (
-            calculate_b_field_at_point(
-                r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
-                z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
-                c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
-                r_test_point=pfcoil_variables.r_pf_coil_outer[n_coil - 1],
-                z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
-            )
-        )
-
-        # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
-        if (bv.iohcl != 0) and (n_coil == pfcoil_variables.n_cs_pf_coils):
-            return (
-                b_pf_inner_radial,
-                b_pf_outer_radial,
-                b_pf_inner_vertical,
-                b_pf_outer_vertical,
-            )
-
-        bpfin = math.sqrt(b_pf_inner_radial**2 + b_pf_inner_vertical**2)
-        bpfout = math.sqrt(b_pf_outer_radial**2 + b_pf_outer_vertical**2)
-        for n in range(pfcoil_variables.n_pf_coils_in_group[n_coil_group - 1]):
-            pfcoil_variables.b_pf_coil_peak[n_coil - 1 + n] = bpfin
-            pfcoil_variables.bpf2[n_coil - 1 + n] = bpfout
-
-        return (
-            b_pf_inner_radial,
-            b_pf_outer_radial,
-            b_pf_inner_vertical,
-            b_pf_outer_vertical,
-        )
-
-    def calculate_cs_peak_field(
-        self,
-        j_cs: float,
-        r_cs_inner: float,
-        r_cs_outer: float,
-        dz_cs_half: float,
-    ) -> float:
-        """
-        Calculates the maximum field of a solenoid.
-
-        :param j_cs: Overall current density (A/m²)
-        :type j_cs: float
-        :param r_cs_inner: Solenoid inner radius (m)
-        :type r_cs_inner: float
-        :param r_cs_outer: Solenoid outer radius (m)
-        :type r_cs_outer: float
-        :param dz_cs_half: Solenoid half height (m)
-        :type dz_cs_half: float
-        :return: Maximum field of solenoid (T)
-        :rtype: float
-
-        :notes:
-
-        :references:
-            - Fits are taken from the figure on p.22 of M. Wilson's book
-            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983.
-        """
-        beta = dz_cs_half / r_cs_inner
-        alpha = r_cs_outer / r_cs_inner
-
-        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
-        b0 = (
-            j_cs
-            * constants.RMU0
-            * dz_cs_half
-            * math.log(
-                (alpha + math.sqrt(alpha**2 + beta**2))
-                / (1.0 + math.sqrt(1.0 + beta**2))
-            )
-        )
-
-        if beta > 3.0:
-            b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
-            f = (3.0 / beta) ** 2
-            b_cs_peak = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
-
-        elif beta > 2.0:
-            rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
-                0.01 - (beta - 2.0) * 0.0045
-            )
-            b_cs_peak = rat * b0
-
-        elif beta > 1.0:
-            rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            b_cs_peak = rat * b0
-
-        elif beta > 0.75:
-            rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
-                0.2 * (beta - 0.75) - 0.05
-            )
-            b_cs_peak = rat * b0
-
-        else:
-            rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
-                0.6 * (beta - 0.5) - 0.20
-            )
-            b_cs_peak = rat * b0
-
-        return b_cs_peak
-
     def vsec(self):
         """Calculation of volt-second capability of PF system.
 
@@ -2485,134 +1663,6 @@ class PFCoil:
         pfcoil_variables.vs_cs_total_pulse = (
             pfcoil_variables.vs_cs_burn + pfcoil_variables.vs_cs_ramp
         )
-
-    def hoop_stress(self, r):
-        """Calculation of hoop stress of central solenoid.
-
-        author: J Morris, CCFE, Culham Science Centre
-        This routine calculates the hoop stress of the central solenoid
-        from "Superconducting magnets", M. N. Wilson OUP
-
-        :param r: radial position a < r < b
-        :type r: float
-        :return: hoop stress (MPa)
-        :rtype: float
-        """
-        a = pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
-
-        # Outer radius of central Solenoid [m]
-        b = pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
-
-        # alpha
-        alpha = b / a
-
-        # epsilon
-        epsilon = r / a
-
-        # Field at inner radius of coil [T]
-        b_a = pfcoil_variables.b_cs_peak_pulse_start
-
-        # Field at outer radius of coil [T]
-        # Assume to be 0 for now
-        b_b = 0.0e0
-
-        # current density [A/m^2]
-        j = pfcoil_variables.j_cs_pulse_start
-
-        # K term
-        k = ((alpha * b_a - b_b) * j * a) / (alpha - 1.0e0)
-
-        # M term
-        m = ((b_a - b_b) * j * a) / (alpha - 1.0e0)
-
-        # calculate hoop stress terms
-        hp_term_1 = k * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
-
-        hp_term_2 = (
-            alpha**2
-            + alpha
-            + 1.0e0
-            + alpha**2 / epsilon**2
-            - epsilon
-            * (
-                ((1.0e0 + 2.0e0 * tfv.poisson_steel) * (alpha + 1.0e0))
-                / (2.0e0 + tfv.poisson_steel)
-            )
-        )
-
-        hp_term_3 = m * ((3.0e0 + tfv.poisson_steel) / (8.0e0))
-
-        hp_term_4 = (
-            alpha**2
-            + 1.0e0
-            + alpha**2 / epsilon**2
-            - epsilon**2
-            * ((1.0e0 + 3.0e0 * tfv.poisson_steel) / (3.0e0 + tfv.poisson_steel))
-        )
-
-        s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
-
-        return s_hoop_nom / pfcoil_variables.f_a_cs_steel
-
-    def axial_stress(self):
-        """Calculation of axial stress of central solenoid.
-
-        author: J Morris, CCFE, Culham Science Centre
-        This routine calculates the axial stress of the central solenoid
-        from "Case studies in superconducting magnets", Y. Iwasa, Springer
-
-        :return: unsmeared axial stress [MPa], axial force [N]
-        :rtype: tuple[float, float]
-        """
-        b = pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
-
-        # Half height of central Solenoid [m]
-        hl = pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
-
-        # Central Solenoid current [A]
-        ni = (
-            pfcoil_variables.c_pf_cs_coils_peak_ma[pfcoil_variables.n_cs_pf_coils - 1]
-            * 1.0e6
-        )
-
-        # kb term for elliptical integrals
-        # kb2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + hl**2))
-        kb2 = (4.0e0 * b**2) / (4.0e0 * b**2 + hl**2)
-
-        # k2b term for elliptical integrals
-        # k2b2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + 4.0e0*hl**2))
-        k2b2 = (4.0e0 * b**2) / (4.0e0 * b**2 + 4.0e0 * hl**2)
-
-        # term 1
-        axial_term_1 = -(constants.RMU0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
-
-        # term 2
-        ekb2_1 = ellipk(kb2)
-        ekb2_2 = ellipe(kb2)
-        axial_term_2 = (
-            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + hl**2)) * (ekb2_1 - ekb2_2)
-        )
-
-        # term 3
-        ek2b2_1 = ellipk(k2b2)
-        ek2b2_2 = ellipe(k2b2)
-        axial_term_3 = (
-            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
-        )
-
-        # calculate axial force [N]
-        axial_force = axial_term_1 * (axial_term_2 - axial_term_3)
-
-        # axial area [m2]
-        area_ax = constants.PI * (
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1] ** 2
-            - pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1] ** 2
-        )
-
-        # calculate unsmeared axial stress [MPa]
-        s_axial = axial_force / (pfcoil_variables.f_a_cs_steel * 0.5 * area_ax)
-
-        return s_axial, axial_force
 
     def induct(self, output):
         """Calculates PF coil set mutual inductance matrix.
@@ -2925,69 +1975,6 @@ class PFCoil:
                 self.outfile,
                 f"Plasma\t{pfcoil_variables.ind_pf_cs_plasma_mutual[: pfcoil_variables.n_pf_cs_plasma_circuits, pfcoil_variables.n_pf_cs_plasma_circuits - 1]}",
             )
-
-    def output_cs_structure(self):
-        op.oheadr(self.outfile, "Central Solenoid Structure")
-
-        op.ocmmnt(self.outfile, "CS turn structure")
-        op.oblnkl(self.outfile)
-
-        op.ovarre(
-            self.outfile,
-            "Poloidal area of a CS turn [m^2]",
-            "(a_cs_turn)",
-            pfcoil_variables.a_cs_turn,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Radial width a CS turn [m^2]",
-            "(dz_cs_turn)",
-            pfcoil_variables.dz_cs_turn,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Length of a CS turn [m]",
-            "(dr_cs_turn)",
-            pfcoil_variables.dr_cs_turn,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Length to diameter ratio of a CS turn",
-            "(ld_ratio_cst)",
-            pfcoil_variables.ld_ratio_cst,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Radius of CS turn cable space [m]",
-            "(radius_cs_turn_cable_space)",
-            pfcoil_variables.radius_cs_turn_cable_space,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Radial thickness of steel conduit to cable space [m]",
-            "(t_structural_radial)",
-            csfv.t_structural_radial,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Vertical thickness of steel conduit to cable space [m]",
-            "(t_structural_vertical)",
-            csfv.t_structural_vertical,
-            "OP ",
-        )
-        op.ovarre(
-            self.outfile,
-            "Corner radius of CS turn [m]",
-            "(r_out_cst)",
-            pfcoil_variables.r_out_cst,
-            "OP ",
-        )
 
     def outpf(self):
         """Routine to write output from PF coil module to file.
@@ -3968,211 +2955,1229 @@ class PFCoil:
             )
             pfcoil_variables.f_c_pf_cs_peak_time_array[ic, 5] = 0.0e0
 
-    def superconpf(
-        self, bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcritsc
-    ):
-        """Routine to calculate the PF coil superconductor properties.
 
-        This routine calculates the superconductor critical winding pack
-        current density for the PF coils, plus the temperature margin.
-        It is based on the TF coil version, supercon.
-        author: P J Knight, CCFE, Culham Science Centre
+class CSCoil:
+    """Calculate central solenoid coil system parameters."""
 
-        N.B. critical current density for a super conductor (j_crit_sc)
-        is for the superconducting strands/tape, not including copper.
-        Critical current density for a cable (j_crit_cable) acounts for
-        both the fraction of the cable taken up by helium coolant channels,
-        and the cable conductor copper fraction - i.e., the copper in the
-        superconducting strands AND any addtional copper, such as REBCO
-        tape support.
+    def __init__(self, cs_fatigue) -> None:
+        """Initialise Fortran module variables."""
+        self.outfile = constants.NOUT  # output file unit``
+        self.mfile = constants.MFILE  # mfile file unit
+        self.cs_fatigue = cs_fatigue
 
-        :param bmax: peak field at conductor (T)
-        :type bmax: float
-        :param fhe: fraction of cable space that is for He cooling
-        :type fhe: float
-        :param fcu: fraction of cable conductor that is copper
-        :type fcu: float
-        :param jwp: actual winding pack current density (A/m2)
-        :type jwp: float
-        :param isumat: switch for conductor type
-        1 = ITER Nb3Sn, standard parameters,
-        2 = Bi-2212 High Temperature Superconductor,
-        3 = NbTi,
-        4 = ITER Nb3Sn, user-defined parameters
-        5 = WST Nb3Sn parameterisation
-        7 = Durham Ginzbug-Landau Nb-Ti parameterisation
-        :type isumat: int
-        :param fhts: Adjustment factor (<= 1) to account for strain,
-        radiation damage, fatigue or AC losses
-        :type fhts: float
-        :param strain: Strain on superconductor at operation conditions
-        :type strain: float
-        :param thelium: He temperature at peak field point (K)
-        :type thelium: float
-        :param bcritsc: Critical field at zero temperature and strain (T) (isumat=4 only)
-        :type bcritsc: float
-        :param tcritsc: Critical temperature at zero field and strain (K) (isumat=4 only)
-        :type tcritsc: float
-        :return: Critical winding pack current density (A/m2) (j_crit_wp),
-        Critical cable current density (A/m2) (j_crit_cable)
-        Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
-        Temperature margin (K) (tmarg)
-        :rtype: tuple[float, float, float, float]
+    def calculate_cs_geometry(
+        self,
+        z_tf_inside_half: float,
+        f_z_cs_tf_internal: float,
+        dr_cs: float,
+        dr_bore: float,
+    ) -> tuple[float, float, float, float, float, float, float, float, float]:
+        """
+        Calculate the geometry of the Central Solenoid (CS) coil.
+
+        :param z_tf_inside_half: Half-height of the TF bore (m)
+        :type z_tf_inside_half: float
+        :param f_z_cs_tf_internal: Fractional height of CS relative to TF bore
+        :type f_z_cs_tf_internal: float
+        :param dr_cs: Thickness of the CS coil (m)
+        :type dr_cs: float
+        :param dr_bore: Radius of the TF bore (m)
+        :type dr_bore: float
+        :return: Tuple containing:
+            - z_cs_coil_upper: Upper Z coordinate of CS coil (m)
+            - z_cs_coil_lower: Lower Z coordinate of CS coil (m)
+            - r_cs_coil_middle: Radial coordinate of CS coil centre (m)
+            - z_cs_coil_middle: Z coordinate of CS coil centre (m)
+            - r_cs_coil_outer: Outer radius of CS coil (m)
+            - r_cs_coil_inner: Inner radius of CS coil (m)
+            - a_cs_poloidal: Total poloidal cross-sectional area of CS coil (m²)
+            - dz_cs_full: Full height of CS coil (m)
+        :rtype: tuple[float, float, float, float, float, float, float, float]
         """
 
-        # Find critical current density in superconducting strand, jcritstr
-        if isumat == 1:
-            # ITER Nb3Sn critical surface parameterization
-            bc20m = 32.97e0
-            tc0m = 16.06e0
+        # Central Solenoid mean radius
+        r_cs_middle = dr_bore + (0.5e0 * dr_cs)
 
-            # j_crit_sc returned by superconductors.itersc is the critical current density in the
-            # superconductor - not the whole strand, which contains copper
+        # Scale the CS height relative to TF bore height
+        z_cs_inside_half = z_tf_inside_half * f_z_cs_tf_internal
 
-            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+        dz_cs_full = 2.0e0 * z_cs_inside_half  # Full height of CS coil
 
-        elif isumat == 2:
-            # Bi-2212 high temperature superconductor parameterization
+        # Z coordinates of CS coil edges
+        z_cs_coil_upper = z_cs_inside_half
+        z_cs_coil_lower = -z_cs_coil_upper
 
-            # Current density in a strand of Bi-2212 conductor
-            # N.B. jcrit returned by superconductors.bi2212 is the critical current density
-            # in the strand, not just the superconducting portion.
-            # The parameterization for j_crit_cable assumes a particular strand
-            # composition that does not require a user-defined copper fraction,
-            # so this is irrelevant in this model
+        # (R,Z) coordinates of coil centre
+        r_cs_coil_middle = r_cs_middle
+        z_cs_coil_middle = 0.0e0
 
-            #  jwp / conductor fraction of cable
-            jstrand = jwp / (1.0e0 - fhe)
-            j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
-            #  j_crit_cable / non-copper fraction of conductor
-            j_crit_sc = j_crit_cable / (1.0e0 - fcu)
+        # Radius of outer edge
+        r_cs_coil_outer = r_cs_middle + 0.5e0 * dr_cs
 
-        elif isumat == 3:
-            # NbTi data
-            bc20m = 15.0e0
-            tc0m = 9.3e0
-            c0 = 1.0e10
-            j_crit_sc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+        # Radius of inner edge
+        r_cs_coil_inner = r_cs_coil_outer - dr_cs
 
-        elif isumat == 4:
-            # As (1), but user-defined parameters
-            bc20m = bcritsc
-            tc0m = tcritsc
-            j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+        # Full radial thickness of CS coil
+        dr_cs_full = 2 * r_cs_coil_outer
 
-        elif isumat == 5:
-            # WST Nb3Sn parameterisation
-            bc20m = 32.97e0
-            tc0m = 16.06e0
+        # Total cross-sectional area
+        a_cs_poloidal = 2.0e0 * z_cs_inside_half * dr_cs
 
-            # j_crit_sc returned by superconductors.itersc is the critical current density in the
-            # superconductor - not the whole strand, which contains copper
+        return (
+            z_cs_coil_upper,
+            z_cs_coil_lower,
+            r_cs_coil_middle,
+            r_cs_middle,
+            z_cs_coil_middle,
+            r_cs_coil_outer,
+            r_cs_coil_inner,
+            a_cs_poloidal,
+            dz_cs_full,
+            dr_cs_full,
+        )
 
-            j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
-                thelium, bmax, strain, bc20m, tc0m
+    def place_cs_filaments(
+        self,
+        n_cs_current_filaments: int,
+        r_cs_middle: float,
+        z_cs_inside_half: float,
+        c_cs_flat_top_end: float,
+        f_j_cs_start_pulse_end_flat_top: float,
+        nfxf: int,
+    ):
+        """
+        Places central solenoid (CS) filaments and assigns their positions and currents.
+
+        This function calculates the radial (R) and vertical (Z) positions, as well as the current values,
+        for a set of CS filaments based on the provided parameters. Each filament is placed symmetrically
+        about the midplane, and currents are assigned according to the flat-top end current and scaling factors.
+
+        :param n_cs_current_filaments: Number of CS current filaments to place (per side).
+        :type n_cs_current_filaments: int
+        :param r_cs_middle: Radial coordinate of the middle of the CS.
+        :type r_cs_middle: float
+        :param z_cs_inside_half: Half-height of the CS in the vertical (Z) direction.
+        :type z_cs_inside_half: float
+        :param c_cs_flat_top_end: Flat-top end current for the CS.
+        :type c_cs_flat_top_end: float
+        :param f_j_cs_start_pulse_end_flat_top: Scaling factor for the CS current at the start of the pulse and flat-top end.
+        :type f_j_cs_start_pulse_end_flat_top: float
+        :param nfxf: Number of flux loops or scaling factor for current distribution.
+        :type nfxf: int
+
+        :returns: Tuple containing:
+            - r_pf_cs_current_filaments (list of float): Radial positions of the CS filaments.
+            - z_pf_cs_current_filaments (list of float): Vertical positions of the CS filaments.
+            - c_pf_cs_current_filaments (list of float): Current values assigned to each CS filament.
+        :rtype: tuple[list[float], list[float], list[float]]
+        """
+        r_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+        z_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+        c_pf_cs_current_filaments = np.zeros(pfcoil_variables.NFIXMX)
+
+        for filament in range(n_cs_current_filaments):
+            # Set the R coordinate of the filaments
+            r_pf_cs_current_filaments[filament] = r_cs_middle
+            r_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
+                r_pf_cs_current_filaments[filament]
             )
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-        elif isumat == 6:
-            # "REBCO" 2nd generation HTS superconductor in CrCo strand
-            j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
-
-        elif isumat == 7:
-            # Durham Ginzburg-Landau critical surface model for Nb-Ti
-            bc20m = tfv.b_crit_upper_nbti
-            tc0m = tfv.t_crit_nbti
-            j_crit_sc, _, _ = superconductors.gl_nbti(
-                thelium, bmax, strain, bc20m, tc0m
+            # Set the Z cordinate of the filaments
+            z_pf_cs_current_filaments[filament] = (
+                z_cs_inside_half / n_cs_current_filaments * ((filament + 1) - 0.5e0)
             )
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+            z_pf_cs_current_filaments[
+                filament + n_cs_current_filaments
+            ] = -z_pf_cs_current_filaments[filament]
 
-            # The CS coil current at EOF
-            # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
-
-        elif isumat == 8:
-            # Durham Ginzburg-Landau critical surface model for REBCO
-            bc20m = 429e0
-            tc0m = 185e0
-            j_crit_sc, _, _ = superconductors.gl_rebco(
-                thelium, bmax, strain, bc20m, tc0m
+            # Assign currents to the filaments
+            c_pf_cs_current_filaments[filament] = (
+                -c_cs_flat_top_end / nfxf * f_j_cs_start_pulse_end_flat_top
             )
-            # A0 calculated for tape cross section already
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
-
-        elif isumat == 9:
-            # Hazelton experimental data + Zhai conceptual model for REBCO
-            bc20m = 138
-            tc0m = 92
-            j_crit_sc, _, _ = superconductors.hijc_rebco(
-                thelium,
-                bmax,
-                bc20m,
-                tc0m,
-                rcv.tape_width,
-                rcv.rebco_thickness,
-                rcv.tape_thickness,
+            c_pf_cs_current_filaments[filament + n_cs_current_filaments] = (
+                c_pf_cs_current_filaments[filament]
             )
-            # A0 calculated for tape cross section already
-            # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
-            j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+        return (
+            r_pf_cs_current_filaments,
+            z_pf_cs_current_filaments,
+            c_pf_cs_current_filaments,
+        )
+
+    def ohcalc(self):
+        """Routine to perform calculations for the Central Solenoid.
+
+        author: P J Knight, CCFE, Culham Science Centre
+        """
+
+        (
+            pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.z_pf_coil_lower[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_cs_middle,
+            pfcoil_variables.z_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1],
+            pfcoil_variables.a_cs_poloidal,
+            pfcoil_variables.dz_cs_full,
+            pfcoil_variables.dr_cs_full,
+        ) = self.calculate_cs_geometry(
+            z_tf_inside_half=bv.z_tf_inside_half,
+            f_z_cs_tf_internal=pfcoil_variables.f_z_cs_tf_internal,
+            dr_cs=bv.dr_cs,
+            dr_bore=bv.dr_bore,
+        )
+
+        # Maximum current (MA-turns) in central Solenoid, at either BOP or EOF
+        if pfcoil_variables.j_cs_pulse_start > pfcoil_variables.j_cs_flat_top_end:
+            sgn = 1.0e0
+            pfcoil_variables.c_pf_cs_coils_peak_ma[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ] = (
+                sgn
+                * 1.0e-6
+                * pfcoil_variables.j_cs_pulse_start
+                * pfcoil_variables.a_cs_poloidal
+            )
+        else:
+            sgn = -1.0e0
+            pfcoil_variables.c_pf_cs_coils_peak_ma[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ] = (
+                sgn
+                * 1.0e-6
+                * pfcoil_variables.j_cs_flat_top_end
+                * pfcoil_variables.a_cs_poloidal
+            )
+
+        # Number of turns
+        pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1] = (
+            1.0e6
+            * abs(
+                pfcoil_variables.c_pf_cs_coils_peak_ma[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ]
+            )
+            / pfcoil_variables.c_pf_coil_turn_peak_input[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ]
+        )
+
+        # Turn vertical cross-sectionnal area
+        pfcoil_variables.a_cs_turn = (
+            pfcoil_variables.a_cs_poloidal
+            / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
+        )
+
+        # Depth/width of cs turn conduit
+        pfcoil_variables.dz_cs_turn = (
+            pfcoil_variables.a_cs_turn / pfcoil_variables.ld_ratio_cst
+        ) ** 0.5
+
+        # length of cs turn conduit
+        pfcoil_variables.dr_cs_turn = (
+            pfcoil_variables.ld_ratio_cst * pfcoil_variables.dz_cs_turn
+        )
+
+        # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
+        # Radius of curved outer corrner pfcoil_variables.r_out_cst = 3mm from literature
+        # pfcoil_variables.ld_ratio_cst = 70 / 22 from literature
+
+        # CS coil turn geometry calculation - stadium shape
+        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
+        pfcoil_variables.radius_cs_turn_cable_space = -(
+            (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn) / constants.PI
+        ) + math.sqrt(
+            (
+                (
+                    (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn)
+                    / constants.PI
+                )
+                ** 2
+            )
+            + (
+                (
+                    (pfcoil_variables.dr_cs_turn * pfcoil_variables.dz_cs_turn)
+                    - (4 - constants.PI) * (pfcoil_variables.r_out_cst**2)
+                    - (pfcoil_variables.a_cs_turn * pfcoil_variables.f_a_cs_steel)
+                )
+                / constants.PI
+            )
+        )
+
+        # Thickness of steel conduit in cs turn
+        csfv.t_structural_vertical = (
+            pfcoil_variables.dz_cs_turn / 2
+        ) - pfcoil_variables.radius_cs_turn_cable_space
+        # In this model the vertical and radial have the same thickness
+        csfv.t_structural_radial = csfv.t_structural_vertical
+        # add a check for negative conduit thickness
+        if csfv.t_structural_radial < 1.0e-3:
+            csfv.t_structural_radial = 1.0e-3
+
+        # Non-steel area void fraction for coolant
+        pfcoil_variables.f_a_pf_coil_void[pfcoil_variables.n_cs_pf_coils - 1] = (
+            pfcoil_variables.f_a_cs_void
+        )
+
+        # Peak field at the End-Of-Flattop (EOF)
+        # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
+
+        # Peak field due to central Solenoid itself
+        bmaxoh2 = self.calculate_cs_peak_field(
+            j_cs=pfcoil_variables.j_cs_flat_top_end,
+            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+        )
+
+        # Peak field due to other PF coils plus plasma
+        timepoint = 5
+        bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
+            n_coil=pfcoil_variables.n_cs_pf_coils,
+            n_coil_group=99,
+            t_b_field_peak=timepoint,
+        )
+
+        pfcoil_variables.b_cs_peak_flat_top_end = abs(bzi - bmaxoh2)
+
+        # Peak field on outboard side of central Solenoid
+        # (self-field is assumed to be zero - long solenoid approximation)
+        bohco = abs(bzo)
+
+        # Peak field at the Beginning-Of-Pulse (BOP)
+        # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
+        pfcoil_variables.b_cs_peak_pulse_start = self.calculate_cs_peak_field(
+            j_cs=pfcoil_variables.j_cs_pulse_start,
+            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                pfcoil_variables.n_cs_pf_coils - 1
+            ],
+        )
+        timepoint = 2
+        bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
+            n_coil=pfcoil_variables.n_cs_pf_coils,
+            n_coil_group=99,
+            t_b_field_peak=timepoint,
+        )
+
+        pfcoil_variables.b_cs_peak_pulse_start = abs(
+            pfcoil_variables.b_cs_peak_pulse_start + bzi
+        )
+
+        # Maximum field values
+        pfcoil_variables.b_pf_coil_peak[pfcoil_variables.n_cs_pf_coils - 1] = max(
+            pfcoil_variables.b_cs_peak_flat_top_end,
+            abs(pfcoil_variables.b_cs_peak_pulse_start),
+        )
+        pfcoil_variables.bpf2[pfcoil_variables.n_cs_pf_coils - 1] = max(bohco, abs(bzo))
+
+        # Stress ==> cross-sectional area of supporting steel to use
+        if pfcoil_variables.i_pf_conductor == 0:
+            # Superconducting coil
+
+            # New calculation from M. N. Wilson for hoop stress
+            pfcoil_variables.sig_hoop = self.hoop_stress(
+                pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
+            )
+
+            # New calculation from Y. Iwasa for axial stress
+            pfcoil_variables.sig_axial, pfcoil_variables.axial_force = (
+                self.axial_stress()
+            )
+
+            # Allowable (hoop) stress (Pa) alstroh
+            # Now a user input
+            # alstroh = min( (2.0e0*csytf/3.0e0), (0.5e0*csutf) )
+
+            # Calculation of CS fatigue
+            # this is only valid for pulsed reactor design
+            if pv.f_c_plasma_inductive > 0.0e-4:
+                csfv.n_cycle, csfv.t_crack_radial = self.cs_fatigue.ncycle(
+                    pfcoil_variables.sig_hoop,
+                    csfv.residual_sig_hoop,
+                    csfv.t_crack_vertical,
+                    csfv.t_structural_vertical,
+                    csfv.t_structural_radial,
+                )
+
+            # Now steel area fraction is iteration variable and constraint
+            # equation is used for Central Solenoid stress
+
+            # Area of steel in Central Solenoid
+            areaspf = pfcoil_variables.f_a_cs_steel * pfcoil_variables.a_cs_poloidal
+
+            if pfcoil_variables.i_cs_stress == 1:
+                pfcoil_variables.s_shear_cs_peak = max(
+                    abs(pfcoil_variables.sig_hoop - pfcoil_variables.sig_axial),
+                    abs(pfcoil_variables.sig_axial - 0.0e0),
+                    abs(0.0e0 - pfcoil_variables.sig_hoop),
+                )
+            else:
+                pfcoil_variables.s_shear_cs_peak = max(
+                    abs(pfcoil_variables.sig_hoop - 0.0e0),
+                    abs(0.0e0 - 0.0e0),
+                    abs(0.0e0 - pfcoil_variables.sig_hoop),
+                )
+
+            # Thickness of hypothetical steel cylinders assumed to encase the CS along
+            # its inside and outside edges; in reality, the steel is distributed
+            # throughout the conductor
+            pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = (
+                0.25e0
+                * areaspf
+                / pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
+            )
 
         else:
-            # Error condition
-            raise ProcessValueError(
-                "Illegal value for i_pf_superconductor", isumat=isumat
+            areaspf = 0.0e0  # Resistive Central Solenoid - no steel needed
+            pfcoil_variables.pfcaseth[pfcoil_variables.n_cs_pf_coils - 1] = 0.0e0
+
+        # Weight of steel
+        pfcoil_variables.m_pf_coil_structure[pfcoil_variables.n_cs_pf_coils - 1] = (
+            areaspf
+            * 2.0e0
+            * constants.PI
+            * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
+            * fwbsv.den_steel
+        )
+
+        # Non-steel cross-sectional area
+        pfcoil_variables.awpoh = pfcoil_variables.a_cs_poloidal - areaspf
+
+        # Issue #97. Fudge to ensure awpoh is positive; result is continuous, smooth and
+        # monotonically decreases
+
+        da = 0.0001e0  # 1 cm^2
+        if pfcoil_variables.awpoh < da:
+            pfcoil_variables.awpoh = da * da / (2.0e0 * da - pfcoil_variables.awpoh)
+
+        # Weight of conductor in central Solenoid
+        if pfcoil_variables.i_pf_conductor == 0:
+            pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
+                pfcoil_variables.awpoh
+                * (1.0e0 - pfcoil_variables.f_a_cs_void)
+                * 2.0e0
+                * constants.PI
+                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
+                * tfv.dcond[pfcoil_variables.i_cs_superconductor - 1]
+            )
+        else:
+            pfcoil_variables.m_pf_coil_conductor[pfcoil_variables.n_cs_pf_coils - 1] = (
+                pfcoil_variables.awpoh
+                * (1.0e0 - pfcoil_variables.f_a_cs_void)
+                * 2.0e0
+                * constants.PI
+                * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
+                * constants.den_copper
             )
 
-        #  Critical current density in winding pack
-        jcritwp = j_crit_cable
+        if pfcoil_variables.i_pf_conductor == 0:
+            # Allowable coil overall current density at EOF
+            # (superconducting coils only)
+
+            (
+                jcritwp,
+                pfcoil_variables.jcableoh_eof,
+                pfcoil_variables.j_cs_conductor_critical_flat_top_end,
+                tmarg1,
+            ) = superconpf(
+                pfcoil_variables.b_cs_peak_flat_top_end,
+                pfcoil_variables.f_a_cs_void,
+                pfcoil_variables.fcuohsu,
+                (
+                    abs(
+                        pfcoil_variables.c_pf_cs_coils_peak_ma[
+                            pfcoil_variables.n_cs_pf_coils - 1
+                        ]
+                    )
+                    / pfcoil_variables.awpoh
+                )
+                * 1.0e6,
+                pfcoil_variables.i_cs_superconductor,
+                tfv.fhts,
+                tfv.str_cs_con_res,
+                tfv.tftmp,
+                tfv.bcritsc,
+                tfv.tcritsc,
+            )
+            # Strand critical current calculation for costing in $/kAm
+            # = superconducting filaments jc * (1 - strand copper fraction)
+            if pfcoil_variables.i_cs_superconductor in {2, 6, 8}:
+                pfcoil_variables.j_crit_str_cs = (
+                    pfcoil_variables.j_cs_conductor_critical_flat_top_end
+                )
+            else:
+                pfcoil_variables.j_crit_str_cs = (
+                    pfcoil_variables.j_cs_conductor_critical_flat_top_end
+                    * (1 - pfcoil_variables.fcuohsu)
+                )
+
+            pfcoil_variables.j_cs_critical_flat_top_end = (
+                jcritwp * pfcoil_variables.awpoh / pfcoil_variables.a_cs_poloidal
+            )
+
+            # Allowable coil overall current density at BOP
+
+            (
+                jcritwp,
+                pfcoil_variables.jcableoh_bop,
+                pfcoil_variables.j_cs_conductor_critical_pulse_start,
+                tmarg2,
+            ) = superconpf(
+                pfcoil_variables.b_cs_peak_pulse_start,
+                pfcoil_variables.f_a_cs_void,
+                pfcoil_variables.fcuohsu,
+                (
+                    abs(
+                        pfcoil_variables.c_pf_cs_coils_peak_ma[
+                            pfcoil_variables.n_cs_pf_coils - 1
+                        ]
+                    )
+                    / pfcoil_variables.awpoh
+                )
+                * 1.0e6,
+                pfcoil_variables.i_cs_superconductor,
+                tfv.fhts,
+                tfv.str_cs_con_res,
+                tfv.tftmp,
+                tfv.bcritsc,
+                tfv.tcritsc,
+            )
+
+            pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1] = (
+                jcritwp * pfcoil_variables.awpoh / pfcoil_variables.a_cs_poloidal
+            )
+            pfcoil_variables.j_cs_critical_pulse_start = (
+                pfcoil_variables.j_pf_wp_critical[pfcoil_variables.n_cs_pf_coils - 1]
+            )
+
+            pfcoil_variables.temp_cs_superconductor_margin = min(tmarg1, tmarg2)
+
+        else:
+            # Resistive power losses (non-superconducting coil)
+
+            pfcoil_variables.p_cs_resistive_flat_top = (
+                2.0e0
+                * constants.PI
+                * pfcoil_variables.r_cs_middle
+                * pfcoil_variables.rho_pf_coil
+                / (
+                    pfcoil_variables.a_cs_poloidal
+                    * (1.0e0 - pfcoil_variables.f_a_cs_void)
+                )
+                * (
+                    1.0e6
+                    * pfcoil_variables.c_pf_cs_coils_peak_ma[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
+                )
+                ** 2
+            )
+            pfcoil_variables.p_pf_coil_resistive_total_flat_top = (
+                pfcoil_variables.p_pf_coil_resistive_total_flat_top
+                + pfcoil_variables.p_cs_resistive_flat_top
+            )
+
+    def calculate_cs_peak_field(
+        self,
+        j_cs: float,
+        r_cs_inner: float,
+        r_cs_outer: float,
+        dz_cs_half: float,
+    ) -> float:
+        """
+        Calculates the maximum field of a solenoid.
+
+        :param j_cs: Overall current density (A/m²)
+        :type j_cs: float
+        :param r_cs_inner: Solenoid inner radius (m)
+        :type r_cs_inner: float
+        :param r_cs_outer: Solenoid outer radius (m)
+        :type r_cs_outer: float
+        :param dz_cs_half: Solenoid half height (m)
+        :type dz_cs_half: float
+        :return: Maximum field of solenoid (T)
+        :rtype: float
+
+        :notes:
+
+        :references:
+            - Fits are taken from the figure on p.22 of M. Wilson's book
+            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983.
+        """
+        beta = dz_cs_half / r_cs_inner
+        alpha = r_cs_outer / r_cs_inner
+
+        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
+        b0 = (
+            j_cs
+            * constants.RMU0
+            * dz_cs_half
+            * math.log(
+                (alpha + math.sqrt(alpha**2 + beta**2))
+                / (1.0 + math.sqrt(1.0 + beta**2))
+            )
+        )
+
+        if beta > 3.0:
+            b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
+            f = (3.0 / beta) ** 2
+            b_cs_peak = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+
+        elif beta > 2.0:
+            rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
+                0.01 - (beta - 2.0) * 0.0045
+            )
+            b_cs_peak = rat * b0
+
+        elif beta > 1.0:
+            rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
+            b_cs_peak = rat * b0
+
+        elif beta > 0.75:
+            rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
+                0.2 * (beta - 0.75) - 0.05
+            )
+            b_cs_peak = rat * b0
+
+        else:
+            rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
+                0.6 * (beta - 0.5) - 0.20
+            )
+            b_cs_peak = rat * b0
+
+        return b_cs_peak
+
+    def output_cs_structure(self):
+        op.oheadr(self.outfile, "Central Solenoid Structure")
+
+        op.ocmmnt(self.outfile, "CS turn structure")
+        op.oblnkl(self.outfile)
+
+        op.ovarre(
+            self.outfile,
+            "Poloidal area of a CS turn [m^2]",
+            "(a_cs_turn)",
+            pfcoil_variables.a_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial width a CS turn [m^2]",
+            "(dz_cs_turn)",
+            pfcoil_variables.dz_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Length of a CS turn [m]",
+            "(dr_cs_turn)",
+            pfcoil_variables.dr_cs_turn,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Length to diameter ratio of a CS turn",
+            "(ld_ratio_cst)",
+            pfcoil_variables.ld_ratio_cst,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radius of CS turn cable space [m]",
+            "(radius_cs_turn_cable_space)",
+            pfcoil_variables.radius_cs_turn_cable_space,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Radial thickness of steel conduit to cable space [m]",
+            "(t_structural_radial)",
+            csfv.t_structural_radial,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Vertical thickness of steel conduit to cable space [m]",
+            "(t_structural_vertical)",
+            csfv.t_structural_vertical,
+            "OP ",
+        )
+        op.ovarre(
+            self.outfile,
+            "Corner radius of CS turn [m]",
+            "(r_out_cst)",
+            pfcoil_variables.r_out_cst,
+            "OP ",
+        )
+
+    def axial_stress(self):
+        """Calculation of axial stress of central solenoid.
+
+        author: J Morris, CCFE, Culham Science Centre
+        This routine calculates the axial stress of the central solenoid
+        from "Case studies in superconducting magnets", Y. Iwasa, Springer
+
+        :return: unsmeared axial stress [MPa], axial force [N]
+        :rtype: tuple[float, float]
+        """
+        b = pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
+
+        # Half height of central Solenoid [m]
+        hl = pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
+
+        # Central Solenoid current [A]
+        ni = (
+            pfcoil_variables.c_pf_cs_coils_peak_ma[pfcoil_variables.n_cs_pf_coils - 1]
+            * 1.0e6
+        )
+
+        # kb term for elliptical integrals
+        # kb2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + hl**2))
+        kb2 = (4.0e0 * b**2) / (4.0e0 * b**2 + hl**2)
+
+        # k2b term for elliptical integrals
+        # k2b2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + 4.0e0*hl**2))
+        k2b2 = (4.0e0 * b**2) / (4.0e0 * b**2 + 4.0e0 * hl**2)
+
+        # term 1
+        axial_term_1 = -(constants.RMU0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
+
+        # term 2
+        ekb2_1 = ellipk(kb2)
+        ekb2_2 = ellipe(kb2)
+        axial_term_2 = (
+            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + hl**2)) * (ekb2_1 - ekb2_2)
+        )
+
+        # term 3
+        ek2b2_1 = ellipk(k2b2)
+        ek2b2_2 = ellipe(k2b2)
+        axial_term_3 = (
+            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
+        )
+
+        # calculate axial force [N]
+        axial_force = axial_term_1 * (axial_term_2 - axial_term_3)
+
+        # axial area [m2]
+        area_ax = constants.PI * (
+            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1] ** 2
+            - pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1] ** 2
+        )
+
+        # calculate unsmeared axial stress [MPa]
+        s_axial = axial_force / (pfcoil_variables.f_a_cs_steel * 0.5 * area_ax)
+
+        return s_axial, axial_force
+
+    def hoop_stress(self, r):
+        """Calculation of hoop stress of central solenoid.
+
+        author: J Morris, CCFE, Culham Science Centre
+        This routine calculates the hoop stress of the central solenoid
+        from "Superconducting magnets", M. N. Wilson OUP
+
+        :param r: radial position a < r < b
+        :type r: float
+        :return: hoop stress (MPa)
+        :rtype: float
+        """
+        a = pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1]
+
+        # Outer radius of central Solenoid [m]
+        b = pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
+
+        # alpha
+        alpha = b / a
+
+        # epsilon
+        epsilon = r / a
+
+        # Field at inner radius of coil [T]
+        b_a = pfcoil_variables.b_cs_peak_pulse_start
+
+        # Field at outer radius of coil [T]
+        # Assume to be 0 for now
+        b_b = 0.0e0
+
+        # current density [A/m^2]
+        j = pfcoil_variables.j_cs_pulse_start
+
+        # K term
+        k = ((alpha * b_a - b_b) * j * a) / (alpha - 1.0e0)
+
+        # M term
+        m = ((b_a - b_b) * j * a) / (alpha - 1.0e0)
+
+        # calculate hoop stress terms
+        hp_term_1 = k * ((2.0e0 + tfv.poisson_steel) / (3.0e0 * (alpha + 1.0e0)))
+
+        hp_term_2 = (
+            alpha**2
+            + alpha
+            + 1.0e0
+            + alpha**2 / epsilon**2
+            - epsilon
+            * (
+                ((1.0e0 + 2.0e0 * tfv.poisson_steel) * (alpha + 1.0e0))
+                / (2.0e0 + tfv.poisson_steel)
+            )
+        )
+
+        hp_term_3 = m * ((3.0e0 + tfv.poisson_steel) / (8.0e0))
+
+        hp_term_4 = (
+            alpha**2
+            + 1.0e0
+            + alpha**2 / epsilon**2
+            - epsilon**2
+            * ((1.0e0 + 3.0e0 * tfv.poisson_steel) / (3.0e0 + tfv.poisson_steel))
+        )
+
+        s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
+
+        return s_hoop_nom / pfcoil_variables.f_a_cs_steel
+
+
+def peak_b_field_at_pf_coil(
+    n_coil: int, n_coil_group: int, t_b_field_peak: int
+) -> tuple[float, float, float, float]:
+    """
+    Calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
+
+    :param n_coil: Coil number (1-based index)
+    :type n_coil: int
+    :param n_coil_group: Group number (1-based index)
+    :type n_coil_group: int
+    :param t_b_field_peak: Time point at which the field is highest
+    :type t_b_field_peak: int
+
+    :returns: Tuple containing:
+        - b_pf_inner_radial (float): Radial field at inner edge (T)
+        - b_pf_outer_radial (float): Radial field at outer edge (T)
+        - b_pf_inner_vertical (float): Vertical field at inner edge (T)
+        - b_pf_outer_vertical (float): Vertical field at outer edge (T)
+    :rtype: tuple[float, float, float, float]
+
+    :notes:
+        This routine calculates the peak magnetic field components at the inner and outer edges of a given PF coil.
+        The calculation includes the effects from all the coils and the plasma.
+
+    :author: P J Knight, CCFE, Culham Science Centre
+    """
+    if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
+        # Peak field is to be calculated at the Central Solenoid itself,
+        # so exclude its own contribution; its self field is
+        # dealt with externally using routine calculate_cs_peak_field()
+        kk = 0
+    else:
+        # Check different times for maximum current
+        if (
+            abs(
+                pfcoil_variables.c_pf_cs_coil_pulse_start_ma[n_coil - 1]
+                - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
+            )
+            < 1.0e-12
+        ):
+            t_b_field_peak = 2
+        elif (
+            abs(
+                pfcoil_variables.c_pf_cs_coil_flat_top_ma[n_coil - 1]
+                - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
+            )
+            < 1.0e-12
+        ):
+            t_b_field_peak = 4
+        elif (
+            abs(
+                pfcoil_variables.c_pf_cs_coil_pulse_end_ma[n_coil - 1]
+                - pfcoil_variables.c_pf_cs_coils_peak_ma[n_coil - 1]
+            )
+            < 1.0e-12
+        ):
+            t_b_field_peak = 5
+        else:
+            raise ProcessValueError(
+                "Illegal value of it; possible rounding error",
+                t_b_field_peak=t_b_field_peak,
+            )
+
+        if bv.iohcl == 0:
+            # No Central Solenoid
+            kk = 0
+        else:
+            sgn = (
+                1.0
+                if pfcoil_variables.j_cs_pulse_start
+                > pfcoil_variables.j_cs_flat_top_end
+                else -1.0
+            )
+
+            # Current in each filament representing part of the Central Solenoid
+            for iohc in range(pfcoil_variables.nfxf):
+                pfcoil_variables.c_pf_cs_current_filaments[iohc] = (
+                    pfcoil_variables.f_c_pf_cs_peak_time_array[
+                        pfcoil_variables.n_cs_pf_coils - 1, t_b_field_peak - 1
+                    ]
+                    * pfcoil_variables.j_cs_flat_top_end
+                    * sgn
+                    * bv.dr_cs
+                    * pfcoil_variables.f_z_cs_tf_internal
+                    * bv.z_tf_inside_half
+                    / pfcoil_variables.nfxf
+                    * 2.0e0
+                )
+
+            kk = pfcoil_variables.nfxf
+
+    # Non-Central Solenoid coils' contributions
+    jj = 0
+    for iii in range(pfcoil_variables.n_pf_coil_groups):
+        for _jjj in range(pfcoil_variables.n_pf_coils_in_group[iii]):
+            jj = jj + 1
+            # Radius, z-coordinate and current for each coil
+            if iii == n_coil_group - 1:
+                # Self field from coil (Lyle's Method)
+                kk = kk + 1
+
+                dzpf = (
+                    pfcoil_variables.z_pf_coil_upper[jj - 1]
+                    - pfcoil_variables.z_pf_coil_lower[jj - 1]
+                )
+                pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.r_pf_coil_middle[jj - 1]
+                )
+                pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.125e0
+                )
+                pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
+                    * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                        jj - 1, t_b_field_peak - 1
+                    ]
+                    * 0.25e6
+                )
+                kk = kk + 1
+                pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.r_pf_coil_middle[jj - 1]
+                )
+                pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.z_pf_coil_middle[jj - 1] + dzpf * 0.375e0
+                )
+                pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
+                    * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                        jj - 1, t_b_field_peak - 1
+                    ]
+                    * 0.25e6
+                )
+                kk = kk + 1
+                pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.r_pf_coil_middle[jj - 1]
+                )
+                pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.125e0
+                )
+                pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
+                    * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                        jj - 1, t_b_field_peak - 1
+                    ]
+                    * 0.25e6
+                )
+                kk = kk + 1
+                pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.r_pf_coil_middle[jj - 1]
+                )
+                pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.z_pf_coil_middle[jj - 1] - dzpf * 0.375e0
+                )
+                pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
+                    * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                        jj - 1, t_b_field_peak - 1
+                    ]
+                    * 0.25e6
+                )
+
+            else:
+                # Field from different coil
+                kk = kk + 1
+                pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.r_pf_coil_middle[jj - 1]
+                )
+                pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.z_pf_coil_middle[jj - 1]
+                )
+                pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = (
+                    pfcoil_variables.c_pf_cs_coils_peak_ma[jj - 1]
+                    * pfcoil_variables.f_c_pf_cs_peak_time_array[
+                        jj - 1, t_b_field_peak - 1
+                    ]
+                    * 1.0e6
+                )
+
+    # Plasma contribution
+    if t_b_field_peak > 2:
+        kk = kk + 1
+        pfcoil_variables.r_pf_cs_current_filaments[kk - 1] = pv.rmajor
+        pfcoil_variables.z_pf_cs_current_filaments[kk - 1] = 0.0e0
+        pfcoil_variables.c_pf_cs_current_filaments[kk - 1] = pv.plasma_current
+
+    # Calculate the field at the inner and outer edges
+    # of the coil of interest
+    pfcoil_variables.xind[:kk], b_pf_inner_radial, b_pf_inner_vertical, psi = (
+        calculate_b_field_at_point(
+            r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
+            z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
+            c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
+            r_test_point=pfcoil_variables.r_pf_coil_inner[n_coil - 1],
+            z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
+        )
+    )
+    pfcoil_variables.xind[:kk], b_pf_outer_radial, b_pf_outer_vertical, psi = (
+        calculate_b_field_at_point(
+            r_current_loop=pfcoil_variables.r_pf_cs_current_filaments[:kk],
+            z_current_loop=pfcoil_variables.z_pf_cs_current_filaments[:kk],
+            c_current_loop=pfcoil_variables.c_pf_cs_current_filaments[:kk],
+            r_test_point=pfcoil_variables.r_pf_coil_outer[n_coil - 1],
+            z_test_point=pfcoil_variables.z_pf_coil_middle[n_coil - 1],
+        )
+    )
+
+    # b_pf_coil_peak and bpf2 for the Central Solenoid are calculated in OHCALC
+    if (bv.iohcl != 0) and (n_coil == pfcoil_variables.n_cs_pf_coils):
+        return (
+            b_pf_inner_radial,
+            b_pf_outer_radial,
+            b_pf_inner_vertical,
+            b_pf_outer_vertical,
+        )
+
+    bpfin = math.sqrt(b_pf_inner_radial**2 + b_pf_inner_vertical**2)
+    bpfout = math.sqrt(b_pf_outer_radial**2 + b_pf_outer_vertical**2)
+    for n in range(pfcoil_variables.n_pf_coils_in_group[n_coil_group - 1]):
+        pfcoil_variables.b_pf_coil_peak[n_coil - 1 + n] = bpfin
+        pfcoil_variables.bpf2[n_coil - 1 + n] = bpfout
+
+    return (
+        b_pf_inner_radial,
+        b_pf_outer_radial,
+        b_pf_inner_vertical,
+        b_pf_outer_vertical,
+    )
+
+
+def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcritsc):
+    """Routine to calculate the PF coil superconductor properties.
+
+    This routine calculates the superconductor critical winding pack
+    current density for the PF coils, plus the temperature margin.
+    It is based on the TF coil version, supercon.
+    author: P J Knight, CCFE, Culham Science Centre
+
+    N.B. critical current density for a super conductor (j_crit_sc)
+    is for the superconducting strands/tape, not including copper.
+    Critical current density for a cable (j_crit_cable) acounts for
+    both the fraction of the cable taken up by helium coolant channels,
+    and the cable conductor copper fraction - i.e., the copper in the
+    superconducting strands AND any addtional copper, such as REBCO
+    tape support.
+
+    :param bmax: peak field at conductor (T)
+    :type bmax: float
+    :param fhe: fraction of cable space that is for He cooling
+    :type fhe: float
+    :param fcu: fraction of cable conductor that is copper
+    :type fcu: float
+    :param jwp: actual winding pack current density (A/m2)
+    :type jwp: float
+    :param isumat: switch for conductor type
+    1 = ITER Nb3Sn, standard parameters,
+    2 = Bi-2212 High Temperature Superconductor,
+    3 = NbTi,
+    4 = ITER Nb3Sn, user-defined parameters
+    5 = WST Nb3Sn parameterisation
+    7 = Durham Ginzbug-Landau Nb-Ti parameterisation
+    :type isumat: int
+    :param fhts: Adjustment factor (<= 1) to account for strain,
+    radiation damage, fatigue or AC losses
+    :type fhts: float
+    :param strain: Strain on superconductor at operation conditions
+    :type strain: float
+    :param thelium: He temperature at peak field point (K)
+    :type thelium: float
+    :param bcritsc: Critical field at zero temperature and strain (T) (isumat=4 only)
+    :type bcritsc: float
+    :param tcritsc: Critical temperature at zero field and strain (K) (isumat=4 only)
+    :type tcritsc: float
+    :return: Critical winding pack current density (A/m2) (j_crit_wp),
+    Critical cable current density (A/m2) (j_crit_cable)
+    Superconducting strand non-copper critical current density (A/m2) (j_crit_sc)
+    Temperature margin (K) (tmarg)
+    :rtype: tuple[float, float, float, float]
+    """
+
+    # Find critical current density in superconducting strand, jcritstr
+    if isumat == 1:
+        # ITER Nb3Sn critical surface parameterization
+        bc20m = 32.97e0
+        tc0m = 16.06e0
+
+        # j_crit_sc returned by superconductors.itersc is the critical current density in the
+        # superconductor - not the whole strand, which contains copper
+
+        j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+    elif isumat == 2:
+        # Bi-2212 high temperature superconductor parameterization
+
+        # Current density in a strand of Bi-2212 conductor
+        # N.B. jcrit returned by superconductors.bi2212 is the critical current density
+        # in the strand, not just the superconducting portion.
+        # The parameterization for j_crit_cable assumes a particular strand
+        # composition that does not require a user-defined copper fraction,
+        # so this is irrelevant in this model
+
         #  jwp / conductor fraction of cable
         jstrand = jwp / (1.0e0 - fhe)
-        #  jstrand / non-copper fraction of conductor
-        jsc = jstrand / (1.0e0 - fcu)
+        j_crit_cable, tmarg = superconductors.bi2212(bmax, jstrand, thelium, fhts)
+        #  j_crit_cable / non-copper fraction of conductor
+        j_crit_sc = j_crit_cable / (1.0e0 - fcu)
 
-        # Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
+    elif isumat == 3:
+        # NbTi data
+        bc20m = 15.0e0
+        tc0m = 9.3e0
+        c0 = 1.0e10
+        j_crit_sc, _ = superconductors.jcrit_nbti(thelium, bmax, c0, bc20m, tc0m)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-        if (
-            (isumat == 1)
-            or (isumat == 3)
-            or (isumat == 4)
-            or (isumat == 5)
-            or (isumat == 7)
-            or (isumat == 8)
-            or (isumat == 9)
-        ):  # Find temperature at which current density margin = 0
-            if isumat == 3:
-                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
-            else:
-                arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
+    elif isumat == 4:
+        # As (1), but user-defined parameters
+        bc20m = bcritsc
+        tc0m = tcritsc
+        j_crit_sc, _, _ = superconductors.itersc(thelium, bmax, strain, bc20m, tc0m)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
 
-            another_estimate = 2 * thelium
-            t_zero_margin, root_result = optimize.newton(
-                superconductors.superconductor_current_density_margin,
-                thelium,
-                fprime=None,
-                args=arguments,
-                tol=1.0e-06,
-                maxiter=50,
-                fprime2=None,
-                x1=another_estimate,
-                rtol=1.0e-6,
-                full_output=True,
-                disp=False,
-            )
-            tmarg = t_zero_margin - thelium
+    elif isumat == 5:
+        # WST Nb3Sn parameterisation
+        bc20m = 32.97e0
+        tc0m = 16.06e0
 
-        return jcritwp, j_crit_cable, j_crit_sc, tmarg
+        # j_crit_sc returned by superconductors.itersc is the critical current density in the
+        # superconductor - not the whole strand, which contains copper
+
+        j_crit_sc, _, _ = superconductors.western_superconducting_nb3sn(
+            thelium, bmax, strain, bc20m, tc0m
+        )
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+    elif isumat == 6:
+        # "REBCO" 2nd generation HTS superconductor in CrCo strand
+        j_crit_sc, _ = superconductors.jcrit_rebco(thelium, bmax)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+    elif isumat == 7:
+        # Durham Ginzburg-Landau critical surface model for Nb-Ti
+        bc20m = tfv.b_crit_upper_nbti
+        tc0m = tfv.t_crit_nbti
+        j_crit_sc, _, _ = superconductors.gl_nbti(thelium, bmax, strain, bc20m, tc0m)
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+        # The CS coil current at EOF
+        # c_cs_flat_top_end = bv.z_tf_inside_half * pfcoil_variables.f_z_cs_tf_internal * bv.dr_cs * 2.0 * pfcoil_variables.j_cs_flat_top_end
+
+    elif isumat == 8:
+        # Durham Ginzburg-Landau critical surface model for REBCO
+        bc20m = 429e0
+        tc0m = 185e0
+        j_crit_sc, _, _ = superconductors.gl_rebco(thelium, bmax, strain, bc20m, tc0m)
+        # A0 calculated for tape cross section already
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+    elif isumat == 9:
+        # Hazelton experimental data + Zhai conceptual model for REBCO
+        bc20m = 138
+        tc0m = 92
+        j_crit_sc, _, _ = superconductors.hijc_rebco(
+            thelium,
+            bmax,
+            bc20m,
+            tc0m,
+            rcv.tape_width,
+            rcv.rebco_thickness,
+            rcv.tape_thickness,
+        )
+        # A0 calculated for tape cross section already
+        # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable
+        j_crit_cable = j_crit_sc * (1.0e0 - fcu) * (1.0e0 - fhe)
+
+    else:
+        # Error condition
+        raise ProcessValueError("Illegal value for i_pf_superconductor", isumat=isumat)
+
+    #  Critical current density in winding pack
+    jcritwp = j_crit_cable
+    #  jwp / conductor fraction of cable
+    jstrand = jwp / (1.0e0 - fhe)
+    #  jstrand / non-copper fraction of conductor
+    jsc = jstrand / (1.0e0 - fcu)
+
+    # Temperature margin (already calculated in superconductors.bi2212 for isumat=2)
+
+    if (
+        (isumat == 1)
+        or (isumat == 3)
+        or (isumat == 4)
+        or (isumat == 5)
+        or (isumat == 7)
+        or (isumat == 8)
+        or (isumat == 9)
+    ):  # Find temperature at which current density margin = 0
+        if isumat == 3:
+            arguments = (isumat, jsc, bmax, strain, bc20m, tc0m, c0)
+        else:
+            arguments = (isumat, jsc, bmax, strain, bc20m, tc0m)
+
+        another_estimate = 2 * thelium
+        t_zero_margin, root_result = optimize.newton(
+            superconductors.superconductor_current_density_margin,
+            thelium,
+            fprime=None,
+            args=arguments,
+            tol=1.0e-06,
+            maxiter=50,
+            fprime2=None,
+            x1=another_estimate,
+            rtol=1.0e-6,
+            full_output=True,
+            disp=False,
+        )
+        tmarg = t_zero_margin - thelium
+
+    return jcritwp, j_crit_cable, j_crit_sc, tmarg
 
 
 @numba.njit(cache=True)

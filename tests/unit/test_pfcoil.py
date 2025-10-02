@@ -10,7 +10,7 @@ from process.cs_fatigue import CsFatigue
 from process.data_structure import build_variables as bv
 from process.data_structure import pfcoil_variables
 from process.data_structure import tfcoil_variables as tfv
-from process.pfcoil import PFCoil, calculate_b_field_at_point, rsid
+from process.pfcoil import CSCoil, PFCoil, calculate_b_field_at_point, rsid
 
 
 @pytest.fixture
@@ -22,6 +22,16 @@ def pfcoil():
     """
 
     return PFCoil(cs_fatigue=CsFatigue())
+
+
+@pytest.fixture
+def cs_coil():
+    """Fixture to create a CSCoil object.
+
+    :return: an instance of CSCoil
+    :rtype: process.pfcoil.CSCoil
+    """
+    return CSCoil(cs_fatigue=CsFatigue())
 
 
 def test_init_pfcoil(pfcoil):
@@ -1030,18 +1040,18 @@ class BfmaxTestAsset(NamedTuple):
         BfmaxTestAsset(a=2.0, h=1.0, bfmax_exp=1.4601048e1),
     ],
 )
-def test_bfmax(pfcoil, test_asset):
+def test_bfmax(cs_coil, test_asset):
     """Test calculate_cs_peak_field() function.
 
-    :param pfcoil: PFCoil object
-    :type pfcoil: process.pfcoil.PFCoil
+    :param cs_coil: CSCoil object
+    :type cs_coil: process.pfcoil.CSCoil
     :param test_asset: arguments and expected return value for single test case
     :type test_asset: BfmaxTestAsset
     """
     rj = 2.0e7
     b = 3.0
 
-    bfmax = pfcoil.calculate_cs_peak_field(rj, test_asset.a, b, test_asset.h)
+    bfmax = cs_coil.calculate_cs_peak_field(rj, test_asset.a, b, test_asset.h)
 
     assert pytest.approx(bfmax) == test_asset.bfmax_exp
 
@@ -1965,7 +1975,7 @@ def test_vsec(pfcoil, monkeypatch):
     assert_array_almost_equal(pfcoil_variables.vs_cs_total_pulse, vsoh_exp)
 
 
-def test_hoop_stress(pfcoil, monkeypatch):
+def test_hoop_stress(cs_coil, monkeypatch):
     """Test hoop_stress subroutine.
 
     hoop_stress() requires specific mocked variables in order to work; these were
@@ -2041,7 +2051,7 @@ def test_hoop_stress(pfcoil, monkeypatch):
 
     r = 2.3
     s_hoop_exp = 6.737108e8
-    s_hoop = pfcoil.hoop_stress(r)
+    s_hoop = cs_coil.hoop_stress(r)
 
     assert pytest.approx(s_hoop) == s_hoop_exp
 
@@ -2096,9 +2106,9 @@ def test_brookscoil(pfcoil):
     ],
 )
 def test_calculate_cs_geometry(
-    pfcoil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected
+    cs_coil, z_tf_inside_half, f_z_cs_tf_internal, dr_cs, dr_bore, expected
 ):
-    result = pfcoil.calculate_cs_geometry(
+    result = cs_coil.calculate_cs_geometry(
         z_tf_inside_half=z_tf_inside_half,
         f_z_cs_tf_internal=f_z_cs_tf_internal,
         dr_cs=dr_cs,
