@@ -10776,10 +10776,6 @@ def plot_beta_profiles(axis, mfile_data, scan):
         for i in range(2 * n_plasma_profile_elements)
     ]
 
-    beta_poloidal_profile = [
-        mfile_data.data[f"beta_poloidal_profile{i}"].get_scan(scan)
-        for i in range(2 * n_plasma_profile_elements)
-    ]
 
     beta_total_profile = [
         mfile_data.data[f"beta_total_profile{i}"].get_scan(scan)
@@ -10793,12 +10789,6 @@ def plot_beta_profiles(axis, mfile_data, scan):
         label="Beta Toroidal",
     )
 
-    axis.plot(
-        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
-        beta_poloidal_profile,
-        color="red",
-        label="Beta Poloidal",
-    )
 
     axis.plot(
         np.linspace(-1, 1, 2 * n_plasma_profile_elements),
@@ -10815,7 +10805,37 @@ def plot_beta_profiles(axis, mfile_data, scan):
     axis.legend()
     axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
     axis.grid(True, linestyle="--", alpha=0.5)
-    axis.set_ylim(bottom=0, top=1.5)
+    
+def plot_beta_profiles_poloidal(axis, mfile_data, scan):
+    # Plot the beta profiles on the given axis
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    beta_poloidal_profile = [
+        mfile_data.data[f"beta_poloidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_poloidal_profile,
+        color="red",
+        label="Beta Poloidal",
+    )
+
+
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("$\\beta$ [%]")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    axis.set_title("Beta Profile")
+    axis.legend()
+    axis.set_yscale("log")
+    axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
+    axis.grid(True, linestyle="--", alpha=0.5)   
 
 
 def main_plot(
@@ -11030,6 +11050,7 @@ def main_plot(
     )
 
     plot_beta_profiles(fig20.add_subplot(221), m_file_data, scan)
+    plot_beta_profiles_poloidal(fig20.add_subplot(223), m_file_data, scan)
 
 
 def main(args=None):

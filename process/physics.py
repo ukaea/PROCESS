@@ -1746,12 +1746,12 @@ class Physics:
         # Avoid division by zero at the magnetic axis
         rho = np.where(rho == 0, 1e-10, rho)
         physics_variables.b_plasma_toroidal_profile = (
-            physics_variables.rmajor * physics_variables.bt / rho
+            physics_variables.rmajor * physics_variables.b_plasma_toroidal_on_axis / rho
         )
 
         physics_variables.b_plasma_poloidal_profile = (
             self.calculate_poloidal_field_profile(
-                j_plasma_on_axis=physics_variables.j_plasma_0,
+                j_plasma_on_axis=physics_variables.j_plasma_on_axis,
                 alphaj=physics_variables.alphaj,
                 n_profile_elements=physics_variables.n_plasma_profile_elements * 2,
                 rminor=physics_variables.rminor,
