@@ -3039,22 +3039,46 @@ class CSCoil:
     def calculate_cs_turn_geometry_eu_demo(
         self,
         a_cs_turn: float,
-        f_dr_dz_cs_turn,
+        f_dr_dz_cs_turn: float,
         radius_cs_turn_corners: float,
         f_a_cs_steel: float,
-    ) -> None:
+    ) -> tuple[float, float, float, float, float]:
+        """
+        Calculate the geometry of a CS (Central Solenoid) turn using the EU DEMO stadium-shaped model.
+
+        :param a_cs_turn: Poloidal area of a CS turn (m^2)
+        :type a_cs_turn: float
+        :param f_dr_dz_cs_turn: Length-to-width ratio of the CS turn
+        :type f_dr_dz_cs_turn: float
+        :param radius_cs_turn_corners: Radius of curved outer corner (m)
+        :type radius_cs_turn_corners: float
+        :param f_a_cs_steel: Fraction of steel area in the CS turn
+        :type f_a_cs_steel: float
+        :return: Tuple containing:
+            - dz_cs_turn: Depth/width of CS turn conduit (m)
+            - dr_cs_turn: Length of CS turn conduit (m)
+            - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
+            - t_structural_radial: Radial thickness of steel conduit (m)
+            - t_structural_vertical: Vertical thickness of steel conduit (m)
+        :rtype: tuple[float, float, float, float, float]
+
+        :notes:
+            - The calculation assumes a stadium-shaped cross-section for the CS turn.
+            - If the calculated conduit thickness is negative or too small, it is set to a minimum value of 1 mm.
+
+        :references:
+            - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
+            Fusion Engineering and Design, vol. 124, pp. 82–85, Apr. 2017,
+            doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
+
+        """
         # Depth/width of cs turn conduit
         dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
 
         # length of cs turn conduit
         dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn
 
-        # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
-        # Radius of curved outer corrner pfcoil_variables.radius_cs_turn_corners = 3mm from literature
-        # pfcoil_variables.f_dr_dz_cs_turn = 70 / 22 from literature
-
         # CS coil turn geometry calculation - stadium shape
-        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
         radius_cs_turn_cable_space = -(
             (dr_cs_turn - dz_cs_turn) / constants.PI
         ) + math.sqrt(
