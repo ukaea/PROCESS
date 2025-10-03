@@ -1081,14 +1081,14 @@ def check_process(inputs):  # noqa: ARG001
             "i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling"
         )
 
-    # Setting t_cable_tf_is_input to true if t_cable_tf is an input
-    data_structure.tfcoil_variables.t_cable_tf_is_input = (
+    # Setting i_dx_tf_turn_cable_space_general_input to true if t_cable_tf is an input
+    data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input = (
         abs(data_structure.tfcoil_variables.t_cable_tf) > 0
     )
 
     # Impossible to set the cable size of integer turn option
     if (
-        data_structure.tfcoil_variables.t_cable_tf_is_input
+        data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input
         and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
@@ -1098,7 +1098,7 @@ def check_process(inputs):  # noqa: ARG001
     # Impossible to set both the TF coil turn and the cable dimension
     if (
         data_structure.tfcoil_variables.i_dx_tf_turn_general_input
-        and data_structure.tfcoil_variables.t_cable_tf_is_input
+        and data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input
     ):
         raise ProcessValidationError(
             "Impossible to set the TF coil turn and cable size simultaneously"

@@ -157,7 +157,7 @@ If the t_cable_tf is non zero, c_tf_turn is calculated
 """
 
 
-t_cable_tf_is_input: bool = None
+i_dx_tf_turn_cable_space_general_input: bool = None
 """Boolean switch to activated when the user set the TF coil cable dimensions
 Not an input
 """
@@ -1114,7 +1114,7 @@ def init_tfcoil_variables():
     global f_t_turn_tf
     global t_turn_tf_max
     global t_cable_tf
-    global t_cable_tf_is_input
+    global i_dx_tf_turn_cable_space_general_input
     global acs
     global cdtfleg
     global cforce
@@ -1325,7 +1325,7 @@ def init_tfcoil_variables():
     casths_fraction = 0.06
     t_conductor = 0.0
     t_cable_tf = 0.0
-    t_cable_tf_is_input = False
+    i_dx_tf_turn_cable_space_general_input = False
     dx_tf_turn_general = 0.0
     i_dx_tf_turn_general_input = False
     f_t_turn_tf = 1.0
