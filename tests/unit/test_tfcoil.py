@@ -960,7 +960,7 @@ class StressclParam(NamedTuple):
 
     i_pf_conductor: Any = None
 
-    f_a_cs_steel: Any = None
+    f_a_cs_turn_steel: Any = None
 
     f_z_cs_tf_internal: Any = None
 
@@ -1085,7 +1085,7 @@ class StressclParam(NamedTuple):
             str_wp=0,
             n_tf_wp_stress_layers=5,
             i_pf_conductor=0,
-            f_a_cs_steel=0.57874999999999999,
+            f_a_cs_turn_steel=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
             j_cs_pulse_start=0,
@@ -1208,7 +1208,7 @@ class StressclParam(NamedTuple):
             str_wp=0.0015619754370069119,
             n_tf_wp_stress_layers=5,
             i_pf_conductor=0,
-            f_a_cs_steel=0.57874999999999999,
+            f_a_cs_turn_steel=0.57874999999999999,
             f_z_cs_tf_internal=0.90000000000000002,
             j_cs_flat_top_end=20726000,
             j_cs_pulse_start=19311657.760000002,
@@ -1340,7 +1340,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.n_pf_coils_in_group,
         70 / 22,
         3e-3,
-        stressclparam.f_a_cs_steel,
+        stressclparam.f_a_cs_turn_steel,
         stressclparam.eyoung_steel,
         stressclparam.poisson_steel,
         stressclparam.eyoung_cond_axial,

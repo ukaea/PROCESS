@@ -253,7 +253,7 @@ i_pf_superconductor = 3 * switch for superconductor material in PF coils;
 n_pf_coils_in_group     = 1,1,2,2 * number of PF coils in group j
 n_pf_coil_groups     = 4 * number of groups of PF coils; Symmetric coil pairs should all be in the same group
 f_z_cs_tf_internal   = 0.9 * Central solenoid height / TF coil internal height
-f_a_cs_steel = 0.4856940627014451 * central solenoid steel fraction (`iteration variable 122`)
+f_a_cs_turn_steel = 0.4856940627014451 * central solenoid steel fraction (`iteration variable 122`)
 j_pf_coil_wp_peak  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6 * average winding pack current density of PF coil i (A/m2) at time of peak
 rpf2     = -1.825 * offset (m) of radial position of `i_pf_location=2` PF coils from being at
 sigpfcf  = 0.666 * fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)

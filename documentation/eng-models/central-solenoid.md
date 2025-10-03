@@ -100,8 +100,8 @@ An example output follows.  Note that in this example the cycle life is *not* su
  CS turn length (m)                                                       (dr_cs_turn)              7.557E-02     
  CS turn internal cable space radius (m)                                  (radius_cs_turn_cable_space)                6.732E-03     
  CS turn width (m)                                                        (dz_cs_turn)              2.519E-02     
- CS structural vertical thickness (m)                                     (t_structural_vertical)   5.863E-03     
- CS structural radial thickness (m)                                       (t_structural_radial)     5.863E-03     
+ CS structural vertical thickness (m)                                     (dz_cs_turn_conduit)   5.863E-03     
+ CS structural radial thickness (m)                                       (dr_cs_turn_conduit)     5.863E-03     
  Allowable number of cycles till CS fracture                              (n_cycle)                 7.529E+02  OP 
  Minimum number of cycles required till CS fracture                       (n_cycle_min)             2.000E+04  OP 
 ```

@@ -239,7 +239,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     monkeypatch.setattr(pfcoil_variables, "j_cs_critical_pulse_start", 3.048e7)
     monkeypatch.setattr(pfcoil_variables, "s_shear_cs_peak", 5.718e8)
     monkeypatch.setattr(pfcoil_variables, "awpoh", 4.232)
-    monkeypatch.setattr(pfcoil_variables, "f_a_cs_steel", 5.926e-1)
+    monkeypatch.setattr(pfcoil_variables, "f_a_cs_turn_steel", 5.926e-1)
     monkeypatch.setattr(pfcoil_variables, "b_cs_peak_pulse_start", 1.4e1)
     monkeypatch.setattr(pfcoil_variables, "j_cs_critical_flat_top_end", 4.070e7)
     monkeypatch.setattr(pfcoil_variables, "temp_cs_superconductor_margin", 1.5)
@@ -2641,7 +2641,7 @@ def test_axial_stress(cs_coil: CSCoil, monkeypatch: pytest.MonkeyPatch):
     :param monkeypatch: mocking fixture
     :type monkeypatch: _pytest.monkeypatch.MonkeyPatch
     """
-    monkeypatch.setattr(pfcoil_variables, "f_a_cs_steel", 0.57874999999999999)
+    monkeypatch.setattr(pfcoil_variables, "f_a_cs_turn_steel", 0.57874999999999999)
     monkeypatch.setattr(pfcoil_variables, "n_cs_pf_coils", 7)
     monkeypatch.setattr(
         pfcoil_variables,

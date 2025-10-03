@@ -3119,9 +3119,9 @@ class TFCoil:
         j_cs_pulse_start,
         c_pf_coil_turn_peak_input,
         n_pf_coils_in_group,
-        ld_ratio_cst,
-        r_out_cst,
-        f_a_cs_steel,
+        f_dr_dz_cs_turn,
+        radius_cs_turn_corners,
+        f_a_cs_turn_steel,
         eyoung_steel,
         poisson_steel,
         eyoung_cond_axial,
@@ -3335,17 +3335,17 @@ class TFCoil:
                 # CS coil turn geometry calculation - stadium shape
                 # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
                 dz_cs_turn = (
-                    a_cs_turn / ld_ratio_cst
+                    a_cs_turn / f_dr_dz_cs_turn
                 ) ** 0.5  # width of cs turn conduit
-                dr_cs_turn = ld_ratio_cst * dz_cs_turn  # length of cs turn conduit
+                dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn  # length of cs turn conduit
                 # Radius of turn space = radius_cs_turn_cable_space
-                # Radius of curved outer corrner r_out_cst = 3mm from literature
-                # ld_ratio_cst = 70 / 22 from literature
+                # Radius of curved outer corrner radius_cs_turn_corners = 3mm from literature
+                # f_dr_dz_cs_turn = 70 / 22 from literature
                 p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
                 p2 = (
                     (dr_cs_turn * dz_cs_turn)
-                    - (4 - np.pi) * (r_out_cst**2)
-                    - (a_cs_turn * f_a_cs_steel)
+                    - (4 - np.pi) * (radius_cs_turn_corners**2)
+                    - (a_cs_turn * f_a_cs_turn_steel)
                 ) / np.pi
                 radius_cs_turn_cable_space = -(
                     (dr_cs_turn - dz_cs_turn) / np.pi
@@ -3372,10 +3372,10 @@ class TFCoil:
                 # Get transverse properties
                 (eyoung_trans[0], a_working, poisson_trans[0]) = eyoung_parallel(
                     eyoung_steel,
-                    f_a_cs_steel,
+                    f_a_cs_turn_steel,
                     poisson_steel,
                     eyoung_cond_axial,
-                    1e0 - f_a_cs_steel,
+                    1e0 - f_a_cs_turn_steel,
                     poisson_cond_axial,
                 )
 

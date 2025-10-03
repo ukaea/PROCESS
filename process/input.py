@@ -1160,7 +1160,7 @@ INPUT_VARIABLES = {
     "layer_ins": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "ld_ratio_cst": InputVariable(
+    "f_dr_dz_cs_turn": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 5.0)
     ),
     "len_fw_channel": InputVariable(
@@ -1275,7 +1275,7 @@ INPUT_VARIABLES = {
     "oacdcp": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
     ),
-    "f_a_cs_steel": InputVariable(
+    "f_a_cs_turn_steel": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.001, 0.999)
     ),
     "f_z_cs_tf_internal": InputVariable(
@@ -1627,10 +1627,10 @@ INPUT_VARIABLES = {
     "t_ramp_down": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "t_structural_radial": InputVariable(
+    "dr_cs_turn_conduit": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
-    "t_structural_vertical": InputVariable(
+    "dz_cs_turn_conduit": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
     "t_turn_tf": InputVariable(
