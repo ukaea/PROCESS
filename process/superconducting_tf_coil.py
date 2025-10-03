@@ -1315,6 +1315,33 @@ class SuperconductingTFCoil(TFCoil):
             c_turn_cables_critical,
         )
 
+    def calculate_cable_in_conduit_strand_count(
+        self, a_cable_space: float, dia_superconductor_strand: float, f_a_void: float
+    ) -> int:
+        """
+        Calculates the maximum number of superconducting strands that can fit into a cable-in-conduit conductor,
+        based on the available cable space, strand diameter, and desired void fraction.
+
+        :param a_cable_space: Total cross-sectional area available for the cable (in m²).
+        :type a_cable_space: float
+        :param dia_superconductor_strand: Diameter of a single superconducting strand (in meters).
+        :type dia_superconductor_strand: float
+        :param f_a_void: Fraction of the cable area to remain void (between 0 and 1).
+        :type f_a_void: float
+
+        :returns: The maximum number of strands that can fit in the available space, accounting for the void fraction.
+        :rtype: int
+        """
+
+        # Effective area available for strands (excluding voids)
+        effective_area = a_cable_space * (1 - f_a_void)
+
+        # Area per strand (circular)
+        strand_area = np.pi * (dia_superconductor_strand / 2) ** 2
+
+        # Number of strands that fit
+        return int(effective_area / strand_area)
+
     def output_tf_superconductor_info(self):
         """Output TF superconductor information"""
 
@@ -1955,6 +1982,15 @@ class SuperconductingTFCoil(TFCoil):
                 c_tf_coil=superconducting_tf_coil_variables.c_tf_coil,
                 dx_tf_turn_steel=tfcoil_variables.dx_tf_turn_steel,
                 dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
+            )
+
+        # Calculate number of cables in turn if CICC conductor
+        # ---------------------------------------------------
+        if tfcoil_variables.i_tf_sc_mat != 6:
+            superconducting_tf_coil_variables.n_tf_turn_superconducting_cables = self.calculate_cable_in_conduit_strand_count(
+                a_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
+                dia_superconductor_strand=superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
+                f_a_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             )
 
         # Areas and fractions
