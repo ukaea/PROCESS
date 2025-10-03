@@ -8705,7 +8705,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     radius_cs_turn_cable_space = mfile_data.data["radius_cs_turn_cable_space"].get_scan(
         scan
     )
-    t_structural_vertical = mfile_data.data["t_structural_vertical"].get_scan(scan)
+    dz_cs_turn_conduit = mfile_data.data["dz_cs_turn_conduit"].get_scan(scan)
     dr_cs_turn_conduit = mfile_data.data["dr_cs_turn_conduit"].get_scan(scan)
     radius_cs_turn_corners = mfile_data.data["radius_cs_turn_corners"].get_scan(scan)
 
@@ -8731,7 +8731,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     # Draw the conductor cross-section as a rectangle
     axis.add_patch(
         patches.Rectangle(
-            (dr_cs_turn_conduit + radius_cs_turn_cable_space, t_structural_vertical),
+            (dr_cs_turn_conduit + radius_cs_turn_cable_space, dz_cs_turn_conduit),
             dr_cs_turn - ((2 * dr_cs_turn_conduit) + (2 * radius_cs_turn_cable_space)),
             2 * radius_cs_turn_cable_space,
             facecolor="white",

@@ -2329,8 +2329,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS structural vertical thickness (m)",
-                        "(t_structural_vertical)",
-                        csfv.t_structural_vertical,
+                        "(dz_cs_turn_conduit)",
+                        csfv.dz_cs_turn_conduit,
                     )
                     op.ovarre(
                         self.outfile,
@@ -3059,7 +3059,7 @@ class CSCoil:
             - dr_cs_turn: Length of CS turn conduit (m)
             - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
             - dr_cs_turn_conduit: Radial thickness of steel conduit (m)
-            - t_structural_vertical: Vertical thickness of steel conduit (m)
+            - dz_cs_turn_conduit: Vertical thickness of steel conduit (m)
         :rtype: tuple[float, float, float, float, float]
 
         :notes:
@@ -3094,9 +3094,9 @@ class CSCoil:
         )
 
         # Thickness of steel conduit in cs turn
-        t_structural_vertical = (dz_cs_turn / 2) - radius_cs_turn_cable_space
+        dz_cs_turn_conduit = (dz_cs_turn / 2) - radius_cs_turn_cable_space
         # In this model the vertical and radial have the same thickness
-        dr_cs_turn_conduit = t_structural_vertical
+        dr_cs_turn_conduit = dz_cs_turn_conduit
         # add a check for negative conduit thickness
         if dr_cs_turn_conduit < 1.0e-3:
             dr_cs_turn_conduit = 1.0e-3
@@ -3106,7 +3106,7 @@ class CSCoil:
             dr_cs_turn,
             radius_cs_turn_cable_space,
             dr_cs_turn_conduit,
-            t_structural_vertical,
+            dz_cs_turn_conduit,
         )
 
     def place_cs_filaments(
@@ -3247,7 +3247,7 @@ class CSCoil:
             pfcoil_variables.dr_cs_turn,
             pfcoil_variables.radius_cs_turn_cable_space,
             csfv.dr_cs_turn_conduit,
-            csfv.t_structural_vertical,
+            csfv.dz_cs_turn_conduit,
         ) = self.calculate_cs_turn_geometry_eu_demo(
             a_cs_turn=pfcoil_variables.a_cs_turn,
             f_dr_dz_cs_turn=pfcoil_variables.f_dr_dz_cs_turn,
@@ -3348,7 +3348,7 @@ class CSCoil:
                     pfcoil_variables.sig_hoop,
                     csfv.residual_sig_hoop,
                     csfv.t_crack_vertical,
-                    csfv.t_structural_vertical,
+                    csfv.dz_cs_turn_conduit,
                     csfv.dr_cs_turn_conduit,
                 )
 
@@ -3651,8 +3651,8 @@ class CSCoil:
         op.ovarre(
             self.outfile,
             "Vertical thickness of steel conduit to cable space [m]",
-            "(t_structural_vertical)",
-            csfv.t_structural_vertical,
+            "(dz_cs_turn_conduit)",
+            csfv.dz_cs_turn_conduit,
             "OP ",
         )
         op.ovarre(

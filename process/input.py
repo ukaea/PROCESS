@@ -1630,7 +1630,7 @@ INPUT_VARIABLES = {
     "dr_cs_turn_conduit": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
-    "t_structural_vertical": InputVariable(
+    "dz_cs_turn_conduit": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
     "t_turn_tf": InputVariable(

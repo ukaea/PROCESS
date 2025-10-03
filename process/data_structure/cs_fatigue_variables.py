@@ -16,7 +16,7 @@ t_crack_vertical: float = None
 dr_cs_turn_conduit: float = None
 """Thickness of CS conductor conduit (m)"""
 
-t_structural_vertical: float = None
+dz_cs_turn_conduit: float = None
 """Vertical thickness of CS conductor conduit (m)"""
 
 bkt_life_csf: float = None
@@ -60,8 +60,8 @@ def init_cs_fatigue_variables():
     global n_cycle_min
     n_cycle_min = 2.0e4
 
-    global t_structural_vertical
-    t_structural_vertical = 0.022
+    global dz_cs_turn_conduit
+    dz_cs_turn_conduit = 0.022
 
     global dr_cs_turn_conduit
     dr_cs_turn_conduit = 0.07

@@ -811,7 +811,7 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.7097E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.4684E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5699E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      5.3812E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      5.3812E-03    
  CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      5.3812E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      1.3795E+02 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
