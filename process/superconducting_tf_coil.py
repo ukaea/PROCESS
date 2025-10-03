@@ -2624,7 +2624,7 @@ class SuperconductingTFCoil(TFCoil):
         """
 
         # Turn dimension is a an input
-        if tfcoil_variables.t_turn_tf_is_input:
+        if tfcoil_variables.i_dx_tf_turn_general_input:
             # Turn area [m2]
             a_turn = tfcoil_variables.t_turn_tf**2
 
