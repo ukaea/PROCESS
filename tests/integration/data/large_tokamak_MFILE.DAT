@@ -1022,7 +1022,7 @@
  ___CS_conductor_cross-sectional_area_(m2)________________________________ (awpoh*(1-f_a_cs_void))________ 2.76994317894894859e+00 OP
  ___CS_void_cross-sectional_area_(m2)_____________________________________ (awpoh*f_a_cs_void)____________ 1.18711850526383511e+00 OP
  CS_steel_cross-sectional_area_(m2)_______________________________________ (a_cs_poloidal-awpoh)__________ 4.94915217044478517e+00 OP
- CS_steel_area_fraction___________________________________________________ (f_a_cs_steel)_________________ 5.55696534039163081e-01
+ CS_steel_area_fraction___________________________________________________ (f_a_cs_turn_steel)_________________ 5.55696534039163081e-01
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)________________________________________ (alstroh)______________________ 7.50000000000000000e+08
  Hoop_stress_in_CS_steel_(Pa)_____________________________________________ (sig_hoop)_____________________ 6.04940170426559329e+08 OP
@@ -1687,9 +1687,9 @@ c_tf_turn = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, f_a_cs_steel
+* CS steel fraction, f_a_cs_turn_steel
 ixc = 122
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135

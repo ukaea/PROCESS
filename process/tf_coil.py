@@ -3121,7 +3121,7 @@ class TFCoil:
         n_pf_coils_in_group,
         f_dr_dz_cs_turn,
         radius_cs_turn_corners,
-        f_a_cs_steel,
+        f_a_cs_turn_steel,
         eyoung_steel,
         poisson_steel,
         eyoung_cond_axial,
@@ -3345,7 +3345,7 @@ class TFCoil:
                 p2 = (
                     (dr_cs_turn * dz_cs_turn)
                     - (4 - np.pi) * (radius_cs_turn_corners**2)
-                    - (a_cs_turn * f_a_cs_steel)
+                    - (a_cs_turn * f_a_cs_turn_steel)
                 ) / np.pi
                 radius_cs_turn_cable_space = -(
                     (dr_cs_turn - dz_cs_turn) / np.pi
@@ -3372,10 +3372,10 @@ class TFCoil:
                 # Get transverse properties
                 (eyoung_trans[0], a_working, poisson_trans[0]) = eyoung_parallel(
                     eyoung_steel,
-                    f_a_cs_steel,
+                    f_a_cs_turn_steel,
                     poisson_steel,
                     eyoung_cond_axial,
-                    1e0 - f_a_cs_steel,
+                    1e0 - f_a_cs_turn_steel,
                     poisson_cond_axial,
                 )
 

@@ -317,7 +317,7 @@ lablxc: list[str] = None
 * (119) temp_plasma_separatrix_kev:  separatrix temperature calculated by the Kallenbach divertor model
 * (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
 * (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
-* (122) f_a_cs_steel : streel fraction of Central Solenoid
+* (122) f_a_cs_turn_steel : streel fraction of Central Solenoid
 * (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)
 * (124) qtargettotal : Power density on target including surface recombination [W/m2]
 * (125) f_nd_impurity_electrons(3) :  Beryllium density fraction relative to electron density

@@ -168,7 +168,7 @@ class SuperconductingTFCoil(TFCoil):
                 pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.f_dr_dz_cs_turn,
                 pfcoil_variables.radius_cs_turn_corners,
-                pfcoil_variables.f_a_cs_steel,
+                pfcoil_variables.f_a_cs_turn_steel,
                 tfcoil_variables.eyoung_steel,
                 tfcoil_variables.poisson_steel,
                 tfcoil_variables.eyoung_cond_axial,

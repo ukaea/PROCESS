@@ -2172,8 +2172,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS steel area fraction",
-                    "(f_a_cs_steel)",
-                    pfcoil_variables.f_a_cs_steel,
+                    "(f_a_cs_turn_steel)",
+                    pfcoil_variables.f_a_cs_turn_steel,
                 )
                 if pfcoil_variables.i_cs_stress == 1:
                     op.ocmmnt(self.outfile, "Hoop + axial stress considered")
@@ -3041,19 +3041,19 @@ class CSCoil:
         a_cs_turn: float,
         f_dr_dz_cs_turn: float,
         radius_cs_turn_corners: float,
-        f_a_cs_steel: float,
+        f_a_cs_turn_steel: float,
     ) -> tuple[float, float, float, float, float]:
         """
         Calculate the geometry of a CS (Central Solenoid) turn using the EU DEMO stadium-shaped model.
 
         :param a_cs_turn: Poloidal area of a CS turn (m^2)
         :type a_cs_turn: float
-        :param f_dr_dz_cs_turn: Length-to-width ratio of the CS turn
+        :param f_dr_dz_cs_turn: Length-to-height ratio of the CS turn
         :type f_dr_dz_cs_turn: float
         :param radius_cs_turn_corners: Radius of curved outer corner (m)
         :type radius_cs_turn_corners: float
-        :param f_a_cs_steel: Fraction of steel area in the CS turn
-        :type f_a_cs_steel: float
+        :param f_a_cs_turn_steel: Fraction of steel area in the CS turn
+        :type f_a_cs_turn_steel: float
         :return: Tuple containing:
             - dz_cs_turn: Depth/width of CS turn conduit (m)
             - dr_cs_turn: Length of CS turn conduit (m)
@@ -3072,13 +3072,13 @@ class CSCoil:
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
 
         """
-        # Depth/width of cs turn conduit
+        # Depth/width of CS turn conduit/turn
         dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
 
-        # length of cs turn conduit
+        # Width of CS turn conduit/turn
         dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn
 
-        # CS coil turn geometry calculation - stadium shape
+        # Calculate radius of cable space in CS turn
         radius_cs_turn_cable_space = -(
             (dr_cs_turn - dz_cs_turn) / constants.PI
         ) + math.sqrt(
@@ -3087,14 +3087,15 @@ class CSCoil:
                 (
                     (dr_cs_turn * dz_cs_turn)
                     - (4 - constants.PI) * (radius_cs_turn_corners**2)
-                    - (a_cs_turn * f_a_cs_steel)
+                    - (a_cs_turn * f_a_cs_turn_steel)
                 )
                 / constants.PI
             )
         )
 
-        # Thickness of steel conduit in cs turn
+        # Vertical thickness of steel conduit in CS turn
         dz_cs_turn_conduit = (dz_cs_turn / 2) - radius_cs_turn_cable_space
+
         # In this model the vertical and radial have the same thickness
         dr_cs_turn_conduit = dz_cs_turn_conduit
         # add a check for negative conduit thickness
@@ -3252,7 +3253,7 @@ class CSCoil:
             a_cs_turn=pfcoil_variables.a_cs_turn,
             f_dr_dz_cs_turn=pfcoil_variables.f_dr_dz_cs_turn,
             radius_cs_turn_corners=pfcoil_variables.radius_cs_turn_corners,
-            f_a_cs_steel=pfcoil_variables.f_a_cs_steel,
+            f_a_cs_turn_steel=pfcoil_variables.f_a_cs_turn_steel,
         )
 
         # Non-steel area void fraction for coolant
@@ -3356,7 +3357,7 @@ class CSCoil:
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfcoil_variables.f_a_cs_steel * pfcoil_variables.a_cs_poloidal
+            areaspf = pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
 
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
@@ -3719,7 +3720,7 @@ class CSCoil:
         )
 
         # calculate unsmeared axial stress [MPa]
-        s_axial = axial_force / (pfcoil_variables.f_a_cs_steel * 0.5 * area_ax)
+        s_axial = axial_force / (pfcoil_variables.f_a_cs_turn_steel * 0.5 * area_ax)
 
         return s_axial, axial_force
 
@@ -3789,7 +3790,7 @@ class CSCoil:
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        return s_hoop_nom / pfcoil_variables.f_a_cs_steel
+        return s_hoop_nom / pfcoil_variables.f_a_cs_turn_steel
 
 
 def peak_b_field_at_pf_coil(

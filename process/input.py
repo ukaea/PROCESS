@@ -1275,7 +1275,7 @@ INPUT_VARIABLES = {
     "oacdcp": InputVariable(
         data_structure.tfcoil_variables, float, range=(10000.0, 1000000000.0)
     ),
-    "f_a_cs_steel": InputVariable(
+    "f_a_cs_turn_steel": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.001, 0.999)
     ),
     "f_z_cs_tf_internal": InputVariable(

@@ -302,8 +302,8 @@ f_z_cs_tf_internal: float = None
 """Central solenoid height / TF coil internal height"""
 
 
-f_a_cs_steel: float = None
-"""central solenoid steel fraction (`iteration variable 122`)"""
+f_a_cs_turn_steel: float = None
+"""Fraction of CS turn poloidal area that is steel (`iteration variable 122`)"""
 
 
 pf_current_safety_factor: float = None
@@ -649,7 +649,7 @@ def init_pfcoil_variables():
     global n_pf_coil_groups
     global n_cs_pf_coils
     global f_z_cs_tf_internal
-    global f_a_cs_steel
+    global f_a_cs_turn_steel
     global pf_current_safety_factor
     global pfcaseth
     global rho_pf_coil
@@ -751,7 +751,7 @@ def init_pfcoil_variables():
     n_pf_coil_groups = 3
     n_cs_pf_coils = 0
     f_z_cs_tf_internal = 0.71
-    f_a_cs_steel = 0.5
+    f_a_cs_turn_steel = 0.5
     pf_current_safety_factor = 1.0
     pfcaseth = np.zeros(NGC2)
     rho_pf_coil = 2.5e-8

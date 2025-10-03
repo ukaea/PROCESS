@@ -301,7 +301,7 @@ var_dicts = {
         description="Minimum burn time",
         units="s",
     ),
-    "pfv.f_a_cs_steel": VariableMetadata(
+    "pfv.f_a_cs_turn_steel": VariableMetadata(
         latex=r"$f_{\mathrm{Steel}}^{\mathrm{CS}}$",
         description="Steel fraction in CS coil",
         units="",
