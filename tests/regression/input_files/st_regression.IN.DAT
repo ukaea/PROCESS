@@ -1142,11 +1142,11 @@ i_tf_turns_integer = 0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*t_cable_tf = 
+*dx_tf_turn_cable_space_general = 
 * DESCRIPTION:   TF coil superconducting cable squared/rounded dimensions [m]
 * If the turn is not a square (i_tf_turns_integer = 1) a squared cable of
 * equivelent size is use to calculated this quantity
-* If the t_cable_tf is non zero, c_tf_turn is calculated
+* If the dx_tf_turn_cable_space_general is non zero, c_tf_turn is calculated
 * Sets the cable space and allows the turn size to be calculated
 * JUSTIFICATION: Not set, as i_tf_turns_integer = 0
 

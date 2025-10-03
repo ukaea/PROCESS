@@ -1081,9 +1081,9 @@ def check_process(inputs):  # noqa: ARG001
             "i_diamagnetic_current = 0 should be used with the Sakai plasma current scaling"
         )
 
-    # Setting i_dx_tf_turn_cable_space_general_input to true if t_cable_tf is an input
+    # Setting i_dx_tf_turn_cable_space_general_input to true if dx_tf_turn_cable_space_general is an input
     data_structure.tfcoil_variables.i_dx_tf_turn_cable_space_general_input = (
-        abs(data_structure.tfcoil_variables.t_cable_tf) > 0
+        abs(data_structure.tfcoil_variables.dx_tf_turn_cable_space_general) > 0
     )
 
     # Impossible to set the cable size of integer turn option
