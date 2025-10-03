@@ -810,7 +810,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.6208E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5061E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9098E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9098E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9098E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -1973,7 +1973,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5657E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5028E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9481E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9481E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9481E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -3136,7 +3136,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5551E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5055E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9725E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9725E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9725E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -4299,7 +4299,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5540E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5064E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9779E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9779E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9779E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -5462,7 +5462,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5701E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5014E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9371E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9371E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9371E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -6625,7 +6625,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5465E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4889E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.8979E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.8979E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.8979E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -7788,7 +7788,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5344E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4869E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9001E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9001E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9001E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -8951,7 +8951,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5265E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4898E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9224E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9224E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9224E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -10114,7 +10114,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5155E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4922E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9457E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9457E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9457E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -11277,7 +11277,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5148E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4925E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9479E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9479E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9479E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -12440,7 +12440,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5297E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4918E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9294E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9294E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9294E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -13603,7 +13603,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5285E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4903E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9232E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9232E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9232E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -14766,7 +14766,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5277E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4908E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9265E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9265E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9265E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -15929,7 +15929,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5206E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4927E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9428E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9428E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9428E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -17092,7 +17092,7 @@
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5116E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4946E-02    
  CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9612E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9612E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9612E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    

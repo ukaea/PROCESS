@@ -13,7 +13,7 @@ t_crack_radial: float = None
 t_crack_vertical: float = None
 """Inital vertical crack size (m)"""
 
-t_structural_radial: float = None
+dr_cs_turn_conduit: float = None
 """Thickness of CS conductor conduit (m)"""
 
 t_structural_vertical: float = None
@@ -63,8 +63,8 @@ def init_cs_fatigue_variables():
     global t_structural_vertical
     t_structural_vertical = 0.022
 
-    global t_structural_radial
-    t_structural_radial = 0.07
+    global dr_cs_turn_conduit
+    dr_cs_turn_conduit = 0.07
 
     global bkt_life_csf
     bkt_life_csf = 0.0

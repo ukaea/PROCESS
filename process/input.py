@@ -1627,7 +1627,7 @@ INPUT_VARIABLES = {
     "t_ramp_down": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "t_structural_radial": InputVariable(
+    "dr_cs_turn_conduit": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
     "t_structural_vertical": InputVariable(

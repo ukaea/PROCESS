@@ -15,7 +15,7 @@ class CsFatigue:
         residual_stress,
         t_crack_vertical,
         t_structural_vertical,
-        t_structural_radial,
+        dr_cs_turn_conduit,
     ):
         """ """
         # Default Parameters for SS 316LN from
@@ -65,7 +65,7 @@ class CsFatigue:
             )
             and (
                 c
-                <= t_structural_radial
+                <= dr_cs_turn_conduit
                 / data_structure.cs_fatigue_variables.sf_radial_crack
             )
             and (
@@ -78,7 +78,7 @@ class CsFatigue:
             k_a, k_c = self.surface_stress_intensity_factor(
                 hoop_stress_MPa,
                 t_structural_vertical,
-                t_structural_radial,
+                dr_cs_turn_conduit,
                 a,
                 c,
                 pi_2_arr,

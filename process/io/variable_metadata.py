@@ -306,7 +306,7 @@ var_dicts = {
         description="Steel fraction in CS coil",
         units="",
     ),
-    "csfv.t_structural_radial": VariableMetadata(
+    "csfv.dr_cs_turn_conduit": VariableMetadata(
         latex=r"$Turn_{\mathrm{radial}}^{\mathrm{CS}}[$m$]$",
         description="Radial turn length",
         units="m",

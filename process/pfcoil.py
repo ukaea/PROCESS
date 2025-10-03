@@ -2335,8 +2335,8 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS structural radial thickness (m)",
-                        "(t_structural_radial)",
-                        csfv.t_structural_radial,
+                        "(dr_cs_turn_conduit)",
+                        csfv.dr_cs_turn_conduit,
                     )
                     op.ovarre(
                         self.outfile,
@@ -3058,7 +3058,7 @@ class CSCoil:
             - dz_cs_turn: Depth/width of CS turn conduit (m)
             - dr_cs_turn: Length of CS turn conduit (m)
             - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
-            - t_structural_radial: Radial thickness of steel conduit (m)
+            - dr_cs_turn_conduit: Radial thickness of steel conduit (m)
             - t_structural_vertical: Vertical thickness of steel conduit (m)
         :rtype: tuple[float, float, float, float, float]
 
@@ -3068,7 +3068,7 @@ class CSCoil:
 
         :references:
             - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
-            Fusion Engineering and Design, vol. 124, pp. 82–85, Apr. 2017,
+            Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
 
         """
@@ -3096,16 +3096,16 @@ class CSCoil:
         # Thickness of steel conduit in cs turn
         t_structural_vertical = (dz_cs_turn / 2) - radius_cs_turn_cable_space
         # In this model the vertical and radial have the same thickness
-        t_structural_radial = t_structural_vertical
+        dr_cs_turn_conduit = t_structural_vertical
         # add a check for negative conduit thickness
-        if t_structural_radial < 1.0e-3:
-            t_structural_radial = 1.0e-3
+        if dr_cs_turn_conduit < 1.0e-3:
+            dr_cs_turn_conduit = 1.0e-3
 
         return (
             dz_cs_turn,
             dr_cs_turn,
             radius_cs_turn_cable_space,
-            t_structural_radial,
+            dr_cs_turn_conduit,
             t_structural_vertical,
         )
 
@@ -3246,7 +3246,7 @@ class CSCoil:
             pfcoil_variables.dz_cs_turn,
             pfcoil_variables.dr_cs_turn,
             pfcoil_variables.radius_cs_turn_cable_space,
-            csfv.t_structural_radial,
+            csfv.dr_cs_turn_conduit,
             csfv.t_structural_vertical,
         ) = self.calculate_cs_turn_geometry_eu_demo(
             a_cs_turn=pfcoil_variables.a_cs_turn,
@@ -3349,7 +3349,7 @@ class CSCoil:
                     csfv.residual_sig_hoop,
                     csfv.t_crack_vertical,
                     csfv.t_structural_vertical,
-                    csfv.t_structural_radial,
+                    csfv.dr_cs_turn_conduit,
                 )
 
             # Now steel area fraction is iteration variable and constraint
@@ -3644,8 +3644,8 @@ class CSCoil:
         op.ovarre(
             self.outfile,
             "Radial thickness of steel conduit to cable space [m]",
-            "(t_structural_radial)",
-            csfv.t_structural_radial,
+            "(dr_cs_turn_conduit)",
+            csfv.dr_cs_turn_conduit,
             "OP ",
         )
         op.ovarre(
