@@ -183,6 +183,9 @@ dr_tf_wp_no_insulation: float = None
 dia_tf_turn_superconducting_cable: float = None
 """Diameter of the superconducting cable in the TF turn [m]"""
 
+n_tf_turn_superconducting_cables: int = None
+"""Number of superconducting cables in the TF turn"""
+
 j_tf_superconductor_critical: float = None
 """Critical current density of the superconducting cable [A/m^2]"""
 
@@ -300,6 +303,7 @@ def init_superconducting_tf_coil_variables():
     global a_tf_turn_cable_space_effective
     global dr_tf_wp_no_insulation
     global dia_tf_turn_superconducting_cable
+    global n_tf_turn_superconducting_cables
     global j_tf_superconductor_critical
     global f_c_tf_turn_operating_critical
     global j_tf_coil_turn
@@ -357,6 +361,7 @@ def init_superconducting_tf_coil_variables():
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0
     dia_tf_turn_superconducting_cable = 0.0
+    n_tf_turn_superconducting_cables = 0
     j_tf_superconductor_critical = 0.0
     f_c_tf_turn_operating_critical = 0.0
     j_tf_coil_turn = 0.0
