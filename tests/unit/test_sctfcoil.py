@@ -1237,7 +1237,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     c_tf_turn: Any = None
 
-    t_cable_tf: Any = None
+    dx_tf_turn_cable_space_general: Any = None
 
     i_dx_tf_turn_cable_space_general_input: Any = None
 
@@ -1285,7 +1285,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dx_tf_turn_general=0,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
-            t_cable_tf=0,
+            dx_tf_turn_cable_space_general=0,
             i_dx_tf_turn_cable_space_general_input=False,
             a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0,
@@ -1311,7 +1311,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dx_tf_turn_general=0.049532469413859428,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
-            t_cable_tf=0,
+            dx_tf_turn_cable_space_general=0,
             i_dx_tf_turn_cable_space_general_input=False,
             a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.049532469413859428,
@@ -1337,7 +1337,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dx_tf_turn_general=0.05872,
             i_dx_tf_turn_general_input=True,
             c_tf_turn=0,
-            t_cable_tf=0,
+            dx_tf_turn_cable_space_general=0,
             i_dx_tf_turn_cable_space_general_input=False,
             a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.05872,
@@ -1363,7 +1363,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             dx_tf_turn_general=0,
             i_dx_tf_turn_general_input=False,
             c_tf_turn=0,
-            t_cable_tf=0.042,
+            dx_tf_turn_cable_space_general=0.042,
             i_dx_tf_turn_cable_space_general_input=True,
             a_tf_wp_no_insulation=0.60510952642236249,
             dr_tf_turn=0.05872,
@@ -1425,7 +1425,9 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     )
 
     monkeypatch.setattr(
-        tfcoil_variables, "t_cable_tf", tfaveragedturngeomparam.t_cable_tf
+        tfcoil_variables,
+        "dx_tf_turn_cable_space_general",
+        tfaveragedturngeomparam.dx_tf_turn_cable_space_general,
     )
 
     monkeypatch.setattr(

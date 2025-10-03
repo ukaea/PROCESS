@@ -1594,7 +1594,7 @@ INPUT_VARIABLES = {
     "t_burn_min": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 1000000.0)
     ),
-    "t_cable_tf": InputVariable(
+    "dx_tf_turn_cable_space_general": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "t_crack_radial": InputVariable(
