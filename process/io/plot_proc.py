@@ -16,6 +16,7 @@ Revised by Michael Kovari, 7/1/2016
 import argparse
 import json
 import os
+import textwrap
 from argparse import RawTextHelpFormatter
 from importlib import resources
 
@@ -10756,7 +10757,7 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     branch_name = mfile_data.data["branch_name"].get_scan(-1)
     fileprefix = mfile_data.data["fileprefix"].get_scan(-1)
     optmisation_switch = mfile_data.data["ioptimz"].get_scan(-1)
-    minmax_switch = mfile_data.data["minmax"].get_scan(-1)
+    minmax_switch = mfile_data.data["minmax"].get_scan(-1) or "N/A"
     ifail = mfile_data.data["ifail"].get_scan(-1)
     nvars = mfile_data.data["nvar"].get_scan(-1)
     # Objective_function_name
@@ -10764,14 +10765,20 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     # Square_root_of_the_sum_of_squares_of_the_constraint_residuals
     sqsumsq = mfile_data.data["sqsumsq"].get_scan(-1)
     # VMCON_convergence_parameter
-    convergence_parameter = mfile_data.data["convergence_parameter"].get_scan(-1)
+    convergence_parameter = (
+        mfile_data.data["convergence_parameter"].get_scan(-1) or "N/A"
+    )
     # Number_of_optimising_solver_iterations
-    nviter = mfile_data.data["nviter"].get_scan(-1)
+    nviter = int(mfile_data.data["nviter"].get_scan(-1)) or "N/A"
 
     # Objective name with minimising/maximising
-    if minmax_switch >= 0:
+    if isinstance(minmax_switch, str):
+        objective_text = ""
+    elif minmax_switch >= 0:
+        minmax_switch = int(minmax_switch)
         objective_text = f"• Minimising {objf_name}"
     else:
+        minmax_switch = int(minmax_switch)
         objective_text = f"• Maximising {objf_name}"
 
     axis.text(
@@ -10810,15 +10817,10 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     # Box 2: File/Branch Info
     # Wrap the whole "Branch Name: ..." line if too long
     max_line_len = 60
-    branch_line = f"• Branch Name: {branch_name}"
-    if isinstance(branch_line, str) and len(branch_line) > max_line_len:
-        # Insert a newline every max_line_len characters
-        branch_line = "\n".join([
-            branch_line[i : i + max_line_len]
-            for i in range(0, len(branch_line), max_line_len)
-        ])
+    branch_line = textwrap.fill(f"• Branch Name: {branch_name}", max_line_len)
+    fileprefix = textwrap.fill(f"File Prefix: {fileprefix}", max_line_len)
 
-    file_info = f"• Tag Number: {tagno}\n{branch_line}\n• File Prefix: {fileprefix}"
+    file_info = f"• Tag Number: {tagno}\n{branch_line}\n• {fileprefix}"
     axis.text(
         0.1,
         0.57,
@@ -10838,13 +10840,13 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     # Box 3: Run Settings
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
-        f"• Figure of Merit Switch (minmax): {int(minmax_switch)}\n"
+        f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
         f"{objective_text}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
-        f"• Solver Iterations: {int(nviter)}"
+        f"• Solver Iterations: {nviter}"
     )
     axis.text(
         0.1,
