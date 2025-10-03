@@ -360,7 +360,7 @@ def init_superconducting_tf_coil_variables():
     radius_tf_turn_cable_space_corners = 0.0
     a_tf_turn_cable_space_effective = 0.0
     dr_tf_wp_no_insulation = 0.0
-    dia_tf_turn_superconducting_cable = 0.0
+    dia_tf_turn_superconducting_cable = 0.0073
     n_tf_turn_superconducting_cables = 0
     j_tf_superconductor_critical = 0.0
     f_c_tf_turn_operating_critical = 0.0
