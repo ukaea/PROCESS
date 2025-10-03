@@ -538,7 +538,7 @@ fb_cs_limit_max: float = None
 """F-value for CS mmax field (`cons. 79`, `itvar 149`)"""
 
 
-ld_ratio_cst: float = None
+f_dr_dz_cs_turn: float = None
 """Ratio of CS coil turn conduit length to depth"""
 
 
@@ -701,7 +701,7 @@ def init_pfcoil_variables():
     global zref
     global b_cs_limit_max
     global fb_cs_limit_max
-    global ld_ratio_cst
+    global f_dr_dz_cs_turn
     global dr_cs_turn
     global dr_cs_full
     global dz_cs_turn
@@ -803,7 +803,7 @@ def init_pfcoil_variables():
     zref = np.array([3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     b_cs_limit_max = 13.0
     fb_cs_limit_max = 1.0
-    ld_ratio_cst = 70.0 / 22.0
+    f_dr_dz_cs_turn = 70.0 / 22.0
     dr_cs_turn = 0.0
     dr_cs_full = 0.0
     dz_cs_turn = 0.0

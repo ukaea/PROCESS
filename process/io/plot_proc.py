@@ -8701,7 +8701,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     dz_cs_turn = mfile_data.data["dz_cs_turn"].get_scan(scan)
     dr_cs_turn = mfile_data.data["dr_cs_turn"].get_scan(scan)
 
-    ld_ratio_cst = mfile_data.data["ld_ratio_cst"].get_scan(scan)
+    f_dr_dz_cs_turn = mfile_data.data["f_dr_dz_cs_turn"].get_scan(scan)
     radius_cs_turn_cable_space = mfile_data.data["radius_cs_turn_cable_space"].get_scan(
         scan
     )
@@ -8767,7 +8767,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
         f"$\\mathbf{{Turn \\ structure:}}$\n\n$A:$ {a_cs_turn:.4e}$ \\ \\text{{m}}^2$\n"
         f"Turn width: {dr_cs_turn:.4e}$ \\ \\text{{m}}$\n"
         f"Turn height: {dz_cs_turn:.4e}$ \\ \\text{{m}}$\n"
-        f"Turn width to height ratio: {ld_ratio_cst:.3f}\n"
+        f"Turn width to height ratio: {f_dr_dz_cs_turn:.3f}\n"
         f"Steel conduit width: {t_structural_radial:.4e}$ \\ \\text{{m}}$\n"
         f"Radius of turn cable space: {radius_cs_turn_cable_space:.4e}$ \\ \\text{{m}}$\n"
         f"Radius of turn corner: {r_out_cst:.4e}$ \\ \\text{{m}}$\n"

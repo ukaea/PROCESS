@@ -3037,17 +3037,17 @@ class CSCoil:
         )
 
     def calculate_cs_turn_geometry_eu_demo(
-        self, a_cs_turn: float, ld_ratio_cst, r_out_cst: float, f_a_cs_steel: float
+        self, a_cs_turn: float, f_dr_dz_cs_turn, r_out_cst: float, f_a_cs_steel: float
     ) -> None:
         # Depth/width of cs turn conduit
-        dz_cs_turn = (a_cs_turn / ld_ratio_cst) ** 0.5
+        dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
 
         # length of cs turn conduit
-        dr_cs_turn = ld_ratio_cst * dz_cs_turn
+        dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn
 
         # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
         # Radius of curved outer corrner pfcoil_variables.r_out_cst = 3mm from literature
-        # pfcoil_variables.ld_ratio_cst = 70 / 22 from literature
+        # pfcoil_variables.f_dr_dz_cs_turn = 70 / 22 from literature
 
         # CS coil turn geometry calculation - stadium shape
         # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
@@ -3222,7 +3222,7 @@ class CSCoil:
             csfv.t_structural_vertical,
         ) = self.calculate_cs_turn_geometry_eu_demo(
             a_cs_turn=pfcoil_variables.a_cs_turn,
-            ld_ratio_cst=pfcoil_variables.ld_ratio_cst,
+            f_dr_dz_cs_turn=pfcoil_variables.f_dr_dz_cs_turn,
             r_out_cst=pfcoil_variables.r_out_cst,
             f_a_cs_steel=pfcoil_variables.f_a_cs_steel,
         )
@@ -3602,8 +3602,8 @@ class CSCoil:
         op.ovarre(
             self.outfile,
             "Length to diameter ratio of a CS turn",
-            "(ld_ratio_cst)",
-            pfcoil_variables.ld_ratio_cst,
+            "(f_dr_dz_cs_turn)",
+            pfcoil_variables.f_dr_dz_cs_turn,
             "OP ",
         )
         op.ovarre(

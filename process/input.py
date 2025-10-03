@@ -1160,7 +1160,7 @@ INPUT_VARIABLES = {
     "layer_ins": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "ld_ratio_cst": InputVariable(
+    "f_dr_dz_cs_turn": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 5.0)
     ),
     "len_fw_channel": InputVariable(

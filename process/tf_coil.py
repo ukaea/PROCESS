@@ -3119,7 +3119,7 @@ class TFCoil:
         j_cs_pulse_start,
         c_pf_coil_turn_peak_input,
         n_pf_coils_in_group,
-        ld_ratio_cst,
+        f_dr_dz_cs_turn,
         r_out_cst,
         f_a_cs_steel,
         eyoung_steel,
@@ -3335,12 +3335,12 @@ class TFCoil:
                 # CS coil turn geometry calculation - stadium shape
                 # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
                 dz_cs_turn = (
-                    a_cs_turn / ld_ratio_cst
+                    a_cs_turn / f_dr_dz_cs_turn
                 ) ** 0.5  # width of cs turn conduit
-                dr_cs_turn = ld_ratio_cst * dz_cs_turn  # length of cs turn conduit
+                dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn  # length of cs turn conduit
                 # Radius of turn space = radius_cs_turn_cable_space
                 # Radius of curved outer corrner r_out_cst = 3mm from literature
-                # ld_ratio_cst = 70 / 22 from literature
+                # f_dr_dz_cs_turn = 70 / 22 from literature
                 p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
                 p2 = (
                     (dr_cs_turn * dz_cs_turn)
