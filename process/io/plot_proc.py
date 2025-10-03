@@ -6156,218 +6156,9 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     )
 
 
-def calculate_strand_count(shape_area, strand_diameter, void_fraction):
-    """Calculate number of strands that fit in shape with given void fraction"""
-
-    # Effective area available for strands (excluding voids)
-    effective_area = shape_area * (1 - void_fraction)
-
-    # Area per strand (circular)
-    strand_area = np.pi * (strand_diameter / 2) ** 2
-
-    # Number of strands that fit
-    n_strands = int(effective_area / strand_area)
-
-    return n_strands
-
-
-def pack_strands_rectangular_with_obstacles(
-    cable_space_bounds,
-    pipe_center,
-    pipe_radius,
-    strand_diameter,
-    void_fraction,
-    axis,
-    corner_radius=0,
-):
-    """Pack circular strands in rectangular space with cooling pipe obstacle"""
-
-    x, y, width, height = cable_space_bounds
-    shape_area = width * height
-
-    # Subtract pipe area from total
-    pipe_area = np.pi * pipe_radius**2
-    # Approximate corner area loss
-    corner_area = 4 * (corner_radius**2 * (1 - np.pi / 4)) if corner_radius > 0 else 0
-
-    usable_area = shape_area - pipe_area - corner_area
-    n_strands = calculate_strand_count(usable_area, strand_diameter, void_fraction)
-    print(n_strands)
-
-    radius = strand_diameter / 2
-    placed_strands = []
-    attempts = 0
-    max_attempts = 1e5
-
-    pipe_x, pipe_y = pipe_center
-
-    # Hexagonal packing parameters
-    # Calculate the spacing between strand centers for the desired void fraction
-    # For hexagonal packing, packing fraction = pi/(2*sqrt(3)) ~ 0.9069
-    # To achieve a lower packing fraction (higher void fraction), increase spacing
-    ideal_packing_fraction = np.pi / (2 * np.sqrt(3))
-    target_packing_fraction = 1 - void_fraction
-    spacing_factor = np.sqrt(ideal_packing_fraction / target_packing_fraction)
-    strand_spacing = strand_diameter * spacing_factor
-
-    # Number of rows and columns that fit in the cable space
-    n_rows = int((height - 2 * radius) // (strand_spacing * np.sqrt(3) / 2))
-    n_cols = int((width - 2 * radius) // strand_spacing)
-
-    # Generate hexagonal grid positions
-    for row in range(n_rows):
-        y_pos = (y + radius + row * strand_spacing * np.sqrt(3) / 2) * 1.07
-        x_offset = strand_spacing / 2 if row % 2 else 0
-        for col in range(n_cols):
-            candidate_x = (x + radius + col * strand_spacing + x_offset) * 1.05
-            candidate_y = y_pos
-
-            # Check if within bounds
-            if candidate_x > x + width - radius or candidate_y > y + height - radius:
-                continue
-
-            # Check collision with cooling pipe
-            pipe_distance = np.sqrt(
-                (candidate_x - pipe_x) ** 2 + (candidate_y - pipe_y) ** 2
-            )
-            if pipe_distance < (pipe_radius + radius):
-                continue
-
-            # Check collision with corners if rounded
-            if corner_radius > 0:
-                corners = [
-                    (x + corner_radius, y + corner_radius),  # bottom-left
-                    (x + width - corner_radius, y + corner_radius),  # bottom-right
-                    (
-                        x + width - corner_radius,
-                        y + height - corner_radius,
-                    ),  # top-right
-                    (x + corner_radius, y + height - corner_radius),  # top-left
-                ]
-                # Check each corner
-                corner_collision = False
-                if candidate_x < corners[0][0] and candidate_y < corners[0][1]:
-                    if (
-                        np.sqrt(
-                            (candidate_x - corners[0][0]) ** 2
-                            + (candidate_y - corners[0][1]) ** 2
-                        )
-                        > corner_radius - radius
-                    ):
-                        corner_collision = True
-                elif candidate_x > corners[1][0] and candidate_y < corners[1][1]:
-                    if (
-                        np.sqrt(
-                            (candidate_x - corners[1][0]) ** 2
-                            + (candidate_y - corners[1][1]) ** 2
-                        )
-                        > corner_radius - radius
-                    ):
-                        corner_collision = True
-                elif candidate_x > corners[2][0] and candidate_y > corners[2][1]:
-                    if (
-                        np.sqrt(
-                            (candidate_x - corners[2][0]) ** 2
-                            + (candidate_y - corners[2][1]) ** 2
-                        )
-                        > corner_radius - radius
-                    ):
-                        corner_collision = True
-                elif candidate_x < corners[3][0] and candidate_y > corners[3][1]:
-                    if (
-                        np.sqrt(
-                            (candidate_x - corners[3][0]) ** 2
-                            + (candidate_y - corners[3][1]) ** 2
-                        )
-                        > corner_radius - radius
-                    ):
-                        corner_collision = True
-                if corner_collision:
-                    continue
-
-            # Check collision with existing strands
-            collision = False
-            for existing_x, existing_y in placed_strands:
-                distance = np.sqrt(
-                    (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
-                )
-                if distance < strand_diameter:
-                    collision = True
-                    break
-
-            if not collision:
-                placed_strands.append((candidate_x, candidate_y))
-                # Plot the strand
-                circle_copper_surrounding = Circle(
-                    (candidate_x, candidate_y),
-                    radius,
-                    facecolor="#b87333",  # copper color
-                    edgecolor="#8B4000",  # darker copper edge
-                    linewidth=0.1,
-                    alpha=0.8,
-                )
-                axis.add_patch(circle_copper_surrounding)
-
-                circle_central_conductor = Circle(
-                    (candidate_x, candidate_y),
-                    radius / 2,
-                    facecolor="black",
-                    linewidth=0.3,
-                    alpha=0.5,
-                )
-                axis.add_patch(circle_central_conductor)
-
-            if len(placed_strands) >= n_strands:
-                break
-        if len(placed_strands) >= n_strands:
-            break
-
-    attempts = n_rows * n_cols
-    print(f"{len(placed_strands)}/ {n_strands}, Attempts:{attempts}")
-
-    return len(placed_strands), attempts
-
-    #     # Check collision with existing strands
-    #     collision = False
-    #     for existing_x, existing_y in placed_strands:
-    #         distance = np.sqrt(
-    #             (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
-    #         )
-    #         if distance < strand_diameter:
-    #             collision = True
-    #             break
-
-    #     if not collision:
-    #         placed_strands.append((candidate_x, candidate_y))
-    #         # Plot the strand
-    #         circle_copper_surrounding = Circle(
-    #             (candidate_x, candidate_y),
-    #             radius,
-    #             facecolor="#b87333",  # copper color
-    #             edgecolor="#8B4000",  # darker copper edge
-    #             linewidth=0.3,
-    #             alpha=0.8,
-    #         )
-    #         axis.add_patch(circle_copper_surrounding)
-
-    #         circle_central_conductor = Circle(
-    #             (candidate_x, candidate_y),
-    #             radius/2,
-    #             facecolor="black",
-    #             linewidth=0.3,
-    #             alpha=0.5,
-    #         )
-    #         axis.add_patch(circle_central_conductor)
-
-    #     attempts += 1
-    #     print(f"{len(placed_strands)}/ {n_strands}, Attempts:{attempts}")
-
-    # return len(placed_strands), attempts
-
-
-def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
+def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     """
-    Plots inboard TF coil individual turn structure.
+    Plots inboard TF coil CICC individual turn structure.
     Author: C. Ashe
 
     Parameters
@@ -6383,6 +6174,204 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     -------
     None
     """
+
+    def _pack_strands_rectangular_with_obstacles(
+        cable_space_bounds,
+        pipe_center,
+        pipe_radius,
+        strand_diameter,
+        void_fraction,
+        n_strands,
+        axis,
+        corner_radius=0,
+    ):
+        """Pack circular strands in rectangular space with cooling pipe obstacle"""
+
+        x, y, width, height = cable_space_bounds
+        shape_area = width * height
+
+        # Subtract pipe area from total
+        pipe_area = np.pi * pipe_radius**2
+        # Approximate corner area loss
+        corner_area = (
+            4 * (corner_radius**2 * (1 - np.pi / 4)) if corner_radius > 0 else 0
+        )
+
+        usable_area = shape_area - pipe_area - corner_area
+
+        radius = strand_diameter / 2
+        placed_strands = []
+        attempts = 0
+        max_attempts = 1e5
+
+        pipe_x, pipe_y = pipe_center
+
+        # Hexagonal packing parameters
+        # Calculate the spacing between strand centers for the desired void fraction
+        # For hexagonal packing, packing fraction = pi/(2*sqrt(3)) ~ 0.9069
+        # To achieve a lower packing fraction (higher void fraction), increase spacing
+        ideal_packing_fraction = np.pi / (2 * np.sqrt(3))
+        target_packing_fraction = 1 - void_fraction
+        spacing_factor = np.sqrt(ideal_packing_fraction / target_packing_fraction)
+        strand_spacing = strand_diameter * spacing_factor
+
+        # Number of rows and columns that fit in the cable space
+        n_rows = int((height - 2 * radius) // (strand_spacing * np.sqrt(3) / 2))
+        n_cols = int((width - 2 * radius) // strand_spacing)
+
+        # Generate hexagonal grid positions
+        for row in range(n_rows):
+            y_pos = (y + radius + row * strand_spacing * np.sqrt(3) / 2) * 1.07
+            x_offset = strand_spacing / 2 if row % 2 else 0
+            for col in range(n_cols):
+                candidate_x = (x + radius + col * strand_spacing + x_offset) * 1.05
+                candidate_y = y_pos
+
+                # Check if within bounds
+                if (
+                    candidate_x > x + width - radius
+                    or candidate_y > y + height - radius
+                ):
+                    continue
+
+                # Check collision with cooling pipe
+                pipe_distance = np.sqrt(
+                    (candidate_x - pipe_x) ** 2 + (candidate_y - pipe_y) ** 2
+                )
+                if pipe_distance < (pipe_radius + radius):
+                    continue
+
+                # Check collision with corners if rounded
+                if corner_radius > 0:
+                    corners = [
+                        (x + corner_radius, y + corner_radius),  # bottom-left
+                        (x + width - corner_radius, y + corner_radius),  # bottom-right
+                        (
+                            x + width - corner_radius,
+                            y + height - corner_radius,
+                        ),  # top-right
+                        (x + corner_radius, y + height - corner_radius),  # top-left
+                    ]
+                    # Check each corner
+                    corner_collision = False
+                    if candidate_x < corners[0][0] and candidate_y < corners[0][1]:
+                        if (
+                            np.sqrt(
+                                (candidate_x - corners[0][0]) ** 2
+                                + (candidate_y - corners[0][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        ):
+                            corner_collision = True
+                    elif candidate_x > corners[1][0] and candidate_y < corners[1][1]:
+                        if (
+                            np.sqrt(
+                                (candidate_x - corners[1][0]) ** 2
+                                + (candidate_y - corners[1][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        ):
+                            corner_collision = True
+                    elif candidate_x > corners[2][0] and candidate_y > corners[2][1]:
+                        if (
+                            np.sqrt(
+                                (candidate_x - corners[2][0]) ** 2
+                                + (candidate_y - corners[2][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        ):
+                            corner_collision = True
+                    elif candidate_x < corners[3][0] and candidate_y > corners[3][1]:
+                        if (
+                            np.sqrt(
+                                (candidate_x - corners[3][0]) ** 2
+                                + (candidate_y - corners[3][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        ):
+                            corner_collision = True
+                    if corner_collision:
+                        continue
+
+                # Check collision with existing strands
+                collision = False
+                for existing_x, existing_y in placed_strands:
+                    distance = np.sqrt(
+                        (candidate_x - existing_x) ** 2
+                        + (candidate_y - existing_y) ** 2
+                    )
+                    if distance < strand_diameter:
+                        collision = True
+                        break
+
+                if not collision:
+                    placed_strands.append((candidate_x, candidate_y))
+                    # Plot the strand
+                    circle_copper_surrounding = Circle(
+                        (candidate_x, candidate_y),
+                        radius,
+                        facecolor="#b87333",  # copper color
+                        edgecolor="#8B4000",  # darker copper edge
+                        linewidth=0.1,
+                        alpha=0.8,
+                    )
+                    axis.add_patch(circle_copper_surrounding)
+
+                    circle_central_conductor = Circle(
+                        (candidate_x, candidate_y),
+                        radius / 2,
+                        facecolor="black",
+                        linewidth=0.3,
+                        alpha=0.5,
+                    )
+                    axis.add_patch(circle_central_conductor)
+
+                if len(placed_strands) >= n_strands:
+                    break
+            if len(placed_strands) >= n_strands:
+                break
+
+        attempts = n_rows * n_cols
+        print(f"{len(placed_strands)}/ {n_strands}, Attempts:{attempts}")
+
+        return len(placed_strands), attempts
+
+        #     # Check collision with existing strands
+        #     collision = False
+        #     for existing_x, existing_y in placed_strands:
+        #         distance = np.sqrt(
+        #             (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
+        #         )
+        #         if distance < strand_diameter:
+        #             collision = True
+        #             break
+
+        #     if not collision:
+        #         placed_strands.append((candidate_x, candidate_y))
+        #         # Plot the strand
+        #         circle_copper_surrounding = Circle(
+        #             (candidate_x, candidate_y),
+        #             radius,
+        #             facecolor="#b87333",  # copper color
+        #             edgecolor="#8B4000",  # darker copper edge
+        #             linewidth=0.3,
+        #             alpha=0.8,
+        #         )
+        #         axis.add_patch(circle_copper_surrounding)
+
+        #         circle_central_conductor = Circle(
+        #             (candidate_x, candidate_y),
+        #             radius/2,
+        #             facecolor="black",
+        #             linewidth=0.3,
+        #             alpha=0.5,
+        #         )
+        #         axis.add_patch(circle_central_conductor)
+
+        #     attempts += 1
+        #     print(f"{len(placed_strands)}/ {n_strands}, Attempts:{attempts}")
+
+        # return len(placed_strands), attempts
 
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
@@ -6505,7 +6494,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
 
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
-            n_strands, attempts = pack_strands_rectangular_with_obstacles(
+            n_strands, attempts = _pack_strands_rectangular_with_obstacles(
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
@@ -6516,6 +6505,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
                 void_fraction=void_fraction,
                 axis=axis,
                 corner_radius=radius_tf_turn_cable_space_corners,
+                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(scan),
             )
 
             # Calculate packing efficiency
@@ -6612,7 +6602,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
 
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
-            n_strands, attempts = pack_strands_rectangular_with_obstacles(
+            n_strands, attempts = _pack_strands_rectangular_with_obstacles(
                 cable_bounds,
                 pipe_center,
                 he_pipe_diameter / 2,
@@ -6620,6 +6610,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
                 void_fraction,
                 axis,
                 radius_tf_turn_cable_space_corners,
+                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(scan),
             )
 
             # Calculate packing efficiency
@@ -11683,7 +11674,7 @@ def main_plot(
         # TF coil turn structure
         ax20 = fig12.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(ax20, fig12, m_file_data, scan)
+        plot_tf_cable_in_conduit_turn(ax20, fig12, m_file_data, scan)
     else:
         ax19 = fig12.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
