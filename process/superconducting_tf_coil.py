@@ -2632,7 +2632,7 @@ class SuperconductingTFCoil(TFCoil):
             tfcoil_variables.c_tf_turn = a_turn * j_tf_wp
 
         # Turn cable dimension is an input
-        elif tfcoil_variables.t_cable_tf_is_input:
+        elif tfcoil_variables.i_dx_tf_turn_cable_space_general_input:
             # Turn squared dimension [m]
             tfcoil_variables.dx_tf_turn_general = (
                 tfcoil_variables.t_cable_tf
