@@ -6183,7 +6183,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         void_fraction,
         n_strands,
         axis,
-        corner_radius=0,
+        corner_radius,
+        f_a_tf_turn_cable_copper,
     ):
         """Pack circular strands in rectangular space with cooling pipe obstacle"""
 
@@ -6218,6 +6219,12 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         # Number of rows and columns that fit in the cable space
         n_rows = int((height - 2 * radius) // (strand_spacing * np.sqrt(3) / 2))
         n_cols = int((width - 2 * radius) // strand_spacing)
+
+        # Calculate the radius of the inner superconductor circle based on the copper area fraction
+        # Area_superconductor = f_a_tf_turn_cable_copper * Area_strand
+        # Area_strand = pi * radius^2
+        # So, radius_superconductor = sqrt(f_a_tf_turn_cable_copper) * radius
+        radius_superconductor = np.sqrt(f_a_tf_turn_cable_copper) * radius
 
         # Generate hexagonal grid positions
         for row in range(n_rows):
@@ -6319,7 +6326,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
 
                     circle_central_conductor = Circle(
                         (candidate_x, candidate_y),
-                        radius / 2,
+                        radius_superconductor,
                         facecolor="black",
                         linewidth=0.3,
                         alpha=0.5,
@@ -6481,8 +6488,12 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         )
 
         # Cable strand packing parameters
-        strand_diameter = 0.0008  # 2mm diameter strands
-        void_fraction = 0.5
+        strand_diameter = mfile_data.data["dia_tf_turn_superconducting_cable"].get_scan(
+            scan
+        )
+        void_fraction = mfile_data.data["f_a_tf_turn_cable_space_extra_void"].get_scan(
+            scan
+        )
 
         # Cable space bounds
         cable_bounds = [
@@ -6505,7 +6516,12 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 void_fraction=void_fraction,
                 axis=axis,
                 corner_radius=radius_tf_turn_cable_space_corners,
-                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(scan),
+                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(
+                    scan
+                ),
+                f_a_tf_turn_cable_copper=mfile_data.data[
+                    "f_a_tf_turn_cable_copper"
+                ].get_scan(scan),
             )
 
             # Calculate packing efficiency
@@ -6610,7 +6626,12 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 void_fraction,
                 axis,
                 radius_tf_turn_cable_space_corners,
-                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(scan),
+                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(
+                    scan
+                ),
+                f_a_tf_turn_cable_copper=mfile_data.data[
+                    "f_a_tf_turn_cable_copper"
+                ].get_scan(scan),
             )
 
             # Calculate packing efficiency
