@@ -143,7 +143,7 @@ class ResistiveTFCoil(TFCoil):
                 pfcoil_variables.c_pf_coil_turn_peak_input,
                 pfcoil_variables.n_pf_coils_in_group,
                 pfcoil_variables.f_dr_dz_cs_turn,
-                pfcoil_variables.r_out_cst,
+                pfcoil_variables.radius_cs_turn_corners,
                 pfcoil_variables.f_a_cs_steel,
                 tfcoil_variables.eyoung_steel,
                 tfcoil_variables.poisson_steel,

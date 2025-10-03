@@ -3120,7 +3120,7 @@ class TFCoil:
         c_pf_coil_turn_peak_input,
         n_pf_coils_in_group,
         f_dr_dz_cs_turn,
-        r_out_cst,
+        radius_cs_turn_corners,
         f_a_cs_steel,
         eyoung_steel,
         poisson_steel,
@@ -3339,12 +3339,12 @@ class TFCoil:
                 ) ** 0.5  # width of cs turn conduit
                 dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn  # length of cs turn conduit
                 # Radius of turn space = radius_cs_turn_cable_space
-                # Radius of curved outer corrner r_out_cst = 3mm from literature
+                # Radius of curved outer corrner radius_cs_turn_corners = 3mm from literature
                 # f_dr_dz_cs_turn = 70 / 22 from literature
                 p1 = ((dr_cs_turn - dz_cs_turn) / np.pi) ** 2
                 p2 = (
                     (dr_cs_turn * dz_cs_turn)
-                    - (4 - np.pi) * (r_out_cst**2)
+                    - (4 - np.pi) * (radius_cs_turn_corners**2)
                     - (a_cs_turn * f_a_cs_steel)
                 ) / np.pi
                 radius_cs_turn_cable_space = -(

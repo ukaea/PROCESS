@@ -8707,7 +8707,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
     )
     t_structural_vertical = mfile_data.data["t_structural_vertical"].get_scan(scan)
     t_structural_radial = mfile_data.data["t_structural_radial"].get_scan(scan)
-    r_out_cst = mfile_data.data["r_out_cst"].get_scan(scan)
+    radius_cs_turn_corners = mfile_data.data["radius_cs_turn_corners"].get_scan(scan)
 
     # Plot the CS turn as a rectangle representing the conductor cross-section
     # Assume dz_cs_turn is the diameter and dr_cs_turn is the length of the conductor cross-section
@@ -8718,7 +8718,9 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
             (0, 0),
             dr_cs_turn,
             dz_cs_turn,
-            boxstyle=patches.BoxStyle("Round", pad=0, rounding_size=r_out_cst),
+            boxstyle=patches.BoxStyle(
+                "Round", pad=0, rounding_size=radius_cs_turn_corners
+            ),
             edgecolor="black",
             facecolor="grey",
             lw=1.5,
@@ -8770,7 +8772,7 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
         f"Turn width to height ratio: {f_dr_dz_cs_turn:.3f}\n"
         f"Steel conduit width: {t_structural_radial:.4e}$ \\ \\text{{m}}$\n"
         f"Radius of turn cable space: {radius_cs_turn_cable_space:.4e}$ \\ \\text{{m}}$\n"
-        f"Radius of turn corner: {r_out_cst:.4e}$ \\ \\text{{m}}$\n"
+        f"Radius of turn corner: {radius_cs_turn_corners:.4e}$ \\ \\text{{m}}$\n"
     )
 
     axis.text(

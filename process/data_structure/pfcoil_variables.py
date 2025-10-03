@@ -553,8 +553,8 @@ dz_cs_turn: float = None
 """Depth/width of CS of CS coil turn conduit"""
 
 
-r_out_cst: float = None
-"""Length of CS of CS coil turn conduit length"""
+radius_cs_turn_corners: float = None
+"""Radius of curvature of CS coil turn corners (m)"""
 
 
 radius_cs_turn_cable_space: float = None
@@ -705,7 +705,7 @@ def init_pfcoil_variables():
     global dr_cs_turn
     global dr_cs_full
     global dz_cs_turn
-    global r_out_cst
+    global radius_cs_turn_corners
     global radius_cs_turn_cable_space
 
     alfapf = 5e-10
@@ -808,4 +808,4 @@ def init_pfcoil_variables():
     dr_cs_full = 0.0
     dz_cs_turn = 0.0
     radius_cs_turn_cable_space = 0.0
-    r_out_cst = 3.0e-3
+    radius_cs_turn_corners = 3.0e-3
