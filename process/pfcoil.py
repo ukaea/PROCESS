@@ -3357,7 +3357,9 @@ class CSCoil:
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
+            areaspf = (
+                pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
+            )
 
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
