@@ -2239,3 +2239,103 @@ def test_place_pf_above_tf(
     assert np.allclose(r_arr[n_pf_group, :n_coils], expected_r)
     assert np.allclose(z_arr[n_pf_group, :n_coils], expected_z)
     assert top_bottom_out == expected_top_bottom
+
+
+def test_calculate_cs_turn_geometry_eu_demo_basic(cs_coil):
+    # Typical values for a CS turn (arbitrary but physically reasonable)
+    a_cs_turn = 0.02  # m^2
+    f_dr_dz_cs_turn = 2.0
+    radius_cs_turn_corners = 0.01  # m
+    f_a_cs_turn_steel = 0.4
+
+    (
+        dz_cs_turn,
+        dr_cs_turn,
+        radius_cs_turn_cable_space,
+        dr_cs_turn_conduit,
+        dz_cs_turn_conduit,
+    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+        a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+    )
+
+    # Check types and positivity
+    assert isinstance(dz_cs_turn, float)
+    assert isinstance(dr_cs_turn, float)
+    assert isinstance(radius_cs_turn_cable_space, float)
+    assert isinstance(dr_cs_turn_conduit, float)
+    assert isinstance(dz_cs_turn_conduit, float)
+    assert dz_cs_turn > 0
+    assert dr_cs_turn > 0
+    assert radius_cs_turn_cable_space > 0
+    assert dr_cs_turn_conduit > 0
+    assert dz_cs_turn_conduit > 0
+
+
+@pytest.mark.parametrize(
+    "a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel",
+    [
+        (0.01, 1.5, 0.0, 0.2),
+    ],
+)
+def test_calculate_cs_turn_geometry_eu_demo_zero_corner(
+    cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+):
+    # Test with zero corner radius
+    (
+        dz_cs_turn,
+        dr_cs_turn,
+        radius_cs_turn_cable_space,
+        dr_cs_turn_conduit,
+        dz_cs_turn_conduit,
+    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+        a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+    )
+    assert dz_cs_turn > 0
+    assert dr_cs_turn > 0
+    assert radius_cs_turn_cable_space > 0
+
+
+@pytest.mark.parametrize(
+    "a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel",
+    [
+        (0.05, 10.0, 0.005, 0.05),
+    ],
+)
+def test_calculate_cs_turn_geometry_eu_demo_high_aspect(
+    cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+):
+    # High aspect ratio
+    (
+        dz_cs_turn,
+        dr_cs_turn,
+        radius_cs_turn_cable_space,
+        dr_cs_turn_conduit,
+        dz_cs_turn_conduit,
+    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+        a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+    )
+    assert dr_cs_turn > dz_cs_turn
+    assert radius_cs_turn_cable_space > 0
+
+
+@pytest.mark.parametrize(
+    "a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel",
+    [
+        (0.03, 2.5, 0.002, 0.15),
+    ],
+)
+def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
+    cs_coil, a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+):
+    # Check that the sum of cable space and conduit thicknesses does not exceed half-width
+    (
+        dz_cs_turn,
+        dr_cs_turn,
+        radius_cs_turn_cable_space,
+        dr_cs_turn_conduit,
+        dz_cs_turn_conduit,
+    ) = cs_coil.calculate_cs_turn_geometry_eu_demo(
+        a_cs_turn, f_dr_dz_cs_turn, radius_cs_turn_corners, f_a_cs_turn_steel
+    )
+    # The cable space plus conduit thickness should not exceed half the turn width
+    assert radius_cs_turn_cable_space + dz_cs_turn_conduit <= dz_cs_turn / 2 + 1e-8
