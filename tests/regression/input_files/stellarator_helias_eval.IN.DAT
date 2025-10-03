@@ -336,7 +336,7 @@ te0_ecrh_achievable = 14.880956269519242 * maximal central electron temperature 
 *-----------------Tfcoil Variables-----------------*
 
 sig_tf_wp_max = 4.e8 * Allowable maximum shear stress (Tresca criterion) in TF coil conduit (Pa)
-t_turn_tf = 0.037 * TF coil turn edge length including turn insulation [m]
+dx_tf_turn_general = 0.037 * TF coil turn edge length including turn insulation [m]
 f_a_tf_turn_cable_copper  = 0.7630096974258808 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 8 * Switch for superconductor material in TF coils;
 ftoroidalgap = 1. * F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)

@@ -1051,9 +1051,9 @@ def check_process(inputs):  # noqa: ARG001
                 dr_tf_wp_min=dr_tf_wp_min,
             )
 
-    # Setting i_dx_tf_turn_general_input to true if t_turn_tf is an input
+    # Setting i_dx_tf_turn_general_input to true if dx_tf_turn_general is an input
     data_structure.tfcoil_variables.i_dx_tf_turn_general_input = (
-        abs(data_structure.tfcoil_variables.t_turn_tf) > 0
+        abs(data_structure.tfcoil_variables.dx_tf_turn_general) > 0
     )
 
     # Impossible to set the turn size of integer turn option

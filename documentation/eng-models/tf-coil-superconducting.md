@@ -133,13 +133,13 @@ turns. The number of turns can be parametrized in three different ways :
     `c_tf_turn`. There is no guarantee that a realistic turn configuration (with all
     the turn geometrically fitting in the allocated space) or even have an
     integer number of turn is used with this parametrization. If the turn
-    thickness `t_turn_tf` or the cable thickness `t_cable_tf` is defined by
+    thickness `dx_tf_turn_general` or the cable thickness `t_cable_tf` is defined by
     the user, this parametrization is not selected.
   </p>   
 - <p style='text-align: justify;'>
-    **Turn size parametrization:** the dimension of the turn `t_turn_tf` can be
+    **Turn size parametrization:** the dimension of the turn `dx_tf_turn_general` can be
     set by the user. To do so, the user just have to select the following option:
-    `i_tf_turns_integer = 0` and to set a value to the variable `t_turn_tf`. The
+    `i_tf_turns_integer = 0` and to set a value to the variable `dx_tf_turn_general`. The
     area of the corresponding squared turn and the number of turns necessary to
     fill the WP area is deduced. There is no guarantee that a realistic turn
     configuration (with all the turn geometrically fitting in the allocated
