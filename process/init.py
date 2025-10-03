@@ -1051,14 +1051,14 @@ def check_process(inputs):  # noqa: ARG001
                 dr_tf_wp_min=dr_tf_wp_min,
             )
 
-    # Setting t_turn_tf_is_input to true if t_turn_tf is an input
-    data_structure.tfcoil_variables.t_turn_tf_is_input = (
+    # Setting i_dx_tf_turn_general_input to true if t_turn_tf is an input
+    data_structure.tfcoil_variables.i_dx_tf_turn_general_input = (
         abs(data_structure.tfcoil_variables.t_turn_tf) > 0
     )
 
     # Impossible to set the turn size of integer turn option
     if (
-        data_structure.tfcoil_variables.t_turn_tf_is_input
+        data_structure.tfcoil_variables.i_dx_tf_turn_general_input
         and data_structure.tfcoil_variables.i_tf_turns_integer == 1
     ):
         raise ProcessValidationError(
@@ -1097,7 +1097,7 @@ def check_process(inputs):  # noqa: ARG001
 
     # Impossible to set both the TF coil turn and the cable dimension
     if (
-        data_structure.tfcoil_variables.t_turn_tf_is_input
+        data_structure.tfcoil_variables.i_dx_tf_turn_general_input
         and data_structure.tfcoil_variables.t_cable_tf_is_input
     ):
         raise ProcessValidationError(

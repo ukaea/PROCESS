@@ -1233,7 +1233,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
 
     t_turn_tf: Any = None
 
-    t_turn_tf_is_input: Any = None
+    i_dx_tf_turn_general_input: Any = None
 
     c_tf_turn: Any = None
 
@@ -1283,7 +1283,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             layer_ins=0,
             t_conductor=0,
             t_turn_tf=0,
-            t_turn_tf_is_input=False,
+            i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
@@ -1309,7 +1309,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             layer_ins=0,
             t_conductor=0.047932469413859431,
             t_turn_tf=0.049532469413859428,
-            t_turn_tf_is_input=False,
+            i_dx_tf_turn_general_input=False,
             c_tf_turn=65000,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
@@ -1335,7 +1335,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             layer_ins=0,
             t_conductor=5.712e-02,
             t_turn_tf=0.05872,
-            t_turn_tf_is_input=True,
+            i_dx_tf_turn_general_input=True,
             c_tf_turn=0,
             t_cable_tf=0,
             t_cable_tf_is_input=False,
@@ -1361,7 +1361,7 @@ class TfAveragedTurnGeomParam(NamedTuple):
             layer_ins=0,
             t_conductor=0.058296,
             t_turn_tf=0,
-            t_turn_tf_is_input=False,
+            i_dx_tf_turn_general_input=False,
             c_tf_turn=0,
             t_cable_tf=0.042,
             t_cable_tf_is_input=True,
@@ -1414,8 +1414,8 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
 
     monkeypatch.setattr(
         tfcoil_variables,
-        "t_turn_tf_is_input",
-        tfaveragedturngeomparam.t_turn_tf_is_input,
+        "i_dx_tf_turn_general_input",
+        tfaveragedturngeomparam.i_dx_tf_turn_general_input,
     )
 
     monkeypatch.setattr(
