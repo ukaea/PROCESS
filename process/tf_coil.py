@@ -976,9 +976,9 @@ class TFCoil:
             )
             po.ovarre(
                 self.outfile,
-                "WP cross section area (per coil) (m2)",
+                "Total steel area in WP (per coil) (m2)",
                 "(a_tf_wp_steel)",
-                superconducting_tf_coil_variables.a_tf_wp_no_insulation,
+                tfcoil_variables.a_tf_wp_steel,
             )
             po.ovarre(
                 self.outfile,
