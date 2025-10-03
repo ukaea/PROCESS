@@ -3036,6 +3036,51 @@ class CSCoil:
             dr_cs_full,
         )
 
+    def calculate_cs_turn_geometry_eu_demo(
+        self, a_cs_turn: float, ld_ratio_cst, r_out_cst: float, f_a_cs_steel: float
+    ) -> None:
+        # Depth/width of cs turn conduit
+        dz_cs_turn = (a_cs_turn / ld_ratio_cst) ** 0.5
+
+        # length of cs turn conduit
+        dr_cs_turn = ld_ratio_cst * dz_cs_turn
+
+        # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
+        # Radius of curved outer corrner pfcoil_variables.r_out_cst = 3mm from literature
+        # pfcoil_variables.ld_ratio_cst = 70 / 22 from literature
+
+        # CS coil turn geometry calculation - stadium shape
+        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
+        radius_cs_turn_cable_space = -(
+            (dr_cs_turn - dz_cs_turn) / constants.PI
+        ) + math.sqrt(
+            (((dr_cs_turn - dz_cs_turn) / constants.PI) ** 2)
+            + (
+                (
+                    (dr_cs_turn * dz_cs_turn)
+                    - (4 - constants.PI) * (r_out_cst**2)
+                    - (a_cs_turn * f_a_cs_steel)
+                )
+                / constants.PI
+            )
+        )
+
+        # Thickness of steel conduit in cs turn
+        t_structural_vertical = (dz_cs_turn / 2) - radius_cs_turn_cable_space
+        # In this model the vertical and radial have the same thickness
+        t_structural_radial = t_structural_vertical
+        # add a check for negative conduit thickness
+        if t_structural_radial < 1.0e-3:
+            t_structural_radial = 1.0e-3
+
+        return (
+            dz_cs_turn,
+            dr_cs_turn,
+            radius_cs_turn_cable_space,
+            t_structural_radial,
+            t_structural_vertical,
+        )
+
     def place_cs_filaments(
         self,
         n_cs_current_filaments: int,
@@ -3169,51 +3214,18 @@ class CSCoil:
             / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
         )
 
-        # Depth/width of cs turn conduit
-        pfcoil_variables.dz_cs_turn = (
-            pfcoil_variables.a_cs_turn / pfcoil_variables.ld_ratio_cst
-        ) ** 0.5
-
-        # length of cs turn conduit
-        pfcoil_variables.dr_cs_turn = (
-            pfcoil_variables.ld_ratio_cst * pfcoil_variables.dz_cs_turn
+        (
+            pfcoil_variables.dz_cs_turn,
+            pfcoil_variables.dr_cs_turn,
+            pfcoil_variables.radius_cs_turn_cable_space,
+            csfv.t_structural_radial,
+            csfv.t_structural_vertical,
+        ) = self.calculate_cs_turn_geometry_eu_demo(
+            a_cs_turn=pfcoil_variables.a_cs_turn,
+            ld_ratio_cst=pfcoil_variables.ld_ratio_cst,
+            r_out_cst=pfcoil_variables.r_out_cst,
+            f_a_cs_steel=pfcoil_variables.f_a_cs_steel,
         )
-
-        # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
-        # Radius of curved outer corrner pfcoil_variables.r_out_cst = 3mm from literature
-        # pfcoil_variables.ld_ratio_cst = 70 / 22 from literature
-
-        # CS coil turn geometry calculation - stadium shape
-        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfcoil_variables.radius_cs_turn_cable_space = -(
-            (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn) / constants.PI
-        ) + math.sqrt(
-            (
-                (
-                    (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn)
-                    / constants.PI
-                )
-                ** 2
-            )
-            + (
-                (
-                    (pfcoil_variables.dr_cs_turn * pfcoil_variables.dz_cs_turn)
-                    - (4 - constants.PI) * (pfcoil_variables.r_out_cst**2)
-                    - (pfcoil_variables.a_cs_turn * pfcoil_variables.f_a_cs_steel)
-                )
-                / constants.PI
-            )
-        )
-
-        # Thickness of steel conduit in cs turn
-        csfv.t_structural_vertical = (
-            pfcoil_variables.dz_cs_turn / 2
-        ) - pfcoil_variables.radius_cs_turn_cable_space
-        # In this model the vertical and radial have the same thickness
-        csfv.t_structural_radial = csfv.t_structural_vertical
-        # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
 
         # Non-steel area void fraction for coolant
         pfcoil_variables.f_a_pf_coil_void[pfcoil_variables.n_cs_pf_coils - 1] = (
