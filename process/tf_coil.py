@@ -5066,10 +5066,9 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # out of numba, running the code, and then copying the result
     # back in. This means that the linear algebra solve is not compiled and runs
     # as if it were written in normal Python.
-    # This is necessary because it uses mpmath solvers that cannot be numba compiled.
-    # We do this because scipy and numpy linear algebra solvers produce
-    # slightly different results depending on the system (e.g. Mac and Linux) which mean
-    # PROCESS can produce different results depending on where it is run!
+    # This is necessary because numba compiles against the SciPy algebra library,
+    # not the Numpy one. There are differences in the Scipy solvers depending on
+    # operating system/architecture/Scipy version that cause tests to fail.
     # https://github.com/ukaea/PROCESS/issues/3027
     # https://github.com/scipy/scipy/issues/23639
     with numba.objmode(cc="float64[:]"):
