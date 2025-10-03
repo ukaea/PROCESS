@@ -711,7 +711,7 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      5.3296E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.5197E+02 OP 
- Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.8716E-02 OP 
+ Width_of_turn_including_inter-turn_insulation_(m)_______________________ (dx_tf_turn_general)___________________      5.8716E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7116E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.1107E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0042E-03 ITV

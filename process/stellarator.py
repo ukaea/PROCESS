@@ -2561,7 +2561,7 @@ class Stellarator:
         #
         # [m] Dimension of square cable space inside insulation
         #     and case of the conduit of each turn
-        dx_tf_turn_cable_space_average = tfcoil_variables.t_turn_tf - 2.0e0 * (
+        dx_tf_turn_cable_space_average = tfcoil_variables.dx_tf_turn_general - 2.0e0 * (
             tfcoil_variables.dx_tf_turn_steel + tfcoil_variables.dx_tf_turn_insulation
         )  # dx_tf_turn_cable_space_average = t_w
         if dx_tf_turn_cable_space_average < 0:
@@ -2643,7 +2643,7 @@ class Stellarator:
                 tfcoil_variables.a_tf_turn_cable_space_no_void
                 * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
             )
-            / (tfcoil_variables.t_turn_tf**2)
+            / (tfcoil_variables.dx_tf_turn_general**2)
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
         )  # fraction that is SC of wp.
         # print *, "f_scu. ",f_scu,"Awp min: ",Awp(1)
@@ -2666,7 +2666,7 @@ class Stellarator:
         )
 
         # Maximum field at superconductor surface (T)
-        wp_width_r_min = max(tfcoil_variables.t_turn_tf**2, wp_width_r_min)
+        wp_width_r_min = max(tfcoil_variables.dx_tf_turn_general**2, wp_width_r_min)
 
         # Recalculate tfcoil_variables.b_tf_inboard_peak_symmetric at the found awp_min:
         tfcoil_variables.b_tf_inboard_peak_symmetric = self.bmax_from_awp(
@@ -2709,7 +2709,7 @@ class Stellarator:
             coilcurrent * 1.0e6 / a_tf_wp_no_insulation
         )  # [A/m^2] winding pack current density
         tfcoil_variables.n_tf_coil_turns = (
-            a_tf_wp_no_insulation / (tfcoil_variables.t_turn_tf**2)
+            a_tf_wp_no_insulation / (tfcoil_variables.dx_tf_turn_general**2)
         )  # estimated number of turns for a given turn size (not global). Take at least 1.
         tfcoil_variables.c_tf_turn = (
             coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
@@ -2730,7 +2730,7 @@ class Stellarator:
         tfcoil_variables.a_tf_coil_wp_turn_insulation = (
             tfcoil_variables.n_tf_coil_turns
             * (
-                tfcoil_variables.t_turn_tf**2
+                tfcoil_variables.dx_tf_turn_general**2
                 - tfcoil_variables.a_tf_turn_steel
                 - tfcoil_variables.a_tf_turn_cable_space_no_void
             )
@@ -3092,7 +3092,7 @@ class Stellarator:
             1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             tfcoil_variables.tftmp,
             tfcoil_variables.a_tf_turn_cable_space_no_void,
-            tfcoil_variables.t_turn_tf**2,
+            tfcoil_variables.dx_tf_turn_general**2,
         )
 
         # print *, "Jmax, comparison: ", j_tf_wp_quench_heat_max, "  ", jwdgpro2,"  ",j_tf_wp/j_tf_wp_quench_heat_max, "   , tfcoil_variables.t_tf_superconductor_quench: ",t_tf_superconductor_quench, " tfcoil_variables.f_a_tf_turn_cable_copper: ",f_a_tf_turn_cable_copper
@@ -3212,7 +3212,7 @@ class Stellarator:
                 r_coil_minor,
                 r_tf_inleg_mid,
                 tfcoil_variables.sig_tf_wp,
-                tfcoil_variables.t_turn_tf,
+                tfcoil_variables.dx_tf_turn_general,
                 tfcoil_variables.t_tf_superconductor_quench,
                 tf_total_h_width,
                 tfborev,
@@ -3720,7 +3720,7 @@ class Stellarator:
         r_coil_minor,
         r_tf_inleg_mid,
         sig_tf_wp,
-        t_turn_tf,
+        dx_tf_turn_general,
         t_tf_superconductor_quench,
         tf_total_h_width,
         tfborev,
@@ -4000,8 +4000,8 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Width of each turn (incl. insulation) (m)",
-            "(t_turn_tf)",
-            t_turn_tf,
+            "(dx_tf_turn_general)",
+            dx_tf_turn_general,
         )
         po.ovarre(
             self.outfile,
