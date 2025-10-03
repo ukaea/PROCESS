@@ -118,11 +118,11 @@ t_conductor: float = None
 """Conductor (cable + steel conduit) area averaged dimension [m]"""
 
 
-t_turn_tf: float = None
+dx_tf_turn_general: float = None
 """TF coil turn edge length including turn insulation [m]
 If the turn is not a square (i_tf_turns_integer = 1) a squared turn of
 equivelent size is use to calculated this quantity
-If the t_turn_tf is non zero, c_tf_turn is calculated
+If the dx_tf_turn_general is non zero, c_tf_turn is calculated
 """
 
 
@@ -1109,7 +1109,7 @@ def init_tfcoil_variables():
     global casths_fraction
     global tfc_sidewall_is_fraction
     global t_conductor
-    global t_turn_tf
+    global dx_tf_turn_general
     global i_dx_tf_turn_general_input
     global f_t_turn_tf
     global t_turn_tf_max
@@ -1326,7 +1326,7 @@ def init_tfcoil_variables():
     t_conductor = 0.0
     t_cable_tf = 0.0
     t_cable_tf_is_input = False
-    t_turn_tf = 0.0
+    dx_tf_turn_general = 0.0
     i_dx_tf_turn_general_input = False
     f_t_turn_tf = 1.0
     t_turn_tf_max = 0.05

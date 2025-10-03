@@ -2501,7 +2501,7 @@ class SuperconductingTFCoil(TFCoil):
             )
 
         # Average turn dimension [m]
-        tfcoil_variables.t_turn_tf = np.sqrt(dr_tf_turn * dx_tf_turn)
+        tfcoil_variables.dx_tf_turn_general = np.sqrt(dr_tf_turn * dx_tf_turn)
 
         # Number of TF turns
         n_tf_coil_turns = np.double(n_tf_wp_layers * n_tf_wp_pancakes)
@@ -2626,7 +2626,7 @@ class SuperconductingTFCoil(TFCoil):
         # Turn dimension is a an input
         if tfcoil_variables.i_dx_tf_turn_general_input:
             # Turn area [m2]
-            a_turn = tfcoil_variables.t_turn_tf**2
+            a_turn = tfcoil_variables.dx_tf_turn_general**2
 
             # Current per turn [A]
             tfcoil_variables.c_tf_turn = a_turn * j_tf_wp
@@ -2634,12 +2634,13 @@ class SuperconductingTFCoil(TFCoil):
         # Turn cable dimension is an input
         elif tfcoil_variables.t_cable_tf_is_input:
             # Turn squared dimension [m]
-            tfcoil_variables.t_turn_tf = tfcoil_variables.t_cable_tf + 2.0e0 * (
-                dx_tf_turn_insulation + dx_tf_turn_steel
+            tfcoil_variables.dx_tf_turn_general = (
+                tfcoil_variables.t_cable_tf
+                + 2.0e0 * (dx_tf_turn_insulation + dx_tf_turn_steel)
             )
 
             # Turn area [m2]
-            a_turn = tfcoil_variables.t_turn_tf**2
+            a_turn = tfcoil_variables.dx_tf_turn_general**2
 
             # Current per turn [A]
             tfcoil_variables.c_tf_turn = a_turn * j_tf_wp
@@ -2652,11 +2653,15 @@ class SuperconductingTFCoil(TFCoil):
             a_turn = tfcoil_variables.c_tf_turn / j_tf_wp
 
             # Dimension of square cross-section of each turn including inter-turn insulation [m]
-            tfcoil_variables.t_turn_tf = np.sqrt(a_turn)
+            tfcoil_variables.dx_tf_turn_general = np.sqrt(a_turn)
 
         # Square turn assumption
-        superconducting_tf_coil_variables.dr_tf_turn = tfcoil_variables.t_turn_tf
-        superconducting_tf_coil_variables.dx_tf_turn = tfcoil_variables.t_turn_tf
+        superconducting_tf_coil_variables.dr_tf_turn = (
+            tfcoil_variables.dx_tf_turn_general
+        )
+        superconducting_tf_coil_variables.dx_tf_turn = (
+            tfcoil_variables.dx_tf_turn_general
+        )
 
         # See derivation in the following document
         # k:\power plant physics and technology\process\hts\hts coil module for process.docx

@@ -53,7 +53,7 @@ OBS_VARS = {
     "ddwi": "dr_vv_outboard",
     "pnuccp": "pnuc_cp",
     "nuc_pow_dep_tot": "pnuc_tot_blk_sector",
-    "t_turn": "t_turn_tf",
+    "t_turn": "dx_tf_turn_general",
     "ratecdol": "discount_rate",
     "strtf1": "sig_tf_case",
     "strtf2": "sig_tf_wp",

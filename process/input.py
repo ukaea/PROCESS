@@ -1633,7 +1633,7 @@ INPUT_VARIABLES = {
     "dz_cs_turn_conduit": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.001, 1.0)
     ),
-    "t_turn_tf": InputVariable(
+    "dx_tf_turn_general": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
     "t_turn_tf_max": InputVariable(

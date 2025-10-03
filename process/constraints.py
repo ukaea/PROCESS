@@ -2220,12 +2220,12 @@ def constraint_equation_86():
     """Upper limit on the turn edge length in the TF winding pack
     Author : S Kahn
 
-    t_turn_tf: TF coil turn edge length including turn insulation [m]
+    dx_tf_turn_general: TF coil turn edge length including turn insulation [m]
     f_t_turn_tf: f-value for TF turn edge length constraint
     t_turn_tf_max: TF turn edge length including turn insulation upper limit [m]
     """
     cc = (
-        data_structure.tfcoil_variables.t_turn_tf
+        data_structure.tfcoil_variables.dx_tf_turn_general
         / data_structure.tfcoil_variables.t_turn_tf_max
         - 1.0 * data_structure.tfcoil_variables.f_t_turn_tf
     )
