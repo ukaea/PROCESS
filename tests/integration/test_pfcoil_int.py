@@ -22,7 +22,14 @@ from process.data_structure import physics_variables as pv
 from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.init import init_all_module_vars
-from process.pfcoil import PFCoil, fixb, mtrx
+from process.pfcoil import (
+    CSCoil,
+    PFCoil,
+    fixb,
+    mtrx,
+    peak_b_field_at_pf_coil,
+    superconpf,
+)
 
 
 @pytest.fixture
@@ -34,6 +41,17 @@ def pfcoil():
     """
     init_all_module_vars()
     return PFCoil(cs_fatigue=CsFatigue())
+
+
+@pytest.fixture
+def cs_coil():
+    """Fixture to create CSCoil object.
+
+    :return: a CSCoil instance
+    :rtype: process.pfcoil.CSCoil
+    """
+
+    return CSCoil(cs_fatigue=CsFatigue())
 
 
 def test_pfcoil(monkeypatch, pfcoil):
@@ -190,15 +208,15 @@ def test_pfcoil(monkeypatch, pfcoil):
     ])
 
 
-def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
+def test_ohcalc(monkeypatch, reinitialise_error_module, cs_coil):
     """Test ohcalc subroutine.
 
     :param monkeypatch: mocking fixture
     :type monkeypatch: MonkeyPatch
     :param reinitialise_error_module: teardown any error side-effects
     :type reinitialise_error_module: None
-    :param pfcoil: a PFCoil instance
-    :type pfcoil: process.pfcoil.PFCoil
+    :param cs_coil: a CSCoil instance
+    :type cs_coil: process.pfcoil.CSCoil
     """
     # Mocks for ohcalc()
     monkeypatch.setattr(bv, "z_tf_inside_half", 8.864)
@@ -292,7 +310,7 @@ def test_ohcalc(monkeypatch, reinitialise_error_module, pfcoil):
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 1.486e1)
     monkeypatch.setattr(tfv, "b_crit_upper_nbti", 9.04)
 
-    pfcoil.ohcalc()
+    cs_coil.ohcalc()
 
     assert pytest.approx(pfcoil_variables.b_pf_coil_peak[4]) == 13.073958753751993
     assert (
@@ -2559,7 +2577,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     bzi_exp = 1.049564e1
     bzo_exp = -6.438987
 
-    bri, bro, bzi, bzo = pfcoil.peak_b_field_at_pf_coil(i, ii, it)
+    bri, bro, bzi, bzo = peak_b_field_at_pf_coil(i, ii, it)
 
     assert pytest.approx(bri) == bri_exp
     assert pytest.approx(bro) == bro_exp
@@ -2567,7 +2585,7 @@ def test_peakb(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     assert pytest.approx(bzo) == bzo_exp
 
 
-def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
+def test_superconpf(monkeypatch: pytest.MonkeyPatch):
     """Test superconpf subroutine.
 
     superconpf() requires specific arguments in order to work; these were
@@ -2601,7 +2619,7 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     jcritsc_exp = -1.23116924e8
     tmarg_exp = -2.651537e-1
 
-    jcritwp, jcritstr, jcritsc, tmarg = pfcoil.superconpf(
+    jcritwp, jcritstr, jcritsc, tmarg = superconpf(
         bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcritsc
     )
 
@@ -2611,7 +2629,7 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch, pfcoil: PFCoil):
     assert pytest.approx(tmarg) == tmarg_exp
 
 
-def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
+def test_axial_stress(cs_coil: CSCoil, monkeypatch: pytest.MonkeyPatch):
     """Test axial_stress subroutine.
 
     axial_stress() requires specific mocked vars in order to work; these were
@@ -2740,7 +2758,7 @@ def test_axial_stress(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
 
     s_axial_exp = -7.468967e8
     axial_force_exp = -1.956801e9
-    s_axial, axial_force = pfcoil.axial_stress()
+    s_axial, axial_force = cs_coil.axial_stress()
 
     assert pytest.approx(s_axial) == s_axial_exp
     assert pytest.approx(axial_force) == axial_force_exp
