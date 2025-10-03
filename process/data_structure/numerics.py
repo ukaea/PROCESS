@@ -427,12 +427,22 @@ vlam: list[float] = None
 
 force_vmcon_inequality_satisfication: int = None
 """If 1, adds an additional convergence criteria to the VMCON solver
-that enforces the inequality constraints with zero margin/tolerance.
-I.e. VMCON cannot converge until all inequality constraints are
-exactly satisfied.
+that enforces a margin on the inequality constraints.
+I.e. VMCON cannot converge until all inequality constraints are satisfied
+to within a tolerance of `force_vmcon_inequality_tolerance`.
 
-Default is 0.
+Default is 1 (enabled).
 
+NOTE: this only affects the VMCON solver.
+"""
+
+force_vmcon_inequality_tolerance: float = None
+"""The relative tolerance for the additional VMCON convergence criteria
+that forces inequality constraints to be satisfied within a tolerance.
+
+Default is 1e-8.
+
+NOTE: has no effect if `force_vmcon_inequality_satisfication` is 0
 NOTE: this only affects the VMCON solver.
 """
 
@@ -480,6 +490,7 @@ def init_numerics():
     global xcs
     global vlam
     global force_vmcon_inequality_satisfication
+    global force_vmcon_inequality_tolerance
 
     """Initialise module variables"""
     ioptimz = 1
@@ -639,4 +650,5 @@ def init_numerics():
     xcs = np.array([0.0] * ipnvars)
     vlam = np.array([0.0] * ipnvars)
     name_xc = [""] * ipnvars
-    force_vmcon_inequality_satisfication = 0
+    force_vmcon_inequality_satisfication = 1
+    force_vmcon_inequality_tolerance = 1e-8

@@ -2339,6 +2339,9 @@ INPUT_VARIABLES = {
         int,
         choices=(0, 1),
     ),
+    "force_vmcon_inequality_tolerance": InputVariable(
+        data_structure.numerics, float, range=(0.0, 1e10)
+    ),
 }
 
 
