@@ -4,6 +4,7 @@ import logging
 
 import numba
 import numpy as np
+from mpmath import lu_solve, mp
 
 from process import constants
 from process import process_output as po
@@ -20,6 +21,8 @@ from process.data_structure import (
 )
 from process.data_structure import build_variables as bv
 from process.exceptions import ProcessValueError
+
+mp.dps = 100
 
 logger = logging.getLogger(__name__)
 
@@ -4892,6 +4895,13 @@ def extended_plane_strain(
     return rradius, sigr, sigt, sigz, str_r, str_t, str_z, r_deflect
 
 
+def _solve_mpmath(a, b):
+    """Solve the linear system of equations ax=b where a is a real square matrix (n, n)
+    and b is a real vector (n,).
+    """
+    return np.vectorize(float)(np.array(lu_solve(a, b)))
+
+
 @numba.njit(cache=True)
 def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     """Calculates the stresses in a superconductor TF coil
@@ -5036,13 +5046,26 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # out of numba, running the code, and then copying the result
     # back in. This means that the linear algebra solve is not compiled and runs
     # as if it were written in normal Python.
-    # This is necessary because numba compiles against the SciPy algebra library,
-    # not the Numpy one. There are differences in the Scipy solvers depending on
-    # operating system/architecture/Scipy version that cause tests to fail.
+    # This is necessary because it uses mpmath solvers that cannot be numba compiled.
+    # We do this because scipy and numpy linear algebra solvers produce
+    # slightly different results depending on the system (e.g. Mac and Linux) which mean
+    # PROCESS can produce different results depending on where it is run!
     # https://github.com/ukaea/PROCESS/issues/3027
     # https://github.com/scipy/scipy/issues/23639
     with numba.objmode(cc="float64[:]"):
-        cc = np.linalg.solve(aa, bb)
+        # These matrices can often end up being very ill-conditioned which can lead to numerical
+        # instability when solving below.
+        # Scaling the matrix can help reduce numerical instability by reducing the condition of matrix.
+        # Here, we scale aa such that the largest element on a given row is 1.0. This does not
+        # change the solution provided each element of a given row is scaled by the same scalar
+        # and the corresponding entry in bb is also scaled the same amount.
+        row_scale = np.max(np.abs(aa), axis=1)
+        aa /= np.repeat(row_scale[:, np.newaxis], aa.shape[0], axis=1)
+        bb /= row_scale
+
+        # splitting this out into a function is necessary to stop
+        # the mpmath solvers being pickled which causes an error
+        cc = _solve_mpmath(aa, bb)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)
     for ii in range(nlayers):

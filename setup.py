@@ -29,6 +29,7 @@ setup_kwargs = {
     "python_requires": ">=3.10",
     "install_requires": [
         "numpy>=1.23",
+        "mpmath>=1.0,<1.4",
         "scipy>=1.10",
         "cvxpy!=1.3.0,!=1.3.1",
         "osqp>=1.0",
