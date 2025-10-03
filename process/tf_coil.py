@@ -1195,6 +1195,18 @@ class TFCoil:
                     "(dia_tf_turn_coolant_channel)",
                     tfcoil_variables.dia_tf_turn_coolant_channel,
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Diameter of superconducting cable",
+                    "(dia_tf_turn_superconducting_cable)",
+                    superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Number of superconducting cables per turn",
+                    "(n_tf_turn_superconducting_cables)",
+                    superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
+                )
                 po.ocmmnt(self.outfile, "Fractions by area")
                 po.ovarre(
                     self.outfile,

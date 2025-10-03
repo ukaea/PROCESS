@@ -2003,6 +2003,15 @@ class SuperconductingTFCoil(TFCoil):
                 dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
             )
 
+        # Calculate number of cables in turn if CICC conductor
+        # ---------------------------------------------------
+        if tfcoil_variables.i_tf_sc_mat != 6:
+            superconducting_tf_coil_variables.n_tf_turn_superconducting_cables = self.calculate_cable_in_conduit_strand_count(
+                a_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
+                dia_superconductor_strand=superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
+                f_a_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
+            )
+
         # Areas and fractions
         # -------------------
         # Central helium channel down the conductor core [m2]
