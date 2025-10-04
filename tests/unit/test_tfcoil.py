@@ -607,17 +607,33 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
 
 
 class TfcindParam(NamedTuple):
-    z_tf_arc: Any
-    r_tf_arc: Any
-    ind_tf_coil: Any
-    dr_tf_inboard: Any
-    itart: Any
-    i_tf_shape: Any
-    z_tf_inside_half: Any
-    dr_tf_outboard: Any
-    r_tf_outboard_mid: Any
-    r_tf_inboard_mid: Any
-    expected_ind_tf_coil: Any
+    z_tf_arc: Any = None
+
+    r_tf_arc: Any = None
+
+    ind_tf_coil: Any = None
+
+    dr_tf_inboard: Any = None
+
+    itart: Any = None
+
+    i_tf_shape: Any = None
+
+    z_tf_inside_half: Any = None
+
+    dr_tf_outboard: Any = None
+
+    r_tf_outboard_mid: Any = None
+
+    r_tf_inboard_mid: Any = None
+
+    n_tf_coils: Any = None
+
+    expected_yarc: Any = None
+
+    expected_ind_tf_coil: Any = None
+
+    expected_ind_tf_total: Any = None
 
 
 @pytest.mark.parametrize(
@@ -655,7 +671,9 @@ class TfcindParam(NamedTuple):
             dr_tf_outboard=0.0,
             r_tf_outboard_mid=0.0,
             r_tf_inboard_mid=0.0,
+            n_tf_coils=16,
             expected_ind_tf_coil=5.4453892599192845e-06,
+            expected_ind_tf_total=8.7126228958708553e-05,
         ),
         TfcindParam(
             z_tf_arc=np.array(
@@ -687,21 +705,25 @@ class TfcindParam(NamedTuple):
             dr_tf_outboard=0.0,
             r_tf_outboard_mid=0.0,
             r_tf_inboard_mid=0.0,
+            n_tf_coils=16,
             expected_ind_tf_coil=5.4524893280368181e-06,
+            expected_ind_tf_total=8.7239821240593091e-05,
         ),
         TfcindParam(
             dr_tf_inboard=1.208,
             itart=0,
             i_tf_shape=0,
+            expected_ind_tf_coil=6.26806810007207e-06,
+            expected_ind_tf_total=0.00010028908960115312,
             z_tf_inside_half=9.0730900215620327,
             dr_tf_outboard=1.208,
+            n_tf_coils=16,
             r_tf_outboard_mid=16.519405859443332,
             r_tf_inboard_mid=3.5979411851091103,
             # following 3 params are not used by needed for numba to be happy
             z_tf_arc=np.zeros(3),
             r_tf_arc=np.zeros(3),
             ind_tf_coil=0.0,
-            expected_ind_tf_coil=6.26806810007207e-06,
         ),
     ),
 )
@@ -720,7 +742,7 @@ def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
 
     monkeypatch.setattr(tfcoil_variables, "ind_tf_coil", tfcindparam.ind_tf_coil)
 
-    ind_tf_coil = tfcoil.tf_coil_self_inductance(
+    ind_tf_coil, ind_tf_total = tfcoil.tf_coil_self_inductance(
         dr_tf_inboard=tfcindparam.dr_tf_inboard,
         r_tf_arc=tfcindparam.r_tf_arc,
         z_tf_arc=tfcindparam.z_tf_arc,
@@ -730,9 +752,12 @@ def test_tf_coil_self_inductance(tfcindparam, monkeypatch, tfcoil):
         dr_tf_outboard=tfcindparam.dr_tf_outboard,
         r_tf_outboard_mid=tfcindparam.r_tf_outboard_mid,
         r_tf_inboard_mid=tfcindparam.r_tf_inboard_mid,
+        n_tf_coils=tfcindparam.n_tf_coils,
     )
 
     assert ind_tf_coil == pytest.approx(tfcindparam.expected_ind_tf_coil)
+
+    assert ind_tf_total == pytest.approx(tfcindparam.expected_ind_tf_total)
 
 
 class TfCoilAreaAndMassesParam(NamedTuple):
