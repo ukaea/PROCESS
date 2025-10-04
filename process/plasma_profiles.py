@@ -43,6 +43,7 @@ class PlasmaProfile:
         """
         # Default profile_size = 501, but it's possible to experiment with this value.
         self.profile_size = 501
+        physics_variables.n_plasma_profile_elements = self.profile_size
         self.outfile = constants.NOUT
         self.neprofile = profiles.NeProfile(self.profile_size)
         self.teprofile = profiles.TeProfile(self.profile_size)
@@ -277,6 +278,37 @@ class PlasmaProfile:
             )
             * 1.0e3
             * constants.ELECTRON_CHARGE
+        )
+
+        # Electron pressure profile (Pa)
+        physics_variables.pres_plasma_electron_profile = self.neprofile.profile_y * (
+            self.teprofile.profile_y * constants.KILOELECTRON_VOLT
+        )
+
+        # Total ion pressure profile (Pa)
+        physics_variables.pres_plasma_ion_total_profile = (
+            physics_variables.nd_ions_total
+            * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
+        ) * (
+            self.teprofile.profile_y
+            * constants.KILOELECTRON_VOLT
+            * physics_variables.f_temp_plasma_ion_electron
+        )
+
+        # Total pressure profile (Pa)
+        physics_variables.pres_plasma_total_profile = (
+            physics_variables.pres_plasma_electron_profile
+            + physics_variables.pres_plasma_ion_total_profile
+        )
+
+        # Fuel ion pressure profile (Pa)
+        physics_variables.pres_plasma_fuel_profile = (
+            physics_variables.nd_fuel_ions
+            * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
+        ) * (
+            self.teprofile.profile_y
+            * constants.KILOELECTRON_VOLT
+            * physics_variables.f_temp_plasma_ion_electron
         )
 
         #  Pressure profile index (N.B. no pedestal effects included here)
