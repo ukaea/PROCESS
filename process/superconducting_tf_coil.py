@@ -2041,6 +2041,16 @@ class SuperconductingTFCoil(TFCoil):
                 f_a_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             )
 
+            (
+                superconducting_tf_coil_variables.len_tf_coil_superconductor,
+                superconducting_tf_coil_variables.len_tf_superconductor_total,
+            ) = self.calculate_cable_in_conduit_superconductor_length(
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+                n_tf_coil_turns=tfcoil_variables.n_tf_coil_turns,
+                len_tf_coil=tfcoil_variables.len_tf_coil,
+                n_tf_turn_superconducting_cables=superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
+            )
+
         # Areas and fractions
         # -------------------
         # Central helium channel down the conductor core [m2]
