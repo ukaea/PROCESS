@@ -189,6 +189,9 @@ n_tf_turn_superconducting_cables: int = None
 len_tf_coil_superconductor: float = None
 """Length of superconducting cable in one TF coil [m]"""
 
+len_tf_superconductor_total: float = None
+"""Total length of superconducting cable in all TF coils [m]"""
+
 j_tf_superconductor_critical: float = None
 """Critical current density of the superconducting cable [A/m^2]"""
 
@@ -308,6 +311,7 @@ def init_superconducting_tf_coil_variables():
     global dia_tf_turn_superconducting_cable
     global n_tf_turn_superconducting_cables
     global len_tf_coil_superconductor
+    global len_tf_superconductor_total
     global j_tf_superconductor_critical
     global f_c_tf_turn_operating_critical
     global j_tf_coil_turn
@@ -367,6 +371,7 @@ def init_superconducting_tf_coil_variables():
     dia_tf_turn_superconducting_cable = 0.00073
     n_tf_turn_superconducting_cables = 0
     len_tf_coil_superconductor = 0.0
+    len_tf_superconductor_total = 0.0
     j_tf_superconductor_critical = 0.0
     f_c_tf_turn_operating_critical = 0.0
     j_tf_coil_turn = 0.0
