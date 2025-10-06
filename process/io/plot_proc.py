@@ -6628,8 +6628,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.425,
+        0.4,
+        0.9,
         textstr_turn_insulation,
         fontsize=9,
         verticalalignment="top",
@@ -6650,8 +6650,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.36,
+        0.55,
+        0.9,
         textstr_turn_steel,
         fontsize=9,
         verticalalignment="top",
@@ -6689,8 +6689,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         )
 
     axis.text(
-        0.3,
-        0.28,
+        0.5,
+        0.7,
         textstr_turn_cable_space,
         fontsize=9,
         verticalalignment="top",
@@ -6712,8 +6712,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.125,
+        0.45,
+        0.8,
         textstr_turn_cooling,
         fontsize=9,
         verticalalignment="top",
@@ -6744,8 +6744,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
     )
     axis.text(
-        0.55,
-        0.425,
+        0.75,
+        0.9,
         textstr_superconductor,
         fontsize=9,
         verticalalignment="top",
@@ -7137,7 +7137,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
-        ("te", r"$\langle T_e \rangle$", "keV"),
+        ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
@@ -10729,6 +10729,7 @@ def main_plot(
     fig16,
     fig17,
     fig18,
+    fig19,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10858,64 +10859,64 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_19 = fig9.add_subplot(231, aspect="equal")
+        plot_19 = fig9.add_subplot(221, aspect="equal")
         plot_19.set_position([
             0.025,
+            0.45,
             0.5,
-            0.45,
-            0.45,
+            0.5,
         ])  # Half height, a bit wider, top left
         plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig9)
 
         # TF coil turn structure
-        plot_20 = fig9.add_subplot(325, aspect="equal")
-        plot_20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_cable_in_conduit_turn(plot_20, fig9, m_file_data, scan)
+        plot_20 = fig10.add_subplot(221, aspect="equal")
+        plot_20.set_position([0.025, 0.5, 0.4, 0.4])
+        plot_tf_cable_in_conduit_turn(plot_20, fig10, m_file_data, scan)
     else:
         plot_19 = fig9.add_subplot(211, aspect="equal")
         plot_19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(plot_19, m_file_data, scan, fig8)
 
-    plot_21 = fig10.add_subplot(111, aspect="equal")
+    plot_21 = fig11.add_subplot(111, aspect="equal")
     plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
 
-    axes = fig11.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig12.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_23 = fig12.add_subplot(221)
+    plot_23 = fig13.add_subplot(221)
     plot_bootstrap_comparison(plot_23, m_file_data, scan)
 
-    plot_24 = fig12.add_subplot(224)
+    plot_24 = fig13.add_subplot(224)
     plot_h_threshold_comparison(plot_24, m_file_data, scan)
 
-    plot_25 = fig13.add_subplot(221)
+    plot_25 = fig14.add_subplot(221)
     plot_density_limit_comparison(plot_25, m_file_data, scan)
 
-    plot_26 = fig13.add_subplot(224)
+    plot_26 = fig14.add_subplot(224)
     plot_confinement_time_comparison(plot_26, m_file_data, scan)
 
-    plot_27 = fig14.add_subplot(111)
+    plot_27 = fig15.add_subplot(111)
     plot_current_profiles_over_time(plot_27, m_file_data, scan)
 
-    plot_28 = fig15.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_28, fig15, m_file_data, scan)
+    plot_28 = fig16.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_28, fig16, m_file_data, scan)
 
-    plot_29 = fig15.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_29, fig15, m_file_data, scan)
+    plot_29 = fig16.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_29, fig16, m_file_data, scan)
 
-    plot_30 = fig16.add_subplot(221, aspect="equal")
+    plot_30 = fig17.add_subplot(221, aspect="equal")
     plot_first_wall_top_down_cross_section(plot_30, m_file_data, scan)
 
-    plot_31 = fig16.add_subplot(122)
+    plot_31 = fig17.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
 
-    plot_32 = fig16.add_subplot(337)
+    plot_32 = fig17.add_subplot(337)
     plot_fw_90_deg_pipe_bend(plot_32, m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig17, m_file_data, scan)
+    plot_blkt_pipe_bends(fig18, m_file_data, scan)
 
-    plot_33 = fig18.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_33, m_file_data, scan, fig18)
+    plot_33 = fig19.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_33, m_file_data, scan, fig19)
 
 
 def main(args=None):
@@ -11225,6 +11226,7 @@ def main(args=None):
     page16 = plt.figure(figsize=(12, 9), dpi=80)
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
+    page19 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11247,6 +11249,7 @@ def main(args=None):
         page16,
         page17,
         page18,
+        page19,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11274,6 +11277,7 @@ def main(args=None):
         pdf.savefig(page16)
         pdf.savefig(page17)
         pdf.savefig(page18)
+        pdf.savefig(page19)
 
     # show fig if option used
     if args.show:
@@ -11298,6 +11302,7 @@ def main(args=None):
     plt.close(page16)
     plt.close(page17)
     plt.close(page18)
+    plt.close(page19)
 
 
 if __name__ == "__main__":
