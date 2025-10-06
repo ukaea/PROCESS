@@ -140,6 +140,9 @@ dr_shld_vv_gap_inboard: float = None
 dr_cs_tf_gap: float = None
 """gap between central solenoid and TF coil (m) (`iteration variable 42`)"""
 
+i_dr_tf_wp_with_insulation_input: bool = None
+"""If True, dr_tf_wp_with_insulation is an input variable, otherwise it is calculated
+"""
 
 gapomin: float = None
 """minimum gap between outboard vacuum vessel and TF coil (m) (`iteration variable 31`)"""
@@ -441,6 +444,7 @@ def init_build_variables():
     global dr_shld_vv_gap_inboard
     global dr_cs_tf_gap
     global gapomin
+    global i_dr_tf_wp_with_insulation_input
     global dr_shld_vv_gap_outboard
     global z_tf_inside_half
     global dz_tf_upper_lower_midplane
@@ -536,6 +540,7 @@ def init_build_variables():
     dr_shld_vv_gap_inboard = 0.155
     dr_cs_tf_gap = 0.08
     gapomin = 0.234
+    i_dr_tf_wp_with_insulation_input = False
     dr_shld_vv_gap_outboard = 0.0
     z_tf_inside_half = 0.0
     dz_tf_upper_lower_midplane = 0.0
