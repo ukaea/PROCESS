@@ -6662,8 +6662,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.425,
+        0.4,
+        0.9,
         textstr_turn_insulation,
         fontsize=9,
         verticalalignment="top",
@@ -6684,8 +6684,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.36,
+        0.55,
+        0.9,
         textstr_turn_steel,
         fontsize=9,
         verticalalignment="top",
@@ -6723,8 +6723,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         )
 
     axis.text(
-        0.3,
-        0.28,
+        0.5,
+        0.7,
         textstr_turn_cable_space,
         fontsize=9,
         verticalalignment="top",
@@ -6746,8 +6746,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.125,
+        0.45,
+        0.8,
         textstr_turn_cooling,
         fontsize=9,
         verticalalignment="top",
@@ -6778,8 +6778,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
     )
     axis.text(
-        0.55,
-        0.425,
+        0.75,
+        0.9,
         textstr_superconductor,
         fontsize=9,
         verticalalignment="top",
@@ -7171,7 +7171,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
-        ("te", r"$\langle T_e \rangle$", "keV"),
+        ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
@@ -11688,13 +11688,18 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        ax19 = fig12.add_subplot(231, aspect="equal")
-        ax19.set_position([0.025, 0.5, 0.45, 0.45])
+        ax19 = fig12.add_subplot(221, aspect="equal")
+        ax19.set_position([
+            0.025,
+            0.45,
+            0.5,
+            0.5,
+        ])  # Half height, a bit wider, top left
         plot_superconducting_tf_wp(ax19, m_file_data, scan, fig12)
 
         # TF coil turn structure
         ax20 = fig12.add_subplot(325, aspect="equal")
-        ax20.set_position([0.025, 0.1, 0.3, 0.3])
+        ax20.set_position([0.025, 0.5, 0.4, 0.4])
         plot_tf_cable_in_conduit_turn(ax20, fig12, m_file_data, scan)
     else:
         ax19 = fig12.add_subplot(211, aspect="equal")
