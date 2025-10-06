@@ -6794,6 +6794,83 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
 
+def plot_cable_in_conduit_cable(axis, fig, mfile_data, scan: int) -> None:
+    """
+    Plots TF coil CICC cable cross-section.
+    """
+
+    dia_tf_turn_superconducting_cable = mfile_data.data[
+        "dia_tf_turn_superconducting_cable"
+    ].get_scan(scan)
+    f_a_tf_turn_cable_copper = mfile_data.data["f_a_tf_turn_cable_copper"].get_scan(
+        scan
+    )
+
+    # Convert to mm
+    dia_mm = dia_tf_turn_superconducting_cable * 1000
+    radius_superconductor_mm = np.sqrt(f_a_tf_turn_cable_copper) * (dia_mm / 2)
+
+    # Draw the outer copper circle
+    circle_copper_surrounding = patches.Circle(
+        (0, 0),
+        dia_mm / 2,
+        facecolor="#b87333",  # copper color
+        edgecolor="#8B4000",  # darker copper edge
+        linewidth=0.1,
+        alpha=0.8,
+        label="Copper",
+        zorder=1,
+    )
+    axis.add_patch(circle_copper_surrounding)
+
+    # Draw the inner superconductor circle
+    circle_central_conductor = patches.Circle(
+        (0, 0),
+        radius_superconductor_mm,
+        facecolor="black",
+        linewidth=0.3,
+        alpha=0.7,
+        label="Superconductor",
+        zorder=2,
+    )
+    axis.add_patch(circle_central_conductor)
+
+    # Convert cable diameter to mm
+    cable_diameter_mm = (
+        mfile_data.data["dia_tf_turn_superconducting_cable"].get_scan(scan) * 1000
+    )
+    textstr_cable = (
+        f"$\\mathbf{{Cable:}}$\n \n"
+        f"Cable diameter: {cable_diameter_mm:.4f} mm\n"
+        f"Copper area fraction: {mfile_data.data['f_a_tf_turn_cable_copper'].get_scan(scan):.4f}\n"
+    )
+    axis.text(
+        0.4,
+        0.3,
+        textstr_cable,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#6dd3f7",  # light blue for superconductors
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.set_aspect("equal")
+    axis.set_xlim(-dia_mm / 1.5, dia_mm / 1.5)
+    axis.set_ylim(-dia_mm / 1.5, dia_mm / 1.5)
+    axis.set_title("TF CICC Cable Cross-Section")
+    axis.minorticks_on()
+    axis.legend(loc="upper right")
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.set_xlabel("X [mm]")
+    axis.set_ylabel("Y [mm]")
+
+
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     """Function to plot PF coils
 
@@ -11701,6 +11778,9 @@ def main_plot(
         ax20 = fig12.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
         plot_tf_cable_in_conduit_turn(ax20, fig12, m_file_data, scan)
+        plot_205 = fig10.add_subplot(223, aspect="equal")
+        plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+        plot_cable_in_conduit_cable(plot_205, fig10, m_file_data, scan)
     else:
         ax19 = fig12.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
