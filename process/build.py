@@ -11,7 +11,6 @@ from process.data_structure import (
     current_drive_variables,
     divertor_variables,
     fwbs_variables,
-    numerics,
     pfcoil_variables,
     physics_variables,
     tfcoil_variables,
@@ -1741,8 +1740,8 @@ class Build:
             build_variables.dr_cs_precomp = 0.0e0
 
         # Issue #514 Radial dimensions of inboard leg
-        # Calculate build_variables.dr_tf_inboard if tfcoil_variables.dr_tf_wp_with_insulation is an iteration variable (140)
-        if 140 in numerics.ixc[0 : numerics.nvar]:
+        # Calculate build_variables.dr_tf_inboard
+        if build_variables.i_dr_tf_wp_with_insulation_input:
             build_variables.dr_tf_inboard = (
                 tfcoil_variables.dr_tf_wp_with_insulation
                 + tfcoil_variables.dr_tf_plasma_case
@@ -1777,7 +1776,7 @@ class Build:
 
         # WP radial thickness [m]
         # Calculated only if not used as an iteration variable
-        if 140 not in numerics.ixc[0 : numerics.nvar]:
+        if not build_variables.i_dr_tf_wp_with_insulation_input:
             tfcoil_variables.dr_tf_wp_with_insulation = (
                 build_variables.dr_tf_inboard
                 - tfcoil_variables.dr_tf_plasma_case
