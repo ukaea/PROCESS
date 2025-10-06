@@ -6604,10 +6604,6 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
             ),
         )
 
-        # Cable strand packing parameters
-        strand_diameter = 0.002  # 2mm diameter strands
-        void_fraction = 0.9
-
         # Cable space bounds
         cable_bounds = [
             insulation_thickness + steel_thickness,
@@ -6843,6 +6839,7 @@ def plot_cable_in_conduit_cable(axis, fig, mfile_data, scan: int) -> None:
         f"$\\mathbf{{Cable:}}$\n \n"
         f"Cable diameter: {cable_diameter_mm:.4f} mm\n"
         f"Copper area fraction: {mfile_data.data['f_a_tf_turn_cable_copper'].get_scan(scan):.4f}\n"
+        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_cables'].get_scan(scan))}\n"
     )
     axis.text(
         0.4,
