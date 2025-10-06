@@ -433,7 +433,7 @@ def plot_main_power_flow(
         0.22,
         0.81,
         "$P_{\\alpha,{loss}}$\n"
-        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
+        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -445,7 +445,7 @@ def plot_main_power_flow(
     axis.text(
         0.22,
         0.69,
-        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -484,7 +484,7 @@ def plot_main_power_flow(
     axis.text(
         0.22,
         0.63,
-        f"$P_{{{{sep}}}}$\n{mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{{{sep}}}}$\n{mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -599,7 +599,7 @@ def plot_main_power_flow(
     axis.text(
         0.37,
         0.775,
-        f"$P_{{\\text{{neutron}}}}$:\n{mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{neutron}}}}$:\n{mfile_data.data['p_neutron_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -902,7 +902,7 @@ def plot_main_power_flow(
     axis.text(
         0.325,
         0.225,
-        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="center",
@@ -939,7 +939,7 @@ def plot_main_power_flow(
     axis.text(
         0.9,
         0.25,
-        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile_data.data['p_plant_primary_heat_mw'].get_scan(scan):.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile_data.data['eta_turbine'].get_scan(scan):.3f}",
+        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile_data.data['p_plant_primary_heat_mw'].get_scan(scan):,.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile_data.data['eta_turbine'].get_scan(scan):.3f}",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1068,7 +1068,7 @@ def plot_main_power_flow(
     axis.text(
         0.68,
         0.15,
-        f"$P_{{\\text{{gross}}}}$:\n{mfile_data.data['p_plant_electric_gross_mw'].get_scan(scan):.2f} MWe",
+        f"$P_{{\\text{{gross}}}}$:\n{mfile_data.data['p_plant_electric_gross_mw'].get_scan(scan):,.2f} MWe",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1100,7 +1100,7 @@ def plot_main_power_flow(
     axis.text(
         0.875,
         0.05,
-        f"$P_{{\\text{{loss}}}}$:\n{mfile_data.data['p_turbine_loss_mw'].get_scan(scan):.2f} MWth",
+        f"$P_{{\\text{{loss}}}}$:\n{mfile_data.data['p_turbine_loss_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1133,7 +1133,7 @@ def plot_main_power_flow(
     axis.text(
         0.68,
         0.05,
-        f"$P_{{\\text{{net,electric}}}}$:\n{mfile_data.data['p_plant_electric_net_mw'].get_scan(scan):.2f} MWe",
+        f"$P_{{\\text{{net,electric}}}}$:\n{mfile_data.data['p_plant_electric_net_mw'].get_scan(scan):,.2f} MWe",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1151,8 +1151,8 @@ def plot_main_power_flow(
         0.575,
         0.14,
         (
-            f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile_data.data['p_plant_electric_recirc_mw'].get_scan(scan):.2f} MWe\n"
-            f"$f_{{\\text{{recirc}}}}$:\n{mfile_data.data['f_p_plant_electric_recirc'].get_scan(scan):.2f}"
+            f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile_data.data['p_plant_electric_recirc_mw'].get_scan(scan):,.2f} MWe\n"
+            f"$f_{{\\text{{recirc}}}}$:\n{mfile_data.data['f_p_plant_electric_recirc'].get_scan(scan):,.2f}"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -1306,7 +1306,7 @@ def plot_main_power_flow(
     axis.text(
         0.46,
         0.775,
-        f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile_data.data['p_fw_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile_data.data['p_fw_nuclear_heat_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1323,7 +1323,7 @@ def plot_main_power_flow(
     axis.text(
         0.46,
         0.71,
-        f"$P_{{\\text{{FW,rad}}}}$:\n{mfile_data.data['p_fw_rad_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{FW,rad}}}}$:\n{mfile_data.data['p_fw_rad_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1385,7 +1385,7 @@ def plot_main_power_flow(
     axis.text(
         0.5,
         0.555,
-        f"Primary thermal\n(inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        f"Primary thermal\n(inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1401,7 +1401,7 @@ def plot_main_power_flow(
     axis.text(
         0.7,
         0.555,
-        f"Primary thermal\n(inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        f"Primary thermal\n(inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1508,7 +1508,7 @@ def plot_main_power_flow(
     axis.text(
         0.6,
         0.49,
-        f"Primary thermal (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth\n",
+        f"Primary thermal (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):,.2f} MWth\n",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1549,9 +1549,9 @@ def plot_main_power_flow(
         0.625,
         0.775,
         (
-            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):.2f} MW \n"
-            f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):.2f} MW\n"
-            f"$f_{{\\text{{multiplication}}}}$:\n{mfile_data.data['f_p_blkt_multiplication'].get_scan(scan):.2f}"
+            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):,.2f} MW \n"
+            f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):,.2f} MW\n"
+            f"$f_{{\\text{{multiplication}}}}$:\n{mfile_data.data['f_p_blkt_multiplication'].get_scan(scan):,.2f}"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -1592,7 +1592,7 @@ def plot_main_power_flow(
     axis.text(
         0.38,
         0.375,
-        f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile_data.data['p_shld_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile_data.data['p_shld_secondary_heat_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1684,7 +1684,7 @@ def plot_main_power_flow(
     axis.text(
         0.29,
         0.57,
-        f"$P_{{\\text{{div,rad}}}}$:\n{mfile_data.data['p_div_rad_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{div,rad}}}}$:\n{mfile_data.data['p_div_rad_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1701,7 +1701,7 @@ def plot_main_power_flow(
     axis.text(
         0.4,
         0.58,
-        f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -2510,9 +2510,9 @@ def plot_main_plasma_information(
         f"$\\kappa_{{95}}$: {mfile_data.data['kappa95'].get_scan(scan):.2f} | $\\delta_{{95}}$: {mfile_data.data['triang95'].get_scan(scan):.2f} | $\\zeta$: {mfile_data.data['plasma_square'].get_scan(scan):.2f}\n"
         f"A: {mfile_data.data['aspect'].get_scan(scan):.2f}\n"
         f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}$ \\ \\text{{m}}^3$\n"
-        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):.2f}$ \\ \\text{{m}}^2$\n"
-        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):.2f}$ \\ \\text{{m}}^2$\n"
-        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):.2f}$ \\ \\text{{m}}$"
+        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):,.2f}$ \\ \\text{{m}}^2$\n"
+        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):,.2f}$ \\ \\text{{m}}^2$\n"
+        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):,.2f}$ \\ \\text{{m}}$"
     )
 
     axis.text(
@@ -2679,7 +2679,7 @@ def plot_main_plasma_information(
         f"  - Volt-seconds needed for burn: {mfile_data.data['vs_plasma_burn_required'].get_scan(scan):.4f} Vs\n"
         f"$V_{{\\text{{loop}}}}$: {mfile_data.data['v_plasma_loop_burn'].get_scan(scan):.4f} V\n"
         f"$\\Omega_{{\\text{{p}}}}$: {mfile_data.data['res_plasma'].get_scan(scan):.4e} $\\Omega$\n"
-        f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):.4f} s\n"
+        f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):,.4f} s\n"
         f"Plasma inductance: {mfile_data.data['ind_plasma'].get_scan(scan):.4e} H\n"
         f"Plasma stored magnetic energy: {mfile_data.data['e_plasma_magnetic_stored'].get_scan(scan) / 1e9:.4f} GJ\n"
         f"Plasma normalised internal inductance: {mfile_data.data['ind_plasma_internal_norm'].get_scan(scan):.4f}"
@@ -2875,11 +2875,11 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
         f"Fuel mixture: \n"
         f"|  D: {mfile_data.data['f_plasma_fuel_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_plasma_fuel_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_plasma_fuel_helium3'].get_scan(scan):.2f}  |\n\n"
-        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW\n"
-        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
-        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['p_alpha_total_mw'].get_scan(scan):.2f} MW"
+        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['p_alpha_total_mw'].get_scan(scan):,.2f} MW"
     )
 
     axis.text(
@@ -4702,9 +4702,9 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
 
     textstr_fw = "\n".join((
         rf"Coolant type: {i_fw_coolant_type}",
-        rf"$T_{{FW,peak}}$: {temp_fw_peak:.3f} K",
-        rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:.3f} kPa",
-        rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:.3f} bar",
+        rf"$T_{{FW,peak}}$: {temp_fw_peak:,.3f} K",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:,.3f} kPa",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:,.3f} bar",
         rf"$N_{{outboard}}$: {n_fw_outboard_channels}",
         rf"$N_{{inboard}}$: {n_fw_inboard_channels}",
     ))
@@ -6763,10 +6763,10 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
         f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
         f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
-        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):.2f} A\n"
-        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):.2f} A\n"
-        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):.4f} K\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):,.2f} A\n"
+        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):,.4f}\n"
+        f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):,.4f} K\n"
         f"\n$\\mathbf{{Quench:}}$\n \n"
         f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
         f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
@@ -6835,11 +6835,21 @@ def plot_cable_in_conduit_cable(axis, fig, mfile_data, scan: int) -> None:
     cable_diameter_mm = (
         mfile_data.data["dia_tf_turn_superconducting_cable"].get_scan(scan) * 1000
     )
+    # Convert lengths from meters to kilometers for display
+    len_tf_coil_superconductor_km = (
+        mfile_data.data["len_tf_coil_superconductor"].get_scan(scan) / 1000.0
+    )
+    len_tf_superconductor_total_km = (
+        mfile_data.data["len_tf_superconductor_total"].get_scan(scan) / 1000.0
+    )
+
     textstr_cable = (
         f"$\\mathbf{{Cable:}}$\n \n"
-        f"Cable diameter: {cable_diameter_mm:.4f} mm\n"
+        f"Cable diameter: {cable_diameter_mm:,.4f} mm\n"
         f"Copper area fraction: {mfile_data.data['f_a_tf_turn_cable_copper'].get_scan(scan):.4f}\n"
-        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_cables'].get_scan(scan))}\n"
+        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_cables'].get_scan(scan)):,}\n"
+        f"Length of superconductor per coil: {len_tf_coil_superconductor_km:,.2f} km\n"
+        f"Total length of superconductor in all coils: {len_tf_superconductor_total_km:,.2f} km\n"
     )
     axis.text(
         0.4,
@@ -6851,7 +6861,7 @@ def plot_cable_in_conduit_cable(axis, fig, mfile_data, scan: int) -> None:
         transform=fig.transFigure,
         bbox={
             "boxstyle": "round",
-            "facecolor": "#6dd3f7",  # light blue for superconductors
+            "facecolor": "#cccccc",  # grayish color
             "alpha": 1.0,
             "linewidth": 2,
         },
@@ -9069,7 +9079,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         f"CS full height: {mfile_data.data['dz_cs_full'].get_scan(scan):.4f} m\n"
         f"CS full width: {mfile_data.data['dr_cs_full'].get_scan(scan):.4f} m\n"
         f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
-        f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
+        f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):,.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
         f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n\n"
     )
@@ -10578,9 +10588,9 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     # ============================================================================
 
     textstr_dt = (
-        f"Total fusion power: {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Plasma fusion power: {mfile_data.data['p_plasma_dt_mw'].get_scan(scan):.2f} MW                     \n"
-        f"Beam fusion power: {mfile_data.data['p_beam_dt_mw'].get_scan(scan):.2f} MW\n"
+        f"Total fusion power: {mfile_data.data['p_dt_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"Plasma fusion power: {mfile_data.data['p_plasma_dt_mw'].get_scan(scan):,.2f} MW                     \n"
+        f"Beam fusion power: {mfile_data.data['p_beam_dt_mw'].get_scan(scan):,.2f} MW\n"
     )
 
     axis.text(
@@ -10611,7 +10621,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     # =================================================
 
     textstr_dd = (
-        f"Total fusion power: {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Total fusion power: {mfile_data.data['p_dd_total_mw'].get_scan(scan):,.2f} MW\n"
         f"Tritium branching ratio: {mfile_data.data['f_dd_branching_trit'].get_scan(scan):.4f}                      \n"
     )
 
@@ -10642,7 +10652,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW                                 \n\n"
+    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):,.2f} MW                                 \n\n"
 
     axis.text(
         0.05,
@@ -10711,11 +10721,11 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     # =================================================
 
     textstr_neutron = (
-        f"Total power: {mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Plasma power: {mfile_data.data['p_plasma_neutron_mw'].get_scan(scan):.2f} MW\n"
-        f"Beam power: {mfile_data.data['p_beam_neutron_mw'].get_scan(scan):.2f} MW\n\n"
-        f"Total power density: {mfile_data.data['pden_neutron_total_mw'].get_scan(scan):.4e} MW/m3\n"
-        f"Plasma power density: {mfile_data.data['pden_plasma_neutron_mw'].get_scan(scan):.4e} MW/m3\n"
+        f"Total power: {mfile_data.data['p_neutron_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"Plasma power: {mfile_data.data['p_plasma_neutron_mw'].get_scan(scan):,.2f} MW\n"
+        f"Beam power: {mfile_data.data['p_beam_neutron_mw'].get_scan(scan):,.2f} MW\n\n"
+        f"Total power density: {mfile_data.data['pden_neutron_total_mw'].get_scan(scan):,.4e} MW/m3\n"
+        f"Plasma power density: {mfile_data.data['pden_plasma_neutron_mw'].get_scan(scan):,.4e} MW/m3\n"
     )
 
     axis.text(

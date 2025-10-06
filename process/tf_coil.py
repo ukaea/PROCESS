@@ -1207,6 +1207,18 @@ class TFCoil:
                     "(n_tf_turn_superconducting_cables)",
                     superconducting_tf_coil_variables.n_tf_turn_superconducting_cables,
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Length of superconductor in TF coil (m)",
+                    "(len_tf_coil_superconductor)",
+                    superconducting_tf_coil_variables.len_tf_coil_superconductor,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total length of superconductor in all TF coils (m)",
+                    "(len_tf_superconductor_total)",
+                    superconducting_tf_coil_variables.len_tf_superconductor_total,
+                )
                 po.ocmmnt(self.outfile, "Fractions by area")
                 po.ovarre(
                     self.outfile,
