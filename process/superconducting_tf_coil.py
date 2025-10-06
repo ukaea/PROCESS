@@ -1342,6 +1342,35 @@ class SuperconductingTFCoil(TFCoil):
         # Number of strands that fit
         return int(effective_area / strand_area)
 
+    def calculate_cable_in_conduit_superconductor_length(
+        self,
+        n_tf_coils: int,
+        n_tf_coil_turns: int,
+        len_tf_coil: float,
+        n_tf_turn_superconducting_cables: int,
+    ) -> float:
+        """
+        Calculates the total length of superconducting material required for the TF coils.
+
+        :param int n_tf_coils: Number of TF coils.
+        :param int n_tf_coil_turns: Total number of turns in the TF coil winding pack.
+        :param float len_tf_coil: Length of a single TF coil (in meters).
+        :param int n_tf_turn_superconducting_cables: Number of superconducting cables per turn in the TF coil.
+
+        :returns: Total length of superconducting material required (in meters).
+        :rtype: float
+        """
+
+        # Length of superconductor in one TF coil
+        len_tf_coil_superconductor = (
+            n_tf_coil_turns * len_tf_coil * n_tf_turn_superconducting_cables
+        )
+
+        # Total length of superconductor in all TF coils
+        len_tf_superconductor_total = len_tf_coil_superconductor * n_tf_coils
+
+        return len_tf_coil_superconductor, len_tf_superconductor_total
+
     def output_tf_superconductor_info(self):
         """Output TF superconductor information"""
 
