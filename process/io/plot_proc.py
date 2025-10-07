@@ -6189,21 +6189,10 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         """Pack circular strands in rectangular space with cooling pipe obstacle"""
 
         x, y, width, height = cable_space_bounds
-        shape_area = width * height
-
-        # Subtract pipe area from total
-        pipe_area = np.pi * pipe_radius**2
-        # Approximate corner area loss
-        corner_area = (
-            4 * (corner_radius**2 * (1 - np.pi / 4)) if corner_radius > 0 else 0
-        )
-
-        usable_area = shape_area - pipe_area - corner_area
 
         radius = strand_diameter / 2
         placed_strands = []
         attempts = 0
-        max_attempts = 1e5
 
         pipe_x, pipe_y = pipe_center
 
@@ -6259,45 +6248,44 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                         ),  # top-right
                         (x + corner_radius, y + height - corner_radius),  # top-left
                     ]
-                    # Check each corner
-                    corner_collision = False
-                    if candidate_x < corners[0][0] and candidate_y < corners[0][1]:
-                        if (
-                            np.sqrt(
+                    if (
+                        (
+                            candidate_x < corners[0][0]
+                            and candidate_y < corners[0][1]
+                            and np.sqrt(
                                 (candidate_x - corners[0][0]) ** 2
                                 + (candidate_y - corners[0][1]) ** 2
                             )
                             > corner_radius - radius
-                        ):
-                            corner_collision = True
-                    elif candidate_x > corners[1][0] and candidate_y < corners[1][1]:
-                        if (
-                            np.sqrt(
+                        )
+                        or (
+                            candidate_x > corners[1][0]
+                            and candidate_y < corners[1][1]
+                            and np.sqrt(
                                 (candidate_x - corners[1][0]) ** 2
                                 + (candidate_y - corners[1][1]) ** 2
                             )
                             > corner_radius - radius
-                        ):
-                            corner_collision = True
-                    elif candidate_x > corners[2][0] and candidate_y > corners[2][1]:
-                        if (
-                            np.sqrt(
+                        )
+                        or (
+                            candidate_x > corners[2][0]
+                            and candidate_y > corners[2][1]
+                            and np.sqrt(
                                 (candidate_x - corners[2][0]) ** 2
                                 + (candidate_y - corners[2][1]) ** 2
                             )
                             > corner_radius - radius
-                        ):
-                            corner_collision = True
-                    elif candidate_x < corners[3][0] and candidate_y > corners[3][1]:
-                        if (
-                            np.sqrt(
+                        )
+                        or (
+                            candidate_x < corners[3][0]
+                            and candidate_y > corners[3][1]
+                            and np.sqrt(
                                 (candidate_x - corners[3][0]) ** 2
                                 + (candidate_y - corners[3][1]) ** 2
                             )
                             > corner_radius - radius
-                        ):
-                            corner_collision = True
-                    if corner_collision:
+                        )
+                    ):
                         continue
 
                 # Check collision with existing strands
@@ -6339,46 +6327,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 break
 
         attempts = n_rows * n_cols
-        print(f"{len(placed_strands)}/ {n_strands}, Attempts:{attempts}")
 
         return len(placed_strands), attempts
-
-        #     # Check collision with existing strands
-        #     collision = False
-        #     for existing_x, existing_y in placed_strands:
-        #         distance = np.sqrt(
-        #             (candidate_x - existing_x) ** 2 + (candidate_y - existing_y) ** 2
-        #         )
-        #         if distance < strand_diameter:
-        #             collision = True
-        #             break
-
-        #     if not collision:
-        #         placed_strands.append((candidate_x, candidate_y))
-        #         # Plot the strand
-        #         circle_copper_surrounding = Circle(
-        #             (candidate_x, candidate_y),
-        #             radius,
-        #             facecolor="#b87333",  # copper color
-        #             edgecolor="#8B4000",  # darker copper edge
-        #             linewidth=0.3,
-        #             alpha=0.8,
-        #         )
-        #         axis.add_patch(circle_copper_surrounding)
-
-        #         circle_central_conductor = Circle(
-        #             (candidate_x, candidate_y),
-        #             radius/2,
-        #             facecolor="black",
-        #             linewidth=0.3,
-        #             alpha=0.5,
-        #         )
-        #         axis.add_patch(circle_central_conductor)
-
-        #     attempts += 1
-        #     print(f"{len(placed_strands)}/ {n_strands}, Attempts:{attempts}")
-
-        # return len(placed_strands), attempts
 
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
@@ -6509,8 +6459,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 cable_space_bounds=cable_bounds,
                 pipe_center=(
                     turn_width / 2,
-                    turn_width / 2,
-                ),  # pipe_center is the center of the turn
+                    (turn_width if i_tf_turns_integer == 0 else turn_height) / 2,
+                ),
                 pipe_radius=he_pipe_diameter / 2,
                 strand_diameter=strand_diameter,
                 void_fraction=void_fraction,
@@ -6524,19 +6474,6 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                 ].get_scan(scan),
             )
 
-            # Calculate packing efficiency
-            total_cable_space = cable_bounds[2] * cable_bounds[3]
-            pipe_area = np.pi * (he_pipe_diameter / 2) ** 2
-            corner_area = 4 * (radius_tf_turn_cable_space_corners**2 * (1 - np.pi / 4))
-            usable_area = total_cable_space - pipe_area - corner_area
-            strand_area = np.pi * (strand_diameter / 2) ** 2
-            achieved_packing = (
-                (n_strands * strand_area) / usable_area if usable_area > 0 else 0
-            )
-        else:
-            n_strands = 0
-            attempts = 0
-            achieved_packing = 0
         axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
         axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
@@ -6614,9 +6551,12 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
 
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
-            n_strands, attempts = _pack_strands_rectangular_with_obstacles(
+            _, _ = _pack_strands_rectangular_with_obstacles(
                 cable_bounds,
-                pipe_center,
+                (
+                    turn_width / 2,
+                    turn_height / 2,
+                ),
                 he_pipe_diameter / 2,
                 strand_diameter,
                 void_fraction,
@@ -6629,20 +6569,6 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                     "f_a_tf_turn_cable_copper"
                 ].get_scan(scan),
             )
-
-            # Calculate packing efficiency
-            total_cable_space = cable_bounds[2] * cable_bounds[3]
-            pipe_area = np.pi * (he_pipe_diameter / 2) ** 2
-            corner_area = 4 * (radius_tf_turn_cable_space_corners**2 * (1 - np.pi / 4))
-            usable_area = total_cable_space - pipe_area - corner_area
-            strand_area = np.pi * (strand_diameter / 2) ** 2
-            achieved_packing = (
-                (n_strands * strand_area) / usable_area if usable_area > 0 else 0
-            )
-        else:
-            n_strands = 0
-            attempts = 0
-            achieved_packing = 0
 
         axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
         axis.set_ylim(-turn_height * 0.05, turn_height * 1.05)
@@ -11787,7 +11713,7 @@ def main_plot(
         plot_tf_cable_in_conduit_turn(ax20, fig12, m_file_data, scan)
         plot_205 = fig10.add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, fig10, m_file_data, scan)
+        plot_cable_in_conduit_cable(plot_205, fig11, m_file_data, scan)
     else:
         ax19 = fig12.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
