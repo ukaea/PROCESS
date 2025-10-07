@@ -514,11 +514,25 @@ class Scan:
 
             for i in range(numerics.neqns, numerics.neqns + numerics.nineqns):
                 name = numerics.lablcc[numerics.icc[i] - 1]
+                constraint_bound = con2[i]
+
+                # assumes f-value is 1
+                # -cc because sign is reversed in constraint_eqns
+                if sym[i] == ">=":
+                    constraint_value = constraint_bound * (1 - -numerics.rcm[i])
+                elif sym[i] == "<=":
+                    constraint_value = constraint_bound * (-numerics.rcm[i] + 1)
+                else:
+                    raise ProcessValueError(
+                        f"Unknown constraint direction '{sym[i]}' for inequality constraint"
+                    )
+
                 inequality_constraint_table.append([
                     name,
+                    f"{constraint_value} {lab[i]}",
                     sym[i],
                     f"{con2[i]} {lab[i]}",
-                    f"{err[i]} {lab[i]}",
+                    f"{numerics.rcm[i]}",
                 ])
                 process_output.ovarre(
                     constants.MFILE,
@@ -533,9 +547,10 @@ class Scan:
                     inequality_constraint_table,
                     headers=[
                         "",
-                        "",
                         "Physical constraint",
-                        "Constraint residue",
+                        "",
+                        "Physical constraint bound",
+                        "Normalised residue",
                     ],
                     numalign="left",
                 ),
