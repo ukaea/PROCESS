@@ -541,6 +541,27 @@ class Scan:
                     numerics.rcm[i],
                 )
 
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} physical value",
+                    f"(ineq_value_con{numerics.icc[i]:03d})",
+                    constraint_value,
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} symbol",
+                    f"(ineq_symbol_con{numerics.icc[i]:03d})",
+                    f"'{sym[i]}'",
+                )
+
+                process_output.ovarre(
+                    constants.MFILE,
+                    f"{name} physical bound",
+                    f"(ineq_bound_con{numerics.icc[i]:03d})",
+                    constraint_bound,
+                )
+
             process_output.write(
                 constants.NOUT,
                 tabulate(
