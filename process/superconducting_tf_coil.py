@@ -1316,7 +1316,9 @@ class SuperconductingTFCoil(TFCoil):
         )
 
     def calculate_cable_in_conduit_strand_count(
-        self, a_cable_space: float, dia_superconductor_strand: float, f_a_void: float
+        self,
+        a_cable_space: float,
+        dia_superconductor_strand: float,
     ) -> int:
         """
         Calculates the maximum number of superconducting strands that can fit into a cable-in-conduit conductor,
@@ -1326,15 +1328,13 @@ class SuperconductingTFCoil(TFCoil):
         :type a_cable_space: float
         :param dia_superconductor_strand: Diameter of a single superconducting strand (in meters).
         :type dia_superconductor_strand: float
-        :param f_a_void: Fraction of the cable area to remain void (between 0 and 1).
-        :type f_a_void: float
 
         :returns: The maximum number of strands that can fit in the available space, accounting for the void fraction.
         :rtype: int
         """
 
         # Effective area available for strands (excluding voids)
-        effective_area = a_cable_space * (1 - f_a_void)
+        effective_area = a_cable_space
 
         # Area per strand (circular)
         strand_area = np.pi * (dia_superconductor_strand / 2) ** 2
@@ -1357,8 +1357,10 @@ class SuperconductingTFCoil(TFCoil):
         :param float len_tf_coil: Length of a single TF coil (in meters).
         :param int n_tf_turn_superconducting_cables: Number of superconducting cables per turn in the TF coil.
 
-        :returns: Total length of superconducting material required (in meters).
-        :rtype: float
+        :returns: Tuple containing:
+            - Length of superconductor in one TF coil (in meters).
+            - Total length of superconductor in all TF coils (in meters).
+        :rtype: tuple[float, float]
         """
 
         # Length of superconductor in one TF coil
@@ -2036,9 +2038,8 @@ class SuperconductingTFCoil(TFCoil):
         # ---------------------------------------------------
         if tfcoil_variables.i_tf_sc_mat != 6:
             superconducting_tf_coil_variables.n_tf_turn_superconducting_cables = self.calculate_cable_in_conduit_strand_count(
-                a_cable_space=tfcoil_variables.a_tf_turn_cable_space_no_void,
+                a_cable_space=superconducting_tf_coil_variables.a_tf_turn_cable_space_effective,
                 dia_superconductor_strand=superconducting_tf_coil_variables.dia_tf_turn_superconducting_cable,
-                f_a_void=tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
             )
 
             (
