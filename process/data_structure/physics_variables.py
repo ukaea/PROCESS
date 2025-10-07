@@ -1746,7 +1746,7 @@ def init_physics_variables():
     pres_plasma_ion_total_profile = []
     pres_plasma_fuel_profile = []
     j_plasma_on_axis = 0.0
-    n_plasma_profile_elements = 0
+    n_plasma_profile_elements = 500
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
     pden_alpha_total_mw = 0.0
