@@ -999,8 +999,8 @@
  Length_of_a_CS_turn_[m]__________________________________________________ (dr_cs_turn)___________________ 7.88513038705025981e-02 OP
  Length_to_diameter_ratio_of_a_CS_turn____________________________________ (ld_ratio_cst)_________________ 3.18181818181818166e+00 OP
  Radius_of_CS_turn_cable_space_[m]________________________________________ (radius_cs_turn_cable_space)___ 6.66617623118415450e-03 OP
- Radial_thickness_of_steel_conduit_to_cable_space_[m]_____________________ (t_structural_radial)__________ 5.72474294846625487e-03 OP
- Vertical_thickness_of_steel_conduit_to_cable_space_[m]___________________ (t_structural_vertical)________ 5.72474294846625487e-03 OP
+ Radial_thickness_of_steel_conduit_to_cable_space_[m]_____________________ (dr_cs_turn_conduit)__________ 5.72474294846625487e-03 OP
+ Vertical_thickness_of_steel_conduit_to_cable_space_[m]___________________ (dz_cs_turn_conduit)________ 5.72474294846625487e-03 OP
  Corner_radius_of_CS_turn_[m]_____________________________________________ (r_out_cst)____________________ 3.00000000000000006e-03 OP
  # Central Solenoid and PF Coils #
  Central_solenoid_superconductor_material________________________________ (i_cs_superconductor)_________              1    
@@ -1022,7 +1022,7 @@
  ___CS_conductor_cross-sectional_area_(m2)________________________________ (awpoh*(1-f_a_cs_void))________ 2.76994317894894859e+00 OP
  ___CS_void_cross-sectional_area_(m2)_____________________________________ (awpoh*f_a_cs_void)____________ 1.18711850526383511e+00 OP
  CS_steel_cross-sectional_area_(m2)_______________________________________ (a_cs_poloidal-awpoh)__________ 4.94915217044478517e+00 OP
- CS_steel_area_fraction___________________________________________________ (f_a_cs_steel)_________________ 5.55696534039163081e-01
+ CS_steel_area_fraction___________________________________________________ (f_a_cs_turn_steel)_________________ 5.55696534039163081e-01
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)________________________________________ (alstroh)______________________ 7.50000000000000000e+08
  Hoop_stress_in_CS_steel_(Pa)_____________________________________________ (sig_hoop)_____________________ 6.04940170426559329e+08 OP
@@ -1043,8 +1043,8 @@
  CS_turn_length_(m)_______________________________________________________ (dr_cs_turn)___________________ 7.88513038705025981e-02
  CS_turn_internal_cable_space_radius_(m)__________________________________ (radius_cs_turn_cable_space)___ 6.66617623118415450e-03
  CS_turn_width_(m)________________________________________________________ (dz_cs_turn)___________________ 2.47818383593008187e-02
- CS_structural_vertical_thickness_(m)_____________________________________ (t_structural_vertical)________ 5.72474294846625487e-03
- CS_structural_radial_thickness_(m)_______________________________________ (t_structural_radial)__________ 5.72474294846625487e-03
+ CS_structural_vertical_thickness_(m)_____________________________________ (dz_cs_turn_conduit)________ 5.72474294846625487e-03
+ CS_structural_radial_thickness_(m)_______________________________________ (dr_cs_turn_conduit)__________ 5.72474294846625487e-03
  Allowable_number_of_cycles_till_CS_fracture______________________________ (n_cycle)______________________ 9.66884244107992799e+02 OP
  Minimum_number_of_cycles_required_till_CS_fracture_______________________ (n_cycle_min)__________________ 2.00000000000000000e+04 OP
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)_________              3    
@@ -1687,9 +1687,9 @@ c_tf_turn = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, f_a_cs_steel
+* CS steel fraction, f_a_cs_turn_steel
 ixc = 122
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135

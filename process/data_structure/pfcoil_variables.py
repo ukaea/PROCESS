@@ -302,8 +302,8 @@ f_z_cs_tf_internal: float = None
 """Central solenoid height / TF coil internal height"""
 
 
-f_a_cs_steel: float = None
-"""central solenoid steel fraction (`iteration variable 122`)"""
+f_a_cs_turn_steel: float = None
+"""Fraction of CS turn poloidal area that is steel (`iteration variable 122`)"""
 
 
 pf_current_safety_factor: float = None
@@ -538,7 +538,7 @@ fb_cs_limit_max: float = None
 """F-value for CS mmax field (`cons. 79`, `itvar 149`)"""
 
 
-ld_ratio_cst: float = None
+f_dr_dz_cs_turn: float = None
 """Ratio of CS coil turn conduit length to depth"""
 
 
@@ -553,8 +553,8 @@ dz_cs_turn: float = None
 """Depth/width of CS of CS coil turn conduit"""
 
 
-r_out_cst: float = None
-"""Length of CS of CS coil turn conduit length"""
+radius_cs_turn_corners: float = None
+"""Radius of curvature of CS coil turn corners (m)"""
 
 
 radius_cs_turn_cable_space: float = None
@@ -649,7 +649,7 @@ def init_pfcoil_variables():
     global n_pf_coil_groups
     global n_cs_pf_coils
     global f_z_cs_tf_internal
-    global f_a_cs_steel
+    global f_a_cs_turn_steel
     global pf_current_safety_factor
     global pfcaseth
     global rho_pf_coil
@@ -701,11 +701,11 @@ def init_pfcoil_variables():
     global zref
     global b_cs_limit_max
     global fb_cs_limit_max
-    global ld_ratio_cst
+    global f_dr_dz_cs_turn
     global dr_cs_turn
     global dr_cs_full
     global dz_cs_turn
-    global r_out_cst
+    global radius_cs_turn_corners
     global radius_cs_turn_cable_space
 
     alfapf = 5e-10
@@ -751,7 +751,7 @@ def init_pfcoil_variables():
     n_pf_coil_groups = 3
     n_cs_pf_coils = 0
     f_z_cs_tf_internal = 0.71
-    f_a_cs_steel = 0.5
+    f_a_cs_turn_steel = 0.5
     pf_current_safety_factor = 1.0
     pfcaseth = np.zeros(NGC2)
     rho_pf_coil = 2.5e-8
@@ -803,9 +803,9 @@ def init_pfcoil_variables():
     zref = np.array([3.6, 1.2, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
     b_cs_limit_max = 13.0
     fb_cs_limit_max = 1.0
-    ld_ratio_cst = 70.0 / 22.0
+    f_dr_dz_cs_turn = 70.0 / 22.0
     dr_cs_turn = 0.0
     dr_cs_full = 0.0
     dz_cs_turn = 0.0
     radius_cs_turn_cable_space = 0.0
-    r_out_cst = 3.0e-3
+    radius_cs_turn_corners = 3.0e-3

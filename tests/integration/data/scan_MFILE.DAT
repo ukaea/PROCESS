@@ -635,7 +635,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -1630,7 +1630,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -2625,7 +2625,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -3620,7 +3620,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -4615,7 +4615,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -5610,7 +5610,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -6605,7 +6605,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -7600,7 +7600,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -8595,7 +8595,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      5.4592E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      2.3397E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      3.9748E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      3.3760E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      3.3760E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      6.6000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6000E+08 OP 
@@ -9066,7 +9066,7 @@ boundl(59) = 0.50
 boundu(59) = 0.94
 ixc = 54 * ftmargtf
 ixc = 106 * ftmargoh
-ixc = 122 * f_a_cs_steel
+ixc = 122 * f_a_cs_turn_steel
 ixc = 123 * foh_stress
 ixc = 109 * f_nd_alpha_electron
 ixc = 110 * falpha_energy_confinement
@@ -9225,7 +9225,7 @@ zref(8) = 1.0
 alstroh = 6.6D8 * allowable hoop stress in Central Solenoid structural material (Pa)
 fcuohsu = 0.70 * copper fraction of strand in central solenoid cable
 i_cs_superconductor = 5 * WST Nb3Sn parameterisation
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 *----------------Physics Variables-----------------*
 
@@ -9348,7 +9348,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      f_a_tf_turn_cable_copper        =  8.0884E-01
                      ftmargtf       =  1.0000E+00
                      ftmargoh       =  1.0000E+00
-                     f_a_cs_steel  =  5.7875E-01
+                     f_a_cs_turn_steel  =  5.7875E-01
                      foh_stress     =  1.0000E+00
                      f_nd_alpha_electron         =  6.8940E-02
                      falpha_energy_confinement      =  1.0000E+00

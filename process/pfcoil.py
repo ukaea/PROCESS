@@ -2172,8 +2172,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "CS steel area fraction",
-                    "(f_a_cs_steel)",
-                    pfcoil_variables.f_a_cs_steel,
+                    "(f_a_cs_turn_steel)",
+                    pfcoil_variables.f_a_cs_turn_steel,
                 )
                 if pfcoil_variables.i_cs_stress == 1:
                     op.ocmmnt(self.outfile, "Hoop + axial stress considered")
@@ -2329,14 +2329,14 @@ class PFCoil:
                     op.ovarre(
                         self.outfile,
                         "CS structural vertical thickness (m)",
-                        "(t_structural_vertical)",
-                        csfv.t_structural_vertical,
+                        "(dz_cs_turn_conduit)",
+                        csfv.dz_cs_turn_conduit,
                     )
                     op.ovarre(
                         self.outfile,
                         "CS structural radial thickness (m)",
-                        "(t_structural_radial)",
-                        csfv.t_structural_radial,
+                        "(dr_cs_turn_conduit)",
+                        csfv.dr_cs_turn_conduit,
                     )
                     op.ovarre(
                         self.outfile,
@@ -3036,6 +3036,81 @@ class CSCoil:
             dr_cs_full,
         )
 
+    def calculate_cs_turn_geometry_eu_demo(
+        self,
+        a_cs_turn: float,
+        f_dr_dz_cs_turn: float,
+        radius_cs_turn_corners: float,
+        f_a_cs_turn_steel: float,
+    ) -> tuple[float, float, float, float, float]:
+        """
+        Calculate the geometry of a CS (Central Solenoid) turn using the EU DEMO stadium-shaped model.
+
+        :param a_cs_turn: Poloidal area of a CS turn (m^2)
+        :type a_cs_turn: float
+        :param f_dr_dz_cs_turn: Length-to-height ratio of the CS turn
+        :type f_dr_dz_cs_turn: float
+        :param radius_cs_turn_corners: Radius of curved outer corner (m)
+        :type radius_cs_turn_corners: float
+        :param f_a_cs_turn_steel: Fraction of steel area in the CS turn
+        :type f_a_cs_turn_steel: float
+        :return: Tuple containing:
+            - dz_cs_turn: Depth/width of CS turn conduit (m)
+            - dr_cs_turn: Length of CS turn conduit (m)
+            - radius_cs_turn_cable_space: Radius of CS turn cable space (m)
+            - dr_cs_turn_conduit: Radial thickness of steel conduit (m)
+            - dz_cs_turn_conduit: Vertical thickness of steel conduit (m)
+        :rtype: tuple[float, float, float, float, float]
+
+        :notes:
+            - The calculation assumes a stadium-shaped cross-section for the CS turn.
+            - If the calculated conduit thickness is negative or too small, it is set to a minimum value of 1 mm.
+
+        :references:
+            - R. Wesche et al., “Central solenoid winding pack design for DEMO,”
+            Fusion Engineering and Design, vol. 124, pp. 82-85, Apr. 2017,
+            doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
+
+        """
+        # Vertical height of CS turn conduit/turn
+        dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
+
+        # Radial width of CS turn conduit/turn
+        dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn
+
+        # Calculate radius of cable space in CS turn
+        radius_cs_turn_cable_space = -(
+            (dr_cs_turn - dz_cs_turn) / constants.PI
+        ) + math.sqrt(
+            (((dr_cs_turn - dz_cs_turn) / constants.PI) ** 2)
+            + (
+                (
+                    (dr_cs_turn * dz_cs_turn)
+                    - (4 - constants.PI) * (radius_cs_turn_corners**2)
+                    - (a_cs_turn * f_a_cs_turn_steel)
+                )
+                / constants.PI
+            )
+        )
+
+        # Vertical thickness of steel conduit in CS turn
+        dz_cs_turn_conduit = (dz_cs_turn / 2) - radius_cs_turn_cable_space
+
+        # In this model the vertical and radial have the same thickness
+        dr_cs_turn_conduit = dz_cs_turn_conduit
+        # add a check for negative conduit thickness
+        if dr_cs_turn_conduit < 1.0e-3:
+            dr_cs_turn_conduit = 1.0e-3
+            logger.error("CS turn conduit radial thickness < 1 mm, kludged to 1 mm")
+
+        return (
+            dz_cs_turn,
+            dr_cs_turn,
+            radius_cs_turn_cable_space,
+            dr_cs_turn_conduit,
+            dz_cs_turn_conduit,
+        )
+
     def place_cs_filaments(
         self,
         n_cs_current_filaments: int,
@@ -3169,51 +3244,18 @@ class CSCoil:
             / pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
         )
 
-        # Depth/width of cs turn conduit
-        pfcoil_variables.dz_cs_turn = (
-            pfcoil_variables.a_cs_turn / pfcoil_variables.ld_ratio_cst
-        ) ** 0.5
-
-        # length of cs turn conduit
-        pfcoil_variables.dr_cs_turn = (
-            pfcoil_variables.ld_ratio_cst * pfcoil_variables.dz_cs_turn
+        (
+            pfcoil_variables.dz_cs_turn,
+            pfcoil_variables.dr_cs_turn,
+            pfcoil_variables.radius_cs_turn_cable_space,
+            csfv.dr_cs_turn_conduit,
+            csfv.dz_cs_turn_conduit,
+        ) = self.calculate_cs_turn_geometry_eu_demo(
+            a_cs_turn=pfcoil_variables.a_cs_turn,
+            f_dr_dz_cs_turn=pfcoil_variables.f_dr_dz_cs_turn,
+            radius_cs_turn_corners=pfcoil_variables.radius_cs_turn_corners,
+            f_a_cs_turn_steel=pfcoil_variables.f_a_cs_turn_steel,
         )
-
-        # Radius of turn space = pfcoil_variables.radius_cs_turn_cable_space
-        # Radius of curved outer corrner pfcoil_variables.r_out_cst = 3mm from literature
-        # pfcoil_variables.ld_ratio_cst = 70 / 22 from literature
-
-        # CS coil turn geometry calculation - stadium shape
-        # Literature: https://doi.org/10.1016/j.fusengdes.2017.04.052
-        pfcoil_variables.radius_cs_turn_cable_space = -(
-            (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn) / constants.PI
-        ) + math.sqrt(
-            (
-                (
-                    (pfcoil_variables.dr_cs_turn - pfcoil_variables.dz_cs_turn)
-                    / constants.PI
-                )
-                ** 2
-            )
-            + (
-                (
-                    (pfcoil_variables.dr_cs_turn * pfcoil_variables.dz_cs_turn)
-                    - (4 - constants.PI) * (pfcoil_variables.r_out_cst**2)
-                    - (pfcoil_variables.a_cs_turn * pfcoil_variables.f_a_cs_steel)
-                )
-                / constants.PI
-            )
-        )
-
-        # Thickness of steel conduit in cs turn
-        csfv.t_structural_vertical = (
-            pfcoil_variables.dz_cs_turn / 2
-        ) - pfcoil_variables.radius_cs_turn_cable_space
-        # In this model the vertical and radial have the same thickness
-        csfv.t_structural_radial = csfv.t_structural_vertical
-        # add a check for negative conduit thickness
-        if csfv.t_structural_radial < 1.0e-3:
-            csfv.t_structural_radial = 1.0e-3
 
         # Non-steel area void fraction for coolant
         pfcoil_variables.f_a_pf_coil_void[pfcoil_variables.n_cs_pf_coils - 1] = (
@@ -3308,15 +3350,17 @@ class CSCoil:
                     pfcoil_variables.sig_hoop,
                     csfv.residual_sig_hoop,
                     csfv.t_crack_vertical,
-                    csfv.t_structural_vertical,
-                    csfv.t_structural_radial,
+                    csfv.dz_cs_turn_conduit,
+                    csfv.dr_cs_turn_conduit,
                 )
 
             # Now steel area fraction is iteration variable and constraint
             # equation is used for Central Solenoid stress
 
             # Area of steel in Central Solenoid
-            areaspf = pfcoil_variables.f_a_cs_steel * pfcoil_variables.a_cs_poloidal
+            areaspf = (
+                pfcoil_variables.f_a_cs_turn_steel * pfcoil_variables.a_cs_poloidal
+            )
 
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
@@ -3590,8 +3634,8 @@ class CSCoil:
         op.ovarre(
             self.outfile,
             "Length to diameter ratio of a CS turn",
-            "(ld_ratio_cst)",
-            pfcoil_variables.ld_ratio_cst,
+            "(f_dr_dz_cs_turn)",
+            pfcoil_variables.f_dr_dz_cs_turn,
             "OP ",
         )
         op.ovarre(
@@ -3604,22 +3648,22 @@ class CSCoil:
         op.ovarre(
             self.outfile,
             "Radial thickness of steel conduit to cable space [m]",
-            "(t_structural_radial)",
-            csfv.t_structural_radial,
+            "(dr_cs_turn_conduit)",
+            csfv.dr_cs_turn_conduit,
             "OP ",
         )
         op.ovarre(
             self.outfile,
             "Vertical thickness of steel conduit to cable space [m]",
-            "(t_structural_vertical)",
-            csfv.t_structural_vertical,
+            "(dz_cs_turn_conduit)",
+            csfv.dz_cs_turn_conduit,
             "OP ",
         )
         op.ovarre(
             self.outfile,
             "Corner radius of CS turn [m]",
-            "(r_out_cst)",
-            pfcoil_variables.r_out_cst,
+            "(radius_cs_turn_corners)",
+            pfcoil_variables.radius_cs_turn_corners,
             "OP ",
         )
 
@@ -3679,7 +3723,7 @@ class CSCoil:
         )
 
         # calculate unsmeared axial stress [MPa]
-        s_axial = axial_force / (pfcoil_variables.f_a_cs_steel * 0.5 * area_ax)
+        s_axial = axial_force / (pfcoil_variables.f_a_cs_turn_steel * 0.5 * area_ax)
 
         return s_axial, axial_force
 
@@ -3749,7 +3793,7 @@ class CSCoil:
 
         s_hoop_nom = hp_term_1 * hp_term_2 - hp_term_3 * hp_term_4
 
-        return s_hoop_nom / pfcoil_variables.f_a_cs_steel
+        return s_hoop_nom / pfcoil_variables.f_a_cs_turn_steel
 
 
 def peak_b_field_at_pf_coil(

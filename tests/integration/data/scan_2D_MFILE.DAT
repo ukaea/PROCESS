@@ -788,7 +788,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.1249E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3392E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3516E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9362E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9362E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.5000E+08 OP 
@@ -809,8 +809,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.5184E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.6208E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5061E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9098E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9098E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9098E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9098E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -1951,7 +1951,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0885E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3236E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3618E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9713E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9713E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4948E+08 OP 
@@ -1972,8 +1972,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.5083E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5657E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5028E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9481E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9481E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9481E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9481E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -3114,7 +3114,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0835E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3215E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3809E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9863E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9863E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4954E+08 OP 
@@ -3135,8 +3135,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.5166E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5551E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5055E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9725E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9725E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9725E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9725E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -4277,7 +4277,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0815E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3206E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3832E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9892E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9892E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4860E+08 OP 
@@ -4298,8 +4298,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.5192E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5540E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5064E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9779E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9779E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9779E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9779E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -5440,7 +5440,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0920E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3251E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3552E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9647E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9647E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4957E+08 OP 
@@ -5461,8 +5461,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.5043E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5701E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5014E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9371E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9371E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9371E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9371E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -6603,7 +6603,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0641E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3132E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2955E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9529E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9529E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4964E+08 OP 
@@ -6624,8 +6624,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4666E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5465E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4889E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.8979E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.8979E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.8979E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.8979E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -7766,7 +7766,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0530E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3084E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.2882E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9576E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9576E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4892E+08 OP 
@@ -7787,8 +7787,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4607E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5344E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4869E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9001E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9001E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9001E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9001E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -8929,7 +8929,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0522E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3081E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3098E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9709E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9709E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4948E+08 OP 
@@ -8950,8 +8950,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4693E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5265E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4898E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9224E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9224E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9224E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9224E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -10092,7 +10092,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0490E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3067E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3305E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9855E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9855E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4900E+08 OP 
@@ -10113,8 +10113,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4767E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5155E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4922E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9457E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9457E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9457E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9457E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -11255,7 +11255,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0480E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3063E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3314E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9868E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4836E+08 OP 
@@ -11276,8 +11276,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4776E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5148E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4925E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9479E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9479E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9479E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9479E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -12418,7 +12418,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0549E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3092E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3178E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9733E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9733E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4943E+08 OP 
@@ -12439,8 +12439,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4754E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5297E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4918E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9294E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9294E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9294E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9294E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -13581,7 +13581,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0476E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3061E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3029E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9706E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9706E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4965E+08 OP 
@@ -13602,8 +13602,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4710E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5285E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4903E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9232E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9232E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9232E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9232E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -14744,7 +14744,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0463E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3056E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3043E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9725E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9725E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4900E+08 OP 
@@ -14765,8 +14765,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4725E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5277E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4908E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9265E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9265E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9265E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9265E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -15907,7 +15907,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0480E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3063E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3239E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9826E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9826E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4949E+08 OP 
@@ -15928,8 +15928,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4780E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5206E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4927E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9428E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9428E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9428E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9428E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -17070,7 +17070,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0478E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3062E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.3439E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      4.9942E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      4.9942E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      7.4997E+08 OP 
@@ -17091,8 +17091,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.4837E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.5116E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.4946E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      4.9612E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      4.9612E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      4.9612E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      4.9612E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      0.0000E+00 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -17745,9 +17745,9 @@ c_tf_turn = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, f_a_cs_steel
+* CS steel fraction, f_a_cs_turn_steel
 ixc = 122
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135

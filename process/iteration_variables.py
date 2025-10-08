@@ -243,7 +243,7 @@ ITERATION_VARIABLES = {
         "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
     ),
     122: IterationVariable(
-        "f_a_cs_steel", data_structure.pfcoil_variables, 0.001, 0.950
+        "f_a_cs_turn_steel", data_structure.pfcoil_variables, 0.001, 0.950
     ),
     123: IterationVariable(
         "foh_stress", data_structure.constraint_variables, 0.001, 1.0

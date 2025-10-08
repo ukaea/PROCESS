@@ -206,7 +206,7 @@ def main(args=None):
         "dr_cs",
         "f_z_cs_tf_internal",
         "csfv.n_cycle_min",
-        "pfv.f_a_cs_steel",
+        "pfv.f_a_cs_turn_steel",
         "csfv.t_crack_vertical",
         "",
         "",

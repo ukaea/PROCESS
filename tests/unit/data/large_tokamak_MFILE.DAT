@@ -790,7 +790,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0759E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3182E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.7639E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      5.2019E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      5.2019E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.6933E+08 OP 
@@ -811,8 +811,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.7097E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.4684E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5699E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      5.3812E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      5.3812E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      5.3812E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      5.3812E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      1.3795E+02 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -1460,9 +1460,9 @@ c_tf_turn = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, f_a_cs_steel
+* CS steel fraction, f_a_cs_turn_steel
 ixc = 122
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135

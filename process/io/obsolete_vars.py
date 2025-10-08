@@ -224,7 +224,7 @@ OBS_VARS = {
     "s_tresca_cond_cear": "s_shear_cea_tf_cond",
     "sig_tf_tresca": "s_shear_tf",
     "rjconpf": "j_pf_coil_wp_peak",
-    "oh_steel_frac": "f_a_cs_steel",
+    "oh_steel_frac": "f_a_cs_turn_steel",
     "vf": "f_a_pf_coil_void",
     "coheof": "j_cs_flat_top_end",
     "ipfres": "i_pf_conductor",
@@ -445,6 +445,10 @@ OBS_VARS = {
     "tratio": "f_temp_plasma_ion_electron",
     "ipedestal": "i_plasma_pedestal",
     "iwalld": "i_pflux_fw_neutron",
+    "ld_ratio_cst": "f_dr_dz_cs_turn",
+    "f_a_cs_steel": "f_a_cs_turn_steel",
+    "t_structural_radial": "dr_cs_turn_conduit",
+    "t_structural_vertical": "dz_cs_turn_conduit",
 }
 
 OBS_VARS_HELP = {
