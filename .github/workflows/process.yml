@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   unit-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -35,7 +35,7 @@ jobs:
           fail_ci_if_error: ${{ github.ref_name == 'main' }}
 
   integration-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -54,7 +54,7 @@ jobs:
         run: pytest tests/integration -n auto -v
 
   example-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -74,7 +74,7 @@ jobs:
 
 
   regression-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [tracking]
     # depend on make and tracking job but dont skip if tracking was skipped
     if: always()
@@ -100,7 +100,7 @@ jobs:
         run: pytest tests/regression -sv --reg-tolerance=${{ matrix.tolerance }}
 
   run-tracking-inputs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
@@ -120,7 +120,7 @@ jobs:
           path: tracking/*_MFILE.DAT
 
   pre-commit-quality-check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -135,7 +135,7 @@ jobs:
     concurrency:
       group: tracking-jobs
       cancel-in-progress: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: run-tracking-inputs
     if: github.ref == 'refs/heads/main'
     env:
@@ -188,7 +188,7 @@ jobs:
     concurrency:
       group: docs-jobs
       cancel-in-progress: false
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: tracking
     if: github.ref == 'refs/heads/main'
     steps:
