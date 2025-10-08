@@ -3072,10 +3072,10 @@ class CSCoil:
             doi: https://doi.org/10.1016/j.fusengdes.2017.04.052.
 
         """
-        # Depth/width of CS turn conduit/turn
+        # Vertical height of CS turn conduit/turn
         dz_cs_turn = (a_cs_turn / f_dr_dz_cs_turn) ** 0.5
 
-        # Width of CS turn conduit/turn
+        # Radial width of CS turn conduit/turn
         dr_cs_turn = f_dr_dz_cs_turn * dz_cs_turn
 
         # Calculate radius of cable space in CS turn
@@ -3101,6 +3101,7 @@ class CSCoil:
         # add a check for negative conduit thickness
         if dr_cs_turn_conduit < 1.0e-3:
             dr_cs_turn_conduit = 1.0e-3
+            logger.error("CS turn conduit radial thickness < 1 mm, kludged to 1 mm")
 
         return (
             dz_cs_turn,
