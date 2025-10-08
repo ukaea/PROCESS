@@ -66,7 +66,7 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 
 -----------
 
-### Self peak magnetic field | `calculate_cs_peak_field()`
+### Self peak magnetic field | `calculate_cs_self_peak_magnetic_field()`
 
 -----------
 

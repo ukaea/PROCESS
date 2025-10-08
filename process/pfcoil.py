@@ -3224,7 +3224,7 @@ class CSCoil:
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
-        bmaxoh2 = self.calculate_cs_peak_field(
+        bmaxoh2 = self.calculate_cs_self_peak_magnetic_field(
             j_cs=pfcoil_variables.j_cs_flat_top_end,
             r_cs_inner=pfcoil_variables.r_pf_coil_inner[
                 pfcoil_variables.n_cs_pf_coils - 1
@@ -3253,17 +3253,19 @@ class CSCoil:
 
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfcoil_variables.b_cs_peak_pulse_start = self.calculate_cs_peak_field(
-            j_cs=pfcoil_variables.j_cs_pulse_start,
-            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
+        pfcoil_variables.b_cs_peak_pulse_start = (
+            self.calculate_cs_self_peak_magnetic_field(
+                j_cs=pfcoil_variables.j_cs_pulse_start,
+                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+            )
         )
         timepoint = 2
         bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
@@ -3490,7 +3492,7 @@ class CSCoil:
                 + pfcoil_variables.p_cs_resistive_flat_top
             )
 
-    def calculate_cs_peak_field(
+    def calculate_cs_self_peak_magnetic_field(
         self,
         j_cs: float,
         r_cs_inner: float,
@@ -3781,7 +3783,7 @@ def peak_b_field_at_pf_coil(
     if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
         # Peak field is to be calculated at the Central Solenoid itself,
         # so exclude its own contribution; its self field is
-        # dealt with externally using routine calculate_cs_peak_field()
+        # dealt with externally using routine calculate_cs_self_peak_magnetic_field()
         kk = 0
     else:
         # Check different times for maximum current
