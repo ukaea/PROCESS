@@ -402,15 +402,30 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ##### Stress
 
-- Stresses should start with the `s_` prefix followed by the type of stress, for example `s_shear_`.
+- Stresses should start with the `stress_` prefix followed by the type of stress, for example `stress_shear_`. Normal stresses are assumed in the `stress_` only case.
+
 
 ---------------------
 
 ##### Strain
 
-- Strains should start with the `str_` prefix.
+- Strains due to normal stresses should start with the `strain_` prefix.
+
+- Strains due to shear stresses should start with the `strain_shear_` prefix.
 
 ---------------------
+
+##### Young's Modulus
+
+- The Young's modulus of materials should start with the `youngmod_` prefix.
+
+---------------------
+
+##### Poisson's ratios
+
+- Poisons ratios for material under stress should start with the `f_poisson_`
+
+--------------------
 
 ##### Forces
 
