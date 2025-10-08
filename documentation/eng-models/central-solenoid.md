@@ -22,6 +22,40 @@ of the superconducting strands is `fcuohsu`.
 
 ### CS Geoemetry | `calculate_cs_geometry()`
 
+This method calculates the CS geometry parameters. The CS is assumed to be a perfect cylinder of uniform thickness.
+
+1. The mean radius of the middle of the CS is given by:
+
+    $$
+    \overbrace{r_{\text{CS,middle}}}^{\texttt{r_cs_middle}} = dr_{\text{bore}} + \frac{dr_{\text{CS}}}{2}
+    $$
+
+2. The half height of the CS is set relative to that of the inside height of the TF and can be scaled by changing the input value of `f_z_cs_tf_internal`:
+
+    $$
+    \overbrace{z_{\text{CS,half}}}^{\texttt{z_cs_inside_half}} = \overbrace{z_{\text{TF,inside-half}}}^{\texttt{z_tf_inside_half}} \times \texttt{f_z_cs_tf_internal}
+    $$
+
+3. The full height of the CS is thus simply given by
+
+    $$
+    \overbrace{dz_{\text{CS}}}^{\texttt{dz_cs_full}} = z_{\text{CS,half}} \times 2
+    $$
+
+4. The outboard edge of the CS is given by:
+
+
+    $$
+    r_{\text{CS,outer}} = r_{\text{CS,middle}} + \frac{dr_{\text{CS}}}{2}
+    $$
+
+5. The full poloidal cross-sectional area is given by:
+
+    $$
+    \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = 2 \times dr_{\text{CS}} \times dz_{\text{CS}}
+    $$
+
+
 ------------
 
 ### CS Current Filaments | `place_cs_filaments()`
