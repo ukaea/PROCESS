@@ -4616,35 +4616,24 @@ class Physics:
             physics_variables.pres_plasma_vol_avg,
             "OP ",
         )
-
-        for i in range(len(physics_variables.pres_plasma_electron_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Plasma electron pressure at point {i}",
-                f"pres_plasma_electron_profile{i}",
-                physics_variables.pres_plasma_electron_profile[i],
-            )
-        for i in range(len(physics_variables.pres_plasma_ion_total_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Plasma ion pressure at point {i}",
-                f"pres_plasma_ion_total_profile{i}",
-                physics_variables.pres_plasma_ion_total_profile[i],
-            )
-        for i in range(len(physics_variables.pres_plasma_total_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Plasma total pressure at point {i}",
-                f"pres_plasma_total_profile{i}",
-                physics_variables.pres_plasma_total_profile[i],
-            )
-        for i in range(len(physics_variables.pres_plasma_fuel_profile)):
-            po.ovarre(
-                self.mfile,
-                f"Fuel pressure at point {i}",
-                f"pres_plasma_fuel_profile{i}",
-                physics_variables.pres_plasma_fuel_profile[i],
-            )
+        # As array output is not currently supported, each element is output as a float instance
+        # Output plasma pressure profiles to mfile
+        for name, arr in [
+            (
+                "Plasma electron pressure",
+                physics_variables.pres_plasma_electron_profile,
+            ),
+            ("Plasma ion pressure", physics_variables.pres_plasma_ion_total_profile),
+            ("Plasma total pressure", physics_variables.pres_plasma_total_profile),
+            ("Fuel pressure", physics_variables.pres_plasma_fuel_profile),
+        ]:
+            for i, val in enumerate(arr):
+                po.ovarre(
+                    self.mfile,
+                    f"{name} at point {i}",
+                    f"{name.lower().replace(' ', '_')}_profile{i}",
+                    val,
+                )
 
         if stellarator_variables.istell == 0:
             po.ovarre(

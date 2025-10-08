@@ -10559,8 +10559,23 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
     axis.legend()
 
 
-def plot_plasma_poloidal_pressure_contours(axis, mfile_data, scan):
-    # Plot plasma poloidal pressure contours inside the plasma boundary
+def plot_plasma_poloidal_pressure_contours(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Plot plasma poloidal pressure contours inside the plasma boundary.
+
+    :param axis: Matplotlib axis object to plot on.
+    :type axis: matplotlib.axes.Axes
+    :param mfile_data: MFILE data object containing plasma and geometry data.
+    :type mfile_data: mf.MFile
+    :param scan: Scan number to use for extracting data.
+    :type scan: int
+
+    This function visualizes the poloidal pressure distribution inside the plasma boundary
+    by interpolating the pressure profile onto a grid defined by the plasma geometry.
+    The pressure is shown as filled contours, with the plasma boundary overlaid.
+    """
 
     n_plasma_profile_elements = int(
         mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
@@ -10625,6 +10640,7 @@ def plot_plasma_poloidal_pressure_contours(axis, mfile_data, scan):
         boundary_theta = np.concatenate(([0], boundary_theta, [2 * np.pi]))
         boundary_r = np.concatenate(([boundary_r[0]], boundary_r, [boundary_r[-1]]))
         boundary_z = np.concatenate(([boundary_z[0]], boundary_z, [boundary_z[-1]]))
+    # Map theta to boundary r/z
     f_r = interp1d(
         boundary_theta,
         boundary_r,
@@ -10632,6 +10648,7 @@ def plot_plasma_poloidal_pressure_contours(axis, mfile_data, scan):
         fill_value="extrapolate",
         assume_sorted=True,
     )
+    # Map theta to boundary z
     f_z = interp1d(
         boundary_theta,
         boundary_z,
