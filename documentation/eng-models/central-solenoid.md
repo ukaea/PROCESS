@@ -16,6 +16,34 @@ for the other PF coils), and if superconducting, switch `i_pf_superconductor` de
 material to use -  its value is used like `isumattf` and `i_pf_superconductor`. The copper fraction (by volume) 
 of the superconducting strands is `fcuohsu`.
 
+-----------
+
+## CS Class | `CSCoil`
+
+### CS Geoemetry | `calculate_cs_geometry()`
+
+------------
+
+### CS Current Filaments | `place_cs_filaments()`
+
+----------
+
+### General calculations | `ohcalc()`
+
+-----------
+
+### Self peak magnetic field | `calculate_cs_peak_field()`
+
+-----------
+
+### Axial stresses | `axial_stress()`
+
+
+### Hoop stress | `hoop_stress()`
+
+
+
+
 The hoop stress is calculated using equations 4.10 and 4.11 from "Superconducting magnets", Martin N. 
 Wilson (1983).  This is divided by the fraction of the area occupied by steel to obtain the hoop 
 stress in the steel, $\sigma_{hoop}$.
