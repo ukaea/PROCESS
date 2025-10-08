@@ -61,7 +61,7 @@ a_tf_leg_outboard: float = None
 
 
 a_tf_wp_steel: float = None
-"""winding pack structure area (m2)"""
+"""Total area of all winding pack steel (sum of each conduit steel from each turn) (m2)"""
 
 
 a_tf_wp_extra_void: float = None
@@ -783,7 +783,7 @@ dr_tf_wp_with_insulation: float = None
 
 
 dx_tf_turn_steel: float = None
-"""TF coil conduit case thickness (m) (`iteration variable 58`)"""
+"""TF coil turn steel conduit case thickness (m) (`iteration variable 58`)"""
 
 
 dx_tf_wp_insulation: float = None
