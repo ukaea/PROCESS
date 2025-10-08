@@ -68,6 +68,18 @@ This method calculates the CS geometry parameters. The CS is assumed to be a per
 
 ### Self peak magnetic field | `calculate_cs_self_peak_magnetic_field()`
 
+The general form for the field at the very centre of the central solenoid bore with uniform current density and rectangular cross-section is given by:
+
+$$
+B_0 = J_{\text{CS}}aF(\alpha,\beta)
+$$
+
+$$
+F(\alpha,\beta) = \mu_0\beta \ln{\left[\frac{\alpha+\sqrt{\alpha^2+\beta^2}}{1+\sqrt{1+\beta^2}}\right]}
+$$
+
+where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,outer}}}$, is the ratio of the solenoid half height to its inboard radius.
+
 -----------
 
 ### Axial stresses | `axial_stress()`

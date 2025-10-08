@@ -3500,7 +3500,7 @@ class CSCoil:
         dz_cs_half: float,
     ) -> float:
         """
-        Calculates the maximum field of a solenoid.
+        Calculates the maximum field of a solenoid of circular winding and rectangular cross-section.
 
         :param j_cs: Overall current density (A/m²)
         :type j_cs: float
@@ -3522,8 +3522,8 @@ class CSCoil:
         beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner
 
-        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
-        b0 = (
+        # Field at the centre of the bore R=0, Z=0 of the solenoid
+        b_cs_bore_centre = (
             j_cs
             * constants.RMU0
             * dz_cs_half
@@ -3533,32 +3533,35 @@ class CSCoil:
             )
         )
 
+        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
         if beta > 3.0:
             b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
             f = (3.0 / beta) ** 2
-            b_cs_peak = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+            b_cs_peak = (
+                f * b_cs_bore_centre * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+            )
 
         elif beta > 2.0:
             rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
                 0.01 - (beta - 2.0) * 0.0045
             )
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         elif beta > 1.0:
             rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         elif beta > 0.75:
             rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
                 0.2 * (beta - 0.75) - 0.05
             )
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         else:
             rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
                 0.6 * (beta - 0.5) - 0.20
             )
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         return b_cs_peak
 
