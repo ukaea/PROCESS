@@ -4,6 +4,9 @@ Examples of how to use PROCESS are provided in the form of Jupyter notebooks. Th
 convenient way of explaining PROCESS usage alongside runnable code cells, as well as displaying 
 some types of output.
 
+Renders of these notebooks can be found under the same sub-heading as this page. We would encourage users to run the notebooks themselves once they have read through the renders as this will help build experience with running and visualising PROCESS.
+
+
 ### Notebooks in VS Code
 
 The recommended way to run notebooks is in VS Code; this has the additional advantage of being able to debug notebooks. Simply open the `.ipynb` file in VS Code to view and run it. You may be required to select a notebook kernel on first run; be sure to select the virtual environment where PROCESS is installed (e.g. `~/PROCESS/.venv`).

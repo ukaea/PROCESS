@@ -10,7 +10,7 @@ nav:
       - Usage:
           - Running PROCESS: usage/running-process.md
           - Examples:
-              - Introduction to Examples: usage/examples.md
+              - Examples of running PROCESS: usage/examples.md
               - examples/examples.ipynb
               - examples/scan.ipynb
               - examples/plot_solutions.ipynb
@@ -37,7 +37,7 @@ nav:
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-                # - Versioning: development/versioning.md
+                      # - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
