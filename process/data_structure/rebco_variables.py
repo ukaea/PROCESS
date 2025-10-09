@@ -13,7 +13,7 @@ tape_width: float = None
 tape_thickness: float = None
 """thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)"""
 
-croco_od: float = None
+dia_croco_strand: float = None
 """Outer diameter of CroCo strand (m)"""
 
 croco_id: float = None
@@ -64,7 +64,7 @@ def init_rebco_variables():
     global copper_thick
     global hastelloy_thickness
     global tape_width
-    global croco_od
+    global dia_croco_strand
     global croco_id
     global croco_thick
     global copper_rrr
@@ -87,7 +87,7 @@ def init_rebco_variables():
     copper_thick = 100.0e-6
     hastelloy_thickness = 50.0e-6
     tape_width = 4.0e-3
-    croco_od = 0.0
+    dia_croco_strand = 0.0
     croco_id = 0.0
     croco_thick = 2.5e-3
     copper_rrr = 100.0

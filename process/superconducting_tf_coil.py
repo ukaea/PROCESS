@@ -448,14 +448,14 @@ class SuperconductingTFCoil(TFCoil):
         #  Find critical current density in superconducting cable, j_crit_cable
         j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak_symmetric)
         # tfcoil_variables.a_tf_turn_cable_space_no_void : Cable space - inside area (m2)
-        # Set new rebco_variables.croco_od
-        # allowing for scaling of rebco_variables.croco_od
-        rebco_variables.croco_od = (
+        # Set new rebco_variables.dia_croco_strand
+        # allowing for scaling of rebco_variables.dia_croco_strand
+        rebco_variables.dia_croco_strand = (
             tfcoil_variables.t_conductor / 3.0e0
             - tfcoil_variables.dx_tf_turn_steel * (2.0e0 / 3.0e0)
         )
         superconducting_tf_coil_variables.conductor_acs = (
-            9.0e0 / 4.0e0 * np.pi * rebco_variables.croco_od**2
+            9.0e0 / 4.0e0 * np.pi * rebco_variables.dia_croco_strand**2
         )
         tfcoil_variables.a_tf_turn_cable_space_no_void = (
             superconducting_tf_coil_variables.conductor_acs
@@ -494,7 +494,7 @@ class SuperconductingTFCoil(TFCoil):
         ) = superconductors.croco(
             j_crit_sc,
             superconducting_tf_coil_variables.conductor_area,
-            rebco_variables.croco_od,
+            rebco_variables.dia_croco_strand,
             rebco_variables.croco_thick,
         )
 
@@ -581,9 +581,9 @@ class SuperconductingTFCoil(TFCoil):
             )
             po.ovarre(
                 self.outfile,
-                "Outer diameter of CroCo copper tube (m) ",
-                "(croco_od)",
-                rebco_variables.croco_od,
+                "Diameter of a CroCo strand (m) ",
+                "(dia_croco_strand)",
+                rebco_variables.dia_croco_strand,
                 "OP ",
             )
             po.ovarre(
