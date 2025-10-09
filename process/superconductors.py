@@ -852,6 +852,98 @@ def bottura_scaling(
     return j_scaling, b_critical, temp_critical
 
 
+def calculate_croco_cable_geometry(
+    dia_croco_strand: float,
+    dx_croco_strand_copper: float,
+    dx_hts_tape_rebco: float,
+    dx_hts_tape_copper: float,
+    dx_hts_tape_hastelloy: float,
+    dr_hts_tape: float,
+) -> tuple[
+    float,  # dia_croco_strand_tape_region
+    float,  # n_croco_strand_hts_tapes
+    float,  # a_croco_strand_copper_total
+    float,  # a_croco_strand_hastelloy
+    float,  # a_croco_strand_solder
+    float,  # a_croco_strand_hts_tapes
+    float,  # croco_strand_area
+]:
+    """
+    Calculate geometry and areas for a CroCo cable strand.
+
+    :param dia_croco_strand: Diameter of CroCo strand (m)
+    :type dia_croco_strand: float
+    :param dx_croco_strand_copper: Thickness of copper layer in CroCo strand (m)
+    :type dx_croco_strand_copper: float
+    :param dx_hts_tape_rebco: Thickness of REBCO layer in HTS tape (m)
+    :type dx_hts_tape_rebco: float
+    :param dx_hts_tape_copper: Thickness of copper layer in HTS tape (m)
+    :type dx_hts_tape_copper: float
+    :param dx_hts_tape_hastelloy: Thickness of Hastelloy layer in HTS tape (m)
+    :type dx_hts_tape_hastelloy: float
+    :param dr_hts_tape: Width of HTS tape (m)
+    :type dr_hts_tape: float
+
+    :return: Tuple containing:
+        - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
+        - n_croco_strand_hts_tapes: Number of HTS tapes in CroCo strand
+        - a_croco_strand_copper_total: Total copper area in CroCo strand (m²)
+        - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
+        - a_croco_strand_solder: Total solder area in CroCo strand (m²)
+        - a_croco_strand_hts_tapes: Total REBCO area in CroCo strand (m²)
+        - croco_strand_area: Total area of CroCo strand (m²)
+    :rtype: tuple[float, float, float, float, float, float, float]
+    """
+
+    # Calculate the inner diameter of the CroCo strand tape region
+    dia_croco_strand_tape_region = dia_croco_strand - 2.0 * dx_croco_strand_copper
+    if dia_croco_strand_tape_region <= 0.0:
+        logger.error("Negative inner CroCo cable diameter")
+
+    # Total thickness of HTS tape
+    dx_hts_tape_total = dx_hts_tape_rebco + dx_hts_tape_copper + dx_hts_tape_hastelloy
+
+    # Calculate the height of HTS tapes in the CroCo strand
+    dx_croco_strand_tape_stack = np.sqrt(
+        dia_croco_strand_tape_region**2 - dr_hts_tape**2
+    )
+    # Number of HTS tapes in the CroCo strand
+    n_croco_strand_hts_tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
+
+    #
+    a_croco_strand_copper_total = (
+        np.pi * dx_croco_strand_copper * dia_croco_strand
+        - np.pi * dx_croco_strand_copper**2
+        + dx_hts_tape_copper * dr_hts_tape * n_croco_strand_hts_tapes
+    )
+    # Area of Hastelloy in the CroCo strand
+    a_croco_strand_hastelloy = (
+        dx_hts_tape_hastelloy * dr_hts_tape * n_croco_strand_hts_tapes
+    )
+    # Area of solder in the CroCo strand surrounding the HTS tapes
+    a_croco_strand_solder = (
+        np.pi / 4.0 * dia_croco_strand_tape_region**2
+        - dx_croco_strand_tape_stack * dr_hts_tape
+    )
+
+    # Area of REBCO in the CroCo strand
+    a_croco_strand_hts_tapes = (
+        dx_hts_tape_rebco * dr_hts_tape * n_croco_strand_hts_tapes
+    )
+    # Total area of the CroCo strand
+    croco_strand_area = np.pi / 4.0 * dia_croco_strand**2
+
+    return (
+        dia_croco_strand_tape_region,
+        n_croco_strand_hts_tapes,
+        a_croco_strand_copper_total,
+        a_croco_strand_hastelloy,
+        a_croco_strand_solder,
+        a_croco_strand_hts_tapes,
+        croco_strand_area,
+    )
+
+
 def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     """'CroCo' (cross-conductor) strand and cable design for
     'REBCO' 2nd generation HTS superconductor
