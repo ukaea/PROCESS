@@ -1057,7 +1057,7 @@ INPUT_VARIABLES = {
     "n_ecrh_harmonic": InputVariable(
         data_structure.current_drive_variables, float, range=(1.0, 10.0)
     ),
-    "hastelloy_thickness": InputVariable(
+    "dx_hts_tape_hastelloy": InputVariable(
         data_structure.rebco_variables, float, range=(1e-08, 0.001)
     ),
     "hccl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
