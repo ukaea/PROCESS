@@ -1149,8 +1149,8 @@ class TFCoil:
                 po.ovarre(
                     self.outfile,
                     "Width of turn including inter-turn insulation (m)",
-                    "(t_turn_tf)",
-                    tfcoil_variables.t_turn_tf,
+                    "(dx_tf_turn_general)",
+                    tfcoil_variables.dx_tf_turn_general,
                     "OP ",
                 )
                 po.ovarre(
