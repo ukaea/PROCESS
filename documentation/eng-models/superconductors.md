@@ -375,6 +375,74 @@ The critical current density for a single REBCO strand can be seen below:
 
 -------------------------
 
+
+### CroCo Cable Geometry | `calculate_croco_cable_geometry()`
+
+The geometry of a single CroCo cable is calculated as follows:
+
+1. The diameter of the circular internal tape region is given by the outer copper diameter minus its thickness:
+
+    $$
+    \overbrace{D_{\text{cable,internal}}}^{\texttt{dia_croco_strand_tape_region}} = \overbrace{D_{\text{cable}}}^{\texttt{dia_croco_strand}} - \overbrace{dx_{\text{cable,copper}}}^{\texttt{dx_croco_strand_copper}}
+    $$
+
+2. The total thickness of the HTS tape is found:
+
+    $$
+    \overbrace{dx_{\text{tape}}}^{\texttt{dx_hts_tape_total}} = \overbrace{dx_{\text{tape,REBCO}}}^{\texttt{dx_hts_tape_rebco}} + \overbrace{dx_{\text{tape,copper}}}^{\texttt{dx_hts_tape_copper}} + \overbrace{dx_{\text{tape,Hastelloy}}}^{\texttt{dx_hts_tape_hastelloy}}
+    $$
+
+3. The width of the tape is scaled to be:
+
+    $$
+    \overbrace{dr_{\text{tape}}^2}^{\texttt{dr_hts_tape}} = \frac{D_{\text{cable,internal}}\times 0.00375}{0.0054}
+    $$
+
+4. The height of the tape stack at the centre of the cable is found using the tape width and diameter of the region:
+
+    $$
+    \overbrace{dx_{\text{tape,stack}}}^{\texttt{dx_croco_strand_tape_stack}} = \sqrt{D_{\text{cable,internal}}^2-\overbrace{dr_{\text{tape}}^2}^{\texttt{dr_hts_tape}}}
+    $$
+
+5. The number of tapes in the stack is thus:
+
+    $$
+    \overbrace{N_{\text{cable,tapes}}}^{\texttt{n_croco_strand_hts_tapes}} = \frac{dx_{\text{tape,stack}}}{dx_{\text{tape}}} 
+    $$
+
+6. The total copper area in the strand (from the copper sheath and inside the tapes) is:
+
+    $$
+    \overbrace{A_{\text{cable,copper}}}^{\texttt{a_croco_strand_copper_total}} = \left(\left(\pi D_{\text{cable}} dx_{\text{cable,copper}}\right) - \pi dx_{\text{cable,copper}}^2\right)\\
+     + \left(dx_{\text{tape,copper}}dr_{\text{tape}}N_{\text{cable,tapes}}\right)
+    $$
+
+7. The total Hastelloy area in the strand is:
+
+    $$
+    \overbrace{A_{\text{cable,Hastelloy}}}^{\texttt{a_croco_strand_hastelloy}} = dx_{\text{tape,Hastelloy}}dr_{\text{tape}}N_{\text{cable,tapes}}
+    $$
+
+8. The area of the solder surrounding the tape stack is:
+
+    $$
+    \overbrace{A_{\text{cable,solder}}}^{\texttt{a_croco_strand_solder}} = \frac{\pi}{4}D_{\text{cable,internal}}^2 - dx_{\text{tape,stack}}dr_{\text{tape}}
+    $$
+
+9. The total area of REBCO in the tape stack is:
+
+    $$
+    \overbrace{A_{\text{cable,REBCO}}}^{\texttt{a_croco_strand_hts_tapes}} = dx_{\text{tape,REBCO}}dr_{\text{tape}}N_{\text{cable,tapes}}
+    $$
+
+10. The total area of the cable is thus:
+
+    $$
+    \overbrace{A_{\text{cable}}}^{\texttt{a_croco_strand}} = \frac{\pi}{4}D_{\text{cable}}^2
+    $$
+
+------------------------
+
 ### Durham Ginzburg-Landau Model Derivation
 
 The Durham scaling law [^6] is derived from the well-known equation for the volume pinning force $F_p$:
