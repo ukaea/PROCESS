@@ -887,7 +887,9 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     a_croco_strand_hastelloy = (
         rebco_variables.dx_hts_tape_hastelloy * dr_hts_tape * n_croco_strand_hts_tapes
     )
-    solder_area = np.pi / 4.0 * croco_id**2 - dx_croco_strand_tape_stack * dr_hts_tape
+    a_croco_strand_solder = (
+        np.pi / 4.0 * croco_id**2 - dx_croco_strand_tape_stack * dr_hts_tape
+    )
 
     a_croco_strand_hts_tapes = (
         rebco_variables.dx_hts_tape_rebco * dr_hts_tape * n_croco_strand_hts_tapes
@@ -911,7 +913,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_hastelloy_area = a_croco_strand_hastelloy * 6.0
     conductor_hastelloy_fraction = conductor_hastelloy_area / conductor_area
 
-    conductor_solder_area = solder_area * 6.0
+    conductor_solder_area = a_croco_strand_solder * 6.0
     conductor_solder_fraction = conductor_solder_area / conductor_area
 
     conductor_rebco_area = a_croco_strand_hts_tapes * 6.0
