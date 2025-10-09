@@ -625,8 +625,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Area of REBCO in strand (m2)",
-                "(rebco_area)",
-                rebco_variables.rebco_area,
+                "(a_croco_strand_hts_tapes)",
+                rebco_variables.a_croco_strand_hts_tapes,
                 "OP ",
             )
             po.ovarre(
@@ -661,7 +661,7 @@ class SuperconductingTFCoil(TFCoil):
                 abs(
                     superconducting_tf_coil_variables.croco_strand_area
                     - (
-                        rebco_variables.rebco_area
+                        rebco_variables.a_croco_strand_hts_tapes
                         + rebco_variables.copper_area
                         + rebco_variables.hastelloy_area
                         + rebco_variables.solder_area
@@ -711,7 +711,7 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "REBCO area of conductor (mm2)",
-                "(rebco_area)",
+                "(a_croco_strand_hts_tapes)",
                 superconducting_tf_coil_variables.conductor_rebco_area,
                 "OP ",
             )

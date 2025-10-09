@@ -889,11 +889,11 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     )
     solder_area = np.pi / 4.0 * croco_id**2 - dx_croco_strand_tape_stack * dr_hts_tape
 
-    rebco_area = (
+    a_croco_strand_hts_tapes = (
         rebco_variables.dx_hts_tape_rebco * dr_hts_tape * n_croco_strand_hts_tapes
     )
     croco_strand_area = np.pi / 4.0 * d**2
-    croco_strand_critical_current = j_crit_sc * rebco_area
+    croco_strand_critical_current = j_crit_sc * a_croco_strand_hts_tapes
 
     # Conductor properties
     # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/croco_strand_area
@@ -914,7 +914,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_solder_area = solder_area * 6.0
     conductor_solder_fraction = conductor_solder_area / conductor_area
 
-    conductor_rebco_area = rebco_area * 6.0
+    conductor_rebco_area = a_croco_strand_hts_tapes * 6.0
     conductor_rebco_fraction = conductor_rebco_area / conductor_area
 
     return (
