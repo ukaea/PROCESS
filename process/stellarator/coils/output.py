@@ -26,15 +26,12 @@ def write(
         min_bending_radius,
         r_coil_major,
         r_coil_minor,
-        r_tf_inleg_mid,
         sig_tf_wp,
         t_turn_tf,
         tdmptf,
-        tf_total_h_width,
-        tfborev,
         toroidalgap,
-        vdalw,
-        vtfskv,
+        allowed_quench_voltage,
+        quench_voltage,
     ):
         """Writes stellarator modular coil output to file
         author: P J Knight, CCFE, Culham Science Centre
@@ -172,12 +169,7 @@ def write(
         )
 
         po.osubhd(stellarator.outfile, "Coil Geometry :")
-        po.ovarre(
-            stellarator.outfile,
-            "Inboard leg centre radius (m)",
-            "(r_tf_inleg_mid)",
-            r_tf_inleg_mid,
-        )
+
         po.ovarre(
             stellarator.outfile,
             "Outboard leg centre radius (m)",
@@ -190,13 +182,6 @@ def write(
             "(z_tf_inside_half)",
             build_variables.z_tf_inside_half,
         )
-        po.ovarre(
-            stellarator.outfile,
-            "Clear horizontal dr_bore (m)",
-            "(tf_total_h_width)",
-            tf_total_h_width,
-        )
-        po.ovarre(stellarator.outfile, "Clear vertical dr_bore (m)", "(tfborev)", tfborev)
 
         po.osubhd(stellarator.outfile, "Conductor Information :")
         po.ovarre(
@@ -408,9 +393,9 @@ def write(
             stellarator.outfile,
             "Maximum allowed voltage during quench due to insulation (kV)",
             "(vdalw)",
-            vdalw,
+            allowed_quench_voltage,
         )
-        po.ovarre(stellarator.outfile, "Actual quench voltage (kV)", "(vtfskv)", vtfskv, "OP ")
+        po.ovarre(stellarator.outfile, "Actual quench voltage (kV)", "(vtfskv)", quench_voltage, "OP ")
         po.ovarre(
             stellarator.outfile,
             "Current (A) per mm^2 copper (A/mm2)",

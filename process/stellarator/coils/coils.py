@@ -11,9 +11,9 @@ from process.fortran import (
 
 def max_dump_voltage(tf_energy_stored:float , t_dump:float, current:float) -> float:
     """
-    return: Max volatage during fast discharge of TF coil (V)
-    tf_energy_stored : Energy stored in one TF coil (J)
-    t_dump : Dump time (sec)
+    Max volatage during fast discharge of TF coil (V)  
+    tf_energy_stored : Energy stored in one TF coil (J)  
+    t_dump : Dump time (sec)  
     current : Operating current (A)
     """
     return 2 * (tf_energy_stored / t_dump) / current
@@ -212,22 +212,21 @@ def jcrit_from_material(
 
 def intersect(x1, y1, x2, y2, xin):
         """Routine to find the x (abscissa) intersection point of two curves
-        each defined by tabulated (x,y) values
-        author: P J Knight, CCFE, Culham Science Centre
-        x1(1:n1) : input real array : x values for first curve
-        y1(1:n1) : input real array : y values for first curve
-        n1       : input integer : length of arrays x1, y1
-        x2(1:n2) : input real array : x values for first curve
-        y2(1:n2) : input real array : y values for first curve
-        n2       : input integer : length of arrays x2, y2
-        x        : input/output real : initial x value guess on entry;
+        each defined by tabulated (x,y) values  
+        author: P J Knight, CCFE, Culham Science Centre  
+        x1(1:n1) : input real array : x values for first curve  
+        y1(1:n1) : input real array : y values for first curve  
+        n1       : length of arrays x1, y1  
+        x2(1:n2) : input real array : x values for first curve  
+        y2(1:n2) : input real array : y values for first curve  
+        n2       : length of arrays x2, y2  
+        xin      : initial guess for intersection point
         x value at point of intersection on exit
         This routine estimates the x point (abscissa) at which two curves
         defined by tabulated (x,y) values intersect, using simple
         linear interpolation and the Newton-Raphson method.
         The routine will stop with an error message if no crossing point
         is found within the x ranges of the two curves.
-        None
         """
         x = xin
         n1 = len(x1)
@@ -245,10 +244,8 @@ def intersect(x1, y1, x2, y2, xin):
 
         #  Ensure input guess for x is within this range
 
-        if x < xmin:
-            x = xmin
-        elif x > xmax:
-            x = xmax
+        if   x < xmin:  x = xmin
+        elif x > xmax:  x = xmax
 
         #  Find overall y range, and set tolerance
         #  in final difference in y values

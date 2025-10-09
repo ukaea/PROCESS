@@ -1,5 +1,4 @@
 import logging
-from copy import copy
 from pathlib import Path
 
 import numpy as np
@@ -7,9 +6,10 @@ import numpy as np
 import process.fusion_reactions as reactions
 import process.physics_functions as physics_funcs
 from process.stellarator.build import st_build
-from process.stellarator.denisty_limits import st_denisty_limits, st_d_limit_ecrh
+from process.stellarator.denisty_limits import power_at_ignition_point, st_denisty_limits
 from process.stellarator.divertor import st_div
-from process.stellarator.coils.st_coil import st_coil
+from process.stellarator.heating import st_heat
+from process.stellarator.coils.caller import st_coil
 from process import (
     process_output as po,
 )
@@ -130,14 +130,15 @@ class Stellarator:
             self.costs.output()
             self.availability.run(output=True)
             self.physics.outplas()
-            self.st_heat(True)
+            st_heat(self, True)
             self.st_phys(True)
             st_denisty_limits(self, True)
 
-            # As stopt changes dene, te and bt, stphys needs two calls
-            # to correct for larger changes (it is only consistent after
-            # two or three fix point iterations) call stphys here again, just to be sure.
-            # This can be removed once the bad practice in stopt is removed!
+            # Change in density limit can result in changed dene?
+            # A second call of st_phys is used to make sure it is consitent.
+            # st_phys and denisty limits should be integarted to avoid this double call. 
+            # Problem was probably bigger in the older version
+
             self.st_phys(False)
 
             st_div(self, True)
@@ -182,7 +183,7 @@ class Stellarator:
             (
                 stellarator_variables.powerht_constraint,
                 stellarator_variables.powerscaling_constraint,
-            ) = self.power_at_ignition_point(
+            ) = power_at_ignition_point(
                 stellarator_variables.max_gyrotron_frequency,
                 stellarator_variables.te0_ecrh_achievable,
             )
@@ -1875,58 +1876,6 @@ class Stellarator:
         )
 
 
-    def power_at_ignition_point(self, gyro_frequency_max, te0_available):
-        """Routine to calculate if the plasma is ignitable with the current values for the B field. Assumes
-        current ECRH achievable peak temperature (which is inaccurate as the cordey pass should be calculated)
-        author: J Lion, IPP Greifswald
-        gyro_frequency_max : input real : Maximal available Gyrotron frequency (1/s) NOT (rad/s)
-        te0_available : input real : Reachable peak electron temperature, reached by ECRH (KEV)
-        powerht_out : output real: Heating Power at ignition point (MW)
-        pscalingmw_out : output real: Heating Power loss at ignition point (MW)
-        This routine calculates the density limit due to an ECRH heating scheme on axis
-        Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
-        Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
-        """
-        te_old = copy(physics_variables.te)
-        # Volume averaged physics_variables.te from te0_achievable
-        physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
-        ne0_max, bt_ecrh_max = st_d_limit_ecrh(
-            gyro_frequency_max, physics_variables.bt
-        )
-        # Now go to point where ECRH is still available
-        # In density..
-        dene_old = copy(physics_variables.dene)
-        physics_variables.dene = min(
-            dene_old, ne0_max / (1.0e0 + physics_variables.alphan)
-        )
-
-        # And B-field..
-        bt_old = copy(physics_variables.bt)
-        physics_variables.bt = min(bt_ecrh_max, physics_variables.bt)
-
-        self.st_phys(False)
-        self.st_phys(
-            False
-        )  # The second call seems to be necessary for all values to "converge" (and is sufficient)
-
-        powerht_out = max(
-            copy(physics_variables.p_plasma_loss_mw), 0.00001e0
-        )  # the radiation module sometimes returns negative heating power
-        pscalingmw_out = copy(physics_variables.pscalingmw)
-
-        # Reverse it and do it again because anything more efficiently isn't suitable with the current implementation
-        # This is bad practice but seems to be necessary as of now:
-        physics_variables.te = te_old
-        physics_variables.dene = dene_old
-        physics_variables.bt = bt_old
-
-        # The second call seems to be necessary for all values to "converge" (and is sufficient)
-        self.st_phys(False)
-        self.st_phys(False)
-
-        return powerht_out, pscalingmw_out
-
-
     def st_phys(self, output):
         """Routine to calculate stellarator plasma physics information
         author: P J Knight, CCFE, Culham Science Centre
@@ -2010,7 +1959,7 @@ class Stellarator:
 
         #  Perform auxiliary power calculations
 
-        self.st_heat(False)
+        st_heat(self, False)
 
         #  Calculate fusion power
 
@@ -2565,209 +2514,4 @@ class Stellarator:
             nd_electron_line / dnelimt,
         )
 
-    def calc_neoclassics(self):
-        pass
 
-
-    def st_heat(self, output: bool):
-        """Routine to calculate the auxiliary heating power
-        in a stellarator
-        author: P J Knight, CCFE, Culham Science Centre
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
-        This routine calculates the auxiliary heating power for
-        a stellarator device.
-        AEA FUS 172: Physics Assessment for the European Reactor Study
-        """
-        if stellarator_variables.isthtr == 1:
-            current_drive_variables.p_hcd_ecrh_injected_total_mw = (
-                current_drive_variables.p_hcd_primary_extra_heat_mw
-            )
-            current_drive_variables.p_hcd_injected_ions_mw = 0
-            current_drive_variables.p_hcd_injected_electrons_mw = (
-                current_drive_variables.p_hcd_ecrh_injected_total_mw
-            )
-            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                current_drive_variables.eta_ecrh_injector_wall_plug
-            )
-            current_drive_variables.p_hcd_electric_total_mw = (
-                current_drive_variables.p_hcd_injected_ions_mw
-                + current_drive_variables.p_hcd_injected_electrons_mw
-            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        elif stellarator_variables.isthtr == 2:
-            current_drive_variables.p_hcd_lowhyb_injected_total_mw = (
-                current_drive_variables.p_hcd_primary_extra_heat_mw
-            )
-            current_drive_variables.p_hcd_injected_ions_mw = 0
-            current_drive_variables.p_hcd_injected_electrons_mw = (
-                current_drive_variables.p_hcd_lowhyb_injected_total_mw
-            )
-            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                current_drive_variables.eta_lowhyb_injector_wall_plug
-            )
-            current_drive_variables.p_hcd_electric_total_mw = (
-                current_drive_variables.p_hcd_injected_ions_mw
-                + current_drive_variables.p_hcd_injected_electrons_mw
-            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        elif stellarator_variables.isthtr == 3:
-            (
-                effnbss,
-                f_p_beam_injected_ions,
-                current_drive_variables.f_p_beam_shine_through,
-            ) = self.current_drive.culnbi()
-            current_drive_variables.p_hcd_beam_injected_total_mw = (
-                current_drive_variables.p_hcd_primary_extra_heat_mw
-                * (1 - current_drive_variables.f_p_beam_orbit_loss)
-            )
-            current_drive_variables.p_beam_orbit_loss_mw = (
-                current_drive_variables.p_hcd_primary_extra_heat_mw
-                * current_drive_variables.f_p_beam_orbit_loss
-            )
-            current_drive_variables.p_hcd_injected_ions_mw = (
-                current_drive_variables.p_hcd_beam_injected_total_mw
-                * f_p_beam_injected_ions
-            )
-            current_drive_variables.p_hcd_injected_electrons_mw = (
-                current_drive_variables.p_hcd_beam_injected_total_mw
-                * (1 - f_p_beam_injected_ions)
-            )
-            current_drive_variables.eta_hcd_primary_injector_wall_plug = (
-                current_drive_variables.eta_beam_injector_wall_plug
-            )
-            current_drive_variables.p_hcd_electric_total_mw = (
-                current_drive_variables.p_hcd_injected_ions_mw
-                + current_drive_variables.p_hcd_injected_electrons_mw
-            ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
-        else:
-            raise ProcessValueError(
-                "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
-            )
-
-        #  Total injected power
-
-        current_drive_variables.p_hcd_injected_total_mw = (
-            current_drive_variables.p_hcd_injected_electrons_mw
-            + current_drive_variables.p_hcd_injected_ions_mw
-        )
-
-        #  Calculate neutral beam current
-
-        if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:
-            current_drive_variables.c_beam_total = (
-                1e-3
-                * (current_drive_variables.p_hcd_beam_injected_total_mw * 1e6)
-                / current_drive_variables.e_beam_kev
-            )
-        else:
-            current_drive_variables.c_beam_total = 0
-
-        #  Ratio of fusion to input (injection+ohmic) power
-
-        if (
-            abs(
-                current_drive_variables.p_hcd_injected_total_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
-                + physics_variables.p_plasma_ohmic_mw
-            )
-            < 1e-6
-        ):
-            current_drive_variables.bigq = 1e18
-        else:
-            current_drive_variables.bigq = physics_variables.p_fusion_total_mw / (
-                current_drive_variables.p_hcd_injected_total_mw
-                + current_drive_variables.p_beam_orbit_loss_mw
-                + physics_variables.p_plasma_ohmic_mw
-            )
-
-        if output:
-            po.oheadr(self.outfile, "Auxiliary Heating System")
-
-            if stellarator_variables.isthtr == 1:
-                po.ocmmnt(self.outfile, "Electron Cyclotron Resonance Heating")
-            elif stellarator_variables.isthtr == 2:
-                po.ocmmnt(self.outfile, "Lower Hybrid Heating")
-            elif stellarator_variables.isthtr == 3:
-                po.ocmmnt(self.outfile, "Neutral Beam Injection Heating")
-
-            if physics_variables.i_plasma_ignited == 1:
-                po.ocmmnt(
-                    self.outfile,
-                    "Ignited plasma; injected power only used for start-up phase",
-                )
-
-            po.oblnkl(self.outfile)
-
-            po.ovarre(
-                self.outfile,
-                "Auxiliary power supplied to plasma (MW)",
-                "(p_hcd_primary_extra_heat_mw)",
-                current_drive_variables.p_hcd_primary_extra_heat_mw,
-            )
-            po.ovarre(
-                self.outfile,
-                "Fusion gain factor Q",
-                "(bigq)",
-                current_drive_variables.bigq,
-            )
-
-            if abs(current_drive_variables.p_hcd_beam_injected_total_mw) > 1e-8:
-                po.ovarre(
-                    self.outfile,
-                    "Neutral beam energy (KEV)",
-                    "(enbeam)",
-                    current_drive_variables.enbeam,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Neutral beam current (A)",
-                    "(c_beam_total)",
-                    current_drive_variables.c_beam_total,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Fraction of beam energy to ions",
-                    "(f_p_beam_injected_ions)",
-                    f_p_beam_injected_ions,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Neutral beam shine-through fraction",
-                    "(f_p_beam_shine_through)",
-                    current_drive_variables.f_p_beam_shine_through,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Neutral beam orbit loss power (MW)",
-                    "(p_beam_orbit_loss_mw)",
-                    current_drive_variables.p_beam_orbit_loss_mw,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Beam duct shielding thickness (m)",
-                    "(dx_beam_shield)",
-                    current_drive_variables.dx_beam_shield,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "R injection tangent / R-major",
-                    "(f_radius_beam_tangency_rmajor)",
-                    current_drive_variables.f_radius_beam_tangency_rmajor,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Beam centreline tangency radius (m)",
-                    "(radius_beam_tangency)",
-                    current_drive_variables.radius_beam_tangency,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Maximum possible tangency radius (m)",
-                    "(radius_beam_tangency_max)",
-                    current_drive_variables.radius_beam_tangency_max,
-                )
-                po.ovarre(
-                    self.outfile,
-                    "Beam decay lengths to centre",
-                    "(n_beam_decay_lengths_core)",
-                    current_drive_variables.n_beam_decay_lengths_core,
-                )

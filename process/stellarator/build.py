@@ -11,11 +11,11 @@ from process.fortran import (
 
 def st_build(stellarator, output: bool):
         """
-                Routine to determine the build of a stellarator machine
-        author: P J Knight, CCFE, Culham Science Centre
-        author: F Warmer, IPP Greifswald
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output file (1=yes)
+        Routine to determine the build of a stellarator machine  
+        author: P J Knight, CCFE, Culham Science Centre  
+        author: F Warmer, IPP Greifswald  
+        outfile : input integer : output file unit  
+        iprint : input integer : switch for writing to output file (1=yes)  
         This routine determines the build of the stellarator machine.
         The values calculated are based on the mean minor radius, etc.,
         as the actual radial and vertical build thicknesses vary with

@@ -1,3 +1,5 @@
+"""Module for coil force calculations in stellarators."""
+
 from process.fortran import (
     stellarator_configuration,
     tfcoil_variables,
@@ -16,6 +18,15 @@ def calculate_max_force_density(a_tf_wp_no_insulation):
         / stellarator_configuration.stella_config_wp_bmax
         * stellarator_configuration.stella_config_wp_area
         / a_tf_wp_no_insulation
+    )
+
+def calculate_max_force_density_mnm():
+    return (
+        stellarator_configuration.stella_config_max_force_density_mnm
+        * st.f_i
+        / st.f_n
+        * tfcoil_variables.b_tf_inboard_peak
+        / stellarator_configuration.stella_config_wp_bmax
     )
 
 
