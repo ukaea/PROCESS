@@ -449,6 +449,8 @@ OBS_VARS = {
     "f_a_cs_steel": "f_a_cs_turn_steel",
     "t_structural_radial": "dr_cs_turn_conduit",
     "t_structural_vertical": "dz_cs_turn_conduit",
+    "t_cable_tf": "dx_tf_turn_cable_space_general",
+    "t_turn_tf": "dx_tf_turn_general",
 }
 
 OBS_VARS_HELP = {
