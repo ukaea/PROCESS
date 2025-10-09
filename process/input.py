@@ -417,7 +417,7 @@ INPUT_VARIABLES = {
     "crane_clrnc_v": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "croco_thick": InputVariable(
+    "dx_croco_strand_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.001, 0.1)
     ),
     "cryomag_h": InputVariable(

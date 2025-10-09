@@ -495,7 +495,7 @@ class SuperconductingTFCoil(TFCoil):
             j_crit_sc,
             superconducting_tf_coil_variables.conductor_area,
             rebco_variables.dia_croco_strand,
-            rebco_variables.croco_thick,
+            rebco_variables.dx_croco_strand_copper,
         )
 
         rebco_variables.coppera_m2 = (
@@ -595,9 +595,9 @@ class SuperconductingTFCoil(TFCoil):
             )
             po.ovarre(
                 self.outfile,
-                "Thickness of CroCo copper tube (m) ",
-                "(croco_thick)",
-                rebco_variables.croco_thick,
+                "Thickness of of o copper tube (m) ",
+                "(dx_croco_strand_copper)",
+                rebco_variables.dx_croco_strand_copper,
             )
 
             po.ovarre(

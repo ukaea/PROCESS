@@ -850,7 +850,7 @@ def bottura_scaling(
     return j_scaling, b_critical, temp_critical
 
 
-def croco(j_crit_sc, conductor_area, dia_croco_strand, croco_thick):
+def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     """'CroCo' (cross-conductor) strand and cable design for
     'REBCO' 2nd generation HTS superconductor
     Updated 13/11/18 using data from Lewandowska et al 2018.
@@ -858,7 +858,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, croco_thick):
     d = dia_croco_strand
     # d = conductor_width / 3.0d0 - dx_tf_turn_steel * ( 2.0d0 / 3.0d0 )
 
-    croco_id = d - 2.0 * croco_thick  # scaling * 5.4d-3
+    croco_id = d - 2.0 * dx_croco_strand_copper  # scaling * 5.4d-3
     if croco_id <= 0.0:
         logger.error("Negitive inner croco diameter")
 
@@ -876,8 +876,8 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, croco_thick):
     tapes = stack_thickness / tape_thickness
 
     copper_area = (
-        np.pi * croco_thick * d
-        - np.pi * croco_thick**2
+        np.pi * dx_croco_strand_copper * d
+        - np.pi * dx_croco_strand_copper**2
         + rebco_variables.copper_thick
         * tape_width
         * tapes  # copper tube  # copper in tape

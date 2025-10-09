@@ -388,7 +388,7 @@ ITERATION_VARIABLES = {
         "fvs_cs_pf_total_ramp", data_structure.pfcoil_variables, 1.0e-3, 1.0e1
     ),
     158: IterationVariable(
-        "croco_thick", data_structure.rebco_variables, 1.0e-3, 1.0e-1
+        "dx_croco_strand_copper", data_structure.rebco_variables, 1.0e-3, 1.0e-1
     ),
     159: IterationVariable(
         "ftoroidalgap", data_structure.tfcoil_variables, 1.0e-4, 1.0
