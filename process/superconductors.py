@@ -931,7 +931,7 @@ def calculate_croco_cable_geometry(
         dx_hts_tape_rebco * dr_hts_tape * n_croco_strand_hts_tapes
     )
     # Total area of the CroCo strand
-    croco_strand_area = np.pi / 4.0 * dia_croco_strand**2
+    a_croco_strand = np.pi / 4.0 * dia_croco_strand**2
 
     return (
         dia_croco_strand_tape_region,
@@ -940,7 +940,7 @@ def calculate_croco_cable_geometry(
         a_croco_strand_hastelloy,
         a_croco_strand_solder,
         a_croco_strand_hts_tapes,
-        croco_strand_area,
+        a_croco_strand,
     )
 
 
