@@ -432,7 +432,7 @@ def plot_main_power_flow(
         0.22,
         0.81,
         "$P_{\\alpha,{loss}}$\n"
-        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):.2f} MW",
+        f"{mfile_data.data['p_fw_alpha_mw'].get_scan(scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -444,7 +444,7 @@ def plot_main_power_flow(
     axis.text(
         0.22,
         0.69,
-        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{{{rad}}}}$\n{mfile_data.data['p_plasma_rad_mw'].get_scan(scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -483,7 +483,7 @@ def plot_main_power_flow(
     axis.text(
         0.22,
         0.63,
-        f"$P_{{{{sep}}}}$\n{mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{{{sep}}}}$\n{mfile_data.data['p_plasma_separatrix_mw'].get_scan(scan):,.2f} MW",
         transform=fig.transFigure,
         horizontalalignment="left",
         verticalalignment="bottom",
@@ -598,7 +598,7 @@ def plot_main_power_flow(
     axis.text(
         0.37,
         0.775,
-        f"$P_{{\\text{{neutron}}}}$:\n{mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{neutron}}}}$:\n{mfile_data.data['p_neutron_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -901,7 +901,7 @@ def plot_main_power_flow(
     axis.text(
         0.325,
         0.225,
-        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        f"\n\nTotal Low Grade Secondary Heat\n\n {mfile_data.data['p_plant_secondary_heat_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="center",
@@ -938,7 +938,7 @@ def plot_main_power_flow(
     axis.text(
         0.9,
         0.25,
-        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile_data.data['p_plant_primary_heat_mw'].get_scan(scan):.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile_data.data['eta_turbine'].get_scan(scan):.3f}",
+        f"$P_{{\\text{{primary,thermal}}}}$:\n{mfile_data.data['p_plant_primary_heat_mw'].get_scan(scan):,.2f} MW \n$\\eta_{{\\text{{turbine}}}}$: {mfile_data.data['eta_turbine'].get_scan(scan):.3f}",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1067,7 +1067,7 @@ def plot_main_power_flow(
     axis.text(
         0.68,
         0.15,
-        f"$P_{{\\text{{gross}}}}$:\n{mfile_data.data['p_plant_electric_gross_mw'].get_scan(scan):.2f} MWe",
+        f"$P_{{\\text{{gross}}}}$:\n{mfile_data.data['p_plant_electric_gross_mw'].get_scan(scan):,.2f} MWe",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1099,7 +1099,7 @@ def plot_main_power_flow(
     axis.text(
         0.875,
         0.05,
-        f"$P_{{\\text{{loss}}}}$:\n{mfile_data.data['p_turbine_loss_mw'].get_scan(scan):.2f} MWth",
+        f"$P_{{\\text{{loss}}}}$:\n{mfile_data.data['p_turbine_loss_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1132,7 +1132,7 @@ def plot_main_power_flow(
     axis.text(
         0.68,
         0.05,
-        f"$P_{{\\text{{net,electric}}}}$:\n{mfile_data.data['p_plant_electric_net_mw'].get_scan(scan):.2f} MWe",
+        f"$P_{{\\text{{net,electric}}}}$:\n{mfile_data.data['p_plant_electric_net_mw'].get_scan(scan):,.2f} MWe",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1150,8 +1150,8 @@ def plot_main_power_flow(
         0.575,
         0.14,
         (
-            f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile_data.data['p_plant_electric_recirc_mw'].get_scan(scan):.2f} MWe\n"
-            f"$f_{{\\text{{recirc}}}}$:\n{mfile_data.data['f_p_plant_electric_recirc'].get_scan(scan):.2f}"
+            f"$P_{{\\text{{recirc,electric}}}}$:\n{mfile_data.data['p_plant_electric_recirc_mw'].get_scan(scan):,.2f} MWe\n"
+            f"$f_{{\\text{{recirc}}}}$:\n{mfile_data.data['f_p_plant_electric_recirc'].get_scan(scan):,.2f}"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -1305,7 +1305,7 @@ def plot_main_power_flow(
     axis.text(
         0.46,
         0.775,
-        f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile_data.data['p_fw_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{FW,nuclear}}}}$:\n{mfile_data.data['p_fw_nuclear_heat_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1322,7 +1322,7 @@ def plot_main_power_flow(
     axis.text(
         0.46,
         0.71,
-        f"$P_{{\\text{{FW,rad}}}}$:\n{mfile_data.data['p_fw_rad_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{FW,rad}}}}$:\n{mfile_data.data['p_fw_rad_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1384,7 +1384,7 @@ def plot_main_power_flow(
     axis.text(
         0.5,
         0.555,
-        f"Primary thermal\n(inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        f"Primary thermal\n(inc pump): {mfile_data.data['p_fw_heat_deposited_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1400,7 +1400,7 @@ def plot_main_power_flow(
     axis.text(
         0.7,
         0.555,
-        f"Primary thermal\n(inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth",
+        f"Primary thermal\n(inc pump): {mfile_data.data['p_blkt_heat_deposited_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1507,7 +1507,7 @@ def plot_main_power_flow(
     axis.text(
         0.6,
         0.49,
-        f"Primary thermal (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):.2f} MWth\n",
+        f"Primary thermal (inc pump): {mfile_data.data['p_fw_blkt_heat_deposited_mw'].get_scan(scan):,.2f} MWth\n",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1548,9 +1548,9 @@ def plot_main_power_flow(
         0.625,
         0.775,
         (
-            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):.2f} MW \n"
-            f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):.2f} MW\n"
-            f"$f_{{\\text{{multiplication}}}}$:\n{mfile_data.data['f_p_blkt_multiplication'].get_scan(scan):.2f}"
+            f"$P_{{\\text{{Blkt,nuclear}}}}$:\n{mfile_data.data['p_blkt_nuclear_heat_total_mw'].get_scan(scan):,.2f} MW \n"
+            f"$P_{{\\text{{Blkt,multiplication}}}}$:\n{mfile_data.data['p_blkt_multiplication_mw'].get_scan(scan):,.2f} MW\n"
+            f"$f_{{\\text{{multiplication}}}}$:\n{mfile_data.data['f_p_blkt_multiplication'].get_scan(scan):,.2f}"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -1591,7 +1591,7 @@ def plot_main_power_flow(
     axis.text(
         0.38,
         0.375,
-        f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile_data.data['p_shld_secondary_heat_mw'].get_scan(scan):.2f} MWth",
+        f"$P_{{\\text{{shld,secondary}}}}$:\n{mfile_data.data['p_shld_secondary_heat_mw'].get_scan(scan):,.2f} MWth",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1683,7 +1683,7 @@ def plot_main_power_flow(
     axis.text(
         0.29,
         0.57,
-        f"$P_{{\\text{{div,rad}}}}$:\n{mfile_data.data['p_div_rad_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{div,rad}}}}$:\n{mfile_data.data['p_div_rad_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -1700,7 +1700,7 @@ def plot_main_power_flow(
     axis.text(
         0.4,
         0.58,
-        f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):.2f} MW",
+        f"$P_{{\\text{{div,nuclear}}}}$:\n{mfile_data.data['p_div_nuclear_heat_total_mw'].get_scan(scan):,.2f} MW",
         fontsize=9,
         verticalalignment="bottom",
         horizontalalignment="left",
@@ -2509,9 +2509,9 @@ def plot_main_plasma_information(
         f"$\\kappa_{{95}}$: {mfile_data.data['kappa95'].get_scan(scan):.2f} | $\\delta_{{95}}$: {mfile_data.data['triang95'].get_scan(scan):.2f} | $\\zeta$: {mfile_data.data['plasma_square'].get_scan(scan):.2f}\n"
         f"A: {mfile_data.data['aspect'].get_scan(scan):.2f}\n"
         f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}$ \\ \\text{{m}}^3$\n"
-        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):.2f}$ \\ \\text{{m}}^2$\n"
-        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):.2f}$ \\ \\text{{m}}^2$\n"
-        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):.2f}$ \\ \\text{{m}}$"
+        f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):,.2f}$ \\ \\text{{m}}^2$\n"
+        f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):,.2f}$ \\ \\text{{m}}^2$\n"
+        f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):,.2f}$ \\ \\text{{m}}$"
     )
 
     axis.text(
@@ -2678,7 +2678,7 @@ def plot_main_plasma_information(
         f"  - Volt-seconds needed for burn: {mfile_data.data['vs_plasma_burn_required'].get_scan(scan):.4f} Vs\n"
         f"$V_{{\\text{{loop}}}}$: {mfile_data.data['v_plasma_loop_burn'].get_scan(scan):.4f} V\n"
         f"$\\Omega_{{\\text{{p}}}}$: {mfile_data.data['res_plasma'].get_scan(scan):.4e} $\\Omega$\n"
-        f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):.4f} s\n"
+        f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):,.4f} s\n"
         f"Plasma inductance: {mfile_data.data['ind_plasma'].get_scan(scan):.4e} H\n"
         f"Plasma normalised internal inductance: {mfile_data.data['ind_plasma_internal_norm'].get_scan(scan):.4f}\n"
     )
@@ -2873,11 +2873,11 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
         f"Fuel mixture: \n"
         f"|  D: {mfile_data.data['f_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
-        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW\n"
-        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
-        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
-        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['p_alpha_total_mw'].get_scan(scan):.2f} MW"
+        f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"D-3He Power, $P_{{\\text{{fus,D3He}}}}:$ {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"Alpha Power, $P_{{\\alpha}}:$ {mfile_data.data['p_alpha_total_mw'].get_scan(scan):,.2f} MW"
     )
 
     axis.text(
@@ -4668,9 +4668,9 @@ def plot_first_wall_poloidal_cross_section(axis, mfile_data, scan):
 
     textstr_fw = "\n".join((
         rf"Coolant type: {i_fw_coolant_type}",
-        rf"$T_{{FW,peak}}$: {temp_fw_peak:.3f} K",
-        rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:.3f} kPa",
-        rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:.3f} bar",
+        rf"$T_{{FW,peak}}$: {temp_fw_peak:,.3f} K",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e3:,.3f} kPa",
+        rf"$P_{{FW}}$: {pres_fw_coolant / 1e5:,.3f} bar",
         rf"$N_{{outboard}}$: {n_fw_outboard_channels}",
         rf"$N_{{inboard}}$: {n_fw_inboard_channels}",
     ))
@@ -6122,9 +6122,9 @@ def plot_resistive_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     )
 
 
-def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
+def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     """
-    Plots inboard TF coil individual turn structure.
+    Plots inboard TF coil CICC individual turn structure.
     Author: C. Ashe
 
     Parameters
@@ -6140,6 +6140,161 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     -------
     None
     """
+
+    def _pack_strands_rectangular_with_obstacles(
+        cable_space_bounds,
+        pipe_center,
+        pipe_radius,
+        strand_diameter,
+        void_fraction,
+        n_strands,
+        axis,
+        corner_radius,
+        f_a_tf_turn_cable_copper,
+    ):
+        """Pack circular strands in rectangular space with cooling pipe obstacle"""
+
+        x, y, width, height = cable_space_bounds
+
+        radius = strand_diameter / 2
+        placed_strands = []
+        attempts = 0
+
+        pipe_x, pipe_y = pipe_center
+
+        # Hexagonal packing parameters
+        # Calculate the spacing between strand centers for the desired void fraction
+        # For hexagonal packing, packing fraction = pi/(2*sqrt(3)) ~ 0.9069
+        # To achieve a lower packing fraction (higher void fraction), increase spacing
+        ideal_packing_fraction = np.pi / (2 * np.sqrt(3))
+        target_packing_fraction = 1 - void_fraction
+        spacing_factor = np.sqrt(ideal_packing_fraction / target_packing_fraction)
+        strand_spacing = strand_diameter * spacing_factor
+
+        # Number of rows and columns that fit in the cable space
+        n_rows = int((height - 2 * radius) // (strand_spacing * np.sqrt(3) / 2))
+        n_cols = int((width - 2 * radius) // strand_spacing)
+
+        # Calculate the radius of the inner superconductor circle based on the copper area fraction
+        # Area_superconductor = f_a_tf_turn_cable_copper * Area_strand
+        # Area_strand = pi * radius^2
+        # So, radius_superconductor = sqrt(f_a_tf_turn_cable_copper) * radius
+        radius_superconductor = np.sqrt(f_a_tf_turn_cable_copper) * radius
+
+        # Generate hexagonal grid positions
+        for row in range(n_rows):
+            y_pos = (y + radius + row * strand_spacing * np.sqrt(3) / 2) * 1.07
+            x_offset = strand_spacing / 2 if row % 2 else 0
+            for col in range(n_cols):
+                candidate_x = (x + radius + col * strand_spacing + x_offset) * 1.05
+                candidate_y = y_pos
+
+                # Check if within bounds
+                if (
+                    candidate_x > x + width - radius
+                    or candidate_y > y + height - radius
+                ):
+                    continue
+
+                # Check collision with cooling pipe
+                pipe_distance = np.sqrt(
+                    (candidate_x - pipe_x) ** 2 + (candidate_y - pipe_y) ** 2
+                )
+                if pipe_distance < (pipe_radius + radius):
+                    continue
+
+                # Check collision with corners if rounded
+                if corner_radius > 0:
+                    corners = [
+                        (x + corner_radius, y + corner_radius),  # bottom-left
+                        (x + width - corner_radius, y + corner_radius),  # bottom-right
+                        (
+                            x + width - corner_radius,
+                            y + height - corner_radius,
+                        ),  # top-right
+                        (x + corner_radius, y + height - corner_radius),  # top-left
+                    ]
+                    if (
+                        (
+                            candidate_x < corners[0][0]
+                            and candidate_y < corners[0][1]
+                            and np.sqrt(
+                                (candidate_x - corners[0][0]) ** 2
+                                + (candidate_y - corners[0][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        )
+                        or (
+                            candidate_x > corners[1][0]
+                            and candidate_y < corners[1][1]
+                            and np.sqrt(
+                                (candidate_x - corners[1][0]) ** 2
+                                + (candidate_y - corners[1][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        )
+                        or (
+                            candidate_x > corners[2][0]
+                            and candidate_y > corners[2][1]
+                            and np.sqrt(
+                                (candidate_x - corners[2][0]) ** 2
+                                + (candidate_y - corners[2][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        )
+                        or (
+                            candidate_x < corners[3][0]
+                            and candidate_y > corners[3][1]
+                            and np.sqrt(
+                                (candidate_x - corners[3][0]) ** 2
+                                + (candidate_y - corners[3][1]) ** 2
+                            )
+                            > corner_radius - radius
+                        )
+                    ):
+                        continue
+
+                # Check collision with existing strands
+                collision = False
+                for existing_x, existing_y in placed_strands:
+                    distance = np.sqrt(
+                        (candidate_x - existing_x) ** 2
+                        + (candidate_y - existing_y) ** 2
+                    )
+                    if distance < strand_diameter:
+                        collision = True
+                        break
+
+                if not collision:
+                    placed_strands.append((candidate_x, candidate_y))
+                    # Plot the strand
+                    circle_copper_surrounding = Circle(
+                        (candidate_x, candidate_y),
+                        radius,
+                        facecolor="#b87333",  # copper color
+                        edgecolor="#8B4000",  # darker copper edge
+                        linewidth=0.1,
+                        alpha=0.8,
+                    )
+                    axis.add_patch(circle_copper_surrounding)
+
+                    circle_central_conductor = Circle(
+                        (candidate_x, candidate_y),
+                        radius_superconductor,
+                        facecolor="black",
+                        linewidth=0.3,
+                        alpha=0.5,
+                    )
+                    axis.add_patch(circle_central_conductor)
+
+                if len(placed_strands) >= n_strands:
+                    break
+            if len(placed_strands) >= n_strands:
+                break
+
+        attempts = n_rows * n_cols
+
+        return len(placed_strands), attempts
 
     # Import the TF turn variables then multiply into mm
     i_tf_turns_integer = mfile_data.data["i_tf_turns_integer"].get_scan(scan)
@@ -6247,6 +6402,44 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
                 edgecolor="black",
             ),
         )
+
+        # Cable strand packing parameters
+        strand_diameter = mfile_data.data["dia_tf_turn_superconducting_cable"].get_scan(
+            scan
+        )
+        void_fraction = mfile_data.data["f_a_tf_turn_cable_space_extra_void"].get_scan(
+            scan
+        )
+
+        # Cable space bounds
+        cable_bounds = [
+            insulation_thickness + steel_thickness,
+            insulation_thickness + steel_thickness,
+            turn_width - 2 * (insulation_thickness + steel_thickness),
+            turn_width - 2 * (insulation_thickness + steel_thickness),
+        ]
+
+        # Pack strands if significant void fraction
+        if void_fraction > 0.001:
+            n_strands, attempts = _pack_strands_rectangular_with_obstacles(
+                cable_space_bounds=cable_bounds,
+                pipe_center=(
+                    turn_width / 2,
+                    (turn_width if i_tf_turns_integer == 0 else turn_height) / 2,
+                ),
+                pipe_radius=he_pipe_diameter / 2,
+                strand_diameter=strand_diameter,
+                void_fraction=void_fraction,
+                axis=axis,
+                corner_radius=radius_tf_turn_cable_space_corners,
+                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(
+                    scan
+                ),
+                f_a_tf_turn_cable_copper=mfile_data.data[
+                    "f_a_tf_turn_cable_copper"
+                ].get_scan(scan),
+            )
+
         axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
         axis.set_ylim(-turn_width * 0.05, turn_width * 1.05)
 
@@ -6314,6 +6507,35 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
             ),
         )
 
+        # Cable space bounds
+        cable_bounds = [
+            insulation_thickness + steel_thickness,
+            insulation_thickness + steel_thickness,
+            turn_width - 2 * (insulation_thickness + steel_thickness),
+            turn_height - 2 * (insulation_thickness + steel_thickness),
+        ]
+
+        # Pack strands if significant void fraction
+        if void_fraction > 0.001:
+            _, _ = _pack_strands_rectangular_with_obstacles(
+                cable_bounds,
+                (
+                    turn_width / 2,
+                    turn_height / 2,
+                ),
+                he_pipe_diameter / 2,
+                strand_diameter,
+                void_fraction,
+                axis,
+                radius_tf_turn_cable_space_corners,
+                n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(
+                    scan
+                ),
+                f_a_tf_turn_cable_copper=mfile_data.data[
+                    "f_a_tf_turn_cable_copper"
+                ].get_scan(scan),
+            )
+
         axis.set_xlim(-turn_width * 0.05, turn_width * 1.05)
         axis.set_ylim(-turn_height * 0.05, turn_height * 1.05)
 
@@ -6328,8 +6550,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.425,
+        0.4,
+        0.9,
         textstr_turn_insulation,
         fontsize=9,
         verticalalignment="top",
@@ -6350,8 +6572,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.36,
+        0.55,
+        0.9,
         textstr_turn_steel,
         fontsize=9,
         verticalalignment="top",
@@ -6389,8 +6611,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         )
 
     axis.text(
-        0.3,
-        0.28,
+        0.5,
+        0.7,
         textstr_turn_cable_space,
         fontsize=9,
         verticalalignment="top",
@@ -6412,8 +6634,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.3,
-        0.125,
+        0.45,
+        0.8,
         textstr_turn_cooling,
         fontsize=9,
         verticalalignment="top",
@@ -6433,10 +6655,10 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
         f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
         f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
-        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):.2f} A\n"
-        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):.2f} A\n"
-        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):.4f}\n"
-        f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):.4f} K\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):,.2f} A\n"
+        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):,.4f}\n"
+        f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):,.4f} K\n"
         f"\n$\\mathbf{{Quench:}}$\n \n"
         f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
         f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
@@ -6444,8 +6666,8 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
     )
     axis.text(
-        0.55,
-        0.425,
+        0.75,
+        0.9,
         textstr_superconductor,
         fontsize=9,
         verticalalignment="top",
@@ -6458,6 +6680,94 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
             "linewidth": 2,
         },
     )
+
+
+def plot_cable_in_conduit_cable(axis, fig, mfile_data, scan: int) -> None:
+    """
+    Plots TF coil CICC cable cross-section.
+    """
+
+    dia_tf_turn_superconducting_cable = mfile_data.data[
+        "dia_tf_turn_superconducting_cable"
+    ].get_scan(scan)
+    f_a_tf_turn_cable_copper = mfile_data.data["f_a_tf_turn_cable_copper"].get_scan(
+        scan
+    )
+
+    # Convert to mm
+    dia_mm = dia_tf_turn_superconducting_cable * 1000
+    radius_superconductor_mm = np.sqrt(f_a_tf_turn_cable_copper) * (dia_mm / 2)
+
+    # Draw the outer copper circle
+    circle_copper_surrounding = patches.Circle(
+        (0, 0),
+        dia_mm / 2,
+        facecolor="#b87333",  # copper color
+        edgecolor="#8B4000",  # darker copper edge
+        linewidth=0.1,
+        alpha=0.8,
+        label="Copper",
+        zorder=1,
+    )
+    axis.add_patch(circle_copper_surrounding)
+
+    # Draw the inner superconductor circle
+    circle_central_conductor = patches.Circle(
+        (0, 0),
+        radius_superconductor_mm,
+        facecolor="black",
+        linewidth=0.3,
+        alpha=0.7,
+        label="Superconductor",
+        zorder=2,
+    )
+    axis.add_patch(circle_central_conductor)
+
+    # Convert cable diameter to mm
+    cable_diameter_mm = (
+        mfile_data.data["dia_tf_turn_superconducting_cable"].get_scan(scan) * 1000
+    )
+    # Convert lengths from meters to kilometers for display
+    len_tf_coil_superconductor_km = (
+        mfile_data.data["len_tf_coil_superconductor"].get_scan(scan) / 1000.0
+    )
+    len_tf_superconductor_total_km = (
+        mfile_data.data["len_tf_superconductor_total"].get_scan(scan) / 1000.0
+    )
+
+    textstr_cable = (
+        f"$\\mathbf{{Cable:}}$\n \n"
+        f"Cable diameter: {cable_diameter_mm:,.4f} mm\n"
+        f"Copper area fraction: {mfile_data.data['f_a_tf_turn_cable_copper'].get_scan(scan):.4f}\n"
+        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_cables'].get_scan(scan)):,}\n"
+        f"Length of superconductor per coil: {len_tf_coil_superconductor_km:,.2f} km\n"
+        f"Total length of superconductor in all coils: {len_tf_superconductor_total_km:,.2f} km\n"
+    )
+    axis.text(
+        0.4,
+        0.3,
+        textstr_cable,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#cccccc",  # grayish color
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.set_aspect("equal")
+    axis.set_xlim(-dia_mm / 1.5, dia_mm / 1.5)
+    axis.set_ylim(-dia_mm / 1.5, dia_mm / 1.5)
+    axis.set_title("TF CICC Cable Cross-Section")
+    axis.minorticks_on()
+    axis.legend(loc="upper right")
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.set_xlabel("X [mm]")
+    axis.set_ylabel("Y [mm]")
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -6837,7 +7147,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
-        ("te", r"$\langle T_e \rangle$", "keV"),
+        ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
@@ -8655,7 +8965,7 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         f"CS full height: {mfile_data.data['dz_cs_full'].get_scan(scan):.4f} m\n"
         f"CS full width: {mfile_data.data['dr_cs_full'].get_scan(scan):.4f} m\n"
         f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
-        f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):.2f}\n"
+        f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):,.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
         f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n\n"
     )
@@ -10101,9 +10411,9 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     # ============================================================================
 
     textstr_dt = (
-        f"Total fusion power: {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Plasma fusion power: {mfile_data.data['p_plasma_dt_mw'].get_scan(scan):.2f} MW                     \n"
-        f"Beam fusion power: {mfile_data.data['p_beam_dt_mw'].get_scan(scan):.2f} MW\n"
+        f"Total fusion power: {mfile_data.data['p_dt_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"Plasma fusion power: {mfile_data.data['p_plasma_dt_mw'].get_scan(scan):,.2f} MW                     \n"
+        f"Beam fusion power: {mfile_data.data['p_beam_dt_mw'].get_scan(scan):,.2f} MW\n"
     )
 
     axis.text(
@@ -10134,7 +10444,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     # =================================================
 
     textstr_dd = (
-        f"Total fusion power: {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
+        f"Total fusion power: {mfile_data.data['p_dd_total_mw'].get_scan(scan):,.2f} MW\n"
         f"Tritium branching ratio: {mfile_data.data['f_dd_branching_trit'].get_scan(scan):.4f}                      \n"
     )
 
@@ -10165,7 +10475,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
 
     # =================================================
 
-    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):.2f} MW                                 \n\n"
+    textstr_dhe3 = f"Total fusion power: {mfile_data.data['p_dhe3_total_mw'].get_scan(scan):,.2f} MW                                 \n\n"
 
     axis.text(
         0.05,
@@ -10234,11 +10544,11 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     # =================================================
 
     textstr_neutron = (
-        f"Total power: {mfile_data.data['p_neutron_total_mw'].get_scan(scan):.2f} MW\n"
-        f"Plasma power: {mfile_data.data['p_plasma_neutron_mw'].get_scan(scan):.2f} MW\n"
-        f"Beam power: {mfile_data.data['p_beam_neutron_mw'].get_scan(scan):.2f} MW\n\n"
-        f"Total power density: {mfile_data.data['pden_neutron_total_mw'].get_scan(scan):.4e} MW/m3\n"
-        f"Plasma power density: {mfile_data.data['pden_plasma_neutron_mw'].get_scan(scan):.4e} MW/m3\n"
+        f"Total power: {mfile_data.data['p_neutron_total_mw'].get_scan(scan):,.2f} MW\n"
+        f"Plasma power: {mfile_data.data['p_plasma_neutron_mw'].get_scan(scan):,.2f} MW\n"
+        f"Beam power: {mfile_data.data['p_beam_neutron_mw'].get_scan(scan):,.2f} MW\n\n"
+        f"Total power density: {mfile_data.data['pden_neutron_total_mw'].get_scan(scan):,.4e} MW/m3\n"
+        f"Plasma power density: {mfile_data.data['pden_plasma_neutron_mw'].get_scan(scan):,.4e} MW/m3\n"
     )
 
     axis.text(
@@ -10433,6 +10743,7 @@ def main_plot(
     fig16,
     fig17,
     fig18,
+    fig19,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10562,64 +10873,67 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        plot_19 = fig9.add_subplot(231, aspect="equal")
+        plot_19 = fig9.add_subplot(221, aspect="equal")
         plot_19.set_position([
             0.025,
+            0.45,
             0.5,
-            0.45,
-            0.45,
+            0.5,
         ])  # Half height, a bit wider, top left
         plot_superconducting_tf_wp(plot_19, m_file_data, scan, fig9)
 
         # TF coil turn structure
-        plot_20 = fig9.add_subplot(325, aspect="equal")
-        plot_20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(plot_20, fig9, m_file_data, scan)
+        plot_20 = fig10.add_subplot(221, aspect="equal")
+        plot_20.set_position([0.025, 0.5, 0.4, 0.4])
+        plot_tf_cable_in_conduit_turn(plot_20, fig10, m_file_data, scan)
+        plot_205 = fig10.add_subplot(223, aspect="equal")
+        plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+        plot_cable_in_conduit_cable(plot_205, fig10, m_file_data, scan)
     else:
         plot_19 = fig9.add_subplot(211, aspect="equal")
         plot_19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(plot_19, m_file_data, scan, fig8)
 
-    plot_21 = fig10.add_subplot(111, aspect="equal")
+    plot_21 = fig11.add_subplot(111, aspect="equal")
     plot_tf_coil_structure(plot_21, m_file_data, scan, colour_scheme)
 
-    axes = fig11.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig12.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_23 = fig12.add_subplot(221)
+    plot_23 = fig13.add_subplot(221)
     plot_bootstrap_comparison(plot_23, m_file_data, scan)
 
-    plot_24 = fig12.add_subplot(224)
+    plot_24 = fig13.add_subplot(224)
     plot_h_threshold_comparison(plot_24, m_file_data, scan)
 
-    plot_25 = fig13.add_subplot(221)
+    plot_25 = fig14.add_subplot(221)
     plot_density_limit_comparison(plot_25, m_file_data, scan)
 
-    plot_26 = fig13.add_subplot(224)
+    plot_26 = fig14.add_subplot(224)
     plot_confinement_time_comparison(plot_26, m_file_data, scan)
 
-    plot_27 = fig14.add_subplot(111)
+    plot_27 = fig15.add_subplot(111)
     plot_current_profiles_over_time(plot_27, m_file_data, scan)
 
-    plot_28 = fig15.add_subplot(121, aspect="equal")
-    plot_cs_coil_structure(plot_28, fig15, m_file_data, scan)
+    plot_28 = fig16.add_subplot(121, aspect="equal")
+    plot_cs_coil_structure(plot_28, fig16, m_file_data, scan)
 
-    plot_29 = fig15.add_subplot(224, aspect="equal")
-    plot_cs_turn_structure(plot_29, fig15, m_file_data, scan)
+    plot_29 = fig16.add_subplot(224, aspect="equal")
+    plot_cs_turn_structure(plot_29, fig16, m_file_data, scan)
 
-    plot_30 = fig16.add_subplot(221, aspect="equal")
+    plot_30 = fig17.add_subplot(221, aspect="equal")
     plot_first_wall_top_down_cross_section(plot_30, m_file_data, scan)
 
-    plot_31 = fig16.add_subplot(122)
+    plot_31 = fig17.add_subplot(122)
     plot_first_wall_poloidal_cross_section(plot_31, m_file_data, scan)
 
-    plot_32 = fig16.add_subplot(337)
+    plot_32 = fig17.add_subplot(337)
     plot_fw_90_deg_pipe_bend(plot_32, m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig17, m_file_data, scan)
+    plot_blkt_pipe_bends(fig18, m_file_data, scan)
 
-    plot_33 = fig18.add_subplot(111, aspect="equal")
-    plot_main_power_flow(plot_33, m_file_data, scan, fig18)
+    plot_33 = fig19.add_subplot(111, aspect="equal")
+    plot_main_power_flow(plot_33, m_file_data, scan, fig19)
 
 
 def main(args=None):
@@ -10929,6 +11243,7 @@ def main(args=None):
     page16 = plt.figure(figsize=(12, 9), dpi=80)
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
+    page19 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -10951,6 +11266,7 @@ def main(args=None):
         page16,
         page17,
         page18,
+        page19,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -10978,6 +11294,7 @@ def main(args=None):
         pdf.savefig(page16)
         pdf.savefig(page17)
         pdf.savefig(page18)
+        pdf.savefig(page19)
 
     # show fig if option used
     if args.show:
@@ -11002,6 +11319,7 @@ def main(args=None):
     plt.close(page16)
     plt.close(page17)
     plt.close(page18)
+    plt.close(page19)
 
 
 if __name__ == "__main__":
