@@ -10,7 +10,7 @@ dx_hts_tape_hastelloy: float = None
 tape_width: float = None
 """Mean width of tape (m)"""
 
-tape_thickness: float = None
+dx_hts_tape_total: float = None
 """thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m)"""
 
 dia_croco_strand: float = None
@@ -70,7 +70,7 @@ def init_rebco_variables():
     global copper_rrr
     global coppera_m2_max
     global f_coppera_m2
-    global tape_thickness
+    global dx_hts_tape_total
     global dx_croco_strand_tape_stack
     global tapes
     global rebco_area
@@ -93,7 +93,7 @@ def init_rebco_variables():
     copper_rrr = 100.0
     coppera_m2_max = 1.0e8
     f_coppera_m2 = 1.0
-    tape_thickness = 6.5e-5
+    dx_hts_tape_total = 6.5e-5
     dx_croco_strand_tape_stack = 0.0
     tapes = 0.0
     rebco_area = 0.0

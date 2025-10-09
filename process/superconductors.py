@@ -524,7 +524,7 @@ def hijc_rebco(
     t_c0: float,
     tape_width: float,
     dx_hts_tape_rebco: float,
-    tape_thickness: float,
+    dx_hts_tape_total: float,
 ) -> tuple[float, float, float]:
     """
     Calculates the critical current density, critical field, and critical temperature
@@ -543,8 +543,8 @@ def hijc_rebco(
     :type tape_width: float
     :param dx_hts_tape_rebco: Thickness of the REBCO layer (m).
     :type dx_hts_tape_rebco: float
-    :param tape_thickness: Total thickness of the tape (m).
-    :type tape_thickness: float
+    :param dx_hts_tape_total: Total thickness of the tape (m).
+    :type dx_hts_tape_total: float
     :return: Tuple containing:
         - j_critical: Critical current density in superconductor (A/m²).
         - b_critical: Critical field (T).
@@ -625,7 +625,7 @@ def hijc_rebco(
     # between tape stacks and CORC cable layouts.
 
     j_critical = (
-        j_critical * (tape_width * dx_hts_tape_rebco) / (tape_width * tape_thickness)
+        j_critical * (tape_width * dx_hts_tape_rebco) / (tape_width * dx_hts_tape_total)
     )
 
     return j_critical, b_critical, temp_critical
@@ -867,13 +867,13 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     scaling = croco_id / 5.4e-3
     tape_width = scaling * 3.75e-3
     # Properties of a single strand
-    tape_thickness = (
+    dx_hts_tape_total = (
         rebco_variables.dx_hts_tape_rebco
         + rebco_variables.dx_hts_tape_copper
         + rebco_variables.dx_hts_tape_hastelloy
     )
     dx_croco_strand_tape_stack = np.sqrt(croco_id**2 - tape_width**2)
-    tapes = dx_croco_strand_tape_stack / tape_thickness
+    tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
 
     copper_area = (
         np.pi * dx_croco_strand_copper * d
@@ -1000,7 +1000,7 @@ def superconductor_current_density_margin(
             tc0m,
             rebco_variables.tape_width,
             rebco_variables.dx_hts_tape_rebco,
-            rebco_variables.tape_thickness,
+            rebco_variables.dx_hts_tape_total,
         )[0],
     }
 

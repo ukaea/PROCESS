@@ -4172,7 +4172,7 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
             tc0m,
             rcv.tape_width,
             rcv.dx_hts_tape_rebco,
-            rcv.tape_thickness,
+            rcv.dx_hts_tape_total,
         )
         # A0 calculated for tape cross section already
         # j_crit_cable = j_crit_sc * non-copper fraction of conductor * conductor fraction of cable

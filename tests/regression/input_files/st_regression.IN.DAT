@@ -914,7 +914,7 @@ i_tf_sc_mat = 9
 * DESCRIPTION:   Mean width of tape (m) (default = 4.0E-3)
 * JUSTIFICATION: 
 
-*tape_thickness =  
+*dx_hts_tape_total =  
 * DESCRIPTION:   Thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m) (default = 6.5E-5)
 * JUSTIFICATION:  
 
