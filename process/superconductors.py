@@ -860,13 +860,13 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     d = dia_croco_strand
     # d = conductor_width / 3.0d0 - dx_tf_turn_steel * ( 2.0d0 / 3.0d0 )
 
-    croco_id = d - 2.0 * dx_croco_strand_copper  # scaling * 5.4d-3
-    if croco_id <= 0.0:
+    dia_croco_strand_tape_region = d - 2.0 * dx_croco_strand_copper  # scaling * 5.4d-3
+    if dia_croco_strand_tape_region <= 0.0:
         logger.error("Negitive inner croco diameter")
 
     # Define the scaling factor for the input REBCO variable
     # Ratio of new croco inner diameter and fixed base line value
-    scaling = croco_id / 5.4e-3
+    scaling = dia_croco_strand_tape_region / 5.4e-3
     dr_hts_tape = scaling * 3.75e-3
     # Properties of a single strand
     dx_hts_tape_total = (
@@ -874,7 +874,9 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
         + rebco_variables.dx_hts_tape_copper
         + rebco_variables.dx_hts_tape_hastelloy
     )
-    dx_croco_strand_tape_stack = np.sqrt(croco_id**2 - dr_hts_tape**2)
+    dx_croco_strand_tape_stack = np.sqrt(
+        dia_croco_strand_tape_region**2 - dr_hts_tape**2
+    )
     n_croco_strand_hts_tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
 
     copper_area = (
@@ -888,7 +890,8 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
         rebco_variables.dx_hts_tape_hastelloy * dr_hts_tape * n_croco_strand_hts_tapes
     )
     a_croco_strand_solder = (
-        np.pi / 4.0 * croco_id**2 - dx_croco_strand_tape_stack * dr_hts_tape
+        np.pi / 4.0 * dia_croco_strand_tape_region**2
+        - dx_croco_strand_tape_stack * dr_hts_tape
     )
 
     a_croco_strand_hts_tapes = (
