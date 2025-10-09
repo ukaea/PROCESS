@@ -609,16 +609,16 @@ class SuperconductingTFCoil(TFCoil):
             )
             po.ovarre(
                 self.outfile,
-                "Thickness of stack of rebco_variables.tapes (m) ",
+                "Thickness of stack of rebco_variables.n_croco_strand_hts_tapes (m) ",
                 "(dx_croco_strand_tape_stack)",
                 rebco_variables.dx_croco_strand_tape_stack,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Number of rebco_variables.tapes in strand",
-                "(tapes)",
-                rebco_variables.tapes,
+                "Number of rebco_variables.n_croco_strand_hts_tapes in strand",
+                "(n_croco_strand_hts_tapes)",
+                rebco_variables.n_croco_strand_hts_tapes,
                 "OP ",
             )
             po.oblnkl(self.outfile)
