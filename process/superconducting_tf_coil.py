@@ -568,8 +568,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Thickness of Hastelloy layer in tape (m) ",
-                "(hastelloy_thickness)",
-                rebco_variables.hastelloy_thickness,
+                "(dx_hts_tape_hastelloy)",
+                rebco_variables.dx_hts_tape_hastelloy,
             )
 
             po.ovarre(

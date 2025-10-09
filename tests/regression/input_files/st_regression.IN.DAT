@@ -918,7 +918,7 @@ i_tf_sc_mat = 9
 * DESCRIPTION:   Thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m) (default = 6.5E-5)
 * JUSTIFICATION:  
 
-*hastelloy_thickness =  
+*dx_hts_tape_hastelloy =  
 * DESCRIPTION:   Thickness of Hastelloy layer in HTS tape (m) (default = 50.0E-6)
 * JUSTIFICATION: 
 
