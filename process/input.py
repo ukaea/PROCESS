@@ -360,7 +360,7 @@ INPUT_VARIABLES = {
     "copper_rrr": InputVariable(
         data_structure.rebco_variables, float, range=(1.0, 10000.0)
     ),
-    "copper_thick": InputVariable(
+    "dx_hts_tape_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.001)
     ),
     "copperaoh_m2": InputVariable(

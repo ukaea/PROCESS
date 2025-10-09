@@ -869,7 +869,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     # Properties of a single strand
     tape_thickness = (
         rebco_variables.dx_hts_tape_rebco
-        + rebco_variables.copper_thick
+        + rebco_variables.dx_hts_tape_copper
         + rebco_variables.hastelloy_thickness
     )
     stack_thickness = np.sqrt(croco_id**2 - tape_width**2)
@@ -878,7 +878,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     copper_area = (
         np.pi * dx_croco_strand_copper * d
         - np.pi * dx_croco_strand_copper**2
-        + rebco_variables.copper_thick
+        + rebco_variables.dx_hts_tape_copper
         * tape_width
         * tapes  # copper tube  # copper in tape
     )

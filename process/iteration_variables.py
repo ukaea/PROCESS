@@ -349,7 +349,7 @@ ITERATION_VARIABLES = {
         "dx_hts_tape_rebco", data_structure.physics_variables, 0.01e-6, 100.0e-6
     ),
     139: IterationVariable(
-        "copper_thick", data_structure.rebco_variables, 1.0e-6, 1.0e-3
+        "dx_hts_tape_copper", data_structure.rebco_variables, 1.0e-6, 1.0e-3
     ),
     140: IterationVariable(
         "dr_tf_wp_with_insulation", data_structure.tfcoil_variables, 0.001, 2.0

@@ -562,8 +562,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Thickness of copper layer in tape (m)",
-                "(copper_thick  )",
-                rebco_variables.copper_thick,
+                "(dx_hts_tape_copper  )",
+                rebco_variables.dx_hts_tape_copper,
             )
             po.ovarre(
                 self.outfile,
