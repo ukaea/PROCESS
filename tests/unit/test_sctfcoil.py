@@ -1400,114 +1400,74 @@ def test_tf_cable_in_conduit_averaged_turn_geometry(
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(
-        tfcoil_variables, "layer_ins", tfaveragedturngeomparam.layer_ins
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "t_conductor", tfaveragedturngeomparam.t_conductor
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_turn_general",
-        tfaveragedturngeomparam.dx_tf_turn_general,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "i_dx_tf_turn_general_input",
-        tfaveragedturngeomparam.i_dx_tf_turn_general_input,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "c_tf_turn", tfaveragedturngeomparam.c_tf_turn
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_turn_cable_space_general",
-        tfaveragedturngeomparam.dx_tf_turn_cable_space_general,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "i_dx_tf_turn_cable_space_general_input",
-        tfaveragedturngeomparam.i_dx_tf_turn_cable_space_general_input,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "a_tf_wp_no_insulation",
-        tfaveragedturngeomparam.a_tf_wp_no_insulation,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "dr_tf_turn",
-        tfaveragedturngeomparam.dr_tf_turn,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "dx_tf_turn",
-        tfaveragedturngeomparam.dx_tf_turn,
-    )
-
-    monkeypatch.setattr(
-        superconducting_tf_coil_variables,
-        "dx_tf_turn_cable_space_average",
-        tfaveragedturngeomparam.dx_tf_turn_cable_space_average,
-    )
-
     (
         a_tf_turn_cable_space_no_void,
         a_tf_turn_steel,
         a_tf_turn_insulation,
         n_tf_coil_turns,
+        dx_tf_turn_general,
+        c_tf_turn,
+        dx_tf_turn_general2,
+        dr_tf_turn,
+        dx_tf_turn,
+        t_conductor,
+        radius_tf_turn_cable_space_corners,
+        dx_tf_turn_cable_space_average,
+        a_tf_turn_cable_space_effective,
+        f_a_tf_turn_cable_space_cooling,
     ) = sctfcoil.tf_cable_in_conduit_averaged_turn_geometry(
-        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
         j_tf_wp=tfaveragedturngeomparam.j_tf_wp,
         dx_tf_turn_steel=tfaveragedturngeomparam.dx_tf_turn_steel,
         dx_tf_turn_insulation=tfaveragedturngeomparam.dx_tf_turn_insulation,
+        i_tf_sc_mat=tfaveragedturngeomparam.i_tf_sc_mat,
+        dx_tf_turn_general=tfaveragedturngeomparam.dx_tf_turn_general,
+        c_tf_turn=tfaveragedturngeomparam.c_tf_turn,
+        i_dx_tf_turn_general_input=tfaveragedturngeomparam.i_dx_tf_turn_general_input,
+        i_dx_tf_turn_cable_space_general_input=tfaveragedturngeomparam.i_dx_tf_turn_cable_space_general_input,
+        dx_tf_turn_cable_space_general=tfaveragedturngeomparam.dx_tf_turn_cable_space_general,
+        layer_ins=tfaveragedturngeomparam.layer_ins,
+        a_tf_wp_no_insulation=tfaveragedturngeomparam.a_tf_wp_no_insulation,
+        dia_tf_turn_coolant_channel=0.004,
+        f_a_tf_turn_cable_space_extra_void=0.3,
     )
 
-    assert tfcoil_variables.t_conductor == pytest.approx(
-        tfaveragedturngeomparam.expected_t_conductor
-    )
-
-    assert tfcoil_variables.dx_tf_turn_general == pytest.approx(
+    # Existing checks
+    assert t_conductor == pytest.approx(tfaveragedturngeomparam.expected_t_conductor)
+    assert dx_tf_turn_general == pytest.approx(
         tfaveragedturngeomparam.expected_dx_tf_turn_general
     )
-
-    assert superconducting_tf_coil_variables.dr_tf_turn == pytest.approx(
-        tfaveragedturngeomparam.expected_t_turn_radial
+    assert dr_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_t_turn_radial)
+    assert dx_tf_turn == pytest.approx(tfaveragedturngeomparam.expected_dx_tf_turn)
+    assert dx_tf_turn_cable_space_average == pytest.approx(
+        tfaveragedturngeomparam.expected_t_cable
     )
-
-    assert superconducting_tf_coil_variables.dx_tf_turn == pytest.approx(
-        tfaveragedturngeomparam.expected_dx_tf_turn
-    )
-
-    assert (
-        superconducting_tf_coil_variables.dx_tf_turn_cable_space_average
-        == pytest.approx(tfaveragedturngeomparam.expected_t_cable)
-    )
-
     assert a_tf_turn_cable_space_no_void == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_cable_space
     )
-
     assert a_tf_turn_steel == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_steel
     )
-
     assert a_tf_turn_insulation == pytest.approx(
         tfaveragedturngeomparam.expected_a_tf_turn_insulation
     )
-
     assert n_tf_coil_turns == pytest.approx(
         tfaveragedturngeomparam.expected_n_tf_coil_turns
     )
+
+    # Expanded checks for unchecked variables
+    assert radius_tf_turn_cable_space_corners == pytest.approx(
+        0.75 * tfaveragedturngeomparam.dx_tf_turn_steel
+    )
+    # c_tf_turn is an input, so just check it matches input if input is used
+    if (
+        not tfaveragedturngeomparam.i_dx_tf_turn_general_input
+        and tfaveragedturngeomparam.c_tf_turn != 0
+    ):
+        assert c_tf_turn == pytest.approx(tfaveragedturngeomparam.c_tf_turn)
+    # dx_tf_turn_general2 should match dx_tf_turn_general
+    assert dx_tf_turn_general2 == pytest.approx(dx_tf_turn_general)
+    # f_a_tf_turn_cable_space_cooling should be a float between 0 and 1
+    assert 0.0 <= f_a_tf_turn_cable_space_cooling <= 1.0
 
 
 class TfWpCurrentsParam(NamedTuple):
