@@ -60,8 +60,6 @@ a_croco_strand_hastelloy: float = None
 a_croco_strand_solder: float = None
 "Area of solder in CroCo strand (m2)"
 
-croco_area: float = None
-
 
 def init_rebco_variables():
     """Initialise the REBCO variables"""
@@ -82,7 +80,6 @@ def init_rebco_variables():
     global copper_area
     global a_croco_strand_hastelloy
     global a_croco_strand_solder
-    global croco_area
     global copperA_m2
     global copperaoh_m2_max
     global f_copperaoh_m2
@@ -105,7 +102,7 @@ def init_rebco_variables():
     copper_area = 0.0
     a_croco_strand_hastelloy = 0.0
     a_croco_strand_solder = 0.0
-    croco_area = 0.0
+
     copperA_m2 = 0.0
     copperaoh_m2_max = 1.0e8
     f_copperaoh_m2 = 1.0
