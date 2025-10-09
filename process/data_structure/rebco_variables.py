@@ -16,8 +16,8 @@ dx_hts_tape_total: float = None
 dia_croco_strand: float = None
 """Outer diameter of CroCo strand (m)"""
 
-croco_id: float = None
-"""Inner diameter of CroCo copper tube (m)"""
+dia_croco_strand_tape_region: float = None
+"""Inner diameter of CroCo strand tape region (m)"""
 
 dx_croco_strand_copper: float = None
 """Thickness of CroCo strand copper tube (m) (`iteration variable 158`)"""
@@ -70,7 +70,7 @@ def init_rebco_variables():
     global dx_hts_tape_hastelloy
     global dr_hts_tape
     global dia_croco_strand
-    global croco_id
+    global dia_croco_strand_tape_region
     global dx_croco_strand_copper
     global copper_rrr
     global coppera_m2_max
@@ -93,7 +93,7 @@ def init_rebco_variables():
     dx_hts_tape_hastelloy = 50.0e-6
     dr_hts_tape = 4.0e-3
     dia_croco_strand = 0.0
-    croco_id = 0.0
+    dia_croco_strand_tape_region = 0.0
     dx_croco_strand_copper = 2.5e-3
     copper_rrr = 100.0
     coppera_m2_max = 1.0e8

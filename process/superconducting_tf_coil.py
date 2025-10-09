@@ -589,8 +589,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Inner diameter of CroCo copper tube (m) ",
-                "(croco_id)",
-                rebco_variables.croco_id,
+                "(dia_croco_strand_tape_region)",
+                rebco_variables.dia_croco_strand_tape_region,
                 "OP ",
             )
             po.ovarre(
