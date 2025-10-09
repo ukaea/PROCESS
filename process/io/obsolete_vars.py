@@ -445,6 +445,8 @@ OBS_VARS = {
     "tratio": "f_temp_plasma_ion_electron",
     "ipedestal": "i_plasma_pedestal",
     "iwalld": "i_pflux_fw_neutron",
+    "t_cable_tf": "dx_tf_turn_cable_space_general",
+    "t_turn_tf": "dx_tf_turn_general",
 }
 
 OBS_VARS_HELP = {
