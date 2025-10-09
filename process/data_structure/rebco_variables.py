@@ -19,8 +19,8 @@ dia_croco_strand: float = None
 croco_id: float = None
 """Inner diameter of CroCo copper tube (m)"""
 
-croco_thick: float = None
-"""Thickness of CroCo copper tube (m) (`iteration variable 158`)"""
+dx_croco_strand_copper: float = None
+"""Thickness of CroCo strand copper tube (m) (`iteration variable 158`)"""
 
 copper_rrr: float = None
 """residual resistivity ratio copper in TF superconducting cable"""
@@ -66,7 +66,7 @@ def init_rebco_variables():
     global tape_width
     global dia_croco_strand
     global croco_id
-    global croco_thick
+    global dx_croco_strand_copper
     global copper_rrr
     global coppera_m2_max
     global f_coppera_m2
@@ -89,7 +89,7 @@ def init_rebco_variables():
     tape_width = 4.0e-3
     dia_croco_strand = 0.0
     croco_id = 0.0
-    croco_thick = 2.5e-3
+    dx_croco_strand_copper = 2.5e-3
     copper_rrr = 100.0
     coppera_m2_max = 1.0e8
     f_coppera_m2 = 1.0

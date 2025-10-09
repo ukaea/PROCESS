@@ -353,7 +353,7 @@ lablxc: list[str] = None
 * (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
 * (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
 * (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
-* (158) croco_thick : Thickness of CroCo copper tube (m)
+* (158) dx_croco_strand_copper : Thickness of CroCo copper tube (m)
 * (159) ftoroidalgap : F-value for toroidalgap >  dx_tf_inboard_out_toroidal constraint (con. 82)
 * (160) f_avspace (f-value for equation 83)
 * (161) fbeta_min (f-value for equation 84)
