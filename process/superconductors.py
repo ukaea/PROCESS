@@ -867,6 +867,7 @@ def calculate_croco_cable_geometry(
     float,  # a_croco_strand_solder
     float,  # a_croco_strand_hts_tapes
     float,  # croco_strand_area
+    float,  # dr_hts_tape
 ]:
     """
     Calculate geometry and areas for a CroCo cable strand.
@@ -881,8 +882,6 @@ def calculate_croco_cable_geometry(
     :type dx_hts_tape_copper: float
     :param dx_hts_tape_hastelloy: Thickness of Hastelloy layer in HTS tape (m)
     :type dx_hts_tape_hastelloy: float
-    :param dr_hts_tape: Width of HTS tape (m)
-    :type dr_hts_tape: float
 
     :return: Tuple containing:
         - dia_croco_strand_tape_region: Inner diameter of CroCo strand tape region (m)
@@ -892,7 +891,8 @@ def calculate_croco_cable_geometry(
         - a_croco_strand_solder: Total solder area in CroCo strand (m²)
         - a_croco_strand_hts_tapes: Total REBCO area in CroCo strand (m²)
         - croco_strand_area: Total area of CroCo strand (m²)
-    :rtype: tuple[float, float, float, float, float, float, float]
+        - dr_hts_tape: Width of the tape (m)
+    :rtype: tuple[float, float, float, float, float, float, float, float]
     """
 
     # Calculate the inner diameter of the CroCo strand tape region
@@ -903,6 +903,9 @@ def calculate_croco_cable_geometry(
     # Total thickness of HTS tape
     dx_hts_tape_total = dx_hts_tape_rebco + dx_hts_tape_copper + dx_hts_tape_hastelloy
 
+    scaling = dia_croco_strand_tape_region / 5.4e-3
+    dr_hts_tape = scaling * 3.75e-3
+
     # Calculate the height of HTS tapes in the CroCo strand
     dx_croco_strand_tape_stack = np.sqrt(
         dia_croco_strand_tape_region**2 - dr_hts_tape**2
@@ -910,7 +913,7 @@ def calculate_croco_cable_geometry(
     # Number of HTS tapes in the CroCo strand
     n_croco_strand_hts_tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
 
-    #
+    # Area of copper in the CroCo strand (copper tube + copper in HTS tapes)
     a_croco_strand_copper_total = (
         np.pi * dx_croco_strand_copper * dia_croco_strand
         - np.pi * dx_croco_strand_copper**2
@@ -941,6 +944,7 @@ def calculate_croco_cable_geometry(
         a_croco_strand_solder,
         a_croco_strand_hts_tapes,
         a_croco_strand,
+        dr_hts_tape,
     )
 
 
