@@ -7,7 +7,7 @@ dx_hts_tape_copper: float = None
 dx_hts_tape_hastelloy: float = None
 """thickness of Hastelloy layer in tape (m)"""
 
-tape_width: float = None
+dr_hts_tape: float = None
 """Mean width of tape (m)"""
 
 dx_hts_tape_total: float = None
@@ -63,7 +63,7 @@ def init_rebco_variables():
     global dx_hts_tape_rebco
     global dx_hts_tape_copper
     global dx_hts_tape_hastelloy
-    global tape_width
+    global dr_hts_tape
     global dia_croco_strand
     global croco_id
     global dx_croco_strand_copper
@@ -86,7 +86,7 @@ def init_rebco_variables():
     dx_hts_tape_rebco = 1.0e-6
     dx_hts_tape_copper = 100.0e-6
     dx_hts_tape_hastelloy = 50.0e-6
-    tape_width = 4.0e-3
+    dr_hts_tape = 4.0e-3
     dia_croco_strand = 0.0
     croco_id = 0.0
     dx_croco_strand_copper = 2.5e-3

@@ -1642,7 +1642,7 @@ INPUT_VARIABLES = {
     "dx_hts_tape_total": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
-    "tape_width": InputVariable(
+    "dr_hts_tape": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
     "tauee_in": InputVariable(
