@@ -16,6 +16,80 @@ for the other PF coils), and if superconducting, switch `i_pf_superconductor` de
 material to use -  its value is used like `isumattf` and `i_pf_superconductor`. The copper fraction (by volume) 
 of the superconducting strands is `fcuohsu`.
 
+-----------
+
+## CS Class | `CSCoil`
+
+### CS Geoemetry | `calculate_cs_geometry()`
+
+This method calculates the CS geometry parameters. The CS is assumed to be a perfect cylinder of uniform thickness.
+
+1. The mean radius of the middle of the CS is given by:
+
+    $$
+    \overbrace{r_{\text{CS,middle}}}^{\texttt{r_cs_middle}} = dr_{\text{bore}} + \frac{dr_{\text{CS}}}{2}
+    $$
+
+2. The half height of the CS is set relative to that of the inside height of the TF and can be scaled by changing the input value of `f_z_cs_tf_internal`:
+
+    $$
+    \overbrace{z_{\text{CS,half}}}^{\texttt{z_cs_inside_half}} = \overbrace{z_{\text{TF,inside-half}}}^{\texttt{z_tf_inside_half}} \times \texttt{f_z_cs_tf_internal}
+    $$
+
+3. The full height of the CS is thus simply given by
+
+    $$
+    \overbrace{dz_{\text{CS}}}^{\texttt{dz_cs_full}} = z_{\text{CS,half}} \times 2
+    $$
+
+4. The outboard edge of the CS is given by:
+
+
+    $$
+    r_{\text{CS,outer}} = r_{\text{CS,middle}} + \frac{dr_{\text{CS}}}{2}
+    $$
+
+5. The full poloidal cross-sectional area is given by:
+
+    $$
+    \overbrace{A_{\text{CS,poloidal}}}^{\texttt{a_cs_poloidal}} = 2 \times dr_{\text{CS}} \times dz_{\text{CS}}
+    $$
+
+
+------------
+
+### CS Current Filaments | `place_cs_filaments()`
+
+----------
+
+### General calculations | `ohcalc()`
+
+-----------
+
+### Self peak magnetic field | `calculate_cs_self_peak_magnetic_field()`
+
+The general form for the field at the very centre of the central solenoid bore with uniform current density and rectangular cross-section is given by:
+
+$$
+B_0 = J_{\text{CS}}aF(\alpha,\beta)
+$$
+
+$$
+F(\alpha,\beta) = \mu_0\beta \ln{\left[\frac{\alpha+\sqrt{\alpha^2+\beta^2}}{1+\sqrt{1+\beta^2}}\right]}
+$$
+
+where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,outer}}}$, is the ratio of the solenoid half height to its inboard radius.
+
+-----------
+
+### Axial stresses | `axial_stress()`
+
+
+### Hoop stress | `hoop_stress()`
+
+
+
+
 The hoop stress is calculated using equations 4.10 and 4.11 from "Superconducting magnets", Martin N. 
 Wilson (1983).  This is divided by the fraction of the area occupied by steel to obtain the hoop 
 stress in the steel, $\sigma_{hoop}$.

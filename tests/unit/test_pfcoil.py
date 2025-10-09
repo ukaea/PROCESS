@@ -1041,7 +1041,7 @@ class BfmaxTestAsset(NamedTuple):
     ],
 )
 def test_bfmax(cs_coil, test_asset):
-    """Test calculate_cs_peak_field() function.
+    """Test calculate_cs_self_peak_magnetic_field() function.
 
     :param cs_coil: CSCoil object
     :type cs_coil: process.pfcoil.CSCoil
@@ -1051,7 +1051,9 @@ def test_bfmax(cs_coil, test_asset):
     rj = 2.0e7
     b = 3.0
 
-    bfmax = cs_coil.calculate_cs_peak_field(rj, test_asset.a, b, test_asset.h)
+    bfmax = cs_coil.calculate_cs_self_peak_magnetic_field(
+        rj, test_asset.a, b, test_asset.h
+    )
 
     assert pytest.approx(bfmax) == test_asset.bfmax_exp
 
