@@ -52,7 +52,8 @@ n_croco_strand_hts_tapes: float = None
 a_croco_strand_hts_tapes: float = None
 "Area of HTS tapes in CroCo strand (m2)"
 
-copper_area: float = None
+a_croco_strand_copper_total: float = None
+"Area of copper in CroCo strand (includes tapes and outer tube) (m2)"
 
 a_croco_strand_hastelloy: float = None
 "Area of Hastelloy in CroCo strand (m2)"
@@ -77,7 +78,7 @@ def init_rebco_variables():
     global dx_croco_strand_tape_stack
     global n_croco_strand_hts_tapes
     global a_croco_strand_hts_tapes
-    global copper_area
+    global a_croco_strand_copper_total
     global a_croco_strand_hastelloy
     global a_croco_strand_solder
     global copperA_m2
@@ -99,7 +100,7 @@ def init_rebco_variables():
     dx_croco_strand_tape_stack = 0.0
     n_croco_strand_hts_tapes = 0.0
     a_croco_strand_hts_tapes = 0.0
-    copper_area = 0.0
+    a_croco_strand_copper_total = 0.0
     a_croco_strand_hastelloy = 0.0
     a_croco_strand_solder = 0.0
 

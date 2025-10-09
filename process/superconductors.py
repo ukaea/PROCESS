@@ -879,7 +879,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     )
     n_croco_strand_hts_tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
 
-    copper_area = (
+    a_croco_strand_copper_total = (
         np.pi * dx_croco_strand_copper * d
         - np.pi * dx_croco_strand_copper**2
         + rebco_variables.dx_hts_tape_copper
@@ -905,7 +905,9 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_critical_current = croco_strand_critical_current * 6.0
     # Area of core = area of strand
     conductor_copper_bar_area = croco_strand_area
-    conductor_copper_area = copper_area * 6.0 + conductor_copper_bar_area
+    conductor_copper_area = (
+        a_croco_strand_copper_total * 6.0 + conductor_copper_bar_area
+    )
     conductor_copper_fraction = conductor_copper_area / conductor_area
 
     # Helium area is set by the user.
