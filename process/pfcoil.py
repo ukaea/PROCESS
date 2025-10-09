@@ -4171,7 +4171,7 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
             bc20m,
             tc0m,
             rcv.tape_width,
-            rcv.rebco_thickness,
+            rcv.dx_hts_tape_rebco,
             rcv.tape_thickness,
         )
         # A0 calculated for tape cross section already

@@ -923,7 +923,7 @@ i_tf_sc_mat = 9
 * JUSTIFICATION: 
 
 *ixc = 138
-*rebco_thickness = 1.0E-6
+*dx_hts_tape_rebco = 1.0E-6
 *boundl(138) = 
 *boundu(138) =  
 * DESCRIPTION:   Thickness of REBCO layer in tape (m) (iteration variable 138) (default = 1.0E-6)
