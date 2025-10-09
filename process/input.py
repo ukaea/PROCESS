@@ -1639,7 +1639,7 @@ INPUT_VARIABLES = {
     "t_turn_tf_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "tape_thickness": InputVariable(
+    "dx_hts_tape_total": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
     "tape_width": InputVariable(
