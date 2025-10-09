@@ -333,7 +333,7 @@ lablxc: list[str] = None
 * (135) f_nd_impurity_electrons(13) :  Xenon density fraction relative to electron density
 * (136) f_nd_impurity_electrons(14) :  Tungsten density fraction relative to electron density
 * (137) fplhsep (f-value for equation 73)
-* (138) rebco_thickness : thickness of REBCO layer in tape (m)
+* (138) dx_hts_tape_rebco : thickness of REBCO layer in tape (m)
 * (139) copper_thick : thickness of copper layer in tape (m)
 * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
 * (141) ftemp_croco_quench_max : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)

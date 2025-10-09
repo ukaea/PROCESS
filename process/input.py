@@ -1448,7 +1448,7 @@ INPUT_VARIABLES = {
     "reactor_wall_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
-    "rebco_thickness": InputVariable(
+    "dx_hts_tape_rebco": InputVariable(
         data_structure.rebco_variables,
         float,
         range=(1e-08, 0.0001),

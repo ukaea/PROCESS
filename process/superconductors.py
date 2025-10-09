@@ -523,7 +523,7 @@ def hijc_rebco(
     b_c20max: float,
     t_c0: float,
     tape_width: float,
-    rebco_thickness: float,
+    dx_hts_tape_rebco: float,
     tape_thickness: float,
 ) -> tuple[float, float, float]:
     """
@@ -541,8 +541,8 @@ def hijc_rebco(
     :type t_c0: float
     :param tape_width: Width of the tape (m).
     :type tape_width: float
-    :param rebco_thickness: Thickness of the REBCO layer (m).
-    :type rebco_thickness: float
+    :param dx_hts_tape_rebco: Thickness of the REBCO layer (m).
+    :type dx_hts_tape_rebco: float
     :param tape_thickness: Total thickness of the tape (m).
     :type tape_thickness: float
     :return: Tuple containing:
@@ -625,7 +625,7 @@ def hijc_rebco(
     # between tape stacks and CORC cable layouts.
 
     j_critical = (
-        j_critical * (tape_width * rebco_thickness) / (tape_width * tape_thickness)
+        j_critical * (tape_width * dx_hts_tape_rebco) / (tape_width * tape_thickness)
     )
 
     return j_critical, b_critical, temp_critical
@@ -868,7 +868,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     tape_width = scaling * 3.75e-3
     # Properties of a single strand
     tape_thickness = (
-        rebco_variables.rebco_thickness
+        rebco_variables.dx_hts_tape_rebco
         + rebco_variables.copper_thick
         + rebco_variables.hastelloy_thickness
     )
@@ -885,7 +885,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     hastelloy_area = rebco_variables.hastelloy_thickness * tape_width * tapes
     solder_area = np.pi / 4.0 * croco_id**2 - stack_thickness * tape_width
 
-    rebco_area = rebco_variables.rebco_thickness * tape_width * tapes
+    rebco_area = rebco_variables.dx_hts_tape_rebco * tape_width * tapes
     croco_strand_area = np.pi / 4.0 * d**2
     croco_strand_critical_current = j_crit_sc * rebco_area
 
@@ -999,7 +999,7 @@ def superconductor_current_density_margin(
             bc20m,
             tc0m,
             rebco_variables.tape_width,
-            rebco_variables.rebco_thickness,
+            rebco_variables.dx_hts_tape_rebco,
             rebco_variables.tape_thickness,
         )[0],
     }

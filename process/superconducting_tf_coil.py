@@ -556,8 +556,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Thickness of REBCO layer in tape (m)",
-                "(rebco_thickness)",
-                rebco_variables.rebco_thickness,
+                "(dx_hts_tape_rebco)",
+                rebco_variables.dx_hts_tape_rebco,
             )
             po.ovarre(
                 self.outfile,
@@ -1251,7 +1251,7 @@ class SuperconductingTFCoil(TFCoil):
                 b_c20max=bc20m,
                 t_c0=tc0m,
                 tape_width=rebco_variables.tape_width,
-                rebco_thickness=rebco_variables.rebco_thickness,
+                dx_hts_tape_rebco=rebco_variables.dx_hts_tape_rebco,
                 tape_thickness=rebco_variables.tape_thickness,
             )
             # Scale for the copper area fraction of the cable

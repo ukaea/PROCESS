@@ -194,7 +194,7 @@ def test_hijc_rebco():
         b_c20max=30.0,
         t_c0=25.0,
         tape_width=4.0e-3,
-        rebco_thickness=1.0e-6,
+        dx_hts_tape_rebco=1.0e-6,
         tape_thickness=6.5e-5,
     )
 
