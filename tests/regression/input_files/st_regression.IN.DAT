@@ -930,7 +930,7 @@ i_tf_sc_mat = 9
 * JUSTIFICATION: 
 
 *ixc = 139
-*copper_thick = 
+*dx_hts_tape_copper = 
 *boundl(139) = 
 *boundu(139) =  
 * DESCRIPTION:   Thickness of copper layer in tape (m) (iteration variable 139) (default = 100.0E-6)
