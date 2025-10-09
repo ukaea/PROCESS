@@ -4170,7 +4170,7 @@ def superconpf(bmax, fhe, fcu, jwp, isumat, fhts, strain, thelium, bcritsc, tcri
             bmax,
             bc20m,
             tc0m,
-            rcv.tape_width,
+            rcv.dr_hts_tape,
             rcv.dx_hts_tape_rebco,
             rcv.dx_hts_tape_total,
         )

@@ -910,7 +910,7 @@ i_tf_sc_mat = 9
 * REBCO HTS SETTINGS *
 *--------------------*
 
-*tape_width =  
+*dr_hts_tape =  
 * DESCRIPTION:   Mean width of tape (m) (default = 4.0E-3)
 * JUSTIFICATION: 
 

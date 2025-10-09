@@ -522,7 +522,7 @@ def hijc_rebco(
     b_conductor: float,
     b_c20max: float,
     t_c0: float,
-    tape_width: float,
+    dr_hts_tape: float,
     dx_hts_tape_rebco: float,
     dx_hts_tape_total: float,
 ) -> tuple[float, float, float]:
@@ -539,8 +539,8 @@ def hijc_rebco(
     :type b_c20max: float
     :param t_c0: Critical temperature (K) at zero field and strain.
     :type t_c0: float
-    :param tape_width: Width of the tape (m).
-    :type tape_width: float
+    :param dr_hts_tape: Width of the tape (m).
+    :type dr_hts_tape: float
     :param dx_hts_tape_rebco: Thickness of the REBCO layer (m).
     :type dx_hts_tape_rebco: float
     :param dx_hts_tape_total: Total thickness of the tape (m).
@@ -625,7 +625,9 @@ def hijc_rebco(
     # between tape stacks and CORC cable layouts.
 
     j_critical = (
-        j_critical * (tape_width * dx_hts_tape_rebco) / (tape_width * dx_hts_tape_total)
+        j_critical
+        * (dr_hts_tape * dx_hts_tape_rebco)
+        / (dr_hts_tape * dx_hts_tape_total)
     )
 
     return j_critical, b_critical, temp_critical
@@ -865,27 +867,27 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     # Define the scaling factor for the input REBCO variable
     # Ratio of new croco inner diameter and fixed base line value
     scaling = croco_id / 5.4e-3
-    tape_width = scaling * 3.75e-3
+    dr_hts_tape = scaling * 3.75e-3
     # Properties of a single strand
     dx_hts_tape_total = (
         rebco_variables.dx_hts_tape_rebco
         + rebco_variables.dx_hts_tape_copper
         + rebco_variables.dx_hts_tape_hastelloy
     )
-    dx_croco_strand_tape_stack = np.sqrt(croco_id**2 - tape_width**2)
+    dx_croco_strand_tape_stack = np.sqrt(croco_id**2 - dr_hts_tape**2)
     tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
 
     copper_area = (
         np.pi * dx_croco_strand_copper * d
         - np.pi * dx_croco_strand_copper**2
         + rebco_variables.dx_hts_tape_copper
-        * tape_width
+        * dr_hts_tape
         * tapes  # copper tube  # copper in tape
     )
-    hastelloy_area = rebco_variables.dx_hts_tape_hastelloy * tape_width * tapes
-    solder_area = np.pi / 4.0 * croco_id**2 - dx_croco_strand_tape_stack * tape_width
+    hastelloy_area = rebco_variables.dx_hts_tape_hastelloy * dr_hts_tape * tapes
+    solder_area = np.pi / 4.0 * croco_id**2 - dx_croco_strand_tape_stack * dr_hts_tape
 
-    rebco_area = rebco_variables.dx_hts_tape_rebco * tape_width * tapes
+    rebco_area = rebco_variables.dx_hts_tape_rebco * dr_hts_tape * tapes
     croco_strand_area = np.pi / 4.0 * d**2
     croco_strand_critical_current = j_crit_sc * rebco_area
 
@@ -998,7 +1000,7 @@ def superconductor_current_density_margin(
             b_superconductor,
             bc20m,
             tc0m,
-            rebco_variables.tape_width,
+            rebco_variables.dr_hts_tape,
             rebco_variables.dx_hts_tape_rebco,
             rebco_variables.dx_hts_tape_total,
         )[0],

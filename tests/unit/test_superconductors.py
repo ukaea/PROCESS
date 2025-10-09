@@ -193,7 +193,7 @@ def test_hijc_rebco():
         b_conductor=7.0,
         b_c20max=30.0,
         t_c0=25.0,
-        tape_width=4.0e-3,
+        dr_hts_tape=4.0e-3,
         dx_hts_tape_rebco=1.0e-6,
         dx_hts_tape_total=6.5e-5,
     )

@@ -575,8 +575,8 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Mean width of tape (m)",
-                "(tape_width)",
-                rebco_variables.tape_width,
+                "(dr_hts_tape)",
+                rebco_variables.dr_hts_tape,
                 "OP ",
             )
             po.ovarre(
@@ -1250,7 +1250,7 @@ class SuperconductingTFCoil(TFCoil):
                 b_conductor=b_tf_inboard_peak,
                 b_c20max=bc20m,
                 t_c0=tc0m,
-                tape_width=rebco_variables.tape_width,
+                dr_hts_tape=rebco_variables.dr_hts_tape,
                 dx_hts_tape_rebco=rebco_variables.dx_hts_tape_rebco,
                 dx_hts_tape_total=rebco_variables.dx_hts_tape_total,
             )
