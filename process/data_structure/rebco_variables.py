@@ -43,7 +43,7 @@ copperaoh_m2_max: float = None
 f_copperaoh_m2: float = None
 """f-value for constraint 88: CS coil current / copper area < copperA_m2_max"""
 
-stack_thickness: float = None
+dx_croco_strand_tape_stack: float = None
 
 tapes: float = None
 
@@ -71,7 +71,7 @@ def init_rebco_variables():
     global coppera_m2_max
     global f_coppera_m2
     global tape_thickness
-    global stack_thickness
+    global dx_croco_strand_tape_stack
     global tapes
     global rebco_area
     global copper_area
@@ -94,7 +94,7 @@ def init_rebco_variables():
     coppera_m2_max = 1.0e8
     f_coppera_m2 = 1.0
     tape_thickness = 6.5e-5
-    stack_thickness = 0.0
+    dx_croco_strand_tape_stack = 0.0
     tapes = 0.0
     rebco_area = 0.0
     copper_area = 0.0
