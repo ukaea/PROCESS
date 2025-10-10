@@ -213,8 +213,8 @@ beamfus0: float = None
 """multiplier for beam-background fusion calculation"""
 
 
-beta: float = None
-"""total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
+beta_total_vol_avg: float = None
+"""Volume averaged total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
 
 
 beta_fast_alpha: float = None
@@ -233,7 +233,7 @@ beta_beam: float = None
 """neutral beam beta component"""
 
 
-beta_poloidal: float = None
+beta_poloidal_vol_avg: float = None
 """poloidal beta"""
 
 
@@ -241,11 +241,11 @@ beta_poloidal_eps: float = None
 """Poloidal beta and inverse aspcet ratio product"""
 
 
-beta_toroidal: float = None
-"""toroidal beta"""
+beta_toroidal_vol_avg: float = None
+"""Volume averaged toroidal beta"""
 
 
-beta_thermal: float = None
+beta_thermal_vol_avg: float = None
 """thermal beta"""
 
 
@@ -445,7 +445,7 @@ f_alpha_ion: float = None
 """fraction of alpha power to ions"""
 
 
-f_deuterium: float = None
+f_plasma_fuel_deuterium: float = None
 """deuterium fuel fraction"""
 
 
@@ -475,7 +475,7 @@ density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`
 """
 
 
-f_helium3: float = None
+f_plasma_fuel_helium3: float = None
 """helium-3 fuel fraction"""
 
 
@@ -501,7 +501,7 @@ fne0: float = None
 """
 
 
-f_tritium: float = None
+f_plasma_fuel_tritium: float = None
 """tritium fuel fraction"""
 
 
@@ -1372,15 +1372,15 @@ def init_physics_variables():
     global alphat
     global aspect
     global beamfus0
-    global beta
+    global beta_total_vol_avg
     global beta_fast_alpha
     global beta_max
     global beta_min
     global beta_beam
-    global beta_poloidal
+    global beta_poloidal_vol_avg
     global beta_poloidal_eps
-    global beta_toroidal
-    global beta_thermal
+    global beta_toroidal_vol_avg
+    global beta_thermal_vol_avg
     global beta_thermal_poloidal
     global beta_thermal_toroidal
     global beta_norm_total
@@ -1427,18 +1427,18 @@ def init_physics_variables():
     global f_alpha_electron
     global f_p_alpha_plasma_deposited
     global f_alpha_ion
-    global f_deuterium
+    global f_plasma_fuel_deuterium
     global f_p_div_lower
     global ffwal
     global f_nd_plasma_pedestal_greenwald
     global f_nd_plasma_separatrix_greenwald
-    global f_helium3
+    global f_plasma_fuel_helium3
     global figmer
     global fkzohm
     global fplhsep
     global fp_plasma_separatrix_min_mw
     global fne0
-    global f_tritium
+    global f_plasma_fuel_tritium
     global fusden_total
     global fusrat_total
     global fusrat_plasma_dt_profile
@@ -1624,15 +1624,15 @@ def init_physics_variables():
     alphat = 0.5
     aspect = 2.907
     beamfus0 = 1.0
-    beta = 0.042
+    beta_total_vol_avg = 0.042
     beta_fast_alpha = 0.0
     beta_max = 0.0
     beta_min = 0.0
     beta_beam = 0.0
-    beta_poloidal = 0.0
+    beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
-    beta_toroidal = 0.0
-    beta_thermal = 0.0
+    beta_toroidal_vol_avg = 0.0
+    beta_thermal_vol_avg = 0.0
     beta_thermal_poloidal = 0.0
     beta_thermal_toroidal = 0.0
     beta_norm_total = 0.0
@@ -1679,18 +1679,18 @@ def init_physics_variables():
     f_alpha_electron = 0.0
     f_p_alpha_plasma_deposited = 0.95
     f_alpha_ion = 0.0
-    f_deuterium = 0.5
+    f_plasma_fuel_deuterium = 0.5
     f_p_div_lower = 1.0
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
     f_nd_plasma_separatrix_greenwald = 0.50
-    f_helium3 = 0.0
+    f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
     fplhsep = 1.0
     fp_plasma_separatrix_min_mw = 1.0
     fne0 = 1.0
-    f_tritium = 0.5
+    f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
     fusrat_plasma_dt_profile = []

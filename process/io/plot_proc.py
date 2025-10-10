@@ -2635,10 +2635,10 @@ def plot_main_plasma_information(
     # Add beta information
     textstr_beta = (
         f"$\\mathbf{{Beta \\ Information:}}$\n \n"
-        f"Total beta,$ \\ \\beta$: {mfile_data.data['beta'].get_scan(scan):.4f}\n"
-        f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal'].get_scan(scan):.4f}\n"
-        f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal'].get_scan(scan):.4f}\n"
-        f"Poloidal beta,$ \\ \\beta_{{\\text{{p}}}}$: {mfile_data.data['beta_poloidal'].get_scan(scan):.4f}\n"
+        f"Total beta,$ \\ \\beta$: {mfile_data.data['beta_total_vol_avg'].get_scan(scan):.4f}\n"
+        f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Poloidal beta,$ \\ \\beta_{{\\text{{p}}}}$: {mfile_data.data['beta_poloidal_vol_avg'].get_scan(scan):.4f}\n"
         f"Fast-alpha beta,$ \\ \\beta_{{\\alpha}}$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
         f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile_data.data['beta_norm_total'].get_scan(scan):.4f}\n"
         f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile_data.data['beta_norm_thermal'].get_scan(scan):.4f}\n"
@@ -2873,7 +2873,7 @@ def plot_main_plasma_information(
     textstr_reactions = (
         f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
         f"Fuel mixture: \n"
-        f"|  D: {mfile_data.data['f_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
+        f"|  D: {mfile_data.data['f_plasma_fuel_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_plasma_fuel_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_plasma_fuel_helium3'].get_scan(scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
         f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"

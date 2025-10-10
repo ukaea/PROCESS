@@ -1741,31 +1741,31 @@ class Physics:
         # Beta Components
         # -----------------------------------------------------
 
-        physics_variables.beta_toroidal = (
-            physics_variables.beta
+        physics_variables.beta_toroidal_vol_avg = (
+            physics_variables.beta_total_vol_avg
             * physics_variables.b_plasma_total**2
             / physics_variables.b_plasma_toroidal_on_axis**2
         )
 
         # Calculate physics_variables.beta poloidal [-]
-        physics_variables.beta_poloidal = calculate_poloidal_beta(
+        physics_variables.beta_poloidal_vol_avg = calculate_poloidal_beta(
             physics_variables.b_plasma_total,
             physics_variables.b_plasma_poloidal_average,
-            physics_variables.beta,
+            physics_variables.beta_total_vol_avg,
         )
 
-        physics_variables.beta_thermal = (
-            physics_variables.beta
+        physics_variables.beta_thermal_vol_avg = (
+            physics_variables.beta_total_vol_avg
             - physics_variables.beta_fast_alpha
             - physics_variables.beta_beam
         )
 
         physics_variables.beta_poloidal_eps = (
-            physics_variables.beta_poloidal * physics_variables.eps
+            physics_variables.beta_poloidal_vol_avg * physics_variables.eps
         )
 
         physics_variables.beta_thermal_poloidal = (
-            physics_variables.beta_thermal
+            physics_variables.beta_thermal_vol_avg
             * (
                 physics_variables.b_plasma_total
                 / physics_variables.b_plasma_poloidal_average
@@ -1773,7 +1773,7 @@ class Physics:
             ** 2
         )
         physics_variables.beta_thermal_toroidal = (
-            physics_variables.beta_thermal
+            physics_variables.beta_thermal_vol_avg
             * (
                 physics_variables.b_plasma_total
                 / physics_variables.b_plasma_toroidal_on_axis
@@ -1782,7 +1782,7 @@ class Physics:
         )
         physics_variables.beta_norm_thermal = (
             1.0e8
-            * physics_variables.beta_thermal
+            * physics_variables.beta_thermal_vol_avg
             * physics_variables.rminor
             * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.plasma_current
@@ -1806,12 +1806,12 @@ class Physics:
 
         physics_variables.f_beta_alpha_beam_thermal = (
             physics_variables.beta_fast_alpha + physics_variables.beta_beam
-        ) / physics_variables.beta_thermal
+        ) / physics_variables.beta_thermal_vol_avg
 
         # Plasma thermal energy derived from the thermal beta
         physics_variables.e_plasma_beta_thermal = (
             1.5e0
-            * physics_variables.beta_thermal
+            * physics_variables.beta_thermal_vol_avg
             * physics_variables.b_plasma_total
             * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
@@ -1821,7 +1821,7 @@ class Physics:
         # Plasma thermal energy derived from the total beta
         physics_variables.e_plasma_beta = (
             1.5e0
-            * physics_variables.beta
+            * physics_variables.beta_total_vol_avg
             * physics_variables.b_plasma_total
             * physics_variables.b_plasma_total
             / (2.0e0 * constants.RMU0)
@@ -1893,13 +1893,15 @@ class Physics:
 
         # Hender scaling for diamagnetic current at tight physics_variables.aspect ratio
         current_drive_variables.f_c_plasma_diamagnetic_hender = (
-            diamagnetic_fraction_hender(physics_variables.beta)
+            diamagnetic_fraction_hender(physics_variables.beta_total_vol_avg)
         )
 
         # SCENE scaling for diamagnetic current
         current_drive_variables.f_c_plasma_diamagnetic_scene = (
             diamagnetic_fraction_scene(
-                physics_variables.beta, physics_variables.q95, physics_variables.q0
+                physics_variables.beta_total_vol_avg,
+                physics_variables.q95,
+                physics_variables.q0,
             )
         )
 
@@ -1918,7 +1920,7 @@ class Physics:
 
         # Pfirsch-Schlüter scaling for diamagnetic current
         current_drive_variables.f_c_plasma_pfirsch_schluter_scene = ps_fraction_scene(
-            physics_variables.beta
+            physics_variables.beta_total_vol_avg
         )
 
         if physics_variables.i_pfirsch_schluter_current == 1:
@@ -1935,7 +1937,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_iter89(
                 physics_variables.aspect,
-                physics_variables.beta,
+                physics_variables.beta_total_vol_avg,
                 physics_variables.b_plasma_total,
                 physics_variables.plasma_current,
                 physics_variables.q95,
@@ -1950,7 +1952,7 @@ class Physics:
             * self.bootstrap_fraction_nevins(
                 physics_variables.alphan,
                 physics_variables.alphat,
-                physics_variables.beta_toroidal,
+                physics_variables.beta_toroidal_vol_avg,
                 physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.plasma_current,
@@ -1986,7 +1988,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_sakai = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_sakai(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 alphan=physics_variables.alphan,
@@ -1999,7 +2001,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_aries = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_aries(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 ind_plasma_internal_norm=physics_variables.ind_plasma_internal_norm,
                 core_density=physics_variables.nd_plasma_electron_on_axis,
                 average_density=physics_variables.nd_plasma_electrons_vol_avg,
@@ -2010,7 +2012,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_andrade = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 core_pressure=physics_variables.pres_plasma_on_axis,
                 average_pressure=physics_variables.pres_plasma_vol_avg,
                 inverse_aspect=physics_variables.eps,
@@ -2019,7 +2021,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_hoang = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_hoang(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 current_index=physics_variables.alphaj,
                 inverse_aspect=physics_variables.eps,
@@ -2028,7 +2030,7 @@ class Physics:
         current_drive_variables.f_c_plasma_bootstrap_wong = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_wong(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 density_index=physics_variables.alphan,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2038,7 +2040,7 @@ class Physics:
         current_drive_variables.bscf_gi_i = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_I(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2051,7 +2053,7 @@ class Physics:
         current_drive_variables.bscf_gi_ii = (
             current_drive_variables.cboot
             * self.bootstrap_fraction_gi_II(
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
@@ -2062,7 +2064,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_sugiyama_l_mode(
                 eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 zeff=physics_variables.zeff,
@@ -2074,7 +2076,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_sugiyama_h_mode(
                 eps=physics_variables.eps,
-                beta_poloidal=physics_variables.beta_poloidal,
+                beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 tbeta=physics_variables.tbeta,
@@ -2206,8 +2208,8 @@ class Physics:
                 physics_variables.nd_fuel_ions,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
-                physics_variables.f_deuterium,
-                physics_variables.f_tritium,
+                physics_variables.f_plasma_fuel_deuterium,
+                physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
                 physics_variables.sigmav_dt_average,
                 physics_variables.temp_plasma_electron_density_weighted_kev,
@@ -3231,7 +3233,8 @@ class Physics:
             physics_variables.nd_protons = max(
                 physics_variables.f_nd_protium_electrons
                 * physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_alphas * (physics_variables.f_helium3 + 1.0e-3),
+                physics_variables.nd_alphas
+                * (physics_variables.f_plasma_fuel_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.nd_protons = max(
@@ -3283,8 +3286,10 @@ class Physics:
 
         # Fuel ion density, nd_fuel_ions
         # For D-T-He3 mix, nd_fuel_ions = nD + nT + nHe3, while znfuel = nD + nT + 2*nHe3
-        # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_helium3*nd_fuel_ions
-        physics_variables.nd_fuel_ions = znfuel / (1.0 + physics_variables.f_helium3)
+        # So nd_fuel_ions = znfuel - nHe3 = znfuel - f_plasma_fuel_helium3*nd_fuel_ions
+        physics_variables.nd_fuel_ions = znfuel / (
+            1.0 + physics_variables.f_plasma_fuel_helium3
+        )
 
         # ======================================================================
 
@@ -3294,7 +3299,10 @@ class Physics:
             impurity_radiation.element2index("H_")
         ] = (
             physics_variables.nd_protons
-            + (physics_variables.f_deuterium + physics_variables.f_tritium)
+            + (
+                physics_variables.f_plasma_fuel_deuterium
+                + physics_variables.f_plasma_fuel_tritium
+            )
             * physics_variables.nd_fuel_ions
             + physics_variables.nd_beam_ions
         ) / physics_variables.nd_plasma_electrons_vol_avg
@@ -3302,7 +3310,7 @@ class Physics:
         impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("He")
         ] = (
-            physics_variables.f_helium3
+            physics_variables.f_plasma_fuel_helium3
             * physics_variables.nd_fuel_ions
             / physics_variables.nd_plasma_electrons_vol_avg
             + physics_variables.f_nd_alpha_electron
@@ -3397,9 +3405,9 @@ class Physics:
 
         # Average atomic masses of injected fuel species
         physics_variables.m_fuel_amu = (
-            (constants.M_DEUTERON_AMU * physics_variables.f_deuterium)
-            + (constants.M_TRITON_AMU * physics_variables.f_tritium)
-            + (constants.M_HELION_AMU * physics_variables.f_helium3)
+            (constants.M_DEUTERON_AMU * physics_variables.f_plasma_fuel_deuterium)
+            + (constants.M_TRITON_AMU * physics_variables.f_plasma_fuel_tritium)
+            + (constants.M_HELION_AMU * physics_variables.f_plasma_fuel_helium3)
         )
 
         # ======================================================================
@@ -3437,18 +3445,18 @@ class Physics:
         # Sum of (Zi^2*n_i) / m_i
         physics_variables.zeffai = (
             (
-                physics_variables.f_deuterium
+                physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_fuel_ions
                 / constants.M_DEUTERON_AMU
             )
             + (
-                physics_variables.f_tritium
+                physics_variables.f_plasma_fuel_tritium
                 * physics_variables.nd_fuel_ions
                 / constants.M_TRITON_AMU
             )
             + (
                 4.0
-                * physics_variables.f_helium3
+                * physics_variables.f_plasma_fuel_helium3
                 * physics_variables.nd_fuel_ions
                 / constants.M_HELION_AMU
             )
@@ -3807,7 +3815,7 @@ class Physics:
         # Normalised beta from Troyon beta limit
         physics_variables.beta_norm_total = (
             1.0e8
-            * physics_variables.beta
+            * physics_variables.beta_total_vol_avg
             * rminor
             * b_plasma_toroidal_on_axis
             / plasma_current
@@ -4326,7 +4334,12 @@ class Physics:
                 "OP ",
             )
 
-        po.ovarre(self.outfile, "Total plasma beta", "(beta)", physics_variables.beta)
+        po.ovarre(
+            self.outfile,
+            "Total plasma beta",
+            "(beta)",
+            physics_variables.beta_total_vol_avg,
+        )
         if physics_variables.i_beta_component == 0:
             po.ovarrf(
                 self.outfile,
@@ -4361,15 +4374,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total poloidal beta",
-            "(beta_poloidal)",
-            physics_variables.beta_poloidal,
+            "(beta_poloidal_vol_avg)",
+            physics_variables.beta_poloidal_vol_avg,
             "OP ",
         )
         po.ovarre(
             self.outfile,
-            "Total toroidal beta",
-            "(beta_toroidal)",
-            physics_variables.beta_toroidal,
+            "Volume averaged toroidal beta",
+            "(beta_toroidal_vol_avg)",
+            physics_variables.beta_toroidal_vol_avg,
             "OP ",
         )
         po.ovarre(
@@ -4396,9 +4409,9 @@ class Physics:
 
         po.ovarre(
             self.outfile,
-            "Thermal beta",
-            "(beta_thermal)",
-            physics_variables.beta_thermal,
+            "Volume averaged thermal beta",
+            "(beta_thermal_vol_avg)",
+            physics_variables.beta_thermal_vol_avg,
             "OP ",
         )
         po.ovarre(
@@ -5044,20 +5057,20 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Deuterium fuel fraction",
-            "(f_deuterium)",
-            physics_variables.f_deuterium,
+            "(f_plasma_fuel_deuterium)",
+            physics_variables.f_plasma_fuel_deuterium,
         )
         po.ovarrf(
             self.outfile,
             "Tritium fuel fraction",
-            "(f_tritium)",
-            physics_variables.f_tritium,
+            "(f_plasma_fuel_tritium)",
+            physics_variables.f_plasma_fuel_tritium,
         )
         po.ovarrf(
             self.outfile,
             "3-Helium fuel fraction",
-            "(f_helium3)",
-            physics_variables.f_helium3,
+            "(f_plasma_fuel_helium3)",
+            physics_variables.f_plasma_fuel_helium3,
         )
         po.oblnkl(self.outfile)
         po.ocmmnt(self.outfile, "----------------------------")
@@ -6935,7 +6948,7 @@ class Physics:
         amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
 
         # Create new array of average main ion charge
-        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_helium3)
+        zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
 
         # Prevent division by zero
         if ne[nr - 1] == 0.0:

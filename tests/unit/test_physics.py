@@ -353,7 +353,7 @@ class BootstrapFractionSauterParam(NamedTuple):
 
     a_plasma_poloidal: Any = None
 
-    f_helium3: Any = None
+    f_plasma_fuel_helium3: Any = None
 
     temp_plasma_pedestal_kev: Any = None
 
@@ -400,7 +400,7 @@ class BootstrapFractionSauterParam(NamedTuple):
             b_plasma_toroidal_on_axis=5.326133750416047,
             plasma_current=16528278.760008096,
             a_plasma_poloidal=38.39822223637151,
-            f_helium3=0,
+            f_plasma_fuel_helium3=0,
             temp_plasma_pedestal_kev=5.5,
             nd_plasma_electrons_vol_avg=8.016748468651018e19,
             te=12.570861186498382,
@@ -486,7 +486,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_helium3", bootstrapfractionsauterparam.f_helium3
+        physics_variables,
+        "f_plasma_fuel_helium3",
+        bootstrapfractionsauterparam.f_plasma_fuel_helium3,
     )
 
     monkeypatch.setattr(
@@ -616,7 +618,9 @@ def test_bootstrap_fraction_sakai(bootstrapfractionsakaiparam, monkeypatch, phys
     """
 
     monkeypatch.setattr(
-        physics_variables, "beta_poloidal", bootstrapfractionsakaiparam.beta_poloidal
+        physics_variables,
+        "beta_poloidal_vol_avg",
+        bootstrapfractionsakaiparam.beta_poloidal,
     )
 
     monkeypatch.setattr(physics_variables, "q95", bootstrapfractionsakaiparam.q95)
@@ -1216,7 +1220,9 @@ def test_calculate_plasma_current(plasmacurrentparam, monkeypatch, physics):
         plasmacurrentparam.beta_norm_total,
     )
 
-    monkeypatch.setattr(physics_variables, "beta", plasmacurrentparam.beta)
+    monkeypatch.setattr(
+        physics_variables, "beta_total_vol_avg", plasmacurrentparam.beta
+    )
 
     b_plasma_poloidal_average, qstar, plasma_current = physics.calculate_plasma_current(
         i_plasma_current=plasmacurrentparam.i_plasma_current,
@@ -1360,7 +1366,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     m_fuel_amu: Any = None
 
-    f_tritium: Any = None
+    f_plasma_fuel_tritium: Any = None
 
     nd_fuel_ions: Any = None
 
@@ -1400,13 +1406,13 @@ class PlasmaCompositionParam(NamedTuple):
 
     proton_rate_density: Any = None
 
-    f_deuterium: Any = None
+    f_plasma_fuel_deuterium: Any = None
 
     alphan: Any = None
 
     nd_beam_ions: Any = None
 
-    f_helium3: Any = None
+    f_plasma_fuel_helium3: Any = None
 
     nd_alphas: Any = None
 
@@ -1526,7 +1532,7 @@ class PlasmaCompositionParam(NamedTuple):
             i_plasma_ignited=0,
             f_alpha_electron=0,
             m_fuel_amu=0,
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             nd_fuel_ions=0,
             m_ions_total_amu=0,
             nd_ions_total=0,
@@ -1546,10 +1552,10 @@ class PlasmaCompositionParam(NamedTuple):
             m_beam_amu=0,
             te=12,
             proton_rate_density=0,
-            f_deuterium=0.5,
+            f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
-            f_helium3=0,
+            f_plasma_fuel_helium3=0,
             nd_alphas=0,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_protons=0,
@@ -1644,7 +1650,7 @@ class PlasmaCompositionParam(NamedTuple):
             i_plasma_ignited=0,
             f_alpha_electron=0.6845930883190634,
             m_fuel_amu=2.5,
-            f_tritium=0.5,
+            f_plasma_fuel_tritium=0.5,
             nd_fuel_ions=5.8589175702454272e19,
             m_ions_total_amu=2.7395439636787726,
             nd_ions_total=6.6125550702454276e19,
@@ -1664,10 +1670,10 @@ class PlasmaCompositionParam(NamedTuple):
             m_beam_amu=2.01355414,
             te=12,
             proton_rate_density=540072280299564.38,
-            f_deuterium=0.5,
+            f_plasma_fuel_deuterium=0.5,
             alphan=1,
             nd_beam_ions=0,
-            f_helium3=0,
+            f_plasma_fuel_helium3=0,
             nd_alphas=7.5e18,
             nd_plasma_electrons_vol_avg=7.5e19,
             nd_protons=7500000000000000,
@@ -1767,7 +1773,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_tritium", plasmacompositionparam.f_tritium
+        physics_variables,
+        "f_plasma_fuel_tritium",
+        plasmacompositionparam.f_plasma_fuel_tritium,
     )
 
     monkeypatch.setattr(
@@ -1855,7 +1863,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_deuterium", plasmacompositionparam.f_deuterium
+        physics_variables,
+        "f_plasma_fuel_deuterium",
+        plasmacompositionparam.f_plasma_fuel_deuterium,
     )
 
     monkeypatch.setattr(physics_variables, "alphan", plasmacompositionparam.alphan)
@@ -1865,7 +1875,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "f_helium3", plasmacompositionparam.f_helium3
+        physics_variables,
+        "f_plasma_fuel_helium3",
+        plasmacompositionparam.f_plasma_fuel_helium3,
     )
 
     monkeypatch.setattr(

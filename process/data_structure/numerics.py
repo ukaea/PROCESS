@@ -201,7 +201,7 @@ lablxc: list[str] = None
 * ( 2) b_plasma_toroidal_on_axis
 * ( 3) rmajor
 * ( 4) temp_plasma_electron_vol_avg_kev
-* ( 5) beta
+* ( 5) beta_total_vol_avg
 * ( 6) nd_plasma_electrons_vol_avg
 * ( 7) f_nd_beam_electron
 * ( 8) fbeta_poloidal_eps (f-value for equation 6)
@@ -368,7 +368,7 @@ lablxc: list[str] = None
 * (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
 * (171) casths_fraction : TF side case thickness as fraction of toridal case thickness
 * (172) dx_tf_side_case_min : TF side case thickness [m]
-* (173) f_deuterium : Deuterium fraction in fuel
+* (173) f_plasma_fuel_deuterium : Deuterium fraction in fuel
 * (174) EMPTY : Description
 * (175) EMPTY : Description
 """
