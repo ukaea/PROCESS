@@ -3868,9 +3868,27 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
     q_r_nevin = q0 + (q95 - q0) * (rho + rho * rho + rho**3) / (3.0)
     q_r_sauter = q0 + (q95 - q0) * (rho * rho)
 
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    q_circular_profile = [
+        mfile_data.data[f"q_circular_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    prof.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        q_circular_profile,
+        label="Circular",
+        linestyle="--",
+        color="black",
+    )
+
     prof.plot(rho, q_r_nevin, label="Nevins")
     prof.plot(rho, q_r_sauter, label="Sauter")
     prof.legend()
+    prof.figure.tight_layout()
 
     # Ranges
     # ---
@@ -3884,9 +3902,9 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
         prof.set_ylim([0, q95 * 1.2])
 
     prof.text(
-        0.6,
+        0.45,
         0.04,
-        "*Profile is not calculated, only $q_0$ and $q_{95}$ are known.",
+        "*Only circular profile is calculated, for others only $q_0$ and $q_{95}$ are known.",
         fontsize=10,
         ha="left",
         transform=plt.gcf().transFigure,
@@ -3898,7 +3916,8 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
         r"$q_0$: " + f"{q0:.3f}\n",
         r"$q_{95}$: " + f"{q95:.3f}\n",
         r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}\n",
-        r"$q_{95,\text{circular}}$: " + f"{mfile_data.data['q_95_circular'].get_scan(scan):.3f}",
+        r"$q_{95,\text{circular}}$: "
+        + f"{mfile_data.data['q_95_circular'].get_scan(scan):.3f}",
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}

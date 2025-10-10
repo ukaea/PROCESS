@@ -1771,6 +1771,23 @@ class Physics:
             )
         )
 
+        physics_variables.q_circular_profile = (
+            (
+                np.linspace(
+                    0,
+                    physics_variables.rminor,
+                    physics_variables.n_plasma_profile_elements,
+                )
+                / physics_variables.rmajor
+            )
+            * physics_variables.b_plasma_toroidal_profile[
+                physics_variables.n_plasma_profile_elements :
+            ]
+            / physics_variables.b_plasma_circular_poloidal_profile[
+                physics_variables.n_plasma_profile_elements :
+            ]
+        )
+
         # Calculate the total magnetic field profile at each point by summing the squares of the toroidal and poloidal components
         physics_variables.b_plasma_total_profile = np.sqrt(
             np.square(physics_variables.b_plasma_toroidal_profile)
@@ -4398,6 +4415,13 @@ class Physics:
                     f"Total field in plasma at point {i}",
                     f"b_plasma_total_profile{i}",
                     physics_variables.b_plasma_total_profile[i],
+                )
+            for i in range(len(physics_variables.q_circular_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Safety factor for circular plasma at point {i}",
+                    f"q_circular_profile{i}",
+                    physics_variables.q_circular_profile[i],
                 )
             po.ovarrf(
                 self.outfile,
