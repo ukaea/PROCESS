@@ -3897,12 +3897,13 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
     textstr_q = "\n".join((
         r"$q_0$: " + f"{q0:.3f}\n",
         r"$q_{95}$: " + f"{q95:.3f}\n",
-        r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}",
+        r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}\n",
+        r"$q_{95,\text{circular}}$: " + f"{mfile_data.data['q_95_circular'].get_scan(scan):.3f}",
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
-        -0.4,
+        -0.5,
         0.75,
         textstr_q,
         transform=prof.transAxes,

@@ -3882,6 +3882,14 @@ class Physics:
             * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
         )
 
+        physics_variables.q_95_circular = (
+            2
+            * np.pi
+            * rminor**2
+            * b_plasma_toroidal_on_axis
+            / (constants.RMU0 * rmajor * plasma_current)
+        )
+
         # Normalised beta from Troyon beta limit
         physics_variables.beta_norm_total = (
             1.0e8
@@ -4433,6 +4441,12 @@ class Physics:
                 "(qstar)",
                 physics_variables.qstar,
                 "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Edge safety factor for a circular plasma (q_circular)",
+                "(q_95_circular)",
+                physics_variables.q_95_circular,
             )
 
             if physics_variables.i_plasma_geometry == 1:

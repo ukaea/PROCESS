@@ -1128,6 +1128,8 @@ qstar: float = None
 q_95_circular: float = None
 """Safety factor at 95% flux surface for circular plasma"""
 
+q_circular_profile: list[float] = None
+"""safety factor profile for circular plasma"""
 
 rad_fraction_sol: float = None
 """SoL radiation fraction"""
@@ -1598,6 +1600,7 @@ def init_physics_variables():
     global q95_min
     global qstar
     global q_95_circular
+    global q_circular_profile
     global rad_fraction_sol
     global rad_fraction_total
     global f_nd_alpha_electron
@@ -1861,6 +1864,7 @@ def init_physics_variables():
     q95_min = 0.0
     qstar = 0.0
     q_95_circular = 0.0
+    q_circular_profile = []
     rad_fraction_sol = 0.8
     rad_fraction_total = 0.0
     f_nd_alpha_electron = 0.1
