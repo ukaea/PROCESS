@@ -185,7 +185,7 @@ def main(args=None):
         "f_nd_impurity_electrons(9)",
         "Obsolete",  # Removed
         "alstrtf",
-        "tmargmin_tf",
+        "temp_tf_superconductor_margin_min",
         "boundu(152)",
         "impurity_enrichment(9)",
         "n_tf_wp_pancakes",

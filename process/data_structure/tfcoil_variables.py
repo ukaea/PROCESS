@@ -794,11 +794,11 @@ Rem : Thickness calculated for stellarators.
 """
 
 
-tmargmin_tf: float = None
+temp_tf_superconductor_margin_min: float = None
 """minimum allowable temperature margin : TF coils (K)"""
 
 
-tmargmin_cs: float = None
+temp_cs_superconductor_margin_min: float = None
 """minimum allowable temperature margin : CS (K)"""
 
 
@@ -1234,8 +1234,8 @@ def init_tfcoil_variables():
     global dr_tf_wp_with_insulation
     global dx_tf_turn_steel
     global dx_tf_wp_insulation
-    global tmargmin_tf
-    global tmargmin_cs
+    global temp_tf_superconductor_margin_min
+    global temp_cs_superconductor_margin_min
     global tmargmin
     global temp_margin
     global temp_tf_superconductor_margin
@@ -1468,8 +1468,8 @@ def init_tfcoil_variables():
     dr_tf_wp_with_insulation = 0.0
     dx_tf_turn_steel = 8e-3
     dx_tf_wp_insulation = 0.018
-    tmargmin_tf = 0.0
-    tmargmin_cs = 0.0
+    temp_tf_superconductor_margin_min = 0.0
+    temp_cs_superconductor_margin_min = 0.0
     tmargmin = 0.0
     temp_margin = 0.0
     temp_tf_superconductor_margin = 0.0

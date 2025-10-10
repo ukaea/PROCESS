@@ -135,7 +135,7 @@ def test_protect(protectparam, sctfcoil):
 
 
 class SuperconParam(NamedTuple):
-    tmargmin_tf: Any = None
+    temp_tf_superconductor_margin_min: Any = None
 
     n_tf_coils: Any = None
 
@@ -215,8 +215,6 @@ class SuperconParam(NamedTuple):
 
     expected_vd: Any = None
 
-    expected_tmarg: Any = None
-
     expected_j_superconductor_critical: Any = None
 
     expected_f_c_tf_turn_operating_critical: Any = None
@@ -229,12 +227,14 @@ class SuperconParam(NamedTuple):
 
     expected_c_turn_cables_critical: Any = None
 
+    expected_j_superconductor: Any = None
+
 
 @pytest.mark.parametrize(
     "superconparam",
     (
         SuperconParam(
-            tmargmin_tf=1.5,
+            temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
             temp_margin=0,
             dia_tf_turn_coolant_channel=0.010000000000000002,
@@ -276,16 +276,16 @@ class SuperconParam(NamedTuple):
             expected_jwdgpro=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=9988.2637896807955,
-            expected_tmarg=2.864553846654988,
             expected_j_superconductor_critical=832616175.5329928,
             expected_f_c_tf_turn_operating_critical=0.46510052068203006,
             expected_j_tf_coil_turn=23124470.793774802,
             expected_bc20m=32.97,
             expected_tc0m=16.06,
             expected_c_turn_cables_critical=159162.9081148869,
+            expected_j_superconductor=387250216.7686755,
         ),
         SuperconParam(
-            tmargmin_tf=1.5,
+            temp_tf_superconductor_margin_min=1.5,
             n_tf_coils=16,
             temp_margin=2.3431632224075836,
             dia_tf_turn_coolant_channel=0.010000000000000002,
@@ -325,13 +325,13 @@ class SuperconParam(NamedTuple):
             expected_jwdgpro=17213147.288375787,
             expected_j_tf_wp_critical=49719296.722920775,
             expected_vd=10001.287165953383,
-            expected_tmarg=2.864553846654988,
             expected_j_superconductor_critical=832616175.5329928,
             expected_f_c_tf_turn_operating_critical=0.46510052068203006,
             expected_j_tf_coil_turn=23124470.793774802,
             expected_bc20m=32.97,
             expected_tc0m=16.06,
             expected_c_turn_cables_critical=159162.9081148869,
+            expected_j_superconductor=387250216.7686755,
         ),
     ),
 )
@@ -351,7 +351,11 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     :type sctfcoil: process.sctfcoil.SuperconductingTFCoil
     """
 
-    monkeypatch.setattr(tfcoil_variables, "tmargmin_tf", superconparam.tmargmin_tf)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "temp_tf_superconductor_margin_min",
+        superconparam.temp_tf_superconductor_margin_min,
+    )
 
     monkeypatch.setattr(tfcoil_variables, "n_tf_coils", superconparam.n_tf_coils)
 
@@ -412,14 +416,14 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
     (
         j_tf_wp_critical,
         vd,
-        tmarg,
         j_superconductor_critical,
         f_c_tf_turn_operating_critical,
+        j_superconductor,
         j_tf_coil_turn,
         bc20m,
         tc0m,
         c_turn_cables_critical,
-    ) = sctfcoil.supercon(
+    ) = sctfcoil.tf_cable_in_conduit_superconductor_properties(
         i_tf_superconductor=superconparam.i_tf_superconductor,
         a_tf_turn_cable_space=superconparam.a_tf_turn_cable_space,
         a_tf_turn=superconparam.a_tf_turn,
@@ -438,15 +442,13 @@ def test_supercon(superconparam, monkeypatch, sctfcoil):
         tcritsc=superconparam.tcritsc,
     )
 
-    assert tmarg == pytest.approx(superconparam.expected_temp_margin)
+    assert j_superconductor == pytest.approx(superconparam.expected_j_superconductor)
 
     assert tfcoil_variables.jwdgpro == pytest.approx(superconparam.expected_jwdgpro)
 
     assert j_tf_wp_critical == pytest.approx(superconparam.expected_j_tf_wp_critical)
 
     assert vd == pytest.approx(superconparam.expected_vd)
-
-    assert tmarg == pytest.approx(superconparam.expected_tmarg)
 
     assert j_superconductor_critical == pytest.approx(
         superconparam.expected_j_superconductor_critical
@@ -2234,3 +2236,48 @@ def test_superconducting_tf_coil_area_and_masses(
     assert tfcoil_variables.cplen == pytest.approx(
         tfcoilareaandmassesparam.expected_cplen
     )
+
+
+@pytest.mark.parametrize(
+    "i_tf_superconductor, j_superconductor, b_tf_inboard_peak, strain, bc20m, tc0m, c0, temp_tf_coolant_peak_field, expected_margin",
+    [
+        # ITER Nb3Sn, standard parameters
+        (1, 1e8, 12.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.679499736095401),
+        # NbTi
+        (3, 1e8, 8.0, 0.0, 15.0, 9.3, 1e10, 4.5, 1.3048296694055175),
+        # User-defined Nb3Sn
+        (4, 1e8, 10.0, 0.0, 30.0, 15.0, 1e10, 4.5, 5.539631803535094),
+        # WST Nb3Sn
+        (5, 1e8, 13.0, 0.0, 32.97, 16.06, 1e10, 4.5, 5.221287311831414),
+        # Durham Ginzburg-Landau Nb-Ti
+        (7, 1e8, 7.0, 0.0, 14.85, 9.04, 1e10, 4.5, 1.263064155425198),
+        # Durham Ginzburg-Landau REBCO
+        (8, 1e8, 10.0, 0.0, 430, 185, 1e10, 20.0, 31.82616792800119),
+        # Hazelton-Zhai REBCO
+        (9, 1e8, 10.0, 0.0, 138, 92, 1e10, 20.0, 48.363687012510425),
+    ],
+)
+def test_calculate_superconductor_temperature_margin(
+    i_tf_superconductor,
+    j_superconductor,
+    b_tf_inboard_peak,
+    strain,
+    bc20m,
+    tc0m,
+    c0,
+    temp_tf_coolant_peak_field,
+    expected_margin,
+):
+    sctfcoil = SuperconductingTFCoil()
+    margin = sctfcoil.calculate_superconductor_temperature_margin(
+        i_tf_superconductor=i_tf_superconductor,
+        j_superconductor=j_superconductor,
+        b_tf_inboard_peak=b_tf_inboard_peak,
+        strain=strain,
+        bc20m=bc20m,
+        tc0m=tc0m,
+        c0=c0,
+        temp_tf_coolant_peak_field=temp_tf_coolant_peak_field,
+    )
+    # The expected_margin values are illustrative; in real tests, use values from reference calculations.
+    assert margin == pytest.approx(expected_margin)
