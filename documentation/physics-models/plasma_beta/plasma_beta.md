@@ -5,8 +5,18 @@
 The efficiency of confinement of plasma pressure by the magnetic field is represented by the ratio:
 
 $$
-\beta = \frac{2\mu_0p}{B^2}
+\beta(\rho) = \frac{2\mu_0p(\rho)}{\left(B(\rho)\right)^2}
 $$
+
+Where $\beta$ is a function of normalised minor radius across the plasma ($\rho$), due to the change in pressure and magnetic field strength. 
+
+The standard $\beta$ term used for comparison and to represent the plasma as a whole in many calculations is the volume averaged value given by:
+
+$$
+\langle \beta \rangle = \frac{2\mu_0 \langle p \rangle}{\langle B \rangle^2}
+$$
+
+Where $\langle p \rangle$ is the volume averaged plasma pressure and $\langle B \rangle$ is the average field.
 
 There are several different measures of this type, arising from different choices of definition and from the need to quantify different equilibrium properties.
 
@@ -91,6 +101,20 @@ $$
 $$
 
 ------------------------
+
+## Definitions
+
+### Volume averaged thermal toroidal beta
+
+$$
+\overbrace{\langle \beta_t \rangle}^{\texttt{beta_toroidal_thermal_vol_avg}} = \frac{2\mu_0 \langle p_{\text{thermal}} \rangle}{\underbrace{B_{\text{T,on-axis}}^2}_{\texttt{b_plasma_toroidal_on_axis}}}
+$$
+
+### Volume averaged thermal poloidal beta
+
+$$
+\langle \beta_p \rangle = \frac{2\mu_0 \langle p_{\text{thermal}} \rangle}{\langle B_{\text{P,average}} \rangle^2}
+$$
 
 ## Troyon Beta Limit
 
