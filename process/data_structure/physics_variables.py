@@ -822,7 +822,7 @@ m_s_limit: float = None
 """margin to vertical stability"""
 
 
-pres_plasma_on_axis: float = None
+pres_plasma_thermal_on_axis: float = None
 """central total plasma pressure (Pa)"""
 
 pres_plasma_total_profile: list[float] = None
@@ -1514,7 +1514,7 @@ def init_physics_variables():
     global nd_plasma_electron_on_axis
     global nd_plasma_ions_on_axis
     global m_s_limit
-    global pres_plasma_on_axis
+    global pres_plasma_thermal_on_axis
     global pres_plasma_total_profile
     global pres_plasma_electron_profile
     global pres_plasma_ion_total_profile
@@ -1773,7 +1773,7 @@ def init_physics_variables():
     nd_plasma_electron_on_axis = 0.0
     nd_plasma_ions_on_axis = 0.0
     m_s_limit = 0.3
-    pres_plasma_on_axis = 0.0
+    pres_plasma_thermal_on_axis = 0.0
     pres_plasma_total_profile = []
     pres_plasma_electron_profile = []
     pres_plasma_ion_total_profile = []
