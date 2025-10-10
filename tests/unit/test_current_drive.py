@@ -39,8 +39,8 @@ def test_cudriv_primary_lower_hybrid(current_drive):
     current_drive_variables.i_hcd_calculations = 1
     current_drive_variables.p_hcd_primary_extra_heat_mw = 0.0
     current_drive_variables.eta_cd_hcd_secondary = 0.0
-    physics_variables.dene = 1e20
-    physics_variables.te = 10
+    physics_variables.nd_plasma_electrons_vol_avg = 1e20
+    physics_variables.temp_plasma_electron_vol_avg_kev = 10
     physics_variables.rmajor = 6.2
     physics_variables.plasma_current = 15e6
     physics_variables.f_c_plasma_auxiliary = 0.2
@@ -85,8 +85,8 @@ def test_cudriv_primary_lower_hybrid_with_heat(current_drive):
     current_drive_variables.i_hcd_calculations = 1
     current_drive_variables.p_hcd_primary_extra_heat_mw = 5.0  # Adding primary heat
     current_drive_variables.eta_cd_hcd_secondary = 0.0
-    physics_variables.dene = 1e20
-    physics_variables.te = 10
+    physics_variables.nd_plasma_electrons_vol_avg = 1e20
+    physics_variables.temp_plasma_electron_vol_avg_kev = 10
     physics_variables.rmajor = 6.2
     physics_variables.plasma_current = 15e6
     physics_variables.f_c_plasma_auxiliary = 0.2

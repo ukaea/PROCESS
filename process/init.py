@@ -400,7 +400,7 @@ def check_process(inputs):  # noqa: ARG001
         )
 
     # Stop the run if oacdcp is used as an optimisation variable
-    # As the current density is now calculated from bt without constraint 10
+    # As the current density is now calculated from b_plasma_toroidal_on_axis without constraint 10
 
     if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 12).any():
         raise ProcessValidationError(
@@ -410,30 +410,33 @@ def check_process(inputs):  # noqa: ARG001
     # Plasma profile consistency checks
     if (
         data_structure.ife_variables.ife != 1
-        and data_structure.physics_variables.ipedestal == 1
+        and data_structure.physics_variables.i_plasma_pedestal == 1
     ):
         # Temperature checks
         if (
-            data_structure.physics_variables.teped
-            < data_structure.physics_variables.tesep
+            data_structure.physics_variables.temp_plasma_pedestal_kev
+            < data_structure.physics_variables.temp_plasma_separatrix_kev
         ):
             raise ProcessValidationError(
                 "Pedestal temperature is lower than separatrix temperature",
-                teped=data_structure.physics_variables.teped,
-                tesep=data_structure.physics_variables.tesep,
+                temp_plasma_pedestal_kev=data_structure.physics_variables.temp_plasma_pedestal_kev,
+                temp_plasma_separatrix_kev=data_structure.physics_variables.temp_plasma_separatrix_kev,
             )
 
-        if (abs(data_structure.physics_variables.rhopedt - 1.0) <= 1e-7) and (
+        if (
+            abs(data_structure.physics_variables.radius_plasma_pedestal_temp_norm - 1.0)
+            <= 1e-7
+        ) and (
             (
-                data_structure.physics_variables.teped
-                - data_structure.physics_variables.tesep
+                data_structure.physics_variables.temp_plasma_pedestal_kev
+                - data_structure.physics_variables.temp_plasma_separatrix_kev
             )
             >= 1e-7
         ):
             warn(
-                f"Temperature pedestal is at plasma edge, but teped "
-                f"({data_structure.physics_variables.teped}) differs from tesep "
-                f"({data_structure.physics_variables.tesep})",
+                f"Temperature pedestal is at plasma edge, but temp_plasma_pedestal_kev "
+                f"({data_structure.physics_variables.temp_plasma_pedestal_kev}) differs from temp_plasma_separatrix_kev "
+                f"({data_structure.physics_variables.temp_plasma_separatrix_kev})",
                 stacklevel=2,
             )
 
@@ -443,31 +446,31 @@ def check_process(inputs):  # noqa: ARG001
         # temperature. Prevent this by adjusting te, and its lower bound
         # (which will only have an effect if this is an optimisation run)
         if (
-            data_structure.physics_variables.te
-            <= data_structure.physics_variables.teped
+            data_structure.physics_variables.temp_plasma_electron_vol_avg_kev
+            <= data_structure.physics_variables.temp_plasma_pedestal_kev
         ):
             warn(
                 f"Volume-averaged temperature ({data_structure.physics_variables.te}) has been "
-                f"forced to exceed input pedestal height ({data_structure.physics_variables.teped}). "
-                "Changing to te = teped*1.001",
+                f"forced to exceed input pedestal height ({data_structure.physics_variables.temp_plasma_pedestal_kev}). "
+                "Changing to te = temp_plasma_pedestal_kev*1.001",
                 stacklevel=2,
             )
-            data_structure.physics_variables.te = (
-                data_structure.physics_variables.teped * 1.001
+            data_structure.physics_variables.temp_plasma_electron_vol_avg_kev = (
+                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
             )
 
         if (
             data_structure.numerics.ioptimz >= 0
             and (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 4).any()
             and data_structure.numerics.boundl[3]
-            < data_structure.physics_variables.teped * 1.001
+            < data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
         ):
             warn(
-                "Lower limit of volume averaged electron temperature (te) has been raised to ensure te > teped",
+                "Lower limit of volume averaged electron temperature (temp_plasma_electron_vol_avg_kev) has been raised to ensure temp_plasma_electron_vol_avg_kev > temp_plasma_pedestal_kev",
                 stacklevel=2,
             )
             data_structure.numerics.boundl[3] = (
-                data_structure.physics_variables.teped * 1.001
+                data_structure.physics_variables.temp_plasma_pedestal_kev * 1.001
             )
             data_structure.numerics.boundu[3] = max(
                 data_structure.numerics.boundu[3], data_structure.numerics.boundl[3]
@@ -476,41 +479,45 @@ def check_process(inputs):  # noqa: ARG001
         # Density checks
         # Case where pedestal density is set manually
         if (
-            data_structure.physics_variables.fgwped < 0
+            data_structure.physics_variables.f_nd_plasma_pedestal_greenwald < 0
             or not (
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any()
         ):
-            # Issue #589 Pedestal density is set manually using neped but it is less than nesep.
+            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron but it is less than nd_plasma_separatrix_electron.
             if (
-                data_structure.physics_variables.neped
-                < data_structure.physics_variables.nesep
+                data_structure.physics_variables.nd_plasma_pedestal_electron
+                < data_structure.physics_variables.nd_plasma_separatrix_electron
             ):
                 raise ProcessValidationError(
                     "Density pedestal is lower than separatrix density",
-                    neped=data_structure.physics_variables.neped,
-                    nesep=data_structure.physics_variables.nesep,
+                    nd_plasma_pedestal_electron=data_structure.physics_variables.nd_plasma_pedestal_electron,
+                    nd_plasma_separatrix_electron=data_structure.physics_variables.nd_plasma_separatrix_electron,
                 )
 
-            # Issue #589 Pedestal density is set manually using neped,
+            # Issue #589 Pedestal density is set manually using nd_plasma_pedestal_electron,
             # but pedestal width = 0.
             if (
-                abs(data_structure.physics_variables.rhopedn - 1.0) <= 1e-7
+                abs(
+                    data_structure.physics_variables.radius_plasma_pedestal_density_norm
+                    - 1.0
+                )
+                <= 1e-7
                 and (
-                    data_structure.physics_variables.neped
-                    - data_structure.physics_variables.nesep
+                    data_structure.physics_variables.nd_plasma_pedestal_electron
+                    - data_structure.physics_variables.nd_plasma_separatrix_electron
                 )
                 >= 1e-7
             ):
                 warn(
                     "Density pedestal is at plasma edge "
-                    f"({data_structure.physics_variables.rhopedn = }), but neped "
-                    f"({data_structure.physics_variables.neped}) differs from "
-                    f"nesep ({data_structure.physics_variables.nesep})",
+                    f"({data_structure.physics_variables.radius_plasma_pedestal_density_norm = }), but nd_plasma_pedestal_electron "
+                    f"({data_structure.physics_variables.nd_plasma_pedestal_electron}) differs from "
+                    f"nd_plasma_separatrix_electron ({data_structure.physics_variables.nd_plasma_separatrix_electron})",
                     stacklevel=2,
                 )
 
-        # Issue #862 : Variable ne0/neped ratio without constraint eq 81 (ne0>neped)
+        # Issue #862 : Variable nd_plasma_electron_on_axis/nd_plasma_pedestal_electron ratio without constraint eq 81 (nd_plasma_electron_on_axis>nd_plasma_pedestal_electron)
         #  -> Potential hollowed density profile
         if (
             data_structure.numerics.ioptimz >= 0
@@ -525,12 +532,12 @@ def check_process(inputs):  # noqa: ARG001
                 data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
             ).any():
                 warn(
-                    "neped set with fgwped without constraint eq 81 (neped<ne0)",
+                    "nd_plasma_pedestal_electron set with f_nd_plasma_pedestal_greenwald without constraint eq 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
             if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 6).any():
                 warn(
-                    "dene used as iteration variable without constraint 81 (neped<ne0)",
+                    "nd_plasma_electrons_vol_avg used as iteration variable without constraint 81 (nd_plasma_pedestal_electron<nd_plasma_electron_on_axis)",
                     stacklevel=2,
                 )
 
@@ -550,16 +557,16 @@ def check_process(inputs):  # noqa: ARG001
             "Cannot use Psep/R and PsepB/qAR constraint equations at the same time"
         )
 
-    # if lower bound of fgwped < fgwsep
+    # if lower bound of f_nd_plasma_pedestal_greenwald < f_nd_plasma_separatrix_greenwald
     if (
         data_structure.numerics.ixc[: data_structure.numerics.nvar] == 145
     ).any() and data_structure.numerics.boundl[
         144
-    ] < data_structure.physics_variables.fgwsep:
+    ] < data_structure.physics_variables.f_nd_plasma_separatrix_greenwald:
         raise ProcessValidationError(
-            "Set lower bound of iteration variable 145, fgwped, to be greater than fgwsep",
+            "Set lower bound of iteration variable 145, f_nd_plasma_pedestal_greenwald, to be greater than f_nd_plasma_separatrix_greenwald",
             boundl_145=data_structure.numerics.boundl[144],
-            fgwsep=data_structure.physics_variables.fgwsep,
+            f_nd_plasma_separatrix_greenwald=data_structure.physics_variables.f_nd_plasma_separatrix_greenwald,
         )
 
     if (
@@ -568,11 +575,11 @@ def check_process(inputs):  # noqa: ARG001
         ]
         == 78
     ).any():
-        # If Reinke criterion is used tesep is calculated and cannot be an
+        # If Reinke criterion is used temp_plasma_separatrix_kev is calculated and cannot be an
         # iteration variable
         if (data_structure.numerics.ixc[: data_structure.numerics.nvar] == 119).any():
             raise ProcessValidationError(
-                "REINKE IMPURITY MODEL: tesep is calculated and cannot be an "
+                "REINKE IMPURITY MODEL: temp_plasma_separatrix_kev is calculated and cannot be an "
                 "iteration variable for the Reinke model"
             )
 
@@ -585,7 +592,7 @@ def check_process(inputs):  # noqa: ARG001
                 ]
                 == 15
             ).any()
-            and data_structure.physics_variables.ipedestal
+            and data_structure.physics_variables.i_plasma_pedestal
         ):
             warn(
                 "REINKE IMPURITY MODEL: The Martin LH threshold scale is not being used and is recommned for the Reinke model",

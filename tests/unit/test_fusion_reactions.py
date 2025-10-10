@@ -17,11 +17,11 @@ class SetFusionPowersParam(NamedTuple):
 
     i_beta_fast_alpha: Any = None
 
-    bp: Any = None
+    b_plasma_poloidal_average: Any = None
 
-    bt: Any = None
+    b_plasma_toroidal_on_axis: Any = None
 
-    dene: Any = None
+    nd_plasma_electrons_vol_avg: Any = None
 
     nd_fuel_ions: Any = None
 
@@ -35,9 +35,9 @@ class SetFusionPowersParam(NamedTuple):
 
     pden_non_alpha_charged_mw: Any = None
 
-    ten: Any = None
+    temp_plasma_electron_density_weighted_kev: Any = None
 
-    tin: Any = None
+    temp_plasma_ion_density_weighted_kev: Any = None
 
     vol_plasma: Any = None
 

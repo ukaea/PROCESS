@@ -42,7 +42,7 @@ def test_plot_scans_stack(temp_data, scan_mfile_name):
             "-f",
             str(mfile),
             "-yv",
-            "p_plant_electric_net_mw bt rmajor",
+            "p_plant_electric_net_mw b_plasma_toroidal_on_axis rmajor",
             "-stc",
             "--outputdir",
             str(temp_data),

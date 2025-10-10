@@ -58,11 +58,11 @@ class Divertor:
                 pv.rmajor,
                 pv.rminor,
                 pv.aspect,
-                pv.bt,
-                pv.bp,
+                pv.b_plasma_toroidal_on_axis,
+                pv.b_plasma_poloidal_average,
                 pv.p_plasma_separatrix_mw,
                 dv.f_div_flux_expansion,
-                pv.nesep,
+                pv.nd_plasma_separatrix_electron,
                 dv.deg_div_field_plate,
                 pv.rad_fraction_sol,
                 pv.f_p_div_lower,
@@ -214,11 +214,11 @@ class Divertor:
         rmajor: float,
         rminor: float,
         aspect: float,
-        bt: float,
-        bp: float,
+        b_plasma_toroidal_on_axis: float,
+        b_plasma_poloidal_average: float,
         p_plasma_separatrix_mw: float,
         f_div_flux_expansion: float,
-        nesep: float,
+        nd_plasma_separatrix_electron: float,
         deg_div_field_plate: float,
         rad_fraction_sol: float,
         f_p_div_lower: float,
@@ -242,11 +242,11 @@ class Divertor:
         :param aspect: tokamak aspect ratio
         :type aspect: float
 
-        :param bt: toroidal field (T)
-        :type bt: float
+        :param b_plasma_toroidal_on_axis: toroidal field (T)
+        :type b_plasma_toroidal_on_axis: float
 
-        :param bp: poloidal field (T)
-        :type bp: float
+        :param b_plasma_poloidal_average: poloidal field (T)
+        :type b_plasma_poloidal_average: float
 
         :param p_plasma_separatrix_mw: power to divertor (MW)
         :type p_plasma_separatrix_mw: float
@@ -254,8 +254,8 @@ class Divertor:
         :param f_div_flux_expansion: plasma flux expansion in divertor
         :type f_div_flux_expansion: float
 
-        :param nesep: electron density at separatrix (m-3)
-        :type nesep: float
+        :param nd_plasma_separatrix_electron: electron density at separatrix (m-3)
+        :type nd_plasma_separatrix_electron: float
 
         :param deg_div_field_plate: field line angle wrt divertor target plate (degrees)
         :type deg_div_field_plate: float
@@ -285,26 +285,26 @@ class Divertor:
         r_omp = rmajor + rminor
 
         # B fields on midplane
-        Bp_omp = -bp * rmajor / r_omp
+        Bp_omp = -b_plasma_poloidal_average * rmajor / r_omp
 
-        Bt_omp = -bt * rmajor / r_omp
+        Bt_omp = -b_plasma_toroidal_on_axis * rmajor / r_omp
 
         # Eich scaling for lambda_q
         lambda_eich = (
             1.35
             * p_plasma_separatrix_mw**-0.02
             * rmajor**0.04
-            * bp**-0.92
+            * b_plasma_poloidal_average**-0.92
             * aspect**0.42
         )
 
         # Spreading factor
         spread_fact = (
             0.12
-            * (nesep / 1e19) ** -0.02
+            * (nd_plasma_separatrix_electron / 1e19) ** -0.02
             * p_plasma_separatrix_mw**-0.21
             * rmajor**0.71
-            * bp**-0.82
+            * b_plasma_poloidal_average**-0.82
         )
 
         # SOL width

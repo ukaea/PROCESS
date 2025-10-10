@@ -165,8 +165,8 @@ lablcc: list[str] = None
 * (68) Psep * Bt / qAR upper limit (itv 117)
 * (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
 * (70) ensure that teomp = separatrix temperature in the pedestal profile,
-(itv 119 (tesep))
-* (71) ensure that neomp = separatrix density (nesep) x neratio
+(itv 119 (temp_plasma_separatrix_kev))
+* (71) ensure that neomp = separatrix density (nd_plasma_separatrix_electron) x neratio
 * (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)
 * (73) Psep >= Plh + Paux (itv 137 (fplhsep))
 * (74) TFC quench < temp_croco_quench_max (itv 141 (ftemp_croco_quench_max))
@@ -198,11 +198,11 @@ ixc: list[int] = None
 lablxc: list[str] = None
 """Labels describing iteration variables<UL>
 * ( 1) aspect
-* ( 2) bt
+* ( 2) b_plasma_toroidal_on_axis
 * ( 3) rmajor
-* ( 4) te
+* ( 4) temp_plasma_electron_vol_avg_kev
 * ( 5) beta
-* ( 6) dene
+* ( 6) nd_plasma_electrons_vol_avg
 * ( 7) f_nd_beam_electron
 * ( 8) fbeta_poloidal_eps (f-value for equation 6)
 * ( 9) fdene (f-value for equation 5)
@@ -314,7 +314,7 @@ lablxc: list[str] = None
 * (115) fpoloidalpower: f-value for max rate of change of
 * (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
 * (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
-* (119) tesep:  separatrix temperature calculated by the Kallenbach divertor model
+* (119) temp_plasma_separatrix_kev:  separatrix temperature calculated by the Kallenbach divertor model
 * (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
 * (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
 * (122) f_a_cs_steel : streel fraction of Central Solenoid
@@ -337,17 +337,17 @@ lablxc: list[str] = None
 * (139) copper_thick : thickness of copper layer in tape (m)
 * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
 * (141) ftemp_croco_quench_max : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)
-* (142) nesep : electron density at separatrix [m-3]
+* (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
 * (143) f_copperA_m2 : TF coil current / copper area < Maximum value
 * (144) fnesep : Eich critical electron density at separatrix
-* (145) fgwped :  fraction of Greenwald density to set as pedestal-top density
+* (145) f_nd_plasma_pedestal_greenwald :  fraction of Greenwald density to set as pedestal-top density
 * (146) fc_tf_turn_max : F-value for TF coil current per turn limit (constraint equation 77)
 * (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
 * (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
 * (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
 * (150) REMOVED
 * (151) REMOVED
-* (152) fgwsep : Ratio of separatrix density to Greenwald density
+* (152) f_nd_plasma_separatrix_greenwald : Ratio of separatrix density to Greenwald density
 * (153) fp_plasma_separatrix_min_mw : F-value for minimum p_plasma_separatrix_mw (con. 80)
 * (154) fne0 : F-value for ne(0) > ne(ped) (con. 81)
 * (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
@@ -598,7 +598,7 @@ def init_numerics():
         "Reinke criterion fZ lower limit  ",
         "Peak CS field upper limit        ",
         "p_sep lower limit                ",
-        "ne0 > neped                      ",
+        "nd_plasma_electron_on_axis > nd_plasma_pedestal_electron                      ",
         "toroidalgap > dx_tf_inboard_out_t",
         "available_space > required_space ",
         "beta > beta_min                  ",

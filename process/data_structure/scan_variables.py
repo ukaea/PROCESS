@@ -43,7 +43,7 @@ nsweep: int = None
 <LI> 6  pflux_fw_neutron_max_mw
 <LI> 7  beamfus0
 <LI> 8  fbig_q_plasma_min
-<LI> 9  te
+<LI> 9  temp_plasma_electron_vol_avg_kev
 <LI> 10 boundu(15: fvs_plasma_total_required)
 <LI> 11 beta_norm_max
 <LI> 12 f_c_plasma_bootstrap_max
@@ -62,7 +62,7 @@ nsweep: int = None
 <LI> 25 kappa
 <LI> 26 triang
 <LI> 27 tbrmin (for blktmodel > 0 only)
-<LI> 28 bt
+<LI> 28 b_plasma_toroidal_on_axis
 <LI> 29 radius_plasma_core_norm
 <LI> 30 fimpvar # OBSOLETE
 <LI> 31 f_alpha_energy_confinement_min
@@ -80,7 +80,7 @@ nsweep: int = None
 <LI> 43 normalised minor radius at which electron cyclotron current drive is maximum
 <LI> 44 Allowable maximum shear stress (Tresca) in tf coil structural material
 <LI> 45 Minimum allowable temperature margin ; tf coils
-<LI> 46 boundu(150) fgwsep
+<LI> 46 boundu(150) f_nd_plasma_separatrix_greenwald
 <LI> 47 impurity_enrichment(9) Argon impurity enrichment
 <LI> 48 TF coil - n_tf_wp_pancakes (integer turn winding pack)
 <LI> 49 TF coil - n_tf_wp_layers (integer turn winding pack)
@@ -90,7 +90,7 @@ nsweep: int = None
 <LI> 54 GL_nbti upper critical field at 0 Kelvin
 <LI> 55 `dr_shld_inboard` : Inboard neutron shield thickness
 <LI> 56 p_cryo_plant_electric_max_mw: Maximum cryogenic power (ixx=164, ixc=87)
-<LI> 57 `bt` lower boundary
+<LI> 57 `b_plasma_toroidal_on_axis` lower boundary
 <LI> 58 `dr_fw_plasma_gap_inboard` : Inboard plasma-first wall gap
 <LI> 59 `dr_fw_plasma_gap_outboard` : Outboard plasma-first wall gap
 <LI> 60 sig_tf_wp_max: Allowable stress in TF Coil conduit (Tresca)

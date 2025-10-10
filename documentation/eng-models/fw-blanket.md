@@ -14,9 +14,9 @@ liquid water, depending on the selection of blanket type using the switch
 
 ## Wall Load Calculation
 
-Switch `iwalld` determines whether the neutron wall load (power per unit area) 
-should be calculated using the plasma surface area (`iwalld = 1`) or the first 
-wall area (`iwalld = 2`) as the denominator. In the former case, input 
+Switch `i_pflux_fw_neutron` determines whether the neutron wall load (power per unit area) 
+should be calculated using the plasma surface area (`i_pflux_fw_neutron = 1`) or the first 
+wall area (`i_pflux_fw_neutron = 2`) as the denominator. In the former case, input 
 parameter `ffwal` (default value 0.92) can be used to scale the neutron power 
 reaching the first wall.
 

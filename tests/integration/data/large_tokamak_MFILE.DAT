@@ -24,31 +24,31 @@
  Square_root_of_the_sum_of_squares_of_the_constraint_residuals____________ (sqsumsq)______________________ 2.88094610924980536e-06 OP
  VMCON_convergence_parameter______________________________________________ (convergence_parameter)________ 9.67014331347917366e-14 OP
  Number_of_optimising_solver_iterations__________________________________ (nviter)______________________              9 OP 
- bt_______________________________________________________________________ (itvar001)_____________________ 5.48764425618610563e+00
- bt_(final_value/initial_value)___________________________________________ (xcm001)_______________________ 9.62744606348439613e-01
- bt_(range_normalised)____________________________________________________ (nitvar001)____________________ 1.82649024881163941e-01
- bt_(upper_bound)_________________________________________________________ (boundu001)____________________ 2.99999999999999964e+01
- bt_(lower_bound)_________________________________________________________ (boundl001)____________________ 1.00000000000000002e-02
+ b_plasma_toroidal_on_axis________________________________________________ (itvar001)_____________________ 5.48764425618610563e+00
+ b_plasma_toroidal_on_axis_(final_value/initial_value)____________________ (xcm001)_______________________ 9.62744606348439613e-01
+ b_plasma_toroidal_on_axis_(range_normalised)_____________________________ (nitvar001)____________________ 1.82649024881163941e-01
+ b_plasma_toroidal_on_axis_(upper_bound)__________________________________ (boundu001)____________________ 2.99999999999999964e+01
+ b_plasma_toroidal_on_axis_(lower_bound)__________________________________ (boundl001)____________________ 1.00000000000000002e-02
  rmajor___________________________________________________________________ (itvar002)_____________________ 8.00000000000000000e+00
  rmajor_(final_value/initial_value)_______________________________________ (xcm002)_______________________ 1.00000000000000000e+00
  rmajor_(range_normalised)________________________________________________ (nitvar002)____________________ 0.00000000000000000e+00
  rmajor_(upper_bound)_____________________________________________________ (boundu002)____________________ 9.00000000000000000e+00
  rmajor_(lower_bound)_____________________________________________________ (boundl002)____________________ 8.00000000000000000e+00
- te_______________________________________________________________________ (itvar003)_____________________ 1.27326078294372849e+01
- te_(final_value/initial_value)___________________________________________ (xcm003)_______________________ 1.06105065245310715e+00
- te_(range_normalised)____________________________________________________ (nitvar003)____________________ 7.64817828491318324e-02
- te_(upper_bound)_________________________________________________________ (boundu003)____________________ 9.99999999999999858e+01
- te_(lower_bound)_________________________________________________________ (boundl003)____________________ 5.50549999999999962e+00
+ temp_plasma_electron_vol_avg_kev_________________________________________ (itvar003)_____________________ 1.27326078294372849e+01
+ temp_plasma_electron_vol_avg_kev_(final_value/initial_value)_____________ (xcm003)_______________________ 1.06105065245310715e+00
+ temp_plasma_electron_vol_avg_kev_(range_normalised)______________________ (nitvar003)____________________ 7.64817828491318324e-02
+ temp_plasma_electron_vol_avg_kev_(upper_bound)___________________________ (boundu003)____________________ 9.99999999999999858e+01
+ temp_plasma_electron_vol_avg_kev_(lower_bound)___________________________ (boundl003)____________________ 5.50549999999999962e+00
  beta_____________________________________________________________________ (itvar004)_____________________ 3.18581642627421696e-02
  beta_(final_value/initial_value)_________________________________________ (xcm004)_______________________ 1.06193880875807234e+00
  beta_(range_normalised)__________________________________________________ (nitvar004)____________________ 3.08890533160582209e-02
  beta_(upper_bound)_______________________________________________________ (boundu004)____________________ 1.00000000000000000e+00
  beta_(lower_bound)_______________________________________________________ (boundl004)____________________ 1.00000000000000024e-03
- dene_____________________________________________________________________ (itvar005)_____________________ 8.00779341307381514e+19
- dene_(final_value/initial_value)_________________________________________ (xcm005)_______________________ 1.06770578840984198e+00
- dene_(range_normalised)__________________________________________________ (nitvar005)____________________ 6.13040144191205685e-02
- dene_(upper_bound)_______________________________________________________ (boundu005)____________________ 1.00000000000000000e+21
- dene_(lower_bound)_______________________________________________________ (boundl005)____________________ 2.00000000000000000e+19
+ nd_plasma_electrons_vol_avg______________________________________________ (itvar005)_____________________ 8.00779341307381514e+19
+ nd_plasma_electrons_vol_avg_(final_value/initial_value)__________________ (xcm005)_______________________ 1.06770578840984198e+00
+ nd_plasma_electrons_vol_avg_(range_normalised)___________________________ (nitvar005)____________________ 6.13040144191205685e-02
+ nd_plasma_electrons_vol_avg_(upper_bound)________________________________ (boundu005)____________________ 1.00000000000000000e+21
+ nd_plasma_electrons_vol_avg_(lower_bound)________________________________ (boundl005)____________________ 2.00000000000000000e+19
  hfact____________________________________________________________________ (itvar006)_____________________ 1.19982013355292505e+00
  hfact_(final_value/initial_value)________________________________________ (xcm006)_______________________ 1.09074557595720445e+00
  hfact_(range_normalised)_________________________________________________ (nitvar006)____________________ 9.99836485048113621e-01
@@ -419,10 +419,10 @@
  Current_density_profile_factor___________________________________________ (alphaj)_______________________ 1.00000000000000000e+00
  J._Wesson_plasma_current_profile_index___________________________________ (alphaj_wesson)________________ 2.11220688952915792e+00 OP
  On-axis_plasma_current_density_(A/m2)____________________________________ (j_plasma_0)___________________ 6.44944535839810502e+05 OP
- Vertical_field_at_plasma_(T)_____________________________________________ (bvert)________________________ -7.12495975576990404e-01 OP
- Vacuum_toroidal_field_at_R_(T)___________________________________________ (bt)___________________________ 5.48764425618610652e+00
- Average_poloidal_field_(T)_______________________________________________ (bp)___________________________ 8.61531084659517776e-01 OP
- Total_field_(sqrt(bp^2_+_bt^2))_(T)______________________________________ (btot)_________________________ 5.55486051060573160e+00 OP
+ Vertical_field_at_plasma_(T)_____________________________________________ (b_plasma_vertical_required)________________________ -7.12495975576990404e-01 OP
+ Vacuum_toroidal_field_at_R_(T)___________________________________________ (b_plasma_toroidal_on_axis)___________________________ 5.48764425618610652e+00
+ Average_poloidal_field_(T)_______________________________________________ (b_plasma_poloidal_average)___________________________ 8.61531084659517776e-01 OP
+ Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)______________________________________ (b_plasma_total)_________________________ 5.55486051060573160e+00 OP
  Safety_factor_on_axis____________________________________________________ (q0)___________________________ 1.00000000000000000e+00
  Safety_factor_at_95%_flux_surface________________________________________ (q95)__________________________ 3.75507212346193731e+00
  Cylindrical_safety_factor_(qcyl)_________________________________________ (qstar)________________________ 3.11220688952915792e+00 OP
@@ -455,17 +455,17 @@
  R._Stambaugh_normalised_beta_upper_limit_________________________________ (beta_norm_max_stambaugh)______ 2.06087953258754553e+00 OP
  Plasma_thermal_energy_derived_from_thermal_beta_(J)______________________ (e_plasma_beta_thermal)________ 9.66355464245535374e+08 OP
  Plasma_thermal_energy_derived_from_the_total_beta_(J)____________________ (e_plasma_beta)________________ 1.10779607068200541e+09 OP
- Volume_averaged_electron_temperature_(keV)_______________________________ (te)___________________________ 1.27326078294372866e+01
- Ratio_of_ion_to_electron_volume-averaged_temperature_____________________ (tratio)_______________________ 1.00000000000000000e+00 IP
- Electron_temperature_on_axis_(keV)_______________________________________ (te0)__________________________ 2.64346007040757769e+01 OP
- Ion_temperature_(keV)____________________________________________________ (ti)___________________________ 1.27326078294372866e+01
+ Volume_averaged_electron_temperature_(kev)_______________________________ (temp_plasma_electron_vol_avg_kev)___________________________ 1.27326078294372866e+01
+ Ratio_of_ion_to_electron_volume-averaged_temperature_____________________ (f_temp_plasma_ion_electron)_______________________ 1.00000000000000000e+00 IP
+ Electron_temperature_on_axis_(keV)_______________________________________ (temp_plasma_electron_on_axis_kev)__________________________ 2.64346007040757769e+01 OP
+ Ion_temperature_(keV)____________________________________________________ (temp_plasma_ion_vol_avg_kev)___________________________ 1.27326078294372866e+01
  Ion_temperature_on_axis_(keV)____________________________________________ (ti0)__________________________ 2.64346007040757769e+01 OP
- Electron_temp.,_density_weighted_(keV)___________________________________ (ten)__________________________ 1.40887910798291696e+01 OP
- Volume_averaged_electron_number_density_(/m3)____________________________ (dene)_________________________ 8.00779341307381514e+19
- Electron_number_density_on_axis_(/m3)____________________________________ (ne0)__________________________ 1.05329687553494565e+20 OP
+ Electron_temp.,_density_weighted_(keV)___________________________________ (temp_plasma_electron_density_weighted_kev)__________________________ 1.40887910798291696e+01 OP
+ Volume_averaged_electron_number_density_(/m3)____________________________ (nd_plasma_electrons_vol_avg)_________________________ 8.00779341307381514e+19
+ Electron_number_density_on_axis_(/m3)____________________________________ (nd_plasma_electron_on_axis)__________________________ 1.05329687553494565e+20 OP
  Line-averaged_electron_number_density_(/m3)______________________________ (nd_electron_line)_____________ 8.86821331867437138e+19 OP
- Plasma_pressure_on_axis_(Pa)_____________________________________________ (p0)___________________________ 8.42056568743616925e+05 OP
- Volume_averaged_plasma_pressure_(Pa)_____________________________________ (vol_avg_pressure)_____________ 2.44074367751773010e+05 OP
+ Plasma_pressure_on_axis_(Pa)_____________________________________________ (pres_plasma_on_axis)___________________________ 8.42056568743616925e+05 OP
+ Volume_averaged_plasma_pressure_(Pa)_____________________________________ (pres_plasma_vol_avg)_____________ 2.44074367751773010e+05 OP
  Line-averaged_electron_density_/_Greenwald_density_______________________ (dnla_gw)______________________ 1.19999998892791648e+00 OP
  Total_Ion_number_density_(/m3)___________________________________________ (nd_ions_total)________________ 7.10762537507155067e+19 OP
  Fuel_ion_number_density_(/m3)____________________________________________ (nd_fuel_ions)_________________ 6.43726858733289964e+19 OP
@@ -501,14 +501,14 @@
  Effective_charge_________________________________________________________ (zeff)_________________________ 2.61287031166971184e+00 OP
  Mass-weighted_Effective_charge___________________________________________ (zeffai)_______________________ 4.27186909562117689e-01 OP
  Density_profile_factor___________________________________________________ (alphan)_______________________ 1.00000000000000000e+00
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
- Density_pedestal_r/a_location____________________________________________ (rhopedn)______________________ 9.39999999999999947e-01
- Electron_density_pedestal_height_(/m3)___________________________________ (neped)________________________ 6.28165115868681994e+19 OP
- Electron_density_at_pedestal_/_nGW_______________________________________ (fgwped_out)___________________ 8.50000000000000311e-01
- Temperature_pedestal_r/a_location________________________________________ (rhopedt)______________________ 9.39999999999999947e-01
- Electron_temp._pedestal_height_(keV)_____________________________________ (teped)________________________ 5.50000000000000000e+00
- Electron_temp._at_separatrix_(keV)_______________________________________ (tesep)________________________ 1.00000000000000006e-01
- Electron_density_at_separatrix_(/m3)_____________________________________ (nesep)________________________ 3.69508891687459881e+19
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
+ Density_pedestal_r/a_location____________________________________________ (radius_plasma_pedestal_density_norm)______________________ 9.39999999999999947e-01
+ Electron_density_pedestal_height_(/m3)___________________________________ (nd_plasma_pedestal_electron)________________________ 6.28165115868681994e+19 OP
+ Electron_density_at_pedestal_/_nGW_______________________________________ (f_nd_plasma_pedestal_greenwald_out)___________________ 8.50000000000000311e-01
+ Temperature_pedestal_r/a_location________________________________________ (radius_plasma_pedestal_temp_norm)______________________ 9.39999999999999947e-01
+ Electron_temp._pedestal_height_(keV)_____________________________________ (temp_plasma_pedestal_kev)________________________ 5.50000000000000000e+00
+ Electron_temp._at_separatrix_(keV)_______________________________________ (temp_plasma_separatrix_kev)________________________ 1.00000000000000006e-01
+ Electron_density_at_separatrix_(/m3)_____________________________________ (nd_plasma_separatrix_electron)________________________ 3.69508891687459881e+19
  Electron_density_at_separatrix_/_nGW_____________________________________ (fgwsep_out)___________________ 5.00000000000000000e-01
  Temperature_profile_index________________________________________________ (alphat)_______________________ 1.44999999999999996e+00
  Temperature_profile_index_beta___________________________________________ (tbeta)________________________ 2.00000000000000000e+00
@@ -1463,9 +1463,9 @@ icc = 11
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*
@@ -1594,7 +1594,7 @@ foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
 
 icc = 81
@@ -1620,9 +1620,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3
@@ -1630,10 +1630,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* te [keV]
+* temp_plasma_electron_vol_avg_kev [keV]
 ixc = 4
 boundu(4) = 100.0
-te = 12.0
+temp_plasma_electron_vol_avg_kev = 12.0
 
 * h factor
 ixc = 10
@@ -1805,31 +1805,31 @@ i_density_limit = 7
 i_beta_fast_alpha = 1
 
 * Switch for pedestal profiles
-ipedestal = 1
+i_plasma_pedestal = 1
 
 * fraction of Greenwald density to set as separatrix density
-fgwsep = 0.5
+f_nd_plasma_separatrix_greenwald = 0.5
 
-* Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+* Electron density of pedestal [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_pedestal_electron = 0.5e20
 
-* Electron density at separatrix [m-3] (ipedestal=1) - initial value
-nesep = 0.2e20
+* Electron density at separatrix [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_separatrix_electron = 0.2e20
 
-* R/a of density pedestal (ipedestal=1)
-rhopedn = 0.94
+* R/a of density pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_density_norm = 0.94
 
-* R/a of temperature pedestal (ipedestal=1)
-rhopedt = 0.94
+* R/a of temperature pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_temp_norm = 0.94
 
-* Temperature profile index beta (ipedestal=1)
+* Temperature profile index beta (i_plasma_pedestal=1)
 tbeta = 2.0
 
-* Electron temperature of pedestal (kev) (ipedestal=1)
-teped = 5.5
+* Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
+temp_plasma_pedestal_kev = 5.5
 
-* Electron temperature at separatrix (kev) (ipedestal=1)
-tesep = 0.1
+* Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
+temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law
 i_confinement_time = 34

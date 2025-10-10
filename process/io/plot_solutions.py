@@ -424,7 +424,7 @@ def _plot_solutions(
     # Replace xcm--- optimisation parameter column headers with actual var names
     # in sub-df: allows plotting showing actual var names
     # eg. column headers "tag, xcm001, xcm002, ..." become
-    # "tag, bt, rmajor, ..."
+    # "tag, b_plasma_toroidal_on_axis, rmajor, ..."
     # Normalising row may have been filtered out; reset index to ensure
     # opt param names in row 0
     opt_params_names_df_reset = opt_params_names_df.reset_index(drop=True)

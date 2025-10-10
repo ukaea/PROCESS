@@ -48,7 +48,7 @@ fr_conducting_wall: float = None
 
 fdene: float = None
 """f-value for density limit (`constraint equation 5`, `iteration variable 9`)
-(invalid if `ipedestal=3`)
+(invalid if `i_plasma_pedestal=3`)
 """
 
 

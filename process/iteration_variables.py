@@ -33,11 +33,17 @@ class IterationVariable:
 
 ITERATION_VARIABLES = {
     1: IterationVariable("aspect", data_structure.physics_variables, 1.1, 10.00),
-    2: IterationVariable("bt", data_structure.physics_variables, 0.010, 30.00),
+    2: IterationVariable(
+        "b_plasma_toroidal_on_axis", data_structure.physics_variables, 0.010, 30.00
+    ),
     3: IterationVariable("rmajor", data_structure.physics_variables, 0.1, 50.00),
-    4: IterationVariable("te", data_structure.physics_variables, 5.0, 150.0),
+    4: IterationVariable(
+        "temp_plasma_electron_vol_avg_kev", data_structure.physics_variables, 5.0, 150.0
+    ),
     5: IterationVariable("beta", data_structure.physics_variables, 0.001, 1.0),
-    6: IterationVariable("dene", data_structure.physics_variables, 2.0e19, 1.0e21),
+    6: IterationVariable(
+        "nd_plasma_electrons_vol_avg", data_structure.physics_variables, 2.0e19, 1.0e21
+    ),
     7: IterationVariable(
         "f_nd_beam_electron", data_structure.physics_variables, 1.0e-6, 1.0
     ),
@@ -233,7 +239,9 @@ ITERATION_VARIABLES = {
     117: IterationVariable(
         "fpsepbqar", data_structure.constraint_variables, 0.001, 1.0
     ),
-    119: IterationVariable("tesep", data_structure.physics_variables, 0.0, 1.0e1),
+    119: IterationVariable(
+        "temp_plasma_separatrix_kev", data_structure.physics_variables, 0.0, 1.0e1
+    ),
     122: IterationVariable(
         "f_a_cs_steel", data_structure.pfcoil_variables, 0.001, 0.950
     ),
@@ -349,10 +357,17 @@ ITERATION_VARIABLES = {
     141: IterationVariable(
         "ftemp_croco_quench_max", data_structure.constraint_variables, 0.001, 1.0
     ),
-    142: IterationVariable("nesep", data_structure.physics_variables, 1.0e17, 1.0e20),
+    142: IterationVariable(
+        "nd_plasma_separatrix_electron",
+        data_structure.physics_variables,
+        1.0e17,
+        1.0e20,
+    ),
     143: IterationVariable("f_coppera_m2", data_structure.rebco_variables, 0.001, 1.0),
     144: IterationVariable("fnesep", data_structure.constraint_variables, 0.001, 1.0),
-    145: IterationVariable("fgwped", data_structure.physics_variables, 0.1, 0.9),
+    145: IterationVariable(
+        "f_nd_plasma_pedestal_greenwald", data_structure.physics_variables, 0.1, 0.9
+    ),
     146: IterationVariable(
         "fc_tf_turn_max", data_structure.constraint_variables, 0.001, 1.0
     ),
@@ -360,8 +375,12 @@ ITERATION_VARIABLES = {
     149: IterationVariable(
         "fb_cs_limit_max", data_structure.pfcoil_variables, 0.001, 1.0
     ),
-    152: IterationVariable("fgwsep", data_structure.physics_variables, 0.001, 0.5),
-    153: IterationVariable("fpdivlim", data_structure.physics_variables, 0.001, 1.0),
+    152: IterationVariable(
+        "f_nd_plasma_separatrix_greenwald", data_structure.physics_variables, 0.001, 0.5
+    ),
+    153: IterationVariable(
+        "fp_plasma_separatrix_min_mw", data_structure.physics_variables, 0.001, 1.0
+    ),
     154: IterationVariable("fne0", data_structure.physics_variables, 0.001, 1.0),
     155: IterationVariable("pfusife", data_structure.ife_variables, 5.0e2, 3.0e3),
     156: IterationVariable("rrin", data_structure.ife_variables, 1.0, 1.0e1),

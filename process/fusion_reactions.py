@@ -212,7 +212,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dt_profile = (
             bosch_hale_reactivity(
-                (physics_variables.ti / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dt,
             )
@@ -220,7 +223,10 @@ class FusionReactionRate:
             * physics_variables.f_tritium
             * (
                 self.plasma_profile.neprofile.profile_y
-                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+                * (
+                    physics_variables.nd_fuel_ions
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
             )
             ** 2
         )
@@ -306,7 +312,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dhe3_profile = (
             bosch_hale_reactivity(
-                (physics_variables.ti / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dhe3,
             )
@@ -314,7 +323,10 @@ class FusionReactionRate:
             * physics_variables.f_helium3
             * (
                 self.plasma_profile.neprofile.profile_y
-                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+                * (
+                    physics_variables.nd_fuel_ions
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
             )
             ** 2
         )
@@ -391,7 +403,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dd_helion_profile = (
             bosch_hale_reactivity(
-                (physics_variables.ti / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dd1,
             )
@@ -399,7 +414,10 @@ class FusionReactionRate:
             * physics_variables.f_deuterium
             * (
                 self.plasma_profile.neprofile.profile_y
-                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+                * (
+                    physics_variables.nd_fuel_ions
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
             )
             ** 2
         )
@@ -479,7 +497,10 @@ class FusionReactionRate:
 
         physics_variables.fusrat_plasma_dd_triton_profile = (
             bosch_hale_reactivity(
-                (physics_variables.ti / physics_variables.te)
+                (
+                    physics_variables.temp_plasma_ion_vol_avg_kev
+                    / physics_variables.temp_plasma_electron_vol_avg_kev
+                )
                 * self.plasma_profile.teprofile.profile_y,
                 dd2,
             )
@@ -487,7 +508,10 @@ class FusionReactionRate:
             * physics_variables.f_deuterium
             * (
                 self.plasma_profile.neprofile.profile_y
-                * (physics_variables.nd_fuel_ions / physics_variables.dene)
+                * (
+                    physics_variables.nd_fuel_ions
+                    / physics_variables.nd_plasma_electrons_vol_avg
+                )
             )
             ** 2
         )
@@ -645,7 +669,8 @@ def fusion_rate_integral(
     # Since the electron temperature profile is only calculated directly, we scale the ion temperature
     # profile by the ratio of the volume averaged ion to electron temperature
     ion_temperature_profile = (
-        physics_variables.ti / physics_variables.te
+        physics_variables.temp_plasma_ion_vol_avg_kev
+        / physics_variables.temp_plasma_electron_vol_avg_kev
     ) * plasma_profile.teprofile.profile_y
 
     # Number of fusion reactions per unit volume per particle volume density (m^3/s)
@@ -658,7 +683,7 @@ def fusion_rate_integral(
 
     # Set each point in the desnity profile as a fraction of the volume averaged desnity
     density_profile_normalised = (
-        1.0 / physics_variables.dene
+        1.0 / physics_variables.nd_plasma_electrons_vol_avg
     ) * plasma_profile.neprofile.profile_y
 
     # Calculate a volume averaged fusion reaction integral that allows for fusion power to be scaled with
@@ -853,10 +878,10 @@ def set_fusion_powers(
 def beam_fusion(
     beamfus0: float,
     betbm0: float,
-    bp: float,
-    bt: float,
+    b_plasma_poloidal_average: float,
+    b_plasma_toroidal_on_axis: float,
     c_beam_total: float,
-    dene: float,
+    nd_plasma_electrons_vol_avg: float,
     nd_fuel_ions: float,
     ion_electron_coulomb_log: float,
     e_beam_kev: float,
@@ -864,8 +889,8 @@ def beam_fusion(
     f_tritium_plasma: float,
     f_beam_tritium: float,
     sigmav_dt_average: float,
-    ten: float,
-    tin: float,
+    temp_plasma_electron_density_weighted_kev: float,
+    temp_plasma_ion_density_weighted_kev: float,
     vol_plasma: float,
     zeffai: float,
 ) -> tuple:
@@ -878,10 +903,10 @@ def beam_fusion(
             Parameters:
                 beamfus0 (float): Multiplier for beam-background fusion calculation.
                 betbm0 (float): Leading coefficient for neutral beam beta fraction.
-                bp (float): Poloidal field (T).
-                bt (float): Toroidal field on axis (T).
+                b_plasma_poloidal_average (float): Poloidal field (T).
+                b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
                 c_beam_total (float): Neutral beam current (A).
-                dene (float): Electron density (m^-3).
+                nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
                 nd_fuel_ions (float): Fuel ion density (m^-3).
                 ion_electron_coulomb_log (float): Ion-electron coulomb logarithm.
                 e_beam_kev (float): Neutral beam energy (keV).
@@ -889,8 +914,8 @@ def beam_fusion(
                 f_tritium_plasma (float): Tritium fraction of main plasma.
                 f_beam_tritium (float): Tritium fraction of neutral beam.
                 sigmav_dt_average (float): Profile averaged <sigma v> for D-T (m^3/s).
-                ten (float): Density-weighted electron temperature (keV).
-                tin (float): Density-weighted ion temperature (keV).
+                temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
+                temp_plasma_ion_density_weighted_kev (float): Density-weighted ion temperature (keV).
                 vol_plasma (float): Plasma volume (m^3).
                 zeffai (float): Mass weighted plasma effective charge.
 
@@ -927,7 +952,7 @@ def beam_fusion(
             constants.M_DEUTERON_AMU * (1.0 - f_beam_tritium)
             + (constants.M_TRITON_AMU * f_beam_tritium)
         )
-        * (ten**1.5 / dene)
+        * (temp_plasma_electron_density_weighted_kev**1.5 / nd_plasma_electrons_vol_avg)
         / ion_electron_coulomb_log
     )
 
@@ -937,7 +962,7 @@ def beam_fusion(
     critical_energy_deuterium = (
         14.8
         * constants.M_DEUTERON_AMU
-        * ten
+        * temp_plasma_electron_density_weighted_kev
         * zeffai ** (2 / 3)
         * (ion_electron_coulomb_log + 4.0)
         / ion_electron_coulomb_log
@@ -964,7 +989,7 @@ def beam_fusion(
         beam_slow_time,
         f_beam_tritium,
         c_beam_total,
-        tin,
+        temp_plasma_ion_density_weighted_kev,
         vol_plasma,
         sigmav_dt_average,
     )
@@ -979,7 +1004,7 @@ def beam_fusion(
         * (2 / 3)
         * hot_beam_density
         * beam_deposited_energy
-        / (bt**2 + bp**2)
+        / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
     )
 
     return beta_beam, hot_beam_density, p_beam_alpha_mw
@@ -994,7 +1019,7 @@ def beamcalc(
     beam_slow_time: float,
     f_beam_tritium: float,
     c_beam_total: float,
-    ti: float,
+    temp_plasma_ion_vol_avg_kev: float,
     vol_plasma: float,
     svdt: float,
 ) -> tuple[float, float, float, float]:
@@ -1014,7 +1039,7 @@ def beamcalc(
         beam_slow_time (float): Beam ion slowing down time on electrons (s).
         f_beam_tritium (float): Beam tritium fraction (0.0 = deuterium beam).
         c_beam_total (float): Beam current (A).
-        ti (float): Thermal ion temperature (keV).
+        temp_plasma_ion_vol_avg_kev (float): Thermal ion temperature (keV).
         vol_plasma (float): Plasma volume (m^3).
         svdt (float): Profile averaged <sigma v> for D-T (m^3/s).
 
@@ -1157,10 +1182,20 @@ def beamcalc(
     )
 
     deuterium_beam_alpha_power = alpha_power_beam(
-        deuterium_beam_density, nt, hot_deuterium_rate, vol_plasma, ti, svdt
+        deuterium_beam_density,
+        nt,
+        hot_deuterium_rate,
+        vol_plasma,
+        temp_plasma_ion_vol_avg_kev,
+        svdt,
     )
     tritium_beam_alpha_power = alpha_power_beam(
-        tritium_beam_density, nd, hot_tritium_rate, vol_plasma, ti, svdt
+        tritium_beam_density,
+        nd,
+        hot_tritium_rate,
+        vol_plasma,
+        temp_plasma_ion_vol_avg_kev,
+        svdt,
     )
 
     return (
@@ -1217,7 +1252,7 @@ def alpha_power_beam(
     plasma_ion_desnity: float,
     sigv: float,
     vol_plasma: float,
-    ti: float,
+    temp_plasma_ion_vol_avg_kev: float,
     sigmav_dt: float,
 ) -> float:
     """
@@ -1231,7 +1266,7 @@ def alpha_power_beam(
         plasma_ion_desnity (float): Thermal ion density (m^-3).
         sigv (float): Hot beam fusion reaction rate (m^3/s).
         vol_plasma (float): Plasma volume (m^3).
-        ti (float): Thermal ion temperature (keV).
+        temp_plasma_ion_vol_avg_kev (float): Thermal ion temperature (keV).
         sigmav_dt (float): Profile averaged <sigma v> for D-T (m^3/s).
 
     Returns:
@@ -1251,7 +1286,8 @@ def alpha_power_beam(
     ratio = (
         sigmav_dt
         / bosch_hale_reactivity(
-            np.array([ti]), BoschHaleConstants(**REACTION_CONSTANTS_DT)
+            np.array([temp_plasma_ion_vol_avg_kev]),
+            BoschHaleConstants(**REACTION_CONSTANTS_DT),
         ).item()
     )
 

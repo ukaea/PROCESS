@@ -53,7 +53,7 @@ class TestVacuum:
         Values taken from first calling of the model in G-L_Nb-Ti regression test.
         """
         monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
-        monkeypatch.setattr(pv, "te", 15.872999999999999)
+        monkeypatch.setattr(pv, "temp_plasma_electron_vol_avg_kev", 15.872999999999999)
         monkeypatch.setattr(tv, "t_precharge", 30)
         monkeypatch.setattr(vacv, "i_vac_pump_dwell", 0)
         monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)

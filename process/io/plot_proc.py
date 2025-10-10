@@ -3017,10 +3017,10 @@ def plot_main_plasma_information(
     # Add magnetic field information
     textstr_fields = (
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
-        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile_data.data['bt'].get_scan(scan):.4f} T                  \n"
-        f"Average poloidal field, $B_{{p}}$: {mfile_data.data['bp'].get_scan(scan):.4f} T              \n"
-        f"Total field, $B_{{tot}}$: {mfile_data.data['btot'].get_scan(scan):.4f} T                \n"
-        f"Vertical field, $B_{{vert}}$: {mfile_data.data['bvert'].get_scan(scan):.4f} T"
+        f"Toroidal field at $R_0$, $B_{{T}}$: {mfile_data.data['b_plasma_toroidal_on_axis'].get_scan(scan):.4f} T                  \n"
+        f"Average poloidal field, $B_{{p}}$: {mfile_data.data['b_plasma_poloidal_average'].get_scan(scan):.4f} T              \n"
+        f"Total field, $B_{{tot}}$: {mfile_data.data['b_plasma_total'].get_scan(scan):.4f} T                \n"
+        f"Vertical field, $B_{{vert}}$: {mfile_data.data['b_plasma_vertical_required'].get_scan(scan):.4f} T"
     )
 
     axis.text(
@@ -3579,14 +3579,20 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
-    if ipedestal == 1:
-        rhocore = np.linspace(0, rhopedn)
-        necore = neped + (ne0 - neped) * (1 - rhocore**2 / rhopedn**2) ** alphan
-        nicore = necore * (nd_fuel_ions / dene)
+    if i_plasma_pedestal == 1:
+        rhocore = np.linspace(0, radius_plasma_pedestal_density_norm)
+        necore = (
+            nd_plasma_pedestal_electron
+            + (ne0 - nd_plasma_pedestal_electron)
+            * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
+        )
+        nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
-        rhosep = np.linspace(rhopedn, 1)
-        neesep = nesep + (neped - nesep) * (1 - rhosep) / (1 - min(0.9999, rhopedn))
-        nisep = neesep * (nd_fuel_ions / dene)
+        rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
+        neesep = nd_plasma_separatrix_electron + (
+            nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+        ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
+        nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
@@ -3596,7 +3602,9 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
-        ni = (ne0 * (nd_fuel_ions / dene)) * (1 - rho**2) ** alphan
+        ni = (ne0 * (nd_fuel_ions / nd_plasma_electrons_vol_avg)) * (
+            1 - rho**2
+        ) ** alphan
     ne = ne / 1e19
     ni = ni / 1e19
     prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
@@ -3614,20 +3622,20 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
 
-    if ipedestal != 0:
+    if i_plasma_pedestal != 0:
         # Print pedestal lines
         prof.axhline(
-            y=neped / 1e19,
-            xmax=rhopedn,
+            y=nd_plasma_pedestal_electron / 1e19,
+            xmax=radius_plasma_pedestal_density_norm,
             color="r",
             linestyle="-",
             linewidth=0.4,
             alpha=0.4,
         )
         prof.vlines(
-            x=rhopedn,
+            x=radius_plasma_pedestal_density_norm,
             ymin=0.0,
-            ymax=neped / 1e19,
+            ymax=nd_plasma_pedestal_electron / 1e19,
             color="r",
             linestyle="-",
             linewidth=0.4,
@@ -3637,19 +3645,19 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
-        rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['dene'].get_scan(scan):.3e} m$^{{-3}}$",
+        rf"$\langle n_{{\text{{e}}}} \rangle$: {mfile_data.data['nd_plasma_electrons_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         rf"$n_{{\text{{e,0}}}}$: {ne0:.3e} m$^{{-3}}$"
         rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
-        rf"$n_{{\text{{e,ped}}}}$: {neped:.3e} m$^{{-3}}$"
+        rf"$n_{{\text{{e,ped}}}}$: {nd_plasma_pedestal_electron:.3e} m$^{{-3}}$"
         r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-        f"{nd_fuel_ions / dene:.3f}",
+        f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}",
         rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
         r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
-        f"{ne0 / dene:.3f}",
-        rf"$\rho_{{\text{{ped,n}}}}$: {rhopedn:.3f}"
+        f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
+        rf"$\rho_{{\text{{ped,n}}}}$: {radius_plasma_pedestal_density_norm:.3f}"
         r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
         f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
-        rf"$n_{{\text{{e,sep}}}}$: {nesep:.3e} m$^{{-3}}$",
+        rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
         rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
     ))
 
@@ -3722,12 +3730,18 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     prof.set_ylabel("$T$ [keV]")
     prof.set_title("Temperature profile")
 
-    if ipedestal == 1:
-        rhocore = np.linspace(0.0, rhopedt)
-        tcore = teped + (te0 - teped) * (1 - (rhocore / rhopedt) ** tbeta) ** alphat
+    if i_plasma_pedestal == 1:
+        rhocore = np.linspace(0.0, radius_plasma_pedestal_temp_norm)
+        tcore = (
+            temp_plasma_pedestal_kev
+            + (te0 - temp_plasma_pedestal_kev)
+            * (1 - (rhocore / radius_plasma_pedestal_temp_norm) ** tbeta) ** alphat
+        )
 
-        rhosep = np.linspace(rhopedt, 1)
-        tsep = tesep + (teped - tesep) * (1 - rhosep) / (1 - min(0.9999, rhopedt))
+        rhosep = np.linspace(radius_plasma_pedestal_temp_norm, 1)
+        tsep = temp_plasma_separatrix_kev + (
+            temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+        ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
         rho = np.append(rhocore, rhosep)
         te = np.append(tcore, tsep)
@@ -3737,7 +3751,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rho = np.append(rho1, rho2)
         te = te0 * (1 - rho**2) ** alphat
     prof.plot(rho, te, color="blue", label="$T_{e}$")
-    prof.plot(rho, te[:] * tratio, color="red", label="$T_{i}$")
+    prof.plot(rho, te[:] * f_temp_plasma_ion_electron, color="red", label="$T_{i}$")
     prof.legend()
 
     # Ranges
@@ -3751,15 +3765,20 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     else:
         prof.set_ylim([0, prof.get_ylim()[1]])
 
-    if ipedestal != 0:
+    if i_plasma_pedestal != 0:
         # Plot pedestal lines
         prof.axhline(
-            y=teped, xmax=rhopedt, color="r", linestyle="-", linewidth=0.4, alpha=0.4
+            y=temp_plasma_pedestal_kev,
+            xmax=radius_plasma_pedestal_temp_norm,
+            color="r",
+            linestyle="-",
+            linewidth=0.4,
+            alpha=0.4,
         )
         prof.vlines(
-            x=rhopedt,
+            x=radius_plasma_pedestal_temp_norm,
             ymin=0.0,
-            ymax=teped,
+            ymax=temp_plasma_pedestal_kev,
             color="r",
             linestyle="-",
             linewidth=0.4,
@@ -3767,19 +3786,19 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         )
         prof.minorticks_on()
 
-    te = mfile_data.data["te"].get_scan(scan)
+    te = mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['te'].get_scan(scan):.3f} keV",
+        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['temp_plasma_electron_vol_avg_kev'].get_scan(scan):.3f} keV",
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
-        rf"$T_{{\text{{e,ped}}}}$: {teped:.3f} keV"
+        rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
         r"$ \hspace{4} \frac{\langle T_i \rangle}{\langle T_e \rangle}$: "
-        f"{tratio:.3f}",
-        rf"$\rho_{{\text{{ped,T}}}}$: {rhopedt:.3f}"
+        f"{f_temp_plasma_ion_electron:.3f}",
+        rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
         r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
         f"{te0 / te:.3f}",
-        rf"$T_{{\text{{e,sep}}}}$: {tesep:.3f} keV",
+        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -3939,7 +3958,7 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
     ])
 
-    if ipedestal == 0:
+    if i_plasma_pedestal == 0:
         # Intialise the radius
         rho = np.linspace(0, 1.0)
 
@@ -3949,9 +3968,11 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
         # The temperature profile
         te = te0 * (1 - rho**2) ** alphat
 
-    if ipedestal == 1:
+    if i_plasma_pedestal == 1:
         # Intialise the normalised radius
-        rhoped = (rhopedn + rhopedt) / 2.0
+        rhoped = (
+            radius_plasma_pedestal_density_norm + radius_plasma_pedestal_temp_norm
+        ) / 2.0
         rhocore1 = np.linspace(0, 0.95 * rhoped)
         rhocore2 = np.linspace(0.95 * rhoped, rhoped)
         rhocore = np.append(rhocore1, rhocore2)
@@ -3960,25 +3981,35 @@ def plot_radprofile(prof, mfile_data, scan, impp, demo_ranges) -> float:
 
         # The density and temperature profile
         # done in such away as to allow for plotting pedestals
-        # with different rhopedn and rhopedt
+        # with different radius_plasma_pedestal_density_norm and radius_plasma_pedestal_temp_norm
         ne = np.zeros(rho.shape[0])
         te = np.zeros(rho.shape[0])
         for q in range(rho.shape[0]):
-            if rho[q] <= rhopedn:
-                ne[q] = neped + (ne0 - neped) * (1 - rho[q] ** 2 / rhopedn**2) ** alphan
+            if rho[q] <= radius_plasma_pedestal_density_norm:
+                ne[q] = (
+                    nd_plasma_pedestal_electron
+                    + (ne0 - nd_plasma_pedestal_electron)
+                    * (1 - rho[q] ** 2 / radius_plasma_pedestal_density_norm**2)
+                    ** alphan
+                )
             else:
-                ne[q] = nesep + (neped - nesep) * (1 - rho[q]) / (
-                    1 - min(0.9999, rhopedn)
+                ne[q] = nd_plasma_separatrix_electron + (
+                    nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
+                ) * (1 - rho[q]) / (
+                    1 - min(0.9999, radius_plasma_pedestal_density_norm)
                 )
 
-            if rho[q] <= rhopedt:
+            if rho[q] <= radius_plasma_pedestal_temp_norm:
                 te[q] = (
-                    teped + (te0 - teped) * (1 - (rho[q] / rhopedt) ** tbeta) ** alphat
+                    temp_plasma_pedestal_kev
+                    + (te0 - temp_plasma_pedestal_kev)
+                    * (1 - (rho[q] / radius_plasma_pedestal_temp_norm) ** tbeta)
+                    ** alphat
                 )
             else:
-                te[q] = tesep + (teped - tesep) * (1 - rho[q]) / (
-                    1 - min(0.9999, rhopedt)
-                )
+                te[q] = temp_plasma_separatrix_kev + (
+                    temp_plasma_pedestal_kev - temp_plasma_separatrix_kev
+                ) * (1 - rho[q]) / (1 - min(0.9999, radius_plasma_pedestal_temp_norm))
 
     # Intailise the radiation profile arrays
     pimpden = np.zeros([imp_data.shape[0], te.shape[0]])
@@ -6778,16 +6809,16 @@ def plot_physics_info(axis, mfile_data, scan):
     ].get_scan(scan)
 
     nd_impurities = mfile_data.data["nd_impurities"].get_scan(scan) / mfile_data.data[
-        "dene"
+        "nd_plasma_electrons_vol_avg"
     ].get_scan(scan)
 
-    tepeak = mfile_data.data["te0"].get_scan(scan) / mfile_data.data["te"].get_scan(
+    tepeak = mfile_data.data["temp_plasma_electron_on_axis_kev"].get_scan(
         scan
-    )
+    ) / mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
 
-    nepeak = mfile_data.data["ne0"].get_scan(scan) / mfile_data.data["dene"].get_scan(
+    nepeak = mfile_data.data["nd_plasma_electron_on_axis"].get_scan(
         scan
-    )
+    ) / mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
 
     # Assume Martin scaling if pthresh is not printed
     # Accounts for pthresh not being written prior to issue #679 and #680
@@ -6800,14 +6831,14 @@ def plot_physics_info(axis, mfile_data, scan):
         ("p_fusion_total_mw", "Fusion power", "MW"),
         ("big_q_plasma", "$Q_{p}$", ""),
         ("plasma_current_ma", "$I_p$", "MA"),
-        ("bt", "Vacuum $B_T$ at $R_0$", "T"),
+        ("b_plasma_toroidal_on_axis", "Vacuum $B_T$ at $R_0$", "T"),
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$\langle T_e \rangle$", "keV"),
-        ("dene", r"$\langle n_e \rangle$", "m$^{-3}$"),
+        ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
@@ -7010,9 +7041,13 @@ def plot_power_info(axis, mfile_data, scan):
         "Normalised radius of 'core' region",
         "",
     )
-    if ipedestal == 1:
-        ped_height = ("neped", "Electron density at pedestal", "m$^{-3}$")
-        ped_pos = ("rhopedn", "r/a at density pedestal", "")
+    if i_plasma_pedestal == 1:
+        ped_height = (
+            "nd_plasma_pedestal_electron",
+            "Electron density at pedestal",
+            "m$^{-3}$",
+        )
+        ped_pos = ("radius_plasma_pedestal_density_norm", "r/a at density pedestal", "")
     else:
         ped_height = ("", "No pedestal model used", "")
         ped_pos = ("", "", "")
@@ -7136,7 +7171,7 @@ def plot_current_drive_info(axis, mfile_data, scan):
         * mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
         / (
             mfile_data.data["rmajor"].get_scan(scan)
-            * mfile_data.data["dene"].get_scan(scan)
+            * mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
         )
     )
 
@@ -7540,7 +7575,9 @@ def plot_confinement_time_comparison(
     kappa95 = mfile_data.data["kappa95"].get_scan(scan)
     dnla20 = mfile_data.data["nd_electron_line"].get_scan(scan) / 1e20
     afuel = mfile_data.data["m_fuel_amu"].get_scan(scan)
-    bt = mfile_data.data["bt"].get_scan(scan)
+    b_plasma_toroidal_on_axis = mfile_data.data["b_plasma_toroidal_on_axis"].get_scan(
+        scan
+    )
     p_plasma_separatrix_mw = mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
     kappa = mfile_data.data["kappa"].get_scan(scan)
     aspect = mfile_data.data["aspect"].get_scan(scan)
@@ -7556,7 +7593,7 @@ def plot_confinement_time_comparison(
         rminor=rminor,
         kappa=kappa,
         dnla20=dnla20,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
@@ -7566,7 +7603,7 @@ def plot_confinement_time_comparison(
         rminor=rminor,
         kappa=kappa,
         dnla20=dnla20,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
@@ -7576,13 +7613,13 @@ def plot_confinement_time_comparison(
         rminor=rminor,
         kappa=kappa,
         dnla20=dnla20,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
     )
     iter_h90_p_amended = confine.iter_h90_p_amended_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         afuel=afuel,
         rmajor=rmajor,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
@@ -7590,7 +7627,7 @@ def plot_confinement_time_comparison(
     )
     iter_93h = confine.iter_93h_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         afuel=afuel,
         rmajor=rmajor,
@@ -7600,7 +7637,7 @@ def plot_confinement_time_comparison(
     )
     iter_h97p = confine.iter_h97p_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         dnla19=dnla19,
         rmajor=rmajor,
@@ -7610,7 +7647,7 @@ def plot_confinement_time_comparison(
     )
     iter_h97p_elmy = confine.iter_h97p_elmy_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         dnla19=dnla19,
         rmajor=rmajor,
@@ -7620,7 +7657,7 @@ def plot_confinement_time_comparison(
     )
     iter_96p = confine.iter_96p_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         kappa95=kappa95,
         rmajor=rmajor,
         aspect=aspect,
@@ -7630,7 +7667,7 @@ def plot_confinement_time_comparison(
     )
     iter_pb98py = confine.iter_pb98py_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7640,7 +7677,7 @@ def plot_confinement_time_comparison(
     )
     iter_ipb98y = confine.iter_ipb98y_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7650,7 +7687,7 @@ def plot_confinement_time_comparison(
     )
     iter_ipb98y1 = confine.iter_ipb98y1_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7660,7 +7697,7 @@ def plot_confinement_time_comparison(
     )
     iter_ipb98y2 = confine.iter_ipb98y2_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7670,7 +7707,7 @@ def plot_confinement_time_comparison(
     )
     iter_ipb98y3 = confine.iter_ipb98y3_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7680,7 +7717,7 @@ def plot_confinement_time_comparison(
     )
     iter_ipb98y4 = confine.iter_ipb98y4_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7690,7 +7727,7 @@ def plot_confinement_time_comparison(
     )
     petty08 = confine.petty08_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7699,7 +7736,7 @@ def plot_confinement_time_comparison(
     )
     menard_nstx = confine.menard_nstx_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7709,7 +7746,7 @@ def plot_confinement_time_comparison(
     )
     menard_nstx_petty08 = confine.menard_nstx_petty08_hybrid_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7719,7 +7756,7 @@ def plot_confinement_time_comparison(
     )
     itpa20 = confine.itpa20_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         dnla19=dnla19,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         rmajor=rmajor,
@@ -7730,7 +7767,7 @@ def plot_confinement_time_comparison(
     )
     itpa20_ilc = confine.itpa20_il_confinement_time(
         pcur=c_plasma_ma,
-        bt=bt,
+        b_plasma_toroidal_on_axis=b_plasma_toroidal_on_axis,
         p_plasma_loss_mw=p_plasma_separatrix_mw,
         dnla19=dnla19,
         aion=m_ions_total_amu,
@@ -10652,7 +10689,7 @@ def main(args=None):
     r_cryostat_inboard = m_file.data["r_cryostat_inboard"].get_scan(scan)
     z_cryostat_half_inside = m_file.data["z_cryostat_half_inside"].get_scan(scan)
     dr_cryostat = m_file.data["dr_cryostat"].get_scan(scan)
-    j_plasma_0 = m_file.data["j_plasma_0"].get_scan(scan)
+    j_plasma_0 = m_file.data["j_plasma_on_axis"].get_scan(scan)
 
     # Magnets related
     global n_tf_coils
@@ -10702,45 +10739,59 @@ def main(args=None):
         ) = 0.0
 
     # Pedestal profile parameters
-    global ipedestal
-    global neped
-    global nesep
-    global rhopedn
-    global rhopedt
+    global i_plasma_pedestal
+    global nd_plasma_pedestal_electron
+    global nd_plasma_separatrix_electron
+    global radius_plasma_pedestal_density_norm
+    global radius_plasma_pedestal_temp_norm
     global tbeta
-    global teped
-    global tesep
+    global temp_plasma_pedestal_kev
+    global temp_plasma_separatrix_kev
     global alphan
     global alphat
     global ne0
     global nd_fuel_ions
-    global dene
+    global nd_plasma_electrons_vol_avg
     global te0
     global ti
     global te
     global fgwped_out
     global fgwsep_out
-    global tratio
+    global f_temp_plasma_ion_electron
 
-    ipedestal = m_file.data["ipedestal"].get_scan(scan)
-    neped = m_file.data["neped"].get_scan(scan)
-    nesep = m_file.data["nesep"].get_scan(scan)
-    rhopedn = m_file.data["rhopedn"].get_scan(scan)
-    rhopedt = m_file.data["rhopedt"].get_scan(scan)
+    i_plasma_pedestal = m_file.data["i_plasma_pedestal"].get_scan(scan)
+    nd_plasma_pedestal_electron = m_file.data["nd_plasma_pedestal_electron"].get_scan(
+        scan
+    )
+    nd_plasma_separatrix_electron = m_file.data[
+        "nd_plasma_separatrix_electron"
+    ].get_scan(scan)
+    radius_plasma_pedestal_density_norm = m_file.data[
+        "radius_plasma_pedestal_density_norm"
+    ].get_scan(scan)
+    radius_plasma_pedestal_temp_norm = m_file.data[
+        "radius_plasma_pedestal_temp_norm"
+    ].get_scan(scan)
     tbeta = m_file.data["tbeta"].get_scan(scan)
-    teped = m_file.data["teped"].get_scan(scan)
-    tesep = m_file.data["tesep"].get_scan(scan)
+    temp_plasma_pedestal_kev = m_file.data["temp_plasma_pedestal_kev"].get_scan(scan)
+    temp_plasma_separatrix_kev = m_file.data["temp_plasma_separatrix_kev"].get_scan(
+        scan
+    )
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
-    ne0 = m_file.data["ne0"].get_scan(scan)
+    ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
     nd_fuel_ions = m_file.data["nd_fuel_ions"].get_scan(scan)
-    dene = m_file.data["dene"].get_scan(scan)
-    te0 = m_file.data["te0"].get_scan(scan)
-    ti = m_file.data["ti"].get_scan(scan)
-    te = m_file.data["te"].get_scan(scan)
+    nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
+        scan
+    )
+    te0 = m_file.data["temp_plasma_electron_on_axis_kev"].get_scan(scan)
+    ti = m_file.data["temp_plasma_ion_vol_avg_kev"].get_scan(scan)
+    te = m_file.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     fgwped_out = m_file.data["fgwped_out"].get_scan(scan)
     fgwsep_out = m_file.data["fgwsep_out"].get_scan(scan)
-    tratio = m_file.data["tratio"].get_scan(scan)
+    f_temp_plasma_ion_electron = m_file.data["f_temp_plasma_ion_electron"].get_scan(
+        scan
+    )
 
     # Plasma
     global triang
@@ -10776,10 +10827,10 @@ def main(args=None):
     # Poloidal flux (Wb) -- 16
     # rad profile
     global f_sync_reflect
-    global bt
+    global b_plasma_toroidal_on_axis
     global vol_plasma
     f_sync_reflect = m_file.data["f_sync_reflect"].get_scan(scan)
-    bt = m_file.data["bt"].get_scan(scan)
+    b_plasma_toroidal_on_axis = m_file.data["b_plasma_toroidal_on_axis"].get_scan(scan)
     vol_plasma = m_file.data["vol_plasma"].get_scan(scan)
 
     # Build the dictionaries of radial and vertical build values and cumulative values

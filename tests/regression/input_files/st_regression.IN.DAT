@@ -89,7 +89,7 @@ icc = 2
 *----------------*
 
 *ixc = 2  
-bt = 3.0
+b_plasma_toroidal_on_axis = 3.0
 *boundl(2) = 2.0 
 *boundu(2) = 5.0
 * DESCRIPTION:   Toroidal field on axis (T)
@@ -244,7 +244,7 @@ i_density_limit = 7
 * JUSTIFICATION: Enforce Greenwald limit
 
 ixc = 6
-dene = 1.5E+20
+nd_plasma_electrons_vol_avg = 1.5E+20
 boundl(6) = 0.5E+20
 boundu(6) = 5.0E+20
 * DESCRIPTION: Average electron density (/m3)
@@ -271,19 +271,19 @@ boundu(109) = 1.0
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
 ixc = 4 
-te = 15.0
+temp_plasma_electron_vol_avg_kev = 15.0
 boundl(4) = 5.0
 boundu(4) = 25.0
 * DESCRIPTION:   Volume averaged electron temperature (keV)
 * JUSTIFICATION: Iterate temperature to get solution
 
-tratio = 1.0
+f_temp_plasma_ion_electron = 1.0
 * DESCRIPTION:   Ion Temperature / Electron Temperature
 * JUSTIFICATION: Default value
 
-*ti =   
-* DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from te if tratio > 0.0
-* JUSTIFICATION: Calculated in-situ as tratio >0
+*temp_plasma_ion_vol_avg_kev =   
+* DESCRIPTION:   volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if f_temp_plasma_ion_electron > 0.0
+* JUSTIFICATION: Calculated in-situ as f_temp_plasma_ion_electron >0
 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Beta ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -425,7 +425,7 @@ boundu(21) = 10.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-*taumax = 
+*t_plasma_energy_confinement_max = 
 * DESCRIPTION:   Maximum allowed energy confinement time (s)
 * JUSTIFICATION: Not setting a limit on confinement time. 
 
@@ -463,7 +463,7 @@ f_alpha_energy_confinement_min = 5.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Pedestal & Profiles ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-ipedestal= 1
+i_plasma_pedestal= 1
 * DESCRIPTION:   Switch for Pedestal Profiles (1: Use Pedestal Profiles)
 * =0 use original parabolic profiles
 * =1 use pedestal profile
@@ -478,8 +478,8 @@ ipedestal= 1
 * Density *          
 *---------*
 
-rhopedn = 0.95  
-* DESCRIPTION:   r/a of Density Pedestal (ipedestal==1)
+radius_plasma_pedestal_density_norm = 0.95  
+* DESCRIPTION:   r/a of Density Pedestal (i_plasma_pedestal==1)
 * JUSTIFICATION: 
 
 alphan = 0.9 
@@ -487,25 +487,25 @@ alphan = 0.9
 * JUSTIFICATION: 
 
 ixc = 145
-fgwped = 0.1
+f_nd_plasma_pedestal_greenwald = 0.1
 boundl(145) = 0.1
 boundu(145) = 1.0 
 * DESCRIPTION:   Fraction of Greenwald Density to Set as Pedestal-Top Density
 * JUSTIFICATION: testing...
 
 ixc = 152
-fgwsep = 0.1 
+f_nd_plasma_separatrix_greenwald = 0.1 
 boundl(152) = 0.001
 boundu(152) = 0.1
 * DESCRIPTION:   Fraction of Greenwald Density to Set as Separatrix Density
 * JUSTIFICATION: Assumed, compare with SCENE profile
 
-*neped =  
-* DESCRIPTION:   Electron density of pedestal [m-3] (ipedestal=1)(default = 4.0E19)
+*nd_plasma_pedestal_electron =  
+* DESCRIPTION:   Electron density of pedestal [m-3] (i_plasma_pedestal=1)(default = 4.0E19)
 * JUSTIFICATION: Not set, used as a fraction of greenwald instead
 
-*nesep =  
-* DESCRIPTION:   electron density at separatrix [m-3] (ipedestal=1)(default = 3.0E19)
+*nd_plasma_separatrix_electron =  
+* DESCRIPTION:   electron density at separatrix [m-3] (i_plasma_pedestal=1)(default = 3.0E19)
 * JUSTIFICATION: Not set, assumed default
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -538,8 +538,8 @@ boundu(154) = 0.99
 * Temperature *          
 *-------------*
 
-rhopedt = 0.925
-* DESCRIPTION:   r/a of Temperature Pedestal (ipedestal==1)
+radius_plasma_pedestal_temp_norm = 0.925
+* DESCRIPTION:   r/a of Temperature Pedestal (i_plasma_pedestal==1)
 * JUSTIFICATION: 
 
 alphat = 1.4
@@ -550,11 +550,11 @@ tbeta = 2.0
 * DESCRIPTION:   Temperature Profile Index Beta
 * JUSTIFICATION: 
 
-teped = 4.5
+temp_plasma_pedestal_kev = 4.5
 * DESCRIPTION:   Electron Temperature of Pedestal top (keV)
 * JUSTIFICATION: 
 
-tesep = 0.125 
+temp_plasma_separatrix_kev = 0.125 
 * DESCRIPTION:   Electron Temperature at Separatrix (keV)
 * JUSTIFICATION: 
 
@@ -831,7 +831,7 @@ boundu(97) = 1.0
 * JUSTIFICATION: Not yet set
 
 *prn1 = 
-* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `ipedestal=0`, = nesep/dene if `ipedestal==1`) (default =  0.285)
+* DESCRIPTION:   n-scrape-off / n-average plasma; (input for `i_plasma_pedestal=0`, = nd_plasma_separatrix_electron/nd_plasma_electrons_vol_avg if `i_plasma_pedestal==1`) (default =  0.285)
 * JUSTIFICATION: Not yet set
 
 *tdiv = 
@@ -2569,7 +2569,7 @@ f_fw_rad_max = 1.0
 * JUSTIFICATION: Turned off, dot care about wall load
 * VARIABLES:     pflux_fw_neutron_mw calculated in-situ
 
-*iwalld = 2
+*i_pflux_fw_neutron = 2
 * DESCRIPTION:   Switch for neutron wall load calculation (default = 1)
 * =1 use scaled plasma surface area
 * =2 use first wall area directly
@@ -2606,7 +2606,7 @@ boundu(116) = 1.0
 
 *ffwal = 
 * DESCRIPTION:   Wall load fiddle factor
-* JUSTIFICATION: Not scaling wall load. Used when iwalld=1
+* JUSTIFICATION: Not scaling wall load. Used when i_pflux_fw_neutron=1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

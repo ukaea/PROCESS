@@ -28,7 +28,7 @@ e_plasma_beta: float = None
 """[J]"""
 
 
-total_loss_power: float = None
+p_plasma_heating_total_mw: float = None
 """[W]"""
 
 
@@ -281,16 +281,16 @@ betbm0: float = None
 """leading coefficient for NB beta fraction"""
 
 
-bp: float = None
-"""poloidal field (T)"""
+b_plasma_poloidal_average: float = None
+"""Plasma average poloidal field (T)"""
 
 
-bt: float = None
-"""toroidal field on axis (T) (`iteration variable 2`)"""
+b_plasma_toroidal_on_axis: float = None
+"""Plasma toroidal field on axis (T) (`iteration variable 2`)"""
 
 
-btot: float = None
-"""total toroidal + poloidal field (T)"""
+b_plasma_total: float = None
+"""Sum of plasma total toroidal + poloidal field (T)"""
 
 
 burnup: float = None
@@ -301,8 +301,8 @@ burnup_in: float = None
 """fractional plasma burnup user input"""
 
 
-bvert: float = None
-"""vertical field at plasma (T)"""
+b_plasma_vertical_required: float = None
+"""Vertical field needed for plasma equilibrium (T)"""
 
 
 c_beta: float = None
@@ -323,8 +323,8 @@ vertical stability (`constraint equation 23`)
 """
 
 
-dene: float = None
-"""electron density (/m3) (`iteration variable 6`)"""
+nd_plasma_electrons_vol_avg: float = None
+"""Plasma volume averaged electron density (/m3) (`iteration variable 6`)"""
 
 
 nd_fuel_ions: float = None
@@ -408,11 +408,11 @@ nd_impurities: float = None
 
 
 gradient_length_ne: float = None
-"""Max. normalized gradient length in el. density (ipedestal==0 only)"""
+"""Max. normalized gradient length in el. density (i_plasma_pedestal==0 only)"""
 
 
 gradient_length_te: float = None
-"""Max. normalized gradient length in el. temperature (ipedestal==0 only)"""
+"""Max. normalized gradient length in el. temperature (i_plasma_pedestal==0 only)"""
 
 
 beta_poloidal_eps_max: float = None
@@ -457,20 +457,20 @@ f_p_div_lower: float = None
 
 ffwal: float = None
 """factor to convert plasma surface area to first wall area in neutron wall
-load calculation (`iwalld=1`)
+load calculation (`i_pflux_fw_neutron=1`)
 """
 
 
-fgwped: float = None
+f_nd_plasma_pedestal_greenwald: float = None
 """fraction of Greenwald density to set as pedestal-top density. If `<0`, pedestal-top
-density set manually using neped (`ipedestal==1`).
+density set manually using nd_plasma_pedestal_electron (`i_plasma_pedestal==1`).
 (`iteration variable 145`)
 """
 
 
-fgwsep: float = None
+f_nd_plasma_separatrix_greenwald: float = None
 """fraction of Greenwald density to set as separatrix density. If `<0`, separatrix
-density set manually using nesep (`ipedestal==1`).
+density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`).
 (`iteration variable 152`)
 """
 
@@ -548,7 +548,7 @@ hfact: float = None
 """H factor on energy confinement times, radiation corrected (`iteration variable 10`)."""
 
 
-taumax: float = None
+t_plasma_energy_confinement_max: float = None
 """Maximum allowed energy confinement time (s)"""
 
 
@@ -634,7 +634,7 @@ plasma start-up, and is excluded from all steady-state power balance calculation
 """
 
 
-ipedestal: int = None
+i_plasma_pedestal: int = None
 """switch for pedestal profiles:
 - =0 use original parabolic profiles
 - =1 use pedestal profile
@@ -648,52 +648,52 @@ i_pfirsch_schluter_current: int = None
 """
 
 
-neped: float = None
-"""electron density of pedestal [m-3] (`ipedestal==1)"""
+nd_plasma_pedestal_electron: float = None
+"""electron density of pedestal [m-3] (`i_plasma_pedestal==1)"""
 
 
-nesep: float = None
-"""electron density at separatrix [m-3] (`ipedestal==1)"""
+nd_plasma_separatrix_electron: float = None
+"""electron density at separatrix [m-3] (`i_plasma_pedestal==1)"""
 
 
 alpha_crit: float = None
 """critical ballooning parameter value"""
 
 
-nesep_crit: float = None
-"""critical electron density at separatrix [m-3]"""
+nd_plasma_separatrix_electron_eich_max: float = None
+"""Eich critical electron density at separatrix [m-3]"""
 
 
 plasma_res_factor: float = None
 """plasma resistivity pre-factor"""
 
 
-rhopedn: float = None
-"""r/a of density pedestal (`ipedestal==1`)"""
+radius_plasma_pedestal_density_norm: float = None
+"""Normalised radius of density pedestal (`i_plasma_pedestal==1`)"""
 
 
-rhopedt: float = None
-"""r/a of temperature pedestal (`ipedestal==1`)"""
+radius_plasma_pedestal_temp_norm: float = None
+"""Normalised radius of temperature pedestal (`i_plasma_pedestal==1`)"""
 
 
 rho_te_max: float = None
-"""r/a where the temperature gradient is largest (`ipedestal==0`)"""
+"""r/a where the temperature gradient is largest (`i_plasma_pedestal==0`)"""
 
 
 rho_ne_max: float = None
-"""r/a where the density gradient is largest (`ipedestal==0`)"""
+"""r/a where the density gradient is largest (`i_plasma_pedestal==0`)"""
 
 
 tbeta: float = None
-"""temperature profile index beta  (`ipedestal==1)"""
+"""temperature profile index beta  (`i_plasma_pedestal==1)"""
 
 
-teped: float = None
-"""electron temperature of pedestal (keV) (`ipedestal==1`)"""
+temp_plasma_pedestal_kev: float = None
+"""Plasma electron temperature of pedestal (keV) (`i_plasma_pedestal==1`)"""
 
 
-tesep: float = None
-"""electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+temp_plasma_separatrix_kev: float = None
+"""Plasma electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
 criterion is used (`icc=78`)
 """
 
@@ -768,7 +768,7 @@ itartpf: int = None
 """
 
 
-iwalld: int = None
+i_pflux_fw_neutron: int = None
 """switch for neutron wall load calculation:
 - =1 use scaled plasma surface area
 - =2 use first wall area directly
@@ -791,11 +791,11 @@ kappa_ipb: float = None
 """Separatrix elongation calculated for IPB scalings"""
 
 
-ne0: float = None
+nd_plasma_electron_on_axis: float = None
 """central electron density (/m3)"""
 
 
-ni0: float = None
+nd_plasma_ions_on_axis: float = None
 """central ion density (/m3)"""
 
 
@@ -803,15 +803,15 @@ m_s_limit: float = None
 """margin to vertical stability"""
 
 
-p0: float = None
+pres_plasma_on_axis: float = None
 """central total plasma pressure (Pa)"""
 
 
-j_plasma_0: float = None
+j_plasma_on_axis: float = None
 """Central plasma current density (A/m2)"""
 
 
-vol_avg_pressure: float = None
+pres_plasma_vol_avg: float = None
 """Volume averaged plasma pressure (Pa)"""
 
 
@@ -895,16 +895,16 @@ p_plasma_separatrix_mw: float = None
 """power to conducted to the divertor region (MW)"""
 
 
-pdivl: float = None
-"""power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
+p_div_lower_separatrix_mw: float = None
+"""Separatrix power conducted to the lower divertor region (calculated if `i_single_null = 0`) (MW)"""
 
 
-pdivu: float = None
-"""power conducted to the upper divertor region (calculated if `i_single_null = 0`) (MW)"""
+p_div_upper_separatrix_mw: float = None
+"""Separatrix power conducted to the upper divertor region (calculated if `i_single_null = 0`) (MW)"""
 
 
-pdivmax: float = None
-"""power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)"""
+p_div_separatrix_max_mw: float = None
+"""Separatrix power conducted to the divertor with most load (calculated if `i_single_null = 0`) (MW)"""
 
 
 p_dt_total_mw: float = None
@@ -1129,7 +1129,7 @@ f_nd_beam_electron: float = None
 """hot beam density / n_e (`iteration variable 7`)"""
 
 
-rncne: float = None
+f_nd_plasma_carbon_electron: float = None
 """n_carbon / n_e"""
 
 
@@ -1137,11 +1137,11 @@ rndfuel: float = None
 """fuel burnup rate (reactions/second)"""
 
 
-rnfene: float = None
+f_nd_plasma_iron_argon_electron: float = None
 """n_highZ / n_e"""
 
 
-rnone: float = None
+f_nd_plasma_oxygen_electron: float = None
 """n_oxygen / n_e"""
 
 
@@ -1200,32 +1200,32 @@ f_alpha_energy_confinement: float = None
 """alpha particle to energy confinement time ratio"""
 
 
-te: float = None
+temp_plasma_electron_vol_avg_kev: float = None
 """volume averaged electron temperature (keV) (`iteration variable 4`)"""
 
 
-te0: float = None
+temp_plasma_electron_on_axis_kev: float = None
 """central electron temperature (keV)"""
 
 
-ten: float = None
+temp_plasma_electron_density_weighted_kev: float = None
 """density weighted average electron temperature (keV)"""
 
 
-ti: float = None
-"""volume averaged ion temperature (keV). N.B. calculated from te if `tratio > 0.0`"""
+temp_plasma_ion_vol_avg_kev: float = None
+"""volume averaged ion temperature (keV). N.B. calculated from temp_plasma_electron_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 
 
-ti0: float = None
+temp_plasma_ion_on_axis_kev: float = None
 """central ion temperature (keV)"""
 
 
-tin: float = None
+temp_plasma_ion_density_weighted_kev: float = None
 """density weighted average ion temperature (keV)"""
 
 
-tratio: float = None
-"""ion temperature / electron temperature(used to calculate ti if `tratio > 0.0`"""
+f_temp_plasma_ion_electron: float = None
+"""ion temperature / electron temperature(used to calculate temp_plasma_ion_vol_avg_kev if `f_temp_plasma_ion_electron > 0.0`"""
 
 
 triang: float = None
@@ -1250,10 +1250,6 @@ vs_plasma_ramp_required: float = None
 
 v_plasma_loop_burn: float = None
 """Plasma loop voltage during flat-top (V)"""
-
-
-vshift: float = None
-"""plasma/device midplane vertical shift - single null"""
 
 
 vs_plasma_ind_ramp: float = None
@@ -1296,7 +1292,7 @@ def init_physics_module():
     global err243
     global f_p_plasma_separatrix_rad
     global e_plasma_beta
-    global total_loss_power
+    global p_plasma_heating_total_mw
     global t_energy_confinement_beta
     global ptarmw
     global lambdaio
@@ -1323,7 +1319,7 @@ def init_physics_module():
     err243 = 0
     f_p_plasma_separatrix_rad = 0.0
     e_plasma_beta = 0.0
-    total_loss_power = 0.0
+    p_plasma_heating_total_mw = 0.0
     t_energy_confinement_beta = 0.0
     ptarmw = 0.0
     lambdaio = 0.0
@@ -1380,17 +1376,17 @@ def init_physics_variables():
     global e_plasma_beta_thermal
     global beta_norm_toroidal
     global betbm0
-    global bp
-    global bt
-    global btot
+    global b_plasma_poloidal_average
+    global b_plasma_toroidal_on_axis
+    global b_plasma_total
     global burnup
     global burnup_in
-    global bvert
+    global b_plasma_vertical_required
     global c_beta
     global csawth
     global f_vol_plasma
     global f_r_conducting_wall
-    global dene
+    global nd_plasma_electrons_vol_avg
     global nd_fuel_ions
     global dlamee
     global dlamie
@@ -1421,13 +1417,13 @@ def init_physics_variables():
     global f_deuterium
     global f_p_div_lower
     global ffwal
-    global fgwped
-    global fgwsep
+    global f_nd_plasma_pedestal_greenwald
+    global f_nd_plasma_separatrix_greenwald
     global f_helium3
     global figmer
     global fkzohm
     global fplhsep
-    global fpdivlim
+    global fp_plasma_separatrix_min_mw
     global fne0
     global f_tritium
     global fusden_total
@@ -1442,7 +1438,7 @@ def init_physics_variables():
     global f_beta_alpha_beam_thermal
     global hfac
     global hfact
-    global taumax
+    global t_plasma_energy_confinement_max
     global i_bootstrap_current
     global i_beta_component
     global i_plasma_current
@@ -1451,18 +1447,18 @@ def init_physics_variables():
     global n_divertors
     global i_beta_fast_alpha
     global i_plasma_ignited
-    global ipedestal
+    global i_plasma_pedestal
     global i_pfirsch_schluter_current
-    global neped
-    global nesep
+    global nd_plasma_pedestal_electron
+    global nd_plasma_separatrix_electron
     global alpha_crit
-    global nesep_crit
+    global nd_plasma_separatrix_electron_eich_max
     global plasma_res_factor
-    global rhopedn
-    global rhopedt
+    global radius_plasma_pedestal_density_norm
+    global radius_plasma_pedestal_temp_norm
     global tbeta
-    global teped
-    global tesep
+    global temp_plasma_pedestal_kev
+    global temp_plasma_separatrix_kev
     global i_beta_norm_max
     global i_rad_loss
     global i_confinement_time
@@ -1471,16 +1467,16 @@ def init_physics_variables():
     global i_plasma_shape
     global itart
     global itartpf
-    global iwalld
+    global i_pflux_fw_neutron
     global plasma_square
     global kappa
     global kappa95
     global kappa_ipb
-    global ne0
-    global ni0
+    global nd_plasma_electron_on_axis
+    global nd_plasma_ions_on_axis
     global m_s_limit
-    global p0
-    global j_plasma_0
+    global pres_plasma_on_axis
+    global j_plasma_on_axis
     global f_dd_branching_trit
     global pden_plasma_alpha_mw
     global pden_alpha_total_mw
@@ -1500,9 +1496,9 @@ def init_physics_variables():
     global p_dd_total_mw
     global p_dhe3_total_mw
     global p_plasma_separatrix_mw
-    global pdivl
-    global pdivu
-    global pdivmax
+    global p_div_lower_separatrix_mw
+    global p_div_upper_separatrix_mw
+    global p_div_separatrix_max_mw
     global p_dt_total_mw
     global p_plasma_dt_mw
     global p_plasma_outer_rad_mw
@@ -1554,10 +1550,10 @@ def init_physics_variables():
     global rmajor
     global rminor
     global f_nd_beam_electron
-    global rncne
+    global f_nd_plasma_carbon_electron
     global rndfuel
-    global rnfene
-    global rnone
+    global f_nd_plasma_iron_argon_electron
+    global f_nd_plasma_oxygen_electron
     global f_res_plasma_neo
     global res_plasma
     global t_plasma_res_diffusion
@@ -1571,20 +1567,19 @@ def init_physics_variables():
     global t_ion_energy_confinement
     global t_alpha_confinement
     global f_alpha_energy_confinement
-    global te
-    global te0
-    global ten
-    global ti
-    global ti0
-    global tin
-    global tratio
+    global temp_plasma_electron_vol_avg_kev
+    global temp_plasma_electron_on_axis_kev
+    global temp_plasma_electron_density_weighted_kev
+    global temp_plasma_ion_vol_avg_kev
+    global temp_plasma_ion_on_axis_kev
+    global temp_plasma_ion_density_weighted_kev
+    global f_temp_plasma_ion_electron
     global triang
     global triang95
     global vol_plasma
     global vs_plasma_burn_required
     global vs_plasma_ramp_required
     global v_plasma_loop_burn
-    global vshift
     global vs_plasma_ind_ramp
     global vs_plasma_res_ramp
     global vs_plasma_total_required
@@ -1628,17 +1623,17 @@ def init_physics_variables():
     e_plasma_beta_thermal = 0.0
     beta_norm_toroidal = 0.0
     betbm0 = 1.5
-    bp = 0.0
-    bt = 5.68
-    btot = 0.0
+    b_plasma_poloidal_average = 0.0
+    b_plasma_toroidal_on_axis = 5.68
+    b_plasma_total = 0.0
     burnup = 0.0
     burnup_in = 0.0
-    bvert = 0.0
+    b_plasma_vertical_required = 0.0
     c_beta = 0.5
     csawth = 1.0
     f_vol_plasma = 1.0
     f_r_conducting_wall = 1.35
-    dene = 9.8e19
+    nd_plasma_electrons_vol_avg = 9.8e19
     nd_fuel_ions = 0.0
     dlamee = 0.0
     dlamie = 0.0
@@ -1669,13 +1664,13 @@ def init_physics_variables():
     f_deuterium = 0.5
     f_p_div_lower = 1.0
     ffwal = 0.92
-    fgwped = 0.85
-    fgwsep = 0.50
+    f_nd_plasma_pedestal_greenwald = 0.85
+    f_nd_plasma_separatrix_greenwald = 0.50
     f_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
     fplhsep = 1.0
-    fpdivlim = 1.0
+    fp_plasma_separatrix_min_mw = 1.0
     fne0 = 1.0
     f_tritium = 0.5
     fusden_total = 0.0
@@ -1690,7 +1685,7 @@ def init_physics_variables():
     f_beta_alpha_beam_thermal = 0.0
     hfac = np.zeros(N_CONFINEMENT_SCALINGS, dtype=np.float64)
     hfact = 1.0
-    taumax = 10.0
+    t_plasma_energy_confinement_max = 10.0
     i_bootstrap_current = 3
     i_beta_component = 0
     i_plasma_current = 4
@@ -1699,18 +1694,18 @@ def init_physics_variables():
     n_divertors = 2
     i_beta_fast_alpha = 1
     i_plasma_ignited = 0
-    ipedestal = 1
+    i_plasma_pedestal = 1
     i_pfirsch_schluter_current = 0
-    neped = 4.0e19
-    nesep = 3.0e19
+    nd_plasma_pedestal_electron = 4.0e19
+    nd_plasma_separatrix_electron = 3.0e19
     alpha_crit = 0.0
-    nesep_crit = 0.0
+    nd_plasma_separatrix_electron_eich_max = 0.0
     plasma_res_factor = 1.0
-    rhopedn = 1.0
-    rhopedt = 1.0
+    radius_plasma_pedestal_density_norm = 1.0
+    radius_plasma_pedestal_temp_norm = 1.0
     tbeta = 2.0
-    teped = 1.0
-    tesep = 0.1
+    temp_plasma_pedestal_kev = 1.0
+    temp_plasma_separatrix_kev = 0.1
     i_beta_norm_max = 1
     i_rad_loss = 1
     i_confinement_time = 34
@@ -1719,16 +1714,16 @@ def init_physics_variables():
     i_plasma_shape = 0
     itart = 0
     itartpf = 0
-    iwalld = 1
+    i_pflux_fw_neutron = 1
     plasma_square = 0.0
     kappa = 1.792
     kappa95 = 1.6
     kappa_ipb = 0.0
-    ne0 = 0.0
-    ni0 = 0.0
+    nd_plasma_electron_on_axis = 0.0
+    nd_plasma_ions_on_axis = 0.0
     m_s_limit = 0.3
-    p0 = 0.0
-    j_plasma_0 = 0.0
+    pres_plasma_on_axis = 0.0
+    j_plasma_on_axis = 0.0
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
     pden_alpha_total_mw = 0.0
@@ -1748,9 +1743,9 @@ def init_physics_variables():
     p_dd_total_mw = 0.0
     p_dhe3_total_mw = 0.0
     p_plasma_separatrix_mw = 0.0
-    pdivl = 0.0
-    pdivu = 0.0
-    pdivmax = 0.0
+    p_div_lower_separatrix_mw = 0.0
+    p_div_upper_separatrix_mw = 0.0
+    p_div_separatrix_max_mw = 0.0
     p_dt_total_mw = 0.0
     p_plasma_dt_mw = 0.0
     p_plasma_outer_rad_mw = 0.0
@@ -1802,10 +1797,10 @@ def init_physics_variables():
     rmajor = 8.14
     rminor = 0.0
     f_nd_beam_electron = 0.005
-    rncne = 0.0
+    f_nd_plasma_carbon_electron = 0.0
     rndfuel = 0.0
-    rnfene = 0.0
-    rnone = 0.0
+    f_nd_plasma_iron_argon_electron = 0.0
+    f_nd_plasma_oxygen_electron = 0.0
     f_res_plasma_neo = 0.0
     res_plasma = 0.0
     t_plasma_res_diffusion = 0.0
@@ -1819,20 +1814,19 @@ def init_physics_variables():
     t_ion_energy_confinement = 0.0
     t_alpha_confinement = 0.0
     f_alpha_energy_confinement = 0.0
-    te = 12.9
-    te0 = 0.0
-    ten = 0.0
-    ti = 12.9
-    ti0 = 0.0
-    tin = 0.0
-    tratio = 1.0
+    temp_plasma_electron_vol_avg_kev = 12.9
+    temp_plasma_electron_on_axis_kev = 0.0
+    temp_plasma_electron_density_weighted_kev = 0.0
+    temp_plasma_ion_vol_avg_kev = 12.9
+    temp_plasma_ion_on_axis_kev = 0.0
+    temp_plasma_ion_density_weighted_kev = 0.0
+    f_temp_plasma_ion_electron = 1.0
     triang = 0.36
     triang95 = 0.24
     vol_plasma = 0.0
     vs_plasma_burn_required = 0.0
     vs_plasma_ramp_required = 0.0
     v_plasma_loop_burn = 0.0
-    vshift = 0.0
     vs_plasma_ind_ramp = 0.0
     vs_plasma_res_ramp = 0.0
     vs_plasma_total_required = 0.0
