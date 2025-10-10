@@ -1771,21 +1771,66 @@ class Physics:
             )
         )
 
+        physics_variables.b_plasma_circular_poloidal_profile = (
+            (
+                constants.RMU0
+                * physics_variables.j_plasma_circular_on_axis
+                * physics_variables.rminor**2
+                * (
+                    1
+                    - (
+                        1
+                        - (
+                            np.linspace(
+                                -1, 1, 2 * physics_variables.n_plasma_profile_elements
+                            )
+                        )
+                        ** 2
+                    )
+                    ** (physics_variables.alphaj + 1)
+                )
+            )
+            / (2 * (physics_variables.alphaj + 1))
+            * np.linspace(-1, 1, 2 * physics_variables.n_plasma_profile_elements)
+            * physics_variables.rminor
+        )
+
+        # physics_variables.q_circular_profile = (
+        #     (
+        #         np.linspace(
+        #             0,
+        #             physics_variables.rminor,
+        #             physics_variables.n_plasma_profile_elements,
+        #         )
+        #         / physics_variables.rmajor
+        #     )
+        #     * physics_variables.b_plasma_toroidal_profile[
+        #         physics_variables.n_plasma_profile_elements :
+        #     ]
+        #     / physics_variables.b_plasma_circular_poloidal_profile[
+        #         physics_variables.n_plasma_profile_elements :
+        #     ]
+        # )
+        rho = np.linspace(
+            0,
+            1.0,
+            physics_variables.n_plasma_profile_elements,
+        )
         physics_variables.q_circular_profile = (
             (
-                np.linspace(
-                    0,
-                    physics_variables.rminor,
-                    physics_variables.n_plasma_profile_elements,
+                (
+                    2
+                    * (physics_variables.alphaj + 1)
+                    * physics_variables.b_plasma_toroidal_on_axis
                 )
-                / physics_variables.rmajor
+                / (
+                    constants.RMU0
+                    * physics_variables.rmajor
+                    * physics_variables.j_plasma_circular_on_axis
+                )
             )
-            * physics_variables.b_plasma_toroidal_profile[
-                physics_variables.n_plasma_profile_elements :
-            ]
-            / physics_variables.b_plasma_circular_poloidal_profile[
-                physics_variables.n_plasma_profile_elements :
-            ]
+            * rho**2
+            / (1 - (1 - rho**2) ** (physics_variables.alphaj + 1))
         )
 
         # Calculate the total magnetic field profile at each point by summing the squares of the toroidal and poloidal components
