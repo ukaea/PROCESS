@@ -292,6 +292,8 @@ betbm0: float = None
 b_plasma_poloidal_average: float = None
 """Plasma average poloidal field (T)"""
 
+b_plasma_poloidal_edge: float = None
+"""Plasma poloidal field at plasma edge (T)"""
 
 b_plasma_toroidal_on_axis: float = None
 """Plasma toroidal field on axis (T) (`iteration variable 2`)"""
@@ -1410,6 +1412,7 @@ def init_physics_variables():
     global beta_norm_toroidal
     global betbm0
     global b_plasma_poloidal_average
+    global b_plasma_poloidal_edge
     global b_plasma_toroidal_on_axis
     global b_plasma_toroidal_profile
     global b_plasma_poloidal_profile
@@ -1668,6 +1671,7 @@ def init_physics_variables():
     beta_norm_toroidal = 0.0
     betbm0 = 1.5
     b_plasma_poloidal_average = 0.0
+    b_plasma_poloidal_edge = 0.0
     b_plasma_toroidal_on_axis = 5.68
     b_plasma_toroidal_profile = []
     b_plasma_poloidal_profile = []
