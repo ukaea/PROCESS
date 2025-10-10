@@ -827,8 +827,8 @@ j_plasma_on_axis: float = None
 n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
 
-pres_plasma_vol_avg: float = None
-"""Volume averaged plasma pressure (Pa)"""
+pres_plasma_thermal_vol_avg: float = None
+"""Volume averaged thermal plasma pressure (Pa)"""
 
 
 f_dd_branching_trit: float = None
