@@ -362,6 +362,9 @@ plasma_coulomb_log_electron_deuteron_profile: float = None
 plasma_coulomb_log_electron_alpha_profile: float = None
 """electron-alpha coulomb logarithm profile"""
 
+plasma_coulomb_log_deuteron_alpha_profile: float = None
+"""deuteron-alpha coulomb logarithm profile"""
+
 len_plasma_electron_debroglie_profile: list[float] = None
 """electron de Broglie wavelength profile (m)"""
 
@@ -1441,6 +1444,7 @@ def init_physics_variables():
     global plasma_coulomb_log_electron_deuteron_profile
     global plasma_coulomb_log_electron_triton_profile
     global plasma_coulomb_log_electron_alpha_profile
+    global plasma_coulomb_log_deuteron_deuteron_profile
     global len_plasma_electron_debroglie_profile
     global freq_plasma_electron_profile
     global freq_plasma_deuteron_profile
@@ -1703,6 +1707,7 @@ def init_physics_variables():
     plasma_coulomb_log_electron_deuteron_profile = []
     plasma_coulomb_log_electron_triton_profile = []
     plasma_coulomb_log_electron_alpha_profile = []
+    plasma_coulomb_log_deuteron_deuteron_profile = []
     len_plasma_electron_debroglie_profile = []
     freq_plasma_electron_profile = []
     freq_plasma_deuteron_profile = []
