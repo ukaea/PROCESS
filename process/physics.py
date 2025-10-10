@@ -4618,22 +4618,34 @@ class Physics:
         )
         # As array output is not currently supported, each element is output as a float instance
         # Output plasma pressure profiles to mfile
-        for name, arr in [
-            (
-                "Plasma electron pressure",
-                physics_variables.pres_plasma_electron_profile,
-            ),
-            ("Plasma ion pressure", physics_variables.pres_plasma_ion_total_profile),
-            ("Plasma total pressure", physics_variables.pres_plasma_total_profile),
-            ("Fuel pressure", physics_variables.pres_plasma_fuel_profile),
-        ]:
-            for i, val in enumerate(arr):
-                po.ovarre(
-                    self.mfile,
-                    f"{name} at point {i}",
-                    f"{name.lower().replace(' ', '_')}_profile{i}",
-                    val,
-                )
+        for i in range(len(physics_variables.pres_plasma_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma pressure at point {i}",
+                f"(pres_plasma_total_profile{i})",
+                physics_variables.pres_plasma_total_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma electron pressure at point {i}",
+                f"(pres_plasma_electron_profile{i})",
+                physics_variables.pres_plasma_electron_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_ion_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma ion pressure at point {i}",
+                f"(pres_plasma_ion_total_profile{i})",
+                physics_variables.pres_plasma_ion_total_profile[i],
+            )
+        for i in range(len(physics_variables.pres_plasma_fuel_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Total plasma fuel pressure at point {i}",
+                f"(pres_plasma_fuel_profile{i})",
+                physics_variables.pres_plasma_fuel_profile[i],
+            )
 
         if stellarator_variables.istell == 0:
             po.ovarre(
