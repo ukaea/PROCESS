@@ -10743,7 +10743,7 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         color="green",
         label="Total B-field [T]",
     )
-    
+
     # Plot plasma minor radius as a circle (ensure it's visible and not covered)
     circle = plt.Circle(
         (rmajor, 0),

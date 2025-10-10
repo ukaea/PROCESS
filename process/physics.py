@@ -2665,7 +2665,7 @@ class Physics:
         physics_variables.beta_norm_max_thloreus = (
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
-                pres_plasma_on_axis=physics_variables.pres_plasma_on_axis,
+                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
                 pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
             )
         )
@@ -3857,6 +3857,12 @@ class Physics:
                 * b_plasma_toroidal_on_axis
             )
         # i_plasma_current == 2 case covered above
+        physics_variables.c_plasma_circular = (
+            (constants.TWOPI / constants.RMU0)
+            * rminor**2
+            / (rmajor * q95)
+            * b_plasma_toroidal_on_axis
+        )
 
         # Calculate cyclindrical safety factor from IPDG89
         qstar = (
@@ -4284,6 +4290,13 @@ class Physics:
                     "Plasma current (MA)",
                     "(plasma_current_MA)",
                     physics_variables.plasma_current / 1.0e6,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
+                    "Plasma current for a circular plasma (A)",
+                    "(c_plasma_circular)",
+                    physics_variables.c_plasma_circular,
                     "OP ",
                 )
 
