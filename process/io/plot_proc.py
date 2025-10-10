@@ -3706,40 +3706,48 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     # ---
 
 
-def plot_jprofile(prof):
+def plot_jprofile(axis, mfile_data, scan):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"Current density $[kA/m^2]$")
-    prof.set_title("$J$ profile")
-    prof.minorticks_on()
-    prof.set_xlim([0, 1.0])
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"Current density $[kA/m^2]$")
+    axis.set_title("$J$ profile")
+    axis.minorticks_on()
+    axis.set_xlim([0, 1.0])
+
+    j_plasma_circular_on_axis = mfile_data.data["j_plasma_circular_on_axis"].get_scan(
+        scan
+    )
 
     rho = np.linspace(0, 1)
     y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
+    y_circular = (j_plasma_circular_on_axis * (1 - rho**2) ** alphaj) / 1e3
 
-    prof.plot(rho, y2, label="$n_{i}$", color="red")
+    axis.plot(rho, y2, label="Real", color="red")
+    axis.plot(rho, y_circular, label="Circular", color="blue", linestyle="--")
+    axis.legend()
 
     textstr_j = "\n".join((
-        r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
+        r"$j_0$: " + f"{j_plasma_0 / 1000:.3f} kA m$^{{-2}}$\n",
+        r"$j_0,circular$: " + f"{j_plasma_circular_on_axis / 1000:.3f} kA m$^{{-2}}$\n",
         r"$\alpha_J$: " + f"{alphaj:.3f}",
     ))
 
     props_j = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    prof.text(
+    axis.text(
         1.1,
         0.75,
         textstr_j,
-        transform=prof.transAxes,
+        transform=axis.transAxes,
         fontsize=9,
         verticalalignment="top",
         bbox=props_j,
     )
 
-    prof.text(
+    axis.text(
         0.05,
         0.04,
         "*Current profile is assumed to be parabolic",
@@ -3747,7 +3755,7 @@ def plot_jprofile(prof):
         ha="left",
         transform=plt.gcf().transFigure,
     )
-    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
 
 def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
@@ -10954,7 +10962,7 @@ def main_plot(
     # Plot current density profile
     ax12 = fig4.add_subplot(4, 3, 10)
     ax12.set_position([0.075, 0.125, 0.25, 0.15])
-    plot_jprofile(ax12)
+    plot_jprofile(ax12, mfile_data=m_file_data, scan=scan)
 
     # Plot q profile
     ax13 = fig4.add_subplot(4, 3, 12)

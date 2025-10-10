@@ -4335,6 +4335,13 @@ class Physics:
                 )
                 po.ovarrf(
                     self.outfile,
+                    "On-axis circular plasma current density (A/m2)",
+                    "(j_plasma_circular_on_axis)",
+                    physics_variables.j_plasma_circular_on_axis,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
                     "Vertical field at plasma (T)",
                     "(b_plasma_vertical_required)",
                     physics_variables.b_plasma_vertical_required,

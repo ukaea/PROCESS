@@ -336,6 +336,17 @@ class PlasmaProfile:
             )
         )
 
+        physics_variables.j_plasma_circular_on_axis = (
+            (physics_variables.c_plasma_circular)
+            * 2
+            / (
+                sp.special.beta(0.5, physics_variables.alphaj + 1)
+                * 2
+                * np.pi
+                * physics_variables.rminor
+            )
+        )
+
     @staticmethod
     def calculate_parabolic_profile_factors() -> None:
         """
