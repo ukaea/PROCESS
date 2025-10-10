@@ -2075,7 +2075,7 @@ class Physics:
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
                 core_pressure=physics_variables.pres_plasma_on_axis,
-                average_pressure=physics_variables.pres_plasma_vol_avg,
+                average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -2666,7 +2666,7 @@ class Physics:
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
                 pres_plasma_on_axis=physics_variables.pres_plasma_on_axis,
-                pres_plasma_vol_avg=physics_variables.pres_plasma_vol_avg,
+                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
             )
         )
 
@@ -4774,8 +4774,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Volume averaged plasma pressure (Pa)",
-            "(pres_plasma_vol_avg)",
-            physics_variables.pres_plasma_vol_avg,
+            "(pres_plasma_thermal_vol_avg)",
+            physics_variables.pres_plasma_thermal_vol_avg,
             "OP ",
         )
         # As array output is not currently supported, each element is output as a float instance
