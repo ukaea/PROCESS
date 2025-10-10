@@ -970,6 +970,9 @@ pden_ion_electron_equilibration_mw: float = None
 plasma_current: float = None
 """plasma current (A)"""
 
+c_plasma_circular: float = None
+"""Plasma current for circular plasma (A)"""
+
 
 p_plasma_neutron_mw: float = None
 """Neutron fusion power from just the plasma [MW]"""
@@ -1552,6 +1555,7 @@ def init_physics_variables():
     global pflux_fw_rad_mw
     global pden_ion_electron_equilibration_mw
     global plasma_current
+    global c_plasma_circular
     global p_plasma_neutron_mw
     global p_neutron_total_mw
     global pden_neutron_total_mw
@@ -1811,6 +1815,7 @@ def init_physics_variables():
     pflux_fw_rad_mw = 0.0
     pden_ion_electron_equilibration_mw = 0.0
     plasma_current = 0.0
+    c_plasma_circular = 0.0
     p_plasma_neutron_mw = 0.0
     p_neutron_total_mw = 0.0
     pden_neutron_total_mw = 0.0
