@@ -10275,6 +10275,13 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         )
         for i in range(500)
     ]
+    
+    plasma_coulomb_log_electron_alpha_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_alpha_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(500)
+    ]
 
     axis.plot(
         np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
@@ -10290,6 +10297,14 @@ def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
         color="grey",
         linestyle="-",
         label=r"$ln \Lambda_{e-D}$",
+    )
+    
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_alpha_profile)),
+        plasma_coulomb_log_electron_alpha_profile,
+        color="red",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-\alpha}$",
     )
 
 
@@ -10619,6 +10634,7 @@ def main_plot(
     plot_36.grid(True, which="both", linestyle="--", alpha=0.5)
     plot_36.set_xlim([0, 1.025])
     plot_36.minorticks_on()
+
     plot_36.legend()
 
     plot_37 = fig19.add_subplot(224)

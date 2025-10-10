@@ -2885,6 +2885,44 @@ class Physics:
             for i in range(len(physics_variables.debye_length_profile))
         ])
 
+        physics_variables.plasma_coulomb_log_electron_alpha_profile = np.array([
+            calculate_coulomb_log_from_impact(
+                impact_param_max=calculate_debye_length(
+                    temp_plasma_electron_kev=(
+                        (
+                            self.plasma_profile.teprofile.profile_y[i]
+                            * physics_variables.tratio
+                            * self.plasma_profile.teprofile.profile_y[i]
+                        )
+                        / (
+                            self.plasma_profile.teprofile.profile_y[i]
+                            + (
+                                physics_variables.tratio
+                                * self.plasma_profile.teprofile.profile_y[i]
+                            )
+                        )
+                    ),
+                    nd_plasma_electron=self.plasma_profile.neprofile.profile_y[i],
+                ),
+                impact_param_min=max(
+                    calculate_classical_distance_of_closest_approach(
+                        charge1=2,
+                        charge2=1,
+                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
+                        * constants.KILOELECTRON_VOLT,
+                    ),
+                    calculate_debroglie_wavelength(
+                        mass=(
+                            (constants.ELECTRON_MASS * constants.ALPHA_MASS)
+                            / (constants.ELECTRON_MASS + constants.ALPHA_MASS)
+                        ),
+                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.debye_length_profile))
+        ])
+
         # Caculate electron-electron collision time profile
         physics_variables.t_plasma_electron_electron_collision_profile = calculate_plasma_collision_time(
             m_particle=constants.ELECTRON_MASS,
