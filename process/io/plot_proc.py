@@ -3706,40 +3706,48 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     # ---
 
 
-def plot_jprofile(prof):
+def plot_jprofile(axis, mfile_data, scan):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
     """
 
-    prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"Current density $[kA/m^2]$")
-    prof.set_title("$J$ profile")
-    prof.minorticks_on()
-    prof.set_xlim([0, 1.0])
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel(r"Current density $[kA/m^2]$")
+    axis.set_title("$J$ profile")
+    axis.minorticks_on()
+    axis.set_xlim([0, 1.0])
+
+    j_plasma_circular_on_axis = mfile_data.data["j_plasma_circular_on_axis"].get_scan(
+        scan
+    )
 
     rho = np.linspace(0, 1)
     y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
+    y_circular = (j_plasma_circular_on_axis * (1 - rho**2) ** alphaj) / 1e3
 
-    prof.plot(rho, y2, label="$n_{i}$", color="red")
+    axis.plot(rho, y2, label="Real", color="red")
+    axis.plot(rho, y_circular, label="Circular", color="blue", linestyle="--")
+    axis.legend()
 
     textstr_j = "\n".join((
-        r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
+        r"$j_0$: " + f"{j_plasma_0 / 1000:.3f} kA m$^{{-2}}$\n",
+        r"$j_0,circular$: " + f"{j_plasma_circular_on_axis / 1000:.3f} kA m$^{{-2}}$\n",
         r"$\alpha_J$: " + f"{alphaj:.3f}",
     ))
 
     props_j = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
-    prof.text(
+    axis.text(
         1.1,
         0.75,
         textstr_j,
-        transform=prof.transAxes,
+        transform=axis.transAxes,
         fontsize=9,
         verticalalignment="top",
         bbox=props_j,
     )
 
-    prof.text(
+    axis.text(
         0.05,
         0.04,
         "*Current profile is assumed to be parabolic",
@@ -3747,7 +3755,7 @@ def plot_jprofile(prof):
         ha="left",
         transform=plt.gcf().transFigure,
     )
-    prof.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
 
 def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
@@ -3860,9 +3868,27 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
     q_r_nevin = q0 + (q95 - q0) * (rho + rho * rho + rho**3) / (3.0)
     q_r_sauter = q0 + (q95 - q0) * (rho * rho)
 
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    q_circular_profile = [
+        mfile_data.data[f"q_circular_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    prof.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        q_circular_profile,
+        label="Circular",
+        linestyle="--",
+        color="black",
+    )
+
     prof.plot(rho, q_r_nevin, label="Nevins")
     prof.plot(rho, q_r_sauter, label="Sauter")
     prof.legend()
+    prof.figure.tight_layout()
 
     # Ranges
     # ---
@@ -3876,9 +3902,9 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
         prof.set_ylim([0, q95 * 1.2])
 
     prof.text(
-        0.6,
+        0.45,
         0.04,
-        "*Profile is not calculated, only $q_0$ and $q_{95}$ are known.",
+        "*Only circular profile is calculated, for others only $q_0$ and $q_{95}$ are known.",
         fontsize=10,
         ha="left",
         transform=plt.gcf().transFigure,
@@ -3889,12 +3915,14 @@ def plot_qprofile(prof, demo_ranges, mfile_data, scan):
     textstr_q = "\n".join((
         r"$q_0$: " + f"{q0:.3f}\n",
         r"$q_{95}$: " + f"{q95:.3f}\n",
-        r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}",
+        r"$q_{\text{cyl}}$: " + f"{mfile_data.data['qstar'].get_scan(scan):.3f}\n",
+        r"$q_{95,\text{circular}}$: "
+        + f"{mfile_data.data['q_95_circular'].get_scan(scan):.3f}",
     ))
 
     props_q = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
-        -0.4,
+        -0.5,
         0.75,
         textstr_q,
         transform=prof.transAxes,
@@ -10695,6 +10723,173 @@ def plot_plasma_poloidal_pressure_contours(
     axis.set_title("Plasma Poloidal Pressure Contours")
 
 
+def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
+    # Plot magnetic field profiles inside the plasma boundary
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    # Get toroidal magnetic field profile (in Tesla)
+    b_plasma_toroidal_profile = [
+        mfile_data.data[f"b_plasma_toroidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    b_plasma_poloidal_profile = [
+        mfile_data.data[f"b_plasma_poloidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    b_plasma_circular_poloidal_profile = [
+        mfile_data.data[f"b_plasma_circular_poloidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    b_plasma_total_profile = [
+        mfile_data.data[f"b_plasma_total_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    # Get major and minor radius for x-axis in metres
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+
+    # Plot magnetic field first (background)
+    axis.plot(
+        np.linspace(rmajor - rminor, rmajor + rminor, len(b_plasma_toroidal_profile)),
+        b_plasma_toroidal_profile,
+        color="blue",
+        label="Toroidal B-field [T]",
+    )
+
+    axis.plot(
+        np.linspace(rmajor - rminor, rmajor + rminor, len(b_plasma_poloidal_profile)),
+        b_plasma_poloidal_profile,
+        color="red",
+        label="Poloidal B-field [T]",
+    )
+
+    axis.plot(
+        np.linspace(
+            rmajor - rminor, rmajor + rminor, len(b_plasma_circular_poloidal_profile)
+        ),
+        b_plasma_circular_poloidal_profile,
+        color="orange",
+        label="Circular Poloidal B-field [T]",
+    )
+
+    axis.plot(
+        np.linspace(rmajor - rminor, rmajor + rminor, len(b_plasma_total_profile)),
+        b_plasma_total_profile,
+        color="green",
+        label="Total B-field [T]",
+    )
+
+    # Plot plasma minor radius as a circle (ensure it's visible and not covered)
+    circle = plt.Circle(
+        (rmajor, 0),
+        rminor,
+        color="purple",
+        fill=False,
+        linewidth=2,
+        linestyle="--",
+        label="Plasma Outer Circlular Flux Surface",
+        zorder=10,
+    )
+    axis.add_patch(circle)
+
+    # Plot plasma on top of magnetic field, displaced vertically by bt
+    plot_plasma(axis, mfile_data, scan, colour_scheme=1)
+
+    # Plot plasma centre dot
+    axis.plot(rmajor, 0, marker="o", color="red", markersize=8, label="Plasma Centre")
+
+    # Plot vertical lines at plasma edge
+    axis.axvline(
+        rmajor - rminor, color="green", linestyle="--", linewidth=1, label="Plasma Edge"
+    )
+    axis.axvline(rmajor + rminor, color="green", linestyle="--", linewidth=1)
+    axis.set_xlabel("Radial Position [m]")
+    axis.set_ylabel("Toroidal Magnetic Field [T]")
+    axis.set_title("Toroidal Magnetic Field Profile in Plasma")
+    axis.grid(True, linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+    axis.set_xlim(rmajor - 1.25 * rminor, rmajor + 1.25 * rminor)
+
+
+def plot_beta_profiles(axis, mfile_data, scan):
+    # Plot the beta profiles on the given axis
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    beta_plasma_toroidal_profile = [
+        mfile_data.data[f"beta_toroidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    beta_total_profile = [
+        mfile_data.data[f"beta_total_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_plasma_toroidal_profile,
+        color="blue",
+        label="Beta Toroidal",
+    )
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_total_profile,
+        color="green",
+        label="Beta Total",
+    )
+
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("$\\beta$ [%]")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    axis.set_title("Beta Profile")
+    axis.legend()
+    axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
+    axis.grid(True, linestyle="--", alpha=0.5)
+
+
+def plot_beta_profiles_poloidal(axis, mfile_data, scan):
+    # Plot the beta profiles on the given axis
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    beta_poloidal_profile = [
+        mfile_data.data[f"beta_poloidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_poloidal_profile,
+        color="red",
+        label="Beta Poloidal",
+    )
+
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("$\\beta$ [%]")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    axis.set_title("Beta Profile")
+    axis.legend()
+    axis.set_yscale("log")
+    axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
+    axis.grid(True, linestyle="--", alpha=0.5)
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10716,6 +10911,7 @@ def main_plot(
     fig17,
     fig18,
     fig19,
+    fig20,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10800,7 +10996,7 @@ def main_plot(
     # Plot current density profile
     ax12 = fig4.add_subplot(4, 3, 10)
     ax12.set_position([0.075, 0.125, 0.25, 0.15])
-    plot_jprofile(ax12)
+    plot_jprofile(ax12, mfile_data=m_file_data, scan=scan)
 
     # Plot q profile
     ax13 = fig4.add_subplot(4, 3, 12)
@@ -10900,6 +11096,13 @@ def main_plot(
     plot_main_power_flow(
         fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
     )
+
+    plot_magnetic_fields_in_plasma(
+        fig20.add_subplot(122, aspect="equal"), m_file_data, scan
+    )
+
+    plot_beta_profiles(fig20.add_subplot(221), m_file_data, scan)
+    plot_beta_profiles_poloidal(fig20.add_subplot(223), m_file_data, scan)
 
 
 def main(args=None):
@@ -11210,6 +11413,7 @@ def main(args=None):
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
     page19 = plt.figure(figsize=(12, 9), dpi=80)
+    page20 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11233,6 +11437,7 @@ def main(args=None):
         page17,
         page18,
         page19,
+        page20,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11261,6 +11466,7 @@ def main(args=None):
         pdf.savefig(page17)
         pdf.savefig(page18)
         pdf.savefig(page19)
+        pdf.savefig(page20)
 
     # show fig if option used
     if args.show:
@@ -11286,6 +11492,7 @@ def main(args=None):
     plt.close(page17)
     plt.close(page18)
     plt.close(page19)
+    plt.close(page20)
 
 
 if __name__ == "__main__":

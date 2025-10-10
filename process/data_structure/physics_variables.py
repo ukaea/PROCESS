@@ -244,6 +244,14 @@ beta_poloidal_eps: float = None
 beta_toroidal: float = None
 """toroidal beta"""
 
+beta_toroidal_profile: list[float] = None
+"""toroidal beta profile"""
+
+beta_poloidal_profile: list[float] = None
+"""poloidal beta profile"""
+
+beta_total_profile: list[float] = None
+"""total beta profile"""
 
 beta_thermal: float = None
 """thermal beta"""
@@ -284,9 +292,23 @@ betbm0: float = None
 b_plasma_poloidal_average: float = None
 """Plasma average poloidal field (T)"""
 
+b_plasma_poloidal_edge: float = None
+"""Plasma poloidal field at plasma edge (T)"""
 
 b_plasma_toroidal_on_axis: float = None
 """Plasma toroidal field on axis (T) (`iteration variable 2`)"""
+
+b_plasma_toroidal_profile: list[float] = None
+"""toroidal field profile in plasma (T)"""
+
+b_plasma_poloidal_profile: list[float] = None
+"""poloidal field profile in plasma (T)"""
+
+b_plasma_circular_poloidal_profile: list[float] = None
+"""poloidal field profile in circular plasma (T)"""
+
+b_plasma_total_profile: list[float] = None
+"""total field profile in plasma (T)"""
 
 
 b_plasma_total: float = None
@@ -803,7 +825,7 @@ m_s_limit: float = None
 """margin to vertical stability"""
 
 
-pres_plasma_on_axis: float = None
+pres_plasma_thermal_on_axis: float = None
 """central total plasma pressure (Pa)"""
 
 pres_plasma_total_profile: list[float] = None
@@ -821,11 +843,14 @@ pres_plasma_fuel_profile: list[float] = None
 j_plasma_on_axis: float = None
 """Central plasma current density (A/m2)"""
 
+j_plasma_circular_on_axis: float = None
+"""Central plasma current density for a circular plasma (A/m2)"""
+
 n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
 
-pres_plasma_vol_avg: float = None
-"""Volume averaged plasma pressure (Pa)"""
+pres_plasma_thermal_vol_avg: float = None
+"""Volume averaged thermal plasma pressure (Pa)"""
 
 
 f_dd_branching_trit: float = None
@@ -950,6 +975,9 @@ pden_ion_electron_equilibration_mw: float = None
 
 plasma_current: float = None
 """plasma current (A)"""
+
+c_plasma_circular: float = None
+"""Plasma current for circular plasma (A)"""
 
 
 p_plasma_neutron_mw: float = None
@@ -1097,6 +1125,11 @@ q95_min: float = None
 qstar: float = None
 """cylindrical safety factor"""
 
+q_95_circular: float = None
+"""Safety factor at 95% flux surface for circular plasma"""
+
+q_circular_profile: list[float] = None
+"""safety factor profile for circular plasma"""
 
 rad_fraction_sol: float = None
 """SoL radiation fraction"""
@@ -1380,6 +1413,9 @@ def init_physics_variables():
     global beta_poloidal
     global beta_poloidal_eps
     global beta_toroidal
+    global beta_toroidal_profile
+    global beta_total_profile
+    global beta_poloidal_profile
     global beta_thermal
     global beta_thermal_poloidal
     global beta_thermal_toroidal
@@ -1390,7 +1426,12 @@ def init_physics_variables():
     global beta_norm_toroidal
     global betbm0
     global b_plasma_poloidal_average
+    global b_plasma_poloidal_edge
     global b_plasma_toroidal_on_axis
+    global b_plasma_toroidal_profile
+    global b_plasma_poloidal_profile
+    global b_plasma_circular_poloidal_profile
+    global b_plasma_total_profile
     global b_plasma_total
     global burnup
     global burnup_in
@@ -1488,12 +1529,13 @@ def init_physics_variables():
     global nd_plasma_electron_on_axis
     global nd_plasma_ions_on_axis
     global m_s_limit
-    global pres_plasma_on_axis
+    global pres_plasma_thermal_on_axis
     global pres_plasma_total_profile
     global pres_plasma_electron_profile
     global pres_plasma_ion_total_profile
     global pres_plasma_fuel_profile
     global j_plasma_on_axis
+    global j_plasma_circular_on_axis
     global n_plasma_profile_elements
     global f_dd_branching_trit
     global pden_plasma_alpha_mw
@@ -1526,6 +1568,7 @@ def init_physics_variables():
     global pflux_fw_rad_mw
     global pden_ion_electron_equilibration_mw
     global plasma_current
+    global c_plasma_circular
     global p_plasma_neutron_mw
     global p_neutron_total_mw
     global pden_neutron_total_mw
@@ -1556,6 +1599,8 @@ def init_physics_variables():
     global tauratio
     global q95_min
     global qstar
+    global q_95_circular
+    global q_circular_profile
     global rad_fraction_sol
     global rad_fraction_total
     global f_nd_alpha_electron
@@ -1632,6 +1677,9 @@ def init_physics_variables():
     beta_poloidal = 0.0
     beta_poloidal_eps = 0.0
     beta_toroidal = 0.0
+    beta_toroidal_profile = []
+    beta_poloidal_profile = []
+    beta_total_profile = []
     beta_thermal = 0.0
     beta_thermal_poloidal = 0.0
     beta_thermal_toroidal = 0.0
@@ -1642,7 +1690,12 @@ def init_physics_variables():
     beta_norm_toroidal = 0.0
     betbm0 = 1.5
     b_plasma_poloidal_average = 0.0
+    b_plasma_poloidal_edge = 0.0
     b_plasma_toroidal_on_axis = 5.68
+    b_plasma_toroidal_profile = []
+    b_plasma_poloidal_profile = []
+    b_plasma_circular_poloidal_profile = []
+    b_plasma_total_profile = []
     b_plasma_total = 0.0
     burnup = 0.0
     burnup_in = 0.0
@@ -1740,12 +1793,13 @@ def init_physics_variables():
     nd_plasma_electron_on_axis = 0.0
     nd_plasma_ions_on_axis = 0.0
     m_s_limit = 0.3
-    pres_plasma_on_axis = 0.0
+    pres_plasma_thermal_on_axis = 0.0
     pres_plasma_total_profile = []
     pres_plasma_electron_profile = []
     pres_plasma_ion_total_profile = []
     pres_plasma_fuel_profile = []
     j_plasma_on_axis = 0.0
+    j_plasma_circular_on_axis = 0.0
     n_plasma_profile_elements = 500
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
@@ -1778,6 +1832,7 @@ def init_physics_variables():
     pflux_fw_rad_mw = 0.0
     pden_ion_electron_equilibration_mw = 0.0
     plasma_current = 0.0
+    c_plasma_circular = 0.0
     p_plasma_neutron_mw = 0.0
     p_neutron_total_mw = 0.0
     pden_neutron_total_mw = 0.0
@@ -1808,6 +1863,8 @@ def init_physics_variables():
     tauratio = 1.0
     q95_min = 0.0
     qstar = 0.0
+    q_95_circular = 0.0
+    q_circular_profile = []
     rad_fraction_sol = 0.8
     rad_fraction_total = 0.0
     f_nd_alpha_electron = 0.1

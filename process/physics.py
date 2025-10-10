@@ -1617,7 +1617,7 @@ class Physics:
 
         # Calculate plasma current
         (
-            physics_variables.b_plasma_poloidal_average,
+            _,
             physics_variables.qstar,
             physics_variables.plasma_current,
         ) = self.calculate_plasma_current(
@@ -1628,7 +1628,7 @@ class Physics:
             physics_variables.i_plasma_current,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.pres_plasma_on_axis,
+            physics_variables.pres_plasma_thermal_on_axis,
             physics_variables.len_plasma_poloidal,
             physics_variables.q95,
             physics_variables.rmajor,
@@ -1735,6 +1735,65 @@ class Physics:
             + physics_variables.b_plasma_poloidal_average**2
         )
 
+        # Calculate the toroidal field across the plasma
+        # Calculate the toroidal field profile across the plasma (1/R dependence)
+        # Double element size to include both sides of the plasma
+        rho = np.linspace(
+            physics_variables.rmajor - physics_variables.rminor,
+            physics_variables.rmajor + physics_variables.rminor,
+            2 * physics_variables.n_plasma_profile_elements,
+        )
+        # Avoid division by zero at the magnetic axis
+        rho = np.where(rho == 0, 1e-10, rho)
+        physics_variables.b_plasma_toroidal_profile = (
+            physics_variables.rmajor * physics_variables.b_plasma_toroidal_on_axis / rho
+        )
+
+        physics_variables.b_plasma_poloidal_profile = (
+            self.calculate_poloidal_field_profile(
+                j_plasma_on_axis=physics_variables.j_plasma_on_axis,
+                alphaj=physics_variables.alphaj,
+                n_profile_elements=physics_variables.n_plasma_profile_elements * 2,
+                rminor=physics_variables.rminor,
+            )
+        )
+        # Calculate the average poloidal field from the profile
+        physics_variables.b_plasma_poloidal_average = np.mean(
+            physics_variables.b_plasma_poloidal_profile
+        )
+
+        physics_variables.b_plasma_circular_poloidal_profile = (
+            self.calculate_poloidal_field_profile(
+                j_plasma_on_axis=physics_variables.j_plasma_circular_on_axis,
+                alphaj=physics_variables.alphaj,
+                n_profile_elements=physics_variables.n_plasma_profile_elements * 2,
+                rminor=physics_variables.rminor,
+            )
+        )
+
+        physics_variables.q_circular_profile = (
+            (
+                np.linspace(
+                    0,
+                    physics_variables.rminor,
+                    physics_variables.n_plasma_profile_elements,
+                )
+                / physics_variables.rmajor
+            )
+            * physics_variables.b_plasma_toroidal_profile[
+                physics_variables.n_plasma_profile_elements :
+            ]
+            / physics_variables.b_plasma_circular_poloidal_profile[
+                physics_variables.n_plasma_profile_elements :
+            ]
+        )
+
+        # Calculate the total magnetic field profile at each point by summing the squares of the toroidal and poloidal components
+        physics_variables.b_plasma_total_profile = np.sqrt(
+            np.square(physics_variables.b_plasma_toroidal_profile)
+            + np.square(physics_variables.b_plasma_poloidal_profile)
+        )
+
         # ============================================
 
         # -----------------------------------------------------
@@ -1746,6 +1805,36 @@ class Physics:
             * physics_variables.b_plasma_total**2
             / physics_variables.b_plasma_toroidal_on_axis**2
         )
+
+        # Mirror the pressure profiles to match the doubled toroidal field profile
+        pres_profile_total = np.concatenate([
+            physics_variables.pres_plasma_total_profile[::-1],
+            physics_variables.pres_plasma_total_profile,
+        ])
+
+        physics_variables.beta_toroidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_toroidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile))
+        ])
+
+        physics_variables.beta_poloidal_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_poloidal_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_poloidal_profile))
+        ])
+
+        physics_variables.beta_total_profile = np.array([
+            self.calculate_plasma_beta(
+                pres_plasma=pres_profile_total[i],
+                b_field=physics_variables.b_plasma_total_profile[i],
+            )
+            for i in range(len(physics_variables.b_plasma_total_profile))
+        ])
 
         # Calculate physics_variables.beta poloidal [-]
         physics_variables.beta_poloidal = calculate_poloidal_beta(
@@ -2011,8 +2100,8 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal,
-                core_pressure=physics_variables.pres_plasma_on_axis,
-                average_pressure=physics_variables.pres_plasma_vol_avg,
+                core_pressure=physics_variables.pres_plasma_thermal_on_axis,
+                average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
         )
@@ -2602,8 +2691,8 @@ class Physics:
         physics_variables.beta_norm_max_thloreus = (
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
-                pres_plasma_on_axis=physics_variables.pres_plasma_on_axis,
-                pres_plasma_vol_avg=physics_variables.pres_plasma_vol_avg,
+                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
+                pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
             )
         )
 
@@ -3794,6 +3883,12 @@ class Physics:
                 * b_plasma_toroidal_on_axis
             )
         # i_plasma_current == 2 case covered above
+        physics_variables.c_plasma_circular = (
+            (constants.TWOPI / constants.RMU0)
+            * rminor**2
+            / (rmajor * q95)
+            * b_plasma_toroidal_on_axis
+        )
 
         # Calculate cyclindrical safety factor from IPDG89
         qstar = (
@@ -3802,6 +3897,14 @@ class Physics:
             / (rmajor * plasma_current / b_plasma_toroidal_on_axis)
             * 0.5
             * (1.0 + kappa95**2 * (1.0 + 2.0 * triang95**2 - 1.2 * triang95**3))
+        )
+
+        physics_variables.q_95_circular = (
+            2
+            * np.pi
+            * rminor**2
+            * b_plasma_toroidal_on_axis
+            / (constants.RMU0 * rmajor * plasma_current)
         )
 
         # Normalised beta from Troyon beta limit
@@ -3828,6 +3931,63 @@ class Physics:
         )
 
         return b_plasma_poloidal_average, qstar, plasma_current
+
+    def calculate_plasma_beta(self, pres_plasma: float, b_field: float) -> float:
+        """
+        Calculate the plasma beta for a given pressure and field.
+
+        :param pres_plasma: Plasma pressure (in Pascals).
+        :type pres_plasma: float
+        :param b_field: Magnetic field strength (in Tesla).
+        :type b_field: float
+        :returns: The plasma beta (dimensionless).
+        :rtype: float
+
+        Plasma beta is the ratio of plasma pressure to magnetic pressure.
+        """
+        if b_field == 0:
+            return 0.0
+        return 2 * constants.RMU0 * pres_plasma / (b_field**2)
+
+    def calculate_poloidal_field_profile(
+        self,
+        j_plasma_on_axis: float,
+        alphaj: float,
+        n_profile_elements: int,
+        rminor: float,
+    ) -> np.ndarray:
+        """
+        This method uses Ampère's law and the circular plasma approximation with a parabolic current profile
+        to compute the poloidal magnetic field profile.
+
+        :param float j_plasma_on_axis: On-axis plasma current density (A/m^2).
+        :param float alphaj: Current profile index (dimensionless).
+        :param int n_profile_elements: Number of radial profile elements (half the total number of points across the diameter).
+        :param float rminor: Plasma minor radius (m).
+
+        :returns: Poloidal magnetic field profile (T) across the full plasma diameter (length 2 * n_profile_elements).
+        :rtype: numpy.ndarray
+
+        """
+        n_profile_elements = n_profile_elements // 2
+        rho = np.linspace(
+            0, rminor, n_profile_elements
+        )  # Normalized minor radius (0 to 1)
+        r = rho * rminor
+
+        j_plasma_profile = j_plasma_on_axis * (1 - (rho / rminor) ** 2) ** alphaj
+
+        integrand = 2 * np.pi * (r * j_plasma_profile)  # dI/dr'
+        dr = r[1] - r[0]
+        c_enclosed = np.cumsum(integrand * dr)  # cumulative current
+
+        # Poloidal field (avoid division by zero at axis)
+        b_poloidal = np.zeros_like(r)
+        mask = rho > 0
+        b_poloidal[mask] = constants.RMU0 / (2 * np.pi * r[mask]) * c_enclosed[mask]
+
+        # Mirror the b_poloidal profile and concatenate to match the doubled toroidal field profile
+        return np.concatenate([b_poloidal[::-1], b_poloidal])
 
     def outtim(self):
         po.oheadr(self.outfile, "Times")
@@ -4166,6 +4326,13 @@ class Physics:
                     physics_variables.plasma_current / 1.0e6,
                     "OP ",
                 )
+                po.ovarrf(
+                    self.outfile,
+                    "Plasma current for a circular plasma (A)",
+                    "(c_plasma_circular)",
+                    physics_variables.c_plasma_circular,
+                    "OP ",
+                )
 
                 if physics_variables.i_alphaj == 1:
                     po.ovarrf(
@@ -4202,6 +4369,13 @@ class Physics:
                 )
                 po.ovarrf(
                     self.outfile,
+                    "On-axis circular plasma current density (A/m2)",
+                    "(j_plasma_circular_on_axis)",
+                    physics_variables.j_plasma_circular_on_axis,
+                    "OP ",
+                )
+                po.ovarrf(
+                    self.outfile,
                     "Vertical field at plasma (T)",
                     "(b_plasma_vertical_required)",
                     physics_variables.b_plasma_vertical_required,
@@ -4214,6 +4388,41 @@ class Physics:
                 "(b_plasma_toroidal_on_axis)",
                 physics_variables.b_plasma_toroidal_on_axis,
             )
+            for i in range(len(physics_variables.b_plasma_toroidal_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Toroidal field in plasma at point {i}",
+                    f"b_plasma_toroidal_profile{i}",
+                    physics_variables.b_plasma_toroidal_profile[i],
+                )
+            for i in range(len(physics_variables.b_plasma_poloidal_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Poloidal field in plasma at point {i}",
+                    f"b_plasma_poloidal_profile{i}",
+                    physics_variables.b_plasma_poloidal_profile[i],
+                )
+            for i in range(len(physics_variables.b_plasma_circular_poloidal_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Poloidal field in circular plasma at point {i}",
+                    f"b_plasma_circular_poloidal_profile{i}",
+                    physics_variables.b_plasma_circular_poloidal_profile[i],
+                )
+            for i in range(len(physics_variables.b_plasma_total_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Total field in plasma at point {i}",
+                    f"b_plasma_total_profile{i}",
+                    physics_variables.b_plasma_total_profile[i],
+                )
+            for i in range(len(physics_variables.q_circular_profile)):
+                po.ovarre(
+                    self.mfile,
+                    f"Safety factor for circular plasma at point {i}",
+                    f"q_circular_profile{i}",
+                    physics_variables.q_circular_profile[i],
+                )
             po.ovarrf(
                 self.outfile,
                 "Average poloidal field (T)",
@@ -4256,6 +4465,12 @@ class Physics:
                 "(qstar)",
                 physics_variables.qstar,
                 "OP ",
+            )
+            po.ovarrf(
+                self.outfile,
+                "Edge safety factor for a circular plasma (q_circular)",
+                "(q_95_circular)",
+                physics_variables.q_95_circular,
             )
 
             if physics_variables.i_plasma_geometry == 1:
@@ -4372,6 +4587,27 @@ class Physics:
             physics_variables.beta_toroidal,
             "OP ",
         )
+        for i in range(len(physics_variables.beta_toroidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta toroidal profile at point {i}",
+                f"beta_toroidal_profile{i}",
+                physics_variables.beta_toroidal_profile[i],
+            )
+        for i in range(len(physics_variables.beta_poloidal_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta poloidal profile at point {i}",
+                f"beta_poloidal_profile{i}",
+                physics_variables.beta_poloidal_profile[i],
+            )
+        for i in range(len(physics_variables.beta_total_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Beta total profile at point {i}",
+                f"beta_total_profile{i}",
+                physics_variables.beta_total_profile[i],
+            )
         po.ovarre(
             self.outfile,
             "Fast alpha beta",
@@ -4605,15 +4841,15 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Plasma pressure on axis (Pa)",
-            "(pres_plasma_on_axis)",
-            physics_variables.pres_plasma_on_axis,
+            "(pres_plasma_thermal_on_axis)",
+            physics_variables.pres_plasma_thermal_on_axis,
             "OP ",
         )
         po.ovarre(
             self.outfile,
             "Volume averaged plasma pressure (Pa)",
-            "(pres_plasma_vol_avg)",
-            physics_variables.pres_plasma_vol_avg,
+            "(pres_plasma_thermal_vol_avg)",
+            physics_variables.pres_plasma_thermal_vol_avg,
             "OP ",
         )
         # As array output is not currently supported, each element is output as a float instance
