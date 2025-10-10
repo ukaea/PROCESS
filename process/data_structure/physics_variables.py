@@ -840,6 +840,9 @@ pres_plasma_fuel_profile: list[float] = None
 j_plasma_on_axis: float = None
 """Central plasma current density (A/m2)"""
 
+j_plasma_circular_on_axis: float = None
+"""Central plasma current density for a circular plasma (A/m2)"""
+
 n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
 
@@ -1523,6 +1526,7 @@ def init_physics_variables():
     global pres_plasma_ion_total_profile
     global pres_plasma_fuel_profile
     global j_plasma_on_axis
+    global j_plasma_circular_on_axis
     global n_plasma_profile_elements
     global f_dd_branching_trit
     global pden_plasma_alpha_mw
@@ -1783,6 +1787,7 @@ def init_physics_variables():
     pres_plasma_ion_total_profile = []
     pres_plasma_fuel_profile = []
     j_plasma_on_axis = 0.0
+    j_plasma_circular_on_axis = 0.0
     n_plasma_profile_elements = 500
     f_dd_branching_trit = 0.0
     pden_plasma_alpha_mw = 0.0
