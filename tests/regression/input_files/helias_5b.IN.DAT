@@ -9,7 +9,7 @@
 
 *---------------Constraint Equations---------------*
 
-neqns = 3               *number of equalities
+neqns =               *number of equalities
 
 
 *--------------- equaltities
