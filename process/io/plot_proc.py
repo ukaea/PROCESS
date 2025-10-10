@@ -10721,6 +10721,11 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         for i in range(2 * n_plasma_profile_elements)
     ]
 
+    b_plasma_circular_poloidal_profile = [
+        mfile_data.data[f"b_plasma_circular_poloidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
     b_plasma_total_profile = [
         mfile_data.data[f"b_plasma_total_profile{i}"].get_scan(scan)
         for i in range(2 * n_plasma_profile_elements)
@@ -10743,6 +10748,15 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         b_plasma_poloidal_profile,
         color="red",
         label="Poloidal B-field [T]",
+    )
+
+    axis.plot(
+        np.linspace(
+            rmajor - rminor, rmajor + rminor, len(b_plasma_circular_poloidal_profile)
+        ),
+        b_plasma_circular_poloidal_profile,
+        color="orange",
+        label="Circular Poloidal B-field [T]",
     )
 
     axis.plot(
