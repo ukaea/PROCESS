@@ -16,6 +16,8 @@ Notes:
 from re import sub
 from sys import stderr
 
+from process.constraints import ConstraintManager
+from process.exceptions import ProcessValidationError
 from process.io.data_structure_dicts import get_dicts
 
 # ioptimz values
@@ -188,20 +190,23 @@ def get_constraint_equations(data):
     :return: dict of the constraint numbers and their comments
     :rtype: dict
     """
-    # Load dicts from dicts JSON file
-    dicts = get_dicts()
-
     constraints = {}
 
     # List of constraint equation numbers in IN.DAT
-    constraint_numbers = data["icc"].value
+    constraint_numbers = [int(i) for i in data["icc"].value]
 
     # Find associated comments and create constraint dict
     for constraint_number in constraint_numbers:
-        if str(constraint_number) not in dicts["DICT_ICC_FULL"]:
-            continue
-        comment = dicts["DICT_ICC_FULL"][str(constraint_number)]["name"]
-        constraints[constraint_number] = comment
+        constraint = ConstraintManager.get_constraint(constraint_number)
+
+        if constraint is None:
+            raise ProcessValidationError(
+                f"Constraint equation {constraint_number} requested but has not been registered"
+            )
+
+        # TODO: we should store a short description of each constraint that we can use here.
+        # Currently, no such information exists.
+        constraints[constraint_number] = ""
 
     return constraints
 
