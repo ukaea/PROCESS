@@ -248,22 +248,6 @@ def dict_var_type():
     return di
 
 
-def dict_icc_full():
-    """Function to return a dictionary matching str(icc_no) to a dictionary
-    containing the name of that constraint equation. Looks in
-    numerics.f90 at !+ad_varc lines in lablcc to get icc_no and
-    variable names.
-
-    Example of a lablxc line we are looking for:
-        !+ad_varc  <LI> ( 5) * beta
-
-    Example dictionary entry:
-        DICT_IXC_FULL['5'] = {'name' : 'beta'}
-    """
-
-    return {str(k): {"name": v.name} for k, v in ITERATION_VARIABLES.items()}
-
-
 def dict_input_bounds():
     """Returns a dictionary matching variable names to dictionary containing
     upper and lower bounds that PROCESS checks variable lies between when
@@ -363,7 +347,6 @@ def get_dicts():
         SourceDictionary("DICT_INPUT_BOUNDS", dict_input_bounds),
         SourceDictionary("DICT_NSWEEP2VARNAME", dict_nsweep2varname),
         SourceDictionary("DICT_VAR_TYPE", dict_var_type),
-        SourceDictionary("DICT_ICC_FULL", dict_icc_full),
         SourceDictionary("DICT_IXC2NSWEEP", dict_ixc2nsweep),
         SourceDictionary("DICT_NSWEEP2IXC", dict_nsweep2ixc),
         SourceDictionary("DICT_IXC_FULL", dict_ixc_full),
