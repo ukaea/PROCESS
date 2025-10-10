@@ -1628,7 +1628,7 @@ class Physics:
             physics_variables.i_plasma_current,
             physics_variables.kappa,
             physics_variables.kappa95,
-            physics_variables.pres_plasma_on_axis,
+            physics_variables.pres_plasma_thermal_on_axis,
             physics_variables.len_plasma_poloidal,
             physics_variables.q95,
             physics_variables.rmajor,
@@ -2013,7 +2013,7 @@ class Physics:
             current_drive_variables.cboot
             * self.bootstrap_fraction_andrade(
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
-                core_pressure=physics_variables.pres_plasma_on_axis,
+                core_pressure=physics_variables.pres_plasma_thermal_on_axis,
                 average_pressure=physics_variables.pres_plasma_thermal_vol_avg,
                 inverse_aspect=physics_variables.eps,
             )
@@ -4622,8 +4622,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Plasma pressure on axis (Pa)",
-            "(pres_plasma_on_axis)",
-            physics_variables.pres_plasma_on_axis,
+            "(pres_plasma_thermal_on_axis)",
+            physics_variables.pres_plasma_thermal_on_axis,
             "OP ",
         )
         po.ovarre(
