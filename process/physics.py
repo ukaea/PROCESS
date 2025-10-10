@@ -1617,7 +1617,7 @@ class Physics:
 
         # Calculate plasma current
         (
-            physics_variables.b_plasma_poloidal_average,
+            _,
             physics_variables.qstar,
             physics_variables.plasma_current,
         ) = self.calculate_plasma_current(
@@ -1756,6 +1756,10 @@ class Physics:
                 n_profile_elements=physics_variables.n_plasma_profile_elements * 2,
                 rminor=physics_variables.rminor,
             )
+        )
+        # Calculate the average poloidal field from the profile
+        physics_variables.b_plasma_poloidal_average = np.mean(
+            physics_variables.b_plasma_poloidal_profile
         )
 
         # Calculate the total magnetic field profile at each point by summing the squares of the toroidal and poloidal components

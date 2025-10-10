@@ -10776,7 +10776,6 @@ def plot_beta_profiles(axis, mfile_data, scan):
         for i in range(2 * n_plasma_profile_elements)
     ]
 
-
     beta_total_profile = [
         mfile_data.data[f"beta_total_profile{i}"].get_scan(scan)
         for i in range(2 * n_plasma_profile_elements)
@@ -10788,7 +10787,6 @@ def plot_beta_profiles(axis, mfile_data, scan):
         color="blue",
         label="Beta Toroidal",
     )
-
 
     axis.plot(
         np.linspace(-1, 1, 2 * n_plasma_profile_elements),
@@ -10805,7 +10803,8 @@ def plot_beta_profiles(axis, mfile_data, scan):
     axis.legend()
     axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
     axis.grid(True, linestyle="--", alpha=0.5)
-    
+
+
 def plot_beta_profiles_poloidal(axis, mfile_data, scan):
     # Plot the beta profiles on the given axis
 
@@ -10818,14 +10817,12 @@ def plot_beta_profiles_poloidal(axis, mfile_data, scan):
         for i in range(2 * n_plasma_profile_elements)
     ]
 
-
     axis.plot(
         np.linspace(-1, 1, 2 * n_plasma_profile_elements),
         beta_poloidal_profile,
         color="red",
         label="Beta Poloidal",
     )
-
 
     axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("$\\beta$ [%]")
@@ -10835,7 +10832,7 @@ def plot_beta_profiles_poloidal(axis, mfile_data, scan):
     axis.legend()
     axis.set_yscale("log")
     axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
-    axis.grid(True, linestyle="--", alpha=0.5)   
+    axis.grid(True, linestyle="--", alpha=0.5)
 
 
 def main_plot(
