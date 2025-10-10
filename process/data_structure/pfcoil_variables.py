@@ -177,7 +177,7 @@ fvs_cs_pf_total_ramp: float = None
 """F-value for `constraint equation 51`"""
 
 
-i_pf_location: list[float] = None
+i_pf_location: list[int] = None
 """Switch for location of PF coil group i:
 - =1 PF coil on top of central solenoid (flux ramp only)
 - =2 PF coil on top of TF coil (flux ramp only)
@@ -279,8 +279,7 @@ n_pf_cs_plasma_circuits: int = None
 """number of PF circuits (including central solenoid and plasma)"""
 
 
-n_pf_coils_in_group: list[float] = None
-
+n_pf_coils_in_group: list[int] = None
 """number of PF coils in group j"""
 
 
