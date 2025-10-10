@@ -10743,6 +10743,19 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         color="green",
         label="Total B-field [T]",
     )
+    
+    # Plot plasma minor radius as a circle (ensure it's visible and not covered)
+    circle = plt.Circle(
+        (rmajor, 0),
+        rminor,
+        color="purple",
+        fill=False,
+        linewidth=2,
+        linestyle="--",
+        label="Plasma Outer Circlular Flux Surface",
+        zorder=10,
+    )
+    axis.add_patch(circle)
 
     # Plot plasma on top of magnetic field, displaced vertically by bt
     plot_plasma(axis, mfile_data, scan, colour_scheme=1)
