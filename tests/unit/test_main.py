@@ -133,11 +133,11 @@ def single_run(monkeypatch, input_file, tmp_path):
     single_run = SingleRun()
 
     temp_input_file = shutil.copy(input_file, tmp_path / Path(input_file).name)
-    print(temp_input_file)
 
     single_run.input_file = str(temp_input_file)
     single_run.models = None
     single_run.set_filenames()
+    single_run.initialise()
     return single_run
 
 
