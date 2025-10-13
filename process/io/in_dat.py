@@ -873,7 +873,7 @@ class INVariable:
         self.comment = comment
 
     def __eq__(self, value):
-        # intentionally missing .comment, this is no necessary for the variable to be equal
+        # intentionally missing .comment, this is not necessary for the variables to be equal
         return (
             self.name == value.name
             and self.value == value.value
@@ -883,8 +883,8 @@ class INVariable:
 
     def __repr__(self):
         return (
-            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}), "
-            f"parameter_group={self.parameter_group!r}, comment={self.comment!r}"
+            f"{type(self).__name__}(name={self.name!r}, value={self.value!r}, v_type={self.v_type!r}, "
+            f"parameter_group={self.parameter_group!r}, comment={self.comment!r})"
         )
 
     @property
