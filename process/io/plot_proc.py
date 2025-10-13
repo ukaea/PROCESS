@@ -6185,7 +6185,7 @@ def plot_tf_turn(axis, fig, mfile_data, scan: int) -> None:
         )
 
     elif i_tf_turns_integer == 0:
-        turn_width = mfile_data.data["t_turn_tf"].get_scan(scan)
+        turn_width = mfile_data.data["dx_tf_turn_general"].get_scan(scan)
         cable_space_width = mfile_data.data["dx_tf_turn_cable_space_average"].get_scan(
             scan
         )

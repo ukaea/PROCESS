@@ -210,7 +210,7 @@ The fully three-dimensional shape of the coils is assumed to be fixed, but the s
 The stellarator coils are assumed to be superconducting - no resistive coil calculations are performed. The critical field at the superconductor is calculated using circular approximations for the coils in the inductance and field calculations, and the limit is enforced automatically. All superconductor materials that are available for tokamaks are also available for stellarators.
 
 The winding pack cross-section is rectangular for the stellarator coils, rather than the two-step cross-section assumed for tokamaks. The coil thicknesses and most of the dimensions of the materials within the coil cross-section are outputs from the model, instead of being inputs as is the case for tokamaks; see the variable descriptor file for details. In addition, certain iteration variables (`dr_tf_inboard`, no. 13; `dr_tf_nose_case`, no. 57; `c_tf_turn`, no. 60 and `dx_tf_inboard_out_toroidal`, no. 77) should not be turned on in the input file as they are calculated self-consistently (`dr_tf_nose_case` is required as input); the code will stop with an error message of this is attempted.
-The conduit insulation thickness (`dx_tf_turn_insulation`), as well as the steel thickness around each conductor (`dx_tf_turn_steel`) should be given as input parameters together with the dimension of the conductor area (`t_turn_tf`).
+The conduit insulation thickness (`dx_tf_turn_insulation`), as well as the steel thickness around each conductor (`dx_tf_turn_steel`) should be given as input parameters together with the dimension of the conductor area (`dx_tf_turn_general`).
 
 
 stellarator-PROCESS returns a set of parameters for the coil force densities, which are scaled from the reference calculation.
@@ -230,7 +230,7 @@ fiooic = 0.78 *Fraction TF coil critical current to operation current (should be
 v_tf_coil_dump_quench_max_kv = 12.64 * Max voltage across tf coil during quench (kV)
 t_tf_superconductor_quench = 20 * Dump time (should be iteration variable)
 dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)
-t_turn_tf = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
+dx_tf_turn_general = 0.048 * Dimension conductor area including steel and insulation. Important parameter.
 dx_tf_turn_insulation = 0.0015 * Conduit insulation thickness (one side) (m)
 dx_tf_turn_steel = 0.006 * thickness of steel around each conductor (one side) (m)
 dx_tf_wp_insulation = 0.1 * insulation on top of winding pack (one side) (m)

@@ -53,7 +53,7 @@ OBS_VARS = {
     "ddwi": "dr_vv_outboard",
     "pnuccp": "pnuc_cp",
     "nuc_pow_dep_tot": "pnuc_tot_blk_sector",
-    "t_turn": "t_turn_tf",
+    "t_turn": "dx_tf_turn_general",
     "ratecdol": "discount_rate",
     "strtf1": "sig_tf_case",
     "strtf2": "sig_tf_wp",
@@ -449,6 +449,8 @@ OBS_VARS = {
     "f_a_cs_steel": "f_a_cs_turn_steel",
     "t_structural_radial": "dr_cs_turn_conduit",
     "t_structural_vertical": "dz_cs_turn_conduit",
+    "t_cable_tf": "dx_tf_turn_cable_space_general",
+    "t_turn_tf": "dx_tf_turn_general",
 }
 
 OBS_VARS_HELP = {
