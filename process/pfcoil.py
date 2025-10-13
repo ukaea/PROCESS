@@ -3517,7 +3517,8 @@ class CSCoil:
 
         :references:
             - Fits are taken from the figure on p.22 of M. Wilson's book
-            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983.
+            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
+            ISBN 13: 9780198548102
         """
         beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner

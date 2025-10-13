@@ -80,6 +80,47 @@ $$
 
 where $\alpha = \frac{r_{\text{CS,outer}}}{r_{\text{CS,inner}}}$, is the ratio of the outer and inner radii of the solenoid and $\beta = \frac{z_{\text{CS,half}}}{r_{\text{CS,outer}}}$, is the ratio of the solenoid half height to its inboard radius.
 
+The peak field at the bore of the central solenoid will not be the same as that felt by the conductors inside the structures. We require to know the peak field on the conductor if we are to design a superconducting central solenoid that has enough margin. Fits to data[^1] for different ranges of $\beta$ have been calulated as follows:
+
+- $\beta > 3.0$
+
+    $$
+    B_{\text{conductor,peak}} = B_0 \times \left(\frac{3}{\beta}\right)^2 \times (1.007 + (\alpha -1.0)\times 0.005) \\
+    +\left(1.0- \left(\frac{3}{\beta}\right)^2\right) \times  (J_{\text{CS}}dr_{\text{CS}})
+    $$
+
+- $\beta > 2.0$
+
+    $$
+    B_{\text{conductor,peak}} = B_0 \times \left(1.025-(\beta-2.0)\times 0.018\right) + (\alpha -1.0) \\
+     \times (0.01-(\beta-2.0)\times 0.0045)
+    $$
+
+
+- $\beta > 1.0$
+
+    $$
+    B_{\text{conductor,peak}} = B_0 \times \left(1.117-(\beta-1.0)\times 0.092\right) + (\alpha -1.0) \\
+     \times ((\beta-1.0)\times 0.01)
+    $$
+
+
+- $\beta > 0.75$
+
+    $$
+    B_{\text{conductor,peak}} = B_0 \times \left(1.3-0.732(\beta-0.75)\right) + (\alpha -1.0) \\
+     \times 0.2((\beta-0.75)-0.05)
+    $$
+
+- $\beta \le 0.75$
+
+    $$
+    B_{\text{conductor,peak}} = B_0 \times \left(1.65-1.4(\beta-0.5)\right) + (\alpha -1.0) \\
+     \times 0.6((\beta-0.5)-0.2)
+    $$
+
+
+
 -----------
 
 ### Axial stresses | `axial_stress()`
@@ -246,3 +287,7 @@ constraints (26 and 27) are activated.
 
 !!! note "Central solenoid current over time"
     A plot of how the central solenoid current varies over time can be found [here](../physics-models/pulsed-plant.md#burn-time)
+
+
+[^1]: M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983, ISBN 13: 9780198548102
+‌
