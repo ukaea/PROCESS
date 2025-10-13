@@ -9,68 +9,6 @@ from process.fortran import (
 )
 
 
-def max_dump_voltage(tf_energy_stored:float , t_dump:float, current:float) -> float:
-    """
-    Max volatage during fast discharge of TF coil (V)  
-    tf_energy_stored : Energy stored in one TF coil (J)  
-    t_dump : Dump time (sec)  
-    current : Operating current (A)
-    """
-    return 2 * (tf_energy_stored / t_dump) / current
-
-
-def calculate_quench_protection_current_density(tau_quench, t_detect, f_cu, f_cond, temp, a_cable, a_turn):
-    """
-    Calculates the current density limited by the protection limit.
-
-    Simplified 0-D adiabatic heat balance "hotspot criterion" model.
-
-    This is slightly diffrent that tokamak version (also diffrent from the stellarator paper). 
-    We skip the superconduc6tor contribution (this should be more conservative in theory). 
-    """
-    temp_k = [4, 14, 24, 34, 44, 54, 64, 74, 84, 94, 104, 114, 124]
-    q_cu_array_sa2m4 = [
-        1.08514e17,
-        1.12043e17,
-        1.12406e17,
-        1.05940e17,
-        9.49741e16,
-        8.43757e16,
-        7.56346e16,
-        6.85924e16,
-        6.28575e16,
-        5.81004e16,
-        5.40838e16,
-        5.06414e16,
-        4.76531e16,
-    ]
-    q_he_array_sa2m4 = [
-        3.44562e16,
-        9.92398e15,
-        4.90462e15,
-        2.41524e15,
-        1.26368e15,
-        7.51617e14,
-        5.01632e14,
-        3.63641e14,
-        2.79164e14,
-        2.23193e14,
-        1.83832e14,
-        1.54863e14,
-        1.32773e14,
-    ]
-
-    q_he = np.interp(temp, temp_k, q_he_array_sa2m4)
-    q_cu = np.interp(temp, temp_k, q_cu_array_sa2m4)
-
-    # This leaves out the contribution from the superconductor fraction for now
-    return (a_cable / a_turn) * np.sqrt(
-        1
-        / (0.5 * tau_quench + t_detect)
-        * (f_cu**2 * f_cond**2 * q_cu + f_cu * f_cond * (1 - f_cond) * q_he)
-    )
-
-
 def jcrit_from_material(
     b_max,
     t_helium,

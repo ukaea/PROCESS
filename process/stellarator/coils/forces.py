@@ -20,6 +20,7 @@ def calculate_max_force_density(a_tf_wp_no_insulation):
         / a_tf_wp_no_insulation
     )
 
+
 def calculate_max_force_density_mnm():
     return (
         stellarator_configuration.stella_config_max_force_density_mnm

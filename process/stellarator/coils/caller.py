@@ -1,13 +1,12 @@
 from process.data_structure import rebco_variables
+from process.stellarator.coils.quench import calculate_quench_protection
 from process.stellarator.coils.mass import calculate_coils_mass
 import process.stellarator.coils.forces as forces
-from process.stellarator.coils.coils import bmax_from_awp, calculate_quench_protection_current_density, intersect, jcrit_from_material, max_dump_voltage
+from process.stellarator.coils.coils import bmax_from_awp, intersect, jcrit_from_material
 
 from process.fortran import (
     build_variables,
     constraint_variables,
-    sctfcoil_module,
-    physics_variables,
     stellarator_configuration,
     stellarator_variables,
     tfcoil_variables,
@@ -277,112 +276,6 @@ def calculate_stored_magnetic_energy(r_coil_minor):
         * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
         * 1.0e-9
     )
-
-def calculate_quench_protection(coilcurrent):
-    #
-    # This copied from the tokamak module:
-    # Radial position of vacuum vessel [m]
-    rad_vv_in = (
-        physics_variables.rmajor
-        - physics_variables.rminor
-        - build_variables.dr_fw_plasma_gap_inboard
-        - build_variables.dr_fw_inboard
-        - build_variables.dr_blkt_inboard
-        - build_variables.dr_shld_blkt_gap
-        - build_variables.dr_shld_inboard
-    )
-    rad_vv_out = (
-        physics_variables.rmajor
-        + physics_variables.rminor
-        + build_variables.dr_fw_plasma_gap_outboard
-        + build_variables.dr_fw_outboard
-        + build_variables.dr_blkt_outboard
-        + build_variables.dr_shld_blkt_gap
-        + build_variables.dr_shld_outboard
-    )
-
-    # Stellarator version is working on the W7-X scaling, so we should actual use vv r_major
-    # plasma r_major is just an approximation, but exact calculations require 3D geometry
-    # Maybe it can be added to the stella_config file in the future
-    rad_vv = physics_variables.rmajor
-
-    # Actual VV force density
-    # Based on reference values from W-7X:
-    # Bref = 3;
-    # Iref = 1.3*50;
-    # aref = 0.92;
-    # \[Tau]ref = 3.;
-    # Rref = 5.2;
-    # dref = 14*10^-3;
-
-    # MN/m^3
-    f_vv_actual = (
-        2.54
-        * (3e0 / physics_variables.bt
-            * 1.3e6 * 50e0 / tfcoil_variables.c_tf_total
-            * 0.92e0**2e0 / physics_variables.rminor**2
-            ) **(-1)
-        * (
-                3e0 / tfcoil_variables.tdmptf
-                * 5.2e0 / rad_vv
-                * 0.014e0 / ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
-            )
-    )
-
-    # This is not correct - it gives pressure on the vv wall, not stress
-    # N/m^2
-    # is the vv width the correct length to multiply by to turn the
-    # force density into a stress?
-    # sctfcoil_module.vv_stress_quench = (
-    #     f_vv_actual
-    #     * 1e6
-    #     * ((build_variables.dr_vv_inboard + build_variables.dr_vv_outboard) / 2)
-    # )
-
-    # This approach merge stress model from tokamaks with induced force calculated from W7-X scaling
-    a_vv = (rad_vv_out + rad_vv_in) / (rad_vv_out - rad_vv_in)
-    zeta = 1 + ((a_vv - 1) * np.log((a_vv + 1) / (a_vv - 1)) / (2 * a_vv))
-
-    sctfcoil_module.vv_stress_quench =  zeta * f_vv_actual * 1e6 * rad_vv_in
-
-    # the conductor fraction is meant of the cable space#
-    # This is the old routine which is being replaced for now by the new one below
-    #    protect(aio,  tfes,               acs,       aturn,   tdump,  fcond,  fcu,   tba,  tmax   ,ajwpro, vd)
-    # call protect(c_tf_turn,e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils*1.0e9,a_tf_turn_cable_space_no_void,
-    #    tfcoil_variables.t_turn_tf**2   ,tdmptf,1-f_a_tf_turn_cable_space_extra_void,fcutfsu,tftmp,tmaxpro,jwdgpro2,vd)
-
-
-    # comparison
-    # the new quench protection routine, see #1047
-    tfcoil_variables.jwdgpro = calculate_quench_protection_current_density(
-        tau_quench=tfcoil_variables.tdmptf,
-        t_detect=tfcoil_variables.t_tf_quench_detection,
-        f_cu=tfcoil_variables.fcutfsu,
-        f_cond=1 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void,
-        temp=tfcoil_variables.tftmp,
-        a_cable=tfcoil_variables.a_tf_turn_cable_space_no_void,
-        a_turn=tfcoil_variables.t_turn_tf**2,
-    )
-
-    # Also give the copper area for REBCO quench calculations:
-    rebco_variables.coppera_m2 = (
-        coilcurrent
-        * 1.0e6
-        / (tfcoil_variables.a_tf_wp_conductor * tfcoil_variables.fcutfsu)
-    )
-
-    # Max volatage during fast discharge of TF coil (V)
-    # (note that tf_coil_variable is in kV, while calculation is in V)
-    tfcoil_variables.vtfskv = max_dump_voltage(
-        tfcoil_variables.e_tf_magnetic_stored_total_gj
-        / tfcoil_variables.n_tf_coils
-        * 1.0e9,
-        tfcoil_variables.tdmptf,
-        tfcoil_variables.c_tf_turn,
-    ) / 1.0e3  
-
-    return f_vv_actual
-
 
 def calculate_winding_pack_geometry():
     '''
