@@ -292,6 +292,9 @@ b_plasma_toroidal_on_axis: float = None
 b_plasma_total: float = None
 """Sum of plasma total toroidal + poloidal field (T)"""
 
+e_plasma_magnetic_stored: float = None
+"""Plasma stored magnetic energy (J)"""
+
 
 burnup: float = None
 """fractional plasma burnup"""
@@ -1392,6 +1395,7 @@ def init_physics_variables():
     global b_plasma_poloidal_average
     global b_plasma_toroidal_on_axis
     global b_plasma_total
+    global e_plasma_magnetic_stored
     global burnup
     global burnup_in
     global b_plasma_vertical_required
@@ -1644,6 +1648,7 @@ def init_physics_variables():
     b_plasma_poloidal_average = 0.0
     b_plasma_toroidal_on_axis = 5.68
     b_plasma_total = 0.0
+    e_plasma_magnetic_stored = 0.0
     burnup = 0.0
     burnup_in = 0.0
     b_plasma_vertical_required = 0.0
