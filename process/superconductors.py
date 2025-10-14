@@ -865,7 +865,7 @@ def calculate_croco_cable_geometry(
     float,  # a_croco_strand_hastelloy
     float,  # a_croco_strand_solder
     float,  # a_croco_strand_rebco
-    float,  # croco_strand_area
+    float,  # a_croco_strand
     float,  # dr_hts_tape
 ]:
     """
@@ -889,7 +889,7 @@ def calculate_croco_cable_geometry(
         - a_croco_strand_hastelloy: Total Hastelloy area in CroCo strand (m²)
         - a_croco_strand_solder: Total solder area in CroCo strand (m²)
         - a_croco_strand_rebco: Total REBCO area in CroCo strand (m²)
-        - croco_strand_area: Total area of CroCo strand (m²)
+        - a_croco_strand: Total area of CroCo strand (m²)
         - dr_hts_tape: Width of the tape (m)
     :rtype: tuple[float, float, float, float, float, float, float, float]
     """
@@ -950,54 +950,37 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     'REBCO' 2nd generation HTS superconductor
     Updated 13/11/18 using data from Lewandowska et al 2018.
     """
-    d = dia_croco_strand
-    # d = conductor_width / 3.0d0 - dx_tf_turn_steel * ( 2.0d0 / 3.0d0 )
 
-    dia_croco_strand_tape_region = d - 2.0 * dx_croco_strand_copper  # scaling * 5.4d-3
-    if dia_croco_strand_tape_region <= 0.0:
-        logger.error("Negitive inner croco diameter")
-
-    # Define the scaling factor for the input REBCO variable
-    # Ratio of new croco inner diameter and fixed base line value
-    scaling = dia_croco_strand_tape_region / 5.4e-3
-    dr_hts_tape = scaling * 3.75e-3
-    # Properties of a single strand
-    dx_hts_tape_total = (
-        rebco_variables.dx_hts_tape_rebco
-        + rebco_variables.dx_hts_tape_copper
-        + rebco_variables.dx_hts_tape_hastelloy
-    )
-    dx_croco_strand_tape_stack = np.sqrt(
-        dia_croco_strand_tape_region**2 - dr_hts_tape**2
-    )
-    n_croco_strand_hts_tapes = dx_croco_strand_tape_stack / dx_hts_tape_total
-
-    a_croco_strand_copper_total = (
-        np.pi * dx_croco_strand_copper * d
-        - np.pi * dx_croco_strand_copper**2
-        + rebco_variables.dx_hts_tape_copper
-        * dr_hts_tape
-        * n_croco_strand_hts_tapes  # copper tube  # copper in tape
-    )
-    a_croco_strand_hastelloy = (
-        rebco_variables.dx_hts_tape_hastelloy * dr_hts_tape * n_croco_strand_hts_tapes
-    )
-    a_croco_strand_solder = (
-        np.pi / 4.0 * dia_croco_strand_tape_region**2
-        - dx_croco_strand_tape_stack * dr_hts_tape
+    (
+        rebco_variables.dia_croco_strand_tape_region,
+        rebco_variables.n_croco_strand_hts_tapes,
+        a_croco_strand_copper_total,
+        a_croco_strand_hastelloy,
+        a_croco_strand_solder,
+        a_croco_strand_rebco,
+        a_croco_strand,
+        rebco_variables.dr_hts_tape,
+    ) = calculate_croco_cable_geometry(
+        dia_croco_strand,
+        dx_croco_strand_copper,
+        rebco_variables.dx_hts_tape_rebco,
+        rebco_variables.dx_hts_tape_copper,
+        rebco_variables.dx_hts_tape_hastelloy,
     )
 
-    a_croco_strand_rebco = (
-        rebco_variables.dx_hts_tape_rebco * dr_hts_tape * n_croco_strand_hts_tapes
-    )
-    croco_strand_area = np.pi / 4.0 * d**2
+    rebco_variables.a_croco_strand_copper_total = a_croco_strand_copper_total
+    rebco_variables.a_croco_strand_hastelloy = a_croco_strand_hastelloy
+    rebco_variables.a_croco_strand_solder = a_croco_strand_solder
+    rebco_variables.a_croco_strand_rebco = a_croco_strand_rebco
+    rebco_variables.a_croco_strand = a_croco_strand
+
     croco_strand_critical_current = j_crit_sc * a_croco_strand_rebco
 
     # Conductor properties
-    # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/croco_strand_area
+    # conductor%number_croco = conductor%acs*(1.0-cable_helium_fraction-copper_bar)/a_croco_strand
     conductor_critical_current = croco_strand_critical_current * 6.0
     # Area of core = area of strand
-    conductor_copper_bar_area = croco_strand_area
+    conductor_copper_bar_area = a_croco_strand
     conductor_copper_area = (
         a_croco_strand_copper_total * 6.0 + conductor_copper_bar_area
     )
@@ -1005,7 +988,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
 
     # Helium area is set by the user.
     # conductor_helium_area = cable_helium_fraction * conductor_acs
-    conductor_helium_area = np.pi / 2.0 * d**2
+    conductor_helium_area = np.pi / 2.0 * dia_croco_strand**2
     conductor_helium_fraction = conductor_helium_area / conductor_area
 
     conductor_hastelloy_area = a_croco_strand_hastelloy * 6.0
@@ -1018,7 +1001,7 @@ def croco(j_crit_sc, conductor_area, dia_croco_strand, dx_croco_strand_copper):
     conductor_rebco_fraction = conductor_rebco_area / conductor_area
 
     return (
-        croco_strand_area,
+        a_croco_strand,
         croco_strand_critical_current,
         conductor_copper_area,
         conductor_copper_fraction,
