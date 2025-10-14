@@ -103,7 +103,10 @@ i_f_dr_tf_plasma_case: bool = None
 
 
 dx_tf_side_case_min: float = None
-"""inboard TF coil sidewall case thickness (m) (calculated for stellarators)"""
+"""inboard TF coil minimum sidewall case thickness (m) (calculated for stellarators)"""
+
+dx_tf_side_case_peak: float = None
+"""inboard TF coil peak sidewall case thickness (m) (calculated for stellarators)"""
 
 
 casths_fraction: float = None
@@ -1106,6 +1109,7 @@ def init_tfcoil_variables():
     global f_dr_tf_plasma_case
     global i_f_dr_tf_plasma_case
     global dx_tf_side_case_min
+    global dx_tf_side_case_peak
     global casths_fraction
     global tfc_sidewall_is_fraction
     global t_conductor
@@ -1322,6 +1326,7 @@ def init_tfcoil_variables():
     f_dr_tf_plasma_case = 0.05
     i_f_dr_tf_plasma_case = False
     dx_tf_side_case_min = 0.0
+    dx_tf_side_case_peak = 0.0
     casths_fraction = 0.06
     t_conductor = 0.0
     dx_tf_turn_cable_space_general = 0.0
