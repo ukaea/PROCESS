@@ -2681,7 +2681,8 @@ def plot_main_plasma_information(
         f"$\\Omega_{{\\text{{p}}}}$: {mfile_data.data['res_plasma'].get_scan(scan):.4e} $\\Omega$\n"
         f"Plasma resistive diffusion time: {mfile_data.data['t_plasma_res_diffusion'].get_scan(scan):.4f} s\n"
         f"Plasma inductance: {mfile_data.data['ind_plasma'].get_scan(scan):.4e} H\n"
-        f"Plasma normalised internal inductance: {mfile_data.data['ind_plasma_internal_norm'].get_scan(scan):.4f}\n"
+        f"Plasma stored magnetic energy: {mfile_data.data['e_plasma_magnetic_stored'].get_scan(scan) / 1e9:.4f} GJ\n"
+        f"Plasma normalised internal inductance: {mfile_data.data['ind_plasma_internal_norm'].get_scan(scan):.4f}"
     )
 
     axis.text(
