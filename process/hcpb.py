@@ -3,6 +3,7 @@ import logging
 import numpy as np
 
 import process.blanket_library as blanket_library
+import process.data_structure.blanket_library as blanket_vars
 from process import constants
 from process import (
     process_output as po,
@@ -1545,6 +1546,12 @@ class CCFE_HCPB(BlanketLibrary):
             "Allowable nominal neutron fluence at first wall (MW.year/m2)",
             "(abktflnc)",
             cost_variables.abktflnc,
+        )
+        po.ovarre(
+            self.outfile,
+            "Blanket half height (m)",
+            "(dz_blkt_half)",
+            blanket_vars.dz_blkt_half,
         )
         po.ovarre(
             self.outfile,
