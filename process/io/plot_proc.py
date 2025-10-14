@@ -3011,6 +3011,7 @@ def plot_main_plasma_information(
     textstr_fields = (
         f"$\\mathbf{{Magnetic\\ fields:}}$\n\n"
         f"Toroidal field at $R_0$, $B_{{T}}$: {mfile_data.data['b_plasma_toroidal_on_axis'].get_scan(scan):.4f} T                  \n"
+        f"  Ripple at outboard , $\\delta$: {mfile_data.data['ripple_b_tf_plasma_edge'].get_scan(scan):.2f}%                  \n"
         f"Average poloidal field, $B_{{p}}$: {mfile_data.data['b_plasma_poloidal_average'].get_scan(scan):.4f} T              \n"
         f"Total field, $B_{{tot}}$: {mfile_data.data['b_plasma_total'].get_scan(scan):.4f} T                \n"
         f"Vertical field, $B_{{vert}}$: {mfile_data.data['b_plasma_vertical_required'].get_scan(scan):.4f} T"
