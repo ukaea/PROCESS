@@ -2544,6 +2544,10 @@ class Physics:
             physics_variables.ind_plasma_internal_norm,
         )
 
+        physics_variables.e_plasma_magnetic_stored = (
+            0.5e0 * physics_variables.ind_plasma * physics_variables.plasma_current**2
+        )
+
         # Calculate auxiliary physics related information
         sbar = 1.0e0
         (
@@ -6232,6 +6236,13 @@ class Physics:
                 "Plasma inductance (H)",
                 "(ind_plasma)",
                 physics_variables.ind_plasma,
+                "OP ",
+            )
+            po.ovarre(
+                self.outfile,
+                "Plasma magnetic energy stored (J)",
+                "(e_plasma_magnetic_stored)",
+                physics_variables.e_plasma_magnetic_stored,
                 "OP ",
             )
             po.ovarrf(
