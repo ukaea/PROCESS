@@ -954,6 +954,12 @@ class TFCoil:
             )
             po.ovarre(
                 self.outfile,
+                "Inboard leg case sidewall peak thickness (m)",
+                "(dx_tf_side_case_peak)",
+                superconducting_tf_coil_variables.dx_tf_side_case_peak,
+            )
+            po.ovarre(
+                self.outfile,
                 "External case mass per coil (kg)",
                 "(m_tf_coil_case)",
                 tfcoil_variables.m_tf_coil_case,
