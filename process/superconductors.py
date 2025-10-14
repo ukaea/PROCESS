@@ -858,7 +858,6 @@ def calculate_croco_cable_geometry(
     dx_hts_tape_rebco: float,
     dx_hts_tape_copper: float,
     dx_hts_tape_hastelloy: float,
-    dr_hts_tape: float,
 ) -> tuple[
     float,  # dia_croco_strand_tape_region
     float,  # n_croco_strand_hts_tapes
