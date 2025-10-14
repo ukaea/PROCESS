@@ -4946,6 +4946,7 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
     dx_tf_wp_primary_toroidal = mfile_data.data["dx_tf_wp_primary_toroidal"].get_scan(
         scan
     )
+    dx_tf_side_case_peak = mfile_data.data["dx_tf_side_case_peak"].get_scan(scan)
     dx_tf_wp_secondary_toroidal = mfile_data.data[
         "dx_tf_wp_secondary_toroidal"
     ].get_scan(scan)
@@ -5445,6 +5446,22 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             linewidth=0.6,
             alpha=0.5,
         )
+        # Max toroidal width including side case
+        axis.axhline(
+            y=(dx_tf_wp_primary_toroidal / 2) + dx_tf_side_case_peak,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
+
+        axis.axhline(
+            y=-(dx_tf_wp_primary_toroidal / 2) - dx_tf_side_case_peak,
+            color="black",
+            linestyle="--",
+            linewidth=0.6,
+            alpha=0.5,
+        )
 
         axis.axvline(
             x=r_tf_inboard_in,
@@ -5500,11 +5517,12 @@ def plot_superconducting_tf_wp(axis, mfile_data, scan: int, fig) -> None:
             f"$A$: {mfile_data.data['a_tf_plasma_case'].get_scan(scan):.3f} $\\mathrm{{m}}^2$\n\n"
             f"$\\text{{Side Case:}}$\n"
             f"Minimum $\\Delta r$: {mfile_data.data['dx_tf_side_case_min'].get_scan(scan):.3f} m\n"
-            f"Average $\\Delta r$: {mfile_data.data['dx_tf_side_case_average'].get_scan(scan):.3f} m"
+            f"Average $\\Delta r$: {mfile_data.data['dx_tf_side_case_average'].get_scan(scan):.3f} m\n"
+            f"Max $\\Delta r$: {mfile_data.data['dx_tf_side_case_peak'].get_scan(scan):.3f} m"
         )
         axis.text(
             0.55,
-            0.95,
+            0.975,
             textstr_casing,
             fontsize=9,
             verticalalignment="top",
