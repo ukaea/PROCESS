@@ -1408,7 +1408,7 @@ class Power:
                 - heat_transport_variables.p_plant_electric_net_mw
             ) / heat_transport_variables.p_plant_electric_gross_mw
 
-        _ = self.power_profiles_over_time(
+        power_variables.e_plant_net_electric_pulse_mj = self.power_profiles_over_time(
             t_precharge=times_variables.t_precharge,
             t_current_ramp_up=times_variables.t_current_ramp_up,
             t_fusion_ramp=times_variables.t_fusion_ramp,
