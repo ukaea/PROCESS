@@ -3246,7 +3246,7 @@ def plot_system_power_profiles_over_time(
     axis: plt.Axes, mfile_data: mf.MFile, scan: int
 ) -> None:
     """
-    Plots the current profiles over time for PF circuits, CS coil, and plasma.
+    Plots the power profiles over time for various systems.
 
     Arguments:
         axis (plt.Axes): Axis object to plot to.
@@ -3259,6 +3259,7 @@ def plot_system_power_profiles_over_time(
     t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
     t_burn = mfile_data.data["t_burn"].get_scan(scan)
     t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+    t_between_pulse = mfile_data.data["t_between_pulse"].get_scan(scan)
 
     p_plant_electric_base_total_mw = mfile_data.data[
         "p_plant_electric_base_total_mw"
@@ -3276,18 +3277,14 @@ def plot_system_power_profiles_over_time(
     p_pf_electric_supplies_mw = mfile_data.data["p_pf_electric_supplies_mw"].get_scan(
         scan
     )
-    p_cp_coolant_pump_elec_mw = mfile_data.data["p_cp_coolant_pump_elec_mw"].get_scan(
-        scan
-    )
-    p_fw_blkt_coolant_pump_elec_mw = mfile_data.data[
-        "p_fw_blkt_coolant_pump_elec_mw"
-    ].get_scan(scan)
     p_coolant_pump_elec_total_mw = mfile_data.data[
         "p_coolant_pump_elec_total_mw"
     ].get_scan(scan)
     p_hcd_electric_total_mw = mfile_data.data["p_hcd_electric_total_mw"].get_scan(scan)
     p_fusion_total_mw = mfile_data.data["p_fusion_total_mw"].get_scan(scan)
-
+    p_plant_electric_gross_mw = mfile_data.data["p_plant_electric_gross_mw"].get_scan(
+        scan
+    )
     # Define a cumulative sum list for each point in the pulse
     t_steps = np.cumsum([
         0,
@@ -3296,6 +3293,7 @@ def plot_system_power_profiles_over_time(
         t_fusion_ramp,
         t_burn,
         t_ramp_down,
+        t_between_pulse,
     ])
 
     # Create empty arrays for the power at each time step for each system
@@ -3307,33 +3305,73 @@ def plot_system_power_profiles_over_time(
         "Vacuum Pumps": np.zeros(len(t_steps)),
         "TF Coil Supplies": np.zeros(len(t_steps)),
         "PF Coil Supplies": np.zeros(len(t_steps)),
-        "CP Coolant Pump Elec": np.zeros(len(t_steps)),
-        "FW+Blkt Coolant Pump Elec": np.zeros(len(t_steps)),
         "Coolant Pump Elec Total": np.zeros(len(t_steps)),
         "HCD Electric Total": np.zeros(len(t_steps)),
+        "Gross Electric Power": np.zeros(len(t_steps)),
+        "Net Electric Power": np.zeros(len(t_steps)),
     }
 
-    power_profiles["Fusion Power"][:3] = 0
-    power_profiles["Fusion Power"][3:] = p_fusion_total_mw
+    power_profiles["Fusion Power"][:2] = 0
+    power_profiles["Fusion Power"][2:5] = p_fusion_total_mw
+    power_profiles["Fusion Power"][5:] = 0
     power_profiles["Plant Base Load"][:] = -p_plant_electric_base_total_mw
     power_profiles["Cryo Plant"][:] = -p_cryo_plant_electric_mw
     power_profiles["Tritium Plant"][:] = -p_tritium_plant_electric_mw
     power_profiles["Vacuum Pumps"][:] = -vachtmw
     # TF Coil Supplies: zero for first 3 time steps, then p_tf_electric_supplies_mw
-    power_profiles["TF Coil Supplies"][:3] = 0
-    power_profiles["TF Coil Supplies"][3:] = -p_tf_electric_supplies_mw
-    power_profiles["PF Coil Supplies"][:2] = 0
-    power_profiles["PF Coil Supplies"][2:] = -p_pf_electric_supplies_mw
-    power_profiles["CP Coolant Pump Elec"][:] = -p_cp_coolant_pump_elec_mw
-    power_profiles["FW+Blkt Coolant Pump Elec"][:3] = 0
-    power_profiles["FW+Blkt Coolant Pump Elec"][3:] = -p_fw_blkt_coolant_pump_elec_mw
-    power_profiles["Coolant Pump Elec Total"][:] = -p_coolant_pump_elec_total_mw
-    power_profiles["HCD Electric Total"][:3] = 0
-    power_profiles["HCD Electric Total"][3:] = -p_hcd_electric_total_mw
+    power_profiles["TF Coil Supplies"][0] = 0
+    power_profiles["TF Coil Supplies"][1:5] = -p_tf_electric_supplies_mw
+    power_profiles["TF Coil Supplies"][5:] = 0
+    power_profiles["PF Coil Supplies"][0] = 0
+    power_profiles["PF Coil Supplies"][1:] = -p_pf_electric_supplies_mw
+    power_profiles["PF Coil Supplies"][5:] = 0
+    power_profiles["Coolant Pump Elec Total"][0:2] = 0
+    power_profiles["Coolant Pump Elec Total"][2:] = -p_coolant_pump_elec_total_mw
+    power_profiles["Coolant Pump Elec Total"][5:] = 0
+    power_profiles["HCD Electric Total"][:2] = 0
+    power_profiles["HCD Electric Total"][2:5] = -p_hcd_electric_total_mw
+    power_profiles["HCD Electric Total"][5] = 0
 
-    # Plot each system's power profile over time
+    power_profiles["Gross Electric Power"][:2] = 0
+    power_profiles["Gross Electric Power"][2:5] = p_plant_electric_gross_mw
+    power_profiles["Gross Electric Power"][5:] = 0
+
+    # Calculate net electric profile by subtracting all power draws from gross electric
+    power_profiles["Net Electric Power"] = (
+        power_profiles["Gross Electric Power"]
+        + power_profiles["Plant Base Load"]
+        + power_profiles["Cryo Plant"]
+        + power_profiles["Tritium Plant"]
+        + power_profiles["Vacuum Pumps"]
+        + power_profiles["TF Coil Supplies"]
+        + power_profiles["PF Coil Supplies"]
+        + power_profiles["Coolant Pump Elec Total"]
+        + power_profiles["HCD Electric Total"]
+    )
+    # Define line styles for each system
+    # All net drains (negative power flows) use the same line style: dashed
+    line_styles = {
+        "Fusion Power": ":",
+        "Plant Base Load": "--",
+        "Cryo Plant": "--",
+        "Tritium Plant": "--",
+        "Vacuum Pumps": "--",
+        "TF Coil Supplies": "--",
+        "PF Coil Supplies": "--",
+        "Coolant Pump Elec Total": "--",
+        "HCD Electric Total": "--",
+        "Gross Electric Power": "-",
+        "Net Electric Power": "-",
+    }
+
+    # Plot each system's power profile over time with different line styles
     for label, powers in power_profiles.items():
-        axis.plot(t_steps, powers, label=label)
+        style = line_styles.get(label, "-")
+        axis.plot(t_steps, powers, label=label, linestyle=style)
+
+    # power_profiles["Net Electric Power"][:2] = 0
+    # power_profiles["Net Electric Power"][2:5] = p_plant_electric_net_mw
+    # power_profiles["Net Electric Power"][5] = 0
 
     # Move the x-axis to 0 on the y-axis
     axis.spines["bottom"].set_position("zero")
@@ -3350,6 +3388,7 @@ def plot_system_power_profiles_over_time(
             "Burn",
             "Ramp Down",
             "Between Pulse",
+            "Restart Pulse",
         ],
         rotation=60,
     )
@@ -3366,8 +3405,10 @@ def plot_system_power_profiles_over_time(
     # Add a legend
     axis.legend()
 
-    # axis.set_yscale("symlog")
-    # axis.set_xscale("symlog")
+    axis.set_yscale("symlog")
+    # axis.set_xscale()
+    axis.minorticks_on()
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
 
     # Add a grid for better readability
     axis.grid(True, linestyle="--", alpha=0.6)
