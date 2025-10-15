@@ -44,25 +44,25 @@ f_copperaoh_m2: float = None
 """f-value for constraint 88: CS coil current / copper area < copperA_m2_max"""
 
 dx_croco_strand_tape_stack: float = None
-"Width / thickness of tape stack in CroCo strand (m)"
+"""Width / thickness of tape stack in CroCo strand (m)"""
 
 n_croco_strand_hts_tapes: float = None
-"Number of HTS tapes in CroCo strand"
+"""Number of HTS tapes in CroCo strand"""
 
 a_croco_strand_rebco: float = None
-"Area of REBCO in CroCo strand (m2)"
+"""Area of REBCO in CroCo strand (m2)"""
 
 a_croco_strand_copper_total: float = None
-"Area of copper in CroCo strand (includes tapes and outer tube) (m2)"
+"""Area of copper in CroCo strand (includes tapes and outer tube) (m2)"""
 
 a_croco_strand_hastelloy: float = None
-"Area of Hastelloy in CroCo strand (m2)"
+"""Area of Hastelloy in CroCo strand (m2)"""
 
 a_croco_strand_solder: float = None
-"Area of solder in CroCo strand (m2)"
+"""Area of solder in CroCo strand (m2)"""
 
 a_croco_strand: float = None
-"Total area of a CroCo strand (m2)"
+"""Total area of a CroCo strand (m2)"""
 
 
 def init_rebco_variables():

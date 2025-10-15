@@ -263,5 +263,5 @@ def test_calculate_croco_cable_geometry(
         dx_hts_tape_copper,
         dx_hts_tape_hastelloy,
     )
-    for r, e in zip(result, expected, strict=False):
+    for r, e in zip(result, expected, strict=True):
         assert r == e
