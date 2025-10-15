@@ -360,7 +360,7 @@ INPUT_VARIABLES = {
     "copper_rrr": InputVariable(
         data_structure.rebco_variables, float, range=(1.0, 10000.0)
     ),
-    "copper_thick": InputVariable(
+    "dx_hts_tape_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.001)
     ),
     "copperaoh_m2": InputVariable(
@@ -417,7 +417,7 @@ INPUT_VARIABLES = {
     "crane_clrnc_v": InputVariable(
         data_structure.buildings_variables, float, range=(0.0, 10.0)
     ),
-    "croco_thick": InputVariable(
+    "dx_croco_strand_copper": InputVariable(
         data_structure.rebco_variables, float, range=(0.001, 0.1)
     ),
     "cryomag_h": InputVariable(
@@ -1057,7 +1057,7 @@ INPUT_VARIABLES = {
     "n_ecrh_harmonic": InputVariable(
         data_structure.current_drive_variables, float, range=(1.0, 10.0)
     ),
-    "hastelloy_thickness": InputVariable(
+    "dx_hts_tape_hastelloy": InputVariable(
         data_structure.rebco_variables, float, range=(1e-08, 0.001)
     ),
     "hccl": InputVariable(data_structure.buildings_variables, float, range=(0.0, 10.0)),
@@ -1448,7 +1448,7 @@ INPUT_VARIABLES = {
     "reactor_wall_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
-    "rebco_thickness": InputVariable(
+    "dx_hts_tape_rebco": InputVariable(
         data_structure.rebco_variables,
         float,
         range=(1e-08, 0.0001),
@@ -1639,10 +1639,10 @@ INPUT_VARIABLES = {
     "t_turn_tf_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
-    "tape_thickness": InputVariable(
+    "dx_hts_tape_total": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
-    "tape_width": InputVariable(
+    "dr_hts_tape": InputVariable(
         data_structure.rebco_variables, float, range=(0.0, 0.1)
     ),
     "tauee_in": InputVariable(

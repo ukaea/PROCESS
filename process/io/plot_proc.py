@@ -10696,6 +10696,90 @@ def plot_plasma_poloidal_pressure_contours(
     axis.set_title("Plasma Poloidal Pressure Contours")
 
 
+def plot_corc_cable_geometry(
+    axis,
+    dia_croco_strand: float,
+    dx_croco_strand_copper: float,
+    dr_hts_tape: float,
+    dx_croco_strand_tape_stack: float,
+    n_croco_strand_hts_tapes: int,
+):
+    """
+    Plot the geometry of a CroCo strand cable.
+
+    :param axis: The matplotlib axis to plot on.
+    :type axis: matplotlib.axes._axes.Axes
+    :param dia_croco_strand: Diameter of the CroCo strand (in meters).
+    :type dia_croco_strand: float
+    :param dx_croco_strand_copper: Thickness of the copper layer (in meters).
+    :type dx_croco_strand_copper: float
+    :param dr_hts_tape: Radius of the HTS tape stack (in meters).
+    :type dr_hts_tape: float
+    :param dx_croco_strand_tape_stack: Height of the HTS tape stack (in meters).
+    :type dx_croco_strand_tape_stack: float
+    :param n_croco_strand_hts_tapes: Number of HTS tape layers in the stack.
+    :type n_croco_strand_hts_tapes: int
+    """
+    # Plot a circle with the given diameter and copper edges
+    circle = Circle(
+        (0, 0),
+        radius=(dia_croco_strand / 2) * 1000,
+        edgecolor="#B87333",
+        facecolor="#B87333",
+        linewidth=2,
+        label="Copper jacket",
+    )
+    axis.add_patch(circle)
+
+    # Plot an inner circle with copper edges
+    circle = Circle(
+        (0, 0),
+        radius=((dia_croco_strand / 2) - dx_croco_strand_copper) * 1000,
+        edgecolor="grey",
+        facecolor="grey",
+        linewidth=2,
+        label="Solder",
+    )
+    axis.add_patch(circle)
+
+    # Plot a rectangular tape stack in the middle
+    rect = Rectangle(
+        (-dr_hts_tape / 2 * 1000, -(dx_croco_strand_tape_stack / 2) * 1000),
+        width=dr_hts_tape * 1000,
+        height=dx_croco_strand_tape_stack * 1000,
+        edgecolor="blue",
+        facecolor="blue",
+        linewidth=2,
+        label="HTS Tape Stack",
+    )
+    axis.add_patch(rect)
+
+    # Slice the tape stack into n_croco_strand_hts_tapes layers
+    for i in range(int(n_croco_strand_hts_tapes)):
+        y_start = -(dx_croco_strand_tape_stack / 2) * 1000 + i * (
+            dx_croco_strand_tape_stack / n_croco_strand_hts_tapes * 1000
+        )
+        rect = Rectangle(
+            (-dr_hts_tape / 2 * 1000, y_start),
+            width=dr_hts_tape * 1000,
+            height=(dx_croco_strand_tape_stack / n_croco_strand_hts_tapes) * 1000,
+            edgecolor="black",
+            facecolor="blue",
+            linewidth=1,
+        )
+        axis.add_patch(rect)
+
+    axis.set_xlim(-dia_croco_strand * 0.75 * 1000, dia_croco_strand * 0.75 * 1000)
+    axis.set_ylim(-dia_croco_strand * 1000, dia_croco_strand * 1000)
+    axis.set_aspect("equal", adjustable="datalim")
+    axis.set_title("CroCo Strand Geometry")
+    axis.grid(True)
+    axis.set_xlabel("X-axis (mm)")
+    axis.set_ylabel("Y-axis (mm)")
+    axis.minorticks_on()
+    axis.legend(loc="upper right")
+
+
 def main_plot(
     fig0,
     fig1,

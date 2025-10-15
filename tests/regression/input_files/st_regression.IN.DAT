@@ -910,27 +910,27 @@ i_tf_sc_mat = 9
 * REBCO HTS SETTINGS *
 *--------------------*
 
-*tape_width =  
+*dr_hts_tape =  
 * DESCRIPTION:   Mean width of tape (m) (default = 4.0E-3)
 * JUSTIFICATION: 
 
-*tape_thickness =  
+*dx_hts_tape_total =  
 * DESCRIPTION:   Thickness of tape, inc. all layers (hts, copper, substrate, etc.) (m) (default = 6.5E-5)
 * JUSTIFICATION:  
 
-*hastelloy_thickness =  
+*dx_hts_tape_hastelloy =  
 * DESCRIPTION:   Thickness of Hastelloy layer in HTS tape (m) (default = 50.0E-6)
 * JUSTIFICATION: 
 
 *ixc = 138
-*rebco_thickness = 1.0E-6
+*dx_hts_tape_rebco = 1.0E-6
 *boundl(138) = 
 *boundu(138) =  
 * DESCRIPTION:   Thickness of REBCO layer in tape (m) (iteration variable 138) (default = 1.0E-6)
 * JUSTIFICATION: 
 
 *ixc = 139
-*copper_thick = 
+*dx_hts_tape_copper = 
 *boundl(139) = 
 *boundu(139) =  
 * DESCRIPTION:   Thickness of copper layer in tape (m) (iteration variable 139) (default = 100.0E-6)

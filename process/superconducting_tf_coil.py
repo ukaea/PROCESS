@@ -448,14 +448,14 @@ class SuperconductingTFCoil(TFCoil):
         #  Find critical current density in superconducting cable, j_crit_cable
         j_crit_sc, _ = superconductors.jcrit_rebco(thelium, b_tf_inboard_peak_symmetric)
         # tfcoil_variables.a_tf_turn_cable_space_no_void : Cable space - inside area (m2)
-        # Set new rebco_variables.croco_od
-        # allowing for scaling of rebco_variables.croco_od
-        rebco_variables.croco_od = (
+        # Set new rebco_variables.dia_croco_strand
+        # allowing for scaling of rebco_variables.dia_croco_strand
+        rebco_variables.dia_croco_strand = (
             tfcoil_variables.t_conductor / 3.0e0
             - tfcoil_variables.dx_tf_turn_steel * (2.0e0 / 3.0e0)
         )
         superconducting_tf_coil_variables.conductor_acs = (
-            9.0e0 / 4.0e0 * np.pi * rebco_variables.croco_od**2
+            9.0e0 / 4.0e0 * np.pi * rebco_variables.dia_croco_strand**2
         )
         tfcoil_variables.a_tf_turn_cable_space_no_void = (
             superconducting_tf_coil_variables.conductor_acs
@@ -494,8 +494,8 @@ class SuperconductingTFCoil(TFCoil):
         ) = superconductors.croco(
             j_crit_sc,
             superconducting_tf_coil_variables.conductor_area,
-            rebco_variables.croco_od,
-            rebco_variables.croco_thick,
+            rebco_variables.dia_croco_strand,
+            rebco_variables.dx_croco_strand_copper,
         )
 
         rebco_variables.coppera_m2 = (
@@ -556,98 +556,98 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Thickness of REBCO layer in tape (m)",
-                "(rebco_thickness)",
-                rebco_variables.rebco_thickness,
+                "(dx_hts_tape_rebco)",
+                rebco_variables.dx_hts_tape_rebco,
             )
             po.ovarre(
                 self.outfile,
                 "Thickness of copper layer in tape (m)",
-                "(copper_thick  )",
-                rebco_variables.copper_thick,
+                "(dx_hts_tape_copper)",
+                rebco_variables.dx_hts_tape_copper,
             )
             po.ovarre(
                 self.outfile,
                 "Thickness of Hastelloy layer in tape (m) ",
-                "(hastelloy_thickness)",
-                rebco_variables.hastelloy_thickness,
+                "(dx_hts_tape_hastelloy)",
+                rebco_variables.dx_hts_tape_hastelloy,
             )
 
             po.ovarre(
                 self.outfile,
                 "Mean width of tape (m)",
-                "(tape_width)",
-                rebco_variables.tape_width,
+                "(dr_hts_tape)",
+                rebco_variables.dr_hts_tape,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Outer diameter of CroCo copper tube (m) ",
-                "(croco_od)",
-                rebco_variables.croco_od,
+                "Diameter of a CroCo strand (m) ",
+                "(dia_croco_strand)",
+                rebco_variables.dia_croco_strand,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Inner diameter of CroCo copper tube (m) ",
-                "(croco_id)",
-                rebco_variables.croco_id,
+                "(dia_croco_strand_tape_region)",
+                rebco_variables.dia_croco_strand_tape_region,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Thickness of CroCo copper tube (m) ",
-                "(croco_thick)",
-                rebco_variables.croco_thick,
+                "Thickness of of o copper tube (m) ",
+                "(dx_croco_strand_copper)",
+                rebco_variables.dx_croco_strand_copper,
             )
 
             po.ovarre(
                 self.outfile,
                 "Thickness of each HTS tape ",
-                "(tape_thickness)",
-                rebco_variables.tape_thickness,
+                "(dx_hts_tape_total)",
+                rebco_variables.dx_hts_tape_total,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Thickness of stack of rebco_variables.tapes (m) ",
-                "(stack_thickness)",
-                rebco_variables.stack_thickness,
+                "Thickness of stack of rebco_variables.n_croco_strand_hts_tapes (m) ",
+                "(dx_croco_strand_tape_stack)",
+                rebco_variables.dx_croco_strand_tape_stack,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
-                "Number of rebco_variables.tapes in strand",
-                "(tapes)",
-                rebco_variables.tapes,
+                "Number of rebco_variables.n_croco_strand_hts_tapes in strand",
+                "(n_croco_strand_hts_tapes)",
+                rebco_variables.n_croco_strand_hts_tapes,
                 "OP ",
             )
             po.oblnkl(self.outfile)
             po.ovarre(
                 self.outfile,
                 "Area of REBCO in strand (m2)",
-                "(rebco_area)",
-                rebco_variables.rebco_area,
+                "(a_croco_strand_rebco)",
+                rebco_variables.a_croco_strand_rebco,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Area of copper in strand (m2)",
-                "(copper_area)",
-                rebco_variables.copper_area,
+                "(a_croco_strand_copper_total)",
+                rebco_variables.a_croco_strand_copper_total,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Area of hastelloy substrate in strand (m2) ",
-                "(hastelloy_area)",
-                rebco_variables.hastelloy_area,
+                "(a_croco_strand_hastelloy)",
+                rebco_variables.a_croco_strand_hastelloy,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Area of solder in strand (m2)  ",
-                "(solder_area)",
-                rebco_variables.solder_area,
+                "(a_croco_strand_solder)",
+                rebco_variables.a_croco_strand_solder,
                 "OP ",
             )
             po.ovarre(
@@ -661,10 +661,10 @@ class SuperconductingTFCoil(TFCoil):
                 abs(
                     superconducting_tf_coil_variables.croco_strand_area
                     - (
-                        rebco_variables.rebco_area
-                        + rebco_variables.copper_area
-                        + rebco_variables.hastelloy_area
-                        + rebco_variables.solder_area
+                        rebco_variables.a_croco_strand_rebco
+                        + rebco_variables.a_croco_strand_copper_total
+                        + rebco_variables.a_croco_strand_hastelloy
+                        + rebco_variables.a_croco_strand_solder
                     )
                 )
                 > 1e-6
@@ -711,7 +711,7 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "REBCO area of conductor (mm2)",
-                "(rebco_area)",
+                "(a_croco_strand_rebco)",
                 superconducting_tf_coil_variables.conductor_rebco_area,
                 "OP ",
             )
@@ -725,21 +725,21 @@ class SuperconductingTFCoil(TFCoil):
             po.ovarre(
                 self.outfile,
                 "Total copper area of conductor, total (mm2)",
-                "(copper_area)",
+                "(a_croco_strand_copper_total)",
                 superconducting_tf_coil_variables.conductor_copper_area,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hastelloy area of conductor (mm2)",
-                "(hastelloy_area)",
+                "(a_croco_strand_hastelloy)",
                 superconducting_tf_coil_variables.conductor_hastelloy_area,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Solder area of conductor (mm2)",
-                "(solder_area)",
+                "(a_croco_strand_solder)",
                 superconducting_tf_coil_variables.conductor_solder_area,
                 "OP ",
             )
@@ -1250,9 +1250,9 @@ class SuperconductingTFCoil(TFCoil):
                 b_conductor=b_tf_inboard_peak,
                 b_c20max=bc20m,
                 t_c0=tc0m,
-                tape_width=rebco_variables.tape_width,
-                rebco_thickness=rebco_variables.rebco_thickness,
-                tape_thickness=rebco_variables.tape_thickness,
+                dr_hts_tape=rebco_variables.dr_hts_tape,
+                dx_hts_tape_rebco=rebco_variables.dx_hts_tape_rebco,
+                dx_hts_tape_total=rebco_variables.dx_hts_tape_total,
             )
             # Scale for the copper area fraction of the cable
             j_cables_critical = j_superconductor_critical * (

@@ -333,8 +333,8 @@ lablxc: list[str] = None
 * (135) f_nd_impurity_electrons(13) :  Xenon density fraction relative to electron density
 * (136) f_nd_impurity_electrons(14) :  Tungsten density fraction relative to electron density
 * (137) fplhsep (f-value for equation 73)
-* (138) rebco_thickness : thickness of REBCO layer in tape (m)
-* (139) copper_thick : thickness of copper layer in tape (m)
+* (138) dx_hts_tape_rebco : thickness of REBCO layer in tape (m)
+* (139) dx_hts_tape_copper : thickness of copper layer in tape (m)
 * (140) dr_tf_wp_with_insulation : radial thickness of TFC winding pack (m)
 * (141) ftemp_croco_quench_max : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)
 * (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
@@ -353,7 +353,7 @@ lablxc: list[str] = None
 * (155) pfusife : IFE input fusion power (MW) (ifedrv=3 only)
 * (156) rrin : Input IFE repetition rate (Hz) (ifedrv=3 only)
 * (157) fvs_cs_pf_total_ramp : F-value for available to required start up flux (con. 51)
-* (158) croco_thick : Thickness of CroCo copper tube (m)
+* (158) dx_croco_strand_copper : Thickness of CroCo copper tube (m)
 * (159) ftoroidalgap : F-value for toroidalgap >  dx_tf_inboard_out_toroidal constraint (con. 82)
 * (160) f_avspace (f-value for equation 83)
 * (161) fbeta_min (f-value for equation 84)

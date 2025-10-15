@@ -451,6 +451,12 @@ OBS_VARS = {
     "t_structural_vertical": "dz_cs_turn_conduit",
     "t_cable_tf": "dx_tf_turn_cable_space_general",
     "t_turn_tf": "dx_tf_turn_general",
+    "copper_thick": "dx_hts_tape_copper",
+    "croco_thick": "dx_croco_strand_copper",
+    "hastelloy_thickness": "dx_hts_tape_hastelloy",
+    "rebco_thickness": "dx_hts_tape_rebco",
+    "tape_thickness": "dx_hts_tape_total",
+    "tape_width": "dr_hts_tape",
 }
 
 OBS_VARS_HELP = {
