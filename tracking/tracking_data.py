@@ -60,6 +60,80 @@ from process.io import mfile as mf
 logging.basicConfig(level=logging.INFO, filename="tracker.log")
 logger = logging.getLogger("PROCESS Tracker")
 
+DEFAULT_TRACKING_VARIABLES = {
+    "CurrentDrive.p_hcd_primary_extra_heat_mw",
+    "CurrentDrive.f_c_plasma_bootstrap",
+    "CurrentDrive.p_hcd_injected_total_mw",
+    "Build.dr_shld_inboard",
+    "Build.dr_fw_inboard",
+    "Build.dr_fw_outboard",
+    "Build.dr_tf_shld_gap",
+    "Build.dr_bore",
+    "Build.dr_cs",
+    "Build.dr_fw_plasma_gap_inboard",
+    "Build.dr_blkt_outboard",
+    "Build.dr_cs_precomp",
+    "Build.dr_tf_outboard",
+    "Build.dr_blkt_inboard",
+    "Build.dr_shld_blkt_gap",
+    "Build.dr_fw_plasma_gap_outboard",
+    "Build.dr_cs_tf_gap",
+    "Build.dr_shld_vv_gap_outboard",
+    "Build.dr_shld_outboard",
+    "Build.dr_tf_inboard",
+    "Build.dr_shld_vv_gap_inboard",
+    "FWBSVariables.p_shld_nuclear_heat_mw",
+    "FWBSVariables.p_blkt_nuclear_heat_total_mw",
+    "Physics.triang",
+    "Physics.triang95",
+    "Physics.p_plasma_inner_rad_mw",
+    "Physics.temp_plasma_separatrix_kev",
+    "Physics.f_nd_alpha_electron",
+    "Physics.pflux_fw_neutron_mw",
+    "Physics.aspect",
+    "Physics.rminor",
+    "Physics.rmajor",
+    "Physics.q95",
+    "Physics.temp_plasma_electron_vol_avg_kev",
+    "Physics.beta_total_vol_avg",
+    "Physics.f_c_plasma_inductive",
+    "Physics.zeff",
+    "Physics.b_plasma_toroidal_on_axis",
+    "Physics.hfact",
+    "Physics.kappa",
+    "Physics.p_fusion_total_mw",
+    "Physics.temp_plasma_pedestal_kev",
+    "Physics.p_plasma_loss_mw",
+    "Physics.kappa95",
+    "Physics.nd_plasma_pedestal_electron",
+    "Physics.nd_plasma_electrons_vol_avg",
+    "Physics.p_plasma_rad_mw",
+    "Physics.nd_plasma_electron_on_axis",
+    "Physics.f_c_plasma_auxiliary",
+    "Physics.nd_plasma_impurities_vol_avg",
+    "Physics.t_energy_confinement",
+    "Physics.temp_plasma_electron_on_axis_kev",
+    "Physics.p_plasma_separatrix_mw",
+    "Physics.nd_plasma_separatrix_electron",
+    "Physics.vol_plasma",
+    "Physics.a_plasma_surface",
+    "HeatTransport.p_plant_electric_net_mw",
+    "HeatTransport.eta_turbine",
+    "HeatTransport.p_plant_electric_gross_mw",
+    "TFCoil.tftmp",
+    "TFCoil.n_tf_coils",
+    "TFCoil.b_tf_inboard_peak_symmetric",
+    "PFCoil.vs_cs_pf_total_pulse",
+    "Physics.nd_plasma_ions_total_vol_avg",
+    "Time.t_plant_pulse_burn",
+    "Cost.divlife",
+    "Cost.cdirt",
+    "Cost.concost",
+}
+"""Variables of the form: <system>.<variable>
+where <system> is an arbitrary name that categorises the variables
+and <variable> is present in the tracked MFile
+"""
 
 # Tracking
 
@@ -87,87 +161,13 @@ class ProcessTracker:
     meta_variables: ClassVar = {"date", "time"}
     # Variables in an MFile that hold metadata we want to show on the graph
 
-    tracking_variables: ClassVar = {
-        "CurrentDrive.p_hcd_primary_extra_heat_mw",
-        "CurrentDrive.f_c_plasma_bootstrap",
-        "CurrentDrive.p_hcd_injected_total_mw",
-        "Build.dr_shld_inboard",
-        "Build.dr_fw_inboard",
-        "Build.dr_fw_outboard",
-        "Build.dr_tf_shld_gap",
-        "Build.dr_bore",
-        "Build.dr_cs",
-        "Build.dr_fw_plasma_gap_inboard",
-        "Build.dr_blkt_outboard",
-        "Build.dr_cs_precomp",
-        "Build.dr_tf_outboard",
-        "Build.dr_blkt_inboard",
-        "Build.dr_shld_blkt_gap",
-        "Build.dr_fw_plasma_gap_outboard",
-        "Build.dr_cs_tf_gap",
-        "Build.dr_shld_vv_gap_outboard",
-        "Build.dr_shld_outboard",
-        "Build.dr_tf_inboard",
-        "Build.dr_shld_vv_gap_inboard",
-        "FWBSVariables.p_shld_nuclear_heat_mw",
-        "FWBSVariables.p_blkt_nuclear_heat_total_mw",
-        "Physics.triang",
-        "Physics.triang95",
-        "Physics.p_plasma_inner_rad_mw",
-        "Physics.temp_plasma_separatrix_kev",
-        "Physics.f_nd_alpha_electron",
-        "Physics.pflux_fw_neutron_mw",
-        "Physics.aspect",
-        "Physics.rminor",
-        "Physics.rmajor",
-        "Physics.q95",
-        "Physics.temp_plasma_electron_vol_avg_kev",
-        "Physics.beta_total_vol_avg",
-        "Physics.f_c_plasma_inductive",
-        "Physics.zeff",
-        "Physics.b_plasma_toroidal_on_axis",
-        "Physics.hfact",
-        "Physics.kappa",
-        "Physics.p_fusion_total_mw",
-        "Physics.temp_plasma_pedestal_kev",
-        "Physics.p_plasma_loss_mw",
-        "Physics.kappa95",
-        "Physics.nd_plasma_pedestal_electron",
-        "Physics.nd_plasma_electrons_vol_avg",
-        "Physics.p_plasma_rad_mw",
-        "Physics.nd_plasma_electron_on_axis",
-        "Physics.f_c_plasma_auxiliary",
-        "Physics.nd_plasma_impurities_vol_avg",
-        "Physics.t_energy_confinement",
-        "Physics.temp_plasma_electron_on_axis_kev",
-        "Physics.p_plasma_separatrix_mw",
-        "Physics.nd_plasma_separatrix_electron",
-        "Physics.vol_plasma",
-        "Physics.a_plasma_surface",
-        "HeatTransport.p_plant_electric_net_mw",
-        "HeatTransport.eta_turbine",
-        "HeatTransport.p_plant_electric_gross_mw",
-        "TFCoil.tftmp",
-        "TFCoil.n_tf_coils",
-        "TFCoil.b_tf_inboard_peak_symmetric",
-        "PFCoil.vs_cs_pf_total_pulse",
-        "Physics.nd_plasma_ions_total_vol_avg",
-        "Time.t_plant_pulse_burn",
-        "Cost.divlife",
-        "Cost.cdirt",
-        "Cost.concost",
-    }
-    # Variable in an MFile that we will track the changes in.
-
-    # 1) A variable of the form X.Y shows that variable Y exists as a member of module Y. This is needed for variables no longer in Fortran modules, where their parent cannot be scraped.
-    # 2) Other variables should be a module variable for a wrapped module. The name of the parent module will be automatically determined.
-
     def __init__(
         self,
         mfile: str,
         database: str | None = None,
         message: str | None = None,
         hashid: str | None = None,
+        tracking_variables_file: pathlib.Path | None = None,
     ) -> None:
         """Drive the creation of tracking JSON files.
 
@@ -179,6 +179,12 @@ class ProcessTracker:
         """
         self.mfile = mf.MFile(mfile)
         self.tracking_file = TrackingFile()
+
+        if tracking_variables_file is None:
+            self.tracking_variables = DEFAULT_TRACKING_VARIABLES
+        else:
+            with open(tracking_variables_file) as f:
+                self.tracking_variables = json.load(f)
 
         self._generate_data()
 
@@ -376,7 +382,7 @@ class TrackedData:
                 )  # add all the data in this JSON file to our internal store
 
 
-def plot_tracking_data(database):
+def plot_tracking_data(database, tracked_variables):
     """
     Drives the processing of existing .json tracking files and then plotting of this processed data.
     """
@@ -390,7 +396,7 @@ def plot_tracking_data(database):
     # variable: parent module name
 
     # populates the overrides map
-    for i in ProcessTracker.tracking_variables:
+    for i in tracked_variables:
         parent_name, variable = i.split(".")
         variable_parent_map[variable] = parent_name
 
@@ -498,9 +504,16 @@ def plot_tracking_data(database):
     return file_html(tabs, CDN, "PROCESS Regression Testing Visualisation")
 
 
-def write_tracking_html_file(database, output):
+def write_tracking_html_file(database, output, tracking_variables_file):
     """Writes the visual tracking data to an appropriate file"""
-    tracking_html = plot_tracking_data(database)
+
+    if tracking_variables_file is None:
+        tracked_variables = DEFAULT_TRACKING_VARIABLES
+    else:
+        with open(tracking_variables_file) as f:
+            tracked_variables = json.load(f)
+
+    tracking_html = plot_tracking_data(database, tracked_variables)
 
     with open(output, "w") as f:
         f.write(tracking_html)
@@ -520,6 +533,7 @@ def track_entrypoint(arguments):
         database=arguments.db,
         message=arguments.commit,
         hashid=arguments.hash,
+        tracking_variables_file=arguments.tracking_variables_file,
     )
 
 
@@ -532,7 +546,11 @@ def plot_entrypoint(arguments):
     if not arguments.out:
         raise ValueError("plot requires --out be set")
 
-    write_tracking_html_file(database=arguments.db, output=arguments.out)
+    write_tracking_html_file(
+        database=arguments.db,
+        output=arguments.out,
+        tracking_variables_file=arguments.tracking_variables_file,
+    )
 
 
 if __name__ == "__main__":
@@ -554,6 +572,13 @@ if __name__ == "__main__":
         type=str,
         default=None,
         help="The current commit hash. If not provided, the code attempts to query to Git repository.",
+    )
+    parser.add_argument(
+        "--tracking-variables-file",
+        type=pathlib.Path,
+        default=None,
+        help="A JSON file containing a list of variables to track."
+        "See the description of DEFAULT_TRACKING_VARIABLES for details on formatting the strings in the list.",
     )
 
     arguments = parser.parse_args()
