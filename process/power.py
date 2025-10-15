@@ -1408,6 +1408,26 @@ class Power:
                 - heat_transport_variables.p_plant_electric_net_mw
             ) / heat_transport_variables.p_plant_electric_gross_mw
 
+        _ = self.power_profiles_over_time(
+            t_precharge=times_variables.t_precharge,
+            t_current_ramp_up=times_variables.t_current_ramp_up,
+            t_fusion_ramp=times_variables.t_fusion_ramp,
+            t_burn=times_variables.t_burn,
+            t_ramp_down=times_variables.t_ramp_down,
+            t_between_pulse=times_variables.t_between_pulse,
+            p_plant_electric_base_total_mw=heat_transport_variables.p_plant_electric_base_total_mw,
+            p_cryo_plant_electric_mw=heat_transport_variables.p_cryo_plant_electric_mw,
+            p_tritium_plant_electric_mw=heat_transport_variables.p_tritium_plant_electric_mw,
+            vachtmw=heat_transport_variables.vachtmw,
+            p_tf_electric_supplies_mw=heat_transport_variables.p_tf_electric_supplies_mw,
+            p_pf_electric_supplies_mw=pfcoil_variables.p_pf_electric_supplies_mw,
+            p_coolant_pump_elec_total_mw=heat_transport_variables.p_coolant_pump_elec_total_mw,
+            p_hcd_electric_total_mw=heat_transport_variables.p_hcd_electric_total_mw,
+            p_fusion_total_mw=physics_variables.p_fusion_total_mw,
+            p_plant_electric_gross_mw=heat_transport_variables.p_plant_electric_gross_mw,
+            p_plant_electric_net_mw=heat_transport_variables.p_plant_electric_net_mw,
+        )
+
     def cryo(
         self,
         i_tf_sup,
@@ -2197,3 +2217,158 @@ class Power:
             )
 
         return (tfckw, len_tf_bus, drarea, tfcbv, p_tf_electric_supplies_mw)
+
+    def power_profiles_over_time(
+        self,
+        t_precharge: float,
+        t_current_ramp_up: float,
+        t_fusion_ramp: float,
+        t_burn: float,
+        t_ramp_down: float,
+        t_between_pulse: float,
+        p_plant_electric_base_total_mw: float,
+        p_cryo_plant_electric_mw: float,
+        p_tritium_plant_electric_mw: float,
+        vachtmw: float,
+        p_tf_electric_supplies_mw: float,
+        p_pf_electric_supplies_mw: float,
+        p_coolant_pump_elec_total_mw: float,
+        p_hcd_electric_total_mw: float,
+        p_fusion_total_mw: float,
+        p_plant_electric_gross_mw: float,
+        p_plant_electric_net_mw: float,
+    ) -> float:
+        """
+        Calculate time-dependent power profiles for different electric systems
+
+        :param t_precharge: Precharge time (s).
+        :type t_precharge: float
+        :param t_current_ramp_up: Current ramp-up time (s).
+        :type t_current_ramp_up: float
+        :param t_fusion_ramp: Fusion ramp time (s).
+        :type t_fusion_ramp: float
+        :param t_burn: Burn time (s).
+        :type t_burn: float
+        :param t_ramp_down: Ramp-down time (s).
+        :type t_ramp_down: float
+        :param t_between_pulse: Time between pulses (s).
+        :type t_between_pulse: float
+        :param p_plant_electric_base_total_mw: Plant base electric load (MW).
+        :type p_plant_electric_base_total_mw: float
+        :param p_cryo_plant_electric_mw: Cryogenic plant electric load (MW).
+        :type p_cryo_plant_electric_mw: float
+        :param p_tritium_plant_electric_mw: Tritium plant electric load (MW).
+        :type p_tritium_plant_electric_mw: float
+        :param vachtmw: Vacuum pumps electric load (MW).
+        :type vachtmw: float
+        :param p_tf_electric_supplies_mw: TF coil electric supplies (MW).
+        :type p_tf_electric_supplies_mw: float
+        :param p_pf_electric_supplies_mw: PF coil electric supplies (MW).
+        :type p_pf_electric_supplies_mw: float
+        :param p_coolant_pump_elec_total_mw: Total coolant pump electric load (MW).
+        :type p_coolant_pump_elec_total_mw: float
+        :param p_hcd_electric_total_mw: HCD electric total (MW).
+        :type p_hcd_electric_total_mw: float
+        :param p_fusion_total_mw: Fusion power (MW).
+        :type p_fusion_total_mw: float
+        :param p_plant_electric_gross_mw: Gross electric power produced (MW).
+        :type p_plant_electric_gross_mw: float
+        :param p_plant_electric_net_mw: Net electric power produced (MW).
+        :type p_plant_electric_net_mw: float
+
+        :notes:
+            - Assumes step-function changes in power at each phase transition.
+            - Negative values indicate power consumption (loads).
+
+        :returns: Total net electric energy produced over the pulse (MJ).
+        :rtype: float
+        """
+
+        t_steps = np.cumsum([
+            0,
+            t_precharge,
+            t_current_ramp_up,
+            t_fusion_ramp,
+            t_burn,
+            t_ramp_down,
+            t_between_pulse,
+        ])
+
+        power_profiles = {
+            "Fusion Power": np.zeros(len(t_steps)),
+            "Plant Base Load": np.zeros(len(t_steps)),
+            "Cryo Plant": np.zeros(len(t_steps)),
+            "Tritium Plant": np.zeros(len(t_steps)),
+            "Vacuum Pumps": np.zeros(len(t_steps)),
+            "TF Coil Supplies": np.zeros(len(t_steps)),
+            "PF Coil Supplies": np.zeros(len(t_steps)),
+            "Coolant Pump Elec Total": np.zeros(len(t_steps)),
+            "HCD Electric Total": np.zeros(len(t_steps)),
+            "Gross Electric Power": np.zeros(len(t_steps)),
+            "Net Electric Power": np.zeros(len(t_steps)),
+        }
+        # No fusion power until start of current ramp-up, then p_fusion_total_mw during burn, then zero
+        power_profiles["Fusion Power"][:2] = 0
+        power_profiles["Fusion Power"][2:5] = p_fusion_total_mw
+        power_profiles["Fusion Power"][5:] = 0
+
+        # Plant Base Load: constant negative load throughout
+        power_profiles["Plant Base Load"][:] = -p_plant_electric_base_total_mw
+
+        # Cryo Plant: constant negative load throughout
+        power_profiles["Cryo Plant"][:] = -p_cryo_plant_electric_mw
+
+        # Tritium Plant: constant negative load throughout
+        power_profiles["Tritium Plant"][:] = -p_tritium_plant_electric_mw
+
+        # Vacuum Pumps: constant negative load throughout
+        power_profiles["Vacuum Pumps"][:] = -vachtmw
+
+        # TF Coil Supplies: zero for first 3 time steps, then p_tf_electric_supplies_mw
+        power_profiles["TF Coil Supplies"][0] = 0
+        power_profiles["TF Coil Supplies"][1:5] = -p_tf_electric_supplies_mw
+        power_profiles["TF Coil Supplies"][5:] = 0
+
+        # PF Coil Supplies: zero for first time step, then p_pf_electric_supplies_mw during ramp-up and burn, then zero
+        power_profiles["PF Coil Supplies"][0] = 0
+        power_profiles["PF Coil Supplies"][1:] = -p_pf_electric_supplies_mw
+        power_profiles["PF Coil Supplies"][5:] = 0
+
+        # Coolant Pump Elec Total: zero for first 2 time steps, then p_coolant_pump_elec_total_mw during ramp-up and burn, then zero
+        power_profiles["Coolant Pump Elec Total"][0:2] = 0
+        power_profiles["Coolant Pump Elec Total"][2:] = -p_coolant_pump_elec_total_mw
+        power_profiles["Coolant Pump Elec Total"][5:] = 0
+
+        # HCD Electric Total: zero for first 2 time steps, then p_hcd_electric_total_mw during ramp-up and burn, then zero
+        power_profiles["HCD Electric Total"][:2] = 0
+        power_profiles["HCD Electric Total"][2:5] = -p_hcd_electric_total_mw
+        power_profiles["HCD Electric Total"][5] = 0
+
+        # Gross Electric Power: zero for first 2 time steps, then p_plant_electric_gross_mw during burn, then zero
+        power_profiles["Gross Electric Power"][:2] = 0
+        power_profiles["Gross Electric Power"][2:5] = p_plant_electric_gross_mw
+        power_profiles["Gross Electric Power"][5:] = 0
+
+        # Calculate net electric profile by subtracting all power draws from gross electric
+        power_profiles["Net Electric Power"] = (
+            power_profiles["Gross Electric Power"]
+            + power_profiles["Plant Base Load"]
+            + power_profiles["Cryo Plant"]
+            + power_profiles["Tritium Plant"]
+            + power_profiles["Vacuum Pumps"]
+            + power_profiles["TF Coil Supplies"]
+            + power_profiles["PF Coil Supplies"]
+            + power_profiles["Coolant Pump Elec Total"]
+            + power_profiles["HCD Electric Total"]
+        )
+
+        if power_profiles["Net Electric Power"][3] != p_plant_electric_net_mw:
+            logger.error(
+                "Calculated net electric power during burn does not match input value."
+                f"Calculated: {power_profiles['Net Electric Power'][3]}, Input: {p_plant_electric_net_mw}"
+            )
+
+        # Integrate net electric power over the pulse to get total energy produced (MJ)
+        # Assume t_steps in seconds, power in MW, so energy in MJ
+        energy_made_MJ = np.trapz(power_profiles["Net Electric Power"], t_steps)
+        return energy_made_MJ
