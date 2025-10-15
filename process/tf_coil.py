@@ -5042,6 +5042,16 @@ def plane_stress(nu, rad, ey, j, nlayers, n_radial_array):
     # https://github.com/ukaea/PROCESS/issues/3027
     # https://github.com/scipy/scipy/issues/23639
     with numba.objmode(cc="float64[:]"):
+        # These matrices can often end up being very ill-conditioned which can lead to numerical
+        # instability when solving below.
+        # Scaling the matrix can help reduce numerical instability by reducing the condition of matrix.
+        # Here, we scale aa such that the largest element on a given row is 1.0. This does not
+        # change the solution provided each element of a given row is scaled by the same scalar
+        # and the corresponding entry in bb is also scaled the same amount.
+        row_scale = np.max(np.abs(aa), axis=1)
+        aa /= np.repeat(row_scale[:, np.newaxis], aa.shape[0], axis=1)
+        bb /= row_scale
+
         cc = np.linalg.solve(aa, bb)
 
     #  Multiply c by (-1) (John Last, internal CCFE memorandum, 21/05/2013)
