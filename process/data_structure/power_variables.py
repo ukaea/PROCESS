@@ -32,6 +32,9 @@ p_cp_coolant_pump_elec_mw: float = None
 
 p_plant_core_systems_elec_mw: float = None
 
+e_plant_net_electric_pulse_mj: float = None
+"""Net electric energy output per pulse (MJ)"""
+
 f_p_div_primary_heat: float = None
 
 delta_eta: float = None
@@ -92,6 +95,9 @@ def init_power_variables():
 
     global p_plant_core_systems_elec_mw
     p_plant_core_systems_elec_mw = 0.0
+
+    global e_plant_net_electric_pulse_mj
+    e_plant_net_electric_pulse_mj = 0.0
 
     global f_p_div_primary_heat
     f_p_div_primary_heat = 0.0
