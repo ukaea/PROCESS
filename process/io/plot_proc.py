@@ -3241,6 +3241,137 @@ def plot_current_profiles_over_time(
     axis.grid(True, linestyle="--", alpha=0.6)
 
 
+def plot_system_power_profiles_over_time(
+    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+) -> None:
+    """
+    Plots the current profiles over time for PF circuits, CS coil, and plasma.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+
+    t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
+    t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
+    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
+    t_burn = mfile_data.data["t_burn"].get_scan(scan)
+    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+
+    p_plant_electric_base_total_mw = mfile_data.data[
+        "p_plant_electric_base_total_mw"
+    ].get_scan(scan)
+    p_cryo_plant_electric_mw = mfile_data.data["p_cryo_plant_electric_mw"].get_scan(
+        scan
+    )
+    p_tritium_plant_electric_mw = mfile_data.data[
+        "p_tritium_plant_electric_mw"
+    ].get_scan(scan)
+    vachtmw = mfile_data.data["vachtmw"].get_scan(scan)
+    p_tf_electric_supplies_mw = mfile_data.data["p_tf_electric_supplies_mw"].get_scan(
+        scan
+    )
+    p_pf_electric_supplies_mw = mfile_data.data["p_pf_electric_supplies_mw"].get_scan(
+        scan
+    )
+    p_cp_coolant_pump_elec_mw = mfile_data.data["p_cp_coolant_pump_elec_mw"].get_scan(
+        scan
+    )
+    p_fw_blkt_coolant_pump_elec_mw = mfile_data.data[
+        "p_fw_blkt_coolant_pump_elec_mw"
+    ].get_scan(scan)
+    p_coolant_pump_elec_total_mw = mfile_data.data[
+        "p_coolant_pump_elec_total_mw"
+    ].get_scan(scan)
+    p_hcd_electric_total_mw = mfile_data.data["p_hcd_electric_total_mw"].get_scan(scan)
+    p_fusion_total_mw = mfile_data.data["p_fusion_total_mw"].get_scan(scan)
+
+    # Define a cumulative sum list for each point in the pulse
+    t_steps = np.cumsum([
+        0,
+        t_precharge,
+        t_current_ramp_up,
+        t_fusion_ramp,
+        t_burn,
+        t_ramp_down,
+    ])
+
+    # Create empty arrays for the power at each time step for each system
+    power_profiles = {
+        "Fusion Power": np.zeros(len(t_steps)),
+        "Plant Base Load": np.zeros(len(t_steps)),
+        "Cryo Plant": np.zeros(len(t_steps)),
+        "Tritium Plant": np.zeros(len(t_steps)),
+        "Vacuum Pumps": np.zeros(len(t_steps)),
+        "TF Coil Supplies": np.zeros(len(t_steps)),
+        "PF Coil Supplies": np.zeros(len(t_steps)),
+        "CP Coolant Pump Elec": np.zeros(len(t_steps)),
+        "FW+Blkt Coolant Pump Elec": np.zeros(len(t_steps)),
+        "Coolant Pump Elec Total": np.zeros(len(t_steps)),
+        "HCD Electric Total": np.zeros(len(t_steps)),
+    }
+
+    power_profiles["Fusion Power"][:3] = 0
+    power_profiles["Fusion Power"][3:] = p_fusion_total_mw
+    power_profiles["Plant Base Load"][:] = -p_plant_electric_base_total_mw
+    power_profiles["Cryo Plant"][:] = -p_cryo_plant_electric_mw
+    power_profiles["Tritium Plant"][:] = -p_tritium_plant_electric_mw
+    power_profiles["Vacuum Pumps"][:] = -vachtmw
+    # TF Coil Supplies: zero for first 3 time steps, then p_tf_electric_supplies_mw
+    power_profiles["TF Coil Supplies"][:3] = 0
+    power_profiles["TF Coil Supplies"][3:] = -p_tf_electric_supplies_mw
+    power_profiles["PF Coil Supplies"][:2] = 0
+    power_profiles["PF Coil Supplies"][2:] = -p_pf_electric_supplies_mw
+    power_profiles["CP Coolant Pump Elec"][:] = -p_cp_coolant_pump_elec_mw
+    power_profiles["FW+Blkt Coolant Pump Elec"][:3] = 0
+    power_profiles["FW+Blkt Coolant Pump Elec"][3:] = -p_fw_blkt_coolant_pump_elec_mw
+    power_profiles["Coolant Pump Elec Total"][:] = -p_coolant_pump_elec_total_mw
+    power_profiles["HCD Electric Total"][:3] = 0
+    power_profiles["HCD Electric Total"][3:] = -p_hcd_electric_total_mw
+
+    # Plot each system's power profile over time
+    for label, powers in power_profiles.items():
+        axis.plot(t_steps, powers, label=label)
+
+    # Move the x-axis to 0 on the y-axis
+    axis.spines["bottom"].set_position("zero")
+
+    # Annotate key points
+    # Create a secondary x-axis for annotations
+    secax = axis.secondary_xaxis("bottom")
+    secax.set_xticks(t_steps)
+    secax.set_xticklabels(
+        [
+            "Precharge",
+            r"$I_{\text{P}}$ Ramp-Up",
+            "Fusion Ramp",
+            "Burn",
+            "Ramp Down",
+            "Between Pulse",
+        ],
+        rotation=60,
+    )
+    secax.tick_params(axis="x", which="major")
+
+    # Add axis labels
+    axis.set_xlabel("Time [s]", fontsize=12)
+    axis.xaxis.set_label_coords(1.05, 0.5)
+    axis.set_ylabel("Power [MW]", fontsize=12)
+
+    # Add a title
+    axis.set_title("System Power Over Time", fontsize=14)
+
+    # Add a legend
+    axis.legend()
+
+    # axis.set_yscale("symlog")
+    # axis.set_xscale("symlog")
+
+    # Add a grid for better readability
+    axis.grid(True, linestyle="--", alpha=0.6)
+
+
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
@@ -10801,6 +10932,7 @@ def main_plot(
     fig17,
     fig18,
     fig19,
+    fig20,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10985,6 +11117,8 @@ def main_plot(
     plot_main_power_flow(
         fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
     )
+
+    plot_system_power_profiles_over_time(fig20.add_subplot(111), m_file_data, scan)
 
 
 def main(args=None):
@@ -11295,6 +11429,7 @@ def main(args=None):
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
     page19 = plt.figure(figsize=(12, 9), dpi=80)
+    page20 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11318,6 +11453,7 @@ def main(args=None):
         page17,
         page18,
         page19,
+        page20,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11346,6 +11482,7 @@ def main(args=None):
         pdf.savefig(page17)
         pdf.savefig(page18)
         pdf.savefig(page19)
+        pdf.savefig(page20)
 
     # show fig if option used
     if args.show:
@@ -11371,6 +11508,7 @@ def main(args=None):
     plt.close(page17)
     plt.close(page18)
     plt.close(page19)
+    plt.close(page20)
 
 
 if __name__ == "__main__":
