@@ -3209,7 +3209,7 @@ t_between_pulse = 100.0
 *icc = 42
 * DESCRIPTION:   Constraint equation for full pulse cycle time lower limit. 
 * JUSTIFICATION: Turned off, do not care about the full pulse cycle time 
-* VARIABLES:     t_cycle (s) calculated in-situ
+* VARIABLES:     t_plant_pulse_total (s) calculated in-situ
 
 *t_cycle_min =  
 * DESCRIPTION:   Minimum full pulse cycle time (s)

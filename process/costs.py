@@ -2868,7 +2868,7 @@ class Costs:
                 * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
                 * times_variables.t_plant_pulse_burn
-                / times_variables.t_cycle
+                / times_variables.t_plant_pulse_total
             )
 
         #  Costs due to reactor plant
