@@ -347,9 +347,9 @@ class Vacuum:
 
         #  dwell pumping options
         if (vacv.i_vac_pump_dwell == 1) or (t_between_pulse == 0):
-            tpump = tv.t_precharge
+            tpump = tv.t_plant_pulse_coil_precharge
         elif vacv.i_vac_pump_dwell == 2:
-            tpump = t_between_pulse + tv.t_precharge
+            tpump = t_between_pulse + tv.t_plant_pulse_coil_precharge
         else:
             tpump = t_between_pulse
 
@@ -579,8 +579,8 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 "CS ramp-up time burns (s)",
-                "(t_precharge.)",
-                tv.t_precharge,
+                "(t_plant_pulse_coil_precharge.)",
+                tv.t_plant_pulse_coil_precharge,
             )
             po.ovarre(
                 self.outfile,

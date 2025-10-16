@@ -971,7 +971,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "t_precharge      ",
+                "t_plant_pulse_coil_precharge      ",
                 "t_current_ramp_up       ",
                 "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
@@ -1714,7 +1714,7 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "t_precharge      ",
+                "t_plant_pulse_coil_precharge      ",
                 "t_current_ramp_up       ",
                 "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",

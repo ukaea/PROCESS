@@ -1838,12 +1838,14 @@ class Physics:
                 times_variables.t_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
                 )
-                times_variables.t_precharge = times_variables.t_current_ramp_up
+                times_variables.t_plant_pulse_coil_precharge = (
+                    times_variables.t_current_ramp_up
+                )
                 times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
         else:
             if times_variables.pulsetimings == 0.0e0:
-                # times_variables.t_precharge is input
+                # times_variables.t_plant_pulse_coil_precharge is input
                 times_variables.t_current_ramp_up = (
                     physics_variables.plasma_current / 1.0e5
                 )
@@ -1852,8 +1854,9 @@ class Physics:
             else:
                 # times_variables.t_current_ramp_up is set either in INITIAL or INPUT, or by being
                 # iterated using limit equation 41.
-                times_variables.t_precharge = max(
-                    times_variables.t_precharge, times_variables.t_current_ramp_up
+                times_variables.t_plant_pulse_coil_precharge = max(
+                    times_variables.t_plant_pulse_coil_precharge,
+                    times_variables.t_current_ramp_up,
                 )
                 # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
                 times_variables.t_ramp_down = times_variables.t_current_ramp_up
@@ -1873,7 +1876,7 @@ class Physics:
             + times_variables.t_ramp_down
         )
         times_variables.tdown = (
-            times_variables.t_precharge
+            times_variables.t_plant_pulse_coil_precharge
             + times_variables.t_current_ramp_up
             + times_variables.t_ramp_down
             + times_variables.t_between_pulse
@@ -1881,7 +1884,7 @@ class Physics:
 
         # Total cycle time
         times_variables.t_cycle = (
-            times_variables.t_precharge
+            times_variables.t_plant_pulse_coil_precharge
             + times_variables.t_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
             + times_variables.t_plant_pulse_burn
@@ -3861,8 +3864,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Initial charge time for CS from zero current (s)",
-            "(t_precharge)",
-            times_variables.t_precharge,
+            "(t_plant_pulse_coil_precharge)",
+            times_variables.t_plant_pulse_coil_precharge,
         )
         po.ovarrf(
             self.outfile,

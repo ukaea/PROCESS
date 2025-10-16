@@ -1623,7 +1623,7 @@ INPUT_VARIABLES = {
     "t_out_bb": InputVariable(
         data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
-    "t_precharge": InputVariable(
+    "t_plant_pulse_coil_precharge": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_ramp_down": InputVariable(
