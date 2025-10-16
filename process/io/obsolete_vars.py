@@ -141,7 +141,7 @@ OBS_VARS = {
     "tdwell": "t_between_pulse",
     "tramp": "t_precharge",
     "tqnch": "t_ramp_down",
-    "tburn": "t_burn",
+    "tburn": "t_plant_pulse_burn",
     "pdivmax/rmajor": "pdivmax_over_rmajor",
     "pdivtbt/qar": "pdivtbt_over_qar",
     "betpmx": "beta_poloidal_max",

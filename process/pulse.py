@@ -35,7 +35,7 @@ class Pulse:
 
             #  Burn time calculation
 
-            times_variables.t_burn = self.calculate_burn_time(
+            times_variables.t_plant_pulse_burn = self.calculate_burn_time(
                 vs_cs_pf_total_burn=pfcoil_variables.vs_cs_pf_total_burn,
                 v_plasma_loop_burn=physics_variables.v_plasma_loop_burn,
                 t_fusion_ramp=times_variables.t_fusion_ramp,
@@ -178,12 +178,14 @@ class Pulse:
 
         """
 
-        t_burn = (abs(vs_cs_pf_total_burn) / v_plasma_loop_burn) - t_fusion_ramp
+        t_plant_pulse_burn = (
+            abs(vs_cs_pf_total_burn) / v_plasma_loop_burn
+        ) - t_fusion_ramp
 
-        if t_burn < 0.0e0:
+        if t_plant_pulse_burn < 0.0e0:
             logger.error(
                 "Negative burn time available; reduce t_fusion_ramp or raise PF coil V-s capabilit. "
-                f"{t_burn=} {vs_cs_pf_total_burn=} {v_plasma_loop_burn=} {t_fusion_ramp=}"
+                f"{t_plant_pulse_burn=} {vs_cs_pf_total_burn=} {v_plasma_loop_burn=} {t_fusion_ramp=}"
             )
 
-        return t_burn
+        return t_plant_pulse_burn

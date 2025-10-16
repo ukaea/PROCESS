@@ -514,7 +514,7 @@ def init_numerics():
         "min R0, max tau_burn  ",
         "net electrical output ",
         "Null figure of merit  ",
-        "max Q, max t_burn     ",
+        "max Q, max t_plant_pulse_burn     ",
     ]
 
     ncalls = 0

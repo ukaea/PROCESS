@@ -1590,7 +1590,7 @@ INPUT_VARIABLES = {
     "t_between_pulse": InputVariable(
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
-    "t_burn": InputVariable(
+    "t_plant_pulse_burn": InputVariable(
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
     "t_burn_min": InputVariable(

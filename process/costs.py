@@ -2867,7 +2867,7 @@ class Costs:
                 * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
-                * times_variables.t_burn
+                * times_variables.t_plant_pulse_burn
                 / times_variables.t_cycle
             )
 

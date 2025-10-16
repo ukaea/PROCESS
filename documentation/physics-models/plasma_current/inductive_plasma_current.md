@@ -143,7 +143,7 @@ where $\rho_\text{p}$ is the calculated [plasma resistivity](./plasma_resistive_
 The total flux required is then simply found by multiplying the loop voltage above by the required duration of the burn phase:
 
 $$
-\overbrace{\Phi_{\text{res,burn}}}^{\texttt{vs_burn_required}} = \overbrace{I_{\text{p}}  \rho_\text{p} f_{\text{ind}}}^{\texttt{v_burn_resistive}} \times \overbrace{T_{\text{burn}}}^{\texttt{t_burn}}
+\overbrace{\Phi_{\text{res,burn}}}^{\texttt{vs_burn_required}} = \overbrace{I_{\text{p}}  \rho_\text{p} f_{\text{ind}}}^{\texttt{v_burn_resistive}} \times \overbrace{T_{\text{burn}}}^{\texttt{t_plant_pulse_burn}}
 $$
 
 ----------------

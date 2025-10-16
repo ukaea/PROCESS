@@ -77,7 +77,7 @@ def calculate_volt_second_requirements(
     res_plasma: float,
     plasma_current: float,
     t_fusion_ramp: float,
-    t_burn: float,
+    t_plant_pulse_burn: float,
     ind_plasma_internal_norm: float,
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
@@ -100,8 +100,8 @@ def calculate_volt_second_requirements(
     :type plasma_current: float
     :param t_fusion_ramp: Heating time (s)
     :type t_fusion_ramp: float
-    :param t_burn: Burn time (s)
-    :type t_burn: float
+    :param t_plant_pulse_burn: Burn time (s)
+    :type t_plant_pulse_burn: float
     :param ind_plasma_internal_norm: Plasma normalized internal inductance
     :type ind_plasma_internal_norm: float
 
@@ -174,11 +174,11 @@ def calculate_volt_second_requirements(
 
     v_burn_resistive = v_plasma_loop_burn * csawth
 
-    # N.B. t_burn on first iteration will not be correct
+    # N.B. t_plant_pulse_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
+    vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_plant_pulse_burn)
     vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
 
     return (
@@ -1856,10 +1856,10 @@ class Physics:
                 # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
                 times_variables.t_ramp_down = times_variables.t_current_ramp_up
 
-        # Reset second times_variables.t_burn value (times_variables.t_burn_0).
+        # Reset second times_variables.t_plant_pulse_burn value (times_variables.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
         # see convergence loop in fcnvmc1, evaluators.f90
-        times_variables.t_burn_0 = times_variables.t_burn
+        times_variables.t_burn_0 = times_variables.t_plant_pulse_burn
 
         # Pulse and down times : The reactor is assumed to be 'down'
         # at all times outside of the plasma current flat-top period.
@@ -1867,7 +1867,7 @@ class Physics:
         times_variables.t_pulse_repetition = (
             times_variables.t_current_ramp_up
             + times_variables.t_fusion_ramp
-            + times_variables.t_burn
+            + times_variables.t_plant_pulse_burn
             + times_variables.t_ramp_down
         )
         times_variables.tdown = (
@@ -1882,7 +1882,7 @@ class Physics:
             times_variables.t_precharge
             + times_variables.t_current_ramp_up
             + times_variables.t_fusion_ramp
-            + times_variables.t_burn
+            + times_variables.t_plant_pulse_burn
             + times_variables.t_ramp_down
             + times_variables.t_between_pulse
         )
@@ -2542,7 +2542,7 @@ class Physics:
             physics_variables.res_plasma,
             physics_variables.plasma_current,
             times_variables.t_fusion_ramp,
-            times_variables.t_burn,
+            times_variables.t_plant_pulse_burn,
             physics_variables.ind_plasma_internal_norm,
         )
 
@@ -3875,7 +3875,11 @@ class Physics:
             times_variables.t_fusion_ramp,
         )
         po.ovarre(
-            self.outfile, "Burn time (s)", "(t_burn)", times_variables.t_burn, "OP "
+            self.outfile,
+            "Burn time (s)",
+            "(t_plant_pulse_burn)",
+            times_variables.t_plant_pulse_burn,
+            "OP ",
         )
         po.ovarrf(
             self.outfile,

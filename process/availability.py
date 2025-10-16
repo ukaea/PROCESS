@@ -176,7 +176,7 @@ class Availability:
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_cycle)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
@@ -383,7 +383,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_cycle)
 
         # Output
         if output:
@@ -1146,7 +1146,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_cycle)
 
         if output:
             po.ocmmnt(self.outfile, "Plant Availability")

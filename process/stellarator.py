@@ -5900,12 +5900,12 @@ def stinit():
 
     times_variables.t_precharge = 0.0
     times_variables.t_current_ramp_up = 0.0
-    times_variables.t_burn = 3.15576e7  # one year
+    times_variables.t_plant_pulse_burn = 3.15576e7  # one year
     times_variables.t_ramp_down = 0.0
     times_variables.t_pulse_repetition = (
         times_variables.t_current_ramp_up
         + times_variables.t_fusion_ramp
-        + times_variables.t_burn
+        + times_variables.t_plant_pulse_burn
         + times_variables.t_ramp_down
     )
     times_variables.tdown = (
@@ -5918,7 +5918,7 @@ def stinit():
         times_variables.t_precharge
         + times_variables.t_current_ramp_up
         + times_variables.t_fusion_ramp
-        + times_variables.t_burn
+        + times_variables.t_plant_pulse_burn
         + times_variables.t_ramp_down
         + times_variables.t_between_pulse
     )

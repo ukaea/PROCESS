@@ -3155,7 +3155,7 @@ i_pulsed_plant = 0
 * DESCRIPTION:   f-value for minimum burn time
 * JUSTIFICATION: Used with icc=13 to enforce minimum burn time, not required
 
-t_burn = 1000.0 
+t_plant_pulse_burn = 1000.0 
 * DESCRIPTION:   Burn Time (s)
 * JUSTIFICATION: Default, steady-state device so input, calculates if i_pulsed_plant = 1
 
