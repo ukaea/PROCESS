@@ -3266,7 +3266,7 @@ class CSCoil:
         # Occurs at inner edge of coil; bmaxoh2 and bzi are of opposite sign at EOF
 
         # Peak field due to central Solenoid itself
-        bmaxoh2 = self.calculate_cs_peak_field(
+        bmaxoh2 = self.calculate_cs_self_peak_magnetic_field(
             j_cs=pfcoil_variables.j_cs_flat_top_end,
             r_cs_inner=pfcoil_variables.r_pf_coil_inner[
                 pfcoil_variables.n_cs_pf_coils - 1
@@ -3295,17 +3295,19 @@ class CSCoil:
 
         # Peak field at the Beginning-Of-Pulse (BOP)
         # Occurs at inner edge of coil; b_cs_peak_pulse_start and bzi are of same sign at BOP
-        pfcoil_variables.b_cs_peak_pulse_start = self.calculate_cs_peak_field(
-            j_cs=pfcoil_variables.j_cs_pulse_start,
-            r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
-            dz_cs_half=pfcoil_variables.z_pf_coil_upper[
-                pfcoil_variables.n_cs_pf_coils - 1
-            ],
+        pfcoil_variables.b_cs_peak_pulse_start = (
+            self.calculate_cs_self_peak_magnetic_field(
+                j_cs=pfcoil_variables.j_cs_pulse_start,
+                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                dz_cs_half=pfcoil_variables.z_pf_coil_upper[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+            )
         )
         timepoint = 2
         bri, bro, bzi, bzo = peak_b_field_at_pf_coil(
@@ -3534,7 +3536,7 @@ class CSCoil:
                 + pfcoil_variables.p_cs_resistive_flat_top
             )
 
-    def calculate_cs_peak_field(
+    def calculate_cs_self_peak_magnetic_field(
         self,
         j_cs: float,
         r_cs_inner: float,
@@ -3542,7 +3544,7 @@ class CSCoil:
         dz_cs_half: float,
     ) -> float:
         """
-        Calculates the maximum field of a solenoid.
+        Calculates the maximum field of a solenoid of circular winding and rectangular cross-section.
 
         :param j_cs: Overall current density (A/m²)
         :type j_cs: float
@@ -3559,13 +3561,14 @@ class CSCoil:
 
         :references:
             - Fits are taken from the figure on p.22 of M. Wilson's book
-            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983.
+            "Superconducting Magnets", Clarendon Press, Oxford, N.Y., 1983,
+            ISBN 13: 9780198548102
         """
         beta = dz_cs_half / r_cs_inner
         alpha = r_cs_outer / r_cs_inner
 
-        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
-        b0 = (
+        # Field at the centre of the bore R=0, Z=0 of the solenoid
+        b_cs_bore_centre = (
             j_cs
             * constants.RMU0
             * dz_cs_half
@@ -3575,32 +3578,35 @@ class CSCoil:
             )
         )
 
+        # Fits are for 1 < alpha < 2 , and 0.5 < beta < very large
         if beta > 3.0:
             b1 = constants.RMU0 * j_cs * (r_cs_outer - r_cs_inner)
             f = (3.0 / beta) ** 2
-            b_cs_peak = f * b0 * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+            b_cs_peak = (
+                f * b_cs_bore_centre * (1.007 + (alpha - 1.0) * 0.0055) + (1.0 - f) * b1
+            )
 
         elif beta > 2.0:
             rat = (1.025 - (beta - 2.0) * 0.018) + (alpha - 1.0) * (
                 0.01 - (beta - 2.0) * 0.0045
             )
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         elif beta > 1.0:
             rat = (1.117 - (beta - 1.0) * 0.092) + (alpha - 1.0) * (beta - 1.0) * 0.01
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         elif beta > 0.75:
             rat = (1.30 - 0.732 * (beta - 0.75)) + (alpha - 1.0) * (
                 0.2 * (beta - 0.75) - 0.05
             )
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         else:
             rat = (1.65 - 1.4 * (beta - 0.5)) + (alpha - 1.0) * (
                 0.6 * (beta - 0.5) - 0.20
             )
-            b_cs_peak = rat * b0
+            b_cs_peak = rat * b_cs_bore_centre
 
         return b_cs_peak
 
@@ -3825,7 +3831,7 @@ def peak_b_field_at_pf_coil(
     if bv.iohcl != 0 and n_coil == pfcoil_variables.n_cs_pf_coils:
         # Peak field is to be calculated at the Central Solenoid itself,
         # so exclude its own contribution; its self field is
-        # dealt with externally using routine calculate_cs_peak_field()
+        # dealt with externally using routine calculate_cs_self_peak_magnetic_field()
         kk = 0
     else:
         # Check different times for maximum current
