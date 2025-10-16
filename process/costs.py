@@ -2816,7 +2816,7 @@ class Costs:
                 cost_variables.c2253 = (
                     cost_variables.ucblss
                     * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
-                    * times_variables.tdown
+                    * times_variables.t_plant_pulse_no_burn
                     / (shcss * pulse_variables.dtstor)
                 )
 

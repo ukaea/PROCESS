@@ -3698,7 +3698,7 @@ class Acc2253Param(NamedTuple):
 
     istore: Any = None
 
-    tdown: Any = None
+    t_plant_pulse_no_burn: Any = None
 
     c22: Any = None
 
@@ -3720,7 +3720,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
             c2253=0,
@@ -3734,7 +3734,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2253=20.785622343242554,
@@ -3777,7 +3777,9 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
-    monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
@@ -5428,7 +5430,7 @@ class Acc2253Param(NamedTuple):
 
     istore: Any = None
 
-    tdown: Any = None
+    t_plant_pulse_no_burn: Any = None
 
     c22: Any = None
 
@@ -5450,7 +5452,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
             c2253=0,
@@ -5464,7 +5466,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2253=20.785622343242554,
@@ -5507,7 +5509,9 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
-    monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 

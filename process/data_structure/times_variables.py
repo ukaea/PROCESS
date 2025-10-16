@@ -15,8 +15,8 @@ t_burn_0: float = None
 t_plant_pulse_total: float = None
 """Total plant pulse cycle time (s)"""
 
-tdown: float = None
-"""down time (s)"""
+t_plant_pulse_no_burn: float = None
+"""Plant pulse time spent not a flat-top burn phase (s)"""
 
 t_between_pulse: float = None
 """time between pulses in a pulsed reactor (s) (`iteration variable 17`)"""
@@ -59,7 +59,7 @@ def init_times_variables():
     global t_plant_pulse_burn
     global t_burn_0
     global t_plant_pulse_total
-    global tdown
+    global t_plant_pulse_no_burn
     global t_between_pulse
     global t_plant_pulse_fusion_ramp
     global t_pulse_cumulative
@@ -75,7 +75,7 @@ def init_times_variables():
     t_plant_pulse_burn = np.array(1000.0, dtype=np.float64)
     t_burn_0 = 0.0
     t_plant_pulse_total = np.array(0.0, dtype=np.float64)
-    tdown = 0.0
+    t_plant_pulse_no_burn = 0.0
     t_between_pulse = 1800.0
     t_plant_pulse_fusion_ramp = 10.0
     t_pulse_cumulative = np.zeros(6, dtype=np.float64)
