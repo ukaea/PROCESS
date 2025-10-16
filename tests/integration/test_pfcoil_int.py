@@ -175,7 +175,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(tv, "t_plant_pulse_burn", 7.1263e-1)
     monkeypatch.setattr(tv, "t_current_ramp_up", 1.82538e2)
     monkeypatch.setattr(tv, "t_ramp_down", 1.82538e2)
-    monkeypatch.setattr(tv, "t_fusion_ramp", 1.0e1)
+    monkeypatch.setattr(tv, "t_plant_pulse_fusion_ramp", 1.0e1)
     monkeypatch.setattr(constants, "den_copper", 8.9e3)
     monkeypatch.setattr(pfcoil_variables, "first_call", True)
 

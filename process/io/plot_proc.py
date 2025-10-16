@@ -3150,7 +3150,9 @@ def plot_current_profiles_over_time(
     """
     t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
     t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
-    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
+    t_plant_pulse_fusion_ramp = mfile_data.data["t_plant_pulse_fusion_ramp"].get_scan(
+        scan
+    )
     t_plant_pulse_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan)
     t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
 
@@ -3159,7 +3161,7 @@ def plot_current_profiles_over_time(
         0,
         t_precharge,
         t_current_ramp_up,
-        t_fusion_ramp,
+        t_plant_pulse_fusion_ramp,
         t_plant_pulse_burn,
         t_ramp_down,
     ])
