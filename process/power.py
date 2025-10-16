@@ -756,7 +756,7 @@ class Power:
                 structure_variables.coldmass,
                 fwbs_variables.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
-                times_variables.t_pulse_repetition,
+                times_variables.t_plant_pulse_plasma_present,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_coils,
             )
@@ -1415,7 +1415,7 @@ class Power:
         coldmass,
         p_tf_nuclear_heat_mw,
         ensxpfm,
-        t_pulse_repetition,
+        t_plant_pulse_plasma_present,
         c_tf_turn,
         n_tf_coils,
     ):
@@ -1430,7 +1430,7 @@ class Power:
         intercoil structure
         p_tf_nuclear_heat_mw : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
-        t_pulse_repetition : input real : Pulse length of cycle (s)
+        t_plant_pulse_plasma_present : input real : Pulse length of cycle (s)
         c_tf_turn : input real : Current per turn in TF coils (A)
         tfno : input real : Number of TF coils
         helpow : output real : Helium heat removal at cryo temperatures (W)
@@ -1447,7 +1447,7 @@ class Power:
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
         #  AC losses
-        power_variables.qac = 1.0e3 * ensxpfm / t_pulse_repetition
+        power_variables.qac = 1.0e3 * ensxpfm / t_plant_pulse_plasma_present
 
         #  Current leads
         if i_tf_sup == 1:
