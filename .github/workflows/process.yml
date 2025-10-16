@@ -215,6 +215,11 @@ jobs:
         with:
           name: sig-tfs
           path: tracking/
+      - name: Download MFILEs
+        uses: actions/download-artifact@v4
+        with:
+          name: tracked-mfiles
+          path: tracking/
       - name: Create an example plot proc
         run: python process/io/plot_proc.py -f tracking/large_tokamak_nof.MFILE.DAT
       - name: Move plot proc file to docs images
