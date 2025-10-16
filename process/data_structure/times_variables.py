@@ -42,8 +42,8 @@ i_t_current_ramp_up: int = None
    - = 0, t_plant_pulse_plasma_current_ramp_up = t_plant_pulse_coil_precharge = t_plant_pulse_plasma_current_ramp_down = Ip(MA)/0.5
    - = 1, t_plant_pulse_plasma_current_ramp_up, t_plant_pulse_coil_precharge, t_plant_pulse_plasma_current_ramp_down are input"""
 
-t_pulse_repetition: float = None
-"""pulse length = t_plant_pulse_plasma_current_ramp_up + t_plant_pulse_fusion_ramp + t_plant_pulse_burn + t_plant_pulse_plasma_current_ramp_down"""
+t_plant_pulse_plasma_present: float = None
+"""Plant pulse time in which a plasma is present (s)"""
 
 t_plant_pulse_plasma_current_ramp_down: float = None
 """Plant pulse time for plasma current, density, and temperature to ramp down to zero, simultaneously (s); if pulsed, = t_plant_pulse_plasma_current_ramp_up
@@ -67,7 +67,7 @@ def init_times_variables():
     global intervallabel
     global t_plant_pulse_plasma_current_ramp_up
     global i_t_current_ramp_up
-    global t_pulse_repetition
+    global t_plant_pulse_plasma_present
     global t_plant_pulse_plasma_current_ramp_down
     global t_plant_pulse_coil_precharge
 
@@ -89,6 +89,6 @@ def init_times_variables():
     ]
     t_plant_pulse_plasma_current_ramp_up = 30.0
     i_t_current_ramp_up = 0
-    t_pulse_repetition = 0.0
+    t_plant_pulse_plasma_present = 0.0
     t_plant_pulse_plasma_current_ramp_down = 15.0
     t_plant_pulse_coil_precharge = 15.0

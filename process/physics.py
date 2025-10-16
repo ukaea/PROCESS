@@ -1872,10 +1872,8 @@ class Physics:
         # see convergence loop in fcnvmc1, evaluators.f90
         times_variables.t_burn_0 = times_variables.t_plant_pulse_burn
 
-        # Pulse and down times : The reactor is assumed to be 'down'
-        # at all times outside of the plasma current flat-top period.
-        # The pulse length is the duration of non-zero plasma current
-        times_variables.t_pulse_repetition = (
+        # Time during the pulse in which a plasma is present
+        times_variables.t_plant_pulse_plasma_present = (
             times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
             + times_variables.t_plant_pulse_burn
