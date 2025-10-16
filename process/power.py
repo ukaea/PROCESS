@@ -2403,9 +2403,7 @@ class Power:
 
         # Integrate net electric power over the pulse to get total energy produced (MJ)
         # Assume t_steps in seconds, power in MW, so energy in MJ
-        energy_made_mj = np.trapzezoid(
-            power_profiles["p_plant_electric_net_mw"], t_steps
-        )
+        energy_made_mj = np.trapz(power_profiles["p_plant_electric_net_mw"], t_steps)
         energy_made_kwh = energy_made_mj / 3.6
 
         return energy_made_kwh, energy_made_mj
