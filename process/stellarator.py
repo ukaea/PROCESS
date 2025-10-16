@@ -5906,6 +5906,7 @@ def stinit():
         + times_variables.t_plant_pulse_plasma_current_ramp_up
         + times_variables.t_plant_pulse_plasma_current_ramp_down
         + times_variables.t_between_pulse
+        + times_variables.t_plant_pulse_fusion_ramp
     )
     times_variables.t_plant_pulse_total = (
         times_variables.t_plant_pulse_coil_precharge
