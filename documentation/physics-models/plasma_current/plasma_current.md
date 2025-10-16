@@ -679,9 +679,9 @@ This constraint can be activated by stating `icc = 41` in the input file.
 
 The value of `tohsm` can be set to the required minimum plasma current ramp up time at the start of a pulse. The scaling value `ft_current_ramp_up` can be varied also
 
-The calculated plasma current ramp up time `t_current_ramp_up` is dictated by the [pulsed plant operation configuration](../pulsed-plant.md).
+The calculated plasma current ramp up time `t_plant_pulse_plasma_current_ramp_up` is dictated by the [pulsed plant operation configuration](../pulsed-plant.md).
 
-This constraint will ensure that the value of `t_current_ramp_up` is always greater than or equal to `tohsm`
+This constraint will ensure that the value of `t_plant_pulse_plasma_current_ramp_up` is always greater than or equal to `tohsm`
 
 --------------------
 

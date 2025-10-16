@@ -121,7 +121,7 @@ class Power:
             pf_power_variables.srcktpm = pf_power_variables.srcktpm + 1.0e3 * rcktpm[ig]
 
         #  Inductive MVA requirements, and stored energy
-        delktim = times_variables.t_current_ramp_up
+        delktim = times_variables.t_plant_pulse_plasma_current_ramp_up
 
         #  PF system (including Central Solenoid solenoid) inductive MVA requirements
         #  pfcoil_variables.c_pf_coil_turn(i,j) : current per turn of coil i at (end) time period j (A)
@@ -756,7 +756,7 @@ class Power:
                 structure_variables.coldmass,
                 fwbs_variables.p_tf_nuclear_heat_mw,
                 pf_power_variables.ensxpfm,
-                times_variables.t_pulse_repetition,
+                times_variables.t_plant_pulse_plasma_present,
                 tfcoil_variables.c_tf_turn,
                 tfcoil_variables.n_tf_coils,
             )
@@ -1415,7 +1415,7 @@ class Power:
         coldmass,
         p_tf_nuclear_heat_mw,
         ensxpfm,
-        t_pulse_repetition,
+        t_plant_pulse_plasma_present,
         c_tf_turn,
         n_tf_coils,
     ):
@@ -1430,7 +1430,7 @@ class Power:
         intercoil structure
         p_tf_nuclear_heat_mw : input real : Nuclear heating in TF coils (MW)
         ensxpfm : input real : Maximum PF coil stored energy (MJ)
-        t_pulse_repetition : input real : Pulse length of cycle (s)
+        t_plant_pulse_plasma_present : input real : Pulse length of cycle (s)
         c_tf_turn : input real : Current per turn in TF coils (A)
         tfno : input real : Number of TF coils
         helpow : output real : Helium heat removal at cryo temperatures (W)
@@ -1447,7 +1447,7 @@ class Power:
         # Issue #511: if fwbs_variables.inuclear = 1 : fwbs_variables.qnuc is input.
 
         #  AC losses
-        power_variables.qac = 1.0e3 * ensxpfm / t_pulse_repetition
+        power_variables.qac = 1.0e3 * ensxpfm / t_plant_pulse_plasma_present
 
         #  Current leads
         if i_tf_sup == 1:
@@ -1761,7 +1761,7 @@ class Power:
             #  Set reactive power to 0, since ramp up can be long
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
-            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
+            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_plant_pulse_plasma_current_ramp_up + t_plant_pulse_coil_precharge)
             #                                 estotf(=e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
             tfreacmw = 0.0e0
 

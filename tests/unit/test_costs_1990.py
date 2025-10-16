@@ -3698,7 +3698,7 @@ class Acc2253Param(NamedTuple):
 
     istore: Any = None
 
-    tdown: Any = None
+    t_plant_pulse_no_burn: Any = None
 
     c22: Any = None
 
@@ -3720,7 +3720,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
             c2253=0,
@@ -3734,7 +3734,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2253=20.785622343242554,
@@ -3777,7 +3777,9 @@ def test_acc2253(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
-    monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
@@ -5428,7 +5430,7 @@ class Acc2253Param(NamedTuple):
 
     istore: Any = None
 
-    tdown: Any = None
+    t_plant_pulse_no_burn: Any = None
 
     c22: Any = None
 
@@ -5450,7 +5452,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=0,
             c225=0,
             c2253=0,
@@ -5464,7 +5466,7 @@ class Acc2253Param(NamedTuple):
             i_pulsed_plant=1,
             dtstor=300,
             istore=1,
-            tdown=854.42613938735622,
+            t_plant_pulse_no_burn=854.42613938735622,
             c22=3474.7391916096453,
             c225=185.05656643685359,
             c2253=20.785622343242554,
@@ -5507,7 +5509,9 @@ def test_acc2253_urt(acc2253param, monkeypatch, costs):
 
     monkeypatch.setattr(pulse_variables, "istore", acc2253param.istore)
 
-    monkeypatch.setattr(times_variables, "tdown", acc2253param.tdown)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_no_burn", acc2253param.t_plant_pulse_no_burn
+    )
 
     monkeypatch.setattr(cost_variables, "c22", acc2253param.c22)
 
@@ -5611,9 +5615,9 @@ class CoelcParam(NamedTuple):
 
     f_helium3: Any = None
 
-    t_cycle: Any = None
+    t_plant_pulse_total: Any = None
 
-    t_burn: Any = None
+    t_plant_pulse_burn: Any = None
 
     outfile: Any = None
 
@@ -5707,8 +5711,8 @@ class CoelcParam(NamedTuple):
             itart=0,
             wtgpd=507.88376577416528,
             f_helium3=0,
-            t_cycle=10864.426139387357,
-            t_burn=0,
+            t_plant_pulse_total=10864.426139387357,
+            t_plant_pulse_burn=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
             expected_coecap=4.9891775218979061e21,
@@ -5791,8 +5795,8 @@ class CoelcParam(NamedTuple):
             itart=0,
             wtgpd=507.72524666099866,
             f_helium3=0,
-            t_cycle=864.42613938735622,
-            t_burn=10230.533336387549,
+            t_plant_pulse_total=864.42613938735622,
+            t_plant_pulse_burn=10230.533336387549,
             outfile=11,
             expected_coeoam=1.2419424614419636,
             expected_coecap=15.547404530833255,
@@ -5910,9 +5914,13 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(physics_variables, "f_helium3", coelcparam.f_helium3)
 
-    monkeypatch.setattr(times_variables, "t_cycle", coelcparam.t_cycle)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_total", coelcparam.t_plant_pulse_total
+    )
 
-    monkeypatch.setattr(times_variables, "t_burn", coelcparam.t_burn)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_burn", coelcparam.t_plant_pulse_burn
+    )
 
     costs.coelc()
 

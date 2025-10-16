@@ -3095,9 +3095,9 @@ lsa = 2
 
 *i_vac_pump_dwell = 
 * DESCRIPTION:   Switch for dwell pumping options:
-* =0 pumping only during t_between_pulse
-* =1 pumping only during t_precharge
-* =2 pumping during t_between_pulse + t_precharge
+* =0 pumping only during t_plant_pulse_dwell
+* =1 pumping only during t_plant_pulse_coil_precharge
+* =2 pumping during t_plant_pulse_dwell + t_plant_pulse_coil_precharge
 * JUSTIFICATION: Not yet set.
 
 *pumpareafraction = 
@@ -3155,13 +3155,13 @@ i_pulsed_plant = 0
 * DESCRIPTION:   f-value for minimum burn time
 * JUSTIFICATION: Used with icc=13 to enforce minimum burn time, not required
 
-t_burn = 1000.0 
+t_plant_pulse_burn = 1000.0 
 * DESCRIPTION:   Burn Time (s)
 * JUSTIFICATION: Default, steady-state device so input, calculates if i_pulsed_plant = 1
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-t_between_pulse = 100.0 
+t_plant_pulse_dwell = 100.0 
 * DESCRIPTION:   Time Between Pulses in a Pulsed Reactor (s)
 * JUSTIFICATION: Steady-state device, assumed
 
@@ -3169,34 +3169,34 @@ t_between_pulse = 100.0
 
 *pulsetimings
 * DESCRIPTION:   Switch for pulse timings (if i_pulsed_plant=1):
-* =0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input
-* =1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up
+* =0, t_plant_pulse_plasma_current_ramp_up = Ip(MA)/0.1 t_plant_pulse_coil_precharge, t_plant_pulse_plasma_current_ramp_down = input
+* =1, t_plant_pulse_plasma_current_ramp_up = iteration var or input. t_plant_pulse_coil_precharge/t_plant_pulse_plasma_current_ramp_down max of input or t_plant_pulse_plasma_current_ramp_up
 * JUSTIFICATION: Assuming default, may change
 
 *icc = 41
 * DESCRIPTION:   Constraint equation for plasma current ramp-up time lower limit
 * JUSTIFICATION: Turned off, do not care about plasma current ramp up time 
-* VARIABLES:     t_current_ramp_up (s) calculated in-situ
+* VARIABLES:     t_plant_pulse_plasma_current_ramp_up (s) calculated in-situ
 
 *t_current_ramp_up_min =  
 * DESCRIPTION:   Minimum plasma current ramp-up time (s)
 * JUSTIFICATION: Turned off, not using icc = 41
 
 *tohsin =  
-* DESCRIPTION:   Switch for t_current_ramp_up calculation
-* = 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5
-* = 1, t_current_ramp_up = tohsin; t_precharge, t_ramp_down are input
+* DESCRIPTION:   Switch for t_plant_pulse_plasma_current_ramp_up calculation
+* = 0, t_plant_pulse_plasma_current_ramp_up = t_plant_pulse_coil_precharge = t_plant_pulse_plasma_current_ramp_down = Ip(MA)/0.5
+* = 1, t_plant_pulse_plasma_current_ramp_up = tohsin; t_plant_pulse_coil_precharge, t_plant_pulse_plasma_current_ramp_down are input
 * JUSTIFICATION: Not used, assuming default
 
-*t_ramp_down =  
+*t_plant_pulse_plasma_current_ramp_down =  
 * DESCRIPTION:   PF coil shutdown time (s)
 * JUSTIFICATION: Assuming default.
 
-*t_current_ramp_up =  
+*t_plant_pulse_plasma_current_ramp_up =  
 * DESCRIPTION:   Plasma current ramp-up time for current initiation (s)
 * JUSTIFICATION: Assuming default of 10 seconds
 
-*t_precharge =  
+*t_plant_pulse_coil_precharge =  
 * DESCRIPTION:   Initial charge time for PF coils (s)
 * JUSTIFICATION: Assuming default.
 
@@ -3209,7 +3209,7 @@ t_between_pulse = 100.0
 *icc = 42
 * DESCRIPTION:   Constraint equation for full pulse cycle time lower limit. 
 * JUSTIFICATION: Turned off, do not care about the full pulse cycle time 
-* VARIABLES:     t_cycle (s) calculated in-situ
+* VARIABLES:     t_plant_pulse_total (s) calculated in-situ
 
 *t_cycle_min =  
 * DESCRIPTION:   Minimum full pulse cycle time (s)

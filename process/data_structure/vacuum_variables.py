@@ -53,9 +53,9 @@ n_vac_pumps_high: int = None
 i_vac_pump_dwell: int = None
 """switch for dwell pumping options:
 
-   - =0 pumping only during t_between_pulse
-   - =1 pumping only during t_precharge
-   - =2 pumping during t_between_pulse + t_precharge
+   - =0 pumping only during t_plant_pulse_dwell
+   - =1 pumping only during t_plant_pulse_coil_precharge
+   - =2 pumping during t_plant_pulse_dwell + t_plant_pulse_coil_precharge
 
    The following are used in the Battes, Day and Rohde pump-down model
    See "Basic considerations on the pump-down time in the dwell phase of a pulsed fusion DEMO"

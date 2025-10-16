@@ -60,7 +60,7 @@ class CryoParam(NamedTuple):
 
     tfcryoarea: Any = None
 
-    t_pulse_repetition: Any = None
+    t_plant_pulse_plasma_present: Any = None
 
     expected_qss: Any = None
 
@@ -90,7 +90,7 @@ class CryoParam(NamedTuple):
             p_tf_nuclear_heat_mw=0.044178296011112193,
             n_tf_coils=16,
             tfcryoarea=0,
-            t_pulse_repetition=10364.426139387357,
+            t_plant_pulse_plasma_present=10364.426139387357,
             expected_qss=20361.633927097802,
             expected_qac=3611.3456752656607,
             expected_qcl=16108.2211128,
@@ -111,7 +111,7 @@ class CryoParam(NamedTuple):
             p_tf_nuclear_heat_mw=0.045535131445547841,
             n_tf_coils=16,
             tfcryoarea=0,
-            t_pulse_repetition=364.42613938735633,
+            t_plant_pulse_plasma_present=364.42613938735633,
             expected_qss=20342.863776957758,
             expected_qac=102701.82327748176,
             expected_qcl=16108.2211128,
@@ -153,7 +153,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         p_tf_nuclear_heat_mw=cryoparam.p_tf_nuclear_heat_mw,
         n_tf_coils=cryoparam.n_tf_coils,
         tfcryoarea=cryoparam.tfcryoarea,
-        t_pulse_repetition=cryoparam.t_pulse_repetition,
+        t_plant_pulse_plasma_present=cryoparam.t_plant_pulse_plasma_present,
     )
 
     assert power_variables.qss == pytest.approx(cryoparam.expected_qss)
@@ -236,7 +236,7 @@ class PfpwrParam(NamedTuple):
 
     timelabel: Any = None
 
-    t_current_ramp_up: Any = None
+    t_plant_pulse_plasma_current_ramp_up: Any = None
 
     outfile: Any = None
 
@@ -971,11 +971,11 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "t_precharge      ",
-                "t_current_ramp_up       ",
-                "t_fusion_ramp      ",
-                "t_burn      ",
-                "t_ramp_down      ",
+                "t_plant_pulse_coil_precharge      ",
+                "t_plant_pulse_plasma_current_ramp_up       ",
+                "t_plant_pulse_fusion_ramp      ",
+                "t_plant_pulse_burn      ",
+                "t_plant_pulse_plasma_current_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -985,7 +985,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            t_current_ramp_up=177.21306969367816,
+            t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=736.39062584245937,
@@ -1714,11 +1714,11 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "t_precharge      ",
-                "t_current_ramp_up       ",
-                "t_fusion_ramp      ",
-                "t_burn      ",
-                "t_ramp_down      ",
+                "t_plant_pulse_coil_precharge      ",
+                "t_plant_pulse_plasma_current_ramp_up       ",
+                "t_plant_pulse_fusion_ramp      ",
+                "t_plant_pulse_burn      ",
+                "t_plant_pulse_plasma_current_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -1728,7 +1728,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            t_current_ramp_up=177.21306969367816,
+            t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=90.673341440806112,
@@ -1870,7 +1870,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        times_variables, "t_current_ramp_up", pfpwrparam.t_current_ramp_up
+        times_variables,
+        "t_plant_pulse_plasma_current_ramp_up",
+        pfpwrparam.t_plant_pulse_plasma_current_ramp_up,
     )
 
     power.pfpwr(output=False)

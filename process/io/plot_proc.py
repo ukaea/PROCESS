@@ -3148,20 +3148,28 @@ def plot_current_profiles_over_time(
         mfile_data (mf.MFile): MFILE data object.
         scan (int): Scan number to use.
     """
-    t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
-    t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
-    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
-    t_burn = mfile_data.data["t_burn"].get_scan(scan)
-    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+    t_plant_pulse_coil_precharge = mfile_data.data[
+        "t_plant_pulse_coil_precharge"
+    ].get_scan(scan)
+    t_plant_pulse_plasma_current_ramp_up = mfile_data.data[
+        "t_plant_pulse_plasma_current_ramp_up"
+    ].get_scan(scan)
+    t_plant_pulse_fusion_ramp = mfile_data.data["t_plant_pulse_fusion_ramp"].get_scan(
+        scan
+    )
+    t_plant_pulse_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan)
+    t_plant_pulse_plasma_current_ramp_down = mfile_data.data[
+        "t_plant_pulse_plasma_current_ramp_down"
+    ].get_scan(scan)
 
     # Define a cumulative sum list for each point in the pulse
     t_steps = np.cumsum([
         0,
-        t_precharge,
-        t_current_ramp_up,
-        t_fusion_ramp,
-        t_burn,
-        t_ramp_down,
+        t_plant_pulse_coil_precharge,
+        t_plant_pulse_plasma_current_ramp_up,
+        t_plant_pulse_fusion_ramp,
+        t_plant_pulse_burn,
+        t_plant_pulse_plasma_current_ramp_down,
     ])
 
     # Find the number of PF circuits, n_pf_cs_plasma_circuits includes the CS and plasma circuits
@@ -6933,7 +6941,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
         pf_info_3_a = ""
         pf_info_3_b = ""
 
-    t_burn = mfile_data.data["t_burn"].get_scan(scan) / 3600.0
+    t_plant_pulse_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan) / 3600.0
 
     if "i_tf_bucking" in mfile_data.data:
         i_tf_bucking = int(mfile_data.data["i_tf_bucking"].get_scan(scan))
@@ -6972,7 +6980,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
-            (t_burn, "Burn time", "hrs"),
+            (t_plant_pulse_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("b_tf_inboard_peak_with_ripple", "Peak field at conductor (w. rip.)", "T"),
@@ -7000,7 +7008,7 @@ def plot_magnetics_info(axis, mfile_data, scan):
             (pf_info_3_a, pf_info_3_b, "MA"),
             (vssoft, "Startup flux swing", "Wb"),
             ("vs_cs_pf_total_pulse", "Available flux swing", "Wb"),
-            (t_burn, "Burn time", "hrs"),
+            (t_plant_pulse_burn, "Burn time", "hrs"),
             ("", "", ""),
             (f"#TF coil type is {tftype}", "", ""),
             ("b_tf_inboard_peak_symmetric", "Peak field at conductor (w. rip.)", "T"),
