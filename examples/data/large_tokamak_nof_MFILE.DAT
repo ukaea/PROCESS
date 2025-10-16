@@ -530,7 +530,7 @@
  Burn_time_(s)____________________________________________________________ (t_plant_pulse_burnt_pulse_burn)_______________________ 7.34493213699665284e+03 OP
  Reset_time_to_zero_current_for_CS_(s)____________________________________ (t_plant_pulse_plasma_current_ramp_downse_plasma_current_ramp_down)__________________ 1.75262350092394996e+02
  Time_between_pulses_(s)__________________________________________________ (t_between_pulse)______________ 1.80000000000000000e+03
- Total_plant_cycle_time_(s)_______________________________________________ (t_cycle)______________________ 1.00054568371814421e+04 OP
+ Total_plant_cycle_time_(s)_______________________________________________ (t_plant_pulse_total_pulse_total)______________________ 1.00054568371814421e+04 OP
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (tf_in_cs)____________________              0    
  Inboard_build_thickness_(m)______________________________________________ (dr_inboard_build)_____________ 5.33333333333333393e+00 OP

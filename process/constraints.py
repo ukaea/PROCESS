@@ -1248,7 +1248,7 @@ def constraint_equation_42():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_cycle_min: f-value for cycle time
-    t_cycle: full cycle time (s)
+    t_plant_pulse_total: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
     """
     if data_structure.constraint_variables.t_cycle_min < 1.0:
@@ -1259,7 +1259,7 @@ def constraint_equation_42():
     cc = (
         1.0
         - data_structure.constraint_variables.ft_cycle_min
-        * data_structure.times_variables.t_cycle
+        * data_structure.times_variables.t_plant_pulse_total
         / data_structure.constraint_variables.t_cycle_min
     )
     return ConstraintResult(

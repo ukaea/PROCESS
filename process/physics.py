@@ -1889,7 +1889,7 @@ class Physics:
         )
 
         # Total cycle time
-        times_variables.t_cycle = (
+        times_variables.t_plant_pulse_total = (
             times_variables.t_plant_pulse_coil_precharge
             + times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
@@ -3908,8 +3908,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total plant cycle time (s)",
-            "(t_cycle)",
-            times_variables.t_cycle,
+            "(t_plant_pulse_total)",
+            times_variables.t_plant_pulse_total,
             "OP ",
         )
 

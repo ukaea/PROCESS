@@ -5615,7 +5615,7 @@ class CoelcParam(NamedTuple):
 
     f_plasma_fuel_helium3: Any = None
 
-    t_cycle: Any = None
+    t_plant_pulse_total: Any = None
 
     t_plant_pulse_burn: Any = None
 
@@ -5711,7 +5711,7 @@ class CoelcParam(NamedTuple):
             itart=0,
             wtgpd=507.88376577416528,
             f_plasma_fuel_helium3=0,
-            t_cycle=10864.426139387357,
+            t_plant_pulse_total=10864.426139387357,
             t_plant_pulse_burn=0,
             outfile=11,
             expected_coeoam=4.4099029328740929e20,
@@ -5795,7 +5795,7 @@ class CoelcParam(NamedTuple):
             itart=0,
             wtgpd=507.72524666099866,
             f_plasma_fuel_helium3=0,
-            t_cycle=864.42613938735622,
+            t_plant_pulse_total=864.42613938735622,
             t_plant_pulse_burn=10230.533336387549,
             outfile=11,
             expected_coeoam=1.2419424614419636,
@@ -5916,7 +5916,9 @@ def test_coelc(coelcparam, monkeypatch, costs):
         physics_variables, "f_plasma_fuel_helium3", coelcparam.f_plasma_fuel_helium3
     )
 
-    monkeypatch.setattr(times_variables, "t_cycle", coelcparam.t_cycle)
+    monkeypatch.setattr(
+        times_variables, "t_plant_pulse_total", coelcparam.t_plant_pulse_total
+    )
 
     monkeypatch.setattr(
         times_variables, "t_plant_pulse_burn", coelcparam.t_plant_pulse_burn
