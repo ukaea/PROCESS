@@ -213,7 +213,7 @@ lablxc: list[str] = None
 * (14) fpflux_fw_neutron_max_mw (f-value for equation 8)
 * (15) fvs_plasma_total_required (f-value for equation 12)
 * (16) dr_cs
-* (17) t_between_pulse
+* (17) t_plant_pulse_dwell
 * (18) q
 * (19) e_beam_kev
 * (20) temp_cp_average

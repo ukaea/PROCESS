@@ -138,7 +138,7 @@ OBS_VARS = {
     "ftohs": "ft_current_ramp_up",
     "tbrnmn": "t_burn_min",
     "tohs": "t_plant_pulse_plasma_current_ramp_up",
-    "tdwell": "t_between_pulse",
+    "tdwell": "t_plant_pulse_dwell",
     "tramp": "t_plant_pulse_coil_precharge",
     "tqnch": "t_plant_pulse_plasma_current_ramp_down",
     "tburn": "t_plant_pulse_burn",
