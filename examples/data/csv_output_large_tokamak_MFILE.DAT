@@ -558,7 +558,7 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.8571E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_prechargese_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6699E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6699E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_plant_pulse_burnt_pulse_burn)_______________________      7.1999E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6699E+02    

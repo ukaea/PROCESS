@@ -236,7 +236,7 @@ class PfpwrParam(NamedTuple):
 
     timelabel: Any = None
 
-    t_current_ramp_up: Any = None
+    t_plant_pulse_plasma_current_ramp_up: Any = None
 
     outfile: Any = None
 
@@ -972,7 +972,7 @@ class PfpwrParam(NamedTuple):
             ).transpose(),
             intervallabel=(
                 "t_plant_pulse_coil_precharge      ",
-                "t_current_ramp_up       ",
+                "t_plant_pulse_plasma_current_ramp_up       ",
                 "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
                 "t_ramp_down      ",
@@ -985,7 +985,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            t_current_ramp_up=177.21306969367816,
+            t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=736.39062584245937,
@@ -1715,7 +1715,7 @@ class PfpwrParam(NamedTuple):
             ).transpose(),
             intervallabel=(
                 "t_plant_pulse_coil_precharge      ",
-                "t_current_ramp_up       ",
+                "t_plant_pulse_plasma_current_ramp_up       ",
                 "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
                 "t_ramp_down      ",
@@ -1728,7 +1728,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            t_current_ramp_up=177.21306969367816,
+            t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=90.673341440806112,
@@ -1870,7 +1870,9 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        times_variables, "t_current_ramp_up", pfpwrparam.t_current_ramp_up
+        times_variables,
+        "t_plant_pulse_plasma_current_ramp_up",
+        pfpwrparam.t_plant_pulse_plasma_current_ramp_up,
     )
 
     power.pfpwr(output=False)

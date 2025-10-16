@@ -1226,13 +1226,13 @@ def constraint_equation_41():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_current_ramp_up: f-value for plasma current ramp-up time
-    t_current_ramp_up: plasma current ramp-up time for current initiation (s)
+    t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
     t_current_ramp_up_min: minimum plasma current ramp-up time (s)
     """
     cc = (
         1.0
         - data_structure.constraint_variables.ft_current_ramp_up
-        * data_structure.times_variables.t_current_ramp_up
+        * data_structure.times_variables.t_plant_pulse_plasma_current_ramp_up
         / data_structure.constraint_variables.t_current_ramp_up_min
     )
     return ConstraintResult(

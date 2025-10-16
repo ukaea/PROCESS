@@ -1835,31 +1835,37 @@ class Physics:
         # Set PF coil ramp times
         if pulse_variables.i_pulsed_plant != 1:
             if times_variables.i_t_current_ramp_up == 0:
-                times_variables.t_current_ramp_up = (
+                times_variables.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
                 )
                 times_variables.t_plant_pulse_coil_precharge = (
-                    times_variables.t_current_ramp_up
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
                 )
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+                times_variables.t_ramp_down = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
 
         else:
             if times_variables.pulsetimings == 0.0e0:
                 # times_variables.t_plant_pulse_coil_precharge is input
-                times_variables.t_current_ramp_up = (
+                times_variables.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 1.0e5
                 )
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+                times_variables.t_ramp_down = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
 
             else:
-                # times_variables.t_current_ramp_up is set either in INITIAL or INPUT, or by being
+                # times_variables.t_plant_pulse_plasma_current_ramp_up is set either in INITIAL or INPUT, or by being
                 # iterated using limit equation 41.
                 times_variables.t_plant_pulse_coil_precharge = max(
                     times_variables.t_plant_pulse_coil_precharge,
-                    times_variables.t_current_ramp_up,
+                    times_variables.t_plant_pulse_plasma_current_ramp_up,
                 )
-                # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+                # t_ramp_down = max(t_ramp_down,t_plant_pulse_plasma_current_ramp_up)
+                times_variables.t_ramp_down = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
 
         # Reset second times_variables.t_plant_pulse_burn value (times_variables.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
@@ -1870,14 +1876,14 @@ class Physics:
         # at all times outside of the plasma current flat-top period.
         # The pulse length is the duration of non-zero plasma current
         times_variables.t_pulse_repetition = (
-            times_variables.t_current_ramp_up
+            times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
             + times_variables.t_plant_pulse_burn
             + times_variables.t_ramp_down
         )
         times_variables.tdown = (
             times_variables.t_plant_pulse_coil_precharge
-            + times_variables.t_current_ramp_up
+            + times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_ramp_down
             + times_variables.t_between_pulse
         )
@@ -1885,7 +1891,7 @@ class Physics:
         # Total cycle time
         times_variables.t_cycle = (
             times_variables.t_plant_pulse_coil_precharge
-            + times_variables.t_current_ramp_up
+            + times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
             + times_variables.t_plant_pulse_burn
             + times_variables.t_ramp_down
@@ -3870,8 +3876,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Plasma current ramp-up time (s)",
-            "(t_current_ramp_up)",
-            times_variables.t_current_ramp_up,
+            "(t_plant_pulse_plasma_current_ramp_up)",
+            times_variables.t_plant_pulse_plasma_current_ramp_up,
         )
         po.ovarrf(
             self.outfile,

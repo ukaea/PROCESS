@@ -1608,7 +1608,7 @@ INPUT_VARIABLES = {
     "t_crit_nbti": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 15.0)
     ),
-    "t_current_ramp_up": InputVariable(
+    "t_plant_pulse_plasma_current_ramp_up": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_plant_pulse_fusion_ramp": InputVariable(
