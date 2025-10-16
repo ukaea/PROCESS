@@ -421,7 +421,7 @@ t_between_pulse = 1800.0
 pulsetimings = 0
 
 * CS ramp up time [s]
-t_precharge = 500.0
+t_plant_pulse_coil_precharge = 500.0
 
 * Current drive *
 *---------------*

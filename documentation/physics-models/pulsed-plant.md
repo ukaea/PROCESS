@@ -31,7 +31,7 @@ but this is not taken ito account.
 
 In the steady-state scenario (`i_pulsed_plant` = 0), the plasma current ramp-up time `t_current_ramp_up` is determined as follows. 
 
-- If `i_t_current_ramp_up` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_precharge` 
+- If `i_t_current_ramp_up` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_plant_pulse_coil_precharge` 
   and shutdown time `t_ramp_down` are (arbitrarily) set equal to `t_current_ramp_up`. 
 - If `i_t_current_ramp_up` $\neq$ 0, the plasma current ramp-up time `t_current_ramp_up`, and the PF coil ramp 
   and shutdown times are input parameters.
@@ -55,7 +55,7 @@ constraint equation no. 13 and iteration variable no 21 (`ft_burn_min`).
 
 Over the course of a pulse, the timings are detailed as:
 
-- Precharge (`t_precharge`) - the CS current ramps from zero to maximum value. The other PF coils also ramp from zero to their required values.
+- Precharge (`t_plant_pulse_coil_precharge`) - the CS current ramps from zero to maximum value. The other PF coils also ramp from zero to their required values.
 - Current ramp-up (`t_current_ramp_up`) - The plasma current ramps up to approx full value. Auxiliary heating is possibly on.
 - Fusion ramp (`t_plant_pulse_fusion_ramp`) - The plasma temperature and density rise to the full values. The CS and other PF coil currents all change steadily. Auxiliary heating is on.
 - Burn time (`t_plant_pulse_burn`) - Flat-top duration. The plasma is approximately steady. Fusion power and electricity are produced. The CS and other PF coil currents all change steadily in a pulsed reactor, but are constant for a "steady-state" reactor. Auxiliary heating is on.

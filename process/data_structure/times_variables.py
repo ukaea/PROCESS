@@ -3,8 +3,8 @@ import numpy as np
 pulsetimings: float = None
 """Switch for pulse timings (if i_pulsed_plant=1):
 
-   - =0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input
-   - =1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up"""
+   - =0, t_current_ramp_up = Ip(MA)/0.1 t_plant_pulse_coil_precharge, t_ramp_down = input
+   - =1, t_current_ramp_up = iteration var or input. t_plant_pulse_coil_precharge/t_ramp_down max of input or t_current_ramp_up"""
 
 t_plant_pulse_burn: float = None
 """flat-top duration (s) (calculated if `i_pulsed_plant=1`)"""
@@ -39,8 +39,8 @@ t_current_ramp_up: float = None
 
 i_t_current_ramp_up: int = None
 """Switch for plasma current ramp-up time (if i_pulsed_plant=0):
-   - = 0, t_current_ramp_up = t_precharge = t_ramp_down = Ip(MA)/0.5
-   - = 1, t_current_ramp_up, t_precharge, t_ramp_down are input"""
+   - = 0, t_current_ramp_up = t_plant_pulse_coil_precharge = t_ramp_down = Ip(MA)/0.5
+   - = 1, t_current_ramp_up, t_plant_pulse_coil_precharge, t_ramp_down are input"""
 
 t_pulse_repetition: float = None
 """pulse length = t_current_ramp_up + t_plant_pulse_fusion_ramp + t_plant_pulse_burn + t_ramp_down"""
@@ -49,7 +49,7 @@ t_ramp_down: float = None
 """time for plasma current, density, and temperature to ramp down to zero, simultaneously (s); if pulsed, = t_current_ramp_up
    the CS and PF coil currents also ramp to zero at the same time"""
 
-t_precharge: float = None
+t_plant_pulse_coil_precharge: float = None
 """the time for the central solenoid and PF coils to ramp from zero to max current (s); if pulsed, = t_current_ramp_up"""
 
 
@@ -69,7 +69,7 @@ def init_times_variables():
     global i_t_current_ramp_up
     global t_pulse_repetition
     global t_ramp_down
-    global t_precharge
+    global t_plant_pulse_coil_precharge
 
     pulsetimings = 1.0
     t_plant_pulse_burn = np.array(1000.0, dtype=np.float64)
@@ -81,7 +81,7 @@ def init_times_variables():
     t_pulse_cumulative = np.zeros(6, dtype=np.float64)
     timelabel = ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
     intervallabel = [
-        "t_precharge        ",
+        "t_plant_pulse_coil_precharge        ",
         "t_current_ramp_up  ",
         "t_plant_pulse_fusion_ramp      ",
         "t_plant_pulse_burn             ",
@@ -91,4 +91,4 @@ def init_times_variables():
     i_t_current_ramp_up = 0
     t_pulse_repetition = 0.0
     t_ramp_down = 15.0
-    t_precharge = 15.0
+    t_plant_pulse_coil_precharge = 15.0

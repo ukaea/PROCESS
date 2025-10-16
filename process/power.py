@@ -1761,7 +1761,7 @@ class Power:
             #  Set reactive power to 0, since ramp up can be long
             #  The TF coil can be ramped up as slowly as you like
             #  (although this will affect the time to recover from a magnet quench).
-            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_precharge)
+            #     tfreacmw = 1.0e-6 * 1.0e9 * estotf/(t_current_ramp_up + t_plant_pulse_coil_precharge)
             #                                 estotf(=e_tf_magnetic_stored_total_gj/tfcoil_variables.n_tf_coils) has been removed (#199 #847)
             tfreacmw = 0.0e0
 
