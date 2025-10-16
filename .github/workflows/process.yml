@@ -220,7 +220,7 @@ jobs:
         with:
           name: tracked-mfiles
           path: tracking/
-      - run: mv tracking/large_tokamak_nof.SIG_TF.DAT tracking/large_tokamak_nof_SIG_TF.DAT
+      - run: mv tracking/large_tokamak_nof.SIG_TF.json tracking/large_tokamak_nof_SIG_TF.json
       - name: Create an example plot proc
         run: python process/io/plot_proc.py -f tracking/large_tokamak_nof_MFILE.DAT
       - name: Move plot proc file to docs images
