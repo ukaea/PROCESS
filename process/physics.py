@@ -4341,7 +4341,7 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total plasma beta",
-            "(beta)",
+            "(beta_total_vol_avg)",
             physics_variables.beta_total_vol_avg,
         )
         if physics_variables.i_beta_component == 0:

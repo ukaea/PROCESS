@@ -242,11 +242,11 @@ beta_poloidal_eps: float = None
 
 
 beta_toroidal_vol_avg: float = None
-"""Volume averaged toroidal beta"""
+"""Plasma volume averaged toroidal beta"""
 
 
 beta_thermal_vol_avg: float = None
-"""thermal beta"""
+"""Plasma volume averaged thermal beta"""
 
 
 beta_thermal_poloidal: float = None
@@ -449,7 +449,7 @@ f_alpha_ion: float = None
 
 
 f_plasma_fuel_deuterium: float = None
-"""deuterium fuel fraction"""
+"""Plasma deuterium fuel fraction"""
 
 
 f_p_div_lower: float = None
@@ -479,7 +479,7 @@ density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`
 
 
 f_plasma_fuel_helium3: float = None
-"""helium-3 fuel fraction"""
+"""Plasma Helium-3 fuel fraction"""
 
 
 figmer: float = None
@@ -505,7 +505,7 @@ fne0: float = None
 
 
 f_plasma_fuel_tritium: float = None
-"""tritium fuel fraction"""
+"""Plasma tritium fuel fraction"""
 
 
 fusden_total: float = None

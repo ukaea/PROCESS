@@ -23,7 +23,7 @@ epsvmc = 1e-7
 * Beta consistency *
 *------------------*
 icc = 1
-ixc = 5 * beta
+ixc = 5 * beta_total_vol_avg
 beta_total_vol_avg =0.03
 
 * Global power balance *

@@ -2154,13 +2154,13 @@ def constraint_equation_84():
     cc = (
         1.0
         - data_structure.constraint_variables.fbeta_min
-        * data_structure.physics_variables.beta
+        * data_structure.physics_variables.beta_total_vol_avg
         / data_structure.physics_variables.beta_min
     )
     return ConstraintResult(
         cc,
         data_structure.physics_variables.beta_min * (1.0 - cc),
-        data_structure.physics_variables.beta * cc,
+        data_structure.physics_variables.beta_total_vol_avg * cc,
     )
 
 

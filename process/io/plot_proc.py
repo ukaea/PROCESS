@@ -2635,11 +2635,11 @@ def plot_main_plasma_information(
     # Add beta information
     textstr_beta = (
         f"$\\mathbf{{Beta \\ Information:}}$\n \n"
-        f"Total beta,$ \\ \\beta$: {mfile_data.data['beta_total_vol_avg'].get_scan(scan):.4f}\n"
-        f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal_vol_avg'].get_scan(scan):.4f}\n"
-        f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal_vol_avg'].get_scan(scan):.4f}\n"
-        f"Poloidal beta,$ \\ \\beta_{{\\text{{p}}}}$: {mfile_data.data['beta_poloidal_vol_avg'].get_scan(scan):.4f}\n"
-        f"Fast-alpha beta,$ \\ \\beta_{{\\alpha}}$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
+        f"Total beta,$ \\ \\langle \\beta \\rangle$: {mfile_data.data['beta_total_vol_avg'].get_scan(scan):.4f}\n"
+        f"Thermal beta,$ \\ \\langle \\beta_{{\\text{{thermal}}}} \\rangle$: {mfile_data.data['beta_thermal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Toroidal beta,$ \\ \\langle \\beta_{{\\text{{t}}}} \\rangle$: {mfile_data.data['beta_toroidal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Poloidal beta,$ \\ \\langle \\beta_{{\\text{{p}}}} \\rangle$: {mfile_data.data['beta_poloidal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Fast-alpha beta,$ \\ \\langle \\beta_{{\\alpha}} \\rangle$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
         f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile_data.data['beta_norm_total'].get_scan(scan):.4f}\n"
         f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile_data.data['beta_norm_thermal'].get_scan(scan):.4f}\n"
     )
