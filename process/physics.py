@@ -1881,7 +1881,7 @@ class Physics:
             + times_variables.t_plant_pulse_burn
             + times_variables.t_plant_pulse_plasma_current_ramp_down
         )
-        times_variables.tdown = (
+        times_variables.t_plant_pulse_no_burn = (
             times_variables.t_plant_pulse_coil_precharge
             + times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_plasma_current_ramp_down
