@@ -70,7 +70,7 @@ ITERATION_VARIABLES = {
     ),
     16: IterationVariable("dr_cs", data_structure.build_variables, 0.01, 10.00),
     17: IterationVariable(
-        "t_between_pulse", data_structure.times_variables, 0.1, 1.0e8
+        "t_plant_pulse_dwell", data_structure.times_variables, 0.1, 1.0e8
     ),
     18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
     19: IterationVariable(

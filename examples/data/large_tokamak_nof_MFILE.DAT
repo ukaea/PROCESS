@@ -529,7 +529,7 @@
  Heating_time_(s)_________________________________________________________ (t_plant_pulse_fusion_ramp)________________ 1.00000000000000000e+01
  Burn_time_(s)____________________________________________________________ (t_plant_pulse_burnt_pulse_burn)_______________________ 7.34493213699665284e+03 OP
  Reset_time_to_zero_current_for_CS_(s)____________________________________ (t_plant_pulse_plasma_current_ramp_downse_plasma_current_ramp_down)__________________ 1.75262350092394996e+02
- Time_between_pulses_(s)__________________________________________________ (t_between_pulse)______________ 1.80000000000000000e+03
+ Time_between_pulses_(s)__________________________________________________ (t_plant_pulse_dwellwell)______________ 1.80000000000000000e+03
  Total_plant_cycle_time_(s)_______________________________________________ (t_plant_pulse_total_pulse_total)______________________ 1.00054568371814421e+04 OP
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (tf_in_cs)____________________              0    
@@ -1073,7 +1073,7 @@
  Chamber_pressure_after_burn_(Pa)_________________________________________ (pend)_________________________ 1.75966345086182835e-01 OP
  Chamber_pressure_before_burn_(Pa)________________________________________ (pstart)_______________________ 1.75966345086182841e-03
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)_____________________________________________ (t_between_pulse.)_____________ 1.80000000000000000e+03
+ Dwell_time_between_burns_(s)_____________________________________________ (t_plant_pulse_dwellwell.)_____________ 1.80000000000000000e+03
  CS_ramp-up_time_burns_(s)________________________________________________ (t_plant_pulse_coil_prechargese_coil_precharge.)_________________ 5.00000000000000000e+02
  Allowable_pumping_time_between_burns_(s)_________________________________ (tpump)________________________ 1.80000000000000000e+03
  Required_D-T_pump_speed_(m3/s)___________________________________________ (s(2))_________________________ 5.77897305930929495e+00 OP
@@ -1635,7 +1635,7 @@ plasma_res_factor = 0.7
 i_pulsed_plant = 1
 
 * dwell time [s]
-t_between_pulse = 1800.0
+t_plant_pulse_dwellwell = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0

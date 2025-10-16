@@ -455,7 +455,7 @@
  Heating_time_(s)_________________________________________________________ (t_plant_pulse_fusion_ramp)________________ 1.00000000000000000e+01
  Burn_time_(s)____________________________________________________________ (t_plant_pulse_burnt_pulse_burn)_______________________ 6.13029258726831449e+03 OP
  Reset_time_to_zero_current_for_CS_(s)____________________________________ (t_plant_pulse_plasma_current_ramp_downse_plasma_current_ramp_down)__________________ 1.60910954080422698e+02
- Time_between_pulses_(s)__________________________________________________ (t_between_pulse)______________ 1.80000000000000000e+03
+ Time_between_pulses_(s)__________________________________________________ (t_plant_pulse_dwellwell)______________ 1.80000000000000000e+03
  Total_plant_cycle_time_(s)_______________________________________________ (t_plant_pulse_total_pulse_total)______________________ 8.76211449542915943e+03 OP
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (tf_in_cs)____________________              0    
@@ -999,7 +999,7 @@
  Chamber_pressure_after_burn_(Pa)_________________________________________ (pend)_________________________ 1.61381834730617624e-01 OP
  Chamber_pressure_before_burn_(Pa)________________________________________ (pstart)_______________________ 1.61381834730617638e-03
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)_____________________________________________ (t_between_pulse.)_____________ 1.80000000000000000e+03
+ Dwell_time_between_burns_(s)_____________________________________________ (t_plant_pulse_dwellwell.)_____________ 1.80000000000000000e+03
  CS_ramp-up_time_burns_(s)________________________________________________ (t_plant_pulse_coil_prechargese_coil_precharge.)_________________ 5.00000000000000000e+02
  Allowable_pumping_time_between_burns_(s)_________________________________ (tpump)________________________ 1.80000000000000000e+03
  Required_D-T_pump_speed_(m3/s)___________________________________________ (s(2))_________________________ 5.77897305930929406e+00 OP
@@ -1572,7 +1572,7 @@ f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (
 *-----------------Times Variables------------------*
 
 pulsetimings = 0 * Switch for pulse timings (if lpulse=1);
-t_between_pulse   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
+t_plant_pulse_dwellwell   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
 t_plant_pulse_coil_prechargese_coil_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_plant_pulse_plasma_current_ramp_up
 
 *--------------------Utilities---------------------*

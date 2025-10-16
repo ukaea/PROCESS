@@ -1587,7 +1587,7 @@ INPUT_VARIABLES = {
     "str_wp_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.3)
     ),
-    "t_between_pulse": InputVariable(
+    "t_plant_pulse_dwell": InputVariable(
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
     "t_plant_pulse_burn": InputVariable(

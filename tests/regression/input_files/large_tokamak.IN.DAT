@@ -439,7 +439,7 @@ i_ind_plasma_internal_norm = 1
 i_pulsed_plant = 1
 
 * dwell time [s]
-t_between_pulse = 1800.0
+t_plant_pulse_dwell = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0

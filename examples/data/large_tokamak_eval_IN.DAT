@@ -392,7 +392,7 @@ f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (
 *-----------------Times Variables------------------*
 
 pulsetimings = 0 * Switch for pulse timings (if i_pulsed_plant=1);
-t_between_pulse   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
+t_plant_pulse_dwellwell   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
 t_plant_pulse_coil_prechargese_coil_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_plant_pulse_plasma_current_ramp_up
 
 *--------------------Utilities---------------------*

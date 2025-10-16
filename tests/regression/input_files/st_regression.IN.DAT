@@ -3095,9 +3095,9 @@ lsa = 2
 
 *i_vac_pump_dwell = 
 * DESCRIPTION:   Switch for dwell pumping options:
-* =0 pumping only during t_between_pulse
+* =0 pumping only during t_plant_pulse_dwell
 * =1 pumping only during t_plant_pulse_coil_precharge
-* =2 pumping during t_between_pulse + t_plant_pulse_coil_precharge
+* =2 pumping during t_plant_pulse_dwell + t_plant_pulse_coil_precharge
 * JUSTIFICATION: Not yet set.
 
 *pumpareafraction = 
@@ -3161,7 +3161,7 @@ t_plant_pulse_burn = 1000.0
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-t_between_pulse = 100.0 
+t_plant_pulse_dwell = 100.0 
 * DESCRIPTION:   Time Between Pulses in a Pulsed Reactor (s)
 * JUSTIFICATION: Steady-state device, assumed
 
