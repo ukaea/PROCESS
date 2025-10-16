@@ -3158,7 +3158,9 @@ def plot_current_profiles_over_time(
         scan
     )
     t_plant_pulse_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan)
-    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
+    t_plant_pulse_plasma_current_ramp_down = mfile_data.data[
+        "t_plant_pulse_plasma_current_ramp_down"
+    ].get_scan(scan)
 
     # Define a cumulative sum list for each point in the pulse
     t_steps = np.cumsum([
@@ -3167,7 +3169,7 @@ def plot_current_profiles_over_time(
         t_plant_pulse_plasma_current_ramp_up,
         t_plant_pulse_fusion_ramp,
         t_plant_pulse_burn,
-        t_ramp_down,
+        t_plant_pulse_plasma_current_ramp_down,
     ])
 
     # Find the number of PF circuits, n_pf_cs_plasma_circuits includes the CS and plasma circuits

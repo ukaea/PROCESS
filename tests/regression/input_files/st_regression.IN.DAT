@@ -3169,8 +3169,8 @@ t_between_pulse = 100.0
 
 *pulsetimings
 * DESCRIPTION:   Switch for pulse timings (if i_pulsed_plant=1):
-* =0, t_plant_pulse_plasma_current_ramp_up = Ip(MA)/0.1 t_plant_pulse_coil_precharge, t_ramp_down = input
-* =1, t_plant_pulse_plasma_current_ramp_up = iteration var or input. t_plant_pulse_coil_precharge/t_ramp_down max of input or t_plant_pulse_plasma_current_ramp_up
+* =0, t_plant_pulse_plasma_current_ramp_up = Ip(MA)/0.1 t_plant_pulse_coil_precharge, t_plant_pulse_plasma_current_ramp_down = input
+* =1, t_plant_pulse_plasma_current_ramp_up = iteration var or input. t_plant_pulse_coil_precharge/t_plant_pulse_plasma_current_ramp_down max of input or t_plant_pulse_plasma_current_ramp_up
 * JUSTIFICATION: Assuming default, may change
 
 *icc = 41
@@ -3184,11 +3184,11 @@ t_between_pulse = 100.0
 
 *tohsin =  
 * DESCRIPTION:   Switch for t_plant_pulse_plasma_current_ramp_up calculation
-* = 0, t_plant_pulse_plasma_current_ramp_up = t_plant_pulse_coil_precharge = t_ramp_down = Ip(MA)/0.5
-* = 1, t_plant_pulse_plasma_current_ramp_up = tohsin; t_plant_pulse_coil_precharge, t_ramp_down are input
+* = 0, t_plant_pulse_plasma_current_ramp_up = t_plant_pulse_coil_precharge = t_plant_pulse_plasma_current_ramp_down = Ip(MA)/0.5
+* = 1, t_plant_pulse_plasma_current_ramp_up = tohsin; t_plant_pulse_coil_precharge, t_plant_pulse_plasma_current_ramp_down are input
 * JUSTIFICATION: Not used, assuming default
 
-*t_ramp_down =  
+*t_plant_pulse_plasma_current_ramp_down =  
 * DESCRIPTION:   PF coil shutdown time (s)
 * JUSTIFICATION: Assuming default.
 

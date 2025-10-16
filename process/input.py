@@ -1626,7 +1626,7 @@ INPUT_VARIABLES = {
     "t_plant_pulse_coil_precharge": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "t_ramp_down": InputVariable(
+    "t_plant_pulse_plasma_current_ramp_down": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "dr_cs_turn_conduit": InputVariable(

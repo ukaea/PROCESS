@@ -1841,7 +1841,7 @@ class Physics:
                 times_variables.t_plant_pulse_coil_precharge = (
                     times_variables.t_plant_pulse_plasma_current_ramp_up
                 )
-                times_variables.t_ramp_down = (
+                times_variables.t_plant_pulse_plasma_current_ramp_down = (
                     times_variables.t_plant_pulse_plasma_current_ramp_up
                 )
 
@@ -1851,7 +1851,7 @@ class Physics:
                 times_variables.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 1.0e5
                 )
-                times_variables.t_ramp_down = (
+                times_variables.t_plant_pulse_plasma_current_ramp_down = (
                     times_variables.t_plant_pulse_plasma_current_ramp_up
                 )
 
@@ -1862,8 +1862,8 @@ class Physics:
                     times_variables.t_plant_pulse_coil_precharge,
                     times_variables.t_plant_pulse_plasma_current_ramp_up,
                 )
-                # t_ramp_down = max(t_ramp_down,t_plant_pulse_plasma_current_ramp_up)
-                times_variables.t_ramp_down = (
+                # t_plant_pulse_plasma_current_ramp_down = max(t_plant_pulse_plasma_current_ramp_down,t_plant_pulse_plasma_current_ramp_up)
+                times_variables.t_plant_pulse_plasma_current_ramp_down = (
                     times_variables.t_plant_pulse_plasma_current_ramp_up
                 )
 
@@ -1879,12 +1879,12 @@ class Physics:
             times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
             + times_variables.t_plant_pulse_burn
-            + times_variables.t_ramp_down
+            + times_variables.t_plant_pulse_plasma_current_ramp_down
         )
         times_variables.tdown = (
             times_variables.t_plant_pulse_coil_precharge
             + times_variables.t_plant_pulse_plasma_current_ramp_up
-            + times_variables.t_ramp_down
+            + times_variables.t_plant_pulse_plasma_current_ramp_down
             + times_variables.t_between_pulse
         )
 
@@ -1894,7 +1894,7 @@ class Physics:
             + times_variables.t_plant_pulse_plasma_current_ramp_up
             + times_variables.t_plant_pulse_fusion_ramp
             + times_variables.t_plant_pulse_burn
-            + times_variables.t_ramp_down
+            + times_variables.t_plant_pulse_plasma_current_ramp_down
             + times_variables.t_between_pulse
         )
 
@@ -3895,8 +3895,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Reset time to zero current for CS (s)",
-            "(t_ramp_down)",
-            times_variables.t_ramp_down,
+            "(t_plant_pulse_plasma_current_ramp_down)",
+            times_variables.t_plant_pulse_plasma_current_ramp_down,
         )
         po.ovarrf(
             self.outfile,

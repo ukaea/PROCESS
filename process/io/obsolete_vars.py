@@ -140,7 +140,7 @@ OBS_VARS = {
     "tohs": "t_plant_pulse_plasma_current_ramp_up",
     "tdwell": "t_between_pulse",
     "tramp": "t_plant_pulse_coil_precharge",
-    "tqnch": "t_ramp_down",
+    "tqnch": "t_plant_pulse_plasma_current_ramp_down",
     "tburn": "t_plant_pulse_burn",
     "pdivmax/rmajor": "pdivmax_over_rmajor",
     "pdivtbt/qar": "pdivtbt_over_qar",

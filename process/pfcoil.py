@@ -144,7 +144,9 @@ class PFCoil:
             tv.t_pulse_cumulative[2] + tv.t_plant_pulse_fusion_ramp
         )
         tv.t_pulse_cumulative[4] = tv.t_pulse_cumulative[3] + tv.t_plant_pulse_burn
-        tv.t_pulse_cumulative[5] = tv.t_pulse_cumulative[4] + tv.t_ramp_down
+        tv.t_pulse_cumulative[5] = (
+            tv.t_pulse_cumulative[4] + tv.t_plant_pulse_plasma_current_ramp_down
+        )
 
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
