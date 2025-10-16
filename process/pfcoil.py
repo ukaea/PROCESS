@@ -138,7 +138,9 @@ class PFCoil:
         tv.t_pulse_cumulative[0] = 0.0e0
         tv.t_pulse_cumulative[1] = tv.t_precharge
         tv.t_pulse_cumulative[2] = tv.t_pulse_cumulative[1] + tv.t_current_ramp_up
-        tv.t_pulse_cumulative[3] = tv.t_pulse_cumulative[2] + tv.t_fusion_ramp
+        tv.t_pulse_cumulative[3] = (
+            tv.t_pulse_cumulative[2] + tv.t_plant_pulse_fusion_ramp
+        )
         tv.t_pulse_cumulative[4] = tv.t_pulse_cumulative[3] + tv.t_plant_pulse_burn
         tv.t_pulse_cumulative[5] = tv.t_pulse_cumulative[4] + tv.t_ramp_down
 
@@ -662,7 +664,7 @@ class PFCoil:
                     )
                 )
 
-                # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_plant_pulse_burn
+                # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_plant_pulse_fusion_ramp+tv.t_plant_pulse_burn
                 pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * (
                     pfcoil_variables.ccls[nng]
                     - (
@@ -2923,7 +2925,7 @@ class PFCoil:
                     pfcoil_variables.c_pf_cs_coil_flat_top_ma[ic]
                 )
 
-            # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_plant_pulse_burn
+            # End of flat-top, t = t_precharge + t_current_ramp_up + t_plant_pulse_fusion_ramp + t_plant_pulse_burn
             if (
                 abs(pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic])
                 >= abs(pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic])

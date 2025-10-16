@@ -1611,7 +1611,7 @@ INPUT_VARIABLES = {
     "t_current_ramp_up": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "t_fusion_ramp": InputVariable(
+    "t_plant_pulse_fusion_ramp": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_in_bb": InputVariable(

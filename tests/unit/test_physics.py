@@ -2016,7 +2016,7 @@ class VoltSecondReqParam(NamedTuple):
 
     t_plant_pulse_burn: Any = None
 
-    t_fusion_ramp: Any = None
+    t_plant_pulse_fusion_ramp: Any = None
 
     expected_vs_plasma_internal: Any = None
 
@@ -2049,7 +2049,7 @@ class VoltSecondReqParam(NamedTuple):
             rmajor=8,
             res_plasma=3.7767895536275952e-09,
             t_plant_pulse_burn=1000,
-            t_fusion_ramp=10,
+            t_plant_pulse_fusion_ramp=10,
             expected_vs_plasma_internal=111.57651734747576,
             expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_plasma_burn_required=42.109179697761263,
@@ -2070,7 +2070,7 @@ class VoltSecondReqParam(NamedTuple):
             rmajor=8,
             res_plasma=3.7767895536275952e-09,
             t_plant_pulse_burn=0,
-            t_fusion_ramp=10,
+            t_plant_pulse_fusion_ramp=10,
             expected_vs_plasma_internal=111.57651734747576,
             expected_ind_plasma=1.4075705307248088e-05,
             expected_vs_plasma_burn_required=0.41692257126496302,
@@ -2112,7 +2112,7 @@ def test_vscalc(voltsecondreqparam):
         rmajor=voltsecondreqparam.rmajor,
         res_plasma=voltsecondreqparam.res_plasma,
         t_plant_pulse_burn=voltsecondreqparam.t_plant_pulse_burn,
-        t_fusion_ramp=voltsecondreqparam.t_fusion_ramp,
+        t_plant_pulse_fusion_ramp=voltsecondreqparam.t_plant_pulse_fusion_ramp,
     )
 
     assert vs_plasma_internal == pytest.approx(

@@ -116,7 +116,7 @@ OBS_VARS = {
     "idhe3": "f_plasma_fuel_helium3",
     "blnktth": None,
     "dz_blkt_upper": None,
-    "theat": "t_fusion_ramp",
+    "theat": "t_plant_pulse_fusion_ramp",
     "ieped": None,
     "eped_sf": None,
     "icurr": "i_plasma_current",

@@ -21,7 +21,7 @@ tdown: float = None
 t_between_pulse: float = None
 """time between pulses in a pulsed reactor (s) (`iteration variable 17`)"""
 
-t_fusion_ramp: float = None
+t_plant_pulse_fusion_ramp: float = None
 """time for plasma temperature and density rise to full values (s)"""
 
 t_pulse_cumulative: list[float] = None
@@ -43,7 +43,7 @@ i_t_current_ramp_up: int = None
    - = 1, t_current_ramp_up, t_precharge, t_ramp_down are input"""
 
 t_pulse_repetition: float = None
-"""pulse length = t_current_ramp_up + t_fusion_ramp + t_plant_pulse_burn + t_ramp_down"""
+"""pulse length = t_current_ramp_up + t_plant_pulse_fusion_ramp + t_plant_pulse_burn + t_ramp_down"""
 
 t_ramp_down: float = None
 """time for plasma current, density, and temperature to ramp down to zero, simultaneously (s); if pulsed, = t_current_ramp_up
@@ -61,7 +61,7 @@ def init_times_variables():
     global t_cycle
     global tdown
     global t_between_pulse
-    global t_fusion_ramp
+    global t_plant_pulse_fusion_ramp
     global t_pulse_cumulative
     global timelabel
     global intervallabel
@@ -77,13 +77,13 @@ def init_times_variables():
     t_cycle = np.array(0.0, dtype=np.float64)
     tdown = 0.0
     t_between_pulse = 1800.0
-    t_fusion_ramp = 10.0
+    t_plant_pulse_fusion_ramp = 10.0
     t_pulse_cumulative = np.zeros(6, dtype=np.float64)
     timelabel = ["Start", "BOP  ", "EOR  ", "BOF  ", "EOF  ", "EOP  "]
     intervallabel = [
         "t_precharge        ",
         "t_current_ramp_up  ",
-        "t_fusion_ramp      ",
+        "t_plant_pulse_fusion_ramp      ",
         "t_plant_pulse_burn             ",
         "t_ramp_down        ",
     ]

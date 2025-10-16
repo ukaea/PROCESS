@@ -973,7 +973,7 @@ class PfpwrParam(NamedTuple):
             intervallabel=(
                 "t_precharge      ",
                 "t_current_ramp_up       ",
-                "t_fusion_ramp      ",
+                "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
                 "t_ramp_down      ",
             ),
@@ -1716,7 +1716,7 @@ class PfpwrParam(NamedTuple):
             intervallabel=(
                 "t_precharge      ",
                 "t_current_ramp_up       ",
-                "t_fusion_ramp      ",
+                "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
                 "t_ramp_down      ",
             ),

@@ -57,7 +57,7 @@ Over the course of a pulse, the timings are detailed as:
 
 - Precharge (`t_precharge`) - the CS current ramps from zero to maximum value. The other PF coils also ramp from zero to their required values.
 - Current ramp-up (`t_current_ramp_up`) - The plasma current ramps up to approx full value. Auxiliary heating is possibly on.
-- Fusion ramp (`t_fusion_ramp`) - The plasma temperature and density rise to the full values. The CS and other PF coil currents all change steadily. Auxiliary heating is on.
+- Fusion ramp (`t_plant_pulse_fusion_ramp`) - The plasma temperature and density rise to the full values. The CS and other PF coil currents all change steadily. Auxiliary heating is on.
 - Burn time (`t_plant_pulse_burn`) - Flat-top duration. The plasma is approximately steady. Fusion power and electricity are produced. The CS and other PF coil currents all change steadily in a pulsed reactor, but are constant for a "steady-state" reactor. Auxiliary heating is on.
 - Ramp-down (`t_ramp_down`) - The plasma current, density and temperature all ramp down to zero simultaneously. As a starter for ten we could assume that the CS and PF coil currents also ramp to zero at the same time. Auxiliary heating is possibly on.
 - Between pulse (`t_between_pulse`) -  CS and PF coil currents are zero - a few minutes may be required to permit vacuum pumping. May be much longer for an experimental device such as DEMO.
