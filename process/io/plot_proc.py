@@ -3243,7 +3243,10 @@ def plot_current_profiles_over_time(
 
 
 def plot_system_power_profiles_over_time(
-    axis: plt.Axes, mfile_data: mf.MFile, scan: int
+    axis: plt.Axes,
+    mfile_data: mf.MFile,
+    scan: int,
+    fig,
 ) -> None:
     """
     Plots the power profiles over time for various systems.
@@ -3366,6 +3369,61 @@ def plot_system_power_profiles_over_time(
 
     # Add a grid for better readability
     axis.grid(True, linestyle="--", alpha=0.6)
+
+    # Add energy produced info
+    textstr_energy = (
+        f"$\\mathbf{{Energy \\ Production:}}$\n\n"
+        f"Energy produced over whole pulse: {mfile_data.data['e_plant_net_electric_pulse_mj'].get_scan(scan):,.4f} MJ \n"
+        f"Energy produced over whole pulse: {mfile_data.data['e_plant_net_electric_pulse_kwh'].get_scan(scan):,.4f} kWh \n"
+    )
+
+    axis.text(
+        0.075,
+        0.2,
+        textstr_energy,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add energy produced info
+    # helper to convert seconds to "Hh Mm Ss"
+    def secs_to_hms(s):
+        """Convert seconds to 'Hh Mm Ss' string."""
+        s = float(s)
+        return f"{int(s // 3600)}h {int((s % 3600) // 60)}m {int(s % 60)}s"
+
+    textstr_times = (
+        f"$\\mathbf{{Pulse \\ Timings:}}$\n\n"
+        f"Coil precharge, $t_{{\\text{{precharge}}}}$:        {mfile_data.data['t_precharge'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_precharge'].get_scan(scan))})\n"
+        f"Current ramp up, $t_{{\\text{{current ramp}}}}$:  {mfile_data.data['t_current_ramp_up'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_current_ramp_up'].get_scan(scan))})\n"
+        f"Fusion ramp, $t_{{\\text{{fusion ramp}}}}$:          {mfile_data.data['t_fusion_ramp'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_fusion_ramp'].get_scan(scan))})\n"
+        f"Burn, $t_{{\\text{{burn}}}}$:                              {mfile_data.data['t_burn'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_burn'].get_scan(scan))})\n"
+        f"Ramp down, $t_{{\\text{{ramp down}}}}$:           {mfile_data.data['t_ramp_down'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_ramp_down'].get_scan(scan))})\n"
+        f"Between pulse, $t_{{\\text{{between pulse}}}}$:   {mfile_data.data['t_between_pulse'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_between_pulse'].get_scan(scan))})\n\n"
+        f"Total pulse length, $t_{{\\text{{cycle}}}}$:        {mfile_data.data['t_cycle'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_cycle'].get_scan(scan))})\n"
+    )
+
+    axis.text(
+        0.6,
+        0.2,
+        textstr_times,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
 
 
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
@@ -12493,7 +12551,10 @@ def main_plot(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
     )
 
-    plot_system_power_profiles_over_time(fig20.add_subplot(111), m_file_data, scan)
+    ax20 = fig20.add_subplot(111)
+    # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
+    ax20.set_position([0.08, 0.35, 0.84, 0.57])
+    plot_system_power_profiles_over_time(ax20, m_file_data, scan, fig20)
 
 
 def main(args=None):
