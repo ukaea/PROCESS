@@ -6,7 +6,7 @@ pulsetimings: float = None
    - =0, t_current_ramp_up = Ip(MA)/0.1 t_precharge, t_ramp_down = input
    - =1, t_current_ramp_up = iteration var or input. t_precharge/t_ramp_down max of input or t_current_ramp_up"""
 
-t_burn: float = None
+t_plant_pulse_burn: float = None
 """flat-top duration (s) (calculated if `i_pulsed_plant=1`)"""
 
 t_burn_0: float = None
@@ -43,7 +43,7 @@ i_t_current_ramp_up: int = None
    - = 1, t_current_ramp_up, t_precharge, t_ramp_down are input"""
 
 t_pulse_repetition: float = None
-"""pulse length = t_current_ramp_up + t_fusion_ramp + t_burn + t_ramp_down"""
+"""pulse length = t_current_ramp_up + t_fusion_ramp + t_plant_pulse_burn + t_ramp_down"""
 
 t_ramp_down: float = None
 """time for plasma current, density, and temperature to ramp down to zero, simultaneously (s); if pulsed, = t_current_ramp_up
@@ -56,7 +56,7 @@ t_precharge: float = None
 def init_times_variables():
     """Initialise plasma pulse timing variables"""
     global pulsetimings
-    global t_burn
+    global t_plant_pulse_burn
     global t_burn_0
     global t_cycle
     global tdown
@@ -72,7 +72,7 @@ def init_times_variables():
     global t_precharge
 
     pulsetimings = 1.0
-    t_burn = np.array(1000.0, dtype=np.float64)
+    t_plant_pulse_burn = np.array(1000.0, dtype=np.float64)
     t_burn_0 = 0.0
     t_cycle = np.array(0.0, dtype=np.float64)
     tdown = 0.0
@@ -84,7 +84,7 @@ def init_times_variables():
         "t_precharge        ",
         "t_current_ramp_up  ",
         "t_fusion_ramp      ",
-        "t_burn             ",
+        "t_plant_pulse_burn             ",
         "t_ramp_down        ",
     ]
     t_current_ramp_up = 30.0
