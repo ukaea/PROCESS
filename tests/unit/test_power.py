@@ -975,7 +975,7 @@ class PfpwrParam(NamedTuple):
                 "t_plant_pulse_plasma_current_ramp_up       ",
                 "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
-                "t_ramp_down      ",
+                "t_plant_pulse_plasma_current_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -1718,7 +1718,7 @@ class PfpwrParam(NamedTuple):
                 "t_plant_pulse_plasma_current_ramp_up       ",
                 "t_plant_pulse_fusion_ramp      ",
                 "t_plant_pulse_burn      ",
-                "t_ramp_down      ",
+                "t_plant_pulse_plasma_current_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
