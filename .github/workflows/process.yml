@@ -72,7 +72,6 @@ jobs:
       - name: Run example notebook tests
         run: pytest tests/examples -n auto -v
 
-
   regression-test:
     runs-on: ubuntu-latest
     needs: [tracking]
@@ -113,11 +112,18 @@ jobs:
         run: pip install -r requirements_dev.txt
       - name: Run regression input files
         run: python tracking/run_tracking_inputs.py run tests/regression/input_files
+      - name: Move other files
+        run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
         uses: actions/upload-artifact@v4
         with:
           name: tracked-mfiles
           path: tracking/*_MFILE.DAT
+      - name: Archive tracked SIG_TF.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: sig-tfs
+          path: tracking/*.json
 
   pre-commit-quality-check:
     runs-on: ubuntu-latest
@@ -204,6 +210,15 @@ jobs:
         run: pip install -r requirements_dev.txt
       - run: python scripts/vardes.py
       - run: git config --global --add safe.directory '*'
+      - name: Download STF_TF.json files
+        uses: actions/download-artifact@v4
+        with:
+          name: sig-tfs
+          path: tracking/
+      - name: Create an example plot proc
+        run: python process/io/plot_proc.py -f tracking/large_tokamak_nof.MFILE.DAT
+      - name: Move plot proc file to docs images
+        run: mv tracking/large_tokamak_nof.MFILE.DATSUMMARY.pdf documentation/images/plot_proc.pdf
       - run: mkdocs build
       - name: Download tracking html
         uses: actions/download-artifact@v4
