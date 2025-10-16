@@ -44,6 +44,7 @@ def tracking(arguments):
             database=arguments.db,
             message=arguments.commit,
             hashid=arguments.hash,
+            tracking_variables_file=arguments.tracking_variables_file,
         )
 
         copied_mfile = shutil.copy(mfile_path, Path(arguments.db) / mfile_path.name)
@@ -67,6 +68,13 @@ if __name__ == "__main__":
     subparser_trk.add_argument("db", type=str)
     subparser_trk.add_argument("commit", type=str)
     subparser_trk.add_argument("hash", type=str)
+    subparser_trk.add_argument(
+        "--tracking-variables-file",
+        type=Path,
+        default=None,
+        help="A JSON file containing a list of variables to track."
+        "See the description of DEFAULT_TRACKING_VARIABLES for details on formatting the strings in the list.",
+    )
 
     arguments = parser.parse_args()
 
