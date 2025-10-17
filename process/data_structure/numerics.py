@@ -612,7 +612,7 @@ def init_numerics():
         "nd_plasma_electron_on_axis > nd_plasma_pedestal_electron                      ",
         "toroidalgap > dx_tf_inboard_out_t",
         "available_space > required_space ",
-        "beta > beta_min                  ",
+        "beta > beta_vol_avg_min                  ",
         "CP lifetime                      ",
         "TFC turn dimension               ",
         "Cryogenic plant power            ",

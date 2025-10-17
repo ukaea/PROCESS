@@ -2149,19 +2149,19 @@ def constraint_equation_84():
     """Equation for the lower limit of beta
     author: J Lion, IPP Greifswald
 
-    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_min
-    beta_min: Lower limit for beta
+    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_vol_avg_min
+    beta_vol_avg_min: Lower limit for beta
     beta: plasma beta
     """
     cc = (
         1.0
         - data_structure.constraint_variables.fbeta_min
         * data_structure.physics_variables.beta_total_vol_avg
-        / data_structure.physics_variables.beta_min
+        / data_structure.physics_variables.beta_vol_avg_min
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.beta_min * (1.0 - cc),
+        data_structure.physics_variables.beta_vol_avg_min * (1.0 - cc),
         data_structure.physics_variables.beta_total_vol_avg * cc,
     )
 

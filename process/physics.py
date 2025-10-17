@@ -4352,24 +4352,24 @@ class Physics:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on total beta",
-                "(beta_min)",
-                physics_variables.beta_min,
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
                 "IP",
             )
         elif physics_variables.i_beta_component == 1:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on thermal beta",
-                "(beta_min)",
-                physics_variables.beta_min,
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
                 "IP",
             )
         else:
             po.ovarrf(
                 self.outfile,
                 "Lower limit on thermal + NB beta",
-                "(beta_min)",
-                physics_variables.beta_min,
+                "(beta_vol_avg_min)",
+                physics_variables.beta_vol_avg_min,
                 "IP",
             )
         po.ovarre(

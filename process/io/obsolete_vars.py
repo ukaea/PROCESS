@@ -152,7 +152,7 @@ OBS_VARS = {
     "dnbeta": "beta_norm_max",
     "ifalphap": "i_beta_fast_alpha",
     "betalim": "beta_vol_avg_max",
-    "betalim_lower": "beta_min",
+    "betalim_lower": "beta_vol_avg_min",
     "fbeta": "fbeta_poloidal_eps",
     "fcwr": "fr_conducting_wall",
     "cvol": "f_vol_plasma",

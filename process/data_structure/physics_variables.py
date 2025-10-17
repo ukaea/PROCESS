@@ -225,8 +225,8 @@ beta_vol_avg_max: float = None
 """Max allowable volume averaged beta"""
 
 
-beta_min: float = None
-"""allowable lower beta"""
+beta_vol_avg_min: float = None
+"""Minimum allowable volume averaged beta"""
 
 
 beta_beam: float = None
@@ -1378,7 +1378,7 @@ def init_physics_variables():
     global beta_total_vol_avg
     global beta_fast_alpha
     global beta_vol_avg_max
-    global beta_min
+    global beta_vol_avg_min
     global beta_beam
     global beta_poloidal_vol_avg
     global beta_poloidal_eps
@@ -1631,7 +1631,7 @@ def init_physics_variables():
     beta_total_vol_avg = 0.042
     beta_fast_alpha = 0.0
     beta_vol_avg_max = 0.0
-    beta_min = 0.0
+    beta_vol_avg_min = 0.0
     beta_beam = 0.0
     beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
