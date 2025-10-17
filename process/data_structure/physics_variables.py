@@ -382,8 +382,8 @@ beta_norm_max_stambaugh: float = None
 """Stambaugh-like coefficient for beta scaling"""
 
 
-dnelimt: float = None
-"""density limit (/m3)"""
+nd_plasma_electrons_max: float = None
+"""Plasma electron max density limit (/m3)"""
 
 
 nd_plasma_ions_total_vol_avg: float = None
@@ -1417,7 +1417,7 @@ def init_physics_variables():
     global beta_norm_max_original_scaling
     global beta_norm_max_tholerus
     global beta_norm_max_stambaugh
-    global dnelimt
+    global nd_plasma_electrons_max
     global nd_plasma_ions_total_vol_avg
     global nd_plasma_electron_line
     global nd_plasma_protons_vol_avg
@@ -1670,7 +1670,7 @@ def init_physics_variables():
     beta_norm_max_original_scaling = 0.0
     beta_norm_max_tholerus = 0.0
     beta_norm_max_stambaugh = 0.0
-    dnelimt = 0.0
+    nd_plasma_electrons_max = 0.0
     nd_plasma_ions_total_vol_avg = 0.0
     nd_plasma_electron_line = 0.0
     nd_plasma_protons_vol_avg = 0.0

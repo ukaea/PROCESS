@@ -281,7 +281,7 @@ class Stellarator:
         This routine reiterates some physics modules.
         """
 
-        physics_variables.dnelimt = self.stdlim(
+        physics_variables.nd_plasma_electrons_max = self.stdlim(
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.p_plasma_loss_mw,
             physics_variables.rmajor,
@@ -3694,7 +3694,7 @@ class Stellarator:
 
         #  Set the required value for icc=5
 
-        physics_variables.dnelimt = nd_plasma_electron_max_array
+        physics_variables.nd_plasma_electrons_max = nd_plasma_electron_max_array
 
         return nd_plasma_electron_max_array
 
@@ -4723,7 +4723,7 @@ class Stellarator:
                 nu_star_T,
                 nu_star_He,
                 physics_variables.nd_plasma_electron_line,
-                physics_variables.dnelimt,
+                physics_variables.nd_plasma_electrons_max,
             )
 
     def stphys_output(
@@ -4747,7 +4747,7 @@ class Stellarator:
         nu_star_T,
         nu_star_He,
         nd_plasma_electron_line,
-        dnelimt,
+        nd_plasma_electrons_max,
     ):
         po.oheadr(self.outfile, "Stellarator Specific Physics:")
 
@@ -4857,12 +4857,17 @@ class Stellarator:
             "(nd_plasma_electron_line)",
             nd_plasma_electron_line,
         )
-        po.ovarre(self.outfile, "Sudo density limit (/m3)", "(dnelimt)", dnelimt)
+        po.ovarre(
+            self.outfile,
+            "Sudo density limit (/m3)",
+            "(nd_plasma_electrons_max)",
+            nd_plasma_electrons_max,
+        )
         po.ovarre(
             self.outfile,
             "Ratio density to sudo limit (1)",
-            "(nd_plasma_electron_line/dnelimt)",
-            nd_plasma_electron_line / dnelimt,
+            "(nd_plasma_electron_line/nd_plasma_electrons_max)",
+            nd_plasma_electron_line / nd_plasma_electrons_max,
         )
 
     def calc_neoclassics(self):

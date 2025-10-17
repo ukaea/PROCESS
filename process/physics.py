@@ -2460,7 +2460,7 @@ class Physics:
         # Density limit
         (
             physics_variables.nd_plasma_electron_max_array,
-            physics_variables.dnelimt,
+            physics_variables.nd_plasma_electrons_max,
         ) = self.calculate_density_limit(
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.i_density_limit,
@@ -3075,7 +3075,7 @@ class Physics:
         Returns:
             Tuple[np.ndarray, float]: A tuple containing:
                 - nd_plasma_electron_max_array (np.ndarray): Average plasma density limit using seven different models (m^-3).
-                - dnelimt (float): Enforced average plasma density limit (m^-3).
+                - nd_plasma_electrons_max (float): Enforced average plasma density limit (m^-3).
 
         Raises:
             ValueError: If i_density_limit is not between 1 and 7.
@@ -5070,16 +5070,16 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Density limit from scaling (/m3)",
-                "(dnelimt)",
-                physics_variables.dnelimt,
+                "(nd_plasma_electrons_max)",
+                physics_variables.nd_plasma_electrons_max,
                 "OP ",
             )
             if (numerics.ioptimz > 0) and (numerics.active_constraints[4]):
                 po.ovarre(
                     self.outfile,
                     "Density limit (enforced) (/m3)",
-                    "(boundu(9)*dnelimt)",
-                    numerics.boundu[8] * physics_variables.dnelimt,
+                    "(boundu(9)*nd_plasma_electrons_max)",
+                    numerics.boundu[8] * physics_variables.nd_plasma_electrons_max,
                     "OP ",
                 )
 

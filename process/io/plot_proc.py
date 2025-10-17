@@ -3118,7 +3118,7 @@ def plot_main_plasma_information(
     # Add density limit information
     textstr_density_limit = (
         f"$\\mathbf{{Density \\ limit:}}$\n\n"
-        f"$n_{{\\text{{e,limit}}}}: {mfile_data.data['dnelimt'].get_scan(scan):.3e} \\ m^{{-3}}$\n"
+        f"$n_{{\\text{{e,limit}}}}: {mfile_data.data['nd_plasma_electrons_max'].get_scan(scan):.3e} \\ m^{{-3}}$\n"
     )
 
     axis.text(

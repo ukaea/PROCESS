@@ -2477,22 +2477,26 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    nd_plasma_electron_max_array, dnelimt = physics.calculate_density_limit(
-        i_density_limit=calculatedensitylimitparam.i_density_limit,
-        b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
-        p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
-        p_hcd_injected_total_mw=calculatedensitylimitparam.p_hcd_injected_total_mw,
-        plasma_current=calculatedensitylimitparam.plasma_current,
-        prn1=calculatedensitylimitparam.prn1,
-        q95=calculatedensitylimitparam.q95,
-        qcyl=calculatedensitylimitparam.qcyl,
-        rmajor=calculatedensitylimitparam.rmajor,
-        rminor=calculatedensitylimitparam.rminor,
-        a_plasma_surface=calculatedensitylimitparam.a_plasma_surface,
-        zeff=calculatedensitylimitparam.zeff,
+    nd_plasma_electron_max_array, nd_plasma_electrons_max = (
+        physics.calculate_density_limit(
+            i_density_limit=calculatedensitylimitparam.i_density_limit,
+            b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
+            p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
+            p_hcd_injected_total_mw=calculatedensitylimitparam.p_hcd_injected_total_mw,
+            plasma_current=calculatedensitylimitparam.plasma_current,
+            prn1=calculatedensitylimitparam.prn1,
+            q95=calculatedensitylimitparam.q95,
+            qcyl=calculatedensitylimitparam.qcyl,
+            rmajor=calculatedensitylimitparam.rmajor,
+            rminor=calculatedensitylimitparam.rminor,
+            a_plasma_surface=calculatedensitylimitparam.a_plasma_surface,
+            zeff=calculatedensitylimitparam.zeff,
+        )
     )
 
-    assert dnelimt == pytest.approx(calculatedensitylimitparam.expected_dnelimt)
+    assert nd_plasma_electrons_max == pytest.approx(
+        calculatedensitylimitparam.expected_dnelimt
+    )
 
     assert nd_plasma_electron_max_array == pytest.approx(
         calculatedensitylimitparam.expected_dlimit
