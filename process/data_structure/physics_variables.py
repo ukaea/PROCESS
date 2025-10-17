@@ -342,8 +342,8 @@ dlamie: float = None
 """ion-electron coulomb logarithm"""
 
 
-dlimit: list[float] = None
-"""density limit (/m3) as calculated using various models"""
+nd_plasma_electron_max_array: list[float] = None
+"""Plasma electron density max limit model array (/m3)"""
 
 
 nd_plasma_alphas_vol_avg: float = None
@@ -1407,7 +1407,7 @@ def init_physics_variables():
     global nd_plasma_fuel_ions_vol_avg
     global dlamee
     global dlamie
-    global dlimit
+    global nd_plasma_electron_max_array
     global nd_plasma_alphas_vol_avg
     global nd_beam_ions
     global nd_beam_ions_out
@@ -1660,7 +1660,7 @@ def init_physics_variables():
     nd_plasma_fuel_ions_vol_avg = 0.0
     dlamee = 0.0
     dlamie = 0.0
-    dlimit = np.zeros(8, dtype=np.float64)
+    nd_plasma_electron_max_array = np.zeros(8, dtype=np.float64)
     nd_plasma_alphas_vol_avg = 0.0
     nd_beam_ions = 0.0
     nd_beam_ions_out = 0.0

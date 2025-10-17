@@ -2085,7 +2085,7 @@ class Physics:
                 q0=physics_variables.q0,
                 radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
                 nd_plasma_pedestal_electron=physics_variables.nd_plasma_pedestal_electron,
-                n_greenwald=physics_variables.dlimit[6],
+                n_greenwald=physics_variables.nd_plasma_electron_max_array[6],
                 temp_plasma_pedestal_kev=physics_variables.temp_plasma_pedestal_kev,
             )
         )
@@ -2459,7 +2459,7 @@ class Physics:
 
         # Density limit
         (
-            physics_variables.dlimit,
+            physics_variables.nd_plasma_electron_max_array,
             physics_variables.dnelimt,
         ) = self.calculate_density_limit(
             physics_variables.b_plasma_toroidal_on_axis,
@@ -2805,7 +2805,7 @@ class Physics:
                 ),
             )
             fgw = (
-                physics_variables.dlimit[6]
+                physics_variables.nd_plasma_electron_max_array[6]
                 / physics_variables.nd_plasma_electrons_vol_avg
             )
             # calculate separatrix temperature, if Reinke criterion is used
@@ -3074,7 +3074,7 @@ class Physics:
 
         Returns:
             Tuple[np.ndarray, float]: A tuple containing:
-                - dlimit (np.ndarray): Average plasma density limit using seven different models (m^-3).
+                - nd_plasma_electron_max_array (np.ndarray): Average plasma density limit using seven different models (m^-3).
                 - dnelimt (float): Enforced average plasma density limit (m^-3).
 
         Raises:
@@ -3098,7 +3098,7 @@ class Physics:
                 "Illegal value for i_density_limit", i_density_limit=i_density_limit
             )
 
-        dlimit = np.empty((8,))
+        nd_plasma_electron_max_array = np.empty((8,))
 
         # Power per unit area crossing the plasma edge
         # (excludes radiation and neutrons)
@@ -3109,7 +3109,7 @@ class Physics:
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[0] = (
+        nd_plasma_electron_max_array[0] = (
             1.54e20
             * p_perp**0.43
             * b_plasma_toroidal_on_axis**0.31
@@ -3121,7 +3121,7 @@ class Physics:
         # to give the density limit applying to the average plasma density.
         # Borrass et al, ITER-TN-PH-9-6 (1989)
 
-        dlimit[1] = (
+        nd_plasma_electron_max_array[1] = (
             1.8e20
             * p_perp**0.53
             * b_plasma_toroidal_on_axis**0.31
@@ -3134,7 +3134,7 @@ class Physics:
         # This formula is (almost) identical to that in the original routine
         # denlim (now deleted).
 
-        dlimit[2] = (
+        nd_plasma_electron_max_array[2] = (
             0.5e20
             * p_perp**0.57
             * b_plasma_toroidal_on_axis**0.31
@@ -3150,19 +3150,21 @@ class Physics:
         if denom <= 0.0:
             if i_density_limit == 4:
                 logger.error(
-                    f"qcyl < 4/3; dlimit(4) set to zero; model 5 will be enforced instead. {denom=} {qcyl=}"
+                    f"qcyl < 4/3; nd_plasma_electron_max_array(4) set to zero; model 5 will be enforced instead. {denom=} {qcyl=}"
                 )
                 i_density_limit = 5
 
-            dlimit[3] = 0.0
+            nd_plasma_electron_max_array[3] = 0.0
         else:
-            dlimit[3] = (1.0e20 * np.sqrt(p_hcd_injected_total_mw / denom)) / prn1
+            nd_plasma_electron_max_array[3] = (
+                1.0e20 * np.sqrt(p_hcd_injected_total_mw / denom)
+            ) / prn1
 
         # JET simplified density limit model
         # This applies to the density at the plasma edge, so must be scaled
         # to give the density limit applying to the average plasma density.
 
-        dlimit[4] = (
+        nd_plasma_electron_max_array[4] = (
             0.237e20
             * b_plasma_toroidal_on_axis
             * np.sqrt(p_plasma_separatrix_mw)
@@ -3172,13 +3174,17 @@ class Physics:
         # Hugill-Murakami M.q limit
         # qcyl=qstar here, which is okay according to the literature
 
-        dlimit[5] = 3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
+        nd_plasma_electron_max_array[5] = (
+            3.0e20 * b_plasma_toroidal_on_axis / (rmajor * qcyl)
+        )
 
         # Greenwald limit
 
-        dlimit[6] = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
+        nd_plasma_electron_max_array[6] = (
+            1.0e14 * plasma_current / (np.pi * rminor * rminor)
+        )
 
-        dlimit[7] = (
+        nd_plasma_electron_max_array[7] = (
             1.0e20
             * 0.506
             * (p_hcd_injected_total_mw**0.396 * (plasma_current / 1.0e6) ** 0.265)
@@ -3187,7 +3193,9 @@ class Physics:
 
         # Enforce the chosen density limit
 
-        return dlimit, dlimit[i_density_limit - 1]
+        return nd_plasma_electron_max_array, nd_plasma_electron_max_array[
+            i_density_limit - 1
+        ]
 
     @staticmethod
     def plasma_composition() -> None:
@@ -4680,7 +4688,8 @@ class Physics:
                 self.outfile,
                 "Line-averaged electron density / Greenwald density",
                 "(dnla_gw)",
-                physics_variables.nd_plasma_electron_line / physics_variables.dlimit[6],
+                physics_variables.nd_plasma_electron_line
+                / physics_variables.nd_plasma_electron_max_array[6],
                 "OP ",
             )
 
@@ -4897,21 +4906,21 @@ class Physics:
             # must be assigned to their exisiting values#
             fgwped_out = (
                 physics_variables.nd_plasma_pedestal_electron
-                / physics_variables.dlimit[6]
+                / physics_variables.nd_plasma_electron_max_array[6]
             )
             fgwsep_out = (
                 physics_variables.nd_plasma_separatrix_electron
-                / physics_variables.dlimit[6]
+                / physics_variables.nd_plasma_electron_max_array[6]
             )
             if physics_variables.f_nd_plasma_pedestal_greenwald >= 0e0:
                 physics_variables.f_nd_plasma_pedestal_greenwald = (
                     physics_variables.nd_plasma_pedestal_electron
-                    / physics_variables.dlimit[6]
+                    / physics_variables.nd_plasma_electron_max_array[6]
                 )
             if physics_variables.f_nd_plasma_separatrix_greenwald >= 0e0:
                 physics_variables.f_nd_plasma_separatrix_greenwald = (
                     physics_variables.nd_plasma_separatrix_electron
-                    / physics_variables.dlimit[6]
+                    / physics_variables.nd_plasma_electron_max_array[6]
                 )
 
             po.ovarre(
@@ -5005,57 +5014,57 @@ class Physics:
             po.ovarre(
                 self.outfile,
                 "Old ASDEX model",
-                "(dlimit(1))",
-                physics_variables.dlimit[0],
+                "(nd_plasma_electron_max_array(1))",
+                physics_variables.nd_plasma_electron_max_array[0],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Borrass ITER model I",
-                "(dlimit(2))",
-                physics_variables.dlimit[1],
+                "(nd_plasma_electron_max_array(2))",
+                physics_variables.nd_plasma_electron_max_array[1],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Borrass ITER model II",
-                "(dlimit(3))",
-                physics_variables.dlimit[2],
+                "(nd_plasma_electron_max_array(3))",
+                physics_variables.nd_plasma_electron_max_array[2],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "JET edge radiation model",
-                "(dlimit(4))",
-                physics_variables.dlimit[3],
+                "(nd_plasma_electron_max_array(4))",
+                physics_variables.nd_plasma_electron_max_array[3],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "JET simplified model",
-                "(dlimit(5))",
-                physics_variables.dlimit[4],
+                "(nd_plasma_electron_max_array(5))",
+                physics_variables.nd_plasma_electron_max_array[4],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Hugill-Murakami Mq model",
-                "(dlimit(6))",
-                physics_variables.dlimit[5],
+                "(nd_plasma_electron_max_array(6))",
+                physics_variables.nd_plasma_electron_max_array[5],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Greenwald model",
-                "(dlimit(7))",
-                physics_variables.dlimit[6],
+                "(nd_plasma_electron_max_array(7))",
+                physics_variables.nd_plasma_electron_max_array[6],
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "ASDEX New",
-                "(dlimit(8))",
-                physics_variables.dlimit[7],
+                "(nd_plasma_electron_max_array(8))",
+                physics_variables.nd_plasma_electron_max_array[7],
                 "OP ",
             )
             po.ovarre(

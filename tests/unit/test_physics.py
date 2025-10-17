@@ -2477,7 +2477,7 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    dlimit, dnelimt = physics.calculate_density_limit(
+    nd_plasma_electron_max_array, dnelimt = physics.calculate_density_limit(
         i_density_limit=calculatedensitylimitparam.i_density_limit,
         b_plasma_toroidal_on_axis=calculatedensitylimitparam.b_plasma_toroidal_on_axis,
         p_plasma_separatrix_mw=calculatedensitylimitparam.p_plasma_separatrix_mw,
@@ -2494,7 +2494,9 @@ def test_calculate_density_limit(calculatedensitylimitparam, physics):
 
     assert dnelimt == pytest.approx(calculatedensitylimitparam.expected_dnelimt)
 
-    assert dlimit == pytest.approx(calculatedensitylimitparam.expected_dlimit)
+    assert nd_plasma_electron_max_array == pytest.approx(
+        calculatedensitylimitparam.expected_dlimit
+    )
 
 
 class ConfinementTimeParam(NamedTuple):

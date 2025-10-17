@@ -2692,7 +2692,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(physics_variables, "dnelimt", stdlimparam.dnelimt)
 
-    dlimit = stellarator.stdlim(
+    nd_plasma_electron_max_array = stellarator.stdlim(
         b_plasma_toroidal_on_axis=stdlimparam.b_plasma_toroidal_on_axis,
         powht=stdlimparam.powht,
         rmajor=stdlimparam.rmajor,
@@ -2701,7 +2701,7 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
 
     assert physics_variables.dnelimt == pytest.approx(stdlimparam.expected_dnelimt)
 
-    assert dlimit == pytest.approx(stdlimparam.expected_dlimit)
+    assert nd_plasma_electron_max_array == pytest.approx(stdlimparam.expected_dlimit)
 
 
 class StdlimEcrhParam(NamedTuple):

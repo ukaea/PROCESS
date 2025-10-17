@@ -1939,7 +1939,7 @@ def constraint_equation_76():
     triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
     aspect: aspect ratio (iteration variable 1)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
-    dlimit(7)array : density limit (/m3) as calculated using various models
+    nd_plasma_electron_max_array(7)array : density limit (/m3) as calculated using various models
     fnesep: f-value for Eich critical separatrix density
     """
     # TODO: why on earth are these variables being set here!? Should they be local?
@@ -1958,7 +1958,7 @@ def constraint_equation_76():
             (data_structure.physics_variables.p_plasma_separatrix_mw * 1.0e6)
             ** (-11.0 / 70.0)
         )
-        * data_structure.physics_variables.dlimit[6]
+        * data_structure.physics_variables.nd_plasma_electron_max_array[6]
     )
 
     cc = (

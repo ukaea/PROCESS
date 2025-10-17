@@ -3658,7 +3658,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
         rf"$\rho_{{\text{{ped,n}}}}$: {radius_plasma_pedestal_density_norm:.3f}"
         r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
-        f"{mfile_data.data['nd_plasma_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
+        f"{mfile_data.data['nd_plasma_electron_line'].get_scan(scan) / mfile_data.data['nd_plasma_electron_max_array(7)'].get_scan(scan):.3f}",
         rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
         rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
     ))
@@ -6839,7 +6839,7 @@ def plot_physics_info(axis, mfile_data, scan):
     axis.set_autoscalex_on(False)
 
     nong = mfile_data.data["nd_plasma_electron_line"].get_scan(scan) / mfile_data.data[
-        "dlimit(7)"
+        "nd_plasma_electron_max_array(7)"
     ].get_scan(scan)
 
     nd_plasma_impurities_vol_avg = mfile_data.data[
@@ -8384,14 +8384,16 @@ def plot_density_limit_comparison(
         mfile_data (mf.MFile): MFILE data object.
         scan (int): Scan number to use.
     """
-    old_asdex = mfile_data.data["dlimit(1)"].get_scan(scan)
-    borrass_iter_i = mfile_data.data["dlimit(2)"].get_scan(scan)
-    borrass_iter_ii = mfile_data.data["dlimit(3)"].get_scan(scan)
-    jet_edge_radiation = mfile_data.data["dlimit(4)"].get_scan(scan)
-    jet_simplified = mfile_data.data["dlimit(5)"].get_scan(scan)
-    hugill_murakami = mfile_data.data["dlimit(6)"].get_scan(scan)
-    greenwald = mfile_data.data["dlimit(7)"].get_scan(scan)
-    asdex_new = mfile_data.data["dlimit(8)"].get_scan(scan)
+    old_asdex = mfile_data.data["nd_plasma_electron_max_array(1)"].get_scan(scan)
+    borrass_iter_i = mfile_data.data["nd_plasma_electron_max_array(2)"].get_scan(scan)
+    borrass_iter_ii = mfile_data.data["nd_plasma_electron_max_array(3)"].get_scan(scan)
+    jet_edge_radiation = mfile_data.data["nd_plasma_electron_max_array(4)"].get_scan(
+        scan
+    )
+    jet_simplified = mfile_data.data["nd_plasma_electron_max_array(5)"].get_scan(scan)
+    hugill_murakami = mfile_data.data["nd_plasma_electron_max_array(6)"].get_scan(scan)
+    greenwald = mfile_data.data["nd_plasma_electron_max_array(7)"].get_scan(scan)
+    asdex_new = mfile_data.data["nd_plasma_electron_max_array(8)"].get_scan(scan)
 
     # Data for the box plot
     data = {

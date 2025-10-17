@@ -406,13 +406,13 @@
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
- Old_ASDEX_model_________________________________________________________ (dlimit(1))___________________      5.2107E+19 OP 
- Borrass_ITER_model_I____________________________________________________ (dlimit(2))___________________      1.0653E+20 OP 
- Borrass_ITER_model_II___________________________________________________ (dlimit(3))___________________      4.1967E+19 OP 
- JET_edge_radiation_model________________________________________________ (dlimit(4))___________________      3.0404E+21 OP 
- JET_simplified_model____________________________________________________ (dlimit(5))___________________      4.0490E+20 OP 
- Hugill-Murakami_Mq_model________________________________________________ (dlimit(6))___________________      6.6879E+19 OP 
- Greenwald_model_________________________________________________________ (dlimit(7))___________________      7.4748E+19 OP 
+ Old_ASDEX_model_________________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(1))___________________      5.2107E+19 OP 
+ Borrass_ITER_model_I____________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(2))___________________      1.0653E+20 OP 
+ Borrass_ITER_model_II___________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(3))___________________      4.1967E+19 OP 
+ JET_edge_radiation_model________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(4))___________________      3.0404E+21 OP 
+ JET_simplified_model____________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(5))___________________      4.0490E+20 OP 
+ Hugill-Murakami_Mq_model________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(6))___________________      6.6879E+19 OP 
+ Greenwald_model_________________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(7))___________________      7.4748E+19 OP 
  Deuterium_fuel_fraction_________________________________________________ (fdeut)_______________________      5.0000E-01    
  Tritium_fuel_fraction___________________________________________________ (ftrit)_______________________      5.0000E-01    
  Total_fusion_power_(MW)_________________________________________________ (p_fusion_total_mw)______________________      1.5926E+03 OP 

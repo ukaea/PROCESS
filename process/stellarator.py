@@ -3661,7 +3661,7 @@ class Stellarator:
         powht  : input real : Absorbed heating power (MW)
         rmajor : input real : Plasma major radius (m)
         rminor : input real : Plasma minor radius (m)
-        dlimit : output real : Maximum volume-averaged plasma density (/m3)
+        nd_plasma_electron_max_array : output real : Maximum volume-averaged plasma density (/m3)
         This routine calculates the density limit for a stellarator.
         S.Sudo, Y.Takeiri, H.Zushi et al., Scalings of Energy Confinement
         and Density Limit in Stellarator/Heliotron Devices, Nuclear Fusion
@@ -3686,7 +3686,7 @@ class Stellarator:
         #  Scale the result so that it applies to the volume-averaged
         #  electron density
 
-        dlimit = (
+        nd_plasma_electron_max_array = (
             dnlamx
             * physics_variables.nd_plasma_electrons_vol_avg
             / physics_variables.nd_plasma_electron_line
@@ -3694,9 +3694,9 @@ class Stellarator:
 
         #  Set the required value for icc=5
 
-        physics_variables.dnelimt = dlimit
+        physics_variables.dnelimt = nd_plasma_electron_max_array
 
-        return dlimit
+        return nd_plasma_electron_max_array
 
     def stcoil_output(
         self,
