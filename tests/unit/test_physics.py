@@ -1418,7 +1418,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     nd_plasma_electrons_vol_avg: Any = None
 
-    nd_protons: Any = None
+    nd_plasma_protons_vol_avg: Any = None
 
     iscz: Any = None
 
@@ -1558,7 +1558,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_plasma_fuel_helium3=0,
             nd_plasma_alphas_vol_avg=0,
             nd_plasma_electrons_vol_avg=7.5e19,
-            nd_protons=0,
+            nd_plasma_protons_vol_avg=0,
             iscz=0,
             err242=0,
             err243=0,
@@ -1676,7 +1676,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_plasma_fuel_helium3=0,
             nd_plasma_alphas_vol_avg=7.5e18,
             nd_plasma_electrons_vol_avg=7.5e19,
-            nd_protons=7500000000000000,
+            nd_plasma_protons_vol_avg=7500000000000000,
             iscz=0,
             err242=0,
             err243=0,
@@ -1893,7 +1893,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "nd_protons", plasmacompositionparam.nd_protons
+        physics_variables,
+        "nd_plasma_protons_vol_avg",
+        plasmacompositionparam.nd_plasma_protons_vol_avg,
     )
 
     monkeypatch.setattr(physics_variables, "iscz", plasmacompositionparam.iscz)
@@ -1972,7 +1974,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_nd_alphas
     )
 
-    assert physics_variables.nd_protons == pytest.approx(
+    assert physics_variables.nd_plasma_protons_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_protons
     )
 

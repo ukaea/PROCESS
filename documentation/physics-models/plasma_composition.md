@@ -68,19 +68,19 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 
 2. **Protons Calculation**
-    - The calculation of proton density (`nd_protons`) depends on whether the alpha rate density has been calculated. This should only happen in the first function call as the rates are calculated later on in the code.
+    - The calculation of proton density (`nd_plasma_protons_vol_avg`) depends on whether the alpha rate density has been calculated. This should only happen in the first function call as the rates are calculated later on in the code.
 
     - If the alpha rate density is not yet calculated, use a rough estimate.
 
     $$
-    \texttt{nd_protons} | n_{\text{p}} = \\
+    \texttt{nd_plasma_protons_vol_avg} | n_{\text{p}} = \\
     \text{max}\left[\texttt{f_nd_protium_electrons} \times n_{\text{e}}, n_{\alpha}\times \left(f_{\text{3He}} + 0.001\right)\right]
     $$
 
     - Otherwise, use the calculated proton rate density.
 
     $$
-    \texttt{nd_protons} | n_{\text{p}} = \\
+    \texttt{nd_plasma_protons_vol_avg} | n_{\text{p}} = \\
     \text{max}\left[\texttt{f_nd_protium_electrons} \times n_{\text{e}}, n_{\alpha}\times \frac{r_{\text{p}}}{r_{\alpha,\text{total}}}\right]
     $$
 

@@ -394,8 +394,8 @@ nd_electron_line: float = None
 """line averaged electron density (/m3)"""
 
 
-nd_protons: float = None
-"""proton ash density (/m3)"""
+nd_plasma_protons_vol_avg: float = None
+"""Plasma volume averaged proton ash density (/m3)"""
 
 
 ntau: float = None
@@ -1420,7 +1420,7 @@ def init_physics_variables():
     global dnelimt
     global nd_ions_total
     global nd_electron_line
-    global nd_protons
+    global nd_plasma_protons_vol_avg
     global ntau
     global nTtau
     global nd_impurities
@@ -1673,7 +1673,7 @@ def init_physics_variables():
     dnelimt = 0.0
     nd_ions_total = 0.0
     nd_electron_line = 0.0
-    nd_protons = 0.0
+    nd_plasma_protons_vol_avg = 0.0
     ntau = 0.0
     nTtau = 0.0
     nd_impurities = 0.0

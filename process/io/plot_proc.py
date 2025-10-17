@@ -3684,7 +3684,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         r"$\langle n_{\text{impurities}} \rangle $: "
         f"{mfile_data.data['nd_impurities'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{protons}} \rangle $:"
-        f"{mfile_data.data['nd_protons'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_protons_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
     ))
 
     prof.text(

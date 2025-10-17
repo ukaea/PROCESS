@@ -3234,14 +3234,14 @@ class Physics:
         # Issue #557 Allow f_nd_protium_electrons impurity to be specified: 'f_nd_protium_electrons'
         # This will override the calculated value which is a minimum.
         if physics_variables.fusden_alpha_total < 1.0e-6:  # not calculated yet...
-            physics_variables.nd_protons = max(
+            physics_variables.nd_plasma_protons_vol_avg = max(
                 physics_variables.f_nd_protium_electrons
                 * physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_plasma_alphas_vol_avg
                 * (physics_variables.f_plasma_fuel_helium3 + 1.0e-3),
             )  # rough estimate
         else:
-            physics_variables.nd_protons = max(
+            physics_variables.nd_plasma_protons_vol_avg = max(
                 physics_variables.f_nd_protium_electrons
                 * physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_plasma_alphas_vol_avg
@@ -3281,7 +3281,7 @@ class Physics:
         znfuel = (
             physics_variables.nd_plasma_electrons_vol_avg
             - 2.0 * physics_variables.nd_plasma_alphas_vol_avg
-            - physics_variables.nd_protons
+            - physics_variables.nd_plasma_protons_vol_avg
             - physics_variables.nd_beam_ions
             - znimp
         )
@@ -3302,7 +3302,7 @@ class Physics:
         impurity_radiation_module.f_nd_impurity_electron_array[
             impurity_radiation.element2index("H_")
         ] = (
-            physics_variables.nd_protons
+            physics_variables.nd_plasma_protons_vol_avg
             + (
                 physics_variables.f_plasma_fuel_deuterium
                 + physics_variables.f_plasma_fuel_tritium
@@ -3337,7 +3337,7 @@ class Physics:
         physics_variables.nd_ions_total = (
             physics_variables.nd_fuel_ions
             + physics_variables.nd_plasma_alphas_vol_avg
-            + physics_variables.nd_protons
+            + physics_variables.nd_plasma_protons_vol_avg
             + physics_variables.nd_beam_ions
             + physics_variables.nd_impurities
         )
@@ -3428,7 +3428,7 @@ class Physics:
         physics_variables.m_ions_total_amu = (
             (physics_variables.m_fuel_amu * physics_variables.nd_fuel_ions)
             + (constants.M_ALPHA_AMU * physics_variables.nd_plasma_alphas_vol_avg)
-            + (physics_variables.nd_protons * constants.M_PROTON_AMU)
+            + (physics_variables.nd_plasma_protons_vol_avg * constants.M_PROTON_AMU)
             + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
         )
         for imp in range(impurity_radiation_module.N_IMPURITIES):
@@ -3465,7 +3465,7 @@ class Physics:
                 / constants.M_HELION_AMU
             )
             + (4.0 * physics_variables.nd_plasma_alphas_vol_avg / constants.M_ALPHA_AMU)
-            + (physics_variables.nd_protons / constants.M_PROTON_AMU)
+            + (physics_variables.nd_plasma_protons_vol_avg / constants.M_PROTON_AMU)
             + (
                 (1.0 - current_drive_variables.f_beam_tritium)
                 * physics_variables.nd_beam_ions
@@ -4709,9 +4709,9 @@ class Physics:
         )
         po.ovarre(
             self.outfile,
-            "Proton number density (/m3)",
-            "(nd_protons)",
-            physics_variables.nd_protons,
+            "Plasma volume averaged proton number density (/m3)",
+            "(nd_plasma_protons_vol_avg)",
+            physics_variables.nd_plasma_protons_vol_avg,
             "OP ",
         )
         po.ovarre(
