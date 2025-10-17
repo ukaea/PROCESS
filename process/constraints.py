@@ -136,6 +136,8 @@ def constraint_equation_1():
     T_i: density weighted average ion temperature [keV]
     B_{tot}: total toroidal + poloidal field [T]
     """
+
+    # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
     cc = (
         1.0
         - (

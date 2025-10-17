@@ -807,7 +807,7 @@ m_s_limit: float = None
 
 
 pres_plasma_thermal_on_axis: float = None
-"""central total plasma pressure (Pa)"""
+"""Plasma central thermal pressure (no fast ions or beam pressure) (Pa)"""
 
 pres_plasma_total_profile: list[float] = None
 """Profile of total pressure in plasma (Pa)"""
@@ -828,7 +828,7 @@ n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
 
 pres_plasma_thermal_vol_avg: float = None
-"""Volume averaged thermal plasma pressure (Pa)"""
+"""Volume averaged thermal plasma pressure (no fast ions or beam pressure) (Pa)"""
 
 
 f_dd_branching_trit: float = None

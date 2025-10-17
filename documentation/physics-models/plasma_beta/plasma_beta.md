@@ -374,7 +374,13 @@ This constraint can be activated by stating `icc = 1` in the input file.
 Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\mathtt{beta}$ is consistent in value with the rest of the physics parameters
 
 $$
-\mathtt{beta_total_vol_avg} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
+\texttt{beta_total_vol_avg} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
+$$
+
+Here the calculation of the volume averaged pressure of the ions and electrons has to use the density weighted temperature for each. This is because $\langle nT \rangle_{\text{V}} \neq \langle n \rangle_{\text{V}} \langle T \rangle_{\text{V}}$, where $\text{V}$ denotes the volume averaged value. The true value is, $\langle nT \rangle_{\text{V}} = \langle n \rangle_{\text{V}} \langle T \rangle_{\text{n}}$, where $\text{n}$ is the density weighted averaged. For example:
+
+$$
+\langle n_{\text{e}}T_{\text{e}} \rangle_{\text{V}} = \overbrace{\langle n_{\text{e}} \rangle_{\text{V}}}^{\texttt{nd_plasma_electrons_vol_avg}} \times  \overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}}
 $$
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**
