@@ -1772,7 +1772,7 @@ class Physics:
             )
             ** 2
         )
-        physics_variables.beta_thermal_toroidal = (
+        physics_variables.beta_thermal_toroidal_vol_avg = (
             physics_variables.beta_thermal_vol_avg
             * (
                 physics_variables.b_plasma_total
@@ -4432,8 +4432,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Thermal toroidal beta",
-            "(beta_thermal_toroidal)",
-            physics_variables.beta_thermal_toroidal,
+            "(beta_thermal_toroidal_vol_avg)",
+            physics_variables.beta_thermal_toroidal_vol_avg,
             "OP ",
         )
 
