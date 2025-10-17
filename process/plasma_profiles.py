@@ -324,9 +324,11 @@ class PlasmaProfile:
         # Shall assume that the pressure profile is parabolic. Can find volume average from
         # profile index and core value the same as for density and temperature
         physics_variables.pres_plasma_thermal_vol_avg = (
-            physics_variables.pres_plasma_thermal_on_axis
-            / (physics_variables.alphap + 1)
-        )
+            physics_variables.nd_plasma_electrons_vol_avg
+            * physics_variables.temp_plasma_electron_density_weighted_kev
+            + physics_variables.nd_ions_total
+            * physics_variables.temp_plasma_ion_density_weighted_kev
+        ) * constants.KILOELECTRON_VOLT
 
         # Central plasma current density (A/m^2)
         # Assumes a parabolic profile for the current density
