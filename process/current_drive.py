@@ -1356,7 +1356,7 @@ class CurrentDrive:
                 * current_drive_variables.feffcd,
                 4: lambda: self.lower_hybrid.lower_hybrid_ehst(
                     te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                    beta=physics_variables.beta,
+                    beta=physics_variables.beta_total_vol_avg,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                     zeff=physics_variables.zeff,

@@ -2608,7 +2608,7 @@ class Physics:
         physics_variables.beta_norm_max_thloreus = (
             self.calculate_beta_norm_max_thloreus(
                 c_beta=physics_variables.c_beta,
-                pres_plasma_on_axis=physics_variables.pres_plasma_on_axis,
+                pres_plasma_on_axis=physics_variables.pres_plasma_thermal_on_axis,
                 pres_plasma_vol_avg=physics_variables.pres_plasma_thermal_vol_avg,
             )
         )
