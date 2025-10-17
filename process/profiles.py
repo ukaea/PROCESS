@@ -247,7 +247,7 @@ class NeProfile(Profile):
                 physics_variables.alphan,
             )
         physics_variables.nd_plasma_ions_on_axis = (
-            physics_variables.nd_ions_total
+            physics_variables.nd_plasma_ions_total_vol_avg
             / physics_variables.nd_plasma_electrons_vol_avg
             * physics_variables.nd_plasma_electron_on_axis
         )

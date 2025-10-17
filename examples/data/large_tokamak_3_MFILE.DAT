@@ -343,8 +343,8 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5961E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9805E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.3648E-02 ITV
- Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2857E+00 OP 
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.3648E-02 ITV
+ Total_poloidal_beta_____________________________________________________ (beta_poloidal_vol_avg)_______________________      1.2857E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.4553E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.2236E-03 OP 
  Beam_ion_beta___________________________________________________________ (betanb)______________________      0.0000E+00 OP 
@@ -368,16 +368,16 @@
  Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3805E+01    
  Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      8.0667E+19 ITV
  Electron_density_on_axis_(/m3)__________________________________________ (nd_plasma_electron_on_axis)_________________________      1.0610E+20 OP 
- Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      8.9334E+19 OP 
+ Line-averaged_electron_density_(/m3)____________________________________ (nd_plasma_electron_line)________________________      8.9334E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
- Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      7.1669E+19 OP 
- Fuel_density_(/m3)______________________________________________________ (nd_fuel_ions)________________________      6.4831E+19 OP 
- Total_impurity_density_with_Z_>_2_(no_He)_(/m3)_________________________ (nd_impurities)_________________________      4.6503E+16 OP 
- Helium_ion_density_(thermalised_ions_only)_(/m3)________________________ (nd_alphas)_______________________      6.7723E+18 OP 
+ Ion_density_(/m3)_______________________________________________________ (nd_plasma_ions_total_vol_avg)______________________      7.1669E+19 OP 
+ Fuel_density_(/m3)______________________________________________________ (nd_plasma_fuel_ions_vol_avgel_ions_vol_avg)________________________      6.4831E+19 OP 
+ Total_impurity_density_with_Z_>_2_(no_He)_(/m3)_________________________ (nd_plasma_impurities_vol_avg)_________________________      4.6503E+16 OP 
+ Helium_ion_density_(thermalised_ions_only)_(/m3)________________________ (nd_plasma_alphas_vol_avg_alphas_vol_avg)_______________________      6.7723E+18 OP 
  Proton_density_(/m3)____________________________________________________ (nd_protonstons)______________________      1.8963E+16 OP 
  Hot_beam_density_(/m3)__________________________________________________ (nd_beam_ions)______________________      0.0000E+00 OP 
- Density_limit_from_scaling_(/m3)________________________________________ (dnelimt)_____________________      7.4445E+19 OP 
- Density_limit_(enforced)_(/m3)__________________________________________ (boundu(9)*dnelimt)___________      7.4445E+19 OP 
+ Density_limit_from_scaling_(/m3)________________________________________ (nd_plasma_electron_maxma_electron_max)_____________________      7.4445E+19 OP 
+ Density_limit_(enforced)_(/m3)__________________________________________ (boundu(9)*nd_plasma_electron_maxma_electron_max)___________      7.4445E+19 OP 
  Helium_ion_density_(thermalised_ions_only)_/_electron_density___________ (f_nd_alpha_electron)______________________      8.3954E-02 ITV
  H__concentration________________________________________________________ (f_nd_impurity_electrons(01))____________________      8.0392E-01 OP 
  He_concentration________________________________________________________ (f_nd_impurity_electrons(02))____________________      8.3954E-02    
@@ -407,13 +407,13 @@
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
- Old_ASDEX_model_________________________________________________________ (dlimit(1))___________________      5.2797E+19 OP 
- Borrass_ITER_model_I____________________________________________________ (dlimit(2))___________________      1.0969E+20 OP 
- Borrass_ITER_model_II___________________________________________________ (dlimit(3))___________________      4.3575E+19 OP 
- JET_edge_radiation_model________________________________________________ (dlimit(4))___________________      3.0227E+21 OP 
- JET_simplified_model____________________________________________________ (dlimit(5))___________________      4.3397E+20 OP 
- Hugill-Murakami_Mq_model________________________________________________ (dlimit(6))___________________      6.6609E+19 OP 
- Greenwald_model_________________________________________________________ (dlimit(7))___________________      7.4445E+19 OP 
+ Old_ASDEX_model_________________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(1))___________________      5.2797E+19 OP 
+ Borrass_ITER_model_I____________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(2))___________________      1.0969E+20 OP 
+ Borrass_ITER_model_II___________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(3))___________________      4.3575E+19 OP 
+ JET_edge_radiation_model________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(4))___________________      3.0227E+21 OP 
+ JET_simplified_model____________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(5))___________________      4.3397E+20 OP 
+ Hugill-Murakami_Mq_model________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(6))___________________      6.6609E+19 OP 
+ Greenwald_model_________________________________________________________ (nd_plasma_electron_max_arraysma_electron_max_array(7))___________________      7.4445E+19 OP 
  Deuterium_fuel_fraction_________________________________________________ (fdeut)_______________________      5.0000E-01    
  Tritium_fuel_fraction___________________________________________________ (ftrit)_______________________      5.0000E-01    
  Total_fusion_power_(MW)_________________________________________________ (p_fusion_total_mw)______________________      1.6202E+03 OP 
@@ -1211,8 +1211,8 @@ epsvmc = 1e-7
 * Beta consistency *
 *------------------*
 icc = 1
-ixc = 5 * beta
-beta = 0.03
+ixc = 5 * beta_total_vol_avg
+beta_total_vol_avg = 0.03
 
 * Global power balance *
 *----------------------*

@@ -40,7 +40,9 @@ ITERATION_VARIABLES = {
     4: IterationVariable(
         "temp_plasma_electron_vol_avg_kev", data_structure.physics_variables, 5.0, 150.0
     ),
-    5: IterationVariable("beta", data_structure.physics_variables, 0.001, 1.0),
+    5: IterationVariable(
+        "beta_total_vol_avg", data_structure.physics_variables, 0.001, 1.0
+    ),
     6: IterationVariable(
         "nd_plasma_electrons_vol_avg", data_structure.physics_variables, 2.0e19, 1.0e21
     ),
@@ -424,7 +426,9 @@ ITERATION_VARIABLES = {
     172: IterationVariable(
         "dx_tf_side_case_min", data_structure.tfcoil_variables, 0.001, 1.0
     ),
-    173: IterationVariable("f_tritium", data_structure.physics_variables, 0.000, 1.000),
+    173: IterationVariable(
+        "f_plasma_fuel_tritium", data_structure.physics_variables, 0.000, 1.000
+    ),
     174: IterationVariable("triang", data_structure.physics_variables, 0.00, 1.00),
     175: IterationVariable("kappa", data_structure.physics_variables, 0.00, 10.00),
 }

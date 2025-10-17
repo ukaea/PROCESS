@@ -2621,9 +2621,9 @@ def test_intersect(intersectparam, stellarator):
 class StdlimParam(NamedTuple):
     nd_plasma_electrons_vol_avg: Any = None
 
-    nd_electron_line: Any = None
+    nd_plasma_electron_line: Any = None
 
-    dnelimt: Any = None
+    nd_plasma_electrons_max: Any = None
 
     b_plasma_toroidal_on_axis: Any = None
 
@@ -2643,8 +2643,8 @@ class StdlimParam(NamedTuple):
     (
         StdlimParam(
             nd_plasma_electrons_vol_avg=2.0914e20,
-            nd_electron_line=2.357822619799476e20,
-            dnelimt=0,
+            nd_plasma_electron_line=2.357822619799476e20,
+            nd_plasma_electrons_max=0,
             b_plasma_toroidal_on_axis=5.5,
             powht=432.20449197454559,
             rmajor=22,
@@ -2654,8 +2654,8 @@ class StdlimParam(NamedTuple):
         ),
         StdlimParam(
             nd_plasma_electrons_vol_avg=2.0914e20,
-            nd_electron_line=2.357822619799476e20,
-            dnelimt=1.2918765671497731e20,
+            nd_plasma_electron_line=2.357822619799476e20,
+            nd_plasma_electrons_max=1.2918765671497731e20,
             b_plasma_toroidal_on_axis=5.5,
             powht=431.98698920075435,
             rmajor=22,
@@ -2685,21 +2685,29 @@ def test_stdlim(stdlimparam, monkeypatch, stellarator):
     )
 
     monkeypatch.setattr(
-        physics_variables, "nd_electron_line", stdlimparam.nd_electron_line
+        physics_variables,
+        "nd_plasma_electron_line",
+        stdlimparam.nd_plasma_electron_line,
     )
 
-    monkeypatch.setattr(physics_variables, "dnelimt", stdlimparam.dnelimt)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_electrons_max",
+        stdlimparam.nd_plasma_electrons_max,
+    )
 
-    dlimit = stellarator.stdlim(
+    nd_plasma_electron_max_array = stellarator.stdlim(
         b_plasma_toroidal_on_axis=stdlimparam.b_plasma_toroidal_on_axis,
         powht=stdlimparam.powht,
         rmajor=stdlimparam.rmajor,
         rminor=stdlimparam.rminor,
     )
 
-    assert physics_variables.dnelimt == pytest.approx(stdlimparam.expected_dnelimt)
+    assert physics_variables.nd_plasma_electrons_max == pytest.approx(
+        stdlimparam.expected_dnelimt
+    )
 
-    assert dlimit == pytest.approx(stdlimparam.expected_dlimit)
+    assert nd_plasma_electron_max_array == pytest.approx(stdlimparam.expected_dlimit)
 
 
 class StdlimEcrhParam(NamedTuple):

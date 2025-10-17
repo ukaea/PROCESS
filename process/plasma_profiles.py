@@ -27,7 +27,7 @@ class PlasmaProfile:
         parameterise_plasma(): Initializes the density and temperature profile averages and peak values.
         parabolic_paramterisation(): Parameterizes plasma profiles in the case where i_plasma_pedestal=0.
         pedestal_parameterisation(): Instance temperature and density profiles then integrate them, setting physics variables temp_plasma_electron_density_weighted_kev and temp_plasma_ion_density_weighted_kev.
-        calculate_profile_factors(): Calculate and set the central pressure (pres_plasma_on_axis) using the ideal gas law and the pressure profile index (alphap).
+        calculate_profile_factors(): Calculate and set the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
         calculate_parabolic_profile_factors(): The gradient information for i_plasma_pedestal = 0.
     """
 
@@ -142,7 +142,7 @@ class PlasmaProfile:
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
-        physics_variables.pcoef = (
+        physics_variables.f_temp_plasma_electron_density_vol_avg = (
             (1.0e0 + physics_variables.alphan)
             * (1.0e0 + physics_variables.alphat)
             / (1.0e0 + physics_variables.alphan + physics_variables.alphat)
@@ -151,7 +151,7 @@ class PlasmaProfile:
         # Line averaged electron density (IPDG89)
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
 
-        physics_variables.nd_electron_line = (
+        physics_variables.nd_plasma_electron_line = (
             physics_variables.nd_plasma_electrons_vol_avg
             * (1.0 + physics_variables.alphan)
             * (sp.special.gamma(0.5) / 2.0)
@@ -162,10 +162,12 @@ class PlasmaProfile:
         #  Density-weighted temperatures
 
         physics_variables.temp_plasma_electron_density_weighted_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_kev * physics_variables.pcoef
+            physics_variables.temp_plasma_electron_vol_avg_kev
+            * physics_variables.f_temp_plasma_electron_density_vol_avg
         )
         physics_variables.temp_plasma_ion_density_weighted_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev * physics_variables.pcoef
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            * physics_variables.f_temp_plasma_electron_density_vol_avg
         )
 
         #  Central values for temperature (keV) and density (m**-3)
@@ -183,8 +185,9 @@ class PlasmaProfile:
             physics_variables.nd_plasma_electrons_vol_avg
             * (1.0 + physics_variables.alphan)
         )
-        physics_variables.nd_plasma_ions_on_axis = physics_variables.nd_ions_total * (
-            1.0 + physics_variables.alphan
+        physics_variables.nd_plasma_ions_on_axis = (
+            physics_variables.nd_plasma_ions_total_vol_avg
+            * (1.0 + physics_variables.alphan)
         )
 
     def pedestal_parameterisation(self) -> None:
@@ -234,7 +237,7 @@ class PlasmaProfile:
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
-        physics_variables.pcoef = (
+        physics_variables.f_temp_plasma_electron_density_vol_avg = (
             physics_variables.temp_plasma_electron_density_weighted_kev
             / physics_variables.temp_plasma_electron_vol_avg_kev
         )
@@ -242,7 +245,7 @@ class PlasmaProfile:
         #  Line-averaged electron density
         #  = integral(n(rho).drho)
 
-        physics_variables.nd_electron_line = self.neprofile.profile_integ
+        physics_variables.nd_plasma_electron_line = self.neprofile.profile_integ
 
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)
@@ -255,10 +258,10 @@ class PlasmaProfile:
 
     def calculate_profile_factors(self) -> None:
         """
-        Calculate and set the central pressure (pres_plasma_on_axis) using the ideal gas law and the pressure profile index (alphap).
+        Calculate and set the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
 
-        This method calculates the central pressure (pres_plasma_on_axis) using the ideal gas law and the pressure profile index (alphap).
-        It sets the value of the physics variable `pres_plasma_on_axis`.
+        This method calculates the central pressure (pres_plasma_thermal_on_axis) using the ideal gas law and the pressure profile index (alphap).
+        It sets the value of the physics variable `pres_plasma_thermal_on_axis`.
 
         Args:
             None
@@ -269,7 +272,7 @@ class PlasmaProfile:
 
         #  Central pressure (Pa), from ideal gas law : p = nkT
 
-        physics_variables.pres_plasma_on_axis = (
+        physics_variables.pres_plasma_thermal_on_axis = (
             (
                 physics_variables.nd_plasma_electron_on_axis
                 * physics_variables.temp_plasma_electron_on_axis_kev
@@ -287,7 +290,7 @@ class PlasmaProfile:
 
         # Total ion pressure profile (Pa)
         physics_variables.pres_plasma_ion_total_profile = (
-            physics_variables.nd_ions_total
+            physics_variables.nd_plasma_ions_total_vol_avg
             * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y
@@ -303,7 +306,7 @@ class PlasmaProfile:
 
         # Fuel ion pressure profile (Pa)
         physics_variables.pres_plasma_fuel_profile = (
-            physics_variables.nd_fuel_ions
+            physics_variables.nd_plasma_fuel_ions_vol_avg
             * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y
@@ -312,7 +315,7 @@ class PlasmaProfile:
         )
 
         #  Pressure profile index (N.B. no pedestal effects included here)
-        #  N.B. pres_plasma_on_axis is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
+        #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
         #  density-weighted temperature
 
@@ -320,8 +323,9 @@ class PlasmaProfile:
 
         # Shall assume that the pressure profile is parabolic. Can find volume average from
         # profile index and core value the same as for density and temperature
-        physics_variables.pres_plasma_vol_avg = (
-            physics_variables.pres_plasma_on_axis / (physics_variables.alphap + 1)
+        physics_variables.pres_plasma_thermal_vol_avg = (
+            physics_variables.pres_plasma_thermal_on_axis
+            / (physics_variables.alphap + 1)
         )
 
         # Central plasma current density (A/m^2)

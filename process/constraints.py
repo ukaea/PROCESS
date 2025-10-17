@@ -127,7 +127,7 @@ def constraint_equation_1():
 
     author: J Morris
 
-    beta: total plasma beta
+    beta_total_vol_avg: total plasma beta
     beta_{ft}: fast alpha beta component
     beta_{NBI}: neutral beam beta component
     n_e: electron density [/m3]
@@ -136,6 +136,8 @@ def constraint_equation_1():
     T_i: density weighted average ion temperature [keV]
     B_{tot}: total toroidal + poloidal field [T]
     """
+
+    # Density weighted temperature is used here as 〈nT〉 != 〈n〉_V * 〈T〉_V
     cc = (
         1.0
         - (
@@ -147,17 +149,19 @@ def constraint_equation_1():
             * (
                 data_structure.physics_variables.nd_plasma_electrons_vol_avg
                 * data_structure.physics_variables.temp_plasma_electron_density_weighted_kev
-                + data_structure.physics_variables.nd_ions_total
+                + data_structure.physics_variables.nd_plasma_ions_total_vol_avg
                 * data_structure.physics_variables.temp_plasma_ion_density_weighted_kev
             )
             / data_structure.physics_variables.b_plasma_total**2
         )
-        / data_structure.physics_variables.beta
+        / data_structure.physics_variables.beta_total_vol_avg
     )
     return ConstraintResult(
         normalised_residual=cc,
-        constraint_value=(data_structure.physics_variables.beta * (1.0 - cc)),
-        constraint_error=(data_structure.physics_variables.beta * cc),
+        constraint_value=(
+            data_structure.physics_variables.beta_total_vol_avg * (1.0 - cc)
+        ),
+        constraint_error=(data_structure.physics_variables.beta_total_vol_avg * cc),
     )
 
 
@@ -353,8 +357,8 @@ def constraint_equation_5():
 
     fdene: f-value for density limit
     nd_plasma_electrons_vol_avg: electron density (/m3)
-    dnelimt: density limit (/m3)
-    nd_electron_line: line averaged electron density (m-3)
+    nd_plasma_electrons_max: density limit (/m3)
+    nd_plasma_electron_line: line averaged electron density (m-3)
 
     i_density_limit:
     - 1 old ASDEX;
@@ -368,24 +372,24 @@ def constraint_equation_5():
     # Apply Greenwald limit to line-averaged density
     if data_structure.physics_variables.i_density_limit == 7:
         return ConstraintResult(
-            data_structure.physics_variables.nd_electron_line
-            / data_structure.physics_variables.dnelimt
+            data_structure.physics_variables.nd_plasma_electron_line
+            / data_structure.physics_variables.nd_plasma_electrons_max
             - 1.0 * data_structure.constraint_variables.fdene,
             data_structure.constraint_variables.fdene
-            * data_structure.physics_variables.dnelimt,
+            * data_structure.physics_variables.nd_plasma_electrons_max,
             data_structure.constraint_variables.fdene
-            * data_structure.physics_variables.dnelimt
-            - data_structure.physics_variables.nd_electron_line,
+            * data_structure.physics_variables.nd_plasma_electrons_max
+            - data_structure.physics_variables.nd_plasma_electron_line,
         )
 
     cc = (
         data_structure.physics_variables.nd_plasma_electrons_vol_avg
-        / data_structure.physics_variables.dnelimt
+        / data_structure.physics_variables.nd_plasma_electrons_max
         - 1.0 * data_structure.constraint_variables.fdene
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.dnelimt * (1.0 - cc),
+        data_structure.physics_variables.nd_plasma_electrons_max * (1.0 - cc),
         data_structure.physics_variables.nd_plasma_electrons_vol_avg * cc,
     )
 
@@ -403,7 +407,7 @@ def constraint_equation_6():
     cc = (
         (
             data_structure.physics_variables.eps
-            * data_structure.physics_variables.beta_poloidal
+            * data_structure.physics_variables.beta_poloidal_vol_avg
         )
         / data_structure.physics_variables.beta_poloidal_eps_max
         - 1.0 * data_structure.constraint_variables.fbeta_poloidal_eps
@@ -413,7 +417,7 @@ def constraint_equation_6():
         data_structure.physics_variables.beta_poloidal_eps_max * (1.0 - cc),
         (
             data_structure.physics_variables.eps
-            * data_structure.physics_variables.beta_poloidal
+            * data_structure.physics_variables.beta_poloidal_vol_avg
         )
         * cc,
     )
@@ -797,8 +801,8 @@ def constraint_equation_24():
     - 0 use tokamak model;
     - 1 use stellarator model
     fbeta_max: f-value for beta limit
-    beta_max: allowable beta
-    beta: total plasma beta (calculated if i_plasma_pedestal =3)
+    beta_vol_avg_max: allowable beta
+    beta_total_vol_avg: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
     b_plasma_toroidal_on_axis: toroidal field
@@ -810,32 +814,32 @@ def constraint_equation_24():
         or data_structure.stellarator_variables.istell != 0
     ):
         cc = (
-            data_structure.physics_variables.beta
-            / data_structure.physics_variables.beta_max
+            data_structure.physics_variables.beta_total_vol_avg
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            data_structure.physics_variables.beta_max
-            - data_structure.physics_variables.beta
+            data_structure.physics_variables.beta_vol_avg_max
+            - data_structure.physics_variables.beta_total_vol_avg
             / data_structure.constraint_variables.fbeta_max
         )
     # Here, the beta limit applies to only the thermal component, not the fast alpha or neutral beam parts
     elif data_structure.physics_variables.i_beta_component == 1:
         cc = (
             (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
                 - data_structure.physics_variables.beta_beam
             )
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            data_structure.physics_variables.beta_max
+            data_structure.physics_variables.beta_vol_avg_max
             - (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
                 - data_structure.physics_variables.beta_beam
             )
@@ -845,36 +849,36 @@ def constraint_equation_24():
     elif data_structure.physics_variables.i_beta_component == 2:
         cc = (
             (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
             )
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max * (1.0 - cc)
+        con = data_structure.physics_variables.beta_vol_avg_max * (1.0 - cc)
         err = (
-            data_structure.physics_variables.beta
+            data_structure.physics_variables.beta_total_vol_avg
             - data_structure.physics_variables.beta_fast_alpha
         ) * cc
     # Beta limit applies to toroidal beta
     elif data_structure.physics_variables.i_beta_component == 3:
         cc = (
             (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 * (
                     data_structure.physics_variables.b_plasma_total
                     / data_structure.physics_variables.b_plasma_toroidal_on_axis
                 )
                 ** 2
             )
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            data_structure.physics_variables.beta_max
+            data_structure.physics_variables.beta_vol_avg_max
             - (
-                data_structure.physics_variables.beta
+                data_structure.physics_variables.beta_total_vol_avg
                 * (
                     data_structure.physics_variables.b_plasma_total
                     / data_structure.physics_variables.b_plasma_toroidal_on_axis
@@ -1387,14 +1391,14 @@ def constraint_equation_48():
     beta_poloidal: poloidal beta
     """
     cc = (
-        data_structure.physics_variables.beta_poloidal
+        data_structure.physics_variables.beta_poloidal_vol_avg
         / data_structure.constraint_variables.beta_poloidal_max
         - 1.0 * data_structure.constraint_variables.fbeta_poloidal
     )
     return ConstraintResult(
         cc,
         data_structure.constraint_variables.beta_poloidal_max * (1.0 - cc),
-        data_structure.physics_variables.beta_poloidal * cc,
+        data_structure.physics_variables.beta_poloidal_vol_avg * cc,
     )
 
 
@@ -1935,7 +1939,7 @@ def constraint_equation_76():
     triang: plasma separatrix triangularity (calculated if i_plasma_geometry = 1, 3-5 or 7)
     aspect: aspect ratio (iteration variable 1)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
-    dlimit(7)array : density limit (/m3) as calculated using various models
+    nd_plasma_electron_max_array(7)array : density limit (/m3) as calculated using various models
     fnesep: f-value for Eich critical separatrix density
     """
     # TODO: why on earth are these variables being set here!? Should they be local?
@@ -1954,7 +1958,7 @@ def constraint_equation_76():
             (data_structure.physics_variables.p_plasma_separatrix_mw * 1.0e6)
             ** (-11.0 / 70.0)
         )
-        * data_structure.physics_variables.dlimit[6]
+        * data_structure.physics_variables.nd_plasma_electron_max_array[6]
     )
 
     cc = (
@@ -2145,20 +2149,20 @@ def constraint_equation_84():
     """Equation for the lower limit of beta
     author: J Lion, IPP Greifswald
 
-    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_min
-    beta_min: Lower limit for beta
+    fbeta_min: f-value for constraint beta-beta_fast_alpha > beta_vol_avg_min
+    beta_vol_avg_min: Lower limit for beta
     beta: plasma beta
     """
     cc = (
         1.0
         - data_structure.constraint_variables.fbeta_min
-        * data_structure.physics_variables.beta
-        / data_structure.physics_variables.beta_min
+        * data_structure.physics_variables.beta_total_vol_avg
+        / data_structure.physics_variables.beta_vol_avg_min
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.beta_min * (1.0 - cc),
-        data_structure.physics_variables.beta * cc,
+        data_structure.physics_variables.beta_vol_avg_min * (1.0 - cc),
+        data_structure.physics_variables.beta_total_vol_avg * cc,
     )
 
 
@@ -2371,18 +2375,18 @@ def constraint_equation_92():
     """Equation for checking is D/T ratio is consistent, and sums to 1.
     author: G Turkington, UKAEA
 
-    f_deuterium: fraction of deuterium ions
-    f_tritium: fraction of tritium ions
-    f_helium3: fraction of helium-3 ions
+    f_plasma_fuel_deuterium: fraction of deuterium ions
+    f_plasma_fuel_tritium: fraction of tritium ions
+    f_plasma_fuel_helium3: fraction of helium-3 ions
     """
-    f_deuterium = 1.0 - (
-        data_structure.physics_variables.f_tritium
-        + data_structure.physics_variables.f_helium3
+    f_plasma_fuel_deuterium = 1.0 - (
+        data_structure.physics_variables.f_plasma_fuel_tritium
+        + data_structure.physics_variables.f_plasma_fuel_helium3
     )
     cc = 1.0 - (
-        f_deuterium
-        + data_structure.physics_variables.f_tritium
-        + data_structure.physics_variables.f_helium3
+        f_plasma_fuel_deuterium
+        + data_structure.physics_variables.f_plasma_fuel_tritium
+        + data_structure.physics_variables.f_plasma_fuel_helium3
     )
 
     return ConstraintResult(cc, 1.0, cc)

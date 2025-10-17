@@ -198,7 +198,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -1193,7 +1193,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -2188,7 +2188,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -3183,7 +3183,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -4178,7 +4178,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -5173,7 +5173,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -6168,7 +6168,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -7163,7 +7163,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -8158,7 +8158,7 @@
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5000E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9256E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.0698E-02 ITV
+ Total_plasma_beta_______________________________________________________ (beta_total_vol_avg)________________________      3.0698E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2080E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.1498E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.1786E-03 OP 
@@ -9010,7 +9010,7 @@ ixc = 3 * rmajor
 boundu(3) = 13
 ixc = 4 * temp_plasma_electron_vol_avg_keV
 boundu(4) = 150.0
-ixc = 5 * beta
+ixc = 5 * beta_total_vol_avg
 ixc = 6 * nd_plasma_electrons_vol_avg
 ixc = 9 * fdene
 boundu(9) = 1.2
@@ -9103,7 +9103,7 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 
 *---------------Constraint Variables---------------*
 
-fbeta_max = 0.4815 * F-value for beta limit
+fbeta_max = 0.4815 * F-value for beta_total_vol_avg limit
 fdene    = 1.2 * F-value for density limit
 fp_fusion_total_max_mw  = 1 * F-value for maximum fusion power
 fjohc    = 0.25 * F-value for central solenoid current at end-of-flattop
@@ -9233,13 +9233,13 @@ alphan   = 1.00 * Density profile index
 alphat   = 1.45 * Temperature profile index
 aspect   = 3.1 * Aspect ratio (iteration variable 1)
 nd_plasma_electrons_vol_avg     = 7.983e+19 * Electron density (/m3) (iteration variable 6)
-beta_norm_max   = 3.0 * (troyon-like) coefficient for beta scaling;
+beta_norm_max   = 3.0 * (troyon-like) coefficient for beta_total_vol_avg scaling;
 fkzohm   = 1.0245 * Zohm elongation scaling adjustment factor (i_plasma_geometry=2; 3)
 f_c_plasma_non_inductive = 0.4434 * Fraction of the plasma current produced by
 ejima_coeff    = 0.3 * Ejima coefficient for resistive startup v-s formula
 hfact    = 1.1 * H factor on energy confinement times (iteration variable 10)
 i_bootstrap_current     = 4 * Switch for bootstrap current scaling;
-i_beta_component   = 1 * Switch for beta limit scaling (constraint equation 24);
+i_beta_component   = 1 * Switch for beta_total_vol_avg limit scaling (constraint equation 24);
 i_plasma_current    = 4 * Switch for plasma current scaling to use;
 i_density_limit   = 7 * Switch for density limit to enforce (constraint equation 5);
 i_beta_fast_alpha = 1 * Switch for fast alpha pressure calculation;
@@ -9250,7 +9250,7 @@ nd_plasma_pedestal_electron    = 0.678e20 * Electron density of pedestal (/m3) (
 nd_plasma_separatrix_electron    = 0.2e20 * Electron density at separatrix (/m3) (i_plasma_pedestal=1)
 radius_plasma_pedestal_density_norm  = 0.94 * R/a of density pedestal (i_plasma_pedestal=1)
 radius_plasma_pedestal_temp_norm  = 0.94 * R/a of temperature pedestal (i_plasma_pedestal=1)
-tbeta    = 2.0 * Temperature profile index beta  (i_plasma_pedestal=1)
+tbeta    = 2.0 * Temperature profile index beta_total_vol_avg  (i_plasma_pedestal=1)
 temp_plasma_pedestal_kev    = 5.5 * Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
 temp_plasma_separatrix_kev    = 0.1 * Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
 i_confinement_time      = 34 * Switch for energy confinement time scaling law
@@ -9315,7 +9315,7 @@ t_burn    = 1.0d4 * Burn time (s) (calculated if i_pulsed_plant=1)
                      b_plasma_toroidal_on_axis            =   5.3292E+00
                      rmajor        =   8.8901E+00
                      temp_plasma_electron_vol_avg_keV             =  1.2330E+01
-                     beta           =  3.1421E-02
+                     beta_total_vol_avg           =  3.1421E-02
                      nd_plasma_electrons_vol_avg           =  7.4321E+19
                      fdene          =  1.2000E+00
                      oacdcp         =  8.6739E+06

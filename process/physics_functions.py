@@ -225,8 +225,8 @@ def fast_alpha_beta(
     b_plasma_poloidal_average: float,
     b_plasma_toroidal_on_axis: float,
     nd_plasma_electrons_vol_avg: float,
-    nd_fuel_ions: float,
-    nd_ions_total: float,
+    nd_plasma_fuel_ions_vol_avg: float,
+    nd_plasma_ions_total_vol_avg: float,
     temp_plasma_electron_density_weighted_kev: float,
     temp_plasma_ion_density_weighted_kev: float,
     pden_alpha_total_mw: float,
@@ -242,8 +242,8 @@ def fast_alpha_beta(
         b_plasma_poloidal_average (float): Poloidal field (T).
         b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
         nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
-        nd_fuel_ions (float): Fuel ion density (m^-3).
-        nd_ions_total (float): Total ion density (m^-3).
+        nd_plasma_fuel_ions_vol_avg (float): Fuel ion density (m^-3).
+        nd_plasma_ions_total_vol_avg (float): Total ion density (m^-3).
         temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
         temp_plasma_ion_density_weighted_kev (float): Density-weighted ion temperature (keV).
         pden_alpha_total_mw (float): Alpha power per unit volume, from beams and plasma (MW/m^3).
@@ -268,14 +268,14 @@ def fast_alpha_beta(
     """
 
     # Determine average fast alpha density
-    if physics_variables.f_deuterium < 1.0:
+    if physics_variables.f_plasma_fuel_deuterium < 1.0:
         beta_thermal = (
             2.0
             * constants.RMU0
             * constants.KILOELECTRON_VOLT
             * (
                 nd_plasma_electrons_vol_avg * temp_plasma_electron_density_weighted_kev
-                + nd_ions_total * temp_plasma_ion_density_weighted_kev
+                + nd_plasma_ions_total_vol_avg * temp_plasma_ion_density_weighted_kev
             )
             / (b_plasma_toroidal_on_axis**2 + b_plasma_poloidal_average**2)
         )
@@ -286,7 +286,7 @@ def fast_alpha_beta(
             fact = min(
                 0.3,
                 0.29
-                * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
+                * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
                 * (
                     (
                         temp_plasma_electron_density_weighted_kev
@@ -302,7 +302,7 @@ def fast_alpha_beta(
             fact = min(
                 0.30,
                 0.26
-                * (nd_fuel_ions / nd_plasma_electrons_vol_avg) ** 2
+                * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg) ** 2
                 * np.sqrt(
                     max(
                         0.0,

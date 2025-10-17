@@ -184,7 +184,7 @@ var_dicts = {
         description="Bore radius",
         units="m",
     ),
-    "nd_electron_line": VariableMetadata(
+    "nd_plasma_electron_line": VariableMetadata(
         latex=r"$\bar{n}_{\mathrm{e}}$[$m^{-3}$]",
         description="Average electron density",
         units="m^{-3}",

@@ -67,7 +67,7 @@ def test_plot_scans_2d_contour(temp_data, scan_2d_mfile_name):
             "-f",
             str(mfile),
             "-yv",
-            "beta",
+            "beta_total_vol_avg",
             "-2DC",
             "--outputdir",
             str(temp_data),

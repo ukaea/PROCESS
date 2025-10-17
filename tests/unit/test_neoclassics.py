@@ -24,15 +24,15 @@ class InitNeoclassicsParam(NamedTuple):
     alphat: Any = None
     temp_plasma_ion_on_axis_kev: Any = None
     nd_plasma_ions_on_axis: Any = None
-    f_deuterium: Any = None
-    nd_alphas: Any = None
+    f_plasma_fuel_deuterium: Any = None
+    nd_plasma_alphas_vol_avg: Any = None
     rminor: Any = None
     rmajor: Any = None
     b_plasma_toroidal_on_axis: Any = None
     te: Any = None
     ti: Any = None
     nd_plasma_electrons_vol_avg: Any = None
-    nd_fuel_ions: Any = None
+    nd_plasma_fuel_ions_vol_avg: Any = None
     densities: Any = None
     temperatures: Any = None
     dr_densities: Any = None
@@ -73,15 +73,15 @@ class InitNeoclassicsParam(NamedTuple):
             alphat=1.2,
             temp_plasma_ion_on_axis_kev=12.579710000000002,
             nd_plasma_ions_on_axis=2.3930858160000005e20,
-            f_deuterium=0.5,
-            nd_alphas=2.9820384000000004e19,
+            f_plasma_fuel_deuterium=0.5,
+            nd_plasma_alphas_vol_avg=2.9820384000000004e19,
             rminor=1.7993820274145451,
             rmajor=22.16,
             b_plasma_toroidal_on_axis=5.2400000000000002,
             te=6.0190000000000001,
             ti=5.7180500000000007,
             nd_plasma_electrons_vol_avg=2.07086e20,
-            nd_fuel_ions=1.47415411616e20,
+            nd_plasma_fuel_ions_vol_avg=1.47415411616e20,
             densities=np.array(
                 np.array((0, 0, 0, 0), order="F"), order="F"
             ).transpose(),
@@ -996,9 +996,15 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
         initneoclassicsparam.nd_plasma_ions_on_axis,
     )
     monkeypatch.setattr(
-        physics_variables, "f_deuterium", initneoclassicsparam.f_deuterium
+        physics_variables,
+        "f_plasma_fuel_deuterium",
+        initneoclassicsparam.f_plasma_fuel_deuterium,
     )
-    monkeypatch.setattr(physics_variables, "nd_alphas", initneoclassicsparam.nd_alphas)
+    monkeypatch.setattr(
+        physics_variables,
+        "nd_plasma_alphas_vol_avg",
+        initneoclassicsparam.nd_plasma_alphas_vol_avg,
+    )
     monkeypatch.setattr(physics_variables, "rminor", initneoclassicsparam.rminor)
     monkeypatch.setattr(physics_variables, "rmajor", initneoclassicsparam.rmajor)
     monkeypatch.setattr(
@@ -1018,7 +1024,9 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
         initneoclassicsparam.nd_plasma_electrons_vol_avg,
     )
     monkeypatch.setattr(
-        physics_variables, "nd_fuel_ions", initneoclassicsparam.nd_fuel_ions
+        physics_variables,
+        "nd_plasma_fuel_ions_vol_avg",
+        initneoclassicsparam.nd_plasma_fuel_ions_vol_avg,
     )
     monkeypatch.setattr(
         neoclassics_variables, "densities", initneoclassicsparam.densities
