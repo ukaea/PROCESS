@@ -75,7 +75,10 @@ class NeutralBeam:
         dend = physics_variables.nd_plasma_fuel_ions_vol_avg * (
             1.0 - current_drive_variables.f_beam_tritium
         )
-        dent = physics_variables.nd_plasma_fuel_ions_vol_avg * current_drive_variables.f_beam_tritium
+        dent = (
+            physics_variables.nd_plasma_fuel_ions_vol_avg
+            * current_drive_variables.f_beam_tritium
+        )
 
         # Power split to ions / electrons
         f_p_beam_injected_ions = self.cfnbi(
@@ -160,7 +163,10 @@ class NeutralBeam:
         dend = physics_variables.nd_plasma_fuel_ions_vol_avg * (
             1.0e0 - current_drive_variables.f_beam_tritium
         )
-        dent = physics_variables.nd_plasma_fuel_ions_vol_avg * current_drive_variables.f_beam_tritium
+        dent = (
+            physics_variables.nd_plasma_fuel_ions_vol_avg
+            * current_drive_variables.f_beam_tritium
+        )
 
         #  Power split to ions / electrons
 

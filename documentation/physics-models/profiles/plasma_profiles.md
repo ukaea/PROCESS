@@ -385,7 +385,7 @@ $$\begin{aligned}
 
 $$\begin{aligned}
 \texttt{nd_plasma_electron_on_axis} = n_{\text{e}} \times (\alpha_n+1) \\
-\texttt{nd_plasma_ions_on_axis} = \texttt{nd_ions_total} \times (\alpha_n+1)
+\texttt{nd_plasma_ions_on_axis} = \texttt{nd_plasma_ions_total_vol_avg} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----

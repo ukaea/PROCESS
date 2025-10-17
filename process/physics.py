@@ -1595,7 +1595,7 @@ class Physics:
         ) = self.calculate_plasma_masses(
             physics_variables.m_fuel_amu,
             physics_variables.m_ions_total_amu,
-            physics_variables.nd_ions_total,
+            physics_variables.nd_plasma_ions_total_vol_avg,
             physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.nd_plasma_alphas_vol_avg,
             physics_variables.vol_plasma,
@@ -2281,7 +2281,7 @@ class Physics:
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_plasma_fuel_ions_vol_avg,
-            physics_variables.nd_ions_total,
+            physics_variables.nd_plasma_ions_total_vol_avg,
             physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.temp_plasma_ion_density_weighted_kev,
             physics_variables.pden_alpha_total_mw,
@@ -2490,7 +2490,7 @@ class Physics:
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
             physics_variables.b_plasma_toroidal_on_axis,
-            physics_variables.nd_ions_total,
+            physics_variables.nd_plasma_ions_total_vol_avg,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.nd_electron_line,
             physics_variables.eps,
@@ -3334,7 +3334,7 @@ class Physics:
         # ======================================================================
 
         # Total ion density
-        physics_variables.nd_ions_total = (
+        physics_variables.nd_plasma_ions_total_vol_avg = (
             physics_variables.nd_plasma_fuel_ions_vol_avg
             + physics_variables.nd_plasma_alphas_vol_avg
             + physics_variables.nd_plasma_protons_vol_avg
@@ -3426,7 +3426,10 @@ class Physics:
 
         # Average mass of all ions
         physics_variables.m_ions_total_amu = (
-            (physics_variables.m_fuel_amu * physics_variables.nd_plasma_fuel_ions_vol_avg)
+            (
+                physics_variables.m_fuel_amu
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
+            )
             + (constants.M_ALPHA_AMU * physics_variables.nd_plasma_alphas_vol_avg)
             + (physics_variables.nd_plasma_protons_vol_avg * constants.M_PROTON_AMU)
             + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
@@ -3440,7 +3443,8 @@ class Physics:
                 )
 
         physics_variables.m_ions_total_amu = (
-            physics_variables.m_ions_total_amu / physics_variables.nd_ions_total
+            physics_variables.m_ions_total_amu
+            / physics_variables.nd_plasma_ions_total_vol_avg
         )
 
         # ======================================================================
@@ -4683,8 +4687,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total Ion number density (/m3)",
-            "(nd_ions_total)",
-            physics_variables.nd_ions_total,
+            "(nd_plasma_ions_total_vol_avg)",
+            physics_variables.nd_plasma_ions_total_vol_avg,
             "OP ",
         )
         po.ovarre(
@@ -6632,7 +6636,7 @@ class Physics:
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
                 physics_variables.b_plasma_toroidal_on_axis,
-                physics_variables.nd_ions_total,
+                physics_variables.nd_plasma_ions_total_vol_avg,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_electron_line,
                 physics_variables.eps,
@@ -6953,7 +6957,7 @@ class Physics:
         # Calculate electron and ion density profiles
         ne = plasma_profile.neprofile.profile_y * 1e-19
         ni = (
-            physics_variables.nd_ions_total
+            physics_variables.nd_plasma_ions_total_vol_avg
             / physics_variables.nd_plasma_electrons_vol_avg
         ) * ne
 
@@ -7562,7 +7566,7 @@ class Physics:
                 physics_variables.p_alpha_total_mw,
                 physics_variables.aspect,
                 physics_variables.b_plasma_toroidal_on_axis,
-                physics_variables.nd_ions_total,
+                physics_variables.nd_plasma_ions_total_vol_avg,
                 physics_variables.nd_plasma_electrons_vol_avg,
                 physics_variables.nd_electron_line,
                 physics_variables.eps,
@@ -7618,7 +7622,7 @@ class Physics:
         p_alpha_total_mw: float,
         aspect: float,
         b_plasma_toroidal_on_axis: float,
-        nd_ions_total: float,
+        nd_plasma_ions_total_vol_avg: float,
         nd_plasma_electrons_vol_avg: float,
         nd_electron_line: float,
         eps: float,
@@ -7647,7 +7651,7 @@ class Physics:
         :param p_alpha_total_mw: Alpha particle power (MW)
         :param aspect: Aspect ratio
         :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
-        :param nd_ions_total: Total ion density (/m3)
+        :param nd_plasma_ions_total_vol_avg: Total ion density (/m3)
         :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3)
         :param nd_electron_line: Line-averaged electron density (/m3)
         :param eps: Inverse aspect ratio
@@ -8465,7 +8469,7 @@ class Physics:
         pden_ion_transport_loss_mw = (
             (3 / 2)
             * (constants.ELECTRON_CHARGE / 1e3)
-            * nd_ions_total
+            * nd_plasma_ions_total_vol_avg
             * temp_plasma_ion_density_weighted_kev
             / t_ion_energy_confinement
         )
@@ -8477,7 +8481,7 @@ class Physics:
             / t_electron_energy_confinement
         )
 
-        ratio = (nd_ions_total / nd_plasma_electrons_vol_avg) * (
+        ratio = (nd_plasma_ions_total_vol_avg / nd_plasma_electrons_vol_avg) * (
             temp_plasma_ion_density_weighted_kev
             / temp_plasma_electron_density_weighted_kev
         )
@@ -8507,7 +8511,7 @@ class Physics:
     def calculate_plasma_masses(
         m_fuel_amu: float,
         m_ions_total_amu: float,
-        nd_ions_total: float,
+        nd_plasma_ions_total_vol_avg: float,
         nd_plasma_fuel_ions_vol_avg: float,
         nd_plasma_alphas_vol_avg: float,
         vol_plasma: float,
@@ -8520,8 +8524,8 @@ class Physics:
         :type m_fuel_amu: float
         :param m_ions_total_amu: Average mass of all ions (amu).
         :type m_ions_total_amu: float
-        :param nd_ions_total: Total ion density (/m3).
-        :type nd_ions_total: float
+        :param nd_plasma_ions_total_vol_avg: Total ion density (/m3).
+        :type nd_plasma_ions_total_vol_avg: float
         :param nd_plasma_fuel_ions_vol_avg: Fuel ion density (/m3).
         :type nd_plasma_fuel_ions_vol_avg: float
         :param nd_plasma_alphas_vol_avg: Alpha ash density (/m3).
@@ -8541,7 +8545,7 @@ class Physics:
         )
 
         m_plasma_ions_total = (m_ions_total_amu * constants.ATOMIC_MASS_UNIT) * (
-            nd_ions_total * vol_plasma
+            nd_plasma_ions_total_vol_avg * vol_plasma
         )
 
         m_plasma_alpha = (nd_plasma_alphas_vol_avg * vol_plasma) * constants.ALPHA_MASS

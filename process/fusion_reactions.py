@@ -252,7 +252,10 @@ class FusionReactionRate:
                 physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
-            * (physics_variables.f_plasma_fuel_tritium * physics_variables.nd_plasma_fuel_ions_vol_avg)
+            * (
+                physics_variables.f_plasma_fuel_tritium
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
+            )
         )
 
         # Power densities for different particles [MW/m^3]
@@ -345,7 +348,10 @@ class FusionReactionRate:
                 physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
-            * (physics_variables.f_plasma_fuel_helium3 * physics_variables.nd_plasma_fuel_ions_vol_avg)
+            * (
+                physics_variables.f_plasma_fuel_helium3
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
+            )
         )
 
         # Power densities for different particles [MW/m^3]

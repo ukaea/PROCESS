@@ -140,7 +140,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 9. **Total Ion Density Calculation**
 
-    - Calculate the total ion density (`nd_ions_total`).
+    - Calculate the total ion density (`nd_plasma_ions_total_vol_avg`).
 
     $$
     \mathtt{nd\_ions\_total} | n_{\text{i,total}} = n_{\text{i}} + n_{\alpha}+n_{\text{protons}}+ n_{\text{beam}}+n_{\text{impurities}}

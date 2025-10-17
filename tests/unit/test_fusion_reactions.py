@@ -25,7 +25,7 @@ class SetFusionPowersParam(NamedTuple):
 
     nd_plasma_fuel_ions_vol_avg: Any = None
 
-    nd_ions_total: Any = None
+    nd_plasma_ions_total_vol_avg: Any = None
 
     f_alpha_electron: Any = None
 

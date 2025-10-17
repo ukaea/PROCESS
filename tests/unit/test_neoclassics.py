@@ -1024,7 +1024,9 @@ def test_init_neoclassics(initneoclassicsparam, monkeypatch, neoclassics):
         initneoclassicsparam.nd_plasma_electrons_vol_avg,
     )
     monkeypatch.setattr(
-        physics_variables, "nd_plasma_fuel_ions_vol_avg", initneoclassicsparam.nd_plasma_fuel_ions_vol_avg
+        physics_variables,
+        "nd_plasma_fuel_ions_vol_avg",
+        initneoclassicsparam.nd_plasma_fuel_ions_vol_avg,
     )
     monkeypatch.setattr(
         neoclassics_variables, "densities", initneoclassicsparam.densities

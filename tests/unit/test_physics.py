@@ -329,7 +329,7 @@ def test_bootstrap_fraction_wilson(bootstrapfractionwilsonparam, physics):
 
 
 class BootstrapFractionSauterParam(NamedTuple):
-    nd_ions_total: Any = None
+    nd_plasma_ions_total_vol_avg: Any = None
 
     rminor: Any = None
 
@@ -388,7 +388,7 @@ class BootstrapFractionSauterParam(NamedTuple):
     "bootstrapfractionsauterparam",
     (
         BootstrapFractionSauterParam(
-            nd_ions_total=7.1297522422781575e19,
+            nd_plasma_ions_total_vol_avg=7.1297522422781575e19,
             rminor=2.6666666666666665,
             temp_plasma_separatrix_kev=0.10000000000000001,
             temp_plasma_ion_vol_avg_kev=12.570861186498382,
@@ -432,7 +432,9 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
     """
 
     monkeypatch.setattr(
-        physics_variables, "nd_ions_total", bootstrapfractionsauterparam.nd_ions_total
+        physics_variables,
+        "nd_plasma_ions_total_vol_avg",
+        bootstrapfractionsauterparam.nd_plasma_ions_total_vol_avg,
     )
 
     monkeypatch.setattr(
@@ -1372,7 +1374,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     m_ions_total_amu: Any = None
 
-    nd_ions_total: Any = None
+    nd_plasma_ions_total_vol_avg: Any = None
 
     f_nd_protium_electrons: Any = None
 
@@ -1535,7 +1537,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_plasma_fuel_tritium=0.5,
             nd_plasma_fuel_ions_vol_avg=0,
             m_ions_total_amu=0,
-            nd_ions_total=0,
+            nd_plasma_ions_total_vol_avg=0,
             f_nd_protium_electrons=0,
             zeffai=0,
             f_nd_plasma_carbon_electron=0,
@@ -1653,7 +1655,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_plasma_fuel_tritium=0.5,
             nd_plasma_fuel_ions_vol_avg=5.8589175702454272e19,
             m_ions_total_amu=2.7395439636787726,
-            nd_ions_total=6.6125550702454276e19,
+            nd_plasma_ions_total_vol_avg=6.6125550702454276e19,
             f_nd_protium_electrons=0,
             zeffai=0.43046641789338563,
             f_nd_plasma_carbon_electron=0,
@@ -1779,7 +1781,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "nd_plasma_fuel_ions_vol_avg", plasmacompositionparam.nd_plasma_fuel_ions_vol_avg
+        physics_variables,
+        "nd_plasma_fuel_ions_vol_avg",
+        plasmacompositionparam.nd_plasma_fuel_ions_vol_avg,
     )
 
     monkeypatch.setattr(
@@ -1787,7 +1791,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     )
 
     monkeypatch.setattr(
-        physics_variables, "nd_ions_total", plasmacompositionparam.nd_ions_total
+        physics_variables,
+        "nd_plasma_ions_total_vol_avg",
+        plasmacompositionparam.nd_plasma_ions_total_vol_avg,
     )
 
     monkeypatch.setattr(
@@ -1952,7 +1958,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_m_ions_total_amu
     )
 
-    assert physics_variables.nd_ions_total == pytest.approx(
+    assert physics_variables.nd_plasma_ions_total_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_ions_total
     )
 
@@ -2516,7 +2522,7 @@ class ConfinementTimeParam(NamedTuple):
 
     nd_plasma_electrons_vol_avg: Any = None
 
-    nd_ions_total: Any = None
+    nd_plasma_ions_total_vol_avg: Any = None
 
     nd_electron_line: Any = None
 
@@ -2590,7 +2596,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=6.1946504123280199,
@@ -2632,7 +2638,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.96163409847948844,
@@ -2674,7 +2680,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1960655150953154,
@@ -2716,7 +2722,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.78453691772934719,
@@ -2758,7 +2764,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1619079679077555,
@@ -2800,7 +2806,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.7340642483550435,
@@ -2842,7 +2848,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.1117392853827024,
@@ -2884,7 +2890,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.84477227311274361,
@@ -2926,7 +2932,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=1.6096667103064701,
@@ -2968,7 +2974,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.67053301699102119,
@@ -3010,7 +3016,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=2.1212580310552207,
@@ -3052,7 +3058,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=50.095480115636271,
@@ -3094,7 +3100,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=87.869318916638761,
@@ -3136,7 +3142,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=28.562137619592285,
@@ -3178,7 +3184,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.50082256309019457,
@@ -3220,7 +3226,7 @@ class ConfinementTimeParam(NamedTuple):
             aspect=3,
             b_plasma_toroidal_on_axis=5.2375830857646202,
             nd_plasma_electrons_vol_avg=8.0593948787884524e19,
-            nd_ions_total=7.1529510234203251e19,
+            nd_plasma_ions_total_vol_avg=7.1529510234203251e19,
             nd_electron_line=8.925359201116491e19,
             eps=0.33333333333333331,
             hfact=0.77961193402355955,
@@ -3300,7 +3306,7 @@ def test_calculate_confinement_time(confinementtimeparam, monkeypatch, physics):
         aspect=confinementtimeparam.aspect,
         b_plasma_toroidal_on_axis=confinementtimeparam.b_plasma_toroidal_on_axis,
         nd_plasma_electrons_vol_avg=confinementtimeparam.nd_plasma_electrons_vol_avg,
-        nd_ions_total=confinementtimeparam.nd_ions_total,
+        nd_plasma_ions_total_vol_avg=confinementtimeparam.nd_plasma_ions_total_vol_avg,
         nd_electron_line=confinementtimeparam.nd_electron_line,
         eps=confinementtimeparam.eps,
         hfact=confinementtimeparam.hfact,
@@ -3353,7 +3359,7 @@ def test_calculate_plasma_masses():
     """Test calculate_plasma_masses()"""
     m_fuel_amu = 2.5
     m_ions_total_amu = 3.0
-    nd_ions_total = 1.0e20
+    nd_plasma_ions_total_vol_avg = 1.0e20
     nd_plasma_fuel_ions_vol_avg = 0.8e20
     nd_plasma_alphas_vol_avg = 0.1e20
     vol_plasma = 100.0
@@ -3368,7 +3374,7 @@ def test_calculate_plasma_masses():
     ) = Physics.calculate_plasma_masses(
         m_fuel_amu=m_fuel_amu,
         m_ions_total_amu=m_ions_total_amu,
-        nd_ions_total=nd_ions_total,
+        nd_plasma_ions_total_vol_avg=nd_plasma_ions_total_vol_avg,
         nd_plasma_fuel_ions_vol_avg=nd_plasma_fuel_ions_vol_avg,
         nd_plasma_alphas_vol_avg=nd_plasma_alphas_vol_avg,
         vol_plasma=vol_plasma,

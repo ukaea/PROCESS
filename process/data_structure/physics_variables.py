@@ -386,8 +386,8 @@ dnelimt: float = None
 """density limit (/m3)"""
 
 
-nd_ions_total: float = None
-"""total ion density (/m3)"""
+nd_plasma_ions_total_vol_avg: float = None
+"""Plasma volume averaged total ion density (/m3)"""
 
 
 nd_electron_line: float = None
@@ -1418,7 +1418,7 @@ def init_physics_variables():
     global beta_norm_max_tholerus
     global beta_norm_max_stambaugh
     global dnelimt
-    global nd_ions_total
+    global nd_plasma_ions_total_vol_avg
     global nd_electron_line
     global nd_plasma_protons_vol_avg
     global ntau
@@ -1671,7 +1671,7 @@ def init_physics_variables():
     beta_norm_max_tholerus = 0.0
     beta_norm_max_stambaugh = 0.0
     dnelimt = 0.0
-    nd_ions_total = 0.0
+    nd_plasma_ions_total_vol_avg = 0.0
     nd_electron_line = 0.0
     nd_plasma_protons_vol_avg = 0.0
     ntau = 0.0

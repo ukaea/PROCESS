@@ -163,7 +163,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     alphat: float = 0.0
 
-    nd_ions_total: float = 0.0
+    nd_plasma_ions_total_vol_avg: float = 0.0
 
     nd_plasma_pedestal_electron: float = 0.0
 
@@ -236,7 +236,7 @@ class PlasmaProfilesParam(NamedTuple):
             f_temp_plasma_ion_electron=1,
             nd_electron_line=0.0,
             alphat=1.45,
-            nd_ions_total=6.9461125748017857e19,
+            nd_plasma_ions_total_vol_avg=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             temp_plasma_ion_vol_avg_kev=12.9,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
@@ -281,7 +281,7 @@ class PlasmaProfilesParam(NamedTuple):
             f_temp_plasma_ion_electron=1,
             nd_electron_line=8.8687354645836431e19,
             alphat=1.45,
-            nd_ions_total=6.9461125748017857e19,
+            nd_plasma_ions_total_vol_avg=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             temp_plasma_ion_vol_avg_kev=13.07,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
@@ -412,7 +412,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
     monkeypatch.setattr(physics_variables, "alphat", plasmaprofilesparam.alphat)
 
     monkeypatch.setattr(
-        physics_variables, "nd_ions_total", plasmaprofilesparam.nd_ions_total
+        physics_variables,
+        "nd_plasma_ions_total_vol_avg",
+        plasmaprofilesparam.nd_plasma_ions_total_vol_avg,
     )
 
     monkeypatch.setattr(

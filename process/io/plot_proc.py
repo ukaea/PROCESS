@@ -3676,7 +3676,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
     textstr_ions = "\n".join((
         r"$\langle n_{\text{ions-total}} \rangle $: "
-        f"{mfile_data.data['nd_ions_total'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_ions_total_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{fuel}} \rangle $: "
         f"{mfile_data.data['nd_plasma_fuel_ions_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{alpha}} \rangle $: "
@@ -11152,7 +11152,9 @@ def main(args=None):
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
-    nd_plasma_fuel_ions_vol_avg = m_file.data["nd_plasma_fuel_ions_vol_avg"].get_scan(scan)
+    nd_plasma_fuel_ions_vol_avg = m_file.data["nd_plasma_fuel_ions_vol_avg"].get_scan(
+        scan
+    )
     nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
         scan
     )

@@ -13,7 +13,7 @@ The density profile class is organised around a central runner function that is 
 ### Calculate core values | `set_physics_variables()`
 
 The core electron density is calculated using the [`ncore`](plasma_density_profile.md#electron-core-density-of-a-pedestalised-profile--ncore) method.
-The core ion density is then set from $n_{\text{i}}$ (`nd_ions_total`) which is the total ion density such as:
+The core ion density is then set from $n_{\text{i}}$ (`nd_plasma_ions_total_vol_avg`) which is the total ion density such as:
 
 $$
 n_{\text{i0}} = \left(\frac{n_\text{i}}{n_\text{e}}\right)n_{\text{e0}}
