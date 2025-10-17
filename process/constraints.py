@@ -801,7 +801,7 @@ def constraint_equation_24():
     - 0 use tokamak model;
     - 1 use stellarator model
     fbeta_max: f-value for beta limit
-    beta_max: allowable beta
+    beta_vol_avg_max: allowable beta
     beta_total_vol_avg: total plasma beta (calculated if i_plasma_pedestal =3)
     beta_fast_alpha: fast alpha beta component
     beta_beam: neutral beam beta component
@@ -815,12 +815,12 @@ def constraint_equation_24():
     ):
         cc = (
             data_structure.physics_variables.beta_total_vol_avg
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            data_structure.physics_variables.beta_max
+            data_structure.physics_variables.beta_vol_avg_max
             - data_structure.physics_variables.beta_total_vol_avg
             / data_structure.constraint_variables.fbeta_max
         )
@@ -832,12 +832,12 @@ def constraint_equation_24():
                 - data_structure.physics_variables.beta_fast_alpha
                 - data_structure.physics_variables.beta_beam
             )
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            data_structure.physics_variables.beta_max
+            data_structure.physics_variables.beta_vol_avg_max
             - (
                 data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
@@ -852,10 +852,10 @@ def constraint_equation_24():
                 data_structure.physics_variables.beta_total_vol_avg
                 - data_structure.physics_variables.beta_fast_alpha
             )
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max * (1.0 - cc)
+        con = data_structure.physics_variables.beta_vol_avg_max * (1.0 - cc)
         err = (
             data_structure.physics_variables.beta_total_vol_avg
             - data_structure.physics_variables.beta_fast_alpha
@@ -871,12 +871,12 @@ def constraint_equation_24():
                 )
                 ** 2
             )
-            / data_structure.physics_variables.beta_max
+            / data_structure.physics_variables.beta_vol_avg_max
             - 1.0 * data_structure.constraint_variables.fbeta_max
         )
-        con = data_structure.physics_variables.beta_max
+        con = data_structure.physics_variables.beta_vol_avg_max
         err = (
-            data_structure.physics_variables.beta_max
+            data_structure.physics_variables.beta_vol_avg_max
             - (
                 data_structure.physics_variables.beta_total_vol_avg
                 * (

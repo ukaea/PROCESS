@@ -305,7 +305,7 @@ icc = 24
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     beta calculated in-situ
 
-*beta_max
+*beta_vol_avg_max
 * DESCRIPTION:   Plasma beta upper limit
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
 

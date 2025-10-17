@@ -119,7 +119,7 @@ INPUT_VARIABLES = {
     "beta_total_vol_avg": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
-    "beta_max": InputVariable(
+    "beta_vol_avg_max": InputVariable(
         data_structure.physics_variables, float, range=(0.0, 1.0)
     ),
     "beta_min": InputVariable(

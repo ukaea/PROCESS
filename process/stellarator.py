@@ -4669,7 +4669,7 @@ class Stellarator:
         )
 
         # Calculate physics_variables.beta limit. Does nothing atm so commented out
-        # call stblim(physics_variables.beta_max)
+        # call stblim(physics_variables.beta_vol_avg_max)
 
         # Calculate the neoclassical sanity check with PROCESS parameters
         (
