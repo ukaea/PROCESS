@@ -106,15 +106,27 @@ $$
 
 ### Volume averaged thermal toroidal beta
 
+We define $B_{\text{T,on-axis}}$ as the toroidal field at the plasma major radius, $R_0$
+
 $$
-\overbrace{\langle \beta_t \rangle}^{\texttt{beta_toroidal_thermal_vol_avg}} = \frac{2\mu_0 \langle p_{\text{thermal}} \rangle}{\underbrace{B_{\text{T,on-axis}}^2}_{\texttt{b_plasma_toroidal_on_axis}}}
+\overbrace{\langle \beta_t \rangle_{\text{V}}}^{\texttt{beta_toroidal_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\underbrace{B_{\text{T,on-axis}}^2}_{\texttt{b_plasma_toroidal_on_axis}}}
 $$
 
 ### Volume averaged thermal poloidal beta
 
+
+
 $$
-\langle \beta_p \rangle = \frac{2\mu_0 \langle p_{\text{thermal}} \rangle}{\langle B_{\text{P,average}} \rangle^2}
+\overbrace{\langle \beta_p \rangle_{\text{V}}}^{\texttt{beta_poloidal_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\underbrace{\langle B_{\text{P,average}} \rangle^2}_{\texttt{b_plasma_poloidal_average}}}
 $$
+
+### Volume averaged thermal beta
+
+$$
+\overbrace{\langle \beta \rangle_{\text{V}}}^{\texttt{beta_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\sqrt{\langle B_{\text{P,average}} \rangle^2+B_{\text{T,on-axis}}^2}}
+$$
+
+------------------
 
 ## Troyon Beta Limit
 
