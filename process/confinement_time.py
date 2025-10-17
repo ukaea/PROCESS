@@ -1724,7 +1724,7 @@ def petty08_confinement_time(
 def lang_high_density_confinement_time(
     plasma_current: float,
     b_plasma_toroidal_on_axis: float,
-    nd_electron_line: float,
+    nd_plasma_electron_line: float,
     p_plasma_loss_mw: float,
     rmajor: float,
     rminor: float,
@@ -1740,7 +1740,7 @@ def lang_high_density_confinement_time(
         Parameters:
         plasma_current (float): Plasma current [MA]
         b_plasma_toroidal_on_axis (float): Toroidal magnetic field [T]
-        nd_electron_line (float): Line averaged electron density [m**-3]
+        nd_plasma_electron_line (float): Line averaged electron density [m**-3]
         p_plasma_loss_mw (float): Net Heating power [MW]
         rmajor (float): Plasma major radius [m]
         rminor (float): Plasma minor radius [m]
@@ -1763,12 +1763,12 @@ def lang_high_density_confinement_time(
     """
     qratio = q / qstar
     n_gw = 1.0e14 * plasma_current / (np.pi * rminor * rminor)
-    nratio = nd_electron_line / n_gw
+    nratio = nd_plasma_electron_line / n_gw
     return (
         6.94e-7
         * plasma_current**1.3678e0
         * b_plasma_toroidal_on_axis**0.12e0
-        * nd_electron_line**0.032236e0
+        * nd_plasma_electron_line**0.032236e0
         * (p_plasma_loss_mw * 1.0e6) ** (-0.74e0)
         * rmajor**1.2345e0
         * kappa_ipb**0.37e0

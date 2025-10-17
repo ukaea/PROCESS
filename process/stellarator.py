@@ -3689,7 +3689,7 @@ class Stellarator:
         dlimit = (
             dnlamx
             * physics_variables.nd_plasma_electrons_vol_avg
-            / physics_variables.nd_electron_line
+            / physics_variables.nd_plasma_electron_line
         )
 
         #  Set the required value for icc=5
@@ -4287,7 +4287,7 @@ class Stellarator:
             / (
                 3.0e0
                 * physics_variables.vol_plasma
-                * physics_variables.nd_electron_line
+                * physics_variables.nd_plasma_electron_line
             )
         ) / (
             constants.ELECTRON_CHARGE
@@ -4606,7 +4606,7 @@ class Stellarator:
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_plasma_ions_total_vol_avg,
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_electron_line,
+            physics_variables.nd_plasma_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
@@ -4722,7 +4722,7 @@ class Stellarator:
                 nu_star_d,
                 nu_star_T,
                 nu_star_He,
-                physics_variables.nd_electron_line,
+                physics_variables.nd_plasma_electron_line,
                 physics_variables.dnelimt,
             )
 
@@ -4746,7 +4746,7 @@ class Stellarator:
         nu_star_D,
         nu_star_T,
         nu_star_He,
-        nd_electron_line,
+        nd_plasma_electron_line,
         dnelimt,
     ):
         po.oheadr(self.outfile, "Stellarator Specific Physics:")
@@ -4854,15 +4854,15 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Obtained line averaged density at op. point (/m3)",
-            "(nd_electron_line)",
-            nd_electron_line,
+            "(nd_plasma_electron_line)",
+            nd_plasma_electron_line,
         )
         po.ovarre(self.outfile, "Sudo density limit (/m3)", "(dnelimt)", dnelimt)
         po.ovarre(
             self.outfile,
             "Ratio density to sudo limit (1)",
-            "(nd_electron_line/dnelimt)",
-            nd_electron_line / dnelimt,
+            "(nd_plasma_electron_line/dnelimt)",
+            nd_plasma_electron_line / dnelimt,
         )
 
     def calc_neoclassics(self):

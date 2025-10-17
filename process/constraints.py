@@ -358,7 +358,7 @@ def constraint_equation_5():
     fdene: f-value for density limit
     nd_plasma_electrons_vol_avg: electron density (/m3)
     dnelimt: density limit (/m3)
-    nd_electron_line: line averaged electron density (m-3)
+    nd_plasma_electron_line: line averaged electron density (m-3)
 
     i_density_limit:
     - 1 old ASDEX;
@@ -372,14 +372,14 @@ def constraint_equation_5():
     # Apply Greenwald limit to line-averaged density
     if data_structure.physics_variables.i_density_limit == 7:
         return ConstraintResult(
-            data_structure.physics_variables.nd_electron_line
+            data_structure.physics_variables.nd_plasma_electron_line
             / data_structure.physics_variables.dnelimt
             - 1.0 * data_structure.constraint_variables.fdene,
             data_structure.constraint_variables.fdene
             * data_structure.physics_variables.dnelimt,
             data_structure.constraint_variables.fdene
             * data_structure.physics_variables.dnelimt
-            - data_structure.physics_variables.nd_electron_line,
+            - data_structure.physics_variables.nd_plasma_electron_line,
         )
 
     cc = (

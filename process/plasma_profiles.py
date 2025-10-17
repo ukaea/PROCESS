@@ -151,7 +151,7 @@ class PlasmaProfile:
         # Line averaged electron density (IPDG89)
         # Taken by integrating the parabolic profile over rho in the bounds of 0 and 1 and dividng by the width of the integration bounds
 
-        physics_variables.nd_electron_line = (
+        physics_variables.nd_plasma_electron_line = (
             physics_variables.nd_plasma_electrons_vol_avg
             * (1.0 + physics_variables.alphan)
             * (sp.special.gamma(0.5) / 2.0)
@@ -245,7 +245,7 @@ class PlasmaProfile:
         #  Line-averaged electron density
         #  = integral(n(rho).drho)
 
-        physics_variables.nd_electron_line = self.neprofile.profile_integ
+        physics_variables.nd_plasma_electron_line = self.neprofile.profile_integ
 
         #  Scrape-off density / volume averaged density
         #  (Input value is used if i_plasma_pedestal = 0)

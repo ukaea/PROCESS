@@ -150,12 +150,14 @@ class NeutralBeam:
         #  Calculate number of decay lengths to centre
 
         current_drive_variables.n_beam_decay_lengths_core = (
-            dpath * physics_variables.nd_electron_line * sigstop
+            dpath * physics_variables.nd_plasma_electron_line * sigstop
         )
 
         #  Shine-through fraction of beam
 
-        fshine = np.exp(-2.0e0 * dpath * physics_variables.nd_electron_line * sigstop)
+        fshine = np.exp(
+            -2.0e0 * dpath * physics_variables.nd_plasma_electron_line * sigstop
+        )
         fshine = max(fshine, 1.0e-20)
 
         #  Deuterium and tritium beam densities
@@ -189,7 +191,7 @@ class NeutralBeam:
             physics_variables.alphat,
             physics_variables.aspect,
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_electron_line,
+            physics_variables.nd_plasma_electron_line,
             current_drive_variables.e_beam_kev,
             current_drive_variables.f_radius_beam_tangency_rmajor,
             fshine,
@@ -208,7 +210,7 @@ class NeutralBeam:
         alphat,
         aspect,
         nd_plasma_electrons_vol_avg,
-        nd_electron_line,
+        nd_plasma_electron_line,
         e_beam_kev,
         f_radius_beam_tangency_rmajor,
         fshine,
@@ -226,7 +228,7 @@ class NeutralBeam:
         alphat  : input real : temperature profile factor
         aspect  : input real : aspect ratio
         nd_plasma_electrons_vol_avg    : input real : volume averaged electron density (m**-3)
-        nd_electron_line    : input real : line averaged electron density (m**-3)
+        nd_plasma_electron_line    : input real : line averaged electron density (m**-3)
         e_beam_kev  : input real : neutral beam energy (keV)
         f_radius_beam_tangency_rmajor  : input real : R_tangent / R_major for neutral beam injection
         fshine  : input real : shine-through fraction of beam
@@ -252,7 +254,7 @@ class NeutralBeam:
         dene20 = nd_plasma_electrons_vol_avg / 1e20
 
         #  Line averaged electron density (10**20 m**-3)
-        dnla20 = nd_electron_line / 1e20
+        dnla20 = nd_plasma_electron_line / 1e20
 
         #  Critical energy (MeV) (power to electrons = power to ions) (IPDG89)
         #  N.B. temp_plasma_electron_density_weighted_kev is in keV

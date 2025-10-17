@@ -2387,7 +2387,7 @@ class Physics:
 
         # Calculate L- to H-mode power threshold for different scalings
         physics_variables.l_h_threshold_powers = l_h_threshold_power(
-            physics_variables.nd_electron_line,
+            physics_variables.nd_plasma_electron_line,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.rmajor,
             physics_variables.rminor,
@@ -2492,7 +2492,7 @@ class Physics:
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_plasma_ions_total_vol_avg,
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_electron_line,
+            physics_variables.nd_plasma_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
@@ -3909,7 +3909,7 @@ class Physics:
             * physics_variables.rmajor**2
             * physics_variables.b_plasma_toroidal_on_axis
             * np.sqrt(physics_variables.eps)
-            * physics_variables.nd_electron_line**3
+            * physics_variables.nd_plasma_electron_line**3
             * physics_variables.kappa
             / (physics_variables.e_plasma_beta**2 * physics_variables.plasma_current)
         )
@@ -3922,7 +3922,7 @@ class Physics:
             / (
                 3.0e0
                 * physics_variables.vol_plasma
-                * physics_variables.nd_electron_line
+                * physics_variables.nd_plasma_electron_line
             )
         ) / (
             constants.ELECTRON_CHARGE
@@ -4626,8 +4626,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Line-averaged electron number density (/m3)",
-            "(nd_electron_line)",
-            physics_variables.nd_electron_line,
+            "(nd_plasma_electron_line)",
+            physics_variables.nd_plasma_electron_line,
             "OP ",
         )
         po.ovarre(
@@ -4680,7 +4680,7 @@ class Physics:
                 self.outfile,
                 "Line-averaged electron density / Greenwald density",
                 "(dnla_gw)",
-                physics_variables.nd_electron_line / physics_variables.dlimit[6],
+                physics_variables.nd_plasma_electron_line / physics_variables.dlimit[6],
                 "OP ",
             )
 
@@ -5890,14 +5890,16 @@ class Physics:
                     )
                     logger.warning("rmajor outside Snipes 2000 fitted range")
 
-                if (physics_variables.nd_electron_line < 0.09e20) or (
-                    physics_variables.nd_electron_line > 3.16e20
+                if (physics_variables.nd_plasma_electron_line < 0.09e20) or (
+                    physics_variables.nd_plasma_electron_line > 3.16e20
                 ):
                     po.ocmmnt(
                         self.outfile,
-                        "(physics_variables.nd_electron_line outside Snipes 2000 fitted range)",
+                        "(physics_variables.nd_plasma_electron_line outside Snipes 2000 fitted range)",
                     )
-                    logger.warning("nd_electron_line outside Snipes 2000 fitted range")
+                    logger.warning(
+                        "nd_plasma_electron_line outside Snipes 2000 fitted range"
+                    )
 
                 if (physics_variables.kappa < 1.0e0) or (
                     physics_variables.kappa > 2.04e0
@@ -6638,7 +6640,7 @@ class Physics:
                 physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_plasma_ions_total_vol_avg,
                 physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_electron_line,
+                physics_variables.nd_plasma_electron_line,
                 physics_variables.eps,
                 1.0,
                 i_confinement_time,
@@ -7568,7 +7570,7 @@ class Physics:
                 physics_variables.b_plasma_toroidal_on_axis,
                 physics_variables.nd_plasma_ions_total_vol_avg,
                 physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_electron_line,
+                physics_variables.nd_plasma_electron_line,
                 physics_variables.eps,
                 hfact,
                 i_confinement_time,
@@ -7624,7 +7626,7 @@ class Physics:
         b_plasma_toroidal_on_axis: float,
         nd_plasma_ions_total_vol_avg: float,
         nd_plasma_electrons_vol_avg: float,
-        nd_electron_line: float,
+        nd_plasma_electron_line: float,
         eps: float,
         hfact: float,
         i_confinement_time: int,
@@ -7653,7 +7655,7 @@ class Physics:
         :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
         :param nd_plasma_ions_total_vol_avg: Total ion density (/m3)
         :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3)
-        :param nd_electron_line: Line-averaged electron density (/m3)
+        :param nd_plasma_electron_line: Line-averaged electron density (/m3)
         :param eps: Inverse aspect ratio
         :param hfact: H factor on energy confinement scalings
         :param i_confinement_time: Switch for energy confinement scaling to use
@@ -7713,8 +7715,8 @@ class Physics:
         # ========================================================================
 
         # Line averaged electron density in scaled units
-        dnla20 = nd_electron_line * 1.0e-20
-        dnla19 = nd_electron_line * 1.0e-19
+        dnla20 = nd_plasma_electron_line * 1.0e-20
+        dnla19 = nd_plasma_electron_line * 1.0e-19
 
         # Volume averaged electron density in units of 10**20 m**-3
         n20 = nd_plasma_electrons_vol_avg / 1.0e20
@@ -8328,7 +8330,7 @@ class Physics:
             t_electron_confinement = confinement.lang_high_density_confinement_time(
                 plasma_current,
                 b_plasma_toroidal_on_axis,
-                nd_electron_line,
+                nd_plasma_electron_line,
                 p_plasma_loss_mw,
                 rmajor,
                 rminor,
@@ -8594,7 +8596,7 @@ def res_diff_time(rmajor, res_plasma, kappa95):
 
 
 def l_h_threshold_power(
-    nd_electron_line: float,
+    nd_plasma_electron_line: float,
     b_plasma_toroidal_on_axis: float,
     rmajor: float,
     rminor: float,
@@ -8607,8 +8609,8 @@ def l_h_threshold_power(
     """
     L-mode to H-mode power threshold calculation.
 
-    :param nd_electron_line: Line-averaged electron density (/m3)
-    :type nd_electron_line: float
+    :param nd_plasma_electron_line: Line-averaged electron density (/m3)
+    :type nd_plasma_electron_line: float
     :param b_plasma_toroidal_on_axis: Toroidal field on axis (T)
     :type b_plasma_toroidal_on_axis: float
     :param rmajor: Plasma major radius (m)
@@ -8630,7 +8632,7 @@ def l_h_threshold_power(
     :rtype: list[float]
     """
 
-    dnla20 = 1e-20 * nd_electron_line
+    dnla20 = 1e-20 * nd_plasma_electron_line
 
     # ========================================================================
 
