@@ -4599,6 +4599,13 @@ class Physics:
             physics_variables.temp_plasma_electron_density_weighted_kev,
             "OP ",
         )
+        po.ovarrf(
+            self.outfile,
+            "Ratio of electron density weighted temp. to volume averaged temp.",
+            "(pcoef)",
+            physics_variables.pcoef,
+            "OP ",
+        )
         po.ovarre(
             self.outfile,
             "Volume averaged electron number density (/m3)",

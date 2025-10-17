@@ -3820,7 +3820,8 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     te = mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['temp_plasma_electron_vol_avg_kev'].get_scan(scan):.3f} keV",
+        rf"$\langle T_{{\text{{e}}}} \rangle_\text{{V}}$: {mfile_data.data['temp_plasma_electron_vol_avg_kev'].get_scan(scan):.3f} keV"
+        rf"$\hspace{{3}} \langle T_{{\text{{e}}}} \rangle_\text{{n}}$: {mfile_data.data['temp_plasma_electron_density_weighted_kev'].get_scan(scan):.3f} keV",
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
@@ -3829,7 +3830,9 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
         r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
         f"{te0 / te:.3f}",
-        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV",
+        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
+        r"$ \hspace{4} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
+        f"{mfile_data.data['pcoef'].get_scan(scan):.3f}",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
