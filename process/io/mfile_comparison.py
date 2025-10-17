@@ -129,7 +129,7 @@ BASELINE_LIST = [
     "temp_plasma_pedestal_kev",
     "nd_plasma_pedestal_electron",
     "zeff",
-    "nd_impurities",
+    "nd_plasma_impurities_vol_avg",
     "t_energy_confinement",
     "hfact",
     "tauelaw",

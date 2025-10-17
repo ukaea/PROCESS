@@ -1394,7 +1394,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     zeff: Any = None
 
-    nd_impurities: Any = None
+    nd_plasma_impurities_vol_avg: Any = None
 
     f_temp_plasma_electron_density_vol_avg: Any = None
 
@@ -1547,7 +1547,7 @@ class PlasmaCompositionParam(NamedTuple):
             dlamee=0,
             f_nd_beam_electron=0,
             zeff=0,
-            nd_impurities=0,
+            nd_plasma_impurities_vol_avg=0,
             f_temp_plasma_electron_density_vol_avg=0,
             fusden_alpha_total=0,
             f_nd_plasma_iron_argon_electron=0,
@@ -1665,7 +1665,7 @@ class PlasmaCompositionParam(NamedTuple):
             dlamee=17.510652035055571,
             f_nd_beam_electron=0,
             zeff=2.0909945616489103,
-            nd_impurities=28875000000000004,
+            nd_plasma_impurities_vol_avg=28875000000000004,
             f_temp_plasma_electron_density_vol_avg=1.0521775929921553,
             fusden_alpha_total=1.973996644759543e17,
             f_nd_plasma_iron_argon_electron=0,
@@ -1837,7 +1837,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
     monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
 
     monkeypatch.setattr(
-        physics_variables, "nd_impurities", plasmacompositionparam.nd_impurities
+        physics_variables,
+        "nd_plasma_impurities_vol_avg",
+        plasmacompositionparam.nd_plasma_impurities_vol_avg,
     )
 
     monkeypatch.setattr(
@@ -1972,7 +1974,7 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
 
     assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
 
-    assert physics_variables.nd_impurities == pytest.approx(
+    assert physics_variables.nd_plasma_impurities_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_impurities
     )
 

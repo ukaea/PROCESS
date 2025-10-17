@@ -132,7 +132,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 8. **Total Impurity Density Calculation**
 
-    - Calculate the total impurity density (`nd_impurities`).
+    - Calculate the total impurity density (`nd_plasma_impurities_vol_avg`).
 
     $$
     \mathtt{nd\_impurities} | n_{\text{impurities}} = \sum_j n_{\text{e}} f_j

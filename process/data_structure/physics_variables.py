@@ -406,8 +406,8 @@ nTtau: float = None
 """Lawson triple product [keV s / m3]"""
 
 
-nd_impurities: float = None
-"""high Z ion density (/m3)"""
+nd_plasma_impurities_vol_avg: float = None
+"""Plasma volume averaged impurity (Z > 2) ion density (/m3)"""
 
 
 gradient_length_ne: float = None
@@ -1423,7 +1423,7 @@ def init_physics_variables():
     global nd_plasma_protons_vol_avg
     global ntau
     global nTtau
-    global nd_impurities
+    global nd_plasma_impurities_vol_avg
     global beta_poloidal_eps_max
     global eps
     global f_c_plasma_auxiliary
@@ -1676,7 +1676,7 @@ def init_physics_variables():
     nd_plasma_protons_vol_avg = 0.0
     ntau = 0.0
     nTtau = 0.0
-    nd_impurities = 0.0
+    nd_plasma_impurities_vol_avg = 0.0
     beta_poloidal_eps_max = 1.38
     eps = 0.34399724802
     f_c_plasma_auxiliary = 0.0

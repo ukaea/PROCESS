@@ -3323,10 +3323,10 @@ class Physics:
         # ======================================================================
 
         # Total impurity density
-        physics_variables.nd_impurities = 0.0
+        physics_variables.nd_plasma_impurities_vol_avg = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.nd_impurities += (
+                physics_variables.nd_plasma_impurities_vol_avg += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * physics_variables.nd_plasma_electrons_vol_avg
                 )
@@ -3339,7 +3339,7 @@ class Physics:
             + physics_variables.nd_plasma_alphas_vol_avg
             + physics_variables.nd_plasma_protons_vol_avg
             + physics_variables.nd_beam_ions
-            + physics_variables.nd_impurities
+            + physics_variables.nd_plasma_impurities_vol_avg
         )
 
         # ======================================================================
@@ -4701,8 +4701,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Total impurity number density with Z > 2 (no He) (/m3)",
-            "(nd_impurities)",
-            physics_variables.nd_impurities,
+            "(nd_plasma_impurities_vol_avg)",
+            physics_variables.nd_plasma_impurities_vol_avg,
             "OP ",
         )
         po.ovarre(

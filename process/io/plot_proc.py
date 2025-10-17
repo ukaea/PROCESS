@@ -3682,7 +3682,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         r"$\langle n_{\text{alpha}} \rangle $: "
         f"{mfile_data.data['nd_plasma_alphas_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{impurities}} \rangle $: "
-        f"{mfile_data.data['nd_impurities'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_impurities_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{protons}} \rangle $:"
         f"{mfile_data.data['nd_plasma_protons_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
     ))
@@ -6842,9 +6842,9 @@ def plot_physics_info(axis, mfile_data, scan):
         "dlimit(7)"
     ].get_scan(scan)
 
-    nd_impurities = mfile_data.data["nd_impurities"].get_scan(scan) / mfile_data.data[
-        "nd_plasma_electrons_vol_avg"
-    ].get_scan(scan)
+    nd_plasma_impurities_vol_avg = mfile_data.data[
+        "nd_plasma_impurities_vol_avg"
+    ].get_scan(scan) / mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
 
     tepeak = mfile_data.data["temp_plasma_electron_on_axis_kev"].get_scan(
         scan
@@ -6877,7 +6877,11 @@ def plot_physics_info(axis, mfile_data, scan):
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
-        (nd_impurities, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
+        (
+            nd_plasma_impurities_vol_avg,
+            r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$",
+            "",
+        ),
         ("t_energy_confinement", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),

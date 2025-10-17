@@ -236,7 +236,7 @@
  Line-averaged_electron_density_/_Greenwald_density_______________________ (dnla_gw)______________________ 1.19833068191158598e+00 OP
  Total_Ion_number_density_(/m3)___________________________________________ (nd_plasma_ions_total_vol_avg)________________ 7.06084473006886912e+19 OP
  Fuel_ion_number_density_(/m3)____________________________________________ (nd_plasma_fuel_ions_vol_avgel_ions_vol_avg)_________________ 6.58453241268011663e+19 OP
- Total_impurity_number_density_with_Z_>_2_(no_He)_(/m3)___________________ (nd_impurities)________________ 5.43985672856892960e+16 OP
+ Total_impurity_number_density_with_Z_>_2_(no_He)_(/m3)___________________ (nd_plasma_impurities_vol_avg)________________ 5.43985672856892960e+16 OP
  Helium_ion_number_density_(thermalised_ions_only)_(/m3)__________________ (nd_plasma_alphas_vol_avg_alphas_vol_avg)____________________ 4.69634891516571443e+18 OP
  Helium_ion_density_(thermalised_ions_only)_/_electron_number_density_____ (f_nd_alpha_electron)__________ 6.02387639886502110e-02
  Proton_number_density_(/m3)______________________________________________ (nd_plasma_protons_vol_avg)___________________ 1.23756914361185080e+16 OP
