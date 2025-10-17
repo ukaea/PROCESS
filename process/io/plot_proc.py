@@ -6869,7 +6869,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
-        ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
+        ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),

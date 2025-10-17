@@ -1764,7 +1764,7 @@ class Physics:
             physics_variables.beta_poloidal_vol_avg * physics_variables.eps
         )
 
-        physics_variables.beta_thermal_poloidal = (
+        physics_variables.beta_thermal_poloidal_vol_avg = (
             physics_variables.beta_thermal_vol_avg
             * (
                 physics_variables.b_plasma_total
@@ -1972,7 +1972,7 @@ class Physics:
                 physics_variables.alphaj,
                 physics_variables.alphap,
                 physics_variables.alphat,
-                physics_variables.beta_thermal_poloidal,
+                physics_variables.beta_thermal_poloidal_vol_avg,
                 physics_variables.q0,
                 physics_variables.q95,
                 physics_variables.rmajor,
@@ -4425,8 +4425,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Thermal poloidal beta",
-            "(beta_thermal_poloidal)",
-            physics_variables.beta_thermal_poloidal,
+            "(beta_thermal_poloidal_vol_avg)",
+            physics_variables.beta_thermal_poloidal_vol_avg,
             "OP ",
         )
         po.ovarre(
