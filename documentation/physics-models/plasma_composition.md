@@ -116,7 +116,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     \mathtt{nd\_fuel\_ions} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
     $$
 
-    - Calculate the fuel ion density (`nd_fuel_ions`).
+    - Calculate the fuel ion density (`nd_plasma_fuel_ions_vol_avg`).
 
 7. **Set Hydrogen and Helium Impurity Fractions**
 

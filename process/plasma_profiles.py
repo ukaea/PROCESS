@@ -305,7 +305,7 @@ class PlasmaProfile:
 
         # Fuel ion pressure profile (Pa)
         physics_variables.pres_plasma_fuel_profile = (
-            physics_variables.nd_fuel_ions
+            physics_variables.nd_plasma_fuel_ions_vol_avg
             * (self.neprofile.profile_y / physics_variables.nd_plasma_electrons_vol_avg)
         ) * (
             self.teprofile.profile_y

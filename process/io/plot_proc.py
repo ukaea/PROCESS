@@ -3588,13 +3588,13 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             + (ne0 - nd_plasma_pedestal_electron)
             * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
         )
-        nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
+        nicore = necore * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
         neesep = nd_plasma_separatrix_electron + (
             nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
-        nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
+        nisep = neesep * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
@@ -3604,7 +3604,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
-        ni = (ne0 * (nd_fuel_ions / nd_plasma_electrons_vol_avg)) * (
+        ni = (ne0 * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)) * (
             1 - rho**2
         ) ** alphan
     ne = ne / 1e19
@@ -3652,7 +3652,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
         rf"$n_{{\text{{e,ped}}}}$: {nd_plasma_pedestal_electron:.3e} m$^{{-3}}$"
         r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-        f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}",
+        f"{nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg:.3f}",
         rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
         r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
         f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
@@ -3678,7 +3678,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         r"$\langle n_{\text{ions-total}} \rangle $: "
         f"{mfile_data.data['nd_ions_total'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{fuel}} \rangle $: "
-        f"{mfile_data.data['nd_fuel_ions'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_fuel_ions_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{alpha}} \rangle $: "
         f"{mfile_data.data['nd_plasma_alphas_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{impurities}} \rangle $: "
@@ -11122,7 +11122,7 @@ def main(args=None):
     global alphan
     global alphat
     global ne0
-    global nd_fuel_ions
+    global nd_plasma_fuel_ions_vol_avg
     global nd_plasma_electrons_vol_avg
     global te0
     global ti
@@ -11152,7 +11152,7 @@ def main(args=None):
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
-    nd_fuel_ions = m_file.data["nd_fuel_ions"].get_scan(scan)
+    nd_plasma_fuel_ions_vol_avg = m_file.data["nd_plasma_fuel_ions_vol_avg"].get_scan(scan)
     nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
         scan
     )

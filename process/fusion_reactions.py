@@ -224,7 +224,7 @@ class FusionReactionRate:
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
-                    physics_variables.nd_fuel_ions
+                    physics_variables.nd_plasma_fuel_ions_vol_avg
                     / physics_variables.nd_plasma_electrons_vol_avg
                 )
             )
@@ -250,9 +250,9 @@ class FusionReactionRate:
             * reaction_energy
             * (
                 physics_variables.f_plasma_fuel_deuterium
-                * physics_variables.nd_fuel_ions
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
-            * (physics_variables.f_plasma_fuel_tritium * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_plasma_fuel_tritium * physics_variables.nd_plasma_fuel_ions_vol_avg)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -327,7 +327,7 @@ class FusionReactionRate:
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
-                    physics_variables.nd_fuel_ions
+                    physics_variables.nd_plasma_fuel_ions_vol_avg
                     / physics_variables.nd_plasma_electrons_vol_avg
                 )
             )
@@ -343,9 +343,9 @@ class FusionReactionRate:
             * reaction_energy
             * (
                 physics_variables.f_plasma_fuel_deuterium
-                * physics_variables.nd_fuel_ions
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
-            * (physics_variables.f_plasma_fuel_helium3 * physics_variables.nd_fuel_ions)
+            * (physics_variables.f_plasma_fuel_helium3 * physics_variables.nd_plasma_fuel_ions_vol_avg)
         )
 
         # Power densities for different particles [MW/m^3]
@@ -421,7 +421,7 @@ class FusionReactionRate:
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
-                    physics_variables.nd_fuel_ions
+                    physics_variables.nd_plasma_fuel_ions_vol_avg
                     / physics_variables.nd_plasma_electrons_vol_avg
                 )
             )
@@ -440,11 +440,11 @@ class FusionReactionRate:
             * (1.0 - self.f_dd_branching_trit)
             * (
                 physics_variables.f_plasma_fuel_deuterium
-                * physics_variables.nd_fuel_ions
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
             * (
                 physics_variables.f_plasma_fuel_deuterium
-                * physics_variables.nd_fuel_ions
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
         )
 
@@ -521,7 +521,7 @@ class FusionReactionRate:
             * (
                 self.plasma_profile.neprofile.profile_y
                 * (
-                    physics_variables.nd_fuel_ions
+                    physics_variables.nd_plasma_fuel_ions_vol_avg
                     / physics_variables.nd_plasma_electrons_vol_avg
                 )
             )
@@ -540,11 +540,11 @@ class FusionReactionRate:
             * self.f_dd_branching_trit
             * (
                 physics_variables.f_plasma_fuel_deuterium
-                * physics_variables.nd_fuel_ions
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
             * (
                 physics_variables.f_plasma_fuel_deuterium
-                * physics_variables.nd_fuel_ions
+                * physics_variables.nd_plasma_fuel_ions_vol_avg
             )
         )
 
@@ -900,7 +900,7 @@ def beam_fusion(
     b_plasma_toroidal_on_axis: float,
     c_beam_total: float,
     nd_plasma_electrons_vol_avg: float,
-    nd_fuel_ions: float,
+    nd_plasma_fuel_ions_vol_avg: float,
     ion_electron_coulomb_log: float,
     e_beam_kev: float,
     f_deuterium_plasma: float,
@@ -925,7 +925,7 @@ def beam_fusion(
                 b_plasma_toroidal_on_axis (float): Toroidal field on axis (T).
                 c_beam_total (float): Neutral beam current (A).
                 nd_plasma_electrons_vol_avg (float): Electron density (m^-3).
-                nd_fuel_ions (float): Fuel ion density (m^-3).
+                nd_plasma_fuel_ions_vol_avg (float): Fuel ion density (m^-3).
                 ion_electron_coulomb_log (float): Ion-electron coulomb logarithm.
                 e_beam_kev (float): Neutral beam energy (keV).
                 f_deuterium_plasma (float): Deuterium fraction of main plasma.
@@ -990,8 +990,8 @@ def beam_fusion(
     )
 
     # Deuterium and tritium ion densities
-    deuterium_density = nd_fuel_ions * f_deuterium_plasma
-    tritium_density = nd_fuel_ions * f_tritium_plasma
+    deuterium_density = nd_plasma_fuel_ions_vol_avg * f_deuterium_plasma
+    tritium_density = nd_plasma_fuel_ions_vol_avg * f_tritium_plasma
 
     (
         deuterium_beam_alpha_power,

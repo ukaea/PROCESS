@@ -330,8 +330,8 @@ nd_plasma_electrons_vol_avg: float = None
 """Plasma volume averaged electron density (/m3) (`iteration variable 6`)"""
 
 
-nd_fuel_ions: float = None
-"""fuel ion density (/m3)"""
+nd_plasma_fuel_ions_vol_avg: float = None
+"""Plasma volume averaged fuel ion density (/m3)"""
 
 
 dlamee: float = None
@@ -1404,7 +1404,7 @@ def init_physics_variables():
     global f_vol_plasma
     global f_r_conducting_wall
     global nd_plasma_electrons_vol_avg
-    global nd_fuel_ions
+    global nd_plasma_fuel_ions_vol_avg
     global dlamee
     global dlamie
     global dlimit
@@ -1657,7 +1657,7 @@ def init_physics_variables():
     f_vol_plasma = 1.0
     f_r_conducting_wall = 1.35
     nd_plasma_electrons_vol_avg = 9.8e19
-    nd_fuel_ions = 0.0
+    nd_plasma_fuel_ions_vol_avg = 0.0
     dlamee = 0.0
     dlamie = 0.0
     dlimit = np.zeros(8, dtype=np.float64)

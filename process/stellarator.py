@@ -4347,7 +4347,7 @@ class Stellarator:
                 physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
                 physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_fuel_ions,
+                physics_variables.nd_plasma_fuel_ions_vol_avg,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
                 physics_variables.f_plasma_fuel_deuterium,
@@ -4410,7 +4410,7 @@ class Stellarator:
             physics_variables.b_plasma_poloidal_average,
             physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_fuel_ions,
+            physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.nd_ions_total,
             physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.temp_plasma_ion_density_weighted_kev,
@@ -4658,7 +4658,7 @@ class Stellarator:
             physics_variables.aspect,
             physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.temp_plasma_electron_vol_avg_kev,
-            physics_variables.nd_fuel_ions,
+            physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
@@ -5630,8 +5630,8 @@ class Neoclassics:
         )
         density = np.array([
             physics_variables.nd_plasma_electrons_vol_avg,
-            physics_variables.nd_fuel_ions * physics_variables.f_plasma_fuel_deuterium,
-            physics_variables.nd_fuel_ions
+            physics_variables.nd_plasma_fuel_ions_vol_avg * physics_variables.f_plasma_fuel_deuterium,
+            physics_variables.nd_plasma_fuel_ions_vol_avg
             * (1 - physics_variables.f_plasma_fuel_deuterium),
             physics_variables.nd_plasma_alphas_vol_avg,
         ])
