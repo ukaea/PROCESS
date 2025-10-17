@@ -237,7 +237,7 @@
  Total_Ion_number_density_(/m3)___________________________________________ (nd_ions_total)________________ 7.06084473006886912e+19 OP
  Fuel_ion_number_density_(/m3)____________________________________________ (nd_fuel_ions)_________________ 6.58453241268011663e+19 OP
  Total_impurity_number_density_with_Z_>_2_(no_He)_(/m3)___________________ (nd_impurities)________________ 5.43985672856892960e+16 OP
- Helium_ion_number_density_(thermalised_ions_only)_(/m3)__________________ (nd_alphas)____________________ 4.69634891516571443e+18 OP
+ Helium_ion_number_density_(thermalised_ions_only)_(/m3)__________________ (nd_plasma_alphas_vol_avg_alphas_vol_avg)____________________ 4.69634891516571443e+18 OP
  Helium_ion_density_(thermalised_ions_only)_/_electron_number_density_____ (f_nd_alpha_electron)__________ 6.02387639886502110e-02
  Proton_number_density_(/m3)______________________________________________ (nd_protons)___________________ 1.23756914361185080e+16 OP
  Proton_number_density_/_electron_number_density__________________________ (f_nd_protium_electrons)_______ 0.00000000000000000e+00 OP

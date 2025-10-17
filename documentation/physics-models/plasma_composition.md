@@ -59,7 +59,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 1. **Alpha Ash Portion Calculation**
 
-    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`nd_plasma_electrons_vol_avg`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
+    - Calculate the number density of alpha particles (`nd_plasma_alphas_vol_avg`) using the electron density (`nd_plasma_electrons_vol_avg`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
         - `f_nd_alpha_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$

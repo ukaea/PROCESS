@@ -346,8 +346,8 @@ dlimit: list[float] = None
 """density limit (/m3) as calculated using various models"""
 
 
-nd_alphas: float = None
-"""thermal alpha density (/m3)"""
+nd_plasma_alphas_vol_avg: float = None
+"""Plasma volume averaged thermal alpha density (/m3)"""
 
 
 nd_beam_ions: float = None
@@ -1408,7 +1408,7 @@ def init_physics_variables():
     global dlamee
     global dlamie
     global dlimit
-    global nd_alphas
+    global nd_plasma_alphas_vol_avg
     global nd_beam_ions
     global nd_beam_ions_out
     global beta_norm_max
@@ -1661,7 +1661,7 @@ def init_physics_variables():
     dlamee = 0.0
     dlamie = 0.0
     dlimit = np.zeros(8, dtype=np.float64)
-    nd_alphas = 0.0
+    nd_plasma_alphas_vol_avg = 0.0
     nd_beam_ions = 0.0
     nd_beam_ions_out = 0.0
     beta_norm_max = 3.5

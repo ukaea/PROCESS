@@ -1597,7 +1597,7 @@ class Physics:
             physics_variables.m_ions_total_amu,
             physics_variables.nd_ions_total,
             physics_variables.nd_fuel_ions,
-            physics_variables.nd_alphas,
+            physics_variables.nd_plasma_alphas_vol_avg,
             physics_variables.vol_plasma,
             physics_variables.nd_plasma_electrons_vol_avg,
         )
@@ -2571,7 +2571,7 @@ class Physics:
             physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
             sbar,
-            physics_variables.nd_alphas,
+            physics_variables.nd_plasma_alphas_vol_avg,
             physics_variables.t_energy_confinement,
             physics_variables.vol_plasma,
         )
@@ -3221,7 +3221,7 @@ class Physics:
         """
 
         # Alpha ash portion
-        physics_variables.nd_alphas = (
+        physics_variables.nd_plasma_alphas_vol_avg = (
             physics_variables.nd_plasma_electrons_vol_avg
             * physics_variables.f_nd_alpha_electron
         )
@@ -3237,14 +3237,14 @@ class Physics:
             physics_variables.nd_protons = max(
                 physics_variables.f_nd_protium_electrons
                 * physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_alphas
+                physics_variables.nd_plasma_alphas_vol_avg
                 * (physics_variables.f_plasma_fuel_helium3 + 1.0e-3),
             )  # rough estimate
         else:
             physics_variables.nd_protons = max(
                 physics_variables.f_nd_protium_electrons
                 * physics_variables.nd_plasma_electrons_vol_avg,
-                physics_variables.nd_alphas
+                physics_variables.nd_plasma_alphas_vol_avg
                 * physics_variables.proton_rate_density
                 / physics_variables.fusden_alpha_total,
             )
@@ -3280,7 +3280,7 @@ class Physics:
         # znfuel is the sum of Zi.ni for the three fuel ions
         znfuel = (
             physics_variables.nd_plasma_electrons_vol_avg
-            - 2.0 * physics_variables.nd_alphas
+            - 2.0 * physics_variables.nd_plasma_alphas_vol_avg
             - physics_variables.nd_protons
             - physics_variables.nd_beam_ions
             - znimp
@@ -3336,7 +3336,7 @@ class Physics:
         # Total ion density
         physics_variables.nd_ions_total = (
             physics_variables.nd_fuel_ions
-            + physics_variables.nd_alphas
+            + physics_variables.nd_plasma_alphas_vol_avg
             + physics_variables.nd_protons
             + physics_variables.nd_beam_ions
             + physics_variables.nd_impurities
@@ -3427,7 +3427,7 @@ class Physics:
         # Average mass of all ions
         physics_variables.m_ions_total_amu = (
             (physics_variables.m_fuel_amu * physics_variables.nd_fuel_ions)
-            + (constants.M_ALPHA_AMU * physics_variables.nd_alphas)
+            + (constants.M_ALPHA_AMU * physics_variables.nd_plasma_alphas_vol_avg)
             + (physics_variables.nd_protons * constants.M_PROTON_AMU)
             + (physics_variables.m_beam_amu * physics_variables.nd_beam_ions)
         )
@@ -3464,7 +3464,7 @@ class Physics:
                 * physics_variables.nd_fuel_ions
                 / constants.M_HELION_AMU
             )
-            + (4.0 * physics_variables.nd_alphas / constants.M_ALPHA_AMU)
+            + (4.0 * physics_variables.nd_plasma_alphas_vol_avg / constants.M_ALPHA_AMU)
             + (physics_variables.nd_protons / constants.M_PROTON_AMU)
             + (
                 (1.0 - current_drive_variables.f_beam_tritium)
@@ -3501,7 +3501,7 @@ class Physics:
         fusden_alpha_total: float,
         plasma_current: float,
         sbar: float,
-        nd_alphas: float,
+        nd_plasma_alphas_vol_avg: float,
         t_energy_confinement: float,
         vol_plasma: float,
     ) -> tuple[float, float, float, float, float, float, float, float]:
@@ -3516,7 +3516,7 @@ class Physics:
             fusden_alpha_total (float): Alpha particle production rate (/m3/s).
             plasma_current (float): Plasma current (A).
             sbar (float): Exponent for aspect ratio (normally 1).
-            nd_alphas (float): Alpha ash density (/m3).
+            nd_plasma_alphas_vol_avg (float): Alpha ash density (/m3).
             t_energy_confinement (float): Global energy confinement time (s).
             vol_plasma (float): Plasma volume (m3).
 
@@ -3545,7 +3545,7 @@ class Physics:
         # Alpha particle confinement time (s)
         # Number of alphas / alpha production rate
         if fusden_alpha_total != 0.0:
-            t_alpha_confinement = nd_alphas / fusden_alpha_total
+            t_alpha_confinement = nd_plasma_alphas_vol_avg / fusden_alpha_total
         else:  # only likely if DD is only active fusion reaction
             t_alpha_confinement = 0.0
 
@@ -3561,8 +3561,8 @@ class Physics:
         # Remember that unburnt fuel-ion pairs/m3 = 0.5 * unburnt fuel-ions/m3
         if physics_variables.burnup_in <= 1.0e-9:
             burnup = (
-                nd_alphas
-                / (nd_alphas + 0.5 * nd_fuel_ions)
+                nd_plasma_alphas_vol_avg
+                / (nd_plasma_alphas_vol_avg + 0.5 * nd_fuel_ions)
                 / physics_variables.tauratio
             )
         else:
@@ -4697,8 +4697,8 @@ class Physics:
         po.ovarre(
             self.outfile,
             "Helium ion number density (thermalised ions only) (/m3)",
-            "(nd_alphas)",
-            physics_variables.nd_alphas,
+            "(nd_plasma_alphas_vol_avg)",
+            physics_variables.nd_plasma_alphas_vol_avg,
             "OP ",
         )
         po.ovarre(
@@ -8502,7 +8502,7 @@ class Physics:
         m_ions_total_amu: float,
         nd_ions_total: float,
         nd_fuel_ions: float,
-        nd_alphas: float,
+        nd_plasma_alphas_vol_avg: float,
         vol_plasma: float,
         nd_plasma_electrons_vol_avg: float,
     ) -> tuple[float, float, float, float, float]:
@@ -8517,8 +8517,8 @@ class Physics:
         :type nd_ions_total: float
         :param nd_fuel_ions: Fuel ion density (/m3).
         :type nd_fuel_ions: float
-        :param nd_alphas: Alpha ash density (/m3).
-        :type nd_alphas: float
+        :param nd_plasma_alphas_vol_avg: Alpha ash density (/m3).
+        :type nd_plasma_alphas_vol_avg: float
         :param vol_plasma: Plasma volume (m3).
         :type vol_plasma: float
         :param nd_plasma_electrons_vol_avg: Volume averaged electron density (/m3).
@@ -8537,7 +8537,7 @@ class Physics:
             nd_ions_total * vol_plasma
         )
 
-        m_plasma_alpha = (nd_alphas * vol_plasma) * constants.ALPHA_MASS
+        m_plasma_alpha = (nd_plasma_alphas_vol_avg * vol_plasma) * constants.ALPHA_MASS
 
         m_plasma_electron = constants.ELECTRON_MASS * (
             nd_plasma_electrons_vol_avg * vol_plasma
