@@ -1394,7 +1394,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     nd_impurities: Any = None
 
-    pcoef: Any = None
+    f_temp_plasma_electron_density_vol_avg: Any = None
 
     fusden_alpha_total: Any = None
 
@@ -1546,7 +1546,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_beam_electron=0,
             zeff=0,
             nd_impurities=0,
-            pcoef=0,
+            f_temp_plasma_electron_density_vol_avg=0,
             fusden_alpha_total=0,
             f_nd_plasma_iron_argon_electron=0,
             m_beam_amu=0,
@@ -1664,7 +1664,7 @@ class PlasmaCompositionParam(NamedTuple):
             f_nd_beam_electron=0,
             zeff=2.0909945616489103,
             nd_impurities=28875000000000004,
-            pcoef=1.0521775929921553,
+            f_temp_plasma_electron_density_vol_avg=1.0521775929921553,
             fusden_alpha_total=1.973996644759543e17,
             f_nd_plasma_iron_argon_electron=0,
             m_beam_amu=2.01355414,
@@ -1834,7 +1834,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         physics_variables, "nd_impurities", plasmacompositionparam.nd_impurities
     )
 
-    monkeypatch.setattr(physics_variables, "pcoef", plasmacompositionparam.pcoef)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_temp_plasma_electron_density_vol_avg",
+        plasmacompositionparam.f_temp_plasma_electron_density_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables,

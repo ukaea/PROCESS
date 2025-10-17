@@ -3832,7 +3832,7 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         f"{te0 / te:.3f}",
         rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
         r"$ \hspace{4} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
-        f"{mfile_data.data['pcoef'].get_scan(scan):.3f}",
+        f"{mfile_data.data['f_temp_plasma_electron_density_vol_avg'].get_scan(scan):.3f}",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}

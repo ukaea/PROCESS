@@ -3387,7 +3387,7 @@ class Physics:
         # (used with electron and ion power balance equations only)
         # No consideration of pden_non_alpha_charged_mw here...
 
-        # pcoef now calculated in plasma_profiles, after the very first
+        # f_temp_plasma_electron_density_vol_avg now calculated in plasma_profiles, after the very first
         # call of plasma_composition; use old parabolic profile estimate
         # in this case
         if physics_variables.first_call == 1:
@@ -3398,7 +3398,7 @@ class Physics:
             )
             physics_variables.first_call = 0
         else:
-            pc = physics_variables.pcoef
+            pc = physics_variables.f_temp_plasma_electron_density_vol_avg
 
         physics_variables.f_alpha_electron = 0.88155 * np.exp(
             -physics_variables.temp_plasma_electron_vol_avg_kev * pc / 67.4036
@@ -4602,8 +4602,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Ratio of electron density weighted temp. to volume averaged temp.",
-            "(pcoef)",
-            physics_variables.pcoef,
+            "(f_temp_plasma_electron_density_vol_avg)",
+            physics_variables.f_temp_plasma_electron_density_vol_avg,
             "OP ",
         )
         po.ovarre(

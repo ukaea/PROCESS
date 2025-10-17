@@ -142,7 +142,7 @@ class PlasmaProfile:
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
-        physics_variables.pcoef = (
+        physics_variables.f_temp_plasma_electron_density_vol_avg = (
             (1.0e0 + physics_variables.alphan)
             * (1.0e0 + physics_variables.alphat)
             / (1.0e0 + physics_variables.alphan + physics_variables.alphat)
@@ -162,10 +162,12 @@ class PlasmaProfile:
         #  Density-weighted temperatures
 
         physics_variables.temp_plasma_electron_density_weighted_kev = (
-            physics_variables.temp_plasma_electron_vol_avg_kev * physics_variables.pcoef
+            physics_variables.temp_plasma_electron_vol_avg_kev
+            * physics_variables.f_temp_plasma_electron_density_vol_avg
         )
         physics_variables.temp_plasma_ion_density_weighted_kev = (
-            physics_variables.temp_plasma_ion_vol_avg_kev * physics_variables.pcoef
+            physics_variables.temp_plasma_ion_vol_avg_kev
+            * physics_variables.f_temp_plasma_electron_density_vol_avg
         )
 
         #  Central values for temperature (keV) and density (m**-3)
@@ -234,7 +236,7 @@ class PlasmaProfile:
         #  Profile factor; ratio of density-weighted to volume-averaged
         #  temperature
 
-        physics_variables.pcoef = (
+        physics_variables.f_temp_plasma_electron_density_vol_avg = (
             physics_variables.temp_plasma_electron_density_weighted_kev
             / physics_variables.temp_plasma_electron_vol_avg_kev
         )

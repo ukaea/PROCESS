@@ -147,7 +147,7 @@ class PlasmaProfilesParam(NamedTuple):
 
     temp_plasma_separatrix_kev: float = 0.0
 
-    pcoef: float = 0.0
+    f_temp_plasma_electron_density_vol_avg: float = 0.0
 
     i_plasma_pedestal: float = 0.0
 
@@ -228,7 +228,7 @@ class PlasmaProfilesParam(NamedTuple):
             pres_plasma_thermal_on_axis=0.0,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             temp_plasma_separatrix_kev=0.10000000000000001,
-            pcoef=0.0,
+            f_temp_plasma_electron_density_vol_avg=0.0,
             i_plasma_pedestal=1,
             nd_plasma_ions_on_axis=0.0,
             nd_plasma_electron_on_axis=0.0,
@@ -273,7 +273,7 @@ class PlasmaProfilesParam(NamedTuple):
             pres_plasma_thermal_on_axis=868071.46874220832,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             temp_plasma_separatrix_kev=0.10000000000000001,
-            pcoef=1.1110842637642833,
+            f_temp_plasma_electron_density_vol_avg=1.1110842637642833,
             i_plasma_pedestal=1,
             nd_plasma_ions_on_axis=9.210720071916929e19,
             nd_plasma_electron_on_axis=1.0585658890823703e20,
@@ -371,7 +371,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.temp_plasma_separatrix_kev,
     )
 
-    monkeypatch.setattr(physics_variables, "pcoef", plasmaprofilesparam.pcoef)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_temp_plasma_electron_density_vol_avg",
+        plasmaprofilesparam.f_temp_plasma_electron_density_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables, "i_plasma_pedestal", plasmaprofilesparam.i_plasma_pedestal
@@ -486,7 +490,9 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.expected_p0
     )
 
-    assert physics_variables.pcoef == pytest.approx(plasmaprofilesparam.expected_pcoef)
+    assert physics_variables.f_temp_plasma_electron_density_vol_avg == pytest.approx(
+        plasmaprofilesparam.expected_pcoef
+    )
 
     assert physics_variables.nd_plasma_ions_on_axis == pytest.approx(
         plasmaprofilesparam.expected_ni0

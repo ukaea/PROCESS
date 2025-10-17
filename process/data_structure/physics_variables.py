@@ -887,8 +887,8 @@ pden_non_alpha_charged_mw: float = None
 """Non-alpha charged particle fusion power per volume [MW/m3]"""
 
 
-pcoef: float = None
-"""profile factor (= n-weighted T / average T)"""
+f_temp_plasma_electron_density_vol_avg: float = None
+"""Ratio of density weighted plasma electron tempertaurature to volume averaged (Profile Factor)"""
 
 
 p_plasma_inner_rad_mw: float = None
@@ -1512,7 +1512,7 @@ def init_physics_variables():
     global p_beam_dt_mw
     global p_non_alpha_charged_mw
     global pden_non_alpha_charged_mw
-    global pcoef
+    global f_temp_plasma_electron_density_vol_avg
     global p_plasma_inner_rad_mw
     global pden_plasma_core_rad_mw
     global p_dd_total_mw
@@ -1765,7 +1765,7 @@ def init_physics_variables():
     p_beam_dt_mw = 0.0
     p_non_alpha_charged_mw = 0.0
     pden_non_alpha_charged_mw = 0.0
-    pcoef = 0.0
+    f_temp_plasma_electron_density_vol_avg = 0.0
     p_plasma_inner_rad_mw = 0.0
     pden_plasma_core_rad_mw = 0.0
     p_dd_total_mw = 0.0
