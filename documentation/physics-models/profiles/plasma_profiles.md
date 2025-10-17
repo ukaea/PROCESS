@@ -271,7 +271,8 @@ The density and temperature profile runner function [`TeProfile/NeProfile.run()`
 Ratio of density-weighted to volume-averaged temperature factor is calculated:
 
 $$
-\texttt{pcoef} = \frac{(1+\alpha_n)(1+\alpha_T)}{(1+\alpha_T + \alpha_n)}
+\texttt{f_temp_plasma_electron_density_vol_avg} =\frac{\langle T_{\text{e}} \rangle_{\text{n}}}{\underbrace{\langle T_{\text{e}} \rangle_{\text{V}}}_{\texttt{temp_plasma_electrons_vol_avg}}}\\
+ = \frac{(1+\alpha_n)(1+\alpha_T)}{(1+\alpha_T + \alpha_n)}
 $$
 
 --------
@@ -310,8 +311,10 @@ $\blacksquare$
 The density weighted temperatures are set:
 
 $$\begin{aligned}
-\texttt{temp_plasma_electron_density_weighted_kev} = \texttt{pcoef} \times T_\text{e} \\
-\texttt{temp_plasma_ion_density_weighted_kev} = \texttt{pcoef}\times T_\text{i}
+\overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}} = \\
+\texttt{f_temp_plasma_electron_density_vol_avg} \times \langle T_\text{e} \rangle  \\
+\overbrace{\langle T_{\text{i}} \rangle_{\text{n}}}^{\texttt{temp_plasma_ion_density_weighted_kev}} = \\
+\texttt{f_temp_plasma_electron_density_vol_avg}\times \langle T_\text{i} \rangle 
 \end{aligned}$$
 
 ------
@@ -392,33 +395,42 @@ $$\begin{aligned}
 
 ##### `calculate_profile_factors()`
 
-The central plasma pressure is calculated from the ideal gas law.
+The central thermal plasma pressure is calculated from the ideal gas law.
 
 $$
-p_0 = (\texttt{nd_plasma_electron_on_axis} \times \texttt{temp_plasma_electron_on_axis_kev}\\
-+\texttt{nd_plasma_ions_on_axis}\times \texttt{temp_plasma_ion_on_axis_kev})\times (1000 \times \text{e})
+p_{\text{thermal,0}} = (\overbrace{n_{\text{e,0}}}^{\texttt{nd_plasma_electron_on_axis}} \times \overbrace{T_{\text{e,0}}}^{\texttt{temp_plasma_electron_on_axis_kev}}\\
++\underbrace{n_{n\text{i,0}}}_{\texttt{nd_plasma_ions_on_axis}}\times \underbrace{T_{\text{i,0}}}_{\texttt{temp_plasma_ion_on_axis_kev})}\times (\times \text{keV})
 $$
 
 With the coefficients used to turn the temperature from $\text{keV}$ back to Joules.
 
-Since we multiply the density and temperature profiles together to get the pressure we can find the pressure profile factor by adding the profile factors for temperature and density.
+
+We calculate the volume averaged thermal plasma pressure using the volume averaged density and the density weighted volume averaged temperature for the electrons and ions. The density weighted temperature is used as $\langle nT \rangle \neq \langle n \rangle \langle T \rangle$. This can be seen also in the [equality constraint for thermal $\beta$](../plasma_beta/plasma_beta.md#beta-consistency)
 
 $$
-\alpha_p = \alpha_n + \alpha_T
+\langle p_{\text{thermal}} \rangle = \overbrace{\langle n_{\text{e}} \rangle_{\text{V}}}^{\texttt{nd_plasma_electrons_vol_avg}} \times \overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}}\\
+ + \underbrace{\langle n_{\text{i}} \rangle_{\text{V}}}_{\texttt{nd_plasma_ions_total_vol_avg}} \times \underbrace{\langle T_{\text{i}} \rangle_{\text{n}}}_{\texttt{temp_plasma_ion_density_weighted_kev}}
 $$
 
-The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temeprature we can set the volume averaged pressure as:
+???+ note "Parabolic pressure profile factor"
 
-$$
-\langle p \rangle =   \frac{p_0}{\alpha_p+1}
-$$
+    For a prabolic profile, since we multiply the density and temperature profiles together to get the pressure we can find the pressure profile factor by adding the profile factors for temperature and density.
 
-???+ note "Pressure profile factor"
+    $$
+    \alpha_p = \alpha_n + \alpha_T
+    $$
+
+    The volume averaged pressure can then be set if we assume the pressure also has a parabolic profile. Using the standard relation used for both density and temeprature we can set the volume averaged pressure as:
+
+    $$
+    \langle p \rangle =   \frac{p_0}{\alpha_p+1}
+    $$
 
     The calculation of $\alpha_p$ is only valid assuming a parabolic profile case. The calculatio of $p_0$ is still true as the core values are calculated independantly for each profile type.
 
     $p_0$ is NOT equal to $\langle p \rangle \times (1 + \alpha_p)$, but $p(\rho) = n(\rho)T(\rho)$ and $\langle p \rangle = \langle n \rangle$ $T_n$, where $T_n$ is the
     density-weighted temperature.
+
 
 The on-axis plasma current density ($J_0$) is then calculated by assuming a parabolic profile and using the calculated plasma current ($I_{\text{plasma}}$) and the plasmas poloidal cross-sectional area ($A_{\text{pol}}$).
 
@@ -588,10 +600,8 @@ The density and temperature profile runner function [`TeProfile/NeProfile.run()`
  Density weighted temperatures are thus set as such
 
 $$
-\texttt{temp_plasma_electron_density_weighted_kev} = \\
-\frac{\int_0^1{\rho \ n(\rho) T(\rho) \  d\rho}}{\int_0^1{\rho \ n(\rho) \ d\rho}} \\
-\texttt{temp_plasma_ion_density_weighted_kev} = \\
-\texttt{temp_plasma_electron_density_weighted_kev}\times \frac{T_\text{i}}{T_\text{e}}
+ \overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}} = \frac{\int_0^1{\rho \ n_{\text{e}}(\rho) T_{\text{e}}(\rho) \  d\rho}}{\int_0^1{\rho \ n_{\text{e}}(\rho) \ d\rho}} \\
+\overbrace{\langle T_{\text{i}} \rangle_{\text{n}}}^{\texttt{temp_plasma_ion_density_weighted_kev}} = \langle T_{\text{e}} \rangle_{\text{n}}\times \frac{\langle T_{\text{i}} \rangle_{\text{V}}}{\langle T_{\text{e}} \rangle_{\text{V}}}
 $$
 
 The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.simpson.html) integration.
@@ -599,13 +609,13 @@ The above is done numerically with [scipy.integrate.simpson](https://docs.scipy.
 Set profile factor which is the ratio of density-weighted to volume-averaged temperature
 
 $$
-\texttt{pcoef} = \frac{\texttt{temp_plasma_electron_density_weighted_kev}}{T_\text{e}}
+\texttt{f_temp_plasma_electron_density_vol_avg} =\frac{\langle T_{\text{e}} \rangle_{\text{n}}}{\underbrace{\langle T_{\text{e}} \rangle_{\text{V}}}_{\texttt{temp_plasma_electrons_vol_avg}}}
 $$
 
 Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
 
 $$
-\texttt{nd_plasma_electron_line} = \int_0^1{n(\rho) \ d\rho}
+ \overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \int_0^1{n(\rho) \ d\rho}
 $$
 
 A divertor variable `prn1` is set to be equal to the separatrix density over the mean density:

@@ -273,15 +273,11 @@ class PlasmaProfile:
         #  Central pressure (Pa), from ideal gas law : p = nkT
 
         physics_variables.pres_plasma_thermal_on_axis = (
-            (
-                physics_variables.nd_plasma_electron_on_axis
-                * physics_variables.temp_plasma_electron_on_axis_kev
-                + physics_variables.nd_plasma_ions_on_axis
-                * physics_variables.temp_plasma_ion_on_axis_kev
-            )
-            * 1.0e3
-            * constants.ELECTRON_CHARGE
-        )
+            physics_variables.nd_plasma_electron_on_axis
+            * physics_variables.temp_plasma_electron_on_axis_kev
+            + physics_variables.nd_plasma_ions_on_axis
+            * physics_variables.temp_plasma_ion_on_axis_kev
+        ) * constants.KILOELECTRON_VOLT
 
         # Electron pressure profile (Pa)
         physics_variables.pres_plasma_electron_profile = self.neprofile.profile_y * (
@@ -314,19 +310,19 @@ class PlasmaProfile:
             * physics_variables.f_temp_plasma_ion_electron
         )
 
-        #  Pressure profile index (N.B. no pedestal effects included here)
+        #  Pressure profile index (only true for a parabolic profile)
         #  N.B. pres_plasma_thermal_on_axis is NOT equal to <p> * (1 + alphap), but p(rho) = n(rho)*T(rho)
         #  and <p> = <n>.T_n where <...> denotes volume-averages and T_n is the
         #  density-weighted temperature
 
         physics_variables.alphap = physics_variables.alphan + physics_variables.alphat
 
-        # Shall assume that the pressure profile is parabolic. Can find volume average from
-        # profile index and core value the same as for density and temperature
+        # Calculate the volume averaged plasma thermal pressure from the density-weighted temperatures
+        # Density-weighted temperatures are used as <nT> != <n>*<T>
         physics_variables.pres_plasma_thermal_vol_avg = (
             physics_variables.nd_plasma_electrons_vol_avg
             * physics_variables.temp_plasma_electron_density_weighted_kev
-            + physics_variables.nd_ions_total
+            + physics_variables.nd_plasma_ions_total_vol_avg
             * physics_variables.temp_plasma_ion_density_weighted_kev
         ) * constants.KILOELECTRON_VOLT
 
