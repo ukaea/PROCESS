@@ -202,7 +202,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.tlife)
 
         # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-        cv.cdrlife = fwbsv.life_blkt_fpy
+        cv.life_hcd_fpy = fwbsv.life_blkt_fpy
 
         # Output section
         if output:
@@ -248,8 +248,8 @@ class Availability:
             po.ovarre(
                 self.outfile,
                 "Heating/CD system lifetime (years)",
-                "(cdrlife)",
-                cv.cdrlife,
+                "(life_hcd_fpy)",
+                cv.life_hcd_fpy,
                 "OP ",
             )
             po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
@@ -383,7 +383,7 @@ class Availability:
                     fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.tlife
                 )
                 # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
-                cv.cdrlife = fwbsv.life_blkt_fpy
+                cv.life_hcd_fpy = fwbsv.life_blkt_fpy
 
             # Divertor
             if cv.divlife < cv.tlife:
@@ -505,7 +505,7 @@ class Availability:
             cv.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
-        cv.cdrlife = fwbsv.life_blkt_fpy
+        cv.life_hcd_fpy = fwbsv.life_blkt_fpy
 
         # Calculate the blanket and divertor replacement times !
 
@@ -1082,12 +1082,12 @@ class Availability:
         cv.cplife = self.cp_lifetime()
 
         # Current drive lifetime (assumed equal to first wall and blanket lifetime)
-        cv.cdrlife = fwbsv.life_blkt_fpy
+        cv.life_hcd_fpy = fwbsv.life_blkt_fpy
 
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
-            fwbsv.life_blkt_fpy, cv.divlife, cv.cplife, cv.cdrlife, cv.tlife
+            fwbsv.life_blkt_fpy, cv.divlife, cv.cplife, cv.life_hcd_fpy, cv.tlife
         )
         maint_cycle = shortest_lifetime + cv.tmain
 
@@ -1154,7 +1154,7 @@ class Availability:
                 fwbsv.life_blkt_fpy = min(
                     fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.tlife
                 )
-                cv.cdrlife = fwbsv.life_blkt_fpy
+                cv.life_hcd_fpy = fwbsv.life_blkt_fpy
 
             # Divertor
             if cv.divlife < cv.tlife:
