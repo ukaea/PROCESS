@@ -1527,6 +1527,11 @@ class Build:
         r_tf_wp_inboard_inner,
         r_tf_wp_inboard_centre: float,
         r_tf_wp_inboard_outer: float,
+        dx_tf_wp_primary_toroidal: float,
+        i_tf_shape: int,
+        i_tf_sup: int,
+        dx_tf_wp_insulation: float,
+        dx_tf_wp_insertion_gap: float,
     ) -> float:
         """
         TF ripple calculation
@@ -1555,7 +1560,7 @@ class Build:
         Activated when i_tf_shape == 2 (picture frame)
 
         """
-        if tfcoil_variables.i_tf_sup == 1:
+        if i_tf_sup == 1:
             # Minimal inboard WP radius [m]
             r_wp_min = r_tf_wp_inboard_inner
 
@@ -1572,35 +1577,19 @@ class Build:
                 r_wp_max = r_tf_wp_inboard_outer
 
             # Calculated maximum toroidal WP toroidal thickness [m]
-            if tfcoil_variables.tfc_sidewall_is_fraction:
-                t_wp_max = 2.0e0 * (
-                    (r_wp_max - tfcoil_variables.casths_fraction * r_wp_min)
-                    * np.tan(np.pi / n_tf_coils)
-                    - tfcoil_variables.dx_tf_wp_insulation
-                    - tfcoil_variables.dx_tf_wp_insertion_gap
-                )
-            else:
-                t_wp_max = 2.0e0 * (
-                    r_wp_max * np.tan(np.pi / n_tf_coils)
-                    - tfcoil_variables.dx_tf_side_case_min
-                    - tfcoil_variables.dx_tf_wp_insulation
-                    - tfcoil_variables.dx_tf_wp_insertion_gap
-                )
+            t_wp_max = dx_tf_wp_primary_toroidal - 2.0 * (
+                dx_tf_wp_insulation + dx_tf_wp_insertion_gap
+            )
 
         # Resistive magnet case
         else:
             # Radius used to define the t_wp_max [m]
-            r_wp_max = (
-                build_variables.r_tf_inboard_in
-                + tfcoil_variables.dr_tf_nose_case
-                + tfcoil_variables.dr_tf_wp_with_insulation
-            )
-
+            r_wp_max = r_tf_wp_inboard_outer
             # Calculated maximum toroidal WP toroidal thickness [m]
             t_wp_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
         flag = 0
-        if tfcoil_variables.i_tf_shape == 2:
+        if i_tf_shape == 2:
             # Ken McClements ST picture frame coil analytical ripple calc
             # Calculated ripple for coil at r_tf_outboard_mid (%)
             ripple = 100.0e0 * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils)
@@ -1610,7 +1599,7 @@ class Build:
             )
         else:
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
-            x = t_wp_max * n_tf_coils / physics_variables.rmajor
+            x = t_wp_max * n_tf_coils / rmajor
 
             # Fitting parameters
             c1 = 0.875e0 - 0.0557e0 * x
@@ -1633,9 +1622,9 @@ class Build:
                 logger.exception("base is <= 1e-6. Kludging to 1e-6.")
                 base = 1e-6
 
-            r_tf_outboard_midmin = (
-                physics_variables.rmajor + physics_variables.rminor
-            ) / (base ** (1.0 / (n_tf_coils - c2)))
+            r_tf_outboard_midmin = (rmajor + rminor) / (
+                base ** (1.0 / (n_tf_coils - c2))
+            )
 
             try:
                 assert r_tf_outboard_midmin < np.inf
@@ -1950,6 +1939,11 @@ class Build:
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            i_tf_sup=tfcoil_variables.i_tf_sup,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
         #  If the tfcoil_variables.ripple is too large then move the outboard TF coil leg
@@ -1986,6 +1980,11 @@ class Build:
             r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
             r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
+            dx_tf_wp_primary_toroidal=tfcoil_variables.dx_tf_wp_primary_toroidal,
+            i_tf_shape=tfcoil_variables.i_tf_shape,
+            i_tf_sup=tfcoil_variables.i_tf_sup,
+            dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
+            dx_tf_wp_insertion_gap=tfcoil_variables.dx_tf_wp_insertion_gap,
         )
 
         #  Half-height of first wall (internal surface)
