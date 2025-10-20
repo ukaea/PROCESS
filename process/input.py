@@ -2122,7 +2122,9 @@ INPUT_VARIABLES = {
     "i_tf_wp_geom": InputVariable(
         data_structure.tfcoil_variables, int, choices=[0, 1, 2]
     ),
-    "iavail": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
+    "i_plant_availability": InputVariable(
+        data_structure.cost_variables, int, range=(0, 3)
+    ),
     "ibkt_life": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_blkt_dual_coolant": InputVariable(
         data_structure.fwbs_variables, int, choices=[0, 1, 2]

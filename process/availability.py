@@ -55,13 +55,13 @@ class Availability:
         :type output: boolean
         """
 
-        if cv.iavail == 3:
+        if cv.i_plant_availability == 3:
             if pv.itart != 1:
                 raise ProcessValueError(
-                    f"{cv.iavail=} is for a Spherical Tokamak. Please set itart=1 to use this model."
+                    f"{cv.i_plant_availability=} is for a Spherical Tokamak. Please set itart=1 to use this model."
                 )
             self.avail_st(output)  # ST model (2023)
-        elif cv.iavail == 2:
+        elif cv.i_plant_availability == 2:
             self.avail_2(output)  # Morris model (2015)
         else:
             self.avail(output)  # Taylor and Ward model (1999)
@@ -133,16 +133,16 @@ class Availability:
             if pv.itart == 1:
                 cv.cplife = self.cp_lifetime()
 
-        # Plant Availability (iavail=0,1)
+        # Plant Availability (i_plant_availability=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
         pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
         cv.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
 
-        # if iavail = 0 use input value for cfactr
+        # if i_plant_availability = 0 use input value for cfactr
 
-        # Taylor and Ward 1999 model (iavail=1)
-        if cv.iavail == 1:
+        # Taylor and Ward 1999 model (i_plant_availability=1)
+        if cv.i_plant_availability == 1:
             # Which component has the shorter life?
             if cv.divlife < fwbsv.life_blkt_fpy:
                 ld = cv.divlife
@@ -245,7 +245,7 @@ class Availability:
             )
             po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
 
-            if cv.iavail == 1:
+            if cv.i_plant_availability == 1:
                 if cv.divlife < fwbsv.life_blkt_fpy:
                     po.ovarre(
                         self.outfile,
@@ -282,7 +282,7 @@ class Availability:
                     "OP ",
                 )
 
-            if cv.iavail == 0:
+            if cv.i_plant_availability == 0:
                 po.ovarre(
                     self.outfile,
                     "Total plant availability fraction",
