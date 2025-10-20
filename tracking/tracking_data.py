@@ -153,7 +153,7 @@ class ProcessTracker:
         "PFCoil.vs_cs_pf_total_pulse",
         "Physics.nd_ions_total",
         "Time.t_burn",
-        "Cost.divlife",
+        "Cost.life_div_fpy",
         "Cost.cdirt",
         "Cost.concost",
     }

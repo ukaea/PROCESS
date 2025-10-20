@@ -2957,7 +2957,7 @@ class Costs:
 
             if cost_variables.ifueltyp == 2:
                 anndiv = anndiv * (
-                    1.0e0 - cost_variables.divlife / cost_variables.life_plant
+                    1.0e0 - cost_variables.life_div_fpy / cost_variables.life_plant
                 )
 
             coediv = 1.0e9 * anndiv / kwhpy
@@ -3174,12 +3174,12 @@ class Costs:
             fwbs_variables.life_blkt = fwbs_variables.life_blkt_fpy
 
         # Divertor
-        if cost_variables.divlife < cost_variables.life_plant:
+        if cost_variables.life_div_fpy < cost_variables.life_plant:
             cost_variables.divlife_cal = (
-                cost_variables.divlife * cost_variables.f_t_plant_available
+                cost_variables.life_div_fpy * cost_variables.f_t_plant_available
             )
         else:
-            cost_variables.divlife_cal = cost_variables.divlife
+            cost_variables.divlife_cal = cost_variables.life_div_fpy
 
         # Centrepost
         if physics_variables.itart == 1:

@@ -401,8 +401,8 @@ divcst: float = None
 """divertor direct cost (M$)"""
 
 
-divlife: float = None
-"""Full power lifetime of divertor (y)"""
+life_div_fpy: float = None
+"""Full power year lifetime of divertor (fpy)"""
 
 
 divlife_cal: float = None
@@ -1323,7 +1323,7 @@ def init_cost_variables():
     global decomf
     global dintrt
     global divcst
-    global divlife
+    global life_div_fpy
     global divlife_cal
     global dtlife
     global fcap0
@@ -1478,7 +1478,7 @@ def init_cost_variables():
     decomf = 0.1
     dintrt = 0.0
     divcst = 0.0
-    divlife = 0.0
+    life_div_fpy = 0.0
     divlife_cal = 0.0
     dtlife = 0.0
     fcap0 = 1.165
