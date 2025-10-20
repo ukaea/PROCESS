@@ -10122,10 +10122,7 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
     if total_reactions > 0.0:
         target = 0.5 * total_reactions
         idxs = np.where(cum_reactions >= target)[0]
-        if idxs.size > 0:
-            rho50 = float(rho_c[idxs[0]])
-        else:
-            rho50 = float(rho_c[-1])
+        rho50 = float(rho_c[idxs[0]]) if idxs.size > 0 else float(rho_c[-1])
 
         # vertical line at 50% cumulative reactions
         axis.axvline(
@@ -10562,10 +10559,10 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         label="Total",
     )
     axis.set_xlabel("$\\rho$ [r/a]")
-    axis.set_ylabel("Pressure [kPa]")
+    axis.set_ylabel("Thermal Pressure [kPa]")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    axis.set_title("Plasma Pressure Profiles")
+    axis.set_title("Plasma Thermal Pressure Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.set_ylim(bottom=0)
@@ -10616,7 +10613,7 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
     axis.set_ylabel("$dP/dr$ [kPa / m]")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    axis.set_title("Plasma Pressure Gradient Profiles")
+    axis.set_title("Plasma Thermal Pressure Gradient Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.legend()
@@ -10692,6 +10689,15 @@ def plot_plasma_poloidal_pressure_contours(
     )
     axis.set_ylabel("Z [m]")
     axis.set_title("Plasma Poloidal Pressure Contours")
+    axis.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
 
 
 def interp1d_profile(profile, mfile_data, scan):
@@ -10899,13 +10905,15 @@ def plot_fusion_rate_contours(
     dd_helion_axes = fig2.add_subplot(121, aspect="equal")
     dhe3_axes = fig2.add_subplot(122, aspect="equal")
 
-    dt_upper = dt_axes.contourf(r_grid, z_grid, dt_grid, levels=50, cmap="plasma")
-    dt_lower = dt_axes.contourf(r_grid, -z_grid, dt_grid, levels=50, cmap="plasma")
+    dt_upper = dt_axes.contourf(
+        r_grid, z_grid, dt_grid, levels=50, cmap="plasma", zorder=2
+    )
+    dt_axes.contourf(r_grid, -z_grid, dt_grid, levels=50, cmap="plasma", zorder=2)
 
     dt_axes.figure.colorbar(
         dt_upper,
         ax=dt_axes,
-        label="Pressure [kPa]",
+        label="Fusion Rate [reactions/second]",
         location="left",
         anchor=(-0.25, 0.5),
     )
@@ -10917,7 +10925,24 @@ def plot_fusion_rate_contours(
         1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
     )
     dt_axes.set_ylabel("Z [m]")
-    dt_axes.set_title("DT Fusion Rate Density Contours")
+    dt_axes.set_title("D+T -> 4He + n Fusion Rate Density Contours")
+    dt_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    # enable minor ticks and grid for clearer reading
+    dt_axes.minorticks_on()
+    dt_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dt_axes.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1)
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dt_axes.tick_params(which="both", direction="in", top=True, right=True)
 
     # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
     peak = np.nanmax(dt_grid)
@@ -10927,10 +10952,10 @@ def plot_fusion_rate_contours(
         colours = ["blue", "yellow", "red"]
 
         # top and mirrored bottom contours (no clabel calls — keep only legend)
-        cs_up = dt_axes.contour(
+        dt_axes.contour(
             r_grid, z_grid, dt_grid, levels=levels, colors=colours, linewidths=1.5
         )
-        cs_low = dt_axes.contour(
+        dt_axes.contour(
             r_grid, -z_grid, dt_grid, levels=levels, colors=colours, linewidths=1.5
         )
 
@@ -10942,16 +10967,16 @@ def plot_fusion_rate_contours(
     # =================================================
 
     dd_triton_upper = dd_triton_axes.contourf(
-        r_grid, z_grid, dd_triton_grid, levels=50, cmap="plasma"
+        r_grid, z_grid, dd_triton_grid, levels=50, cmap="plasma", zorder=2
     )
-    dd_triton_lower = dd_triton_axes.contourf(
-        r_grid, -z_grid, dd_triton_grid, levels=50, cmap="plasma"
+    dd_triton_axes.contourf(
+        r_grid, -z_grid, dd_triton_grid, levels=50, cmap="plasma", zorder=2
     )
 
     dd_triton_axes.figure.colorbar(
         dd_triton_upper,
         ax=dd_triton_axes,
-        label="Pressure [kPa]",
+        label="Fusion Rate [reactions/second]",
         location="left",
         anchor=(-0.25, 0.5),
     )
@@ -10963,21 +10988,39 @@ def plot_fusion_rate_contours(
         1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
     )
     dd_triton_axes.set_ylabel("Z [m]")
-    dd_triton_axes.set_title("DD Triton Fusion Rate Density Contours")
+    dd_triton_axes.set_title("D+D -> T + p Fusion Rate Density Contours")
+    dd_triton_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    dd_triton_axes.minorticks_on()
+    dd_triton_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dd_triton_axes.grid(
+        True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dd_triton_axes.tick_params(which="both", direction="in", top=True, right=True)
 
     # ================================================
 
     dd_helion_upper = dd_helion_axes.contourf(
-        r_grid, z_grid, dd_helion_grid, levels=50, cmap="plasma"
+        r_grid, z_grid, dd_helion_grid, levels=50, cmap="plasma", zorder=2
     )
-    dd_helion_lower = dd_helion_axes.contourf(
-        r_grid, -z_grid, dd_helion_grid, levels=50, cmap="plasma"
+    dd_helion_axes.contourf(
+        r_grid, -z_grid, dd_helion_grid, levels=50, cmap="plasma", zorder=2
     )
 
     dd_helion_axes.figure.colorbar(
         dd_helion_upper,
         ax=dd_helion_axes,
-        label="Pressure [kPa]",
+        label="Fusion Rate [reactions/second]",
         location="left",
         anchor=(-0.25, 0.5),
     )
@@ -10989,19 +11032,37 @@ def plot_fusion_rate_contours(
         1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
     )
     dd_helion_axes.set_ylabel("Z [m]")
-    dd_helion_axes.set_title("DD Helion Fusion Rate Density Contours")
+    dd_helion_axes.set_title("D+D -> 3He + n Fusion Rate Density Contours")
+    dd_helion_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    dd_helion_axes.minorticks_on()
+    dd_helion_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dd_helion_axes.grid(
+        True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dd_helion_axes.tick_params(which="both", direction="in", top=True, right=True)
 
     # ================================================
 
-    dhe3_upper = dhe3_axes.contourf(r_grid, z_grid, dhe3_grid, levels=50, cmap="plasma")
-    dhe3_lower = dhe3_axes.contourf(
-        r_grid, -z_grid, dhe3_grid, levels=50, cmap="plasma"
+    dhe3_upper = dhe3_axes.contourf(
+        r_grid, z_grid, dhe3_grid, levels=50, cmap="plasma", zorder=2
     )
+    dhe3_axes.contourf(r_grid, -z_grid, dhe3_grid, levels=50, cmap="plasma", zorder=2)
 
     dhe3_axes.figure.colorbar(
         dhe3_upper,
         ax=dhe3_axes,
-        label="Pressure [kPa]",
+        label="Fusion Rate [reactions/second]",
         location="left",
         anchor=(-0.25, 0.5),
     )
@@ -11013,7 +11074,25 @@ def plot_fusion_rate_contours(
         1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
     )
     dhe3_axes.set_ylabel("Z [m]")
-    dhe3_axes.set_title("DT Fusion Rate Density Contours")
+    dhe3_axes.set_title("D+3He -> 4He + n Fusion Rate Density Contours")
+    dhe3_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    dhe3_axes.minorticks_on()
+    dhe3_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dhe3_axes.grid(
+        True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dhe3_axes.tick_params(which="both", direction="in", top=True, right=True)
 
 
 def main_plot(
@@ -11132,17 +11211,20 @@ def main_plot(
 
     plot_fusion_rate_profiles(fig5.add_subplot(122), fig5, m_file_data, scan)
 
-    plot_plasma_pressure_profiles(fig6.add_subplot(222), m_file_data, scan)
-    plot_plasma_pressure_gradient_profiles(fig6.add_subplot(224), m_file_data, scan)
+    if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
+        plot_fusion_rate_contours(fig6, fig7, m_file_data, scan)
+
+    plot_plasma_pressure_profiles(fig8.add_subplot(222), m_file_data, scan)
+    plot_plasma_pressure_gradient_profiles(fig8.add_subplot(224), m_file_data, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
     if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
         plot_plasma_poloidal_pressure_contours(
-            fig6.add_subplot(121, aspect="equal"), m_file_data, scan
+            fig8.add_subplot(121, aspect="equal"), m_file_data, scan
         )
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        fig7.add_subplot(121, aspect="equal"),
+        fig9.add_subplot(121, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -11151,7 +11233,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        fig7.add_subplot(122, aspect="equal"),
+        fig9.add_subplot(122, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -11159,19 +11241,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = fig7.add_subplot(222)
+    ax17 = fig9.add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file_data, scan, colour_scheme)
 
-    ax18 = fig8.add_subplot(211)
+    ax18 = fig10.add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = fig9.add_subplot(211)
+    ax185 = fig11.add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = fig9.add_subplot(212)
+    ax18b = fig11.add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file_data, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file_data, colour_scheme)
@@ -11179,52 +11261,50 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        ax19 = fig10.add_subplot(231, aspect="equal")
+        ax19 = fig12.add_subplot(231, aspect="equal")
         ax19.set_position([0.025, 0.5, 0.45, 0.45])
-        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig10)
+        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig12)
 
         # TF coil turn structure
-        ax20 = fig10.add_subplot(325, aspect="equal")
+        ax20 = fig12.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(ax20, fig10, m_file_data, scan)
+        plot_tf_turn(ax20, fig12, m_file_data, scan)
     else:
-        ax19 = fig10.add_subplot(211, aspect="equal")
+        ax19 = fig12.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file_data, scan, fig9)
+        plot_resistive_tf_wp(ax19, m_file_data, scan, fig12)
 
     plot_tf_coil_structure(
-        fig11.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+        fig13.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    axes = fig12.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig14.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_bootstrap_comparison(fig13.add_subplot(221), m_file_data, scan)
-    plot_h_threshold_comparison(fig13.add_subplot(224), m_file_data, scan)
-    plot_density_limit_comparison(fig14.add_subplot(221), m_file_data, scan)
-    plot_confinement_time_comparison(fig14.add_subplot(224), m_file_data, scan)
-    plot_current_profiles_over_time(fig15.add_subplot(111), m_file_data, scan)
+    plot_bootstrap_comparison(fig15.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig15.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig16.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig16.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig17.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig16.add_subplot(121, aspect="equal"), fig16, m_file_data, scan
+        fig18.add_subplot(121, aspect="equal"), fig18, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig16.add_subplot(224, aspect="equal"), fig16, m_file_data, scan
+        fig18.add_subplot(224, aspect="equal"), fig18, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig17.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig19.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig17.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig17.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig19.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig19.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig18, m_file_data, scan)
+    plot_blkt_pipe_bends(fig20, m_file_data, scan)
 
     plot_main_power_flow(
-        fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
+        fig21.add_subplot(111, aspect="equal"), m_file_data, scan, fig21
     )
-
-    plot_fusion_rate_contours(fig20, fig21, m_file_data, scan)
 
 
 def main(args=None):
