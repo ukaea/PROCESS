@@ -10604,6 +10604,35 @@ def plot_plasma_poloidal_pressure_contours(
         )
     ]
 
+    pressure_grid, r_grid, z_grid = interp1d_profile(
+        pres_plasma_profile, mfile_data, scan
+    )
+
+    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
+    # Plot filled contour
+    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
+    c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
+
+    # Add colorbar for pressure (now in kPa)
+    # You can control the location using the 'location' argument ('left', 'right', 'top', 'bottom')
+    # For more control, use 'ax' or 'fraction', 'pad', etc.
+    # Example: location="right", pad=0.05, fraction=0.05
+    axis.figure.colorbar(
+        c, ax=axis, label="Pressure [kPa]", location="left", anchor=(-0.25, 0.5)
+    )
+
+    axis.set_aspect("equal")
+    axis.set_xlabel("R [m]")
+    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    axis.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Plasma Poloidal Pressure Contours")
+
+
+def interp1d_profile(profile, mfile_data, scan):
     # Get plasma geometry and boundary
     pg = plasma_geometry(
         rmajor=mfile_data.data["rmajor"].get_scan(scan),
@@ -10614,8 +10643,7 @@ def plot_plasma_poloidal_pressure_contours(
         i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
         square=mfile_data.data["plasma_square"].get_scan(scan),
     )
-    rminor = mfile_data.data["rminor"].get_scan(scan)
-    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+
     # Create a grid of (R, Z) points inside the plasma boundary
     n_rho = 500
     n_theta = 720
@@ -10664,36 +10692,10 @@ def plot_plasma_poloidal_pressure_contours(
     r_grid = r_center + (f_r(theta_grid) - r_center) * rho_grid
     z_grid = z_center + (f_z(theta_grid) - z_center) * rho_grid
 
-    # Interpolate pressure profile for each rho
-    pressure_grid = np.interp(
-        rho_grid, np.linspace(0, 1, len(pres_plasma_profile)), pres_plasma_profile
-    )
+    # Interpolate profile for each rho
+    profile_grid = np.interp(rho_grid, np.linspace(0, 1, len(profile)), profile)
 
-    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
-    # Plot filled contour
-    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
-    c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
-
-    # Overlay plasma boundary
-    axis.plot(pg.rs, pg.zs, color="black", linewidth=2, label="Plasma Boundary")
-
-    # Add colorbar for pressure (now in kPa)
-    # You can control the location using the 'location' argument ('left', 'right', 'top', 'bottom')
-    # For more control, use 'ax' or 'fraction', 'pad', etc.
-    # Example: location="right", pad=0.05, fraction=0.05
-    axis.figure.colorbar(
-        c, ax=axis, label="Pressure [kPa]", location="left", anchor=(-0.25, 0.5)
-    )
-
-    axis.set_aspect("equal")
-    axis.set_xlabel("R [m]")
-    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
-    axis.set_ylim(
-        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
-        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
-    )
-    axis.set_ylabel("Z [m]")
-    axis.set_title("Plasma Poloidal Pressure Contours")
+    return profile_grid, r_grid, z_grid
 
 
 def plot_corc_cable_geometry(
