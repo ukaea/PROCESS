@@ -1686,7 +1686,9 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
-    "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
+    "t_div_replace_yrs": InputVariable(
+        data_structure.cost_variables, float, range=(0.01, 2.0)
+    ),
     "t_tf_superconductor_quench": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),
