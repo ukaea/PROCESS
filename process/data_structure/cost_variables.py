@@ -239,7 +239,7 @@ cdirt: float = None
 """total plant direct cost (M$)"""
 
 
-cdrlife: float = None
+life_hcd_fpy: float = None
 """Full power year lifetime of heating/current drive system (y)"""
 
 
@@ -1285,7 +1285,7 @@ def init_cost_variables():
     global cconshtf
     global cdcost
     global cdirt
-    global cdrlife
+    global life_hcd_fpy
     global cdrlife_cal
     global f_t_plant_available
     global cpfact
@@ -1442,7 +1442,7 @@ def init_cost_variables():
     cconshtf = 75.0
     cdcost = 0.0
     cdirt = 0.0
-    cdrlife = 0.0
+    life_hcd_fpy = 0.0
     cdrlife_cal = 0.0
     f_t_plant_available = 0.75
     cpfact = 0.0
