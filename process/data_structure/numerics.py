@@ -43,7 +43,7 @@ constructed cost otherwise)
 * (13) hydrogen production rate OBSOLETE
 * (14) pulse length
 * (15) plant availability factor (N.B. requires
-iavail=1 to be set)
+i_plant_availability=1 to be set)
 * (16) linear combination of major radius (minimised) and pulse length (maximised)
 note: FoM should be minimised only!
 * (17) net electrical output

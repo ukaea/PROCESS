@@ -248,7 +248,7 @@ cdrlife_cal: float = None
 
 
 cfactr: float = None
-"""Total plant availability fraction; input if `iavail=0`"""
+"""Total plant availability fraction; input if `i_plant_availability=0`"""
 
 
 cpfact: float = None
@@ -441,7 +441,7 @@ fwallcst: float = None
 """first wall cost (M$)"""
 
 
-iavail: int = None
+i_plant_availability: int = None
 """Switch for plant availability model:
 - =0 use input value for cfactr
 - =1 calculate cfactr using Taylor and Ward 1999 model
@@ -533,43 +533,43 @@ t_operation: float = None
 
 
 tbktrepl: float = None
-"""time taken to replace blanket (y) (`iavail=1`)"""
+"""time taken to replace blanket (y) (`i_plant_availability=1`)"""
 
 
 tcomrepl: float = None
-"""time taken to replace both blanket and divertor (y) (`iavail=1`)"""
+"""time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)"""
 
 
 tdivrepl: float = None
-"""time taken to replace divertor (y) (`iavail=1`)"""
+"""time taken to replace divertor (y) (`i_plant_availability=1`)"""
 
 
 uubop: float = None
-"""unplanned unavailability factor for balance of plant (`iavail=1`)"""
+"""unplanned unavailability factor for balance of plant (`i_plant_availability=1`)"""
 
 
 uucd: float = None
-"""unplanned unavailability factor for current drive (`iavail=1`)"""
+"""unplanned unavailability factor for current drive (`i_plant_availability=1`)"""
 
 
 uudiv: float = None
-"""unplanned unavailability factor for divertor (`iavail=1`)"""
+"""unplanned unavailability factor for divertor (`i_plant_availability=1`)"""
 
 
 uufuel: float = None
-"""unplanned unavailability factor for fuel system (`iavail=1`)"""
+"""unplanned unavailability factor for fuel system (`i_plant_availability=1`)"""
 
 
 uufw: float = None
-"""unplanned unavailability factor for first wall (`iavail=1`)"""
+"""unplanned unavailability factor for first wall (`i_plant_availability=1`)"""
 
 
 uumag: float = None
-"""unplanned unavailability factor for magnets (`iavail=1`)"""
+"""unplanned unavailability factor for magnets (`i_plant_availability=1`)"""
 
 
 uuves: float = None
-"""unplanned unavailability factor for vessel (`iavail=1`)"""
+"""unplanned unavailability factor for vessel (`i_plant_availability=1`)"""
 
 
 ifueltyp: int = None
@@ -639,11 +639,11 @@ tlife: float = None
 
 
 tmain: float = None
-"""Maintenance time for replacing CP (years) (iavail = 3)"""
+"""Maintenance time for replacing CP (years) (i_plant_availability = 3)"""
 
 
 u_unplanned_cp: float = None
-"""User-input CP unplanned unavailability (iavail = 3)"""
+"""User-input CP unplanned unavailability (i_plant_availability = 3)"""
 
 
 UCAD: float = 180.0
@@ -1333,7 +1333,7 @@ def init_cost_variables():
     global fcr0
     global fkind
     global fwallcst
-    global iavail
+    global i_plant_availability
     global ibkt_life
     global life_dpa
     global bktcycles
@@ -1488,7 +1488,7 @@ def init_cost_variables():
     fcr0 = 0.0966
     fkind = 1.0
     fwallcst = 0.0
-    iavail = 2
+    i_plant_availability = 2
     ibkt_life = 0
     life_dpa = 50
     bktcycles = 1.0e3
