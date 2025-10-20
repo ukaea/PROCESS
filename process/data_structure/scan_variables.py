@@ -56,7 +56,7 @@ nsweep: int = None
 <LI> 19 boundl(16: dr_cs)
 <LI> 20 t_burn_min
 <LI> 21 not used
-<LI> 22 cfactr (N.B. requires i_plant_availability=0)
+<LI> 22 f_t_plant_available (N.B. requires i_plant_availability=0)
 <LI> 23 boundu(72: fipir)
 <LI> 24 p_fusion_total_max_mw
 <LI> 25 kappa
