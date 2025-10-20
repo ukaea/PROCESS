@@ -114,7 +114,7 @@ f_alpha_energy_confinement_min = 5.0 * Lower limit on f_alpha_energy_confinement
 
 *------------------Cost Variables------------------*
 
-cfactr   = 0.80 * Total plant availability fraction; input if `i_plant_availability=0`
+f_t_plant_available   = 0.80 * Total plant availability fraction; input if `i_plant_availability=0`
 cost_model = 0 * Switch for cost model;
 i_plant_availability   = 0 * Switch for plant availability model;
 output_costs = 1 * Switch for costs output;

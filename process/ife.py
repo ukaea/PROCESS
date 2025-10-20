@@ -1853,7 +1853,10 @@ class IFE:
             life = min(
                 cost_variables.tlife,
                 cost_variables.abktflnc
-                / (physics_variables.pflux_fw_neutron_mw * cost_variables.cfactr),
+                / (
+                    physics_variables.pflux_fw_neutron_mw
+                    * cost_variables.f_t_plant_available
+                ),
             )
 
         fwbs_variables.life_blkt_fpy = life

@@ -106,7 +106,7 @@ falpha_energy_confinement = 1. * f-value for lower limit on taup/taueff the rati
 
 abktflnc = 5. * allowable first wall/blanket neutron fluence (MW-yr/m2) (`blktmodel=0`)
 adivflnc = 7. * allowable divertor heat fluence (MW-yr/m2)
-cfactr   = 0.75 * Total plant availability fraction; input if `i_plant_availability=0`
+f_t_plant_available   = 0.75 * Total plant availability fraction; input if `i_plant_availability=0`
 cost_model = 0 * Switch for cost model;
 dintrt   = 0. * diff between borrowing and saving interest rates
 fcap0    = 1.15 * average cost of money for construction of plant assuming design/construction time of six years

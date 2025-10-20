@@ -247,7 +247,7 @@ cdrlife_cal: float = None
 """Calendar year lifetime of heating/current drive system (y)"""
 
 
-cfactr: float = None
+f_t_plant_available: float = None
 """Total plant availability fraction; input if `i_plant_availability=0`"""
 
 
@@ -443,10 +443,10 @@ fwallcst: float = None
 
 i_plant_availability: int = None
 """Switch for plant availability model:
-- =0 use input value for cfactr
-- =1 calculate cfactr using Taylor and Ward 1999 model
-- =2 calculate cfactr using new (2015) model
-- =3 calculate cfactr using ST model
+- =0 use input value for f_t_plant_available
+- =1 calculate f_t_plant_available using Taylor and Ward 1999 model
+- =2 calculate f_t_plant_available using new (2015) model
+- =3 calculate f_t_plant_available using ST model
 """
 
 
@@ -1287,7 +1287,7 @@ def init_cost_variables():
     global cdirt
     global cdrlife
     global cdrlife_cal
-    global cfactr
+    global f_t_plant_available
     global cpfact
     global cfind
     global cland
@@ -1444,7 +1444,7 @@ def init_cost_variables():
     cdirt = 0.0
     cdrlife = 0.0
     cdrlife_cal = 0.0
-    cfactr = 0.75
+    f_t_plant_available = 0.75
     cpfact = 0.0
     cfind = [0.244, 0.244, 0.244, 0.29]
     cland = 19.2
