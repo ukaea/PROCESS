@@ -1582,19 +1582,19 @@ def constraint_equation_61():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     favail: F-value for minimum availability
-    cfactr: Total plant availability fraction
+    f_t_plant_available: Total plant availability fraction
     avail_min: Minimum availability
     """
     cc = (
         1.0
         - data_structure.cost_variables.favail
-        * data_structure.cost_variables.cfactr
+        * data_structure.cost_variables.f_t_plant_available
         / data_structure.cost_variables.avail_min
     )
     return ConstraintResult(
         cc,
         data_structure.cost_variables.avail_min * (1.0 - cc),
-        data_structure.cost_variables.cfactr * cc,
+        data_structure.cost_variables.f_t_plant_available * cc,
     )
 
 

@@ -325,7 +325,9 @@ INPUT_VARIABLES = {
     "cdriv0": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
     "cdriv1": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
     "cdriv2": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
-    "cfactr": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
+    "f_t_plant_available": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 1.0)
+    ),
     "chdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "chdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "chemlab_h": InputVariable(

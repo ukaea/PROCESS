@@ -522,7 +522,7 @@ output_costs = 1
 cost_model = 0
 
 * Total plant availability fraction;
-cfactr = 0.80
+f_t_plant_available = 0.80
 
 * Switch for plant availability model
 iavail = 0

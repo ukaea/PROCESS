@@ -2482,7 +2482,7 @@ class Stellarator:
             # Full power DT operation years for replacement of TF Coil
             # (or plant life)
 
-            fpydt = cost_variables.cfactr * cost_variables.tlife
+            fpydt = cost_variables.f_t_plant_available * cost_variables.tlife
             fpsdt = fpydt * 3.154e7  # seconds
 
             # Insulator dose (rad)

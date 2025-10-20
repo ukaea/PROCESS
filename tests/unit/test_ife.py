@@ -1256,7 +1256,7 @@ class IfefbsParam(NamedTuple):
     a_fw_total: Any = None
     tlife: Any = None
     abktflnc: Any = None
-    cfactr: Any = None
+    f_t_plant_available: Any = None
     den_steel: Any = None
     m_fw_total: Any = None
     m_blkt_total: Any = None
@@ -1306,7 +1306,7 @@ class IfefbsParam(NamedTuple):
             a_fw_total=188.02432031734912,
             tlife=30.0,
             abktflnc=20.0,
-            cfactr=0.75000000000000011,
+            f_t_plant_available=0.75000000000000011,
             den_steel=7800.0,
             m_fw_total=0.0,
             m_blkt_total=0.0,
@@ -1573,7 +1573,9 @@ def test_ifefbs(ifefbsparam, monkeypatch, ife):
     monkeypatch.setattr(build_variables, "a_fw_total", ifefbsparam.a_fw_total)
     monkeypatch.setattr(cost_variables, "tlife", ifefbsparam.tlife)
     monkeypatch.setattr(cost_variables, "abktflnc", ifefbsparam.abktflnc)
-    monkeypatch.setattr(cost_variables, "cfactr", ifefbsparam.cfactr)
+    monkeypatch.setattr(
+        cost_variables, "f_t_plant_available", ifefbsparam.f_t_plant_available
+    )
     monkeypatch.setattr(fwbs_variables, "den_steel", ifefbsparam.den_steel)
     monkeypatch.setattr(fwbs_variables, "m_fw_total", ifefbsparam.m_fw_total)
     monkeypatch.setattr(fwbs_variables, "m_blkt_total", ifefbsparam.m_blkt_total)

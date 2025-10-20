@@ -52,7 +52,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(tv, "t_plant_pulse_total", 5.0)
     monkeypatch.setattr(cv, "i_plant_availability", 0)
-    monkeypatch.setattr(cv, "cfactr", 0.8)
+    monkeypatch.setattr(cv, "f_t_plant_available", 0.8)
     monkeypatch.setattr(tv, "t_plant_pulse_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
 
@@ -101,7 +101,7 @@ def test_avail_1(monkeypatch, availability):
     monkeypatch.setattr(cv, "uuves", 0.11)
 
     availability.avail(output=False)
-    cfactr_obs = cv.cfactr
+    cfactr_obs = cv.f_t_plant_available
     cfactr_exp = 0.0006344554455445239
     assert pytest.approx(cfactr_exp) == cfactr_obs
 
@@ -310,7 +310,9 @@ def calc_u_unplanned_magnets_fix(request, monkeypatch):
     param = request.param
 
     # Mock module variables
-    monkeypatch.setattr(cv, "t_plant_operational_total_yrs", param["t_plant_operational_total_yrs"])
+    monkeypatch.setattr(
+        cv, "t_plant_operational_total_yrs", param["t_plant_operational_total_yrs"]
+    )
     monkeypatch.setattr(cv, "conf_mag", param["conf_mag"])
     monkeypatch.setattr(
         tfv,
@@ -552,7 +554,7 @@ def test_avail_2(monkeypatch, availability):
 
     availability.avail_2(False)
 
-    cfactr_obs = cv.cfactr
+    cfactr_obs = cv.f_t_plant_available
     cfactr_exp = 0.7173
     assert pytest.approx(cfactr_obs) == cfactr_exp
 
@@ -600,7 +602,7 @@ def test_avail_st(monkeypatch, availability):
     availability.avail_st(output=False)
 
     assert pytest.approx(cv.t_plant_operational_total_yrs) == 15.0
-    assert pytest.approx(cv.cfactr) == 0.27008858
+    assert pytest.approx(cv.f_t_plant_available) == 0.27008858
     assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
 
 
