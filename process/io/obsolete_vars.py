@@ -469,6 +469,7 @@ OBS_VARS = {
     "t_between_pulse": "t_plant_pulse_dwell",
     "t_precharge": "t_plant_pulse_coil_precharge",
     "t_burn": "t_plant_pulse_burn",
+    "tfootfi": "f_dr_tf_outboard_inboard",
 }
 
 OBS_VARS_HELP = {

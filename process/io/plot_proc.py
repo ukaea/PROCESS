@@ -9374,6 +9374,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # =============================================================
