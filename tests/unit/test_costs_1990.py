@@ -5557,7 +5557,7 @@ class CoelcParam(NamedTuple):
 
     life_div_fpy: Any = None
 
-    divlife_cal: Any = None
+    life_div: Any = None
 
     coefuelt: Any = None
 
@@ -5656,7 +5656,7 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             life_div_fpy=6.1337250397740126,
-            divlife_cal=6.1337250397740126,
+            life_div=6.1337250397740126,
             coefuelt=0,
             moneyint=0,
             life_hcd_fpy=19.216116010620578,
@@ -5740,7 +5740,7 @@ class CoelcParam(NamedTuple):
             divcst=88.904644548525795,
             ucfuel=3.4500000000000002,
             life_div_fpy=6.145510750914414,
-            divlife_cal=6.145510750914414,
+            life_div=6.145510750914414,
             coefuelt=1.4801870771036603e21,
             moneyint=1001.1727468691442,
             life_hcd_fpy=19.222115557991025,
@@ -5854,7 +5854,7 @@ def test_coelc(coelcparam, monkeypatch, costs):
 
     monkeypatch.setattr(cost_variables, "life_div_fpy", coelcparam.life_div_fpy)
 
-    monkeypatch.setattr(cost_variables, "divlife_cal", coelcparam.divlife_cal)
+    monkeypatch.setattr(cost_variables, "life_div", coelcparam.life_div)
 
     monkeypatch.setattr(cost_variables, "coefuelt", coelcparam.coefuelt)
 
