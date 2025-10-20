@@ -169,7 +169,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -1164,7 +1164,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -2159,7 +2159,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -3154,7 +3154,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -4149,7 +4149,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -5144,7 +5144,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -6139,7 +6139,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -7134,7 +7134,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    
@@ -8129,7 +8129,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      1.5000E+01    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      2.0000E+01    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      2.0217E+01 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1594E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1594E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      2.0217E+01 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      4.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      7.5000E-01    

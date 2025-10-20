@@ -65,7 +65,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     bktlife_exp = bktlife_exp_param
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
-    divlife_obs = cv.divlife
+    divlife_obs = cv.life_div_fpy
     divlife_exp = 1.0
     assert pytest.approx(divlife_obs) == divlife_exp
 
@@ -87,7 +87,7 @@ def test_avail_1(monkeypatch, availability):
 
     # Mock module vars
     monkeypatch.setattr(cv, "i_plant_availability", 1)
-    monkeypatch.setattr(cv, "divlife", 1.0)
+    monkeypatch.setattr(cv, "life_div_fpy", 1.0)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 7.0)
     monkeypatch.setattr(cv, "t_div_replace_yrs", 0.1)
     monkeypatch.setattr(cv, "t_blkt_replace_yrs", 0.2)
@@ -214,7 +214,7 @@ def calc_u_planned_fix(request, monkeypatch):
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", param["pflux_fw_neutron_mw"])
     monkeypatch.setattr(pv, "itart", param["itart"])
     monkeypatch.setattr(cv, "life_plant", param["life_plant"])
-    monkeypatch.setattr(cv, "divlife", 0.0)
+    monkeypatch.setattr(cv, "life_div_fpy", 0.0)
     monkeypatch.setattr(cv, "adivflnc", param["adivflnc"])
     monkeypatch.setattr(cv, "abktflnc", param["abktflnc"])
     monkeypatch.setattr(cv, "life_hcd_fpy", 0.0)
@@ -350,7 +350,7 @@ def calc_u_unplanned_divertor_param(**kwargs):
     """
     # Default parameters
     defaults = {
-        "divlife": 1.99,
+        "life_div_fpy": 1.99,
         "t_plant_pulse_total": 9000,
         "expected": approx(0.02, abs=0.005),
     }
@@ -371,8 +371,8 @@ def calc_u_unplanned_divertor_params():
     """
     return [
         calc_u_unplanned_divertor_param(),
-        calc_u_unplanned_divertor_param(divlife=4, expected=approx(1, abs=0)),
-        calc_u_unplanned_divertor_param(divlife=3, expected=approx(0.1, abs=0.05)),
+        calc_u_unplanned_divertor_param(life_div_fpy=4, expected=approx(1, abs=0)),
+        calc_u_unplanned_divertor_param(life_div_fpy=3, expected=approx(0.1, abs=0.05)),
     ]
 
 
@@ -395,7 +395,7 @@ def calc_u_unplanned_divertor_fix(request, monkeypatch):
     # Mock variables used by calc_u_unplanned_divertor()
     # Some may be parameterised
     monkeypatch.setattr(tv, "t_plant_pulse_total", param["t_plant_pulse_total"])
-    monkeypatch.setattr(cv, "divlife", param["divlife"])
+    monkeypatch.setattr(cv, "life_div_fpy", param["life_div_fpy"])
 
     # Return the expected result for the given parameter list
     return param["expected"]
@@ -549,7 +549,7 @@ def test_avail_2(monkeypatch, availability):
     monkeypatch.setattr(ifev, "ife", 0)
     monkeypatch.setattr(pv, "itart", 1)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 5.0)
-    monkeypatch.setattr(cv, "divlife", 10.0)
+    monkeypatch.setattr(cv, "life_div_fpy", 10.0)
     monkeypatch.setattr(cv, "cplife", 15.0)
 
     availability.avail_2(False)
@@ -566,7 +566,7 @@ def test_avail_2(monkeypatch, availability):
     bktlife_exp = 6.97058413
     assert pytest.approx(bktlife_obs) == bktlife_exp
 
-    divlife_obs = cv.divlife
+    divlife_obs = cv.life_div_fpy
     divlife_exp = 13.94116827
     assert pytest.approx(divlife_obs) == divlife_exp
 

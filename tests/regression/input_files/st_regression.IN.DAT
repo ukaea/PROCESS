@@ -3026,7 +3026,7 @@ cost_model = 0
 
 *adivflnc = 
 * DESCRIPTION:   Allowable Divertor Heat Fluence (MW-yr/m2)
-* JUSTIFICATION: Set to enforce a divertor lifetime (`divlife`) of 5 years
+* JUSTIFICATION: Set to enforce a divertor lifetime (`life_div_fpy`) of 5 years
 *                NOTE: not currently functional, issue to be raised
 
 *cpstflnc = 
