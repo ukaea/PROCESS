@@ -188,7 +188,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.2378E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.9781E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.9781E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      5.0680E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -314,7 +314,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.2378E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9781E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.9781E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.2378E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -1351,7 +1351,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1809E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.9607E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.9607E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.9264E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -1477,7 +1477,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1809E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9607E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.9607E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1809E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -2514,7 +2514,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1514E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      4.1198E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      4.1198E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8552E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -2640,7 +2640,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1514E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1198E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.1198E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1514E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -3677,7 +3677,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1409E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      4.0530E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      4.0530E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8190E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -3803,7 +3803,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1409E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.0530E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      4.0530E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1409E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -4840,7 +4840,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1311E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.9130E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.9130E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8502E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -4966,7 +4966,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1311E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9130E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.9130E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1311E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -6003,7 +6003,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1505E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.7932E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.7932E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.9135E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -6129,7 +6129,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1505E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7932E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.7932E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1505E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -7166,7 +7166,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1381E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.7356E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.7356E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8875E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -7292,7 +7292,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1381E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7356E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.7356E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1381E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -8329,7 +8329,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1295E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.8406E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.8406E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8398E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -8455,7 +8455,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1295E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8406E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.8406E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1295E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -9492,7 +9492,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1526E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.9127E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.9127E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8291E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -9618,7 +9618,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1526E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9127E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.9127E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1526E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -10655,7 +10655,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.1129E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.8644E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.8644E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.7776E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -10781,7 +10781,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1129E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8644E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.8644E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1129E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -11818,7 +11818,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.0770E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.8640E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.8640E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.7771E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -11944,7 +11944,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0770E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8640E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.8640E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0770E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -12981,7 +12981,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.0793E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.7702E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.7702E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.8195E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -13107,7 +13107,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0793E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7702E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.7702E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0793E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -14144,7 +14144,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.0468E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.7245E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.7245E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.7748E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -14270,7 +14270,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0468E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7245E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.7245E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0468E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -15307,7 +15307,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      6.0152E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.8183E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.8183E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.7106E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -15433,7 +15433,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0152E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8183E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.8183E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0152E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
@@ -16470,7 +16470,7 @@
  # Final Feasible Point #
  # Power Reactor Costs (1990 US$) #
  First_wall_/_blanket_life_(years)_______________________________________ (fwbllife)____________________      5.9822E+00    
- Divertor_life_(years)___________________________________________________ (divlife.)____________________      3.9249E+00    
+ Divertor_life_(years)___________________________________________________ (life_div_fpy.)____________________      3.9249E+00    
  Cost_of_electricity_(m$/kWh)____________________________________________ (coe)_________________________      4.6464E+02    
  # Detailed Costings (1990 US$) #
  Acc.22_multiplier_for_Nth_of_a_kind_____________________________________ (fkind)_______________________      1.0000E+00    
@@ -16596,7 +16596,7 @@
  Allowable_blanket_neutron_fluence_(MW-yr/m2)____________________________ (abktflnc)____________________      5.0000E+00    
  Allowable_divertor_heat_fluence_(MW-yr/m2)______________________________ (adivflnc)____________________      7.0000E+00    
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      5.9822E+00 OP 
- Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9249E+00 OP 
+ Divertor_lifetime_(years)_______________________________________________ (life_div_fpy)_____________________      3.9249E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      5.9822E+00 OP 
  Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    

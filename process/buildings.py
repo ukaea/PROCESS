@@ -629,7 +629,7 @@ class Buildings:
 
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
-        if cost_variables.divlife != 0.0e0:
+        if cost_variables.life_div_fpy != 0.0e0:
             hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
@@ -641,7 +641,7 @@ class Buildings:
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.life_plant / cost_variables.divlife)
+                * (cost_variables.life_plant / cost_variables.life_div_fpy)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of divertor segments
             div_hotcell_vol = hcomp_req_supply * hcomp_vol
