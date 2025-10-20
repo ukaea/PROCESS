@@ -34,6 +34,7 @@ import process.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
+from process.build import Build
 from process.data_structure import physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
@@ -10714,6 +10715,323 @@ def plot_plasma_poloidal_pressure_contours(
     axis.set_title("Plasma Poloidal Pressure Contours")
 
 
+def plot_plasma_outboard_toroidal_ripple_map(
+    fig, mfile_data: mf.MFile, scan: int
+) -> None:
+    r_tf_outboard_mid = mfile_data.data["r_tf_outboard_mid"].get_scan(scan)
+    n_tf_coils = mfile_data.data["n_tf_coils"].get_scan(scan)
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+    r_tf_wp_inboard_inner = mfile_data.data["r_tf_wp_inboard_inner"].get_scan(scan)
+    r_tf_wp_inboard_centre = mfile_data.data["r_tf_wp_inboard_centre"].get_scan(scan)
+    r_tf_wp_inboard_outer = mfile_data.data["r_tf_wp_inboard_outer"].get_scan(scan)
+    dx_tf_wp_primary_toroidal = mfile_data.data["dx_tf_wp_primary_toroidal"].get_scan(
+        scan
+    )
+    i_tf_shape = mfile_data.data["i_tf_shape"].get_scan(scan)
+    i_tf_sup = mfile_data.data["i_tf_sup"].get_scan(scan)
+    dx_tf_wp_insulation = mfile_data.data["dx_tf_wp_insulation"].get_scan(scan)
+    dx_tf_wp_insertion_gap = mfile_data.data["dx_tf_wp_insertion_gap"].get_scan(scan)
+    ripple_b_tf_plasma_edge_max = mfile_data.data[
+        "ripple_b_tf_plasma_edge_max"
+    ].get_scan(scan)
+
+    build = Build()
+
+    r_nom = r_tf_outboard_mid
+    dx_nom = dx_tf_wp_primary_toroidal if dx_tf_wp_primary_toroidal is not None else 0.0
+
+    # Simple ±20% scan around nominal values for r and dx
+    r_min = r_nom * 0.9
+    r_max = r_nom * 1.1
+
+    if dx_nom > 0:
+        dx_min = dx_nom * 0.8
+        dx_max = dx_nom * 1.2
+    else:
+        # fallback sensible small range if nominal is zero
+        dx_min = 1e-3
+        dx_max = 1e-2
+
+    n_r = 50
+    n_dx = 50
+    r_vals = np.linspace(r_min, r_max, n_r)
+    dx_vals = np.linspace(dx_min, dx_max, n_dx)
+
+    rg, dxg = np.meshgrid(r_vals, dx_vals)
+
+    # prepare metric array to hold ripple metric for each (r, dx) pair
+    metric = np.full(rg.shape, np.nan, dtype=float)
+
+    for ii in range(rg.shape[0]):
+        for jj in range(rg.shape[1]):
+            r_test = float(rg[ii, jj])
+            dx_test = float(dxg[ii, jj])
+
+            try:
+                rip, _, _ = build.plasma_outboard_edge_toroidal_ripple(
+                    ripple_b_tf_plasma_edge_max=0.05,
+                    r_tf_outboard_mid=r_test,
+                    n_tf_coils=int(n_tf_coils),
+                    rmajor=rmajor,
+                    rminor=rminor,
+                    r_tf_wp_inboard_inner=r_tf_wp_inboard_inner,
+                    r_tf_wp_inboard_centre=r_tf_wp_inboard_centre,
+                    r_tf_wp_inboard_outer=r_tf_wp_inboard_outer,
+                    dx_tf_wp_primary_toroidal=dx_test,
+                    i_tf_shape=i_tf_shape,
+                    i_tf_sup=i_tf_sup,
+                    dx_tf_wp_insulation=dx_tf_wp_insulation,
+                    dx_tf_wp_insertion_gap=dx_tf_wp_insertion_gap,
+                )
+            except (ValueError, ZeroDivisionError, OverflowError, TypeError):
+                # Only catch expected numeric/validation errors from the ripple calculation;
+                # let other exceptions propagate so they can be diagnosed.
+                rip = np.nan
+            metric[ii, jj] = rip
+
+    # Create two subplots that share the same x axis
+    ax1 = fig.add_subplot(2, 1, 1)
+    ax2 = fig.add_subplot(2, 1, 2, sharex=ax1)
+
+    # Make contour plot of the ripple metric (r vs dx) on ax1
+    if np.all(np.isnan(metric)):
+        ax1.text(0.5, 0.5, "No valid ripple data (r vs dx)", ha="center", va="center")
+    else:
+        vmin = np.nanmin(metric)
+        vmax = np.nanmax(metric)
+
+        # Guard against degenerate range
+        if np.isclose(vmin, vmax, atol=1e-12) or np.isnan(vmin) or np.isnan(vmax):
+            vmin = vmin - 0.25
+            vmax = vmax + 0.25
+
+        # Smooth filled contour levels
+        levels = np.linspace(vmin, vmax, 50)
+        cf = ax1.contourf(rg, dxg, metric, levels=levels, cmap="plasma", extend="both")
+
+        # Contour lines only at 0.5 increments
+        step = 0.5
+        start = np.floor(vmin / step) * step
+        end = np.ceil(vmax / step) * step
+        contour_levels = np.arange(start, end + 1e-12, step)
+
+        # Fallback if contour_levels is empty for some reason
+        if contour_levels.size < 2:
+            contour_levels = np.array([vmin, vmax])
+
+        contours = ax1.contour(
+            rg,
+            dxg,
+            metric,
+            levels=contour_levels,
+            colors="k",
+            linewidths=0.5,
+            alpha=0.7,
+        )
+        ax1.clabel(contours, inline=True, fontsize=8, fmt="%.2f%%", colors="white")
+        # Overlay contour line at the specified target ripple value
+
+        target = float(ripple_b_tf_plasma_edge_max)
+
+        if target is not None and not np.isnan(target):
+            # Check if target lies within computed metric range
+            if (target >= vmin) and (target <= vmax):
+                c_target = ax1.contour(
+                    rg,
+                    dxg,
+                    metric,
+                    levels=[target],
+                    colors="white",
+                    linewidths=2.0,
+                    linestyles="--",
+                    zorder=20,
+                )
+                ax1.clabel(
+                    c_target,
+                    inline=True,
+                    fmt={target: f"Input Max {target:.2f}%"},
+                    fontsize=8,
+                    colors="white",
+                )
+            else:
+                # annotate that target is outside plotted range
+                ax1.text(
+                    0.02,
+                    0.98,
+                    f"Target ripple {target:.2f}% outside plot range [{vmin:.2f},{vmax:.2f}]",
+                    transform=ax1.transAxes,
+                    color="white",
+                    fontsize=8,
+                    va="top",
+                    bbox={"facecolor": "black", "alpha": 0.6, "pad": 2},
+                )
+
+        # Colourbar with 0.5 increments (use the same contour_levels as for the contour lines)
+        ticks = contour_levels
+        # Fallback to sensible ticks if contour_levels is not appropriate
+        if ticks.size == 0 or np.isnan(ticks).all():
+            ticks = np.linspace(vmin, vmax, 5)
+        cb = ax1.figure.colorbar(
+            cf, ax=ax1, label="Plasma Outboard Toroidal Ripple", ticks=ticks
+        )
+        cb.ax.set_yticklabels([f"{t:.2f}%" for t in ticks])
+
+        # mark nominal point
+        ax1.scatter(
+            [r_nom],
+            [dx_nom],
+            color="white",
+            edgecolor="black",
+            s=200,
+            linewidths=1.5,
+            marker="o",
+            zorder=10,
+            label="Design Point",
+        )
+        ax1.set_xlabel("Outboard TF leg centre [m]")
+        ax1.set_ylabel("WP Toroidal Width [m]")
+        ax1.legend(loc="upper right")
+
+    # ---------------------------------------------------------------------
+    # Second plot: scan number of TF coils vs r_tf_outboard_mid (keep dx at nominal)
+    # ---------------------------------------------------------------------
+    # Determine a sensible integer range of TF coils to scan around nominal
+    n_nom = int(n_tf_coils)
+    span = max(2, int(min(12, n_nom // 2)))  # choose a span based on nominal
+    n_min = max(12, n_nom - span)
+    n_max = n_nom + span
+    n_vals = np.arange(n_min, n_max + 1, dtype=int)
+
+    n_r2 = 60
+    r_vals2 = np.linspace(r_min, r_max, n_r2)
+    rg2, ng2 = np.meshgrid(r_vals2, n_vals)
+
+    metric2 = np.full(rg2.shape, np.nan, dtype=float)
+
+    for ii in range(rg2.shape[0]):
+        for jj in range(rg2.shape[1]):
+            r_test = float(rg2[ii, jj])
+            n_test = int(ng2[ii, jj])
+            try:
+                rip, _, _ = build.plasma_outboard_edge_toroidal_ripple(
+                    ripple_b_tf_plasma_edge_max=0.05,
+                    r_tf_outboard_mid=r_test,
+                    n_tf_coils=n_test,
+                    rmajor=rmajor,
+                    rminor=rminor,
+                    r_tf_wp_inboard_inner=r_tf_wp_inboard_inner,
+                    r_tf_wp_inboard_centre=r_tf_wp_inboard_centre,
+                    r_tf_wp_inboard_outer=r_tf_wp_inboard_outer,
+                    dx_tf_wp_primary_toroidal=dx_nom,
+                    i_tf_shape=i_tf_shape,
+                    i_tf_sup=i_tf_sup,
+                    dx_tf_wp_insulation=dx_tf_wp_insulation,
+                    dx_tf_wp_insertion_gap=dx_tf_wp_insertion_gap,
+                )
+            except (ValueError, ZeroDivisionError, OverflowError, TypeError):
+                # Only catch expected numeric/validation errors from the ripple calculation;
+                # let other exceptions propagate so they can be diagnosed.
+                rip = np.nan
+            metric2[ii, jj] = rip
+
+    # Plot the second metric on the bottom axes (ax2) so it shares x-axis with ax1
+    if np.all(np.isnan(metric2)):
+        ax2.text(
+            0.5, 0.5, "No valid ripple data (r vs n_tf_coils)", ha="center", va="center"
+        )
+    else:
+        vmin2 = np.nanmin(metric2)
+        vmax2 = np.nanmax(metric2)
+
+        # filled contour levels (smooth shading)
+        levels2 = np.linspace(vmin2, vmax2, 40)
+        cf2 = ax2.contourf(
+            rg2, ng2, metric2, levels=levels2, cmap="viridis", extend="both"
+        )
+
+        # contour lines only at 0.5 steps
+        step = 0.5
+        start = np.floor(vmin2 / step) * step
+        end = np.ceil(vmax2 / step) * step
+        contour_levels = np.arange(start, end + 1e-12, step)
+
+        # fallback if arange returned empty (very small range)
+        if contour_levels.size == 0:
+            contour_levels = np.array([vmin2, vmax2])
+
+        contours2 = ax2.contour(
+            rg2,
+            ng2,
+            metric2,
+            levels=contour_levels,
+            colors="k",
+            linewidths=0.5,
+            alpha=0.7,
+        )
+        ax2.clabel(contours2, inline=True, fontsize=8, fmt="%.2f%%", colors="white")
+
+        target2 = float(ripple_b_tf_plasma_edge_max)
+
+        if target2 is not None and not np.isnan(target2):
+            if (target2 >= vmin2) and (target2 <= vmax2):
+                c_target2 = ax2.contour(
+                    rg2,
+                    ng2,
+                    metric2,
+                    levels=[target2],
+                    colors="white",
+                    linewidths=2.0,
+                    linestyles="--",
+                    zorder=20,
+                )
+            ax2.clabel(
+                c_target2,
+                inline=True,
+                fmt={target2: f"Input Max {target2:.2f}%"},
+                fontsize=8,
+                colors="white",
+            )
+        else:
+            ax2.text(
+                0.02,
+                0.98,
+                f"Target ripple {target2:.2f}% outside plot range [{vmin2:.2f},{vmax2:.2f}]",
+                transform=ax2.transAxes,
+                color="white",
+                fontsize=8,
+                va="top",
+                bbox={"facecolor": "black", "alpha": 0.6, "pad": 2},
+            )
+        # colorbar with 0.5 increments
+        # ensure contour_levels exists and is in 0.5 steps (constructed above)
+        ticks = contour_levels
+        cb2 = ax2.figure.colorbar(
+            cf2, ax=ax2, label="Plasma Outboard Toroidal Ripple", ticks=ticks
+        )
+        cb2.ax.set_yticklabels([f"{t:.2f}%" for t in ticks])
+
+        # nominal markers
+        ax2.scatter(
+            [r_nom],
+            [n_nom],
+            color="white",
+            edgecolor="black",
+            s=300,
+            linewidths=1.5,
+            marker="o",
+            zorder=10,
+            label="Design Point",
+        )
+        ax2.set_xlabel("Outboard TF leg centre [m]")
+        ax2.set_ylabel("Number of TF coils")
+        ax2.set_yticks(n_vals)
+        ax2.legend(loc="upper right")
+
+    # Improve layout
+    fig.tight_layout()
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10735,6 +11053,7 @@ def main_plot(
     fig17,
     fig18,
     fig19,
+    fig20,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10892,32 +11211,34 @@ def main_plot(
         fig11.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    axes = fig12.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    plot_plasma_outboard_toroidal_ripple_map(fig12, m_file_data, scan)
+
+    axes = fig13.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_bootstrap_comparison(fig13.add_subplot(221), m_file_data, scan)
-    plot_h_threshold_comparison(fig13.add_subplot(224), m_file_data, scan)
-    plot_density_limit_comparison(fig14.add_subplot(221), m_file_data, scan)
-    plot_confinement_time_comparison(fig14.add_subplot(224), m_file_data, scan)
-    plot_current_profiles_over_time(fig15.add_subplot(111), m_file_data, scan)
+    plot_bootstrap_comparison(fig14.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig14.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig15.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig15.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig16.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig16.add_subplot(121, aspect="equal"), fig16, m_file_data, scan
+        fig17.add_subplot(121, aspect="equal"), fig17, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig16.add_subplot(224, aspect="equal"), fig16, m_file_data, scan
+        fig17.add_subplot(224, aspect="equal"), fig17, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig17.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig18.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig17.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig17.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig18.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig18.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig18, m_file_data, scan)
+    plot_blkt_pipe_bends(fig19, m_file_data, scan)
 
     plot_main_power_flow(
-        fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
+        fig20.add_subplot(111, aspect="equal"), m_file_data, scan, fig20
     )
 
 
@@ -11229,6 +11550,7 @@ def main(args=None):
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
     page19 = plt.figure(figsize=(12, 9), dpi=80)
+    page20 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11252,6 +11574,7 @@ def main(args=None):
         page17,
         page18,
         page19,
+        page20,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11280,6 +11603,7 @@ def main(args=None):
         pdf.savefig(page17)
         pdf.savefig(page18)
         pdf.savefig(page19)
+        pdf.savefig(page20)
 
     # show fig if option used
     if args.show:
@@ -11305,6 +11629,7 @@ def main(args=None):
     plt.close(page17)
     plt.close(page18)
     plt.close(page19)
+    plt.close(page20)
 
 
 if __name__ == "__main__":
