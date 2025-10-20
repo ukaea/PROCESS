@@ -1756,7 +1756,9 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "tlife": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
+    "life_plant": InputVariable(
+        data_structure.cost_variables, float, range=(1.0, 100.0)
+    ),
     "tmain": InputVariable(data_structure.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 20.0)
