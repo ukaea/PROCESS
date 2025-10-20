@@ -10082,16 +10082,78 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
         label=r"Total",
     )
 
+    # =================================================
+
+    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalized radius
+    rho_c = np.linspace(0.0, 1.0, len(fusrat_plasma_total_profile))
+    y_total = np.asarray(fusrat_plasma_total_profile, dtype=float)
+
+    # handle degenerate case
+    if y_total.size < 2:
+        cum_trap = np.array([0.0, y_total.sum()])
+    else:
+        dx = rho_c[1] - rho_c[0]
+        # cumulative trapezoid: integral from 0 to rho[i]
+        cum_trap_mid = np.cumsum((y_total[1:] + y_total[:-1]) * 0.5 * dx)
+        cum_trap = np.concatenate(([0.0], cum_trap_mid))
+
+    # Normalize to reported total fusion rate if available, otherwise keep raw integral
+    reported_total = mfile_data.data.get("fusrat_total")
+    if reported_total is not None:
+        total_reported = float(reported_total.get_scan(scan))
+        # avoid division by zero
+        norm_factor = cum_trap[-1] if cum_trap[-1] > 0 else 1.0
+        cum_reactions = cum_trap / norm_factor * total_reported
+    else:
+        cum_reactions = cum_trap
+
+    # Plot cumulative reactions on a separate right-hand axis (offset)
+
+    axis.plot(
+        rho_c,
+        cum_reactions,
+        color="black",
+        linewidth=2,
+        label="Cumulative total reactions",
+    )
+
+    # mark the rho location where cumulative reactions reach 50% of the total
+    total_reactions = float(cum_reactions[-1]) if np.size(cum_reactions) > 0 else 0.0
+    if total_reactions > 0.0:
+        target = 0.5 * total_reactions
+        idxs = np.where(cum_reactions >= target)[0]
+        if idxs.size > 0:
+            rho50 = float(rho_c[idxs[0]])
+        else:
+            rho50 = float(rho_c[-1])
+
+        # vertical line at 50% cumulative reactions
+        axis.axvline(
+            rho50,
+            color="black",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=1,
+            label="50% total\nreactions",
+        )
+
+    # =================================================
+
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.set_ylabel("Fusion Rate [reactions/second]")
     axis.legend(
-        loc="lower left", edgecolor="black", facecolor="white", labelcolor="black"
+        loc="lower left",
+        edgecolor="black",
+        facecolor="white",
+        labelcolor="black",
+        framealpha=1.0,
+        frameon=True,
     )
     axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.minorticks_on()
-    axis.set_ylim([1e10, 1e19])
+    axis.set_ylim([1e10, 1e23])
     axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
     axis.yaxis.set_minor_locator(
         plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
