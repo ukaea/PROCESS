@@ -10782,6 +10782,178 @@ def plot_corc_cable_geometry(
     axis.legend(loc="upper right")
 
 
+def plot_fusion_rate_contours(
+    fig1,
+    fig2,
+    mfile_data: mf.MFile,
+    scan: int,
+) -> None:
+    fusrat_plasma_dt_profile = []
+    fusrat_plasma_dd_triton_profile = []
+    fusrat_plasma_dd_helion_profile = []
+    fusrat_plasma_dhe3_profile = []
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    fusrat_plasma_dt_profile = [
+        mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusrat_plasma_dd_triton_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_triton_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusrat_plasma_dd_helion_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_helion_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+    fusrat_plasma_dhe3_profile = [
+        mfile_data.data[f"fusrat_plasma_dhe3_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    dt_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dt_profile, mfile_data, scan
+    )
+
+    dd_triton_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dd_triton_profile, mfile_data, scan
+    )
+    dd_helion_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dd_helion_profile, mfile_data, scan
+    )
+    dhe3_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dhe3_profile, mfile_data, scan
+    )
+    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
+    # Plot filled contour
+
+    dt_axes = fig1.add_subplot(121, aspect="equal")
+    dd_triton_axes = fig1.add_subplot(122, aspect="equal")
+    dd_helion_axes = fig2.add_subplot(121, aspect="equal")
+    dhe3_axes = fig2.add_subplot(122, aspect="equal")
+
+    dt_upper = dt_axes.contourf(r_grid, z_grid, dt_grid, levels=50, cmap="plasma")
+    dt_lower = dt_axes.contourf(r_grid, -z_grid, dt_grid, levels=50, cmap="plasma")
+
+    dt_axes.figure.colorbar(
+        dt_upper,
+        ax=dt_axes,
+        label="Pressure [kPa]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dt_axes.set_xlabel("R [m]")
+    dt_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dt_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dt_axes.set_ylabel("Z [m]")
+    dt_axes.set_title("DT Fusion Rate Density Contours")
+
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dt_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        cs_up = dt_axes.contour(
+            r_grid, z_grid, dt_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+        cs_low = dt_axes.contour(
+            r_grid, -z_grid, dt_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dt_axes.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
+
+    # =================================================
+
+    dd_triton_upper = dd_triton_axes.contourf(
+        r_grid, z_grid, dd_triton_grid, levels=50, cmap="plasma"
+    )
+    dd_triton_lower = dd_triton_axes.contourf(
+        r_grid, -z_grid, dd_triton_grid, levels=50, cmap="plasma"
+    )
+
+    dd_triton_axes.figure.colorbar(
+        dd_triton_upper,
+        ax=dd_triton_axes,
+        label="Pressure [kPa]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dd_triton_axes.set_xlabel("R [m]")
+    dd_triton_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dd_triton_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dd_triton_axes.set_ylabel("Z [m]")
+    dd_triton_axes.set_title("DD Triton Fusion Rate Density Contours")
+
+    # ================================================
+
+    dd_helion_upper = dd_helion_axes.contourf(
+        r_grid, z_grid, dd_helion_grid, levels=50, cmap="plasma"
+    )
+    dd_helion_lower = dd_helion_axes.contourf(
+        r_grid, -z_grid, dd_helion_grid, levels=50, cmap="plasma"
+    )
+
+    dd_helion_axes.figure.colorbar(
+        dd_helion_upper,
+        ax=dd_helion_axes,
+        label="Pressure [kPa]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dd_helion_axes.set_xlabel("R [m]")
+    dd_helion_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dd_helion_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dd_helion_axes.set_ylabel("Z [m]")
+    dd_helion_axes.set_title("DD Helion Fusion Rate Density Contours")
+
+    # ================================================
+
+    dhe3_upper = dhe3_axes.contourf(r_grid, z_grid, dhe3_grid, levels=50, cmap="plasma")
+    dhe3_lower = dhe3_axes.contourf(
+        r_grid, -z_grid, dhe3_grid, levels=50, cmap="plasma"
+    )
+
+    dhe3_axes.figure.colorbar(
+        dhe3_upper,
+        ax=dhe3_axes,
+        label="Pressure [kPa]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dhe3_axes.set_xlabel("R [m]")
+    dhe3_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dhe3_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dhe3_axes.set_ylabel("Z [m]")
+    dhe3_axes.set_title("DT Fusion Rate Density Contours")
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10803,6 +10975,8 @@ def main_plot(
     fig17,
     fig18,
     fig19,
+    fig20,
+    fig21,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10987,6 +11161,8 @@ def main_plot(
     plot_main_power_flow(
         fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
     )
+
+    plot_fusion_rate_contours(fig20, fig21, m_file_data, scan)
 
 
 def main(args=None):
@@ -11297,6 +11473,8 @@ def main(args=None):
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
     page19 = plt.figure(figsize=(12, 9), dpi=80)
+    page20 = plt.figure(figsize=(12, 9), dpi=80)
+    page21 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11320,6 +11498,8 @@ def main(args=None):
         page17,
         page18,
         page19,
+        page20,
+        page21,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11348,6 +11528,8 @@ def main(args=None):
         pdf.savefig(page17)
         pdf.savefig(page18)
         pdf.savefig(page19)
+        pdf.savefig(page20)
+        pdf.savefig(page21)
 
     # show fig if option used
     if args.show:
@@ -11373,6 +11555,8 @@ def main(args=None):
     plt.close(page17)
     plt.close(page18)
     plt.close(page19)
+    plt.close(page20)
+    plt.close(page21)
 
 
 if __name__ == "__main__":
