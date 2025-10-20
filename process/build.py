@@ -14,6 +14,7 @@ from process.data_structure import (
     numerics,
     pfcoil_variables,
     physics_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
@@ -1517,7 +1518,15 @@ class Build:
         return divht
 
     def plasma_outboard_edge_toroidal_ripple(
-        self, ripple_b_tf_plasma_edge_max: float, r_tf_outboard_mid: float
+        self,
+        ripple_b_tf_plasma_edge_max: float,
+        r_tf_outboard_mid: float,
+        n_tf_coils: int,
+        rmajor: float,
+        rminor: float,
+        r_tf_wp_inboard_inner,
+        r_tf_wp_inboard_centre: float,
+        r_tf_wp_inboard_outer: float,
     ) -> float:
         """
         TF ripple calculation
@@ -1546,12 +1555,9 @@ class Build:
         Activated when i_tf_shape == 2 (picture frame)
 
         """
-        n = float(tfcoil_variables.n_tf_coils)
         if tfcoil_variables.i_tf_sup == 1:
             # Minimal inboard WP radius [m]
-            r_wp_min = (
-                build_variables.r_tf_inboard_in + tfcoil_variables.dr_tf_nose_case
-            )
+            r_wp_min = r_tf_wp_inboard_inner
 
             # Rectangular WP
             if tfcoil_variables.i_tf_wp_geom == 0:
@@ -1559,23 +1565,23 @@ class Build:
 
             # Double rectangle WP
             elif tfcoil_variables.i_tf_wp_geom == 1:
-                r_wp_max = r_wp_min + 0.5e0 * tfcoil_variables.dr_tf_wp_with_insulation
+                r_wp_max = r_tf_wp_inboard_centre
 
             # Trapezoidal WP
             elif tfcoil_variables.i_tf_wp_geom == 2:
-                r_wp_max = r_wp_min + tfcoil_variables.dr_tf_wp_with_insulation
+                r_wp_max = r_tf_wp_inboard_outer
 
             # Calculated maximum toroidal WP toroidal thickness [m]
             if tfcoil_variables.tfc_sidewall_is_fraction:
                 t_wp_max = 2.0e0 * (
                     (r_wp_max - tfcoil_variables.casths_fraction * r_wp_min)
-                    * np.tan(np.pi / n)
+                    * np.tan(np.pi / n_tf_coils)
                     - tfcoil_variables.dx_tf_wp_insulation
                     - tfcoil_variables.dx_tf_wp_insertion_gap
                 )
             else:
                 t_wp_max = 2.0e0 * (
-                    r_wp_max * np.tan(np.pi / n)
+                    r_wp_max * np.tan(np.pi / n_tf_coils)
                     - tfcoil_variables.dx_tf_side_case_min
                     - tfcoil_variables.dx_tf_wp_insulation
                     - tfcoil_variables.dx_tf_wp_insertion_gap
@@ -1591,23 +1597,20 @@ class Build:
             )
 
             # Calculated maximum toroidal WP toroidal thickness [m]
-            t_wp_max = 2.0e0 * r_wp_max * np.tan(np.pi / n)
+            t_wp_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
         flag = 0
         if tfcoil_variables.i_tf_shape == 2:
             # Ken McClements ST picture frame coil analytical ripple calc
             # Calculated ripple for coil at r_tf_outboard_mid (%)
-            ripple = 100.0e0 * (
-                (physics_variables.rmajor + physics_variables.rminor)
-                / r_tf_outboard_mid
-            ) ** (n)
+            ripple = 100.0e0 * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils)
             #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
-            r_tf_outboard_midmin = (
-                physics_variables.rmajor + physics_variables.rminor
-            ) / ((0.01e0 * ripple_b_tf_plasma_edge_max) ** (1.0e0 / n))
+            r_tf_outboard_midmin = (rmajor + rminor) / (
+                (0.01e0 * ripple_b_tf_plasma_edge_max) ** (1.0e0 / n_tf_coils)
+            )
         else:
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
-            x = t_wp_max * n / physics_variables.rmajor
+            x = t_wp_max * n_tf_coils / physics_variables.rmajor
 
             # Fitting parameters
             c1 = 0.875e0 - 0.0557e0 * x
@@ -1617,11 +1620,7 @@ class Build:
             ripple = (
                 100.0e0
                 * c1
-                * (
-                    (physics_variables.rmajor + physics_variables.rminor)
-                    / r_tf_outboard_mid
-                )
-                ** (n - c2)
+                * ((rmajor + rminor) / r_tf_outboard_mid) ** (n_tf_coils - c2)
             )
 
             #  Calculated r_tf_outboard_mid to produce a ripple of amplitude ripple_b_tf_plasma_edge_max
@@ -1636,7 +1635,7 @@ class Build:
 
             r_tf_outboard_midmin = (
                 physics_variables.rmajor + physics_variables.rminor
-            ) / (base ** (1.0 / (n - c2)))
+            ) / (base ** (1.0 / (n_tf_coils - c2)))
 
             try:
                 assert r_tf_outboard_midmin < np.inf
@@ -1644,24 +1643,16 @@ class Build:
                 logger.exception(
                     "r_tf_outboard_midmin is inf. Kludging to a large value instead."
                 )
-                r_tf_outboard_midmin = (
-                    physics_variables.rmajor + physics_variables.rminor
-                ) * 3
+                r_tf_outboard_midmin = (rmajor + rminor) * 3
 
             #  Notify via flag if a range of applicability is violated
             flag = 0
             if (x < 0.737e0) or (x > 2.95e0):
                 flag = 1
-            if (tfcoil_variables.n_tf_coils < 16) or (tfcoil_variables.n_tf_coils > 20):
+            if (n_tf_coils < 16) or (n_tf_coils > 20):
                 flag = 2
-            if (
-                (physics_variables.rmajor + physics_variables.rminor)
-                / r_tf_outboard_mid
-                < 0.7e0
-            ) or (
-                (physics_variables.rmajor + physics_variables.rminor)
-                / r_tf_outboard_mid
-                > 0.8e0
+            if ((rmajor + rminor) / r_tf_outboard_mid < 0.7e0) or (
+                (rmajor + rminor) / r_tf_outboard_mid > 0.8e0
             ):
                 flag = 3
 
@@ -1951,8 +1942,14 @@ class Build:
             r_tf_outboard_midl,
             build_variables.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
-            tfcoil_variables.ripple_b_tf_plasma_edge_max,
-            build_variables.r_tf_outboard_mid,
+            ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+            r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
         )
 
         #  If the tfcoil_variables.ripple is too large then move the outboard TF coil leg
@@ -1981,8 +1978,14 @@ class Build:
             r_tf_outboard_midl,
             build_variables.ripflag,
         ) = self.plasma_outboard_edge_toroidal_ripple(
-            tfcoil_variables.ripple_b_tf_plasma_edge_max,
-            build_variables.r_tf_outboard_mid,
+            ripple_b_tf_plasma_edge_max=tfcoil_variables.ripple_b_tf_plasma_edge_max,
+            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+            n_tf_coils=tfcoil_variables.n_tf_coils,
+            rmajor=physics_variables.rmajor,
+            rminor=physics_variables.rminor,
+            r_tf_wp_inboard_inner=superconducting_tf_coil_variables.r_tf_wp_inboard_inner,
+            r_tf_wp_inboard_centre=superconducting_tf_coil_variables.r_tf_wp_inboard_centre,
+            r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
         )
 
         #  Half-height of first wall (internal surface)
