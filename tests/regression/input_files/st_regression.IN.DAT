@@ -3287,7 +3287,7 @@ i_plant_availability = 0
 * DESCRIPTION: Vacuum system pump redundancy level (%)
 * JUSTIFICATION: testing
 
-*tbktrepl = 
+*t_blkt_replace_yrs = 
 * DESCRIPTION: Time needed to replace blanket (yr)
 * JUSTIFICATION: testing
 

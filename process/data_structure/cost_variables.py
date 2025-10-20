@@ -532,7 +532,7 @@ t_operation: float = None
 """Operational time (yrs)"""
 
 
-tbktrepl: float = None
+t_blkt_replace_yrs: float = None
 """time taken to replace blanket (y) (`i_plant_availability=1`)"""
 
 
@@ -1354,7 +1354,7 @@ def init_cost_variables():
     global redun_vacp
     global redun_vac
     global t_operation
-    global tbktrepl
+    global t_blkt_replace_yrs
     global tcomrepl
     global tdivrepl
     global uubop
@@ -1509,7 +1509,7 @@ def init_cost_variables():
     redun_vacp = 25.0
     redun_vac = 0
     t_operation = 0.0
-    tbktrepl = 0.5
+    t_blkt_replace_yrs = 0.5
     tcomrepl = 0.5
     tdivrepl = 0.25
     uubop = 0.02
