@@ -63,7 +63,7 @@ SCAN_VARIABLES = {
     18: ScanVariable("eta_cd_norm_hcd_primary_max", "Maximum_CD_gamma"),
     19: ScanVariable("boundl(16)", "CS_thickness_lower_bound"),
     20: ScanVariable("t_burn_min", "Minimum_burn_time_(s)"),
-    22: ScanVariable("cfactr", "Plant_availability_factor"),
+    22: ScanVariable("f_t_plant_available", "Plant_availability_factor"),
     23: ScanVariable("boundu(72)", "Ip/Irod_upper_bound"),
     24: ScanVariable("p_fusion_total_max_mw", "Fusion_power_limit_(MW)"),
     25: ScanVariable("kappa", "Plasma_elongation"),
@@ -976,9 +976,9 @@ class Scan:
             case 22:
                 if cost_variables.i_plant_availability == 1:
                     raise ProcessValueError(
-                        "Do not scan cfactr if i_plant_availability=1"
+                        "Do not scan f_t_plant_available if i_plant_availability=1"
                     )
-                cost_variables.cfactr = swp[iscn - 1]
+                cost_variables.f_t_plant_available = swp[iscn - 1]
             case 23:
                 numerics.boundu[71] = swp[iscn - 1]
             case 24:

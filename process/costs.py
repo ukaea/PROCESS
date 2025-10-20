@@ -2859,14 +2859,14 @@ class Costs:
                 1.0e3
                 * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
-                * cost_variables.cfactr
+                * cost_variables.f_t_plant_available
             )
         else:
             kwhpy = (
                 1.0e3
                 * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
-                * cost_variables.cfactr
+                * cost_variables.f_t_plant_available
                 * times_variables.t_plant_pulse_burn
                 / times_variables.t_plant_pulse_total
             )
@@ -3078,7 +3078,7 @@ class Costs:
                 * 1.0e-3
                 * cost_variables.uche3
                 * constants.N_DAY_YEAR
-                * cost_variables.cfactr
+                * cost_variables.f_t_plant_available
             )
         else:
             annfuel = (
@@ -3086,7 +3086,7 @@ class Costs:
                 * ife_variables.uctarg
                 * ife_variables.reprat
                 * 3.1536e7
-                * cost_variables.cfactr
+                * cost_variables.f_t_plant_available
             )
 
         #  Cost of electricity due to reactor fuel
@@ -3164,7 +3164,7 @@ class Costs:
         # FW/Blanket and HCD
         if fwbs_variables.life_blkt_fpy < cost_variables.tlife:
             fwbs_variables.life_blkt = (
-                fwbs_variables.life_blkt_fpy * cost_variables.cfactr
+                fwbs_variables.life_blkt_fpy * cost_variables.f_t_plant_available
             )
             # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
             cost_variables.cdrlife_cal = fwbs_variables.life_blkt
@@ -3173,7 +3173,9 @@ class Costs:
 
         # Divertor
         if cost_variables.divlife < cost_variables.tlife:
-            cost_variables.divlife_cal = cost_variables.divlife * cost_variables.cfactr
+            cost_variables.divlife_cal = (
+                cost_variables.divlife * cost_variables.f_t_plant_available
+            )
         else:
             cost_variables.divlife_cal = cost_variables.divlife
 
@@ -3181,7 +3183,7 @@ class Costs:
         if physics_variables.itart == 1:
             if cost_variables.cplife < cost_variables.tlife:
                 cost_variables.cplife_cal = (
-                    cost_variables.cplife * cost_variables.cfactr
+                    cost_variables.cplife * cost_variables.f_t_plant_available
                 )
             else:
                 cost_variables.cplife_cal = cost_variables.cplife

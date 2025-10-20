@@ -29,7 +29,7 @@ YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
 # Number of seconds in a year [s]
 
 AVAILABILITY_MODELS = {
-    0: "Input value for cfactr",
+    0: "Input value for f_t_plant_available",
     1: "Ward and Taylor model (1999)",
     2: "Morris model (2015)",
     3: "ST model (2023)",
@@ -53,7 +53,7 @@ class Availability:
         Availability switch values
         No.  |  model
         ---- | ------
-        0    |  Input value for cfactr
+        0    |  Input value for f_t_plant_available
         1    |  Ward and Taylor model (1999)
         2    |  Morris model (2015)
         3    |  ST model (2023)
@@ -146,7 +146,7 @@ class Availability:
         pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
         cv.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
 
-        # if i_plant_availability = 0 use input value for cfactr
+        # if i_plant_availability = 0 use input value for f_t_plant_available
 
         # Taylor and Ward 1999 model (i_plant_availability=1)
         if cv.i_plant_availability == 1:
@@ -179,25 +179,27 @@ class Availability:
             uutot = uutot + (1.0e0 - uutot) * cv.uuves  # vacuum vessel
 
             # Total availability
-            cv.cfactr = 1.0e0 - (uplanned + uutot - (uplanned * uutot))
+            cv.f_t_plant_available = 1.0e0 - (uplanned + uutot - (uplanned * uutot))
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
+        cv.cpfact = cv.f_t_plant_available * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
             # First wall / blanket
             if fwbsv.life_blkt_fpy < cv.tlife:
-                fwbsv.life_blkt_fpy = min(fwbsv.life_blkt_fpy / cv.cfactr, cv.tlife)
+                fwbsv.life_blkt_fpy = min(
+                    fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.tlife
+                )
 
             # Divertor
             if cv.divlife < cv.tlife:
-                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+                cv.divlife = min(cv.divlife / cv.f_t_plant_available, cv.tlife)
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.tlife:
-                cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
+                cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.tlife)
 
         # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
         cv.cdrlife = fwbsv.life_blkt_fpy
@@ -293,8 +295,8 @@ class Availability:
                 po.ovarre(
                     self.outfile,
                     "Total plant availability fraction",
-                    "(cfactr)",
-                    cv.cfactr,
+                    "(f_t_plant_available)",
+                    cv.f_t_plant_available,
                 )
                 po.ovarre(
                     self.outfile,
@@ -306,8 +308,8 @@ class Availability:
                 po.ovarre(
                     self.outfile,
                     "Total plant availability fraction",
-                    "(cfactr)",
-                    cv.cfactr,
+                    "(f_t_plant_available)",
+                    cv.f_t_plant_available,
                     "OP ",
                 )
 
@@ -369,7 +371,7 @@ class Availability:
         )
 
         # Total availability
-        cv.cfactr = max(
+        cv.f_t_plant_available = max(
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
@@ -377,20 +379,22 @@ class Availability:
         if ifev.ife != 1:
             # First wall / blanket
             if fwbsv.life_blkt_fpy < cv.tlife:
-                fwbsv.life_blkt_fpy = min(fwbsv.life_blkt_fpy / cv.cfactr, cv.tlife)
+                fwbsv.life_blkt_fpy = min(
+                    fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.tlife
+                )
                 # Current drive system lifetime (assumed equal to first wall and blanket lifetime)
                 cv.cdrlife = fwbsv.life_blkt_fpy
 
             # Divertor
             if cv.divlife < cv.tlife:
-                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+                cv.divlife = min(cv.divlife / cv.f_t_plant_available, cv.tlife)
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.tlife:
-                cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
+                cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
+        cv.cpfact = cv.f_t_plant_available * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         # Output
         if output:
@@ -433,8 +437,8 @@ class Availability:
             po.ovarre(
                 self.outfile,
                 "Total plant availability fraction",
-                "(cfactr)",
-                cv.cfactr,
+                "(f_t_plant_available)",
+                cv.f_t_plant_available,
                 "OP ",
             )
             po.ovarre(
@@ -615,7 +619,9 @@ class Availability:
         mag_main_time = 0.5e0
 
         # Minimum unplanned unavailability
-        mag_min_u_unplanned = mag_main_time / (cv.t_plant_operational_total_yrs + mag_main_time)
+        mag_min_u_unplanned = mag_main_time / (
+            cv.t_plant_operational_total_yrs + mag_main_time
+        )
 
         # Point at which risk of unplanned unavailability increases
         # conf_mag is the c factor, which determines the temperature margin at which
@@ -880,7 +886,9 @@ class Availability:
         bop_mttr = 96.0e0 / (24.0e0 * DAYS_IN_YEAR)
 
         # Unplanned downtime balance of plant
-        u_unplanned_bop = (bop_mttr * bop_num_failures) / (cv.t_plant_operational_total_yrs)
+        u_unplanned_bop = (bop_mttr * bop_num_failures) / (
+            cv.t_plant_operational_total_yrs
+        )
 
         # Output
         if output:
@@ -982,7 +990,9 @@ class Availability:
         t_down = (n_shutdown + 1.0e0) * cryo_main_time * sum_prob
 
         # Total vacuum unplanned unavailability
-        u_unplanned_vacuum = max(0.005, t_down / (cv.t_plant_operational_total_yrs + t_down))
+        u_unplanned_vacuum = max(
+            0.005, t_down / (cv.t_plant_operational_total_yrs + t_down)
+        )
 
         # Output
         if output:
@@ -1133,7 +1143,7 @@ class Availability:
         )
 
         # Total availability
-        cv.cfactr = max(
+        cv.f_t_plant_available = max(
             1.0e0 - (u_planned + u_unplanned + u_planned * u_unplanned), 0.0e0
         )
 
@@ -1141,19 +1151,21 @@ class Availability:
         if ifev.ife != 1:
             # First wall / blanket
             if fwbsv.life_blkt_fpy < cv.tlife:
-                fwbsv.life_blkt_fpy = min(fwbsv.life_blkt_fpy / cv.cfactr, cv.tlife)
+                fwbsv.life_blkt_fpy = min(
+                    fwbsv.life_blkt_fpy / cv.f_t_plant_available, cv.tlife
+                )
                 cv.cdrlife = fwbsv.life_blkt_fpy
 
             # Divertor
             if cv.divlife < cv.tlife:
-                cv.divlife = min(cv.divlife / cv.cfactr, cv.tlife)
+                cv.divlife = min(cv.divlife / cv.f_t_plant_available, cv.tlife)
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.tlife:
-                cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
+                cv.cplife = min(cv.cplife / cv.f_t_plant_available, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
+        cv.cpfact = cv.f_t_plant_available * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         if output:
             po.ocmmnt(self.outfile, "Plant Availability")
@@ -1264,8 +1276,8 @@ class Availability:
             po.ovarre(
                 self.outfile,
                 "Total plant availability fraction",
-                "(cfactr)",
-                cv.cfactr,
+                "(f_t_plant_available)",
+                cv.f_t_plant_available,
                 "OP ",
             )
             po.ovarre(
