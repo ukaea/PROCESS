@@ -528,7 +528,7 @@ redun_vac: int = None
 """Number of redundant vacuum pumps"""
 
 
-t_operation: float = None
+t_plant_operational_total_yrs: float = None
 """Operational time (yrs)"""
 
 
@@ -1353,7 +1353,7 @@ def init_cost_variables():
     global fwbs_umain_time
     global redun_vacp
     global redun_vac
-    global t_operation
+    global t_plant_operational_total_yrs
     global t_blkt_replace_yrs
     global tcomrepl
     global t_div_replace_yrs
@@ -1508,7 +1508,7 @@ def init_cost_variables():
     fwbs_umain_time = 0.25
     redun_vacp = 25.0
     redun_vac = 0
-    t_operation = 0.0
+    t_plant_operational_total_yrs = 0.0
     t_blkt_replace_yrs = 0.5
     tcomrepl = 0.5
     t_div_replace_yrs = 0.25
