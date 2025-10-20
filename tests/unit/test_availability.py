@@ -217,7 +217,7 @@ def calc_u_planned_fix(request, monkeypatch):
     monkeypatch.setattr(cv, "divlife", 0.0)
     monkeypatch.setattr(cv, "adivflnc", param["adivflnc"])
     monkeypatch.setattr(cv, "abktflnc", param["abktflnc"])
-    monkeypatch.setattr(cv, "cdrlife", 0.0)
+    monkeypatch.setattr(cv, "life_hcd_fpy", 0.0)
     monkeypatch.setattr(cv, "cplife", 0.0)
     monkeypatch.setattr(cv, "cpstflnc", param["cpstflnc"])
     monkeypatch.setattr(cv, "num_rh_systems", param["num_rh_systems"])
@@ -597,7 +597,7 @@ def test_avail_st(monkeypatch, availability):
     monkeypatch.setattr(cv, "abktflnc", 10.0)
     monkeypatch.setattr(pv, "pflux_fw_neutron_mw", 10.0)
     monkeypatch.setattr(cv, "cplife", 5.0)
-    monkeypatch.setattr(cv, "cdrlife", 15.0)
+    monkeypatch.setattr(cv, "life_hcd_fpy", 15.0)
 
     availability.avail_st(output=False)
 
