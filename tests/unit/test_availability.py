@@ -130,8 +130,8 @@ def test_calc_u_unplanned_bop(monkeypatch, availability):
     :type availability: tests.unit.test_availability.availability (functional fixture)
     """
 
-    # Mock module variable t_operation
-    monkeypatch.setattr(cv, "t_operation", 25.0)
+    # Mock module variable t_plant_operational_total_yrs
+    monkeypatch.setattr(cv, "t_plant_operational_total_yrs", 25.0)
 
     # Call subroutine and check result is within an absolute tolerance
     result = availability.calc_u_unplanned_bop(output=False)
@@ -253,7 +253,7 @@ def calc_u_unplanned_magnets_param(**kwargs):
         "temp_margin": 1.5,
         "temp_tf_superconductor_margin_min": 1.5,
         "temp_cs_superconductor_margin_min": 1.5,
-        "t_operation": 30,
+        "t_plant_operational_total_yrs": 30,
         "conf_mag": 1.0,
         "expected": approx(0.02, abs=0.005),
     }
@@ -310,7 +310,7 @@ def calc_u_unplanned_magnets_fix(request, monkeypatch):
     param = request.param
 
     # Mock module variables
-    monkeypatch.setattr(cv, "t_operation", param["t_operation"])
+    monkeypatch.setattr(cv, "t_plant_operational_total_yrs", param["t_plant_operational_total_yrs"])
     monkeypatch.setattr(cv, "conf_mag", param["conf_mag"])
     monkeypatch.setattr(
         tfv,
@@ -599,7 +599,7 @@ def test_avail_st(monkeypatch, availability):
 
     availability.avail_st(output=False)
 
-    assert pytest.approx(cv.t_operation) == 15.0
+    assert pytest.approx(cv.t_plant_operational_total_yrs) == 15.0
     assert pytest.approx(cv.cfactr) == 0.27008858
     assert pytest.approx(cv.cpfact, abs=1.0e-8) == 0.00015005
 
