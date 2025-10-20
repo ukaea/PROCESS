@@ -197,7 +197,9 @@ class Availability:
 
             # Divertor
             if cv.life_div_fpy < cv.life_plant:
-                cv.life_div_fpy = min(cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant)
+                cv.life_div_fpy = min(
+                    cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant
+                )
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.life_plant:
@@ -394,7 +396,9 @@ class Availability:
 
             # Divertor
             if cv.life_div_fpy < cv.life_plant:
-                cv.life_div_fpy = min(cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant)
+                cv.life_div_fpy = min(
+                    cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant
+                )
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.life_plant:
@@ -413,7 +417,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(life_div_fpy)", cv.life_div_fpy, "OP "
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(life_div_fpy)",
+                cv.life_div_fpy,
+                "OP ",
             )
             if pv.itart == 1:
                 po.ovarre(
@@ -1103,7 +1111,11 @@ class Availability:
         # Time for a maintenance cycle (years)
         # Shortest component lifetime + time to replace
         shortest_lifetime = min(
-            fwbsv.life_blkt_fpy, cv.life_div_fpy, cv.cplife, cv.life_hcd_fpy, cv.life_plant
+            fwbsv.life_blkt_fpy,
+            cv.life_div_fpy,
+            cv.cplife,
+            cv.life_hcd_fpy,
+            cv.life_plant,
         )
         maint_cycle = shortest_lifetime + cv.tmain
 
@@ -1174,7 +1186,9 @@ class Availability:
 
             # Divertor
             if cv.life_div_fpy < cv.life_plant:
-                cv.life_div_fpy = min(cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant)
+                cv.life_div_fpy = min(
+                    cv.life_div_fpy / cv.f_t_plant_available, cv.life_plant
+                )
 
             # Centrepost
             if pv.itart == 1 and cv.cplife < cv.life_plant:
@@ -1206,7 +1220,11 @@ class Availability:
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "Divertor lifetime (FPY)", "(life_div_fpy)", cv.life_div_fpy, "OP "
+                self.outfile,
+                "Divertor lifetime (FPY)",
+                "(life_div_fpy)",
+                cv.life_div_fpy,
+                "OP ",
             )
             if tfv.i_tf_sup == 1:
                 po.ovarre(

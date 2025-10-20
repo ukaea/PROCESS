@@ -106,8 +106,8 @@ class Costs:
             po.ovarrf(
                 self.outfile,
                 "Divertor life (years)",
-                "(divlife_cal)",
-                cost_variables.divlife_cal,
+                "(life_div)",
+                cost_variables.life_div,
             )
             if physics_variables.itart == 1:
                 po.ovarrf(
@@ -2936,9 +2936,7 @@ class Costs:
         else:
             #  Compound interest factor
 
-            fefdiv = (
-                1.0e0 + cost_variables.discount_rate
-            ) ** cost_variables.divlife_cal
+            fefdiv = (1.0e0 + cost_variables.discount_rate) ** cost_variables.life_div
 
             #  Capital recovery factor
 
@@ -3175,11 +3173,11 @@ class Costs:
 
         # Divertor
         if cost_variables.life_div_fpy < cost_variables.life_plant:
-            cost_variables.divlife_cal = (
+            cost_variables.life_div = (
                 cost_variables.life_div_fpy * cost_variables.f_t_plant_available
             )
         else:
-            cost_variables.divlife_cal = cost_variables.life_div_fpy
+            cost_variables.life_div = cost_variables.life_div_fpy
 
         # Centrepost
         if physics_variables.itart == 1:
