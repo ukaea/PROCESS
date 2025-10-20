@@ -9561,7 +9561,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     axis.text(
         (r_tf_outboard_in + 2 * dr_tf_outboard),
         -2.0,
-        f"$\\Delta Z$ coil centre to plasma centre = {mfile_data.data['dz_tf_plasma_offset'].get_scan(scan):.3f} m",
+        f"$\\Delta Z$ coil centre to plasma centre = {mfile_data.data['dz_tf_plasma_centre_offset'].get_scan(scan):.3f} m",
         fontsize=7,
         color="black",
         verticalalignment="center",
