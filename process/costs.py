@@ -2920,7 +2920,7 @@ class Costs:
 
         if cost_variables.ifueltyp == 2:
             annfwbl = annfwbl * (
-                1.0e0 - fwbs_variables.life_blkt_fpy / cost_variables.tlife
+                1.0e0 - fwbs_variables.life_blkt_fpy / cost_variables.life_plant
             )
 
         #  Cost of electricity due to first wall/blanket replacements
@@ -2957,7 +2957,7 @@ class Costs:
 
             if cost_variables.ifueltyp == 2:
                 anndiv = anndiv * (
-                    1.0e0 - cost_variables.divlife / cost_variables.tlife
+                    1.0e0 - cost_variables.divlife / cost_variables.life_plant
                 )
 
             coediv = 1.0e9 * anndiv / kwhpy
@@ -2985,7 +2985,9 @@ class Costs:
 
             #  Cost of electricity due to centrepost replacements
             if cost_variables.ifueltyp == 2:
-                anncp = anncp * (1.0e0 - cost_variables.cplife / cost_variables.tlife)
+                anncp = anncp * (
+                    1.0e0 - cost_variables.cplife / cost_variables.life_plant
+                )
 
             coecp = 1.0e9 * anncp / kwhpy
 
@@ -3123,7 +3125,7 @@ class Costs:
             * cost_variables.concost
             * cost_variables.fcr0
             / (1.0e0 + cost_variables.discount_rate - cost_variables.dintrt)
-            ** (cost_variables.tlife - cost_variables.dtlife)
+            ** (cost_variables.life_plant - cost_variables.dtlife)
         )
 
         #  Cost of electricity due to decommissioning fund
@@ -3162,7 +3164,7 @@ class Costs:
         Author: J Foster, CCFE, Culham Campus
         """
         # FW/Blanket and HCD
-        if fwbs_variables.life_blkt_fpy < cost_variables.tlife:
+        if fwbs_variables.life_blkt_fpy < cost_variables.life_plant:
             fwbs_variables.life_blkt = (
                 fwbs_variables.life_blkt_fpy * cost_variables.f_t_plant_available
             )
@@ -3172,7 +3174,7 @@ class Costs:
             fwbs_variables.life_blkt = fwbs_variables.life_blkt_fpy
 
         # Divertor
-        if cost_variables.divlife < cost_variables.tlife:
+        if cost_variables.divlife < cost_variables.life_plant:
             cost_variables.divlife_cal = (
                 cost_variables.divlife * cost_variables.f_t_plant_available
             )
@@ -3181,7 +3183,7 @@ class Costs:
 
         # Centrepost
         if physics_variables.itart == 1:
-            if cost_variables.cplife < cost_variables.tlife:
+            if cost_variables.cplife < cost_variables.life_plant:
                 cost_variables.cplife_cal = (
                     cost_variables.cplife * cost_variables.f_t_plant_available
                 )

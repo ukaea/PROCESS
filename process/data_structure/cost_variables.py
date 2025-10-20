@@ -634,7 +634,7 @@ supercond_cost_model: int = None
 - =1 use $/kAm"""
 
 
-tlife: float = None
+life_plant: float = None
 """Full power year plant lifetime (years)"""
 
 
@@ -1374,7 +1374,7 @@ def init_cost_variables():
     global startupratio
     global startuppwr
     global supercond_cost_model
-    global tlife
+    global life_plant
     global tmain
     global u_unplanned_cp
     global ucblbe
@@ -1528,7 +1528,7 @@ def init_cost_variables():
     discount_rate = 0.0435
     startupratio = 1.0
     startuppwr = 0.0
-    tlife = 30.0
+    life_plant = 30.0
     ucblbe = 260.0
     ucblbreed = 875.0
     ucblli = 875.0

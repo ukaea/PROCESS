@@ -134,7 +134,7 @@ class BldgsSizesParam(NamedTuple):
     n_tf_coils: Any
     i_tf_sup: Any
     r_pf_coil_outer_max: Any
-    tlife: Any
+    life_plant: Any
     cplife: Any
     divlife: Any
     r_cryostat_inboard: Any
@@ -277,7 +277,7 @@ class BldgsSizesParam(NamedTuple):
             n_tf_coils=16,
             i_tf_sup=1,
             r_pf_coil_outer_max=18.98258241468535,
-            tlife=40,
+            life_plant=40,
             cplife=0,
             divlife=0,
             r_cryostat_inboard=19.48258241468535,
@@ -416,7 +416,7 @@ class BldgsSizesParam(NamedTuple):
             n_tf_coils=16,
             i_tf_sup=1,
             r_pf_coil_outer_max=18.982980877139834,
-            tlife=40,
+            life_plant=40,
             cplife=0,
             divlife=6.1337250397740126,
             r_cryostat_inboard=19.482980877139834,
@@ -683,7 +683,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_outer_max", bldgssizesparam.r_pf_coil_outer_max
     )
-    monkeypatch.setattr(cost_variables, "tlife", bldgssizesparam.tlife)
+    monkeypatch.setattr(cost_variables, "life_plant", bldgssizesparam.life_plant)
     monkeypatch.setattr(cost_variables, "cplife", bldgssizesparam.cplife)
     monkeypatch.setattr(cost_variables, "divlife", bldgssizesparam.divlife)
     monkeypatch.setattr(

@@ -316,7 +316,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.2378E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9781E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.2378E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.6003E+04    
  # Plasma #
@@ -1479,7 +1479,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1809E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9607E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1809E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5395E+04    
  # Plasma #
@@ -2642,7 +2642,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1514E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.1198E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1514E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5046E+04    
  # Plasma #
@@ -3805,7 +3805,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1409E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      4.0530E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1409E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4929E+04    
  # Plasma #
@@ -4968,7 +4968,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1311E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9130E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1311E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5117E+04    
  # Plasma #
@@ -6131,7 +6131,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1505E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7932E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1505E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5342E+04    
  # Plasma #
@@ -7294,7 +7294,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1381E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7356E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1381E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5226E+04    
  # Plasma #
@@ -8457,7 +8457,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1295E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8406E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1295E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5037E+04    
  # Plasma #
@@ -9620,7 +9620,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1526E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9127E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1526E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4939E+04    
  # Plasma #
@@ -10783,7 +10783,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.1129E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8644E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.1129E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4788E+04    
  # Plasma #
@@ -11946,7 +11946,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0770E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8640E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0770E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4875E+04    
  # Plasma #
@@ -13109,7 +13109,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0793E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7702E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0793E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.5063E+04    
  # Plasma #
@@ -14272,7 +14272,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0468E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.7245E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0468E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4921E+04    
  # Plasma #
@@ -15435,7 +15435,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      6.0152E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.8183E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      6.0152E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4739E+04    
  # Plasma #
@@ -16598,7 +16598,7 @@
  First_wall_/_blanket_lifetime_(years)___________________________________ (life_blkt_fpy)_____________________      5.9822E+00 OP 
  Divertor_lifetime_(years)_______________________________________________ (divlife)_____________________      3.9249E+00 OP 
  Heating/CD_system_lifetime_(years)______________________________________ (life_hcd_fpy)_____________________      5.9822E+00 OP 
- Total_plant_lifetime_(years)____________________________________________ (tlife)_______________________      3.0000E+01    
+ Total_plant_lifetime_(years)____________________________________________ (life_plant)_______________________      3.0000E+01    
  Total_plant_availability_fraction_______________________________________ (f_t_plant_available)______________________      8.0000E-01    
  Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA_______________ (bktcycles)___________________      1.4560E+04    
  # Plasma #
