@@ -2179,7 +2179,7 @@ def constraint_equation_85():
 
     cplife: calculated CP full power year lifetime (years)
     life_blkt_fpy: calculated first wall/blanket power year lifetime (years)
-    divlife: calculated divertor  power year lifetime (years)
+    life_div_fpy: calculated divertor  power year lifetime (years)
     i_cp_lifetime: switch chosing which plant element the CP
         the CP lifetime must equate
     """
@@ -2195,7 +2195,7 @@ def constraint_equation_85():
         cc = (
             1.0
             - data_structure.cost_variables.cplife
-            / data_structure.cost_variables.divlife
+            / data_structure.cost_variables.life_div_fpy
         )
 
     # The CP lifetime is equal to the tritium breeding blankets / FW one
@@ -2215,8 +2215,8 @@ def constraint_equation_85():
 
     return ConstraintResult(
         cc,
-        data_structure.cost_variables.divlife * (1.0 - cc),
-        data_structure.cost_variables.divlife * cc,
+        data_structure.cost_variables.life_div_fpy * (1.0 - cc),
+        data_structure.cost_variables.life_div_fpy * cc,
     )
 
 
