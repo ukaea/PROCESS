@@ -96,8 +96,8 @@ def objective_function(minmax: int) -> float:
         case 14:
             objective_metric = times_variables.t_plant_pulse_burn / 2.0e4
         case 15:
-            if cost_variables.iavail != 1:
-                raise ProcessValueError("minmax=15 requires iavail=1")
+            if cost_variables.i_plant_availability != 1:
+                raise ProcessValueError("minmax=15 requires i_plant_availability=1")
             objective_metric = cost_variables.cfactr
         case 16:
             objective_metric = 0.95 * (physics_variables.rmajor / 9.0) - 0.05 * (

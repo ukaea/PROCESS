@@ -31,7 +31,7 @@ def availability():
     ((0.0000001, 0, 0.5), (0.0000001, 1, 2.5), (1.0, 0, 0.5), (1.0, 1, 1.25)),
 )
 def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_param):
-    """Test avail for iavail = 0
+    """Test avail for i_plant_availability = 0
 
     :param monkeypatch: mocking fixture
     :type monkeypatch: MonkeyPatch
@@ -51,7 +51,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
     monkeypatch.setattr(cv, "adivflnc", 8.0)
     monkeypatch.setattr(dv, "pflux_div_heat_load_mw", 10.0)
     monkeypatch.setattr(tv, "t_plant_pulse_total", 5.0)
-    monkeypatch.setattr(cv, "iavail", 0)
+    monkeypatch.setattr(cv, "i_plant_availability", 0)
     monkeypatch.setattr(cv, "cfactr", 0.8)
     monkeypatch.setattr(tv, "t_plant_pulse_burn", 500.0)
     monkeypatch.setattr(pv, "itart", 1)
@@ -75,7 +75,7 @@ def test_avail_0(monkeypatch, availability, life_fw_fpy, ibkt_life, bktlife_exp_
 
 
 def test_avail_1(monkeypatch, availability):
-    """Test avail for iavail = 1
+    """Test avail for i_plant_availability = 1
 
     :param monkeypatch: mocking fixture
     :type monkeypatch: MonkeyPatch
@@ -86,7 +86,7 @@ def test_avail_1(monkeypatch, availability):
     init_all_module_vars()
 
     # Mock module vars
-    monkeypatch.setattr(cv, "iavail", 1)
+    monkeypatch.setattr(cv, "i_plant_availability", 1)
     monkeypatch.setattr(cv, "divlife", 1.0)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 7.0)
     monkeypatch.setattr(cv, "tdivrepl", 0.1)
