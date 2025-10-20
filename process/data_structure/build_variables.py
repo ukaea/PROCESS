@@ -323,8 +323,8 @@ dr_tf_inboard: float = None
 """
 
 
-tfoffset: float = None
-"""vertical distance between centre of TF coils and centre of plasma (m)"""
+dz_tf_plasma_offset: float = None
+"""Vertical distance between centre of TF coils and centre of plasma (m)"""
 
 
 tfootfi: float = None
@@ -479,7 +479,7 @@ def init_build_variables():
     global dz_shld_upper
     global sigallpc
     global dr_tf_inboard
-    global tfoffset
+    global dz_tf_plasma_offset
     global tfootfi
     global dr_tf_outboard
     global dr_tf_shld_gap
@@ -573,7 +573,7 @@ def init_build_variables():
     dz_shld_upper = 0.6
     sigallpc = 3.0e8
     dr_tf_inboard = 0.0
-    tfoffset = 0.0
+    dz_tf_plasma_offset = 0.0
     tfootfi = 1.19
     dr_tf_outboard = 0.0
     dr_tf_shld_gap = 0.05

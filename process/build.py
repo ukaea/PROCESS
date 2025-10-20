@@ -473,7 +473,9 @@ class Build:
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.tfoffset = (vbuile1 + vertical_build_upper) / 2.0e0
+                build_variables.dz_tf_plasma_offset = (
+                    vbuile1 + vertical_build_upper
+                ) / 2.0e0
 
                 # End of Double null case
             else:
@@ -785,7 +787,7 @@ class Build:
                 )
 
                 # To calculate vertical offset between TF coil centre and plasma centre
-                build_variables.tfoffset = (vbuile1 + vbuild) / 2.0e0
+                build_variables.dz_tf_plasma_offset = (vbuile1 + vbuild) / 2.0e0
 
                 # end of Single null case
 
@@ -1035,8 +1037,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "TF coil vertical offset (m)",
-                    "(tfoffset)",
-                    build_variables.tfoffset,
+                    "(dz_tf_plasma_offset)",
+                    build_variables.dz_tf_plasma_offset,
                     "OP ",
                 )
                 po.ovarrf(
@@ -1243,8 +1245,8 @@ class Build:
                 po.ovarrf(
                     self.outfile,
                     "TF coil vertical offset (m)",
-                    "(tfoffset)",
-                    build_variables.tfoffset,
+                    "(dz_tf_plasma_offset)",
+                    build_variables.dz_tf_plasma_offset,
                     "OP ",
                 )
                 po.ovarrf(
