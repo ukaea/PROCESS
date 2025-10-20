@@ -28,6 +28,12 @@ DAYS_IN_YEAR = 365.25
 YEAR_SECONDS = DAY_SECONDS * DAYS_IN_YEAR
 # Number of seconds in a year [s]
 
+AVAILABILITY_MODELS = {
+    0: "Input value for cfactr",
+    1: "Ward and Taylor model (1999)",
+    2: "Morris model (2015)",
+    3: "ST model (2023)",
+}
 
 class Availability:
     """Module containing plant availability routines
