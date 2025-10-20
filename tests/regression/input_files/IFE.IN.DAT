@@ -239,7 +239,7 @@ abktflnc    = 20.0     *Allowable first wall/blanket neutron fluence (MW-yr/m2)
 cfactr      = 0.75     *Total plant availability fraction
 fcdfuel     = 0.0      *Fraction of current drive cost treated as fuel (if ifueltyp = 1)
 fkind       = 1.0      *Multiplier for Nth of a kind costs
-iavail      = 0        *Switch for plant availability model (use cfactr)
+i_plant_availability      = 0        *Switch for plant availability model (use cfactr)
 ifueltyp    = 1        *Fuel Switch (1: Treat blankets, FW and fcdfuel of CD as fuel)
 ireactor    = 1        *Switch for net electric and CoE (1: calculate)
 lsa         = 4        *Level of safety assurance switch (4: like current fission plant)

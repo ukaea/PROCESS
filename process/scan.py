@@ -974,8 +974,10 @@ class Scan:
             case 20:
                 constraint_variables.t_burn_min = swp[iscn - 1]
             case 22:
-                if cost_variables.iavail == 1:
-                    raise ProcessValueError("Do not scan cfactr if iavail=1")
+                if cost_variables.i_plant_availability == 1:
+                    raise ProcessValueError(
+                        "Do not scan cfactr if i_plant_availability=1"
+                    )
                 cost_variables.cfactr = swp[iscn - 1]
             case 23:
                 numerics.boundu[71] = swp[iscn - 1]
