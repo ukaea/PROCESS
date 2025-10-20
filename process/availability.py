@@ -35,6 +35,7 @@ AVAILABILITY_MODELS = {
     3: "ST model (2023)",
 }
 
+
 class Availability:
     """Module containing plant availability routines
     author: P J Knight, CCFE, Culham Science Centre
@@ -157,7 +158,7 @@ class Availability:
             else:
                 ld = fwbsv.life_blkt_fpy
                 lb = cv.divlife
-                td = cv.tbktrepl
+                td = cv.t_blkt_replace_yrs
 
             # Number of outages between each combined outage
             n = math.ceil(lb / ld) - 1
@@ -263,8 +264,8 @@ class Availability:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace blanket (years)",
-                        "(tbktrepl)",
-                        cv.tbktrepl,
+                        "(t_blkt_replace_yrs)",
+                        cv.t_blkt_replace_yrs,
                     )
 
                 po.ovarre(

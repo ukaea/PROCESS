@@ -90,7 +90,7 @@ def test_avail_1(monkeypatch, availability):
     monkeypatch.setattr(cv, "divlife", 1.0)
     monkeypatch.setattr(fwbsv, "life_blkt_fpy", 7.0)
     monkeypatch.setattr(cv, "tdivrepl", 0.1)
-    monkeypatch.setattr(cv, "tbktrepl", 0.2)
+    monkeypatch.setattr(cv, "t_blkt_replace_yrs", 0.2)
     monkeypatch.setattr(cv, "tcomrepl", 0.3)
     monkeypatch.setattr(cv, "uubop", 0.4)
     monkeypatch.setattr(cv, "uucd", 0.5)

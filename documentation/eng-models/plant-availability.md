@@ -16,7 +16,7 @@ If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used inst
 
 | Input parameter | Description |
 | :-: | - |
-| `tbktrepl` | time needed to replace blanket (years) |
+| `t_blkt_replace_yrs` | time needed to replace blanket (years) |
 | `tdivrepl` | time needed to replace divertor (years) |
 | `tcomrepl` | time  needed to replace both blanket and divertor (years) |
 | `uubop` | unplanned unavailability of balance of plant |

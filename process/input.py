@@ -1669,7 +1669,9 @@ INPUT_VARIABLES = {
         data_structure.current_drive_variables, float, range=(0.0, 10.0)
     ),
     "tbeta": InputVariable(data_structure.physics_variables, float, range=(0.0, 4.0)),
-    "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
+    "t_blkt_replace_yrs": InputVariable(
+        data_structure.cost_variables, float, range=(0.01, 2.0)
+    ),
     "tbrmin": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 2.0)
     ),
