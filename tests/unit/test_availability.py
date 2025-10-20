@@ -349,7 +349,11 @@ def calc_u_unplanned_divertor_param(**kwargs):
     :rtype: dict
     """
     # Default parameters
-    defaults = {"life_div_fpy": 1.99, "t_cycle": 9000, "expected": approx(0.02, abs=0.005)}
+    defaults = {
+        "life_div_fpy": 1.99,
+        "t_cycle": 9000,
+        "expected": approx(0.02, abs=0.005),
+    }
 
     # Merge default dict with any optional keyword arguments to override values
     return {**defaults, **kwargs}

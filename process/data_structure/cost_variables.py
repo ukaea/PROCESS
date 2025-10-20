@@ -405,7 +405,7 @@ life_div_fpy: float = None
 """Full power year lifetime of divertor (fpy)"""
 
 
-divlife_cal: float = None
+life_div: float = None
 """Calendar year lifetime of divertor (y)"""
 
 
@@ -1324,7 +1324,7 @@ def init_cost_variables():
     global dintrt
     global divcst
     global life_div_fpy
-    global divlife_cal
+    global life_div
     global dtlife
     global fcap0
     global fcap0cp
@@ -1479,7 +1479,7 @@ def init_cost_variables():
     dintrt = 0.0
     divcst = 0.0
     life_div_fpy = 0.0
-    divlife_cal = 0.0
+    life_div = 0.0
     dtlife = 0.0
     fcap0 = 1.165
     fcap0cp = 1.08
