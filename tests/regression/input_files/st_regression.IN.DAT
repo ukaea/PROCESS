@@ -3295,7 +3295,7 @@ i_plant_availability = 0
 * DESCRIPTION: Time needed to replace blanket+divertor (yr)
 * JUSTIFICATION: testing
 
-*tdivrepl = 
+*t_div_replace_yrs = 
 * DESCRIPTION: Time needed to replace divertor (yr)
 * JUSTIFICATION: testing
 

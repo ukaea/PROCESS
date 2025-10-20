@@ -540,8 +540,8 @@ tcomrepl: float = None
 """time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)"""
 
 
-tdivrepl: float = None
-"""time taken to replace divertor (y) (`i_plant_availability=1`)"""
+t_div_replace_yrs: float = None
+"""Time taken to replace divertor (y) (`i_plant_availability=1`)"""
 
 
 uubop: float = None
@@ -1356,7 +1356,7 @@ def init_cost_variables():
     global t_operation
     global t_blkt_replace_yrs
     global tcomrepl
-    global tdivrepl
+    global t_div_replace_yrs
     global uubop
     global uucd
     global uudiv
@@ -1511,7 +1511,7 @@ def init_cost_variables():
     t_operation = 0.0
     t_blkt_replace_yrs = 0.5
     tcomrepl = 0.5
-    tdivrepl = 0.25
+    t_div_replace_yrs = 0.25
     uubop = 0.02
     uucd = 0.02
     uudiv = 0.04

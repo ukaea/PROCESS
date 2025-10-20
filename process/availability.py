@@ -154,7 +154,7 @@ class Availability:
             if cv.divlife < fwbsv.life_blkt_fpy:
                 ld = cv.divlife
                 lb = fwbsv.life_blkt_fpy
-                td = cv.tdivrepl
+                td = cv.t_div_replace_yrs
             else:
                 ld = fwbsv.life_blkt_fpy
                 lb = cv.divlife
@@ -257,8 +257,8 @@ class Availability:
                     po.ovarre(
                         self.outfile,
                         "Time needed to replace divertor (years)",
-                        "(tdivrepl)",
-                        cv.tdivrepl,
+                        "(t_div_replace_yrs)",
+                        cv.t_div_replace_yrs,
                     )
                 else:
                     po.ovarre(
