@@ -331,7 +331,7 @@ class Availability:
         u_planned = self.calc_u_planned(output)
 
         # Operational time (years)
-        cv.t_operation = cv.tlife * (1.0e0 - u_planned)
+        cv.t_plant_operational_total_yrs = cv.tlife * (1.0e0 - u_planned)
 
         # Un-planned unavailability
 
@@ -440,8 +440,8 @@ class Availability:
             po.ovarre(
                 self.outfile,
                 "Total DT operational time (years)",
-                "(t_operation)",
-                cv.t_operation,
+                "(t_plant_operational_total_yrs)",
+                cv.t_plant_operational_total_yrs,
                 "OP ",
             )
             po.ovarre(self.outfile, "Total plant lifetime (years)", "(tlife)", cv.tlife)
@@ -615,7 +615,7 @@ class Availability:
         mag_main_time = 0.5e0
 
         # Minimum unplanned unavailability
-        mag_min_u_unplanned = mag_main_time / (cv.t_operation + mag_main_time)
+        mag_min_u_unplanned = mag_main_time / (cv.t_plant_operational_total_yrs + mag_main_time)
 
         # Point at which risk of unplanned unavailability increases
         # conf_mag is the c factor, which determines the temperature margin at which
@@ -629,7 +629,7 @@ class Availability:
             # Linear decrease in expected lifetime when approaching the limit
             t_life = max(
                 0.0e0,
-                (cv.t_operation / (start_of_risk - tmargmin))
+                (cv.t_plant_operational_total_yrs / (start_of_risk - tmargmin))
                 * (tfv.temp_margin - tmargmin),
             )
             u_unplanned_magnets = mag_main_time / (t_life + mag_main_time)
@@ -872,7 +872,7 @@ class Availability:
 
         # Number of balance of plant failures in plant operational lifetime
         bop_num_failures = math.ceil(
-            bop_fail_rate * DAYS_IN_YEAR * 24.0e0 * cv.t_operation
+            bop_fail_rate * DAYS_IN_YEAR * 24.0e0 * cv.t_plant_operational_total_yrs
         )
 
         # Balance of plant mean time to repair (years)
@@ -880,7 +880,7 @@ class Availability:
         bop_mttr = 96.0e0 / (24.0e0 * DAYS_IN_YEAR)
 
         # Unplanned downtime balance of plant
-        u_unplanned_bop = (bop_mttr * bop_num_failures) / (cv.t_operation)
+        u_unplanned_bop = (bop_mttr * bop_num_failures) / (cv.t_plant_operational_total_yrs)
 
         # Output
         if output:
@@ -945,12 +945,12 @@ class Availability:
 
         # Number of shutdowns
         n_shutdown: int = round(
-            (cv.tlife - cv.t_operation)
+            (cv.tlife - cv.t_plant_operational_total_yrs)
             / ((21.0e0 * cv.num_rh_systems ** (-0.9e0) + 2.0e0) / 12.0e0)
         )
 
         # Operational time between shutdowns
-        t_op_bt = cv.t_operation / (n_shutdown + 1.0e0)
+        t_op_bt = cv.t_plant_operational_total_yrs / (n_shutdown + 1.0e0)
 
         # Cryopump maintenance time (y) = 2 months
         cryo_main_time = 1.0e0 / 6.0e0
@@ -982,7 +982,7 @@ class Availability:
         t_down = (n_shutdown + 1.0e0) * cryo_main_time * sum_prob
 
         # Total vacuum unplanned unavailability
-        u_unplanned_vacuum = max(0.005, t_down / (cv.t_operation + t_down))
+        u_unplanned_vacuum = max(0.005, t_down / (cv.t_plant_operational_total_yrs + t_down))
 
         # Output
         if output:
@@ -1091,7 +1091,7 @@ class Availability:
         u_planned = cv.tmain / maint_cycle
 
         # Operational time (years)
-        cv.t_operation = cv.tlife * (1.0e0 - u_planned)
+        cv.t_plant_operational_total_yrs = cv.tlife * (1.0e0 - u_planned)
 
         if output:
             po.oheadr(self.outfile, "Plant Availability")
@@ -1278,8 +1278,8 @@ class Availability:
             po.ovarre(
                 self.outfile,
                 "Total DT operational time (years)",
-                "(t_operation)",
-                cv.t_operation,
+                "(t_plant_operational_total_yrs)",
+                cv.t_plant_operational_total_yrs,
                 "OP ",
             )
             po.ovarre(
