@@ -2911,7 +2911,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
     dr_shld_inboard: Any = None
     dr_shld_outboard: Any = None
     f_t_plant_available: Any = None
-    tlife: Any = None
+    life_plant: Any = None
     pflux_fw_neutron_mw: Any = None
     dr_tf_plasma_case: Any = None
     i_tf_sup: Any = None
@@ -2942,7 +2942,7 @@ class SctfcoilNuclearHeatingIter90Param(NamedTuple):
             dr_shld_inboard=0.20000000000000001,
             dr_shld_outboard=0.20000000000000001,
             f_t_plant_available=0.75000000000000011,
-            tlife=40,
+            life_plant=40,
             pflux_fw_neutron_mw=0.61095969282042206,
             dr_tf_plasma_case=0.050000000000000003,
             i_tf_sup=1,
@@ -3013,7 +3013,7 @@ def test_sctfcoil_nuclear_heating_iter90(
         sctfcoilnuclearheatingiter90param.f_t_plant_available,
     )
     monkeypatch.setattr(
-        cost_variables, "tlife", sctfcoilnuclearheatingiter90param.tlife
+        cost_variables, "life_plant", sctfcoilnuclearheatingiter90param.life_plant
     )
     monkeypatch.setattr(
         physics_variables,

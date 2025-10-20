@@ -2209,7 +2209,8 @@ def constraint_equation_85():
     elif data_structure.cost_variables.i_cp_lifetime == 3:
         cc = (
             1.0
-            - data_structure.cost_variables.cplife / data_structure.cost_variables.tlife
+            - data_structure.cost_variables.cplife
+            / data_structure.cost_variables.life_plant
         )
 
     return ConstraintResult(
