@@ -5883,7 +5883,7 @@ def stinit():
     build_variables.iohcl = 0
     pfcoil_variables.f_z_cs_tf_internal = 0.0
     build_variables.dr_cs_tf_gap = 0.0
-    build_variables.tfootfi = 1.0
+    build_variables.f_dr_tf_outboard_inboard = 1.0
 
     #  Physics quantities
 

@@ -1925,7 +1925,7 @@ class Build:
         #  Thickness of outboard TF coil legs
         if tfcoil_variables.i_tf_sup != 1:
             build_variables.dr_tf_outboard = (
-                build_variables.tfootfi * build_variables.dr_tf_inboard
+                build_variables.f_dr_tf_outboard_inboard * build_variables.dr_tf_inboard
             )
         else:
             build_variables.dr_tf_outboard = build_variables.dr_tf_inboard

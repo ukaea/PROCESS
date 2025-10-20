@@ -27,9 +27,9 @@ Two shapes can be selected using the `i_tf_shape` integer switch:
 Resistive coils can benefit in having a larger outboard conductor area than
 the inboard one, to reduce resistive heating without increasing the plasma
 major radius or increasing its aspect ratio. For this reason, thicker outboard
-can be set using the tfootfi user input defined as the ratio between
+can be set using the f_dr_tf_outboard_inboard user input defined as the ratio between
 ouboard and inboard TF coil legs. The possibility of having different coil
-thicknesses is only available for resistive coils and tfootfi
+thicknesses is only available for resistive coils and f_dr_tf_outboard_inboard
 would have no effect if superconducting coils are selected (`i_tf_sup = 1`)
 
 
@@ -932,7 +932,7 @@ considered/implemented in <em>PROCESS</em>.
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------------ | ---- |
 | `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
 | `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp_with_insulation` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
-| `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
+| `f_dr_tf_outboard_inboard`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
 | `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
 | `dx_tf_side_case_min`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |
@@ -947,7 +947,7 @@ considered/implemented in <em>PROCESS</em>.
 | -                     | -                                                                                                                                                    | -                  | -                                    | -    |
 | `i_tf_inside_cs`      | TF coil inboard leg radial placement switch. <br> - 0 : Outside of central solenoid <br> - 1 : Inside of central solenoid                            | -                  | 0                                    | -    |
 | `dr_tf_inboard`       | TF coil maximum radial size <br> calculated if `dr_tf_wp_with_insulation` is used as iteration variable                                                              | ixc = 13           | No default                           | m    |
-| `tfootfi`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
+| `f_dr_tf_outboard_inboard`             | Outboard/inboard TF coil thickness ratio                                                                                                             | -                  | 1                                    | -    |
 | `dr_tf_wp_with_insulation`            | Winding pack radial thickness <br> calculated if `dr_tf_inboard` is used as iteration variable. Include the ground insulation and the insertion gap. | ixc = 140          | No default                           | m    |
 | `dr_tf_nose_case`     | Nose/inner case radial thickness                                                                                                                     | ixc = 57           | 0.3                                  | m    |
 | `dx_tf_side_case_min`     | Minimal sidewall casing thickness                                                                                                                    | -                  | -                                    | m    |

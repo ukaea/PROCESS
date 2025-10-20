@@ -1712,7 +1712,9 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insertion_gap": InputVariable(
         data_structure.tfcoil_variables, float, range=(1e-10, 0.1)
     ),
-    "tfootfi": InputVariable(data_structure.build_variables, float, range=(0.2, 5.0)),
+    "f_dr_tf_outboard_inboard": InputVariable(
+        data_structure.build_variables, float, range=(0.2, 5.0)
+    ),
     "tftmp": InputVariable(data_structure.tfcoil_variables, float, range=(0.01, 293.0)),
     "tgain": InputVariable(data_structure.ife_variables, float, range=(1.0, 500.0)),
     "th_joint_contact": InputVariable(
