@@ -34,6 +34,7 @@ import process.constants as constants
 import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
+from process.build import Build
 from process.data_structure import physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
@@ -11975,6 +11976,8 @@ def main_plot(
     plot_tf_coil_structure(
         fig15.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
+    
+    plot_plasma_outboard_toroidal_ripple_map(fig15, m_file_data, scan)
 
     axes = fig16.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
