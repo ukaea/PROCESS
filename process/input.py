@@ -477,6 +477,9 @@ INPUT_VARIABLES = {
     "dia_tf_turn_coolant_channel": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
+    "dia_tf_turn_superconducting_cable": InputVariable(
+        data_structure.superconducting_tf_coil_variables, float, range=(0.0001, 0.01)
+    ),
     "dintrt": InputVariable(data_structure.cost_variables, float, range=(0.0, 0.1)),
     "discount_rate": InputVariable(
         data_structure.cost_variables, float, range=(0.0, 0.5)
