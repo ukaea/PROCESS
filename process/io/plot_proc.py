@@ -11008,6 +11008,38 @@ def plot_fusion_rate_contours(
     # make minor ticks visible on all sides and draw ticks inward for compact look
     dd_triton_axes.tick_params(which="both", direction="in", top=True, right=True)
 
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dd_triton_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dd_triton_axes.contour(
+            r_grid,
+            z_grid,
+            dd_triton_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+        dd_triton_axes.contour(
+            r_grid,
+            -z_grid,
+            dd_triton_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dd_triton_axes.legend(
+            legend_handles, legend_labels, loc="upper right", fontsize=8
+        )
+
     # ================================================
 
     dd_helion_upper = dd_helion_axes.contourf(
@@ -11052,6 +11084,38 @@ def plot_fusion_rate_contours(
     # make minor ticks visible on all sides and draw ticks inward for compact look
     dd_helion_axes.tick_params(which="both", direction="in", top=True, right=True)
 
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dd_helion_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dd_helion_axes.contour(
+            r_grid,
+            z_grid,
+            dd_helion_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+        dd_helion_axes.contour(
+            r_grid,
+            -z_grid,
+            dd_helion_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dd_helion_axes.legend(
+            legend_handles, legend_labels, loc="upper right", fontsize=8
+        )
+
     # ================================================
 
     dhe3_upper = dhe3_axes.contourf(
@@ -11093,6 +11157,28 @@ def plot_fusion_rate_contours(
     )
     # make minor ticks visible on all sides and draw ticks inward for compact look
     dhe3_axes.tick_params(which="both", direction="in", top=True, right=True)
+
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dhe3_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dhe3_axes.contour(
+            r_grid, z_grid, dhe3_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+        dhe3_axes.contour(
+            r_grid, -z_grid, dhe3_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dhe3_axes.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
+
+    # ===============================================
 
 
 def main_plot(
@@ -11214,13 +11300,45 @@ def main_plot(
     if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
         plot_fusion_rate_contours(fig6, fig7, m_file_data, scan)
 
+    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
+    if i_shape != 1:
+        msg = (
+            "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D fusion rate/profile plots for available information."
+        )
+        # Add explanatory text to both figures reserved for contour outputs
+        fig6.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        fig7.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+
     plot_plasma_pressure_profiles(fig8.add_subplot(222), m_file_data, scan)
     plot_plasma_pressure_gradient_profiles(fig8.add_subplot(224), m_file_data, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
-    if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
+    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
+    if i_shape == 1:
         plot_plasma_poloidal_pressure_contours(
             fig8.add_subplot(121, aspect="equal"), m_file_data, scan
         )
+    else:
+        ax = fig8.add_subplot(131, aspect="equal")
+        msg = (
+            "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D pressure/profile plots for available information."
+        )
+        ax.text(
+            0.5,
+            0.5,
+            msg,
+            ha="center",
+            va="center",
+            wrap=True,
+            fontsize=10,
+            transform=ax.transAxes,
+        )
+        ax.axis("off")
 
     # Plot poloidal cross-section
     poloidal_cross_section(
