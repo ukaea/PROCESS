@@ -11565,6 +11565,38 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
         linewidth=1.0,
     )
 
+    # Text box for inboard toroidal field
+    axis.text(
+        0.1,
+        0.025,
+        f"$B_{{\\text{{T,inboard}}}}={mfile_data.data['b_plasma_inboard_toroidal'].get_scan(scan):.2f}$ T",
+        verticalalignment="center",
+        horizontalalignment="center",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Text box for outboard toroidal field
+    axis.text(
+        0.9,
+        0.1,
+        f"$B_{{\\text{{T,outboard}}}}={mfile_data.data['b_plasma_outboard_toroidal'].get_scan(scan):.2f}$ T",
+        verticalalignment="center",
+        horizontalalignment="center",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
     axis.set_xlabel("Radial Position [m]")
     axis.set_ylabel("Toroidal Magnetic Field [T]")
     axis.set_title("Toroidal Magnetic Field Profile in Plasma")

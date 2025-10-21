@@ -1743,6 +1743,20 @@ class Physics:
             physics_variables.rmajor + physics_variables.rminor,
             2 * physics_variables.n_plasma_profile_elements,
         )
+
+        # Calculate the inboard and outboard toroidal field
+        physics_variables.b_plasma_inboard_toroidal = (
+            physics_variables.rmajor
+            * physics_variables.b_plasma_toroidal_on_axis
+            / (physics_variables.rmajor - physics_variables.rminor)
+        )
+
+        physics_variables.b_plasma_outboard_toroidal = (
+            physics_variables.rmajor
+            * physics_variables.b_plasma_toroidal_on_axis
+            / (physics_variables.rmajor + physics_variables.rminor)
+        )
+
         # Avoid division by zero at the magnetic axis
         rho = np.where(rho == 0, 1e-10, rho)
         physics_variables.b_plasma_toroidal_profile = (
@@ -4287,6 +4301,19 @@ class Physics:
                 "(b_plasma_toroidal_on_axis)",
                 physics_variables.b_plasma_toroidal_on_axis,
             )
+            po.ovarrf(
+                self.outfile,
+                "Toroidal field at plasma inboard (T)",
+                "(b_plasma_inboard_toroidal)",
+                physics_variables.b_plasma_inboard_toroidal,
+            )
+            po.ovarrf(
+                self.outfile,
+                "Toroidal field at plasma outboard (T)",
+                "(b_plasma_outboard_toroidal)",
+                physics_variables.b_plasma_outboard_toroidal,
+            )
+
             for i in range(len(physics_variables.b_plasma_toroidal_profile)):
                 po.ovarre(
                     self.mfile,
