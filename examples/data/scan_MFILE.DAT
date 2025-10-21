@@ -410,12 +410,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -872,8 +872,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -1405,12 +1405,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -1867,8 +1867,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -2400,12 +2400,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -2862,8 +2862,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -3395,12 +3395,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -3857,8 +3857,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -4390,12 +4390,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -4852,8 +4852,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -5385,12 +5385,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -5847,8 +5847,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -6380,12 +6380,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -6842,8 +6842,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -7375,12 +7375,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -7837,8 +7837,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -8370,12 +8370,12 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      3.6189E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.3054E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
  Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.8078E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
  Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
  Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.8078E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      0.0000E+00    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      0.0000E+00    
  Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      8.0716E+03 OP 
  kallenbach_switch_______________________________________________________ (kallenbach_switch)___________              0    
  # Radial Build #
@@ -8832,8 +8832,8 @@
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.4725E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.4725E-03    
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      0.0000E+00    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      0.0000E+00    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      5.0000E+02    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      2.8467E+01 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      8.9545E+01 OP 
@@ -9270,9 +9270,9 @@ plasma_res_factor = 0.66 * plasma resistivity pre-factor
 *-----------------Pulse Variables------------------*
 
 i_pulsed_plant = 1 * Switch for reactor model;
-t_between_pulse = 0 * dwell time (s)
+t_plant_pulse_dwell = 0 * dwell time (s)
 pulsetimings = 0
-t_precharge = 500.0
+t_plant_pulse_coil_precharge = 500.0
 
 *-----------------Tfcoil Variables-----------------*
 

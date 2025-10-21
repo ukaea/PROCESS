@@ -708,12 +708,12 @@
  Inductive_fraction_______________________________________________________ (f_c_plasma_inductive)_________ 5.49633213668178855e-01 OP
  Fraction_of_the_plasma_current_produced_by_non-inductive_means___________ (f_c_plasma_non_inductive)_____ 4.50366786331821145e-01
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)_________________________ (t_precharge)__________________ 5.00000000000000000e+02
+ Initial_charge_time_for_CS_from_zero_current_(s)_________________________ (t_plant_pulse_coil_precharge)__________________ 5.00000000000000000e+02
  Plasma_current_ramp-up_time_(s)__________________________________________ (t_current_ramp_up)____________ 1.65098157448736771e+02
  Heating_time_(s)_________________________________________________________ (t_fusion_ramp)________________ 1.00000000000000000e+01
  Burn_time_(s)____________________________________________________________ (t_burn)_______________________ 7.20027233571826036e+03 OP
  Reset_time_to_zero_current_for_CS_(s)____________________________________ (t_ramp_down)__________________ 1.65098157448736771e+02
- Time_between_pulses_(s)__________________________________________________ (t_between_pulse)______________ 1.80000000000000000e+03
+ Time_between_pulses_(s)__________________________________________________ (t_plant_pulse_dwell)______________ 1.80000000000000000e+03
  Total_plant_cycle_time_(s)_______________________________________________ (t_cycle)______________________ 9.84046865061573772e+03 OP
  Flux_expansion___________________________________________________________ (f_div_flux_expansion)_________ 2.00000000000000000e+00
  Field_line_angle_wrt_to_target_divertor_plate_(degrees)__________________ (deg_div_field_plate)__________ 1.00000000000000000e+00
@@ -1293,8 +1293,8 @@
  Chamber_pressure_after_burn_(Pa)_________________________________________ (pend)_________________________ 1.65761323650627984e-01 OP
  Chamber_pressure_before_burn_(Pa)________________________________________ (pstart)_______________________ 1.65761323650627989e-03
  Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
- Dwell_time_between_burns_(s)_____________________________________________ (t_between_pulse.)_____________ 1.80000000000000000e+03
- CS_ramp-up_time_burns_(s)________________________________________________ (t_precharge.)_________________ 5.00000000000000000e+02
+ Dwell_time_between_burns_(s)_____________________________________________ (t_plant_pulse_dwell.)_____________ 1.80000000000000000e+03
+ CS_ramp-up_time_burns_(s)________________________________________________ (t_plant_pulse_coil_precharge.)_________________ 5.00000000000000000e+02
  Allowable_pumping_time_between_burns_(s)_________________________________ (tpump)________________________ 1.80000000000000000e+03
  Required_D-T_pump_speed_(m3/s)___________________________________________ (s(2))_________________________ 5.77897305930929495e+00 OP
  D-T_pump_speed_provided_(m3/s)___________________________________________ (snet(2))______________________ 6.00584768236042237e+01 OP
@@ -1854,13 +1854,13 @@ plasma_res_factor = 0.7
 i_pulsed_plant = 1
 
 * dwell time [s]
-t_between_pulse = 1800.0
+t_plant_pulse_dwell = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0
 
 * CS ramp up time [s]
-t_precharge = 500.0
+t_plant_pulse_coil_precharge = 500.0
 
 * Current drive *
 *---------------*
