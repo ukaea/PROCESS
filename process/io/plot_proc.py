@@ -10082,16 +10082,75 @@ def plot_fusion_rate_profiles(axis, fig, mfile_data, scan):
         label=r"Total",
     )
 
+    # =================================================
+
+    # Compute cumulative integral (trapezoidal) of the total fusion rate profile vs normalized radius
+    rho_c = np.linspace(0.0, 1.0, len(fusrat_plasma_total_profile))
+    y_total = np.asarray(fusrat_plasma_total_profile, dtype=float)
+
+    # handle degenerate case
+    if y_total.size < 2:
+        cum_trap = np.array([0.0, y_total.sum()])
+    else:
+        dx = rho_c[1] - rho_c[0]
+        # cumulative trapezoid: integral from 0 to rho[i]
+        cum_trap_mid = np.cumsum((y_total[1:] + y_total[:-1]) * 0.5 * dx)
+        cum_trap = np.concatenate(([0.0], cum_trap_mid))
+
+    # Normalize to reported total fusion rate if available, otherwise keep raw integral
+    reported_total = mfile_data.data.get("fusrat_total")
+    if reported_total is not None:
+        total_reported = float(reported_total.get_scan(scan))
+        # avoid division by zero
+        norm_factor = cum_trap[-1] if cum_trap[-1] > 0 else 1.0
+        cum_reactions = cum_trap / norm_factor * total_reported
+    else:
+        cum_reactions = cum_trap
+
+    # Plot cumulative reactions on a separate right-hand axis (offset)
+
+    axis.plot(
+        rho_c,
+        cum_reactions,
+        color="black",
+        linewidth=2,
+        label="Cumulative total reactions",
+    )
+
+    # mark the rho location where cumulative reactions reach 50% of the total
+    total_reactions = float(cum_reactions[-1]) if np.size(cum_reactions) > 0 else 0.0
+    if total_reactions > 0.0:
+        target = 0.5 * total_reactions
+        idxs = np.where(cum_reactions >= target)[0]
+        rho50 = float(rho_c[idxs[0]]) if idxs.size > 0 else float(rho_c[-1])
+
+        # vertical line at 50% cumulative reactions
+        axis.axvline(
+            rho50,
+            color="black",
+            linestyle="--",
+            linewidth=1.5,
+            zorder=1,
+            label="50% total\nreactions",
+        )
+
+    # =================================================
+
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.set_ylabel("Fusion Rate [reactions/second]")
     axis.legend(
-        loc="lower left", edgecolor="black", facecolor="white", labelcolor="black"
+        loc="lower left",
+        edgecolor="black",
+        facecolor="white",
+        labelcolor="black",
+        framealpha=1.0,
+        frameon=True,
     )
     axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.minorticks_on()
-    axis.set_ylim([1e10, 1e19])
+    axis.set_ylim([1e10, 1e23])
     axis.yaxis.set_major_locator(plt.LogLocator(base=10.0, numticks=10))
     axis.yaxis.set_minor_locator(
         plt.LogLocator(base=10.0, subs=np.arange(1, 10) * 0.1, numticks=100)
@@ -10500,10 +10559,10 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         label="Total",
     )
     axis.set_xlabel("$\\rho$ [r/a]")
-    axis.set_ylabel("Pressure [kPa]")
+    axis.set_ylabel("Thermal Pressure [kPa]")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    axis.set_title("Plasma Pressure Profiles")
+    axis.set_title("Plasma Thermal Pressure Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.set_ylim(bottom=0)
@@ -10554,7 +10613,7 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
     axis.set_ylabel("$dP/dr$ [kPa / m]")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
-    axis.set_title("Plasma Pressure Gradient Profiles")
+    axis.set_title("Plasma Thermal Pressure Gradient Profiles")
     axis.grid(True, linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.legend()
@@ -10604,6 +10663,44 @@ def plot_plasma_poloidal_pressure_contours(
         )
     ]
 
+    pressure_grid, r_grid, z_grid = interp1d_profile(
+        pres_plasma_profile, mfile_data, scan
+    )
+
+    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
+    # Plot filled contour
+    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
+    c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
+
+    # Add colorbar for pressure (now in kPa)
+    # You can control the location using the 'location' argument ('left', 'right', 'top', 'bottom')
+    # For more control, use 'ax' or 'fraction', 'pad', etc.
+    # Example: location="right", pad=0.05, fraction=0.05
+    axis.figure.colorbar(
+        c, ax=axis, label="Pressure [kPa]", location="left", anchor=(-0.25, 0.5)
+    )
+
+    axis.set_aspect("equal")
+    axis.set_xlabel("R [m]")
+    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    axis.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    axis.set_ylabel("Z [m]")
+    axis.set_title("Plasma Poloidal Pressure Contours")
+    axis.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+
+
+def interp1d_profile(profile, mfile_data, scan):
     # Get plasma geometry and boundary
     pg = plasma_geometry(
         rmajor=mfile_data.data["rmajor"].get_scan(scan),
@@ -10614,8 +10711,7 @@ def plot_plasma_poloidal_pressure_contours(
         i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
         square=mfile_data.data["plasma_square"].get_scan(scan),
     )
-    rminor = mfile_data.data["rminor"].get_scan(scan)
-    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+
     # Create a grid of (R, Z) points inside the plasma boundary
     n_rho = 500
     n_theta = 720
@@ -10664,36 +10760,10 @@ def plot_plasma_poloidal_pressure_contours(
     r_grid = r_center + (f_r(theta_grid) - r_center) * rho_grid
     z_grid = z_center + (f_z(theta_grid) - z_center) * rho_grid
 
-    # Interpolate pressure profile for each rho
-    pressure_grid = np.interp(
-        rho_grid, np.linspace(0, 1, len(pres_plasma_profile)), pres_plasma_profile
-    )
+    # Interpolate profile for each rho
+    profile_grid = np.interp(rho_grid, np.linspace(0, 1, len(profile)), profile)
 
-    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
-    # Plot filled contour
-    c = axis.contourf(r_grid, z_grid, pressure_grid, levels=50, cmap="plasma")
-    c = axis.contourf(r_grid, -z_grid, pressure_grid, levels=50, cmap="plasma")
-
-    # Overlay plasma boundary
-    axis.plot(pg.rs, pg.zs, color="black", linewidth=2, label="Plasma Boundary")
-
-    # Add colorbar for pressure (now in kPa)
-    # You can control the location using the 'location' argument ('left', 'right', 'top', 'bottom')
-    # For more control, use 'ax' or 'fraction', 'pad', etc.
-    # Example: location="right", pad=0.05, fraction=0.05
-    axis.figure.colorbar(
-        c, ax=axis, label="Pressure [kPa]", location="left", anchor=(-0.25, 0.5)
-    )
-
-    axis.set_aspect("equal")
-    axis.set_xlabel("R [m]")
-    axis.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
-    axis.set_ylim(
-        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
-        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
-    )
-    axis.set_ylabel("Z [m]")
-    axis.set_title("Plasma Poloidal Pressure Contours")
+    return profile_grid, r_grid, z_grid
 
 
 def plot_corc_cable_geometry(
@@ -10780,6 +10850,337 @@ def plot_corc_cable_geometry(
     axis.legend(loc="upper right")
 
 
+def plot_fusion_rate_contours(
+    fig1,
+    fig2,
+    mfile_data: mf.MFile,
+    scan: int,
+) -> None:
+    fusrat_plasma_dt_profile = []
+    fusrat_plasma_dd_triton_profile = []
+    fusrat_plasma_dd_helion_profile = []
+    fusrat_plasma_dhe3_profile = []
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    fusrat_plasma_dt_profile = [
+        mfile_data.data[f"fusrat_plasma_dt_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusrat_plasma_dd_triton_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_triton_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    fusrat_plasma_dd_helion_profile = [
+        mfile_data.data[f"fusrat_plasma_dd_helion_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+    fusrat_plasma_dhe3_profile = [
+        mfile_data.data[f"fusrat_plasma_dhe3_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    dt_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dt_profile, mfile_data, scan
+    )
+
+    dd_triton_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dd_triton_profile, mfile_data, scan
+    )
+    dd_helion_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dd_helion_profile, mfile_data, scan
+    )
+    dhe3_grid, r_grid, z_grid = interp1d_profile(
+        fusrat_plasma_dhe3_profile, mfile_data, scan
+    )
+    # Mask points outside the plasma boundary (optional, but grid is inside by construction)
+    # Plot filled contour
+
+    dt_axes = fig1.add_subplot(121, aspect="equal")
+    dd_triton_axes = fig1.add_subplot(122, aspect="equal")
+    dd_helion_axes = fig2.add_subplot(121, aspect="equal")
+    dhe3_axes = fig2.add_subplot(122, aspect="equal")
+
+    dt_upper = dt_axes.contourf(
+        r_grid, z_grid, dt_grid, levels=50, cmap="plasma", zorder=2
+    )
+    dt_axes.contourf(r_grid, -z_grid, dt_grid, levels=50, cmap="plasma", zorder=2)
+
+    dt_axes.figure.colorbar(
+        dt_upper,
+        ax=dt_axes,
+        label="Fusion Rate [reactions/second]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dt_axes.set_xlabel("R [m]")
+    dt_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dt_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dt_axes.set_ylabel("Z [m]")
+    dt_axes.set_title("D+T -> 4He + n Fusion Rate Density Contours")
+    dt_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    # enable minor ticks and grid for clearer reading
+    dt_axes.minorticks_on()
+    dt_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dt_axes.grid(True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1)
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dt_axes.tick_params(which="both", direction="in", top=True, right=True)
+
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dt_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dt_axes.contour(
+            r_grid, z_grid, dt_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+        dt_axes.contour(
+            r_grid, -z_grid, dt_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dt_axes.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
+
+    # =================================================
+
+    dd_triton_upper = dd_triton_axes.contourf(
+        r_grid, z_grid, dd_triton_grid, levels=50, cmap="plasma", zorder=2
+    )
+    dd_triton_axes.contourf(
+        r_grid, -z_grid, dd_triton_grid, levels=50, cmap="plasma", zorder=2
+    )
+
+    dd_triton_axes.figure.colorbar(
+        dd_triton_upper,
+        ax=dd_triton_axes,
+        label="Fusion Rate [reactions/second]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dd_triton_axes.set_xlabel("R [m]")
+    dd_triton_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dd_triton_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dd_triton_axes.set_ylabel("Z [m]")
+    dd_triton_axes.set_title("D+D -> T + p Fusion Rate Density Contours")
+    dd_triton_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    dd_triton_axes.minorticks_on()
+    dd_triton_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dd_triton_axes.grid(
+        True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dd_triton_axes.tick_params(which="both", direction="in", top=True, right=True)
+
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dd_triton_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dd_triton_axes.contour(
+            r_grid,
+            z_grid,
+            dd_triton_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+        dd_triton_axes.contour(
+            r_grid,
+            -z_grid,
+            dd_triton_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dd_triton_axes.legend(
+            legend_handles, legend_labels, loc="upper right", fontsize=8
+        )
+
+    # ================================================
+
+    dd_helion_upper = dd_helion_axes.contourf(
+        r_grid, z_grid, dd_helion_grid, levels=50, cmap="plasma", zorder=2
+    )
+    dd_helion_axes.contourf(
+        r_grid, -z_grid, dd_helion_grid, levels=50, cmap="plasma", zorder=2
+    )
+
+    dd_helion_axes.figure.colorbar(
+        dd_helion_upper,
+        ax=dd_helion_axes,
+        label="Fusion Rate [reactions/second]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dd_helion_axes.set_xlabel("R [m]")
+    dd_helion_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dd_helion_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dd_helion_axes.set_ylabel("Z [m]")
+    dd_helion_axes.set_title("D+D -> 3He + n Fusion Rate Density Contours")
+    dd_helion_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    dd_helion_axes.minorticks_on()
+    dd_helion_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dd_helion_axes.grid(
+        True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dd_helion_axes.tick_params(which="both", direction="in", top=True, right=True)
+
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dd_helion_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dd_helion_axes.contour(
+            r_grid,
+            z_grid,
+            dd_helion_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+        dd_helion_axes.contour(
+            r_grid,
+            -z_grid,
+            dd_helion_grid,
+            levels=levels,
+            colors=colours,
+            linewidths=1.5,
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dd_helion_axes.legend(
+            legend_handles, legend_labels, loc="upper right", fontsize=8
+        )
+
+    # ================================================
+
+    dhe3_upper = dhe3_axes.contourf(
+        r_grid, z_grid, dhe3_grid, levels=50, cmap="plasma", zorder=2
+    )
+    dhe3_axes.contourf(r_grid, -z_grid, dhe3_grid, levels=50, cmap="plasma", zorder=2)
+
+    dhe3_axes.figure.colorbar(
+        dhe3_upper,
+        ax=dhe3_axes,
+        label="Fusion Rate [reactions/second]",
+        location="left",
+        anchor=(-0.25, 0.5),
+    )
+
+    dhe3_axes.set_xlabel("R [m]")
+    dhe3_axes.set_xlim(rmajor - 1.2 * rminor, rmajor + 1.2 * rminor)
+    dhe3_axes.set_ylim(
+        -1.2 * rminor * mfile_data.data["kappa"].get_scan(scan),
+        1.2 * mfile_data.data["kappa"].get_scan(scan) * rminor,
+    )
+    dhe3_axes.set_ylabel("Z [m]")
+    dhe3_axes.set_title("D+3He -> 4He + n Fusion Rate Density Contours")
+    dhe3_axes.plot(
+        rmajor,
+        0,
+        marker="o",
+        color="red",
+        markersize=6,
+        markeredgecolor="black",
+        zorder=100,
+    )
+    dhe3_axes.minorticks_on()
+    dhe3_axes.grid(
+        True, which="major", linestyle="--", linewidth=0.8, alpha=0.7, zorder=1
+    )
+    dhe3_axes.grid(
+        True, which="minor", linestyle=":", linewidth=0.4, alpha=0.5, zorder=1
+    )
+    # make minor ticks visible on all sides and draw ticks inward for compact look
+    dhe3_axes.tick_params(which="both", direction="in", top=True, right=True)
+
+    # draw contours at 25%, 50% and 75% of the DT peak value (both top and mirrored bottom)
+    peak = np.nanmax(dhe3_grid)
+    if peak > 0:
+        levels = [0.25 * peak, 0.5 * peak, 0.75 * peak]
+        # distinct colours for each level
+        colours = ["blue", "yellow", "red"]
+
+        # top and mirrored bottom contours (no clabel calls — keep only legend)
+        dhe3_axes.contour(
+            r_grid, z_grid, dhe3_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+        dhe3_axes.contour(
+            r_grid, -z_grid, dhe3_grid, levels=levels, colors=colours, linewidths=1.5
+        )
+
+        # create legend entries (use Line2D proxies so we get one entry per requested level)
+        legend_handles = [mpl.lines.Line2D([0], [0], color=c, lw=2) for c in colours]
+        legend_labels = ["25% peak", "50% peak", "75% peak"]
+        dhe3_axes.legend(legend_handles, legend_labels, loc="upper right", fontsize=8)
+
+    # ===============================================
+
+
 def main_plot(
     fig0,
     fig1,
@@ -10801,6 +11202,8 @@ def main_plot(
     fig17,
     fig18,
     fig19,
+    fig20,
+    fig21,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -10894,17 +11297,52 @@ def main_plot(
 
     plot_fusion_rate_profiles(fig5.add_subplot(122), fig5, m_file_data, scan)
 
-    plot_plasma_pressure_profiles(fig6.add_subplot(222), m_file_data, scan)
-    plot_plasma_pressure_gradient_profiles(fig6.add_subplot(224), m_file_data, scan)
-    # Currently only works with Sauter geometry as plasma has a closed surface
     if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
-        plot_plasma_poloidal_pressure_contours(
-            fig6.add_subplot(121, aspect="equal"), m_file_data, scan
+        plot_fusion_rate_contours(fig6, fig7, m_file_data, scan)
+
+    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
+    if i_shape != 1:
+        msg = (
+            "Fusion-rate contour plots require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D fusion rate/profile plots for available information."
         )
+        # Add explanatory text to both figures reserved for contour outputs
+        fig6.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        fig7.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+
+    plot_plasma_pressure_profiles(fig8.add_subplot(222), m_file_data, scan)
+    plot_plasma_pressure_gradient_profiles(fig8.add_subplot(224), m_file_data, scan)
+    # Currently only works with Sauter geometry as plasma has a closed surface
+    i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
+    if i_shape == 1:
+        plot_plasma_poloidal_pressure_contours(
+            fig8.add_subplot(121, aspect="equal"), m_file_data, scan
+        )
+    else:
+        ax = fig8.add_subplot(131, aspect="equal")
+        msg = (
+            "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
+            "(i_plasma_shape == 1). "
+            f"Current i_plasma_shape = {i_shape}. Contour plots are skipped; "
+            "see the 1D pressure/profile plots for available information."
+        )
+        ax.text(
+            0.5,
+            0.5,
+            msg,
+            ha="center",
+            va="center",
+            wrap=True,
+            fontsize=10,
+            transform=ax.transAxes,
+        )
+        ax.axis("off")
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        fig7.add_subplot(121, aspect="equal"),
+        fig9.add_subplot(121, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -10913,7 +11351,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        fig7.add_subplot(122, aspect="equal"),
+        fig9.add_subplot(122, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -10921,19 +11359,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = fig7.add_subplot(222)
+    ax17 = fig9.add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file_data, scan, colour_scheme)
 
-    ax18 = fig8.add_subplot(211)
+    ax18 = fig10.add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = fig9.add_subplot(211)
+    ax185 = fig11.add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = fig9.add_subplot(212)
+    ax18b = fig11.add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file_data, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file_data, colour_scheme)
@@ -10941,49 +11379,49 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        ax19 = fig10.add_subplot(231, aspect="equal")
+        ax19 = fig12.add_subplot(231, aspect="equal")
         ax19.set_position([0.025, 0.5, 0.45, 0.45])
-        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig10)
+        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig12)
 
         # TF coil turn structure
-        ax20 = fig10.add_subplot(325, aspect="equal")
+        ax20 = fig12.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.1, 0.3, 0.3])
-        plot_tf_turn(ax20, fig10, m_file_data, scan)
+        plot_tf_turn(ax20, fig12, m_file_data, scan)
     else:
-        ax19 = fig10.add_subplot(211, aspect="equal")
+        ax19 = fig12.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file_data, scan, fig9)
+        plot_resistive_tf_wp(ax19, m_file_data, scan, fig12)
 
     plot_tf_coil_structure(
-        fig11.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+        fig13.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    axes = fig12.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig14.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_bootstrap_comparison(fig13.add_subplot(221), m_file_data, scan)
-    plot_h_threshold_comparison(fig13.add_subplot(224), m_file_data, scan)
-    plot_density_limit_comparison(fig14.add_subplot(221), m_file_data, scan)
-    plot_confinement_time_comparison(fig14.add_subplot(224), m_file_data, scan)
-    plot_current_profiles_over_time(fig15.add_subplot(111), m_file_data, scan)
+    plot_bootstrap_comparison(fig15.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig15.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig16.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig16.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig17.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig16.add_subplot(121, aspect="equal"), fig16, m_file_data, scan
+        fig18.add_subplot(121, aspect="equal"), fig18, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig16.add_subplot(224, aspect="equal"), fig16, m_file_data, scan
+        fig18.add_subplot(224, aspect="equal"), fig18, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig17.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig19.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig17.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig17.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig19.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig19.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig18, m_file_data, scan)
+    plot_blkt_pipe_bends(fig20, m_file_data, scan)
 
     plot_main_power_flow(
-        fig19.add_subplot(111, aspect="equal"), m_file_data, scan, fig19
+        fig21.add_subplot(111, aspect="equal"), m_file_data, scan, fig21
     )
 
 
@@ -11295,6 +11733,8 @@ def main(args=None):
     page17 = plt.figure(figsize=(12, 9), dpi=80)
     page18 = plt.figure(figsize=(12, 9), dpi=80)
     page19 = plt.figure(figsize=(12, 9), dpi=80)
+    page20 = plt.figure(figsize=(12, 9), dpi=80)
+    page21 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -11318,6 +11758,8 @@ def main(args=None):
         page17,
         page18,
         page19,
+        page20,
+        page21,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -11346,6 +11788,8 @@ def main(args=None):
         pdf.savefig(page17)
         pdf.savefig(page18)
         pdf.savefig(page19)
+        pdf.savefig(page20)
+        pdf.savefig(page21)
 
     # show fig if option used
     if args.show:
@@ -11371,6 +11815,8 @@ def main(args=None):
     plt.close(page17)
     plt.close(page18)
     plt.close(page19)
+    plt.close(page20)
+    plt.close(page21)
 
 
 if __name__ == "__main__":
