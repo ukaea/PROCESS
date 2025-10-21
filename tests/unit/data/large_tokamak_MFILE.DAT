@@ -553,12 +553,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.6494E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6521E+02    
- Heating_time_(s)________________________________________________________ (t_fusion_ramp)_______________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.1971E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6521E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6521E+02    
+ Heating_time_(s)________________________________________________________ (t_plant_pulse_fusion_ramp)_______________      1.0000E+01    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.1971E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6521E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      9.8377E+03 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      9.8377E+03 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    

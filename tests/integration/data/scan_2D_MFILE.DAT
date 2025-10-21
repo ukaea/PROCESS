@@ -557,12 +557,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9617E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6569E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6569E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2000E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6569E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.2000E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6569E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      9.8415E+03 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      9.8415E+03 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -1720,12 +1720,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0338E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6633E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6633E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.4937E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6633E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.4937E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6633E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0137E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0137E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -2883,12 +2883,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0929E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6683E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6683E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.6787E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6683E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.6787E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6683E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0323E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0323E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -4046,12 +4046,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0982E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6609E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6609E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.7431E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6609E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.7431E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6609E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0386E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0386E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -5209,12 +5209,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0430E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6604E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6604E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.5979E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6604E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.5979E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6604E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0240E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0240E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -6372,12 +6372,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9690E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6548E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6548E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.4808E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6548E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.4808E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6548E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0122E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0122E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -7535,12 +7535,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9732E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6479E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6479E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.5384E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6479E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.5384E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6479E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0178E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0178E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -8698,12 +8698,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0426E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6497E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6497E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.6518E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6497E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.6518E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6497E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0292E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0292E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -9861,12 +9861,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1131E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6468E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6468E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.7587E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6468E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.7587E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6468E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0398E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0398E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -11024,12 +11024,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1157E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6447E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6447E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.7976E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6447E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.7976E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6447E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0437E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0437E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -12187,12 +12187,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0431E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6498E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6498E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.6748E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6498E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.6748E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6498E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0315E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0315E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -13350,12 +13350,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9741E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6485E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6485E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.5501E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6485E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.5501E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6485E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0190E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0190E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -14513,12 +14513,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.9768E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6455E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6455E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.5927E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6455E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.5927E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6455E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0232E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0232E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -15676,12 +15676,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.0430E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6516E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6516E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.6632E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6516E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.6632E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6516E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0304E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0304E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -16839,12 +16839,12 @@
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      3.1092E+02    
  # Times #
  Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6581E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6581E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.7318E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6581E+02    
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.7318E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6581E+02    
  Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      1.0374E+04 OP 
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      1.0374E+04 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
