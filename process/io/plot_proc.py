@@ -3577,10 +3577,11 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     Arguments:
       prof --> axis object to add plot to
     """
-    nd_alphas = mfile_data.data["nd_alphas"].get_scan(scan)
-    nd_protons = mfile_data.data["nd_protons"].get_scan(scan)
-    nd_impurities = mfile_data.data["nd_impurities"].get_scan(scan)
-    nd_ions_total = mfile_data.data["nd_ions_total"].get_scan(scan)
+    nd_alphas = mfile_data.data["nd_plasma_alphas_vol_avg"].get_scan(scan)
+    nd_protons = mfile_data.data["nd_plasma_protons_vol_avg"].get_scan(scan)
+    nd_impurities = mfile_data.data["nd_plasma_impurities_vol_avg"].get_scan(scan)
+    nd_ions_total = mfile_data.data["nd_plasma_ions_total_vol_avg"].get_scan(scan)
+    nd_fuel_ions = mfile_data.data["nd_plasma_fuel_ions_vol_avg"].get_scan(scan)
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
@@ -7294,7 +7295,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
-        ("beta_poloidal", r"$\beta_P$, total", ""),
+        ("beta_poloidal_vol_avg", r"$\beta_P$, total", ""),
         ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
