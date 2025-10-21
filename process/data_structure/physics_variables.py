@@ -291,6 +291,12 @@ b_plasma_poloidal_average: float = None
 b_plasma_toroidal_on_axis: float = None
 """Plasma toroidal field on axis (T) (`iteration variable 2`)"""
 
+b_plasma_inboard_toroidal: float = None
+"""Plasma inboard toroidal field (T)"""
+
+b_plasma_outboard_toroidal: float = None
+"""Plasma outboard toroidal field (T)"""
+
 b_plasma_toroidal_profile: list[float] = None
 """toroidal field profile in plasma (T)"""
 
@@ -1401,6 +1407,8 @@ def init_physics_variables():
     global betbm0
     global b_plasma_poloidal_average
     global b_plasma_toroidal_on_axis
+    global b_plasma_toroidal_inboard
+    global b_plasma_toroidal_outboard
     global b_plasma_toroidal_profile
     global b_plasma_total
     global e_plasma_magnetic_stored
@@ -1656,6 +1664,8 @@ def init_physics_variables():
     betbm0 = 1.5
     b_plasma_poloidal_average = 0.0
     b_plasma_toroidal_on_axis = 5.68
+    b_plasma_toroidal_inboard = 0.0
+    b_plasma_toroidal_outboard = 0.0
     b_plasma_toroidal_profile = []
     b_plasma_total = 0.0
     e_plasma_magnetic_stored = 0.0
