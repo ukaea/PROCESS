@@ -11523,6 +11523,7 @@ def main_plot(
     fig19,
     fig20,
     fig21,
+    fig22,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -11708,47 +11709,47 @@ def main_plot(
         plot_superconducting_tf_wp(ax19, m_file_data, scan, fig12)
 
         # TF coil turn structure
-        ax20 = fig12.add_subplot(325, aspect="equal")
+        ax20 = fig13.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, fig12, m_file_data, scan)
-        plot_205 = fig10.add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, fig13, m_file_data, scan)
+        plot_205 = fig13.add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, fig11, m_file_data, scan)
+        plot_cable_in_conduit_cable(plot_205, fig16, m_file_data, scan)
     else:
         ax19 = fig12.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
         plot_resistive_tf_wp(ax19, m_file_data, scan, fig12)
 
     plot_tf_coil_structure(
-        fig13.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+        fig14.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    axes = fig14.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig15.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_bootstrap_comparison(fig15.add_subplot(221), m_file_data, scan)
-    plot_h_threshold_comparison(fig15.add_subplot(224), m_file_data, scan)
-    plot_density_limit_comparison(fig16.add_subplot(221), m_file_data, scan)
-    plot_confinement_time_comparison(fig16.add_subplot(224), m_file_data, scan)
-    plot_current_profiles_over_time(fig17.add_subplot(111), m_file_data, scan)
+    plot_bootstrap_comparison(fig16.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig16.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig17.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig17.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig18.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig18.add_subplot(121, aspect="equal"), fig18, m_file_data, scan
+        fig19.add_subplot(121, aspect="equal"), fig19, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig18.add_subplot(224, aspect="equal"), fig18, m_file_data, scan
+        fig19.add_subplot(224, aspect="equal"), fig19, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig19.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig20.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig19.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig19.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig20.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig20.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig20, m_file_data, scan)
+    plot_blkt_pipe_bends(fig21, m_file_data, scan)
 
     plot_main_power_flow(
-        fig21.add_subplot(111, aspect="equal"), m_file_data, scan, fig21
+        fig22.add_subplot(111, aspect="equal"), m_file_data, scan, fig22
     )
 
 
@@ -12064,6 +12065,7 @@ def main(args=None):
     page19 = plt.figure(figsize=(12, 9), dpi=80)
     page20 = plt.figure(figsize=(12, 9), dpi=80)
     page21 = plt.figure(figsize=(12, 9), dpi=80)
+    page22 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12089,6 +12091,7 @@ def main(args=None):
         page19,
         page20,
         page21,
+        page22,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -12119,6 +12122,7 @@ def main(args=None):
         pdf.savefig(page19)
         pdf.savefig(page20)
         pdf.savefig(page21)
+        pdf.savefig(page22)
 
     # show fig if option used
     if args.show:
@@ -12146,6 +12150,7 @@ def main(args=None):
     plt.close(page19)
     plt.close(page20)
     plt.close(page21)
+    plt.close(page22)
 
 
 if __name__ == "__main__":
