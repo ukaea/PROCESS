@@ -343,7 +343,7 @@ dlamie: float = None
 
 
 nd_plasma_electron_max_array: list[float] = None
-"""Plasma electron density max limit model array (/m3)"""
+"""Array of plasma electron density upper limits values (/m3)"""
 
 
 nd_plasma_alphas_vol_avg: float = None

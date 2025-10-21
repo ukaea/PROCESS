@@ -457,6 +457,12 @@ OBS_VARS = {
     "rebco_thickness": "dx_hts_tape_rebco",
     "tape_thickness": "dx_hts_tape_total",
     "tape_width": "dr_hts_tape",
+    "beta": "beta_total_vol_avg",
+    "beta_max": "beta_vol_avg_max",
+    "beta_min": "beta_vol_avg_min",
+    "f_deuterium": "f_plasma_fuel_deuterium",
+    "f_tritium": "f_plasma_fuel_tritium",
+    "f_helium3": "f_plasma_fuel_helium3",
 }
 
 OBS_VARS_HELP = {
