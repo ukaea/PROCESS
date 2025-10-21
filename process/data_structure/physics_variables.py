@@ -213,27 +213,27 @@ beamfus0: float = None
 """multiplier for beam-background fusion calculation"""
 
 
-beta: float = None
-"""total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
+beta_total_vol_avg: float = None
+"""Volume averaged total plasma beta (`iteration variable 5`) (calculated if stellarator)"""
 
 
 beta_fast_alpha: float = None
 """fast alpha beta component"""
 
 
-beta_max: float = None
-"""Max allowable beta"""
+beta_vol_avg_max: float = None
+"""Max allowable volume averaged beta"""
 
 
-beta_min: float = None
-"""allowable lower beta"""
+beta_vol_avg_min: float = None
+"""Minimum allowable volume averaged beta"""
 
 
 beta_beam: float = None
 """neutral beam beta component"""
 
 
-beta_poloidal: float = None
+beta_poloidal_vol_avg: float = None
 """poloidal beta"""
 
 
@@ -241,20 +241,20 @@ beta_poloidal_eps: float = None
 """Poloidal beta and inverse aspcet ratio product"""
 
 
-beta_toroidal: float = None
-"""toroidal beta"""
+beta_toroidal_vol_avg: float = None
+"""Plasma volume averaged toroidal beta"""
 
 
-beta_thermal: float = None
-"""thermal beta"""
+beta_thermal_vol_avg: float = None
+"""Plasma volume averaged thermal beta"""
 
 
-beta_thermal_poloidal: float = None
-"""poloidal thermal beta"""
+beta_thermal_poloidal_vol_avg: float = None
+"""Plasma volume averaged poloidal thermal beta"""
 
 
-beta_thermal_toroidal: float = None
-"""poloidal thermal beta"""
+beta_thermal_toroidal_vol_avg: float = None
+"""Plasma volume averaged toloidal thermal beta"""
 
 
 beta_norm_total: float = None
@@ -330,8 +330,8 @@ nd_plasma_electrons_vol_avg: float = None
 """Plasma volume averaged electron density (/m3) (`iteration variable 6`)"""
 
 
-nd_fuel_ions: float = None
-"""fuel ion density (/m3)"""
+nd_plasma_fuel_ions_vol_avg: float = None
+"""Plasma volume averaged fuel ion density (/m3)"""
 
 
 dlamee: float = None
@@ -342,12 +342,12 @@ dlamie: float = None
 """ion-electron coulomb logarithm"""
 
 
-dlimit: list[float] = None
-"""density limit (/m3) as calculated using various models"""
+nd_plasma_electron_max_array: list[float] = None
+"""Array of plasma electron density upper limits values (/m3)"""
 
 
-nd_alphas: float = None
-"""thermal alpha density (/m3)"""
+nd_plasma_alphas_vol_avg: float = None
+"""Plasma volume averaged thermal alpha density (/m3)"""
 
 
 nd_beam_ions: float = None
@@ -382,20 +382,20 @@ beta_norm_max_stambaugh: float = None
 """Stambaugh-like coefficient for beta scaling"""
 
 
-dnelimt: float = None
-"""density limit (/m3)"""
+nd_plasma_electrons_max: float = None
+"""Plasma electron max density limit (/m3)"""
 
 
-nd_ions_total: float = None
-"""total ion density (/m3)"""
+nd_plasma_ions_total_vol_avg: float = None
+"""Plasma volume averaged total ion density (/m3)"""
 
 
-nd_electron_line: float = None
-"""line averaged electron density (/m3)"""
+nd_plasma_electron_line: float = None
+"""Plasma line averaged electron density (/m3)"""
 
 
-nd_protons: float = None
-"""proton ash density (/m3)"""
+nd_plasma_protons_vol_avg: float = None
+"""Plasma volume averaged proton ash density (/m3)"""
 
 
 ntau: float = None
@@ -406,8 +406,8 @@ nTtau: float = None
 """Lawson triple product [keV s / m3]"""
 
 
-nd_impurities: float = None
-"""high Z ion density (/m3)"""
+nd_plasma_impurities_vol_avg: float = None
+"""Plasma volume averaged impurity (Z > 2) ion density (/m3)"""
 
 
 gradient_length_ne: float = None
@@ -448,8 +448,8 @@ f_alpha_ion: float = None
 """fraction of alpha power to ions"""
 
 
-f_deuterium: float = None
-"""deuterium fuel fraction"""
+f_plasma_fuel_deuterium: float = None
+"""Plasma deuterium fuel fraction"""
 
 
 f_p_div_lower: float = None
@@ -478,8 +478,8 @@ density set manually using nd_plasma_separatrix_electron (`i_plasma_pedestal==1`
 """
 
 
-f_helium3: float = None
-"""helium-3 fuel fraction"""
+f_plasma_fuel_helium3: float = None
+"""Plasma Helium-3 fuel fraction"""
 
 
 figmer: float = None
@@ -504,8 +504,8 @@ fne0: float = None
 """
 
 
-f_tritium: float = None
-"""tritium fuel fraction"""
+f_plasma_fuel_tritium: float = None
+"""Plasma tritium fuel fraction"""
 
 
 fusden_total: float = None
@@ -806,8 +806,8 @@ m_s_limit: float = None
 """margin to vertical stability"""
 
 
-pres_plasma_on_axis: float = None
-"""central total plasma pressure (Pa)"""
+pres_plasma_thermal_on_axis: float = None
+"""Plasma central thermal pressure (no fast ions or beam pressure) (Pa)"""
 
 pres_plasma_total_profile: list[float] = None
 """Profile of total pressure in plasma (Pa)"""
@@ -827,8 +827,8 @@ j_plasma_on_axis: float = None
 n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
 
-pres_plasma_vol_avg: float = None
-"""Volume averaged plasma pressure (Pa)"""
+pres_plasma_thermal_vol_avg: float = None
+"""Volume averaged thermal plasma pressure (no fast ions or beam pressure) (Pa)"""
 
 
 f_dd_branching_trit: float = None
@@ -887,8 +887,8 @@ pden_non_alpha_charged_mw: float = None
 """Non-alpha charged particle fusion power per volume [MW/m3]"""
 
 
-pcoef: float = None
-"""profile factor (= n-weighted T / average T)"""
+f_temp_plasma_electron_density_vol_avg: float = None
+"""Ratio of density weighted plasma electron tempertaurature to volume averaged (Profile Factor)"""
 
 
 p_plasma_inner_rad_mw: float = None
@@ -1375,17 +1375,17 @@ def init_physics_variables():
     global alphat
     global aspect
     global beamfus0
-    global beta
+    global beta_total_vol_avg
     global beta_fast_alpha
-    global beta_max
-    global beta_min
+    global beta_vol_avg_max
+    global beta_vol_avg_min
     global beta_beam
-    global beta_poloidal
+    global beta_poloidal_vol_avg
     global beta_poloidal_eps
-    global beta_toroidal
-    global beta_thermal
-    global beta_thermal_poloidal
-    global beta_thermal_toroidal
+    global beta_toroidal_vol_avg
+    global beta_thermal_vol_avg
+    global beta_thermal_poloidal_vol_avg
+    global beta_thermal_toroidal_vol_avg
     global beta_norm_total
     global beta_norm_thermal
     global beta_norm_poloidal
@@ -1404,11 +1404,11 @@ def init_physics_variables():
     global f_vol_plasma
     global f_r_conducting_wall
     global nd_plasma_electrons_vol_avg
-    global nd_fuel_ions
+    global nd_plasma_fuel_ions_vol_avg
     global dlamee
     global dlamie
-    global dlimit
-    global nd_alphas
+    global nd_plasma_electron_max_array
+    global nd_plasma_alphas_vol_avg
     global nd_beam_ions
     global nd_beam_ions_out
     global beta_norm_max
@@ -1417,13 +1417,13 @@ def init_physics_variables():
     global beta_norm_max_original_scaling
     global beta_norm_max_tholerus
     global beta_norm_max_stambaugh
-    global dnelimt
-    global nd_ions_total
-    global nd_electron_line
-    global nd_protons
+    global nd_plasma_electrons_max
+    global nd_plasma_ions_total_vol_avg
+    global nd_plasma_electron_line
+    global nd_plasma_protons_vol_avg
     global ntau
     global nTtau
-    global nd_impurities
+    global nd_plasma_impurities_vol_avg
     global beta_poloidal_eps_max
     global eps
     global f_c_plasma_auxiliary
@@ -1431,18 +1431,18 @@ def init_physics_variables():
     global f_alpha_electron
     global f_p_alpha_plasma_deposited
     global f_alpha_ion
-    global f_deuterium
+    global f_plasma_fuel_deuterium
     global f_p_div_lower
     global ffwal
     global f_nd_plasma_pedestal_greenwald
     global f_nd_plasma_separatrix_greenwald
-    global f_helium3
+    global f_plasma_fuel_helium3
     global figmer
     global fkzohm
     global fplhsep
     global fp_plasma_separatrix_min_mw
     global fne0
-    global f_tritium
+    global f_plasma_fuel_tritium
     global fusden_total
     global fusrat_total
     global fusrat_plasma_dt_profile
@@ -1492,7 +1492,7 @@ def init_physics_variables():
     global nd_plasma_electron_on_axis
     global nd_plasma_ions_on_axis
     global m_s_limit
-    global pres_plasma_on_axis
+    global pres_plasma_thermal_on_axis
     global pres_plasma_total_profile
     global pres_plasma_electron_profile
     global pres_plasma_ion_total_profile
@@ -1512,7 +1512,7 @@ def init_physics_variables():
     global p_beam_dt_mw
     global p_non_alpha_charged_mw
     global pden_non_alpha_charged_mw
-    global pcoef
+    global f_temp_plasma_electron_density_vol_avg
     global p_plasma_inner_rad_mw
     global pden_plasma_core_rad_mw
     global p_dd_total_mw
@@ -1628,17 +1628,17 @@ def init_physics_variables():
     alphat = 0.5
     aspect = 2.907
     beamfus0 = 1.0
-    beta = 0.042
+    beta_total_vol_avg = 0.042
     beta_fast_alpha = 0.0
-    beta_max = 0.0
-    beta_min = 0.0
+    beta_vol_avg_max = 0.0
+    beta_vol_avg_min = 0.0
     beta_beam = 0.0
-    beta_poloidal = 0.0
+    beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
-    beta_toroidal = 0.0
-    beta_thermal = 0.0
-    beta_thermal_poloidal = 0.0
-    beta_thermal_toroidal = 0.0
+    beta_toroidal_vol_avg = 0.0
+    beta_thermal_vol_avg = 0.0
+    beta_thermal_poloidal_vol_avg = 0.0
+    beta_thermal_toroidal_vol_avg = 0.0
     beta_norm_total = 0.0
     beta_norm_thermal = 0.0
     beta_norm_poloidal = 0.0
@@ -1657,11 +1657,11 @@ def init_physics_variables():
     f_vol_plasma = 1.0
     f_r_conducting_wall = 1.35
     nd_plasma_electrons_vol_avg = 9.8e19
-    nd_fuel_ions = 0.0
+    nd_plasma_fuel_ions_vol_avg = 0.0
     dlamee = 0.0
     dlamie = 0.0
-    dlimit = np.zeros(8, dtype=np.float64)
-    nd_alphas = 0.0
+    nd_plasma_electron_max_array = np.zeros(8, dtype=np.float64)
+    nd_plasma_alphas_vol_avg = 0.0
     nd_beam_ions = 0.0
     nd_beam_ions_out = 0.0
     beta_norm_max = 3.5
@@ -1670,13 +1670,13 @@ def init_physics_variables():
     beta_norm_max_original_scaling = 0.0
     beta_norm_max_tholerus = 0.0
     beta_norm_max_stambaugh = 0.0
-    dnelimt = 0.0
-    nd_ions_total = 0.0
-    nd_electron_line = 0.0
-    nd_protons = 0.0
+    nd_plasma_electrons_max = 0.0
+    nd_plasma_ions_total_vol_avg = 0.0
+    nd_plasma_electron_line = 0.0
+    nd_plasma_protons_vol_avg = 0.0
     ntau = 0.0
     nTtau = 0.0
-    nd_impurities = 0.0
+    nd_plasma_impurities_vol_avg = 0.0
     beta_poloidal_eps_max = 1.38
     eps = 0.34399724802
     f_c_plasma_auxiliary = 0.0
@@ -1684,18 +1684,18 @@ def init_physics_variables():
     f_alpha_electron = 0.0
     f_p_alpha_plasma_deposited = 0.95
     f_alpha_ion = 0.0
-    f_deuterium = 0.5
+    f_plasma_fuel_deuterium = 0.5
     f_p_div_lower = 1.0
     ffwal = 0.92
     f_nd_plasma_pedestal_greenwald = 0.85
     f_nd_plasma_separatrix_greenwald = 0.50
-    f_helium3 = 0.0
+    f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
     fplhsep = 1.0
     fp_plasma_separatrix_min_mw = 1.0
     fne0 = 1.0
-    f_tritium = 0.5
+    f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
     fusrat_plasma_dt_profile = []
@@ -1745,7 +1745,7 @@ def init_physics_variables():
     nd_plasma_electron_on_axis = 0.0
     nd_plasma_ions_on_axis = 0.0
     m_s_limit = 0.3
-    pres_plasma_on_axis = 0.0
+    pres_plasma_thermal_on_axis = 0.0
     pres_plasma_total_profile = []
     pres_plasma_electron_profile = []
     pres_plasma_ion_total_profile = []
@@ -1765,7 +1765,7 @@ def init_physics_variables():
     p_beam_dt_mw = 0.0
     p_non_alpha_charged_mw = 0.0
     pden_non_alpha_charged_mw = 0.0
-    pcoef = 0.0
+    f_temp_plasma_electron_density_vol_avg = 0.0
     p_plasma_inner_rad_mw = 0.0
     pden_plasma_core_rad_mw = 0.0
     p_dd_total_mw = 0.0

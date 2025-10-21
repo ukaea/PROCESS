@@ -282,23 +282,23 @@ The line averaged density is then calculated for the profile paramaters
 Line averaged electron density is calculated by integrating the profile across the normalised width of the profile and then dividing by the width of the integration bounds
 
 $$
-\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \frac{\int^1_0 n_0(1-\rho^2)^{\alpha_n} \ d\rho}{\rho}
 $$
 
 This can be more easily represented in radial coordinates and returning $\rho = \frac{r}{a}$
 
 $$
-\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{\int^a_0 n_0(1-r^2/a^2)^{\alpha_n} \ dr}{a}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \frac{\int^a_0 n_0(1-r^2/a^2)^{\alpha_n} \ dr}{a}
 $$
 
 $$
-\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{\left[\frac{an_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}\right]}{a}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \frac{\left[\frac{an_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}\right]}{a}
 $$
 
 $\Gamma$ is the [gamma function](https://en.wikipedia.org/wiki/Gamma_function) and is calculated in the code with [scipy.special.gamma()](https://docs.scipy.org/doc/scipy/reference/generated/scipy.special.gamma.html)
 
 $$
-\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_electron_line}} = \frac{n_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}
+\overbrace{\bar{n_{\text{e}}}}^{\texttt{nd_plasma_electron_line}} = \frac{n_0}{2}\frac{\Gamma(1/2)\Gamma(\alpha_n+1)}{\Gamma(\alpha_n+3/2)}
 $$
 
 This is in agreement with the derivation from the ITER Physics Design 1989 [^2]
@@ -385,7 +385,7 @@ $$\begin{aligned}
 
 $$\begin{aligned}
 \texttt{nd_plasma_electron_on_axis} = n_{\text{e}} \times (\alpha_n+1) \\
-\texttt{nd_plasma_ions_on_axis} = \texttt{nd_ions_total} \times (\alpha_n+1)
+\texttt{nd_plasma_ions_on_axis} = \texttt{nd_plasma_ions_total_vol_avg} \times (\alpha_n+1)
 \end{aligned}$$
 
 -----
@@ -605,7 +605,7 @@ $$
 Calculate the line averaged electron density by integrating the normalised profile using the class [`integrate_profile_y()`](./plasma_profiles_abstract_class.md#calculate-the-profile-integral-value-integrate_profile_y) function
 
 $$
-\texttt{nd_electron_line} = \int_0^1{n(\rho) \ d\rho}
+\texttt{nd_plasma_electron_line} = \int_0^1{n(\rho) \ d\rho}
 $$
 
 A divertor variable `prn1` is set to be equal to the separatrix density over the mean density:

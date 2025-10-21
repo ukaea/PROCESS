@@ -141,13 +141,13 @@ class PlasmaProfilesParam(NamedTuple):
 
     temp_plasma_electron_on_axis_kev: float = 0.0
 
-    pres_plasma_on_axis: float = 0.0
+    pres_plasma_thermal_on_axis: float = 0.0
 
     nd_plasma_separatrix_electron: float = 0.0
 
     temp_plasma_separatrix_kev: float = 0.0
 
-    pcoef: float = 0.0
+    f_temp_plasma_electron_density_vol_avg: float = 0.0
 
     i_plasma_pedestal: float = 0.0
 
@@ -159,11 +159,11 @@ class PlasmaProfilesParam(NamedTuple):
 
     f_temp_plasma_ion_electron: float = 0.0
 
-    nd_electron_line: float = 0.0
+    nd_plasma_electron_line: float = 0.0
 
     alphat: float = 0.0
 
-    nd_ions_total: float = 0.0
+    nd_plasma_ions_total_vol_avg: float = 0.0
 
     nd_plasma_pedestal_electron: float = 0.0
 
@@ -225,18 +225,18 @@ class PlasmaProfilesParam(NamedTuple):
             alphap=0.0,
             tbeta=2,
             temp_plasma_electron_on_axis_kev=0.0,
-            pres_plasma_on_axis=0.0,
+            pres_plasma_thermal_on_axis=0.0,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             temp_plasma_separatrix_kev=0.10000000000000001,
-            pcoef=0.0,
+            f_temp_plasma_electron_density_vol_avg=0.0,
             i_plasma_pedestal=1,
             nd_plasma_ions_on_axis=0.0,
             nd_plasma_electron_on_axis=0.0,
             temp_plasma_ion_on_axis_kev=0.0,
             f_temp_plasma_ion_electron=1,
-            nd_electron_line=0.0,
+            nd_plasma_electron_line=0.0,
             alphat=1.45,
-            nd_ions_total=6.9461125748017857e19,
+            nd_plasma_ions_total_vol_avg=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             temp_plasma_ion_vol_avg_kev=12.9,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
@@ -270,18 +270,18 @@ class PlasmaProfilesParam(NamedTuple):
             alphap=2.4500000000000002,
             tbeta=2,
             temp_plasma_electron_on_axis_kev=27.369013322953624,
-            pres_plasma_on_axis=868071.46874220832,
+            pres_plasma_thermal_on_axis=868071.46874220832,
             nd_plasma_separatrix_electron=3.6421334486704804e19,
             temp_plasma_separatrix_kev=0.10000000000000001,
-            pcoef=1.1110842637642833,
+            f_temp_plasma_electron_density_vol_avg=1.1110842637642833,
             i_plasma_pedestal=1,
             nd_plasma_ions_on_axis=9.210720071916929e19,
             nd_plasma_electron_on_axis=1.0585658890823703e20,
             temp_plasma_ion_on_axis_kev=27.369013322953624,
             f_temp_plasma_ion_electron=1,
-            nd_electron_line=8.8687354645836431e19,
+            nd_plasma_electron_line=8.8687354645836431e19,
             alphat=1.45,
-            nd_ions_total=6.9461125748017857e19,
+            nd_plasma_ions_total_vol_avg=6.9461125748017857e19,
             nd_plasma_pedestal_electron=6.1916268627398164e19,
             temp_plasma_ion_vol_avg_kev=13.07,
             radius_plasma_pedestal_density_norm=0.94000000000000006,
@@ -355,8 +355,8 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
 
     monkeypatch.setattr(
         physics_variables,
-        "pres_plasma_on_axis",
-        plasmaprofilesparam.pres_plasma_on_axis,
+        "pres_plasma_thermal_on_axis",
+        plasmaprofilesparam.pres_plasma_thermal_on_axis,
     )
 
     monkeypatch.setattr(
@@ -371,7 +371,11 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.temp_plasma_separatrix_kev,
     )
 
-    monkeypatch.setattr(physics_variables, "pcoef", plasmaprofilesparam.pcoef)
+    monkeypatch.setattr(
+        physics_variables,
+        "f_temp_plasma_electron_density_vol_avg",
+        plasmaprofilesparam.f_temp_plasma_electron_density_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables, "i_plasma_pedestal", plasmaprofilesparam.i_plasma_pedestal
@@ -402,13 +406,17 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
     )
 
     monkeypatch.setattr(
-        physics_variables, "nd_electron_line", plasmaprofilesparam.nd_electron_line
+        physics_variables,
+        "nd_plasma_electron_line",
+        plasmaprofilesparam.nd_plasma_electron_line,
     )
 
     monkeypatch.setattr(physics_variables, "alphat", plasmaprofilesparam.alphat)
 
     monkeypatch.setattr(
-        physics_variables, "nd_ions_total", plasmaprofilesparam.nd_ions_total
+        physics_variables,
+        "nd_plasma_ions_total_vol_avg",
+        plasmaprofilesparam.nd_plasma_ions_total_vol_avg,
     )
 
     monkeypatch.setattr(
@@ -482,11 +490,13 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.expected_te0
     )
 
-    assert physics_variables.pres_plasma_on_axis == pytest.approx(
+    assert physics_variables.pres_plasma_thermal_on_axis == pytest.approx(
         plasmaprofilesparam.expected_p0
     )
 
-    assert physics_variables.pcoef == pytest.approx(plasmaprofilesparam.expected_pcoef)
+    assert physics_variables.f_temp_plasma_electron_density_vol_avg == pytest.approx(
+        plasmaprofilesparam.expected_pcoef
+    )
 
     assert physics_variables.nd_plasma_ions_on_axis == pytest.approx(
         plasmaprofilesparam.expected_ni0
@@ -500,7 +510,7 @@ def test_plasma_profiles(plasmaprofilesparam, monkeypatch):
         plasmaprofilesparam.expected_ti0
     )
 
-    assert physics_variables.nd_electron_line == pytest.approx(
+    assert physics_variables.nd_plasma_electron_line == pytest.approx(
         plasmaprofilesparam.expected_nd_electron_line
     )
 

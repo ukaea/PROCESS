@@ -2635,11 +2635,11 @@ def plot_main_plasma_information(
     # Add beta information
     textstr_beta = (
         f"$\\mathbf{{Beta \\ Information:}}$\n \n"
-        f"Total beta,$ \\ \\beta$: {mfile_data.data['beta'].get_scan(scan):.4f}\n"
-        f"Thermal beta,$ \\ \\beta_{{\\text{{thermal}}}}$: {mfile_data.data['beta_thermal'].get_scan(scan):.4f}\n"
-        f"Toroidal beta,$ \\ \\beta_{{\\text{{t}}}}$: {mfile_data.data['beta_toroidal'].get_scan(scan):.4f}\n"
-        f"Poloidal beta,$ \\ \\beta_{{\\text{{p}}}}$: {mfile_data.data['beta_poloidal'].get_scan(scan):.4f}\n"
-        f"Fast-alpha beta,$ \\ \\beta_{{\\alpha}}$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
+        f"Total beta,$ \\ \\langle \\beta \\rangle$: {mfile_data.data['beta_total_vol_avg'].get_scan(scan):.4f}\n"
+        f"Thermal beta,$ \\ \\langle \\beta_{{\\text{{thermal}}}} \\rangle$: {mfile_data.data['beta_thermal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Toroidal beta,$ \\ \\langle \\beta_{{\\text{{t}}}} \\rangle$: {mfile_data.data['beta_toroidal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Poloidal beta,$ \\ \\langle \\beta_{{\\text{{p}}}} \\rangle$: {mfile_data.data['beta_poloidal_vol_avg'].get_scan(scan):.4f}\n"
+        f"Fast-alpha beta,$ \\ \\langle \\beta_{{\\alpha}} \\rangle$: {mfile_data.data['beta_fast_alpha'].get_scan(scan):.4f}\n"
         f"Normalised total beta,$ \\ \\beta_{{\\text{{N}}}}$: {mfile_data.data['beta_norm_total'].get_scan(scan):.4f}\n"
         f"Normalised thermal beta,$ \\ \\beta_{{\\text{{N,thermal}}}}$: {mfile_data.data['beta_norm_thermal'].get_scan(scan):.4f}\n"
     )
@@ -2874,7 +2874,7 @@ def plot_main_plasma_information(
     textstr_reactions = (
         f"$\\mathbf{{Fusion \\ Reactions:}}$\n \n"
         f"Fuel mixture: \n"
-        f"|  D: {mfile_data.data['f_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_helium3'].get_scan(scan):.2f}  |\n\n"
+        f"|  D: {mfile_data.data['f_plasma_fuel_deuterium'].get_scan(scan):.2f}  |  T: {mfile_data.data['f_plasma_fuel_tritium'].get_scan(scan):.2f}  |  3He: {mfile_data.data['f_plasma_fuel_helium3'].get_scan(scan):.2f}  |\n\n"
         f"Fusion Power, $P_{{\\text{{fus}}}}:$ {mfile_data.data['p_fusion_total_mw'].get_scan(scan):.2f} MW\n"
         f"D-T Power, $P_{{\\text{{fus,DT}}}}:$ {mfile_data.data['p_dt_total_mw'].get_scan(scan):.2f} MW\n"
         f"D-D Power, $P_{{\\text{{fus,DD}}}}:$ {mfile_data.data['p_dd_total_mw'].get_scan(scan):.2f} MW\n"
@@ -3118,7 +3118,7 @@ def plot_main_plasma_information(
     # Add density limit information
     textstr_density_limit = (
         f"$\\mathbf{{Density \\ limit:}}$\n\n"
-        f"$n_{{\\text{{e,limit}}}}: {mfile_data.data['dnelimt'].get_scan(scan):.3e} \\ m^{{-3}}$\n"
+        f"$n_{{\\text{{e,limit}}}}: {mfile_data.data['nd_plasma_electrons_max'].get_scan(scan):.3e} \\ m^{{-3}}$\n"
     )
 
     axis.text(
@@ -3588,13 +3588,13 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             + (ne0 - nd_plasma_pedestal_electron)
             * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
         )
-        nicore = necore * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
+        nicore = necore * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
         neesep = nd_plasma_separatrix_electron + (
             nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
-        nisep = neesep * (nd_fuel_ions / nd_plasma_electrons_vol_avg)
+        nisep = neesep * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
@@ -3604,7 +3604,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
-        ni = (ne0 * (nd_fuel_ions / nd_plasma_electrons_vol_avg)) * (
+        ni = (ne0 * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)) * (
             1 - rho**2
         ) ** alphan
     ne = ne / 1e19
@@ -3652,13 +3652,13 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\hspace{{4}} \alpha_{{\text{{n}}}}$: {alphan:.3f}",
         rf"$n_{{\text{{e,ped}}}}$: {nd_plasma_pedestal_electron:.3e} m$^{{-3}}$"
         r"$ \hspace{3} \frac{\langle n_i \rangle}{\langle n_e \rangle}$: "
-        f"{nd_fuel_ions / nd_plasma_electrons_vol_avg:.3f}",
+        f"{nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg:.3f}",
         rf"$f_{{\text{{GW e,ped}}}}$: {fgwped_out:.3f}"
         r"$ \hspace{7} \frac{n_{e,0}}{\langle n_e \rangle}$: "
         f"{ne0 / nd_plasma_electrons_vol_avg:.3f}",
         rf"$\rho_{{\text{{ped,n}}}}$: {radius_plasma_pedestal_density_norm:.3f}"
         r"$ \hspace{8} \frac{\overline{n_{e}}}{n_{\text{GW}}}$: "
-        f"{mfile_data.data['nd_electron_line'].get_scan(scan) / mfile_data.data['dlimit(7)'].get_scan(scan):.3f}",
+        f"{mfile_data.data['nd_plasma_electron_line'].get_scan(scan) / mfile_data.data['nd_plasma_electron_max_array(7)'].get_scan(scan):.3f}",
         rf"$n_{{\text{{e,sep}}}}$: {nd_plasma_separatrix_electron:.3e} m$^{{-3}}$",
         rf"$f_{{\text{{GW e,sep}}}}$: {fgwsep_out:.3f}",
     ))
@@ -3676,15 +3676,15 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
     textstr_ions = "\n".join((
         r"$\langle n_{\text{ions-total}} \rangle $: "
-        f"{mfile_data.data['nd_ions_total'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_ions_total_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{fuel}} \rangle $: "
-        f"{mfile_data.data['nd_fuel_ions'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_fuel_ions_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{alpha}} \rangle $: "
-        f"{mfile_data.data['nd_alphas'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_alphas_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{impurities}} \rangle $: "
-        f"{mfile_data.data['nd_impurities'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_impurities_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
         r"$\langle n_{\text{protons}} \rangle $:"
-        f"{mfile_data.data['nd_protons'].get_scan(scan):.3e} m$^{{-3}}$",
+        f"{mfile_data.data['nd_plasma_protons_vol_avg'].get_scan(scan):.3e} m$^{{-3}}$",
     ))
 
     prof.text(
@@ -3820,7 +3820,8 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
     te = mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan)
     # Add text box with temperature profile parameters
     textstr_temperature = "\n".join((
-        rf"$\langle T_{{\text{{e}}}} \rangle$: {mfile_data.data['temp_plasma_electron_vol_avg_kev'].get_scan(scan):.3f} keV",
+        rf"$\langle T_{{\text{{e}}}} \rangle_\text{{V}}$: {mfile_data.data['temp_plasma_electron_vol_avg_kev'].get_scan(scan):.3f} keV"
+        rf"$\hspace{{3}} \langle T_{{\text{{e}}}} \rangle_\text{{n}}$: {mfile_data.data['temp_plasma_electron_density_weighted_kev'].get_scan(scan):.3f} keV",
         rf"$T_{{\text{{e,0}}}}$: {te0:.3f} keV"
         rf"$\hspace{{4}} \alpha_{{\text{{T}}}}$: {alphat:.3f}",
         rf"$T_{{\text{{e,ped}}}}$: {temp_plasma_pedestal_kev:.3f} keV"
@@ -3829,7 +3830,9 @@ def plot_t_profiles(prof, demo_ranges, mfile_data, scan):
         rf"$\rho_{{\text{{ped,T}}}}$: {radius_plasma_pedestal_temp_norm:.3f}"
         r"$ \hspace{6} \frac{T_{e,0}}{\langle T_e \rangle}$: "
         f"{te0 / te:.3f}",
-        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV",
+        rf"$T_{{\text{{e,sep}}}}$: {temp_plasma_separatrix_kev:.3f} keV"
+        r"$ \hspace{4} \frac{{{\langle T_e \rangle_n}}}{{{\langle T_e \rangle_V}}}$: "
+        f"{mfile_data.data['f_temp_plasma_electron_density_vol_avg'].get_scan(scan):.3f}",
     ))
 
     props_temperature = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
@@ -6835,13 +6838,13 @@ def plot_physics_info(axis, mfile_data, scan):
     axis.set_autoscaley_on(False)
     axis.set_autoscalex_on(False)
 
-    nong = mfile_data.data["nd_electron_line"].get_scan(scan) / mfile_data.data[
-        "dlimit(7)"
+    nong = mfile_data.data["nd_plasma_electron_line"].get_scan(scan) / mfile_data.data[
+        "nd_plasma_electron_max_array(7)"
     ].get_scan(scan)
 
-    nd_impurities = mfile_data.data["nd_impurities"].get_scan(scan) / mfile_data.data[
-        "nd_plasma_electrons_vol_avg"
-    ].get_scan(scan)
+    nd_plasma_impurities_vol_avg = mfile_data.data[
+        "nd_plasma_impurities_vol_avg"
+    ].get_scan(scan) / mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
 
     tepeak = mfile_data.data["temp_plasma_electron_on_axis_kev"].get_scan(
         scan
@@ -6866,7 +6869,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("q95", r"$q_{\mathrm{95}}$", ""),
         ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
-        ("beta_thermal_poloidal", r"$\beta_P$, thermal", ""),
+        ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
         ("beta_poloidal", r"$\beta_P$, total", ""),
         ("te", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
@@ -6874,7 +6877,11 @@ def plot_physics_info(axis, mfile_data, scan):
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
         ("zeff", r"$Z_{\mathrm{eff}}$", ""),
-        (nd_impurities, r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$", ""),
+        (
+            nd_plasma_impurities_vol_avg,
+            r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$",
+            "",
+        ),
         ("t_energy_confinement", r"$\tau_e$", "s"),
         ("hfact", "H-factor", ""),
         (pthresh, "H-mode threshold", "MW"),
@@ -7604,7 +7611,7 @@ def plot_confinement_time_comparison(
     rmajor = mfile_data.data["rmajor"].get_scan(scan)
     c_plasma_ma = mfile_data.data["plasma_current_ma"].get_scan(scan)
     kappa95 = mfile_data.data["kappa95"].get_scan(scan)
-    dnla20 = mfile_data.data["nd_electron_line"].get_scan(scan) / 1e20
+    dnla20 = mfile_data.data["nd_plasma_electron_line"].get_scan(scan) / 1e20
     afuel = mfile_data.data["m_fuel_amu"].get_scan(scan)
     b_plasma_toroidal_on_axis = mfile_data.data["b_plasma_toroidal_on_axis"].get_scan(
         scan
@@ -7612,7 +7619,7 @@ def plot_confinement_time_comparison(
     p_plasma_separatrix_mw = mfile_data.data["p_plasma_separatrix_mw"].get_scan(scan)
     kappa = mfile_data.data["kappa"].get_scan(scan)
     aspect = mfile_data.data["aspect"].get_scan(scan)
-    dnla19 = mfile_data.data["nd_electron_line"].get_scan(scan) / 1e19
+    dnla19 = mfile_data.data["nd_plasma_electron_line"].get_scan(scan) / 1e19
     kappa_ipb = mfile_data.data["kappa_ipb"].get_scan(scan)
     triang = mfile_data.data["triang"].get_scan(scan)
     m_ions_total_amu = mfile_data.data["m_ions_total_amu"].get_scan(scan)
@@ -8377,14 +8384,16 @@ def plot_density_limit_comparison(
         mfile_data (mf.MFile): MFILE data object.
         scan (int): Scan number to use.
     """
-    old_asdex = mfile_data.data["dlimit(1)"].get_scan(scan)
-    borrass_iter_i = mfile_data.data["dlimit(2)"].get_scan(scan)
-    borrass_iter_ii = mfile_data.data["dlimit(3)"].get_scan(scan)
-    jet_edge_radiation = mfile_data.data["dlimit(4)"].get_scan(scan)
-    jet_simplified = mfile_data.data["dlimit(5)"].get_scan(scan)
-    hugill_murakami = mfile_data.data["dlimit(6)"].get_scan(scan)
-    greenwald = mfile_data.data["dlimit(7)"].get_scan(scan)
-    asdex_new = mfile_data.data["dlimit(8)"].get_scan(scan)
+    old_asdex = mfile_data.data["nd_plasma_electron_max_array(1)"].get_scan(scan)
+    borrass_iter_i = mfile_data.data["nd_plasma_electron_max_array(2)"].get_scan(scan)
+    borrass_iter_ii = mfile_data.data["nd_plasma_electron_max_array(3)"].get_scan(scan)
+    jet_edge_radiation = mfile_data.data["nd_plasma_electron_max_array(4)"].get_scan(
+        scan
+    )
+    jet_simplified = mfile_data.data["nd_plasma_electron_max_array(5)"].get_scan(scan)
+    hugill_murakami = mfile_data.data["nd_plasma_electron_max_array(6)"].get_scan(scan)
+    greenwald = mfile_data.data["nd_plasma_electron_max_array(7)"].get_scan(scan)
+    asdex_new = mfile_data.data["nd_plasma_electron_max_array(8)"].get_scan(scan)
 
     # Data for the box plot
     data = {
@@ -11557,7 +11566,7 @@ def main(args=None):
     global alphan
     global alphat
     global ne0
-    global nd_fuel_ions
+    global nd_plasma_fuel_ions_vol_avg
     global nd_plasma_electrons_vol_avg
     global te0
     global ti
@@ -11587,7 +11596,9 @@ def main(args=None):
     alphan = m_file.data["alphan"].get_scan(scan)
     alphat = m_file.data["alphat"].get_scan(scan)
     ne0 = m_file.data["nd_plasma_electron_on_axis"].get_scan(scan)
-    nd_fuel_ions = m_file.data["nd_fuel_ions"].get_scan(scan)
+    nd_plasma_fuel_ions_vol_avg = m_file.data["nd_plasma_fuel_ions_vol_avg"].get_scan(
+        scan
+    )
     nd_plasma_electrons_vol_avg = m_file.data["nd_plasma_electrons_vol_avg"].get_scan(
         scan
     )

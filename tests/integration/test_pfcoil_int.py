@@ -160,7 +160,7 @@ def test_pfcoil(monkeypatch, pfcoil):
     monkeypatch.setattr(pv, "vs_plasma_ind_ramp", 3.497e2)
     monkeypatch.setattr(pv, "aspect", 3.1)
     monkeypatch.setattr(pv, "itart", 0)
-    monkeypatch.setattr(pv, "beta_poloidal", 6.313e-1)
+    monkeypatch.setattr(pv, "beta_poloidal_vol_avg", 6.313e-1)
     monkeypatch.setattr(tfv, "tftmp", 4.750)
     monkeypatch.setattr(tfv, "dcond", np.full(9, 9.0e3))
     monkeypatch.setattr(tfv, "i_tf_sup", 1)

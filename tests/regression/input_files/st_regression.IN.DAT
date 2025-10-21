@@ -237,7 +237,7 @@ triang = 0.5
 icc = 5
 * DESCRIPTION:   Density Upper Limit
 * JUSTIFICATION: Used to enforce Greenwald limit
-* VARIABLES:     dnelimt & nd_electron_line calculated in-situ
+* VARIABLES:     nd_plasma_electrons_max & nd_plasma_electron_line calculated in-situ
 
 i_density_limit = 7
 * DESCRIPTION:   Switch for Density Limit to Enforce (icc=5) (7: Greenwald Limit)
@@ -305,12 +305,12 @@ icc = 24
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     beta calculated in-situ
 
-*beta_max
+*beta_vol_avg_max
 * DESCRIPTION:   Plasma beta upper limit
 * JUSTIFICATION: Turned off, not in use. icc=24. Allow to be calculated in-situ
 
 ixc = 5
-beta = 0.2
+beta_total_vol_avg = 0.2
 boundl(5) = 0.01
 boundu(5) = 1.0
 * DESCRIPTION:   Total Plasma Beta, 
@@ -349,9 +349,9 @@ i_beta_norm_max = 0
 *icc = 84
 * DESCRIPTION:   Constraint equation for lower limit of beta
 * JUSTIFICATION: Turned off, do not require a beta lower limit
-* VARIABLES:     beta_min (Lower limit for beta). beta,betaft calculated in-situ
+* VARIABLES:     beta_vol_avg_min (Lower limit for beta). beta,betaft calculated in-situ
 
-*beta_min = 
+*beta_vol_avg_min = 
 * DESCRIPTION:   Plasma beta lower limit
 * JUSTIFICATION: Turned off, not in use, Used with icc=84 to enforce beta limit
 
@@ -622,15 +622,15 @@ boundu(28) = 1.0
 * DESCRIPTION:   Seeded f_nd_protium_electrons density / electron density (default = 0.0)
 * JUSTIFICATION: Not used, no f_nd_protium_electrons seeding.
 
-*f_deuterium = 
+*f_plasma_fuel_deuterium = 
 * DESCRIPTION:   Deuterium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*f_tritium = 
+*f_plasma_fuel_tritium = 
 * DESCRIPTION:   Tritium fuel fraction
 * JUSTIFICATION: Using default = 0.5
 
-*f_helium3 = 
+*f_plasma_fuel_helium3 = 
 * DESCRIPTION:   Helium-3 fuel fraction
 * JUSTIFICATION: Using default = 0.0
 

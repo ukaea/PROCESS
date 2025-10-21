@@ -5,8 +5,18 @@
 The efficiency of confinement of plasma pressure by the magnetic field is represented by the ratio:
 
 $$
-\beta = \frac{2\mu_0p}{B^2}
+\beta(\rho) = \frac{2\mu_0p(\rho)}{\left(B(\rho)\right)^2}
 $$
+
+Where $\beta$ is a function of normalised minor radius across the plasma ($\rho$), due to the change in pressure and magnetic field strength. 
+
+The standard $\beta$ term used for comparison and to represent the plasma as a whole in many calculations is the volume averaged value given by:
+
+$$
+\langle \beta \rangle = \frac{2\mu_0 \langle p \rangle}{\langle B \rangle^2}
+$$
+
+Where $\langle p \rangle$ is the volume averaged plasma pressure and $\langle B \rangle$ is the average field.
 
 There are several different measures of this type, arising from different choices of definition and from the need to quantify different equilibrium properties.
 
@@ -91,6 +101,32 @@ $$
 $$
 
 ------------------------
+
+## Definitions
+
+### Volume averaged thermal toroidal beta
+
+We define $B_{\text{T,on-axis}}$ as the toroidal field at the plasma major radius, $R_0$
+
+$$
+\overbrace{\langle \beta_t \rangle_{\text{V}}}^{\texttt{beta_toroidal_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\underbrace{B_{\text{T,on-axis}}^2}_{\texttt{b_plasma_toroidal_on_axis}}}
+$$
+
+### Volume averaged thermal poloidal beta
+
+
+
+$$
+\overbrace{\langle \beta_p \rangle_{\text{V}}}^{\texttt{beta_poloidal_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\underbrace{\langle B_{\text{P,average}} \rangle^2}_{\texttt{b_plasma_poloidal_average}}}
+$$
+
+### Volume averaged thermal beta
+
+$$
+\overbrace{\langle \beta \rangle_{\text{V}}}^{\texttt{beta_thermal_vol_avg}} = \frac{2\mu_0 \overbrace{\langle p_{\text{thermal}} \rangle}^{\texttt{pres_plasma_thermal_vol_avg}}}{\sqrt{\langle B_{\text{P,average}} \rangle^2+B_{\text{T,on-axis}}^2}}
+$$
+
+------------------
 
 ## Troyon Beta Limit
 
@@ -350,7 +386,13 @@ This constraint can be activated by stating `icc = 1` in the input file.
 Ensures the relationship between $\beta$, density, temperature and total magnetic field is withheld by checking the fixed input or iteration variable $\mathtt{beta}$ is consistent in value with the rest of the physics parameters
 
 $$
-\mathtt{beta} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
+\texttt{beta_total_vol_avg} \equiv \frac{2\mu_0 \langle n_{\text{e}}T_{\text{e}}+n_{\text{i}}T_{\text{i}}\rangle}{B^2} + \beta_{\alpha} + \beta_{\text{beam}}
+$$
+
+Here the calculation of the volume averaged pressure of the ions and electrons has to use the density weighted temperature for each. This is because $\langle nT \rangle_{\text{V}} \neq \langle n \rangle_{\text{V}} \langle T \rangle_{\text{V}}$, where $\text{V}$ denotes the volume averaged value. The true value is, $\langle nT \rangle_{\text{V}} = \langle n \rangle_{\text{V}} \langle T \rangle_{\text{n}}$, where $\text{n}$ is the density weighted averaged. For example:
+
+$$
+\langle n_{\text{e}}T_{\text{e}} \rangle_{\text{V}} = \overbrace{\langle n_{\text{e}} \rangle_{\text{V}}}^{\texttt{nd_plasma_electrons_vol_avg}} \times  \overbrace{\langle T_{\text{e}} \rangle_{\text{n}}}^{\texttt{temp_plasma_electron_density_weighted_kev}}
 $$
 
 **It is highly recommended to always have this constraint on as it is a global consistency checker**
@@ -403,7 +445,7 @@ The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta
 
 This constraint can be activated by stating `icc = 84` in the input file.
 
-The value of `beta_min` can be set to the desired minimum total beta. The scaling value `fbeta_min` can be varied also.
+The value of `beta_vol_avg_min` can be set to the desired minimum total beta. The scaling value `fbeta_min` can be varied also.
 
 [^0]: F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,” Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597–1609, Oct. 1988, doi: https://doi.org/10.1088/0741-3335/30/11/019.
 

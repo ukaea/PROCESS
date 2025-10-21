@@ -36,7 +36,7 @@ using input array `f_nd_impurity_electrons(1,...,14)`. The available species alo
 As stated above, the number density fractions for hydrogen (all isotopes) and
 helium should not be set, as they are calculated by the code. This is to ensure 
 plasma quasi-neutrality taking into account the fuel ratios
-`f_deuterium`, `f_tritium` and `f_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
+`f_plasma_fuel_deuterium`, `f_plasma_fuel_tritium` and `f_plasma_fuel_helium3`, and the alpha particle fraction `f_nd_alpha_electron` which may 
 be input by the user or selected as an iteration variable.
 
 !!! note "Location of impurities"
@@ -59,7 +59,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 1. **Alpha Ash Portion Calculation**
 
-    - Calculate the number density of alpha particles (`nd_alphas`) using the electron density (`nd_plasma_electrons_vol_avg`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
+    - Calculate the number density of alpha particles (`nd_plasma_alphas_vol_avg`) using the electron density (`nd_plasma_electrons_vol_avg`) and the alpha particle to electron ratio (`f_nd_alpha_electron`).
         - `f_nd_alpha_electron` can be set as an iteration variable (`ixc = 109`) or set directly.
 
     $$
@@ -68,19 +68,19 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 
 2. **Protons Calculation**
-    - The calculation of proton density (`nd_protons`) depends on whether the alpha rate density has been calculated. This should only happen in the first function call as the rates are calculated later on in the code.
+    - The calculation of proton density (`nd_plasma_protons_vol_avg`) depends on whether the alpha rate density has been calculated. This should only happen in the first function call as the rates are calculated later on in the code.
 
     - If the alpha rate density is not yet calculated, use a rough estimate.
 
     $$
-    \texttt{nd_protons} | n_{\text{p}} = \\
+    \texttt{nd_plasma_protons_vol_avg} | n_{\text{p}} = \\
     \text{max}\left[\texttt{f_nd_protium_electrons} \times n_{\text{e}}, n_{\alpha}\times \left(f_{\text{3He}} + 0.001\right)\right]
     $$
 
     - Otherwise, use the calculated proton rate density.
 
     $$
-    \texttt{nd_protons} | n_{\text{p}} = \\
+    \texttt{nd_plasma_protons_vol_avg} | n_{\text{p}} = \\
     \text{max}\left[\texttt{f_nd_protium_electrons} \times n_{\text{e}}, n_{\alpha}\times \frac{r_{\text{p}}}{r_{\alpha,\text{total}}}\right]
     $$
 
@@ -116,7 +116,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
     \mathtt{nd\_fuel\_ions} | n_{\text{i}} = \frac{\mathtt{znfuel}}{1+f_{\text{3He}}}
     $$
 
-    - Calculate the fuel ion density (`nd_fuel_ions`).
+    - Calculate the fuel ion density (`nd_plasma_fuel_ions_vol_avg`).
 
 7. **Set Hydrogen and Helium Impurity Fractions**
 
@@ -132,7 +132,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 8. **Total Impurity Density Calculation**
 
-    - Calculate the total impurity density (`nd_impurities`).
+    - Calculate the total impurity density (`nd_plasma_impurities_vol_avg`).
 
     $$
     \mathtt{nd\_impurities} | n_{\text{impurities}} = \sum_j n_{\text{e}} f_j
@@ -140,7 +140,7 @@ All of the plasma composites are normally given as a fraction of the volume aver
 
 9. **Total Ion Density Calculation**
 
-    - Calculate the total ion density (`nd_ions_total`).
+    - Calculate the total ion density (`nd_plasma_ions_total_vol_avg`).
 
     $$
     \mathtt{nd\_ions\_total} | n_{\text{i,total}} = n_{\text{i}} + n_{\alpha}+n_{\text{protons}}+ n_{\text{beam}}+n_{\text{impurities}}
