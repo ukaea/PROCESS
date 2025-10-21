@@ -1817,7 +1817,7 @@ class Physics:
             physics_variables.pres_plasma_thermal_total_profile,
         ])
 
-        physics_variables.beta_toroidal_profile = np.array([
+        physics_variables.beta_thermal_toroidal_profile = np.array([
             self.calculate_plasma_beta(
                 pres_plasma=pres_profile_total[i],
                 b_field=physics_variables.b_plasma_toroidal_profile[i],
@@ -4484,12 +4484,12 @@ class Physics:
             physics_variables.beta_toroidal_vol_avg,
             "OP ",
         )
-        for i in range(len(physics_variables.beta_toroidal_profile)):
+        for i in range(len(physics_variables.beta_thermal_toroidal_profile)):
             po.ovarre(
                 self.mfile,
                 f"Beta toroidal profile at point {i}",
-                f"beta_toroidal_profile{i}",
-                physics_variables.beta_toroidal_profile[i],
+                f"beta_thermal_toroidal_profile{i}",
+                physics_variables.beta_thermal_toroidal_profile[i],
             )
 
         po.ovarre(

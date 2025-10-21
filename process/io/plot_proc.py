@@ -10851,7 +10851,9 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
     pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
     pres_plasma_profile_fuel_kpa = [p / 1000.0 for p in pres_plasma_profile_fuel]
-    pres_plasma_profile_total_kpa = [p / 1000.0 for p in pres_plasma_thermal_total_profile]
+    pres_plasma_profile_total_kpa = [
+        p / 1000.0 for p in pres_plasma_thermal_total_profile
+    ]
 
     axis.plot(
         np.linspace(0, 1, len(pres_plasma_profile_kpa)),
@@ -11616,7 +11618,7 @@ def plot_beta_profiles(axis, mfile_data, scan):
     )
 
     beta_plasma_toroidal_profile = [
-        mfile_data.data[f"beta_toroidal_profile{i}"].get_scan(scan)
+        mfile_data.data[f"beta_thermal_toroidal_profile{i}"].get_scan(scan)
         for i in range(2 * n_plasma_profile_elements)
     ]
 
@@ -11636,13 +11638,14 @@ def plot_beta_profiles(axis, mfile_data, scan):
     )
 
     axis.set_xlabel("$\\rho$ [r/a]")
-    axis.set_ylabel("$\\beta$ [%]")
+    axis.set_ylabel("$\\beta$")
     axis.minorticks_on()
     axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
     axis.set_title("Thermal Beta Profiles")
     axis.legend()
     axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
     axis.grid(True, linestyle="--", alpha=0.5)
+    axis.set_ylim(bottom=0.0)
 
 
 def main_plot(
