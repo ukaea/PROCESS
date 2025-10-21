@@ -10840,8 +10840,8 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
         for i in range(n_plasma_profile_elements)
     ]
-    pres_plasma_total_profile = [
-        mfile_data.data[f"pres_plasma_total_profile{i}"].get_scan(scan)
+    pres_plasma_thermal_total_profile = [
+        mfile_data.data[f"pres_plasma_thermal_total_profile{i}"].get_scan(scan)
         for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_fuel = [
@@ -10851,7 +10851,7 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
     pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
     pres_plasma_profile_fuel_kpa = [p / 1000.0 for p in pres_plasma_profile_fuel]
-    pres_plasma_profile_total_kpa = [p / 1000.0 for p in pres_plasma_total_profile]
+    pres_plasma_profile_total_kpa = [p / 1000.0 for p in pres_plasma_thermal_total_profile]
 
     axis.plot(
         np.linspace(0, 1, len(pres_plasma_profile_kpa)),
@@ -10903,7 +10903,7 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
         for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_total = [
-        mfile_data.data[f"pres_plasma_total_profile{i}"].get_scan(scan)
+        mfile_data.data[f"pres_plasma_thermal_total_profile{i}"].get_scan(scan)
         for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_fuel = [

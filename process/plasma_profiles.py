@@ -299,7 +299,7 @@ class PlasmaProfile:
         )
 
         # Total pressure profile (Pa)
-        physics_variables.pres_plasma_total_profile = (
+        physics_variables.pres_plasma_thermal_total_profile = (
             physics_variables.pres_plasma_electron_profile
             + physics_variables.pres_plasma_ion_total_profile
         )

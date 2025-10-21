@@ -1813,8 +1813,8 @@ class Physics:
 
         # Mirror the pressure profiles to match the doubled toroidal field profile
         pres_profile_total = np.concatenate([
-            physics_variables.pres_plasma_total_profile[::-1],
-            physics_variables.pres_plasma_total_profile,
+            physics_variables.pres_plasma_thermal_total_profile[::-1],
+            physics_variables.pres_plasma_thermal_total_profile,
         ])
 
         physics_variables.beta_toroidal_profile = np.array([
@@ -4745,12 +4745,12 @@ class Physics:
         )
         # As array output is not currently supported, each element is output as a float instance
         # Output plasma pressure profiles to mfile
-        for i in range(len(physics_variables.pres_plasma_total_profile)):
+        for i in range(len(physics_variables.pres_plasma_thermal_total_profile)):
             po.ovarre(
                 self.mfile,
                 f"Total plasma pressure at point {i}",
-                f"(pres_plasma_total_profile{i})",
-                physics_variables.pres_plasma_total_profile[i],
+                f"(pres_plasma_thermal_total_profile{i})",
+                physics_variables.pres_plasma_thermal_total_profile[i],
             )
         for i in range(len(physics_variables.pres_plasma_electron_profile)):
             po.ovarre(
