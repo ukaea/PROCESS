@@ -726,17 +726,8 @@ logging_model_handler.setLevel(logging.WARNING)
 logging_model_handler.setFormatter(logging_formatter)
 
 
-def main(args=None):
-    """Run Process.
-
-    The args parameter is used to control command-line arguments when running
-    tests. Optional args can be supplied by different tests, which are then
-    used instead of command-line arguments by argparse. This allows testing of
-    different command-line arguments from the test suite.
-
-    :param args: Arguments to parse, defaults to None
-    :type args: list, optional
-    """
+def setup_loggers():
+    """A function that adds our handlers to the appropriate logger object."""
     # Only add our handlers if PROCESS is being run as an application
     # This should allow it to be used as a package (e.g. people import models that log)
     # without creating a process.log file... people can then handle our logs as they wish.
@@ -749,6 +740,21 @@ def main(args=None):
     # regardless of whether it has already been created.
     root_logger = logging.getLogger()
     root_logger.addHandler(logging_model_handler)
+
+
+def main(args=None):
+    """Run Process.
+
+    The args parameter is used to control command-line arguments when running
+    tests. Optional args can be supplied by different tests, which are then
+    used instead of command-line arguments by argparse. This allows testing of
+    different command-line arguments from the test suite.
+
+    :param args: Arguments to parse, defaults to None
+    :type args: list, optional
+    """
+
+    setup_loggers()
 
     Process(args)
 
