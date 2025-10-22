@@ -696,11 +696,8 @@ def constraint_equation_19():
         + data_structure.tfcoil_variables.p_tf_leg_resistive_mw
     )
 
-    cc = (
-        totmva / data_structure.constraint_variables.mvalim
-        - 1.0 * data_structure.constraint_variables.fmva
-    )
-    return ConstraintManager(
+    cc = totmva / data_structure.constraint_variables.mvalim - 1.0
+    return ConstraintResult(
         cc, data_structure.constraint_variables.mvalim * (1.0 - cc), totmva * cc
     )
 
