@@ -12321,7 +12321,22 @@ def plot_frequency_profile(axis, mfile_data, scan):
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
+    freq_plasma_larmor_toroidal_electron_profile = [
+        mfile_data.data[f"freq_plasma_larmor_toroidal_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
 
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle="-",
+        label=r"$f_{Larmor,toroidal,e}$",
+    )
     x = np.linspace(0, 1, len(freq_plasma_electron_profile))
     y = np.array(freq_plasma_electron_profile) / 1e9
     # original curve

@@ -9097,14 +9097,14 @@ class DetailedPhysics:
                 z_particle=1.0,
             )
         )
-        
+
         # ============================
         # Larmor frequencies
         # ============================
-        
-        physics_variables.freq_plasma_electron_larmor_profile = (
+
+        physics_variables.freq_plasma_larmor_toroidal_electron_profile = (
             self.calculate_larmor_frequency(
-                b_field=self.plasma_profile.bprofile.profile_y,
+                b_field=physics_variables.b_plasma_toroidal_profile,
                 m_particle=constants.ELECTRON_MASS,
                 z_particle=1.0,
             )
@@ -9289,4 +9289,13 @@ class DetailedPhysics:
                 f"Plasma electron frequency at point {i}",
                 f"freq_plasma_electron_profile{i}",
                 physics_variables.freq_plasma_electron_profile[i],
+            )
+        for i in range(
+            len(physics_variables.freq_plasma_larmor_toroidal_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron Larmor frequency at point {i}",
+                f"freq_plasma_larmor_toroidal_electron_profile{i}",
+                physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
             )
