@@ -195,6 +195,9 @@ Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/cuu/Value?c|search_for=light
 """
 
+PLANCK_CONSTANT = 6.62607015e-34
+"""Planck's constant [J.s]"""
+
 D_T_ENERGY = (
     (DEUTERON_MASS + TRITON_MASS) - (ALPHA_MASS + NEUTRON_MASS)
 ) * SPEED_LIGHT**2

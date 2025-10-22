@@ -9147,6 +9147,44 @@ class DetailedPhysics:
             ** 0.5
         )
 
+    def calculate_coulomb_log_from_impact(
+        self, impact_param_max: float, impact_param_min: float
+    ) -> float:
+        """
+        Calculate the Coulomb logarithm from maximum and minimum impact parameters.
+        :param impact_param_max: Maximum impact parameter in meters.
+        :type impact_param_max: float
+        :param impact_param_min: Minimum impact parameter in meters.
+        :type impact_param_min: float
+        :returns: Coulomb logarithm (dimensionless).
+        :rtype: float
+        """
+        return np.log(impact_param_max / impact_param_min)
+
+    def calculate_classical_distance_of_closest_approach(
+        self,
+        charge1: float,
+        charge2: float,
+        e_kinetic: float,
+    ) -> float:
+        """ """
+
+        return (charge1 * charge2 * constants.ELECTRON_CHARGE**2) / (
+            4 * np.pi * constants.EPSILON0 * e_kinetic
+        )
+
+    def calculate_debroglie_wavelength(self, mass: float, velocity: float) -> float:
+        """
+        Calculate the de Broglie wavelength of a particle.
+        :param mass: Mass of the particle in kg.
+        :type mass: float
+        :param velocity: Velocity of the particle in m/s.
+        :type velocity: float
+        :returns: de Broglie wavelength in meters.
+        :rtype: float
+        """
+        return constants.PLANCK_CONSTANT / (mass * velocity)
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
 
