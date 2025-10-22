@@ -1326,6 +1326,9 @@ len_plasma_debye_electron_profile: list[float] = None
 len_plasma_debye_electron_vol_avg: float = None
 """Volume averaged electron Debye length in plasma (m)"""
 
+vel_plasma_electron_profile: list[float] = None
+"""Profile of electron thermal velocity in plasma (m/s)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1648,6 +1651,7 @@ def init_physics_variables():
         n_charge_plasma_effective_mass_weighted_vol_avg
     global len_plasma_debye_electron_profile
     global len_plasma_debye_electron_vol_avg
+    global vel_plasma_electron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1910,3 +1914,4 @@ def init_physics_variables():
     n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
     len_plasma_debye_electron_profile = []
     len_plasma_debye_electron_vol_avg = 0.0
+    vel_plasma_electron_profile = []
