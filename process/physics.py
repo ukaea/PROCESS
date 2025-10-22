@@ -9097,6 +9097,18 @@ class DetailedPhysics:
                 z_particle=1.0,
             )
         )
+        
+        # ============================
+        # Larmor frequencies
+        # ============================
+        
+        physics_variables.freq_plasma_electron_larmor_profile = (
+            self.calculate_larmor_frequency(
+                b_field=self.plasma_profile.bprofile.profile_y,
+                m_particle=constants.ELECTRON_MASS,
+                z_particle=1.0,
+            )
+        )
 
     def calculate_debye_length(
         self,

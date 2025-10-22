@@ -12322,18 +12322,17 @@ def plot_frequency_profile(axis, mfile_data, scan):
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
-    axis.plot(
-        np.linspace(0, 1, len(freq_plasma_electron_profile)),
-        np.array(freq_plasma_electron_profile) / 1e9,
-        color="blue",
-        linestyle="-",
-        label=r"$\omega_{p,e}$",
-    )
+    x = np.linspace(0, 1, len(freq_plasma_electron_profile))
+    y = np.array(freq_plasma_electron_profile) / 1e9
+    # original curve
+    axis.plot(x, y, color="blue", linestyle="-", label=r"$\omega_{p,e}$")
+    # mirrored across the y-axis (drawn at negative rho)
+    axis.plot(-x, y, color="blue", linestyle="-", label="_nolegend_")
+    axis.set_xlim(-1.025, 1.025)
 
     axis.set_ylabel("Frequency [GHz]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
-    axis.set_xlim([0, 1.025])
     axis.minorticks_on()
     axis.legend()
 
