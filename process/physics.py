@@ -9074,6 +9074,18 @@ class DetailedPhysics:
             )
         )
 
+        # ============================
+        # Particle relativistic speeds
+        # ============================
+
+        physics_variables.vel_plasma_electron_profile = (
+            self.calculate_relativistic_particle_speed(
+                e_kinetic=self.plasma_profile.teprofile.profile_y
+                * constants.KILOELECTRON_VOLT,
+                mass=constants.ELECTRON_MASS,
+            )
+        )
+
     def calculate_debye_length(
         self,
         temp_plasma_species_kev: float,
@@ -9130,8 +9142,8 @@ class DetailedPhysics:
         :rtype: float
         """
         return (
-            constants.SPEED_OF_LIGHT
-            * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_OF_LIGHT**2)) + 1) ** 2))
+            constants.SPEED_LIGHT
+            * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_LIGHT**2)) + 1) ** 2))
             ** 0.5
         )
 
@@ -9155,4 +9167,14 @@ class DetailedPhysics:
                 f"Plasma electron Debye length at point {i}",
                 f"len_plasma_debye_electron_profile{i}",
                 physics_variables.len_plasma_debye_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Velocities:")
+
+        for i in range(len(physics_variables.vel_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron thermal velocity at point {i}",
+                f"vel_plasma_electron_profile{i}",
+                physics_variables.vel_plasma_electron_profile[i],
             )

@@ -189,7 +189,7 @@ Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=W
 """
 
-SPEED_LIGHT = 299792458
+SPEED_LIGHT = 299792458.0
 """Speed of light in vacuum (c) [m/s]
 Reference: National Institute of Standards and Technology (NIST)
 https://physics.nist.gov/cgi-bin/cuu/Value?c|search_for=light
