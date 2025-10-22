@@ -9056,3 +9056,36 @@ class DetailedPhysics:
         self.mfile = constants.MFILE
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
+
+    def calculate_debye_length(
+        self,
+        temp_plasma_species_kev: float,
+        nd_plasma_species: float,
+    ) -> float:
+        """
+        Calculate the Debye length for a plasma.
+
+        :param temp_plasma_species_kev: Species temperature in keV.
+        :type temp_plasma_species_kev: float
+        :param nd_plasma_species: Species number density (/m^3).
+        :type nd_plasma_species: float
+
+        :returns: Debye length in meters.
+        :rtype: float
+        """
+        return (
+            (constants.EPSILON0 * temp_plasma_species_kev)
+            / (nd_plasma_species * constants.ELECTRON_CHARGE**2)
+        ) ** 0.5
+
+    def calculate_debye_length_profile(
+        self,
+        temp_plasma_species_profile_kev: np.ndarray,
+        nd_plasma_species_profile: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Calculate the Debye length profile for a plasma.
+        """
+        return self.calculate_debye_length(
+            temp_plasma_species_profile_kev, nd_plasma_species_profile
+        )
