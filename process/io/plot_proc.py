@@ -11700,7 +11700,22 @@ def plot_frequency_profile(axis, mfile_data, scan):
         mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
         for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
+    freq_plasma_larmor_toroidal_electron_profile = [
+        mfile_data.data[f"freq_plasma_larmor_toroidal_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(
+            2 * int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan))
+        )
+    ]
 
+    axis.plot(
+        np.linspace(-1, 1, len(freq_plasma_larmor_toroidal_electron_profile)),
+        np.array(freq_plasma_larmor_toroidal_electron_profile) / 1e9,
+        color="red",
+        linestyle="-",
+        label=r"$f_{Larmor,toroidal,e}$",
+    )
     x = np.linspace(0, 1, len(freq_plasma_electron_profile))
     y = np.array(freq_plasma_electron_profile) / 1e9
     # original curve
@@ -11741,6 +11756,7 @@ def main_plot(
     fig21,
     fig22,
     fig23,
+    fig24,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -11972,9 +11988,9 @@ def main_plot(
         fig23.add_subplot(111, aspect="equal"), m_file_data, scan, fig23
     )
 
-    plot_debye_length_profile(fig23.add_subplot(221), m_file_data, scan)
-    plot_velocity_profile(fig23.add_subplot(222), m_file_data, scan)
-    plot_frequency_profile(fig23.add_subplot(212), m_file_data, scan)
+    plot_debye_length_profile(fig24.add_subplot(221), m_file_data, scan)
+    plot_velocity_profile(fig24.add_subplot(222), m_file_data, scan)
+    plot_frequency_profile(fig24.add_subplot(212), m_file_data, scan)
 
 
 def main(args=None):
@@ -12291,6 +12307,7 @@ def main(args=None):
     page21 = plt.figure(figsize=(12, 9), dpi=80)
     page22 = plt.figure(figsize=(12, 9), dpi=80)
     page23 = plt.figure(figsize=(12, 9), dpi=80)
+    page24 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12318,6 +12335,7 @@ def main(args=None):
         page21,
         page22,
         page23,
+        page24,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -12350,6 +12368,7 @@ def main(args=None):
         pdf.savefig(page21)
         pdf.savefig(page22)
         pdf.savefig(page23)
+        pdf.savefig(page24)
 
     # show fig if option used
     if args.show:
@@ -12379,6 +12398,7 @@ def main(args=None):
     plt.close(page21)
     plt.close(page22)
     plt.close(page23)
+    plt.close(page24)
 
 
 if __name__ == "__main__":
