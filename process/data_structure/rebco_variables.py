@@ -25,7 +25,7 @@ dx_croco_strand_copper: float = None
 copper_rrr: float = None
 """residual resistivity ratio copper in TF superconducting cable"""
 
-copperA_m2: float = None  # noqa: N816
+coppera_m2: float = None
 """TF coil current / copper area (A/m2)"""
 
 coppera_m2_max: float = None
@@ -85,7 +85,7 @@ def init_rebco_variables():
     global a_croco_strand_hastelloy
     global a_croco_strand_solder
     global a_croco_strand
-    global copperA_m2
+    global coppera_m2
     global copperaoh_m2_max
     global f_copperaoh_m2
     global copperaoh_m2
@@ -109,7 +109,7 @@ def init_rebco_variables():
     a_croco_strand_solder = 0.0
     a_croco_strand = 0.0
 
-    copperA_m2 = 0.0
+    coppera_m2 = 0.0
     copperaoh_m2_max = 1.0e8
     f_copperaoh_m2 = 1.0
     copperaoh_m2 = 0.0
