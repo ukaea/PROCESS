@@ -707,9 +707,6 @@ This constraint can be activated by stating `icc = 62` in the input file.
 
 The value of `f_alpha_energy_confinement_min` can be set to the desired minimum total ratio between the alpha confinement and energy confinement times.
 
- The scaling value `falpha_energy_confinement` can be varied also.
-
-
 [^1]: N. A. Uckan, International Atomic Energy Agency, Vienna (Austria) and ITER Physics Group, "ITER physics design guidelines: 1989", no. No. 10. Feb. 1990.
 [^2]: T.C. Hender et al., 'Physics Assessment of the European Reactor Study', AEA FUS 172, 1992.
 [^3]: J. P. Christiansen et al., “Global energy confinement H-mode database for ITER,” Nuclear Fusion, vol. 32, no. 2, pp. 291-338, Feb. 1992, doi: https://doi.org/10.1088/0029-5515/32/2/i11.

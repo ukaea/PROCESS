@@ -93,6 +93,9 @@ times (`constraint equation 62`)
 zeff_max: float = None
 """maximum value for Zeff (`constraint equation 64`)"""
 
+fl_h_threshold: float = None
+"""f-value for L-H power threshold (`constraint equation 15`, `iteration variable 103`)"""
+
 
 def init_constraint_variables():
     """Initialise the constraint variables"""
@@ -122,6 +125,7 @@ def init_constraint_variables():
     global pflux_fw_neutron_max_mw
     global f_alpha_energy_confinement_min
     global zeff_max
+    global fl_h_threshold
 
     p_hcd_injected_min_mw = 0.1
     beta_poloidal_max = 0.19
@@ -149,3 +153,4 @@ def init_constraint_variables():
     pflux_fw_neutron_max_mw = 1.0
     f_alpha_energy_confinement_min = 5.0
     zeff_max = 3.6
+    fl_h_threshold = 1.0

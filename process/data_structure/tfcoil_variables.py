@@ -135,15 +135,6 @@ Not an input
 """
 
 
-f_t_turn_tf: float = None
-"""f-value for TF turn edge length constraint
-If the turn is not a square (i_tf_turns_integer = 1) a squared turn of
-equivelent size is use for this constraint
-iteration variable ixc = 175
-constraint equation icc = 86
-"""
-
-
 t_turn_tf_max: float = None
 """TF turn edge length including turn insulation upper limit [m]
 If the turn is not a square (i_tf_turns_integer = 1) a squared turn of
@@ -509,10 +500,6 @@ res_tf_leg: float = None
 
 toroidalgap: float = None
 """Minimal distance between two toroidal coils. (m)"""
-
-
-ftoroidalgap: float = None
-"""F-value for minimum dx_tf_inboard_out_toroidal (`constraint equation 82`)"""
 
 
 ripple_b_tf_plasma_edge_max: float = None
@@ -1115,7 +1102,6 @@ def init_tfcoil_variables():
     global t_conductor
     global dx_tf_turn_general
     global i_dx_tf_turn_general_input
-    global f_t_turn_tf
     global t_turn_tf_max
     global dx_tf_turn_cable_space_general
     global i_dx_tf_turn_cable_space_general_input
@@ -1177,7 +1163,6 @@ def init_tfcoil_variables():
     global r_b_tf_inboard_peak
     global res_tf_leg
     global toroidalgap
-    global ftoroidalgap
     global ripple_b_tf_plasma_edge_max
     global ripple_b_tf_plasma_edge
     global c_tf_total
@@ -1333,7 +1318,6 @@ def init_tfcoil_variables():
     i_dx_tf_turn_cable_space_general_input = False
     dx_tf_turn_general = 0.0
     i_dx_tf_turn_general_input = False
-    f_t_turn_tf = 1.0
     t_turn_tf_max = 0.05
     acs = 0.0
     cdtfleg = 0.0
@@ -1413,7 +1397,6 @@ def init_tfcoil_variables():
     r_b_tf_inboard_peak = 0.0
     res_tf_leg = 0.0
     toroidalgap = 1.0  # [m]
-    ftoroidalgap = 1.0
     ripple_b_tf_plasma_edge_max = 1.0
     ripple_b_tf_plasma_edge = 0.0
     c_tf_total = 0.0

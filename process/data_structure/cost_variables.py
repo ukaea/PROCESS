@@ -476,10 +476,6 @@ light_build_cost_per_vol: float = None
 """Unit cost for unshielded non-active buildings ($/m3)"""
 
 
-favail: float = None
-"""F-value for minimum availability (`constraint equation 61`)"""
-
-
 num_rh_systems: int = None
 """Number of remote handling systems (1-10)"""
 
@@ -1340,7 +1336,6 @@ def init_cost_variables():
     global avail_min
     global tok_build_cost_per_vol
     global light_build_cost_per_vol
-    global favail
     global num_rh_systems
     global conf_mag
     global div_prob_fail
@@ -1495,7 +1490,6 @@ def init_cost_variables():
     avail_min = 0.75
     tok_build_cost_per_vol = 1283.0
     light_build_cost_per_vol = 270.0
-    favail = 1.0
     num_rh_systems = 4
     conf_mag = 0.99
     div_prob_fail = 0.0002

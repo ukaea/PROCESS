@@ -31,7 +31,7 @@ This performs calculations on the first wall of the machine. Evaluations of the 
 thermal stresses on this component lead to a measure of the maximum number of cycles to which the 
 first wall can be subjected, and hence to the minimum allowable length of each reactor cycle for a 
 specified first wall lifetime. The cycle time can be constrained to be at least the minimum value 
-by turning on constraint equation no. 42 with iteration variable no 67 (`ft_cycle_min`).
+by turning on constraint equation no. 42.
 
 # Power conversion cycle
 
