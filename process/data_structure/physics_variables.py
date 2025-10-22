@@ -1311,6 +1311,9 @@ zeff: float = None
 zeffai: float = None
 """mass weighted plasma effective charge"""
 
+len_plasma_debye_electron_profile: list[float] = None
+"""Profile of electron Debye length in plasma (m)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1626,6 +1629,7 @@ def init_physics_variables():
     global a_plasma_poloidal
     global zeff
     global zeffai
+    global len_plasma_debye_electron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1883,3 +1887,4 @@ def init_physics_variables():
     a_plasma_poloidal = 0.0
     zeff = 0.0
     zeffai = 0.0
+    len_plasma_debye_electron_profile = []
