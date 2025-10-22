@@ -9086,6 +9086,18 @@ class DetailedPhysics:
             )
         )
 
+        # ============================
+        # Plasma frequencies
+        # ============================
+
+        physics_variables.freq_plasma_electron_profile = (
+            self.calculate_plasma_frequency(
+                nd_particle=self.plasma_profile.neprofile.profile_y,
+                m_particle=constants.ELECTRON_MASS,
+                z_particle=1.0,
+            )
+        )
+
     def calculate_debye_length(
         self,
         temp_plasma_species_kev: float,
@@ -9184,9 +9196,9 @@ class DetailedPhysics:
         :rtype: float
         """
         return constants.PLANCK_CONSTANT / (mass * velocity)
-    
+
     def calculate_plasma_frequency(
-        nd_particle: float, m_particle: float, z_particle: float
+        self, nd_particle: float, m_particle: float, z_particle: float
     ) -> float:
         """
         Calculate the plasma frequency for a particle species.
@@ -9237,4 +9249,14 @@ class DetailedPhysics:
                 f"Plasma electron thermal velocity at point {i}",
                 f"vel_plasma_electron_profile{i}",
                 physics_variables.vel_plasma_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Frequencies:")
+
+        for i in range(len(physics_variables.freq_plasma_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron frequency at point {i}",
+                f"freq_plasma_electron_profile{i}",
+                physics_variables.freq_plasma_electron_profile[i],
             )

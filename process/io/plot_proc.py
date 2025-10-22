@@ -12273,7 +12273,7 @@ def plot_debye_length_profile(axis, mfile_data, scan):
     """Plot the Debye length profile on the given axis."""
     len_plasma_debye_electron_profile = [
         mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
     axis.plot(
@@ -12286,7 +12286,6 @@ def plot_debye_length_profile(axis, mfile_data, scan):
 
     axis.set_ylabel("Debye Length [m]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
-    axis.set_yscale("log")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
     axis.minorticks_on()
@@ -12297,7 +12296,7 @@ def plot_velocity_profile(axis, mfile_data, scan):
     """Plot the electron thermal velocity profile on the given axis."""
     vel_plasma_electron_profile = [
         mfile_data.data[f"vel_plasma_electron_profile{i}"].get_scan(scan)
-        for i in range(500)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
     ]
 
     axis.plot(
@@ -12309,6 +12308,29 @@ def plot_velocity_profile(axis, mfile_data, scan):
     )
 
     axis.set_ylabel("Velocity [m/s]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.minorticks_on()
+    axis.legend()
+
+
+def plot_frequency_profile(axis, mfile_data, scan):
+    """Plot the electron thermal frequency profile on the given axis."""
+    freq_plasma_electron_profile = [
+        mfile_data.data[f"freq_plasma_electron_profile{i}"].get_scan(scan)
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(freq_plasma_electron_profile)),
+        np.array(freq_plasma_electron_profile) / 1e9,
+        color="blue",
+        linestyle="-",
+        label=r"$\omega_{p,e}$",
+    )
+
+    axis.set_ylabel("Frequency [GHz]")
     axis.set_xlabel("$\\rho \\ [r/a]$")
     axis.grid(True, which="both", linestyle="--", alpha=0.5)
     axis.set_xlim([0, 1.025])
