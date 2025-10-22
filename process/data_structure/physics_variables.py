@@ -1320,6 +1320,9 @@ n_charge_plasma_effective_profile: list[float] = None
 n_charge_plasma_effective_mass_weighted_vol_avg: float = None
 """Plasma mass-weighted volume averaged plasma effective charge"""
 
+len_plasma_debye_electron_profile: list[float] = None
+"""Profile of electron Debye length in plasma (m)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1640,6 +1643,7 @@ def init_physics_variables():
         n_charge_plasma_effective_vol_avg, \
         n_charge_plasma_effective_profile, \
         n_charge_plasma_effective_mass_weighted_vol_avg
+    global len_plasma_debye_electron_profile
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1900,3 +1904,4 @@ def init_physics_variables():
     n_charge_plasma_effective_vol_avg = 0.0
     n_charge_plasma_effective_profile = []
     n_charge_plasma_effective_mass_weighted_vol_avg = 0.0
+    len_plasma_debye_electron_profile = []
