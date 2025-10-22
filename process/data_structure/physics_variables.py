@@ -1314,6 +1314,9 @@ zeffai: float = None
 len_plasma_debye_electron_profile: list[float] = None
 """Profile of electron Debye length in plasma (m)"""
 
+len_plasma_debye_electron_vol_avg: float = None
+"""Volume averaged electron Debye length in plasma (m)"""
+
 
 def init_physics_module():
     """Initialise the physics module"""
@@ -1630,6 +1633,7 @@ def init_physics_variables():
     global zeff
     global zeffai
     global len_plasma_debye_electron_profile
+    global len_plasma_debye_electron_vol_avg
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1888,3 +1892,4 @@ def init_physics_variables():
     zeff = 0.0
     zeffai = 0.0
     len_plasma_debye_electron_profile = []
+    len_plasma_debye_electron_vol_avg = 0.0
