@@ -15,7 +15,6 @@ from process.data_structure import constraint_variables as ctv
 from process.data_structure import cs_fatigue_variables as csfv
 from process.data_structure import fwbs_variables as fwbsv
 from process.data_structure import (
-    numerics,
     pfcoil_variables,
     superconducting_tf_coil_variables,
 )
@@ -2353,19 +2352,19 @@ class PFCoil:
                         "OP ",
                     )
                 # Check whether CS coil is hitting any limits
-                # iteration variable (39) fjohc0
-                # iteration variable(38) fjohc
                 if (
                     abs(pfcoil_variables.j_cs_flat_top_end)
                     > 0.99e0
                     * abs(
-                        numerics.boundu[37] * pfcoil_variables.j_cs_critical_flat_top_end
+                        # numerics.boundu[fjohc] * (which should have been 1)
+                        pfcoil_variables.j_cs_critical_flat_top_end
                     )
                 ) or (
                     abs(pfcoil_variables.j_cs_pulse_start)
                     > 0.99e0
                     * abs(
-                        numerics.boundu[38] * pfcoil_variables.j_cs_critical_pulse_start
+                        # numerics.boundu[fjohc0] * (which should have been 1)
+                        pfcoil_variables.j_cs_critical_pulse_start
                     )
                 ):
                     pfcoil_variables.cslimit = True
@@ -2377,16 +2376,6 @@ class PFCoil:
                 if not pfcoil_variables.cslimit:
                     logger.warning(
                         "CS not using max current density: further optimisation may be possible"
-                    )
-
-                # Check whether CS coil currents are feasible from engineering POV
-                if ctv.fjohc > 0.7:
-                    logger.error(
-                        "fjohc shouldn't be above 0.7 for engineering reliability"
-                    )
-                if ctv.fjohc0 > 0.7:
-                    logger.error(
-                        "fjohc0 shouldn't be above 0.7 for engineering reliability"
                     )
 
                 # REBCO fractures in strains above ~+/- 0.7%

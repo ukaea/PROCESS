@@ -261,7 +261,67 @@ is_leg_cp_temp_same: int = None
 
 
 def init_superconducting_tf_coil_variables():
-    global is_leg_cp_temp_same, tf_fit_t, tf_fit_z, f_b_tf_inboard_peak_ripple_symmetric, c_tf_coil, a_tf_wp_with_insulation, a_tf_wp_no_insulation, a_tf_coil_inboard_steel, a_tf_coil_inboard_insulation, f_a_tf_coil_inboard_steel, f_a_tf_coil_inboard_insulation, z_cp_top, r_tf_outboard_in, r_tf_outboard_out, r_tf_wp_inboard_inner, r_tf_wp_inboard_outer, r_tf_wp_inboard_centre, dr_tf_wp_top, vol_ins_cp, vol_gr_ins_cp, vol_case_cp, dx_tf_wp_toroidal_min, dx_tf_wp_toroidal_average, dx_tf_side_case_average, a_tf_plasma_case, a_tf_coil_nose_case, a_tf_wp_ground_insulation, a_leg_ins, a_leg_gr_ins, a_leg_cond, rad_tf_coil_inboard_toroidal_half, tan_theta_coil, t_conductor_radial, t_conductor_toroidal, dr_tf_turn_cable_space, dx_tf_turn_cable_space, dr_tf_turn, dx_tf_turn, dx_tf_turn_cable_space_average, vforce_inboard_tot, t1, time2, tau2, e_tf_magnetic_stored_total, radius_tf_turn_cable_space_corners, a_tf_turn_cable_space_effective, dr_tf_wp_no_insulation, dia_tf_turn_superconducting_cable, n_tf_turn_superconducting_cables, len_tf_coil_superconductor, len_tf_superconductor_total, j_tf_superconductor_critical, f_c_tf_turn_operating_critical, j_tf_coil_turn, b_tf_superconductor_critical_zero_temp_strain, temp_tf_superconductor_critical_zero_field_strain, f_a_tf_turn_cable_space_cooling, c_tf_turn_cables_critical, j_tf_superconductor, vv_stress_quench
+    global \
+        is_leg_cp_temp_same, \
+        tf_fit_t, \
+        tf_fit_z, \
+        f_b_tf_inboard_peak_ripple_symmetric, \
+        c_tf_coil, \
+        a_tf_wp_with_insulation, \
+        a_tf_wp_no_insulation, \
+        a_tf_coil_inboard_steel, \
+        a_tf_coil_inboard_insulation, \
+        f_a_tf_coil_inboard_steel, \
+        f_a_tf_coil_inboard_insulation, \
+        z_cp_top, \
+        r_tf_outboard_in, \
+        r_tf_outboard_out, \
+        r_tf_wp_inboard_inner, \
+        r_tf_wp_inboard_outer, \
+        r_tf_wp_inboard_centre, \
+        dr_tf_wp_top, \
+        vol_ins_cp, \
+        vol_gr_ins_cp, \
+        vol_case_cp, \
+        dx_tf_wp_toroidal_min, \
+        dx_tf_wp_toroidal_average, \
+        dx_tf_side_case_average, \
+        a_tf_plasma_case, \
+        a_tf_coil_nose_case, \
+        a_tf_wp_ground_insulation, \
+        a_leg_ins, \
+        a_leg_gr_ins, \
+        a_leg_cond, \
+        rad_tf_coil_inboard_toroidal_half, \
+        tan_theta_coil, \
+        t_conductor_radial, \
+        t_conductor_toroidal, \
+        dr_tf_turn_cable_space, \
+        dx_tf_turn_cable_space, \
+        dr_tf_turn, \
+        dx_tf_turn, \
+        dx_tf_turn_cable_space_average, \
+        vforce_inboard_tot, \
+        t1, \
+        time2, \
+        tau2, \
+        e_tf_magnetic_stored_total, \
+        radius_tf_turn_cable_space_corners, \
+        a_tf_turn_cable_space_effective, \
+        dr_tf_wp_no_insulation, \
+        dia_tf_turn_superconducting_cable, \
+        n_tf_turn_superconducting_cables, \
+        len_tf_coil_superconductor, \
+        len_tf_superconductor_total, \
+        j_tf_superconductor_critical, \
+        f_c_tf_turn_operating_critical, \
+        j_tf_coil_turn, \
+        b_tf_superconductor_critical_zero_temp_strain, \
+        temp_tf_superconductor_critical_zero_field_strain, \
+        f_a_tf_turn_cable_space_cooling, \
+        c_tf_turn_cables_critical, \
+        j_tf_superconductor, \
+        vv_stress_quench
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0

@@ -128,12 +128,6 @@ equations and the iteration variables that determines whether the code will eb s
 producing a useful result. It can be somewhat laborious process to arrive at a working vase, 
 and experience is often of great value in this situation.
 
-It should be remembered that sufficient iteration variables should be used to solve each constraint 
-equation. For instance, a specific limit equation may be $A \leq B$, i.e. $A = fB$, where the 
-f-value $f$ must lie between zero and one for the relation to be satisfied. However, if none of 
-the iteration variables have any effect on the values of $A$ and $B$, and $A$ happens to be 
-*greater* than $B$, the PROCESS will clearly not be able to solve the constraint.
-
 The lower and upper bounds of the iteration variables are all available to be changed in the input 
 file. Constraints can be relaxed in a controlled manner by moving these bounds, although in some 
 cases care should be taken to ensure that un-physical values cannot occur. The code indicates which 

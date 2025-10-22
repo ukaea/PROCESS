@@ -20,13 +20,6 @@ Scan variable nwseep = 56
 """
 
 
-f_crypmw: float = None
-"""f-value for maximum cryogenic plant power
-Iteration variable ixc = 164
-Constraint equation icc = 87
-"""
-
-
 etatf: float = None
 """AC to resistive power conversion for TF coils"""
 
@@ -234,7 +227,6 @@ def init_heat_transport_variables():
         p_plant_electric_base, \
         p_cryo_plant_electric_mw, \
         p_cryo_plant_electric_max_mw, \
-        f_crypmw, \
         etatf, \
         eta_turbine, \
         etath_liq, \
@@ -285,7 +277,6 @@ def init_heat_transport_variables():
     p_plant_electric_base = 5.0e6
     p_cryo_plant_electric_mw = 0.0
     p_cryo_plant_electric_max_mw = 50.0
-    f_crypmw = 1.0
     etatf = 0.9
     eta_turbine = 0.35
     etath_liq = 0.35

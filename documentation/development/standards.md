@@ -506,11 +506,6 @@ If a variable is intended to represent an engineering efficiency then it should 
 
 ---------------------
 
-##### F-values
-
-Variables used within constraint equations to scale iteration variables (f-values) should start with the `f` prefix without an underscore before the next word.
-
----------------------
 
 ### Variable Length
 

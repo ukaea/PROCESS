@@ -93,10 +93,40 @@ times (`constraint equation 62`)
 zeff_max: float = None
 """maximum value for Zeff (`constraint equation 64`)"""
 
+fl_h_threshold: float = None
+"""f-value for L-H power threshold (`constraint equation 15`, `iteration variable 103`)"""
+
 
 def init_constraint_variables():
     """Initialise the constraint variables"""
-    global p_hcd_injected_min_mw, beta_poloidal_max, big_q_plasma_min, b_tf_inboard_max, q95_fixed, eta_cd_norm_hcd_primary_max, i_q95_fixed, pflux_fw_rad_max, mvalim, f_p_beam_shine_through_max, nflutfmax, p_plasma_separatrix_min_mw, f_fw_rad_max, pflux_fw_rad_max_mw, p_plant_electric_net_required_mw, p_fusion_total_max_mw, psepbqarmax, pseprmax, ptfnucmax, tbrmin, t_burn_min, t_cycle_min, t_current_ramp_up_min, pflux_fw_neutron_max_mw, f_alpha_energy_confinement_min, zeff_max
+    global \
+        p_hcd_injected_min_mw, \
+        beta_poloidal_max, \
+        big_q_plasma_min, \
+        b_tf_inboard_max, \
+        q95_fixed, \
+        eta_cd_norm_hcd_primary_max, \
+        i_q95_fixed, \
+        pflux_fw_rad_max, \
+        mvalim, \
+        f_p_beam_shine_through_max, \
+        nflutfmax, \
+        p_plasma_separatrix_min_mw, \
+        f_fw_rad_max, \
+        pflux_fw_rad_max_mw, \
+        p_plant_electric_net_required_mw, \
+        p_fusion_total_max_mw, \
+        psepbqarmax, \
+        pseprmax, \
+        ptfnucmax, \
+        tbrmin, \
+        t_burn_min, \
+        t_cycle_min, \
+        t_current_ramp_up_min, \
+        pflux_fw_neutron_max_mw, \
+        f_alpha_energy_confinement_min, \
+        zeff_max, \
+        fl_h_threshold
 
     p_hcd_injected_min_mw = 0.1
     beta_poloidal_max = 0.19
@@ -124,3 +154,4 @@ def init_constraint_variables():
     pflux_fw_neutron_max_mw = 1.0
     f_alpha_energy_confinement_min = 5.0
     zeff_max = 3.6
+    fl_h_threshold = 1.0
