@@ -222,7 +222,7 @@ If the plasma is classed as ignited then the injected heating power density is n
 
 This constraint can be activated by stating `icc = 9` in the input file.
 
-The value of `p_fusion_total_max_mw` can be set to the desired maximum fusion power. The scaling value `fp_fusion_total_max_mw` can be varied also.
+The value of `p_fusion_total_max_mw` can be set to the desired maximum fusion power.
 
 ---------------------------------
 
@@ -230,7 +230,7 @@ The value of `p_fusion_total_max_mw` can be set to the desired maximum fusion po
 
 This constraint can be activated by stating `icc = 28` in the input file.
 
-The value of `big_q_plasma_min` can be set to the minimum desired $Q_{\text{plasma}}$ value. The scaling value `fbig_q_plasma_min` can be varied also.
+The value of `big_q_plasma_min` can be set to the minimum desired $Q_{\text{plasma}}$ value.
 
 -------------------------
 

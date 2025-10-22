@@ -405,8 +405,6 @@ This constraint can be activated by stating `icc = 6` in the input file [^6].
 
 The limiting value of $\epsilon\beta_p$ is be set using input parameter `beta_poloidal_eps_max`.
 
-The scaling value `fbeta_poloidal_eps` can be varied also.
-
 !!! note "Origin of the $\epsilon\beta_p$ limit"
 
     High poloidal beta shots in TFTR were performed[^6] and it was found that as $\beta_p$,
@@ -427,8 +425,6 @@ It is the general setting of the $\beta$ limit depending on the $\beta_{\text{N}
 The upper limit value of beta is calculated by `calculate_beta_limit()`. The beta
 coefficient $g$ can be set using `beta_norm_max`, depending on the setting of [`i_beta_norm_max`](#setting-the-beta--coefficient). It can be set directly or follow some relation.
 
-The scaling value `fbeta_max` can be varied also.
-
 **It is recommended to have this constraint on as it is a plasma stability model**
 
 --------------------
@@ -437,7 +433,7 @@ The scaling value `fbeta_max` can be varied also.
 
 This constraint can be activated by stating `icc = 48` in the input file.
 
-The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta. The scaling value `fbeta_poloidal` can be varied also.
+The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta.
 
 -------------------
 
@@ -445,7 +441,7 @@ The value of `beta_poloidal_max` can be set to the desired maximum poloidal beta
 
 This constraint can be activated by stating `icc = 84` in the input file.
 
-The value of `beta_vol_avg_min` can be set to the desired minimum total beta. The scaling value `fbeta_min` can be varied also.
+The value of `beta_vol_avg_min` can be set to the desired minimum total beta.
 
 [^0]: F. Troyon et.al,  “Beta limit in tokamaks. Experimental and computational status,” Plasma Physics and Controlled Fusion, vol. 30, no. 11, pp. 1597–1609, Oct. 1988, doi: https://doi.org/10.1088/0741-3335/30/11/019.
 

@@ -502,20 +502,6 @@ fkzohm: float = None
 """Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)"""
 
 
-fplhsep: float = None
-"""F-value for Psep >= Plh + Paux (`constraint equation 73`)"""
-
-
-fp_plasma_separatrix_min_mw: float = None
-"""F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)"""
-
-
-fne0: float = None
-"""f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
-(`Iteration variable 154`)
-"""
-
-
 f_plasma_fuel_tritium: float = None
 """Plasma tritium fuel fraction"""
 
@@ -1461,9 +1447,6 @@ def init_physics_variables():
     global f_plasma_fuel_helium3
     global figmer
     global fkzohm
-    global fplhsep
-    global fp_plasma_separatrix_min_mw
-    global fne0
     global f_plasma_fuel_tritium
     global fusden_total
     global fusrat_total
@@ -1720,9 +1703,6 @@ def init_physics_variables():
     f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
-    fplhsep = 1.0
-    fp_plasma_separatrix_min_mw = 1.0
-    fne0 = 1.0
     f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0
