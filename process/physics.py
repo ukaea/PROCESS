@@ -9219,6 +9219,24 @@ class DetailedPhysics:
             ** 0.5
         ) / (2 * np.pi)
 
+    def calculate_larmor_frequency(
+        self, b_field: float, m_particle: float, z_particle: float
+    ) -> float:
+        """
+        Calculate the Larmor frequency for a particle species.
+        :param b_field: Magnetic field strength (T).
+        :type b_field: float
+        :param m_particle: Mass of the particle species (kg).
+        :type m_particle: float
+        :param Z_particle: Charge state of the particle species (dimensionless).
+        :type Z_particle: float
+        :returns: Larmor frequency in Hz.
+        :rtype: float
+        """
+        return (z_particle * constants.ELECTRON_CHARGE * b_field) / (
+            2 * np.pi * m_particle
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
 
