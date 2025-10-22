@@ -9107,6 +9107,34 @@ class DetailedPhysics:
             temp_plasma_species_profile_kev, nd_plasma_species_profile
         )
 
+    def calculate_lorentz_factor(self, velocity: float) -> float:
+        """
+        Calculate the Lorentz factor for a given velocity.
+        :param velocity: Velocity in m/s.
+        :type velocity: float
+        :returns: Lorentz factor (dimensionless).
+        :rtype: float
+        """
+        return 1 / (1 - (velocity / constants.SPEED_LIGHT) ** 2) ** 0.5
+
+    def calculate_relativistic_particle_speed(
+        self, e_kinetic: float, mass: float
+    ) -> float:
+        """
+        Calculate the speed of a particle given its kinetic energy and mass using relativistic mechanics.
+        :param e_kinetic: Kinetic energy in Joules.
+        :type e_kinetic: float
+        :param mass: Mass of the particle in kg.
+        :type mass: float
+        :returns: Speed of the particle in m/s.
+        :rtype: float
+        """
+        return (
+            constants.SPEED_OF_LIGHT
+            * (1 - (1 / ((e_kinetic / (mass * constants.SPEED_OF_LIGHT**2)) + 1) ** 2))
+            ** 0.5
+        )
+
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
 
