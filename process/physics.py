@@ -9046,3 +9046,13 @@ def reinke_tsep(b_plasma_toroidal_on_axis, flh, qstar, rmajor, eps, fgw, kappa, 
         * (eps**0.15 * (1.0 + kappa**2.0) ** 0.34)
         * (lhat**0.29 * kappa_0 ** (-0.29) * 0.285)
     )
+
+
+class DetailedPhysics:
+    """Class to hold detailed physics models for plasma processing."""
+
+    def __init__(self, plasma_profile, current_drive):
+        self.outfile = constants.NOUT
+        self.mfile = constants.MFILE
+        self.plasma_profile = plasma_profile
+        self.current_drive = current_drive
