@@ -253,6 +253,7 @@ class Caller:
         self.models.build.run()
 
         self.models.physics.physics()
+        self.models.physics_detailed.run()
 
         # Toroidal field coil model
 

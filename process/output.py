@@ -43,6 +43,7 @@ def write(models, _outfile):
     # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
     models.physics.calculate_effective_charge_ionisation_profiles()
     models.physics.outplas()
+    models.physics_detailed.output_detailed_physics()
 
     # TODO what is this? Not in caller.f90?
     models.current_drive.output_current_drive()

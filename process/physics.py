@@ -9057,6 +9057,23 @@ class DetailedPhysics:
         self.plasma_profile = plasma_profile
         self.current_drive = current_drive
 
+    def run(self):
+        # ---------------------------
+        #  Debye length calculation
+        # ---------------------------
+
+        physics_variables.len_plasma_debye_electron_vol_avg = self.calculate_debye_length_profile(
+            temp_plasma_species_profile_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+            nd_plasma_species_profile=physics_variables.nd_plasma_electrons_vol_avg,
+        )
+
+        physics_variables.len_plasma_debye_electron_profile = (
+            self.calculate_debye_length_profile(
+                temp_plasma_species_profile_kev=self.plasma_profile.teprofile.profile_y,
+                nd_plasma_species_profile=self.plasma_profile.neprofile.profile_y,
+            )
+        )
+
     def calculate_debye_length(
         self,
         temp_plasma_species_kev: float,
@@ -9074,7 +9091,7 @@ class DetailedPhysics:
         :rtype: float
         """
         return (
-            (constants.EPSILON0 * temp_plasma_species_kev)
+            (constants.EPSILON0 * temp_plasma_species_kev * constants.KILOELECTRON_VOLT)
             / (nd_plasma_species * constants.ELECTRON_CHARGE**2)
         ) ** 0.5
 
@@ -9089,3 +9106,25 @@ class DetailedPhysics:
         return self.calculate_debye_length(
             temp_plasma_species_profile_kev, nd_plasma_species_profile
         )
+
+    def output_detailed_physics(self):
+        """Outputs detailed physics variables to file."""
+
+        po.oheadr(self.outfile, "Detailed Plasma")
+
+        po.osubhd(self.outfile, "Debye lengths:")
+
+        po.ovarrf(
+            self.outfile,
+            "Plasma volume averaged electron Debye length (m)",
+            "(len_plasma_debye_electron_vol_avg)",
+            physics_variables.len_plasma_debye_electron_vol_avg,
+            "OP ",
+        )
+        for i in range(len(physics_variables.len_plasma_debye_electron_profile)):
+            po.ovarre(
+                self.mfile,
+                f"Plasma electron Debye length at point {i}",
+                f"len_plasma_debye_electron_profile{i}",
+                physics_variables.len_plasma_debye_electron_profile[i],
+            )

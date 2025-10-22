@@ -12269,6 +12269,30 @@ def plot_ebw_ecrh_coupling_graph(axis: plt.Axes, mfile: mf.MFile, scan: int):
     axis.minorticks_on()
 
 
+def plot_debye_length_profile(axis, mfile_data, scan):
+    """Plot the Debye length profile on the given axis."""
+    len_plasma_debye_electron_profile = [
+        mfile_data.data[f"len_plasma_debye_electron_profile{i}"].get_scan(scan)
+        for i in range(500)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(len_plasma_debye_electron_profile)),
+        len_plasma_debye_electron_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$\lambda_{Debye,e}$",
+    )
+
+    axis.set_ylabel("Debye Length [m]")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.set_yscale("log")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.set_xlim([0, 1.025])
+    axis.minorticks_on()
+    axis.legend()
+
+
 def main_plot(
     figs: list[Axes],
     m_file: mf.MFile,
