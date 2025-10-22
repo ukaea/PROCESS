@@ -9,8 +9,7 @@ A model has been implemented, based on
 
 This model takes account of the currents induced in both the vacuum vessel and the steel TF coil structures.
 
-Constraint 65 implements this model, by applying a maximum permitted stress in the vacuum vessel.  
-`fmaxvvstress` f-value for constraint 65. Iteration variable 113.   
+Constraint 65 implements this model, by applying a maximum permitted stress in the vacuum vessel.   
 `theta1_coil` An angle, shown as $\theta_1$ in Figure 1, relating to the shape of the TF coil conductor centre-line (degrees).   
 `theta1_vv` An angle, shown as $\theta_1$ in Figure 1, relating to the shape of the vacuum vessel centre-line (degrees).   
 `max_vv_stress` The maximum permissible maximum shear stress in the vacuum vessel (Pa) (as used in the Tresca criterion).    

@@ -983,7 +983,6 @@ $$
 | `n_tf_wp_pancakes`          | Number of turns in the toroidal direction (`i_tf_turns_integer = 1` only)                                                   | -                  | 10            | -    |
 | `dx_tf_turn_general`          | TF turn squared size                                                                                                        | -                  | No default    | m    |
 | `dx_tf_turn_cable_space_general`         | TF cable diameter size                                                                                                      | -                  | No default    | m    |
-| `f_t_turn_tf`        | f-value for TF turn squared size constraint (icc = 86)                                                                      | 175                | 1.            | m    |
 | `t_turn_tf_max`      | Maximum turn squared size for constraint (icc = 86)                                                                         | -                  | 0.05          | m    |
 | `c_tf_turn`              | Current per turn <br> Overwitten if `dx_tf_turn_general` is set by the user                                                          | ixc = 60           | $70.10^3$     | A    |
 | `dx_tf_turn_insulation`           | Turn insulation layer thickness                                                                                             | -                  | $0.8.10^{-3}$ | m    |

@@ -37,8 +37,7 @@ thereby ensuring that $g = h$.
 ## Limit Equations
 
 The limit equations are inequalities that ensure that various physics or engineering 
-limits are not exceeded. Each of these equations has an associated `f-value`, which allow 
-them to be coded as equalities.
+limits are not exceeded. 
 
 The f-values are used as follows. In general, limit equations have the form
 
@@ -73,9 +72,7 @@ For example, to set the net electric power to a certain value, the following
 should be carried out:
 
 1. Activate `constraint 16` (net electric power lower limit) by including it in the `icc` array
-2. Set the corresponding `f-value` `fp_plant_electric_net_required_mw = 1.0D0`
-3. Ensure that `fp_plant_electric_net_required_mw` (iteration variable no. 25) **IS NOT** selected as an iteration variable.
-4. Set `p_plant_electric_net_required_mw` to the required net electric power.
+2. Set `p_plant_electric_net_required_mw` to the required net electric power.
 
 Limit equations are not restricted to optimisation mode. In non-optimisation mode, the iteration
 variables are not bounded, but the `f-values` can still be used to provide information about 

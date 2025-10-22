@@ -63,7 +63,7 @@ icc = 83 * Radial build at critical location
 icc = 91 * ECRH ignitability (checks critical density at ignition point)
 ```
 
-A reasonable start for iteration variables (next to the required f-values) are:
+A reasonable start for iteration variables are:
 
 ```
 ixc = 2 * Toroidal Magnetic field strength
@@ -123,7 +123,7 @@ Stellarators try to achieve zero plasma current in order to allow safe divertor 
 ### Beta limit
 
 The stellarator version calculates the plasma beta based on the input parameter and it is thus not necessary to Differently to the tokamak version, 
-The beta limit is assumed to be 5%, based on 3-D MHD calculations[^7]. To apply the beta limit, constraint equation no. 24 should be turned on with iteration variable no. 36 (`fbeta_max`).
+The beta limit is assumed to be 5%, based on 3-D MHD calculations[^7]. To apply the beta limit, constraint equation no. 24 should be turned on.
 
 ### Density limit
 
@@ -131,7 +131,7 @@ The density limit relevant to certain stellarators experiments has been proposed
 
 $n_{max} = 0.25(PB_0/R_0a^2_p)^{1/2}$
 
-where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5 with iteration variable no. 9 (`fdene`).
+where $n$ is the line-averaged electron density in units of $10^{20} m^{-3}$, $p$ is the absorbed heating power (MW), $B_0$ is the on-axis field (t), $R_0$ is the major radius (m), and $a_p$ is the plasma minor radius (m). To enforce the Sudo density limit, turn on constraint equation no. 5.
 
 Note that the Sudo limit is a radiation based density limit and it is unclear how well this limit extrapolates to reactor parameters, especially as no impurity dependence e.g. is present in the Sudo model.
 PROCESS features an impurity dependent radiation module already which can be used with `icc=17` and by setting the `f_nd_impurity_electrons` vector.
@@ -226,7 +226,6 @@ f_a_tf_turn_cable_copper = 0.7 *Copper fraction of cable conductor (TF coils), S
 tftmp = 4.75 *Peak helium coolant temperature in TF coils and PF coils (K)
 temp_tf_cryo = 4.75 * Temperature in TF coils, required for plant efficiency (K)
 f_a_tf_turn_cable_space_extra_void = 0.3 *Coolant fraction of TF coil leg (itfsup=0) this is the same for conductor and strand!
-fiooic = 0.78 *Fraction TF coil critical current to operation current (should be iteration variable!)
 v_tf_coil_dump_quench_max_kv = 12.64 * Max voltage across tf coil during quench (kV)
 t_tf_superconductor_quench = 20 * Dump time (should be iteration variable)
 dr_tf_nose_case = 0.1 * Thickness TF Coil case (for stellarators: Also for toroidal direction)

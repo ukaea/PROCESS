@@ -636,7 +636,6 @@ def constraint_equation_18():
     """Equation for divertor heat load upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fpflux_div_heat_load_mw: f-value for divertor heat load
     pflux_div_heat_load_max_mw: heat load limit (MW/m2)
     pflux_div_heat_load_mw: divertor heat load (MW/m2)
     """
@@ -810,17 +809,13 @@ def constraint_equation_24():
     # Beta limit applies to toroidal beta
     elif data_structure.physics_variables.i_beta_component == 3:
         cc = (
-            (
-                data_structure.physics_variables.beta_total_vol_avg
-                * (
-                    data_structure.physics_variables.b_plasma_total
-                    / data_structure.physics_variables.b_plasma_toroidal_on_axis
-                )
-                ** 2
+            data_structure.physics_variables.beta_total_vol_avg
+            * (
+                data_structure.physics_variables.b_plasma_total
+                / data_structure.physics_variables.b_plasma_toroidal_on_axis
             )
-            / data_structure.physics_variables.beta_vol_avg_max
-            - 1.0 * data_structure.constraint_variables.fbeta_max
-        )
+            ** 2
+        ) / data_structure.physics_variables.beta_vol_avg_max - 1.0
         con = data_structure.physics_variables.beta_vol_avg_max
         err = data_structure.physics_variables.beta_vol_avg_max - (
             data_structure.physics_variables.beta_total_vol_avg
@@ -1945,8 +1940,11 @@ def constraint_equation_81():
     )
     return ConstraintResult(
         cc,
-        data_structure.physics_variables.fne0,
-        data_structure.physics_variables.fne0 * cc,
+        data_structure.physics_variables.nd_plasma_electron_on_axis,
+        (
+            data_structure.physics_variables.nd_plasma_electron_on_axis
+            - data_structure.physics_variables.nd_plasma_pedestal_electron
+        ),
     )
 
 

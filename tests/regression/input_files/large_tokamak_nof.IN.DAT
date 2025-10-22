@@ -65,7 +65,6 @@ p_plant_electric_net_required_mw = 400.0
 * Beta upper limit *
 *------------------*
 icc = 24
-fbeta_max = 1.0
 
 * Max TF field *
 *--------------*
@@ -76,31 +75,24 @@ b_tf_inboard_max = 14.0
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
-ixc = 37 * j_cs_flat_top_end [A/m2]
-j_cs_flat_top_end = 1.5E7
-fjohc = 1.0
 
 * Central solenoid BOP current density upper limit *
 *--------------------------------------------------*
 icc = 27
-fjohc0 = 1.0
 f_j_cs_start_pulse_end_flat_top = 1.0
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-fiooic = 1.0
 
 * Dump voltage upper limit *
 *--------------------------*
 icc = 34
-fvdump = 1.0
 v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*
 icc = 35 
-fjprot = 1.0
 
 * TF temp marg lower limit *
 *--------------------------*
@@ -121,7 +113,6 @@ f_alpha_energy_confinement_min = 5.0
 * dump time constraint for VV stresses *
 *--------------------------------------*
 icc = 65
-fmaxvvstress = 1.0
 
 * CS stress limit *
 *-----------------*
@@ -152,13 +143,11 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*
 icc = 8
-fpflux_fw_neutron_max_mw = 1.0
 * wall load limit [MW/m2]
 pflux_fw_neutron_max_mw = 2.0
 

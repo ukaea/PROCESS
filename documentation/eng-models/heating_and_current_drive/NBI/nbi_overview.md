@@ -7,7 +7,7 @@
 
 If present, a neutral beam injection system needs sufficient space between the TF coils to be able to intercept the plasma tangentially. The major radius `radius_beam_tangency` at which the centre-line of the beam is tangential to the toroidal direction is user-defined using input parameter `f_radius_beam_tangency_rmajor`, which is the ratio of `radius_beam_tangency` to the plasma major radius `rmajor`.
 
-The maximum possible tangency radius `radius_beam_tangency_max` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using `icc = 20` with `ixc = 33` (`fradius_beam_tangency`). The thickness of the beam duct walls may be set using input parameter `dx_beam_shield`.
+The maximum possible tangency radius `radius_beam_tangency_max` is determined by the geometry of the TF coils - see Figure 1, and this can be enforced using `icc = 20`. The thickness of the beam duct walls may be set using input parameter `dx_beam_shield`.
 
 
 <figure markdown>

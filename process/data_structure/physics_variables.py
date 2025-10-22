@@ -502,20 +502,6 @@ fkzohm: float = None
 """Zohm elongation scaling adjustment factor (`i_plasma_geometry=2, 3`)"""
 
 
-fplhsep: float = None
-"""F-value for Psep >= Plh + Paux (`constraint equation 73`)"""
-
-
-fp_plasma_separatrix_min_mw: float = None
-"""F-value for minimum p_plasma_separatrix_mw (`constraint equation 80`)"""
-
-
-fne0: float = None
-"""f-value for the constraint ne(0) > ne(ped) (`constraint equation 81`)
-(`Iteration variable 154`)
-"""
-
-
 f_plasma_fuel_tritium: float = None
 """Plasma tritium fuel fraction"""
 
@@ -1484,9 +1470,6 @@ def init_physics_variables():
         f_plasma_fuel_helium3, \
         figmer, \
         fkzohm, \
-        fplhsep, \
-        fp_plasma_separatrix_min_mw, \
-        fne0, \
         f_plasma_fuel_tritium, \
         fusden_total, \
         fusrat_total, \
@@ -1543,7 +1526,6 @@ def init_physics_variables():
         pres_plasma_ion_total_profile, \
         pres_plasma_fuel_profile, \
         j_plasma_on_axis, \
-        j_plasma_bootstrap_sauter_profile, \
         n_plasma_profile_elements, \
         f_dd_branching_trit, \
         pden_plasma_alpha_mw, \
@@ -1658,6 +1640,7 @@ def init_physics_variables():
         n_charge_plasma_effective_vol_avg, \
         n_charge_plasma_effective_profile, \
         n_charge_plasma_effective_mass_weighted_vol_avg, \
+        j_plasma_bootstrap_sauter_profile, \
         len_plasma_debye_electron_profile, \
         len_plasma_debye_electron_vol_avg, \
         vel_plasma_electron_profile, \
@@ -1750,9 +1733,6 @@ def init_physics_variables():
     f_plasma_fuel_helium3 = 0.0
     figmer = 0.0
     fkzohm = 1.0
-    fplhsep = 1.0
-    fp_plasma_separatrix_min_mw = 1.0
-    fne0 = 1.0
     f_plasma_fuel_tritium = 0.5
     fusden_total = 0.0
     fusrat_total = 0.0

@@ -18,9 +18,9 @@
 
 2. Spherical tokamaks have resistive TF coils that combine into a single centrepost at the centre of the machine. The centrepost is constructed from copper (as are the outboard TF coil sections), and tapered length ways so that it is narrowest at the midplane of the device. Routine `CNTRPST` calculates various parameters relevant to the centrepost, including the pump pressure, maximum temperature and pip radius, and these may be limited using constraint equations 43 to 45 of required:
     * Equation 43 is a consistency equation for the average centrepost temperature.
-    * Equation 44 can be used to limit the peak centrepost temperature to a maximum value (`temp_cp_max`) using iteration variable no. 68 (`fptemp`).
-    * Equation 45 can be used to force a lower; limit to the edge safety factor *q$_{lim}$* using iteration variable no. 71 (`fq95_min`).
-    Equation 46 can be used to apply an upper limit to the ratio of plasma current to TF coil ("rod") current , using iteration variable no. 72 (`fipir`)<br></br>
+    * Equation 44 can be used to limit the peak centrepost temperature to a maximum value (`temp_cp_max`).
+    * Equation 45 can be used to force a lower; limit to the edge safety factor *q$_{lim}$*.
+    Equation 46 can be used to apply an upper limit to the ratio of plasma current to TF coil ("rod") current.<br></br>
 
 3. A gaseous divertor model is used, and a simple divertor heat load calculation is employed, rather than the more complex divertor model assumed for conventional aspect ratio tokamaks. <br></br>
 

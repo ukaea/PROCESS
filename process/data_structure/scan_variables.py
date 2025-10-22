@@ -42,14 +42,10 @@ nsweep: int = None
 <LI> 5  oacdcp
 <LI> 6  pflux_fw_neutron_max_mw
 <LI> 7  beamfus0
-<LI> 8  fbig_q_plasma_min
 <LI> 9  temp_plasma_electron_vol_avg_kev
-<LI> 10 boundu(15: fvs_plasma_total_required)
 <LI> 11 beta_norm_max
 <LI> 12 f_c_plasma_bootstrap_max
 <LI> 13 boundu(10: hfact)
-<LI> 14 fiooic
-<LI> 15 fjprot
 <LI> 16 rmajor
 <LI> 17 b_tf_inboard_max
 <LI> 18 eta_cd_norm_hcd_primary_max
@@ -57,7 +53,6 @@ nsweep: int = None
 <LI> 20 t_burn_min
 <LI> 21 not used
 <LI> 22 f_t_plant_available (N.B. requires i_plant_availability=0)
-<LI> 23 boundu(72: fipir)
 <LI> 24 p_fusion_total_max_mw
 <LI> 25 kappa
 <LI> 26 triang

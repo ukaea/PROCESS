@@ -90,10 +90,6 @@ dr_vv_shells: float = None
 """vacuum vessel double walled shell thicknesses (m)"""
 
 
-f_avspace: float = None
-"""F-value for stellarator radial space check (`constraint equation 83`)"""
-
-
 fcspc: float = None
 """Fraction of space occupied by CS pre-compression structure"""
 
@@ -428,7 +424,6 @@ def init_build_variables():
         dz_vv_upper, \
         dz_vv_lower, \
         dr_vv_shells, \
-        f_avspace, \
         fcspc, \
         fseppc, \
         a_fw_total_full_coverage, \
@@ -523,7 +518,6 @@ def init_build_variables():
     dz_vv_upper = 0.07
     dz_vv_lower = 0.07
     dr_vv_shells = 0.12
-    f_avspace = 1.0
     fcspc = 0.6
     fseppc = 3.5e8
     a_fw_total_full_coverage = 0.0

@@ -104,13 +104,6 @@ icc = 9
 * JUSTIFICATION: Working to target fusion
 * VARIABLES:     p_fusion_total_mw (fusion power) calculated in-situ
 
-ixc = 26
-fp_fusion_total_max_mw = 1.0
-*boundl(26) = 0.9
-*boundu(26) = 1.1
-* DESCRIPTION:   f-value for Maximum Fusion Power
-* JUSTIFICATION: Used with icc=9 to enforce Fusion Power limit
-
 p_fusion_total_max_mw = 2500.0 
 * DESCRIPTION:   Maximum fusion power (MW) (icc=9)
 * JUSTIFICATION: 
@@ -127,13 +120,6 @@ icc = 16
 p_plant_electric_net_required_mw = 100.0
 * DESCRIPTION:   Required net electric power lower limit (MW) (icc=16)
 * JUSTIFICATION: Not used in this run
-
-ixc = 25
-fp_plant_electric_net_required_mw = 1.0 
-* boundl(25) = 
-* boundu(25) = 
-* DESCRIPTION:   f-value for net electric power (constraint equation 16)
-* JUSTIFICATION:
 
 *---------*
 * Q-value *          * Actual Q is calculated by the code *
@@ -248,14 +234,7 @@ nd_plasma_electrons_vol_avg = 1.5E+20
 boundl(6) = 0.5E+20
 boundu(6) = 5.0E+20
 * DESCRIPTION: Average electron density (/m3)
-* JUSTIFICATION: Density is constrained by fdene
-
-ixc = 9
-fdene = 1.0
-boundl(9) = 0.1
-boundu(9) = 1.0 
-* DESCRIPTION:   f-value for density limit
-* JUSTIFICATION: Used with icc=5 to enforce density limit
+* JUSTIFICATION: Density is constrained
                
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -289,11 +268,6 @@ f_temp_plasma_ion_electron = 1.0
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Beta ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-*icc = 6
-* DESCRIPTION:   Equation for epsilon beta-poloidal upper limit
-* JUSTIFICATION: Turned off, not in use 
-* VARIABLES:     eps,fbeta_poloidal_eps Rest calculated in-situ
-
 *beta_poloidal_eps_max
 * DESCRIPTION:   Max epsilon*beta value
 * JUSTIFICATION: Turned off, not in use. icc=6.
@@ -316,12 +290,6 @@ boundu(5) = 1.0
 * DESCRIPTION:   Total Plasma Beta, 
 * JUSTIFICATION: Beta is limited by beta_norm_max
 
-ixc = 36
-fbeta_max = 0.75
-boundl(36) = 0.01
-boundu(36) = 1.0
-* DESCRIPTION:   f-value for Beta Limit
-* JUSTIFICATION: Used with icc=24 to enforce beta limit
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -356,11 +324,6 @@ i_beta_norm_max = 0
 * JUSTIFICATION: Turned off, not in use, Used with icc=84 to enforce beta limit
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-*icc = 48
-* DESCRIPTION:   Constraint equation for poloidal beta upper limit
-* JUSTIFICATION: Turned off, do not care about poloidal beta
-* VARIABLES:     beta_poloidal_max, fbeta_poloidal. beta_poloidal calculated in-situ
 
 *beta_poloidal_max = 
 * DESCRIPTION:   Maximum poloidal beta (`constraint equation 48`) (default = 0.19)
@@ -416,13 +379,6 @@ icc = 15
 * JUSTIFICATION: Required to be in H-mode
 * VARIABLES:     p_l_h_threshold_mw,p_plasma_separatrix_mw calculated in-situ
 
-ixc = 103 
-fl_h_threshold = 1.0
-*boundl(21) = 0.01
-boundu(21) = 10.0
-* DESCRIPTION:   f-value for L-H Power Threshold
-* JUSTIFICATION: Used with icc=15 to enforce H-mode
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *t_plasma_energy_confinement_max = 
@@ -447,13 +403,6 @@ icc = 62
 * DESCRIPTION:   f_alpha_energy_confinement ratio of particle to energy confinement times
 * JUSTIFICATION: Used to constrain helium fraction
 * VARIABLES:     t_energy_confinement,t_alpha_confinement calculated in-situ
-
-ixc = 110
-falpha_energy_confinement = 1.0
-boundl(110) = 0.01
-boundu(110) = 1.0
-* DESCRIPTION:   f-value for lower limit on f_alpha_energy_confinement the ratio of alpha particle to energy confinement times
-* JUSTIFICATION: Calculate He fraction consistent with tau ratio
 
 f_alpha_energy_confinement_min = 5.0 
 * DESCRIPTION:   Ratio of Alpha Particle to Energy Confinement times (icc=62)
@@ -515,11 +464,6 @@ icc = 81
 * JUSTIFICATION: Prevents unrealistic density profiles
 * VARIABLES:
 
-ixc = 154
-fne0 = 0.08
-boundu(154) = 0.99
-* DESCRIPTION:   f-value for ne(0) > ne(sep)
-* JUSTIFICATION: Used with icc=81 to prevent unrealistic density profiles
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -527,10 +471,6 @@ boundu(154) = 0.99
 * DESCRIPTION:   Eich critical separatrix density model
 * JUSTIFICATION: Turned off, not using model
 * VARIABLES:     Calculated in-situ
-
-*fnesep = 
-* DESCRIPTION:   f-value for Eich critical separatrix density
-* JUSTIFICATION: Not using icc=76
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -609,12 +549,6 @@ icc = 17
 * DESCRIPTION:   Radiation Fraction Upper Limit
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     Rest calculated in-situ
-
-ixc = 28
-fradpwr = 0.64
-boundu(28) = 1.0
-* DESCRIPTION:   f-value for Core Radiation Power Limit
-* JUSTIFICATION: Used with icc=17 to enforce Core Radiation limit
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -708,11 +642,6 @@ i_single_null = 0
 * DESCRIPTION:   Divertor heat load (MW/m2)
 * JUSTIFICATION: Turned off, not used
 
-*ixc = 27
-*fpflux_div_heat_load_mw = 
-* DESCRIPTION:   f-value for divertor heat load
-* JUSTIFICATION: Used with icc=18 to enforce max divertor heat load, not used
-
 *pflux_div_heat_load_max_mw = 
 * DESCRIPTION:   Heat load limit (MW/m2)
 * JUSTIFICATION: Turned off, not used
@@ -749,13 +678,6 @@ icc = 56
 pseprmax = 40.0 
 * DESCRIPTION:   Maximum ratio of Psep/R (MW/m) (icc=56)
 * JUSTIFICATION: 
-
-ixc = 97
-fpsepr = 1.0
-boundl(97) = 0.01
-boundu(97) = 1.0
-* DESCRIPTION:   f-value for Maximum Psep/R Limit
-* JUSTIFICATION: Used with icc=56 to enforce Psep/R limit
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Divertor Configuration ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
@@ -955,13 +877,6 @@ icc = 33
 * JUSTIFICATION: A quench must be avoided
 * VARIABLES:     j_tf_wp & j_tf_wp_critical (critical current) calculated in-situ
 
-ixc = 50
-fiooic = 1.0
-boundl(50) = 0.01
-boundu(50) = 1.0
-* DESCRIPTION:   f-value for TF coil operating current / critical current density ratio
-* JUSTIFICATION: icc = 33 is used
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *icc = 35
@@ -994,12 +909,6 @@ boundu(50) = 1.0
 * DESCRIPTION:   Maximum TF coil current / copper area (A/m2)
 * JUSTIFICATION: Not yet defined, assuming (default =  100E0)
 
-*ixc = 143
-*f_coppera_m2 = 
-*boundl(143) = 
-*boundu(143) =  
-* DESCRIPTION:   f-value for constraint 75: TF coil current / copper area < copperA_m2_max (iteration variable 143)
-* JUSTIFICATION: Not used.
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1301,13 +1210,6 @@ sig_tf_case_max = 850.0E6
 * JUSTIFICATION: Stress limit increased as required to match TF coil design finite 
 *                element modelling shows PROCESS maybe conservative in stress calculations
 
-ixc = 48
-fstrcase = 1.0
-boundl(48) = 0.01
-boundu(48) = 1.0
-* DESCRIPTION:   f-value for Maxiumum TF Coil case (bucking) TRESCA stress
-* JUSTIFICATION: Used with icc=31 to enforce stress limit in conductor
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 icc = 32
@@ -1319,12 +1221,6 @@ sig_tf_wp_max = 700.0E6
 * DESCRIPTION:   Allowable Tresca stress in TF coil winding pack (Pa) (icc=32)
 * JUSTIFICATION: Stress limit increased as required to match TF coil design finite 
 *                element modelling shows PROCESS maybe conservative in stress calculations
-
-ixc = 49
-fstrcond = 1.0
-boundu(49) = 1.0
-* DESCRIPTION:   f-value for Maxiumum TF Coil Conduit Tresca Stress
-* JUSTIFICATION: Used with icc=32 to enforce stress limit
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1506,13 +1402,6 @@ tftmp = 20.0
 * DESCRIPTION:   Maximum Peak Centrepost Temperature (K) (icc=44) 
 * JUSTIFICATION: Unknown, seems high compared to constrained average
 
-*ixc = 68
-*fptemp = 0.46
-*boundl(68) = 
-*boundu(68) = 
-* DESCRIPTION:   f-value for Peak Centrepost Temperature
-* JUSTIFICATION: Used with icc=44 to enforce centrepost temperature limit
-
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * radius_cp_coolant_channel = 3.0E-3 
@@ -1652,13 +1541,6 @@ i_pf_conductor = 0
 * DESCRIPTION:   Allowable stress in CS pre-comp structure (Pa)
 * JUSTIFICATION: 
 
-*ixc = 123
-*foh_stress =  
-*boundl(123) = 
-*boundu(123) = 
-* DESCRIPTION:   F-value for CS coil Tresca yield criterion
-* JUSTIFICATION: Not scaling CS force
-
 *------------------------*
 * Current & Field Limits *
 *------------------------*
@@ -1685,15 +1567,6 @@ i_pf_conductor = 0
 *b_cs_limit_max = 
 * DESCRIPTION:   Maximum allowed peak field on central solenoid (icc = 79)
 * JUSTIFICATION: Not using icc=79
-
-*ixc = 149
-*fb_cs_limit_max = 
-*boundl(149)
-*boundu(149)
-* DESCRIPTION:   F-value for max peak CS field (icc = 79)
-* JUSTIFICATION: Not using icc=79
-*
-*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *icc = 26
 * DESCRIPTION:   Constraint equation for CS current density upper limit at EOF 
@@ -1730,12 +1603,6 @@ i_pf_conductor = 0
 * DESCRIPTION:   Maximum CS coil current / copper area (A/m2)
 * JUSTIFICATION: Not using icc = 89
 
-*ixc = 166
-*f_copperaoh_m2 =  
-*boundl(166) = 
-*boundu(166) = 
-* DESCRIPTION:   f-value for constraint 88: CS coil current / copper area < copperA_m2_max
-* JUSTIFICATION: Not using icc = 89
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2573,14 +2440,7 @@ f_fw_rad_max = 1.0
 * DESCRIPTION:   Switch for neutron wall load calculation (default = 1)
 * =1 use scaled plasma surface area
 * =2 use first wall area directly
-* JUSTIFICATION: Not set, assuming default value
-
-*ixc = 14
-*fpflux_fw_neutron_max_mw = 0.99
-*boundl(14) = 0.99
-*boundu(14) = 1.0 
-* DESCRIPTION:   f-value for maximum neutron wall load
-* JUSTIFICATION: Used with icc=8 to enforce wall load limit               
+* JUSTIFICATION: Not set, assuming default value       
 
 *pflux_fw_neutron_max_mw = 
 * DESCRIPTION:   Allowable neutron wall-load (MW/m2)
@@ -2596,13 +2456,6 @@ icc = 67
 pflux_fw_rad_max = 1.2
 * DESCRIPTION:   Peak radiation wall load (MW/m^2) 
 * JUSTIFICATION: 
-
-ixc = 116
-fpflux_fw_rad_max = 1.0
-boundl(116) = 0.01
-boundu(116) = 1.0
-* DESCRIPTION:   f-value for upper limit on radiation wall load
-* JUSTIFICATION: just a 0.001 to 1. variation. The peaking factor actually sets the limit
 
 *ffwal = 
 * DESCRIPTION:   Wall load fiddle factor
@@ -2639,12 +2492,6 @@ i_hcd_calculations = 1
 * DESCRIPTION:   Minimum required auxiliary power (MW)
 * JUSTIFICATION: Turned off, not using icc = 40
 
-*ixc = 64
-*fp_hcd_injected_min_mw =  
-*boundl(64) = 
-*boundu(64) = 
-* DESCRIPTION:   f-value for minimum auxiliary power (`constraint equation 40`, `iteration variable 64`)
-* JUSTIFICATION: Turned off, not using icc = 40
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 *icc = 37
@@ -2681,13 +2528,6 @@ icc = 30
 * DESCRIPTION:   Injection Power Upper Limit
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     p_hcd_injected_total_mw (total auxiliary injected power (MW)) summed from all injected power sources
-
-ixc = 46
-fp_hcd_injected_max = 1.0
-boundl(46) = 0.6
-boundu(46) = 1.5
-* DESCRIPTION:   f-value for injected power variation range
-* JUSTIFICATION: Setup to allow the injected power to vary
 
 p_hcd_injected_max = 150.0 
 * DESCRIPTION:   Maximum Allowable Value for Injected Power (MW) (icc=30)
@@ -2920,10 +2760,6 @@ icc = 46
 *                neutronic shield into account ?
 * VARIABLES:     Variables calculated in-situ
 
-ixc = 72
-fipir = 0.58
-* DESCRIPTION:   f-value for Ip/Irod Limit
-* JUSTIFICATION: Used with icc=46 to enforce Ip/Irod limit
 
 *__________________________________________________________________________________________________________________________________________________________________________________________________________________________________*
 *----------------------Heat transport / Power settings-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -2977,12 +2813,6 @@ i_shld_primary_heat = 1
 * DESCRIPTION: Maximum cryogenic plant power (MW)
 * JUSTIFICATION: Turned off, not using icc=85
 
-*ixc = 164
-*f_crypmw = 
-*boundl(164) = 
-*boundu(164) = 
-* DESCRIPTION: f-value for maximum cryogenic plant power
-* JUSTIFICATION: Turned off, not using icc=85
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3147,13 +2977,6 @@ i_pulsed_plant = 0
 *t_burn_min =  
 * DESCRIPTION:   Minimum required burn Time (s)
 * JUSTIFICATION: No required burn time
-
-*ixc = 21
-*ft_burn_min = 1.0
-*boundl(21) = 0.99
-*boundu(21) = 1.0
-* DESCRIPTION:   f-value for minimum burn time
-* JUSTIFICATION: Used with icc=13 to enforce minimum burn time, not required
 
 t_plant_pulse_burn = 1000.0 
 * DESCRIPTION:   Burn Time (s)
@@ -3342,13 +3165,6 @@ i_plant_availability = 0
 *avail_min = 
 * DESCRIPTION: Minimum availability (`constraint equation 61`)
 * JUSTIFICATION: testing
-
-*ixc = 107
-*favail = 
-*boundl(107) = 
-*boundu(107) = 
-* DESCRIPTION:   F-value for minimum availability (constraint equation 61)
-* JUSTIFICATION: 
 
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
