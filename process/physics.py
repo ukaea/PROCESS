@@ -9184,6 +9184,28 @@ class DetailedPhysics:
         :rtype: float
         """
         return constants.PLANCK_CONSTANT / (mass * velocity)
+    
+    def calculate_plasma_frequency(
+        nd_particle: float, m_particle: float, z_particle: float
+    ) -> float:
+        """
+        Calculate the plasma frequency for a particle species.
+        :param nd_particle: Number density of the particle species (/m^3).
+        :type nd_particle: float
+        :param m_particle: Mass of the particle species (kg).
+        :type m_particle: float
+        :param Z_particle: Charge state of the particle species (dimensionless).
+        :type Z_particle: float
+        :returns: Plasma frequency in Hz.
+        :rtype: float
+        """
+        return (
+            (
+                (nd_particle * z_particle**2 * constants.ELECTRON_CHARGE**2)
+                / (m_particle * constants.EPSILON0)
+            )
+            ** 0.5
+        ) / (2 * np.pi)
 
     def output_detailed_physics(self):
         """Outputs detailed physics variables to file."""
