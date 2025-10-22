@@ -25,8 +25,6 @@ There are two separate constraint equations for enforcing the L-H threshold.
 
 This constraint can be activated by stating `icc = 15` in the input file.
 
-The scaling value `fl_h_threshold (ixc=103)` can be varied to set the required margin around the threshold.
-
 $$
 1.0 - \mathtt{fl\_h\_threshold} \times \frac{\overbrace{\mathtt{p\_l\_h\_threshold\_mw}}^{\text{Power from scaling}}}{\mathtt{p_plasma_separatrix_mw}}
 $$

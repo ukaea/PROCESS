@@ -167,7 +167,7 @@ lablcc: list[str] = None
 * (70) ensure that teomp = separatrix temperature in the pedestal profile,
 (itv 119 (temp_plasma_separatrix_kev))
 * (71) ensure that neomp = separatrix density (nd_plasma_separatrix_electron) x neratio
-* (72) central solenoid shear stress limit (Tresca yield criterion) (itv 123 foh_stress)
+* (72) central solenoid shear stress limit (Tresca yield criterion)
 * (73) Psep >= Plh + Paux (itv 137 (fplhsep))
 * (74) TFC quench < temp_croco_quench_max (itv 141 (ftemp_croco_quench_max))
 * (75) TFC current/copper area < Maximum (itv 143 f_coppera_m2)
@@ -185,8 +185,8 @@ lablcc: list[str] = None
 * (87) Constraint for cryogenic power
 * (88) Constraint for TF coil strain absolute value
 * (89) Constraint for CS coil quench protection
-* (90) Lower Limit on number of stress load cycles for CS (itr 167 fncycle)
-* (91) Checking if the design point is ECRH ignitable (itv 168 fecrh_ignition)
+* (90) Lower Limit on number of stress load cycles for CS
+* (91) Checking if the design point is ECRH ignitable
 * (92) D/T/He3 ratio in fuel sums to 1
 """
 
@@ -204,8 +204,6 @@ lablxc: list[str] = None
 * ( 5) beta_total_vol_avg
 * ( 6) nd_plasma_electrons_vol_avg
 * ( 7) f_nd_beam_electron
-* ( 8) fbeta_poloidal_eps (f-value for equation 6)
-* ( 9) fdene (f-value for equation 5)
 * (10) hfact
 * (11) p_hcd_primary_extra_heat_mw
 * (12) oacdcp
@@ -221,35 +219,20 @@ lablxc: list[str] = None
 * (22) NOT USED
 * (23) fcoolcp
 * (24) NOT USED
-* (25) fp_plant_electric_net_required_mw (f-value for equation 16)
-* (26) fp_fusion_total_max_mw (f-value for equation 9)
-* (27) fpflux_div_heat_load_mw (f-value for equation 18)
-* (28) fradpwr (f-value for equation 17), total radiation fraction
 * (29) dr_bore
-* (30) fmva (f-value for equation 19)
 * (31) gapomin
 * (32) frminor (f-value for equation 21)
-* (33) fradius_beam_tangency (f-value for equation 20)
 * (34) NOT USED
-* (35) fb_tf_inboard_max (f-value for equation 25)
-* (36) fbeta_max (f-value for equation 24)
 * (37) j_cs_flat_top_end
-* (38) fjohc (f-value for equation 26)
-* (39) fjohc0 (f-value for equation 27)
-* (40) feta_cd_norm_hcd_primary_max (f-value for equation 37)
 * (41) f_j_cs_start_pulse_end_flat_top
 * (42) dr_cs_tf_gap
 * (43) NOT USED
 * (44) f_c_plasma_non_inductive
-* (45) fbig_q_plasma_min (f-value for equation 28)
-* (46) fp_hcd_injected_max (f-value for equation 30)
 * (47) feffcd
 * (48) fstrcase (f-value for equation 31)
 * (49) fstrcond (f-value for equation 32)
-* (50) fiooic (f-value for equation 33)
 * (51) fvdump (f-value for equation 34)
 * (52) NOT USED
-* (53) fjprot (f-value for equation 35)
 * (54) ftmargtf (f-value for equation 36)
 * (55) NOT USED
 * (56) t_tf_superconductor_quench
@@ -258,24 +241,18 @@ lablxc: list[str] = None
 * (59) f_a_tf_turn_cable_copper
 * (60) c_tf_turn
 * (61) dr_shld_vv_gap_inboard
-* (62) fdtmp (f-value for equation 38)
 * (63) ftemp_fw_max (f-value for equation 39)
-* (64) fp_hcd_injected_min_mw (f-value for equation 40)
 * (65) t_current_ramp_up
 * (66) ft_current_ramp_up (f-value for equation 41)
 * (67) ft_cycle_min (f-value for equation 42)
-* (68) fptemp (f-value for equation 44)
 * (69) rcool
 * (70) vcool
-* (71) fq95_min (f-value for equation 45)
-* (72) fipir (f-value for equation 46)
 * (73) dr_fw_plasma_gap_inboard
 * (74) dr_fw_plasma_gap_outboard
 * (75) tfootfi
 * (76) NOT USED
 * (77) NOT USED
 * (78) NOT USED
-* (79) fbeta_poloidal (f-value for equation 48)
 * (80) NOT USED
 * (81) edrive
 * (82) drveff
@@ -288,20 +265,15 @@ lablxc: list[str] = None
 * (89) ftbr (f-value for equation 52)
 * (90) blbuith
 * (91) blbuoth
-* (92) fflutf (f-value for equation 53)
 * (93) dr_shld_inboard
 * (94) dr_shld_outboard
-* (95) fptfnuc (f-value for equation 54)
 * (96) fvvhe (f-value for equation 55)
-* (97) fpsepr (f-value for equation 56)
 * (98) f_blkt_li6_enrichment
 * (99) NOT USED
 * (100) NOT USED
 * (101) NOT USED
 * (102) f_nd_impurity_electronsvar # OBSOLETE
 * (103) fl_h_threshold (f-value for equation 15)
-* (104)fr_conducting_wall (f-value for equation 23)
-* (105) fnbshinef (f-value for equation 59)
 * (106) ftmargoh (f-value for equation 60)
 * (107) favail (f-value for equation 61)
 * (108) breeder_f: Volume of Li4SiO4 / (Volume of Be12Ti + Li4SiO4)
@@ -312,13 +284,10 @@ lablxc: list[str] = None
 * (113) ftaucq: f-value for minimum quench time (f-value for equation 65)
 * (114) len_fw_channel: Length of a single first wall channel
 * (115) fpoloidalpower: f-value for max rate of change of
-* (116) fpflux_fw_rad_max: f-value for radiation wall load limit (eq. 67)
-* (117) fpsepbqar: f-value for  Psep*Bt/qar upper limit (eq. 68)
 * (119) temp_plasma_separatrix_kev:  separatrix temperature calculated by the Kallenbach divertor model
 * (120) ttarget: Plasma temperature adjacent to divertor sheath [eV]
 * (121) neratio: ratio of mean SOL density at OMP to separatrix density at OMP
 * (122) f_a_cs_turn_steel : streel fraction of Central Solenoid
-* (123) foh_stress : f-value for CS coil Tresca yield criterion (f-value for eq. 72)
 * (124) qtargettotal : Power density on target including surface recombination [W/m2]
 * (125) f_nd_impurity_electrons(3) :  Beryllium density fraction relative to electron density
 * (126) f_nd_impurity_electrons(4) :  Carbon density fraction relative to electron density
@@ -339,9 +308,7 @@ lablxc: list[str] = None
 * (141) ftemp_croco_quench_max : TF coil quench temperature < temp_croco_quench_max (f-value for equation 74)
 * (142) nd_plasma_separatrix_electron : electron density at separatrix [m-3]
 * (143) f_copperA_m2 : TF coil current / copper area < Maximum value
-* (144) fnesep : Eich critical electron density at separatrix
 * (145) f_nd_plasma_pedestal_greenwald :  fraction of Greenwald density to set as pedestal-top density
-* (146) fc_tf_turn_max : F-value for TF coil current per turn limit (constraint equation 77)
 * (147) freinke : F-value for Reinke detachment criterion (constraint equation 78)
 * (148) fzactual : fraction of impurity at SOL with Reinke detachment criterion
 * (149) fb_cs_limit_max : F-value for max peak CS field (con. 79, itvar 149)
@@ -356,14 +323,11 @@ lablxc: list[str] = None
 * (158) dx_croco_strand_copper : Thickness of CroCo copper tube (m)
 * (159) ftoroidalgap : F-value for toroidalgap >  dx_tf_inboard_out_toroidal constraint (con. 82)
 * (160) f_avspace (f-value for equation 83)
-* (161) fbeta_min (f-value for equation 84)
 * (162) r_cp_top : Top outer radius of the centropost (ST only) (m)
 * (163) f_t_turn_tf : f-value for TF coils WP trurn squared dimension constraint
 * (164) f_crypmw : f-value for cryogenic plant power
 * (165) fstr_wp : f-value for TF coil strain absolute value
 * (166) f_copperaoh_m2 : CS coil current /copper area < Maximum value
-* (167) fncycle : f-value for minimum CS coil stress load cycles
-* (168) fecrh_ignition: f-value for equation 91
 * (169) te0_ecrh_achievable: Max. achievable electron temperature at ignition point
 * (170) deg_div_field_plate : field line angle wrt divertor target plate (degrees)
 * (171) casths_fraction : TF side case thickness as fraction of toridal case thickness

@@ -696,7 +696,7 @@ $$
 $$
 
 In this case $I_{\text{cp}}$ is the total current going up the centrepost in a spherical tokamak.
-This constraint was initially though to prevent instabilities and act as a guideline to limit power dissipation when generating new designs. The scaling value for the constraint, `fipir` can be varied also.
+This constraint was initially though to prevent instabilities and act as a guideline to limit power dissipation when generating new designs.
 
  The origins of the relation should be seen in early spherical tokamak papers not yet referenced here.
 

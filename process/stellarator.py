@@ -2635,7 +2635,7 @@ class Stellarator:
             )  # Get here a temperature margin of 1.5K.
 
         # The operation current density weighted with the global iop/icrit fraction
-        lhs[:] = constraint_variables.fiooic * jcrit_vector
+        lhs[:] = jcrit_vector
 
         # Conduct fraction of conduit * Superconductor fraction in conductor
         f_scu = (
@@ -3201,7 +3201,6 @@ class Stellarator:
                 rebco_variables.coppera_m2_max,
                 f_scu,
                 f_vv_actual,
-                constraint_variables.fiooic,
                 inductance,
                 tfcoil_variables.max_force_density,
                 max_force_density_mnm,
@@ -3709,7 +3708,6 @@ class Stellarator:
         coppera_m2_max,
         f_scu,
         f_vv_actual,
-        fiooic,
         inductance,
         max_force_density,
         max_force_density_mnm,
@@ -4009,7 +4007,6 @@ class Stellarator:
             "(c_tf_turn)",
             tfcoil_variables.c_tf_turn,
         )
-        po.ovarre(self.outfile, "jop/jcrit", "(fiooic)", fiooic)
         po.ovarre(
             self.outfile,
             "Current density in conductor area (A/m2)",
