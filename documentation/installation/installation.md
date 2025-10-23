@@ -14,6 +14,11 @@ PROCESS is a command-line Python program. As such, it should be supported by a w
     wsl --install
     ```
 
+!!! Warning "Users of 'incompatible' systems"
+    PROCESS is a complex numerical code that performs thousands of calculations and, on certain systems (e.g. Mac and some non-Ubuntu Linux systems), we have observed that floating-point rounding error can slightly alter the results of individual models--they are not wrong, just different. However, in a code like PROCESS, this error _could_ accumulate over many iterations of the optimiser to cause non-convergence/convergence to a very different design point. To be clear, this does not happen at the moment in any of our regression tests, but is theoretically possible. 
+
+    In our test suite, we skip a couple of tests if the system is not Linux or has an `ldd` version less than `2.31` because of this floating-point rounding difference: you can look for tests using the `skip_if_incompatible_system` fixture. While we encourage users of all systems to use PROCESS, we highly recommend you check your results on our officially support systems (listed above) and Python versions. 
+
 
 Start by downloading the PROCESS source code using `git`:
 
