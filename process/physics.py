@@ -9110,6 +9110,29 @@ class DetailedPhysics:
             )
         )
 
+        # ============================
+        # Coulomb logarithm
+        # ============================
+
+        physics_variables.plasma_coulomb_log_electron_electron_profile = np.array([
+            self.calculate_coulomb_log_from_impact(
+                impact_param_max=physics_variables.len_plasma_debye_electron_profile[i],
+                impact_param_min=max(
+                    self.calculate_classical_distance_of_closest_approach(
+                        charge1=1,
+                        charge2=1,
+                        e_kinetic=self.plasma_profile.teprofile.profile_y[i]
+                        * constants.KILOELECTRON_VOLT,
+                    ),
+                    self.calculate_debroglie_wavelength(
+                        mass=constants.ELECTRON_MASS,
+                        velocity=physics_variables.vel_plasma_electron_profile[i],
+                    ),
+                ),
+            )
+            for i in range(len(physics_variables.len_plasma_debye_electron_profile))
+        ])
+
     def calculate_debye_length(
         self,
         temp_plasma_species_kev: float,
@@ -9298,4 +9321,16 @@ class DetailedPhysics:
                 f"Plasma electron Larmor frequency at point {i}",
                 f"freq_plasma_larmor_toroidal_electron_profile{i}",
                 physics_variables.freq_plasma_larmor_toroidal_electron_profile[i],
+            )
+
+        po.osubhd(self.outfile, "Coulomb Logarithms:")
+
+        for i in range(
+            len(physics_variables.plasma_coulomb_log_electron_electron_profile)
+        ):
+            po.ovarre(
+                self.mfile,
+                f"Electron-electron Coulomb log at point {i}",
+                f"plasma_coulomb_log_electron_electron_profile{i}",
+                physics_variables.plasma_coulomb_log_electron_electron_profile[i],
             )

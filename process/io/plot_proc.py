@@ -12352,6 +12352,30 @@ def plot_frequency_profile(axis, mfile_data, scan):
     axis.legend()
 
 
+def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
+    """Plot the plasma coloumb logarithms on the given axis."""
+    plasma_coulomb_log_electron_electron_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
+        plasma_coulomb_log_electron_electron_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-e}$",
+    )
+
+    axis.set_ylabel("Coulomb Logarithm")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def main_plot(
     figs: list[Axes],
     m_file: mf.MFile,
