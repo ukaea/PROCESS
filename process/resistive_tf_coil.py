@@ -33,16 +33,19 @@ class ResistiveTFCoil(TFCoil):
         self.res_tf_internal_geom()
         self.tf_res_heating()
 
-        tfcoil_variables.ind_tf_coil = self.tf_coil_self_inductance(
-            dr_tf_inboard=build_variables.dr_tf_inboard,
-            r_tf_arc=tfcoil_variables.r_tf_arc,
-            z_tf_arc=tfcoil_variables.z_tf_arc,
-            itart=physics_variables.itart,
-            i_tf_shape=tfcoil_variables.i_tf_shape,
-            z_tf_inside_half=build_variables.z_tf_inside_half,
-            dr_tf_outboard=build_variables.dr_tf_outboard,
-            r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
-            r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+        tfcoil_variables.ind_tf_coil, tfcoil_variables.ind_tf_total = (
+            self.tf_coil_self_inductance(
+                dr_tf_inboard=build_variables.dr_tf_inboard,
+                r_tf_arc=tfcoil_variables.r_tf_arc,
+                z_tf_arc=tfcoil_variables.z_tf_arc,
+                itart=physics_variables.itart,
+                i_tf_shape=tfcoil_variables.i_tf_shape,
+                z_tf_inside_half=build_variables.z_tf_inside_half,
+                dr_tf_outboard=build_variables.dr_tf_outboard,
+                r_tf_outboard_mid=build_variables.r_tf_outboard_mid,
+                r_tf_inboard_mid=build_variables.r_tf_inboard_mid,
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+            )
         )
 
         (

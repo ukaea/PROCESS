@@ -5,15 +5,68 @@ The main power flow is controlled by `power.py`. The main class `Power` controls
 
 ### TF Coils
 
+Generall the net power consumption of one magnet in $\text{VA}$ is given by:
+
+$$
+P_{\text{TF,electric}} = \left(\Omega_{\text{TF,coil}}+\Omega_{\text{joints}}+\Omega_{\text{feeder}}\right) \times I_{\text{TF,coil}}^2 
+\\ +\left(L_{\text{TF,coil-self}}+L_{\text{feeder}}\right)\frac{dI}{dt}
+$$
+
 #### Resistive TF coil power requirements | `tfpwr()`
 
 ---
 
-#### Superconducting TF coil power requirements | `tfcpwr()`
+#### Superconducting TF coil power requirements | `superconducting_tf_power_iter_1988()`
+
+
+The electrical power requirements for the superconducting TF coils are as follows:
+
+1. Calculate the cross-sectional areas of the TF bus by taking.
+
+    $$
+    A_{\text{bus}} = \frac{\overbrace{I_{\text{TF,turn}}}^{\texttt{c_tf_turn_ka}}}{J_{\text{TF,design}}}
+    $$
+
+2. The total bus length is defined as  
+
+    $$
+    L_{\text{TF,bus}} = 8 \pi R_0 + (1 + N_{\text{circuit}}) (12 R_0 + 80) 
+    $$
+
+3. The total resistance of the bus bar is calculated
+
+    $$
+    \Omega_{\text{TF,bus}} = \frac{\overbrace{\rho_{\text{TF,bus}}}^{\texttt{rho_tf_bus}}}{L_{\text{TF,bus}}}{A_{\text{TF,bus}}}
+    $$
+
+4. The total voltage drop across the busbar is given by:
+
+    $$
+    V_{\text{TF,bus}} = I_{\text{TF,turn}} \times \Omega_{\text{TF,bus}}
+    $$
+
+5. The total impedance of the circuit is given by:
+
+    $$
+    Z_{\text{TF,total}} = \Omega_{\text{TF,bus}} + \frac{L_{\text{TF,total}}}{t_{\text{TF,charge}}}
+    $$
+
+6. The charging voltage is thus:
+
+    $$
+    V_{\text{TF,charge}} = I_{\text{TF,turn}} \times L_{\text{TF,total}}
+    $$
+
+The resistivity of the busbar is 2.62e-8 ohm.m (0.0262 ohm.mm²/m) (hard-coded).
+
+"TF coil resistive power" (`rpower`) includes the dissipation of the cryogenic current leads (assumed to be resistive).
+
+The AC power required is determined by the efficiency of the coil power supply: `etatf` (default = 90%).
+
 
 ---
 
-#### TF coil power conversion system parameters | `tfcpwr()`
+#### TF coil power conversion system parameters | `superconducting_tf_power_iter_1988()`
 
 ---
 
@@ -310,45 +363,4 @@ The correlation of efficiency with temperature is derived from results of cycle 
 
 
 ### Cryogenic power requirements | `cryo()`
-
----
-
-
-
-
-
-Figure 1 shows a simplified description of the power flow. 
-
-<figure>
-    <center>
-    <img src="../../images/Overall-power-flow.png" alt="Overall power flow" 
-    title="Power flows" 
-    width="650" height="100" />
-    <br><br>
-    <figcaption><i>Figure 1: Power flows
-    </i></figcaption>
-    <br>
-    </center>
-</figure>
-
-Some details of the auxiliary systems are as follows.
-
-`tfcpwr` calculates the TF coil power conversion system parameters.  Only the steady-state power consumption for a superconducting TFC system is described here.
-
-The TF current is carried from the power supplies to the reactor by room-temperature aluminium busbars, organised in $N_{circuit}$ circuits.  The total length of the busbars is (somehwat arbitrarily) given by
-
-$$
-L_bus = 8 \pi R_0 + (1 + N_{circuit}) (12 R_0 + 80) 
-$$
-
-The resistivity of the busbar is 2.62e-8 ohm.m (0.0262 ohm.mm²/m) (hard-coded).
-
-"TF coil resistive power" (`rpower`) includes the dissipation of the cryogenic current leads (assumed to be resistive).
-
-The AC power required is determined by the efficiency of the coil power supply: `etatf` (default = 90%).
-
-
-
-
-
 
