@@ -1848,12 +1848,15 @@ class IFE:
 
         # Blanket and first wall lifetimes (HYLIFE-II: = plant life)
         if (ife_variables.ifetyp == 3) or (ife_variables.ifetyp == 4):
-            life = cost_variables.tlife
+            life = cost_variables.life_plant
         else:
             life = min(
-                cost_variables.tlife,
+                cost_variables.life_plant,
                 cost_variables.abktflnc
-                / (physics_variables.pflux_fw_neutron_mw * cost_variables.cfactr),
+                / (
+                    physics_variables.pflux_fw_neutron_mw
+                    * cost_variables.f_t_plant_available
+                ),
             )
 
         fwbs_variables.life_blkt_fpy = life
