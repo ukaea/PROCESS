@@ -11731,6 +11731,30 @@ def plot_frequency_profile(axis, mfile_data, scan):
     axis.legend()
 
 
+def plot_plasma_coloumb_logarithms(axis, mfile_data, scan):
+    """Plot the plasma coloumb logarithms on the given axis."""
+    plasma_coulomb_log_electron_electron_profile = [
+        mfile_data.data[f"plasma_coulomb_log_electron_electron_profile{i}"].get_scan(
+            scan
+        )
+        for i in range(int(mfile_data.data["n_plasma_profile_elements"].get_scan(scan)))
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, len(plasma_coulomb_log_electron_electron_profile)),
+        plasma_coulomb_log_electron_electron_profile,
+        color="blue",
+        linestyle="-",
+        label=r"$ln \Lambda_{e-e}$",
+    )
+
+    axis.set_ylabel("Coulomb Logarithm")
+    axis.set_xlabel("$\\rho \\ [r/a]$")
+    axis.grid(True, which="both", linestyle="--", alpha=0.5)
+    axis.minorticks_on()
+    axis.legend()
+
+
 def main_plot(
     fig0,
     fig1,
@@ -11757,6 +11781,7 @@ def main_plot(
     fig22,
     fig23,
     fig24,
+    fig25,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -11991,6 +12016,7 @@ def main_plot(
     plot_debye_length_profile(fig24.add_subplot(221), m_file_data, scan)
     plot_velocity_profile(fig24.add_subplot(222), m_file_data, scan)
     plot_frequency_profile(fig24.add_subplot(212), m_file_data, scan)
+    plot_plasma_coloumb_logarithms(fig25.add_subplot(221), m_file_data, scan)
 
 
 def main(args=None):
@@ -12308,6 +12334,7 @@ def main(args=None):
     page22 = plt.figure(figsize=(12, 9), dpi=80)
     page23 = plt.figure(figsize=(12, 9), dpi=80)
     page24 = plt.figure(figsize=(12, 9), dpi=80)
+    page25 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12336,6 +12363,7 @@ def main(args=None):
         page22,
         page23,
         page24,
+        page25,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -12369,6 +12397,7 @@ def main(args=None):
         pdf.savefig(page22)
         pdf.savefig(page23)
         pdf.savefig(page24)
+        pdf.savefig(page25)
 
     # show fig if option used
     if args.show:
@@ -12399,6 +12428,7 @@ def main(args=None):
     plt.close(page22)
     plt.close(page23)
     plt.close(page24)
+    plt.close(page25)
 
 
 if __name__ == "__main__":
