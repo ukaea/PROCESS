@@ -466,7 +466,7 @@ OBS_VARS = {
     "t_fusion_ramp": "t_plant_pulse_fusion_ramp",
     "t_current_ramp_up": "t_plant_pulse_plasma_current_ramp_up",
     "t_ramp_down": "t_plant_pulse_plasma_current_ramp_down",
-    "t_between_pulses": "t_plant_pulse_dwell",
+    "t_between_pulse": "t_plant_pulse_dwell",
     "t_precharge": "t_plant_pulse_coil_precharge",
     "t_burn": "t_plant_pulse_burn",
 }
