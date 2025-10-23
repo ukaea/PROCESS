@@ -152,7 +152,7 @@ class ProcessTracker:
         "TFCoil.b_tf_inboard_peak_symmetric",
         "PFCoil.vs_cs_pf_total_pulse",
         "Physics.nd_plasma_ions_total_vol_avg",
-        "Time.t_burn",
+        "Time.t_plant_pulse_burn",
         "Cost.divlife",
         "Cost.cdirt",
         "Cost.concost",

@@ -34,7 +34,7 @@ class TestVacuum:
         )
         monkeypatch.setattr(pv, "a_plasma_surface", 1500.3146527709359)
         monkeypatch.setattr(tfv, "n_tf_coils", 18)
-        monkeypatch.setattr(tv, "t_between_pulse", 500)
+        monkeypatch.setattr(tv, "t_plant_pulse_dwell", 500)
         monkeypatch.setattr(vacv, "outgasfactor", 0.0235)
         monkeypatch.setattr(vacv, "outgasindex", 1)
         monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.0005)
@@ -54,7 +54,7 @@ class TestVacuum:
         """
         monkeypatch.setattr(pv, "p_fusion_total_mw", 2115.3899563651776)
         monkeypatch.setattr(pv, "temp_plasma_electron_vol_avg_kev", 15.872999999999999)
-        monkeypatch.setattr(tv, "t_precharge", 30)
+        monkeypatch.setattr(tv, "t_plant_pulse_coil_precharge", 30)
         monkeypatch.setattr(vacv, "i_vac_pump_dwell", 0)
         monkeypatch.setattr(vacv, "i_vacuum_pump_type", 1)
         monkeypatch.setattr(vacv, "pres_vv_chamber_base", 0.00050000000000000001)
@@ -74,7 +74,7 @@ class TestVacuum:
         thtf = 0.63812000000000002
         ritf = 3.6371848450794664
         n_tf_coils = 18
-        t_between_pulse = 1800
+        t_plant_pulse_dwell = 1800
         nplasma = 7.2834e19
         qtorus = 0
         gasld = 2.7947500651998464e-05
@@ -96,7 +96,7 @@ class TestVacuum:
             thtf,
             ritf,
             n_tf_coils,
-            t_between_pulse,
+            t_plant_pulse_dwell,
             nplasma,
             ndiv,
             qtorus,

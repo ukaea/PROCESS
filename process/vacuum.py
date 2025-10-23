@@ -72,7 +72,7 @@ class Vacuum:
                 buv.dr_tf_inboard,
                 buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
                 tfv.n_tf_coils,
-                tv.t_between_pulse,
+                tv.t_plant_pulse_dwell,
                 pv.nd_plasma_electrons_vol_avg,
                 pv.n_divertors,
                 qtorus,
@@ -118,7 +118,7 @@ class Vacuum:
         # Required pumping speed for pump-down
         pumpdownspeed = (
             vacv.outgasfactor * wallarea / vacv.pres_vv_chamber_base
-        ) * tv.t_between_pulse ** (-vacv.outgasindex)
+        ) * tv.t_plant_pulse_dwell ** (-vacv.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
 
@@ -162,7 +162,10 @@ class Vacuum:
             )
 
             po.ovarre(
-                self.outfile, "Dwell time", "(t_between_pulse)", tv.t_between_pulse
+                self.outfile,
+                "Dwell time",
+                "(t_plant_pulse_dwell)",
+                tv.t_plant_pulse_dwell,
             )
             po.ovarre(
                 self.outfile,
@@ -194,7 +197,7 @@ class Vacuum:
         thtf,
         ritf,
         n_tf_coils,
-        t_between_pulse,
+        t_plant_pulse_dwell,
         nplasma,
         ndiv,
         qtorus,
@@ -243,7 +246,7 @@ class Vacuum:
         :param tfno:  Number of TF coils
         :type : int
 
-        :param t_between_pulse: Dwell time between pulses (s)
+        :param t_plant_pulse_dwell: Dwell time between pulses (s)
         :type : float
 
         :param nplasma: Plasma density (m**-3)
@@ -332,7 +335,7 @@ class Vacuum:
         #  Pumpdown between burns
         #  s(2) = net pump speed (DT) required for pumpdown between burns (m^3/s)
         #  temp_vv_chamber_gas_burn_end = temperature of neutral gas in chamber (K)
-        #  t_between_pulse = dwell time between burns (s)
+        #  t_plant_pulse_dwell = dwell time between burns (s)
 
         pend = (
             0.5e0 * nplasma * k * vacv.temp_vv_chamber_gas_burn_end
@@ -346,12 +349,12 @@ class Vacuum:
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        if (vacv.i_vac_pump_dwell == 1) or (t_between_pulse == 0):
-            tpump = tv.t_precharge
+        if (vacv.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
+            tpump = tv.t_plant_pulse_coil_precharge
         elif vacv.i_vac_pump_dwell == 2:
-            tpump = t_between_pulse + tv.t_precharge
+            tpump = t_plant_pulse_dwell + tv.t_plant_pulse_coil_precharge
         else:
-            tpump = t_between_pulse
+            tpump = t_plant_pulse_dwell
 
         s.append(volume / tpump * math.log(pend / pstart))
 
@@ -573,14 +576,14 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 "Dwell time between burns (s)",
-                "(t_between_pulse.)",
-                t_between_pulse,
+                "(t_plant_pulse_dwell.)",
+                t_plant_pulse_dwell,
             )
             po.ovarre(
                 self.outfile,
                 "CS ramp-up time burns (s)",
-                "(t_precharge.)",
-                tv.t_precharge,
+                "(t_plant_pulse_coil_precharge.)",
+                tv.t_plant_pulse_coil_precharge,
             )
             po.ovarre(
                 self.outfile,

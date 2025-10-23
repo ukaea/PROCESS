@@ -548,19 +548,19 @@ def constraint_equation_13():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_burn_min: f-value for minimum burn time
-    t_burn: burn time (s) (calculated if i_pulsed_plant=1)
+    t_plant_pulse_burn: burn time (s) (calculated if i_pulsed_plant=1)
     t_burn_min: minimum burn time (s)
     """
     return ConstraintResult(
         1.0
         - data_structure.constraint_variables.ft_burn_min
-        * data_structure.times_variables.t_burn
+        * data_structure.times_variables.t_plant_pulse_burn
         / data_structure.constraint_variables.t_burn_min,
         data_structure.constraint_variables.t_burn_min
         / data_structure.constraint_variables.ft_burn_min,
         data_structure.constraint_variables.t_burn_min
         / data_structure.constraint_variables.ft_burn_min
-        - data_structure.times_variables.t_burn,
+        - data_structure.times_variables.t_plant_pulse_burn,
     )
 
 
@@ -1226,13 +1226,13 @@ def constraint_equation_41():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_current_ramp_up: f-value for plasma current ramp-up time
-    t_current_ramp_up: plasma current ramp-up time for current initiation (s)
+    t_plant_pulse_plasma_current_ramp_up: plasma current ramp-up time for current initiation (s)
     t_current_ramp_up_min: minimum plasma current ramp-up time (s)
     """
     cc = (
         1.0
         - data_structure.constraint_variables.ft_current_ramp_up
-        * data_structure.times_variables.t_current_ramp_up
+        * data_structure.times_variables.t_plant_pulse_plasma_current_ramp_up
         / data_structure.constraint_variables.t_current_ramp_up_min
     )
     return ConstraintResult(
@@ -1248,7 +1248,7 @@ def constraint_equation_42():
     author: P B Lloyd, CCFE, Culham Science Centre
 
     ft_cycle_min: f-value for cycle time
-    t_cycle: full cycle time (s)
+    t_plant_pulse_total: full cycle time (s)
     t_cycle_min: minimum cycle time (s)
     """
     if data_structure.constraint_variables.t_cycle_min < 1.0:
@@ -1259,7 +1259,7 @@ def constraint_equation_42():
     cc = (
         1.0
         - data_structure.constraint_variables.ft_cycle_min
-        * data_structure.times_variables.t_cycle
+        * data_structure.times_variables.t_plant_pulse_total
         / data_structure.constraint_variables.t_cycle_min
     )
     return ConstraintResult(

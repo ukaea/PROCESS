@@ -109,7 +109,7 @@ Produces a three-page PDF file in the same directory as the input MFILE. The PDF
 `Plasma Composition` - Number densities of several ion species relative to the electron density.
 
 `Coil Currents etc` - Peak coil currents of the PF coils in $\text{MA}$, flux swing of the central solenoid 
-used for startup and total available in $\text{Wb}$. Total burn time `t_burn` in hrs.
+used for startup and total available in $\text{Wb}$. Total burn time `t_plant_pulse_burn` in hrs.
 
 `Cost of electricity` - This is the cost of electricity in $ $/ \text{MWh}$. Check the respective cost model 
 for the reference year of the inflation used.

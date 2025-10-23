@@ -76,8 +76,8 @@ def calculate_volt_second_requirements(
     rmajor: float,
     res_plasma: float,
     plasma_current: float,
-    t_fusion_ramp: float,
-    t_burn: float,
+    t_plant_pulse_fusion_ramp: float,
+    t_plant_pulse_burn: float,
     ind_plasma_internal_norm: float,
 ) -> tuple[float, float, float, float, float, float]:
     """Calculate the volt-second requirements and related parameters for plasma physics.
@@ -98,10 +98,10 @@ def calculate_volt_second_requirements(
     :type res_plasma: float
     :param plasma_current: Plasma current (A)
     :type plasma_current: float
-    :param t_fusion_ramp: Heating time (s)
-    :type t_fusion_ramp: float
-    :param t_burn: Burn time (s)
-    :type t_burn: float
+    :param t_plant_pulse_fusion_ramp: Heating time (s)
+    :type t_plant_pulse_fusion_ramp: float
+    :param t_plant_pulse_burn: Burn time (s)
+    :type t_plant_pulse_burn: float
     :param ind_plasma_internal_norm: Plasma normalized internal inductance
     :type ind_plasma_internal_norm: float
 
@@ -174,11 +174,13 @@ def calculate_volt_second_requirements(
 
     v_burn_resistive = v_plasma_loop_burn * csawth
 
-    # N.B. t_burn on first iteration will not be correct
+    # N.B. t_plant_pulse_burn on first iteration will not be correct
     # if the pulsed reactor option is used, but the value
     # will be correct on subsequent calls.
 
-    vs_plasma_burn_required = v_burn_resistive * (t_fusion_ramp + t_burn)
+    vs_plasma_burn_required = v_burn_resistive * (
+        t_plant_pulse_fusion_ramp + t_plant_pulse_burn
+    )
     vs_plasma_total_required = vs_plasma_ramp_required + vs_plasma_burn_required
 
     return (
@@ -1833,58 +1835,66 @@ class Physics:
         # Set PF coil ramp times
         if pulse_variables.i_pulsed_plant != 1:
             if times_variables.i_t_current_ramp_up == 0:
-                times_variables.t_current_ramp_up = (
+                times_variables.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 5.0e5
                 )
-                times_variables.t_precharge = times_variables.t_current_ramp_up
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+                times_variables.t_plant_pulse_coil_precharge = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
+                times_variables.t_plant_pulse_plasma_current_ramp_down = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
 
         else:
             if times_variables.pulsetimings == 0.0e0:
-                # times_variables.t_precharge is input
-                times_variables.t_current_ramp_up = (
+                # times_variables.t_plant_pulse_coil_precharge is input
+                times_variables.t_plant_pulse_plasma_current_ramp_up = (
                     physics_variables.plasma_current / 1.0e5
                 )
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+                times_variables.t_plant_pulse_plasma_current_ramp_down = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
 
             else:
-                # times_variables.t_current_ramp_up is set either in INITIAL or INPUT, or by being
+                # times_variables.t_plant_pulse_plasma_current_ramp_up is set either in INITIAL or INPUT, or by being
                 # iterated using limit equation 41.
-                times_variables.t_precharge = max(
-                    times_variables.t_precharge, times_variables.t_current_ramp_up
+                times_variables.t_plant_pulse_coil_precharge = max(
+                    times_variables.t_plant_pulse_coil_precharge,
+                    times_variables.t_plant_pulse_plasma_current_ramp_up,
                 )
-                # t_ramp_down = max(t_ramp_down,t_current_ramp_up)
-                times_variables.t_ramp_down = times_variables.t_current_ramp_up
+                # t_plant_pulse_plasma_current_ramp_down = max(t_plant_pulse_plasma_current_ramp_down,t_plant_pulse_plasma_current_ramp_up)
+                times_variables.t_plant_pulse_plasma_current_ramp_down = (
+                    times_variables.t_plant_pulse_plasma_current_ramp_up
+                )
 
-        # Reset second times_variables.t_burn value (times_variables.t_burn_0).
+        # Reset second times_variables.t_plant_pulse_burn value (times_variables.t_burn_0).
         # This is used to ensure that the burn time is used consistently;
         # see convergence loop in fcnvmc1, evaluators.f90
-        times_variables.t_burn_0 = times_variables.t_burn
+        times_variables.t_burn_0 = times_variables.t_plant_pulse_burn
 
-        # Pulse and down times : The reactor is assumed to be 'down'
-        # at all times outside of the plasma current flat-top period.
-        # The pulse length is the duration of non-zero plasma current
-        times_variables.t_pulse_repetition = (
-            times_variables.t_current_ramp_up
-            + times_variables.t_fusion_ramp
-            + times_variables.t_burn
-            + times_variables.t_ramp_down
+        # Time during the pulse in which a plasma is present
+        times_variables.t_plant_pulse_plasma_present = (
+            times_variables.t_plant_pulse_plasma_current_ramp_up
+            + times_variables.t_plant_pulse_fusion_ramp
+            + times_variables.t_plant_pulse_burn
+            + times_variables.t_plant_pulse_plasma_current_ramp_down
         )
-        times_variables.tdown = (
-            times_variables.t_precharge
-            + times_variables.t_current_ramp_up
-            + times_variables.t_ramp_down
-            + times_variables.t_between_pulse
+        times_variables.t_plant_pulse_no_burn = (
+            times_variables.t_plant_pulse_coil_precharge
+            + times_variables.t_plant_pulse_plasma_current_ramp_up
+            + times_variables.t_plant_pulse_plasma_current_ramp_down
+            + times_variables.t_plant_pulse_dwell
+            + times_variables.t_plant_pulse_fusion_ramp
         )
 
         # Total cycle time
-        times_variables.t_cycle = (
-            times_variables.t_precharge
-            + times_variables.t_current_ramp_up
-            + times_variables.t_fusion_ramp
-            + times_variables.t_burn
-            + times_variables.t_ramp_down
-            + times_variables.t_between_pulse
+        times_variables.t_plant_pulse_total = (
+            times_variables.t_plant_pulse_coil_precharge
+            + times_variables.t_plant_pulse_plasma_current_ramp_up
+            + times_variables.t_plant_pulse_fusion_ramp
+            + times_variables.t_plant_pulse_burn
+            + times_variables.t_plant_pulse_plasma_current_ramp_down
+            + times_variables.t_plant_pulse_dwell
         )
 
         # ***************************** #
@@ -2541,8 +2551,8 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.res_plasma,
             physics_variables.plasma_current,
-            times_variables.t_fusion_ramp,
-            times_variables.t_burn,
+            times_variables.t_plant_pulse_fusion_ramp,
+            times_variables.t_plant_pulse_burn,
             physics_variables.ind_plasma_internal_norm,
         )
 
@@ -3859,42 +3869,46 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Initial charge time for CS from zero current (s)",
-            "(t_precharge)",
-            times_variables.t_precharge,
+            "(t_plant_pulse_coil_precharge)",
+            times_variables.t_plant_pulse_coil_precharge,
         )
         po.ovarrf(
             self.outfile,
             "Plasma current ramp-up time (s)",
-            "(t_current_ramp_up)",
-            times_variables.t_current_ramp_up,
+            "(t_plant_pulse_plasma_current_ramp_up)",
+            times_variables.t_plant_pulse_plasma_current_ramp_up,
         )
         po.ovarrf(
             self.outfile,
             "Heating time (s)",
-            "(t_fusion_ramp)",
-            times_variables.t_fusion_ramp,
+            "(t_plant_pulse_fusion_ramp)",
+            times_variables.t_plant_pulse_fusion_ramp,
         )
         po.ovarre(
-            self.outfile, "Burn time (s)", "(t_burn)", times_variables.t_burn, "OP "
+            self.outfile,
+            "Burn time (s)",
+            "(t_plant_pulse_burn)",
+            times_variables.t_plant_pulse_burn,
+            "OP ",
         )
         po.ovarrf(
             self.outfile,
             "Reset time to zero current for CS (s)",
-            "(t_ramp_down)",
-            times_variables.t_ramp_down,
+            "(t_plant_pulse_plasma_current_ramp_down)",
+            times_variables.t_plant_pulse_plasma_current_ramp_down,
         )
         po.ovarrf(
             self.outfile,
             "Time between pulses (s)",
-            "(t_between_pulse)",
-            times_variables.t_between_pulse,
+            "(t_plant_pulse_dwell)",
+            times_variables.t_plant_pulse_dwell,
         )
         po.oblnkl(self.outfile)
         po.ovarre(
             self.outfile,
             "Total plant cycle time (s)",
-            "(t_cycle)",
-            times_variables.t_cycle,
+            "(t_plant_pulse_total)",
+            times_variables.t_plant_pulse_total,
             "OP ",
         )
 

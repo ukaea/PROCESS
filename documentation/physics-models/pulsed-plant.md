@@ -29,16 +29,16 @@ change equal to the maximum proposed in [^1], or it can be set by the user.  The
 constraint is likely to depend on whether the ramp-up is purely inductive or includes current drive, 
 but this is not taken ito account.
 
-In the steady-state scenario (`i_pulsed_plant` = 0), the plasma current ramp-up time `t_current_ramp_up` is determined as follows. 
+In the steady-state scenario (`i_pulsed_plant` = 0), the plasma current ramp-up time `t_plant_pulse_plasma_current_ramp_up` is determined as follows. 
 
-- If `i_t_current_ramp_up` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_precharge` 
-  and shutdown time `t_ramp_down` are (arbitrarily) set equal to `t_current_ramp_up`. 
-- If `i_t_current_ramp_up` $\neq$ 0, the plasma current ramp-up time `t_current_ramp_up`, and the PF coil ramp 
+- If `i_t_current_ramp_up` = 0, the rate of change of plasma current is 0.5 MA/s. The PF coil ramp time `t_plant_pulse_coil_precharge` 
+  and shutdown time `t_plant_pulse_plasma_current_ramp_down` are (arbitrarily) set equal to `t_plant_pulse_plasma_current_ramp_up`. 
+- If `i_t_current_ramp_up` $\neq$ 0, the plasma current ramp-up time `t_plant_pulse_plasma_current_ramp_up`, and the PF coil ramp 
   and shutdown times are input parameters.
 
-In the pulsed scenario, (`i_pulsed_plant` = 1), the plasma current ramp-up time `t_current_ramp_up` is an input, and it 
+In the pulsed scenario, (`i_pulsed_plant` = 1), the plasma current ramp-up time `t_plant_pulse_plasma_current_ramp_up` is an input, and it 
 can be set as an iteration variable (65). The ramp-up and shutdown time in the pulsed case are set 
-equal to `t_current_ramp_up`. To ensure that the plasma current ramp rate during start-up is prevented from being 
+equal to `t_plant_pulse_plasma_current_ramp_up`. To ensure that the plasma current ramp rate during start-up is prevented from being 
 too high, as governed by the requirement to maintain plasma stability by ensuring that the induced 
 current has time to diffuse into the body of the plasma, constraint equation no. 41 should be 
 turned on with iteration variable no. 66 `ft_current_ramp_up` and input `t_current_ramp_up_min`, the minimum plasma current 
@@ -55,12 +55,12 @@ constraint equation no. 13 and iteration variable no 21 (`ft_burn_min`).
 
 Over the course of a pulse, the timings are detailed as:
 
-- Precharge (`t_precharge`) - the CS current ramps from zero to maximum value. The other PF coils also ramp from zero to their required values.
-- Current ramp-up (`t_current_ramp_up`) - The plasma current ramps up to approx full value. Auxiliary heating is possibly on.
-- Fusion ramp (`t_fusion_ramp`) - The plasma temperature and density rise to the full values. The CS and other PF coil currents all change steadily. Auxiliary heating is on.
-- Burn time (`t_burn`) - Flat-top duration. The plasma is approximately steady. Fusion power and electricity are produced. The CS and other PF coil currents all change steadily in a pulsed reactor, but are constant for a "steady-state" reactor. Auxiliary heating is on.
-- Ramp-down (`t_ramp_down`) - The plasma current, density and temperature all ramp down to zero simultaneously. As a starter for ten we could assume that the CS and PF coil currents also ramp to zero at the same time. Auxiliary heating is possibly on.
-- Between pulse (`t_between_pulse`) -  CS and PF coil currents are zero - a few minutes may be required to permit vacuum pumping. May be much longer for an experimental device such as DEMO.
+- Precharge (`t_plant_pulse_coil_precharge`) - the CS current ramps from zero to maximum value. The other PF coils also ramp from zero to their required values.
+- Current ramp-up (`t_plant_pulse_plasma_current_ramp_up`) - The plasma current ramps up to approx full value. Auxiliary heating is possibly on.
+- Fusion ramp (`t_plant_pulse_fusion_ramp`) - The plasma temperature and density rise to the full values. The CS and other PF coil currents all change steadily. Auxiliary heating is on.
+- Burn time (`t_plant_pulse_burn`) - Flat-top duration. The plasma is approximately steady. Fusion power and electricity are produced. The CS and other PF coil currents all change steadily in a pulsed reactor, but are constant for a "steady-state" reactor. Auxiliary heating is on.
+- Ramp-down (`t_plant_pulse_plasma_current_ramp_down`) - The plasma current, density and temperature all ramp down to zero simultaneously. As a starter for ten we could assume that the CS and PF coil currents also ramp to zero at the same time. Auxiliary heating is possibly on.
+- Between pulse (`t_plant_pulse_dwell`) -  CS and PF coil currents are zero - a few minutes may be required to permit vacuum pumping. May be much longer for an experimental device such as DEMO.
 - Pulse repitition (`t_pulse_repitition`) - Sum of all the above times.
 
 A plot showing schematically these timings over a pulse can be found in Figure 2.

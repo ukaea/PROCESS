@@ -136,11 +136,17 @@ class PFCoil:
 
         # Set up array of times
         tv.t_pulse_cumulative[0] = 0.0e0
-        tv.t_pulse_cumulative[1] = tv.t_precharge
-        tv.t_pulse_cumulative[2] = tv.t_pulse_cumulative[1] + tv.t_current_ramp_up
-        tv.t_pulse_cumulative[3] = tv.t_pulse_cumulative[2] + tv.t_fusion_ramp
-        tv.t_pulse_cumulative[4] = tv.t_pulse_cumulative[3] + tv.t_burn
-        tv.t_pulse_cumulative[5] = tv.t_pulse_cumulative[4] + tv.t_ramp_down
+        tv.t_pulse_cumulative[1] = tv.t_plant_pulse_coil_precharge
+        tv.t_pulse_cumulative[2] = (
+            tv.t_pulse_cumulative[1] + tv.t_plant_pulse_plasma_current_ramp_up
+        )
+        tv.t_pulse_cumulative[3] = (
+            tv.t_pulse_cumulative[2] + tv.t_plant_pulse_fusion_ramp
+        )
+        tv.t_pulse_cumulative[4] = tv.t_pulse_cumulative[3] + tv.t_plant_pulse_burn
+        tv.t_pulse_cumulative[5] = (
+            tv.t_pulse_cumulative[4] + tv.t_plant_pulse_plasma_current_ramp_down
+        )
 
         # Set up call to MHD scaling routine for coil currents.
         # First break up Central Solenoid solenoid into 'filaments'
@@ -647,12 +653,12 @@ class PFCoil:
                     pfcoil_variables.ccl0[nng] = 1.0e6 * pfcoil_variables.ccl0_ma[nng]
                     pfcoil_variables.ccls[nng] = 1.0e6 * pfcoil_variables.ccls_ma[nng]
 
-                # Beginning of pulse: t = tv.t_precharge
+                # Beginning of pulse: t = tv.t_plant_pulse_coil_precharge
                 pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ncl] = (
                     1.0e-6 * pfcoil_variables.ccl0[nng]
                 )
 
-                # Beginning of flat-top: t = tv.t_precharge+tv.t_current_ramp_up
+                # Beginning of flat-top: t = tv.t_plant_pulse_coil_precharge+tv.t_plant_pulse_plasma_current_ramp_up
                 pfcoil_variables.c_pf_cs_coil_flat_top_ma[ncl] = 1.0e-6 * (
                     pfcoil_variables.ccls[nng]
                     - (
@@ -662,7 +668,7 @@ class PFCoil:
                     )
                 )
 
-                # End of flat-top: t = tv.t_precharge+tv.t_current_ramp_up+tv.t_fusion_ramp+tv.t_burn
+                # End of flat-top: t = tv.t_plant_pulse_coil_precharge+tv.t_plant_pulse_plasma_current_ramp_up+tv.t_plant_pulse_fusion_ramp+tv.t_plant_pulse_burn
                 pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ncl] = 1.0e-6 * (
                     pfcoil_variables.ccls[nng]
                     - (
@@ -2899,7 +2905,7 @@ class PFCoil:
 
         for ic in range(pfcoil_variables.n_cs_pf_coils):
             # Find where the peak current occurs
-            # Beginning of pulse, t = t_precharge
+            # Beginning of pulse, t = t_plant_pulse_coil_precharge
             if (
                 abs(pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ic])
                 >= abs(pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic])
@@ -2911,7 +2917,7 @@ class PFCoil:
                     pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ic]
                 )
 
-            # Beginning of flat-top, t = t_precharge + t_current_ramp_up
+            # Beginning of flat-top, t = t_plant_pulse_coil_precharge + t_plant_pulse_plasma_current_ramp_up
             if (
                 abs(pfcoil_variables.c_pf_cs_coil_flat_top_ma[ic])
                 >= abs(pfcoil_variables.c_pf_cs_coil_pulse_start_ma[ic])
@@ -2923,7 +2929,7 @@ class PFCoil:
                     pfcoil_variables.c_pf_cs_coil_flat_top_ma[ic]
                 )
 
-            # End of flat-top, t = t_precharge + t_current_ramp_up + t_fusion_ramp + t_burn
+            # End of flat-top, t = t_plant_pulse_coil_precharge + t_plant_pulse_plasma_current_ramp_up + t_plant_pulse_fusion_ramp + t_plant_pulse_burn
             if (
                 abs(pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic])
                 >= abs(pfcoil_variables.c_pf_cs_coil_pulse_end_ma[ic])

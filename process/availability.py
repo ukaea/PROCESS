@@ -136,7 +136,7 @@ class Availability:
         # Plant Availability (iavail=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
-        pulse_fpy = tv.t_cycle / YEAR_SECONDS
+        pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
         cv.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
 
         # if iavail = 0 use input value for cfactr
@@ -176,7 +176,7 @@ class Availability:
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
@@ -383,7 +383,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         # Output
         if output:
@@ -673,11 +673,11 @@ class Availability:
 
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = cv.divlife * YEAR_SECONDS / tv.t_cycle
+        n = cv.divlife * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
-        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_cycle
-        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_cycle
+        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
@@ -769,12 +769,12 @@ class Availability:
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
-        n = fwbsv.life_blkt_fpy * YEAR_SECONDS / tv.t_cycle
+        n = fwbsv.life_blkt_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
-        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_cycle
-        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_cycle
+        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
 
         if cv.fwbs_nu <= cv.fwbs_nref:
             logger.error(
@@ -1146,7 +1146,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         if output:
             po.ocmmnt(self.outfile, "Plant Availability")

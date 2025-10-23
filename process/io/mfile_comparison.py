@@ -183,7 +183,7 @@ BASELINE_LIST = [
     "p_plasma_separatrix_mw",
     "vssoft",
     "vs_cs_pf_total_pulse",
-    "t_burn",
+    "t_plant_pulse_burn",
     "b_tf_inboard_peak_symmetric",
     "iooic",
     "tmarg",

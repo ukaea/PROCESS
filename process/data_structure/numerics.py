@@ -160,7 +160,7 @@ lablcc: list[str] = None
 * (64) Zeff less than or equal to zeff_max (itv 112)
 * (65) Dump time set by VV loads (itv 56, 113)
 * (66) Limit on rate of change of energy in poloidal field
-(Use iteration variable 65(t_current_ramp_up), 115)
+(Use iteration variable 65(t_plant_pulse_plasma_current_ramp_up), 115)
 * (67) Simple Radiation Wall load limit (itv 116, 4,6)
 * (68) Psep * Bt / qAR upper limit (itv 117)
 * (69) ensure separatrix power = the value from Kallenbach divertor (itv 118)
@@ -213,7 +213,7 @@ lablxc: list[str] = None
 * (14) fpflux_fw_neutron_max_mw (f-value for equation 8)
 * (15) fvs_plasma_total_required (f-value for equation 12)
 * (16) dr_cs
-* (17) t_between_pulse
+* (17) t_plant_pulse_dwell
 * (18) q
 * (19) e_beam_kev
 * (20) temp_cp_average
@@ -261,7 +261,7 @@ lablxc: list[str] = None
 * (62) fdtmp (f-value for equation 38)
 * (63) ftemp_fw_max (f-value for equation 39)
 * (64) fp_hcd_injected_min_mw (f-value for equation 40)
-* (65) t_current_ramp_up
+* (65) t_plant_pulse_plasma_current_ramp_up
 * (66) ft_current_ramp_up (f-value for equation 41)
 * (67) ft_cycle_min (f-value for equation 42)
 * (68) fptemp (f-value for equation 44)
@@ -514,7 +514,7 @@ def init_numerics():
         "min R0, max tau_burn  ",
         "net electrical output ",
         "Null figure of merit  ",
-        "max Q, max t_burn     ",
+        "max Q, max t_plant_pulse_burn     ",
     ]
 
     ncalls = 0

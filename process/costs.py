@@ -2816,7 +2816,7 @@ class Costs:
                 cost_variables.c2253 = (
                     cost_variables.ucblss
                     * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
-                    * times_variables.tdown
+                    * times_variables.t_plant_pulse_no_burn
                     / (shcss * pulse_variables.dtstor)
                 )
 
@@ -2867,8 +2867,8 @@ class Costs:
                 * heat_transport_variables.p_plant_electric_net_mw
                 * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
-                * times_variables.t_burn
-                / times_variables.t_cycle
+                * times_variables.t_plant_pulse_burn
+                / times_variables.t_plant_pulse_total
             )
 
         #  Costs due to reactor plant

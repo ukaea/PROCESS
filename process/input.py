@@ -1590,10 +1590,10 @@ INPUT_VARIABLES = {
     "str_wp_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.3)
     ),
-    "t_between_pulse": InputVariable(
+    "t_plant_pulse_dwell": InputVariable(
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
-    "t_burn": InputVariable(
+    "t_plant_pulse_burn": InputVariable(
         data_structure.times_variables, float, range=(0.0, 100000000.0)
     ),
     "t_burn_min": InputVariable(
@@ -1611,10 +1611,10 @@ INPUT_VARIABLES = {
     "t_crit_nbti": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 15.0)
     ),
-    "t_current_ramp_up": InputVariable(
+    "t_plant_pulse_plasma_current_ramp_up": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "t_fusion_ramp": InputVariable(
+    "t_plant_pulse_fusion_ramp": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "t_in_bb": InputVariable(
@@ -1626,10 +1626,10 @@ INPUT_VARIABLES = {
     "t_out_bb": InputVariable(
         data_structure.primary_pumping_variables, float, range=(200.0, 1000.0)
     ),
-    "t_precharge": InputVariable(
+    "t_plant_pulse_coil_precharge": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
-    "t_ramp_down": InputVariable(
+    "t_plant_pulse_plasma_current_ramp_down": InputVariable(
         data_structure.times_variables, float, range=(0.0, 10000.0)
     ),
     "dr_cs_turn_conduit": InputVariable(

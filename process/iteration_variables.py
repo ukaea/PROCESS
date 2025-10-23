@@ -70,7 +70,7 @@ ITERATION_VARIABLES = {
     ),
     16: IterationVariable("dr_cs", data_structure.build_variables, 0.01, 10.00),
     17: IterationVariable(
-        "t_between_pulse", data_structure.times_variables, 0.1, 1.0e8
+        "t_plant_pulse_dwell", data_structure.times_variables, 0.1, 1.0e8
     ),
     18: IterationVariable("q95", data_structure.physics_variables, 2.0, 50.00),
     19: IterationVariable(
@@ -159,7 +159,10 @@ ITERATION_VARIABLES = {
         "fp_hcd_injected_min_mw", data_structure.constraint_variables, 0.001, 1.0
     ),
     65: IterationVariable(
-        "t_current_ramp_up", data_structure.times_variables, 0.1, 1.0e3
+        "t_plant_pulse_plasma_current_ramp_up",
+        data_structure.times_variables,
+        0.1,
+        1.0e3,
     ),
     66: IterationVariable(
         "ft_current_ramp_up", data_structure.constraint_variables, 0.001, 1.0
