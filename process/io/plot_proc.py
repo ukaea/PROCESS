@@ -9537,24 +9537,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
 
     # ==============================================================
 
-    axis.plot(
-        mfile_data.data["rmajor"].get_scan(scan),
-        0.0,
-        marker="o",
-        color="red",
-        markersize=5,
-        label="Top of coil",
-    )
-
     y_center = y2 - ((y2 - y4) / 2)
-    axis.plot(
-        mfile_data.data["rmajor"].get_scan(scan),
-        y_center,
-        marker="o",
-        color="blue",
-        markersize=5,
-        label="Vertical centre of coil",
-    )
     # also draw a red horizontal line at the same vertical centre
     axis.axhline(y=y_center, color="red", linestyle="--", linewidth=1.0, zorder=5)
 
