@@ -2180,20 +2180,15 @@ class SuperconductingTFCoil(TFCoil):
             else:
                 # Integer number of turns
                 (
-                    superconducting_tf_coil_variables.radius_tf_turn_cable_space_corners,
                     superconducting_tf_coil_variables.dr_tf_turn,
                     superconducting_tf_coil_variables.dx_tf_turn,
-                    tfcoil_variables.a_tf_turn_cable_space_no_void,
-                    tfcoil_variables.a_tf_turn_steel,
-                    tfcoil_variables.a_tf_turn_insulation,
                     tfcoil_variables.c_tf_turn,
                     tfcoil_variables.n_tf_coil_turns,
-                    superconducting_tf_coil_variables.t_conductor_radial,
-                    superconducting_tf_coil_variables.t_conductor_toroidal,
-                    tfcoil_variables.t_conductor,
                     superconducting_tf_coil_variables.dr_tf_turn_cable_space,
                     superconducting_tf_coil_variables.dx_tf_turn_cable_space,
                     superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
+                    superconducting_tf_coil_variables.dr_tf_turn_tape_stack,
+                    superconducting_tf_coil_variables.dx_tf_turn_tape_stack,
                 ) = self.tf_step_vertical_tape_integer_turn_geometry(
                     dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                     dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
@@ -2906,7 +2901,10 @@ class SuperconductingTFCoil(TFCoil):
                 f"{x_tf_turn_coolant_channel_centre=} {dx_tf_turn_conductor=}"
             )
 
+        # Width of the tape stack allows for 10% of copper stabiliser on each side
         dr_tf_turn_tape_stack = dr_tf_turn_conductor * 0.8
+        
+        # Bottom of tape stack starts at the centre of the turn and allows for 10% of conductor height above
         dx_tf_turn_tape_stack = (dx_tf_turn / 2) - (
             dx_tf_turn_insulation + (0.1 * dx_tf_turn_conductor)
         )
