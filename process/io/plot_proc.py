@@ -7296,6 +7296,9 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int)
 
 def plot_tf_step_vertical_tape_turn(
     axis,
+    fig,
+    mfile_data,
+    scan: int,
     dr_tf_turn,
     dx_tf_turn,
     dia_tf_turn_coolant_channel,
@@ -7303,7 +7306,7 @@ def plot_tf_step_vertical_tape_turn(
     dr_tf_turn_tape_stack,
     dx_tf_turn_tape_stack,
     x_tf_turn_coolant_channel_centre,
-    dr_tf_turn_conductor,
+    dr_tf_turn_stabiliser,
 ) -> None:
     """
     Plots TF coil step vertical tape turn structure.
@@ -7342,7 +7345,7 @@ def plot_tf_step_vertical_tape_turn(
     # Plot the tape stack
     axis.add_patch(
         Rectangle(
-            [(dr_tf_turn_conductor * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
+            [(dr_tf_turn_stabiliser * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
             (dr_tf_turn_tape_stack),
             (dx_tf_turn_tape_stack),
             facecolor="black",
@@ -7356,6 +7359,103 @@ def plot_tf_step_vertical_tape_turn(
     axis.set_title("WP Turn Structure")
     axis.set_xlabel("X [m]")
     axis.set_ylabel("Y [m]")
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_insulation = f"$\\mathbf{{Turn \\ Insulation:}}$\n\n$\\Delta r:${mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.3e} m"
+
+    axis.text(
+        0.4,
+        0.9,
+        textstr_turn_insulation,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "red",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_turn_strand_space = (
+        f"$\\mathbf{{Strand \\ Space:}}$\n\n"
+        f"$\\Delta r:$ {mfile_data.data['dr_tf_turn_tape_stack'].get_scan(scan):.3e} m\n"
+        f"$\\Delta x:$ {mfile_data.data['dx_tf_turn_tape_stack'].get_scan(scan):.3e} m\n"
+        f"Tape stack space area: {mfile_data.data['a_tf_turn_tape_stack'].get_scan(scan):.3e} m$^2$"
+    )
+
+    axis.text(
+        0.5,
+        0.7,
+        textstr_turn_strand_space,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add info about the steel casing surrounding the WP
+    textstr_turn_cooling = (
+        f"$\\mathbf{{Cooling:}}$\n\n"
+        f"$\\varnothing$: {mfile_data.data['dia_tf_turn_coolant_channel'].get_scan(scan):.3e} m\n"
+        f"Total area of all coolant channels: {mfile_data.data['a_tf_wp_coolant_channels'].get_scan(scan):.4f} m$^2$"
+    )
+
+    axis.text(
+        0.45,
+        0.8,
+        textstr_turn_cooling,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "white",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_superconductor = (
+        f"$\\mathbf{{Superconductor:}}$\n \n"
+        f"Superconductor used: {sctf.SUPERCONDUCTING_TF_TYPES[mfile_data.data['i_tf_sc_mat'].get_scan(scan)]}\n"
+        f"Critical field at zero \ntemperature and strain: {mfile_data.data['b_tf_superconductor_critical_zero_temp_strain'].get_scan(scan):.4f} T\n"
+        f"Critical temperature at \nzero field and strain: {mfile_data.data['temp_tf_superconductor_critical_zero_field_strain'].get_scan(scan):.4f} K\n"
+        f"Temperature at conductor: {mfile_data.data['tftmp'].get_scan(scan):.4f} K\n"
+        f"$I_{{\\text{{TF,turn critical}}}}$: {mfile_data.data['c_turn_cables_critical'].get_scan(scan):,.2f} A\n"
+        f"$I_{{\\text{{TF,turn}}}}$: {mfile_data.data['c_tf_turn'].get_scan(scan):,.2f} A\n"
+        f"Critcal current ratio: {mfile_data.data['f_c_tf_turn_operating_critical'].get_scan(scan):,.4f}\n"
+        f"Superconductor temperature \nmargin: {mfile_data.data['temp_tf_superconductor_margin'].get_scan(scan):,.4f} K\n"
+        f"\n$\\mathbf{{Quench:}}$\n \n"
+        f"Quench dump time: {mfile_data.data['t_tf_superconductor_quench'].get_scan(scan):.4e} s\n"
+        f"Quench detection time: {mfile_data.data['t_tf_quench_detection'].get_scan(scan):.4e} s\n"
+        f"User input max temperature \nduring quench: {mfile_data.data['temp_tf_conductor_quench_max'].get_scan(scan):.2f} K\n"
+        f"Required maxium WP current \ndensity for heat protection:\n{mfile_data.data['j_tf_wp_quench_heat_max'].get_scan(scan):.2e} A/m$^2$\n"
+    )
+    axis.text(
+        0.75,
+        0.9,
+        textstr_superconductor,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#6dd3f7",  # light blue for superconductors
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -12742,10 +12842,38 @@ def main_plot(
         # TF coil turn structure
         ax20 = figs[19].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, figs[19], m_file, scan)
-        plot_205 = figs[19].add_subplot(223, aspect="equal")
-        plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, figs[19], m_file, scan)
+        if m_file_data.data["i_tf_turn_type"].get_scan(scan) == 0:
+            plot_tf_cable_in_conduit_turn(ax20, fig14, m_file_data, scan)
+            plot_205 = fig14.add_subplot(223, aspect="equal")
+            plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+            plot_cable_in_conduit_cable(plot_205, fig14, m_file_data, scan)
+        elif m_file_data.data["i_tf_turn_type"].get_scan(scan) == 2:
+            plot_tf_step_vertical_tape_turn(
+                ax20,
+                fig14,
+                m_file_data,
+                scan,
+                dr_tf_turn=m_file_data.data["dr_tf_turn"].get_scan(scan),
+                dx_tf_turn=m_file_data.data["dx_tf_turn"].get_scan(scan),
+                dia_tf_turn_coolant_channel=m_file_data.data[
+                    "dia_tf_turn_coolant_channel"
+                ].get_scan(scan),
+                dx_tf_turn_insulation=m_file_data.data[
+                    "dx_tf_turn_insulation"
+                ].get_scan(scan),
+                dr_tf_turn_tape_stack=m_file_data.data[
+                    "dr_tf_turn_tape_stack"
+                ].get_scan(scan),
+                dx_tf_turn_tape_stack=m_file_data.data[
+                    "dx_tf_turn_tape_stack"
+                ].get_scan(scan),
+                x_tf_turn_coolant_channel_centre=m_file_data.data[
+                    "x_tf_turn_coolant_channel_centre"
+                ].get_scan(scan),
+                dr_tf_turn_stabiliser=m_file_data.data[
+                    "dr_tf_turn_stabiliser"
+                ].get_scan(scan),
+            )
     else:
         ax19 = figs[18].add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])

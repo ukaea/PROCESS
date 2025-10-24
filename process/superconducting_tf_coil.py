@@ -3096,7 +3096,7 @@ class SuperconductingTFCoil(TFCoil):
         if x_tf_turn_coolant_channel_centre > (dx_tf_turn_stabiliser / 2) - (
             0.1 * dx_tf_turn_stabiliser
         ) - (dia_tf_turn_coolant_channel / 2):
-            logger.error(
+            logger.critical(
                 "Coolant channel too big for turn conductor dimension; reduce coolant channel diameter or increase turn dimensions."
                 f"{x_tf_turn_coolant_channel_centre=} {dx_tf_turn_stabiliser=}"
             )

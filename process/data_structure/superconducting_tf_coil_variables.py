@@ -231,6 +231,12 @@ a_tf_turn_tape_stack: float = None
 n_tf_turn_superconducting_strands: int = None
 """Number of superconducting strands in the TF turn"""
 
+x_tf_turn_coolant_channel_centre: float = None
+"""Vertical centre position of the coolant channel in the TF turn [m]"""
+
+dr_tf_turn_stabiliser: float = None
+"""Radial thickness of the stabiliser in the TF turn [m]"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -340,6 +346,8 @@ def init_superconducting_tf_coil_variables():
     global dr_tf_turn_tape_stack
     global a_tf_turn_tape_stack
     global n_tf_turn_superconducting_strands
+    global x_tf_turn_coolant_channel_centre
+    global dr_tf_turn_stabiliser
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -405,3 +413,5 @@ def init_superconducting_tf_coil_variables():
     dr_tf_turn_tape_stack = 0.0
     a_tf_turn_tape_stack = 0.0
     n_tf_turn_superconducting_strands = 0
+    x_tf_turn_coolant_channel_centre = 0.0
+    dr_tf_turn_stabiliser = 0.0
