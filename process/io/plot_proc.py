@@ -6593,7 +6593,6 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     axis.set_title("WP Turn Structure")
     axis.set_xlabel("r [m]")
     axis.set_ylabel("x [m]")
-    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.5)
 
     # Add info about the steel casing surrounding the WP
     textstr_turn_insulation = (
@@ -6623,7 +6622,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     )
 
     axis.text(
-        0.55,
+        0.65,
         0.9,
         textstr_turn_steel,
         fontsize=9,
@@ -6651,8 +6650,8 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
     elif i_tf_turns_integer == 1:
         textstr_turn_cable_space = (
             f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-            f"Cable space: \n{cable_space_width_radial:.3e} m radial width \n"
-            f"{cable_space_width_toroidal:.3e} m toroidal width \n"
+            f"Cable space: \n$\\Delta r$: {cable_space_width_radial:.3e} m \n"
+            f"$\\Delta x$: {cable_space_width_toroidal:.3e} m \n"
             f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
             f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
             f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
@@ -6670,6 +6669,36 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         bbox={
             "boxstyle": "round",
             "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    if i_tf_turns_integer == 0:
+        textstr_turn = (
+            f"$\\mathbf{{Turn:}}$\n\n"
+            f"$\\Delta r$: {turn_width:.3e} m\n"
+            f"$\\Delta x$: {turn_width:.3e} m"
+        )
+
+    if i_tf_turns_integer == 1:
+        textstr_turn = (
+            f"$\\mathbf{{Turn:}}$\n\n"
+            f"$\\Delta r$: {turn_width:.3e} m\n"
+            f"$\\Delta x$: {turn_height:.3e} m"
+        )
+
+    axis.text(
+        0.525,
+        0.9,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
             "alpha": 1.0,
             "linewidth": 2,
         },
