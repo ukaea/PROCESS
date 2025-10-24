@@ -7294,9 +7294,71 @@ def plot_cable_in_conduit_cable(axis: plt.Axes, fig, mfile: mf.MFile, scan: int)
     axis.set_ylabel("Y [mm]")
 
 
-def plot_pf_coils(
-    axis: plt.Axes, mfile: mf.MFile, scan: int, colour_scheme: Literal[1, 2]
-):
+def plot_tf_step_vertical_tape_turn(
+    axis,
+    dr_tf_turn,
+    dx_tf_turn,
+    dia_tf_turn_coolant_channel,
+    dx_tf_turn_insulation,
+    dr_tf_turn_tape_stack,
+    dx_tf_turn_tape_stack,
+    x_tf_turn_coolant_channel_centre,
+    dr_tf_turn_conductor,
+) -> None:
+    """
+    Plots TF coil step vertical tape turn structure.
+    """
+
+    axis.add_patch(
+        Rectangle(
+            [0, 0],
+            dr_tf_turn,
+            dx_tf_turn,
+            facecolor="red",
+            edgecolor="black",
+        ),
+    )
+    # Plot the steel conduit
+    axis.add_patch(
+        Rectangle(
+            [dx_tf_turn_insulation, dx_tf_turn_insulation],
+            (dr_tf_turn - 2 * dx_tf_turn_insulation),
+            (dx_tf_turn - 2 * dx_tf_turn_insulation),
+            facecolor="#b87333",
+            edgecolor="#8B4000",
+        ),
+    )
+
+    # Plot the coolant channel
+    axis.add_patch(
+        Circle(
+            [(dr_tf_turn / 2), x_tf_turn_coolant_channel_centre],
+            dia_tf_turn_coolant_channel / 2,
+            facecolor="white",
+            edgecolor="black",
+        ),
+    )
+
+    # Plot the tape stack
+    axis.add_patch(
+        Rectangle(
+            [(dr_tf_turn_conductor * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
+            (dr_tf_turn_tape_stack),
+            (dx_tf_turn_tape_stack),
+            facecolor="black",
+        ),
+    )
+
+    axis.set_xlim(-dr_tf_turn * 0.05, dr_tf_turn * 1.05)
+    axis.set_ylim(-dx_tf_turn * 0.05, dx_tf_turn * 1.05)
+
+    axis.minorticks_on()
+    axis.set_title("WP Turn Structure")
+    axis.set_xlabel("X [m]")
+    axis.set_ylabel("Y [m]")
+
+
+def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
     """Function to plot PF coils
 
     Arguments:
