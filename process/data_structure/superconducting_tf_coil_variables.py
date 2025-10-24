@@ -228,6 +228,9 @@ dr_tf_turn_tape_stack: float = None
 a_tf_turn_tape_stack: float = None
 """Cross-sectional area of the tape stack in the TF turn [m^2]"""
 
+n_tf_turn_superconducting_strands: int = None
+"""Number of superconducting strands in the TF turn"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -336,6 +339,7 @@ def init_superconducting_tf_coil_variables():
     global dx_tf_turn_tape_stack
     global dr_tf_turn_tape_stack
     global a_tf_turn_tape_stack
+    global n_tf_turn_superconducting_strands
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -400,3 +404,4 @@ def init_superconducting_tf_coil_variables():
     dx_tf_turn_tape_stack = 0.0
     dr_tf_turn_tape_stack = 0.0
     a_tf_turn_tape_stack = 0.0
+    n_tf_turn_superconducting_strands = 0
