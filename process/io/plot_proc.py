@@ -6557,19 +6557,27 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
             turn_height - 2 * (insulation_thickness + steel_thickness),
         ]
 
+        # Cable strand packing parameters
+        strand_diameter = mfile_data.data["dia_tf_turn_superconducting_cable"].get_scan(
+            scan
+        )
+        void_fraction = mfile_data.data["f_a_tf_turn_cable_space_extra_void"].get_scan(
+            scan
+        )
+
         # Pack strands if significant void fraction
         if void_fraction > 0.001:
             _, _ = _pack_strands_rectangular_with_obstacles(
-                cable_bounds,
-                (
+                cable_space_bounds=cable_bounds,
+                pipe_center=(
                     turn_width / 2,
                     turn_height / 2,
                 ),
-                he_pipe_diameter / 2,
-                strand_diameter,
-                void_fraction,
-                axis,
-                radius_tf_turn_cable_space_corners,
+                pipe_radius=he_pipe_diameter / 2,
+                strand_diameter=strand_diameter,
+                void_fraction=void_fraction,
+                axis=axis,
+                corner_radius=radius_tf_turn_cable_space_corners,
                 n_strands=mfile_data.data["n_tf_turn_superconducting_cables"].get_scan(
                     scan
                 ),
@@ -6641,15 +6649,13 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         )
     elif i_tf_turns_integer == 1:
         textstr_turn_cable_space = (
-            (
-                f"$\\mathbf{{Cable \\ Space:}}$\n\n"
-                f"Cable space: \n{cable_space_width_radial:.3e} m radial width \n"
-                f"{cable_space_width_toroidal:.3e} m toroidal width \n"
-                f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
-                f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
-                f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
-                f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
-            ),
+            f"$\\mathbf{{Cable \\ Space:}}$\n\n"
+            f"Cable space: \n{cable_space_width_radial:.3e} m radial width \n"
+            f"{cable_space_width_toroidal:.3e} m toroidal width \n"
+            f"Corner radius, $r$: {radius_tf_turn_cable_space_corners:.3e} m\n"
+            f"Cable area with no cooling channel or gaps: {a_tf_turn_cable_space_no_void:.3e} m$^2$\n"
+            f"Extra cable space area void fraction: {f_a_tf_turn_cable_space_extra_void}\n"
+            f"True cable space area: {a_tf_turn_cable_space_effective:.3e} m$^2$"
         )
 
     axis.text(
