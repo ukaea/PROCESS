@@ -219,6 +219,9 @@ j_tf_superconductor: float = None
 i_tf_turn_type: int = None
 """Switch for TF turn geometry type"""
 
+dx_tf_turn_tape_stack: float = None
+"""Thickness of the tape stack in the TF turn [m]"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -324,6 +327,7 @@ def init_superconducting_tf_coil_variables():
     global c_tf_turn_cables_critical
     global j_tf_superconductor
     global i_tf_turn_type
+    global dx_tf_turn_tape_stack
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -385,3 +389,4 @@ def init_superconducting_tf_coil_variables():
     c_tf_turn_cables_critical = 0.0
     j_tf_superconductor = 0.0
     i_tf_turn_type = 0
+    dx_tf_turn_tape_stack = 0.0
