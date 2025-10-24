@@ -7379,6 +7379,28 @@ def plot_tf_step_vertical_tape_turn(
         },
     )
 
+    textstr_turn = (
+        f"$\\mathbf{{Turn:}}$\n\n"
+        f"$\\Delta r$: {mfile_data.data['dr_tf_turn'].get_scan(scan):.3e} m\n"
+        f"$\\Delta x$: {mfile_data.data['dx_tf_turn'].get_scan(scan):.3e} m"
+    )
+
+    axis.text(
+        0.525,
+        0.9,
+        textstr_turn,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
     textstr_turn_strand_space = (
         f"$\\mathbf{{Strand \\ Space:}}$\n\n"
         f"$\\Delta r:$ {mfile_data.data['dr_tf_turn_tape_stack'].get_scan(scan):.3e} m\n"
@@ -7456,6 +7478,130 @@ def plot_tf_step_vertical_tape_turn(
             "linewidth": 2,
         },
     )
+
+
+def plot_hts_tape(
+    axis,
+    fig,
+    mfile_data,
+    scan: int,
+    dx_hts_tape_rebco,
+    dx_hts_tape_copper,
+    dx_hts_tape_hastelloy,
+    dx_hts_tape_total,
+    dr_hts_tape,
+) -> None:
+    """
+    Plot the TF coils HTS tape compositions and dimensions
+    """
+
+    # convert all dimensions from metres to micrometres for plotting
+    um = 1e6
+    dx_cu_um = dx_hts_tape_copper * um
+    dx_hast_um = dx_hts_tape_hastelloy * um
+    dx_rebco_um = dx_hts_tape_rebco * um
+    dx_total_um = dx_hts_tape_total * um
+    dr_um = dr_hts_tape * um
+
+    # left copper (half), left hastelloy (half), REBCO, then mirrored right side
+    axis.add_patch(
+        Rectangle(
+            [0, 0],
+            dx_cu_um / 2,
+            dr_um,
+            facecolor="#b87333",  # copper color
+            edgecolor="#8B4000",  # darker copper edge
+        ),
+    )
+
+    axis.add_patch(
+        Rectangle(
+            [dx_cu_um / 2, 0],
+            dx_hast_um / 2,
+            dr_um,
+            facecolor="silver",
+            edgecolor="#A9A9A9",
+        ),
+    )
+
+    rebco_x = (dx_cu_um + dx_hast_um) / 2
+    axis.add_patch(
+        Rectangle(
+            [rebco_x, 0],
+            dx_rebco_um,
+            dr_um,
+            facecolor="#D4AF37",  # gold fill
+            edgecolor="#B8860B",
+        ),
+    )
+
+    # mirror Hastelloy and copper on the right side of the REBCO
+    rebco_end = rebco_x + dx_rebco_um
+    axis.add_patch(
+        Rectangle(
+            [rebco_end, 0],
+            dx_hast_um / 2,
+            dr_um,
+            facecolor="silver",
+            edgecolor="#A9A9A9",
+        ),
+    )
+
+    axis.add_patch(
+        Rectangle(
+            [rebco_end + dx_hast_um / 2, 0],
+            dx_cu_um / 2,
+            dr_um,
+            facecolor="#b87333",
+            edgecolor="#8B4000",
+        ),
+    )
+
+    # Convert lengths from meters to kilometers for display
+    len_tf_coil_superconductor_km = (
+        mfile_data.data["len_tf_coil_superconductor"].get_scan(scan) / 1000.0
+    )
+    len_tf_superconductor_total_km = (
+        mfile_data.data["len_tf_superconductor_total"].get_scan(scan) / 1000.0
+    )
+
+    # Annotate component widths (in µm)
+    textstr_components = (
+        f"$\\mathbf{{Tapes:}}$\n \n"
+        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_cables'].get_scan(scan)):,}\n"
+        f"Length of superconductor per coil: {len_tf_coil_superconductor_km:,.2f} km\n"
+        f"Total length of superconductor in all coils: {len_tf_superconductor_total_km:,.2f} km\n"
+        f"Copper (each side half): {dx_cu_um / 2:.1f} µm\n"
+        f"Hastelloy (each side half): {dx_hast_um / 2:.1f} µm\n"
+        f"REBCO: {dx_rebco_um:.1f} µm\n"
+        f"Total tape thickness: {dx_total_um:.1f} µm\n"
+        f"Tape width: {dr_um:.1f} µm"
+    )
+    axis.text(
+        0.4,
+        0.3,
+        textstr_components,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#eeeeee",
+            "alpha": 0.9,
+            "linewidth": 1,
+        },
+    )
+
+    axis.set_xlim(-dx_total_um * 0.1, dx_total_um * 1.1)
+    axis.set_ylim(-dr_um * 0.1, dr_um * 1.1)
+    axis.set_title("TF HTS Tape Cross-Section (µm)")
+    axis.minorticks_on()
+    # remove legend if nothing to show (keeps plot clean)
+    axis.legend(loc="upper right")
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+    axis.set_xlabel("X [µm]")
+    axis.set_ylabel("Y [µm]")
 
 
 def plot_pf_coils(axis, mfile_data, scan, colour_scheme):
@@ -12842,12 +12988,16 @@ def main_plot(
         # TF coil turn structure
         ax20 = figs[19].add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
+
         if m_file_data.data["i_tf_turn_type"].get_scan(scan) == 0:
-            plot_tf_cable_in_conduit_turn(ax20, fig14, m_file_data, scan)
             plot_205 = fig14.add_subplot(223, aspect="equal")
             plot_205.set_position([0.075, 0.1, 0.3, 0.3])
+            plot_tf_cable_in_conduit_turn(ax20, fig14, m_file_data, scan)
+
             plot_cable_in_conduit_cable(plot_205, fig14, m_file_data, scan)
         elif m_file_data.data["i_tf_turn_type"].get_scan(scan) == 2:
+            plot_205 = fig14.add_subplot(223)
+            plot_205.set_position([0.075, 0.1, 0.3, 0.3])
             plot_tf_step_vertical_tape_turn(
                 ax20,
                 fig14,
@@ -12873,6 +13023,21 @@ def main_plot(
                 dr_tf_turn_stabiliser=m_file_data.data[
                     "dr_tf_turn_stabiliser"
                 ].get_scan(scan),
+            )
+            plot_hts_tape(
+                plot_205,
+                fig14,
+                m_file_data,
+                scan,
+                dx_hts_tape_rebco=m_file_data.data["dx_hts_tape_rebco"].get_scan(scan),
+                dx_hts_tape_copper=m_file_data.data["dx_hts_tape_copper"].get_scan(
+                    scan
+                ),
+                dx_hts_tape_hastelloy=m_file_data.data[
+                    "dx_hts_tape_hastelloy"
+                ].get_scan(scan),
+                dx_hts_tape_total=m_file_data.data["dx_hts_tape_total"].get_scan(scan),
+                dr_hts_tape=m_file_data.data["dr_hts_tape"].get_scan(scan),
             )
     else:
         ax19 = figs[18].add_subplot(211, aspect="equal")

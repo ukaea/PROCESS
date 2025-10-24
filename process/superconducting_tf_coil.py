@@ -2380,12 +2380,13 @@ class SuperconductingTFCoil(TFCoil):
                     superconducting_tf_coil_variables.dx_tf_turn,
                     tfcoil_variables.c_tf_turn,
                     tfcoil_variables.n_tf_coil_turns,
-                    superconducting_tf_coil_variables.dr_tf_turn_cable_space,
+                    superconducting_tf_coil_variables.dr_tf_turn_stabiliser,
                     superconducting_tf_coil_variables.dx_tf_turn_cable_space,
                     superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
                     superconducting_tf_coil_variables.dr_tf_turn_tape_stack,
                     superconducting_tf_coil_variables.dx_tf_turn_tape_stack,
                     superconducting_tf_coil_variables.a_tf_turn_tape_stack,
+                    superconducting_tf_coil_variables.x_tf_turn_coolant_channel_centre,
                 ) = self.tf_step_vertical_tape_integer_turn_geometry(
                     dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                     dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
@@ -2396,6 +2397,9 @@ class SuperconductingTFCoil(TFCoil):
                     c_tf_coil=superconducting_tf_coil_variables.c_tf_coil,
                     dx_tf_turn_insulation=tfcoil_variables.dx_tf_turn_insulation,
                     dia_tf_turn_coolant_channel=tfcoil_variables.dia_tf_turn_coolant_channel,
+                )
+                rebco_variables.dr_hts_tape = (
+                    superconducting_tf_coil_variables.dr_tf_turn_tape_stack
                 )
 
     def superconducting_tf_wp_geometry(
@@ -3123,6 +3127,7 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_turn_tape_stack,
             dx_tf_turn_tape_stack,
             a_tf_turn_tape_stack,
+            x_tf_turn_coolant_channel_centre,
         )
 
         # -------------

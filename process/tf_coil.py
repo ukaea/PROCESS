@@ -1428,6 +1428,36 @@ class TFCoil:
                     "(dr_tf_turn_stabiliser)",
                     superconducting_tf_coil_variables.dr_tf_turn_stabiliser,
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Thickness of REBCO strand in TF turn HTS tape (m)",
+                    "(dx_hts_tape_rebco)",
+                    rebco_variables.dx_hts_tape_rebco,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Thickness of copper strand in TF turn HTS tape (m)",
+                    "(dx_hts_tape_copper)",
+                    rebco_variables.dx_hts_tape_copper,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Thickness of hastelloy strand in TF turn HTS tape (m)",
+                    "(dx_hts_tape_hastelloy)",
+                    rebco_variables.dx_hts_tape_hastelloy,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Total thickness of HTS tape in TF turn (m)",
+                    "(dx_hts_tape_total)",
+                    rebco_variables.dx_hts_tape_total,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Width of HTS tape in TF turn (m)",
+                    "(dr_hts_tape)",
+                    rebco_variables.dr_hts_tape,
+                )
                 po.ocmmnt(self.outfile, "Fractions by area")
                 po.ovarre(
                     self.outfile,
