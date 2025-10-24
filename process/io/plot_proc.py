@@ -3611,38 +3611,27 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         ne = ne0 * (1 - rho**2) ** alphan
 
     # species profiles scaled by their average fraction relative to electrons
-    # use nd_plasma_electrons_vol_avg as reference for fractions
-    frac_fuel = (
-        nd_fuel_ions / nd_plasma_electrons_vol_avg
-        if nd_plasma_electrons_vol_avg != 0
-        else 0.0
-    )
-    frac_alpha = (
-        nd_alphas / nd_plasma_electrons_vol_avg
-        if nd_plasma_electrons_vol_avg != 0
-        else 0.0
-    )
-    frac_proton = (
-        nd_protons / nd_plasma_electrons_vol_avg
-        if nd_plasma_electrons_vol_avg != 0
-        else 0.0
-    )
-    frac_imp = (
-        nd_impurities / nd_plasma_electrons_vol_avg
-        if nd_plasma_electrons_vol_avg != 0
-        else 0.0
-    )
-    frac_ions = (
-        nd_ions_total / nd_plasma_electrons_vol_avg
-        if nd_plasma_electrons_vol_avg != 0
-        else 0.0
-    )
 
-    n_fuel = ne * frac_fuel
-    n_alpha = ne * frac_alpha
-    n_proton = ne * frac_proton
-    n_imp = ne * frac_imp
-    n_ions = ne * frac_ions
+    if nd_plasma_electrons_vol_avg != 0:
+        fracs = (
+            np.array([
+                nd_fuel_ions,
+                nd_alphas,
+                nd_protons,
+                nd_impurities,
+                nd_ions_total,
+            ])
+            / nd_plasma_electrons_vol_avg
+        )
+    else:
+        fracs = np.zeros(5)
+
+    # build species density profiles from electron profile and fractions
+    n_fuel = ne * fracs[0]
+    n_alpha = ne * fracs[1]
+    n_proton = ne * fracs[2]
+    n_imp = ne * fracs[3]
+    n_ions = ne * fracs[4]
 
     # convert to 1e19 m^-3 units for plotting
     ne_plot = ne / 1e19
@@ -3653,21 +3642,47 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     n_ions_plot = n_ions / 1e19
 
     prof.plot(
-        rho, n_fuel_plot, label=r"$n_{\text{fuel}}$", color="#2ca02c", linewidth=1.5
-    )  # green
-    prof.plot(rho, ne_plot, label=r"$n_{e}$", color="blue", linewidth=1.5)  # blue
+        rho,
+        n_fuel_plot,
+        label=r"$n_{\text{fuel}}$",
+        color="#2ca02c",
+        linewidth=1.5,
+    )
     prof.plot(
-        rho, n_alpha_plot, label=r"$n_{\alpha}$", color="#d62728", linewidth=1.5
-    )  # red
+        rho,
+        ne_plot,
+        label=r"$n_{e}$",
+        color="blue",
+        linewidth=1.5,
+    )
     prof.plot(
-        rho, n_proton_plot, label=r"$n_{p}$", color="#17becf", linewidth=1.5
-    )  # orange
+        rho,
+        n_alpha_plot,
+        label=r"$n_{\alpha}$",
+        color="#d62728",
+        linewidth=1.5,
+    )
     prof.plot(
-        rho, n_imp_plot, label=r"$n_{Z}$", color="#9467bd", linewidth=1.5
-    )  # purple
+        rho,
+        n_proton_plot,
+        label=r"$n_{p}$",
+        color="#17becf",
+        linewidth=1.5,
+    )
     prof.plot(
-        rho, n_ions_plot, label=r"$n_{i,total}$", color="#ff7f0e", linewidth=1.5
-    )  # cyan
+        rho,
+        n_imp_plot,
+        label=r"$n_{Z}$",
+        color="#9467bd",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        n_ions_plot,
+        label=r"$n_{i,total}$",
+        color="#ff7f0e",
+        linewidth=1.5,
+    )
 
     # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
     handles, labels = prof.get_legend_handles_labels()
