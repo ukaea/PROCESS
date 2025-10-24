@@ -6532,7 +6532,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
                     insulation_thickness + steel_thickness,
                 ],
                 (turn_width - 2 * (insulation_thickness + steel_thickness)),
-                (turn_width - 2 * (insulation_thickness + steel_thickness)),
+                (turn_height - 2 * (insulation_thickness + steel_thickness)),
                 facecolor="none",
                 edgecolor="black",
                 linestyle="--",
@@ -6591,8 +6591,9 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
 
     axis.minorticks_on()
     axis.set_title("WP Turn Structure")
-    axis.set_xlabel("X [m]")
-    axis.set_ylabel("Y [m]")
+    axis.set_xlabel("r [m]")
+    axis.set_ylabel("x [m]")
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.5)
 
     # Add info about the steel casing surrounding the WP
     textstr_turn_insulation = (
@@ -6659,7 +6660,7 @@ def plot_tf_cable_in_conduit_turn(axis, fig, mfile_data, scan: int) -> None:
         )
 
     axis.text(
-        0.5,
+        0.40,
         0.7,
         textstr_turn_cable_space,
         fontsize=9,
