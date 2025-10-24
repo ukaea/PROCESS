@@ -9410,6 +9410,7 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
         verticalalignment="center",
         horizontalalignment="center",
         bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+        zorder=100,  # Ensure label is on top of all plots
     )
 
     # =============================================================
@@ -9571,6 +9572,23 @@ def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
         )
 
     # ==============================================================
+
+    y_center = y2 - ((y2 - y4) / 2)
+    # also draw a red horizontal line at the same vertical centre
+    axis.axhline(y=y_center, color="red", linestyle="--", linewidth=1.0, zorder=5)
+
+    # Add a label the plasma and TF vertical centre distance offset
+    axis.text(
+        (r_tf_outboard_in + 2 * dr_tf_outboard),
+        -2.0,
+        f"$\\Delta Z$ coil centre to plasma centre = {mfile_data.data['dz_tf_plasma_centre_offset'].get_scan(scan):.3f} m",
+        fontsize=7,
+        color="black",
+        verticalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "pink", "alpha": 1.0},
+    )
+
+    # =============================================================
 
     # Plot a red dot at (0,0)
     axis.plot(0, 0, marker="o", color="red", markersize=7)

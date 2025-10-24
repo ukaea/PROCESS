@@ -610,7 +610,7 @@
  Plasma_geometric_centre,_vertical_(m)___________________________________ (0.0)_________________________      0.0000E+00    
  Plasma_lower_physics_variables.triangularity____________________________ (tril)________________________      5.0000E-01    
  Plasma_elongation_______________________________________________________ (physics_variables.kappa.)____      1.8500E+00    
- TF_coil_vertical_offset_(m)_____________________________________________ (tfoffset)____________________     -6.1694E-01    
+ TF_coil_vertical_offset_(m)_____________________________________________ (dz_tf_plasma_centre_offset)____________________     -6.1694E-01    
  Plasma_outer_arc_radius_of_curvature_(m)________________________________ (rco)_________________________      5.0422E+00    
  Plasma_inner_arc_radius_of_curvature_(m)________________________________ (rci)_________________________      9.7933E+00    
  Plasma_lower_X-pt,_radial_(m)___________________________________________ (rxpt)________________________      6.6667E+00    

@@ -2086,7 +2086,7 @@ gapomin = 0.0
 * JUSTIFICATION: Gap is set by the ripple, no need to set minimum
 
 *ixc = 75
-tfootfi = 1.0 
+f_dr_tf_outboard_inboard = 1.0 
 *boundl(75) = 
 *boundu(75) = 
 * DESCRIPTION:   TF coil outboard leg / inboard leg radial thickness

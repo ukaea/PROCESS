@@ -26,7 +26,7 @@ class DivgeomParam(NamedTuple):
 
     plleno: Any = None
 
-    tfoffset: Any = None
+    dz_tf_plasma_centre_offset: Any = None
 
     plsepi: Any = None
 
@@ -103,7 +103,7 @@ class RippleAmplitudeParam(NamedTuple):
         DivgeomParam(
             rspo=8.2125352340518898,
             plleno=1,
-            tfoffset=0,
+            dz_tf_plasma_centre_offset=0,
             plsepi=1,
             plleni=1,
             plsepo=1.5,
@@ -122,7 +122,7 @@ class RippleAmplitudeParam(NamedTuple):
         DivgeomParam(
             rspo=8.2125352340518898,
             plleno=1,
-            tfoffset=0,
+            dz_tf_plasma_centre_offset=0,
             plsepi=1,
             plleni=1,
             plsepo=1.5,
@@ -160,7 +160,11 @@ def test_divgeom(divgeomparam, monkeypatch, build):
 
     monkeypatch.setattr(build_variables, "plleno", divgeomparam.plleno)
 
-    monkeypatch.setattr(build_variables, "tfoffset", divgeomparam.tfoffset)
+    monkeypatch.setattr(
+        build_variables,
+        "dz_tf_plasma_centre_offset",
+        divgeomparam.dz_tf_plasma_centre_offset,
+    )
 
     monkeypatch.setattr(build_variables, "plsepi", divgeomparam.plsepi)
 

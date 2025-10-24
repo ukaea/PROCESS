@@ -271,7 +271,7 @@ lablxc: list[str] = None
 * (72) fipir (f-value for equation 46)
 * (73) dr_fw_plasma_gap_inboard
 * (74) dr_fw_plasma_gap_outboard
-* (75) tfootfi
+* (75) f_dr_tf_outboard_inboard
 * (76) NOT USED
 * (77) NOT USED
 * (78) NOT USED

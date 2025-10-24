@@ -77,7 +77,7 @@ dr_shld_inboard  = 0.39314459807893426 * inboard shield thickness (m) (`iteratio
 dz_shld_lower  = 0.6 * lower (under divertor) shield thickness (m)
 dr_shld_outboard  = 0.3 * outboard shield thickness (m) (`iteration variable 94`)
 dz_shld_upper  = 0.3 * upper/lower shield thickness (m); calculated if `blktmodel > 0` (= dz_shld_lower if double-null)
-tfootfi  = 1.0 * TF coil outboard leg / inboard leg radial thickness
+f_dr_tf_outboard_inboard  = 1.0 * TF coil outboard leg / inboard leg radial thickness
 dr_tf_shld_gap  = 0.01 * Minimum metal-to-metal gap between TF coil and thermal shield (m)
 dr_shld_thermal_inboard = 0.05 * TF-VV thermal shield thickness; inboard (m)
 dr_shld_thermal_outboard = 0.07 * TF-VV thermal shield thickness; outboard (m)

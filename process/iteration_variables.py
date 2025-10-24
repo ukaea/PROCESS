@@ -181,7 +181,9 @@ ITERATION_VARIABLES = {
     74: IterationVariable(
         "dr_fw_plasma_gap_outboard", data_structure.build_variables, 0.001, 10.00
     ),
-    75: IterationVariable("tfootfi", data_structure.build_variables, 0.200, 5.0),
+    75: IterationVariable(
+        "f_dr_tf_outboard_inboard", data_structure.build_variables, 0.200, 5.0
+    ),
     79: IterationVariable(
         "fbeta_poloidal", data_structure.constraint_variables, 0.001, 1.0
     ),
