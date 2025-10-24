@@ -244,6 +244,9 @@ beta_poloidal_eps: float = None
 beta_toroidal_vol_avg: float = None
 """Plasma volume averaged toroidal beta"""
 
+beta_thermal_toroidal_profile: list[float] = None
+"""toroidal beta profile"""
+
 
 beta_thermal_vol_avg: float = None
 """Plasma volume averaged thermal beta"""
@@ -287,6 +290,15 @@ b_plasma_poloidal_average: float = None
 
 b_plasma_toroidal_on_axis: float = None
 """Plasma toroidal field on axis (T) (`iteration variable 2`)"""
+
+b_plasma_inboard_toroidal: float = None
+"""Plasma inboard toroidal field (T)"""
+
+b_plasma_outboard_toroidal: float = None
+"""Plasma outboard toroidal field (T)"""
+
+b_plasma_toroidal_profile: list[float] = None
+"""toroidal field profile in plasma (T)"""
 
 
 b_plasma_total: float = None
@@ -809,7 +821,7 @@ m_s_limit: float = None
 pres_plasma_thermal_on_axis: float = None
 """Plasma central thermal pressure (no fast ions or beam pressure) (Pa)"""
 
-pres_plasma_total_profile: list[float] = None
+pres_plasma_thermal_total_profile: list[float] = None
 """Profile of total pressure in plasma (Pa)"""
 
 pres_plasma_electron_profile: list[float] = None
@@ -1383,6 +1395,7 @@ def init_physics_variables():
     global beta_poloidal_vol_avg
     global beta_poloidal_eps
     global beta_toroidal_vol_avg
+    global beta_thermal_toroidal_profile
     global beta_thermal_vol_avg
     global beta_thermal_poloidal_vol_avg
     global beta_thermal_toroidal_vol_avg
@@ -1394,6 +1407,9 @@ def init_physics_variables():
     global betbm0
     global b_plasma_poloidal_average
     global b_plasma_toroidal_on_axis
+    global b_plasma_toroidal_inboard
+    global b_plasma_toroidal_outboard
+    global b_plasma_toroidal_profile
     global b_plasma_total
     global e_plasma_magnetic_stored
     global burnup
@@ -1493,7 +1509,7 @@ def init_physics_variables():
     global nd_plasma_ions_on_axis
     global m_s_limit
     global pres_plasma_thermal_on_axis
-    global pres_plasma_total_profile
+    global pres_plasma_thermal_total_profile
     global pres_plasma_electron_profile
     global pres_plasma_ion_total_profile
     global pres_plasma_fuel_profile
@@ -1636,6 +1652,7 @@ def init_physics_variables():
     beta_poloidal_vol_avg = 0.0
     beta_poloidal_eps = 0.0
     beta_toroidal_vol_avg = 0.0
+    beta_thermal_toroidal_profile = []
     beta_thermal_vol_avg = 0.0
     beta_thermal_poloidal_vol_avg = 0.0
     beta_thermal_toroidal_vol_avg = 0.0
@@ -1647,6 +1664,9 @@ def init_physics_variables():
     betbm0 = 1.5
     b_plasma_poloidal_average = 0.0
     b_plasma_toroidal_on_axis = 5.68
+    b_plasma_toroidal_inboard = 0.0
+    b_plasma_toroidal_outboard = 0.0
+    b_plasma_toroidal_profile = []
     b_plasma_total = 0.0
     e_plasma_magnetic_stored = 0.0
     burnup = 0.0
@@ -1746,7 +1766,7 @@ def init_physics_variables():
     nd_plasma_ions_on_axis = 0.0
     m_s_limit = 0.3
     pres_plasma_thermal_on_axis = 0.0
-    pres_plasma_total_profile = []
+    pres_plasma_thermal_total_profile = []
     pres_plasma_electron_profile = []
     pres_plasma_ion_total_profile = []
     pres_plasma_fuel_profile = []

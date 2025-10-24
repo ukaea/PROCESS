@@ -10902,8 +10902,8 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         mfile_data.data[f"pres_plasma_ion_total_profile{i}"].get_scan(scan)
         for i in range(n_plasma_profile_elements)
     ]
-    pres_plasma_total_profile = [
-        mfile_data.data[f"pres_plasma_total_profile{i}"].get_scan(scan)
+    pres_plasma_thermal_total_profile = [
+        mfile_data.data[f"pres_plasma_thermal_total_profile{i}"].get_scan(scan)
         for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_fuel = [
@@ -10913,7 +10913,9 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
     pres_plasma_profile_kpa = [p / 1000.0 for p in pres_plasma_profile]
     pres_plasma_profile_ion_kpa = [p / 1000.0 for p in pres_plasma_profile_ion]
     pres_plasma_profile_fuel_kpa = [p / 1000.0 for p in pres_plasma_profile_fuel]
-    pres_plasma_profile_total_kpa = [p / 1000.0 for p in pres_plasma_total_profile]
+    pres_plasma_profile_total_kpa = [
+        p / 1000.0 for p in pres_plasma_thermal_total_profile
+    ]
 
     axis.plot(
         np.linspace(0, 1, len(pres_plasma_profile_kpa)),
@@ -10965,7 +10967,7 @@ def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
         for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_total = [
-        mfile_data.data[f"pres_plasma_total_profile{i}"].get_scan(scan)
+        mfile_data.data[f"pres_plasma_thermal_total_profile{i}"].get_scan(scan)
         for i in range(n_plasma_profile_elements)
     ]
     pres_plasma_profile_fuel = [
@@ -11562,6 +11564,152 @@ def plot_fusion_rate_contours(
     # ===============================================
 
 
+def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
+    # Plot magnetic field profiles inside the plasma boundary
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    # Get toroidal magnetic field profile (in Tesla)
+    b_plasma_toroidal_profile = [
+        mfile_data.data[f"b_plasma_toroidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    # Get major and minor radius for x-axis in metres
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
+
+    # Plot magnetic field first (background)
+    axis.plot(
+        np.linspace(rmajor - rminor, rmajor + rminor, len(b_plasma_toroidal_profile)),
+        b_plasma_toroidal_profile,
+        color="blue",
+        label="Toroidal B-field [T]",
+        linewidth=2,
+    )
+
+    # Plot plasma on top of magnetic field, displaced vertically by bt
+    plot_plasma(axis, mfile_data, scan, colour_scheme=1)
+
+    # Plot plasma centre dot
+    axis.plot(rmajor, 0, marker="o", color="red", markersize=8, label="Plasma Centre")
+
+    # Plot vertical lines at plasma edge
+    axis.axvline(
+        rmajor - rminor,
+        color="green",
+        linestyle="--",
+        linewidth=1,
+    )
+    axis.axvline(rmajor + rminor, color="green", linestyle="--", linewidth=1)
+
+    # Plot horizontal line for toroidal magnetic field at plasma inboard
+    axis.axhline(
+        mfile_data.data[f"b_plasma_toroidal_profile{0}"].get_scan(scan),
+        color="blue",
+        linestyle="--",
+        linewidth=1.0,
+    )
+
+    # Plot horizontal line for toroidal magnetic field at plasma centre
+    axis.axhline(
+        mfile_data.data["b_plasma_toroidal_on_axis"].get_scan(scan),
+        color="blue",
+        linestyle="--",
+        linewidth=1.0,
+    )
+
+    # Plot horizontal line for toroidal magnetic field at plasma outboard
+    axis.axhline(
+        b_plasma_toroidal_profile[-1],
+        color="blue",
+        linestyle="--",
+        linewidth=1.0,
+    )
+
+    # Text box for inboard toroidal field
+    axis.text(
+        0.1,
+        0.025,
+        f"$B_{{\\text{{T,inboard}}}}={mfile_data.data['b_plasma_inboard_toroidal'].get_scan(scan):.2f}$ T",
+        verticalalignment="center",
+        horizontalalignment="center",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Text box for outboard toroidal field
+    axis.text(
+        0.9,
+        0.1,
+        f"$B_{{\\text{{T,outboard}}}}={mfile_data.data['b_plasma_outboard_toroidal'].get_scan(scan):.2f}$ T",
+        verticalalignment="center",
+        horizontalalignment="center",
+        transform=axis.transAxes,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "wheat",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    axis.set_xlabel("Radial Position [m]")
+    axis.set_ylabel("Toroidal Magnetic Field [T]")
+    axis.set_title("Toroidal Magnetic Field Profile in Plasma")
+    axis.minorticks_on()
+    # Enable grid for both major and minor ticks
+    axis.grid(which="both", linestyle="--", alpha=0.5)
+    axis.grid(which="minor", linestyle=":", alpha=0.3)
+    axis.legend(loc="lower right")
+    axis.set_xlim(rmajor - 1.25 * rminor, rmajor + 1.25 * rminor)
+
+
+def plot_beta_profiles(axis, mfile_data, scan):
+    # Plot the beta profiles on the given axis
+
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    beta_plasma_toroidal_profile = [
+        mfile_data.data[f"beta_thermal_toroidal_profile{i}"].get_scan(scan)
+        for i in range(2 * n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(-1, 1, 2 * n_plasma_profile_elements),
+        beta_plasma_toroidal_profile,
+        color="blue",
+        label="$\\beta_t$",
+    )
+
+    axis.axhline(
+        mfile_data.data["beta_thermal_toroidal_vol_avg"].get_scan(scan),
+        color="blue",
+        linestyle="--",
+        linewidth=1.0,
+        label="$\\langle \\beta_t \\rangle_{\\text{V}}$",
+    )
+
+    axis.set_xlabel("$\\rho$ [r/a]")
+    axis.set_ylabel("$\\beta$")
+    axis.minorticks_on()
+    axis.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    axis.set_title("Thermal Beta Profiles")
+    axis.legend()
+    axis.axvline(x=0, color="black", linestyle="--", linewidth=1)
+    axis.grid(True, linestyle="--", alpha=0.5)
+    axis.set_ylim(bottom=0.0)
+
+
 def main_plot(
     fig0,
     fig1,
@@ -11586,6 +11734,7 @@ def main_plot(
     fig20,
     fig21,
     fig22,
+    fig23,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -11722,9 +11871,12 @@ def main_plot(
         )
         ax.axis("off")
 
+    plot_magnetic_fields_in_plasma(fig9.add_subplot(122), m_file_data, scan)
+    plot_beta_profiles(fig9.add_subplot(221), m_file_data, scan)
+
     # Plot poloidal cross-section
     poloidal_cross_section(
-        fig9.add_subplot(121, aspect="equal"),
+        fig10.add_subplot(121, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -11733,7 +11885,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        fig9.add_subplot(122, aspect="equal"),
+        fig10.add_subplot(122, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -11741,19 +11893,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = fig9.add_subplot(222)
+    ax17 = fig10.add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file_data, scan, colour_scheme)
 
-    ax18 = fig10.add_subplot(211)
+    ax18 = fig11.add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = fig11.add_subplot(211)
+    ax185 = fig12.add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = fig11.add_subplot(212)
+    ax18b = fig12.add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file_data, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file_data, colour_scheme)
@@ -11761,57 +11913,57 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        ax19 = fig12.add_subplot(221, aspect="equal")
+        ax19 = fig13.add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig12)
+        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig13)
 
         # TF coil turn structure
-        ax20 = fig13.add_subplot(325, aspect="equal")
+        ax20 = fig14.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, fig13, m_file_data, scan)
-        plot_205 = fig13.add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, fig14, m_file_data, scan)
+        plot_205 = fig14.add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, fig16, m_file_data, scan)
+        plot_cable_in_conduit_cable(plot_205, fig14, m_file_data, scan)
     else:
-        ax19 = fig12.add_subplot(211, aspect="equal")
+        ax19 = fig13.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file_data, scan, fig12)
+        plot_resistive_tf_wp(ax19, m_file_data, scan, fig13)
 
     plot_tf_coil_structure(
-        fig14.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+        fig15.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    axes = fig15.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig16.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_bootstrap_comparison(fig16.add_subplot(221), m_file_data, scan)
-    plot_h_threshold_comparison(fig16.add_subplot(224), m_file_data, scan)
-    plot_density_limit_comparison(fig17.add_subplot(221), m_file_data, scan)
-    plot_confinement_time_comparison(fig17.add_subplot(224), m_file_data, scan)
-    plot_current_profiles_over_time(fig18.add_subplot(111), m_file_data, scan)
+    plot_bootstrap_comparison(fig17.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig17.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig18.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig18.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig19.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig19.add_subplot(121, aspect="equal"), fig19, m_file_data, scan
+        fig20.add_subplot(121, aspect="equal"), fig20, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig19.add_subplot(224, aspect="equal"), fig19, m_file_data, scan
+        fig20.add_subplot(224, aspect="equal"), fig20, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig20.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig21.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig20.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig20.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig21.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig21.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig21, m_file_data, scan)
+    plot_blkt_pipe_bends(fig22, m_file_data, scan)
 
     plot_main_power_flow(
-        fig22.add_subplot(111, aspect="equal"), m_file_data, scan, fig22
+        fig23.add_subplot(111, aspect="equal"), m_file_data, scan, fig23
     )
 
 
@@ -12128,6 +12280,7 @@ def main(args=None):
     page20 = plt.figure(figsize=(12, 9), dpi=80)
     page21 = plt.figure(figsize=(12, 9), dpi=80)
     page22 = plt.figure(figsize=(12, 9), dpi=80)
+    page23 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12154,6 +12307,7 @@ def main(args=None):
         page20,
         page21,
         page22,
+        page23,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -12185,6 +12339,7 @@ def main(args=None):
         pdf.savefig(page20)
         pdf.savefig(page21)
         pdf.savefig(page22)
+        pdf.savefig(page23)
 
     # show fig if option used
     if args.show:
@@ -12213,6 +12368,7 @@ def main(args=None):
     plt.close(page20)
     plt.close(page21)
     plt.close(page22)
+    plt.close(page23)
 
 
 if __name__ == "__main__":
