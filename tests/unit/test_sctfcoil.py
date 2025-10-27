@@ -2525,3 +2525,139 @@ def test_tf_step_vertical_stack_superconductor_properties_relations(
     # Check the model-specific BC20M and TC0M values are as documented
     assert bc20m == expected_bc20m
     assert tc0m == expected_tc0m
+
+
+@pytest.mark.parametrize(
+    "params",
+    [
+        # Case A: dx input mode (i_dx_tf_turn_general_input=True)
+        {
+            "j_tf_wp": 5e5,
+            "dx_tf_turn_insulation": 0.001,
+            "dx_tf_turn_general": 0.02,
+            "c_tf_turn_input": 0.0,  # ignored/overwritten
+            "i_dx_tf_turn_general_input": True,
+            "dia_tf_turn_coolant_channel": 0.004,
+            # choose a_tf_wp_no_insulation and c_tf_coil so that final c_tf_turn equals the a*j value
+            "a_tf_wp_no_insulation": 0.5,
+        },
+        # Case B: current-per-turn input mode (i_dx_tf_turn_general_input=False)
+        {
+            "j_tf_wp": 1.0e6,
+            "dx_tf_turn_insulation": 0.0015,
+            "dx_tf_turn_general": 0.0,  # ignored in this mode
+            "c_tf_turn_input": 500.0,
+            "i_dx_tf_turn_general_input": False,
+            "dia_tf_turn_coolant_channel": 0.006,
+            "a_tf_wp_no_insulation": 0.5,
+        },
+    ],
+)
+def test_tf_step_vertical_tape_averaged_turn_geometry_consistency(params):
+    """
+    Sanity tests for tf_step_vertical_tape_averaged_turn_geometry.
+
+    The routine can be called in two modes:
+    - i_dx_tf_turn_general_input=True: dx_tf_turn_general provided, c_tf_turn is computed from j_tf_wp.
+      Later c_tf_turn is overwritten with c_tf_coil / n_tf_coil_turns, so we set c_tf_coil to keep consistency.
+    - i_dx_tf_turn_general_input=False: c_tf_turn provided and dx is computed from c_tf_turn and j_tf_wp.
+      Later c_tf_turn is overwritten with c_tf_coil / n_tf_coil_turns, so we set c_tf_coil to keep consistency.
+
+    For both modes we assert internal relations (areas, dimensions and simple derived quantities).
+    """
+
+    sc = SuperconductingTFCoil()
+
+    j_tf_wp = params["j_tf_wp"]
+    dx_ins = params["dx_tf_turn_insulation"]
+    dx_general = params["dx_tf_turn_general"]
+    c_tf_turn_input = params["c_tf_turn_input"]
+    mode = params["i_dx_tf_turn_general_input"]
+    dia = params["dia_tf_turn_coolant_channel"]
+    a_wp = params["a_tf_wp_no_insulation"]
+
+    # Prepare c_tf_coil so that after the function recomputes c_tf_turn = c_tf_coil / n_tf_coil_turns
+    if mode:
+        # compute a_tf_turn, n_tf_coil_turns and set c_tf_coil so final c_tf_turn equals a*j
+        a_tf_turn = dx_general**2
+        n_expected = a_wp / a_tf_turn
+        c_per_turn_target = a_tf_turn * j_tf_wp
+        c_tf_coil = c_per_turn_target * n_expected
+    else:
+        # current-per-turn input: compute a_tf_turn from provided c_tf_turn_input then set c_tf_coil so final c_tf_turn unchanged
+        a_tf_turn = c_tf_turn_input / j_tf_wp
+        n_expected = a_wp / a_tf_turn
+        c_tf_coil = c_tf_turn_input * n_expected
+
+    out = sc.tf_step_vertical_tape_averaged_turn_geometry(
+        j_tf_wp=j_tf_wp,
+        dx_tf_turn_insulation=dx_ins,
+        dx_tf_turn_general=dx_general,
+        c_tf_turn=c_tf_turn_input,
+        i_dx_tf_turn_general_input=mode,
+        dia_tf_turn_coolant_channel=dia,
+        c_tf_coil=c_tf_coil,
+        a_tf_wp_no_insulation=a_wp,
+    )
+
+    # Unpack outputs
+    (
+        dr_tf_turn,
+        dx_tf_turn,
+        c_tf_turn_final,
+        n_tf_coil_turns,
+        dr_tf_turn_stabiliser,
+        dx_tf_turn_stabiliser,
+        x_tf_turn_coolant_channel_centre,
+        dr_tf_turn_tape_stack,
+        dx_tf_turn_tape_stack,
+        a_tf_turn_tape_stack,
+        a_tf_turn_insulation,
+        a_tf_turn_stabiliser,
+    ) = out
+
+    # Basic geometric relations
+    # square-turn assumption: dr == dx
+    assert dr_tf_turn == pytest.approx(dx_tf_turn, rel=1e-12)
+
+    # a_tf_turn used in internal calcs
+    a_tf_turn_computed = dx_tf_turn**2
+
+    # number of turns
+    assert n_tf_coil_turns == pytest.approx(a_wp / a_tf_turn_computed, rel=1e-12)
+
+    # final c per turn should equal c_tf_coil / n_tf_coil_turns
+    assert c_tf_turn_final == pytest.approx(c_tf_coil / n_tf_coil_turns, rel=1e-12)
+
+    # stabiliser dims
+    assert dr_tf_turn_stabiliser == pytest.approx(dr_tf_turn - 2.0 * dx_ins, rel=1e-12)
+    assert dx_tf_turn_stabiliser == pytest.approx(dx_tf_turn - 2.0 * dx_ins, rel=1e-12)
+
+    # coolant channel centre calculation
+    expected_x = dx_ins + (0.1 * dx_tf_turn_stabiliser) + (dia / 2.0)
+    assert x_tf_turn_coolant_channel_centre == pytest.approx(expected_x, rel=1e-12)
+
+    # tape stack dims and area relation
+    assert dr_tf_turn_tape_stack == pytest.approx(
+        dr_tf_turn_stabiliser * 0.8, rel=1e-12
+    )
+    expected_dx_tape = (dx_tf_turn / 2.0) - (dx_ins + (0.1 * dx_tf_turn_stabiliser))
+    assert dx_tf_turn_tape_stack == pytest.approx(expected_dx_tape, rel=1e-12)
+    assert a_tf_turn_tape_stack == pytest.approx(
+        dr_tf_turn_tape_stack * dx_tf_turn_tape_stack, rel=1e-12
+    )
+
+    # a_tf_turn_insulation computed as difference between full turn and stabiliser region
+    expected_a_turn_insulation = (dr_tf_turn * dx_tf_turn) - (
+        dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
+    )
+    assert a_tf_turn_insulation == pytest.approx(expected_a_turn_insulation, rel=1e-12)
+
+    # a_tf_turn_stabiliser consistency check (non-negative)
+    # a_tf_turn_stabiliser = dr_stab*dx_stab - a_tf_turn_tape_stack - (pi/4)*dia^2
+    expected_a_stabiliser = (
+        dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
+        - a_tf_turn_tape_stack
+        - (np.pi / 4.0) * dia * dia
+    )
+    assert a_tf_turn_stabiliser == pytest.approx(expected_a_stabiliser, rel=1e-12)

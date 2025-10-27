@@ -3450,46 +3450,87 @@ class SuperconductingTFCoil(TFCoil):
 
     def tf_step_vertical_tape_averaged_turn_geometry(
         self,
-        j_tf_wp,
-        dx_tf_turn_steel,
-        dx_tf_turn_insulation,
-        i_tf_sc_mat,
-        dx_tf_turn_general,
-        c_tf_turn,
-        i_dx_tf_turn_general_input,
-        i_dx_tf_turn_cable_space_general_input,
-        dx_tf_turn_cable_space_general,
-        layer_ins,
-        a_tf_wp_no_insulation,
-        dia_tf_turn_coolant_channel,
-        f_a_tf_turn_cable_space_extra_void,
-    ):
+        j_tf_wp: float,
+        dx_tf_turn_insulation: float,
+        dx_tf_turn_general: float,
+        c_tf_turn: float,
+        i_dx_tf_turn_general_input: bool,
+        dia_tf_turn_coolant_channel: float,
+        c_tf_coil: float,
+        a_tf_wp_no_insulation: float,
+    ) -> tuple[
+        float,  # dr_tf_turn
+        float,  # dx_tf_turn
+        float,  # c_tf_turn
+        float,  # n_tf_coil_turns
+        float,  # dr_tf_turn_stabiliser
+        float,  # dx_tf_turn_stabiliser
+        float,  # x_tf_turn_coolant_channel_centre
+        float,  # dr_tf_turn_tape_stack
+        float,  # dx_tf_turn_tape_stack
+        float,  # a_tf_turn_tape_stack
+        float,  # a_tf_turn_insulation
+        float,  # a_tf_turn_stabiliser
+    ]:
         """
-        subroutine straight from Python, see comments in tf_averaged_turn_geom_wrapper
-        Authors : J. Morris, CCFE
-        Authors : S. Kahn, CCFE
-        Setting the TF WP turn geometry for SC magnets from the number
-        the current per turn.
-        This calculation has two purposes, first to check if a turn can exist
-        (positive cable space) and the second to provide its dimensions,
-        areas and the (float) number of turns
+        Calculate the integer-turn geometry for TF coil turns using a vertical
+        stacked tape (REBCO-style) conductor.
+
+        :param float dr_tf_wp_with_insulation:
+            Radial thickness of the winding pack including insulation (m).
+        :param float dx_tf_wp_insulation:
+            Thickness of winding-pack insulation (m).
+        :param float dx_tf_wp_insertion_gap:
+            Insertion gap thickness inside the winding pack (m).
+        :param int n_tf_wp_layers:
+            Number of radial layers (turn rows).
+        :param float dx_tf_wp_toroidal_min:
+            Minimum toroidal thickness of the winding pack (m).
+        :param int n_tf_wp_pancakes:
+            Number of toroidal pancakes per radial layer.
+        :param float c_tf_coil:
+            Total TF coil current (A).
+        :param float dx_tf_turn_insulation:
+            Thickness of the turn (intra-turn) insulation (m).
+        :param float dia_tf_turn_coolant_channel:
+            Diameter of the coolant channel inside the conductor (m).
+
+        :returns: Tuple containing:
+            - dr_tf_turn (float): Radial turn dimension (m).
+            - dx_tf_turn (float): Toroidal turn dimension (m).
+            - c_tf_turn (float): Current per turn (A).
+            - n_tf_coil_turns (float): Total number of turns in a TF coil
+                (float, integer-valued).
+            - dr_tf_turn_stabiliser (float): Radial dimension of conductor
+                stabiliser region (m).
+            - dx_tf_turn_stabiliser (float): Toroidal dimension of conductor
+                stabiliser region (m).
+            - x_tf_turn_coolant_channel_centre (float): Centre position of the
+                coolant channel measured from the inner face (m).
+            - dr_tf_turn_tape_stack (float): Width of the tape stack in the
+                radial direction (m).
+            - dx_tf_turn_tape_stack (float): Height of the tape stack in the
+                toroidal direction (m).
+            - a_tf_turn_tape_stack (float): Cross-sectional area of the tape
+                stack per turn (m^2).
+        :rtype: tuple[float, float, float, float, float, float, float, float, float, float]
+
+        :notes:
+            - Assumes rectangular turns and places the coolant channel near the
+                bottom of the conductor with a small clearance from the tape stack.
+            - Basic consistency checks are emitted via logger.error() if
+                calculated dimensions are non-positive or if the coolant channel
+                conflicts with the conductor geometry.
+
+        :references:
+            - E. Nasr, S. C. Wimbush, P. Noonan, P. Harris, R. Gowland, and A. Petrov,
+            “The magnetic cage,” Philosophical Transactions of the Royal Society A Mathematical Physical and Engineering Sciences,
+            vol. 382, no. 2280, Aug. 2024, doi: https://doi.org/10.1098/rsta.2023.0407.
+        ‌
         """
 
         # Turn dimension is a an input
         if i_dx_tf_turn_general_input:
-            # Turn area [m2]
-            a_tf_turn = dx_tf_turn_general**2
-
-            # Current per turn [A]
-            c_tf_turn = a_tf_turn * j_tf_wp
-
-        # Turn cable dimension is an input
-        elif i_dx_tf_turn_cable_space_general_input:
-            # Turn squared dimension [m]
-            dx_tf_turn_general = dx_tf_turn_cable_space_general + 2.0e0 * (
-                dx_tf_turn_insulation + dx_tf_turn_steel
-            )
-
             # Turn area [m2]
             a_tf_turn = dx_tf_turn_general**2
 
@@ -3508,104 +3549,88 @@ class SuperconductingTFCoil(TFCoil):
 
         # Square turn assumption
         dr_tf_turn = dx_tf_turn_general
+
+        if dr_tf_turn <= (2.0e0 * dx_tf_turn_insulation):
+            logger.error(
+                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. "
+                f"{dr_tf_turn=} {dx_tf_turn_insulation=}"
+            )
+
         dx_tf_turn = dx_tf_turn_general
 
-        # See derivation in the following document
-        # k:\power plant physics and technology\process\hts\hts coil module for process.docx
-        t_conductor = (
-            -layer_ins + np.sqrt(layer_ins**2 + 4.0e00 * a_tf_turn)
-        ) / 2 - 2.0e0 * dx_tf_turn_insulation
+        if dx_tf_turn <= (2.0e0 * dx_tf_turn_insulation):
+            logger.error(
+                "Negative cable space dimension; reduce conduit thicknesses or raise c_tf_turn. "
+                f"{dx_tf_turn=} {dx_tf_turn_insulation=}"
+            )
 
         # Total number of turns per TF coil (not required to be an integer)
         n_tf_coil_turns = a_tf_wp_no_insulation / a_tf_turn
 
-        # Area of inter-turn insulation: single turn [m2]
-        a_tf_turn_insulation = a_tf_turn - t_conductor**2
+        # Current per turn [A/turn]
+        c_tf_turn = c_tf_coil / n_tf_coil_turns
 
-        # NOTE: Fortran has a_tf_turn_cable_space_no_void as an intent(out) variable that was outputting
-        # into tfcoil_variables.a_tf_turn_cable_space_no_void. The local variable, however, appears to
-        # initially hold the value of tfcoil_variables.a_tf_turn_cable_space_no_void despite not being
-        # intent(in). I have replicated this behaviour in Python for now.
-        a_tf_turn_cable_space_no_void = copy.copy(
-            tfcoil_variables.a_tf_turn_cable_space_no_void
+        # Radial and toroidal dimension of conductor region containing tape stack and cooling pipe [m]
+        dr_tf_turn_stabiliser = dr_tf_turn - 2.0e0 * dx_tf_turn_insulation
+        dx_tf_turn_stabiliser = dx_tf_turn - 2.0e0 * dx_tf_turn_insulation
+
+        # Place coolant channel at bottom of turn with a gap equal to 10% of conductor height
+        x_tf_turn_coolant_channel_centre = (
+            dx_tf_turn_insulation
+            + (0.1 * dx_tf_turn_stabiliser)
+            + (dia_tf_turn_coolant_channel / 2)
         )
 
-        # ITER like turn structure
-        if i_tf_sc_mat != 6:
-            # Radius of rounded corners of cable space inside conduit [m]
-            radius_tf_turn_cable_space_corners = dx_tf_turn_steel * 0.75e0
-
-            # Dimension of square cable space inside conduit [m]
-            dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
-
-            # Cross-sectional area of cable space per turn
-            # taking account of rounded inside corners [m2]
-            a_tf_turn_cable_space_no_void = (
-                dx_tf_turn_cable_space_average**2
-                - (4.0e0 - np.pi) * radius_tf_turn_cable_space_corners**2
+        # Check to make sure coolant channel leaves some gap to the tape stack
+        if x_tf_turn_coolant_channel_centre > (dx_tf_turn_stabiliser / 2) - (
+            0.1 * dx_tf_turn_stabiliser
+        ) - (dia_tf_turn_coolant_channel / 2):
+            logger.error(
+                "Coolant channel too big for turn conductor dimension; reduce coolant channel diameter or increase turn dimensions."
+                f"{x_tf_turn_coolant_channel_centre=} {dx_tf_turn_stabiliser=}"
             )
 
-            # Calculate the true effective cable space by taking away the cooling
-            # channel and the extra void fraction
+        # Width of the tape stack allows for 10% of copper stabiliser on each side
+        dr_tf_turn_tape_stack = dr_tf_turn_stabiliser * 0.8
 
-            a_tf_turn_cable_space_effective = (
-                a_tf_turn_cable_space_no_void
-                -
-                # Coolant channel area
-                (
-                    (np.pi / 4.0e0)
-                    * dia_tf_turn_coolant_channel
-                    * dia_tf_turn_coolant_channel
-                )
-                # Additional void area deduction
-                - (a_tf_turn_cable_space_no_void * f_a_tf_turn_cable_space_extra_void)
-            )
+        # Bottom of tape stack starts at the centre of the turn and allows for 10% of conductor height above
+        dx_tf_turn_tape_stack = (dx_tf_turn / 2) - (
+            dx_tf_turn_insulation + (0.1 * dx_tf_turn_stabiliser)
+        )
 
-            f_a_tf_turn_cable_space_cooling = 1 - (
-                a_tf_turn_cable_space_effective / a_tf_turn_cable_space_no_void
-            )
+        # Cross-sectional area of tape stack per turn [m²]
+        a_tf_turn_tape_stack = dr_tf_turn_tape_stack * dx_tf_turn_tape_stack
 
-            if a_tf_turn_cable_space_no_void <= 0.0e0:
-                if t_conductor < 0.0e0:
-                    logger.error(
-                        f"Negative cable space dimension. {a_tf_turn_cable_space_no_void=} "
-                        f"{dx_tf_turn_cable_space_average=}"
-                    )
-                else:
-                    logger.error(
-                        "Cable space area problem; artificially set rounded corner radius to 0. "
-                        f"{a_tf_turn_cable_space_no_void=} {dx_tf_turn_cable_space_average=}"
-                    )
-                    radius_tf_turn_cable_space_corners = 0.0e0
-                    a_tf_turn_cable_space_no_void = dx_tf_turn_cable_space_average**2
+        # Area of inter-turn insulation: single turn [m²]
+        a_tf_turn_insulation = (dr_tf_turn * dx_tf_turn) - (
+            dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
+        )
 
-            # Cross-sectional area of conduit jacket per turn [m2]
-            a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
-
-        # REBCO turn structure
-        elif i_tf_sc_mat == 6:
-            # Diameter of circular cable space inside conduit [m]
-            dx_tf_turn_cable_space_average = t_conductor - 2.0e0 * dx_tf_turn_steel
-
-            # Cross-sectional area of conduit jacket per turn [m2]
-            a_tf_turn_steel = t_conductor**2 - a_tf_turn_cable_space_no_void
+        # Area of stabiliser region per turn [m²]
+        a_tf_turn_stabiliser = (
+            dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
+            - a_tf_turn_tape_stack
+            - (np.pi / 4.0e0)
+            * dia_tf_turn_coolant_channel
+            * dia_tf_turn_coolant_channel
+        )
 
         return (
-            a_tf_turn_cable_space_no_void,
-            a_tf_turn_steel,
-            a_tf_turn_insulation,
-            n_tf_coil_turns,
-            dx_tf_turn_general,
-            c_tf_turn,
-            dx_tf_turn_general,
             dr_tf_turn,
             dx_tf_turn,
-            t_conductor,
-            radius_tf_turn_cable_space_corners,
-            dx_tf_turn_cable_space_average,
-            a_tf_turn_cable_space_effective,
-            f_a_tf_turn_cable_space_cooling,
+            c_tf_turn,
+            n_tf_coil_turns,
+            dr_tf_turn_stabiliser,
+            dx_tf_turn_stabiliser,
+            x_tf_turn_coolant_channel_centre,
+            dr_tf_turn_tape_stack,
+            dx_tf_turn_tape_stack,
+            a_tf_turn_tape_stack,
+            a_tf_turn_insulation,
+            a_tf_turn_stabiliser,
         )
+
+        # -------------
 
     def superconducting_tf_coil_areas_and_masses(self):
         # Mass of case [kg]
