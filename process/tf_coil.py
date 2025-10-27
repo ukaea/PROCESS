@@ -1199,7 +1199,10 @@ class TFCoil:
                 tfcoil_variables.dx_tf_turn_insulation,
             )
 
-            if tfcoil_variables.i_tf_sc_mat in (1, 2, 3, 4, 5, 7, 8, 9):
+            if (
+                tfcoil_variables.i_tf_sc_mat in (1, 2, 3, 4, 5, 7)
+                and superconducting_tf_coil_variables.i_tf_turn_type == 0
+            ):
                 po.osubhd(self.outfile, "Conductor information:")
                 po.ovarre(
                     self.outfile,
