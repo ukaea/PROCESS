@@ -1539,7 +1539,7 @@ class SuperconductingTFCoil(TFCoil):
         # Number of strands that fit
         return int(effective_area / strand_area)
 
-    def calculate_cable_in_conduit_superconductor_length(
+    def calculate_tf_superconductor_length(
         self,
         n_tf_coils: int,
         n_tf_coil_turns: int,
@@ -2251,7 +2251,7 @@ class SuperconductingTFCoil(TFCoil):
                 (
                     superconducting_tf_coil_variables.len_tf_coil_superconductor,
                     superconducting_tf_coil_variables.len_tf_superconductor_total,
-                ) = self.calculate_cable_in_conduit_superconductor_length(
+                ) = self.calculate_tf_superconductor_length(
                     n_tf_coils=tfcoil_variables.n_tf_coils,
                     n_tf_coil_turns=tfcoil_variables.n_tf_coil_turns,
                     len_tf_coil=tfcoil_variables.len_tf_coil,
@@ -2382,13 +2382,13 @@ class SuperconductingTFCoil(TFCoil):
                     tfcoil_variables.c_tf_turn,
                     tfcoil_variables.n_tf_coil_turns,
                     superconducting_tf_coil_variables.dr_tf_turn_stabiliser,
-                    superconducting_tf_coil_variables.dx_tf_turn_cable_space,
-                    superconducting_tf_coil_variables.dx_tf_turn_cable_space_average,
+                    superconducting_tf_coil_variables.dx_tf_turn_stabiliser,
+                    superconducting_tf_coil_variables.x_tf_turn_coolant_channel_centre,
                     superconducting_tf_coil_variables.dr_tf_turn_tape_stack,
                     superconducting_tf_coil_variables.dx_tf_turn_tape_stack,
                     superconducting_tf_coil_variables.a_tf_turn_tape_stack,
-                    superconducting_tf_coil_variables.x_tf_turn_coolant_channel_centre,
                     tfcoil_variables.a_tf_turn_insulation,
+                    superconducting_tf_coil_variables.a_tf_turn_stabiliser,
                 ) = self.tf_step_vertical_tape_integer_turn_geometry(
                     dr_tf_wp_with_insulation=tfcoil_variables.dr_tf_wp_with_insulation,
                     dx_tf_wp_insulation=tfcoil_variables.dx_tf_wp_insulation,
@@ -2407,6 +2407,16 @@ class SuperconductingTFCoil(TFCoil):
                 superconducting_tf_coil_variables.n_tf_turn_superconducting_strands = self.calculate_stacked_tape_strand_count(
                     dr_tape_stack=superconducting_tf_coil_variables.dx_tf_turn_tape_stack,
                     dr_hts_tape=rebco_variables.dx_hts_tape_total,
+                )
+
+                (
+                    superconducting_tf_coil_variables.len_tf_coil_superconductor,
+                    superconducting_tf_coil_variables.len_tf_superconductor_total,
+                ) = self.calculate_tf_superconductor_length(
+                    n_tf_coils=tfcoil_variables.n_tf_coils,
+                    n_tf_coil_turns=tfcoil_variables.n_tf_coil_turns,
+                    len_tf_coil=tfcoil_variables.len_tf_coil,
+                    n_tf_turn_superconducting_cables=superconducting_tf_coil_variables.n_tf_turn_superconducting_strands,
                 )
 
             # Areas and fractions
@@ -3117,27 +3127,33 @@ class SuperconductingTFCoil(TFCoil):
             - dx_tf_turn (float): Toroidal turn dimension (m).
             - c_tf_turn (float): Current per turn (A).
             - n_tf_coil_turns (float): Total number of turns in a TF coil
-              (float, integer-valued).
+                (float, integer-valued).
             - dr_tf_turn_stabiliser (float): Radial dimension of conductor
-              stabiliser region (m).
+                stabiliser region (m).
             - dx_tf_turn_stabiliser (float): Toroidal dimension of conductor
-              stabiliser region (m).
+                stabiliser region (m).
             - x_tf_turn_coolant_channel_centre (float): Centre position of the
-              coolant channel measured from the inner face (m).
+                coolant channel measured from the inner face (m).
             - dr_tf_turn_tape_stack (float): Width of the tape stack in the
-              radial direction (m).
+                radial direction (m).
             - dx_tf_turn_tape_stack (float): Height of the tape stack in the
-              toroidal direction (m).
+                toroidal direction (m).
             - a_tf_turn_tape_stack (float): Cross-sectional area of the tape
-              stack per turn (m^2).
+                stack per turn (m^2).
         :rtype: tuple[float, float, float, float, float, float, float, float, float, float]
 
         :notes:
             - Assumes rectangular turns and places the coolant channel near the
-              bottom of the conductor with a small clearance from the tape stack.
+                bottom of the conductor with a small clearance from the tape stack.
             - Basic consistency checks are emitted via logger.error() if
-              calculated dimensions are non-positive or if the coolant channel
-              conflicts with the conductor geometry.
+                calculated dimensions are non-positive or if the coolant channel
+                conflicts with the conductor geometry.
+
+        :references:
+            - E. Nasr, S. C. Wimbush, P. Noonan, P. Harris, R. Gowland, and A. Petrov,
+            “The magnetic cage,” Philosophical Transactions of the Royal Society A Mathematical Physical and Engineering Sciences,
+            vol. 382, no. 2280, Aug. 2024, doi: https://doi.org/10.1098/rsta.2023.0407.
+        ‌
         """
 
         # Radial turn dimension [m]
@@ -3206,6 +3222,15 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
         )
 
+        # Area of stabiliser region per turn [m²]
+        a_tf_turn_stabiliser = (
+            dr_tf_turn_stabiliser * dx_tf_turn_stabiliser
+            - a_tf_turn_tape_stack
+            - (np.pi / 4.0e0)
+            * dia_tf_turn_coolant_channel
+            * dia_tf_turn_coolant_channel
+        )
+
         return (
             dr_tf_turn,
             dx_tf_turn,
@@ -3217,8 +3242,8 @@ class SuperconductingTFCoil(TFCoil):
             dr_tf_turn_tape_stack,
             dx_tf_turn_tape_stack,
             a_tf_turn_tape_stack,
-            x_tf_turn_coolant_channel_centre,
             a_tf_turn_insulation,
+            a_tf_turn_stabiliser,
         )
 
         # -------------

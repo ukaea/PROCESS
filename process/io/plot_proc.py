@@ -7342,9 +7342,6 @@ def plot_tf_step_vertical_tape_turn(
         ),
     )
 
-    n_tf_turn_superconducting_strands = mfile_data.data[
-        "n_tf_turn_superconducting_strands"
-    ].get_scan(scan)
     # Plot the tape stack
     axis.add_patch(
         Rectangle(
@@ -7422,6 +7419,29 @@ def plot_tf_step_vertical_tape_turn(
         bbox={
             "boxstyle": "round",
             "facecolor": "royalblue",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    textstr_stabiliser = (
+        f"$\\mathbf{{Stabiliser:}}$\n\n"
+        f"$\\Delta r$: {mfile_data.data['dr_tf_turn_stabiliser'].get_scan(scan):.3e} m\n"
+        f"$\\Delta x$: {mfile_data.data['dx_tf_turn_stabiliser'].get_scan(scan):.3e} m\n"
+        f"Stabiliser area: {mfile_data.data['a_tf_turn_stabiliser'].get_scan(scan):.3e} m$^2$"
+    )
+
+    axis.text(
+        0.5,
+        0.6,
+        textstr_stabiliser,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="left",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "#b87333",
             "alpha": 1.0,
             "linewidth": 2,
         },

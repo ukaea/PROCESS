@@ -1421,6 +1421,12 @@ class TFCoil:
                 )
                 po.ovarre(
                     self.outfile,
+                    "Area of tape stack in TF turn (m)",
+                    "(a_tf_turn_tape_stack)",
+                    superconducting_tf_coil_variables.a_tf_turn_tape_stack,
+                )
+                po.ovarre(
+                    self.outfile,
                     "Vertical position of coolant channel centre in TF turn (m)",
                     "(x_tf_turn_coolant_channel_centre)",
                     superconducting_tf_coil_variables.x_tf_turn_coolant_channel_centre,
@@ -1430,6 +1436,18 @@ class TFCoil:
                     "Radial width of stabiliser in TF turn (m)",
                     "(dr_tf_turn_stabiliser)",
                     superconducting_tf_coil_variables.dr_tf_turn_stabiliser,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Toroidal width of stabiliser in TF turn (m)",
+                    "(dx_tf_turn_stabiliser)",
+                    superconducting_tf_coil_variables.dx_tf_turn_stabiliser,
+                )
+                po.ovarre(
+                    self.outfile,
+                    "Area of stabiliser in TF turn (m)",
+                    "(a_tf_turn_stabiliser)",
+                    superconducting_tf_coil_variables.a_tf_turn_stabiliser,
                 )
                 po.ovarre(
                     self.outfile,

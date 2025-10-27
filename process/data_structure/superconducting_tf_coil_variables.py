@@ -237,6 +237,12 @@ x_tf_turn_coolant_channel_centre: float = None
 dr_tf_turn_stabiliser: float = None
 """Radial thickness of the stabiliser in the TF turn [m]"""
 
+dx_tf_turn_stabiliser: float = None
+"""Toroidal thickness of the stabiliser in the TF turn [m]"""
+
+a_tf_turn_stabiliser: float = None
+"""Cross-sectional area of the stabiliser in the TF turn [m^2]"""
+
 # Vacuum Vessel stress on TF coil quench
 
 vv_stress_quench: float = None
@@ -348,6 +354,8 @@ def init_superconducting_tf_coil_variables():
     global n_tf_turn_superconducting_strands
     global x_tf_turn_coolant_channel_centre
     global dr_tf_turn_stabiliser
+    global dx_tf_turn_stabiliser
+    global a_tf_turn_stabiliser
 
     is_leg_cp_temp_same = 0
     tf_fit_t = 0.0
@@ -415,3 +423,5 @@ def init_superconducting_tf_coil_variables():
     n_tf_turn_superconducting_strands = 0
     x_tf_turn_coolant_channel_centre = 0.0
     dr_tf_turn_stabiliser = 0.0
+    dx_tf_turn_stabiliser = 0.0
+    a_tf_turn_stabiliser = 0.0
