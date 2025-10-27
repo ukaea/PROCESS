@@ -1406,6 +1406,8 @@ class SuperconductingTFCoil(TFCoil):
         else:
             strain = tfcoil_variables.str_wp
 
+        # =================================================================
+
         # Durham Ginzburg-Landau critical surface model for REBCO
         if i_tf_superconductor == 8:
             bc20m = 430  # [T]
@@ -1478,7 +1480,7 @@ class SuperconductingTFCoil(TFCoil):
             #  Critical current in turn all turn cables
             c_turn_strands_critical = j_strand_critical * a_tf_turn_tape_stack
 
-        else:
+        elif i_tf_superconductor not in TAPE_SUPERCONDUCTORS:
             raise ProcessValueError(
                 "Illegal value for i_tf_sc_mat", i_tf_superconductor=i_tf_superconductor
             )
