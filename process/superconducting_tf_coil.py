@@ -2402,6 +2402,11 @@ class SuperconductingTFCoil(TFCoil):
                     superconducting_tf_coil_variables.dr_tf_turn_tape_stack
                 )
 
+                superconducting_tf_coil_variables.n_tf_turn_superconducting_strands = self.calculate_stacked_tape_strand_count(
+                    dr_tape_stack=superconducting_tf_coil_variables.dx_tf_turn_tape_stack,
+                    dr_hts_tape=rebco_variables.dx_hts_tape_total,
+                )
+
     def superconducting_tf_wp_geometry(
         self,
         i_tf_wp_geom: int,
@@ -3131,6 +3136,31 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         # -------------
+
+    def calculate_stacked_tape_strand_count(
+        self,
+        dr_tape_stack: float,
+        dr_hts_tape: float,
+    ) -> int:
+        """
+        Calculate how many HTS tapes can be placed in a vertical stacked tape conductor.
+
+        The function returns the maximum whole number of tapes that fit within the
+        available radial tape stack width by taking the floor of the ratio
+        dr_tape_stack / dr_hts_tape.
+
+        :param dr_tape_stack: Available radial width for the tape stack (m). Must be >= 0.
+        :param dr_hts_tape: Width of a single HTS tape (m). Must be > 0.
+        :return: Maximum number of tapes that fit (int).
+        :raises ValueError: If dr_hts_tape <= 0 or dr_tape_stack < 0.
+        """
+        if dr_hts_tape <= 0:
+            raise ValueError("dr_hts_tape must be greater than 0")
+        if dr_tape_stack < 0:
+            raise ValueError("dr_tape_stack must be non-negative")
+
+        # Use floor to get the maximum whole number of tapes that fit
+        return int(np.floor(dr_tape_stack / dr_hts_tape))
 
     def tf_wp_currents(self):
         """

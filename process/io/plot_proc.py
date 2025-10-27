@@ -7342,13 +7342,16 @@ def plot_tf_step_vertical_tape_turn(
         ),
     )
 
+    n_tf_turn_superconducting_strands = mfile_data.data[
+        "n_tf_turn_superconducting_strands"
+    ].get_scan(scan)
     # Plot the tape stack
     axis.add_patch(
         Rectangle(
             [(dr_tf_turn_stabiliser * 0.1 + dx_tf_turn_insulation), (dx_tf_turn * 0.5)],
             (dr_tf_turn_tape_stack),
             (dx_tf_turn_tape_stack),
-            facecolor="black",
+            facecolor="royalblue",
         ),
     )
 
@@ -7568,7 +7571,7 @@ def plot_hts_tape(
     # Annotate component widths (in µm)
     textstr_components = (
         f"$\\mathbf{{Tapes:}}$\n \n"
-        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_cables'].get_scan(scan)):,}\n"
+        f"Number of strands per turn: {int(mfile_data.data['n_tf_turn_superconducting_strands'].get_scan(scan)):,}\n"
         f"Length of superconductor per coil: {len_tf_coil_superconductor_km:,.2f} km\n"
         f"Total length of superconductor in all coils: {len_tf_superconductor_total_km:,.2f} km\n"
         f"Copper (each side half): {dx_cu_um / 2:.1f} µm\n"

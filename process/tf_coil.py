@@ -1458,6 +1458,13 @@ class TFCoil:
                     "(dr_hts_tape)",
                     rebco_variables.dr_hts_tape,
                 )
+                po.ovarre(
+                    self.outfile,
+                    "Number of superconducting strands per turn",
+                    "(n_tf_turn_superconducting_strands)",
+                    superconducting_tf_coil_variables.n_tf_turn_superconducting_strands,
+                )
+
                 po.ocmmnt(self.outfile, "Fractions by area")
                 po.ovarre(
                     self.outfile,
