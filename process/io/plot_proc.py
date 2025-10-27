@@ -3257,12 +3257,16 @@ def plot_system_power_profiles_over_time(
         scan (int): Scan number to use.
     """
 
-    t_precharge = mfile_data.data["t_precharge"].get_scan(scan)
-    t_current_ramp_up = mfile_data.data["t_current_ramp_up"].get_scan(scan)
-    t_fusion_ramp = mfile_data.data["t_fusion_ramp"].get_scan(scan)
-    t_burn = mfile_data.data["t_burn"].get_scan(scan)
-    t_ramp_down = mfile_data.data["t_ramp_down"].get_scan(scan)
-    t_between_pulse = mfile_data.data["t_between_pulse"].get_scan(scan)
+    t_precharge = mfile_data.data["t_plant_pulse_coil_precharge"].get_scan(scan)
+    t_current_ramp_up = mfile_data.data[
+        "t_plant_pulse_plasma_current_ramp_up"
+    ].get_scan(scan)
+    t_fusion_ramp = mfile_data.data["t_plant_pulse_fusion_ramp"].get_scan(scan)
+    t_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan)
+    t_ramp_down = mfile_data.data["t_plant_pulse_plasma_current_ramp_down"].get_scan(
+        scan
+    )
+    t_between_pulse = mfile_data.data["t_plant_pulse_dwell"].get_scan(scan)
 
     # Define a cumulative sum list for each point in the pulse
     t_steps = np.cumsum([
@@ -3401,13 +3405,13 @@ def plot_system_power_profiles_over_time(
 
     textstr_times = (
         f"$\\mathbf{{Pulse \\ Timings:}}$\n\n"
-        f"Coil precharge, $t_{{\\text{{precharge}}}}$:        {mfile_data.data['t_precharge'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_precharge'].get_scan(scan))})\n"
-        f"Current ramp up, $t_{{\\text{{current ramp}}}}$:  {mfile_data.data['t_current_ramp_up'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_current_ramp_up'].get_scan(scan))})\n"
-        f"Fusion ramp, $t_{{\\text{{fusion ramp}}}}$:          {mfile_data.data['t_fusion_ramp'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_fusion_ramp'].get_scan(scan))})\n"
-        f"Burn, $t_{{\\text{{burn}}}}$:                              {mfile_data.data['t_burn'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_burn'].get_scan(scan))})\n"
-        f"Ramp down, $t_{{\\text{{ramp down}}}}$:           {mfile_data.data['t_ramp_down'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_ramp_down'].get_scan(scan))})\n"
-        f"Between pulse, $t_{{\\text{{between pulse}}}}$:   {mfile_data.data['t_between_pulse'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_between_pulse'].get_scan(scan))})\n\n"
-        f"Total pulse length, $t_{{\\text{{cycle}}}}$:        {mfile_data.data['t_cycle'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_cycle'].get_scan(scan))})\n"
+        f"Coil precharge, $t_{{\\text{{precharge}}}}$:        {mfile_data.data['t_plant_pulse_coil_precharge'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_coil_precharge'].get_scan(scan))})\n"
+        f"Current ramp up, $t_{{\\text{{current ramp}}}}$:  {mfile_data.data['t_plant_pulse_plasma_current_ramp_up'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_plasma_current_ramp_up'].get_scan(scan))})\n"
+        f"Fusion ramp, $t_{{\\text{{fusion ramp}}}}$:          {mfile_data.data['t_plant_pulse_fusion_ramp'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_fusion_ramp'].get_scan(scan))})\n"
+        f"Burn, $t_{{\\text{{burn}}}}$:                              {mfile_data.data['t_plant_pulse_burn'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_burn'].get_scan(scan))})\n"
+        f"Ramp down, $t_{{\\text{{ramp down}}}}$:           {mfile_data.data['t_plant_pulse_plasma_current_ramp_down'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_plasma_current_ramp_down'].get_scan(scan))})\n"
+        f"Between pulse, $t_{{\\text{{between pulse}}}}$:   {mfile_data.data['t_plant_pulse_dwell'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_dwell'].get_scan(scan))})\n\n"
+        f"Total pulse length, $t_{{\\text{{cycle}}}}$:        {mfile_data.data['t_plant_pulse_total'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_total'].get_scan(scan))})\n"
     )
 
     axis.text(
@@ -12551,10 +12555,10 @@ def main_plot(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
     )
 
-    ax20 = fig20.add_subplot(111)
+    ax24 = fig24.add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
-    ax20.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax20, m_file_data, scan, fig20)
+    ax24.set_position([0.08, 0.35, 0.84, 0.57])
+    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig24)
 
 
 def main(args=None):
@@ -12964,6 +12968,7 @@ def main(args=None):
     plt.close(page23)
     plt.close(page24)
     plt.close(page25)
+
 
 if __name__ == "__main__":
     main()

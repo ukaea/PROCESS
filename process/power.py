@@ -1428,12 +1428,12 @@ class Power:
             power_variables.e_plant_net_electric_pulse_kwh,
             power_variables.e_plant_net_electric_pulse_mj,
         ) = self.power_profiles_over_time(
-            t_precharge=times_variables.t_precharge,
-            t_current_ramp_up=times_variables.t_current_ramp_up,
-            t_fusion_ramp=times_variables.t_fusion_ramp,
-            t_burn=times_variables.t_burn,
-            t_ramp_down=times_variables.t_ramp_down,
-            t_between_pulse=times_variables.t_between_pulse,
+            t_precharge=times_variables.t_plant_pulse_coil_precharge,
+            t_current_ramp_up=times_variables.t_plant_pulse_plasma_current_ramp_up,
+            t_fusion_ramp=times_variables.t_plant_pulse_fusion_ramp,
+            t_burn=times_variables.t_plant_pulse_burn,
+            t_ramp_down=times_variables.t_plant_pulse_plasma_current_ramp_down,
+            t_between_pulse=times_variables.t_plant_pulse_dwell,
             p_plant_electric_base_total_mw=heat_transport_variables.p_plant_electric_base_total_mw,
             p_cryo_plant_electric_mw=heat_transport_variables.p_cryo_plant_electric_mw,
             p_tritium_plant_electric_mw=heat_transport_variables.p_tritium_plant_electric_mw,
@@ -2346,10 +2346,8 @@ class Power:
         # Vacuum pumps: constant negative load throughout
         power_profiles["vachtmw"][:] = -vachtmw
 
-        # TF coil supplies: zero for first step, then negative during ramp-up and burn, then zero
-        power_profiles["p_tf_electric_supplies_mw"][0] = 0
-        power_profiles["p_tf_electric_supplies_mw"][1:5] = -p_tf_electric_supplies_mw
-        power_profiles["p_tf_electric_supplies_mw"][5:] = 0
+        # TF coil supplies: assume coil is always charged, so constant negative load
+        power_profiles["p_tf_electric_supplies_mw"][:] = -p_tf_electric_supplies_mw
 
         # PF coil supplies: zero for first step, then negative during ramp-up and burn, then zero
         power_profiles["p_pf_electric_supplies_mw"][0] = 0
