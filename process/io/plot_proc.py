@@ -10941,6 +10941,18 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
         color="green",
         label="Total",
     )
+
+    # Plot horizontal line for volume-average thermal pressure (converted to kPa)
+    p_vol_kpa = mfile_data.data["pres_plasma_thermal_vol_avg"].get_scan(scan) / 1000.0
+    axis.axhline(
+        p_vol_kpa,
+        color="black",
+        linestyle="--",
+        linewidth=1.2,
+        label="Volume avg",
+        zorder=5,
+    )
+
     axis.set_xlabel("$\\rho$ [r/a]")
     axis.set_ylabel("Thermal Pressure [kPa]")
     axis.minorticks_on()
@@ -10950,6 +10962,22 @@ def plot_plasma_pressure_profiles(axis, mfile_data, scan):
     axis.set_xlim([0, 1.025])
     axis.set_ylim(bottom=0)
     axis.legend()
+
+    textstr_pressure = "\n".join((
+        rf"$p_0$: {mfile_data.data['pres_plasma_thermal_on_axis'].get_scan(scan) / 1000:,.3f} kPa",
+        rf"$\langle p_{{\text{{total}}}} \rangle_\text{{V}}$: {mfile_data.data['pres_plasma_thermal_vol_avg'].get_scan(scan) / 1000:,.3f} kPa",
+    ))
+
+    axis.text(
+        0.5,
+        1.2,
+        textstr_pressure,
+        transform=axis.transAxes,
+        fontsize=9,
+        verticalalignment="top",
+        horizontalalignment="center",
+        bbox={"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5},
+    )
 
 
 def plot_plasma_pressure_gradient_profiles(axis, mfile_data, scan):
