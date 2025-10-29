@@ -3344,7 +3344,19 @@ class CSCoil:
 
             # New calculation from Y. Iwasa for axial stress
             pfcoil_variables.sig_axial, pfcoil_variables.axial_force = (
-                self.axial_stress()
+                self.axial_stress(
+                    r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ],
+                    r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ],
+                    dz_cs_half=pfcoil_variables.dz_cs_full / 2.0,
+                    c_cs_peak=pfcoil_variables.c_pf_cs_coils_peak_ma[
+                        pfcoil_variables.n_cs_pf_coils - 1
+                    ]
+                    * 1.0e6,
+                )
             )
 
             # Allowable (hoop) stress (Pa) alstroh
@@ -3679,60 +3691,75 @@ class CSCoil:
             "OP ",
         )
 
-    def axial_stress(self):
-        """Calculation of axial stress of central solenoid.
-
-        author: J Morris, CCFE, Culham Science Centre
-        This routine calculates the axial stress of the central solenoid
-        from "Case studies in superconducting magnets", Y. Iwasa, Springer
-
-        :return: unsmeared axial stress [MPa], axial force [N]
-        :rtype: tuple[float, float]
+    def axial_stress(
+        self,
+        r_cs_outer: float,
+        r_cs_inner: float,
+        dz_cs_half: float,
+        c_cs_peak: float,
+    ) -> tuple[float, float]:
         """
-        b = pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1]
+        Calculate axial stress and axial force for the central solenoid.
 
-        # Half height of central Solenoid [m]
-        hl = pfcoil_variables.z_pf_coil_upper[pfcoil_variables.n_cs_pf_coils - 1]
+        :param float r_cs_outer: Outer radius of the central solenoid (m).
+        :param float r_cs_inner: Inner radius of the central solenoid (m).
+        :param float dz_cs_half: Half-height of the central solenoid (m).
+        :param float c_cs_peak: Peak CS coil current (A).
 
-        # Central Solenoid current [A]
-        ni = (
-            pfcoil_variables.c_pf_cs_coils_peak_ma[pfcoil_variables.n_cs_pf_coils - 1]
-            * 1.0e6
-        )
+        :returns: A tuple containing the unsmeared axial stress and the axial force.
+        :rtype: tuple(float, float)
+            The first element is the unsmeared axial stress in MPa.
+            The second element is the axial force in newtons (N).
+
+        :note:
+           The axial force is computed using elliptic-integral based terms and the
+           unsmeared axial stress is obtained by dividing the axial force by
+           the effective steel area associated with the CS turns.
+
+        :references:
+            - Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009.
+              doi: https://doi.org/10.1007/b112047.
+
+        """
 
         # kb term for elliptical integrals
         # kb2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + hl**2))
-        kb2 = (4.0e0 * b**2) / (4.0e0 * b**2 + hl**2)
+        kb2 = (4.0e0 * r_cs_outer**2) / (4.0e0 * r_cs_outer**2 + dz_cs_half**2)
 
         # k2b term for elliptical integrals
         # k2b2 = SQRT((4.0e0*b**2)/(4.0e0*b**2 + 4.0e0*hl**2))
-        k2b2 = (4.0e0 * b**2) / (4.0e0 * b**2 + 4.0e0 * hl**2)
+        k2b2 = (4.0e0 * r_cs_outer**2) / (4.0e0 * r_cs_outer**2 + 4.0e0 * dz_cs_half**2)
 
         # term 1
-        axial_term_1 = -(constants.RMU0 / 2.0e0) * (ni / (2.0e0 * hl)) ** 2
+        axial_term_1 = (
+            -(constants.RMU0 / 2.0e0) * (c_cs_peak / (2.0e0 * dz_cs_half)) ** 2
+        )
 
         # term 2
         ekb2_1 = ellipk(kb2)
         ekb2_2 = ellipe(kb2)
         axial_term_2 = (
-            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + hl**2)) * (ekb2_1 - ekb2_2)
+            2.0e0
+            * dz_cs_half
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + dz_cs_half**2))
+            * (ekb2_1 - ekb2_2)
         )
 
         # term 3
         ek2b2_1 = ellipk(k2b2)
         ek2b2_2 = ellipe(k2b2)
         axial_term_3 = (
-            2.0e0 * hl * (math.sqrt(4.0e0 * b**2 + 4.0e0 * hl**2)) * (ek2b2_1 - ek2b2_2)
+            2.0e0
+            * dz_cs_half
+            * (math.sqrt(4.0e0 * r_cs_outer**2 + 4.0e0 * dz_cs_half**2))
+            * (ek2b2_1 - ek2b2_2)
         )
 
         # calculate axial force [N]
         axial_force = axial_term_1 * (axial_term_2 - axial_term_3)
 
         # axial area [m2]
-        area_ax = constants.PI * (
-            pfcoil_variables.r_pf_coil_outer[pfcoil_variables.n_cs_pf_coils - 1] ** 2
-            - pfcoil_variables.r_pf_coil_inner[pfcoil_variables.n_cs_pf_coils - 1] ** 2
-        )
+        area_ax = constants.PI * (r_cs_outer**2 - r_cs_inner**2)
 
         # calculate unsmeared axial stress [MPa]
         s_axial = axial_force / (pfcoil_variables.f_a_cs_turn_steel * 0.5 * area_ax)
