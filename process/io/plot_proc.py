@@ -12307,10 +12307,10 @@ def main_plot(
     plot_current_profiles_over_time(fig20.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig21.add_subplot(121, aspect="equal"), fig20, m_file_data, scan
+        fig21.add_subplot(121, aspect="equal"), fig21, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig21.add_subplot(224, aspect="equal"), fig20, m_file_data, scan
+        fig21.add_subplot(224, aspect="equal"), fig21, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
