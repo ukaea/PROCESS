@@ -3627,19 +3627,18 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
         fracs = np.zeros(5)
 
     # build species density profiles from electron profile and fractions
-    n_fuel = ne * fracs[0]
-    n_alpha = ne * fracs[1]
-    n_proton = ne * fracs[2]
-    n_imp = ne * fracs[3]
-    n_ions = ne * fracs[4]
+    # fracs = [fuel, alpha, protons, impurities, ions_total]
+    n_fuel, n_alpha, n_proton, n_imp, n_ions = [ne * f for f in fracs[:5]]
 
-    # convert to 1e19 m^-3 units for plotting
-    ne_plot = ne / 1e19
-    n_fuel_plot = n_fuel / 1e19
-    n_alpha_plot = n_alpha / 1e19
-    n_proton_plot = n_proton / 1e19
-    n_imp_plot = n_imp / 1e19
-    n_ions_plot = n_ions / 1e19
+    # convert to 1e19 m^-3 units for plotting (vectorised / less repetitive)
+    (
+        ne_plot,
+        n_fuel_plot,
+        n_alpha_plot,
+        n_proton_plot,
+        n_imp_plot,
+        n_ions_plot,
+    ) = [arr / 1e19 for arr in (ne, n_fuel, n_alpha, n_proton, n_imp, n_ions)]
 
     prof.plot(
         rho,
