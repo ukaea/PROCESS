@@ -29,7 +29,8 @@ ricpf: float = None
 
 ssq0: float = None
 
-sig_axial: float = None
+stress_z_cs_self_peak_midplane: float = None
+"""Peak axial stress (z) in central solenoid at midplane due to its own field (when at peak current) (Pa)"""
 
 sig_hoop: float = None
 
@@ -567,7 +568,7 @@ def init_pfcoil_module():
     global nfxf
     global ricpf
     global ssq0
-    global sig_axial
+    global stress_z_cs_self_peak_midplane
     global sig_hoop
     global axial_force
     global r_pf_cs_current_filaments
@@ -587,7 +588,7 @@ def init_pfcoil_module():
     nfxf = 0
     ricpf = 0.0
     ssq0 = 0.0
-    sig_axial = 0.0
+    stress_z_cs_self_peak_midplane = 0.0
     sig_hoop = 0.0
     axial_force = 0.0
 

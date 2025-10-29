@@ -2208,8 +2208,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Axial stress in CS steel (Pa)",
-                    "(sig_axial)",
-                    pfcoil_variables.sig_axial,
+                    "(stress_z_cs_self_peak_midplane)",
+                    pfcoil_variables.stress_z_cs_self_peak_midplane,
                     "OP ",
                 )
                 op.ovarre(
@@ -3343,20 +3343,21 @@ class CSCoil:
             )
 
             # New calculation from Y. Iwasa for axial stress
-            pfcoil_variables.sig_axial, pfcoil_variables.axial_force = (
-                self.calculate_cs_self_peak_midplane_axial_stress(
-                    r_cs_outer=pfcoil_variables.r_pf_coil_outer[
-                        pfcoil_variables.n_cs_pf_coils - 1
-                    ],
-                    r_cs_inner=pfcoil_variables.r_pf_coil_inner[
-                        pfcoil_variables.n_cs_pf_coils - 1
-                    ],
-                    dz_cs_half=pfcoil_variables.dz_cs_full / 2.0,
-                    c_cs_peak=pfcoil_variables.c_pf_cs_coils_peak_ma[
-                        pfcoil_variables.n_cs_pf_coils - 1
-                    ]
-                    * 1.0e6,
-                )
+            (
+                pfcoil_variables.stress_z_cs_self_peak_midplane,
+                pfcoil_variables.axial_force,
+            ) = self.calculate_cs_self_peak_midplane_axial_stress(
+                r_cs_outer=pfcoil_variables.r_pf_coil_outer[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                r_cs_inner=pfcoil_variables.r_pf_coil_inner[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ],
+                dz_cs_half=pfcoil_variables.dz_cs_full / 2.0,
+                c_cs_peak=pfcoil_variables.c_pf_cs_coils_peak_ma[
+                    pfcoil_variables.n_cs_pf_coils - 1
+                ]
+                * 1.0e6,
             )
 
             # Allowable (hoop) stress (Pa) alstroh
@@ -3384,8 +3385,11 @@ class CSCoil:
 
             if pfcoil_variables.i_cs_stress == 1:
                 pfcoil_variables.s_shear_cs_peak = max(
-                    abs(pfcoil_variables.sig_hoop - pfcoil_variables.sig_axial),
-                    abs(pfcoil_variables.sig_axial - 0.0e0),
+                    abs(
+                        pfcoil_variables.sig_hoop
+                        - pfcoil_variables.stress_z_cs_self_peak_midplane
+                    ),
+                    abs(pfcoil_variables.stress_z_cs_self_peak_midplane - 0.0e0),
                     abs(0.0e0 - pfcoil_variables.sig_hoop),
                 )
             else:
