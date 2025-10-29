@@ -483,8 +483,8 @@ def init_current_drive_variables():
     n_ecrh_harmonic = 2.0
     i_ecrh_wave_mode = 0
     e_beam_kev = 1.0e3
-    eta_hcd_primary_injector_wall_plug = 0.0
-    eta_hcd_secondary_injector_wall_plug = 0.0
+    eta_hcd_primary_injector_wall_plug = 0.3
+    eta_hcd_secondary_injector_wall_plug = 0.3
     eta_ecrh_injector_wall_plug = 0.3
     eta_lowhyb_injector_wall_plug = 0.3
     eta_beam_injector_wall_plug = 0.3
@@ -529,8 +529,8 @@ def init_current_drive_variables():
     c_hcd_secondary_driven = 0.0
     f_c_plasma_hcd_primary = 0.0
     f_c_plasma_hcd_secondary = 0.0
-    eta_icrh_injector_wall_plug = 0.0
-    eta_ebw_injector_wall_plug = 0.0
+    eta_icrh_injector_wall_plug = 0.3
+    eta_ebw_injector_wall_plug = 0.3
     p_hcd_primary_injected_mw = 0.0
     p_hcd_icrh_injected_total_mw = 0.0
     p_hcd_ebw_injected_total_mw = 0.0

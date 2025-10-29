@@ -632,6 +632,12 @@ INPUT_VARIABLES = {
     "eta_ecrh_injector_wall_plug": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
+    "eta_icrh_injector_wall_plug": InputVariable(
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
+    ),
+    "eta_ebw_injector_wall_plug": InputVariable(
+        data_structure.current_drive_variables, float, range=(0.0, 1.0)
+    ),
     "eta_coolant_pump_electric": InputVariable(
         data_structure.fwbs_variables, float, range=(0.1, 1.0)
     ),
