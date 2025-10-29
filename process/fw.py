@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class Fw:
     def __init__(self) -> None:
         self.outfile = constants.NOUT
-        self.blanket_methods = BlanketLibrary(fw=self)
+        self.blanket_library = BlanketLibrary(fw=self)
 
     def run(self):
         (
@@ -32,7 +32,7 @@ class Fw:
         (
             fwbs_variables.radius_fw_channel_90_bend,
             fwbs_variables.radius_fw_channel_180_bend,
-        ) = self.blanket_methods.calculate_pipe_bend_radius(i_ps=1)
+        ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
 
     def set_fw_geometry(self):
         build_variables.dr_fw_inboard = (
