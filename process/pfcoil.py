@@ -3344,7 +3344,7 @@ class CSCoil:
 
             # New calculation from Y. Iwasa for axial stress
             pfcoil_variables.sig_axial, pfcoil_variables.axial_force = (
-                self.axial_stress(
+                self.calculate_cs_self_peak_midplane_axial_stress(
                     r_cs_outer=pfcoil_variables.r_pf_coil_outer[
                         pfcoil_variables.n_cs_pf_coils - 1
                     ],
@@ -3691,7 +3691,7 @@ class CSCoil:
             "OP ",
         )
 
-    def axial_stress(
+    def calculate_cs_self_peak_midplane_axial_stress(
         self,
         r_cs_outer: float,
         r_cs_inner: float,

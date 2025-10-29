@@ -2632,7 +2632,7 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch):
 def test_axial_stress(cs_coil: CSCoil, monkeypatch: pytest.MonkeyPatch):
     """Test axial_stress subroutine.
 
-    axial_stress() requires specific mocked vars in order to work; these were
+    calculate_cs_self_peak_midplane_axial_stress() requires specific mocked vars in order to work; these were
     discovered using gdb to break on the first subroutine call when running the
     baseline 2018 IN.DAT.
 
@@ -2758,7 +2758,7 @@ def test_axial_stress(cs_coil: CSCoil, monkeypatch: pytest.MonkeyPatch):
 
     s_axial_exp = -7.468967e8
     axial_force_exp = -1.956801e9
-    s_axial, axial_force = cs_coil.axial_stress()
+    s_axial, axial_force = cs_coil.calculate_cs_self_peak_midplane_axial_stress()
 
     assert pytest.approx(s_axial) == s_axial_exp
     assert pytest.approx(axial_force) == axial_force_exp
