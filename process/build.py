@@ -1534,31 +1534,53 @@ class Build:
         dx_tf_wp_insertion_gap: float,
     ) -> float:
         """
-        TF ripple calculation
-        author: P J Knight and C W Ashe, CCFE, Culham Science Centre
-        ripple_b_tf_plasma_edge_max : input real  : maximum allowed ripple at plasma edge (%)
-        ripple_b_tf_plasma_edge : output real : actual ripple at plasma edge (%)
-        rtot   : input real  : radius to the centre of the outboard
-        TF coil leg (m)
-        rtotmin : output real : radius to the centre of the outboard
-        TF coil leg which would produce
-        a ripple of amplitude ripple_b_tf_plasma_edge_max (m)
-        flag : output integer : on exit, =1 if the fitted
-        range of applicability is exceeded
-        This routine calculates the toroidal field ripple amplitude
-        at the midplane outboard plasma edge. The fitted coefficients
-        were produced from MATLAB runs by M. Kovari using the CCFE
-        MAGINT code to model the coils and fields.
-        <P>The minimum radius of the centre of the TF coil legs
-        to produce the maximum allowed ripple is also calculated.
-        M. Kovari, Toroidal Field Coils - Maximum Field and Ripple -
-        Parametric Calculation, July 2014
-        ##############################################################
+        Plasma outboard toroidal field (TF) ripple calculation.
 
-        Picture frame coil model by Ken McClements 2022 gives analytical
-        solutions within 10% agreement with numerical models.
-        Activated when i_tf_shape == 2 (picture frame)
+        This routine computes the TF ripple amplitude at the midplane outboard
+        plasma edge and the minimum radius of the TF coil centre that would
+        produce a specified maximum allowed ripple. The calculation uses
+        fitted coefficients derived from numerical modelling (MAGINT) and
+        includes a simplified analytical picture-frame coil model for
+        i_tf_shape == 2.
 
+        :param ripple_b_tf_plasma_edge_max: Maximum allowed ripple at plasma edge (percent)
+        :type ripple_b_tf_plasma_edge_max: float
+        :param r_tf_outboard_mid: Radius to the centre of the outboard TF coil leg (m)
+        :type r_tf_outboard_mid: float
+        :param n_tf_coils: Number of TF coils
+        :type n_tf_coils: int
+        :param rmajor: Plasma major radius (m)
+        :type rmajor: float
+        :param rminor: Plasma minor radius (m)
+        :type rminor: float
+        :param r_tf_wp_inboard_inner: Inner winding-pack inboard radius (m)
+        :type r_tf_wp_inboard_inner: float
+        :param r_tf_wp_inboard_centre: Centre winding-pack inboard radius (m)
+        :type r_tf_wp_inboard_centre: float
+        :param r_tf_wp_inboard_outer: Outer winding-pack inboard radius (m)
+        :type r_tf_wp_inboard_outer: float
+        :param dx_tf_wp_primary_toroidal: Primary toroidal winding-pack thickness (m)
+        :type dx_tf_wp_primary_toroidal: float
+        :param i_tf_shape: TF coil shape switch (2 => picture-frame analytical model)
+        :type i_tf_shape: int
+        :param i_tf_sup: TF coil support flag (1 => superconducting)
+        :type i_tf_sup: int
+        :param dx_tf_wp_insulation: Winding-pack insulation thickness (m)
+        :type dx_tf_wp_insulation: float
+        :param dx_tf_wp_insertion_gap: Winding-pack insertion gap (m)
+        :type dx_tf_wp_insertion_gap: float
+
+        :returns: Tuple containing:
+                  - ripple: Calculated ripple at plasma edge (percent)
+                  - r_tf_outboard_midmin: Minimum r_tf_outboard_mid that yields the specified maximum ripple (m)
+                  - flag: Applicability flag (0 = OK, non-zero = fitted-range concern)
+        :rtype: tuple[float, float, int]
+
+        :notes:
+            - Fitted coefficients originate from parametric MAGINT runs (M. Kovari, 2014).
+            - Picture-frame coil analytical model (Ken McClements, 2022) is used when
+            `i_tf_shape == 2` and gives approximate results (within ~10% of numerical).
+            - The routine sets an applicability flag when fitted-range assumptions are exceeded.
         """
         if i_tf_sup == 1:
             # Minimal inboard WP radius [m]
@@ -1577,16 +1599,16 @@ class Build:
                 r_wp_max = r_tf_wp_inboard_outer
 
             # Calculated maximum toroidal WP toroidal thickness [m]
-            t_wp_max = dx_tf_wp_primary_toroidal - 2.0 * (
+            dx_tf_wp_conductor_max = dx_tf_wp_primary_toroidal - 2.0 * (
                 dx_tf_wp_insulation + dx_tf_wp_insertion_gap
             )
 
         # Resistive magnet case
         else:
-            # Radius used to define the t_wp_max [m]
+            # Radius used to define the dx_tf_wp_conductor_max [m]
             r_wp_max = r_tf_wp_inboard_outer
             # Calculated maximum toroidal WP toroidal thickness [m]
-            t_wp_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
+            dx_tf_wp_conductor_max = 2.0e0 * r_wp_max * np.tan(np.pi / n_tf_coils)
 
         flag = 0
         if i_tf_shape == 2:
@@ -1599,7 +1621,7 @@ class Build:
             )
         else:
             # Winding pack to iter-coil at plasma centre toroidal lenth ratio
-            x = t_wp_max * n_tf_coils / rmajor
+            x = dx_tf_wp_conductor_max * n_tf_coils / rmajor
 
             # Fitting parameters
             c1 = 0.875e0 - 0.0557e0 * x
