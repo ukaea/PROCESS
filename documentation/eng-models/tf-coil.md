@@ -786,6 +786,8 @@ $$
   Von-Mises yeild stress is also shown in the output for information.
 </p>
 
+-------------
+
 ## TF coil ripple
 
 
@@ -806,20 +808,40 @@ ripple impacts TF coil design in two ways:
     conductor is larger than the value obtained using the axisymmetric
     assumption. This is only true in `PROCESS` for the superconducting coil case. More info can be found [here](../eng-models/tf-coil-superconducting.md#on-coil-ripple-peak_tf_with_ripple).
 
-### Plasma ripple
+-------------
 
-The maximum plasma ripple is defined in *PROCESS* with the user input `ripple_b_tf_plasma_edge_max`
+### Plasma ripple | `plasma_outboard_edge_toroidal_ripple()`
+
+The maximum toroidal plasma ripple at the outboard is defined in `PROCESS` with the user input `ripple_b_tf_plasma_edge_max`
 as:
 
 $$
   \delta = \frac{B_\mathrm{max}-B_\mathrm{min}}{B_\mathrm{max}+B_\mathrm{min}}
 $$
 
-with \( B_\mathrm{min}\) and \( B_\mathrm{max}\) minimum field (between coils)
+with $B_\mathrm{min}$ and $B_\mathrm{max}$ minimum field (between coils)
 and the maximum field (on coil toroidal direction) respectively, measured at
-the mid-plane plasma outer limit (separatrix). <em>PROCESS</em> plasma ripple
-is estimated using a parametric Bio-Savart calculation fitted using the
-<em>UKAEA</em> free boundary MHD code <em>FIESTA</em>. The shape (Princeton-D) 
+the mid-plane plasma outer limit (separatrix). 
+
+To prevent intolerable fast particles losses and plasma instabilities,
+$\delta$ must be limited to a few percent, approximatively \( \delta \in
+[0.5-1]\) . If intolerable, the plasma ripple can be reduced with many
+different techniques, for example the TF coil shape, stabilisation coils can
+be added, more coils can be used or the coil outboard radius can be increased.
+All these design modifications affects the coil system design, for example
+ripple shape optimisation should be done without generating too much bending
+stress due to the un-adapted curvature radius, and adding coils must not prevent
+remote maintenance. To keep the design procedure as simple as possible in
+`PROCESS`, unacceptable ripple is reduced by simply moving the
+TF coil leg to a larger radius. The outboard ripple is directly obtained reverting the ripple fit to provide
+$R_\mathrm{outboard\ WP}^\mathrm{mid}$ as a function of the ripple.
+The minimal $R_\mathrm{outboard\ WP}^\mathrm{mid}$ is technically obtained
+by increasing the gap between the vacuum vessel and the coil (`dr_shld_vv_gap_outboard`).
+
+#### D-shaped coils
+
+`PROCESS` plasma ripple is estimated using a parametric Bio-Savart calculation fitted using the
+UKAEA free boundary MHD code FIESTA. The shape (Princeton-D) 
 used for these MHD model is shown in the left section of Figure 11. 
 
 
@@ -834,10 +856,10 @@ used for these MHD model is shown in the left section of Figure 11.
     <br>
     <figcaption><i>
       <p style='text-align: justify;'> 
-        Figure 11 : The left graph shows the filament shape used in the
-        <em>FIESTA</em> ripple calculations. The current loops are made straight
+        Figure 11 : The top graph shows the filament shape used in the
+        FIESTA ripple calculations. The current loops are made straight
         section (red lines) connecting vertices (blue dots) following the coil
-        shape. The right plot shows the ripple calculated by <em>FIESTA</em> (lines with
+        shape. The bottom plot shows the ripple calculated by FIESTA (lines with
         open circles) compared to the fit values (lines without circles) for
         different number of coils (16, 18 and 20) and lateral winding pack to
         TF size ratio (\(x = 0.737\) and \(x = 2.947\)) as a function of the
@@ -863,13 +885,12 @@ dimensions defined as:
 
 
 $$
-  x = \frac{\Delta R_\mathrm{tWP}^\mathrm{out}}{R_\mathrm{maj}} N_\mathrm{TF}
+  x = \frac{\Delta x_\mathrm{WP,max}}{R_\mathrm{maj}} N_\mathrm{TF}
 $$
 
   
-with \(\Delta R_\mathrm{tWP}^\mathrm{out}\) the plasma side WP thickness
-defined in the Figures 1 and 3, \(N_\mathrm{TF}\) the number of coils and
-\(R_\mathrm{maj}\) the plasma centre radius. \(y\) is the plasma outer
+with $\Delta x_\mathrm{WP,max}$ the maximum toroidal width of the WP on the plasma side, $N_\mathrm{TF}$ the number of coils and
+$R_\mathrm{maj}$ the plasma centre radius. $y$ is the plasma outer
 mid-plane separatrix to outboard TF leg mid-plane radius ratio:
 
 
@@ -878,41 +899,33 @@ $$
 $$
 
 
-with \(a_\mathrm{min}\) the plasma minor radius and \(R_\mathrm{outboard\ TF}
-^\mathrm{mid}\) the TF winding pack outboard leg midplane radius at its
+with $a_\mathrm{min}$ the plasma minor radius and $R_\mathrm{outboard\ TF}
+^\mathrm{mid}$ the TF winding pack outboard leg midplane radius at its
 centre. The scaling fitting range is provided by:
 
 
-- **Number of coils:** \( N_\mathrm{TF} \in \{16, 18, 20\} \).
+- **Number of coils:** $N_\mathrm{TF} \in \{16, 18, 20\}$
 
-- **Winding pack size ratio:** \( x \in [0.737-2.95] \)
+- **Winding pack size ratio:** $x \in [0.737-2.95]$
 
-- **separatrix to TF ratio:** \( y \in [0.7-0.8] \)
+- **separatrix to TF ratio:** $y \in [0.7-0.8]$
 
-  
+#### Picture frame coils 
 
+For the picture frame coils the presence of a straight outboard leg means the ripple is just given by:
 
-To prevent intolerable fast particles losses and plasma instabilities,
-\(\delta\) must be limited to a few percent, approximatively \( \delta \in
-[0.5-1]\) . If intolerable, the plasma ripple can be reduced with many
-different techniques, for example the TF coil shape, stabilisation coils can
-be added, more coils can be used or the coil outboard radius can be increased.
-All these design modifications affects the coil system design, for example
-ripple shape optimisation should be done without generating too much bending
-stress due to the un-adapted curvature radius, and adding coils must not prevent
-remote maintenance. To keep the design procedure as simple as possible in
-<em>PROCESS</em>, unacceptable ripple is reduced by simply moving the
-TF coil leg to a larger radius. The outboard ripple is directly obtained reverting the ripple fit to provide
-\(R_\mathrm{outboard\ WP}^\mathrm{mid}\) as a function of the ripple.
-The minimal \(R_\mathrm{outboard\ WP}^\mathrm{mid}\) is technically obtained
-by increasing the gap between the vacuum vessel and the coil (dr_shld_vv_gap_outboard).
+$$
+\delta = \left(\frac{R_{\text{maj}}+a_{\text{min}}}{R_\mathrm{outboard\ TF}^\mathrm{mid}}\right)^{\frac{1}{N_{\text{TF}}}}
+$$
 
 
-The currently implemented plasma ripple evaluation assumes a Princeton-D shape
-and is therefore not valid anymore if very different shapes are considered,
-with picture frame coils, for example, different models should be 
-considered/implemented in <em>PROCESS</em>.
 
+
+
+
+
+
+------------
 
 ## TF coil parameter summary table
 
