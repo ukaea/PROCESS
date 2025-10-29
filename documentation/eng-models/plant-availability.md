@@ -1,15 +1,23 @@
 # Plant Availability
 
-Switch `iavail` is used to control how the overall plant availability factor `cfactr` is calculated, as follows:
+Switch `i_plant_availability` is used to control how the overall plant availability factor `f_t_plant_available` is calculated, as follows:
 
-If `iavail = 0`, the input value of `cfactr` is used.
+If `i_plant_availability = 0`, the input value of `f_t_plant_available` is used.
 
-If `iavail = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `cfactr` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
+If `i_plant_availability = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which `f_t_plant_available` is calculated taking into account the time taken to replace certain components of the fusion power core, and various unplanned unavailability fractions which may be set by the user, as summerised in Table 1.
+
+------------------
+
+## Availability Class | `Availability`
+
+
+### Taylor-Ward 1999 Model | `avail()`
+
 
 | Input parameter | Description |
 | :-: | - |
-| `tbktrepl` | time needed to replace blanket (years) |
-| `tdivrepl` | time needed to replace divertor (years) |
+| `t_blkt_replace_yrs` | time needed to replace blanket (years) |
+| `t_div_replace_yrs` | time needed to replace divertor (years) |
 | `tcomrepl` | time  needed to replace both blanket and divertor (years) |
 | `uubop` | unplanned unavailability of balance of plant |
 | `uucd` | unplanned unavailability of current drive system |
@@ -19,9 +27,13 @@ If `iavail = 1`, a model by N. Taylor and D. Ward[^1] is used instead, in which 
 | `uumag` | unplanned unavailability of magnets |
 | `uuves` | unplanned unavailability of vessel |
 
-Table 3.4: *Summary of the variables in `PROCESS` that relate to the Taylor-Ward availability model (`iavail=1`).*
+Table 3.4: *Summary of the variables in `PROCESS` that relate to the Taylor-Ward availability model (`i_plant_availability=1`).*
 
-If `iavail = 2`, the new Morris model is implemented[^2]. It estimates both planned and unplanned unavailability, and the time during which no power is being generated if the reactor is pulsed.
+---------------------
+
+### Morris 2015 Model | `avail_2()`
+
+If `i_plant_availability = 2`, the new Morris model is implemented[^2]. It estimates both planned and unplanned unavailability, and the time during which no power is being generated if the reactor is pulsed.
 
 The panned unavailability is linked to the lifetime of the blanket and the time taken to replace them. The lifetime of the blanket is based on the allowable fast neutron fluence. In contrast, the lifetime of the divertor is estimated using the particle and photon load. The time to replace the blanket and divertor have been estimated by Crofts et al, who studied the influence of the number of remote handling systems working in parallel. `PROCESS` uses a simple fit to their results, and adds a month to allow the dose rate to reduce to an acceptable level before remote handling operations start, and a month to allow for pump-down and preparation for operation for operation at the enf of the shutdown.
 
@@ -33,7 +45,11 @@ The unplanned downtime for the blanket is based on the number of cycles it exper
 
 It is assumed that the vacuum system can be maintained in parallel with blanket replacement, so it does not contribute to the planned downtime. The unplanned downtime is baed on an assumed failure rate for a cryo-pump, and a specified total number pumps, with some of them being redundant. The resulting downtime can be reduced to a negligible level if there are several redundant pumps, but in addition, there is a fixed unavailability to allow for common mode failures affecting several pumps.
 
-If `iavail = 3`, the availability model for Spherical Tokamaks (ST) is implemented. 
+-------------------
+
+### ST Model 2023 | `avail_st()`
+
+If `i_plant_availability = 3`, the availability model for Spherical Tokamaks (ST) is implemented. 
 
 This model takes the user-specified time to replace a centrepost `tmain` and the centrepost lifetime `cplife` (calculated, see below) and calculates the number of maintenance cycles
 
@@ -59,7 +75,7 @@ $$ A_{\text{tot}} = 1 - (U_{\text{planned}} + U_{\text{unplanned}} + U_{\text{pl
 
 where $U_{\text{unplanned}}$ is unplanned unavailability. The cross term takes account of overlap between planned and unplanned unavailability.
 
-This model uses the unplanned unavailability calculations implemented in `iavail = 2` (see above). This includes the magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems. The centrepost unplanned unavailability $U_{\text{unplanned,CP}}$ is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. These unplanned unavailabilities are then added to $U_{\text{unplanned,CP}}$ to give $U_{\text{unplanned}}$.
+This model uses the unplanned unavailability calculations implemented in `i_plant_availability = 2` (see above). This includes the magnets, divertor, first wall and blanket, balance of plant, heating and current drive, and vacuum systems. The centrepost unplanned unavailability $U_{\text{unplanned,CP}}$ is provided by the user i.e. how often do you expect the centrepost to break over its lifetime. These unplanned unavailabilities are then added to $U_{\text{unplanned,CP}}$ to give $U_{\text{unplanned}}$.
 
 Finally, the capcity factor is given by
 
@@ -67,7 +83,44 @@ $$ C = A_{\text{tot}} (t_{\text{burn}} / t_{\text{cycle}}) $$
 
 where $t_{\text{burn}}$ is the burn time and $t_{\text{cycle}}$ is the full cycle time.
 
+
+-------------------------
+
+### Planned unavailability | `calc_u_planned()`
+
+
+
+------------------------
+
+### Unplanned unavailability magnets | `calc_u_unplanned_magnets()`
+
+-------------------------
+
+### Unplanned unavailability divertor | `calc_u_unplanned_divertor()`
+
+-------------------------
+
+### Unplanned unavailability fwbs | `calc_u_unplanned_fwbs()`
+
+-------------------------
+
+### Unplanned unavailability BOP | `calc_u_unplanned_bop()`
+
+-------------------------
+
+### Unplanned unavailability HCD | `calc_u_unplanned_hcd()`
+
+-------------------------
+
+### Unplanned unavailability vacuum | `calc_u_unplanned_vacuum()`
+
+-------------------------
+
+
+
 ## Centrepost Lifetime
+
+--------------
 
 All availability models in PROCESS require the calculation of the centerpost lifetime, which is detailed here.
 
@@ -86,6 +139,8 @@ $$ t_{\text{CP,life}} = \min(f_{\text{CP, allowable}}/P_{\text{wall}}, t_{\text{
 
 where $f_{\text{CP, allowable}}$ is the allowable centrepost neutron fluence and $P_{\text{wall}}$ is the average neutron wall load ($\mathrm{MW} \mathrm{m}^{-2}$).
 
+---------------
+
 ## Divertor lifetime
 
 The divertor lifetime is calculated as
@@ -93,6 +148,11 @@ The divertor lifetime is calculated as
 $$ t_{\text{div, life}} = \max (0, \min(f_{\text{div, allowable}} / P_{\text{div}}, t_{\text{life}})) $$
 
 where $f_{\text{div, allowable}}$ is the allowable divertor heat fluence ($\mathrm{MW}\text{-}\mathrm{yr} \mathrm{m}^{-2}$) and $P_{\text{div}}$ is the heat load to the divertor ($\mathrm{MW} \mathrm{m}^{-2}$).
+
+
+----------------
+
+
 
 [^1]: P. J. Knight, *"PROCESS 3020: Plant Availability Model"*, Work File Note
 F/PL/PJK/PROCESS/CODE/<br>

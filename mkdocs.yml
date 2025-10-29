@@ -217,9 +217,9 @@ plugins:
       caption_position: bottom
   - git-revision-date-localized:
       enable_creation_date: true
-  - mkdocs-jupyter:
-      execute: true
-      ignore: [scripts/**/*.py]
+#   - mkdocs-jupyter:
+#       execute: true
+#       ignore: [scripts/**/*.py]
 
 #     - mkdocstrings:
 #           handlers:
