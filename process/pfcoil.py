@@ -3766,9 +3766,8 @@ class CSCoil:
         area_ax = constants.PI * (r_cs_outer**2 - r_cs_inner**2)
 
         # calculate unsmeared axial stress [MPa]
-        s_axial = forc_z_cs_self_peak_midplane / (
-            pfcoil_variables.f_a_cs_turn_steel * 0.5 * area_ax
-        )
+        # Average axial stress at the interface of each half of the coil
+        s_axial = forc_z_cs_self_peak_midplane / (0.5 * area_ax)
 
         return s_axial, forc_z_cs_self_peak_midplane
 
