@@ -1660,7 +1660,7 @@ def constraint_equation_64():
     """
     cc = (
         data_structure.physics_variables.zeff
-        / data_structure.constraint_variables.fzeff_max
+        / data_structure.constraint_variables.zeff_max
         - 1.0 * data_structure.constraint_variables.fzeff_max
     )
     return ConstraintResult(
