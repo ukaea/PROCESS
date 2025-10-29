@@ -2758,10 +2758,12 @@ def test_axial_stress(cs_coil: CSCoil, monkeypatch: pytest.MonkeyPatch):
 
     s_axial_exp = -7.468967e8
     axial_force_exp = -1.956801e9
-    s_axial, axial_force = cs_coil.calculate_cs_self_peak_midplane_axial_stress()
+    s_axial, forc_z_cs_self_peak_midplane = (
+        cs_coil.calculate_cs_self_peak_midplane_axial_stress()
+    )
 
     assert pytest.approx(s_axial) == s_axial_exp
-    assert pytest.approx(axial_force) == axial_force_exp
+    assert pytest.approx(forc_z_cs_self_peak_midplane) == axial_force_exp
 
 
 def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):

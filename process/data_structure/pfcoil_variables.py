@@ -34,7 +34,8 @@ stress_z_cs_self_peak_midplane: float = None
 
 sig_hoop: float = None
 
-axial_force: float = None
+forc_z_cs_self_peak_midplane: float = None
+"""Axial force (z) on central solenoid at midplane due to its own field (when at peak current) (N)"""
 
 r_pf_cs_current_filaments: list[float] = None
 """array of radial positions of current filaments in central solenoid"""
@@ -570,7 +571,7 @@ def init_pfcoil_module():
     global ssq0
     global stress_z_cs_self_peak_midplane
     global sig_hoop
-    global axial_force
+    global forc_z_cs_self_peak_midplane
     global r_pf_cs_current_filaments
     global z_pf_cs_current_filaments
     global c_pf_cs_current_filaments
@@ -590,7 +591,7 @@ def init_pfcoil_module():
     ssq0 = 0.0
     stress_z_cs_self_peak_midplane = 0.0
     sig_hoop = 0.0
-    axial_force = 0.0
+    forc_z_cs_self_peak_midplane = 0.0
 
     r_pf_cs_current_filaments = np.zeros(NFIXMX)
     z_pf_cs_current_filaments = np.zeros(NFIXMX)

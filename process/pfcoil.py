@@ -2222,8 +2222,8 @@ class PFCoil:
                 op.ovarre(
                     self.outfile,
                     "Axial force in CS (N)",
-                    "(axial_force)",
-                    pfcoil_variables.axial_force,
+                    "(forc_z_cs_self_peak_midplane)",
+                    pfcoil_variables.forc_z_cs_self_peak_midplane,
                     "OP ",
                 )
                 op.ovarre(
@@ -3345,7 +3345,7 @@ class CSCoil:
             # New calculation from Y. Iwasa for axial stress
             (
                 pfcoil_variables.stress_z_cs_self_peak_midplane,
-                pfcoil_variables.axial_force,
+                pfcoil_variables.forc_z_cs_self_peak_midplane,
             ) = self.calculate_cs_self_peak_midplane_axial_stress(
                 r_cs_outer=pfcoil_variables.r_pf_coil_outer[
                     pfcoil_variables.n_cs_pf_coils - 1
@@ -3760,15 +3760,17 @@ class CSCoil:
         )
 
         # calculate axial force [N]
-        axial_force = axial_term_1 * (axial_term_2 - axial_term_3)
+        forc_z_cs_self_peak_midplane = axial_term_1 * (axial_term_2 - axial_term_3)
 
         # axial area [m2]
         area_ax = constants.PI * (r_cs_outer**2 - r_cs_inner**2)
 
         # calculate unsmeared axial stress [MPa]
-        s_axial = axial_force / (pfcoil_variables.f_a_cs_turn_steel * 0.5 * area_ax)
+        s_axial = forc_z_cs_self_peak_midplane / (
+            pfcoil_variables.f_a_cs_turn_steel * 0.5 * area_ax
+        )
 
-        return s_axial, axial_force
+        return s_axial, forc_z_cs_self_peak_midplane
 
     def hoop_stress(self, r):
         """Calculation of hoop stress of central solenoid.
