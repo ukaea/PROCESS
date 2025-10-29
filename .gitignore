@@ -60,6 +60,7 @@ env_process/
 stellarator_test/autostart/*
 stellarator_analysis/*
 !stellarator_test/autostart/*.py
+!stellarator_test/templates/squid.IN.DAT
 */.ipynb_checkpoints/
 REBCO_JC.DAT
 *.whl
