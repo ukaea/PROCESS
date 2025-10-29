@@ -46,6 +46,39 @@ i_div_primary_heat: float = None
 
 p_turbine_loss_mw: float = None
 
+p_hcd_electric_total_profile_mw: list[float] = None
+"""Profile of total HCD electric power (MW) over pulse"""
+
+p_tf_electric_supplies_profile_mw: list[float] = None
+"""Profile of total TF coil electric power (MW) over pulse"""
+
+p_pf_electric_supplies_profile_mw: list[float] = None
+"""Profile of total PF coil electric power (MW) over pulse"""
+
+p_coolant_pump_elec_total_profile_mw: list[float] = None
+"""Profile of total coolant pump electric power (MW) over pulse"""
+
+vachtmw_profile_mw: list[float] = None
+"""Profile of total active vacuum pump power (MW) over pulse"""
+
+p_tritium_plant_electric_profile_mw: list[float] = None
+"""Profile of total tritium plant electric power (MW) over pulse"""
+
+p_cryo_plant_electric_profile_mw: list[float] = None
+"""Profile of total cryo plant electric power (MW) over pulse"""
+
+p_plant_electric_base_total__profile_mw: list[float] = None
+"""Profile of total plant electric base power (MW) over pulse"""
+
+p_plant_electric_gross_profile_mw: list[float] = None
+"""Profile of total plant electric gross power (MW) over pulse"""
+
+p_plant_electric_net_profile_mw: list[float] = None
+"""Profile of total plant electric net power (MW) over pulse"""
+
+p_fusion_total_profile_mw: list[float] = None
+"""Profile of total fusion power (MW) over pulse"""
+
 
 def init_power_variables():
     global qmisc
@@ -116,3 +149,6 @@ def init_power_variables():
 
     global p_turbine_loss_mw
     p_turbine_loss_mw = 0.0
+
+    global p_hcd_electric_total_profile_mw
+    p_hcd_electric_total_profile_mw = []

@@ -1427,6 +1427,17 @@ class Power:
         (
             power_variables.e_plant_net_electric_pulse_kwh,
             power_variables.e_plant_net_electric_pulse_mj,
+            power_variables.p_plant_electric_base_total_profile_mw,
+            power_variables.p_plant_electric_gross_profile_mw,
+            power_variables.p_plant_electric_net_profile_mw,
+            power_variables.p_hcd_electric_total_profile_mw,
+            power_variables.p_coolant_pump_elec_total_profile_mw,
+            power_variables.p_tf_electric_supplies_profile_mw,
+            power_variables.p_pf_electric_supplies_profile_mw,
+            power_variables.vachtmw_profile_mw,
+            power_variables.p_tritium_plant_electric_profile_mw,
+            power_variables.p_cryo_plant_electric_profile_mw,
+            power_variables.p_fusion_total_profile_mw,
         ) = self.power_profiles_over_time(
             t_precharge=times_variables.t_plant_pulse_coil_precharge,
             t_current_ramp_up=times_variables.t_plant_pulse_plasma_current_ramp_up,
@@ -2390,18 +2401,104 @@ class Power:
                 f"Calculated: {power_profiles['p_plant_electric_net_mw'][3]}, Input: {p_plant_electric_net_mw}"
             )
 
-        for sys in power_profiles:
-            for i, t in enumerate(t_steps):
-                po.ovarre(
-                    self.mfile,
-                    f"{sys} at t={t:.1f}s",
-                    f"({sys}_t{i})",
-                    power_profiles[sys][i],
-                )
-
         # Integrate net electric power over the pulse to get total energy produced (MJ)
         # Assume t_steps in seconds, power in MW, so energy in MJ
-        energy_made_mj = np.trapz(power_profiles["p_plant_electric_net_mw"], t_steps)
+        energy_made_mj = np.trapz(power_profiles["p_plant_electric_net_mw"], t_steps)  # noqa: NPY201
         energy_made_kwh = energy_made_mj / 3.6
 
-        return energy_made_kwh, energy_made_mj
+        return (
+            energy_made_kwh,
+            energy_made_mj,
+            power_profiles["p_plant_electric_base_total_mw"],
+            power_profiles["p_plant_electric_gross_mw"],
+            power_profiles["p_plant_electric_net_mw"],
+            power_profiles["p_hcd_electric_total_mw"],
+            power_profiles["p_coolant_pump_elec_total_mw"],
+            power_profiles["p_tf_electric_supplies_mw"],
+            power_profiles["p_pf_electric_supplies_mw"],
+            power_profiles["vachtmw"],
+            power_profiles["p_tritium_plant_electric_mw"],
+            power_profiles["p_cryo_plant_electric_mw"],
+            power_profiles["p_fusion_total_mw"],
+        )
+
+    def output_power_profiles_over_time(
+        self,
+    ):
+        for i in range(len(power_variables.p_plant_electric_base_total_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric base load at time point {i}",
+                f"p_plant_electric_base_total_profile_mw{i}",
+                power_variables.p_plant_electric_base_total_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_plant_electric_gross_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric gross at time point {i}",
+                f"p_plant_electric_gross_profile_mw{i}",
+                power_variables.p_plant_electric_gross_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_plant_electric_net_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric net at time point {i}",
+                f"p_plant_electric_net_profile_mw{i}",
+                power_variables.p_plant_electric_net_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_hcd_electric_total_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric HCD at time point {i}",
+                f"p_hcd_electric_total_profile_mw{i}",
+                power_variables.p_hcd_electric_total_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_coolant_pump_elec_total_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric coolant pump at time point {i}",
+                f"p_coolant_pump_elec_total_profile_mw{i}",
+                power_variables.p_coolant_pump_elec_total_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_tf_electric_supplies_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric TF supplies at time point {i}",
+                f"p_tf_electric_supplies_profile_mw{i}",
+                power_variables.p_tf_electric_supplies_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_pf_electric_supplies_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric PF supplies at time point {i}",
+                f"p_pf_electric_supplies_profile_mw{i}",
+                power_variables.p_pf_electric_supplies_profile_mw[i],
+            )
+        for i in range(len(power_variables.vachtmw_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric vacuum pump power at time point {i}",
+                f"vachtmw_profile_mw{i}",
+                power_variables.vachtmw_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_tritium_plant_electric_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric tritium plant power at time point {i}",
+                f"p_tritium_plant_electric_profile_mw{i}",
+                power_variables.p_tritium_plant_electric_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_cryo_plant_electric_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric cryo plant power at time point {i}",
+                f"p_cryo_plant_electric_profile_mw{i}",
+                power_variables.p_cryo_plant_electric_profile_mw[i],
+            )
+        for i in range(len(power_variables.p_fusion_total_profile_mw)):
+            po.ovarre(
+                self.mfile,
+                f"Plant total electric fusion plant power at time point {i}",
+                f"p_fusion_total_profile_mw{i}",
+                power_variables.p_fusion_total_profile_mw[i],
+            )

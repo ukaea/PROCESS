@@ -3296,21 +3296,21 @@ def plot_system_power_profiles_over_time(
 
     # Fill power_profiles arrays using vectorized assignment
     for label, key in [
-        ("Fusion Power", "p_fusion_total_mw"),
-        ("Gross Electric Power", "p_plant_electric_gross_mw"),
-        ("Net Electric Power", "p_plant_electric_net_mw"),
-        ("Plant Base Load", "p_plant_electric_base_total_mw"),
-        ("Cryo Plant", "p_cryo_plant_electric_mw"),
-        ("Tritium Plant", "p_tritium_plant_electric_mw"),
-        ("Vacuum Pumps", "vachtmw"),
-        ("TF Coil Supplies", "p_tf_electric_supplies_mw"),
-        ("PF Coil Supplies", "p_pf_electric_supplies_mw"),
-        ("Coolant Pump Elec Total", "p_coolant_pump_elec_total_mw"),
-        ("HCD Electric Total", "p_hcd_electric_total_mw"),
+        ("Fusion Power", "p_fusion_total_profile_mw"),
+        ("Gross Electric Power", "p_plant_electric_gross_profile_mw"),
+        ("Net Electric Power", "p_plant_electric_net_profile_mw"),
+        ("Plant Base Load", "p_plant_electric_base_total_profile_mw"),
+        ("Cryo Plant", "p_cryo_plant_electric_profile_mw"),
+        ("Tritium Plant", "p_tritium_plant_electric_profile_mw"),
+        ("Vacuum Pumps", "vachtmw_profile_mw"),
+        ("TF Coil Supplies", "p_tf_electric_supplies_profile_mw"),
+        ("PF Coil Supplies", "p_pf_electric_supplies_profile_mw"),
+        ("Coolant Pump Elec Total", "p_coolant_pump_elec_total_profile_mw"),
+        ("HCD Electric Total", "p_hcd_electric_total_profile_mw"),
     ]:
         for time in range(len(t_steps)):
             power_profiles[label][time] = mfile_data.data.get(
-                f"{key}_t{time}", mfile_data.data.get(key)
+                f"{key}{time}", mfile_data.data.get(key)
             ).get_scan(scan)
 
     # Define line styles for each system
