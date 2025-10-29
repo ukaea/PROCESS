@@ -7,56 +7,56 @@
     "coil_rminor": 5.36634287,
     "aspect_ref": 11.10442978,
     "bt_ref": 5.6,
-    "WP_area": 23.9913913,
-    "WP_bmax": 11.87249919,
-    "i0": 27.44471227,
-    "a1": 0.42161213,
-    "a2": 0.08207511,
+    "WP_area": 2.59920849,
+    "WP_bmax": 12.01694469,
+    "i0": 15.09819601,
+    "a1": 0.69932084,
+    "a2": 0.0703121,
     "dmin": 1.0823218,
-    "inductance": 0.000792,
+    "inductance": 0.00127367,
     "coilsurface": 5828.75048104,
     "coillength": 1470.17032267,
     "max_portsize_width": 4.79340231,
     "maximal_coil_height": 12.93570399,
     "WP_ratio": 1.2,
-    "max_force_density_MNm": 149.63236328,
-    "max_force_density": 6.23691896,
+    "max_force_density_MNm": 197.49344939,
+    "max_force_density": 75.98215001,
     "min_bend_radius": 0.34902454,
-    "max_lateral_force_density": 6.15146093,
-    "max_radial_force_density": 4.22833852,
-    "centering_force_max_MN": 83.9893865,
-    "centering_force_min_MN": -384.62823121,
-    "centering_force_avg_MN": -102.31138785,
+    "max_lateral_force_density": 21.6963338,
+    "max_radial_force_density": 74.38043412,
+    "centering_force_max_MN": 681.13466454,
+    "centering_force_min_MN": -230.48546697,
+    "centering_force_avg_MN": 157.80576867,
     "coils_data": [
         {
             "current": 0.02273675,
             "plasma-coil disctance": 2.82024999,
             "plasma-coil distance derivative": -0.62496763,
-            "max_B": 8.78399817
+            "max_B": 7.37397547
         },
         {
             "current": 2.02785293,
             "plasma-coil disctance": 2.78292519,
             "plasma-coil distance derivative": -0.85624163,
-            "max_B": 11.87249919
+            "max_B": 12.01694469
         },
         {
             "current": 0.974741,
             "plasma-coil disctance": 2.80375704,
             "plasma-coil distance derivative": -1.67493815,
-            "max_B": 9.36075176
+            "max_B": 8.2793165
         },
         {
             "current": 1.17657714,
             "plasma-coil disctance": 2.82537348,
             "plasma-coil distance derivative": -0.58265494,
-            "max_B": 9.65337799
+            "max_B": 9.57730098
         },
         {
             "current": 0.79809217,
             "plasma-coil disctance": 2.87082532,
             "plasma-coil distance derivative": -0.87783134,
-            "max_B": 7.10403563
+            "max_B": 7.01381538
         }
     ],
     "symmetry": 4,
