@@ -30,7 +30,7 @@ setup_kwargs = {
     "install_requires": [
         "numpy>=1.23",
         "scipy>=1.10",
-        "cvxpy!=1.3.0,!=1.3.1",
+        "cvxpy~=1.7.3",
         "osqp>=1.0",
         "pandas>=2.0",
         "numba>=0.57",
