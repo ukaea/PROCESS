@@ -4,38 +4,46 @@ ISBN:9780471223634.
 """
 
 import functools
+import inspect
 
 import numpy as np
-from neutronics_data import MaterialMacroInfo
 from numpy import typing as npt
 from scipy.special import expm1
 
 from process.exceptions import ProcessValidationError
+from process.neutronics_data import MaterialMacroInfo
 
 
-def groupwise(func):
-    """Rename the current func as groupwise_func, and over-write the current method
-    as one that sums up all group-wise func.
+def summarize_values(func):
     """
-    method_name = func.__name__
-    groupwise_name = f"groupwise_{method_name}"
+    Keep groupwise_func unchanged, but create a new method under a similar name
+    (but with the prefix "groupwise_" removed) which outputs the sum of every
+    groupwise value.
+    """
+    summary_method_name = func.__name__[10:]
+    # confirm this is a groupwise method
+    func_params = inspect.signature(func).parameters
+    if not (func.__name__.startswith("groupwise_") and "n" in func_params):
+        raise ValueError(
+            "The decorated method is designed to turn groupwise methods into "
+            "summed flux/reaction/current methods."
+        )
 
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
-        groupwise_func = getattr(self, groupwise_name)
-        return np.array(
-            [
-                groupwise_func(n, *args, **kwargs)
-                for n in range(1, self.n_groups + 1)
-            ],
+        groupwise_func = getattr(self, func.__name__)
+        return np.sum(
+            [groupwise_func(n, *args, **kwargs) for n in range(self.n_groups)],
+            axis=0,
         )
 
     def wrapper_setattr(cls):
-        """Save the decorated (groupwise) function under a different name after it has
-        been created, then overwrite the current method with the np.sum implementation.
         """
-        setattr(cls, groupwise_name, func)
-        setattr(cls, method_name, wrapper)
+        Attach the method that outputs the summed values of all of the
+        groupwise values to the same parent class.
+        """
+        setattr(cls, func.__name__, func)
+        setattr(cls, summary_method_name, wrapper)
         return cls
 
     # Instead of returning a function, we return a descriptor that registers itself later
@@ -133,7 +141,7 @@ class NeutronFluxProfile:
         x_fw:
             thickness of the first wall [m]. It will be converted and stored in [cm].
         x_bz:
-            thickness of the blanket [m]. It will be converted and stored in [cm].
+            thickness of the blanket + first-wall [m]. It will be converted and stored in [cm].
         fw_mat:
             first wall material information
         bz_mat:
@@ -141,10 +149,10 @@ class NeutronFluxProfile:
 
         Attributes
         ----------
-        x_fw:
+        x_fw_cm:
             thickness of the first wall, converted from [m] into [cm].
-        x_bz:
-            thickness of the blanket, converted from [m] into [cm].
+        x_bz_cm:
+            thickness of the blanket + first-wall, converted from [m] into [cm].
         n_groups:
             number of groups in the group structure
         group_structure:
@@ -155,14 +163,16 @@ class NeutronFluxProfile:
             raise ValueError(
                 f"Cannot construct a first-wall+blanket module where{x_fw=}, {x_bz=}."
             )
-        self.x_fw = x_fw * 100
-        self.x_bz = x_bz * 100
+        self.x_fw_cm = x_fw * 100
+        self.x_bz_cm = x_bz * 100
         self.fw_mat = fw_mat
         self.bz_mat = bz_mat
         self.n_groups = self.fw_mat.n_groups
         self.group_structure = self.fw_mat.group_structure
-        if not np.isclose(
-            self.fw_mat.group_structure, self.bz_mat.group_structure
+        if not np.allclose(
+            self.fw_mat.group_structure,
+            self.bz_mat.group_structure,
+            atol=0,
         ):
             raise ProcessValidationError(
                 "The first-wall material info and breeding zone material info"
@@ -182,24 +192,24 @@ class NeutronFluxProfile:
         Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
         self.l_bz_2[0], and self.integration_constants[0].
         """
-        i = 0
-        if i in self.integration_constants:
+        n = 0
+        if n in self.integration_constants:
             return  # skip if it has already been solved.
-        self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
-            self.fw_mat.sigma_t[i],
-            self.fw_mat.sigma_s[i, i],
+        self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
+            self.fw_mat.sigma_t[n],
+            self.fw_mat.sigma_s[n, n],
             self.fw_mat.avg_atomic_mass,
         )
-        self.l_bz_2[i], d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[i],
-            self.bz_mat.sigma_s[i, i],
+        self.l_bz_2[n], d_bz = get_diffusion_coefficient_and_length(
+            self.bz_mat.sigma_t[n],
+            self.bz_mat.sigma_s[n, n],
             self.bz_mat.avg_atomic_mass,
         )
-        l_fw = np.sqrt(abs(self.l_fw_2[i]))
-        l_bz = np.sqrt(abs(self.l_bz_2[i]))
-        x_fw, x_bz = self.x_fw, self.x_bz
-        self.extended_boundary[i] = x_bz + extrapolation_length(d_bz)
-        if self.l_fw_2[i] > 0:
+        l_fw = np.sqrt(abs(self.l_fw_2[n]))
+        l_bz = np.sqrt(abs(self.l_bz_2[n]))
+        x_fw, x_bz = self.x_fw_cm, self.x_bz_cm
+        self.extended_boundary[n] = x_bz + extrapolation_length(d_bz)
+        if self.l_fw_2[n] > 0:
             sinh_fw = np.sinh(x_fw / l_fw)
             cosh_fw = np.cosh(x_fw / l_fw)
             tanh_fw = np.tanh(x_fw / l_fw)
@@ -207,14 +217,14 @@ class NeutronFluxProfile:
             sinh_fw = np.sin(x_fw / l_fw)
             cosh_fw = np.cos(x_fw / l_fw)
             tanh_fw = np.tan(x_fw / l_fw)
-        if self.l_bz_2[i] > 0:
-            sinh_bz = np.sinh((self.extended_boundary[i] - x_fw) / l_bz)
-            cosh_bz = np.cosh((self.extended_boundary[i] - x_fw) / l_bz)
-            tanh_bz = np.tanh((self.extended_boundary[i] - x_fw) / l_bz)
+        if self.l_bz_2[n] > 0:
+            sinh_bz = np.sinh((self.extended_boundary[n] - x_fw) / l_bz)
+            cosh_bz = np.cosh((self.extended_boundary[n] - x_fw) / l_bz)
+            tanh_bz = np.tanh((self.extended_boundary[n] - x_fw) / l_bz)
         else:
-            sinh_bz = np.sin((self.extended_boundary[i] - x_fw) / l_bz)
-            cosh_bz = np.cos((self.extended_boundary[i] - x_fw) / l_bz)
-            tanh_bz = np.tan((self.extended_boundary[i] - x_fw) / l_bz)
+            sinh_bz = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
+            cosh_bz = np.cos((self.extended_boundary[n] - x_fw) / l_bz)
+            tanh_bz = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
 
         c2 = (
             self.flux
@@ -232,64 +242,64 @@ class NeutronFluxProfile:
             * (1 - tanh_fw)
             / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
         )
-        c3 = c3_c4_common_factor * np.exp(self.extended_boundary[i] / l_bz)
-        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary[i] / l_bz)
-        self.integration_constants[i] = [c1, c2, c3, c4]
+        c3 = c3_c4_common_factor * np.exp(self.extended_boundary[n] / l_bz)
+        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary[n] / l_bz)
+        self.integration_constants[n] = [c1, c2, c3, c4]
 
     def solve_group_n(self, n: int) -> None:
         """
-        Solve the n-th group of neutron's diffusion equation.
+        Solve the n-th group of neutron's diffusion equation, where n<=n_groups-1.
         Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
         self.l_bz_2[n-1], and self.integration_constants[n-1].
 
         Parameters
         ----------
         n:
-            The index of the neutron group whose constants are being solved.
-            allowed range: [1, self.n_groups]
-            This gets translated to the index i=n-1 used for the dictionaries of
-            constants attached to self.
+            The index of the neutron group whose constants are being solved. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         """
-        if n not in range(1, self.n_groups):
+        if n not in range(self.n_groups):
             raise ValueError(
                 f"n must be a positive integer between 1 and {self.n_groups}!"
             )
-        if n == 1:
+        if n == 0:
             return self.solve_lowest_group()
-        for k in range(n - 1):
+        for k in range(n):
             if k not in self.integration_constants:
                 self.solve_group_n(k)
-        i = n - 1
-        if i in self.integration_constants:
+        if n in self.integration_constants:
             return None  # skip if it has already been solved.
-        self.l_fw_2[i], d_fw = get_diffusion_coefficient_and_length(
-            self.fw_mat.sigma_t[i],
-            self.fw_mat.sigma_s[i, i],
+        self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
+            self.fw_mat.sigma_t[n],
+            self.fw_mat.sigma_s[n, n],
             self.fw_mat.avg_atomic_mass,
         )
-        self.l_bz_2[i], d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[i],
-            self.bz_mat.sigma_s[i, i],
+        self.l_bz_2[n], d_bz = get_diffusion_coefficient_and_length(
+            self.bz_mat.sigma_t[n],
+            self.bz_mat.sigma_s[n, n],
             self.bz_mat.avg_atomic_mass,
         )
-        l_fw = np.sqrt(abs(self.l_fw_2[i]))
-        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        l_fw = np.sqrt(abs(self.l_fw_2[n]))
+        l_bz = np.sqrt(abs(self.l_bz_2[n]))
         c1 = ...
         c2 = ...
         c3 = ...
         c4 = ...
-        self.extended_boundary[i] = self.x_bz + extrapolation_length(d_bz)
-        self.integration_constants[i] = [c1, c2, c3, c4]
+        self.extended_boundary[n] = self.x_bz_cm + extrapolation_length(d_bz)
+        self.integration_constants[n] = [c1, c2, c3, c4]
         return None
 
-    @groupwise
-    def neutron_flux_fw(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
+    @summarize_values
+    def groupwise_neutron_flux_fw(
+        self, n: int, x: float | npt.NDArray
+    ) -> npt.NDArray:
         """Neutron flux of the n-th group at the first wall, at location x [m].
 
         Parameters
         ----------
         n:
-            The index of the neutron group whose flux is being evaluated.
+            The index of the neutron group whose flux is being evaluated. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         x:
             The position where the neutron flux has to be evaluated.
             Note that this function does not enforce a check for x=inside the first-wall,
@@ -302,20 +312,22 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        i = n - 1
-        c1, c2 = self.integration_constants[i][:2]
-        l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        c1, c2 = self.integration_constants[n][:2]
+        l_fw = np.sqrt(abs(self.l_fw_2[n]))
         x_l_fw = abs(x) / l_fw
         return c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw)
 
-    @groupwise
-    def neutron_flux_bz(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
+    @summarize_values
+    def groupwise_neutron_flux_bz(
+        self, n: int, x: float | npt.NDArray
+    ) -> npt.NDArray:
         """Neutron flux of the n-th groupat the blanket, at location x [m].
 
         Parameters
         ----------
         n:
-            The index of the neutron group whose flux is being evaluated.
+            The index of the neutron group whose flux is being evaluated. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         x:
             The position where the neutron flux has to be evaluated. [m]
             Note that this function does not enforce a check for x=inside the blanket,
@@ -328,22 +340,24 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        i = n - 1
-        c3, c4 = self.integration_constants[i][2:]
-        l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        c3, c4 = self.integration_constants[n][2:]
+        l_bz = np.sqrt(abs(self.l_bz_2[n]))
         x_l_bz = abs(x) / l_bz
         return c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz)
 
-    @groupwise
-    def neutron_flux_at(self, n: int, x: float | npt.NDArray) -> npt.NDArray:
+    @summarize_values
+    def groupwise_neutron_flux_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> npt.NDArray:
         """
         Neutron flux anywhere within the valid range of x,
-        i.e. from -self.x_bz to self.x_bz.
+        i.e. from -self.x_bz_cm to self.x_bz_cm.
 
         Parameters
         ----------
         n:
-            Neutron group number
+            Neutron group index. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         x:
             The depth where we want the neutron flux (m).
             Valid only between x= -extended boundary to +-extended boundary of that group
@@ -356,8 +370,8 @@ class NeutronFluxProfile:
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
         x = np.asarray(x)
-        in_fw = abs(x) <= self.x_fw
-        in_bz = np.logical_and(self.x_fw < abs(x), abs(x) <= self.x_bz)
+        in_fw = abs(x) <= self.x_fw_cm
+        in_bz = np.logical_and(self.x_fw_cm < abs(x), abs(x) <= self.x_bz_cm)
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated up to "
@@ -370,98 +384,128 @@ class NeutronFluxProfile:
         return out_flux
 
     # scalar values (one or two such floats per neutron group.)
-    @groupwise
-    def reaction_rate_fw(self, n: int, reaction_type: str) -> float:
+    @summarize_values
+    def groupwise_reaction_rate_fw(self, n: int, reaction_type: str) -> float:
         """Calculate the reaction rate in the first wall.
 
         Parameters
         ----------
         n:
-            The index of the neutron group that needs to be solved.
+            The index of the neutron group that needs to be solved. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
             Two options: "total" or "non-scattering".
 
         """
         self.solve_group_n(n)
-        i = n - 1
-        l_fw = np.sqrt(abs(self.l_fw_2[i]))
-        c1, c2, c3, c4 = self.integration_constants[i]
+        l_fw = np.sqrt(abs(self.l_fw_2[n]))
+        c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "non-scattering":
-            sigma = self.fw_mat.sigma_t[i] - self.fw_mat.sigma_s[i, i]
+            sigma = self.fw_mat.sigma_t[n] - self.fw_mat.sigma_s[n, n]
         elif reaction_type == "total":
-            sigma = self.fw_mat.sigma_t[i]
+            sigma = self.fw_mat.sigma_t[n]
         else:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
             )
         return sigma * (
-            c1 * expm1(self.x_fw / l_fw) - c2 * expm1(-self.x_fw / l_fw)
+            c1 * expm1(self.x_fw_cm / l_fw) - c2 * expm1(-self.x_fw_cm / l_fw)
         )
 
-    @groupwise
-    def reaction_rate_bz(self, n: int, reaction_type: str) -> float:
+    @summarize_values
+    def groupwise_reaction_rate_bz(self, n: int, reaction_type: str) -> float:
         """Calculate the reaction rate in the blanket.
 
         Parameters
         ----------
         n:
-            The index of the neutron group that needs to be solved.
+            The index of the neutron group that needs to be solved. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
             Two options: "total" or "non-scattering".
 
         """
         self.solve_group_n(n)
-        i = n - 1
-        l_bz = np.sqrt(abs(self.l_bz_2[i]))
-        c1, c2, c3, c4 = self.integration_constants[i]
+        l_bz = np.sqrt(abs(self.l_bz_2[n]))
+        c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "non-scattering":
-            sigma = self.bz_mat.sigma_t[i] - self.bz_mat.sigma_s[i, i]
+            sigma = self.bz_mat.sigma_t[n] - self.bz_mat.sigma_s[n, n]
         elif reaction_type == "total":
-            sigma = self.bz_mat.sigma_t[i]
+            sigma = self.bz_mat.sigma_t[n]
         else:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
             )
         # thicknesses in terms of bz path lengths
-        bz_thick = (self.x_bz - self.x_fw) / l_bz
-        fw_thick = self.x_fw / l_bz
+        bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
+        fw_thick = self.x_fw_cm / l_bz
         return sigma * (
             c3 * np.exp(fw_thick) * expm1(bz_thick)
             - c4 * np.exp(-fw_thick) * expm1(-bz_thick)
         )
 
-    @groupwise
-    def flux_fw2bz(self, n: int) -> float:
+    @summarize_values
+    def groupwise_current_fw2bz(self, n: int) -> float:
+        """
+        Net current from the first wall to breeding zone.
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that we want the current for. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
+
+        Returns
+        -------
+        :
+            current in cm^-2
+        """
         self.solve_group_n(n)
-        i = n - 1
-        c1, c2, c3, c4 = self.integration_constants[i]
+        c1, c2, c3, c4 = self.integration_constants[n]
         l_bz_2, d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[i],
-            self.bz_mat.sigma_s[i, i],
+            self.bz_mat.sigma_t[n],
+            self.bz_mat.sigma_s[n, n],
             self.bz_mat.avg_atomic_mass,
         )
         l_bz = np.sqrt(abs(l_bz_2))
         return (
             -d_bz
             / l_bz
-            * (c3 * np.exp(self.x_fw / l_bz) - c4 * np.exp(-self.x_fw / l_bz))
+            * (
+                c3 * np.exp(self.x_fw_cm / l_bz)
+                - c4 * np.exp(-self.x_fw_cm / l_bz)
+            )
         )
         # equivalent definition below: (should yield the same answer)
-        # self.flux_fw2bz[i] = - d_fw / l_fw * (c1 * np.exp(x_fw/l_fw) - c2 * np.exp(-x_fw/l_fw))
+        # return - d_fw / l_fw * (c1 * np.exp(x_fw/l_fw) - c2 * np.exp(-x_fw/l_fw))
 
-    @groupwise
-    def flux_escaped(self, n: int) -> float:
+    @summarize_values
+    def groupwise_current_escaped(self, n: int) -> float:
+        """
+        Neutron current escaped from the breeding zone to outside the reactor.
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that we want the current for. n <= n_groups - 1.
+            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
+
+        Returns
+        -------
+        :
+            current in cm^-2
+        """
         self.solve_group_n(n)
-        i = n - 1
-        c1, c2, c3, c4 = self.integration_constants[i]
+        c1, c2, c3, c4 = self.integration_constants[n]
         l_bz_2, d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[i],
-            self.bz_mat.sigma_s[i, i],
+            self.bz_mat.sigma_t[n],
+            self.bz_mat.sigma_s[n, n],
             self.bz_mat.avg_atomic_mass,
         )
         l_bz = np.sqrt(abs(l_bz_2))
-        self.flux_escaped[i] = (
+        return (
             -d_bz
             / l_bz
-            * (c3 * np.exp(self.x_bz / l_bz) - c4 * np.exp(-self.x_bz / l_bz))
+            * (
+                c3 * np.exp(self.x_bz_cm / l_bz)
+                - c4 * np.exp(-self.x_bz_cm / l_bz)
+            )
         )
