@@ -128,7 +128,7 @@ class AutoPopulatingDict:
     that specific key.
     """
 
-    def __init__(self, populating_method: Callable[[int], None]):
+    def __init__(self, populating_method: Callable[[int], None], name: str):
         """
         Attributes
         ----------
@@ -141,24 +141,26 @@ class AutoPopulatingDict:
             dictionary.
         """
         self._dict = {}
-        self._attempting_to_access = []
+        self._name = name
+        self._attempting_to_access = set()
         self.populating_method = populating_method
 
     def __getitem__(self, i: int):
         """Check if index i is in the dictionary or not. If not, populate it."""
         if i in self._attempting_to_access:
             raise RecursionError(
-                f"retrieving the value of [{i}] requires the value of [{i}]"
+                f"retrieving the value of {self._name}[{i}] requires the "
+                f"value of {self._name}[{i}]."
             )
         if i not in self._dict:
-            self._attempting_to_access.append(i)
+            self._attempting_to_access.add(i)
             self.populating_method(i)
             if i not in self._dict:
                 raise RuntimeError(
                     f"{self.populating_method}({i}) failed to populate key {i} "
                     "in the dictionary!"
                 )
-            self._attempting_to_access.remove(i)
+            self._attempting_to_access.discard(i)
         return self._dict[i]
 
     def __contains__(self, i: int):
@@ -167,6 +169,7 @@ class AutoPopulatingDict:
 
     def __setitem__(self, i: int, value: float):
         """Check if dict i is in the index or not."""
+        self._attempting_to_access.discard(i)
         self._dict[i] = value
 
 
@@ -229,11 +232,15 @@ class NeutronFluxProfile:
                 "must have the same group structure!"
             )
 
-        self.integration_constants = AutoPopulatingDict(self.solve_group_n)
+        self.integration_constants = AutoPopulatingDict(
+            self.solve_group_n, "integration_constants"
+        )
         # diffusion lengths squared
-        self.l_fw_2 = AutoPopulatingDict(self.solve_group_n)
-        self.l_bz_2 = AutoPopulatingDict(self.solve_group_n)
-        self.extended_boundary = AutoPopulatingDict(self.solve_group_n)
+        self.l_fw_2 = AutoPopulatingDict(self.solve_group_n, "l_fw_2")
+        self.l_bz_2 = AutoPopulatingDict(self.solve_group_n, "l_bz_2")
+        self.extended_boundary = AutoPopulatingDict(
+            self.solve_group_n, "extended_boundary"
+        )
 
     def solve_lowest_group(self) -> None:
         """
@@ -309,7 +316,7 @@ class NeutronFluxProfile:
         """
         if n not in range(self.n_groups):
             raise ValueError(
-                f"n must be a positive integer between 1 and {self.n_groups}!"
+                f"n must be a positive integer between 0 and {self.n_groups}!"
             )
         if n == 0:
             return self.solve_lowest_group()
@@ -408,7 +415,7 @@ class NeutronFluxProfile:
             Neutron group index. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         x:
-            The depth where we want the neutron flux (m).
+            The depth where we want the neutron flux [m].
             Valid only between x= -extended boundary to +-extended boundary of that group
 
         Raises
@@ -418,13 +425,15 @@ class NeutronFluxProfile:
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.asarray(x)
+        x = np.asarray(x) * 100
         in_fw = abs(x) <= self.x_fw_cm
-        in_bz = np.logical_and(self.x_fw_cm < abs(x), abs(x) <= self.x_bz_cm)
+        in_bz = np.logical_and(
+            self.x_fw_cm < abs(x), abs(x) <= self.extended_boundary[n]
+        )
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated "
-                f"up to {self.x_bz_cm} cm, which {x * 100} cm violates!"
+                f"up to {self.extended_boundary[n]} cm, which {x * 100} cm violates!"
             )
 
         out_flux = np.zeros_like(x)
@@ -492,7 +501,7 @@ class NeutronFluxProfile:
         )
 
     @summarize_values
-    def groupwise_current_fw2bz(self, n: int) -> float:
+    def groupwise_neutron_current_fw2bz(self, n: int) -> float:
         """
         Net current from the first wall to breeding zone.
         Parameters
@@ -525,7 +534,7 @@ class NeutronFluxProfile:
         # return - d_fw / l_fw * (c1 * np.exp(x_fw/l_fw) - c2 * np.exp(-x_fw/l_fw))
 
     @summarize_values
-    def groupwise_current_escaped(self, n: int) -> float:
+    def groupwise_neutron_current_escaped(self, n: int) -> float:
         """
         Neutron current escaped from the breeding zone to outside the reactor.
         Parameters
