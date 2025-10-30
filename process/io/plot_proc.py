@@ -396,9 +396,8 @@ def plot_main_power_flow(
     # ===========================================
 
     # Load the plasma image
-    plasma = mpimg.imread(
-        resources.path("process.io", "plasma.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "plasma.png") as img_path:
+        plasma = mpimg.imread(img_path.open("rb"))
 
     # Display the plasma image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -420,7 +419,8 @@ def plot_main_power_flow(
         fontsize=11,
     )
     # Load the neutron image
-    neutron = mpimg.imread(resources.path("process.io", "neutron.png"))
+    with resources.path("process.io", "neutron.png") as img_path:
+        neutron = mpimg.imread(img_path.open("rb"))
 
     new_ax = axis.inset_axes(
         [0.2, 0.85, 0.03, 0.03], transform=axis.transAxes, zorder=10
@@ -566,9 +566,8 @@ def plot_main_power_flow(
     )
 
     # Load the alpha particle image
-    alpha = mpimg.imread(
-        resources.path("process.io", "alpha_particle.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "alpha_particle.png") as img_path:
+        alpha = mpimg.imread(img_path.open("rb"))
 
     # Display the alpha particle image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -653,9 +652,8 @@ def plot_main_power_flow(
     )
 
     # Load the HCD injector image
-    hcd_injector_1 = hcd_injector_2 = mpimg.imread(
-        resources.path("process.io", "hcd_injector.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "hcd_injector.png") as img_path:
+        hcd_injector_1 = hcd_injector_2 = mpimg.imread(img_path.open("rb"))
 
     # Display the injector image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -924,9 +922,8 @@ def plot_main_power_flow(
     # ===========================================
 
     # Load the turbine image
-    turbine = mpimg.imread(
-        resources.path("process.io", "turbine.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "turbine.png") as img_path:
+        turbine = mpimg.imread(img_path.open("rb"))
 
     # Display the turbine image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -983,9 +980,8 @@ def plot_main_power_flow(
     )
 
     # Load the generator image
-    generator = mpimg.imread(
-        resources.path("process.io", "generator.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "generator.png") as img_path:
+        generator = mpimg.imread(img_path.open("rb"))
 
     # Display the generator image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -1053,9 +1049,8 @@ def plot_main_power_flow(
     )
 
     # Load the pylon image
-    pylon = mpimg.imread(
-        resources.path("process.io", "pylon.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "pylon.png") as img_path:
+        pylon = mpimg.imread(img_path.open("rb"))
 
     # Display the pylon image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -1263,9 +1258,8 @@ def plot_main_power_flow(
     # ================================
 
     # Load the first wall image
-    fw = mpimg.imread(
-        resources.path("process.io", "fw.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "fw.png") as img_path:
+        fw = mpimg.imread(img_path.open("rb"))
 
     # Display the first wall image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -1522,9 +1516,8 @@ def plot_main_power_flow(
     )
 
     # Load the blanket image
-    blanket = mpimg.imread(
-        resources.path("process.io", "blanket_with_coolant.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "blanket_with_coolant.png") as img_path:
+        blanket = mpimg.imread(img_path.open("rb"))
 
     # Display the blanket image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -1566,9 +1559,8 @@ def plot_main_power_flow(
     )
 
     # Load the vacuum vessel image
-    vv = mpimg.imread(
-        resources.path("process.io", "vv.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "vv.png") as img_path:
+        vv = mpimg.imread(img_path.open("rb"))
 
     # Display the vacuum vessel image over the figure, not the axes
     new_ax = axis.inset_axes(
@@ -1671,9 +1663,8 @@ def plot_main_power_flow(
     )
 
     # Load the divertor image
-    divertor = mpimg.imread(
-        resources.path("process.io", "divertor.png")
-    )  # Use importlib.resources to locate the image
+    with resources.path("process.io", "divertor.png") as img_path:
+        divertor = mpimg.imread(img_path.open("rb"))
 
     # Display the divertor image over the figure, not the axes
     new_ax = axis.inset_axes([0.1, 0.4, 0.3, 0.25], transform=axis.transAxes, zorder=10)
