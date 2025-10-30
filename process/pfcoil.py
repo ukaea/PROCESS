@@ -3765,7 +3765,7 @@ class CSCoil:
         # axial area [m2]
         area_ax = constants.PI * (r_cs_outer**2 - r_cs_inner**2)
 
-        # calculate unsmeared axial stress [MPa]
+        # Calculate unsmeared axial stress
         # Average axial stress at the interface of each half of the coil
         s_axial = forc_z_cs_self_peak_midplane / (0.5 * area_ax)
 

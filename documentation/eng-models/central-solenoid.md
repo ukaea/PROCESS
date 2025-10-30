@@ -146,7 +146,10 @@ $$
 k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+dz_{\text{half}}^2}}
 $$
 
-The axial compressive force at $z$ in an isolated solenoid increases from 0 at $z = dz_{\text{half}}^2}$
+Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the first and second kinds.
+
+
+The axial compressive force at $z$ in an isolated solenoid increases from 0 at $z  = dz_{\text{half}}$
 to the maximum at the midplane, $F_{z}(0)$.
 
 
