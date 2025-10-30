@@ -1001,6 +1001,7 @@ class ElectronBernstein:
             / (2.0e0 * np.pi)
             * np.sqrt(
                 dene20
+                * 1.0e20
                 * constants.ELECTRON_CHARGE**2
                 / (constants.ELECTRON_MASS * constants.EPSILON0)
             )
