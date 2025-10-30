@@ -2342,6 +2342,7 @@ def test_calculate_cs_turn_geometry_eu_demo_output_consistency(
     # The cable space plus conduit thickness should not exceed half the turn width
     assert radius_cs_turn_cable_space + dz_cs_turn_conduit <= dz_cs_turn / 2 + 1e-8
 
+
 def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
     # Typical values for a CS coil
     r_cs_outer = 2.0
@@ -2361,6 +2362,7 @@ def test_calculate_cs_self_peak_midplane_axial_stress_basic(cs_coil):
     assert pytest.approx(s_axial, rel=1e-4) == s_axial_exp
     assert pytest.approx(force_axial, rel=1e-4) == force_axial_exp
 
+
 def test_calculate_cs_self_peak_midplane_axial_stress_zero_current(cs_coil):
     # Zero current should yield zero force and stress
     r_cs_outer = 2.0
@@ -2374,6 +2376,7 @@ def test_calculate_cs_self_peak_midplane_axial_stress_zero_current(cs_coil):
 
     assert pytest.approx(s_axial) == 0.0
     assert pytest.approx(force_axial) == 0.0
+
 
 def test_calculate_cs_self_peak_midplane_axial_stress_extreme_geometry(cs_coil):
     # Very thin coil, large dz_cs_half
@@ -2393,6 +2396,7 @@ def test_calculate_cs_self_peak_midplane_axial_stress_extreme_geometry(cs_coil):
     assert pytest.approx(s_axial, rel=1e-4) == s_axial_exp
     assert pytest.approx(force_axial, rel=1e-4) == force_axial_exp
 
+
 def test_calculate_cs_self_peak_midplane_axial_stress_invalid(cs_coil):
     # Negative dz_cs_half should still return floats, but may be positive force
     r_cs_outer = 2.0
@@ -2406,7 +2410,7 @@ def test_calculate_cs_self_peak_midplane_axial_stress_invalid(cs_coil):
 
     # Check actual output numbers
     s_axial_exp = -16262350.341736654  # Example expected value, update as needed
-    force_axial_exp =-44703470.31824042  # Example expected value, update as needed
+    force_axial_exp = -44703470.31824042  # Example expected value, update as needed
 
     assert pytest.approx(s_axial, rel=1e-4) == s_axial_exp
     assert pytest.approx(force_axial, rel=1e-4) == force_axial_exp

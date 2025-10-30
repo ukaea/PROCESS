@@ -2629,7 +2629,6 @@ def test_superconpf(monkeypatch: pytest.MonkeyPatch):
     assert pytest.approx(tmarg) == tmarg_exp
 
 
-
 def test_induct(pfcoil: PFCoil, monkeypatch: pytest.MonkeyPatch):
     """Test induct subroutine.
 
