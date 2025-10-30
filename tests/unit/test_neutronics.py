@@ -37,10 +37,10 @@ def test_has_local_fluxes():
 
 def test_has_boundary_current():
     """Test that the groupwise decorator has worked on the boundary fluxes methods."""
-    assert hasattr(NeutronFluxProfile, "groupwise_current_fw2bz")
-    assert hasattr(NeutronFluxProfile, "current_fw2bz")
-    assert hasattr(NeutronFluxProfile, "groupwise_current_escaped")
-    assert hasattr(NeutronFluxProfile, "current_escaped")
+    assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_fw2bz")
+    assert hasattr(NeutronFluxProfile, "neutron_current_fw2bz")
+    assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_escaped")
+    assert hasattr(NeutronFluxProfile, "neutron_current_escaped")
 
 
 def test_has_reactions():
@@ -51,11 +51,19 @@ def test_has_reactions():
     assert hasattr(NeutronFluxProfile, "reaction_rate_bz")
 
 
+# 2 groups
+# fw_material = MaterialMacroInfo(
+#     [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [0, 100, 1000], 1.0
+# )
+# bz_material = MaterialMacroInfo(
+#     [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [0, 100, 1000], 2.0
+# )
+# 1 group
 fw_material = MaterialMacroInfo(
-    [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [0, 100, 1000], 1.0
+    [1.0], [[0.5]], [0, 100], 1.0
 )
 bz_material = MaterialMacroInfo(
-    [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [0, 100, 1000], 2.0
+    [1.0], [[0.5]], [0, 100], 2.0
 )
 profile = NeutronFluxProfile(
     1.0,  # flux
