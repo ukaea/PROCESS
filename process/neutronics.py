@@ -5,6 +5,7 @@ ISBN:9780471223634.
 
 import functools
 import inspect
+from collections.abc import Callable
 
 import numpy as np
 from numpy import typing as npt
@@ -120,6 +121,55 @@ def extrapolation_length(diffusion_coefficient: float) -> float:
     return 0.7104 * 3 * diffusion_coefficient
 
 
+class AutoPopulatingDict:
+    """
+    Class that behaves like a dictionary, but if the required key does not
+    exist in the dictionary, it will call the populating_method to populate
+    that specific key.
+    """
+
+    def __init__(self, populating_method: Callable[[int], None]):
+        """
+        Attributes
+        ----------
+        _dict:
+            A dictionary indexed by integers, so that we can populate its
+            values out of sequence.
+        populating_method:
+            The method to be called if the requested index n is currently
+            unpopulated in the dictionary. This method should populate the
+            dictionary.
+        """
+        self._dict = {}
+        self._attempting_to_access = []
+        self.populating_method = populating_method
+
+    def __getitem__(self, i: int):
+        """Check if index i is in the dictionary or not. If not, populate it."""
+        if i in self._attempting_to_access:
+            raise RecursionError(
+                f"retrieving the value of [{i}] requires the value of [{i}]"
+            )
+        if i not in self._dict:
+            self._attempting_to_access.append(i)
+            self.populating_method(i)
+            if i not in self._dict:
+                raise RuntimeError(
+                    f"{self.populating_method}({i}) failed to populate key {i} "
+                    "in the dictionary!"
+                )
+            self._attempting_to_access.remove(i)
+        return self._dict[i]
+
+    def __contains__(self, i: int):
+        """Check if key 'i' is in the dictionary or not."""
+        return i in self._dict
+
+    def __setitem__(self, i: int, value: float):
+        """Check if dict i is in the index or not."""
+        self._dict[i] = value
+
+
 class NeutronFluxProfile:
     """Neutron flux in the first wall or the blanket."""
 
@@ -179,12 +229,11 @@ class NeutronFluxProfile:
                 "must have the same group structure!"
             )
 
-        # macroscopic cross-sections Sigma saved here.
-        # Dictionaries indexed by integers, so that we can create these values
-        # out of sequence.
-        self.integration_constants = {}
-        self.l_fw_2, self.l_bz_2 = {}, {}  # diffusion lengths squared
-        self.extended_boundary = {}
+        self.integration_constants = AutoPopulatingDict(self.solve_group_n)
+        # diffusion lengths squared
+        self.l_fw_2 = AutoPopulatingDict(self.solve_group_n)
+        self.l_bz_2 = AutoPopulatingDict(self.solve_group_n)
+        self.extended_boundary = AutoPopulatingDict(self.solve_group_n)
 
     def solve_lowest_group(self) -> None:
         """
@@ -374,8 +423,8 @@ class NeutronFluxProfile:
         in_bz = np.logical_and(self.x_fw_cm < abs(x), abs(x) <= self.x_bz_cm)
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
-                f"for neutron group {n}, neutron flux can only be calculated up to "
-                f"{self.extended_boundary[n]} cm, which {x * 100} cm violates!"
+                f"for neutron group {n}, neutron flux can only be calculated "
+                f"up to {self.x_bz_cm} cm, which {x * 100} cm violates!"
             )
 
         out_flux = np.zeros_like(x)
@@ -383,7 +432,7 @@ class NeutronFluxProfile:
         out_flux[in_bz] = self.groupwise_neutron_flux_bz(n, x[in_bz])
         return out_flux
 
-    # scalar values (one or two such floats per neutron group.)
+    # scalar values (one such float per neutron group.)
     @summarize_values
     def groupwise_reaction_rate_fw(self, n: int, reaction_type: str) -> float:
         """Calculate the reaction rate in the first wall.
@@ -397,7 +446,6 @@ class NeutronFluxProfile:
             Two options: "total" or "non-scattering".
 
         """
-        self.solve_group_n(n)
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
         c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "non-scattering":
@@ -425,7 +473,6 @@ class NeutronFluxProfile:
             Two options: "total" or "non-scattering".
 
         """
-        self.solve_group_n(n)
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
         c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "non-scattering":
@@ -459,7 +506,6 @@ class NeutronFluxProfile:
         :
             current in cm^-2
         """
-        self.solve_group_n(n)
         c1, c2, c3, c4 = self.integration_constants[n]
         l_bz_2, d_bz = get_diffusion_coefficient_and_length(
             self.bz_mat.sigma_t[n],
@@ -493,7 +539,6 @@ class NeutronFluxProfile:
         :
             current in cm^-2
         """
-        self.solve_group_n(n)
         c1, c2, c3, c4 = self.integration_constants[n]
         l_bz_2, d_bz = get_diffusion_coefficient_and_length(
             self.bz_mat.sigma_t[n],
