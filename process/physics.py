@@ -6775,10 +6775,15 @@ class Physics:
                 physics_variables.zeff,
             )
 
-            # Calculate the H-factor for the same confinement time in other scalings
-            physics_variables.hfac[i_confinement_time - 1] = self.find_other_h_factors(
-                i_confinement_time
-            )
+            try:
+                # Calculate the H-factor for the same confinement time in other scalings
+                physics_variables.hfac[i_confinement_time - 1] = (
+                    self.find_other_h_factors(i_confinement_time)
+                )
+            except ValueError:
+                # This is only used for a table in the OUT.DAT so if it fails
+                # just write a NaN--its not worth crashing PROCESS over.
+                physics_variables.hfac[i_confinement_time - 1] = np.nan
 
             po.ocmmnt(
                 self.outfile,
