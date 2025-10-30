@@ -370,7 +370,7 @@ class NeutronFluxProfile:
         """
         c1, c2 = self.integration_constants[n][:2]
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
-        x_l_fw = abs(x) / l_fw
+        x_l_fw = abs(x * 100) / l_fw
         return c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw)
 
     @summarize_values
@@ -398,7 +398,7 @@ class NeutronFluxProfile:
         """
         c3, c4 = self.integration_constants[n][2:]
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        x_l_bz = abs(x) / l_bz
+        x_l_bz = abs(x * 100) / l_bz
         return c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz)
 
     @summarize_values
@@ -425,10 +425,11 @@ class NeutronFluxProfile:
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.asarray(x) * 100
-        in_fw = abs(x) <= self.x_fw_cm
+        x = np.asarray(x)
+        in_fw = abs(x * 100) <= self.x_fw_cm
         in_bz = np.logical_and(
-            self.x_fw_cm < abs(x), abs(x) <= self.extended_boundary[n]
+            self.x_fw_cm < abs(x * 100),
+            abs(x * 100) <= self.extended_boundary[n],
         )
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
