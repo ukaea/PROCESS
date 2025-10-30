@@ -5128,7 +5128,7 @@ class PlaneStressParam(NamedTuple):
         ),
     ),
 )
-def test_plane_stress(planestressparam, monkeypatch):
+def test_plane_stress(planestressparam, skip_if_incompatible_system):
     """
     Automatically generated Regression Unit Test for plane_stress.
 
