@@ -206,7 +206,7 @@ class MaterialMacroInfo:
         self.group_structure = np.array(self.group_structure, dtype=float)
         self.avg_atomic_mass = float(self.avg_atomic_mass)
 
-        if np.diff(self.group_structure)>=0:
+        if np.diff(self.group_structure) >= 0:
             raise ValueError(
                 "The group structure must be defined beginning from the highest energy "
                 "bin (i.e. lowest lethargy bin) edge, descending to the lowest energy. "
