@@ -3,6 +3,7 @@ import logging
 import numpy as np
 
 import process.blanket_library as blanket_library
+import process.data_structure.blanket_library as blanket_vars
 from process import constants
 from process import (
     process_output as po,
@@ -44,6 +45,13 @@ class CCFE_HCPB(BlanketLibrary):
 
         # Calculate blanket, shield, vacuum vessel and cryostat volumes
         self.component_volumes()
+
+        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        fwbs_variables.radius_blkt_channel = dia_blkt_channel / 2
+        (
+            fwbs_variables.radius_blkt_channel_90_bend,
+            fwbs_variables.radius_blkt_channel_180_bend,
+        ) = self.calculate_pipe_bend_radius(i_ps=1)
 
         # Centrepost neutronics
         if physics_variables.itart == 1:
@@ -1538,6 +1546,12 @@ class CCFE_HCPB(BlanketLibrary):
             "Allowable nominal neutron fluence at first wall (MW.year/m2)",
             "(abktflnc)",
             cost_variables.abktflnc,
+        )
+        po.ovarre(
+            self.outfile,
+            "Blanket half height (m)",
+            "(dz_blkt_half)",
+            blanket_vars.dz_blkt_half,
         )
         po.ovarre(
             self.outfile,

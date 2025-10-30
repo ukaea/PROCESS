@@ -4,6 +4,7 @@ import numpy as np
 
 from process import constants
 from process import process_output as po
+from process.blanket_library import BlanketLibrary
 from process.coolprop_interface import FluidProperties
 from process.data_structure import blanket_library, build_variables, fwbs_variables
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 class Fw:
     def __init__(self) -> None:
         self.outfile = constants.NOUT
+        self.blanket_library = BlanketLibrary(fw=self)
 
     def run(self):
         (
@@ -26,6 +28,11 @@ class Fw:
         )
 
         self.set_fw_geometry()
+
+        (
+            fwbs_variables.radius_fw_channel_90_bend,
+            fwbs_variables.radius_fw_channel_180_bend,
+        ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
 
     def set_fw_geometry(self):
         build_variables.dr_fw_inboard = (

@@ -89,6 +89,13 @@ class DCLL(BlanketLibrary):
 
     def run(self, output: bool):
         self.component_volumes()
+        dia_blkt_channel = self.pipe_hydraulic_diameter(i_channel_shape=1)
+        fwbs_variables.radius_blkt_channel = dia_blkt_channel / 2
+        (
+            fwbs_variables.radius_blkt_channel_90_bend,
+            fwbs_variables.radius_blkt_channel_180_bend,
+        ) = self.calculate_pipe_bend_radius(i_ps=1)
+
         self.primary_coolant_properties(output=output)
         self.liquid_breeder_properties(output=output)
         self.dcll_neutronics_and_power(output=output)
