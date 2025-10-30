@@ -200,7 +200,13 @@ class MaterialMacroInfo:
 
     def __post_init__(self):
         """Validation to confirm the shape is correct."""
-        if len(self.sigma_t) != self.n_groups:
+        # force into float or numpy arrays.
+        self.sigma_t = np.array(self.sigma_t, dtype=float)
+        self.sigma_s = np.array(self.sigma_s, dtype=float)
+        self.group_structure = np.array(self.group_structure, dtype=float)
+        self.avg_atomic_mass = float(self.avg_atomic_mass)
+
+        if np.shape(self.sigma_t) != (self.n_groups,):
             raise ProcessValidationError(
                 f"total group-wise cross-sections should have {self.n_groups} "
                 "groups as specified by the group_structure."
@@ -210,7 +216,11 @@ class MaterialMacroInfo:
                 "Group-wise scattering cross-sections be a square matrix of "
                 f"shape n*n, where n= number of groups = {self.n_groups}."
             )
-        self.avg_atomic_mass = float(self.avg_atomic_mass)  # force into float
+        if (self.sigma_s.sum(axis=1) > self.sigma_t).any():
+            raise ProcessValidationError(
+                "Each group's scattering cross-section should be smaller than "
+                "or equal to its total cross-section."
+            )
 
     @property
     def n_groups(self):
