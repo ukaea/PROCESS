@@ -453,12 +453,12 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
-            Two options: "total" or "non-scattering".
+            Two options: "total" or "exclude elastic-scattering".
 
         """
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
         c1, c2, c3, c4 = self.integration_constants[n]
-        if reaction_type == "non-scattering":
+        if reaction_type == "exclude elastic-scattering":
             sigma = self.fw_mat.sigma_t[n] - self.fw_mat.sigma_s[n, n]
         elif reaction_type == "total":
             sigma = self.fw_mat.sigma_t[n]
@@ -480,12 +480,12 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
-            Two options: "total" or "non-scattering".
+            Two options: "total" or "exclude elastic-scattering".
 
         """
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
         c1, c2, c3, c4 = self.integration_constants[n]
-        if reaction_type == "non-scattering":
+        if reaction_type == "exclude elastic-scattering":
             sigma = self.bz_mat.sigma_t[n] - self.bz_mat.sigma_s[n, n]
         elif reaction_type == "total":
             sigma = self.bz_mat.sigma_t[n]
