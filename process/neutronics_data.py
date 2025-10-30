@@ -206,6 +206,14 @@ class MaterialMacroInfo:
         self.group_structure = np.array(self.group_structure, dtype=float)
         self.avg_atomic_mass = float(self.avg_atomic_mass)
 
+        if np.diff(self.group_structure)>=0:
+            raise ValueError(
+                "The group structure must be defined beginning from the highest energy "
+                "bin (i.e. lowest lethargy bin) edge, descending to the lowest energy. "
+                "Similarly the cross-section must be arranged with the highest energy "
+                "group first, and the lowest energy group last."
+            )
+
         if np.shape(self.sigma_t) != (self.n_groups,):
             raise ProcessValidationError(
                 f"total group-wise cross-sections should have {self.n_groups} "

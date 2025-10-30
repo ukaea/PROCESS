@@ -53,17 +53,17 @@ def test_has_reactions():
 
 # 2 groups
 # fw_material = MaterialMacroInfo(
-#     [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [0, 100, 1000], 1.0
+    # [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 1.0
 # )
 # bz_material = MaterialMacroInfo(
-#     [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [0, 100, 1000], 2.0
+    # [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 2.0
 # )
 # 1 group
 fw_material = MaterialMacroInfo(
-    [1.0], [[0.5]], [0, 100], 1.0
+    [1.0], [[0.5]], [100, 0], 1.0
 )
 bz_material = MaterialMacroInfo(
-    [1.0], [[0.5]], [0, 100], 2.0
+    [1.0], [[0.5]], [100, 0], 2.0
 )
 profile = NeutronFluxProfile(
     1.0,  # flux
