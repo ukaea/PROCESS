@@ -87,7 +87,9 @@ def calculate_average_macro_xs(
 
     total_fraction = sum(composition.values())
     weighted_micro_xs, weighted_atomic_mass = [], []
-    if extra_species:=set(micro_xs.keys()).difference(set(composition.keys())):
+    if extra_species := set(micro_xs.keys()).difference(
+        set(composition.keys())
+    ):
         raise KeyError(
             f"micro_xs contains species not specified by the composition: {extra_species}"
         )
@@ -126,12 +128,18 @@ def discretize_xs(
         microscopic cross-section values discretized according to the group structure.
         1D array.
     """
-    lethargy = np.log10(group_structure)
+    lethargy = -np.log(group_structure)
     lower_leth, upper_leth = lethargy[:-1], lethargy[1:]
     leth_spacing = np.diff(lethargy)
-    continuous_xs_lethargy_input = lambda e: continuous_xs(10**-e)
 
-    return integrate(continuous_xs_lethargy_input, lower_leth, upper_leth)/leth_spacing
+    def continuous_xs_lethargy_input(lethargy):
+        return continuous_xs(np.exp(-lethargy))
+
+    return (
+        integrate(continuous_xs_lethargy_input, lower_leth, upper_leth)
+        / leth_spacing
+    )
+
 
 def discretize_scattering_xs(
     continuous_xs, group_structure: npt.NDArray[np.float64], atomic_mass: float
@@ -156,9 +164,10 @@ def discretize_scattering_xs(
         probability of scattering neutrons from bin i to bin j.
     """
     return (
-        discretize_xs(continuous_xs, group_structure) *
-        scattering_weight_matrix(group_structure, atomic_mass).T
+        discretize_xs(continuous_xs, group_structure)
+        * scattering_weight_matrix(group_structure, atomic_mass).T
     ).T
+
 
 def discretize_n2n_xs(
     continuous_xs, group_structure: npt.NDArray[np.float64], q_value: float
@@ -184,13 +193,17 @@ def discretize_n2n_xs(
         caused by a neutron in bin i.
     """
     return (
-        discretize_xs(continuous_xs, group_structure) * 2 *
-        n2n_weight_matrix(group_structure, atomic_mass).T
+        discretize_xs(continuous_xs, group_structure)
+        * 2
+        * n2n_weight_matrix(group_structure, q_value).T
     ).T
 
+
 def discretize_fission_xs(
-    continuous_xs, group_structure: npt.NDArray[np.float64],
-    fission_spectrum_continuous, num_neutrons: float,
+    continuous_xs,
+    group_structure: npt.NDArray[np.float64],
+    fission_spectrum_continuous,
+    num_neutrons: float,
 ) -> npt.NDArray:
     """
     Discretize a fission macroscopic cross-section from a continuous
@@ -217,11 +230,12 @@ def discretize_fission_xs(
     """
     fiss_spec = integrate(fission_spectrum_continuous, group_structure)
 
-    scaled_fission_spectrum = fiss_spec/fiss_spec.sum() * num_neutrons
+    scaled_fission_spectrum = fiss_spec / fiss_spec.sum() * num_neutrons
     return np.outer(
         discretize_xs(continuous_xs, group_structure),
         scaled_fission_spectrum,
     )
+
 
 def scattering_weight_matrix(
     group_structure: npt.NDArray[np.float64], atomic_mass: float
@@ -307,7 +321,7 @@ class MaterialMacroInfo:
         # force into float or numpy arrays of floats.
         self.sigma_t = np.array(self.sigma_t, dtype=float)
         self.sigma_s = np.array(self.sigma_s, dtype=float)
-        self.group_structure = np.clip(self.group_structure, 1E-9, np.inf)
+        self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
         self.avg_atomic_mass = float(self.avg_atomic_mass)
 
         if np.diff(self.group_structure) >= 0:
@@ -355,6 +369,7 @@ class MaterialMacroInfo:
     def contains_upscatter(self):
         return np.tril(self.sigma_s, k=-1).any()
 
+
 def get_material_nuclear_data(
     material: str, group_structure: npt.NDArray[np.float64]
 ) -> MaterialMacroInfo:
@@ -386,10 +401,15 @@ def get_material_nuclear_data(
     avg_atomic_mass = get_avg_atomic_mass(composition)
 
     # dicts of {"isotope": npt.NDArray[np.float64] 1D/2D arrays}
-    micro_total_xs, micro_scattering_xs, micro_n2n_xs = {}, {}, {}
+    micro_total_xs = {}
+    micro_scattering_xs = {}
+    micro_n2n_xs = {}
+    micro_fiss_xs = {}
 
     for species in composition:
-        total_xs_continuous, elastic_scattering_xs_continuous = xs_data_bank[species]
+        total_xs_continuous, elastic_scattering_xs_continuous = xs_data_bank[
+            species
+        ]
 
         micro_total_xs[species] = discretize_xs(
             total_xs_continuous, group_structure
@@ -398,18 +418,25 @@ def get_material_nuclear_data(
             elastic_scattering_xs_continuous,
             group_structure,
             extract_atomic_mass(species),
-
         )
         if species in breeding_xs_data_bank:
             n2n_xs_continuous, q_value = breeding_xs_data_bank[species]
             micro_n2n_xs[species] = discretize_n2n_xs(
-                n2n_xs_continuous, group_structure, q_value,
+                n2n_xs_continuous,
+                group_structure,
+                q_value,
             )
         if species in fission_xs_data_bank:
-            fission_xs_continuous, fission_spectrum_continuous, num_neutrons_per_fission = fission_xs_data_bank[species]
+            (
+                fission_xs_continuous,
+                fission_spectrum_continuous,
+                num_neutrons_per_fission,
+            ) = fission_xs_data_bank[species]
             micro_fiss_xs[species] = discretize_fission_xs(
-                fission_xs_continuous, group_structure,
-                fission_spectrum_continuous, num_neutrons_per_fission,
+                fission_xs_continuous,
+                group_structure,
+                fission_spectrum_continuous,
+                num_neutrons_per_fission,
             )
 
     discrete_macro_total_xs = calculate_average_macro_xs(
@@ -424,7 +451,11 @@ def get_material_nuclear_data(
     discrete_macro_fission_xs = calculate_average_macro_xs(
         composition, micro_fiss_xs, density
     )
-    source_matrix = discrete_macro_scattering_xs + discrete_macro_n2n_xs + discrete_macro_fission_xs
+    source_matrix = (
+        discrete_macro_scattering_xs
+        + discrete_macro_n2n_xs
+        + discrete_macro_fission_xs
+    )
 
     return MaterialMacroInfo(
         discrete_macro_total_xs,
