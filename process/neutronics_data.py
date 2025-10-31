@@ -200,10 +200,15 @@ class MaterialMacroInfo:
         total macroscopic cross-section, 1D array of len = n.
     sigma_s:
         Source matrix, 2D array of shape (n, n). Includes a sum of the
-        scattering matrix and multiplying matrix. Scattering matrix is the
+        scattering matrix and n2n matrix. Scattering matrix is the
         macroscopic scattering cross-section from group i to j, and the
-        multiplying matrix is the macroscopic cross-section for production of
-        group j neutrons due to group i neutrons.
+        n2n matrix is the macroscopic cross-section for production of
+        group j neutrons due to group i neutrons. It should be
+        mostly-upper-triangular, i.e. the lower triangle must have small values
+        compared to the average macroscopic cross-section value of the matrix.
+
+        e.g. [0,3] would be the cross-section for proudction of group 4 neutrons
+        due to reactions (scattering and n2n) caused by group 1 neutrons.
     group_structure:
         energy bin edges, 1D array of len = n+1
     avg_atomic_mass:
@@ -249,6 +254,24 @@ class MaterialMacroInfo:
             self._n_groups = len(self.group_structure) - 1
         return self._n_groups
 
+    @property
+    def downscatter_only(self):
+        """
+        Checks if the source matrix suggests that neutrons from each group can
+        only cause neutrons to be born in higher-lethargy (lower energy) groups.
+
+        If True, the transport equation can be solved acyclically, from low
+        to high lethargy groups in a single-pass.
+
+        If False, and the transport equation will need to be solved iteratively,
+        as neutron fluxes in higher-lethargy groups in turn affects the neutron
+        flux in lower-lethargy groups.
+        """
+        return ~self.contains_upscatter
+
+    @property
+    def contains_upscatter(self):
+        return np.tril(self.sigma_s, k=-1).any()
 
 def get_material_nuclear_data(
     material: str, group_structure: list[float]
