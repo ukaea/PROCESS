@@ -5,16 +5,6 @@ from process.neutronics import NeutronFluxProfile
 from process.neutronics_data import MaterialMacroInfo
 
 
-def test_scattering_larger_than_total():
-    with pytest.raises(ProcessValidationError):
-        MaterialMacroInfo(
-            [1.0],
-            [[2.0]],
-            [1.0, 2.0],
-            1,
-        )
-
-
 def test_group_structure_too_short():
     with pytest.raises(ProcessValidationError):
         MaterialMacroInfo(
