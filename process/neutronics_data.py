@@ -191,16 +191,33 @@ class ZeroContinuousFunc:
 
 @dataclass
 class MaterialMacroInfo:
-    """Material information"""
+    """
+    Material information.
 
-    sigma_t: npt.NDArray[np.float64]  # Sigma_total, 1D array of len = n
-    sigma_s: npt.NDArray  # Sigma_scattering from group i to j, 2D array of n*n
-    group_structure: npt.NDArray  # energy bin edges, 1D array of len = n+1
-    avg_atomic_mass: float  # average atomic mass (weighted by fraction)
+    Parameters
+    ----------
+    sigma_t:
+        total macroscopic cross-section, 1D array of len = n.
+    sigma_s:
+        Source matrix, 2D array of shape (n, n). Includes a sum of the
+        scattering matrix and multiplying matrix. Scattering matrix is the
+        macroscopic scattering cross-section from group i to j, and the
+        multiplying matrix is the macroscopic cross-section for production of
+        group j neutrons due to group i neutrons.
+    group_structure:
+        energy bin edges, 1D array of len = n+1
+    avg_atomic_mass:
+        average atomic mass (weighted by fraction)
+    """
+
+    sigma_t: npt.NDArray[np.float64]
+    sigma_s: npt.NDArray
+    group_structure: npt.NDArray
+    avg_atomic_mass: float
 
     def __post_init__(self):
         """Validation to confirm the shape is correct."""
-        # force into float or numpy arrays.
+        # force into float or numpy arrays of floats.
         self.sigma_t = np.array(self.sigma_t, dtype=float)
         self.sigma_s = np.array(self.sigma_s, dtype=float)
         self.group_structure = np.array(self.group_structure, dtype=float)
@@ -223,11 +240,6 @@ class MaterialMacroInfo:
             raise ProcessValidationError(
                 "Group-wise scattering cross-sections be a square matrix of "
                 f"shape n*n, where n= number of groups = {self.n_groups}."
-            )
-        if (self.sigma_s.sum(axis=1) > self.sigma_t).any():
-            raise ProcessValidationError(
-                "Each group's scattering cross-section should be smaller than "
-                "or equal to its total cross-section."
             )
 
     @property
