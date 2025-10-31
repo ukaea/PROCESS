@@ -457,6 +457,11 @@ class NeutronFluxProfile:
 
         """
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
+        if n > 0:
+            raise NotImplementedError(
+                "We have not done the integration for "
+                "higher energy groups' fluxes yet."
+            )
         c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "exclude elastic-scattering":
             sigma = self.fw_mat.sigma_t[n] - self.fw_mat.sigma_s[n, n]
@@ -484,6 +489,11 @@ class NeutronFluxProfile:
 
         """
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
+        if n > 0:
+            raise NotImplementedError(
+                "We have not done the integration for "
+                "higher energy groups' fluxes yet."
+            )
         c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "exclude elastic-scattering":
             sigma = self.bz_mat.sigma_t[n] - self.bz_mat.sigma_s[n, n]
