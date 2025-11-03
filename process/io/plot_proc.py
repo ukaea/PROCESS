@@ -11980,6 +11980,47 @@ def main_plot(
     plot_fw_90_deg_pipe_bend(fig21.add_subplot(337), m_file_data, scan)
 
     plot_blkt_pipe_bends(fig22, m_file_data, scan)
+    ax_blanket = fig22.add_subplot(122, aspect="equal")
+    plot_blanket(ax_blanket, m_file_data, scan, colour_scheme)
+    plot_firstwall(ax_blanket, m_file_data, scan, colour_scheme)
+    ax_blanket.set_xlabel("Radial position [m]")
+    ax_blanket.set_ylabel("Vertical position [m]")
+    ax_blanket.set_title("Blanket and First Wall Poloidal Cross-Section")
+    ax_blanket.minorticks_on()
+    ax_blanket.grid(which="minor", linestyle=":", linewidth=0.5, alpha=0.5)
+    # Plot major radius line (vertical dashed line at rmajor)
+    ax_blanket.axvline(
+        rmajor,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Major Radius $R_0$",
+    )
+    # Plot a horizontal line at dz_blkt_half (blanket half height)
+    dz_blkt_half = m_file_data.data["dz_blkt_half"].get_scan(scan)
+    ax_blanket.axhline(
+        dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+    ax_blanket.axhline(
+        -dz_blkt_half,
+        color="purple",
+        linestyle="--",
+        linewidth=1.5,
+        label="Blanket Half Height",
+    )
+
+    # Plot midplane line (horizontal dashed line at Z=0)
+    ax_blanket.axhline(
+        0.0,
+        color="black",
+        linestyle="--",
+        linewidth=1.5,
+        label="Midplane",
+    )
 
     plot_main_power_flow(
         fig23.add_subplot(111, aspect="equal"), m_file_data, scan, fig23

@@ -535,6 +535,7 @@ class BlanketLibrary:
                     fwbs_variables.temp_blkt_coolant_out,
                     "OP ",
                 )
+
             else:
                 po.ovarre(
                     self.outfile,
@@ -2153,7 +2154,12 @@ class BlanketLibrary:
 
             # BB
             po.osubhd(self.outfile, "Breeding Blanket (primary): ")
-
+            po.ovarre(
+                self.outfile,
+                "Blanket half height (m)",
+                "(dz_blkt_half)",
+                blanket_library.dz_blkt_half,
+            )
             po.ovarin(
                 self.outfile,
                 "Blanket coolant type (1=He, 2=H20)",

@@ -253,6 +253,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Darcy Friction Factors
+
+- Darcy Friction Factors for fluid flow numbers should start with the `darcy_frict_` prefix
+
+---------------------
+
 ##### Pressures
 
 - Pressures should start with the `pres_` prefix
