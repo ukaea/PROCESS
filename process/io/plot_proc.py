@@ -12393,6 +12393,91 @@ def plot_plasma_outboard_toroidal_ripple_map(
     # Improve layout
     fig.tight_layout()
 
+def plot_reactor_hall_layout(axis, mfile_data, scan, colour_scheme):
+    
+    
+    # Plot the right hand side (positive) section
+    plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme)
+    plot_shield(axis, mfile_data, scan, colour_scheme)
+    plot_blanket(axis, mfile_data, scan, colour_scheme)
+    plot_firstwall(axis, mfile_data, scan, colour_scheme)
+
+    plot_plasma(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
+        plasma_square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
+    plot_centre_cross(axis, mfile_data, scan)
+    plot_cryostat(axis, mfile_data, scan, colour_scheme)
+
+    plot_tf_coils(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        x1=mfile_data.data["r_tf_arc(1)"].get_scan(scan),
+        y1=mfile_data.data["z_tf_arc(1)"].get_scan(scan),
+        x2=mfile_data.data["r_tf_arc(2)"].get_scan(scan),
+        y2=mfile_data.data["z_tf_arc(2)"].get_scan(scan),
+        x3=mfile_data.data["r_tf_arc(3)"].get_scan(scan),
+        y3=mfile_data.data["z_tf_arc(3)"].get_scan(scan),
+        x4=mfile_data.data["r_tf_arc(4)"].get_scan(scan),
+        y4=mfile_data.data["z_tf_arc(4)"].get_scan(scan),
+        x5=mfile_data.data["r_tf_arc(5)"].get_scan(scan),
+        y5=mfile_data.data["z_tf_arc(5)"].get_scan(scan),
+    )
+    plot_pf_coils(axis, mfile_data, scan, colour_scheme)
+    
+    
+    # =======================
+    
+     # Plot the right hand side (positive) section
+    plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme)
+    plot_shield(axis, mfile_data, scan, colour_scheme)
+    plot_blanket(axis, mfile_data, scan, colour_scheme)
+    plot_firstwall(axis, mfile_data, scan, colour_scheme)
+
+    plot_plasma(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        rmajor=-mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
+        plasma_square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
+    plot_centre_cross(axis, mfile_data, scan)
+    plot_cryostat(axis, mfile_data, scan, colour_scheme)
+
+    plot_tf_coils(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        x1=-mfile_data.data["r_tf_arc(1)"].get_scan(scan),
+        y1=mfile_data.data["z_tf_arc(1)"].get_scan(scan),
+        x2=-mfile_data.data["r_tf_arc(2)"].get_scan(scan),
+        y2=mfile_data.data["z_tf_arc(2)"].get_scan(scan),
+        x3=mfile_data.data["r_tf_arc(3)"].get_scan(scan),
+        y3=mfile_data.data["z_tf_arc(3)"].get_scan(scan),
+        x4=-mfile_data.data["r_tf_arc(4)"].get_scan(scan),
+        y4=mfile_data.data["z_tf_arc(4)"].get_scan(scan),
+        x5=-mfile_data.data["r_tf_arc(5)"].get_scan(scan),
+        y5=mfile_data.data["z_tf_arc(5)"].get_scan(scan),
+    )
+    plot_pf_coils(axis, mfile_data, scan, colour_scheme)
 
 def main_plot(
     fig0,
@@ -12693,6 +12778,10 @@ def main_plot(
 
     plot_main_power_flow(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
+    )
+    
+    plot_reactor_hall_layout(
+        fig25.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
     ax24 = fig25.add_subplot(111)
