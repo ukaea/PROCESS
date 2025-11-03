@@ -2152,3 +2152,34 @@ def itpa20_il_confinement_time(
         * (1 + triang) ** 0.56
         * kappa_ipb**0.67
     )
+
+
+def modified_itpa20_confinement_time(
+    # pcur: float,
+    # b_plasma_toroidal_on_axis: float,
+    # dnla19: float,
+    # p_plasma_loss_mw: float,
+    # rmajor: float,
+    # triang: float,
+    # kappa_ipb: float,
+    # eps: float,
+    # aion: float,
+    nd_plasma_separatrix_electron: float,
+    n_greenwald: float,
+) -> float:
+    """ """
+    # return (
+    #     -1.2192 * ((nd_plasma_separatrix_electron / n_greenwald) * 1e-19) + 1.2463
+    # ) * itpa20_confinement_time(
+    #     pcur,
+    #     b_plasma_toroidal_on_axis,
+    #     dnla19,
+    #     p_plasma_loss_mw,
+    #     rmajor,
+    #     triang,
+    #     kappa_ipb,
+    #     eps,
+    #     aion,
+    # )
+
+    return -1.2192 * ((nd_plasma_separatrix_electron / n_greenwald) * 1e-19) + 1.2463

@@ -2509,6 +2509,9 @@ class Physics:
             physics_variables.qstar,
             physics_variables.vol_plasma,
             physics_variables.zeff,
+            physics_variables.nd_plasma_separatrix_electron,
+            physics_variables.dlimit[6],
+            physics_variables.t_energy_confinement_beta,
         )
 
         # Total transport power from scaling law (MW)
@@ -6586,6 +6589,9 @@ class Physics:
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
                 physics_variables.zeff,
+                physics_variables.nd_plasma_separatrix_electron,
+                physics_variables.dlimit[6],
+                physics_variables.t_energy_confinement_beta,
             )
 
             # Calculate the H-factor for the same confinement time in other scalings
@@ -7516,6 +7522,9 @@ class Physics:
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
                 physics_variables.zeff,
+                physics_variables.nd_plasma_separatrix_electron,
+                physics_variables.dlimit[6],
+                physics_variables.t_energy_confinement_beta,
             )
 
             # At power balance, fhz is zero.
@@ -7572,6 +7581,9 @@ class Physics:
         qstar: float,
         vol_plasma: float,
         zeff: float,
+        nd_plasma_separatrix_electron: float,
+        n_greenwald: float,
+        t_energy_confinement_beta: float,
     ) -> tuple[float, float, float, float, float, float, float]:
         """
         Calculate the confinement times and the transport power loss terms.
@@ -7602,6 +7614,8 @@ class Physics:
         :param vol_plasma: Plasma volume (m3)
         :param a_plasma_poloidal: Plasma cross-sectional area (m2)
         :param zeff: Plasma effective charge
+        :param nd_plasma_separatrix_electron: Electron density at separatrix (/m3)
+        :param n_greenwald: Greenwald density limit (/m3)
 
         :return: Tuple containing:
             - pden_electron_transport_loss_mw (float): Electron transport power (MW/m3)
@@ -8378,6 +8392,22 @@ class Physics:
 
         # ==========================================================================
 
+        # Modified IPB98(y,2) ELMy H-mode scaling with stronger density dependence
+        elif i_confinement_time == 51:
+            t_electron_confinement = confinement.modified_itpa20_confinement_time(
+                # pcur,
+                # b_plasma_toroidal_on_axis,
+                # dnla19,
+                # p_plasma_loss_mw,
+                # rmajor,
+                # physics_variables.triang,
+                # physics_variables.kappa_ipb,
+                # eps,
+                # physics_variables.m_ions_total_amu,
+                nd_plasma_separatrix_electron,
+                n_greenwald,
+                t_energy_confinement_beta,
+            )
         else:
             raise ProcessValueError(
                 "Illegal value for i_confinement_time",

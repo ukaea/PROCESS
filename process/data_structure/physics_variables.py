@@ -86,7 +86,7 @@ first_call: int = None
 
 
 # From physics_variables.f90:
-N_CONFINEMENT_SCALINGS: int = 51
+N_CONFINEMENT_SCALINGS: int = 52
 """number of energy confinement time scaling laws"""
 
 LABELS_CONFINEMENT_SCALINGS: list[str] = [
@@ -141,6 +141,7 @@ LABELS_CONFINEMENT_SCALINGS: list[str] = [
     "Buxton NSTX gyro-Bohm      (ST)(H)",
     "ITPA20                         (H)",
     "ITPA20-IL                      (H)",
+    "Density enhanced IPB98(y,2)    (H)",
 ]
 """labels describing energy confinement scaling laws"""
 
