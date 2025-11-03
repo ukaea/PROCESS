@@ -19,6 +19,11 @@ from process.data_structure import (
 
 logger = logging.getLogger(__name__)
 
+BUILDINGS_MODELS = {
+    0: "Previous estimation work (Knight and Shipe, 1992)",
+    1: "Updated building estimates (Chapman et al.)",
+}
+
 
 class Buildings:
     """author: J. Morris, P. Knight, R. Chapman (UKAEA)
@@ -83,7 +88,7 @@ class Buildings:
                 tf_vertical_dim,
                 tfmtn,
                 tfcoil_variables.n_tf_coils,
-                build_variables.rsldo,
+                build_variables.r_shld_outboard_outer,
                 build_variables.rsldi,
                 2.0e0
                 * (build_variables.z_tf_inside_half - build_variables.dz_shld_vv_gap)
