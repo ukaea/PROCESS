@@ -5,7 +5,7 @@ import pytest
 
 from process.data_structure import neoclassics_variables
 from process.fortran import physics_variables
-from process.stellarator import Neoclassics
+from process.stellarator.neoclassics import Neoclassics
 
 
 @pytest.fixture

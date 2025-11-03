@@ -119,7 +119,7 @@ class PlasmaProfile:
             or physics_variables.nesep != 0.0
             or physics_variables.tbeta != 2.0
         ):
-            logger.warning(
+            logger.info(
                 "Parabolic plasma profiles is used for an L-Mode plasma, "
                 "but the physics variables do not describe an L-Mode plasma. "
                 "'rhopedt', 'rhopedn', 'teped', 'tesep', 'neped', 'nesep', "

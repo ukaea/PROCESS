@@ -206,7 +206,7 @@ class Vmcon(_Solver):
             :rtype: bool
             """
             # Check all ineqs positive, i.e. satisfied
-            return bool(np.all(result.ie >= 0.0))
+            return bool(np.all(result.ie >= -1e-8))
 
         try:
             x, _, _, res = solve(

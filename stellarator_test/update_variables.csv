@@ -1,0 +1,26 @@
+pnetelin, p_plant_electric_net_required_mw
+walalw, pflux_fw_neutron_max_mw
+hldivlim, pflux_div_heat_load_max_mw
+maxradwallload, pflux_fw_rad_max
+fpnetel, fp_plant_electric_net_required_mw
+ignite, i_plasma_ignited
+d_vv_top, dz_vv_upper
+d_vv_bot, dz_vv_lower
+shldtth, dz_shld_upper
+vgap_xpoint_divertor, dz_xpoint_divertor
+etaech, eta_ecrh_injector_wall_plug
+pheat, p_hcd_primary_extra_heat_mw
+divdum, 
+zeffdiv, 
+emult, f_p_blkt_multiplication
+etahtp, eta_coolant_pump_electric
+primary_pumping, i_coolant_pumping
+secondary_cycle, i_thermal_electric_conversion
+etath, eta_turbine
+coreradius, radius_plasma_core_norm
+tmpcry, temp_tf_cryo
+thicndut, dx_tf_turn_insulation
+thwcndut, dx_tf_turn_steel
+vftf, f_a_tf_turn_cable_space_extra_void
+thkcas, dr_tf_nose_case
+tinstf, dx_tf_wp_insulation

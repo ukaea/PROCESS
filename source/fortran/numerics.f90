@@ -381,6 +381,7 @@ module numerics
   !! <LI> (173) f_deuterium : Deuterium fraction in fuel
   !! <LI> (174) EMPTY : Description
   !! <LI> (175) EMPTY : Description
+  !! <LI> (176) f_st_coil_aspect: aspect ratio of the stellartor coils
   ! Issue 287 iteration variables are now defined in module define_iteration_variables in iteration variables.f90
 
   character*32, dimension(ipnvars) :: name_xc

@@ -29,7 +29,8 @@ from process.hcpb import CCFE_HCPB
 from process.physics import Physics
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
-from process.stellarator import Neoclassics, Stellarator
+from process.stellarator.neoclassics import Neoclassics
+from process.stellarator.stellarator import Stellarator
 from process.vacuum import Vacuum
 
 
