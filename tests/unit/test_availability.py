@@ -350,13 +350,9 @@ def calc_u_unplanned_divertor_param(**kwargs):
     """
     # Default parameters
     defaults = {
-        
         "life_div_fpy": 1.99,
-       
         "t_plant_pulse_total": 9000,
-       
         "expected": approx(0.02, abs=0.005),
-    ,
     }
 
     # Merge default dict with any optional keyword arguments to override values
