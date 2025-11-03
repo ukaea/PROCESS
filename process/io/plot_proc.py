@@ -376,7 +376,22 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     plot_centre_cross(axis, mfile_data, scan)
     plot_cryostat(axis, mfile_data, scan, colour_scheme)
 
-    plot_tf_coils(axis, mfile_data, scan, colour_scheme)
+    plot_tf_coils(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        x1=mfile_data.data["r_tf_arc(1)"].get_scan(scan),
+        y1=mfile_data.data["z_tf_arc(1)"].get_scan(scan),
+        x2=mfile_data.data["r_tf_arc(2)"].get_scan(scan),
+        y2=mfile_data.data["z_tf_arc(2)"].get_scan(scan),
+        x3=mfile_data.data["r_tf_arc(3)"].get_scan(scan),
+        y3=mfile_data.data["z_tf_arc(3)"].get_scan(scan),
+        x4=mfile_data.data["r_tf_arc(4)"].get_scan(scan),
+        y4=mfile_data.data["z_tf_arc(4)"].get_scan(scan),
+        x5=mfile_data.data["r_tf_arc(5)"].get_scan(scan),
+        y5=mfile_data.data["z_tf_arc(5)"].get_scan(scan),
+    )
     plot_pf_coils(axis, mfile_data, scan, colour_scheme)
 
     # Ranges
@@ -5115,7 +5130,9 @@ def plot_firstwall(axis, mfile_data, scan, colour_scheme):
         )
 
 
-def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
+def plot_tf_coils(
+    axis, mfile_data, scan, colour_scheme, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5
+):
     """Function to plot TF coils
 
     Arguments:
@@ -5126,18 +5143,6 @@ def plot_tf_coils(axis, mfile_data, scan, colour_scheme):
 
     """
 
-    # Arc points
-    # MDK Only 4 points now required for elliptical arcs
-    x1 = mfile_data.data["r_tf_arc(1)"].get_scan(scan)
-    y1 = mfile_data.data["z_tf_arc(1)"].get_scan(scan)
-    x2 = mfile_data.data["r_tf_arc(2)"].get_scan(scan)
-    y2 = mfile_data.data["z_tf_arc(2)"].get_scan(scan)
-    x3 = mfile_data.data["r_tf_arc(3)"].get_scan(scan)
-    y3 = mfile_data.data["z_tf_arc(3)"].get_scan(scan)
-    x4 = mfile_data.data["r_tf_arc(4)"].get_scan(scan)
-    y4 = mfile_data.data["z_tf_arc(4)"].get_scan(scan)
-    x5 = mfile_data.data["r_tf_arc(5)"].get_scan(scan)
-    y5 = mfile_data.data["z_tf_arc(5)"].get_scan(scan)
     dr_shld_thermal_inboard = mfile_data.data["dr_shld_thermal_inboard"].get_scan(scan)
     dr_shld_thermal_outboard = mfile_data.data["dr_shld_thermal_outboard"].get_scan(
         scan
@@ -9505,7 +9510,22 @@ def plot_cs_turn_structure(axis, fig, mfile_data, scan):
 
 def plot_tf_coil_structure(axis, mfile_data, scan, colour_scheme=1):
     # Plot the TF coil poloidal cross-section
-    plot_tf_coils(axis, mfile_data, scan, colour_scheme)
+    plot_tf_coils(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        x1=mfile_data.data["r_tf_arc(1)"].get_scan(scan),
+        y1=mfile_data.data["z_tf_arc(1)"].get_scan(scan),
+        x2=mfile_data.data["r_tf_arc(2)"].get_scan(scan),
+        y2=mfile_data.data["z_tf_arc(2)"].get_scan(scan),
+        x3=mfile_data.data["r_tf_arc(3)"].get_scan(scan),
+        y3=mfile_data.data["z_tf_arc(3)"].get_scan(scan),
+        x4=mfile_data.data["r_tf_arc(4)"].get_scan(scan),
+        y4=mfile_data.data["z_tf_arc(4)"].get_scan(scan),
+        x5=mfile_data.data["r_tf_arc(5)"].get_scan(scan),
+        y5=mfile_data.data["z_tf_arc(5)"].get_scan(scan),
+    )
 
     x1 = mfile_data.data["r_tf_arc(1)"].get_scan(scan)
     y1 = mfile_data.data["z_tf_arc(1)"].get_scan(scan)
