@@ -444,7 +444,7 @@ class Buildings:
 
         # Height of reactor building
         # include height of TF coil *twice*, to allow for construction/maintenance
-        buildings_variables.reactor_hall_h = (2.0e0 * tf_vertical_dim) + height_clrnc
+        buildings_variables.dz_reactor_hall = (2.0e0 * tf_vertical_dim) + height_clrnc
 
         # Heating and Current Drive facility
         # Dimensions based upon estimates from M. Henderson, HCD Development Group
@@ -487,7 +487,7 @@ class Buildings:
         reactor_hall_area = (
             buildings_variables.reactor_hall_l * buildings_variables.reactor_hall_w
         )
-        reactor_hall_vol = reactor_hall_area * buildings_variables.reactor_hall_h
+        reactor_hall_vol = reactor_hall_area * buildings_variables.dz_reactor_hall
 
         # Reactor building external footprint and volume
         reactor_building_l = (
@@ -499,7 +499,7 @@ class Buildings:
             + 2.0e0 * buildings_variables.reactor_wall_thk
         )
         reactor_building_h = (
-            buildings_variables.reactor_hall_h
+            buildings_variables.dz_reactor_hall
             + buildings_variables.reactor_roof_thk
             + buildings_variables.reactor_fndtn_thk
         )
@@ -1005,8 +1005,8 @@ class Buildings:
             po.ovarre(
                 self.outfile,
                 "   Reactor hall height (m)",
-                "(reactor_hall_h)",
-                buildings_variables.reactor_hall_h,
+                "(dz_reactor_hall)",
+                buildings_variables.dz_reactor_hall,
             )
             if (current_drive_variables.i_hcd_primary == 5) or (
                 current_drive_variables.i_hcd_primary == 8

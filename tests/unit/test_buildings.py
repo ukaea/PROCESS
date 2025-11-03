@@ -42,7 +42,7 @@ class BldgsSizesParam(NamedTuple):
     crane_arm_h: Any
     reactor_hall_l: Any
     reactor_hall_w: Any
-    reactor_hall_h: Any
+    dz_reactor_hall: Any
     nbi_sys_l: Any
     nbi_sys_w: Any
     fc_building_l: Any
@@ -185,7 +185,7 @@ class BldgsSizesParam(NamedTuple):
             crane_arm_h=10,
             reactor_hall_l=0,
             reactor_hall_w=0,
-            reactor_hall_h=0,
+            dz_reactor_hall=0,
             nbi_sys_l=225,
             nbi_sys_w=185,
             fc_building_l=60,
@@ -324,7 +324,7 @@ class BldgsSizesParam(NamedTuple):
             crane_arm_h=10,
             reactor_hall_l=218.89549448811209,
             reactor_hall_w=218.89549448811209,
-            reactor_hall_h=67.624360086248132,
+            dz_reactor_hall=67.624360086248132,
             nbi_sys_l=225,
             nbi_sys_w=185,
             fc_building_l=60,
@@ -490,7 +490,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
         buildings_variables, "reactor_hall_w", bldgssizesparam.reactor_hall_w
     )
     monkeypatch.setattr(
-        buildings_variables, "reactor_hall_h", bldgssizesparam.reactor_hall_h
+        buildings_variables, "dz_reactor_hall", bldgssizesparam.dz_reactor_hall
     )
     monkeypatch.setattr(buildings_variables, "nbi_sys_l", bldgssizesparam.nbi_sys_l)
     monkeypatch.setattr(buildings_variables, "nbi_sys_w", bldgssizesparam.nbi_sys_w)
@@ -753,7 +753,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     assert buildings_variables.reactor_hall_w == pytest.approx(
         bldgssizesparam.expected_reactor_hall_w
     )
-    assert buildings_variables.reactor_hall_h == pytest.approx(
+    assert buildings_variables.dz_reactor_hall == pytest.approx(
         bldgssizesparam.expected_reactor_hall_h
     )
 

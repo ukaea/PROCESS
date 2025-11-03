@@ -1444,7 +1444,7 @@ INPUT_VARIABLES = {
     "reactor_fndtn_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
-    "reactor_hall_h": InputVariable(
+    "dz_reactor_hall": InputVariable(
         data_structure.buildings_variables, float, range=(1.0, 100.0)
     ),
     "reactor_hall_l": InputVariable(

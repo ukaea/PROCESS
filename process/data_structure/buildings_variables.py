@@ -382,7 +382,7 @@ reactor_hall_w: float = None
 """reactor building width (m)"""
 
 
-reactor_hall_h: float = None
+dz_reactor_hall: float = None
 """reactor building height (m)"""
 
 
@@ -707,7 +707,7 @@ def init_buildings_variables():
     global reactor_fndtn_thk
     global reactor_hall_l
     global reactor_hall_w
-    global reactor_hall_h
+    global dz_reactor_hall
     global reactor_roof_thk
     global reactor_wall_thk
     global rmbvol
@@ -861,7 +861,7 @@ def init_buildings_variables():
     reactor_fndtn_thk = 2.0
     reactor_hall_l = 0.0
     reactor_hall_w = 0.0
-    reactor_hall_h = 0.0
+    dz_reactor_hall = 0.0
     reactor_roof_thk = 1.0
     reactor_wall_thk = 2.0
     rmbvol = 0.0
