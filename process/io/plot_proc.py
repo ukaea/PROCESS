@@ -184,7 +184,19 @@ rtangle = np.pi / 2
 rtangle2 = 2 * rtangle
 
 
-def plot_plasma(axis, mfile_data, scan, colour_scheme):
+def plot_plasma(
+    axis,
+    mfile_data,
+    scan,
+    colour_scheme,
+    rmajor,
+    rminor,
+    triang,
+    kappa,
+    i_single_null,
+    i_plasma_shape,
+    plasma_square,
+):
     """Plots the plasma boundary arcs.
 
     Arguments:
@@ -195,8 +207,8 @@ def plot_plasma(axis, mfile_data, scan, colour_scheme):
 
     """
 
-    r_0 = mfile_data.data["rmajor"].get_scan(scan)
-    a = mfile_data.data["rminor"].get_scan(scan)
+    rmajor = mfile_data.data["rmajor"].get_scan(scan)
+    rminor = mfile_data.data["rminor"].get_scan(scan)
     triang = mfile_data.data["triang"].get_scan(scan)
     kappa = mfile_data.data["kappa"].get_scan(scan)
     i_single_null = mfile_data.data["i_single_null"].get_scan(scan)
@@ -204,8 +216,8 @@ def plot_plasma(axis, mfile_data, scan, colour_scheme):
     plasma_square = mfile_data.data["plasma_square"].get_scan(scan)
 
     pg = plasma_geometry(
-        rmajor=r_0,
-        rminor=a,
+        rmajor=rmajor,
+        rminor=rminor,
         triang=triang,
         kappa=kappa,
         i_single_null=i_single_null,
@@ -225,14 +237,14 @@ def plot_plasma(axis, mfile_data, scan, colour_scheme):
         axis.fill_between(
             x=pg.rs[0],
             y1=pg.zs[0],
-            where=(pg.rs[0] > r_0 - (triang_95 * a * 1.5)),
+            where=(pg.rs[0] > rmajor - (triang_95 * rminor * 1.5)),
             color=PLASMA_COLOUR[colour_scheme - 1],
         )
         # Colour in left side of plasma
         axis.fill_between(
             x=pg.rs[1],
             y1=pg.zs[1],
-            where=(pg.rs[1] < r_0 - (triang_95 * a * 1.5)),
+            where=(pg.rs[1] < rmajor - (triang_95 * rminor * 1.5)),
             color=PLASMA_COLOUR[colour_scheme - 1],
         )
 
@@ -348,7 +360,19 @@ def poloidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
     plot_blanket(axis, mfile_data, scan, colour_scheme)
     plot_firstwall(axis, mfile_data, scan, colour_scheme)
 
-    plot_plasma(axis, mfile_data, scan, colour_scheme)
+    plot_plasma(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
+        plasma_square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
     plot_centre_cross(axis, mfile_data, scan)
     plot_cryostat(axis, mfile_data, scan, colour_scheme)
 
@@ -2354,7 +2378,19 @@ def plot_main_plasma_information(
     axis.axis("off")
 
     # Plot the main plasma shape
-    plot_plasma(axis, mfile_data, scan, colour_scheme)
+    plot_plasma(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme,
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
+        plasma_square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
 
     # Get the plasma permieter points for the core plasma region
     pg = plasma_geometry(
@@ -11890,7 +11926,19 @@ def plot_magnetic_fields_in_plasma(axis, mfile_data, scan):
     )
 
     # Plot plasma on top of magnetic field, displaced vertically by bt
-    plot_plasma(axis, mfile_data, scan, colour_scheme=1)
+    plot_plasma(
+        axis,
+        mfile_data,
+        scan,
+        colour_scheme=1,
+        rmajor=mfile_data.data["rmajor"].get_scan(scan),
+        rminor=mfile_data.data["rminor"].get_scan(scan),
+        triang=mfile_data.data["triang"].get_scan(scan),
+        kappa=mfile_data.data["kappa"].get_scan(scan),
+        i_single_null=mfile_data.data["i_single_null"].get_scan(scan),
+        i_plasma_shape=mfile_data.data["i_plasma_shape"].get_scan(scan),
+        plasma_square=mfile_data.data["plasma_square"].get_scan(scan),
+    )
 
     # Plot plasma centre dot
     axis.plot(rmajor, 0, marker="o", color="red", markersize=8, label="Plasma Centre")
