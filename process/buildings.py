@@ -74,7 +74,7 @@ class Buildings:
                 buildings_variables.rmbvol,
                 buildings_variables.wsvol,
                 buildings_variables.elevol,
-            ) = self.bldgs(
+            ) = self.calculate_building_sizes_1992(
                 output,
                 pfcoil_variables.r_pf_coil_outer_max,
                 pfcoil_variables.m_pf_coil_max,
@@ -94,7 +94,7 @@ class Buildings:
                 heat_transport_variables.helpow,
             )
 
-    def bldgs(
+    def calculate_building_sizes_1992(
         self,
         output: bool,
         pfr,

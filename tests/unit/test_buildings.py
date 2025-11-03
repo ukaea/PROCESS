@@ -983,7 +983,7 @@ def test_bldgs(buildings, bldgsparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "convol", bldgsparam.convol)
     monkeypatch.setattr(buildings_variables, "volnucb", bldgsparam.volnucb)
 
-    cryv, vrci, rbv, rmbv, wsv, elev = buildings.bldgs(
+    cryv, vrci, rbv, rmbv, wsv, elev = buildings.calculate_building_sizes_1992(
         output=False,
         pfr=bldgsparam.pfr,
         pfm=bldgsparam.pfm,
