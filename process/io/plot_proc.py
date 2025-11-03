@@ -3309,9 +3309,7 @@ def plot_system_power_profiles_over_time(
         ("HCD Electric Total", "p_hcd_electric_total_profile_mw"),
     ]:
         for time in range(len(t_steps)):
-            power_profiles[label][time] = mfile_data.data.get(
-                f"{key}{time}", mfile_data.data.get(key)
-            ).get_scan(scan)
+            power_profiles[label][time] = mfile_data.data[f"{key}{time}"].get_scan(scan)
 
     # Define line styles for each system
     # All net drains (negative power flows) use the same line style: dashed
@@ -3416,7 +3414,7 @@ def plot_system_power_profiles_over_time(
 
     axis.text(
         0.6,
-        0.2,
+        0.225,
         textstr_times,
         fontsize=9,
         verticalalignment="top",
@@ -12555,10 +12553,10 @@ def main_plot(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
     )
 
-    ax24 = fig24.add_subplot(111)
+    ax24 = fig25.add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig24)
+    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig25)
 
 
 def main(args=None):
@@ -12876,6 +12874,7 @@ def main(args=None):
     page22 = plt.figure(figsize=(12, 9), dpi=80)
     page23 = plt.figure(figsize=(12, 9), dpi=80)
     page24 = plt.figure(figsize=(12, 9), dpi=80)
+    page25 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12904,6 +12903,7 @@ def main(args=None):
         page22,
         page23,
         page24,
+        page25,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -12937,6 +12937,7 @@ def main(args=None):
         pdf.savefig(page22)
         pdf.savefig(page23)
         pdf.savefig(page24)
+        pdf.savefig(page25)
 
     # show fig if option used
     if args.show:
