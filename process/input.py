@@ -1494,7 +1494,9 @@ INPUT_VARIABLES = {
     "rhopfbus": InputVariable(
         data_structure.pfcoil_variables, float, range=(0.0, 1e-05)
     ),
-    "rinboard": InputVariable(data_structure.build_variables, float, range=(0.1, 10.0)),
+    "r_plasma_inboard": InputVariable(
+        data_structure.build_variables, float, range=(0.1, 10.0)
+    ),
     "ripple_b_tf_plasma_edge_max": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),

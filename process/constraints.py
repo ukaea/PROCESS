@@ -991,7 +991,7 @@ def constraint_equation_29():
 
     rmajor: plasma major radius (m) (iteration variable 3)
     rminor: plasma minor radius (m)
-    rinboard: plasma inboard radius (m)
+    r_plasma_inboard: plasma inboard radius (m)
     """
     cc = (
         1.0
@@ -999,12 +999,12 @@ def constraint_equation_29():
             data_structure.physics_variables.rmajor
             - data_structure.physics_variables.rminor
         )
-        / data_structure.build_variables.rinboard
+        / data_structure.build_variables.r_plasma_inboard
     )
     return ConstraintResult(
         cc,
-        data_structure.build_variables.rinboard * (1.0 - cc),
-        data_structure.build_variables.rinboard * cc,
+        data_structure.build_variables.r_plasma_inboard * (1.0 - cc),
+        data_structure.build_variables.r_plasma_inboard * cc,
     )
 
 

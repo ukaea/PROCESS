@@ -11469,7 +11469,11 @@ def test_calc_n_plant_and_vv_costs(calcnplantandvvcostsparam, monkeypatch, costs
     :type monkeypatch: _pytest.monkeypatch.monkeypatch
     """
 
-    monkeypatch.setattr(build_variables, "r_shld_outboard_outer", calcnplantandvvcostsparam.r_shld_outboard_outer)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_outboard_outer",
+        calcnplantandvvcostsparam.r_shld_outboard_outer,
+    )
 
     monkeypatch.setattr(
         build_variables, "dr_vv_outboard", calcnplantandvvcostsparam.dr_vv_outboard

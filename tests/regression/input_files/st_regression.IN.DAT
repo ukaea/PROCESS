@@ -3469,4 +3469,4 @@ iavail = 0
 *icc = 29
 * DESCRIPTION:   Constraint equation for inboard major radius: This is a consistency equation 
 * JUSTIFICATION: Turned off, build consistency covered by icc = 11  
-* VARIABLES:     rinboard calculated in-situ
+* VARIABLES:     r_plasma_inboard calculated in-situ

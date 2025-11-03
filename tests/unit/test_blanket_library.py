@@ -796,7 +796,11 @@ def test_dshaped_component(dshapedcomponentparam, monkeypatch, blanket_library_f
     monkeypatch.setattr(
         build_variables, "dz_shld_upper", dshapedcomponentparam.dz_shld_upper
     )
-    monkeypatch.setattr(build_variables, "r_shld_outboard_outer", dshapedcomponentparam.r_shld_outboard_outer)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_outboard_outer",
+        dshapedcomponentparam.r_shld_outboard_outer,
+    )
     monkeypatch.setattr(
         build_variables, "dr_vv_inboard", dshapedcomponentparam.dr_vv_inboard
     )
@@ -1097,7 +1101,11 @@ def test_elliptical_component(
     monkeypatch.setattr(
         build_variables, "dr_blkt_inboard", ellipticalcomponentparam.dr_blkt_inboard
     )
-    monkeypatch.setattr(build_variables, "r_shld_outboard_outer", ellipticalcomponentparam.r_shld_outboard_outer)
+    monkeypatch.setattr(
+        build_variables,
+        "r_shld_outboard_outer",
+        ellipticalcomponentparam.r_shld_outboard_outer,
+    )
     monkeypatch.setattr(
         build_variables, "dr_shld_outboard", ellipticalcomponentparam.dr_shld_outboard
     )

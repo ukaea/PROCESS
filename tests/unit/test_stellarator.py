@@ -576,7 +576,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     monkeypatch.setattr(build_variables, "rsldi", stbildparam.rsldi)
 
-    monkeypatch.setattr(build_variables, "r_shld_outboard_outer", stbildparam.r_shld_outboard_outer)
+    monkeypatch.setattr(
+        build_variables, "r_shld_outboard_outer", stbildparam.r_shld_outboard_outer
+    )
 
     monkeypatch.setattr(build_variables, "rspo", stbildparam.rspo)
 
@@ -697,7 +699,9 @@ def test_stbild(stbildparam, monkeypatch, stellarator):
 
     assert build_variables.rsldi == pytest.approx(stbildparam.expected_rsldi)
 
-    assert build_variables.r_shld_outboard_outer == pytest.approx(stbildparam.expected_rsldo)
+    assert build_variables.r_shld_outboard_outer == pytest.approx(
+        stbildparam.expected_rsldo
+    )
 
     assert build_variables.rspo == pytest.approx(stbildparam.expected_rspo)
 

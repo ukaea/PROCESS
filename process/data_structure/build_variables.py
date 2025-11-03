@@ -204,7 +204,7 @@ required_radial_space: float = None
 """Required space between coil and plasma for blanket shield wall etc (m)"""
 
 
-rinboard: float = None
+r_plasma_inboard: float = None
 """plasma inboard radius (m) (`consistency equation 29`)"""
 
 
@@ -453,7 +453,7 @@ def init_build_variables():
     global dr_cs_precomp
     global rbld
     global required_radial_space
-    global rinboard
+    global r_plasma_inboard
     global rsldi
     global r_shld_outboard_outer
     global r_vv_inboard_out
@@ -548,7 +548,7 @@ def init_build_variables():
     dr_cs_precomp = 0.0
     rbld = 0.0
     required_radial_space = 0.0
-    rinboard = 0.651
+    r_plasma_inboard = 0.651
     rsldi = 0.0
     r_shld_outboard_outer = 0.0
     r_vv_inboard_out = 0.0
