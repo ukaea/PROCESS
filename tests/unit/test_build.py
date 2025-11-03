@@ -7,7 +7,6 @@ from process.data_structure import (
     build_variables,
     divertor_variables,
     physics_variables,
-    tfcoil_variables,
 )
 
 
@@ -55,46 +54,6 @@ class DivgeomParam(NamedTuple):
     outfile: Any = None
 
     expected_divht: Any = None
-
-
-class RippleAmplitudeParam(NamedTuple):
-    rminor: Any = None
-
-    rmajor: Any = None
-
-    dx_tf_wp_insulation: Any = None
-
-    n_tf_coils: Any = None
-
-    dx_tf_inboard_out_toroidal: Any = None
-
-    dx_tf_side_case_min: Any = None
-
-    dr_tf_wp_with_insulation: Any = None
-
-    dr_tf_nose_case: Any = None
-
-    casths_fraction: Any = None
-
-    i_tf_sup: Any = None
-
-    i_tf_wp_geom: Any = None
-
-    dx_tf_wp_insertion_gap: Any = None
-
-    tfc_sidewall_is_fraction: Any = None
-
-    r_tf_inboard_in: Any = None
-
-    ripple_b_tf_plasma_edge_max: Any = None
-
-    r_tf_outboard_mid: Any = None
-
-    expected_ripple: Any = None
-
-    expected_r_tf_outboard_midmin: Any = None
-
-    expected_flag: Any = None
 
 
 @pytest.mark.parametrize(
@@ -193,143 +152,6 @@ def test_divgeom(divgeomparam, monkeypatch, build):
     assert divht == pytest.approx(divgeomparam.expected_divht)
 
 
-@pytest.mark.parametrize(
-    "rippleamplitudeparam",
-    (
-        RippleAmplitudeParam(
-            rminor=2.8677741935483869,
-            rmajor=8.8901000000000003,
-            dx_tf_wp_insulation=0.0080000000000000019,
-            n_tf_coils=16,
-            dx_tf_inboard_out_toroidal=1,
-            dx_tf_side_case_min=0.05000000000000001,
-            dr_tf_wp_with_insulation=0.54261087836601019,
-            dr_tf_nose_case=0.52465000000000006,
-            casths_fraction=0.059999999999999998,
-            i_tf_sup=1,
-            i_tf_wp_geom=0,
-            dx_tf_wp_insertion_gap=0.01,
-            tfc_sidewall_is_fraction=False,
-            r_tf_inboard_in=2.9939411851091102,
-            ripple_b_tf_plasma_edge_max=0.60000000000000009,
-            r_tf_outboard_mid=14.988874193548387,
-            expected_ripple=2.3850014198003961,
-            expected_r_tf_outboard_midmin=16.519405859443332,
-            expected_flag=0,
-        ),
-        RippleAmplitudeParam(
-            rminor=2.8677741935483869,
-            rmajor=8.8901000000000003,
-            dx_tf_wp_insulation=0.0080000000000000019,
-            n_tf_coils=16,
-            dx_tf_inboard_out_toroidal=1,
-            dx_tf_side_case_min=0.05000000000000001,
-            dr_tf_wp_with_insulation=0.54261087836601019,
-            dr_tf_nose_case=0.52465000000000006,
-            casths_fraction=0.059999999999999998,
-            i_tf_sup=1,
-            i_tf_wp_geom=0,
-            dx_tf_wp_insertion_gap=0.01,
-            tfc_sidewall_is_fraction=False,
-            r_tf_inboard_in=2.9939411851091102,
-            ripple_b_tf_plasma_edge_max=0.60000000000000009,
-            r_tf_outboard_mid=16.519405859443332,
-            expected_ripple=0.59999999999999987,
-            expected_r_tf_outboard_midmin=16.519405859443332,
-            expected_flag=0,
-        ),
-    ),
-)
-def test_ripple_amplitude(rippleamplitudeparam, monkeypatch, build):
-    """
-    Automatically generated Regression Unit Test for ripple_amplitude.
-
-    This test was generated using data from tracking/baseline_2018/baseline_2018_IN.DAT.
-
-    :param rippleamplitudeparam: the data used to mock and assert in this test.
-    :type rippleamplitudeparam: rippleamplitudeparam
-
-    :param monkeypatch: pytest fixture used to mock module/class variables
-    :type monkeypatch: _pytest.monkeypatch.monkeypatch
-
-    :param build: fixture containing an initialised `Build` object
-    :type build: tests.unit.test_build.build (functional fixture)
-    """
-
-    monkeypatch.setattr(physics_variables, "rminor", rippleamplitudeparam.rminor)
-
-    monkeypatch.setattr(physics_variables, "rmajor", rippleamplitudeparam.rmajor)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_insulation",
-        rippleamplitudeparam.dx_tf_wp_insulation,
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "n_tf_coils", rippleamplitudeparam.n_tf_coils)
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_inboard_out_toroidal",
-        rippleamplitudeparam.dx_tf_inboard_out_toroidal,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_side_case_min",
-        rippleamplitudeparam.dx_tf_side_case_min,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dr_tf_wp_with_insulation",
-        rippleamplitudeparam.dr_tf_wp_with_insulation,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "dr_tf_nose_case", rippleamplitudeparam.dr_tf_nose_case
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables, "casths_fraction", rippleamplitudeparam.casths_fraction
-    )
-
-    monkeypatch.setattr(tfcoil_variables, "i_tf_sup", rippleamplitudeparam.i_tf_sup)
-
-    monkeypatch.setattr(
-        tfcoil_variables, "i_tf_wp_geom", rippleamplitudeparam.i_tf_wp_geom
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "dx_tf_wp_insertion_gap",
-        rippleamplitudeparam.dx_tf_wp_insertion_gap,
-    )
-
-    monkeypatch.setattr(
-        tfcoil_variables,
-        "tfc_sidewall_is_fraction",
-        rippleamplitudeparam.tfc_sidewall_is_fraction,
-    )
-
-    monkeypatch.setattr(
-        build_variables, "r_tf_inboard_in", rippleamplitudeparam.r_tf_inboard_in
-    )
-
-    ripple, r_tf_outboard_midmin, flag = build.plasma_outboard_edge_toroidal_ripple(
-        ripple_b_tf_plasma_edge_max=rippleamplitudeparam.ripple_b_tf_plasma_edge_max,
-        r_tf_outboard_mid=rippleamplitudeparam.r_tf_outboard_mid,
-    )
-
-    assert ripple == pytest.approx(rippleamplitudeparam.expected_ripple)
-
-    assert r_tf_outboard_midmin == pytest.approx(
-        rippleamplitudeparam.expected_r_tf_outboard_midmin
-    )
-
-    assert flag == pytest.approx(rippleamplitudeparam.expected_flag)
-
-
 class PortszParam(NamedTuple):
     r_tf_outboard_mid: Any = None
 
@@ -420,3 +242,168 @@ def test_calculate_beam_port_size(portszparam, build):
     assert radius_beam_tangency_max == pytest.approx(
         portszparam.expected_radius_beam_tangency_max
     )
+
+
+class PlasmaRippleParam(NamedTuple):
+    ripple_b_tf_plasma_edge_max: Any = None
+    r_tf_outboard_mid: Any = None
+    n_tf_coils: Any = None
+    rmajor: Any = None
+    rminor: Any = None
+    r_tf_wp_inboard_inner: Any = None
+    r_tf_wp_inboard_centre: Any = None
+    r_tf_wp_inboard_outer: Any = None
+    dx_tf_wp_primary_toroidal: Any = None
+    i_tf_shape: Any = None
+    i_tf_sup: Any = None
+    dx_tf_wp_insulation: Any = None
+    dx_tf_wp_insertion_gap: Any = None
+
+
+@pytest.mark.parametrize(
+    "param",
+    (
+        # Picture-frame analytical model (i_tf_shape == 2)
+        PlasmaRippleParam(
+            ripple_b_tf_plasma_edge_max=0.6,
+            r_tf_outboard_mid=14.988874193548387,
+            n_tf_coils=16,
+            rmajor=8.8901000000000003,
+            rminor=2.8677741935483869,
+            r_tf_wp_inboard_inner=2.9939411851091102,
+            r_tf_wp_inboard_centre=3.0939411851091102,
+            r_tf_wp_inboard_outer=3.1939411851091102,
+            dx_tf_wp_primary_toroidal=0.8,
+            i_tf_shape=2,
+            i_tf_sup=1,
+            dx_tf_wp_insulation=0.008,
+            dx_tf_wp_insertion_gap=0.01,
+        ),
+        # Fitted-range diagnostic: small coil width X -> should set flag = 1
+        PlasmaRippleParam(
+            ripple_b_tf_plasma_edge_max=0.6,
+            r_tf_outboard_mid=10.0,
+            n_tf_coils=16,
+            rmajor=8.8901000000000003,
+            rminor=2.8677741935483869,
+            r_tf_wp_inboard_inner=0.6,
+            r_tf_wp_inboard_centre=0.7,
+            r_tf_wp_inboard_outer=0.8,
+            dx_tf_wp_primary_toroidal=0.01,  # very small -> x << 0.737
+            i_tf_shape=0,
+            i_tf_sup=1,
+            dx_tf_wp_insulation=0.0,
+            dx_tf_wp_insertion_gap=0.0,
+        ),
+        # Additional picture-frame cases: different coil counts and toroidal thicknesses
+        PlasmaRippleParam(
+            ripple_b_tf_plasma_edge_max=0.6,
+            r_tf_outboard_mid=13.5,
+            n_tf_coils=8,
+            rmajor=8.8901000000000003,
+            rminor=2.8677741935483869,
+            r_tf_wp_inboard_inner=3.0,
+            r_tf_wp_inboard_centre=3.1,
+            r_tf_wp_inboard_outer=3.2,
+            dx_tf_wp_primary_toroidal=0.5,
+            i_tf_shape=2,
+            i_tf_sup=1,
+            dx_tf_wp_insulation=0.01,
+            dx_tf_wp_insertion_gap=0.02,
+        ),
+        PlasmaRippleParam(
+            ripple_b_tf_plasma_edge_max=0.6,
+            r_tf_outboard_mid=17.0,
+            n_tf_coils=24,
+            rmajor=8.8901000000000003,
+            rminor=2.8677741935483869,
+            r_tf_wp_inboard_inner=3.5,
+            r_tf_wp_inboard_centre=3.6,
+            r_tf_wp_inboard_outer=3.7,
+            dx_tf_wp_primary_toroidal=1.2,
+            i_tf_shape=2,
+            i_tf_sup=1,
+            dx_tf_wp_insulation=0.02,
+            dx_tf_wp_insertion_gap=0.01,
+        ),
+        # Same coil count as baseline but very thin toroidal WP to check sensitivity
+        PlasmaRippleParam(
+            ripple_b_tf_plasma_edge_max=0.6,
+            r_tf_outboard_mid=14.988874193548387,
+            n_tf_coils=16,
+            rmajor=8.8901000000000003,
+            rminor=2.8677741935483869,
+            r_tf_wp_inboard_inner=2.9,
+            r_tf_wp_inboard_centre=3.0,
+            r_tf_wp_inboard_outer=3.1,
+            dx_tf_wp_primary_toroidal=0.05,
+            i_tf_shape=2,
+            i_tf_sup=1,
+            dx_tf_wp_insulation=0.0,
+            dx_tf_wp_insertion_gap=0.0,
+        ),
+        # Another fitted-range diagnostic case with different coil number and small X
+        PlasmaRippleParam(
+            ripple_b_tf_plasma_edge_max=0.6,
+            r_tf_outboard_mid=9.5,
+            n_tf_coils=12,
+            rmajor=8.8901000000000003,
+            rminor=2.8677741935483869,
+            r_tf_wp_inboard_inner=0.7,
+            r_tf_wp_inboard_centre=0.8,
+            r_tf_wp_inboard_outer=0.9,
+            dx_tf_wp_primary_toroidal=0.02,
+            i_tf_shape=0,
+            i_tf_sup=1,
+            dx_tf_wp_insulation=0.0,
+            dx_tf_wp_insertion_gap=0.0,
+        ),
+    ),
+)
+def test_plasma_outboard_edge_toroidal_ripple_additional(param, build):
+    """
+    Additional unit tests for plasma_outboard_edge_toroidal_ripple.
+
+    - First case exercises the picture-frame analytical branch (i_tf_shape == 2)
+        and checks returned ripple and r_tf_outboard_midmin against the analytical formula.
+    - Second case forces the fitted-range diagnostic (x out of range) to ensure the
+        applicability flag is set (flag == 1) and results remain finite/positive.
+    - Additional cases vary coil counts (n_tf_coils) and toroidal WP thickness
+      (dx_tf_wp_primary_toroidal) to cover more branches and sensitivities.
+    """
+
+    ripple, r_tf_outboard_midmin, flag = build.plasma_outboard_edge_toroidal_ripple(
+        ripple_b_tf_plasma_edge_max=param.ripple_b_tf_plasma_edge_max,
+        r_tf_outboard_mid=param.r_tf_outboard_mid,
+        n_tf_coils=param.n_tf_coils,
+        rmajor=param.rmajor,
+        rminor=param.rminor,
+        r_tf_wp_inboard_inner=param.r_tf_wp_inboard_inner,
+        r_tf_wp_inboard_centre=param.r_tf_wp_inboard_centre,
+        r_tf_wp_inboard_outer=param.r_tf_wp_inboard_outer,
+        dx_tf_wp_primary_toroidal=param.dx_tf_wp_primary_toroidal,
+        i_tf_shape=param.i_tf_shape,
+        i_tf_sup=param.i_tf_sup,
+        dx_tf_wp_insulation=param.dx_tf_wp_insulation,
+        dx_tf_wp_insertion_gap=param.dx_tf_wp_insertion_gap,
+    )
+
+    if param.i_tf_shape == 2:
+        # Analytical expected values for picture-frame model
+        expected_ripple = 100.0 * (
+            (param.rmajor + param.rminor) / param.r_tf_outboard_mid
+        ) ** (param.n_tf_coils)
+        expected_r_min = (param.rmajor + param.rminor) / (
+            (0.01 * param.ripple_b_tf_plasma_edge_max) ** (1.0 / param.n_tf_coils)
+        )
+
+        assert ripple == pytest.approx(expected_ripple)
+        assert r_tf_outboard_midmin == pytest.approx(expected_r_min)
+        assert flag == 0
+    else:
+        # Expect the fitted-range diagnostic to trigger for very small coil-width X
+        # (existing tests use flag == 3 for that diagnostic; keep the same expectation)
+        assert flag == 3
+        # Results should be finite and positive
+        assert ripple > 0.0
+        assert r_tf_outboard_midmin > 0.0

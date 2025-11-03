@@ -887,6 +887,8 @@ class TfCaseGeomParam(NamedTuple):
 
     expected_dx_tf_side_case_average: Any = None
 
+    expected_dx_tf_side_case_peak: Any = None
+
     expected_a_tf_plasma_case: Any = None
 
     expected_a_tf_coil_nose_case: Any = None
@@ -914,6 +916,7 @@ class TfCaseGeomParam(NamedTuple):
             expected_a_tf_coil_inboard_case=1.0015169239205168,
             expected_a_tf_coil_outboard_case=1.2752592893394648,
             expected_dx_tf_side_case_average=0.10396600719086938,
+            expected_dx_tf_side_case_peak=0.15793201438173876,
             expected_a_tf_plasma_case=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
@@ -936,6 +939,7 @@ class TfCaseGeomParam(NamedTuple):
             expected_a_tf_coil_inboard_case=1.0015169239205168,
             expected_a_tf_coil_outboard_case=1.2752592893394648,
             expected_dx_tf_side_case_average=0.10396600719086938,
+            expected_dx_tf_side_case_peak=0.15793201438173876,
             expected_a_tf_plasma_case=0.18607458590131154,
             expected_a_tf_coil_nose_case=0.70261616505511615,
         ),
@@ -957,6 +961,7 @@ def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
         a_tf_plasma_case,
         a_tf_coil_nose_case,
         dx_tf_side_case_average,
+        dx_tf_side_case_peak,
     ) = sctfcoil.superconducting_tf_case_geometry(
         i_tf_wp_geom=tfcasegeomparam.i_tf_wp_geom,
         i_tf_case_geom=tfcasegeomparam.i_tf_case_geom,
@@ -985,6 +990,10 @@ def test_superconducting_tf_case_geometry(tfcasegeomparam, sctfcoil):
 
     assert dx_tf_side_case_average == pytest.approx(
         tfcasegeomparam.expected_dx_tf_side_case_average
+    )
+
+    assert dx_tf_side_case_peak == pytest.approx(
+        tfcasegeomparam.expected_dx_tf_side_case_peak
     )
 
     assert a_tf_plasma_case == pytest.approx(tfcasegeomparam.expected_a_tf_plasma_case)

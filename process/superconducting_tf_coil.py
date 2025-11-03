@@ -1950,6 +1950,7 @@ class SuperconductingTFCoil(TFCoil):
             superconducting_tf_coil_variables.a_tf_plasma_case,
             superconducting_tf_coil_variables.a_tf_coil_nose_case,
             superconducting_tf_coil_variables.dx_tf_side_case_average,
+            superconducting_tf_coil_variables.dx_tf_side_case_peak,
         ) = self.superconducting_tf_case_geometry(
             i_tf_case_geom=i_tf_case_geom,
             i_tf_wp_geom=i_tf_wp_geom,
@@ -2392,7 +2393,7 @@ class SuperconductingTFCoil(TFCoil):
         r_tf_inboard_in: float,
         dx_tf_side_case_min: float,
         dr_tf_wp_with_insulation: float,
-    ) -> tuple[float, float, float, float, float]:
+    ) -> tuple[float, float, float, float, float, float]:
         """
         Setting the case geometry and area for SC magnets
 
@@ -2433,6 +2434,7 @@ class SuperconductingTFCoil(TFCoil):
             - a_tf_plasma_case (float): Front casing area [m²].
             - a_tf_coil_nose_case (float): Nose casing area [m²].
             - dx_tf_side_case_average (float): Average lateral casing thickness [m].
+            - dx_tf_side_case_peak (float): Peak lateral casing thickness [m].
         :rtype: tuple[float, float, float, float, float]
 
         :raises: Reports error if calculated casing areas are negative.
@@ -2489,12 +2491,32 @@ class SuperconductingTFCoil(TFCoil):
         else:
             dx_tf_side_case_average = dx_tf_side_case_min
 
+        # Peak lateral casing thickness [m]
+        # --------------
+        # Rectangular casing
+
+        if i_tf_wp_geom == 0:
+            dx_tf_side_case_peak = (
+                dx_tf_side_case_min + tan_theta_coil * dr_tf_wp_with_insulation
+            )
+        # Double rectangular WP
+        elif i_tf_wp_geom == 1:
+            dx_tf_side_case_peak = (
+                dx_tf_side_case_min + 0.5 * tan_theta_coil * dr_tf_wp_with_insulation
+            )
+
+        # Trapezoidal WP
+        # Constant thickness so min = average
+        else:
+            dx_tf_side_case_peak = dx_tf_side_case_min
+
         return (
             a_tf_coil_inboard_case,
             a_tf_coil_outboard_case,
             a_tf_plasma_case,
             a_tf_coil_nose_case,
             dx_tf_side_case_average,
+            dx_tf_side_case_peak,
         )
 
     def tf_cable_in_conduit_integer_turn_geometry(
