@@ -492,11 +492,11 @@ class Buildings:
         # Reactor building external footprint and volume
         reactor_building_l = (
             buildings_variables.reactor_hall_l
-            + 2.0e0 * buildings_variables.reactor_wall_thk
+            + 2.0e0 * buildings_variables.dr_dx_reactor_hall_wall
         )
         reactor_building_w = (
             buildings_variables.reactor_hall_w
-            + 2.0e0 * buildings_variables.reactor_wall_thk
+            + 2.0e0 * buildings_variables.dr_dx_reactor_hall_wall
         )
         reactor_building_h = (
             buildings_variables.dz_reactor_hall
@@ -688,8 +688,8 @@ class Buildings:
 
         # external dimensions include same wall and roof thicknesses as reactor building
         hotcell_area_ext = (
-            hotcell_l + 2.0e0 * buildings_variables.reactor_wall_thk
-        ) * (hotcell_w + 2.0e0 * buildings_variables.reactor_wall_thk)
+            hotcell_l + 2.0e0 * buildings_variables.dr_dx_reactor_hall_wall
+        ) * (hotcell_w + 2.0e0 * buildings_variables.dr_dx_reactor_hall_wall)
         hotcell_vol_ext = hotcell_area_ext * (
             buildings_variables.hotcell_h
             + buildings_variables.reactor_roof_thk

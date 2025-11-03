@@ -31,7 +31,7 @@ class BldgsSizesParam(NamedTuple):
     a_plant_floor_effective: Any
     volnucb: Any
     bioshld_thk: Any
-    reactor_wall_thk: Any
+    dr_dx_reactor_hall_wall: Any
     reactor_roof_thk: Any
     reactor_fndtn_thk: Any
     reactor_clrnc: Any
@@ -174,7 +174,7 @@ class BldgsSizesParam(NamedTuple):
             a_plant_floor_effective=0,
             volnucb=0,
             bioshld_thk=2.5,
-            reactor_wall_thk=2,
+            dr_dx_reactor_hall_wall=2,
             reactor_roof_thk=1,
             reactor_fndtn_thk=2,
             reactor_clrnc=4,
@@ -313,7 +313,7 @@ class BldgsSizesParam(NamedTuple):
             a_plant_floor_effective=1539392.0963074313,
             volnucb=5212998.1139194397,
             bioshld_thk=2.5,
-            reactor_wall_thk=2,
+            dr_dx_reactor_hall_wall=2,
             reactor_roof_thk=1,
             reactor_fndtn_thk=2,
             reactor_clrnc=4,
@@ -459,7 +459,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
-        buildings_variables, "reactor_wall_thk", bldgssizesparam.reactor_wall_thk
+        buildings_variables, "dr_dx_reactor_hall_wall", bldgssizesparam.dr_dx_reactor_hall_wall
     )
     monkeypatch.setattr(
         buildings_variables, "reactor_roof_thk", bldgssizesparam.reactor_roof_thk

@@ -1456,7 +1456,7 @@ INPUT_VARIABLES = {
     "reactor_roof_thk": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
-    "reactor_wall_thk": InputVariable(
+    "dr_dx_reactor_hall_wall": InputVariable(
         data_structure.buildings_variables, float, range=(0.25, 25.0)
     ),
     "dx_hts_tape_rebco": InputVariable(

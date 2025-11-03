@@ -390,7 +390,7 @@ reactor_roof_thk: float = None
 """reactor building roof thickness (m)"""
 
 
-reactor_wall_thk: float = None
+dr_dx_reactor_hall_wall: float = None
 """reactor building wall thickness (m)"""
 
 
@@ -709,7 +709,7 @@ def init_buildings_variables():
     global reactor_hall_w
     global dz_reactor_hall
     global reactor_roof_thk
-    global reactor_wall_thk
+    global dr_dx_reactor_hall_wall
     global rmbvol
     global robotics_l
     global robotics_w
@@ -863,7 +863,7 @@ def init_buildings_variables():
     reactor_hall_w = 0.0
     dz_reactor_hall = 0.0
     reactor_roof_thk = 1.0
-    reactor_wall_thk = 2.0
+    dr_dx_reactor_hall_wall = 2.0
     rmbvol = 0.0
     robotics_l = 50.0
     robotics_w = 30.0
