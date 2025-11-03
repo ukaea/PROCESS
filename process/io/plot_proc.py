@@ -12393,9 +12393,8 @@ def plot_plasma_outboard_toroidal_ripple_map(
     # Improve layout
     fig.tight_layout()
 
+
 def plot_reactor_hall_layout(axis, mfile_data, scan, colour_scheme):
-    
-    
     # Plot the right hand side (positive) section
     plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme)
     plot_shield(axis, mfile_data, scan, colour_scheme)
@@ -12435,11 +12434,10 @@ def plot_reactor_hall_layout(axis, mfile_data, scan, colour_scheme):
         y5=mfile_data.data["z_tf_arc(5)"].get_scan(scan),
     )
     plot_pf_coils(axis, mfile_data, scan, colour_scheme)
-    
-    
+
     # =======================
-    
-     # Plot the right hand side (positive) section
+
+    # Plot the right hand side (positive) section
     plot_vacuum_vessel_and_divertor(axis, mfile_data, scan, colour_scheme)
     plot_shield(axis, mfile_data, scan, colour_scheme)
     plot_blanket(axis, mfile_data, scan, colour_scheme)
@@ -12478,6 +12476,7 @@ def plot_reactor_hall_layout(axis, mfile_data, scan, colour_scheme):
         y5=mfile_data.data["z_tf_arc(5)"].get_scan(scan),
     )
     plot_pf_coils(axis, mfile_data, scan, colour_scheme)
+
 
 def main_plot(
     fig0,
@@ -12779,7 +12778,7 @@ def main_plot(
     plot_main_power_flow(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
     )
-    
+
     plot_reactor_hall_layout(
         fig25.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )

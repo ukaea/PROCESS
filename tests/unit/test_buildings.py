@@ -741,7 +741,7 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(physics_variables, "rmajor", bldgssizesparam.rmajor)
     monkeypatch.setattr(physics_variables, "rminor", bldgssizesparam.rminor)
 
-    buildings.bldgs_sizes(
+    buildings.calculate_building_sizes_chapman(
         tf_radial_dim=bldgssizesparam.tf_radial_dim,
         tf_vertical_dim=bldgssizesparam.tf_vertical_dim,
         output=False,
