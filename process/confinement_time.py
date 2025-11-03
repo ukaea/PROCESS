@@ -2166,6 +2166,7 @@ def modified_itpa20_confinement_time(
     # aion: float,
     nd_plasma_separatrix_electron: float,
     n_greenwald: float,
+    t_energy_confinement_beta: float,
 ) -> float:
     """ """
     # return (
@@ -2182,4 +2183,6 @@ def modified_itpa20_confinement_time(
     #     aion,
     # )
 
-    return -1.2192 * ((nd_plasma_separatrix_electron / n_greenwald) * 1e-19) + 1.2463
+    return t_energy_confinement_beta / (
+        -1.2192 * ((nd_plasma_separatrix_electron / n_greenwald) * 1e-19) + 1.2463
+    )
