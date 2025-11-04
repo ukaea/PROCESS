@@ -709,7 +709,7 @@ def init_pfcoil_variables():
 
     alfapf = 5e-10
     alstroh = 4.0e8
-    i_cs_stress = 0
+    i_cs_stress = 1
     a_cs_poloidal = 0.0
     a_cs_turn = 0.0
     awpoh = 0.0
