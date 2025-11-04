@@ -1,17 +1,20 @@
 ---
 site_name: PROCESS
-docs_dir: documentation/proc-pages/
+docs_dir: documentation/
 nav:
   - Getting Started:
       - About: index.md
       - Installation:
-          - Introduction: installation/introduction.md
-          - Installation on Ubuntu/Windows: installation/installation-ubuntu.md
-          - Installation on CSD3: installation/csd3-for-process.md
+          - Installation: installation/installation.md
           - Visual Studio Code: installation/vs-code.md
       - Usage:
           - Running PROCESS: usage/running-process.md
-          - Examples: usage/examples.md
+          - Examples:
+              - Examples of running PROCESS: usage/examples.md
+              - examples/examples.ipynb
+              - examples/scan.ipynb
+              - examples/plot_solutions.ipynb
+              - examples/single_model_evaluation.ipynb
           - Troubleshooting: usage/troubleshooting.md
           - Plotting: usage/plotting.md
           - Tracking: tracking.html
@@ -29,15 +32,12 @@ nav:
       - Maintenance:
           - Testing: development/testing.md
           - Debugging: development/debugging.md
-          - Tools: development/tools.md
       - Code modification:
           - Adding Variables & Constraints: development/add-vars.md
-          - Adding Physics and Engineering Variables to Python: development/annotated-variable.md
           - Python Optimisation and Numba: development/numba.md
       - Style:
           - Standards: development/standards.md
-          - F2Py Standards: development/f2py-standards.md
-      # - Versioning: development/versioning.md
+                      # - Versioning: development/versioning.md
   - Models:
       - Physics Models:
           - Plasma:
@@ -75,7 +75,12 @@ nav:
           - Machine Build: eng-models/machine-build.md
           - Structural Components: eng-models/structural-components.md
           - Buildings: eng-models/buildings.md
-          - First Wall/Blanket: eng-models/fw-blanket.md
+          - First Wall/Blanket:
+              - Overview: eng-models/fw-blanket.md
+              - Blanket:
+                  - Overview: eng-models/blanket_overview.md
+                  - CCFE HCPB: eng-models/ccfe_hcpb.md
+
           - TF Coil:
               - Overview: eng-models/tf-coil.md
               - Resistive TF Coil: eng-models/tf-coil-resistive.md
@@ -129,11 +134,9 @@ nav:
           - Inertial Fusion Energy Model: fusion-devices/inertial.md
   - Publications: publications.md
   - Source Documentation:
-      - FORD Documentation: ford_site
       - process: python/process.md
       - process.io: python/process.io.md
       - process.utilities: python/process.utilities.md
-      - process.fortran: python/process.fortran.md
 
 # repo_url: https://git.ccfe.ac.uk/process/process.git
 
@@ -143,7 +146,7 @@ repo_name: UKAEA/PROCESS
 copyright: Copyright &copy; 2023 United Kingdom Atomic Energy Authority
 
 theme:
-  # name: readthedocs
+    # name: readthedocs
   name: material
   font:
     text: Roboto
@@ -151,7 +154,7 @@ theme:
     - navigation.tabs
     - navigation.footer
     - navigation.top
-      # - navigation.sections
+          # - navigation.sections
     - search.suggest
     - search.highlight
     - navigation.instant
@@ -214,6 +217,10 @@ plugins:
       caption_position: bottom
   - git-revision-date-localized:
       enable_creation_date: true
+  - mkdocs-jupyter:
+      execute: true
+      ignore: [scripts/**/*.py]
+
 #     - mkdocstrings:
 #           handlers:
 #               python:

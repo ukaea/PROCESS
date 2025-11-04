@@ -3,14 +3,13 @@ import math
 
 import numpy as np
 
+from process import constants
 from process import process_output as po
+from process.data_structure import build_variables as buv
+from process.data_structure import physics_variables as pv
+from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
-from process.fortran import build_variables as buv
-from process.fortran import constants
-from process.fortran import error_handling as eh
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +23,7 @@ class Vacuum:
     """
 
     def __init__(self) -> None:
-        self.outfile: int = constants.nout
+        self.outfile: int = constants.NOUT
 
     def run(self, output: bool) -> None:
         """Routine to call the vacuum module
@@ -43,14 +42,25 @@ class Vacuum:
         #  2 nuclei * nucleus-pairs/sec * mass/nucleus
 
         # MDK Check this!!
-        gasld = 2.0e0 * pv.qfuel * pv.m_fuel_amu * constants.umass
+        gasld = (
+            2.0e0
+            * pv.molflow_plasma_fuelling_required
+            * pv.m_fuel_amu
+            * constants.UMASS
+        )
 
-        self.vacuum_model = vacv.vacuum_model
+        self.i_vacuum_pumping = vacv.i_vacuum_pumping
 
-        # vacuum_model required to be compared to a b string
+        # i_vacuum_pumping required to be compared to a b string
         # as this is what f2py returns
-        if self.vacuum_model == "old":
-            pumpn, vacv.nvduct, vacv.dlscal, vacv.vacdshm, vacv.vcdimax = self.vacuum(
+        if self.i_vacuum_pumping == "old":
+            (
+                pumpn,
+                vacv.n_vv_vacuum_ducts,
+                vacv.dlscal,
+                vacv.m_vv_vacuum_duct_shield,
+                vacv.dia_vv_vacuum_ducts,
+            ) = self.vacuum(
                 pv.p_fusion_total_mw,
                 pv.rmajor,
                 pv.rminor,
@@ -62,23 +72,19 @@ class Vacuum:
                 buv.dr_tf_inboard,
                 buv.rsldi - buv.dr_shld_vv_gap_inboard - buv.dr_vv_inboard,
                 tfv.n_tf_coils,
-                tv.t_between_pulse,
-                pv.dene,
+                tv.t_plant_pulse_dwell,
+                pv.nd_plasma_electrons_vol_avg,
                 pv.n_divertors,
                 qtorus,
                 gasld,
                 output=output,
             )
             # MDK pumpn is real: convert to integer by rounding.
-            vacv.vpumpn = math.floor(pumpn + 0.5e0)
-        elif self.vacuum_model == "simple":
-            vacv.niterpump = self.vacuum_simple(output=output)
+            vacv.n_vac_pumps_high = math.floor(pumpn + 0.5e0)
+        elif self.i_vacuum_pumping == "simple":
+            vacv.n_iter_vacuum_pumps = self.vacuum_simple(output=output)
         else:
-            logger.warning(f"vacuum_model seems to be invalid: {vacv.vacuum_model}")
-            po.ocmmnt(
-                self.outfile,
-                f'ERROR "vacuum_model" seems to be invalid: {vacv.vacuum_model}',
-            )
+            logger.error(f"i_vacuum_pumping is invalid: {vacv.i_vacuum_pumping}")
 
     def vacuum_simple(self, output) -> float:
         """Simple model of vacuum pumping system
@@ -94,14 +100,16 @@ class Vacuum:
         # Steady-state model (super simple)
         # One ITER torus cryopump has a throughput of 50 Pa m3/s = 1.2155e+22 molecules/s
         # Issue #304
-        niterpump = pv.qfuel / vacv.pumptp
+        n_iter_vacuum_pumps = (
+            pv.molflow_plasma_fuelling_required / vacv.molflow_vac_pumps
+        )
 
         # Pump-down:
         # Pumping speed per pump m3/s
         pumpspeed = (
-            vacv.pumpspeedmax
-            * vacv.pumpareafraction
-            * vacv.pumpspeedfactor
+            vacv.volflow_vac_pumps_max
+            * vacv.f_a_vac_pump_port_plasma_surface
+            * vacv.f_volflow_vac_pumps_impedance
             * pv.a_plasma_surface
             / tfv.n_tf_coils
         )
@@ -109,14 +117,14 @@ class Vacuum:
         wallarea = (pv.a_plasma_surface / 1084.0e0) * 2000.0e0
         # Required pumping speed for pump-down
         pumpdownspeed = (
-            vacv.outgasfactor * wallarea / vacv.pbase
-        ) * tv.t_between_pulse ** (-vacv.outgasindex)
+            vacv.outgasfactor * wallarea / vacv.pres_vv_chamber_base
+        ) * tv.t_plant_pulse_dwell ** (-vacv.outgasindex)
         # Number of pumps required for pump-down
         npumpdown = pumpdownspeed / pumpspeed
 
         # Combine the two (somewhat inconsistent) models
         # Note that 'npump' can be constrained by constraint equation 63
-        npump = max(niterpump, npumpdown)
+        npump = max(n_iter_vacuum_pumps, npumpdown)
 
         #  Output section
         if output:
@@ -124,8 +132,8 @@ class Vacuum:
             po.ovarst(
                 self.outfile,
                 "Switch for vacuum pumping model",
-                "(vacuum_model)",
-                '"' + self.vacuum_model + '"',
+                "(i_vacuum_pumping)",
+                '"' + self.i_vacuum_pumping + '"',
             )
             po.ocmmnt(
                 self.outfile,
@@ -134,8 +142,8 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 "Plasma fuelling rate (nucleus-pairs/s)",
-                "(qfuel)",
-                pv.qfuel,
+                "(molflow_plasma_fuelling_required)",
+                pv.molflow_plasma_fuelling_required,
                 "OP ",
             )
             po.ocmmnt(
@@ -148,13 +156,16 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 " all operating at the same time",
-                "(niterpump)",
-                niterpump,
+                "(n_iter_vacuum_pumps)",
+                n_iter_vacuum_pumps,
                 "OP ",
             )
 
             po.ovarre(
-                self.outfile, "Dwell time", "(t_between_pulse)", tv.t_between_pulse
+                self.outfile,
+                "Dwell time",
+                "(t_plant_pulse_dwell)",
+                tv.t_plant_pulse_dwell,
             )
             po.ovarre(
                 self.outfile,
@@ -186,7 +197,7 @@ class Vacuum:
         thtf,
         ritf,
         n_tf_coils,
-        t_between_pulse,
+        t_plant_pulse_dwell,
         nplasma,
         ndiv,
         qtorus,
@@ -235,7 +246,7 @@ class Vacuum:
         :param tfno:  Number of TF coils
         :type : int
 
-        :param t_between_pulse: Dwell time between pulses (s)
+        :param t_plant_pulse_dwell: Dwell time between pulses (s)
         :type : float
 
         :param nplasma: Plasma density (m**-3)
@@ -265,9 +276,9 @@ class Vacuum:
         fsolid = 0.9e0  # Fraction of duct shielding that is solid material
 
         #  Pump type;
-        #    ntype = 0 for turbomolecular pump (mag. bearing) with a nominal
+        #    i_vacuum_pump_type = 0 for turbomolecular pump (mag. bearing) with a nominal
         #              speed of 2.0 m^3/s (1.95 for N2, 1.8 for He, 1.8 for DT)
-        #    ntype = 1 for compound cryopump with nominal speed of 10 m^3/s
+        #    i_vacuum_pump_type = 1 for compound cryopump with nominal speed of 10 m^3/s
         #              (9.0 for N2, 5.0 for He and 25. for DT)
 
         pfus = pfusmw * 1.0e6  # Fusion power (W)
@@ -298,7 +309,11 @@ class Vacuum:
         #  Speed of high-vacuum pumps (m^3/s)
 
         # nitrogen, DT, helium, DT again
-        sp = [1.95, 1.8, 1.8, 1.8] if vacv.ntype == 0 else [9.0, 25.0, 5.0, 25.0]
+        sp = (
+            [1.95, 1.8, 1.8, 1.8]
+            if vacv.i_vacuum_pump_type == 0
+            else [9.0, 25.0, 5.0, 25.0]
+        )
 
         #  Calculate required pumping speeds
 
@@ -307,23 +322,23 @@ class Vacuum:
         #  Initial pumpdown based on outgassing
         #  s(1) = net pump speed (N2) required for pumpdown to base pressure (m^3/s)
         #  area = vacuum chamber/fw area (m^2)  ;  outgassing area = 10 x area
-        #  rat = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
-        #  pbase = base pressure (Pa)
+        #  outgrat_fw = outgassing rate (effective for N2) of plasma chamber surface (Pa-m/s)
+        #  pres_vv_chamber_base = base pressure (Pa)
 
         #  Old method: area = 4.0e0 * pi*pi * r0 * aw * sqrt(0.5e0*(1.0e0 + kappa*kappa))
 
         area = plasma_sarea * (aw + dsol) / aw
 
-        ogas = vacv.rat * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
-        s.append(ogas / vacv.pbase)
+        ogas = vacv.outgrat_fw * area * 10.0e0  # Outgassing rate (Pa-m^3/s)
+        s.append(ogas / vacv.pres_vv_chamber_base)
 
         #  Pumpdown between burns
         #  s(2) = net pump speed (DT) required for pumpdown between burns (m^3/s)
-        #  tn = temperature of neutral gas in chamber (K)
-        #  t_between_pulse = dwell time between burns (s)
+        #  temp_vv_chamber_gas_burn_end = temperature of neutral gas in chamber (K)
+        #  t_plant_pulse_dwell = dwell time between burns (s)
 
         pend = (
-            0.5e0 * nplasma * k * vacv.tn
+            0.5e0 * nplasma * k * vacv.temp_vv_chamber_gas_burn_end
         )  # pressure in plasma chamber after burn (Pa)
         pstart = 0.01e0 * pend  # pressure in chamber before start of burn (Pa)
 
@@ -334,12 +349,12 @@ class Vacuum:
         volume = plasma_vol * (aw + dsol) * (aw + dsol) / (aw * aw)
 
         #  dwell pumping options
-        if (vacv.dwell_pump == 1) or (t_between_pulse == 0):
-            tpump = tv.t_precharge
-        elif vacv.dwell_pump == 2:
-            tpump = t_between_pulse + tv.t_precharge
+        if (vacv.i_vac_pump_dwell == 1) or (t_plant_pulse_dwell == 0):
+            tpump = tv.t_plant_pulse_coil_precharge
+        elif vacv.i_vac_pump_dwell == 2:
+            tpump = t_plant_pulse_dwell + tv.t_plant_pulse_coil_precharge
         else:
-            tpump = t_between_pulse
+            tpump = t_plant_pulse_dwell
 
         s.append(volume / tpump * math.log(pend / pstart))
 
@@ -347,16 +362,18 @@ class Vacuum:
         #  s(3) = net pump speed (He) required for helium ash removal (m^3/s)
         #  source = alpha production rate (pa - m^3/s)
         #  fhe = fraction of neutral gas in divertor chamber that is helium
-        #  prdiv = pressure in divertor chamber during burn (Pa)
+        #  pres_div_chamber_burn = pressure in divertor chamber during burn (Pa)
 
         source = pfus * 1.47e-09
         fhe = source / (frate * 4.985e5)
-        s.append(source / vacv.prdiv / fhe)
+        s.append(source / vacv.pres_div_chamber_burn / fhe)
 
         #  Removal of dt on steady state basis
         #  s(4) = net speed (D-T) required to remove dt at fuelling rate (m^3/s)
 
-        s.append((frate * 4.985e5 - source) / (vacv.prdiv * (1.0e0 - fhe)))
+        s.append(
+            (frate * 4.985e5 - source) / (vacv.pres_div_chamber_burn * (1.0e0 - fhe))
+        )
 
         #  Calculate conductance of a single duct
 
@@ -444,9 +461,9 @@ class Vacuum:
                         break
 
                 else:
-                    eh.fdiags[0] = pv.p_fusion_total_mw
-                    eh.fdiags[1] = pv.te
-                    eh.report_error(124)
+                    logger.error(
+                        f"Newton's method not converging; check fusion power, te {pv.p_fusion_total_mw=} {pv.temp_plasma_electron_vol_avg_kev=}"
+                    )
 
                 theta = math.pi / ntf
 
@@ -491,7 +508,7 @@ class Vacuum:
         #  If cryopumps are used then an additional pump is required
         #  for continuous operation with regeneration.
 
-        if vacv.ntype == 1:
+        if vacv.i_vacuum_pump_type == 1:
             pumpn = pumpn * 2.0e0
 
         #  Information for costing routine
@@ -515,13 +532,19 @@ class Vacuum:
             po.ocmmnt(self.outfile, "Pumpdown to Base Pressure :")
             po.oblnkl(self.outfile)
             po.ovarre(
-                self.outfile, "First wall outgassing rate (Pa m/s)", "(rat)", vacv.rat
+                self.outfile,
+                "First wall outgassing rate (Pa m/s)",
+                "(outgrat_fw)",
+                vacv.outgrat_fw,
             )
             po.ovarre(
                 self.outfile, "Total outgassing load (Pa m3/s)", "(ogas)", ogas, "OP "
             )
             po.ovarre(
-                self.outfile, "Base pressure required (Pa)", "(pbase)", vacv.pbase
+                self.outfile,
+                "Base pressure required (Pa)",
+                "(pres_vv_chamber_base)",
+                vacv.pres_vv_chamber_base,
             )
             po.ovarre(
                 self.outfile, "Required N2 pump speed (m3/s)", "(s(1))", s[0], "OP "
@@ -547,20 +570,20 @@ class Vacuum:
             po.ovarin(
                 self.outfile,
                 "Allowable pumping time switch",
-                "(dwell_pump)",
-                vacv.dwell_pump,
+                "(i_vac_pump_dwell)",
+                vacv.i_vac_pump_dwell,
             )
             po.ovarre(
                 self.outfile,
                 "Dwell time between burns (s)",
-                "(t_between_pulse.)",
-                t_between_pulse,
+                "(t_plant_pulse_dwell.)",
+                t_plant_pulse_dwell,
             )
             po.ovarre(
                 self.outfile,
                 "CS ramp-up time burns (s)",
-                "(t_precharge.)",
-                tv.t_precharge,
+                "(t_plant_pulse_coil_precharge.)",
+                tv.t_plant_pulse_coil_precharge,
             )
             po.ovarre(
                 self.outfile,
@@ -583,8 +606,8 @@ class Vacuum:
             po.ovarre(
                 self.outfile,
                 "Divertor chamber gas pressure (Pa)",
-                "(prdiv)",
-                vacv.prdiv,
+                "(pres_div_chamber_burn)",
+                vacv.pres_div_chamber_burn,
             )
             po.ovarre(
                 self.outfile,
@@ -624,7 +647,9 @@ class Vacuum:
                 po.ocmmnt(self.outfile, "Conductance is inadequate.")
                 po.oblnkl(self.outfile)
 
-            i_fw_blkt_shared_coolant = "cryo " if vacv.ntype == 1 else "turbo"
+            i_fw_blkt_shared_coolant = (
+                "cryo " if vacv.i_vacuum_pump_type == 1 else "turbo"
+            )
 
             po.oblnkl(self.outfile)
             po.ocmmnt(self.outfile, "The vacuum pumping system size is governed by the")

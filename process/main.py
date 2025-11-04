@@ -49,8 +49,8 @@ from typing import Protocol
 
 import process
 import process.data_structure as data_structure
-import process.fortran as fortran
 import process.init as init
+from process import constants
 from process.availability import Availability
 from process.blanket_library import BlanketLibrary
 from process.build import Build
@@ -73,7 +73,12 @@ from process.fw import Fw
 from process.hcpb import CCFE_HCPB
 from process.ife import IFE
 from process.impurity_radiation import initialise_imprad
-from process.io import mfile, plot_proc, plot_radial_build, plot_sankey
+from process.io import (
+    mfile,
+    plot_plotly_sankey,
+    plot_proc,
+    plot_radial_build,
+)
 from process.io import obsolete_vars as ov
 
 # For VaryRun
@@ -87,11 +92,13 @@ from process.io.process_funcs import (
     process_warnings,
     vary_iteration_variables,
 )
+from process.log import logging_model_handler, show_errors
 from process.pfcoil import PFCoil
 from process.physics import Physics
 from process.plasma_geometry import PlasmaGeom
 from process.plasma_profiles import PlasmaProfile
 from process.power import Power
+from process.process_output import OutputFileManager, oheadr
 from process.pulse import Pulse
 from process.resistive_tf_coil import AluminiumTFCoil, CopperTFCoil, ResistiveTFCoil
 from process.scan import Scan
@@ -100,27 +107,12 @@ from process.stellarator.stellarator import Stellarator
 from process.structure import Structure
 from process.superconducting_tf_coil import SuperconductingTFCoil
 from process.tf_coil import TFCoil
-from process.utilities.f2py_string_patch import string_to_f2py_compatible
 from process.vacuum import Vacuum
 from process.water_use import WaterUse
 
 os.environ["PYTHON_PROCESS_ROOT"] = os.path.join(os.path.dirname(__file__))
 
-# Define parent logger
-logger = logging.getLogger("process")
-# Ensure every log goes through to a handler
-logger.setLevel(logging.DEBUG)
-# Handler for logging to stderr (and hence the terminal by default)
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.WARNING)
-# Handler for logging to file
-f_handler = logging.FileHandler("process.log", mode="w")
-f_handler.setLevel(logging.INFO)
-formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
-s_handler.setFormatter(formatter)
-f_handler.setFormatter(formatter)
-logger.addHandler(s_handler)
-logger.addHandler(f_handler)
+logger = logging.getLogger(__name__)
 
 
 class Process:
@@ -258,7 +250,9 @@ class Process:
             if mfile_path.exists():
                 plot_proc.main(args=["-f", mfile_str])
                 plot_radial_build.main(args=["-f", mfile_str, "-nm"])
-                plot_sankey.main(args=["-m", mfile_str])
+
+                plot_plotly_sankey.main(args=["-m", mfile_str])
+
             else:
                 logger.error("mfile to be used for plotting doesn't exist")
 
@@ -436,11 +430,7 @@ class SingleRun:
             )
 
         # Set the input file in the Fortran
-        fortran.global_variables.fileprefix = string_to_f2py_compatible(
-            fortran.global_variables.fileprefix,
-            str(self.input_path.resolve()),
-            except_length=True,
-        )
+        data_structure.global_variables.fileprefix = str(self.input_path.resolve())
 
     def set_output(self):
         """Set the output file name.
@@ -448,9 +438,7 @@ class SingleRun:
         Set Path object on the Process object, and set the prefix in the Fortran.
         """
         self.output_path = Path(self.filename_prefix + "OUT.DAT")
-        fortran.global_variables.output_prefix = string_to_f2py_compatible(
-            fortran.global_variables.output_prefix, self.filename_prefix
-        )
+        data_structure.global_variables.output_prefix = self.filename_prefix
 
     def set_mfile(self):
         """Set the mfile filename."""
@@ -465,30 +453,30 @@ class SingleRun:
 
         # Order optimisation parameters (arbitrary order in input file)
         # Ensures consistency and makes output comparisons more straightforward
-        n = int(fortran.numerics.nvar)
+        n = int(data_structure.numerics.nvar)
         # [:n] as array always at max size: contains 0s
-        fortran.numerics.ixc[:n].sort()
+        data_structure.numerics.ixc[:n].sort()
 
     def run_scan(self):
         """Create scan object if required."""
         # TODO Move this solver logic up to init?
         # ioptimz == 1: optimisation
-        if fortran.numerics.ioptimz == 1:
+        if data_structure.numerics.ioptimz == 1:
             pass
         # ioptimz == -2: evaluation
-        elif fortran.numerics.ioptimz == -2:
+        elif data_structure.numerics.ioptimz == -2:
             # No optimisation: solve equality (consistency) constraints only using fsolve (HYBRD)
             self.solver = "fsolve"
         else:
             raise ValueError(
-                f"Invalid ioptimz value: {fortran.numerics.ioptimz}. Please "
+                f"Invalid ioptimz value: {data_structure.numerics.ioptimz}. Please "
                 "select either 1 (optimise) or -2 (no optimisation)."
             )
         self.scan = Scan(self.models, self.solver)
 
     def show_errors(self):
         """Report all informational/error messages encountered."""
-        fortran.error_handling.show_errors()
+        show_errors(constants.NOUT)
 
     def finish(self):
         """Run the finish subroutine to close files open in the Fortran.
@@ -496,7 +484,10 @@ class SingleRun:
         Files being handled by Fortran must be closed before attempting to
         write to them using Python, otherwise only parts are written.
         """
-        fortran.init_module.finish()
+        oheadr(constants.NOUT, "End of PROCESS Output")
+        oheadr(constants.IOTTY, "End of PROCESS Output")
+        oheadr(constants.NOUT, "Copy of PROCESS Input Follows")
+        OutputFileManager.finish()
 
     def append_input(self):
         """Append the input file to the output file and mfile."""
@@ -541,13 +532,17 @@ class SingleRun:
                     continue
 
                 # Extract the variable name before the separator
-                variable_name = line.split("=", 1)[0].strip()
-                variables_in_in_dat.append(variable_name)
+                raw_variable_name = line.split("=", 1)[0].strip()
+                # handle cases where the variable name might have parentheses
+                variable_name = (
+                    raw_variable_name.split("(", 1)[0]
+                    if "(" in raw_variable_name
+                    else raw_variable_name
+                )
 
                 # Check if the variable is obsolete and needs replacing
                 if variable_name in obsolete_variables:
                     replacement = obsolete_variables.get(variable_name)
-
                     if replace_obsolete:
                         # Prepare replacement or removal
                         if replacement is None:
@@ -564,7 +559,7 @@ class SingleRun:
                                     f"The variable '{variable_name}' is obsolete and should be replaced by the following variables: {replacement_str}. "
                                     "Please set their values accordingly."
                                 )
-                            # Replace obsolete variable with updated variable
+                            # Replace obsolete variable
                             modified_line = line.replace(variable_name, replacement, 1)
                             modified_lines.append(
                                 f"* Replaced '{variable_name}' with '{replacement}'\n{modified_line}"
@@ -572,6 +567,7 @@ class SingleRun:
                             changes_made.append(
                                 f"Replaced '{variable_name}' with '{replacement}'"
                             )
+                            variables_in_in_dat.append(variable_name)
                     else:
                         # If replacement is False, add the line as-is
                         modified_lines.append(line)
@@ -671,7 +667,7 @@ class Models:
         self.plasma_profile = PlasmaProfile()
         self.fw = Fw()
         self.blanket_library = BlanketLibrary(fw=self.fw)
-        self.ccfe_hcpb = CCFE_HCPB()
+        self.ccfe_hcpb = CCFE_HCPB(fw=self.fw)
         self.current_drive = CurrentDrive(
             plasma_profile=self.plasma_profile,
             electron_cyclotron=ElectronCyclotron(plasma_profile=self.plasma_profile),
@@ -696,7 +692,7 @@ class Models:
             physics=self.physics,
             neoclassics=self.neoclassics,
         )
-        self.dcll = DCLL()
+        self.dcll = DCLL(fw=self.fw)
 
     @property
     def costs(self) -> CostsProtocol:
@@ -716,6 +712,37 @@ class Models:
         self._costs_custom = value
 
 
+# setup handlers for writing to terminal (on warnings+)
+# or writing to the log file (on info+)
+logging_formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+logging_stream_handler = logging.StreamHandler()
+logging_stream_handler.setLevel(logging.CRITICAL)
+logging_stream_handler.setFormatter(logging_formatter)
+
+logging_file_handler = logging.FileHandler("process.log", mode="w")
+logging_file_handler.setLevel(logging.INFO)
+logging_file_handler.setFormatter(logging_formatter)
+
+logging_model_handler.setLevel(logging.WARNING)
+logging_model_handler.setFormatter(logging_formatter)
+
+
+def setup_loggers():
+    """A function that adds our handlers to the appropriate logger object."""
+    # Only add our handlers if PROCESS is being run as an application
+    # This should allow it to be used as a package (e.g. people import models that log)
+    # without creating a process.log file... people can then handle our logs as they wish.
+    # Using basicConfig adds these handlers to the root logger iff the root logger has not
+    # been setup yet. This means that during testing these hanlders won't be present, which
+    # will ensure they do not conflict with the pytest handlers.
+    logging.basicConfig(handlers=[logging_stream_handler, logging_file_handler])
+
+    # However, this handler we know to be safe and necessary so we add it to the root logger
+    # regardless of whether it has already been created.
+    root_logger = logging.getLogger()
+    root_logger.addHandler(logging_model_handler)
+
+
 def main(args=None):
     """Run Process.
 
@@ -727,6 +754,9 @@ def main(args=None):
     :param args: Arguments to parse, defaults to None
     :type args: list, optional
     """
+
+    setup_loggers()
+
     Process(args)
 
 

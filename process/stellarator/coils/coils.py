@@ -1,4 +1,5 @@
 import numpy as np
+import logging
 
 import process.superconductors as superconductors
 from process.exceptions import ProcessValueError
@@ -7,7 +8,7 @@ from process.fortran import (
     error_handling,
     stellarator_configuration,
 )
-
+logger = logging.getLogger(__name__)
 
 def jcrit_from_material(
     b_max,
@@ -15,7 +16,7 @@ def jcrit_from_material(
     i_tf_sc_mat,
     b_crit_upper_nbti,
     b_crit_sc,
-    f_cu_tf_su,
+    f_a_tf_turn_cable_copper,
     f_hts,
     t_crit_nbti,
     t_crit_sc,
@@ -25,7 +26,7 @@ def jcrit_from_material(
     strain = -0.005  # for now a small value
     f_he = f_a_tf_turn_cable_space_extra_void  # this is helium fraction in the superconductor (set it to the fixed global variable here)
 
-    f_tf_conductor_copper = f_cu_tf_su  # fcutfsu is a global variable. Is the copper fraction
+    f_tf_conductor_copper = f_a_tf_turn_cable_copper  # fcutfsu is a global variable. Is the copper fraction
     # of a cable conductor.
 
     if i_tf_sc_mat == 1:  # ITER Nb3Sn critical surface parameterization
@@ -174,11 +175,10 @@ def intersect(x1, y1, x2, y2, xin):
         xmax = min(np.max(x1), np.amax(x2))
 
         if xmin >= xmax:
-            error_handling.fdiags[0] = np.amin(x1)
-            error_handling.fdiags[1] = np.amin(x2)
-            error_handling.fdiags[2] = np.amax(x1)
-            error_handling.fdiags[3] = np.amax(x2)
-            error_handling.report_error(111)
+            logger.error(
+                f"X ranges not overlapping. {np.amin(x1)=} {np.amin(x2)=} "
+                f"{np.amax(x1)=} {np.amax(x2)=}"
+            )
 
         #  Ensure input guess for x is within this range
 
@@ -224,20 +224,20 @@ def intersect(x1, y1, x2, y2, xin):
             x = x - 2.0e0 * dx * y / (yright - yleft)
 
             if x < xmin:
-                error_handling.fdiags[0] = x
-                error_handling.fdiags[1] = xmin
-                error_handling.report_error(112)
+                logger.error(
+                    f"X has dropped below Xmin; X={x} has been set equal to Xmin={xmin}"
+                )
                 x = xmin
                 break
 
             if x > xmax:
-                error_handling.fdiags[0] = x
-                error_handling.fdiags[1] = xmax
-                error_handling.report_error(113)
+                logger.error(
+                    f"X has risen above Xmax; X={x} has been set equal to Xmax={xmin}"
+                )
                 x = xmax
                 break
         else:
-            error_handling.report_error(114)
+            logger.error("Convergence too slow; X may be wrong...")
 
         return x
 

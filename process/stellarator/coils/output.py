@@ -27,8 +27,8 @@ def write(
         r_coil_major,
         r_coil_minor,
         sig_tf_wp,
-        t_turn_tf,
-        tdmptf,
+        dx_tf_turn_general,
+        t_tf_superconductor_quench,
         toroidalgap,
         allowed_quench_voltage,
         quench_voltage,
@@ -137,8 +137,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Max allowable current density as restricted by quench (A/m2)",
-            "(jwdgpro)",
-            tfcoil_variables.jwdgpro,
+            "(j_tf_wp_quench_heat_max)",
+            tfcoil_variables.j_tf_wp_quench_heat_max,
         )
         po.ovarre(
             stellarator.outfile,
@@ -149,8 +149,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Maximum field on superconductor (T)",
-            "(b_tf_inboard_peak)",
-            tfcoil_variables.b_tf_inboard_peak,
+            "(b_tf_inboard_peak_symmetric)",
+            tfcoil_variables.b_tf_inboard_peak_symmetric,
         )
         po.ovarre(
             stellarator.outfile,
@@ -187,14 +187,14 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Superconductor mass per coil (kg)",
-            "(whtconsc)",
-            tfcoil_variables.whtconsc,
+            "(m_tf_coil_superconductor)",
+            tfcoil_variables.m_tf_coil_superconductor,
         )
         po.ovarre(
             stellarator.outfile,
             "Copper mass per coil (kg)",
-            "(whtconcu)",
-            tfcoil_variables.whtconcu,
+            "(m_tf_coil_copper)",
+            tfcoil_variables.m_tf_coil_copper,
         )
         po.ovarre(
             stellarator.outfile,
@@ -205,8 +205,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Total conductor cable mass per coil (kg)",
-            "(whtcon)",
-            tfcoil_variables.whtcon,
+            "(m_tf_coil_conductor)",
+            tfcoil_variables.m_tf_coil_conductor,
         )
         po.ovarre(
             stellarator.outfile,
@@ -245,8 +245,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Copper fraction of conductor",
-            "(fcutfsu)",
-            tfcoil_variables.fcutfsu,
+            "(f_a_tf_turn_cable_copper)",
+            tfcoil_variables.f_a_tf_turn_cable_copper,
         )
         po.ovarre(
             stellarator.outfile,
@@ -293,8 +293,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Width of each turn (incl. insulation) (m)",
-            "(t_turn_tf)",
-            t_turn_tf,
+            "(dx_tf_turn_general)",
+            dx_tf_turn_general,
         )
         po.ovarre(
             stellarator.outfile,
@@ -380,8 +380,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Actual quench time (or time constant) (s)",
-            "(tdmptf)",
-            tdmptf,
+            "(t_tf_superconductor_quench)",
+            t_tf_superconductor_quench,
         )
         po.ovarre(
             stellarator.outfile,
@@ -392,10 +392,16 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Maximum allowed voltage during quench due to insulation (kV)",
-            "(vdalw)",
+            "(v_tf_coil_dump_quench_max_kv)",
             allowed_quench_voltage,
         )
-        po.ovarre(stellarator.outfile, "Actual quench voltage (kV)", "(vtfskv)", quench_voltage, "OP ")
+        po.ovarre(
+                stellarator.outfile,
+                "Actual quench voltage (kV)", 
+                "(v_tf_coil_dump_quench_kv)", 
+                quench_voltage, 
+                "OP "
+        )
         po.ovarre(
             stellarator.outfile,
             "Current (A) per mm^2 copper (A/mm2)",
@@ -438,8 +444,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "External case mass per coil (kg)",
-            "(whtcas)",
-            tfcoil_variables.whtcas,
+            "(m_tf_coil_case)",
+            tfcoil_variables.m_tf_coil_case,
         )
 
         po.osubhd(stellarator.outfile, "Available Space for Ports :")

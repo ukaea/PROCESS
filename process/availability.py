@@ -1,20 +1,21 @@
 import logging
 import math
 
+import numpy as np
 from scipy.special import comb as combinations
 
-from process import fortran as ft
+from process import constants
 from process import process_output as po
+from process.data_structure import constraint_variables as ctv
 from process.data_structure import cost_variables as cv
 from process.data_structure import divertor_variables as dv
+from process.data_structure import fwbs_variables as fwbsv
+from process.data_structure import ife_variables as ifev
+from process.data_structure import physics_variables as pv
+from process.data_structure import tfcoil_variables as tfv
 from process.data_structure import times_variables as tv
 from process.data_structure import vacuum_variables as vacv
 from process.exceptions import ProcessValueError
-from process.fortran import constraint_variables as ctv
-from process.fortran import fwbs_variables as fwbsv
-from process.fortran import ife_variables as ifev
-from process.fortran import physics_variables as pv
-from process.fortran import tfcoil_variables as tfv
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Availability:
     """
 
     def __init__(self) -> None:
-        self.outfile = ft.constants.nout  # output file unit
+        self.outfile = constants.NOUT  # output file unit
 
     def run(self, output: bool = False):
         """Run appropriate availability model
@@ -103,7 +104,8 @@ class Availability:
                 # or DEMO fusion power model (ibkt_life=1)
                 if cv.ibkt_life == 0:
                     fwbsv.life_blkt_fpy = min(
-                        cv.abktflnc / pv.pflux_fw_neutron_mw, cv.tlife
+                        (cv.abktflnc / np.asarray(pv.pflux_fw_neutron_mw)).item(),
+                        cv.tlife,
                     )
                 else:
                     fwbsv.life_blkt_fpy = min(cv.life_dpa / dpa_fpy, cv.tlife)  # DEMO
@@ -134,7 +136,7 @@ class Availability:
         # Plant Availability (iavail=0,1)
 
         # Calculate the number of fusion cycles for a given blanket lifetime
-        pulse_fpy = tv.t_cycle / YEAR_SECONDS
+        pulse_fpy = tv.t_plant_pulse_total / YEAR_SECONDS
         cv.bktcycles = (fwbsv.life_blkt_fpy / pulse_fpy) + 1
 
         # if iavail = 0 use input value for cfactr
@@ -174,7 +176,7 @@ class Availability:
 
         # Capacity factor
         # Using the amount of time burning for a given pulse cycle
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         # Modify lifetimes to take account of the availability
         if ifev.ife != 1:
@@ -344,7 +346,7 @@ class Availability:
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(vacv.vpumpn * cv.redun_vacp / 100.0 + 0.5e0)
+        cv.redun_vac = math.floor(vacv.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0)
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
 
@@ -381,7 +383,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         # Output
         if output:
@@ -597,7 +599,9 @@ class Availability:
 
         # Magnet temperature margin limit (K)
         # Use the lower of the two values.  Issue #526
-        tmargmin = min(tfv.tmargmin_tf, tfv.tmargmin_cs)
+        tmargmin = min(
+            tfv.temp_tf_superconductor_margin_min, tfv.temp_cs_superconductor_margin_min
+        )
         mag_temp_marg_limit = tmargmin
 
         # Magnet maintenance time (years)
@@ -669,11 +673,11 @@ class Availability:
 
         # Calculate cycle limit in terms of days
         # Number of cycles between planned blanket replacements, N
-        n = cv.divlife * YEAR_SECONDS / tv.t_cycle
+        n = cv.divlife * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # The probability of failure in one pulse cycle (before the reference cycle life)
-        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_cycle
-        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_cycle
+        pf = (cv.div_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        a0 = 1.0e0 - pf * cv.div_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # Integrating the instantaneous availability gives the mean
         # availability over the planned cycle life N
@@ -765,12 +769,12 @@ class Availability:
         # Calculate cycle limit in terms of days
 
         # Number of cycles between planned blanket replacements, N
-        n = fwbsv.life_blkt_fpy * YEAR_SECONDS / tv.t_cycle
+        n = fwbsv.life_blkt_fpy * YEAR_SECONDS / tv.t_plant_pulse_total
 
         # The probability of failure in one pulse cycle
         # (before the reference cycle life)
-        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_cycle
-        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_cycle
+        pf = (cv.fwbs_prob_fail / DAY_SECONDS) * tv.t_plant_pulse_total
+        a0 = 1.0e0 - pf * cv.fwbs_umain_time * YEAR_SECONDS / tv.t_plant_pulse_total
 
         if cv.fwbs_nu <= cv.fwbs_nref:
             logger.error(
@@ -945,7 +949,7 @@ class Availability:
         cryo_main_time = 1.0e0 / 6.0e0
 
         # Total pumps = pumps + redundant pumps
-        total_pumps = vacv.vpumpn + cv.redun_vac
+        total_pumps = vacv.n_vac_pumps_high + cv.redun_vac
 
         # Cryopump failure rate per machine operational period
         # From "Selected component failure rate values from fusion
@@ -980,8 +984,8 @@ class Availability:
             po.ovarin(
                 self.outfile,
                 "Number of pumps (excluding redundant pumps)",
-                "(vpumpn)",
-                vacv.vpumpn,
+                "(n_vac_pumps_high)",
+                vacv.n_vac_pumps_high,
                 "OP ",
             )
             po.ovarin(
@@ -1105,7 +1109,7 @@ class Availability:
         # Vacuum systems
 
         # Number of redundant pumps
-        cv.redun_vac = math.floor(vacv.vpumpn * cv.redun_vacp / 100.0 + 0.5e0)
+        cv.redun_vac = math.floor(vacv.n_vac_pumps_high * cv.redun_vacp / 100.0 + 0.5e0)
 
         u_unplanned_vacuum = self.calc_u_unplanned_vacuum(output)
 
@@ -1142,7 +1146,7 @@ class Availability:
                 cv.cplife = min(cv.cplife / cv.cfactr, cv.tlife)
 
         # Capacity factor
-        cv.cpfact = cv.cfactr * (tv.t_burn / tv.t_cycle)
+        cv.cpfact = cv.cfactr * (tv.t_plant_pulse_burn / tv.t_plant_pulse_total)
 
         if output:
             po.ocmmnt(self.outfile, "Plant Availability")
@@ -1288,7 +1292,12 @@ class Availability:
         # SC magnets CP lifetime
         # Rem : only the TF maximum fluence is considered for now
         if tfv.i_tf_sup == 1:
-            cplife = min(ctv.nflutfmax / (fwbsv.neut_flux_cp * YEAR_SECONDS), cv.tlife)
+            cplife = min(
+                (
+                    ctv.nflutfmax / (np.asarray(fwbsv.neut_flux_cp) * YEAR_SECONDS)
+                ).item(),
+                cv.tlife,
+            )
 
         # Aluminium/Copper magnets CP lifetime
         # For now, we keep the original def, developed for GLIDCOP magnets ...

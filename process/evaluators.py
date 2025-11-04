@@ -5,10 +5,10 @@ import numpy as np
 
 from process.caller import Caller
 from process.data_structure import cost_variables as cv
+from process.data_structure import global_variables as gv
+from process.data_structure import numerics
+from process.data_structure import physics_variables as pv
 from process.data_structure import times_variables as tv
-from process.fortran import global_variables as gv
-from process.fortran import numerics
-from process.fortran import physics_variables as pv
 
 logger = logging.getLogger(__name__)
 
@@ -65,12 +65,12 @@ class Evaluators:
             logger.debug(f"{numerics.nviter = }")
             logger.debug(f"{(1 - (ifail % 7)) - 1 = }")
             logger.debug(f"{(numerics.nviter % 2) - 1 = }")
-            logger.debug(f"{pv.te = }")
+            logger.debug(f"{pv.temp_plasma_electron_vol_avg_kev = }")
             logger.debug(f"{cv.coe = }")
             logger.debug(f"{pv.rmajor = }")
             logger.debug(f"{pv.p_fusion_total_mw = }")
-            logger.debug(f"{pv.bt = }")
-            logger.debug(f"{tv.t_burn = }")
+            logger.debug(f"{pv.b_plasma_toroidal_on_axis = }")
+            logger.debug(f"{tv.t_plant_pulse_burn = }")
             logger.debug(f"{sqsumconfsq = }")
             logger.debug(f"{xv = }")
 

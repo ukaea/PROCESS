@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 
 from process.cryostat import Cryostat
-from process.fortran import (
+from process.data_structure import (
     blanket_library,
     build_variables,
     buildings_variables,
@@ -34,7 +34,7 @@ class ExternalCryoGeometryParam(NamedTuple):
     vol_cryostat: Any = None
     m_vv: Any = None
     vol_vv: Any = None
-    denstl: Any = None
+    den_steel: Any = None
     dewmkg: Any = None
     r_pf_coil_outer: Any = None
     z_pf_coil_upper: Any = None
@@ -63,7 +63,7 @@ class ExternalCryoGeometryParam(NamedTuple):
             vol_cryostat=0,
             m_vv=0,
             vol_vv=1016.2876250857248,
-            denstl=7800,
+            den_steel=7800,
             dewmkg=0,
             r_pf_coil_outer=np.array(
                 np.array(
@@ -181,7 +181,9 @@ def test_external_cryo_geometry(
     )
     monkeypatch.setattr(fwbs_variables, "m_vv", externalcryogeometryparam.m_vv)
     monkeypatch.setattr(fwbs_variables, "vol_vv", externalcryogeometryparam.vol_vv)
-    monkeypatch.setattr(fwbs_variables, "denstl", externalcryogeometryparam.denstl)
+    monkeypatch.setattr(
+        fwbs_variables, "den_steel", externalcryogeometryparam.den_steel
+    )
     monkeypatch.setattr(fwbs_variables, "dewmkg", externalcryogeometryparam.dewmkg)
     monkeypatch.setattr(
         pfcoil_variables, "r_pf_coil_outer", externalcryogeometryparam.r_pf_coil_outer

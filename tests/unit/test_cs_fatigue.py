@@ -22,9 +22,9 @@ class NcycleParam(NamedTuple):
 
     t_crack_vertical: Any = None
 
-    t_structural_vertical: Any = None
+    dz_cs_turn_conduit: Any = None
 
-    t_structural_radial: Any = None
+    dr_cs_turn_conduit: Any = None
 
     n_cycle: Any = None
 
@@ -42,8 +42,8 @@ class NcycleParam(NamedTuple):
             max_hoop_stress=659999225.25370133,
             residual_stress=240000000,
             t_crack_vertical=0.00088999999999999995,
-            t_structural_vertical=0.0063104538380405924,
-            t_structural_radial=0.0063104538380405924,
+            dz_cs_turn_conduit=0.0063104538380405924,
+            dr_cs_turn_conduit=0.0063104538380405924,
             t_crack_radial=0.0026699999999999996,
             expected_n_cycle=1113.5875631615095,
             expected_t_crack_radial=0.0026699999999999996,
@@ -67,8 +67,8 @@ def test_ncycle(ncycleparam, monkeypatch, cs_fatigue_python):
         max_hoop_stress=ncycleparam.max_hoop_stress,
         residual_stress=ncycleparam.residual_stress,
         t_crack_vertical=ncycleparam.t_crack_vertical,
-        t_structural_vertical=ncycleparam.t_structural_vertical,
-        t_structural_radial=ncycleparam.t_structural_radial,
+        dz_cs_turn_conduit=ncycleparam.dz_cs_turn_conduit,
+        dr_cs_turn_conduit=ncycleparam.dr_cs_turn_conduit,
     )
 
     assert n_cycle == pytest.approx(ncycleparam.expected_n_cycle)

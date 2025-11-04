@@ -1,14 +1,10 @@
 import numpy as np
 import pytest
 
+import process.data_structure as data_structure
 import process.init as init
 import process.input as process_input
-from process import fortran
 from process.exceptions import ProcessValidationError
-from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
-    string_to_f2py_compatible,
-)
 
 
 def _create_input_file(directory, content: str):
@@ -62,13 +58,12 @@ def test_parse_real(epsvmc, expected, tmp_path):
 
     Program to get the expected value for 0.008 provided at https://github.com/ukaea/PROCESS/pull/3067
     """
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, f"epsvmc = {epsvmc}"),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, f"epsvmc = {epsvmc}"
     )
     init.init_process()
 
-    assert fortran.numerics.epsvmc == expected
+    assert data_structure.numerics.epsvmc == expected
 
 
 @pytest.mark.parametrize(
@@ -88,37 +83,30 @@ def test_exact_parsing(value, tmp_path):
     These tests failed using the old input parser and serve to show that the Python parser generally
     produces more accurate floats and accumulates less error.
     """
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, f"epsvmc = {value}"),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, f"epsvmc = {value}"
     )
     init.init_process()
 
-    assert fortran.numerics.epsvmc == value
+    assert data_structure.numerics.epsvmc == value
 
 
 def test_parse_input(tmp_path):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(
-            tmp_path,
-            ("runtitle = my run title\nioptimz = -2\nepsvmc = 0.6\nboundl(1) = 0.5"),
-        ),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path,
+        ("runtitle = my run title\nioptimz = -2\nepsvmc = 0.6\nboundl(1) = 0.5"),
     )
     init.init_process()
 
-    assert (
-        f2py_compatible_to_string(fortran.global_variables.runtitle) == "my run title"
-    )
-    assert fortran.numerics.ioptimz == -2
-    assert pytest.approx(fortran.numerics.epsvmc) == 0.6
-    assert pytest.approx(fortran.numerics.boundl[0]) == 0.5
+    assert data_structure.global_variables.runtitle == "my run title"
+    assert data_structure.numerics.ioptimz == -2
+    assert pytest.approx(data_structure.numerics.epsvmc) == 0.6
+    assert pytest.approx(data_structure.numerics.boundl[0]) == 0.5
 
 
 def test_input_choices(tmp_path):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, ("ioptimz = -1")),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, ("ioptimz = -1")
     )
 
     with pytest.raises(ProcessValidationError):
@@ -129,9 +117,8 @@ def test_input_choices(tmp_path):
     ("input_file_value"), ((-0.01,), (1.1,)), ids=("violate lower", "violate upper")
 )
 def test_input_range(tmp_path, input_file_value):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, (f"epsvmc = {input_file_value}")),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, (f"epsvmc = {input_file_value}")
     )
 
     # check that the test data doesn't change
@@ -142,9 +129,8 @@ def test_input_range(tmp_path, input_file_value):
 
 
 def test_input_array_when_not(tmp_path):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, ("epsvmc(1) = 0.5")),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, ("epsvmc(1) = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):
@@ -152,9 +138,8 @@ def test_input_array_when_not(tmp_path):
 
 
 def test_input_not_array_when_is(tmp_path):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, ("boundl = 0.5")),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, ("boundl = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):
@@ -162,9 +147,8 @@ def test_input_not_array_when_is(tmp_path):
 
 
 def test_input_float_when_int(tmp_path):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, ("ioptimz = 0.5")),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, ("ioptimz = 0.5")
     )
 
     with pytest.raises(ProcessValidationError):
@@ -172,11 +156,11 @@ def test_input_float_when_int(tmp_path):
 
 
 def test_input_array(tmp_path):
-    fortran.global_variables.fileprefix = string_to_f2py_compatible(
-        fortran.global_variables.fileprefix,
-        _create_input_file(tmp_path, ("boundl = 0.1, 0.2, 1.0, 0.0, 1.0e2")),
+    data_structure.global_variables.fileprefix = _create_input_file(
+        tmp_path, ("boundl = 0.1, 0.2, 1.0, 0.0, 1.0e2")
     )
+
     init.init_process()
     np.testing.assert_array_equal(
-        fortran.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
+        data_structure.numerics.boundl[:6], [0.1, 0.2, 1.0, 0.0, 1.0e2, 0]
     )

@@ -1,4 +1,4 @@
-vacuum_model: str = None
+i_vacuum_pumping: str = None
 """switch for vacuum pumping model:
 
  - ='old' for old detailed ETR model
@@ -6,12 +6,12 @@ vacuum_model: str = None
   !#TODO: old and simple not suitable names.
 """
 
-niterpump: float = None
+n_iter_vacuum_pumps: float = None
 """number of high vacuum pumps (real number), each with the throughput of one
-ITER cryopump (50 Pa m3 s-1), all operating at the same time (`vacuum_model='simple'`)
+ITER cryopump (50 Pa m3 s-1), all operating at the same time (`i_vacuum_pumping='simple'`)
 """
 
-ntype: int = None
+i_vacuum_pump_type: int = None
 """switch for vacuum pump type:
 
    - =0 - for turbomolecular pump (magnetic bearing) with speed of 2.0 m3/s
@@ -20,58 +20,58 @@ ntype: int = None
      (9.0 for N2, 5.0 for He and 25.0 for DT)
 """
 
-nvduct: int = None
+n_vv_vacuum_ducts: int = None
 """number of ducts (torus to pumps)"""
 
 dlscal: float = None
 """vacuum system duct length scaling"""
 
-pbase: float = None
+pres_vv_chamber_base: float = None
 """base pressure during dwell before gas pre-fill(Pa)"""
 
-prdiv: float = None
+pres_div_chamber_burn: float = None
 """divertor chamber pressure during burn (Pa)"""
 
-pumptp: float = None
+molflow_vac_pumps: float = None
 """Pump throughput (molecules/s) (default is ITER value)"""
 
-rat: float = None
+outgrat_fw: float = None
 """plasma chamber wall outgassing rate (Pa-m/s)"""
 
-tn: float = None
+temp_vv_chamber_gas_burn_end: float = None
 """neutral gas temperature in chamber (K)"""
 
-vacdshm: float = None
+m_vv_vacuum_duct_shield: float = None
 """mass of vacuum duct shield (kg)"""
 
-vcdimax: float = None
+dia_vv_vacuum_ducts: float = None
 """diameter of duct passage (m)"""
 
-vpumpn: int = None
+n_vac_pumps_high: int = None
 """number of high vacuum pumps"""
 
-dwell_pump: int = None
+i_vac_pump_dwell: int = None
 """switch for dwell pumping options:
 
-   - =0 pumping only during t_between_pulse
-   - =1 pumping only during t_precharge
-   - =2 pumping during t_between_pulse + t_precharge
+   - =0 pumping only during t_plant_pulse_dwell
+   - =1 pumping only during t_plant_pulse_coil_precharge
+   - =2 pumping during t_plant_pulse_dwell + t_plant_pulse_coil_precharge
 
    The following are used in the Battes, Day and Rohde pump-down model
    See "Basic considerations on the pump-down time in the dwell phase of a pulsed fusion DEMO"
-   http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(vacuum_model=simple')
+   http://dx.doi.org/10.1016/j.fusengdes.2015.07.011)(i_vacuum_pumping=simple')
 """
 
-pumpareafraction: float = None
+f_a_vac_pump_port_plasma_surface: float = None
 """area of one pumping port as a fraction of plasma surface area"""
 
-pumpspeedmax: float = None
+volflow_vac_pumps_max: float = None
 """maximum pumping speed per unit area for deuterium & tritium, molecular flow"""
 
-pumpspeedfactor: float = None
+f_volflow_vac_pumps_impedance: float = None
 """effective pumping speed reduction factor due to duct impedance"""
 
-initialpressure: float = None
+pres_vv_chamber_dwell_start: float = None
 """initial neutral pressure at the beginning of the dwell phase (Pa)"""
 
 outgasindex: float = None
@@ -83,44 +83,44 @@ outgasfactor: float = None
 
 def init_vacuum_variables():
     """Initialise Vacuum variables"""
-    global vacuum_model
-    global niterpump
-    global ntype
-    global nvduct
+    global i_vacuum_pumping
+    global n_iter_vacuum_pumps
+    global i_vacuum_pump_type
+    global n_vv_vacuum_ducts
     global dlscal
-    global pbase
-    global prdiv
-    global pumptp
-    global rat
-    global tn
-    global vacdshm
-    global vcdimax
-    global vpumpn
-    global dwell_pump
-    global pumpareafraction
-    global pumpspeedmax
-    global pumpspeedfactor
-    global initialpressure
+    global pres_vv_chamber_base
+    global pres_div_chamber_burn
+    global molflow_vac_pumps
+    global outgrat_fw
+    global temp_vv_chamber_gas_burn_end
+    global m_vv_vacuum_duct_shield
+    global dia_vv_vacuum_ducts
+    global n_vac_pumps_high
+    global i_vac_pump_dwell
+    global f_a_vac_pump_port_plasma_surface
+    global volflow_vac_pumps_max
+    global f_volflow_vac_pumps_impedance
+    global pres_vv_chamber_dwell_start
     global outgasindex
     global outgasfactor
 
-    vacuum_model = "old"
-    niterpump = 0.0
-    ntype = 1
-    nvduct = 0
+    i_vacuum_pumping = "old"
+    n_iter_vacuum_pumps = 0.0
+    i_vacuum_pump_type = 1
+    n_vv_vacuum_ducts = 0
     dlscal = 0.0
-    pbase = 5.0e-4
-    prdiv = 0.36
-    pumptp = 1.2155e22
-    rat = 1.3e-8
-    tn = 300.0
-    vacdshm = 0.0
-    vcdimax = 0.0
-    vpumpn = 0
-    dwell_pump = 0
-    pumpareafraction = 0.0203
-    pumpspeedmax = 27.3
-    pumpspeedfactor = 0.167
-    initialpressure = 1.0
+    pres_vv_chamber_base = 5.0e-4
+    pres_div_chamber_burn = 0.36
+    molflow_vac_pumps = 1.2155e22
+    outgrat_fw = 1.3e-8
+    temp_vv_chamber_gas_burn_end = 300.0
+    m_vv_vacuum_duct_shield = 0.0
+    dia_vv_vacuum_ducts = 0.0
+    n_vac_pumps_high = 0
+    i_vac_pump_dwell = 0
+    f_a_vac_pump_port_plasma_surface = 0.0203
+    volflow_vac_pumps_max = 27.3
+    f_volflow_vac_pumps_impedance = 0.167
+    pres_vv_chamber_dwell_start = 1.0
     outgasindex = 1.0
     outgasfactor = 0.0235

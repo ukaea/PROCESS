@@ -2,14 +2,15 @@ import logging
 
 import numpy as np
 
-from process.fortran import build_variables, constants, physics_variables
+from process import constants
+from process.data_structure import build_variables, physics_variables
 
 logger = logging.getLogger(__name__)
 
 
 class PlasmaGeom:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def plasma_geometry(self) -> None:
         """
@@ -451,7 +452,7 @@ class PlasmaGeom:
 
         rc = rmajor - rminor + xi
         vin = (
-            constants.twopi
+            constants.TWOPI
             * xi
             * (
                 rc**2 * np.sin(thetai)
@@ -464,7 +465,7 @@ class PlasmaGeom:
 
         rc = rmajor + rminor - xo
         vout = (
-            constants.twopi
+            constants.TWOPI
             * xo
             * (
                 rc**2 * np.sin(thetao)

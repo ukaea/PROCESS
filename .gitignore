@@ -40,13 +40,13 @@ com.msg
 *.fls
 *.gz
 ford_site/
-lib/ford
+lib/
+process/io/python_fortran_dicts.json
 *.egg-info
 fortran.py
 .coverage
 dist/*
-process/io/python_fortran_dicts.json
-documentation/proc-pages/io/vardes.md
+documentation/io/vardes.md
 lcov_results/
 env/
 env_process/
@@ -68,3 +68,6 @@ python_modules.txt
 quench_data.DAT
 env-fork
 *SIG_TF.json
+!tests/integration/data/large_tokamak_SIG_TF.json
+*.html
+!documentation/**/*.html

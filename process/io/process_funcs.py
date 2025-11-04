@@ -18,11 +18,10 @@ from time import sleep
 
 from numpy.random import default_rng
 
-from process.fortran import numerics
+from process.data_structure import numerics
+from process.io.data_structure_dicts import get_dicts
 from process.io.in_dat import InDat
 from process.io.mfile import MFile
-from process.io.python_fortran_dicts import get_dicts
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +94,7 @@ def get_variable_range(itervars, factor, wdir="."):
     lbs = []
     ubs = []
 
-    iteration_variables = [f2py_compatible_to_string(i) for i in numerics.lablxc]
+    iteration_variables = numerics.lablxc
 
     for varname in itervars:
         iteration_variable_index = iteration_variables.index(varname)

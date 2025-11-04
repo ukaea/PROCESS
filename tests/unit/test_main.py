@@ -6,11 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from process import fortran, main
+from process import data_structure, main
 from process.main import Process, SingleRun, VaryRun
-from process.utilities.f2py_string_patch import (
-    f2py_compatible_to_string,
-)
 
 
 def test_main(monkeypatch):
@@ -140,6 +137,7 @@ def single_run(monkeypatch, input_file, tmp_path):
     single_run.input_file = str(temp_input_file)
     single_run.models = None
     single_run.set_filenames()
+    single_run.initialise()
     return single_run
 
 
@@ -168,44 +166,36 @@ def test_set_input(single_run, monkeypatch, input_file):
     monkeypatch.setattr(single_run, "input_file", input_file, raising=False)
 
     # Mocking undo trys to set the value as none
-    # TODO Create our own monkeypatch for strings (if needed)
-    # Mock the Fortran set
-    # monkeypatch.setattr(fortran.global_variables, "fileprefix", string_to_f2py_compatible(fortran.global_variables.fileprefix,None))
-    # fortran.global_variables.test_setting_string()
 
     # Mocks set up, can now run set_input()
     single_run.set_input()
-    # Check path has been set in the Fortran (mocked above)
-    result = f2py_compatible_to_string(fortran.global_variables.fileprefix)
-    assert result == expected
+    # Check path has been set
+    assert data_structure.global_variables.fileprefix == expected
 
 
 def test_set_output(single_run, monkeypatch):
-    """Check output filename setting in the Fortran.
+    """Check output filename set correctly.
 
     :param single_run: single_run fixture
     :type single_run: SingleRun
     :param monkeypatch: monkeypatch fixture
     :type monkeypatch: object
     """
-    # Expected output prefix stored in Fortran
+    # Expected output prefix
     expected = "output_prefix"
     # Mock self.filename_prefix on single_run with the value of expected
     monkeypatch.setattr(single_run, "filename_prefix", expected, raising=False)
 
     # Mocking undo trys to set the value as none
-    # TODO Create our own monkeypatch for strings (if needed)
-    # Mock the Fortran set
-    # monkeypatch.setattr(fortran.global_variables, "output_prefix", None)
-    # Run the method, and extract the value from the Fortran
+    # monkeypatch.setattr(data_structure.global_variables, "output_prefix", None)
+    # Run the method, and extract the value
     single_run.set_output()
-    # Convert string from byte-string for comparison
-    result = f2py_compatible_to_string(fortran.global_variables.output_prefix)
-    assert result == expected
+
+    assert data_structure.global_variables.output_prefix == expected
 
 
 def test_initialise(single_run, monkeypatch):
-    """Test that the init_module can be called in the Fortran.
+    """Test that the init_module runs without crashing
 
     :param single_run: single_run fixture
     :type single_run: SingleRun

@@ -8,12 +8,12 @@ import numpy as np
 from tabulate import tabulate
 
 import process.constraints as constraints
-from process import fortran as ft
+from process import data_structure
 from process.final import finalise
 from process.io.mfile import MFile
 from process.iteration_variables import set_scaled_iteration_variable
 from process.objectives import objective_function
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
+from process.process_output import OutputFileManager
 
 if TYPE_CHECKING:
     from process.main import Models
@@ -75,7 +75,7 @@ class Caller:
         for _ in range(10):
             self._call_models_once(xc)
             # Evaluate objective function and constraints
-            objf = objective_function(ft.numerics.minmax)
+            objf = objective_function(data_structure.numerics.minmax)
             conf, _, _, _, _ = constraints.constraint_eqns(m, -1)
 
             if objf_prev is None and conf_prev is None:
@@ -131,16 +131,15 @@ class Caller:
             for _ in range(10):
                 # Divert OUT.DAT and MFILE.DAT output to scratch files for
                 # idempotence checking
-                ft.init_module.open_idempotence_files()
+                OutputFileManager.open_idempotence_files()
                 self._call_models_once(xc)
                 # Write mfile
                 finalise(self.models, ifail)
 
                 # Extract data from intermediate idempotence-checking mfile
                 mfile_path = (
-                    f2py_compatible_to_string(ft.global_variables.output_prefix)
-                    + "IDEM_MFILE.DAT"
-                )
+                    data_structure.global_variables.output_prefix
+                ) + "IDEM_MFILE.DAT"
                 mfile = MFile(mfile_path)
                 # Create mfile dict of float values: only compare floats
                 mfile_data = {
@@ -175,7 +174,7 @@ class Caller:
                     logger.debug("Mfiles idempotent, returning")
                     # Divert OUT.DAT and MFILE.DAT output back to original files
                     # now idempotence checking complete
-                    ft.init_module.close_idempotence_files()
+                    OutputFileManager.close_idempotence_files()
                     # Write final output file and mfile
                     finalise(self.models, ifail)
                     return
@@ -201,7 +200,7 @@ class Caller:
             )
 
             # Close idempotence files, write final output file and mfile
-            ft.init_module.close_idempotence_files()
+            OutputFileManager.close_idempotence_files()
             finalise(
                 self.models,
                 ifail,
@@ -212,7 +211,7 @@ class Caller:
         except Exception:
             # If exception in model evaluations delete intermediate idempotence
             # files to clean up
-            ft.init_module.close_idempotence_files()
+            OutputFileManager.close_idempotence_files()
             raise
 
     def _call_models_once(self, xc: np.ndarray) -> None:
@@ -225,23 +224,23 @@ class Caller:
         :type xc: np.array
         """
         # Number of active iteration variables
-        nvars = xc.shape[0]
+        nvars = len(xc)
 
         # Increment the call counter
-        ft.numerics.ncalls = ft.numerics.ncalls + 1
+        data_structure.numerics.ncalls = data_structure.numerics.ncalls + 1
 
         # Convert variables
         set_scaled_iteration_variable(xc, nvars)
 
         # Perform the various function calls
         # Stellarator caller
-        if ft.stellarator_variables.istell != 0:
+        if data_structure.stellarator_variables.istell != 0:
             self.models.stellarator.run(output=False)
             # TODO Is this return safe?
             return
 
         # Inertial Fusion Energy calls
-        if ft.ife_variables.ife != 0:
+        if data_structure.ife_variables.ife != 0:
             self.models.ife.run(output=False)
             return
 
@@ -251,9 +250,6 @@ class Caller:
 
         # Machine Build Model
         # Radial build
-        if ft.build_variables.i_tf_inside_cs == 1:
-            self.models.build.tf_in_cs_bore_calc()
-
         self.models.build.run()
 
         self.models.physics.physics()
@@ -261,14 +257,14 @@ class Caller:
         # Toroidal field coil model
 
         # Toroidal field coil resistive model
-        if ft.tfcoil_variables.i_tf_sup == 0:
+        if data_structure.tfcoil_variables.i_tf_sup == 0:
             self.models.copper_tf_coil.run(output=False)
 
         # Toroidal field coil superconductor model
-        if ft.tfcoil_variables.i_tf_sup == 1:
+        if data_structure.tfcoil_variables.i_tf_sup == 1:
             self.models.sctfcoil.run(output=False)
 
-        if ft.tfcoil_variables.i_tf_sup == 2:
+        if data_structure.tfcoil_variables.i_tf_sup == 2:
             self.models.aluminium_tf_coil.run(output=False)
 
         # Poloidal field and central solenoid model
@@ -290,13 +286,13 @@ class Caller:
         4    |  KIT HCLL model
         5    |  DCLL model
         """
-        if ft.fwbs_variables.i_blanket_type == 1:
+        if data_structure.fwbs_variables.i_blanket_type == 1:
             # CCFE HCPB model
             self.models.ccfe_hcpb.run(output=False)
         # i_blanket_type = 2, KIT HCPB removed
         # i_blanket_type = 3, CCFE HCPB with TBR calculation removed
         # i_blanket_type = 4, KIT HCLL removed
-        elif ft.fwbs_variables.i_blanket_type == 5:
+        elif data_structure.fwbs_variables.i_blanket_type == 5:
             # DCLL model
             self.models.dcll.run(output=False)
 
@@ -308,7 +304,10 @@ class Caller:
         self.models.structure.run(output=False)
 
         # Tight aspect ratio machine model
-        if ft.physics_variables.itart == 1 and ft.tfcoil_variables.i_tf_sup != 1:
+        if (
+            data_structure.physics_variables.itart == 1
+            and data_structure.tfcoil_variables.i_tf_sup != 1
+        ):
             self.models.tfcoil.cntrpst()
 
         # Toroidal field coil power model
@@ -362,8 +361,8 @@ def write_output_files(models: Models, ifail: int) -> None:
     :param ifail: solver return code
     :type ifail: int
     """
-    n = ft.numerics.nvar
-    x = ft.numerics.xcm[:n]
+    n = data_structure.numerics.nvar
+    x = data_structure.numerics.xcm[:n]
     # Call models, ensuring output mfiles are fully idempotent
     caller = Caller(models)
     caller.call_models_and_write_output(

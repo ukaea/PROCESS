@@ -11,44 +11,13 @@ permissions:
   id-token: write
 
 jobs:
-  make:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-      - name: Build PROCESS
-        run: |
-          git config --global --add safe.directory '*'
-          cmake -S. -Bbuild
-          cmake --build build
-      - name: Archive build artifacts in process
-        uses: actions/upload-artifact@v4
-        with:
-          name: process-build-artifacts
-          path: |
-            process/**/*.so
-            process/io/python_fortran_dicts.json
-      - name: Archive ford artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ford-artifact
-          path: build/ford_project.pickle
-
   unit-test:
     runs-on: ubuntu-latest
-    needs: make
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: process-build-artifacts
-          path: process/
       - name: Install PROCESS
         # Editable install to match default install
         run: |
@@ -67,17 +36,30 @@ jobs:
 
   integration-test:
     runs-on: ubuntu-latest
-    needs: make
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Install PROCESS
+        # Editable install to match default install
+        run: |
+          pip install -e '.[test]'
+          pip install -r requirements_dev.txt
+      - name: Install poppler
+        run: |
+          sudo apt update
+          sudo apt install poppler-utils
+      - name: Run integration tests
+        run: pytest tests/integration -n auto -v
+
+  example-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          name: process-build-artifacts
-          path: process/
+          python-version: '3.10'
       - name: Install PROCESS
         # Editable install to match default install
         run: |
@@ -87,16 +69,14 @@ jobs:
         run: |
           sudo apt update
           sudo apt install poppler-utils
-      - name: Run integration tests
-        run: pytest tests/integration -n auto -v
-
+      - name: Run example notebook tests
+        run: pytest tests/examples -n auto -v
 
   regression-test:
     runs-on: ubuntu-latest
-    needs: [make, tracking]
-    # depend on make and tracking job, check make job was successful
-    # but dont skip if tracking was skipped
-    if: always() && needs.make.result == 'success'
+    needs: [tracking]
+    # depend on make and tracking job but dont skip if tracking was skipped
+    if: always()
     continue-on-error: true
     strategy:
       matrix:
@@ -108,11 +88,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: process-build-artifacts
-          path: process/
       - name: Install PROCESS
         # Editable install to match default install
         run: |
@@ -125,29 +100,30 @@ jobs:
 
   run-tracking-inputs:
     runs-on: ubuntu-latest
-    needs: make
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: process-build-artifacts
-          path: process/
       - name: Install PROCESS
         run: pip install -e .
       - name: Install dev dependencies
         run: pip install -r requirements_dev.txt
       - name: Run regression input files
         run: python tracking/run_tracking_inputs.py run tests/regression/input_files
+      - name: Move other files
+        run: mv tests/regression/input_files/*.json tracking/
       - name: Archive tracked MFILEs
         uses: actions/upload-artifact@v4
         with:
           name: tracked-mfiles
           path: tracking/*_MFILE.DAT
+      - name: Archive tracked SIG_TF.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: sig-tfs
+          path: tracking/*.json
 
   pre-commit-quality-check:
     runs-on: ubuntu-latest
@@ -175,11 +151,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: process-build-artifacts
-          path: process/
       - name: Install PROCESS
         run: pip install -e .
       - name: Install dev dependencies
@@ -233,28 +204,28 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: process-build-artifacts
-          path: process/
       - name: Install PROCESS
         run: pip install -e .
       - name: Install dev dependencies
         run: pip install -r requirements_dev.txt
-      - name: Install ford
-        run: pip install git+https://github.com/jonmaddock/ford
-      - run: ford documentation/ford/index.md
-      - name: Download ford project
-        uses: actions/download-artifact@v4
-        with:
-          name: ford-artifact
-          path: build/
-      - run: python scripts/document_fortran_interface.py
       - run: python scripts/vardes.py
       - run: git config --global --add safe.directory '*'
+      - name: Download STF_TF.json files
+        uses: actions/download-artifact@v4
+        with:
+          name: sig-tfs
+          path: tracking/
+      - name: Download MFILEs
+        uses: actions/download-artifact@v4
+        with:
+          name: tracked-mfiles
+          path: tracking/
+      - run: mv tracking/large_tokamak_nof.SIG_TF.json tracking/large_tokamak_nof_SIG_TF.json
+      - name: Create an example plot proc
+        run: python process/io/plot_proc.py -f tracking/large_tokamak_nof_MFILE.DAT
+      - name: Move plot proc file to docs images
+        run: mv tracking/large_tokamak_nof_MFILE.DATSUMMARY.pdf documentation/images/plot_proc.pdf
       - run: mkdocs build
-      - run: mv ford_site site
       - name: Download tracking html
         uses: actions/download-artifact@v4
         with:

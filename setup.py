@@ -12,7 +12,7 @@ if platform.system() == "Darwin":
 
 setup_kwargs = {
     "name": MODULE_NAME,
-    "version": "3.1.0",
+    "version": "3.2.1",
     "description": (
         "Power Reactor Optimisation Code for Environmental and Safety Studies"
     ),
@@ -21,19 +21,14 @@ setup_kwargs = {
     "packages": find_packages(),
     "package_dir": {"process": "process"},
     "package_data": {
-        "process": [
-            "lib/lib*",
-            "fortran*.so",
-            "data/lz_non_corona_14_elements/*",
-            "utilities/*",
-        ],
-        "process.io": ["python_fortran_dicts.json"],
+        "process": ["data/lz_non_corona_14_elements/*"],
         "process.data.impuritydata": ["*"],
+        "process.io": ["*.png"],
     },
     "test_suite": "pytest",
     "python_requires": ">=3.10",
     "install_requires": [
-        "numpy>=1.23,<2",
+        "numpy>=1.23",
         "scipy>=1.10",
         "cvxpy!=1.3.0,!=1.3.1",
         "osqp>=1.0",
@@ -48,6 +43,7 @@ setup_kwargs = {
     "extras_require": {
         "test": ["pytest>=5.4.1", "requests>=2.30", "testbook>=0.4"],
         "examples": ["pillow>=5.1.0", "jupyter==1.0.0", "pdf2image==1.16.0"],
+        "plotly": ["plotly>=5.15.0,<6"],
     },
     "entry_points": {"console_scripts": ["process=process.main:main"]},
     "extra_link_args": EXTRA_ARGS,

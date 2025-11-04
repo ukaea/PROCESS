@@ -71,9 +71,9 @@
  fvdump__________________________________________________________________ (itvar016)____________________      9.5837E-01    
  fvdump_(final_value/initial_value)______________________________________ (xcm016)______________________      9.5837E-01    
  fvdump_(range_normalised)_______________________________________________ (nitvar016)___________________      9.5833E-01    
- vdalw___________________________________________________________________ (itvar017)____________________      9.5837E+00    
- vdalw_(final_value/initial_value)_______________________________________ (xcm017)______________________      9.5837E-01    
- vdalw_(range_normalised)________________________________________________ (nitvar017)___________________      9.5837E-01    
+ v_tf_coil_dump_quench_max_kv___________________________________________________________________ (itvar017)____________________      9.5837E+00    
+ v_tf_coil_dump_quench_max_kv_(final_value/initial_value)_______________________________________ (xcm017)______________________      9.5837E-01    
+ v_tf_coil_dump_quench_max_kv_(range_normalised)________________________________________________ (nitvar017)___________________      9.5837E-01    
  fjprot__________________________________________________________________ (itvar018)____________________      9.9639E-01    
  fjprot_(final_value/initial_value)______________________________________ (xcm018)______________________      9.6639E-01    
  fjprot_(range_normalised)_______________________________________________ (nitvar018)___________________      5.9639E-01    
@@ -152,9 +152,9 @@
  oh_steel_frac___________________________________________________________ (itvar043)____________________      5.1868E-01    
  oh_steel_frac_(final_value/initial_value)_______________________________ (xcm043)______________________      6.4835E-01    
  oh_steel_frac_(range_normalised)________________________________________ (nitvar043)___________________      5.4550E-01    
- fimp(13)________________________________________________________________ (itvar044)____________________      5.7149E-04    
- fimp(13)_(final_value/initial_value)____________________________________ (xcm044)______________________      1.5039E+00    
- fimp(13)_(range_normalised)_____________________________________________ (nitvar044)___________________      5.7148E-02    
+ f_nd_impurity_electrons(13)________________________________________________________________ (itvar044)____________________      5.7149E-04    
+ f_nd_impurity_electrons(13)_(final_value/initial_value)____________________________________ (xcm044)______________________      1.5039E+00    
+ f_nd_impurity_electrons(13)_(range_normalised)_____________________________________________ (nitvar044)___________________      5.7148E-02    
  dr_tf_wp________________________________________________________________ (itvar045)____________________      5.0416E-01    
  dr_tf_wp_(final_value/initial_value)____________________________________ (xcm045)______________________      1.1083E+00    
  dr_tf_wp_(range_normalised)_____________________________________________ (nitvar045)___________________      6.5100E-02    
@@ -336,14 +336,14 @@
  Plasma_current_(MA)_____________________________________________________ (plasma_current_MA)_________________      1.6631E+01    
  Current_density_profile_factor__________________________________________ (alphaj)______________________      1.9805E+00    
  Plasma_internal_inductance,_li__________________________________________ (ind_plasma_internal_norm)_________________________      1.2275E+00    
- Vertical_field_at_plasma_(T)____________________________________________ (bvert)_______________________     -7.4373E-01    
- Vacuum_toroidal_field_at_R_(T)__________________________________________ (bt)__________________________      5.2940E+00 ITV
- Average_poloidal_field_(T)______________________________________________ (bp)__________________________      8.6787E-01    
- Total_field_(sqrt(bp^2_+_bt^2))_(T)_____________________________________ (btot)________________________      5.3647E+00    
+ Vertical_field_at_plasma_(T)____________________________________________ (b_plasma_vertical_required)_______________________     -7.4373E-01    
+ Vacuum_toroidal_field_at_R_(T)__________________________________________ (b_plasma_toroidal_on_axis)__________________________      5.2940E+00 ITV
+ Average_poloidal_field_(T)______________________________________________ (b_plasma_poloidal_average)__________________________      8.6787E-01    
+ Total_field_(sqrt(b_plasma_poloidal_average^2_+_bt^2))_(T)_____________________________________ (b_plasma_total)________________________      5.3647E+00    
  Safety_factor_on_axis___________________________________________________ (q0)__________________________      1.0000E+00    
  Safety_factor_at_95%_flux_surface_______________________________________ (q95)_________________________      3.5961E+00 ITV
  Cylindrical_safety_factor_(qcyl)________________________________________ (qstar)_______________________      2.9805E+00    
- Total_plasma_beta_______________________________________________________ (beta)________________________      3.3648E-02 ITV
+ Total_plasma_beta_______________________________________________________ beta_total_vol_avg________________________      3.3648E-02 ITV
  Total_poloidal_beta_____________________________________________________ (beta_poloidal)_______________________      1.2857E+00 OP 
  Total_toroidal_beta_____________________________________________________ ______________________________      3.4553E-02 OP 
  Fast_alpha_beta_________________________________________________________ (betaft)______________________      4.2236E-03 OP 
@@ -361,13 +361,13 @@
  Limit_on_thermal_beta___________________________________________________ (betalim)_____________________      5.7842E-02    
  Plasma_thermal_energy_(J)_______________________________________________ ______________________________      9.5431E+08 OP 
  Total_plasma_internal_energy_(J)________________________________________ (e_plasma_beta)      1.0913E+09 OP 
- Electron_temperature_(keV)______________________________________________ (te)__________________________      1.2489E+01 ITV
- Electron_temperature_on_axis_(keV)______________________________________ (te0)_________________________      2.5758E+01    
- Ion_temperature_(keV)___________________________________________________ (ti)__________________________      1.2489E+01    
+ Electron_temperature_(keV)______________________________________________ (temp_plasma_electron_vol_avg_keV)__________________________      1.2489E+01 ITV
+ Electron_temperature_on_axis_(keV)______________________________________ (temp_plasma_electron_on_axis_kev)_________________________      2.5758E+01    
+ Ion_temperature_(keV)___________________________________________________ (temp_plasma_ion_vol_avg_kev)__________________________      1.2489E+01    
  Ion_temperature_on_axis_(keV)___________________________________________ (ti0)_________________________      2.5758E+01    
- Electron_temp.,_density_weighted_(keV)__________________________________ (ten)_________________________      1.3805E+01    
- Electron_density_(/m3)__________________________________________________ (dene)________________________      8.0667E+19 ITV
- Electron_density_on_axis_(/m3)__________________________________________ (ne0)_________________________      1.0610E+20 OP 
+ Electron_temp.,_density_weighted_(keV)__________________________________ (temp_plasma_electron_density_weighted_kev)_________________________      1.3805E+01    
+ Electron_density_(/m3)__________________________________________________ (nd_plasma_electrons_vol_avg)________________________      8.0667E+19 ITV
+ Electron_density_on_axis_(/m3)__________________________________________ (nd_plasma_electron_on_axis)_________________________      1.0610E+20 OP 
  Line-averaged_electron_density_(/m3)____________________________________ (nd_electron_line)________________________      8.9334E+19 OP 
  Line-averaged_electron_density_/_Greenwald_density______________________ (dnla_gw)_____________________      1.2000E+00 OP 
  Ion_density_(/m3)_______________________________________________________ (nd_ions_total)______________________      7.1669E+19 OP 
@@ -379,31 +379,31 @@
  Density_limit_from_scaling_(/m3)________________________________________ (dnelimt)_____________________      7.4445E+19 OP 
  Density_limit_(enforced)_(/m3)__________________________________________ (boundu(9)*dnelimt)___________      7.4445E+19 OP 
  Helium_ion_density_(thermalised_ions_only)_/_electron_density___________ (f_nd_alpha_electron)______________________      8.3954E-02 ITV
- H__concentration________________________________________________________ (fimp(01))____________________      8.0392E-01 OP 
- He_concentration________________________________________________________ (fimp(02))____________________      8.3954E-02    
- Be_concentration________________________________________________________ (fimp(03))____________________      0.0000E+00    
- C__concentration________________________________________________________ (fimp(04))____________________      0.0000E+00    
- N__concentration________________________________________________________ (fimp(05))____________________      0.0000E+00    
- O__concentration________________________________________________________ (fimp(06))____________________      0.0000E+00    
- Ne_concentration________________________________________________________ (fimp(07))____________________      0.0000E+00    
- Si_concentration________________________________________________________ (fimp(08))____________________      0.0000E+00    
- Ar_concentration________________________________________________________ (fimp(09))____________________      0.0000E+00    
- Fe_concentration________________________________________________________ (fimp(10))____________________      0.0000E+00    
- Ni_concentration________________________________________________________ (fimp(11))____________________      0.0000E+00    
- Kr_concentration________________________________________________________ (fimp(12))____________________      0.0000E+00    
- Xe_concentration________________________________________________________ (fimp(13))____________________      5.7149E-04 ITV
- W__concentration________________________________________________________ (fimp(14))____________________      5.0000E-06    
+ H__concentration________________________________________________________ (f_nd_impurity_electrons(01))____________________      8.0392E-01 OP 
+ He_concentration________________________________________________________ (f_nd_impurity_electrons(02))____________________      8.3954E-02    
+ Be_concentration________________________________________________________ (f_nd_impurity_electrons(03))____________________      0.0000E+00    
+ C__concentration________________________________________________________ (f_nd_impurity_electrons(04))____________________      0.0000E+00    
+ N__concentration________________________________________________________ (f_nd_impurity_electrons(05))____________________      0.0000E+00    
+ O__concentration________________________________________________________ (f_nd_impurity_electrons(06))____________________      0.0000E+00    
+ Ne_concentration________________________________________________________ (f_nd_impurity_electrons(07))____________________      0.0000E+00    
+ Si_concentration________________________________________________________ (f_nd_impurity_electrons(08))____________________      0.0000E+00    
+ Ar_concentration________________________________________________________ (f_nd_impurity_electrons(09))____________________      0.0000E+00    
+ Fe_concentration________________________________________________________ (f_nd_impurity_electrons(10))____________________      0.0000E+00    
+ Ni_concentration________________________________________________________ (f_nd_impurity_electrons(11))____________________      0.0000E+00    
+ Kr_concentration________________________________________________________ (f_nd_impurity_electrons(12))____________________      0.0000E+00    
+ Xe_concentration________________________________________________________ (f_nd_impurity_electrons(13))____________________      5.7149E-04 ITV
+ W__concentration________________________________________________________ (f_nd_impurity_electrons(14))____________________      5.0000E-06    
  Average_mass_of_all_ions_(amu)__________________________________________ (m_ions_total_amu)________________________      2.7252E+00 OP 
  Effective_charge________________________________________________________ (zeff)________________________      2.5164E+00    
  Density_profile_factor__________________________________________________ (alphan)______________________      1.0000E+00    
- Plasma_profile_model____________________________________________________ (ipedestal)___________________              1    
- Density_pedestal_r/a_location___________________________________________ (rhopedn)_____________________      9.4000E-01    
- Electron_density_pedestal_height_(/m3)__________________________________ (neped)_______________________      6.3278E+19 OP 
- Electron_density_at_pedestal_/_nGW______________________________________ (fgwped_out)__________________      8.5000E-01    
- Temperature_pedestal_r/a_location_______________________________________ (rhopedt)_____________________      9.4000E-01       
- Electron_temp._pedestal_height_(keV)____________________________________ (teped)_______________________      5.5000E+00    
- Electron_temp._at_separatrix_(keV)______________________________________ (tesep)_______________________      1.0000E-01    
- Electron_density_at_separatrix_(/m3)____________________________________ (nesep)_______________________      3.7223E+19    
+ Plasma_profile_model____________________________________________________ (i_plasma_pedestal)___________________              1    
+ Density_pedestal_r/a_location___________________________________________ (radius_plasma_pedestal_density_norm)_____________________      9.4000E-01    
+ Electron_density_pedestal_height_(/m3)__________________________________ (nd_plasma_pedestal_electron)_______________________      6.3278E+19 OP 
+ Electron_density_at_pedestal_/_nGW______________________________________ (f_nd_plasma_pedestal_greenwald_out)__________________      8.5000E-01    
+ Temperature_pedestal_r/a_location_______________________________________ (radius_plasma_pedestal_temp_norm)_____________________      9.4000E-01       
+ Electron_temp._pedestal_height_(keV)____________________________________ (temp_plasma_pedestal_kev)_______________________      5.5000E+00    
+ Electron_temp._at_separatrix_(keV)______________________________________ (temp_plasma_separatrix_kev)_______________________      1.0000E-01    
+ Electron_density_at_separatrix_(/m3)____________________________________ (nd_plasma_separatrix_electron)_______________________      3.7223E+19    
  Electron_density_at_separatrix_/_nGW____________________________________ (fgwsep_out)__________________      5.0000E-01    
  Temperature_profile_index_______________________________________________ (alphat)______________________      1.4500E+00    
  Temperature_profile_index_beta__________________________________________ (tbeta)_______________________      2.0000E+00    
@@ -430,7 +430,7 @@
  Synchrotron_radiation_power_(MW)________________________________________ (p_plasma_sync_mw)_________________      1.5187E+01 OP 
  Synchrotron_wall_reflectivity_factor____________________________________ (f_sync_reflect)_______________________      6.0000E-01    
  Normalised_minor_radius_defining_'core'_________________________________ (radius_plasma_core_norm)__________________      7.5000E-01    
- Fraction_of_core_radiation_subtracted_from_P_L__________________________ (coreradiationfraction)_______      6.0000E-01    
+ Fraction_of_core_radiation_subtracted_from_P_L__________________________ (f_p_plasma_core_rad_reduction)_______      6.0000E-01    
  Radiation_power_from_inner_zone_(MW)____________________________________ (p_plasma_inner_rad_mw)_____________      9.1650E+01 OP 
  Radiation_power_from_outer_zone_(MW)____________________________________ (p_plasma_outer_rad_mw)_____________      1.3482E+02 OP 
  Total_radiation_power_from_inside_LCFS_(MW)_____________________________ (p_plasma_rad_mw)______________________      2.2647E+02 OP 
@@ -523,7 +523,7 @@
  Plasma_inductance_(H)___________________________________________________ (ind_plasma)_________________________      1.4181E-05 OP 
  Coefficient_for_sawtooth_effects_on_burn_V-s_requirement________________ (csawth)______________________      1.0000E+00    
  Ratio_of_He_and_pellet_particle_confinement_times_______________________ (tauratio)____________________      1.0000E+00    
- Fuelling_rate_(nucleus-pairs/s)_________________________________________ (qfuel)_______________________      3.3420E+21 OP 
+ Fuelling_rate_(nucleus-pairs/s)_________________________________________ (molflow_plasma_fuelling_required)_______________________      3.3420E+21 OP 
  Fuel_burn-up_rate_(reactions/s)_________________________________________ (rndfuel)_____________________      5.7755E+20 OP 
  Burn-up_fraction________________________________________________________ (burnup)______________________      1.7282E-01    
  # Energy confinement times, and required H-factors : #
@@ -534,7 +534,7 @@
  Auxiliary_power_used_for_plasma_heating_only_(MW)_______________________ (p_hcd_primary_extra_heat_mw)_______________________      7.5000E+01    
  Power_injected_for_current_drive_(MW)___________________________________ (pcurrentdrivemw)_____________      5.1429E+00    
  Maximum_Allowed_Bootstrap_current_fraction______________________________ (f_c_plasma_bootstrap_max)_____________________      9.5000E-01    
- Fusion_gain_factor_Q____________________________________________________ (bigq)________________________      2.0060E+01 OP 
+ Fusion_gain_factor_Q____________________________________________________ (big_q_plasma)________________________      2.0060E+01 OP 
  Auxiliary_current_drive_(A)_____________________________________________ (auxiliary_cd)________________      2.3908E+05 OP 
  Current_drive_efficiency_(A/W)__________________________________________ (eta_cd_hcd_primary)_______________________      4.6488E-02 OP 
  Normalised_current_drive_efficiency,_gamma_(10^20_A/W-m2)_______________ (eta_cd_norm_hcd_primary)_______________________      3.0000E-01 OP 
@@ -555,13 +555,13 @@
  Required_volt-seconds_during_start-up_(Wb)______________________________ (vssoft)______________________      2.8601E+02    
  Available_volt-seconds_during_burn_(Wb)_________________________________ (vsmax)_______________________      2.7014E+02    
  # Times #
- Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_precharge)_______________________      5.0000E+02    
- Plasma_current_ramp-up_time_(s)_________________________________________ (t_current_ramp_up)________________________      1.6631E+02    
+ Initial_charge_time_for_CS_from_zero_current_(s)________________________ (t_plant_pulse_coil_precharge)_______________________      5.0000E+02    
+ Plasma_current_ramp-up_time_(s)_________________________________________ (t_plant_pulse_plasma_current_ramp_up)________________________      1.6631E+02    
  Heating_time_(s)________________________________________________________ (theat)_______________________      1.0000E+01    
- Burn_time_(s)___________________________________________________________ (t_burn)_______________________      7.2035E+03 OP 
- Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_ramp_down)_______________________      1.6631E+02    
- Time_between_pulses_(s)_________________________________________________ (t_between_pulse)______________________      1.8000E+03    
- Total_plant_cycle_time_(s)______________________________________________ (t_cycle)______________________      9.8463E+03 OP 
+ Burn_time_(s)___________________________________________________________ (t_plant_pulse_burn)_______________________      7.2035E+03 OP 
+ Reset_time_to_zero_current_for_CS_(s)___________________________________ (t_plant_pulse_plasma_current_ramp_down)_______________________      1.6631E+02    
+ Time_between_pulses_(s)_________________________________________________ (t_plant_pulse_dwell)______________________      1.8000E+03    
+ Total_plant_cycle_time_(s)______________________________________________ (t_plant_pulse_total)______________________      9.8463E+03 OP 
  # Radial Build #
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
  TF_coil_radial_placement_switch_________________________________________ (i_tf_inside_cs)____________________              0    
@@ -611,7 +611,7 @@
  Plasma_geometric_centre,_vertical_(m)___________________________________ (0.0)_________________________      0.0000E+00    
  Plasma_lower_physics_variables.triangularity____________________________ (tril)________________________      5.0000E-01    
  Plasma_elongation_______________________________________________________ (physics_variables.kappa.)____      1.8500E+00    
- TF_coil_vertical_offset_(m)_____________________________________________ (tfoffset)____________________     -6.1694E-01    
+ TF_coil_vertical_offset_(m)_____________________________________________ (dz_tf_plasma_centre_offset)____________________     -6.1694E-01    
  Plasma_outer_arc_radius_of_curvature_(m)________________________________ (rco)_________________________      5.0422E+00    
  Plasma_inner_arc_radius_of_curvature_(m)________________________________ (rci)_________________________      9.7933E+00    
  Plasma_lower_X-pt,_radial_(m)___________________________________________ (rxpt)________________________      6.6667E+00    
@@ -694,7 +694,7 @@
  Inboard_leg_case_plasma_side_wall_thickness_(m)_________________________ (dr_tf_plasma_case)______________________      6.0000E-02    
  Inboard_leg_case_inboard_"nose"_thickness_(m)___________________________ (dr_tf_nose_case)______________________      2.8216E-01 ITV
  Inboard_leg_case_sidewall_thickness_at_its_narrowest_point_(m)__________ (dx_tf_side_case_min)______________________      5.0000E-02    
- External_case_mass_per_coil_(kg)________________________________________ (whtcas)______________________      5.5456E+05 OP 
+ External_case_mass_per_coil_(kg)________________________________________ (m_tf_coil_case)______________________      5.5456E+05 OP 
  WP_cross_section_area_with_insulation_and_insertion_(per_coil)_(m2)_____ (a_tf_wp_with_insulation)________________________      5.7486E-01    
  WP_cross_section_area_(per_coil)_(m2)___________________________________ (a_tf_wp_steel)________________________      5.1696E-01    
  Winding_pack_radial_thickness_(m)_______________________________________ (dr_tf_wp_with_insulation)____________________      5.0416E-01 ITV
@@ -708,33 +708,34 @@
  Cable_WP_fraction_______________________________________________________ ((a_tf_wp_with_insulation-a_tf_wp_steel-a_tf_coil_wp_turn_insulation)/a_tf_wp_with_insulation)_______      5.3656E-01    
  Turn_parametrisation____________________________________________________ (i_tf_turns_integer)__________              0    
  Number_of_turns_per_TF_coil_____________________________________________ (n_tf_coil_turns)___________________      1.4739E+02 OP 
- Width_of_turn_including_inter-turn_insulation_(m)_______________________ (t_turn_tf)___________________      5.9223E-02 OP 
+ Width_of_turn_including_inter-turn_insulation_(m)_______________________ (dx_tf_turn_general)___________________      5.9223E-02 OP 
  Width_of_conductor_(square)_(m)_________________________________________ (t_conductor)_________________      5.7623E-02 OP 
  Width_of_space_inside_conductor_(m)_____________________________________ (dx_tf_turn_cable_space_average)_____________________      4.1604E-02 OP 
  Steel_conduit_thickness_(m)_____________________________________________ (dx_tf_turn_steel)____________________      8.0099E-03 ITV
  Inter-turn_insulation_thickness_(m)_____________________________________ (dx_tf_turn_insulation)____________________      8.0000E-04    
  Diameter_of_central_helium_channel_in_cable_____________________________ (dia_tf_turn_coolant_channel)_____________________      1.0000E-02    
+ Diameter_of_superconducting_cable________________________________________ (dia_tf_turn_superconducting_cable)_ 7.29999999999999963e-04
  internal_area_of_the_cable_space________________________________________ (a_tf_turn_cable_space_no_void)_______________________      1.6999E-03    
  Coolant_fraction_in_conductor_excluding_central_channel_________________ (f_a_tf_turn_cable_space_extra_void)________________________      3.0000E-01    
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4212E-01 ITV
- Superconductor_fraction_of_conductor____________________________________ (1-fcutfsu)___________________      1.5788E-01    
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4212E-01 ITV
+ Superconductor_fraction_of_conductor____________________________________ (1-f_a_tf_turn_cable_copper)___________________      1.5788E-01    
  Check_total_area_fractions_in_winding_pack_=_1__________________________ ______________________________      1.0000E+00    
- minimum_TF_conductor_temperature_margin__(K)____________________________ (tmargmin_tf)_________________      1.5000E+00    
- TF_conductor_temperature_margin_(K)_____________________________________ (tmargtf)_____________________      1.5049E+00    
+ minimum_TF_conductor_temperature_margin__(K)____________________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
+ TF_conductor_temperature_margin_(K)_____________________________________ (temp_tf_superconductor_margin)_____________________      1.5049E+00    
  Elastic_properties_behavior_____________________________________________ (i_tf_cond_eyoung_axial)______              0    
  Conductor_axial_Youngs_modulus__________________________________________ (eyoung_cond_axial)___________      0.0000E+00    
  Conductor_transverse_Youngs_modulus_____________________________________ (eyoung_cond_trans)___________      0.0000E+00    
- Superconductor_mass_per_coil_(kg)_______________________________________ (whtconsc)____________________      4.6964E+03 OP 
- Copper_mass_per_coil_(kg)_______________________________________________ (whtconcu)____________________      5.8073E+04 OP 
- Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_turn_steel_conduit)____________________      8.9310E+04 OP 
- Conduit_insulation_mass_per_coil_(kg)___________________________________ (whtconin)____________________      2.3777E+03 OP 
- Total_conduit_mass_per_coil_(kg)________________________________________ (whtcon)______________________      1.5446E+05 OP 
+ Superconductor_mass_per_coil_(kg)_______________________________________ (m_tf_coil_superconductor)____________________      4.6964E+03 OP 
+ Copper_mass_per_coil_(kg)_______________________________________________ (m_tf_coil_copper)____________________      5.8073E+04 OP 
+ Steel_conduit_mass_per_coil_(kg)________________________________________ (m_tf_wp_steel_conduit)____________________      8.9310E+04 OP 
+ Conduit_insulation_mass_per_coil_(kg)___________________________________ (m_tf_coil_wp_turn_insulation)____________________      2.3777E+03 OP 
+ Total_conduit_mass_per_coil_(kg)________________________________________ (m_tf_coil_conductor)______________________      1.5446E+05 OP 
  Mass_of_each_TF_coil_(kg)_______________________________________________ (m_tf_coils_total/n_tf_coils)__________________      7.1402E+05 OP 
  Total_TF_coil_mass_(kg)_________________________________________________ (m_tf_coils_total)_______________________      1.1424E+07 OP 
- Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak)______________________      1.2178E+01 OP 
+ Nominal_peak_field_assuming_toroidal_symmetry_(T)_______________________ (b_tf_inboard_peak_symmetric)______________________      1.2178E+01 OP 
  Total_current_in_all_TF_coils_(MA)______________________________________ (c_tf_total/1.D6)__________________      2.1176E+02 OP 
  TF_coil_current_(summed_over_all_coils)_(A)_____________________________ (c_tf_total)_______________________      2.1176E+08    
- Actual_peak_field_at_discrete_conductor_(T)_____________________________ (bmaxtfrp)____________________      1.2636E+01 OP 
+ Actual_peak_field_at_discrete_conductor_(T)_____________________________ (b_tf_inboard_peak_with_ripple)____________________      1.2636E+01 OP 
  Winding_pack_current_density_(A/m2)_____________________________________ (j_tf_wp)_______________________      2.5602E+07 OP 
  Inboard_leg_mid-plane_conductor_current_density_(A/m2)__________________ (oacdcp)______________________      1.1617E+07    
  Total_stored_energy_in_TF_coils_(GJ)____________________________________ (e_tf_magnetic_stored_total_gj)___________________      1.2161E+02 OP 
@@ -742,27 +743,27 @@
  Outboard_vertical_tension_per_coil_(N)__________________________________ (vforce_outboard)_____________      2.0908E+08 OP 
  inboard_vertical_tension_fraction_(-)___________________________________ (f_vforce_inboard)____________      5.0000E-01 OP 
  Centring_force_per_coil_(N/m)___________________________________________ (cforce)______________________      8.0590E+07 OP 
- Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripmax)______________________      6.0000E-01    
+ Max_allowed_tfcoil_variables.ripple_amplitude_at_plasma_outboard_midplan (ripple_b_tf_plasma_edge_max)______________________      6.0000E-01    
  Ripple_amplitude_at_plasma_outboard_midplane_(%)________________________ (ripple)______________________      6.0000E-01 OP 
- Actual_quench_time_(or_time_constant)_(s)_______________________________ (tdmptf)______________________      1.8429E+01 ITV
+ Actual_quench_time_(or_time_constant)_(s)_______________________________ (t_tf_superconductor_quench)______________________      1.8429E+01 ITV
  Vacuum_Vessel_stress_on_quench_(Pa)_____________________________________ (vv_stress_quench)____________      6.1442E+07 OP 
- Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (vdalw)_______________________      9.5837E+00 ITV
- Actual_quench_voltage_(kV)______________________________________________ (vtfskv)______________________      9.1862E+00 OP 
- Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (tmaxpro)_____________________      1.5000E+02    
+ Maximum_allowed_voltage_during_quench_due_to_insulation_(kV)____________ (v_tf_coil_dump_quench_max_kv)_______________________      9.5837E+00 ITV
+ Actual_quench_voltage_(kV)______________________________________________ (v_tf_coil_dump_quench_kv)______________________      9.1862E+00 OP 
+ Maximum_allowed_temp_rise_during_a_quench_(K)___________________________ (temp_tf_conductor_quench_max)_____________________      1.5000E+02    
  # Superconducting TF Coils #
  Superconductor_switch___________________________________________________ (isumat)______________________              1    
  Critical_field_at_zero_temperature_and_strain_(T)_______________________ (bc20m)_______________________      3.2970E+01    
  Critical_temperature_at_zero_field_and_strain_(K)_______________________ (tc0m)________________________      1.6060E+01    
  Helium_temperature_at_peak_field_(=_superconductor_temperature)_(K)_____ (thelium)_____________________      4.7500E+00    
  Total_helium_fraction_inside_cable_space________________________________ (fhetot)______________________      3.4620E-01 OP 
- Copper_fraction_of_conductor____________________________________________ (fcutfsu)_____________________      8.4212E-01 ITV
+ Copper_fraction_of_conductor____________________________________________ (f_a_tf_turn_cable_copper)_____________________      8.4212E-01 ITV
  Residual_manufacturing_strain_on_superconductor_________________________ (str_tf_con_res)______________     -5.0000E-03    
  Self-consistent_strain_on_superconductor________________________________ (str_wp)______________________      2.0730E-03    
  Critical_current_density_in_superconductor_(A/m2)_______________________ (j_crit_sc)_____________________      7.1337E+08 OP 
  Critical_current_density_in_cable_(A/m2)_______________________________ (j_crit_cable)____________________      1.1263E+08 OP 
  Critical_current_density_in_winding_pack_(A/m2)_________________________ (j_tf_wp_critical)_____________________      3.5688E+07 OP 
  Actual_current_density_in_winding_pack_(A/m2)___________________________ (jwdgop)______________________      2.5602E+07 OP 
- Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (tmargmin_tf)_________________      1.5000E+00    
+ Minimum_allowed_temperature_margin_in_superconductor_(K)________________ (temp_tf_superconductor_margin_min)_________________      1.5000E+00    
  Actual_temperature_margin_in_superconductor_(K)_________________________ (tmarg)_______________________      1.5049E+00 OP 
  Critical_current_(A)____________________________________________________ (icrit)_______________________      1.2517E+05 OP 
  Actual_current_(A)______________________________________________________ (c_tf_turn)_______________________      8.9795E+04 ITV
@@ -787,7 +788,7 @@
  ___CS_conductor_cross-sectional_area_(m2)_______________________________ (awpoh*(1-f_a_cs_void))_____________      3.0797E+00 OP 
  ___CS_void_cross-sectional_area_(m2)____________________________________ (awpoh*f_a_cs_void)_________________      1.3199E+00 OP 
  CS_steel_cross-sectional_area_(m2)______________________________________ (a_cs_poloidal-awpoh)________________      4.7411E+00 OP 
- CS_steel_area_fraction__________________________________________________ (f_a_cs_steel)_______________      5.1868E-01 ITV
+ CS_steel_area_fraction__________________________________________________ (f_a_cs_turn_steel)_______________      5.1868E-01 ITV
  Switch_for_CS_stress_calculation________________________________________ (i_cs_stress)_________________              0    
  Allowable_stress_in_CS_steel_(Pa)_______________________________________ (alstroh)_____________________      7.5000E+08    
  Hoop_stress_in_CS_steel_(Pa)____________________________________________ (sig_hoop)____________________      6.7569E+08 OP 
@@ -798,8 +799,8 @@
  Copper_fraction_in_strand_______________________________________________ (fcuohsu)_____________________      7.0000E-01    
  Void_(coolant)_fraction_in_conductor____________________________________ (f_a_cs_void)_______________________      3.0000E-01    
  Helium_coolant_temperature_(K)__________________________________________ (tftmp)_______________________      4.7500E+00    
- CS_temperature_margin_(K)_______________________________________________ (temp_cs_margin)_____________________      1.5052E+00 OP 
- Minimum_permitted_temperature_margin_(K)________________________________ (tmargmin_cs)_________________      1.5000E+00    
+ CS_temperature_margin_(K)_______________________________________________ (temp_cs_superconductor_margin)_____________________      1.5052E+00 OP 
+ Minimum_permitted_temperature_margin_(K)________________________________ (temp_cs_superconductor_margin_min)_________________      1.5000E+00    
  Residual_hoop_stress_in_CS_Steel_(Pa)___________________________________ (residual_sig_hoop)___________      2.4000E+08    
  Minimum_burn_time_(s)___________________________________________________ (t_burn_min)______________________      7.2000E+03    
  Initial_vertical_crack_size_(m)_________________________________________ (t_crack_vertical)____________      8.9000E-04    
@@ -808,8 +809,8 @@
  CS_turn_length_(m)______________________________________________________ (dr_cs_turn)__________________      7.6953E-02    
  CS_turn_internal_cable_space_radius_(m)_________________________________ (radius_cs_turn_cable_space)____________________      7.4740E-03    
  CS_turn_width_(m)_______________________________________________________ (dz_cs_turn)__________________      2.5651E-02    
- CS_structural_vertical_thickness_(m)____________________________________ (t_structural_vertical)_______      5.3514E-03    
- CS_structural_radial_thickness_(m)______________________________________ (t_structural_radial)_________      5.3514E-03    
+ CS_structural_vertical_thickness_(m)____________________________________ (dz_cs_turn_conduit)_______      5.3514E-03    
+ CS_structural_radial_thickness_(m)______________________________________ (dr_cs_turn_conduit)_________      5.3514E-03    
  Allowable_number_of_cycles_till_CS_fracture_____________________________ (n_cycle)_____________________      1.3378E+02 OP 
  Minimum_number_of_cycles_required_till_CS_fracture______________________ (n_cycle_min)_________________      2.0000E+04 OP 
  PF_coil_superconductor_material_________________________________________ (i_pf_superconductor)____________________              3    
@@ -957,7 +958,7 @@
  First_Wall_Armour_Volume_(m3)___________________________________________ (fw_armour_vol)_______________      5.8692E+00    
  First_Wall_Volume_(m3)__________________________________________________ (vol_fw_total)_______________________      1.9807E+01    
  Blanket_Volume_(m3)_____________________________________________________ (vol_blkt_total)_____________________      1.1849E+03    
- Shield_Volume_(m3)______________________________________________________ (volshld)_____________________      7.8520E+02    
+ Shield_Volume_(m3)______________________________________________________ (vol_shld_total)_____________________      7.8520E+02    
  Vacuum_vessel_volume_(m3)_______________________________________________ (vol_vv)______________________      1.0178E+03    
  First_Wall_Armour_Mass_(kg)_____________________________________________ (fw_armour_mass)______________      1.1298E+05 OP 
  First_Wall_Mass,_excluding_armour_(kg)__________________________________ (m_fw_total)______________________      1.5449E+05 OP 
@@ -995,7 +996,7 @@
  # Superconducting TF Coil Power Conversion #
  TF_coil_current_(kA)____________________________________________________ (itfka)_______________________      8.9795E+01 OP 
  Number_of_TF_coils______________________________________________________ (ntfc)________________________      1.6000E+01    
- Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (vtfskv)______________________      9.1862E+00 OP 
+ Voltage_across_a_TF_coil_during_quench_(kV)_____________________________ (v_tf_coil_dump_quench_kv)______________________      9.1862E+00 OP 
  TF_coil_charge_time_(hours)_____________________________________________ (tchghr)______________________      4.0000E+00    
  Total_inductance_of_TF_coils_(H)________________________________________ (ltfth)_______________________      3.0165E+01 OP 
  Total_resistance_of_TF_coils_(ohm)______________________________________ (rcoils)______________________      0.0000E+00 OP 
@@ -1034,21 +1035,21 @@
  Maximum_stored_energy_in_poloidal_field_(MJ)____________________________ (ensxpfm)_____________________      2.8804E+04 OP 
  Peak_absolute_rate_of_change_of_stored_energy_in_poloidal_field_(MW)____ (peakpoloidalpower)___________      1.7319E+02 OP 
  # Vacuum System #
- First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (rat)_________________________      1.3000E-08    
+ First_wall_outgassing_rate_(Pa_m/s)_____________________________________ (outgrat_fw)_________________________      1.3000E-08    
  Total_outgassing_load_(Pa_m3/s)_________________________________________ (ogas)________________________      1.6691E-04 OP 
- Base_pressure_required_(Pa)_____________________________________________ (pbase)_______________________      5.0000E-04    
+ Base_pressure_required_(Pa)_____________________________________________ (pres_vv_chamber_base)_______________________      5.0000E-04    
  Required_N2_pump_speed_(m3/s)___________________________________________ (s(1))________________________      3.3381E-01 OP 
  N2_pump_speed_provided_(m3/s)___________________________________________ (snet(1))_____________________      2.3404E+01 OP 
  Plasma_chamber_volume_(m3)______________________________________________ (volume)______________________      2.2588E+03 OP 
  Chamber_pressure_after_burn_(Pa)________________________________________ (pend)________________________      1.6698E-01 OP 
  Chamber_pressure_before_burn_(Pa)_______________________________________ (pstart)______________________      1.6698E-03    
- Allowable_pumping_time_switch___________________________________________ (dwell_pump)__________________              0    
- Dwell_time_between_burns_(s)____________________________________________ (t_between_pulse.)_____________________      1.8000E+03    
- CS_ramp-up_time_burns_(s)_______________________________________________ (t_precharge.)______________________      5.0000E+02    
+ Allowable_pumping_time_switch___________________________________________ (i_vac_pump_dwell)__________________              0    
+ Dwell_time_between_burns_(s)____________________________________________ (t_plant_pulse_dwell.)_____________________      1.8000E+03    
+ CS_ramp-up_time_burns_(s)_______________________________________________ (t_plant_pulse_coil_precharge.)______________________      5.0000E+02    
  Allowable_pumping_time_between_burns_(s)________________________________ (tpump)_______________________      1.8000E+03    
  Required_D-T_pump_speed_(m3/s)__________________________________________ (s(2))________________________      5.7790E+00 OP 
  D-T_pump_speed_provided_(m3/s)__________________________________________ (snet(2))_____________________      5.6700E+01 OP 
- Divertor_chamber_gas_pressure_(Pa)______________________________________ (prdiv)_______________________      3.6000E-01    
+ Divertor_chamber_gas_pressure_(Pa)______________________________________ (pres_div_chamber_burn)_______________________      3.6000E-01    
  Helium_gas_fraction_in_divertor_chamber_________________________________ (fhe)_________________________      1.7218E-01 OP 
  Required_helium_pump_speed_(m3/s)_______________________________________ (s(3))________________________      3.8423E+01 OP 
  Helium_pump_speed_provided_(m3/s)_______________________________________ (snet(3))_____________________      3.8423E+01 OP 
@@ -1103,9 +1104,9 @@
  # Plant Power / Heat Transport Balance #
  Neutron_power_multiplication_in_blanket_________________________________ (f_p_blkt_multiplication)_______________________      1.2690E+00    
  Divertor_area_fraction_of_whole_toroid_surface__________________________ (f_ster_div_single)________________________      1.1500E-01    
- H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_hcd)________________________      0.0000E+00    
- First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_hcd)_________________      8.8500E-01    
- Switch_for_pumping_of_primary_coolant___________________________________ (i_coolant_pumping)_____________              3    
+ H/CD_apparatus_+_diagnostics_area_fraction______________________________ (f_a_fw_outboard_hcd)________________________      0.0000E+00    
+ First_wall_area_fraction________________________________________________ (1-f_ster_div_single-f_a_fw_outboard_hcd)_________________      8.8500E-01    
+ Switch_for_pumping_of_primary_coolant___________________________________ (i_p_coolant_pumping)_____________              3    
  Mechanical_pumping_power_for_FW_cooling_loop_including_heat_exchanger_(M (p_fw_coolant_pump_mw)____________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_blanket_cooling_loop_including_heat_exchang (p_blkt_coolant_pump_mw)__________________      0.0000E+00 OP 
  Mechanical_pumping_power_for_FW_and_blanket_cooling_loop_including_heat_ (p_fw_blkt_coolant_pump_mw)_______________      1.6407E+02 OP 
@@ -1115,8 +1116,8 @@
  Electrical_pumping_power_for_shield_(MW)________________________________ (p_shld_coolant_pump_elec_mw)_________________      8.1250E-03 OP 
  Electrical_pumping_power_for_divertor_(MW)______________________________ (p_div_coolant_pump_elec_mw)__________________      1.9433E+00 OP 
  Total_electrical_pumping_power_for_primary_coolant_(MW)_________________ (p_coolant_pump_elec_total_mw)_______________________      1.9053E+02 OP 
- Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (fpumpshld)___________________      5.0000E-03    
- Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (fpumpdiv)____________________      5.0000E-03    
+ Coolant_pump_power_/_non-pumping_thermal_power_in_shield________________ (f_p_shld_coolant_pump_total_heat)___________________      5.0000E-03    
+ Coolant_pump_power_/_non-pumping_thermal_power_in_divertor______________ (f_p_div_coolant_pump_total_heat)____________________      5.0000E-03    
  Electrical_efficiency_of_heat_transport_coolant_pumps___________________ (eta_coolant_pump_electric)______________________      8.7000E-01    
  Thermal_to_electric_conversion_efficiency_of_the_power_conversion_cycle_ (eta_turbine)_______________________      4.0000E-01    
  Fraction_of_total_high-grade_thermal_power_to_divertor__________________ (f_p_div_primary_heat)________________      1.5623E-01    
@@ -1212,7 +1213,7 @@ epsvmc = 1e-7
 *------------------*
 icc = 1
 ixc = 5 * beta
-beta = 0.03
+beta_total_vol_avg =0.03
 
 * Global power balance *
 *----------------------*
@@ -1228,9 +1229,9 @@ icc = 11
 * Density upper limit *
 *---------------------*
 icc = 5
-ixc = 6 * dene [m-3]
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
 fdene = 1.2
-dene = 7.5E19
+nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
 *-------------------------------*
@@ -1317,10 +1318,10 @@ fiooic = 0.65
 *--------------------------*
 icc = 34
 ixc = 51 * fvdump
-ixc = 52 * vdalw [kV]
+ixc = 52 * v_tf_coil_dump_quench_max_kv [kV]
 boundu(52) = 10.0
 fvdump = 1.0
-vdalw = 10.0
+v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*
@@ -1339,7 +1340,7 @@ tmargmin = 1.5
 *---------------------------------*
 icc = 60
 ixc = 106 * ftmargoh
-tmargmin_cs = 1.5
+temp_cs_superconductor_margin_min = 1.5
 
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
@@ -1361,7 +1362,7 @@ foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* neped<ne0 *
+* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
 *------------------*
 
 icc = 81
@@ -1387,9 +1388,9 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 * Iteration Variables *
 ***********************
 
-* bt [T]
+* b_plasma_toroidal_on_axis [T]
 ixc = 2
-bt = 5.7
+b_plasma_toroidal_on_axis = 5.7
 
 * rmajor [m]
 ixc = 3
@@ -1397,10 +1398,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* te [keV]
+* temp_plasma_electron_vol_avg_keV [keV]
 ixc = 4
 boundu(4) = 100.0
-te = 12.0
+temp_plasma_electron_vol_avg_keV = 12.0
 
 * h factor
 ixc = 10
@@ -1430,9 +1431,9 @@ dr_bore = 2.0
 ixc = 44
 f_c_plasma_non_inductive = 0.4
 
-* tdmptf [s]
+* t_tf_superconductor_quench [s]
 ixc = 56
-tdmptf = 25.0
+t_tf_superconductor_quench = 25.0
 
 * dr_tf_nose_case [m]
 ixc = 57
@@ -1447,7 +1448,7 @@ dx_tf_turn_steel = 0.008
 ixc = 59 
 boundl(59) = 0.50
 boundu(59) = 0.94
-fcutfsu = 0.8
+f_a_tf_turn_cable_copper = 0.8
 
 * TF Current per turn [A]
 ixc = 60
@@ -1459,13 +1460,13 @@ c_tf_turn = 65000.0
 ixc = 109
 boundu(109) = 0.1
 
-* CS steel fraction, f_a_cs_steel
+* CS steel fraction, f_a_cs_turn_steel
 ixc = 122
-f_a_cs_steel = 0.8
+f_a_cs_turn_steel = 0.8
 
 * core impurity fraction, Xenon
 ixc = 135
-fimp(13) = 0.00038
+f_nd_impurity_electrons(13) = 0.00038
 
 * TF winding pack thickness [m]
 ixc = 140
@@ -1577,31 +1578,31 @@ i_density_limit = 7
 i_beta_fast_alpha = 1
 
 * Switch for pedestal profiles
-ipedestal = 1
+i_plasma_pedestal = 1
 
 * fraction of Greenwald density to set as separatrix density
-fgwsep = 0.5
+f_nd_plasma_separatrix_greenwald = 0.5
 
-* Electron density of pedestal [m-3] (ipedestal=1) - initial value
-neped = 0.5e20
+* Electron density of pedestal [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_pedestal_electron = 0.5e20
 
-* Electron density at separatrix [m-3] (ipedestal=1) - initial value
-nesep = 0.2e20
+* Electron density at separatrix [m-3] (i_plasma_pedestal=1) - initial value
+nd_plasma_separatrix_electron = 0.2e20
 
-* R/a of density pedestal (ipedestal=1)
-rhopedn = 0.94
+* R/a of density pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_density_norm = 0.94
 
-* R/a of temperature pedestal (ipedestal=1)
-rhopedt = 0.94
+* R/a of temperature pedestal (i_plasma_pedestal=1)
+radius_plasma_pedestal_temp_norm = 0.94
 
-* Temperature profile index beta (ipedestal=1)
+* Temperature profile index beta (i_plasma_pedestal=1)
 tbeta = 2.0
 
-* Electron temperature of pedestal (kev) (ipedestal=1)
-teped = 5.5
+* Electron temperature of pedestal (kev) (i_plasma_pedestal=1)
+temp_plasma_pedestal_kev = 5.5
 
-* Electron temperature at separatrix (kev) (ipedestal=1)
-tesep = 0.1
+* Electron temperature at separatrix (kev) (i_plasma_pedestal=1)
+temp_plasma_separatrix_kev = 0.1
 
 * Switch for energy confinement time scaling law
 i_confinement_time = 34
@@ -1625,13 +1626,13 @@ plasma_res_factor = 0.7
 i_pulsed_plant = 1
 
 * dwell time [s]
-t_between_pulse = 1800.0
+t_plant_pulse_dwell = 1800.0
 
 * Switch for pulse timing calculations
 pulsetimings = 0
 
 * CS ramp up time [s]
-t_precharge = 500.0
+t_plant_pulse_coil_precharge = 500.0
 
 * Current drive *
 *---------------*
@@ -1658,23 +1659,23 @@ p_hcd_primary_extra_heat_mw = 75.0
 radius_plasma_core_norm = 0.75
 
 * fraction of radiation from 'core' region that is subtracted
-coreradiationfraction = 0.6
+f_p_plasma_core_rad_reduction = 0.6
 
 * impurity array
-fimp(1) = 0.9
-fimp(2) = 0.1
-fimp(3) = 0.0
-fimp(4) = 0.0
-fimp(5) = 0.0
-fimp(6) = 0.0
-fimp(7) = 0.0
-fimp(8) = 0.0
-fimp(9) = 0.0
-fimp(10) = 0.0
-fimp(11) = 0.0
-fimp(12) = 0.0
-fimp(13) = 0.00038
-fimp(14) = 0.000005
+f_nd_impurity_electrons(1) = 0.9
+f_nd_impurity_electrons(2) = 0.1
+f_nd_impurity_electrons(3) = 0.0
+f_nd_impurity_electrons(4) = 0.0
+f_nd_impurity_electrons(5) = 0.0
+f_nd_impurity_electrons(6) = 0.0
+f_nd_impurity_electrons(7) = 0.0
+f_nd_impurity_electrons(8) = 0.0
+f_nd_impurity_electrons(9) = 0.0
+f_nd_impurity_electrons(10) = 0.0
+f_nd_impurity_electrons(11) = 0.0
+f_nd_impurity_electrons(12) = 0.0
+f_nd_impurity_electrons(13) = 0.00038
+f_nd_impurity_electrons(14) = 0.000005
 
 * Heat transport *
 ******************
@@ -1683,7 +1684,7 @@ fimp(14) = 0.000005
 ipowerflow = 0
 
 * Switch for pumping power for primary coolant
-i_coolant_pumping = 3
+i_p_coolant_pumping = 3
 
 * Electrical efficiency of FW and blanket coolant pumps
 eta_coolant_pump_electric = 0.87
@@ -1773,7 +1774,7 @@ dr_tf_plasma_case = 0.06
 dx_tf_side_case_min = 0.05
 
 * Max allowable TF ripple at plasma edge [%]
-ripmax = 0.6
+ripple_b_tf_plasma_edge_max = 0.6
 
 * Number of TF coils
 n_tf_coils = 16

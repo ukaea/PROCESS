@@ -1,33 +1,31 @@
 import numpy as np
 
+from process import constants
 from process import process_output as po
 from process.data_structure import (
-    cost_variables,
-    divertor_variables,
-    pulse_variables,
-    structure_variables,
-    times_variables,
-    vacuum_variables,
-)
-from process.exceptions import ProcessValueError
-from process.fortran import (
     build_variables,
     buildings_variables,
-    constants,
+    cost_variables,
     current_drive_variables,
+    divertor_variables,
     fwbs_variables,
     heat_transport_variables,
     ife_variables,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
+    pulse_variables,
+    structure_variables,
     tfcoil_variables,
+    times_variables,
+    vacuum_variables,
 )
+from process.exceptions import ProcessValueError
 
 
 class Costs:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def run(self):
         """
@@ -1568,7 +1566,7 @@ class Costs:
             if cost_variables.supercond_cost_model == 0:
                 costtfsc = (
                     cost_variables.ucsc[tfcoil_variables.i_tf_sc_mat - 1]
-                    * tfcoil_variables.whtconsc
+                    * tfcoil_variables.m_tf_coil_superconductor
                     / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
                 )
             else:
@@ -1582,7 +1580,7 @@ class Costs:
 
             costtfcu = (
                 cost_variables.uccu
-                * tfcoil_variables.whtconcu
+                * tfcoil_variables.m_tf_coil_copper
                 / (tfcoil_variables.len_tf_coil * tfcoil_variables.n_tf_coil_turns)
             )
 
@@ -1628,7 +1626,7 @@ class Costs:
 
             cost_variables.c22213 = (
                 1.0e-6
-                * (tfcoil_variables.whtcas * cost_variables.uccase)
+                * (tfcoil_variables.m_tf_coil_case * cost_variables.uccase)
                 * tfcoil_variables.n_tf_coils
             )
             cost_variables.c22213 = (
@@ -1692,7 +1690,7 @@ class Costs:
         for i in range(pfcoil_variables.n_cs_pf_coils):
             pfwndl = (
                 pfwndl
-                + constants.twopi
+                + constants.TWOPI
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
             )
@@ -1762,7 +1760,7 @@ class Costs:
                     )
                     * 1.0e6
                     / pfcoil_variables.j_pf_coil_wp_peak[i]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
             else:
                 costpfcu = (
@@ -1774,7 +1772,7 @@ class Costs:
                     )
                     * 1.0e6
                     / pfcoil_variables.j_pf_coil_wp_peak[i]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
 
             #  Total cost/metre of superconductor and copper wire
@@ -1789,7 +1787,7 @@ class Costs:
 
             cost_variables.c22221 = cost_variables.c22221 + (
                 1.0e-6
-                * constants.twopi
+                * constants.TWOPI
                 * pfcoil_variables.r_pf_coil_middle[i]
                 * pfcoil_variables.n_pf_coil_turns[i]
                 * cpfconpm
@@ -1841,7 +1839,7 @@ class Costs:
                     / pfcoil_variables.n_pf_coil_turns[
                         pfcoil_variables.n_cs_pf_coils - 1
                     ]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
             else:
                 # MDK I don't know if this is ccorrect as we never use the resistive model
@@ -1852,7 +1850,7 @@ class Costs:
                     / pfcoil_variables.n_pf_coil_turns[
                         pfcoil_variables.n_cs_pf_coils - 1
                     ]
-                    * constants.dcopper
+                    * constants.den_copper
                 )
 
             #  Total cost/metre of superconductor and copper wire (Central Solenoid)
@@ -1867,7 +1865,7 @@ class Costs:
 
             cost_variables.c22221 = cost_variables.c22221 + (
                 1.0e-6
-                * constants.twopi
+                * constants.TWOPI
                 * pfcoil_variables.r_pf_coil_middle[pfcoil_variables.n_cs_pf_coils - 1]
                 * pfcoil_variables.n_pf_coil_turns[pfcoil_variables.n_cs_pf_coils - 1]
                 * cpfconpm
@@ -2062,27 +2060,29 @@ class Costs:
         This routine evaluates the Account 224 (vacuum system) costs.
         The costs are scaled from TETRA reactor code runs.
         """
-        if vacuum_variables.ntype == 1:
+        if vacuum_variables.i_vacuum_pump_type == 1:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.vpumpn * cost_variables.UCCPMP
+                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.UCCPMP
             )
         else:
             cost_variables.c2241 = (
-                1.0e-6 * vacuum_variables.vpumpn * cost_variables.uctpmp
+                1.0e-6 * vacuum_variables.n_vac_pumps_high * cost_variables.uctpmp
             )
 
         cost_variables.c2241 = cost_variables.fkind * cost_variables.c2241
 
         #  Account 224.2 : Backing pumps
 
-        cost_variables.c2242 = 1.0e-6 * vacuum_variables.nvduct * cost_variables.UCBPMP
+        cost_variables.c2242 = (
+            1.0e-6 * vacuum_variables.n_vv_vacuum_ducts * cost_variables.UCBPMP
+        )
         cost_variables.c2242 = cost_variables.fkind * cost_variables.c2242
 
         #  Account 224.3 : Vacuum duct
 
         cost_variables.c2243 = (
             1.0e-6
-            * vacuum_variables.nvduct
+            * vacuum_variables.n_vv_vacuum_ducts
             * vacuum_variables.dlscal
             * cost_variables.UCDUCT
         )
@@ -2093,8 +2093,8 @@ class Costs:
         cost_variables.c2244 = (
             1.0e-6
             * 2.0e0
-            * vacuum_variables.nvduct
-            * (vacuum_variables.vcdimax * 1.2e0) ** 1.4e0
+            * vacuum_variables.n_vv_vacuum_ducts
+            * (vacuum_variables.dia_vv_vacuum_ducts * 1.2e0) ** 1.4e0
             * cost_variables.UCVALV
         )
         cost_variables.c2244 = cost_variables.fkind * cost_variables.c2244
@@ -2103,8 +2103,8 @@ class Costs:
 
         cost_variables.c2245 = (
             1.0e-6
-            * vacuum_variables.nvduct
-            * vacuum_variables.vacdshm
+            * vacuum_variables.n_vv_vacuum_ducts
+            * vacuum_variables.m_vv_vacuum_duct_shield
             * cost_variables.UCVDSH
         )
         cost_variables.c2245 = cost_variables.fkind * cost_variables.c2245
@@ -2151,7 +2151,11 @@ class Costs:
             cost_variables.c22512 = 1.0e-6 * (
                 cost_variables.uctfbr
                 * tfcoil_variables.n_tf_coils
-                * (tfcoil_variables.c_tf_turn * tfcoil_variables.vtfskv * 1.0e3)
+                * (
+                    tfcoil_variables.c_tf_turn
+                    * tfcoil_variables.v_tf_coil_dump_quench_kv
+                    * 1.0e3
+                )
                 ** expel
                 + cost_variables.uctfsw * tfcoil_variables.c_tf_turn
             )
@@ -2444,16 +2448,16 @@ class Costs:
         This routine evaluates the Account 2272 - Fuel processing
         """
         if ife_variables.ife != 1:
-            #  Previous calculation, using qfuel in Amps:
+            #  Previous calculation, using molflow_plasma_fuelling_required in Amps:
             #  1.3 should have been physics_variables.m_fuel_amu*umass/electron_charge*1000*s/day = 2.2
-            # wtgpd = burnup * qfuel * 1.3e0
+            # wtgpd = burnup * molflow_plasma_fuelling_required * 1.3e0
 
             #  New calculation: 2 nuclei * reactions/sec * kg/nucleus * g/kg * sec/day
             physics_variables.wtgpd = (
                 2.0e0
                 * physics_variables.rndfuel
                 * physics_variables.m_fuel_amu
-                * constants.umass
+                * constants.UMASS
                 * 1000.0e0
                 * 86400.0e0
             )
@@ -2464,7 +2468,7 @@ class Costs:
                 * 3.0e0
                 * 1.67e-27
                 * 1.0e3
-                / (constants.electron_volt * 17.6e6 * ife_variables.fburn)
+                / (constants.ELECTRON_VOLT * 17.6e6 * ife_variables.fburn)
             )
             physics_variables.wtgpd = targtm * ife_variables.reprat * 86400.0e0
 
@@ -2487,7 +2491,7 @@ class Costs:
         cfrht = 1.0e5
 
         #  No detritiation needed if purely D-He3 reaction
-        if physics_variables.f_tritium > 1.0e-3:
+        if physics_variables.f_plasma_fuel_tritium > 1.0e-3:
             cost_variables.c2273 = (
                 1.0e-6
                 * cost_variables.UCDTC
@@ -2812,7 +2816,7 @@ class Costs:
                 cost_variables.c2253 = (
                     cost_variables.ucblss
                     * (heat_transport_variables.p_plant_primary_heat_mw * 1.0e6)
-                    * times_variables.tdown
+                    * times_variables.t_plant_pulse_no_burn
                     / (shcss * pulse_variables.dtstor)
                 )
 
@@ -2854,17 +2858,17 @@ class Costs:
             kwhpy = (
                 1.0e3
                 * heat_transport_variables.p_plant_electric_net_mw
-                * (24.0e0 * constants.n_day_year)
+                * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
             )
         else:
             kwhpy = (
                 1.0e3
                 * heat_transport_variables.p_plant_electric_net_mw
-                * (24.0e0 * constants.n_day_year)
+                * (24.0e0 * constants.N_DAY_YEAR)
                 * cost_variables.cfactr
-                * times_variables.t_burn
-                / times_variables.t_cycle
+                * times_variables.t_plant_pulse_burn
+                / times_variables.t_plant_pulse_total
             )
 
         #  Costs due to reactor plant
@@ -3069,11 +3073,11 @@ class Costs:
                 * heat_transport_variables.p_plant_electric_net_mw
                 / 1200.0e0
                 + 1.0e-6
-                * physics_variables.f_helium3
+                * physics_variables.f_plasma_fuel_helium3
                 * physics_variables.wtgpd
                 * 1.0e-3
                 * cost_variables.uche3
-                * constants.n_day_year
+                * constants.N_DAY_YEAR
                 * cost_variables.cfactr
             )
         else:

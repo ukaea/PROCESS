@@ -10,48 +10,38 @@ from process.stellarator.denisty_limits import power_at_ignition_point, st_denis
 from process.stellarator.divertor import st_div
 from process.stellarator.heating import st_heat
 from process.stellarator.coils.caller import st_coil
-from process import (
-    process_output as po,
-)
+from process import constants
+from process import process_output as po
 from process.coolprop_interface import FluidProperties
 from process.data_structure import (
     cost_variables,
     divertor_variables,
     structure_variables,
-)
-from process.exceptions import ProcessValueError
-from process.fortran import (
     build_variables,
-    constants,
     constraint_variables,
+    cost_variables,
     current_drive_variables,
+    divertor_variables,
     fwbs_variables,
     global_variables,
     heat_transport_variables,
     numerics,
-    physics_module,
     physics_variables,
     stellarator_configuration,
     stellarator_variables,
+    structure_variables,
     tfcoil_variables,
 )
-from process.fortran import (
-    stellarator_module as st,
-)
+from process.exceptions import ProcessValueError
 from process.physics import rether
 from process.stellarator.preset_config import load_stellarator_config
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 logger = logging.getLogger(__name__)
-# Logging handler for console output
-s_handler = logging.StreamHandler()
-s_handler.setLevel(logging.ERROR)
-logger.addHandler(s_handler)
 
 # NOTE: a different value of electron_charge was used in the original implementation
 # making the post-Python results slightly different. As a result, there is a
 # relative tolerance on the neoclassics tests of 1e-3
-KEV = 1e3 * constants.electron_charge  # Kiloelectron-volt (keV)
+KEV = 1e3 * constants.ELECTRON_CHARGE  # Kiloelectron-volt (keV)
 
 
 class Stellarator:
@@ -99,7 +89,7 @@ class Stellarator:
         :type neoclassics: process.stellarator.Neoclassics
         """
 
-        self.outfile: int = constants.nout
+        self.outfile: int = constants.NOUT
         self.first_call_stfwbs = True
 
         self.availability = availability
@@ -177,7 +167,7 @@ class Stellarator:
         self.availability.avail(output=False)
         self.costs.run()
 
-        if any(numerics.icc == 91):
+        if 91 in numerics.icc:
             # This call is comparably time consuming..
             # If the respective constraint equation is not called, do not set the values
             (
@@ -188,7 +178,7 @@ class Stellarator:
                 stellarator_variables.te0_ecrh_achievable,
             )
 
-        st.first_call = False
+        stellarator_variables.first_call = False
 
     def st_new_config(self):
         """author: J Lion, IPP Greifswald
@@ -202,9 +192,7 @@ class Stellarator:
 
         load_stellarator_config(
             stellarator_variables.istell,
-            Path(
-                f"{f2py_compatible_to_string(global_variables.output_prefix)}stella_conf.json"
-            ),
+            Path(f"{global_variables.output_prefix}stella_conf.json"),
         )
 
         # Set the physics_variables.rminor radius as result here.
@@ -217,43 +205,43 @@ class Stellarator:
         )  # This overwrites tfcoil_variables.n_tf_coils in input file.
 
         #  Factors used to scale the reference point.
-        st.f_r = (
+        stellarator_variables.f_r = (
             physics_variables.rmajor
             / stellarator_configuration.stella_config_rmajor_ref
         )  # Size scaling factor with respect to the reference calculation
-        st.f_a = (
+        stellarator_variables.f_a = (
             physics_variables.rminor
             / stellarator_configuration.stella_config_rminor_ref
         )  # Size scaling factor with respect to the reference calculation
 
-        st.f_aspect = (
+        stellarator_variables.f_aspect = (
             physics_variables.aspect
             / stellarator_configuration.stella_config_aspect_ref
         )
-        st.f_n = tfcoil_variables.n_tf_coils / (
+        stellarator_variables.f_n = tfcoil_variables.n_tf_coils / (
             stellarator_configuration.stella_config_coilspermodule
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
-        st.f_b = (
+        stellarator_variables.f_b = (
             physics_variables.bt / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
-        st.f_coil_aspect = stellarator_variables.f_st_coil_aspect
+        stellarator_variables.f_coil_aspect = stellarator_variables.f_st_coil_aspect
 
         # Coil aspect ration factor can be described with the reversed equation (so if we would know r_coil_minor)
-        # st.f_coil_aspect = (
-        #     (physics_variables.rmajor / st.r_coil_minor) /
+        # stellarator_variables.f_coil_aspect = (
+        #     (physics_variables.rmajor / stellarator_variables.r_coil_minor) /
         #     (stellarator_configuration.stella_config_rmajor_ref / 
         #      stellarator_configuration.stella_config_coil_rminor)
         # ) 
 
         # Coil major radius, scaled with respect to the reference calculation
-        st.r_coil_major = stellarator_configuration.stella_config_coil_rmajor * st.f_r
+        stellarator_variables.r_coil_major = stellarator_configuration.stella_config_coil_rmajor * stellarator_variables.f_r
         # Coil minor radius, scaled with respect to the reference calculation
-        st.r_coil_minor = stellarator_configuration.stella_config_coil_rminor * st.f_r / st.f_coil_aspect
+        stellarator_variables.r_coil_minor = stellarator_configuration.stella_config_coil_rminor * stellarator_variables.f_r / stellarator_variables.f_coil_aspect
 
-        st.f_coil_shape = (( stellarator_configuration.stella_config_min_plasma_coil_distance
+        stellarator_variables.f_coil_shape = (( stellarator_configuration.stella_config_min_plasma_coil_distance
                            + stellarator_configuration.stella_config_rminor_ref )
                            / stellarator_configuration.stella_config_coil_rminor)
 
@@ -274,13 +262,17 @@ class Stellarator:
         surfaces with Fourier coefficients')
         """
         physics_variables.vol_plasma = (
-            # st.f_r * st.f_a**2 * stellarator_configuration.stella_config_plasma_volume
-            st.f_r * st.f_a**2 * stellarator_configuration.stella_config_vol_plasma
+            # stellarator_variables.f_r * stellarator_variables.f_a**2 * stellarator_configuration.stella_config_plasma_volume
+            stellarator_variables.f_r 
+            * stellarator_variables.f_a**2 
+            * stellarator_configuration.stella_config_vol_plasma
         )
 
         # Plasma surface scaled from effective parameter:
         physics_variables.a_plasma_surface = (
-            st.f_r * st.f_a * stellarator_configuration.stella_config_plasma_surface
+            stellarator_variables.f_r 
+            * stellarator_variables.f_a 
+            * stellarator_configuration.stella_config_plasma_surface
         )
 
         # Plasma cross section area. Approximated
@@ -332,8 +324,8 @@ class Stellarator:
         # Calculate the intercoil bolted plates structure from the coil surface
 
         intercoil_surface = (
-            stellarator_configuration.stella_config_coilsurface * st.f_r
-            * (st.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
+            stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_r
+            * (stellarator_variables.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
             - tfcoil_variables.dx_tf_inboard_out_toroidal
             * tfcoil_variables.len_tf_coil
             * tfcoil_variables.n_tf_coils
@@ -489,14 +481,14 @@ class Stellarator:
             + build_variables.dr_fw_outboard
         )
         if heat_transport_variables.ipowerflow == 0:
-            build_variables.blarea = (
+            build_variables.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
                 * (1.0e0 - fwbs_variables.fhole)
             )
         else:
-            build_variables.blarea = (
+            build_variables.a_blkt_total_surface = (
                 physics_variables.a_plasma_surface
                 * r1
                 / physics_variables.rminor
@@ -504,18 +496,22 @@ class Stellarator:
                     1.0e0
                     - fwbs_variables.fhole
                     - fwbs_variables.f_ster_div_single
-                    - fwbs_variables.f_a_fw_hcd
+                    - fwbs_variables.f_a_fw_outboard_hcd
                 )
             )
 
-        build_variables.blareaib = 0.5e0 * build_variables.blarea
-        build_variables.blareaob = 0.5e0 * build_variables.blarea
+        build_variables.a_blkt_inboard_surface = (
+            0.5e0 * build_variables.a_blkt_total_surface
+        )
+        build_variables.a_blkt_outboard_surface = (
+            0.5e0 * build_variables.a_blkt_total_surface
+        )
 
         fwbs_variables.vol_blkt_inboard = (
-            build_variables.blareaib * build_variables.dr_blkt_inboard
+            build_variables.a_blkt_inboard_surface * build_variables.dr_blkt_inboard
         )
         fwbs_variables.vol_blkt_outboard = (
-            build_variables.blareaob * build_variables.dr_blkt_outboard
+            build_variables.a_blkt_outboard_surface * build_variables.dr_blkt_outboard
         )
         fwbs_variables.vol_blkt_total = (
             fwbs_variables.vol_blkt_inboard + fwbs_variables.vol_blkt_outboard
@@ -527,19 +523,23 @@ class Stellarator:
         r1 = r1 + 0.5e0 * (
             build_variables.dr_blkt_inboard + build_variables.dr_blkt_outboard
         )
-        build_variables.sharea = (
+        build_variables.a_shld_total_surface = (
             physics_variables.a_plasma_surface * r1 / physics_variables.rminor
         )
-        build_variables.shareaib = (
-            0.5e0 * build_variables.sharea * fwbs_variables.fvolsi
+        build_variables.a_shld_inboard_surface = (
+            0.5e0 * build_variables.a_shld_total_surface * fwbs_variables.fvolsi
         )
-        build_variables.shareaob = (
-            0.5e0 * build_variables.sharea * fwbs_variables.fvolso
+        build_variables.a_shld_outboard_surface = (
+            0.5e0 * build_variables.a_shld_total_surface * fwbs_variables.fvolso
         )
 
-        volshldi = build_variables.shareaib * build_variables.dr_shld_inboard
-        volshldo = build_variables.shareaob * build_variables.dr_shld_outboard
-        fwbs_variables.volshld = volshldi + volshldo
+        vol_shld_inboard = (
+            build_variables.a_shld_inboard_surface * build_variables.dr_shld_inboard
+        )
+        vol_shld_outboard = (
+            build_variables.a_shld_outboard_surface * build_variables.dr_shld_outboard
+        )
+        fwbs_variables.vol_shld_total = vol_shld_inboard + vol_shld_outboard
 
         #  Neutron power lost through holes in first wall (eventually absorbed by
         #  shield)
@@ -563,7 +563,8 @@ class Stellarator:
                     * fwbs_variables.f_ster_div_single
                 )
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_neutron_total_mw
+                    * fwbs_variables.f_a_fw_outboard_hcd
                 )
                 fwbs_variables.p_fw_nuclear_heat_total_mw = (
                     physics_variables.p_neutron_total_mw
@@ -579,7 +580,8 @@ class Stellarator:
                     physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
                 )
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_plasma_rad_mw
+                    * fwbs_variables.f_a_fw_outboard_hcd
                 )
                 fwbs_variables.p_fw_rad_total_mw = (
                     physics_variables.p_plasma_rad_mw
@@ -589,7 +591,7 @@ class Stellarator:
                 )
 
                 heat_transport_variables.p_fw_coolant_pump_mw = (
-                    heat_transport_variables.fpumpfw
+                    heat_transport_variables.f_p_fw_coolant_pump_total_heat
                     * (
                         fwbs_variables.p_fw_nuclear_heat_total_mw
                         + fwbs_variables.p_fw_rad_total_mw
@@ -597,15 +599,15 @@ class Stellarator:
                     )
                 )
                 heat_transport_variables.p_blkt_coolant_pump_mw = (
-                    heat_transport_variables.fpumpblkt
+                    heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                     * fwbs_variables.p_blkt_nuclear_heat_total_mw
                 )
                 heat_transport_variables.p_shld_coolant_pump_mw = (
-                    heat_transport_variables.fpumpshld
+                    heat_transport_variables.f_p_shld_coolant_pump_total_heat
                     * fwbs_variables.p_shld_nuclear_heat_mw
                 )
                 heat_transport_variables.p_div_coolant_pump_mw = (
-                    heat_transport_variables.fpumpdiv
+                    heat_transport_variables.f_p_div_coolant_pump_total_heat
                     * (
                         physics_variables.p_plasma_separatrix_mw
                         + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -646,7 +648,7 @@ class Stellarator:
 
                 decaybl = 0.075e0 / (
                     1.0e0
-                    - fwbs_variables.vfblkt
+                    - fwbs_variables.f_a_blkt_cooling_channels
                     - fwbs_variables.fblli2o
                     - fwbs_variables.fblbe
                 )
@@ -685,7 +687,8 @@ class Stellarator:
                 #  Neutron power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_nuclear_heat_mw = (
-                    physics_variables.p_neutron_total_mw * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_neutron_total_mw
+                    * fwbs_variables.f_a_fw_outboard_hcd
                 )
 
                 #  Neutron power deposited in first wall, blanket and shield (MW)
@@ -711,8 +714,9 @@ class Stellarator:
 
                 #  Radiation power incident on divertor (MW)
 
-                fwbs_variables.p_div_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_ster_div_single
+                fwbs_variables.p_fw_hcd_rad_total_mw = (
+                    physics_variables.p_plasma_rad_mw
+                    * fwbs_variables.f_a_fw_outboard_hcd
                 )
 
                 #  Radiation power incident on HCD apparatus (MW)
@@ -796,7 +800,7 @@ class Stellarator:
                     / build_variables.a_fw_total
                 )
 
-                #  Simple blanket model (fwbs_variables.i_coolant_pumping = 0 or 1) is assumed for stellarators
+                #  Simple blanket model (fwbs_variables.i_p_coolant_pumping = 0 or 1) is assumed for stellarators
 
                 #  The power deposited in the first wall, breeder zone and shield is
                 #  calculated according to their dimensions and materials assuming
@@ -839,12 +843,12 @@ class Stellarator:
 
                 #  First wall and Blanket pumping power (MW)
 
-                if fwbs_variables.i_coolant_pumping == 0:
+                if fwbs_variables.i_p_coolant_pumping == 0:
                     #    Use input
                     pass
-                elif fwbs_variables.i_coolant_pumping == 1:
+                elif fwbs_variables.i_p_coolant_pumping == 1:
                     heat_transport_variables.p_fw_coolant_pump_mw = (
-                        heat_transport_variables.fpumpfw
+                        heat_transport_variables.f_p_fw_coolant_pump_total_heat
                         * (
                             p_fw_inboard_nuclear_heat_mw
                             + p_fw_outboard_nuclear_heat_mw
@@ -854,7 +858,7 @@ class Stellarator:
                         )
                     )
                     heat_transport_variables.p_blkt_coolant_pump_mw = (
-                        heat_transport_variables.fpumpblkt
+                        heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                         * (
                             pnucbzi * fwbs_variables.f_p_blkt_multiplication
                             + pnucbzo * fwbs_variables.f_p_blkt_multiplication
@@ -862,11 +866,11 @@ class Stellarator:
                     )
                 else:
                     raise ProcessValueError(
-                        "i_coolant_pumping = 0 or 1 only for stellarator"
+                        "i_p_coolant_pumping = 0 or 1 only for stellarator"
                     )
 
                 fwbs_variables.p_blkt_multiplication_mw = (
-                    heat_transport_variables.fpumpblkt
+                    heat_transport_variables.f_p_blkt_coolant_pump_total_heat
                     * (pnucbzi * fwbs_variables.f_p_blkt_multiplication + pnucbzo)
                     * (fwbs_variables.f_p_blkt_multiplication - 1.0e0)
                 )
@@ -891,7 +895,7 @@ class Stellarator:
 
                 #  Calculation of shield and divertor powers
                 #  Shield and divertor powers and pumping powers are calculated using the same
-                #  simplified method as the first wall and breeder zone when fwbs_variables.i_coolant_pumping = 1.
+                #  simplified method as the first wall and breeder zone when fwbs_variables.i_p_coolant_pumping = 1.
                 #  i.e. the pumping power is a fraction of the total thermal power deposited in the
                 #  coolant.
 
@@ -935,15 +939,16 @@ class Stellarator:
                 #     htpmw_i = fpump_i*C
                 #  where C is the non-pumping thermal power deposited in the coolant
 
-                if fwbs_variables.i_coolant_pumping == 1:
+                if fwbs_variables.i_p_coolant_pumping == 1:
                     #  Shield pumping power (MW)
                     heat_transport_variables.p_shld_coolant_pump_mw = (
-                        heat_transport_variables.fpumpshld * (pnucshldi + pnucshldo)
+                        heat_transport_variables.f_p_shld_coolant_pump_total_heat
+                        * (pnucshldi + pnucshldo)
                     )
 
                     #  Divertor pumping power (MW)
                     heat_transport_variables.p_div_coolant_pump_mw = (
-                        heat_transport_variables.fpumpdiv
+                        heat_transport_variables.f_p_div_coolant_pump_total_heat
                         * (
                             physics_variables.p_plasma_separatrix_mw
                             + fwbs_variables.p_div_nuclear_heat_total_mw
@@ -1018,7 +1023,7 @@ class Stellarator:
 
             fwbs_variables.m_blkt_steel_total = (
                 fwbs_variables.vol_blkt_total
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
                 * fwbs_variables.fblss
             )
             fwbs_variables.m_blkt_vanadium = (
@@ -1032,7 +1037,7 @@ class Stellarator:
             )
 
         else:  # volume fractions proportional to sub-assembly thicknesses
-            fwbs_variables.m_blkt_steel_total = fwbs_variables.denstl * (
+            fwbs_variables.m_blkt_steel_total = fwbs_variables.den_steel * (
                 fwbs_variables.vol_blkt_inboard
                 / build_variables.dr_blkt_inboard
                 * (
@@ -1086,7 +1091,7 @@ class Stellarator:
                 + fwbs_variables.whtblbreed
             )
 
-            fwbs_variables.vfblkt = (
+            fwbs_variables.f_a_blkt_cooling_channels = (
                 fwbs_variables.vol_blkt_inboard
                 / fwbs_variables.vol_blkt_total
                 * (  # inboard portion
@@ -1103,8 +1108,8 @@ class Stellarator:
                     * fwbs_variables.fblhebpi
                 )
             )
-            fwbs_variables.vfblkt = (
-                fwbs_variables.vfblkt
+            fwbs_variables.f_a_blkt_cooling_channels = (
+                fwbs_variables.f_a_blkt_cooling_channels
                 + fwbs_variables.vol_blkt_outboard
                 / fwbs_variables.vol_blkt_total
                 * (  # outboard portion
@@ -1129,16 +1134,20 @@ class Stellarator:
         #  in the blanket.
 
         if fwbs_variables.blktmodel == 0:
-            coolvol = coolvol + fwbs_variables.vol_blkt_total * fwbs_variables.vfblkt
+            coolvol = (
+                coolvol
+                + fwbs_variables.vol_blkt_total
+                * fwbs_variables.f_a_blkt_cooling_channels
+            )
 
         # Shield mass
         fwbs_variables.whtshld = (
-            fwbs_variables.volshld
-            * fwbs_variables.denstl
+            fwbs_variables.vol_shld_total
+            * fwbs_variables.den_steel
             * (1.0e0 - fwbs_variables.vfshld)
         )
 
-        coolvol = coolvol + fwbs_variables.volshld * fwbs_variables.vfshld
+        coolvol = coolvol + fwbs_variables.vol_shld_total * fwbs_variables.vfshld
 
         #  Penetration shield (set = internal shield)
 
@@ -1152,7 +1161,7 @@ class Stellarator:
                 build_variables.a_fw_total
                 * (build_variables.dr_fw_inboard + build_variables.dr_fw_outboard)
                 / 2.0e0
-                * fwbs_variables.denstl
+                * fwbs_variables.den_steel
                 * (1.0e0 - fwbs_variables.fwclfr)
             )
 
@@ -1167,7 +1176,7 @@ class Stellarator:
             )
 
         else:
-            fwbs_variables.m_fw_total = fwbs_variables.denstl * (
+            fwbs_variables.m_fw_total = fwbs_variables.den_steel * (
                 build_variables.a_fw_inboard
                 * build_variables.dr_fw_inboard
                 * (1.0e0 - f_a_fw_coolant_inboard)
@@ -1260,13 +1269,13 @@ class Stellarator:
 
         #  Vacuum vessel mass
 
-        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.denstl
+        fwbs_variables.m_vv = fwbs_variables.vol_vv * fwbs_variables.den_steel
 
         #  Sum of internal vacuum vessel and external cryostat masses
 
         fwbs_variables.dewmkg = (
             fwbs_variables.vol_vv + fwbs_variables.vol_cryostat
-        ) * fwbs_variables.denstl
+        ) * fwbs_variables.den_steel
 
         if output:
             #  Output section
@@ -1596,12 +1605,12 @@ class Stellarator:
 
             #     if (fwbs_variables.blktmodel == 0) :
             #         if ((fwbs_variables.blkttype == 1)or(fwbs_variables.blkttype == 2)) :
-            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fbllipb, wtbllipb, fblli, m_blkt_lithium,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,601) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, f_a_blkt_cooling_channels, fbllipb, wtbllipb, fblli, m_blkt_lithium,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, vol_shld_inboard, vol_shld_outboard,                vol_shld_total, whtshld, vfshld, fwbs_variables.wpenshld
             #         else:  #  (also if ipowerflow=0)
-            #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, vfblkt, fblbe, m_blkt_beryllium, fblli2o, m_blkt_li2o,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, volshldi, volshldo,                volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #             po.write(self.outfile,600) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total,                m_blkt_total, f_a_blkt_cooling_channels, fblbe, m_blkt_beryllium, fblli2o, m_blkt_li2o,                fblss, m_blkt_steel_total, fblvd, m_blkt_vanadium, vol_shld_inboard, vol_shld_outboard,                vol_shld_total, whtshld, vfshld, fwbs_variables.wpenshld
 
             #     else:
-            #         po.write(self.outfile,602) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total, m_blkt_total, vfblkt,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, m_blkt_beryllium,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             m_blkt_steel_total,             volshldi, volshldo, volshld, whtshld, vfshld, fwbs_variables.wpenshld
+            #         po.write(self.outfile,602) vol_blkt_inboard, vol_blkt_outboard, vol_blkt_total, m_blkt_total, f_a_blkt_cooling_channels,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbe, m_blkt_beryllium,             (fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total * build_variables.blbuith/build_variables.dr_blkt_inboard +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total * build_variables.blbuoth/build_variables.dr_blkt_outboard) * fblbreed, whtblbreed,             fwbs_variables.vol_blkt_inboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_inboard * (build_variables.blbuith * fwbs_variables.fblss             + build_variables.blbmith * (1.0e0-fwbs_variables.fblhebmi) + build_variables.blbpith * (1.0e0-fwbs_variables.fblhebpi)) +             fwbs_variables.vol_blkt_outboard/fwbs_variables.vol_blkt_total/build_variables.dr_blkt_outboard * (build_variables.blbuoth * fwbs_variables.fblss             + build_variables.blbmoth * (1.0e0-fwbs_variables.fblhebmo) + build_variables.blbpoth * (1.0e0-fwbs_variables.fblhebpo)),             m_blkt_steel_total,             vol_shld_inboard, vol_shld_outboard, vol_shld_total, whtshld, vfshld, fwbs_variables.wpenshld
 
             # 600 format(          t32,'volume (m3)',t45,'vol fraction',t62,'weight (kg)'/          t32,'-----------',t45,'------------',t62,'-----------'/          '    Inboard blanket' ,t32,1pe10.3,/          '    Outboard blanket' ,t32,1pe10.3,/          '    Total blanket' ,t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '       Blanket Be   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Li2O ',t45,1pe10.3,t62,1pe10.3/          '       Blanket ss   ',t45,1pe10.3,t62,1pe10.3/          '       Blanket Vd   ',t45,1pe10.3,t62,1pe10.3/          '    Inboard shield'  ,t32,1pe10.3,/          '    Outboard shield'  ,t32,1pe10.3,/          '    Primary shield',t32,1pe10.3,t62,1pe10.3/          '       Void fraction' ,t45,1pe10.3,/          '    Penetration shield'        ,t62,1pe10.3)
 
@@ -1895,8 +1904,9 @@ class Stellarator:
         self.plasma_profile.run()
 
         #  Total field
-        physics_variables.btot = np.sqrt(
-            physics_variables.bt**2 + physics_variables.bp**2
+        physics_variables.b_plasma_total = np.sqrt(
+            physics_variables.b_plasma_toroidal_on_axis**2
+            + physics_variables.b_plasma_poloidal_average**2
         )
 
         # Check if physics_variables.beta (iteration variable 5) is an iteration variable
@@ -1907,55 +1917,54 @@ class Stellarator:
 
         #  Set physics_variables.beta as a consequence:
         #  This replaces constraint equation 1 as it is just an equality.
-        physics_variables.beta = (
+        physics_variables.beta_total_vol_avg = (
             physics_variables.beta_fast_alpha
             + physics_variables.beta_beam
             + 2.0e3
-            * constants.rmu0
-            * constants.electron_charge
+            * constants.RMU0
+            * constants.ELECTRON_CHARGE
             * (
-                physics_variables.dene * physics_variables.ten
-                + physics_variables.nd_ions_total * physics_variables.tin
+                physics_variables.nd_plasma_electrons_vol_avg
+                * physics_variables.temp_plasma_electron_density_weighted_kev
+                + physics_variables.nd_plasma_ions_total_vol_avg
+                * physics_variables.temp_plasma_ion_density_weighted_kev
             )
-            / physics_variables.btot**2
+            / physics_variables.b_plasma_total**2
         )
-        physics_module.e_plasma_beta = (
+        physics_variables.e_plasma_beta = (
             1.5e0
-            * physics_variables.beta
-            * physics_variables.btot
-            * physics_variables.btot
-            / (2.0e0 * constants.rmu0)
+            * physics_variables.beta_total_vol_avg
+            * physics_variables.b_plasma_total
+            * physics_variables.b_plasma_total
+            / (2.0e0 * constants.RMU0)
             * physics_variables.vol_plasma
         )
 
-        physics_module.rho_star = np.sqrt(
+        physics_variables.rho_star = np.sqrt(
             2.0e0
-            * constants.proton_mass
+            * constants.PROTON_MASS
             * physics_variables.m_ions_total_amu
-            * physics_module.e_plasma_beta
+            * physics_variables.e_plasma_beta
             / (
                 3.0e0
                 * physics_variables.vol_plasma
-                * physics_variables.nd_electron_line
+                * physics_variables.nd_plasma_electron_line
             )
         ) / (
-            constants.electron_charge
-            * physics_variables.bt
+            constants.ELECTRON_CHARGE
+            * physics_variables.b_plasma_toroidal_on_axis
             * physics_variables.eps
             * physics_variables.rmajor
         )
 
         #  Calculate poloidal field using rotation transform
-        physics_variables.bp = (
+        physics_variables.b_plasma_poloidal_average = (
             physics_variables.rminor
-            * physics_variables.bt
+            * physics_variables.b_plasma_toroidal_on_axis
             / physics_variables.rmajor
             * stellarator_variables.iotabar
         )
 
-        #  Poloidal physics_variables.beta
-
-        # beta_poloidal = physics_variables.beta * ( physics_variables.btot/physics_variables.bp )**2 # Dont need this I think.
 
         #  Perform auxiliary power calculations
 
@@ -1964,19 +1973,19 @@ class Stellarator:
         #  Calculate fusion power
 
         fusion_reactions = reactions.FusionReactionRate(self.plasma_profile)
-        fusion_reactions.deuterium_branching(physics_variables.ti)
+        fusion_reactions.deuterium_branching(physics_variables.temp_plasma_ion_vol_avg_kev)
         fusion_reactions.calculate_fusion_rates()
         fusion_reactions.set_physics_variables()
 
         # D-T power density is named differently to differentiate it from the beam given component
         physics_variables.p_plasma_dt_mw = (
-            physics_module.dt_power_density_plasma * physics_variables.vol_plasma
+            physics_variables.dt_power_density_plasma * physics_variables.vol_plasma
         )
         physics_variables.p_dhe3_total_mw = (
-            physics_module.dhe3_power_density * physics_variables.vol_plasma
+            physics_variables.dhe3_power_density * physics_variables.vol_plasma
         )
         physics_variables.p_dd_total_mw = (
-            physics_module.dd_power_density * physics_variables.vol_plasma
+            physics_variables.dd_power_density * physics_variables.vol_plasma
         )
 
         #  Calculate neutral beam slowing down effects
@@ -1992,19 +2001,19 @@ class Stellarator:
             ) = reactions.beam_fusion(
                 physics_variables.beamfus0,
                 physics_variables.betbm0,
-                physics_variables.bp,
-                physics_variables.bt,
+                physics_variables.b_plasma_poloidal_average,
+                physics_variables.b_plasma_toroidal_on_axis,
                 current_drive_variables.c_beam_total,
-                physics_variables.dene,
-                physics_variables.nd_fuel_ions,
+                physics_variables.nd_plasma_electrons_vol_avg,
+                physics_variables.nd_plasma_fuel_ions_vol_avg,
                 physics_variables.dlamie,
                 current_drive_variables.e_beam_kev,
-                physics_variables.f_deuterium,
-                physics_variables.f_tritium,
+                physics_variables.f_plasma_fuel_deuterium,
+                physics_variables.f_plasma_fuel_tritium,
                 current_drive_variables.f_beam_tritium,
-                physics_module.sigmav_dt_average,
-                physics_variables.ten,
-                physics_variables.tin,
+                physics_variables.sigmav_dt_average,
+                physics_variables.temp_plasma_electron_density_weighted_kev,
+                physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
                 physics_variables.zeffai,
             )
@@ -2012,14 +2021,14 @@ class Stellarator:
                 physics_variables.fusden_plasma
                 + 1.0e6
                 * physics_variables.p_beam_alpha_mw
-                / (constants.dt_alpha_energy)
+                / (constants.DT_ALPHA_ENERGY)
                 / physics_variables.vol_plasma
             )
             physics_variables.fusden_alpha_total = (
                 physics_variables.fusden_plasma_alpha
                 + 1.0e6
                 * physics_variables.p_beam_alpha_mw
-                / (constants.dt_alpha_energy)
+                / (constants.DT_ALPHA_ENERGY)
                 / physics_variables.vol_plasma
             )
             physics_variables.p_dt_total_mw = (
@@ -2056,13 +2065,13 @@ class Stellarator:
         )
 
         physics_variables.beta_fast_alpha = physics_funcs.fast_alpha_beta(
-            physics_variables.bp,
-            physics_variables.bt,
-            physics_variables.dene,
-            physics_variables.nd_fuel_ions,
-            physics_variables.nd_ions_total,
-            physics_variables.ten,
-            physics_variables.tin,
+            physics_variables.b_plasma_poloidal_average,
+            physics_variables.b_plasma_toroidal_on_axis,
+            physics_variables.nd_plasma_electrons_vol_avg,
+            physics_variables.nd_plasma_fuel_ions_vol_avg,
+            physics_variables.nd_plasma_ions_total_vol_avg,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
+            physics_variables.temp_plasma_ion_density_weighted_kev,
             physics_variables.pden_alpha_total_mw,
             physics_variables.pden_plasma_alpha_mw,
             physics_variables.i_beta_fast_alpha,
@@ -2070,7 +2079,7 @@ class Stellarator:
 
         #  Neutron wall load
 
-        if physics_variables.iwalld == 1:
+        if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_neutron_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_neutron_total_mw
@@ -2088,7 +2097,7 @@ class Stellarator:
                     (
                         1.0e0
                         - fwbs_variables.fhole
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_neutron_total_mw
@@ -2100,24 +2109,24 @@ class Stellarator:
         physics_variables.pden_ion_electron_equilibration_mw = rether(
             physics_variables.alphan,
             physics_variables.alphat,
-            physics_variables.dene,
+            physics_variables.nd_plasma_electrons_vol_avg,
             physics_variables.dlamie,
-            physics_variables.te,
-            physics_variables.ti,
+            physics_variables.temp_plasma_electron_vol_avg_kev,
+            physics_variables.temp_plasma_ion_vol_avg_kev,
             physics_variables.zeffai,
         )
 
         #  Calculate radiation power
         radpwr_data = physics_funcs.calculate_radiation_powers(
             self.plasma_profile,
-            physics_variables.ne0,
+            physics_variables.nd_plasma_electron_on_axis,
             physics_variables.rminor,
-            physics_variables.bt,
+            physics_variables.b_plasma_toroidal_on_axis,
             physics_variables.aspect,
             physics_variables.alphan,
             physics_variables.alphat,
             physics_variables.tbeta,
-            physics_variables.te0,
+            physics_variables.temp_plasma_electron_on_axis_kev,
             physics_variables.f_sync_reflect,
             physics_variables.rmajor,
             physics_variables.kappa,
@@ -2200,7 +2209,7 @@ class Stellarator:
         )
 
         # Nominal mean photon wall load
-        if physics_variables.iwalld == 1:
+        if physics_variables.i_pflux_fw_neutron == 1:
             physics_variables.pflux_fw_rad_mw = (
                 physics_variables.ffwal
                 * physics_variables.p_plasma_rad_mw
@@ -2218,7 +2227,7 @@ class Stellarator:
                     (
                         1.0e0
                         - fwbs_variables.fhole
-                        - fwbs_variables.f_a_fw_hcd
+                        - fwbs_variables.f_a_fw_outboard_hcd
                         - fwbs_variables.f_ster_div_single
                     )
                     * physics_variables.p_plasma_rad_mw
@@ -2252,10 +2261,10 @@ class Stellarator:
             physics_variables.m_fuel_amu,
             physics_variables.p_alpha_total_mw,
             physics_variables.aspect,
-            physics_variables.bt,
-            physics_variables.nd_ions_total,
-            physics_variables.dene,
-            physics_variables.nd_electron_line,
+            physics_variables.b_plasma_toroidal_on_axis,
+            physics_variables.nd_plasma_ions_total_vol_avg,
+            physics_variables.nd_plasma_electrons_vol_avg,
+            physics_variables.nd_plasma_electron_line,
             physics_variables.eps,
             physics_variables.hfact,
             physics_variables.i_confinement_time,
@@ -2268,8 +2277,8 @@ class Stellarator:
             physics_variables.pden_plasma_core_rad_mw,
             physics_variables.rmajor,
             physics_variables.rminor,
-            physics_variables.ten,
-            physics_variables.tin,
+            physics_variables.temp_plasma_electron_density_weighted_kev,
+            physics_variables.temp_plasma_ion_density_weighted_kev,
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.vol_plasma,
@@ -2299,26 +2308,26 @@ class Stellarator:
             physics_variables.nTtau,
             physics_variables.figmer,
             fusrat,
-            physics_variables.qfuel,
+            physics_variables.molflow_plasma_fuelling_required,
             physics_variables.rndfuel,
             physics_variables.t_alpha_confinement,
             physics_variables.f_alpha_energy_confinement,
         ) = self.physics.phyaux(
             physics_variables.aspect,
-            physics_variables.dene,
-            physics_variables.te,
-            physics_variables.nd_fuel_ions,
+            physics_variables.nd_plasma_electrons_vol_avg,
+            physics_variables.temp_plasma_electron_vol_avg_kev,
+            physics_variables.nd_plasma_fuel_ions_vol_avg,
             physics_variables.fusden_total,
             physics_variables.fusden_alpha_total,
             physics_variables.plasma_current,
             sbar,
-            physics_variables.nd_alphas,
+            physics_variables.nd_plasma_alphas_vol_avg,
             physics_variables.t_energy_confinement,
             physics_variables.vol_plasma,
         )
 
         # Calculate physics_variables.beta limit. Does nothing atm so commented out
-        # call stblim(physics_variables.beta_max)
+        # call stblim(physics_variables.beta_vol_avg_max)
 
         # Calculate the neoclassical sanity check with PROCESS parameters
         (
@@ -2366,13 +2375,13 @@ class Stellarator:
                 physics_variables.rho_te_max,
                 physics_variables.gradient_length_ne,
                 physics_variables.gradient_length_te,
-                physics_module.rho_star,
+                physics_variables.rho_star,
                 nu_star_e,
                 nu_star_d,
                 nu_star_T,
                 nu_star_He,
-                physics_variables.nd_electron_line,
-                physics_variables.dnelimt,
+                physics_variables.nd_plasma_electron_line,
+                physics_variables.nd_plasma_electrons_max,
             )
 
     def st_phys_output(
@@ -2395,8 +2404,8 @@ class Stellarator:
         nu_star_D,
         nu_star_T,
         nu_star_He,
-        nd_electron_line,
-        dnelimt,
+        nd_plasma_electron_line,
+        nd_plasma_electrons_max,
     ):
         po.oheadr(self.outfile, "Stellarator Specific Physics:")
 
@@ -2503,15 +2512,20 @@ class Stellarator:
         po.ovarre(
             self.outfile,
             "Obtained line averaged density at op. point (/m3)",
-            "(nd_electron_line)",
-            nd_electron_line,
+            "(nd_plasma_electron_line)",
+            nd_plasma_electron_line,
         )
-        po.ovarre(self.outfile, "Sudo density limit (/m3)", "(dnelimt)", dnelimt)
+        po.ovarre(
+            self.outfile,
+            "Sudo density limit (/m3)",
+            "(nd_plasma_electrons_max)",
+            nd_plasma_electrons_max,
+        )
         po.ovarre(
             self.outfile,
             "Ratio density to sudo limit (1)",
-            "(nd_electron_line/dnelimt)",
-            nd_electron_line / dnelimt,
+            "(nd_plasma_electron_line/nd_plasma_electrons_max)",
+            nd_plasma_electron_line / nd_plasma_electrons_max,
         )
 
 

@@ -3,16 +3,11 @@
 from tabulate import tabulate
 
 import process.constraints as constraints
+from process import constants
 from process import output as op
-from process import (
-    process_output as po,
-)
-from process.fortran import (
-    constants,
-    numerics,
-)
+from process import process_output as po
+from process.data_structure import numerics
 from process.objectives import objective_function
-from process.utilities.f2py_string_patch import f2py_compatible_to_string
 
 
 def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
@@ -28,9 +23,9 @@ def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
     :type non_idempotent_msg: None | str, optional
     """
     if ifail == 1:
-        po.oheadr(constants.nout, "Final Feasible Point")
+        po.oheadr(constants.NOUT, "Final Feasible Point")
     else:
-        po.oheadr(constants.nout, "Final UNFEASIBLE Point")
+        po.oheadr(constants.NOUT, "Final UNFEASIBLE Point")
 
     # Output relevant to no optimisation
     if numerics.ioptimz == -2:
@@ -38,23 +33,23 @@ def finalise(models, ifail: int, non_idempotent_msg: None | str = None):
 
     # Print non-idempotence warning to OUT.DAT only
     if non_idempotent_msg:
-        po.oheadr(constants.nout, "NON-IDEMPOTENT VARIABLES")
-        po.ocmmnt(constants.nout, non_idempotent_msg)
+        po.oheadr(constants.NOUT, "NON-IDEMPOTENT VARIABLES")
+        po.ocmmnt(constants.NOUT, non_idempotent_msg)
 
     # Write output to OUT.DAT and MFILE.DAT
-    op.write(models, constants.nout)
+    op.write(models, constants.NOUT)
 
 
 def output_evaluation():
     """Write output for an evaluation run of PROCESS"""
-    po.oheadr(constants.nout, "Numerics")
-    po.ocmmnt(constants.nout, "PROCESS has performed an evaluation run.")
-    po.oblnkl(constants.nout)
+    po.oheadr(constants.NOUT, "Numerics")
+    po.ocmmnt(constants.NOUT, "PROCESS has performed an evaluation run.")
+    po.oblnkl(constants.NOUT)
 
     # Evaluate objective function
     norm_objf = objective_function(numerics.minmax)
     po.ovarre(
-        constants.mfile, "Normalised objective function", "(norm_objf)", norm_objf
+        constants.MFILE, "Normalised objective function", "(norm_objf)", norm_objf
     )
 
     # Print the residuals of the constraint equations
@@ -64,8 +59,8 @@ def output_evaluation():
     )
 
     labels = [
-        f2py_compatible_to_string(i)
-        for i in numerics.lablcc[numerics.icc[: numerics.neqns + numerics.nineqns] - 1]
+        numerics.lablcc[j]
+        for j in [i - 1 for i in numerics.icc[: numerics.neqns + numerics.nineqns]]
     ]
     physical_constraint = [f"{c} {u}" for c, u in zip(value, units, strict=False)]
     physical_residual = [f"{c} {u}" for c, u in zip(residual, units, strict=False)]
@@ -78,12 +73,12 @@ def output_evaluation():
         "Normalised residual": residual_error,
     }
 
-    po.write(constants.nout, tabulate(table_data, headers="keys"))
+    po.write(constants.NOUT, tabulate(table_data, headers="keys"))
 
     for i in range(numerics.neqns):
         constraint_id = numerics.icc[i]
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             f"{labels[i]} normalised residue",
             f"(eq_con{constraint_id:03d})",
             residual_error[i],
@@ -92,7 +87,7 @@ def output_evaluation():
     for i in range(numerics.nineqns):
         constraint_id = numerics.icc[numerics.neqns + i]
         po.ovarre(
-            constants.mfile,
+            constants.MFILE,
             f"{labels[numerics.neqns + i]}",
             f"(ineq_con{constraint_id:03d})",
             residual_error[numerics.neqns + i],

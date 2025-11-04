@@ -1,20 +1,18 @@
 """Module for coil force calculations in stellarators."""
 
-from process.fortran import (
+from process.data_structure import (
     stellarator_configuration,
     tfcoil_variables,
-)
-from process.fortran import (
-    stellarator_module as st,
+    stellarator_variables
 )
 
 def calculate_max_force_density(a_tf_wp_no_insulation):
 
     tfcoil_variables.max_force_density = (
         stellarator_configuration.stella_config_max_force_density
-        * st.f_i
-        / st.f_n
-        * tfcoil_variables.b_tf_inboard_peak
+        * stellarator_variables.f_i
+        / stellarator_variables.f_n
+        * tfcoil_variables.b_tf_inboard_peak_symmetric
         / stellarator_configuration.stella_config_wp_bmax
         * stellarator_configuration.stella_config_wp_area
         / a_tf_wp_no_insulation
@@ -24,9 +22,9 @@ def calculate_max_force_density(a_tf_wp_no_insulation):
 def calculate_max_force_density_mnm():
     return (
         stellarator_configuration.stella_config_max_force_density_mnm
-        * st.f_i
-        / st.f_n
-        * tfcoil_variables.b_tf_inboard_peak
+        * stellarator_variables.f_i
+        / stellarator_variables.f_n
+        * tfcoil_variables.b_tf_inboard_peak_symmetric
         / stellarator_configuration.stella_config_wp_bmax
     )
 
@@ -43,9 +41,9 @@ def calculate_maximum_stress():
 def calculate_max_lateral_force_density(a_tf_wp_no_insulation):
     return (
         stellarator_configuration.stella_config_max_lateral_force_density
-        * st.f_i
-        / st.f_n
-        * tfcoil_variables.b_tf_inboard_peak
+        * stellarator_variables.f_i
+        / stellarator_variables.f_n
+        * tfcoil_variables.b_tf_inboard_peak_symmetric
         / stellarator_configuration.stella_config_wp_bmax
         * stellarator_configuration.stella_config_wp_area
         / a_tf_wp_no_insulation
@@ -55,9 +53,9 @@ def calculate_max_lateral_force_density(a_tf_wp_no_insulation):
 def calculate_max_radial_force_density(a_tf_wp_no_insulation):
     return (
         stellarator_configuration.stella_config_max_radial_force_density
-        * st.f_i
-        / st.f_n
-        * tfcoil_variables.b_tf_inboard_peak
+        * stellarator_variables.f_i
+        / stellarator_variables.f_n
+        * tfcoil_variables.b_tf_inboard_peak_symmetric
         / stellarator_configuration.stella_config_wp_bmax
         * stellarator_configuration.stella_config_wp_area
         / a_tf_wp_no_insulation
@@ -67,9 +65,9 @@ def calculate_max_radial_force_density(a_tf_wp_no_insulation):
 def calculate_centering_force_max_mn():
     return (
     stellarator_configuration.stella_config_centering_force_max_mn
-    * st.f_i
-    / st.f_n
-    * tfcoil_variables.b_tf_inboard_peak
+    * stellarator_variables.f_i
+    / stellarator_variables.f_n
+    * tfcoil_variables.b_tf_inboard_peak_symmetric
     / stellarator_configuration.stella_config_wp_bmax
     * stellarator_configuration.stella_config_coillength
     / tfcoil_variables.n_tf_coils
@@ -80,9 +78,9 @@ def calculate_centering_force_max_mn():
 def calculate_centering_force_min_mn():
     return (
     stellarator_configuration.stella_config_centering_force_min_mn
-    * st.f_i
-    / st.f_n
-    * tfcoil_variables.b_tf_inboard_peak
+    * stellarator_variables.f_i
+    / stellarator_variables.f_n
+    * tfcoil_variables.b_tf_inboard_peak_symmetric
     / stellarator_configuration.stella_config_wp_bmax
     * stellarator_configuration.stella_config_coillength
     / tfcoil_variables.n_tf_coils
@@ -93,9 +91,9 @@ def calculate_centering_force_min_mn():
 def calculate_centering_force_avg_mn():
     return (
     stellarator_configuration.stella_config_centering_force_avg_mn
-    * st.f_i
-    / st.f_n
-    * tfcoil_variables.b_tf_inboard_peak
+    * stellarator_variables.f_i
+    / stellarator_variables.f_n
+    * tfcoil_variables.b_tf_inboard_peak_symmetric
     / stellarator_configuration.stella_config_wp_bmax
     * stellarator_configuration.stella_config_coillength
     / tfcoil_variables.n_tf_coils

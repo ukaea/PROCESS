@@ -6,9 +6,10 @@ import numpy as np
 import pytest
 
 from process.costs_2015 import Costs2015
-from process.data_structure import cost_2015_variables, cost_variables
-from process.fortran import (
+from process.data_structure import (
     build_variables,
+    cost_2015_variables,
+    cost_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -4679,9 +4680,9 @@ class CalcTfCoilCostsParam(NamedTuple):
 
     n_tf_coil_turns: Any = None
 
-    whtconcu: Any = None
+    m_tf_coil_copper: Any = None
 
-    whtconsc: Any = None
+    m_tf_coil_superconductor: Any = None
 
     cost_factor_tf_coils: Any = None
 
@@ -4715,8 +4716,8 @@ class CalcTfCoilCostsParam(NamedTuple):
             n_tf_coils=18,
             len_tf_coil=46.64605032553105,
             n_tf_coil_turns=200.13346153846152,
-            whtconcu=31746.02769109578,
-            whtconsc=10284.64237165747,
+            m_tf_coil_copper=31746.02769109578,
+            m_tf_coil_superconductor=10284.64237165747,
             cost_factor_tf_coils=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -5804,8 +5805,8 @@ class CalcTfCoilCostsParam(NamedTuple):
             n_tf_coils=18,
             len_tf_coil=46.6270502920285,
             n_tf_coil_turns=200.13346153846155,
-            whtconcu=24895.07929687943,
-            whtconsc=7945.1211509981658,
+            m_tf_coil_copper=24895.07929687943,
+            m_tf_coil_superconductor=7945.1211509981658,
             cost_factor_tf_coils=1,
             costexp=0.80000000000000004,
             s_kref=np.array(
@@ -6914,9 +6915,15 @@ def test_calc_tf_coil_costs(calctfcoilcostsparam, monkeypatch, costs2015):
         tfcoil_variables, "n_tf_coil_turns", calctfcoilcostsparam.n_tf_coil_turns
     )
 
-    monkeypatch.setattr(tfcoil_variables, "whtconcu", calctfcoilcostsparam.whtconcu)
+    monkeypatch.setattr(
+        tfcoil_variables, "m_tf_coil_copper", calctfcoilcostsparam.m_tf_coil_copper
+    )
 
-    monkeypatch.setattr(tfcoil_variables, "whtconsc", calctfcoilcostsparam.whtconsc)
+    monkeypatch.setattr(
+        tfcoil_variables,
+        "m_tf_coil_superconductor",
+        calctfcoilcostsparam.m_tf_coil_superconductor,
+    )
 
     monkeypatch.setattr(
         cost_variables,

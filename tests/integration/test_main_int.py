@@ -112,6 +112,6 @@ def test_single_run_with_mfilejson(temp_data):
         raise AssertionError("The JSON file is not valid JSON") from err
 
     # Check if the JSON contains expected outputs.
-    expected_keys = ["rmajor", "bt", "beta"]
+    expected_keys = ["rmajor", "b_plasma_toroidal_on_axis", "beta_total_vol_avg"]
     for key in expected_keys:
         assert key in json_data, f"Expected key '{key}' not found in the JSON file"

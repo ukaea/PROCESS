@@ -36,9 +36,9 @@ icc = 32 * TF coil conduit stress upper limit
 
 *---------------Iteration Variables----------------*
 
-ixc = 4 * te
+ixc = 4 * temp_plasma_electron_vol_avg_kev
 boundu(4) = 100.0
-ixc = 6 * dene
+ixc = 6 * nd_plasma_electrons_vol_avg
 
 *---------------Cs Fatigue Variables---------------*
 
@@ -175,7 +175,7 @@ i_div_heat_load = 2
 
 inuclear = 1 * switch for nuclear heating in the coils;
 qnuc     = 1.3e4 * nuclear heating in the coils (W) (`inuclear=1`)
-i_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
+i_p_coolant_pumping = 3 * Switch for pumping power for primary coolant (mechanical power only and peak first wall
 i_thermal_electric_conversion = 2 * Switch for power conversion cycle;
 vfshld   = 0.60 * coolant void fraction in shield
 etaiso   = 0.9 * isentropic efficiency of FW and blanket coolant pumps
@@ -200,21 +200,21 @@ i_shld_primary_heat = 1 * Switch for shield thermal power destiny;
 *------------Impurity Radiation Module-------------*
 
 radius_plasma_core_norm = 0.75 * radius_plasma_core_norm /0;6/ ; normalised radius defining the 'core' region
-coreradiationfraction = 0.6 * coreradiationfraction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
-fimp(1) = 0.9
-fimp(2) = 0.1
-fimp(3) = 0.0
-fimp(4) = 0.0
-fimp(5) = 0.0
-fimp(6) = 0.0
-fimp(7) = 0.0
-fimp(8) = 0.0
-fimp(9) = 0.0
-fimp(10) = 0.0
-fimp(11) = 0.0
-fimp(12) = 0.0
-fimp(13) = 0.000597755323387789
-fimp(14) = 5e-06
+f_p_plasma_core_rad_reduction = 0.6 * f_p_plasma_core_rad_reduction /1;0/ ; fraction of radiation from 'core' region that is subtracted from the loss power
+f_nd_impurity_electrons(1) = 0.9
+f_nd_impurity_electrons(2) = 0.1
+f_nd_impurity_electrons(3) = 0.0
+f_nd_impurity_electrons(4) = 0.0
+f_nd_impurity_electrons(5) = 0.0
+f_nd_impurity_electrons(6) = 0.0
+f_nd_impurity_electrons(7) = 0.0
+f_nd_impurity_electrons(8) = 0.0
+f_nd_impurity_electrons(9) = 0.0
+f_nd_impurity_electrons(10) = 0.0
+f_nd_impurity_electrons(11) = 0.0
+f_nd_impurity_electrons(12) = 0.0
+f_nd_impurity_electrons(13) = 0.000597755323387789
+f_nd_impurity_electrons(14) = 5e-06
 
 *-------------------Init Module--------------------*
 
@@ -253,7 +253,7 @@ i_pf_superconductor = 3 * switch for superconductor material in PF coils;
 n_pf_coils_in_group     = 1,1,2,2 * number of PF coils in group j
 n_pf_coil_groups     = 4 * number of groups of PF coils; Symmetric coil pairs should all be in the same group
 f_z_cs_tf_internal   = 0.9 * Central solenoid height / TF coil internal height
-f_a_cs_steel = 0.4856940627014451 * central solenoid steel fraction (`iteration variable 122`)
+f_a_cs_turn_steel = 0.4856940627014451 * central solenoid steel fraction (`iteration variable 122`)
 j_pf_coil_wp_peak  = 1.1d7, 1.1d7, 6.d6, 6.d6, 8.d6, 8.0d6, 8.0d6, 8.0d6 * average winding pack current density of PF coil i (A/m2) at time of peak
 rpf2     = -1.825 * offset (m) of radial position of `i_pf_location=2` PF coils from being at
 sigpfcf  = 0.666 * fraction of JxB hoop force supported by steel case for superconducting PF coils (`i_pf_conductor=0`)
@@ -279,11 +279,11 @@ zref(10) = 1.0
 alphan   = 1.00 * density profile index
 alphat   = 1.45 * temperature profile index
 aspect   = 3.0 * aspect ratio (`iteration variable 1`)
-beta     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
-bt       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
-dene     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
+beta_total_vol_avg     = 0.03230408815355488 * total plasma beta (`iteration variable 5`) (calculated if stellarator)
+b_plasma_toroidal_on_axis       = 5.318322174644904 * toroidal field on axis (T) (`iteration variable 2`)
+nd_plasma_electrons_vol_avg     = 7.796223900029837e+19 * electron density (/m3) (`iteration variable 6`)
 beta_norm_max   = 3.0 * Troyon-like coefficient for beta scaling calculated
-fgwsep   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
+f_nd_plasma_separatrix_greenwald   = 0.5 * fraction of Greenwald density to set as separatrix density; If `<0`; separatrix
 fkzohm   = 1.02 * Zohm elongation scaling adjustment factor (`i_plasma_geometry=2; 3`)
 f_c_plasma_non_inductive = 0.4242184436680697 * fraction of the plasma current produced by non-inductive means (`iteration variable 44`)
 ejima_coeff    = 0.3 * Ejima coefficient for resistive startup V-s formula
@@ -293,15 +293,15 @@ i_beta_component   = 1 * switch for beta limit scaling (`constraint equation 24`
 i_plasma_current = 4 * switch for plasma current scaling to use
 i_density_limit   = 7 * switch for density limit to enforce (`constraint equation 5`)
 i_beta_fast_alpha = 1 * switch for fast alpha pressure calculation
-ipedestal = 1 * switch for pedestal profiles;
-neped    = 0.5e20 * electron density of pedestal [m-3] (`ipedestal==1)
-nesep    = 0.2e20 * electron density at separatrix [m-3] (`ipedestal==1)
+i_plasma_pedestal = 1 * switch for pedestal profiles;
+nd_plasma_pedestal_electron    = 0.5e20 * electron density of pedestal [m-3] (`i_plasma_pedestal==1)
+nd_plasma_separatrix_electron    = 0.2e20 * electron density at separatrix [m-3] (`i_plasma_pedestal==1)
 plasma_res_factor = 0.7 * plasma resistivity pre-factor
-rhopedn  = 0.94 * r/a of density pedestal (`ipedestal==1`)
-rhopedt  = 0.94 * r/a of temperature pedestal (`ipedestal==1`)
-tbeta    = 2.0 * temperature profile index beta  (`ipedestal==1)
-teped    = 5.5 * electron temperature of pedestal (keV) (`ipedestal==1')
-tesep    = 0.1 * electron temperature at separatrix (keV) (`ipedestal==1`) calculated if reinke
+radius_plasma_pedestal_density_norm  = 0.94 * r/a of density pedestal (`i_plasma_pedestal==1`)
+radius_plasma_pedestal_temp_norm  = 0.94 * r/a of temperature pedestal (`i_plasma_pedestal==1`)
+tbeta    = 2.0 * temperature profile index beta  (`i_plasma_pedestal==1)
+temp_plasma_pedestal_kev    = 5.5 * electron temperature of pedestal (keV) (`i_plasma_pedestal==1')
+temp_plasma_separatrix_kev    = 0.1 * electron temperature at separatrix (keV) (`i_plasma_pedestal==1`) calculated if reinke
 i_confinement_time      = 34 * switch for energy confinement time scaling law (see description in `labels_confinement_scalings`)
 i_plasma_geometry   = 0 * switch for plasma cross-sectional shape calculation;
 kappa    = 1.85 * plasma separatrix elongation (calculated if `i_plasma_geometry = 1-5; 7 or 9-10`)
@@ -311,7 +311,7 @@ f_nd_alpha_electron   = 0.060238763988650204 * thermal alpha density/electron de
 rmajor   = 8.0 * plasma major radius (m) (`iteration variable 3`)
 i_single_null = 1 * switch for single null / double null plasma;
 f_sync_reflect    = 0.6 * synchrotron wall reflectivity factor
-te       = 12.221383528378944 * volume averaged electron temperature (keV) (`iteration variable 4`)
+temp_plasma_electron_vol_avg_kev       = 12.221383528378944 * volume averaged electron temperature (keV) (`iteration variable 4`)
 triang   = 0.5 * plasma separatrix triangularity (calculated if `i_plasma_geometry = 1; 3-5 or 7`)
 
 *----------------------Power-----------------------*
@@ -374,27 +374,27 @@ dr_tf_plasma_case   = 0.06 * inboard TF coil case plasma side thickness (m) (cal
 dx_tf_side_case_min   = 0.05 * inboard TF coil sidewall case thickness (m) (calculated for stellarators)
 c_tf_turn    = 85462.67500253802 * TF coil current per turn (A); (calculated for stellarators) (calculated for
 dia_tf_turn_coolant_channel  = 0.01 * diameter of central helium channel in TF winding (m)
-fcutfsu  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
+f_a_tf_turn_cable_copper  = 0.8231999768826475 * copper fraction of cable conductor (TF coils)
 i_tf_sc_mat = 1 * Switch for superconductor material in TF coils;
-ripmax   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
-tdmptf   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
+ripple_b_tf_plasma_edge_max   = 0.6 * aximum allowable toroidal field ripple amplitude at plasma edge (%)
+t_tf_superconductor_quench   = 17.97282589344206 * fast discharge time for TF coil in event of quench (s) (`iteration variable 56`)
 n_tf_coils     = 16 * Number of TF coils (default = 50 for stellarators); Number of TF coils outer legs for ST
 tftmp    = 4.75 * peak helium coolant temperature in TF coils and PF coils (K)
 dr_tf_nose_case   = 0.2816873221155309 * inboard TF coil case outer (non-plasma side) thickness (m) (`iteration variable 57`)
 dr_tf_wp_with_insulation = 0.5153787768966674 * radial thickness of winding pack (m) (issue #514)
 dx_tf_turn_steel = 0.008012110032981922 * TF coil conduit case thickness (m) (`iteration variable 58`)
 dx_tf_wp_insulation   = 0.008 * Thickness of the ground insulation layer surrounding (m)
-tmargmin_cs = 1.5 * minimum allowable temperature margin ; CS (K)
+temp_cs_superconductor_margin_min = 1.5 * minimum allowable temperature margin ; CS (K)
 tmargmin = 1.5 * minimum allowable temperature margin ; TFC AND CS (K)
-vdalw    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
+v_tf_coil_dump_quench_max_kv    = 10.0 * max voltage across TF coil during quench (kV) (`iteration variable 52`)
 f_a_tf_turn_cable_space_extra_void     = 0.3 * coolant fraction of TFC 'cable' (`i_tf_sup=1`); or of TFC leg (`i_tf_ssup=0`)
 nflutfmax = 1e22 * max fluence in the TF coil
 
 *-----------------Times Variables------------------*
 
 pulsetimings = 0 * Switch for pulse timings (if i_pulsed_plant=1);
-t_between_pulse   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
-t_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_current_ramp_up
+t_plant_pulse_dwell   = 1800.0 * time between pulses in a pulsed reactor (s) (`iteration variable 17`)
+t_plant_pulse_coil_precharge    = 500.0 * initial PF coil charge time (s); if pulsed; = t_plant_pulse_plasma_current_ramp_up
 
 *--------------------Utilities---------------------*
 

@@ -3,12 +3,11 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import cost_variables, power_variables, times_variables
-from process.data_structure import primary_pumping_variables as ppv
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     buildings_variables,
     constraint_variables,
+    cost_variables,
     current_drive_variables,
     fwbs_variables,
     heat_transport_variables,
@@ -16,8 +15,11 @@ from process.fortran import (
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
+    power_variables,
     tfcoil_variables,
+    times_variables,
 )
+from process.data_structure import primary_pumping_variables as ppv
 from process.power import Power
 
 
@@ -58,7 +60,7 @@ class CryoParam(NamedTuple):
 
     tfcryoarea: Any = None
 
-    t_pulse_repetition: Any = None
+    t_plant_pulse_plasma_present: Any = None
 
     expected_qss: Any = None
 
@@ -88,7 +90,7 @@ class CryoParam(NamedTuple):
             p_tf_nuclear_heat_mw=0.044178296011112193,
             n_tf_coils=16,
             tfcryoarea=0,
-            t_pulse_repetition=10364.426139387357,
+            t_plant_pulse_plasma_present=10364.426139387357,
             expected_qss=20361.633927097802,
             expected_qac=3611.3456752656607,
             expected_qcl=16108.2211128,
@@ -109,7 +111,7 @@ class CryoParam(NamedTuple):
             p_tf_nuclear_heat_mw=0.045535131445547841,
             n_tf_coils=16,
             tfcryoarea=0,
-            t_pulse_repetition=364.42613938735633,
+            t_plant_pulse_plasma_present=364.42613938735633,
             expected_qss=20342.863776957758,
             expected_qac=102701.82327748176,
             expected_qcl=16108.2211128,
@@ -151,7 +153,7 @@ def test_cryo(cryoparam, monkeypatch, power):
         p_tf_nuclear_heat_mw=cryoparam.p_tf_nuclear_heat_mw,
         n_tf_coils=cryoparam.n_tf_coils,
         tfcryoarea=cryoparam.tfcryoarea,
-        t_pulse_repetition=cryoparam.t_pulse_repetition,
+        t_plant_pulse_plasma_present=cryoparam.t_plant_pulse_plasma_present,
     )
 
     assert power_variables.qss == pytest.approx(cryoparam.expected_qss)
@@ -228,13 +230,13 @@ class PfpwrParam(NamedTuple):
 
     ioptimz: Any = None
 
-    tim: Any = None
+    t_pulse_cumulative: Any = None
 
     intervallabel: Any = None
 
     timelabel: Any = None
 
-    t_current_ramp_up: Any = None
+    t_plant_pulse_plasma_current_ramp_up: Any = None
 
     outfile: Any = None
 
@@ -954,7 +956,7 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            tim=np.array(
+            t_pulse_cumulative=np.array(
                 np.array(
                     (
                         0,
@@ -969,11 +971,11 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "t_precharge      ",
-                "t_current_ramp_up       ",
-                "t_fusion_ramp      ",
-                "t_burn      ",
-                "t_ramp_down      ",
+                "t_plant_pulse_coil_precharge      ",
+                "t_plant_pulse_plasma_current_ramp_up       ",
+                "t_plant_pulse_fusion_ramp      ",
+                "t_plant_pulse_burn      ",
+                "t_plant_pulse_plasma_current_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -983,7 +985,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            t_current_ramp_up=177.21306969367816,
+            t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=736.39062584245937,
@@ -1697,7 +1699,7 @@ class PfpwrParam(NamedTuple):
                 False,
             ),
             ioptimz=1,
-            tim=np.array(
+            t_pulse_cumulative=np.array(
                 np.array(
                     (
                         0,
@@ -1712,11 +1714,11 @@ class PfpwrParam(NamedTuple):
                 order="F",
             ).transpose(),
             intervallabel=(
-                "t_precharge      ",
-                "t_current_ramp_up       ",
-                "t_fusion_ramp      ",
-                "t_burn      ",
-                "t_ramp_down      ",
+                "t_plant_pulse_coil_precharge      ",
+                "t_plant_pulse_plasma_current_ramp_up       ",
+                "t_plant_pulse_fusion_ramp      ",
+                "t_plant_pulse_burn      ",
+                "t_plant_pulse_plasma_current_ramp_down      ",
             ),
             timelabel=(
                 "Start      ",
@@ -1726,7 +1728,7 @@ class PfpwrParam(NamedTuple):
                 "EOF        ",
                 "EOP        ",
             ),
-            t_current_ramp_up=177.21306969367816,
+            t_plant_pulse_plasma_current_ramp_up=177.21306969367816,
             outfile=11,
             iprint=0,
             expected_peakmva=90.673341440806112,
@@ -1863,10 +1865,14 @@ def test_pfpwr(pfpwrparam, monkeypatch, power):
 
     monkeypatch.setattr(numerics, "ioptimz", pfpwrparam.ioptimz)
 
-    monkeypatch.setattr(times_variables, "tim", pfpwrparam.tim)
+    monkeypatch.setattr(
+        times_variables, "t_pulse_cumulative", pfpwrparam.t_pulse_cumulative
+    )
 
     monkeypatch.setattr(
-        times_variables, "t_current_ramp_up", pfpwrparam.t_current_ramp_up
+        times_variables,
+        "t_plant_pulse_plasma_current_ramp_up",
+        pfpwrparam.t_plant_pulse_plasma_current_ramp_up,
     )
 
     power.pfpwr(output=False)
@@ -2102,7 +2108,7 @@ class Power2Param(NamedTuple):
 
     f_ster_div_single: Any = None
 
-    f_a_fw_hcd: Any = None
+    f_a_fw_outboard_hcd: Any = None
 
     i_thermal_electric_conversion: Any = None
 
@@ -2110,7 +2116,7 @@ class Power2Param(NamedTuple):
 
     p_div_nuclear_heat_total_mw: Any = None
 
-    i_coolant_pumping: Any = None
+    i_p_coolant_pumping: Any = None
 
     p_tf_nuclear_heat_mw: Any = None
 
@@ -2128,15 +2134,15 @@ class Power2Param(NamedTuple):
 
     p_shld_secondary_heat_mw: Any = None
 
-    fpumpshld: Any = None
+    f_p_shld_coolant_pump_total_heat: Any = None
 
     temp_turbine_coolant_in: Any = None
 
     p_plant_electric_net_mw: Any = None
 
-    fpumpdiv: Any = None
+    f_p_div_coolant_pump_total_heat: Any = None
 
-    fpumpblkt: Any = None
+    f_p_blkt_coolant_pump_total_heat: Any = None
 
     vachtmw: Any = None
 
@@ -2152,7 +2158,7 @@ class Power2Param(NamedTuple):
 
     p_plant_primary_heat_mw: Any = None
 
-    fpumpfw: Any = None
+    f_p_fw_coolant_pump_total_heat: Any = None
 
     p_plant_electric_base_total_mw: Any = None
 
@@ -2294,11 +2300,11 @@ class Power2Param(NamedTuple):
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.69222981118057,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_tf_nuclear_heat_mw=0.044178296011112193,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.3609360176065353,
@@ -2307,11 +2313,11 @@ class Power2Param(NamedTuple):
             p_shld_coolant_pump_mw=0.0068046800880326762,
             p_blkt_coolant_pump_mw=0,
             p_shld_secondary_heat_mw=0,
-            fpumpshld=0.0050000000000000001,
+            f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             temp_turbine_coolant_in=0,
             p_plant_electric_net_mw=0,
-            fpumpdiv=0.0050000000000000001,
-            fpumpblkt=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7942175899286208,
             n_primary_heat_exchangers=3,
@@ -2319,7 +2325,7 @@ class Power2Param(NamedTuple):
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=0,
             p_plant_primary_heat_mw=2620.2218111502593,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_plant_electric_base_total_mw=62.23714391536082,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
@@ -2375,12 +2381,12 @@ class Power2Param(NamedTuple):
             qmisc=23850.540321823562,
             outfile=11,
             iprint=0,
-            expected_p_plant_electric_net_mw=492.6632974794346,
-            expected_precircmw=489.9198817019128,
-            expected_fachtmw=62.23714391536082,
+            expected_p_plant_electric_net_mw=549.90044139,
+            expected_precircmw=432.68273779,
+            expected_fachtmw=5.0,
             expected_p_plant_electric_gross_mw=982.58317918134742,
-            expected_p_plant_secondary_heat_mw=234.15719103660052,
-            expected_pcoresystems=125.68822074464052,
+            expected_p_plant_secondary_heat_mw=176.92004712,
+            expected_pcoresystems=68.45107682927969,
         ),
         Power2Param(
             p_plant_electric_net_required_mw=500,
@@ -2396,11 +2402,11 @@ class Power2Param(NamedTuple):
             f_p_blkt_multiplication=1.2690000534057617,
             p_div_rad_total_mw=33.119482558354782,
             f_ster_div_single=0.115,
-            f_a_fw_hcd=0,
+            f_a_fw_outboard_hcd=0,
             i_thermal_electric_conversion=2,
             pnuc_cp=0,
             p_div_nuclear_heat_total_mw=182.6352084763719,
-            i_coolant_pumping=3,
+            i_p_coolant_pumping=3,
             p_tf_nuclear_heat_mw=0.045535131445547841,
             p_fw_hcd_nuclear_heat_mw=0,
             p_shld_nuclear_heat_mw=1.4036212304705389,
@@ -2409,11 +2415,11 @@ class Power2Param(NamedTuple):
             p_shld_coolant_pump_mw=0.0070181061523526943,
             p_blkt_coolant_pump_mw=0,
             p_shld_secondary_heat_mw=0,
-            fpumpshld=0.0050000000000000001,
+            f_p_shld_coolant_pump_total_heat=0.0050000000000000001,
             temp_turbine_coolant_in=0,
             p_plant_electric_net_mw=493.01760776192009,
-            fpumpdiv=0.0050000000000000001,
-            fpumpblkt=0.0050000000000000001,
+            f_p_div_coolant_pump_total_heat=0.0050000000000000001,
+            f_p_blkt_coolant_pump_total_heat=0.0050000000000000001,
             vachtmw=0.5,
             p_div_coolant_pump_mw=1.7933419035282543,
             n_primary_heat_exchangers=3,
@@ -2421,7 +2427,7 @@ class Power2Param(NamedTuple):
             p_fw_coolant_pump_mw=0,
             p_plant_electric_recirc_mw=489.9198817019128,
             p_plant_primary_heat_mw=2619.4223856129224,
-            fpumpfw=0.0050000000000000001,
+            f_p_fw_coolant_pump_total_heat=0.0050000000000000001,
             p_plant_electric_base_total_mw=62.237143915360818,
             i_shld_primary_heat=1,
             p_hcd_electric_total_mw=129.94611930107126,
@@ -2477,12 +2483,12 @@ class Power2Param(NamedTuple):
             qmisc=68432.80867525778,
             outfile=11,
             iprint=0,
-            expected_p_plant_electric_net_mw=422.4198205312706,
-            expected_precircmw=559.86357407357548,
-            expected_fachtmw=62.237143915360818,
+            expected_p_plant_electric_net_mw=479.65696445,
+            expected_precircmw=502.62643016,
+            expected_fachtmw=5.0,
             expected_p_plant_electric_gross_mw=982.28339460484608,
-            expected_p_plant_secondary_heat_mw=304.16251287817744,
-            expected_pcoresystems=195.70119200650984,
+            expected_p_plant_secondary_heat_mw=246.92536896,
+            expected_pcoresystems=138.46404809114904,
         ),
     ),
 )
@@ -2551,7 +2557,9 @@ def test_power2(power2param, monkeypatch, power):
         fwbs_variables, "f_ster_div_single", power2param.f_ster_div_single
     )
 
-    monkeypatch.setattr(fwbs_variables, "f_a_fw_hcd", power2param.f_a_fw_hcd)
+    monkeypatch.setattr(
+        fwbs_variables, "f_a_fw_outboard_hcd", power2param.f_a_fw_outboard_hcd
+    )
 
     monkeypatch.setattr(
         fwbs_variables,
@@ -2568,7 +2576,7 @@ def test_power2(power2param, monkeypatch, power):
     )
 
     monkeypatch.setattr(
-        fwbs_variables, "i_coolant_pumping", power2param.i_coolant_pumping
+        fwbs_variables, "i_p_coolant_pumping", power2param.i_p_coolant_pumping
     )
 
     monkeypatch.setattr(
@@ -2611,7 +2619,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_shld_secondary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpshld", power2param.fpumpshld)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_shld_coolant_pump_total_heat",
+        power2param.f_p_shld_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,
@@ -2625,9 +2637,17 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_plant_electric_net_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpdiv", power2param.fpumpdiv)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_div_coolant_pump_total_heat",
+        power2param.f_p_div_coolant_pump_total_heat,
+    )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpblkt", power2param.fpumpblkt)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_blkt_coolant_pump_total_heat",
+        power2param.f_p_blkt_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(heat_transport_variables, "vachtmw", power2param.vachtmw)
 
@@ -2663,7 +2683,11 @@ def test_power2(power2param, monkeypatch, power):
         power2param.p_plant_primary_heat_mw,
     )
 
-    monkeypatch.setattr(heat_transport_variables, "fpumpfw", power2param.fpumpfw)
+    monkeypatch.setattr(
+        heat_transport_variables,
+        "f_p_fw_coolant_pump_total_heat",
+        power2param.f_p_fw_coolant_pump_total_heat,
+    )
 
     monkeypatch.setattr(
         heat_transport_variables,

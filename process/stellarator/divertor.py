@@ -3,7 +3,7 @@ import numpy as np
 from process import process_output as po
 from process.data_structure import divertor_variables
 
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     constants,
     fwbs_variables,
@@ -32,11 +32,11 @@ def st_div(stellarator, output: bool):
 
     #  Scrape-off temperature in Joules
 
-    e = T_scrape * constants.electron_charge
+    e = T_scrape * constants.ELECTRON_CHARGE
 
     #  Sound speed of particles (m/s)
 
-    c_s = np.sqrt(e / (physics_variables.m_fuel_amu * constants.umass))
+    c_s = np.sqrt(e / (physics_variables.m_fuel_amu * constants.UMASS))
 
     #  Island size (m)
 

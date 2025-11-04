@@ -3,13 +3,13 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-from process.data_structure import pulse_variables
-from process.fortran import (
+from process.data_structure import (
     constraint_variables,
     numerics,
     pf_power_variables,
     pfcoil_variables,
     physics_variables,
+    pulse_variables,
 )
 from process.pulse import Pulse
 
@@ -1250,7 +1250,7 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 
 
 @pytest.mark.parametrize(
-    "vs_cs_pf_total_burn, v_plasma_loop_burn, t_fusion_ramp, expected",
+    "vs_cs_pf_total_burn, v_plasma_loop_burn, t_plant_pulse_fusion_ramp, expected",
     [
         (100.0, 10.0, 2.0, 8.0),
         (-100.0, 10.0, 2.0, 8.0),  # abs() should be used
@@ -1260,13 +1260,13 @@ def test_tohswg(tohswgparam, monkeypatch, pulse):
 def test_calculate_burn_time_valid(
     vs_cs_pf_total_burn,
     v_plasma_loop_burn,
-    t_fusion_ramp,
+    t_plant_pulse_fusion_ramp,
     expected,
 ):
     pulse = Pulse()
     result = pulse.calculate_burn_time(
         vs_cs_pf_total_burn=vs_cs_pf_total_burn,
         v_plasma_loop_burn=v_plasma_loop_burn,
-        t_fusion_ramp=t_fusion_ramp,
+        t_plant_pulse_fusion_ramp=t_plant_pulse_fusion_ramp,
     )
     assert result == expected

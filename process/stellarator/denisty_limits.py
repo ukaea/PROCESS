@@ -20,8 +20,8 @@ def st_denisty_limits(stellarator, output):
     """
 
     #  Set the required value for icc=5
-    physics_variables.dnelimt = st_sudo_density_limit(
-        physics_variables.bt,
+    physics_variables.nd_plasma_electrons_max = st_sudo_density_limit(
+        physics_variables.b_plasma_toroidal_on_axis,
         physics_variables.p_plasma_loss_mw,
         physics_variables.rmajor,
         physics_variables.rminor,
@@ -30,11 +30,12 @@ def st_denisty_limits(stellarator, output):
     # Calculates the ECRH parameters
 
     ne0_max_ECRH, bt_ecrh = st_d_limit_ecrh(
-        stellarator_variables.max_gyrotron_frequency, physics_variables.bt
+        stellarator_variables.max_gyrotron_frequency, 
+        physics_variables.b_plasma_toroidal_on_axis
     )
 
-    ne0_max_ECRH = min(physics_variables.ne0, ne0_max_ECRH)
-    bt_ecrh = min(physics_variables.bt, bt_ecrh)
+    ne0_max_ECRH = min(physics_variables.nd_plasma_electron_on_axis, ne0_max_ECRH)
+    bt_ecrh = min(physics_variables.b_plasma_toroidal_on_axis, bt_ecrh)
 
     if output:
         print_output(
@@ -48,6 +49,7 @@ def st_sudo_density_limit(bt, powht, rmajor, rminor):
         """Routine to calculate the Sudo density limit in a stellarator
         author: P J Knight, CCFE, Culham Science Centre
         bt     : input real : Toroidal field on axis (T)
+        bt = b_plasma_toroidal_on_axis
         powht  : input real : Absorbed heating power (MW)
         rmajor : input real : Plasma major radius (m)
         rminor : input real : Plasma minor radius (m)
@@ -76,9 +78,15 @@ def st_sudo_density_limit(bt, powht, rmajor, rminor):
         #  Scale the result so that it applies to the volume-averaged
         #  electron density
 
-        dlimit = dnlamx * physics_variables.dene / physics_variables.nd_electron_line
+        nd_plasma_electron_max_array = (
+            dnlamx
+            * physics_variables.nd_plasma_electrons_vol_avg
+            / physics_variables.nd_plasma_electron_line
+        )
 
-        return dlimit
+        physics_variables.nd_plasma_electrons_max = nd_plasma_electron_max_array
+
+        return nd_plasma_electron_max_array
 
 
 def st_d_limit_ecrh(gyro_frequency_max, bt_input):
@@ -100,12 +108,13 @@ def st_d_limit_ecrh(gyro_frequency_max, bt_input):
         ne0_max = max(0.0e0, 3.142077e-4 * gyro_frequency**2)
 
         # Check if parabolic profiles are used:
-        if physics_variables.ipedestal != 0:
-            logger.warning(
-                "It was used physics_variables.ipedestal != 0 in a stellarator routine. PROCESS will pretend it got parabolic profiles (physics_variables.ipedestal = 0)."
+        if physics_variables.i_plasma_pedestal == 0:
+            # Parabolic profiles used, use analytical formula:
+            dlimit_ecrh = ne0_max
+        else:
+            logger.error(
+                "It was used physics_variables.i_plasma_pedestal = 1 in a stellarator routine."
             )
-        # Assume parabolic profiles anyway, use analytical formula:  
-        dlimit_ecrh = ne0_max
 
         return dlimit_ecrh, bt_max
 
@@ -122,22 +131,26 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
         Assumes current peak temperature (which is inaccurate as the cordey pass should be calculated)
         Maybe use this: https://doi.org/10.1088/0029-5515/49/8/085026
         """
-        te_old = copy(physics_variables.te)
+        te_old = copy(physics_variables.temp_plasma_electron_vol_avg_kev)
         # Volume averaged physics_variables.te from te0_achievable
-        physics_variables.te = te0_available / (1.0e0 + physics_variables.alphat)
+        physics_variables.temp_plasma_electron_vol_avg_kev = te0_available / (
+            1.0e0 + physics_variables.alphat
+        )
         ne0_max, bt_ecrh_max = st_d_limit_ecrh(
-            gyro_frequency_max, physics_variables.bt
+            gyro_frequency_max, physics_variables.b_plasma_toroidal_on_axis
         )
         # Now go to point where ECRH is still available
         # In density..
-        dene_old = copy(physics_variables.dene)
-        physics_variables.dene = min(
+        dene_old = copy(physics_variables.nd_plasma_electrons_vol_avg)
+        physics_variables.nd_plasma_electrons_vol_avg = min(
             dene_old, ne0_max / (1.0e0 + physics_variables.alphan)
         )
 
         # And B-field..
-        bt_old = copy(physics_variables.bt)
-        physics_variables.bt = min(bt_ecrh_max, physics_variables.bt)
+        bt_old = copy(physics_variables.b_plasma_toroidal_on_axis)
+        physics_variables.b_plasma_toroidal_on_axis = min(
+             bt_ecrh_max, physics_variables.b_plasma_toroidal_on_axis
+             )
 
         stellarator.st_phys(False)
         stellarator.st_phys(
@@ -151,9 +164,9 @@ def power_at_ignition_point(stellarator, gyro_frequency_max, te0_available):
 
         # Reverse it and do it again because anything more efficiently isn't suitable with the current implementation
         # This is bad practice but seems to be necessary as of now:
-        physics_variables.te = te_old
-        physics_variables.dene = dene_old
-        physics_variables.bt = bt_old
+        physics_variables.temp_plasma_electron_vol_avg_kev = te_old
+        physics_variables.nd_plasma_electrons_vol_avg = dene_old
+        physics_variables.b_plasma_toroidal_on_axis = bt_old
 
         # The second call seems to be necessary for all values to "converge" (and is sufficient)
         stellarator.st_phys(False)
@@ -175,21 +188,21 @@ def print_output(stellarator, bt_ecrh, ne0_max_ECRH):
     po.ovarre(
         stellarator.outfile,
         "Operating point: bfield",
-        "(bt)",
-        physics_variables.bt
+        "(b_plasma_toroidal_on_axis)",
+        physics_variables.b_plasma_toroidal_on_axis
     )
 
     po.ovarre(
         stellarator.outfile,
         "Operating point: Peak density",
-        "(ne0)",
-        physics_variables.ne0,
+        "(nd_plasma_electron_on_axis)",
+        physics_variables.nd_plasma_electron_on_axis,
     )
     po.ovarre(
         stellarator.outfile,
         "Operating point: Peak temperature",
-        "(te0)",
-        physics_variables.te0,
+        "(temp_plasma_electron_on_axis_kev)",
+        physics_variables.temp_plasma_electron_on_axis_kev,
     )
 
     po.ovarre(stellarator.outfile, "Ignition point: bfield (T)", "(bt_ecrh)", bt_ecrh)

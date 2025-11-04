@@ -2,20 +2,20 @@ import numpy as np
 from numba import njit
 
 import process.data_structure as data_structure
-from process.fortran import constants
+from process import constants
 
 
 class CsFatigue:
     def __init__(self):
-        self.outfile = constants.nout
+        self.outfile = constants.NOUT
 
     def ncycle(
         self,
         max_hoop_stress,
         residual_stress,
         t_crack_vertical,
-        t_structural_vertical,
-        t_structural_radial,
+        dz_cs_turn_conduit,
+        dr_cs_turn_conduit,
     ):
         """ """
         # Default Parameters for SS 316LN from
@@ -60,12 +60,12 @@ class CsFatigue:
         while (
             (
                 a
-                <= t_structural_vertical
+                <= dz_cs_turn_conduit
                 / data_structure.cs_fatigue_variables.sf_vertical_crack
             )
             and (
                 c
-                <= t_structural_radial
+                <= dr_cs_turn_conduit
                 / data_structure.cs_fatigue_variables.sf_radial_crack
             )
             and (
@@ -77,8 +77,8 @@ class CsFatigue:
             # find SIF max from SIF_a and SIF_c
             k_a, k_c = self.surface_stress_intensity_factor(
                 hoop_stress_MPa,
-                t_structural_vertical,
-                t_structural_radial,
+                dz_cs_turn_conduit,
+                dr_cs_turn_conduit,
                 a,
                 c,
                 pi_2_arr,

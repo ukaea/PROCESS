@@ -4,15 +4,12 @@ from process.stellarator.coils.mass import calculate_coils_mass
 import process.stellarator.coils.forces as forces
 from process.stellarator.coils.coils import bmax_from_awp, intersect, jcrit_from_material
 
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     constraint_variables,
     stellarator_configuration,
     stellarator_variables,
     tfcoil_variables,
-)
-from process.fortran import (
-    stellarator_module as st,
 )
 
 import numpy as np
@@ -34,8 +31,8 @@ def st_coil(stellarator, output: bool):
     are assumed to be a fixed shape, but are scaled in size
     appropriately for the machine being modelled.
     """
-    r_coil_major = st.r_coil_major
-    r_coil_minor = st.r_coil_minor
+    r_coil_major = stellarator_variables.r_coil_major
+    r_coil_minor = stellarator_variables.r_coil_minor
 
     #######################################################################################
     calculate_winding_pack_geometry()
@@ -86,8 +83,8 @@ def st_coil(stellarator, output: bool):
 
     # [m^2] Total surface area of toroidal shells covering coils
     tfcoil_variables.tfcryoarea = (
-        stellarator_configuration.stella_config_coilsurface * st.f_r
-        * (st.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
+        stellarator_configuration.stella_config_coilsurface * stellarator_variables.f_r
+        * (stellarator_variables.r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
         * 1.1e0
     )
     # 1.1 to scale it out a bit, as the shell must be bigger than WP
@@ -96,7 +93,7 @@ def st_coil(stellarator, output: bool):
     # Minimal bending radius:
     min_bending_radius = (
         stellarator_configuration.stella_config_min_bend_radius
-        * st.f_r
+        * stellarator_variables.f_r
         / (1.0 - tfcoil_variables.dr_tf_wp_with_insulation / (2.0 * r_coil_minor))
     )
 
@@ -151,11 +148,11 @@ def st_coil(stellarator, output: bool):
             r_coil_major=r_coil_major,
             r_coil_minor=r_coil_minor,
             sig_tf_wp=tfcoil_variables.sig_tf_wp,
-            t_turn_tf=tfcoil_variables.t_turn_tf,
-            tdmptf=tfcoil_variables.tdmptf,
+            dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
+            tdmptf=tfcoil_variables.t_tf_superconductor_quench,
             toroidalgap=tfcoil_variables.toroidalgap,
-            allowed_quench_voltage=tfcoil_variables.vdalw,
-            quench_voltage=tfcoil_variables.vtfskv,
+            allowed_quench_voltage=tfcoil_variables.v_tf_coil_dump_quench_max_kv,
+            quench_voltage=tfcoil_variables.v_tf_coil_dump_quench_kv,
         )
 
 def calculate_coil_toroidal_thickness():
@@ -244,7 +241,7 @@ def calculate_coils_summary_variables(coilcurrent, r_coil_major, r_coil_minor, a
         tfcoil_variables.c_tf_total / tfcoil_variables.a_tf_inboard_total
     )  
     # [m] radius of peak field occurrence, average
-    tfcoil_variables.r_b_tf_inboard_peak = (
+    tfcoil_variables.r_b_tf_inboard_peak_symmetric = (
         r_coil_major - r_coil_minor + awp_rad
     )  
     # jlion: not sure what this will be used for. Not very
@@ -255,9 +252,9 @@ def calculate_inductnace(r_coil_minor):
     """ This uses the reference value for the inductance and scales it with a^2/R (toroid inductance scaling) """
     inductance = (
         stellarator_configuration.stella_config_inductance
-        / st.f_r
+        / stellarator_variables.f_r
         * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
-        * st.f_n**2
+        * stellarator_variables.f_n**2
     )
     return inductance
 
@@ -268,10 +265,10 @@ def calculate_stored_magnetic_energy(r_coil_minor):
         0.5e0
         * (
             stellarator_configuration.stella_config_inductance
-            / st.f_r
+            / stellarator_variables.f_r
             * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
             ** 2
-            * st.f_n**2
+            * stellarator_variables.f_n**2
         )
         * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2
         * 1.0e-9
@@ -284,7 +281,7 @@ def calculate_winding_pack_geometry():
     '''
     # [m] Dimension of square cable space inside insulation
     #     and case of the conduit of each turn
-    dx_tf_turn_cable_space_average = tfcoil_variables.t_turn_tf - 2.0e0 * (
+    dx_tf_turn_cable_space_average = tfcoil_variables.dx_tf_turn_general - 2.0e0 * (
         tfcoil_variables.dx_tf_turn_steel + tfcoil_variables.dx_tf_turn_insulation
     )  # dx_tf_turn_cable_space_average = t_w
     if dx_tf_turn_cable_space_average < 0:
@@ -307,9 +304,13 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
     #
     # Total coil current (MA)
     coilcurrent = (
-        st.f_b * stellarator_configuration.stella_config_i0 * st.f_r / st.f_coil_aspect / st.f_n
+        stellarator_variables.f_b 
+        * stellarator_configuration.stella_config_i0 
+        * stellarator_variables.f_r 
+        / stellarator_variables.f_coil_aspect 
+        / stellarator_variables.f_n
     )
-    st.f_i = coilcurrent / stellarator_configuration.stella_config_i0
+    stellarator_variables.f_i = coilcurrent / stellarator_configuration.stella_config_i0
 
     n_it = 200  # number of iterations
 
@@ -347,7 +348,7 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
             tfcoil_variables.i_tf_sc_mat,
             tfcoil_variables.b_crit_upper_nbti,
             tfcoil_variables.bcritsc,
-            tfcoil_variables.fcutfsu,
+            tfcoil_variables.f_a_tf_turn_cable_copper,
             tfcoil_variables.fhts,
             tfcoil_variables.t_crit_nbti,
             tfcoil_variables.tcritsc,
@@ -364,8 +365,8 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
         )
-        * (1.0e0 - tfcoil_variables.fcutfsu)
-        / (tfcoil_variables.t_turn_tf**2)
+        * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_copper)
+        / (tfcoil_variables.dx_tf_turn_general**2)
 
     )
     # print *, "f_a_scu_of_wp. ",f_a_scu_of_wp,"Awp min: ",Awp(1)
@@ -388,10 +389,10 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
     )
 
     # Maximum field at superconductor surface (T)
-    wp_width_r_min = max(tfcoil_variables.t_turn_tf**2, wp_width_r_min)
+    wp_width_r_min = max(tfcoil_variables.dx_tf_turn_general**2, wp_width_r_min)
 
-    # Recalculate tfcoil_variables.b_tf_inboard_peak at the found awp_min:
-    tfcoil_variables.b_tf_inboard_peak = bmax_from_awp(
+    # Recalculate tfcoil_variables.b_tf_inboard_peak_symmetric at the found awp_min:
+    tfcoil_variables.b_tf_inboard_peak_symmetric = bmax_from_awp(
         wp_width_r_min,
         coilcurrent,
         tfcoil_variables.n_tf_coils,
@@ -431,7 +432,7 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
         coilcurrent * 1.0e6 / a_tf_wp_no_insulation
     )  # [A/m^2] winding pack current density
     tfcoil_variables.n_tf_coil_turns = (
-        a_tf_wp_no_insulation / (tfcoil_variables.t_turn_tf**2)
+        a_tf_wp_no_insulation / (tfcoil_variables.dx_tf_turn_general**2)
     )  # estimated number of turns for a given turn size (not global). Take at least 1.
     tfcoil_variables.c_tf_turn = (
         coilcurrent * 1.0e6 / tfcoil_variables.n_tf_coil_turns
@@ -452,7 +453,7 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
     tfcoil_variables.a_tf_coil_wp_turn_insulation = (
         tfcoil_variables.n_tf_coil_turns
         * (
-            tfcoil_variables.t_turn_tf**2
+            tfcoil_variables.dx_tf_turn_general**2
             - tfcoil_variables.a_tf_turn_steel
             - tfcoil_variables.a_tf_turn_cable_space_no_void
         )
@@ -491,8 +492,8 @@ def calculate_vertical_ports():
     stellarator_variables.vporttmax = (
         0.4e0
         * stellarator_configuration.stella_config_max_portsize_width
-        * st.f_r
-        / st.f_n
+        * stellarator_variables.f_r
+        / stellarator_variables.f_n
     )  # This is not accurate yet. Needs more insight#
 
     #  Maximal poloidal port size (vertical ports) (m)
@@ -510,8 +511,8 @@ def calculate_horizontal_ports():
     stellarator_variables.hporttmax = (
         0.8e0
         * stellarator_configuration.stella_config_max_portsize_width
-        * st.f_r
-        / st.f_n
+        * stellarator_variables.f_r
+        / stellarator_variables.f_n
     )  # Factor 0.8 to take the variation with height into account
 
     #  Maximal poloidal port size (horizontal ports) (m)
