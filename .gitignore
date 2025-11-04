@@ -62,6 +62,7 @@ stellarator_analysis/*
 !stellarator_test/autostart/*.py
 !stellarator_test/templates/squid.IN.DAT
 !stellarator_test/manual_start/squid_25_09_23/squid.IN.DAT
+!stellarator_test/manual_start/squid_25_09_23_benchmark/*
 */.ipynb_checkpoints/
 REBCO_JC.DAT
 *.whl
