@@ -3577,11 +3577,17 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     Arguments:
       prof --> axis object to add plot to
     """
+    nd_alphas = mfile_data.data["nd_plasma_alphas_vol_avg"].get_scan(scan)
+    nd_protons = mfile_data.data["nd_plasma_protons_vol_avg"].get_scan(scan)
+    nd_impurities = mfile_data.data["nd_plasma_impurities_vol_avg"].get_scan(scan)
+    nd_ions_total = mfile_data.data["nd_plasma_ions_total_vol_avg"].get_scan(scan)
+    nd_fuel_ions = mfile_data.data["nd_plasma_fuel_ions_vol_avg"].get_scan(scan)
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
+    prof.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
+    # build electron profile and species profiles (scale with electron profile shape)
     if i_plasma_pedestal == 1:
         rhocore = np.linspace(0, radius_plasma_pedestal_density_norm)
         necore = (
@@ -3589,30 +3595,89 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             + (ne0 - nd_plasma_pedestal_electron)
             * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
         )
-        nicore = necore * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
         neesep = nd_plasma_separatrix_electron + (
             nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
-        nisep = neesep * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
-        ni = np.append(nicore, nisep)
+
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
-        ni = (ne0 * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)) * (
-            1 - rho**2
-        ) ** alphan
-    ne = ne / 1e19
-    ni = ni / 1e19
-    prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
-    prof.plot(rho, ne, label="$n_{e}$", color="blue")
-    prof.legend()
+
+    # species profiles scaled by their average fraction relative to electrons
+
+    if nd_plasma_electrons_vol_avg != 0:
+        fracs = (
+            np.array([
+                nd_fuel_ions,
+                nd_alphas,
+                nd_protons,
+                nd_impurities,
+                nd_ions_total,
+                nd_plasma_electrons_vol_avg,
+            ])
+            / nd_plasma_electrons_vol_avg
+        )
+    else:
+        fracs = np.zeros(5)
+
+    # build species density profiles from electron profile and fractions
+    # fracs = [fuel, alpha, protons, impurities, ions_total]
+    # Create a density profile for each species by multiplying ne by each fraction in fracs
+    density_profiles = np.array([ne * frac for frac in fracs])
+
+    # convert to 1e19 m^-3 units for plotting (vectorised)
+    density_profiles_plotting = density_profiles / 1e19
+
+    prof.plot(
+        rho,
+        density_profiles_plotting[0],
+        label=r"$n_{\text{fuel}}$",
+        color="#2ca02c",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[1],
+        label=r"$n_{\alpha}$",
+        color="#d62728",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[2],
+        label=r"$n_{p}$",
+        color="#17becf",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[3],
+        label=r"$n_{Z}$",
+        color="#9467bd",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[4],
+        label=r"$n_{i,total}$",
+        color="#ff7f0e",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho, density_profiles_plotting[5], label=r"$n_{e}$", color="blue", linewidth=1.5
+    )
+
+    # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
+    handles, labels = prof.get_legend_handles_labels()
+    ncol = min(4, max(1, len(labels)))
+    prof.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=ncol)
 
     # Ranges
     # ---
@@ -3644,7 +3709,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             linewidth=0.4,
             alpha=0.4,
         )
-        prof.minorticks_on()
+    prof.minorticks_on()
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
@@ -3667,7 +3732,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
         0.0,
-        -0.16,
+        -0.25,
         textstr_density,
         transform=prof.transAxes,
         fontsize=9,
@@ -7235,7 +7300,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
-        ("beta_poloidal", r"$\beta_P$, total", ""),
+        ("beta_poloidal_vol_avg", r"$\beta_P$, total", ""),
         ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
@@ -12175,7 +12240,7 @@ def main_plot(
 
     # Plot current density profile
     ax12 = fig4.add_subplot(4, 3, 10)
-    ax12.set_position([0.075, 0.125, 0.25, 0.15])
+    ax12.set_position([0.075, 0.105, 0.25, 0.15])
     plot_jprofile(ax12)
 
     # Plot q profile
