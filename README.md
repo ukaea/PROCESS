@@ -17,6 +17,11 @@ PROCESS was originally a Fortran code, but is now a pure-Python command line pro
 ## Getting Started
 Please see the [installation guide](https://ukaea.github.io/PROCESS/installation/installation/) and the [usage guide](https://ukaea.github.io/PROCESS/usage/running-process/). Once installed, take a look at the [examples page](https://ukaea.github.io/PROCESS/usage/examples/) for examples of how PROCESS can be run, and its results visualised. 
 
+If you wish to run the examples before installing, you can click on the `binder` badge at the top of the README, or 
+can click [here](https://mybinder.org/v2/gh/ukaea/PROCESS/HEAD). Once loaded, you can double click the `examples` tab down the
+left hand side and select an example to run using jupyter. There is also a terminal option in Binder which would allow you to run
+PROCESS from your browser.
+
 ## Documentation
 To read about how the code works and the modules in it see the [documentation](https://ukaea.github.io/PROCESS/).
 
