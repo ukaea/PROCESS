@@ -30,11 +30,11 @@ setup_kwargs = {
     "install_requires": [
         "numpy>=1.23",
         "scipy>=1.10",
-        "cvxpy!=1.3.0,!=1.3.1",
+        "cvxpy~=1.7.3",
         "osqp>=1.0",
         "pandas>=2.0",
         "numba>=0.57",
-        "PyVMCON>=2.3.1,<3.0.0",
+        "PyVMCON>=2.4.0,<2.5.0",
         "CoolProp>=6.4",
         "matplotlib>=2.1.1",
         "seaborn>=0.12.2",
