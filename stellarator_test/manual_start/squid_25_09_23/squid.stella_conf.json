@@ -64,7 +64,7 @@
     "rminor_ref": 1.78955162,
     "vol_plasma": 1256.19973155,
     "plasma_surface": 1972.42440867,
-    "epseff": -999999,
+    "epseff": 0.015,
     "number_nu_star": 20,
     "D11_star_mono_input": [
         1.0,

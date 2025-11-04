@@ -9,7 +9,8 @@ from process.data_structure import (
 )
 
 import numpy as np
-
+import logging
+logger = logging.getLogger(__name__)
 
 class Neoclassics:
     @property
@@ -257,6 +258,10 @@ class Neoclassics:
 
 
     def calc_neoclassics(self):
+        if stellarator_configuration.stella_config_epseff < 0:
+            logger.error(
+            f"epseff value lower than 0:  {stellarator_configuration.stella_config_epseff}"
+            )
         self.init_neoclassics(
             0.6,
             stellarator_configuration.stella_config_epseff,
