@@ -3620,6 +3620,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
                 nd_protons,
                 nd_impurities,
                 nd_ions_total,
+                nd_plasma_electrons_vol_avg,
             ])
             / nd_plasma_electrons_vol_avg
         )
@@ -3628,28 +3629,50 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
 
     # build species density profiles from electron profile and fractions
     # fracs = [fuel, alpha, protons, impurities, ions_total]
-    n_fuel = ne * fracs[0]
-    n_alpha = ne * fracs[1]
-    n_proton = ne * fracs[2]
-    n_imp = ne * fracs[3]
-    n_ions = ne * fracs[4]
+    # Create a density profile for each species by multiplying ne by each fraction in fracs
+    density_profiles = np.array([ne * frac for frac in fracs])
 
     # convert to 1e19 m^-3 units for plotting (vectorised)
-    ne_plot = ne / 1e19
-    n_fuel_plot = n_fuel / 1e19
-    n_alpha_plot = n_alpha / 1e19
-    n_proton_plot = n_proton / 1e19
-    n_imp_plot = n_imp / 1e19
-    n_ions_plot = n_ions / 1e19
+    density_profiles_plotting = density_profiles / 1e19
 
     prof.plot(
-        rho, n_fuel_plot, label=r"$n_{\text{fuel}}$", color="#2ca02c", linewidth=1.5
+        rho,
+        density_profiles_plotting[0],
+        label=r"$n_{\text{fuel}}$",
+        color="#2ca02c",
+        linewidth=1.5,
     )
-    prof.plot(rho, ne_plot, label=r"$n_{e}$", color="blue", linewidth=1.5)
-    prof.plot(rho, n_alpha_plot, label=r"$n_{\alpha}$", color="#d62728", linewidth=1.5)
-    prof.plot(rho, n_proton_plot, label=r"$n_{p}$", color="#17becf", linewidth=1.5)
-    prof.plot(rho, n_imp_plot, label=r"$n_{Z}$", color="#9467bd", linewidth=1.5)
-    prof.plot(rho, n_ions_plot, label=r"$n_{i,total}$", color="#ff7f0e", linewidth=1.5)
+    prof.plot(
+        rho,
+        density_profiles_plotting[1],
+        label=r"$n_{\alpha}$",
+        color="#d62728",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[2],
+        label=r"$n_{p}$",
+        color="#17becf",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[3],
+        label=r"$n_{Z}$",
+        color="#9467bd",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[4],
+        label=r"$n_{i,total}$",
+        color="#ff7f0e",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho, density_profiles_plotting[5], label=r"$n_{e}$", color="blue", linewidth=1.5
+    )
 
     # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
     handles, labels = prof.get_legend_handles_labels()
