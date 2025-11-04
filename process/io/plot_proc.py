@@ -9131,7 +9131,9 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):,.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
-        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n"
+        f"$F_{{\\text{{z,self,peak}}}}:$ {mfile_data.data['forc_z_cs_self_peak_midplane'].get_scan(scan) / 1e6:.3f}$ \\ MN$\n"
+        f"$\\sigma_{{\\text{{z,self,peak}}}}:$ {mfile_data.data['stress_z_cs_self_peak_midplane'].get_scan(scan) / 1e6:.3f}$ \\ MPa$ "
     )
 
     axis.text(
