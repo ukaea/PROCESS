@@ -1,5 +1,5 @@
 from process.data_structure import times_variables
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     current_drive_variables,
     numerics,

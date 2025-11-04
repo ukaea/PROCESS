@@ -5,6 +5,8 @@ f_r: float = None
 
 f_aspect: float = None
 
+f_st_coil_aspect:float = None
+
 f_b: float = None
 
 f_i: float = None
@@ -106,6 +108,7 @@ def init_stellarator_variables():
     global f_asym
     global f_rad
     global f_w
+    global f_st_coil_aspect
     global fdivwet
     global flpitch
     global hportamax
@@ -140,7 +143,7 @@ def init_stellarator_variables():
     hportpmax = 0.0
     hporttmax = 0.0
     iotabar = 1.0
-    isthtr = 3
+    isthtr = 1
     m_res = 5
     n_res = 5
     shear = 0.5

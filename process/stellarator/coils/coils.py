@@ -4,8 +4,7 @@ import logging
 import process.superconductors as superconductors
 from process.exceptions import ProcessValueError
 
-from process.fortran import (
-    error_handling,
+from process.data_structure import (
     stellarator_configuration,
 )
 logger = logging.getLogger(__name__)

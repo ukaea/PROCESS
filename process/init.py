@@ -59,11 +59,7 @@ from process.data_structure.water_usage_variables import init_watuse_variables
 from process.exceptions import ProcessValidationError
 from process.input import parse_input_file
 from process.log import logging_model_handler
-from process.stellarator.initialization import (
-    stinit,
-    init_stellarator_module, 
-    init_stellarator_variables
-)
+from process.stellarator.initialization import st_init
 
 
 def init_process():

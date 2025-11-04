@@ -149,7 +149,7 @@ def st_coil(stellarator, output: bool):
             r_coil_minor=r_coil_minor,
             sig_tf_wp=tfcoil_variables.sig_tf_wp,
             dx_tf_turn_general=tfcoil_variables.dx_tf_turn_general,
-            tdmptf=tfcoil_variables.t_tf_superconductor_quench,
+            t_tf_superconductor_quench=tfcoil_variables.t_tf_superconductor_quench,
             toroidalgap=tfcoil_variables.toroidalgap,
             allowed_quench_voltage=tfcoil_variables.v_tf_coil_dump_quench_max_kv,
             quench_voltage=tfcoil_variables.v_tf_coil_dump_quench_kv,

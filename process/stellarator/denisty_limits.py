@@ -7,7 +7,7 @@ from process import process_output as po
 from process.exceptions import ProcessValueError
 
 
-from process.fortran import (
+from process.data_structure import (
     physics_variables,
     stellarator_variables,
 )

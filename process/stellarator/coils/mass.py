@@ -1,7 +1,7 @@
 """Module for coil mass calculations in stellarators."""
 
-from process.fortran import (
-    constants,
+from process import constants
+from process.data_structure import (
     fwbs_variables,
     tfcoil_variables
 )
@@ -90,7 +90,7 @@ def conduit_steel():
         * tfcoil_variables.a_tf_turn_steel
         * fwbs_variables.den_steel
     )
-    # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_turn_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
+    # if (i_tf_sc_mat==6)   tfcoil_variables.m_tf_wp_steel_conduit = fcondsteel * a_tf_wp_no_insulation *tfcoil_variables.len_tf_coil* fwbs_variables.denstl
 
 def conduit_insulation():
     """Conduit insulation mass [kg]

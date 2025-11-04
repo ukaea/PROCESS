@@ -223,7 +223,7 @@ class Stellarator:
             * stellarator_configuration.stella_config_symmetry
         )  # Coil number factor
         stellarator_variables.f_b = (
-            physics_variables.bt / stellarator_configuration.stella_config_bt_ref
+            physics_variables.b_plasma_toroidal_on_axis / stellarator_configuration.stella_config_bt_ref
         )  # B-field scaling factor
 
         # Coil aspect ratio factor to the reference calculation (we use it to scale the coil minor radius)
@@ -334,7 +334,7 @@ class Stellarator:
         # This 0.18 m is an effective thickness which is scaled with empirial 1.5 law. 5.6 T is reference point of Helias
         # The thickness 0.18m was obtained as a measured value from Schauer, F. and Bykov, V. design of Helias 5-B. (Nucl Fus. 2013)
         structure_variables.aintmass = (
-            0.18e0 * (physics_variables.bt/5.6)**2 * intercoil_surface * fwbs_variables.denstl
+            0.18e0 * (physics_variables.b_plasma_toroidal_on_axis/5.6)**2 * intercoil_surface * fwbs_variables.den_steel
         )
 
         structure_variables.clgsmass = (
@@ -722,7 +722,7 @@ class Stellarator:
                 #  Radiation power incident on HCD apparatus (MW)
 
                 fwbs_variables.p_fw_hcd_rad_total_mw = (
-                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_hcd
+                    physics_variables.p_plasma_rad_mw * fwbs_variables.f_a_fw_outboard_hcd
                 )
 
                 #  Radiation power lost through holes (eventually hits shield) (MW)

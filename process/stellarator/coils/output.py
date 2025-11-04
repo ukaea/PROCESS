@@ -1,6 +1,6 @@
 from process import process_output as po
 
-from process.fortran import (
+from process.data_structure import (
     build_variables,
     stellarator_variables,
     tfcoil_variables,
@@ -199,8 +199,8 @@ def write(
         po.ovarre(
             stellarator.outfile,
             "Steel conduit mass per coil (kg)",
-            "(m_tf_turn_steel_conduit)",
-            tfcoil_variables.m_tf_turn_steel_conduit,
+            "(m_tf_wp_steel_conduit)",
+            tfcoil_variables.m_tf_wp_steel_conduit,
         )
         po.ovarre(
             stellarator.outfile,

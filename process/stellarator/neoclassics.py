@@ -1,8 +1,7 @@
 from process.data_structure import neoclassics_variables
 from process.stellarator.stellarator import KEV
-
-from process.fortran import (
-    constants,
+from process import constants
+from process.data_structure import (
     impurity_radiation_module,
     physics_variables,
     stellarator_configuration,

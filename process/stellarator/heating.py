@@ -1,7 +1,7 @@
 from process import process_output as po
 from process.exceptions import ProcessValueError
 
-from process.fortran import (
+from process.data_structure import (
     current_drive_variables,
     physics_variables,
     stellarator_variables,
@@ -81,6 +81,8 @@ def st_heat(stellarator, output: bool):
             + current_drive_variables.p_hcd_injected_electrons_mw
         ) / current_drive_variables.eta_hcd_primary_injector_wall_plug
     else:
+        print('isthtr', stellarator_variables.isthtr, '\n')
+        print('isthtr type', type(stellarator_variables.isthtr), '\n')
         raise ProcessValueError(
             "Illegal value for isthtr", isthtr=stellarator_variables.isthtr
         )

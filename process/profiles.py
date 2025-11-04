@@ -308,7 +308,7 @@ class TeProfile(Profile):
             logger.info(
                 f"TPROFILE: temperature pedestal is higher than core temperature. {temp_plasma_pedestal_kev = }, {t0 = }"
             )
-        else:
+
         rho_index = rho <= radius_plasma_pedestal_temp_norm
         self.profile_y[rho_index] = (
             temp_plasma_pedestal_kev
