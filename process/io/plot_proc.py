@@ -16,6 +16,7 @@ Revised by Michael Kovari, 7/1/2016
 import argparse
 import json
 import os
+import textwrap
 from argparse import RawTextHelpFormatter
 from importlib import resources
 
@@ -60,6 +61,7 @@ from process.geometry.vacuum_vessel_geometry import (
     vacuum_vessel_geometry_single_null,
 )
 from process.impurity_radiation import read_impurity_file
+from process.io.mfile import MFileErrorClass
 from process.objectives import OBJECTIVE_NAMES
 from process.superconducting_tf_coil import SUPERCONDUCTING_TF_TYPES
 
@@ -3577,11 +3579,17 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     Arguments:
       prof --> axis object to add plot to
     """
+    nd_alphas = mfile_data.data["nd_plasma_alphas_vol_avg"].get_scan(scan)
+    nd_protons = mfile_data.data["nd_plasma_protons_vol_avg"].get_scan(scan)
+    nd_impurities = mfile_data.data["nd_plasma_impurities_vol_avg"].get_scan(scan)
+    nd_ions_total = mfile_data.data["nd_plasma_ions_total_vol_avg"].get_scan(scan)
+    nd_fuel_ions = mfile_data.data["nd_plasma_fuel_ions_vol_avg"].get_scan(scan)
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
-    prof.set_ylabel(r"$n $ $[10^{19} \mathrm{m}^{-3}]$")
+    prof.set_ylabel(r"$n \ [10^{19}\ \mathrm{m}^{-3}]$")
     prof.set_title("Density profile")
 
+    # build electron profile and species profiles (scale with electron profile shape)
     if i_plasma_pedestal == 1:
         rhocore = np.linspace(0, radius_plasma_pedestal_density_norm)
         necore = (
@@ -3589,30 +3597,89 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             + (ne0 - nd_plasma_pedestal_electron)
             * (1 - rhocore**2 / radius_plasma_pedestal_density_norm**2) ** alphan
         )
-        nicore = necore * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rhosep = np.linspace(radius_plasma_pedestal_density_norm, 1)
         neesep = nd_plasma_separatrix_electron + (
             nd_plasma_pedestal_electron - nd_plasma_separatrix_electron
         ) * (1 - rhosep) / (1 - min(0.9999, radius_plasma_pedestal_density_norm))
-        nisep = neesep * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)
 
         rho = np.append(rhocore, rhosep)
         ne = np.append(necore, neesep)
-        ni = np.append(nicore, nisep)
+
     else:
         rho1 = np.linspace(0, 0.95)
         rho2 = np.linspace(0.95, 1)
         rho = np.append(rho1, rho2)
         ne = ne0 * (1 - rho**2) ** alphan
-        ni = (ne0 * (nd_plasma_fuel_ions_vol_avg / nd_plasma_electrons_vol_avg)) * (
-            1 - rho**2
-        ) ** alphan
-    ne = ne / 1e19
-    ni = ni / 1e19
-    prof.plot(rho, ni, label=r"$n_{\text{i,fuel}}$", color="red")
-    prof.plot(rho, ne, label="$n_{e}$", color="blue")
-    prof.legend()
+
+    # species profiles scaled by their average fraction relative to electrons
+
+    if nd_plasma_electrons_vol_avg != 0:
+        fracs = (
+            np.array([
+                nd_fuel_ions,
+                nd_alphas,
+                nd_protons,
+                nd_impurities,
+                nd_ions_total,
+                nd_plasma_electrons_vol_avg,
+            ])
+            / nd_plasma_electrons_vol_avg
+        )
+    else:
+        fracs = np.zeros(5)
+
+    # build species density profiles from electron profile and fractions
+    # fracs = [fuel, alpha, protons, impurities, ions_total]
+    # Create a density profile for each species by multiplying ne by each fraction in fracs
+    density_profiles = np.array([ne * frac for frac in fracs])
+
+    # convert to 1e19 m^-3 units for plotting (vectorised)
+    density_profiles_plotting = density_profiles / 1e19
+
+    prof.plot(
+        rho,
+        density_profiles_plotting[0],
+        label=r"$n_{\text{fuel}}$",
+        color="#2ca02c",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[1],
+        label=r"$n_{\alpha}$",
+        color="#d62728",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[2],
+        label=r"$n_{p}$",
+        color="#17becf",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[3],
+        label=r"$n_{Z}$",
+        color="#9467bd",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho,
+        density_profiles_plotting[4],
+        label=r"$n_{i,total}$",
+        color="#ff7f0e",
+        linewidth=1.5,
+    )
+    prof.plot(
+        rho, density_profiles_plotting[5], label=r"$n_{e}$", color="blue", linewidth=1.5
+    )
+
+    # make legend use multiple columns (up to 4) and place it to the right to avoid overlapping the plots
+    handles, labels = prof.get_legend_handles_labels()
+    ncol = min(4, max(1, len(labels)))
+    prof.legend(loc="upper center", bbox_to_anchor=(0.5, -0.1), ncol=ncol)
 
     # Ranges
     # ---
@@ -3644,7 +3711,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
             linewidth=0.4,
             alpha=0.4,
         )
-        prof.minorticks_on()
+    prof.minorticks_on()
 
     # Add text box with density profile parameters
     textstr_density = "\n".join((
@@ -3667,7 +3734,7 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     props_density = {"boxstyle": "round", "facecolor": "wheat", "alpha": 0.5}
     prof.text(
         0.0,
-        -0.16,
+        -0.25,
         textstr_density,
         transform=prof.transAxes,
         fontsize=9,
@@ -7047,7 +7114,9 @@ def plot_header(axis, mfile_data, scan):
         (f"!{mfile_data.data['date'].get_scan(-1)}", "Date:", ""),
         (f"!{mfile_data.data['time'].get_scan(-1)}", "Time:", ""),
         (f"!{mfile_data.data['username'].get_scan(-1)}", "User:", ""),
-        (
+        ("!Evaluation", "Run type", "")
+        if isinstance(mfile_data.data["minmax"], MFileErrorClass)
+        else (
             f"!{OBJECTIVE_NAMES[abs(int(mfile_data.data['minmax'].get_scan(-1)))]}",
             "Optimising:",
             "",
@@ -7235,7 +7304,7 @@ def plot_physics_info(axis, mfile_data, scan):
         ("beta_norm_thermal", r"$\beta_N$, thermal", "% m T MA$^{-1}$"),
         ("beta_norm_toroidal", r"$\beta_N$, toroidal", "% m T MA$^{-1}$"),
         ("beta_thermal_poloidal_vol_avg", r"$\beta_P$, thermal", ""),
-        ("beta_poloidal", r"$\beta_P$, total", ""),
+        ("beta_poloidal_vol_avg", r"$\beta_P$, total", ""),
         ("temp_plasma_electron_vol_avg_kev", r"$\langle T_e \rangle$", "keV"),
         ("nd_plasma_electrons_vol_avg", r"$\langle n_e \rangle$", "m$^{-3}$"),
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
@@ -9062,7 +9131,9 @@ def plot_cs_coil_structure(axis, fig, mfile_data, scan, colour_scheme=1):
         f"CS poloidal area: {mfile_data.data['a_cs_poloidal'].get_scan(scan):.4f} m$^2$\n"
         f"$N_{{\\text{{turns}}}}:$ {mfile_data.data['n_pf_coil_turns[n_cs_pf_coils-1]'].get_scan(scan):,.2f}\n"
         f"$I_{{\\text{{peak}}}}:$ {mfile_data.data['c_pf_cs_coils_peak_ma[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ MA$\n"
-        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n\n"
+        f"$B_{{\\text{{peak}}}}:$ {mfile_data.data['b_pf_coil_peak[n_cs_pf_coils-1]'].get_scan(scan):.3f}$ \\ T$\n"
+        f"$F_{{\\text{{z,self,peak}}}}:$ {mfile_data.data['forc_z_cs_self_peak_midplane'].get_scan(scan) / 1e6:.3f}$ \\ MN$\n"
+        f"$\\sigma_{{\\text{{z,self,peak}}}}:$ {mfile_data.data['stress_z_cs_self_peak_midplane'].get_scan(scan) / 1e6:.3f}$ \\ MPa$ "
     )
 
     axis.text(
@@ -10773,7 +10844,7 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     branch_name = mfile_data.data["branch_name"].get_scan(-1)
     fileprefix = mfile_data.data["fileprefix"].get_scan(-1)
     optmisation_switch = mfile_data.data["ioptimz"].get_scan(-1)
-    minmax_switch = mfile_data.data["minmax"].get_scan(-1)
+    minmax_switch = mfile_data.data["minmax"].get_scan(-1) or "N/A"
     ifail = mfile_data.data["ifail"].get_scan(-1)
     nvars = mfile_data.data["nvar"].get_scan(-1)
     # Objective_function_name
@@ -10781,14 +10852,20 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     # Square_root_of_the_sum_of_squares_of_the_constraint_residuals
     sqsumsq = mfile_data.data["sqsumsq"].get_scan(-1)
     # VMCON_convergence_parameter
-    convergence_parameter = mfile_data.data["convergence_parameter"].get_scan(-1)
+    convergence_parameter = (
+        mfile_data.data["convergence_parameter"].get_scan(-1) or "N/A"
+    )
     # Number_of_optimising_solver_iterations
-    nviter = mfile_data.data["nviter"].get_scan(-1)
+    nviter = int(mfile_data.data["nviter"].get_scan(-1)) or "N/A"
 
     # Objective name with minimising/maximising
-    if minmax_switch >= 0:
+    if isinstance(minmax_switch, str):
+        objective_text = ""
+    elif minmax_switch >= 0:
+        minmax_switch = int(minmax_switch)
         objective_text = f"• Minimising {objf_name}"
     else:
+        minmax_switch = int(minmax_switch)
         objective_text = f"• Maximising {objf_name}"
 
     axis.text(
@@ -10827,15 +10904,10 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     # Box 2: File/Branch Info
     # Wrap the whole "Branch Name: ..." line if too long
     max_line_len = 60
-    branch_line = f"• Branch Name: {branch_name}"
-    if isinstance(branch_line, str) and len(branch_line) > max_line_len:
-        # Insert a newline every max_line_len characters
-        branch_line = "\n".join([
-            branch_line[i : i + max_line_len]
-            for i in range(0, len(branch_line), max_line_len)
-        ])
+    branch_line = textwrap.fill(f"• Branch Name: {branch_name}", max_line_len)
+    fileprefix = textwrap.fill(f"File Prefix: {fileprefix}", max_line_len)
 
-    file_info = f"• Tag Number: {tagno}\n{branch_line}\n• File Prefix: {fileprefix}"
+    file_info = f"• Tag Number: {tagno}\n{branch_line}\n• {fileprefix}"
     axis.text(
         0.1,
         0.57,
@@ -10855,13 +10927,13 @@ def plot_cover_page(axis, mfile_data, scan, fig, colour_scheme):
     # Box 3: Run Settings
     settings_info = (
         f"• Optimisation Switch: {int(optmisation_switch)}\n"
-        f"• Figure of Merit Switch (minmax): {int(minmax_switch)}\n"
+        f"• Figure of Merit Switch (minmax): {minmax_switch}\n"
         f"• Fail Status (ifail): {int(ifail)}\n"
         f"• Number of Iteration Variables: {int(nvars)}\n"
         f"{objective_text}\n"
         f"• Constraint Residuals (sqrt sum sq): {sqsumsq}\n"
         f"• Convergence Parameter: {convergence_parameter}\n"
-        f"• Solver Iterations: {int(nviter)}"
+        f"• Solver Iterations: {nviter}"
     )
     axis.text(
         0.1,
@@ -12175,7 +12247,7 @@ def main_plot(
 
     # Plot current density profile
     ax12 = fig4.add_subplot(4, 3, 10)
-    ax12.set_position([0.075, 0.125, 0.25, 0.15])
+    ax12.set_position([0.075, 0.105, 0.25, 0.15])
     plot_jprofile(ax12)
 
     # Plot q profile
