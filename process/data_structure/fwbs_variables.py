@@ -369,6 +369,12 @@ i_fw_coolant_type: str = None
 - 'water'
 """
 
+i_fw_inboard_coolant_type: str = None
+"""switch for inboard first wall coolant (can be different from blanket coolant):
+- 'helium'
+- 'water'
+"""
+
 
 dr_fw_wall: float = None
 """wall thickness of first wall coolant channels [m]"""
@@ -978,6 +984,7 @@ def init_fwbs_variables():
     global secondary_cycle_liq
     global i_blkt_coolant_type
     global i_fw_coolant_type
+    global i_fw_inboard_coolant_type
     global dr_fw_wall
     global radius_fw_channel
     global dx_fw_module
@@ -1170,6 +1177,7 @@ def init_fwbs_variables():
     secondary_cycle_liq = 4
     i_blkt_coolant_type = 1
     i_fw_coolant_type = "helium"
+    i_fw_inboard_coolant_type = "helium"
     dr_fw_wall = 0.003
     radius_fw_channel = 0.006
     dx_fw_module = 0.02
