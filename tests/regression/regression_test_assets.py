@@ -58,7 +58,7 @@ class RegressionTestAssetCollector:
                 with open(reference_mfile_location, "w") as f:
                     f.write(requests.get(mf.download_link).content.decode())
 
-                logger.info(f"Reference MFile found for commit {mf.hash}")
+                print(f"Reference MFile found for commit {mf.hash}")
                 return reference_mfile_location
 
         return None
