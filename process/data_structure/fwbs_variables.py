@@ -434,6 +434,11 @@ len_fw_channel: float = None
 (`iteration variable 114`, useful for `constraint equation 39`)
 """
 
+len_fw_inboard_channel: float = None
+"""Length of a single inboard first wall channel (all in parallel) [m]
+(`iteration variable 115`, useful for `constraint equation 40`)
+"""
+
 
 f_fw_peak: float = None
 """peaking factor for first wall heat loads. (Applied separately to inboard and outboard loads.
@@ -1023,6 +1028,7 @@ def init_fwbs_variables():
     global roughness_fw_channel
     global roughness_fw_inboard_channel
     global len_fw_channel
+    global len_fw_inboard_channel
     global f_fw_peak
     global pres_blkt_coolant
     global temp_blkt_coolant_in
@@ -1224,6 +1230,7 @@ def init_fwbs_variables():
     roughness_fw_channel = 1.0e-6
     roughness_fw_inboard_channel = 1.0e-6
     len_fw_channel = 4.0
+    len_fw_inboard_channel = 4.0
     f_fw_peak = 1.0
     pres_blkt_coolant = 15.50e6
     temp_blkt_coolant_in = 573.0
