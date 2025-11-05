@@ -2152,7 +2152,7 @@ def plot_main_power_flow(
         (
             f"Plant base load:\n{mfile_data.data['p_plant_electric_base_total_mw'].get_scan(scan):.3f} MWe\n"
             f"Minimum base load:\n{mfile_data.data['p_plant_electric_base'].get_scan(scan) * 1.0e-6:.3f} MWe\n"
-            f"Plant floor power density:\n{mfile_data.data['pflux_plant_floor_electric'].get_scan(scan) * 1.0e-3:.3f} kW/m^2"
+            f"Plant floor power density:\n{mfile_data.data['pflux_plant_floor_electric'].get_scan(scan) * 1.0e-3:.3f} kW$\\text{{m}}^{{-2}}$"
         ),
         fontsize=9,
         verticalalignment="bottom",
@@ -2503,7 +2503,7 @@ def plot_main_plasma_information(
         f"$\\mathbf{{Shaping:}}$\n \n"
         f"$\\kappa_{{95}}$: {mfile_data.data['kappa95'].get_scan(scan):.2f} | $\\delta_{{95}}$: {mfile_data.data['triang95'].get_scan(scan):.2f} | $\\zeta$: {mfile_data.data['plasma_square'].get_scan(scan):.2f}\n"
         f"A: {mfile_data.data['aspect'].get_scan(scan):.2f}\n"
-        f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):.2f}$ \\ \\text{{m}}^3$\n"
+        f"$ V_{{\\text{{p}}}}:$ {mfile_data.data['vol_plasma'].get_scan(scan):,.2f}$ \\ \\text{{m}}^3$\n"
         f"$ A_{{\\text{{p,surface}}}}:$ {mfile_data.data['a_plasma_surface'].get_scan(scan):,.2f}$ \\ \\text{{m}}^2$\n"
         f"$ A_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['a_plasma_poloidal'].get_scan(scan):,.2f}$ \\ \\text{{m}}^2$\n"
         f"$ L_{{\\text{{p_poloidal}}}}:$ {mfile_data.data['len_plasma_poloidal'].get_scan(scan):,.2f}$ \\ \\text{{m}}$"
@@ -2588,13 +2588,13 @@ def plot_main_plasma_information(
         f"Current driving power {mfile_data.data['p_hcd_primary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_primary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
         f"$\\gamma_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_hcd_primary'].get_scan(scan):.4f} A/W\n"
-        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_norm_hcd_primary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
+        f"$\\eta_{{\\text{{CD,prim}}}}$: {mfile_data.data['eta_cd_norm_hcd_primary'].get_scan(scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by primary: {mfile_data.data['c_hcd_primary_driven'].get_scan(scan) / 1e6:.3f} MA\n\n"
         f"$\\mathbf{{Secondary \\ system: {secondary_heating}}}$ \n"
         f"Current driving power {mfile_data.data['p_hcd_secondary_injected_mw'].get_scan(scan):.4f} MW\n"
         f"Extra heat power: {mfile_data.data['p_hcd_secondary_extra_heat_mw'].get_scan(scan):.4f} MW\n"
         f"$\\gamma_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_hcd_secondary'].get_scan(scan):.4f} A/W\n"
-        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_norm_hcd_secondary'].get_scan(scan):.2f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
+        f"$\\eta_{{\\text{{CD,sec}}}}$: {mfile_data.data['eta_cd_norm_hcd_secondary'].get_scan(scan):.4f} $\\times 10^{{20}}  \\mathrm{{A}} / \\mathrm{{Wm}}^2$\n"
         f"Current driven by secondary: {mfile_data.data['c_hcd_secondary_driven'].get_scan(scan) / 1e6:.3f} MA\n"
     )
 
@@ -12005,7 +12005,7 @@ def plot_plasma_outboard_toroidal_ripple_map(
     # Determine a sensible integer range of TF coils to scan around nominal
     n_nom = int(n_tf_coils)
     span = max(2, int(min(12, n_nom // 2)))  # choose a span based on nominal
-    n_min = max(12, n_nom - span)
+    n_min = max(10, n_nom - span)
     n_max = n_nom + span
     n_vals = np.arange(n_min, n_max + 1, dtype=int)
 
