@@ -634,3 +634,49 @@ class Fw:
             fwbs_variables.temp_fw_peak,
             "OP ",
         )
+
+
+class InboardFW(Fw):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def run(self):
+        (
+            blanket_library.n_fw_inboard_channels,
+            blanket_library.n_fw_outboard_channels,
+        ) = self.calculate_total_fw_channels(
+            build_variables.a_fw_inboard,
+            build_variables.a_fw_outboard,
+            fwbs_variables.len_fw_channel,
+            fwbs_variables.dx_fw_module,
+        )
+
+        self.set_fw_geometry()
+
+        (
+            fwbs_variables.radius_fw_channel_90_bend,
+            fwbs_variables.radius_fw_channel_180_bend,
+        ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
+
+
+class OutboardFW(Fw):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def run(self):
+        (
+            blanket_library.n_fw_inboard_channels,
+            blanket_library.n_fw_outboard_channels,
+        ) = self.calculate_total_fw_channels(
+            build_variables.a_fw_inboard,
+            build_variables.a_fw_outboard,
+            fwbs_variables.len_fw_channel,
+            fwbs_variables.dx_fw_module,
+        )
+
+        self.set_fw_geometry()
+
+        (
+            fwbs_variables.radius_fw_channel_90_bend,
+            fwbs_variables.radius_fw_channel_180_bend,
+        ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
