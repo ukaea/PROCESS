@@ -386,6 +386,9 @@ dr_fw_inboard_wall: float = None
 radius_fw_channel: float = None
 """radius of first wall cooling channels [m]"""
 
+radius_fw_inboard_channel: float = None
+"""radius of inboard first wall cooling channels [m]"""
+
 
 dx_fw_module: float = None
 """Width of a FW module containing a cooling channel [m]"""
@@ -991,6 +994,7 @@ def init_fwbs_variables():
     global dr_fw_wall
     global dr_fw_inboard_wall
     global radius_fw_channel
+    global radius_fw_inboard_channel
     global dx_fw_module
     global temp_fw_coolant_in
     global temp_fw_coolant_out
@@ -1185,6 +1189,7 @@ def init_fwbs_variables():
     dr_fw_wall = 0.003
     dr_fw_inboard_wall = 0.003
     radius_fw_channel = 0.006
+    radius_fw_inboard_channel = 0.006
     dx_fw_module = 0.02
     temp_fw_coolant_in = 573.0
     temp_fw_coolant_out = 823.0
