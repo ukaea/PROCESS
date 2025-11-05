@@ -379,6 +379,9 @@ i_fw_inboard_coolant_type: str = None
 dr_fw_wall: float = None
 """wall thickness of first wall coolant channels [m]"""
 
+dr_fw_inboard_wall: float = None
+"""wall thickness of inboard first wall coolant channels [m]"""
+
 
 radius_fw_channel: float = None
 """radius of first wall cooling channels [m]"""
@@ -986,6 +989,7 @@ def init_fwbs_variables():
     global i_fw_coolant_type
     global i_fw_inboard_coolant_type
     global dr_fw_wall
+    global dr_fw_inboard_wall
     global radius_fw_channel
     global dx_fw_module
     global temp_fw_coolant_in
@@ -1179,6 +1183,7 @@ def init_fwbs_variables():
     i_fw_coolant_type = "helium"
     i_fw_inboard_coolant_type = "helium"
     dr_fw_wall = 0.003
+    dr_fw_inboard_wall = 0.003
     radius_fw_channel = 0.006
     dx_fw_module = 0.02
     temp_fw_coolant_in = 573.0
