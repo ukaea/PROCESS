@@ -34,11 +34,18 @@ class Fw:
             fwbs_variables.radius_fw_channel_180_bend,
         ) = self.blanket_library.calculate_pipe_bend_radius(i_ps=1)
 
-    def set_fw_geometry(self):
-        build_variables.dr_fw_inboard = (
-            2 * fwbs_variables.radius_fw_channel + 2 * fwbs_variables.dr_fw_wall
-        )
-        build_variables.dr_fw_outboard = build_variables.dr_fw_inboard
+    def set_fw_geometry(self, radius_fw_channel: float, dr_fw_wall: float) -> float:
+        """
+        Calculates and returns the total geometry width of the first wall (FW) channel.
+        :param radius_fw_channel: The radius of the FW channel.
+        :type radius_fw_channel: float
+        :param dr_fw_wall: The thickness of the FW wall.
+        :type dr_fw_wall: float
+        :returns: The total width of the FW geometry.
+        :rtype: float
+        """
+
+        return 2 * radius_fw_channel + 2 * dr_fw_wall
 
     def fw_temp(
         self,
@@ -651,7 +658,10 @@ class InboardFW(Fw):
             fwbs_variables.dx_fw_module,
         )
 
-        self.set_fw_geometry()
+        build_variables.dr_fw_inboard = self.set_fw_geometry(
+            radius_fw_channel=fwbs_variables.radius_fw_inboard_channel,
+            dr_fw_wall=fwbs_variables.dr_fw_inboard_wall,
+        )
 
         (
             fwbs_variables.radius_fw_channel_90_bend,
@@ -674,7 +684,10 @@ class OutboardFW(Fw):
             fwbs_variables.dx_fw_module,
         )
 
-        self.set_fw_geometry()
+        build_variables.dr_fw_outboard = self.set_fw_geometry(
+            radius_fw_channel=fwbs_variables.radius_fw_channel,
+            dr_fw_wall=fwbs_variables.dr_fw_wall,
+        )
 
         (
             fwbs_variables.radius_fw_channel_90_bend,

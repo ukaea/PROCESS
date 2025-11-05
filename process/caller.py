@@ -274,7 +274,8 @@ class Caller:
         self.models.pulse.run(output=False)
 
         # First wall model
-        self.models.fw.run()
+        self.models.inboard_fw.run()
+        self.models.outboard_fw.run()
 
         # Blanket model
         """Blanket switch values
