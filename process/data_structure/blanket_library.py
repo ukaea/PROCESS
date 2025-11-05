@@ -235,6 +235,9 @@ dz_vv_half: float = None
 dpres_blkt_pipe_90_deg_bend: float = None
 """Pressure drop across 90 degree bend in blanket coolant pipe (Pa)"""
 
+reynolds_blkt_outboard: float = None
+"""Reynolds number of outboard blanket coolant flow"""
+
 
 icomponent: int = None
 """Switch used to specify selected component: blanket=0, shield=1, vacuum vessel=2"""
@@ -292,6 +295,7 @@ def init_blanket_library():
     global vfblkti
     global vfblkto
     global dpres_blkt_pipe_90_deg_bend
+    global reynolds_blkt_outboard
 
     dz_blkt_half = 0.0
     dz_shld_half = 0.0
@@ -344,3 +348,4 @@ def init_blanket_library():
     vfblkti = 0.0
     vfblkto = 0.0
     dpres_blkt_pipe_90_deg_bend = 0.0
+    reynolds_blkt_outboard = 0.0

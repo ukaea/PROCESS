@@ -38,6 +38,14 @@ logger = logging.getLogger(__name__)
 # FCI         Flow Channel Insert
 
 
+COOLANT_PUMPING_CALCS = {
+    0: "User defined",
+    1: "Fraction of thermal power",
+    2: "Calculated",
+    3: "Calculated with pressure drop",
+}
+
+
 class BlanketLibrary:
     def __init__(self, fw) -> None:
         self.outfile = constants.NOUT

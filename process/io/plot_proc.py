@@ -3500,7 +3500,7 @@ def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
                 zorder=100,
             )
 
-    # Ranges
+            # Ranges
     # ---
     # DEMO : Fixed ranges for comparison
     if demo_ranges:
@@ -10301,8 +10301,8 @@ def plot_tf_stress(axis):
 def plot_blkt_pipe_bends(fig, m_file_data, scan):
     """Plot the blanket pipe bends on the given axis, with axes in mm."""
 
-    ax_90 = fig.add_subplot(331)
-    ax_180 = fig.add_subplot(334)
+    ax_90 = fig.add_axes([0.05, 0.75, 0.2, 0.2])  # [left, bottom, width, height]
+    ax_180 = fig.add_axes([0.3, 0.75, 0.2, 0.2])
 
     # Get pipe radius from m_file_data, fallback to 0.1 m
     r = m_file_data.data["radius_blkt_channel"].get_scan(scan)

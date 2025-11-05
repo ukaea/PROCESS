@@ -160,13 +160,6 @@ class CCFE_HCPB(BlanketLibrary):
             + fwbs_variables.p_tf_nuclear_heat_mw
         )
 
-        # Total nuclear power deposited in the
-        # if ( pnuc_tot_blk_sector < 1.0d0 .or. pnuc_tot_blk_sector /= pnuc_tot_blk_sector ) then
-        # #TODO This can flood the terminal, and should be logged once in Python
-        # write(*,*)'p_fw_nuclear_heat_total_mw =', p_fw_nuclear_heat_total_mw, ' and ', 'p_blkt_nuclear_heat_total_mw =', p_blkt_nuclear_heat_total_mw
-        # write(*,*)'p_shld_nuclear_heat_mw =', p_shld_nuclear_heat_mw, ' p_tf_nuclear_heat_mw =', p_tf_nuclear_heat_mw
-        # end if
-
         # Solid angle fraction taken by the breeding blankets/shields
         f_geom_blanket = (
             1
