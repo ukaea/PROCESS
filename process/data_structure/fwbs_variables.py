@@ -426,6 +426,8 @@ temp_fw_inboard_peak: float = None
 roughness_fw_channel: float = None
 """first wall channel roughness epsilon [m]"""
 
+roughness_fw_inboard_channel: float = None
+"""inboard first wall channel roughness epsilon [m]"""
 
 len_fw_channel: float = None
 """Length of a single first wall channel (all in parallel) [m]
@@ -1019,6 +1021,7 @@ def init_fwbs_variables():
     global temp_fw_peak
     global temp_fw_inboard_peak
     global roughness_fw_channel
+    global roughness_fw_inboard_channel
     global len_fw_channel
     global f_fw_peak
     global pres_blkt_coolant
@@ -1219,6 +1222,7 @@ def init_fwbs_variables():
     temp_fw_peak = 873.0
     temp_fw_inboard_peak = 873.0
     roughness_fw_channel = 1.0e-6
+    roughness_fw_inboard_channel = 1.0e-6
     len_fw_channel = 4.0
     f_fw_peak = 1.0
     pres_blkt_coolant = 15.50e6
