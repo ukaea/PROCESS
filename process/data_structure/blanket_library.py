@@ -232,6 +232,9 @@ dz_shld_half: float = None
 dz_vv_half: float = None
 """Vacuum vessel internal half-height (m)"""
 
+dpres_blkt_pipe_90_deg_bend: float = None
+"""Pressure drop across 90 degree bend in blanket coolant pipe (Pa)"""
+
 
 icomponent: int = None
 """Switch used to specify selected component: blanket=0, shield=1, vacuum vessel=2"""
@@ -288,6 +291,7 @@ def init_blanket_library():
     global htpmw_blkto
     global vfblkti
     global vfblkto
+    global dpres_blkt_pipe_90_deg_bend
 
     dz_blkt_half = 0.0
     dz_shld_half = 0.0
@@ -339,3 +343,4 @@ def init_blanket_library():
     htpmw_blkto = 0.0
     vfblkti = 0.0
     vfblkto = 0.0
+    dpres_blkt_pipe_90_deg_bend = 0.0
