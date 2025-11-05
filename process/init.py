@@ -1244,7 +1244,7 @@ def set_active_constraints():
             ] = True
             num_constraints += 1
 
-    if data_structure.numerics.neqns == 0:
+    if data_structure.numerics.neqns < 0:
         # The value of neqns has not been set in the input file.  Default = 0.
         data_structure.numerics.neqns = num_constraints - data_structure.numerics.nineqns
     else:

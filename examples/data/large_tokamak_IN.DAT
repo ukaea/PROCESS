@@ -17,14 +17,16 @@ minmax = 1
 * Error tolerance for VMCON
 epsvmc = 1e-7
 
+neqns = 3
+
 * Constraint Equations - Consistency Equations *
 ************************************************
 
 * Beta consistency *
 *------------------*
 icc = 1
-ixc = 5 * beta_total_vol_avg_total_vol_avg
-beta_total_vol_avg =0.03
+ixc = 5 * beta_total_vol_avg
+beta_total_vol_avg = 0.03
 
 * Global power balance *
 *----------------------*
@@ -37,162 +39,130 @@ icc = 11
 * Constraint Equations - Limit Equations *
 ******************************************
 
-* Density upper limit *
-*---------------------*
-icc = 5
-ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
-fdene = 1.2
-nd_plasma_electrons_vol_avg = 7.5E19
 
-* Neutron wall load upper limit *
-*-------------------------------*
-icc = 8
-ixc = 14 * fpflux_fw_neutron_max_mw
-fpflux_fw_neutron_max_mw = 1.0
-* wall load limit [MW/m2]
-pflux_fw_neutron_max_mw = 2.0
-
-* Fusion power upper limit *
-*--------------------------*
-
-icc = 9
-ixc = 26 * fp_fusion_total_max_mw
-* Maximum allowable value fusion power [MW]
-p_fusion_total_max_mw = 3000
-
-* Burn time lower limit *
-*-----------------------*
-icc = 13 
-ixc = 21 * fr_burn_min
-* minimum burn time [s]
-t_burn_min = 7200.0
-
-* L-H threshold scaling *
-*-----------------------*
-icc = 15
-ixc = 103 * fl_h_threshold
-boundu(103) = 10.0
 
 * Injection power upper limit *
 *-----------------------------*
 icc = 30
-ixc = 46 * fp_hcd_injected_total_mw
 * Maximum allowable value for injected power [MW]
 p_hcd_injected_max = 200.0
+
+
+
+
+
+* L-H threshold scaling *
+*-----------------------*
+icc = 15
 
 * Net electric power lower limit *
 *--------------------------------*
 icc = 16
-ixc = 25 * fp_plant_electric_net_required_mw
 * Minimum allowable value for net eletric power [MW]
 p_plant_electric_net_required_mw = 400.0
 
 * Beta upper limit *
 *------------------*
 icc = 24
-ixc = 36 * fbeta_max
-fbeta_max = 0.5
 
 * Max TF field *
 *--------------*
 icc = 25
-ixc = 35 * fb_tf_inboard_max
 * Maximum allowable value for toroidal magnetic field [T]
 b_tf_inboard_max = 14.0
 
 * Central solenoid EOF current density upper limit *
 *--------------------------------------------------*
 icc = 26
-ixc = 37 * j_cs_flat_top_end [A/m2]
-ixc = 38 * fjohc
-boundu(38) = 1.0
-j_cs_flat_top_end = 1.5E7
-fjohc = 0.6
 
 * Central solenoid BOP current density upper limit *
 *--------------------------------------------------*
 icc = 27
-ixc = 39 * fjohc0
-ixc = 41 * f_j_cs_start_pulse_end_flat_top
-boundu(39) = 1.0
-fjohc0 = 0.6
-f_j_cs_start_pulse_end_flat_top = 0.9
+f_j_cs_start_pulse_end_flat_top = 1.0
 
 * I_op/I_Crit TF coil limit *
 *---------------------------*
 icc = 33
-ixc = 50 * fiooic
-boundu(50) = 1.0
-fiooic = 0.65
 
 * Dump voltage upper limit *
 *--------------------------*
 icc = 34
-ixc = 51 * fvdump
-fvdump = 1.0
 v_tf_coil_dump_quench_max_kv = 10.0
 
 * J_winding pack protection *
 *---------------------------*
 icc = 35 
-ixc = 53 * fjprot
-fjprot = 1.0
 
 * TF temp marg lower limit *
 *--------------------------*
 icc = 36
-ixc = 54 * ftmargtf
 * Minimum allowable temperature margin [K]
 tmargmin = 1.5
 
 * CS coil temp margin lower limit *
 *---------------------------------*
 icc = 60
-ixc = 106 * ftmargoh
 temp_cs_superconductor_margin_min = 1.5
 
 * Lower limit on f_alpha_energy_confinement (ratio alpha particle/energy confinement times) *
 *-------------------------------------------------------------------------------*
 icc = 62 
-ixc = 110 * falpha_energy_confinement
 f_alpha_energy_confinement_min = 5.0
 
 * dump time constraint for VV stresses *
 *--------------------------------------*
 icc = 65
-ixc = 113 * fmaxvvstress
-fmaxvvstress = 1.0
 
 * CS stress limit *
 *-----------------*
 icc = 72
-ixc = 123 * foh_stress
-foh_stress = 1.0
 * allowable hoop stress in Central Solenoid structural material [Pa]
 alstroh = 7.5D8
 
-* nd_plasma_pedestal_electron<nd_plasma_electron_on_axis *
+* nd_plasma_pedestal_electron<ne0 *
 *------------------*
 
 icc = 81
-ixc = 154 *fne0
 
 * PsepBt/qAR limit *
 *------------------*
 
 icc = 68
-ixc = 117 *fpsepbqar
 psepbqarmax = 10.0
 
 * TF coil stress limits *
 *-----------------------*
 
 icc = 31 * TF coil case stress upper limit
-ixc = 48 * fstrcase
 icc = 32 * TF coil conduit stress upper limit
-ixc = 49 * fstrcond
 sig_tf_case_max  = 7.5E8 * Allowable maximum shear stress in TF coil case (Tresca criterion) (Pa)
 sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tresca criterion) (Pa)
+
+* Density upper limit *
+*---------------------*
+icc = 5
+ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
+nd_plasma_electrons_vol_avg = 7.5E19
+
+* Neutron wall load upper limit *
+*-------------------------------*
+icc = 8
+* wall load limit [MW/m2]
+pflux_fw_neutron_max_mw = 2.0
+
+* Fusion power upper limit *
+*--------------------------*
+icc = 9
+* Maximum allowable value fusion power [MW]
+p_fusion_total_max_mw = 3000
+
+* Burn time lower limit *
+*-----------------------*
+icc = 13 
+* minimum burn time [s]
+t_burn_min = 7200.0
+
+
 
 * Iteration Variables *
 ***********************
@@ -207,10 +177,10 @@ boundl(3) = 8.0
 boundu(3) = 9.0
 rmajor = 8.0
 
-* temp_plasma_electron_vol_avg_keV [keV]
+* temp_plasma_electron_vol_avg_kev [keV]
 ixc = 4
 boundu(4) = 100.0
-temp_plasma_electron_vol_avg_keV = 12.0
+temp_plasma_electron_vol_avg_kev = 12.0
 
 * h factor
 ixc = 10
@@ -303,7 +273,7 @@ dz_vv_upper = 0.3
 * Underside vacuum vessel radial thickness [m]
 dz_vv_lower = 0.3
 
-* Inboard radiation shield radial thickness [m]
+* Inboard vacuum vessel thickness [m]
 dr_shld_inboard = 0.3
 
 * Gap between vacuum vessel and blanket [m]
@@ -329,6 +299,9 @@ dr_shld_outboard = 0.800
 
 * Divertor structure vertical thickness [m]
 dz_divertor = 0.62 
+
+* Use Wade divertor heat load model
+i_div_heat_load = 2
 
 * Coolant void fraction in shield
 vfshld = 0.60 
@@ -373,14 +346,13 @@ i_bootstrap_current = 4
 i_beta_component = 1
 
 * Switch for plasma current scaling
-i_plasma_current    = 4
+i_plasma_current = 4
 
 * Switch for density limit to enforce
 i_density_limit = 7
 
 * Switch for fast alpha pressure calculation
 i_beta_fast_alpha = 1
-
 
 * Switch for pedestal profiles
 i_plasma_pedestal = 1
@@ -598,3 +570,6 @@ f_a_tf_turn_cable_space_extra_void = 0.3
 
 * Conductor type switch (ITER Nb3Sn)
 i_tf_sc_mat = 1
+
+* max fluence in the TF coil
+nflutfmax = 1e22

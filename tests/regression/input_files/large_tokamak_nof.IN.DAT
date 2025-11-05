@@ -54,7 +54,6 @@ p_hcd_injected_max = 200.0
 * L-H threshold scaling *
 *-----------------------*
 icc = 15
-boundu(103) = 10.0
 
 * Net electric power lower limit *
 *--------------------------------*
