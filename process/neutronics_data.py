@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from itertools import islice
+from itertools import islice, pairwise
 from pathlib import Path
 
 import numpy as np
@@ -237,6 +237,10 @@ def discretize_fission_xs(
     )
 
 
+def _get_alpha(atomic_mass: float):
+    return ((atomic_mass - 1) / (atomic_mass + 1)) ** 2
+
+
 def scattering_weight_matrix(
     group_structure: npt.NDArray[np.float64], atomic_mass: float
 ) -> npt.NDArray:
@@ -259,7 +263,133 @@ def scattering_weight_matrix(
         The lower triangle must be all zeros.
         np.sum(axis=1) == np.ones(len(group_structure)-1).
     """
-    return atomic_mass, group_structure
+
+    alpha = _get_alpha(atomic_mass)
+    n_groups = len(group_structure) - 1
+    matrix = np.zeros([n_groups, n_groups], dtype=float)
+    for i, in_group in enumerate(pairwise(group_structure)):
+        for g, out_group in enumerate(pairwise(group_structure)):
+            if i == g:
+                for energy_limits, case_descr in _split_into_energy_limits(
+                    alpha, in_group
+                ):
+                    matrix[i, g] += _convolved_scattering_fraction(
+                        energy_limits, alpha, in_group, out_group, case_descr
+                    )
+            elif i < g:
+                for energy_limits, case_descr in _split_into_energy_limits(
+                    alpha, in_group, out_group
+                ):
+                    matrix[i, g] += _convolved_scattering_fraction(
+                        energy_limits, alpha, in_group, out_group, case_descr
+                    )
+    return matrix
+
+
+def _split_into_energy_limits(
+    alpha,
+    in_group: tuple[float, float],
+    out_group: tuple[float, float] | None = None,
+):
+    """
+    Spit out a list of integration limits to be used by _convolved_scattering_fraction.
+
+    Parameters
+    ----------
+    alpha:
+        Parameters
+    in_group:
+        Descending energy bounds of the input group. Scattering neutrons are
+        generated from this energy group. (e_i1, e_i)
+    out_group:
+        Descending energy bounds of the output group. Scattering neutrons are
+        born into this energy group. (e_g1, e_g)
+
+    Returns
+    -------
+    :
+        list of 2-tuples, each two tuple contains the following items:
+    energy_limits:
+        A tuple of two floats in descending order, describing the integration
+        limits.
+    case_descr:
+        A string to describe which case it belongs to.
+    """
+    e_i1, e_i = in_group
+    max_min_scattered_energy = alpha * e_i1
+    min_min_scattered_energy = alpha * e_i
+
+    if not out_group:
+        # min_min_scattered_energy < e_i < max_min_scattered_energy < e_i1
+        if (alpha > 0) and (e_i < max_min_scattered_energy):
+            mid_e = min(e_i / alpha, e_i1)
+            return [
+                ((e_i1, mid_e), "self, complete"),
+                ((mid_e, e_i), "self, upper-half"),
+            ]
+        # min_min_scattered_energy < max_min_scattered_energy < e_i < e_i1
+        return [((e_i1, e_i), "self, upper-half")]
+    e_g1, e_g = out_group
+    if alpha == 0:
+        # min_min_scattered_energy < max_min_scattered_energy < e_g < e_g1
+        return [((e_i1, e_i), "down, middle")]
+
+    top_e = min(e_g1 / alpha, e_i1)
+    mid_e = min(e_g / alpha, e_i1)
+
+    # e_g < e_g1 < min_min_scattered_energy < max_min_scattered_energy
+    if e_g1 <= min_min_scattered_energy:
+        return []
+
+    # e_g < min_min_scattered_energy < e_g1 < max_min_scattered_energy
+    # e_g < min_min_scattered_energy < max_min_scattered_energy < e_g1
+    if e_g <= min_min_scattered_energy:
+        return [((top_e, e_i), "down, upper-half")]
+
+    # min_min_scattered_energy < e_g < e_g1 < max_min_scattered_energy
+    # min_min_scattered_energy < e_g < max_min_scattered_energy < e_g1
+    if e_g < max_min_scattered_energy:
+        return [
+            ((top_e, mid_e), "down, upper-half"),
+            ((mid_e, e_i), "down, middle"),
+        ]
+
+    # min_min_scattered_energy < max_min_scattered_energy < e_g < e_g1
+    return [((top_e, e_i), "down, middle")]
+
+
+def _convolved_scattering_fraction(
+    energy_limits: tuple[float, float],
+    alpha: float,
+    in_group: tuple[float, float],
+    out_group: tuple[float, float],
+    case_description: str,
+):
+    r"""
+    The fraction of neutron flux from bin i that would get scattered into bin g
+    is calculated as $M_{ig} = \int_{E_{min}}^{E_{max}} flux_i(E) dist(E) dE$,
+    where $flux_i=$ normalized flux (we assume the neutron flux in bin i has
+    constant in per-unit-lethargy space), i.e. follows a 1/E distribution.
+    Hence after intergration, frac is always accompanied by a factor of
+    $1/(ln(E_{i-1}) - ln(E_i))$.
+    """
+    e_max, e_min = energy_limits
+    e_i1, e_i = in_group
+    e_g1, e_g = out_group
+
+    _const = 1 / (np.log(e_i1) - np.log(e_i))
+    _am1i = 1 / (1 - alpha)
+    _diff_log_e = np.log(e_max) - np.log(e_min)
+    _diff_inv_e = 1 / e_min - 1 / e_max
+    match case_description:
+        case "self, complete":
+            return _const * _diff_log_e
+        case "self, upper-half":
+            return _const * _am1i * (_diff_log_e - e_g * _diff_inv_e)
+        case "down, upper-half":
+            return _const * _am1i * -(alpha * _diff_log_e - e_g1 * _diff_inv_e)
+        case "down, middle":
+            return _const * _am1i * (e_g1 - e_g) * _diff_inv_e
 
 
 def n2n_weight_matrix(
@@ -282,7 +412,9 @@ def n2n_weight_matrix(
         bin neutron ends up in the j-th bin.
         np.sum(axis=1) == np.ones(len(group_structure)-1).
     """
-    return
+    # Assume that the two neutrons would share the resulting energy evenly, i.e.
+    # a flat line.
+    return q_value, group_structure
 
 
 @dataclass
@@ -324,7 +456,7 @@ class MaterialMacroInfo:
         self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
         self.avg_atomic_mass = float(self.avg_atomic_mass)
 
-        if np.diff(self.group_structure) >= 0:
+        if np.diff(self.group_structure) > 0:
             raise ValueError(
                 "The group structure must be defined beginning from the highest energy "
                 "bin (i.e. lowest lethargy bin) edge, descending to the lowest energy. "
