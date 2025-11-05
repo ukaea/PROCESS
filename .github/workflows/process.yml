@@ -91,7 +91,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[test, examples]'
+          pip install -e '.[test]'
           pip install -r requirements_dev.txt
       - name: Allow git commands to be run
         run: git config --global --add safe.directory '*'
