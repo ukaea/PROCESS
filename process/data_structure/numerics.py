@@ -448,7 +448,7 @@ def init_numerics():
     ]
 
     ncalls = 0
-    neqns = 0
+    neqns = -1
     nfev1 = 0
     nfev2 = 0
     nineqns = 0

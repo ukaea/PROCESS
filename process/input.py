@@ -102,10 +102,10 @@ INPUT_VARIABLES = {
     "maxcal": InputVariable(data_structure.global_variables, int, range=(0, 10000)),
     "minmax": InputVariable(data_structure.numerics, int),
     "neqns": InputVariable(
-        data_structure.numerics, int, range=(1, ConstraintManager.num_constraints())
+        data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),
     "nineqns": InputVariable(
-        data_structure.numerics, int, range=(1, ConstraintManager.num_constraints())
+        data_structure.numerics, int, range=(0, ConstraintManager.num_constraints())
     ),
     "alphaj": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),
     "alphan": InputVariable(data_structure.physics_variables, float, range=(0.0, 10.0)),

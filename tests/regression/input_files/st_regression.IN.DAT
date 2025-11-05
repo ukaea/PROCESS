@@ -55,6 +55,10 @@ minmax = -5
 * DESCRIPTION:   Switch for Figure-of-Merit 
 * JUSTIFICATION: Selected optimisation
 
+neqns = 3
+* DESCRIPTION:   Number of equality constraints (the first neqns icc = ... statements are considered equality)
+* JUSTIFICATION: 3 equality (consistency) equations
+
 *________________________________________________________________________*
 *------------------------------ *Key Variables* -------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
@@ -63,9 +67,9 @@ itart = 1
 * DESCRIPTION:   Switch for Spherical Tokamak models (1: Use Spherical Tokamak Models)
 * JUSTIFICATION: ST
 
-*________________________________________________________________________*
-*------------------------------- *Plasma* -------------------------------*
-*‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
+*_______________________________________________________________________________________*
+*------------------------------- *Consistency Equations* -------------------------------*
+*‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 icc = 1
 * DESCRIPTION:   Beta Consistency
 * JUSTIFICATION: Consistency equations should always be on
@@ -76,6 +80,14 @@ icc = 2
 * JUSTIFICATION: Consistency equations should always be on
 * VARIABLES:     p_hcd_injected_total_mw, Rest calculated in-situ
 
+icc = 11
+* DESCRIPTION:   Radial Build Consistency
+* JUSTIFICATION: Consistency equations should always be on
+* VARIABLES:     rmajor, Rest calculated in-situ
+
+*________________________________________________________________________*
+*------------------------------- *Plasma* -------------------------------*
+*‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 *icc = 4
 * DESCRIPTION:   Global power balance for electrons
 * JUSTIFICATION: Not recommended for use 
@@ -1778,11 +1790,6 @@ zref(4) = 5.2
 *______________________________________________________________________________________________________________________________________________________________________________________________________________________*
 *-------------------------Radial & Vertical build----------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
-
-icc = 11
-* DESCRIPTION:   Radial Build Consistency
-* JUSTIFICATION: Consistency equations should always be on
-* VARIABLES:     rmajor, Rest calculated in-situ
 
 i_tf_inside_cs = 0 
 * DESCRIPTION:  Switch for placing TF coils inside of the CS
