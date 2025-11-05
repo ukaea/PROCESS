@@ -3395,11 +3395,6 @@ def plot_system_power_profiles_over_time(
     )
 
     # Add energy produced info
-    # helper to convert seconds to "Hh Mm Ss"
-    def secs_to_hms(s):
-        """Convert seconds to 'Hh Mm Ss' string."""
-        s = float(s)
-        return f"{int(s // 3600)}h {int((s % 3600) // 60)}m {int(s % 60)}s"
 
     textstr_times = (
         f"$\\mathbf{{Pulse \\ Timings:}}$\n\n"
@@ -3499,6 +3494,13 @@ def color_key(axis, mfile_data, scan, colour_scheme):
                 edgecolor="black" if color == "none" else "none",
             )
         )
+
+
+# helper to convert seconds to "Hh Mm Ss"
+def secs_to_hms(s):
+    """Convert seconds to 'Hh Mm Ss' string."""
+    s = float(s)
+    return f"{int(s // 3600)}h {int((s % 3600) // 60)}m {int(s % 60)}s"
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
