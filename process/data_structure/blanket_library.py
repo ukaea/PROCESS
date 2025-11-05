@@ -232,11 +232,17 @@ dz_shld_half: float = None
 dz_vv_half: float = None
 """Vacuum vessel internal half-height (m)"""
 
-dpres_blkt_pipe_90_deg_bend: float = None
-"""Pressure drop across 90 degree bend in blanket coolant pipe (Pa)"""
+dpres_blkt_outer_pipe_90_deg_bend: float = None
+"""Pressure drop across 90 degree bend in outboard blanket coolant pipe (Pa)"""
+
+dpres_blkt_outer_pipe_180_deg_bend: float = None
+"""Pressure drop across 180 degree bend in outboard blanket coolant pipe (Pa)"""
 
 reynolds_blkt_outboard: float = None
 """Reynolds number of outboard blanket coolant flow"""
+
+darcy_frict_blkt_outboard: float = None
+"""Darcy friction factor of outboard blanket coolant flow"""
 
 
 icomponent: int = None
@@ -294,8 +300,10 @@ def init_blanket_library():
     global htpmw_blkto
     global vfblkti
     global vfblkto
-    global dpres_blkt_pipe_90_deg_bend
+    global dpres_blkt_outer_pipe_90_deg_bend
     global reynolds_blkt_outboard
+    global darcy_frict_blkt_outboard
+    global dpres_blkt_outer_pipe_180_deg_bend
 
     dz_blkt_half = 0.0
     dz_shld_half = 0.0
@@ -347,5 +355,7 @@ def init_blanket_library():
     htpmw_blkto = 0.0
     vfblkti = 0.0
     vfblkto = 0.0
-    dpres_blkt_pipe_90_deg_bend = 0.0
+    dpres_blkt_outer_pipe_90_deg_bend = 0.0
     reynolds_blkt_outboard = 0.0
+    darcy_frict_blkt_outboard = 0.0
+    dpres_blkt_outer_pipe_180_deg_bend = 0.0
