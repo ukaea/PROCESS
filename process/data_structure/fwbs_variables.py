@@ -400,6 +400,9 @@ dx_fw_inboard_module: float = None
 temp_fw_coolant_in: float = None
 """inlet temperature of first wall coolant [K]"""
 
+temp_fw_inboard_coolant_in: float = None
+"""inlet temperature of inboard first wall coolant [K]"""
+
 
 temp_fw_coolant_out: float = None
 """outlet temperature of first wall coolant [K]"""
@@ -1001,6 +1004,7 @@ def init_fwbs_variables():
     global dx_fw_module
     global dx_fw_inboard_module
     global temp_fw_coolant_in
+    global temp_fw_inboard_coolant_in
     global temp_fw_coolant_out
     global pres_fw_coolant
     global temp_fw_peak
@@ -1197,6 +1201,7 @@ def init_fwbs_variables():
     dx_fw_module = 0.02
     dx_fw_inboard_module = 0.02
     temp_fw_coolant_in = 573.0
+    temp_fw_inboard_coolant_in = 573.0
     temp_fw_coolant_out = 823.0
     pres_fw_coolant = 15.5e6
     temp_fw_peak = 873.0
