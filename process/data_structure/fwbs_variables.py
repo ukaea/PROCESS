@@ -407,6 +407,8 @@ temp_fw_inboard_coolant_in: float = None
 temp_fw_coolant_out: float = None
 """outlet temperature of first wall coolant [K]"""
 
+temp_fw_inboard_coolant_out: float = None
+"""outlet temperature of inboard first wall coolant [K]"""
 
 pres_fw_coolant: float = None
 """first wall coolant pressure [Pa] (`i_thermal_electric_conversion>1`)"""
@@ -1006,6 +1008,7 @@ def init_fwbs_variables():
     global temp_fw_coolant_in
     global temp_fw_inboard_coolant_in
     global temp_fw_coolant_out
+    global temp_fw_inboard_coolant_out
     global pres_fw_coolant
     global temp_fw_peak
     global roughness_fw_channel
@@ -1203,6 +1206,7 @@ def init_fwbs_variables():
     temp_fw_coolant_in = 573.0
     temp_fw_inboard_coolant_in = 573.0
     temp_fw_coolant_out = 823.0
+    temp_fw_inboard_coolant_out = 823.0
     pres_fw_coolant = 15.5e6
     temp_fw_peak = 873.0
     roughness_fw_channel = 1.0e-6
