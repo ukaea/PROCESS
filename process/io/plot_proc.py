@@ -12138,6 +12138,60 @@ def plot_plasma_outboard_toroidal_ripple_map(
     fig.tight_layout()
 
 
+def plot_outboard_blanket_pipe_info(axis, mfile_data, scan, fig):
+    len_blkt_outboard_channel_total = mfile_data.data[
+        "len_blkt_outboard_channel_total"
+    ].get_scan(scan)
+
+    n_blkt_outboard_module_coolant_sections_radial = mfile_data.data[
+        "n_blkt_outboard_module_coolant_sections_radial"
+    ].get_scan(scan)
+
+    len_blkt_outboard_coolant_channel_radial = mfile_data.data[
+        "len_blkt_outboard_coolant_channel_radial"
+    ].get_scan(scan)
+
+    n_blkt_outboard_module_coolant_sections_poloidal = mfile_data.data[
+        "n_blkt_outboard_module_coolant_sections_poloidal"
+    ].get_scan(scan)
+
+    len_blkt_outboard_segment_poloidal = mfile_data.data[
+        "len_blkt_outboard_segment_poloidal"
+    ].get_scan(scan)
+
+    n_blkt_outboard_modules_toroidal = mfile_data.data[
+        "n_blkt_outboard_modules_toroidal"
+    ].get_scan(scan)
+
+    n_blkt_outboard_modules_poloidal = mfile_data.data[
+        "n_blkt_outboard_modules_poloidal"
+    ].get_scan(scan)
+
+    # Add a box with text showing the total outboard blanket channel length
+    textstr = (
+        f"Outboard Blanket Channel Total Length:\n"
+        f"{len_blkt_outboard_channel_total:.2f} m"
+        f"\n\nOutboard Blanket Module Coolant Sections (Radial):\n"
+        f"Number of Sections: {n_blkt_outboard_module_coolant_sections_radial}\n"
+        f"Length per Section: {len_blkt_outboard_coolant_channel_radial:.2f} m"
+        f"\n\nOutboard Blanket Module Coolant Sections (Poloidal):\n"
+        f"Number of Sections: {n_blkt_outboard_module_coolant_sections_poloidal}\n"
+        f"Length per Section: {len_blkt_outboard_segment_poloidal:.2f} m"
+        f"\n\nOutboard Blanket Modules:\n"
+        f"Number Toroidal: {n_blkt_outboard_modules_toroidal}\n"
+        f"Number Poloidal: {n_blkt_outboard_modules_poloidal}"
+    )
+    axis.text(
+        0.3,
+        0.3,
+        textstr,
+        transform=fig.transFigure,
+        fontsize=12,
+        verticalalignment="top",
+        bbox=dict(boxstyle="round", facecolor="lightyellow", alpha=0.8),
+    )
+
+
 def main_plot(
     fig0,
     fig1,
@@ -12433,6 +12487,8 @@ def main_plot(
         linewidth=1.5,
         label="Midplane",
     )
+
+    plot_outboard_blanket_pipe_info(ax_blanket, m_file_data, scan, fig23)
 
     plot_main_power_flow(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24

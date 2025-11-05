@@ -2977,6 +2977,64 @@ class BlanketLibrary:
 
         return pumppower
 
+    def output_blanket_pipe_geometry(self):
+        """Outputs the blanket coolant pipe geometry to the output file.
+
+        :param self: Instance of the FWBS class.
+        """
+        po.osubhd(self.outfile, "Blanket Coolant Pipe Geometry")
+
+        po.ovarre(
+            self.outfile,
+            "Total length of outboard blanket straight coolant channels (m)",
+            "(len_blkt_outboard_channel_total)",
+            blanket_library.len_blkt_outboard_channel_total,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket module coolant sections (radial)",
+            "(n_blkt_outboard_module_coolant_sections_radial)",
+            fwbs_variables.n_blkt_outboard_module_coolant_sections_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Length of outboard blanket coolant channel (radial) (m)",
+            "(len_blkt_outboard_coolant_channel_radial)",
+            blanket_library.len_blkt_outboard_coolant_channel_radial,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket module coolant sections (poloidal)",
+            "(n_blkt_outboard_module_coolant_sections_poloidal)",
+            fwbs_variables.n_blkt_outboard_module_coolant_sections_poloidal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Length of outboard blanket segment (poloidal) (m)",
+            "(len_blkt_outboard_segment_poloidal)",
+            blanket_library.len_blkt_outboard_segment_poloidal,
+            "OP ",
+        )
+
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket modules (toroidal)",
+            "(n_blkt_outboard_modules_toroidal)",
+            fwbs_variables.n_blkt_outboard_modules_toroidal,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Number of outboard blanket modules (poloidal)",
+            "(n_blkt_outboard_modules_poloidal)",
+            fwbs_variables.n_blkt_outboard_modules_poloidal,
+            "OP ",
+        )
+
 
 def set_pumping_powers_as_fractions():
     # User sets mechanical pumping power as a fraction of thermal power in component
