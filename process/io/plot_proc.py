@@ -12355,19 +12355,70 @@ def plot_ion_charge_profile(axis, mfile_data, scan):
         mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
     )
 
+    # find impurity densities
+    imp_frac = np.array([
+        mfile_data.data["f_nd_impurity_electrons(01)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(02)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(03)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(04)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(05)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(06)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(07)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(08)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(09)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(10)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(11)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(12)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(13)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
+    ])
+
+    imp_label = [
+        "H",
+        "He",
+        "Be",
+        "C",
+        "N",
+        "O",
+        "Ne",
+        "Si",
+        "Ar",
+        "Fe",
+        "Ni",
+        "Kr",
+        "Xe",
+        "W",
+    ]
+    full_charge_array = [1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74]
+
     n_charge_plasma_profile = []
+    avg_ionisation_percentages = []
     for imp in range(impurity_radiation_module.N_IMPURITIES):
-        profile = [
-            mfile_data.data[f"n_charge_plasma_profile{imp}_{i}"].get_scan(scan)
-            for i in range(n_plasma_profile_elements)
-        ]
-        n_charge_plasma_profile.append(profile)
-        axis.plot(
-            np.linspace(0, 1, n_plasma_profile_elements),
-            profile,
-            label=f"Ion Charge Profile {imp + 1}",
-        )
+        if imp_frac[imp] > 1.0e-30:
+            profile = [
+                mfile_data.data[f"n_charge_plasma_profile{imp}_{i}"].get_scan(scan)
+                for i in range(n_plasma_profile_elements)
+            ]
+            n_charge_plasma_profile.append(profile)
+            z_max = full_charge_array[imp]
+            # Calculate relative ionisation state as percent of full ionisation
+            rel_ion_state = [
+                100.0 * (val / z_max if z_max > 0 else 0) for val in profile
+            ]
+            avg_ionisation = np.mean(rel_ion_state)
+            avg_ionisation_percentages.append((imp_label[imp], avg_ionisation))
+            axis.plot(
+                np.linspace(0, 1, n_plasma_profile_elements),
+                rel_ion_state,
+                label=f"{imp_label[imp]} (Z={z_max}): avg {avg_ionisation:.1f}%",
+            )
+    axis.set_ylabel("Relative Ionisation State [% of $Z$]")
     axis.legend()
+    axis.set_xlim(0, 1.025)
+    axis.set_xlabel("Normalized Minor Radius (r/a)")
+    axis.set_title("Impurity Ion Charge State Profiles")
+    axis.minorticks_on()
+    axis.grid(which="both", linestyle="--", alpha=0.5)
 
 
 def main_plot(
