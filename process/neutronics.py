@@ -8,6 +8,7 @@ import inspect
 from collections.abc import Callable
 
 import numpy as np
+from matplotlib import pyplot as plt
 from numpy import typing as npt
 from scipy.special import expm1
 
@@ -171,6 +172,9 @@ class AutoPopulatingDict:
         """Check if dict i is in the index or not."""
         self._attempting_to_access.discard(i)
         self._dict[i] = value
+
+    def values(self):
+        return self._dict.values()
 
 
 class NeutronFluxProfile:
@@ -575,3 +579,52 @@ class NeutronFluxProfile:
                 - c4 * np.exp(-self.x_bz_cm / l_bz)
             )
         )
+
+    def plot(
+        self,
+        ax: plt.Axes | None = None,
+        n_points: int = 100,
+        symmetric: bool = True,
+        plot_groups: bool = False,
+    ):
+        """
+        Make a rough plot of the neutron flux.
+
+        Parameters
+        ----------
+        ax:
+            A plt.Axes object to plot on.
+        n_points:
+            number of points to be used for plotting.
+        symmetric:
+            Whether to plot from -x to x (symmetric), or from 0 to x (right side only.)
+        plot_groups:
+            Whether to plot each individual group's neutron flux.
+            If True, a legend will be added to help label the groups.
+        """
+        self.solve_group_n(self.n_groups - 1)
+        x_range = _generate_x_range(
+            min(self.extended_boundary.values()) / 100, n_points, symmetric
+        )
+        flux = self.neutron_flux_at(x_range)
+        ax = ax or plt.axes()
+        ax.plot(x_range, flux, label="total")
+
+        if plot_groups:
+            for n in range(self.n_groups):
+                x_range = _generate_x_range(
+                    self.extended_boundary[n], n_points, symmetric
+                )
+                flux = self.groupwise_neutron_flux_at(x_range)
+                ax.plot(x_range, flux, label=f"group {n}")
+        ax.legend()
+        ax.set_title("Neutron flux profile")
+        return ax
+
+
+def _generate_x_range(x_max, n_points, symmetric: bool):
+    """Helper function for finding the range of x-values to be plotted."""
+
+    if symmetric:
+        return np.linspace(-x_max, x_max, n_points * 2 - 1)
+    return np.linspace(0, x_max, n_points)
