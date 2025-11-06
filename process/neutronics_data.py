@@ -194,7 +194,6 @@ def discretize_n2n_xs(
     """
     return (
         discretize_xs(continuous_xs, group_structure)
-        * 2
         * n2n_weight_matrix(group_structure, q_value).T
     ).T
 
@@ -410,11 +409,27 @@ def n2n_weight_matrix(
         A macroscopic cross-section matrix, where the j-th column of the i-th row
         expresses the probability of one of the n2n neutrons trigged by a i-th
         bin neutron ends up in the j-th bin.
-        np.sum(axis=1) == np.ones(len(group_structure)-1).
+        np.sum(axis=1) <= np.ones(len(group_structure)-1) * 2, i.e. the
+        probability distribution in each row (i.e. i-th bin) is normalized to
+        2, i.e. the number of neutrons.
     """
     # Assume that the two neutrons would share the resulting energy evenly, i.e.
-    # a flat line.
-    return q_value, group_structure
+    # each take half of the neutron
+    # To make things even simpler, we'll assume the neutron flux is
+    shift_e = -q_value / 2
+
+    e_i1, e_i = group_structure[:-1], group_structure[1:]
+    weight = 1 / (np.log(e_i1) - np.log(e_i))
+
+    n_groups = len(group_structure) - 1
+    e_g1 = np.broadcast_to(e_i1, [n_groups, n_groups])
+    e_g = np.broadcast_to(e_i, [n_groups, n_groups])
+
+    e_min = np.clip((e_g + shift_e).T, e_i, e_i1).T
+    e_max = np.clip((e_g1 + shift_e).T, e_min.T, e_i1).T
+
+    matrix = np.log(e_max) - np.log(e_min)
+    return (weight * matrix.T).T
 
 
 @dataclass
