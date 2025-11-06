@@ -311,8 +311,9 @@ class NeutronFluxProfile:
         Parameters
         ----------
         n:
-            The index of the neutron group whose constants are being solved. n <= n_groups - 1.
-            Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
+            The index of the neutron group whose constants are being solved.
+            The allowed range of values = [0, self.n_groups-1]. Therefore,
+            n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         """
         if n not in range(self.n_groups):
             raise ValueError(
