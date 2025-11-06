@@ -12326,6 +12326,30 @@ def plot_plasma_outboard_toroidal_ripple_map(
     fig.tight_layout()
 
 
+def plot_plasma_effective_charge_profile(axis, mfile_data, scan):
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    n_charge_plasma_effective_profile = [
+        mfile_data.data[f"n_charge_plasma_effective_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        n_charge_plasma_effective_profile,
+        label="Effective Charge Profile",
+    )
+
+    axis.set_xlabel("Normalized Minor Radius (r/a)")
+    axis.set_ylabel("Effective Charge ($Z_{\\text{eff}}$)")
+    axis.set_title("Plasma Effective Charge Profile")
+    axis.minorticks_on()
+    axis.set_xlim(0, 1.025)
+    axis.grid(which="both", linestyle="--", alpha=0.5)
+
+
 def main_plot(
     fig0,
     fig1,
@@ -12353,6 +12377,7 @@ def main_plot(
     fig23,
     fig24,
     fig25,
+    fig26,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -12631,6 +12656,8 @@ def main_plot(
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig25)
+
+    plot_plasma_effective_charge_profile(fig26.add_subplot(111), m_file_data, scan)
 
 
 def main(args=None):
@@ -12949,6 +12976,7 @@ def main(args=None):
     page23 = plt.figure(figsize=(12, 9), dpi=80)
     page24 = plt.figure(figsize=(12, 9), dpi=80)
     page25 = plt.figure(figsize=(12, 9), dpi=80)
+    page26 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12978,6 +13006,7 @@ def main(args=None):
         page23,
         page24,
         page25,
+        page26,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -13012,6 +13041,7 @@ def main(args=None):
         pdf.savefig(page23)
         pdf.savefig(page24)
         pdf.savefig(page25)
+        pdf.savefig(page26)
 
     # show fig if option used
     if args.show:
@@ -13043,6 +13073,7 @@ def main(args=None):
     plt.close(page23)
     plt.close(page24)
     plt.close(page25)
+    plt.close(page26)
 
 
 if __name__ == "__main__":
