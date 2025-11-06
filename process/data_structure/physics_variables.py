@@ -1310,6 +1310,9 @@ a_plasma_poloidal: float = None
 zeff: float = None
 """plasma effective charge"""
 
+n_charge_plasma_effective_profile: list[float] = None
+"""Profile of plasma effective charge"""
+
 
 zeffai: float = None
 """mass weighted plasma effective charge"""
@@ -1629,6 +1632,7 @@ def init_physics_variables():
     global wtgpd
     global a_plasma_poloidal
     global zeff
+    global n_charge_plasma_effective_profile
     global zeffai
 
     m_beam_amu = 0.0
@@ -1887,4 +1891,5 @@ def init_physics_variables():
     wtgpd = 0.0
     a_plasma_poloidal = 0.0
     zeff = 0.0
+    n_charge_plasma_effective_profile = []
     zeffai = 0.0
