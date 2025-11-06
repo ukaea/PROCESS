@@ -585,7 +585,7 @@ class NeutronFluxProfile:
         ax: plt.Axes | None = None,
         n_points: int = 100,
         symmetric: bool = True,
-        plot_groups: bool = False,
+        plot_groups: bool = True,
     ):
         """
         Make a rough plot of the neutron flux.
@@ -603,28 +603,118 @@ class NeutronFluxProfile:
             If True, a legend will be added to help label the groups.
         """
         self.solve_group_n(self.n_groups - 1)
-        x_range = _generate_x_range(
-            min(self.extended_boundary.values()) / 100, n_points, symmetric
-        )
-        flux = self.neutron_flux_at(x_range)
         ax = ax or plt.axes()
-        ax.plot(x_range, flux, label="total")
+
+        x_bz_left, x_fw, x_bz_right = _generate_x_range(
+            min(self.extended_boundary.values()), n_points,
+            symmetric, self.x_fw_cm
+        )
+        ax.plot(
+            x_bz_left, self.neutron_flux_bz(x_bz_left),
+            label="total (BZ)", color="black", ls=(0, (3, 1, 1, 1))
+        )
+        ax.plot(
+            x_fw, self.neutron_flux_fw(x_fw),
+            label="total (FW)", color="black", ls="solid"
+        )
+        ax.plot(
+            x_bz_right, self.neutron_flux_bz(x_bz_right),
+            color="black", ls=(0, (3, 1, 1, 1))
+        )
 
         if plot_groups:
             for n in range(self.n_groups):
-                x_range = _generate_x_range(
-                    self.extended_boundary[n], n_points, symmetric
+                x_bz_left, x_fw, x_bz_right = _generate_x_range(
+                    self.extended_boundary[n], n_points,
+                    symmetric, self.x_fw_cm
                 )
-                flux = self.groupwise_neutron_flux_at(x_range)
-                ax.plot(x_range, flux, label=f"group {n}")
+                ax.plot(
+                    x_bz_left, self.neutron_flux_bz(x_bz_left),
+                    label=f"group {n+1} (BZ)", color=f"C{n}", ls=(0, (3, 1, 1, 1))
+                )
+                ax.plot(
+                    x_fw, self.neutron_flux_fw(x_fw),
+                    label=f"group {n+1} (FW)", color=f"C{n}", ls="solid"
+                )
+                ax.plot(
+                    x_bz_right, self.neutron_flux_bz(x_bz_right),
+                    color=f"C{n}", ls=(0, (3, 1, 1, 1))
+                )
         ax.legend()
         ax.set_title("Neutron flux profile")
         return ax
 
 
-def _generate_x_range(x_max, n_points, symmetric: bool):
-    """Helper function for finding the range of x-values to be plotted."""
+def _generate_x_range(
+    x_max_cm: float,
+    approx_n_points: int,
+    symmetric: bool,
+    fw_bz_split_point_cm: float|None=None
+):
+    """Helper function for finding the range of x-values to be plotted.
+
+    Parameters
+    ----------
+    x_max_cm:
+        absolute value of the maximum x that we want to plot.
+        This is typically obtained by min(extended_boundary), or
+        extended_boundary[n] [cm]
+    symmetric:
+        Whether we want to plot the negative side of the x-axis as well, forming
+        a symmetric plot.
+    approx_n_points:
+        number of points to be plotted.
+    fw_bz_split_point_cm:
+        FW and BZ region splits at this distance. If provided, we generate separate
+        x ranges for the FW and BZ. [cm]
+
+    Returns
+    -------
+    if (fw_bz_split_point_cm, symmetric) = (float value, True):
+        x_range_bz_left:
+            The array of x-values to be used for plotting the left (negative)
+            side of bz. [m]
+        x_range_fw:
+            The array of x-values to be used for plotting both the left and
+            right sides of fw. [m]
+        x_range_bz_right:
+            The array of x-values to be used for plotting the right (positive) 
+            side of bz. [m]
+    elif (fw_bz_split_point_cm, symmetric) = (float value, False):
+        x_range_fw:
+            The array of x-values to be used for plotting the right (positive)
+            side of fw [m]
+        x_range_bz:
+            The array of x-values to be used for plotting the right (positive)
+            side of bz [m]
+    elif (fw_bz_split_point_cm, symmetric) = (None, True):
+        x_range:
+            The array of x-values to be used for plotting both sides of the
+            neutron flux. [m]
+    else (fw_bz_split_point_cm, symmetric) = (None, False):
+        x_range:
+            The array of x-values to be used for plotting the right (positive)
+            side neutron flux. [m]
+    """
+
+    x_max = x_max_cm/100
+    if fw_bz_split_point_cm is not None:
+        x_range = np.linspace(0, x_max_cm, approx_n_points)
+        n_points_fw = (x_range<fw_bz_split_point_cm).sum() + 1
+        n_points_bz = (x_range>=fw_bz_split_point_cm).sum() + 1
+
+        split_point = fw_bz_split_point_cm/100
+        if symmetric:
+            return (
+                np.linspace(-x_max, -split_point, n_points_bz),
+                np.linspace(-split_point, split_point, n_points_fw * 2 - 1),
+                np.linspace(split_point, x_max, n_points_bz),
+            )
+        return (
+            np.linspace(0, split_point, n_points_fw),
+            np.linspace(split_point, x_max, n_points_bz),
+        )
 
     if symmetric:
-        return np.linspace(-x_max, x_max, n_points * 2 - 1)
-    return np.linspace(0, x_max, n_points)
+        return np.linspace(-x_max, x_max, approx_n_points * 2 - 1)
+    return np.linspace(0, x_max, approx_n_points)
