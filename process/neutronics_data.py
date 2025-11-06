@@ -227,7 +227,8 @@ def discretize_fission_xs(
         probability of a fission neutron being born into bin j due to a reaction
         caused by a neutron in bin i.
     """
-    fiss_spec = integrate(fission_spectrum_continuous, group_structure)
+    e_max, e_min = group_structure[:-1], group_structure[1:]
+    fiss_spec = integrate(fission_spectrum_continuous, e_max, e_min)
 
     scaled_fission_spectrum = fiss_spec / fiss_spec.sum() * num_neutrons
     return np.outer(
