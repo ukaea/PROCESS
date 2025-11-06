@@ -1132,6 +1132,9 @@ f_nd_protium_electrons: float = None
 ind_plasma_internal_norm: float = None
 """Plasma normalised internal inductance"""
 
+ind_plasma_internal_norm_iter_3: float = None
+"""Plasma normalised internal inductance (ITER type 3)"""
+
 
 ind_plasma_internal_norm_wesson: float = None
 """Wesson-like plasma normalised internal inductance"""
@@ -1583,6 +1586,7 @@ def init_physics_variables():
     global ind_plasma_internal_norm
     global ind_plasma_internal_norm_wesson
     global ind_plasma_internal_norm_menard
+    global ind_plasma_internal_norm_iter_3
     global i_ind_plasma_internal_norm
     global ind_plasma
     global rmajor
@@ -1840,6 +1844,7 @@ def init_physics_variables():
     ind_plasma_internal_norm = 0.9
     ind_plasma_internal_norm_wesson = 0.0
     ind_plasma_internal_norm_menard = 0.0
+    ind_plasma_internal_norm_iter_3 = 0.0
     i_ind_plasma_internal_norm = 0
     ind_plasma = 0.0
     rmajor = 8.14
