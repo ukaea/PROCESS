@@ -43,18 +43,14 @@ def test_has_reactions():
 
 # 2 groups
 # fw_material = MaterialMacroInfo(
-    # [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 1.0
+# [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 1.0
 # )
 # bz_material = MaterialMacroInfo(
-    # [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 2.0
+# [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 2.0
 # )
 # 1 group
-fw_material = MaterialMacroInfo(
-    [1.0], [[0.5]], [100, 0], 1.0
-)
-bz_material = MaterialMacroInfo(
-    [1.0], [[0.5]], [100, 0], 2.0
-)
+fw_material = MaterialMacroInfo([1.0], [[0.5]], [100, 0], 1.0)
+bz_material = MaterialMacroInfo([1.0], [[0.5]], [100, 0], 2.0)
 profile = NeutronFluxProfile(
     1.0,  # flux
     0.01,  # 1cm
@@ -62,3 +58,29 @@ profile = NeutronFluxProfile(
     fw_material,
     bz_material,
 )
+
+
+def test_against_desmos_number():
+    dummy = [100, 1]  # dummy group structure
+    # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
+    # [cm]
+    mfp_fw_s = 118 * 0.01
+    mfp_fw_t = 16.65 * 0.01
+    sigma_fw_t = 1 / mfp_fw_t  # [1/cm]
+    sigma_fw_s = 1 / mfp_fw_s  # [1/cm]
+    a_fw = 52
+    fw_material = MaterialMacroInfo([sigma_fw_t], [[sigma_fw_s]], dummy, a_fw)
+
+    mfp_bz_s = 97 * 0.01
+    mfp_bz_t = 35.8 * 0.01
+    sigma_bz_s = 1 / mfp_bz_s  # [1/cm]
+    sigma_bz_t = 1 / mfp_bz_t  # [1/cm]
+    a_bz = 71
+    bz_material = MaterialMacroInfo([sigma_bz_t], [[sigma_bz_s]], dummy, a_bz)
+
+    x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
+    incoming_flux = 41
+    neutron_profile = NeutronFluxProfile(
+        incoming_flux, x_fw, x_bz, fw_material, bz_material
+    )
+    neutron_profile.plot()
