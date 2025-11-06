@@ -242,14 +242,14 @@ class NeutronFluxProfile:
         # diffusion lengths squared
         self.l_fw_2 = AutoPopulatingDict(self.solve_group_n, "l_fw_2")
         self.l_bz_2 = AutoPopulatingDict(self.solve_group_n, "l_bz_2")
-        self.extended_boundary = AutoPopulatingDict(
-            self.solve_group_n, "extended_boundary"
+        self.extended_boundary_cm = AutoPopulatingDict(
+            self.solve_group_n, "extended_boundary_cm"
         )
 
     def solve_lowest_group(self) -> None:
         """
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
-        Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
+        Store the solved constants in self.extended_boundary_cm[0], self.l_fw_2[0],
         self.l_bz_2[0], and self.integration_constants[0].
         """
         n = 0
@@ -268,7 +268,7 @@ class NeutronFluxProfile:
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
         x_fw, x_bz = self.x_fw_cm, self.x_bz_cm
-        self.extended_boundary[n] = x_bz + extrapolation_length(d_bz)
+        self.extended_boundary_cm[n] = x_bz + extrapolation_length(d_bz)
         if self.l_fw_2[n] > 0:
             sinh_fw = np.sinh(x_fw / l_fw)
             cosh_fw = np.cosh(x_fw / l_fw)
@@ -278,13 +278,13 @@ class NeutronFluxProfile:
             cosh_fw = np.cos(x_fw / l_fw)
             tanh_fw = np.tan(x_fw / l_fw)
         if self.l_bz_2[n] > 0:
-            sinh_bz = np.sinh((self.extended_boundary[n] - x_fw) / l_bz)
-            cosh_bz = np.cosh((self.extended_boundary[n] - x_fw) / l_bz)
-            tanh_bz = np.tanh((self.extended_boundary[n] - x_fw) / l_bz)
+            sinh_bz = np.sinh((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            cosh_bz = np.cosh((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            tanh_bz = np.tanh((self.extended_boundary_cm[n] - x_fw) / l_bz)
         else:
-            sinh_bz = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
-            cosh_bz = np.cos((self.extended_boundary[n] - x_fw) / l_bz)
-            tanh_bz = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
+            sinh_bz = np.sin((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            cosh_bz = np.cos((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            tanh_bz = np.tan((self.extended_boundary_cm[n] - x_fw) / l_bz)
 
         c2 = (
             self.flux
@@ -302,14 +302,14 @@ class NeutronFluxProfile:
             * (1 - tanh_fw)
             / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
         )
-        c3 = c3_c4_common_factor * np.exp(self.extended_boundary[n] / l_bz)
-        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary[n] / l_bz)
+        c3 = c3_c4_common_factor * np.exp(self.extended_boundary_cm[n] / l_bz)
+        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary_cm[n] / l_bz)
         self.integration_constants[n] = [c1, c2, c3, c4]
 
     def solve_group_n(self, n: int) -> None:
         """
         Solve the n-th group of neutron's diffusion equation, where n<=n_groups-1.
-        Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
+        Store the solved constants in self.extended_boundary_cm[n-1], self.l_fw_2[n-1],
         self.l_bz_2[n-1], and self.integration_constants[n-1].
 
         Parameters
@@ -346,7 +346,7 @@ class NeutronFluxProfile:
         c2 = ...
         c3 = ...
         c4 = ...
-        self.extended_boundary[n] = self.x_bz_cm + extrapolation_length(d_bz)
+        self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(d_bz)
         self.integration_constants[n] = [c1, c2, c3, c4]
         return None
 
@@ -434,12 +434,12 @@ class NeutronFluxProfile:
         in_fw = abs(x * 100) <= self.x_fw_cm
         in_bz = np.logical_and(
             self.x_fw_cm < abs(x * 100),
-            abs(x * 100) <= self.extended_boundary[n],
+            abs(x * 100) <= self.extended_boundary_cm[n],
         )
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated "
-                f"up to {self.extended_boundary[n]} cm, which {x * 100} cm violates!"
+                f"up to {self.extended_boundary_cm[n]} cm, which {x * 100} cm violates!"
             )
 
         out_flux = np.zeros_like(x)
@@ -606,7 +606,7 @@ class NeutronFluxProfile:
         ax = ax or plt.axes()
 
         x_bz_left, x_fw, x_bz_right = _generate_x_range(
-            min(self.extended_boundary.values()),
+            min(self.extended_boundary_cm.values()),
             n_points,
             symmetric,
             self.x_fw_cm,
@@ -635,7 +635,7 @@ class NeutronFluxProfile:
         if plot_groups:
             for n in range(self.n_groups):
                 x_bz_left, x_fw, x_bz_right = _generate_x_range(
-                    self.extended_boundary[n],
+                    self.extended_boundary_cm[n],
                     n_points,
                     symmetric,
                     self.x_fw_cm,
@@ -677,8 +677,8 @@ def _generate_x_range(
     ----------
     x_max_cm:
         absolute value of the maximum x that we want to plot.
-        This is typically obtained by min(extended_boundary), or
-        extended_boundary[n] [cm]
+        This is typically obtained by min(extended_boundary_cm), or
+        extended_boundary_cm[n] [cm]
     symmetric:
         Whether we want to plot the negative side of the x-axis as well, forming
         a symmetric plot.
