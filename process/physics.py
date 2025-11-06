@@ -3666,8 +3666,8 @@ class Physics:
             f_alpha_energy_confinement,
         )
 
+    @staticmethod
     def calculate_normalised_internal_inductance_iter_3(
-        self,
         b_plasma_poloidal_vol_avg: float,
         c_plasma: float,
         vol_plasma: float,
