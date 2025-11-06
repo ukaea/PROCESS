@@ -837,7 +837,7 @@ j_plasma_on_axis: float = None
 """Central plasma current density (A/m2)"""
 
 j_plasma_bootstrap_sauter_profile: list[float] = None
-"""Profile of bootstrap current density in plasma using Sauter et al scaling (A/m2)""" 
+"""Profile of bootstrap current density in plasma using Sauter et al scaling (A/m2)"""
 
 n_plasma_profile_elements: int = None
 """Number of elements in plasma profile"""
