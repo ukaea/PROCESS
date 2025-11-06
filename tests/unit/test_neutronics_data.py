@@ -4,26 +4,17 @@ from numpy import typing as npt
 
 from process.neutronics_data import n2n_weight_matrix, scattering_weight_matrix
 
-np.random.seed(1)
+rng = np.random.default_rng(1)
 
 
 @pytest.mark.parametrize(
     "group_structure, atomic_mass",
     [
-        (
-            np.cumsum(100 ** abs(np.random.randn(5)))[::-1],
-            np.random.rand() * 200,
-        ),
-        (
-            np.cumsum(100 ** abs(np.random.randn(10)))[::-1],
-            np.random.rand() * 239,
-        ),
-        (
-            np.cumsum(100 ** abs(np.random.randn(20)))[::-1],
-            np.random.rand() * 150,
-        ),
-        (np.cumsum(100 ** abs(np.random.randn(30)))[::-1], 1),
-        (np.cumsum(100 ** abs(np.random.randn(40)))[::-1], 2),
+        (np.cumsum(100 ** abs(rng.normal(5)))[::-1], rng.random() * 200),
+        (np.cumsum(100 ** abs(rng.normal(10)))[::-1], rng.random() * 239),
+        (np.cumsum(100 ** abs(rng.normal(20)))[::-1], rng.random() * 150),
+        (np.cumsum(100 ** abs(rng.normal(30)))[::-1], 1),
+        (np.cumsum(100 ** abs(rng.normal(40)))[::-1], 2),
     ],
 )
 def test_scattering_matrix(
