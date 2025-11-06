@@ -36,7 +36,7 @@ import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.build import Build
-from process.data_structure import physics_variables
+from process.data_structure import impurity_radiation_module, physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -12350,6 +12350,26 @@ def plot_plasma_effective_charge_profile(axis, mfile_data, scan):
     axis.grid(which="both", linestyle="--", alpha=0.5)
 
 
+def plot_ion_charge_profile(axis, mfile_data, scan):
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    n_charge_plasma_profile = []
+    for imp in range(impurity_radiation_module.N_IMPURITIES):
+        profile = [
+            mfile_data.data[f"n_charge_plasma_profile{imp}_{i}"].get_scan(scan)
+            for i in range(n_plasma_profile_elements)
+        ]
+        n_charge_plasma_profile.append(profile)
+        axis.plot(
+            np.linspace(0, 1, n_plasma_profile_elements),
+            profile,
+            label=f"Ion Charge Profile {imp + 1}",
+        )
+    axis.legend()
+
+
 def main_plot(
     fig0,
     fig1,
@@ -12657,7 +12677,8 @@ def main_plot(
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig25)
 
-    plot_plasma_effective_charge_profile(fig26.add_subplot(111), m_file_data, scan)
+    plot_plasma_effective_charge_profile(fig26.add_subplot(211), m_file_data, scan)
+    plot_ion_charge_profile(fig26.add_subplot(212), m_file_data, scan)
 
 
 def main(args=None):
