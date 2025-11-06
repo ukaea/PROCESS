@@ -41,25 +41,6 @@ def test_has_reactions():
     assert hasattr(NeutronFluxProfile, "reaction_rate_bz")
 
 
-# 2 groups
-# fw_material = MaterialMacroInfo(
-# [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 1.0
-# )
-# bz_material = MaterialMacroInfo(
-# [1.0, 0.5], [[0.5, 0.1], [0, 0.1]], [1000, 100, 0], 2.0
-# )
-# 1 group
-fw_material = MaterialMacroInfo([1.0], [[0.5]], [100, 0], 1.0)
-bz_material = MaterialMacroInfo([1.0], [[0.5]], [100, 0], 2.0)
-profile = NeutronFluxProfile(
-    1.0,  # flux
-    0.01,  # 1cm
-    0.11,  # 10cm thick blanket
-    fw_material,
-    bz_material,
-)
-
-
 def test_against_desmos_number():
     dummy = [100, 1]  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
