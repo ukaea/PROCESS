@@ -465,14 +465,17 @@ class MaterialMacroInfo:
     avg_atomic_mass: float
 
     def __post_init__(self):
-        """Validation to confirm the shape is correct."""
+        """
+        Validation of group_structure, sigma_s and sigma_t to confirm their
+        shapes are correct.
+        """
         # force into float or numpy arrays of floats.
         self.sigma_t = np.array(self.sigma_t, dtype=float)
         self.sigma_s = np.array(self.sigma_s, dtype=float)
         self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
         self.avg_atomic_mass = float(self.avg_atomic_mass)
 
-        if np.diff(self.group_structure) > 0:
+        if (np.diff(self.group_structure) > 0).any():
             raise ValueError(
                 "The group structure must be defined beginning from the highest energy "
                 "bin (i.e. lowest lethargy bin) edge, descending to the lowest energy. "
@@ -493,7 +496,10 @@ class MaterialMacroInfo:
 
     @property
     def n_groups(self):
-        """Store this attribute upon first retrieval."""
+        """
+        Number of groups in the group structure.
+        Store this attribute upon first retrieval.
+        """
         if not hasattr(self, "_n_groups"):
             self._n_groups = len(self.group_structure) - 1
         return self._n_groups
