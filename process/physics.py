@@ -4048,6 +4048,21 @@ class Physics:
                 )
         physics_variables.n_charge_plasma_effective_profile = zeff_profile
 
+        # Assign the charge profiles of each species
+        n_impurities = impurity_radiation_module.N_IMPURITIES
+        te_profile = self.plasma_profile.teprofile.profile_y
+        n_points = len(te_profile)
+        # Create a 2D array: (n_impurities, n_points)
+        charge_profiles = np.zeros((n_impurities, n_points))
+        for imp in range(n_impurities):
+            for i in range(n_points):
+                charge_profiles[imp, i] = impurity_radiation.zav_of_te(
+                    imp, np.array([te_profile[i]])
+                ).squeeze()
+        impurity_radiation_module.n_charge_impurity_profile = charge_profiles
+
+        print(impurity_radiation_module.n_charge_impurity_profile)
+
         # ###############################################
         # Dimensionless plasma parameters. See reference below.
         physics_variables.nu_star = (
@@ -5040,6 +5055,16 @@ class Physics:
                 physics_variables.n_charge_plasma_effective_profile[i],
                 "OP ",
             )
+
+        for imp in range(impurity_radiation_module.N_IMPURITIES):
+            for i in range(physics_variables.n_plasma_profile_elements):
+                po.ovarre(
+                    self.outfile,
+                    "Impurity charge at point",
+                    f"(n_charge_plasma_profile{imp}_{i})",
+                    impurity_radiation_module.n_charge_impurity_profile[imp][i],
+                    "OP ",
+                )
 
         po.ovarrf(
             self.outfile,
