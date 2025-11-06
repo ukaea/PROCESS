@@ -7190,8 +7190,6 @@ class Physics:
         The code was supplied by Emiliano Fable, IPP Garching (private communication).
         """
 
-        # Number of radial data points along the profile
-        nr = plasma_profile.profile_size
 
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
@@ -7227,14 +7225,14 @@ class Physics:
             + (physics_variables.q95 - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
+        amain = np.full_like(inverse_q, physics_variables.m_ions_total_amu)
 
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
 
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
-        radial_elements = np.arange(2, nr)
+        radial_elements = np.arange(2, plasma_profile.profile_size)
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -7252,7 +7250,7 @@ class Physics:
             * (
                 _calculate_l31_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7268,7 +7266,7 @@ class Physics:
                 * dlogne_drho
                 + _calculate_l31_32_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7284,7 +7282,7 @@ class Physics:
                 * dlogte_drho
                 + _calculate_l34_alpha_31_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
