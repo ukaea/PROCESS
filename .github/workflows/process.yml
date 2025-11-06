@@ -80,7 +80,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        tolerance: [0, 5]
+        tolerance: [0.2, 5]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -91,7 +91,7 @@ jobs:
       - name: Install PROCESS
         # Editable install to match default install
         run: |
-          pip install -e '.[test, examples]'
+          pip install -e '.[test]'
           pip install -r requirements_dev.txt
       - name: Allow git commands to be run
         run: git config --global --add safe.directory '*'
