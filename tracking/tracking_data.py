@@ -126,7 +126,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "PFCoil.vs_cs_pf_total_pulse",
     "Physics.nd_plasma_ions_total_vol_avg",
     "Time.t_plant_pulse_burn",
-    "Cost.divlife",
+    "Cost.life_div_fpy",
     "Cost.cdirt",
     "Cost.concost",
 }

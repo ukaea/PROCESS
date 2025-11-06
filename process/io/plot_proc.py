@@ -7727,7 +7727,7 @@ def plot_power_info(axis, mfile_data, scan):
         ("p_shld_nuclear_heat_mw", "Nuclear heating in shield", "MW"),
         (p_cryo_plant_electric_mw, "TF cryogenic power", "MW"),
         ("p_plasma_separatrix_mw", "Power to divertor", "MW"),
-        ("divlife", "Divertor life", "years"),
+        ("life_div_fpy", "Divertor life", "years"),
         ("p_plant_primary_heat_mw", "Primary (high grade) heat", "MW"),
         (gross_eff, "Gross cycle efficiency", "%"),
         (net_eff, "Net cycle efficiency", "%"),
