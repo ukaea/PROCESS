@@ -1680,6 +1680,15 @@ class Physics:
             self.calculate_internal_inductance_menard(kappa=physics_variables.kappa)
         )
 
+        physics_variables.ind_plasma_internal_norm_iter_3 = (
+            self.calculate_normalised_internal_inductance_iter_3(
+                b_plasma_poloidal_vol_avg=physics_variables.b_plasma_poloidal_average,
+                c_plasma=physics_variables.plasma_current,
+                vol_plasma=physics_variables.vol_plasma,
+                rmajor=physics_variables.rmajor,
+            )
+        )
+
         # Map calculation methods to a dictionary
         ind_plasma_internal_norm_calculations = {
             0: physics_variables.ind_plasma_internal_norm,
@@ -3658,6 +3667,47 @@ class Physics:
         )
 
     @staticmethod
+    def calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg: float,
+        c_plasma: float,
+        vol_plasma: float,
+        rmajor: float,
+    ) -> float:
+        """
+        Calculate the normalised internal inductance using ITER-3 scaling li(3).
+
+        :param b_plasma_poloidal_vol_avg: Volume-averaged poloidal magnetic field (T).
+        :type b_plasma_poloidal_vol_avg: float
+        :param c_plasma: Plasma current (A).
+        :type c_plasma: float
+        :param vol_plasma: Plasma volume (m^3).
+        :type vol_plasma: float
+        :param rmajor: Plasma major radius (m).
+        :type rmajor: float
+
+        :returns: The li(3) normalised internal inductance.
+        :rtype: float
+
+        :references:
+            - T. C. Luce, D. A. Humphreys, G. L. Jackson, and W. M. Solomon,
+            “Inductive flux usage and its optimization in tokamak operation,”
+            Nuclear Fusion, vol. 54, no. 9, p. 093005, Jul. 2014,
+            doi: https://doi.org/10.1088/0029-5515/54/9/093005.
+
+            - G. L. Jackson et al., “ITER startup studies in the DIII-D tokamak,”
+            Nuclear Fusion, vol. 48, no. 12, p. 125002, Nov. 2008,
+            doi: https://doi.org/10.1088/0029-5515/48/12/125002.
+        ‌
+        """
+
+        return (
+            2
+            * vol_plasma
+            * b_plasma_poloidal_vol_avg**2
+            / (constants.RMU0**2 * c_plasma**2 * rmajor)
+        )
+
+    @staticmethod
     def plasma_ohmic_heating(
         f_c_plasma_inductive: float,
         kappa95: float,
@@ -4411,6 +4461,14 @@ class Physics:
                 physics_variables.ind_plasma_internal_norm_menard,
                 "OP ",
             )
+            po.ovarrf(
+                self.outfile,
+                "ITER li(3) plasma normalised internal inductance",
+                "(ind_plasma_internal_norm_iter_3)",
+                physics_variables.ind_plasma_internal_norm_iter_3,
+                "OP ",
+            )
+
         else:
             po.ovarrf(
                 self.outfile,

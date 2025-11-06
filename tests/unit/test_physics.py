@@ -3459,3 +3459,11 @@ def test_calculate_beta_norm_max_stambaugh():
         f_c_plasma_bootstrap, kappa, aspect
     )
     assert result == pytest.approx(3.840954484207041, abs=0.00001)
+
+
+def test_calculate_internal_inductance_iter_3():
+    """Test calculate_normalised_internal_inductance_iter_3."""
+    result = Physics.calculate_normalised_internal_inductance_iter_3(
+        b_plasma_poloidal_vol_avg=1.0, c_plasma=1.5e7, vol_plasma=1000.0, rmajor=6.2
+    )
+    assert result == pytest.approx(0.9078959099585583, abs=0.00001)
