@@ -459,7 +459,9 @@ def test_bldgs_sizes(buildings, bldgssizesparam, monkeypatch):
     monkeypatch.setattr(buildings_variables, "volnucb", bldgssizesparam.volnucb)
     monkeypatch.setattr(buildings_variables, "bioshld_thk", bldgssizesparam.bioshld_thk)
     monkeypatch.setattr(
-        buildings_variables, "dr_dx_reactor_hall_wall", bldgssizesparam.dr_dx_reactor_hall_wall
+        buildings_variables,
+        "dr_dx_reactor_hall_wall",
+        bldgssizesparam.dr_dx_reactor_hall_wall,
     )
     monkeypatch.setattr(
         buildings_variables, "reactor_roof_thk", bldgssizesparam.reactor_roof_thk
