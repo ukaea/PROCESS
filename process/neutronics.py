@@ -606,39 +606,59 @@ class NeutronFluxProfile:
         ax = ax or plt.axes()
 
         x_bz_left, x_fw, x_bz_right = _generate_x_range(
-            min(self.extended_boundary.values()), n_points,
-            symmetric, self.x_fw_cm
+            min(self.extended_boundary.values()),
+            n_points,
+            symmetric,
+            self.x_fw_cm,
         )
         ax.plot(
-            x_bz_left, self.neutron_flux_bz(x_bz_left),
-            label="total (BZ)", color="black", ls=(0, (3, 1, 1, 1))
+            x_bz_left,
+            self.neutron_flux_bz(x_bz_left),
+            label="total (BZ)",
+            color="black",
+            ls=(0, (3, 1, 1, 1)),
         )
         ax.plot(
-            x_fw, self.neutron_flux_fw(x_fw),
-            label="total (FW)", color="black", ls="solid"
+            x_fw,
+            self.neutron_flux_fw(x_fw),
+            label="total (FW)",
+            color="black",
+            ls="solid",
         )
         ax.plot(
-            x_bz_right, self.neutron_flux_bz(x_bz_right),
-            color="black", ls=(0, (3, 1, 1, 1))
+            x_bz_right,
+            self.neutron_flux_bz(x_bz_right),
+            color="black",
+            ls=(0, (3, 1, 1, 1)),
         )
 
         if plot_groups:
             for n in range(self.n_groups):
                 x_bz_left, x_fw, x_bz_right = _generate_x_range(
-                    self.extended_boundary[n], n_points,
-                    symmetric, self.x_fw_cm
+                    self.extended_boundary[n],
+                    n_points,
+                    symmetric,
+                    self.x_fw_cm,
                 )
                 ax.plot(
-                    x_bz_left, self.neutron_flux_bz(x_bz_left),
-                    label=f"group {n+1} (BZ)", color=f"C{n}", ls=(0, (3, 1, 1, 1))
+                    x_bz_left,
+                    self.neutron_flux_bz(x_bz_left),
+                    label=f"group {n + 1} (BZ)",
+                    color=f"C{n}",
+                    ls=(0, (3, 1, 1, 1)),
                 )
                 ax.plot(
-                    x_fw, self.neutron_flux_fw(x_fw),
-                    label=f"group {n+1} (FW)", color=f"C{n}", ls="solid"
+                    x_fw,
+                    self.neutron_flux_fw(x_fw),
+                    label=f"group {n + 1} (FW)",
+                    color=f"C{n}",
+                    ls="solid",
                 )
                 ax.plot(
-                    x_bz_right, self.neutron_flux_bz(x_bz_right),
-                    color=f"C{n}", ls=(0, (3, 1, 1, 1))
+                    x_bz_right,
+                    self.neutron_flux_bz(x_bz_right),
+                    color=f"C{n}",
+                    ls=(0, (3, 1, 1, 1)),
                 )
         ax.legend()
         ax.set_title("Neutron flux profile")
@@ -649,7 +669,7 @@ def _generate_x_range(
     x_max_cm: float,
     approx_n_points: int,
     symmetric: bool,
-    fw_bz_split_point_cm: float|None=None
+    fw_bz_split_point_cm: float | None = None,
 ):
     """Helper function for finding the range of x-values to be plotted.
 
@@ -678,7 +698,7 @@ def _generate_x_range(
             The array of x-values to be used for plotting both the left and
             right sides of fw. [m]
         x_range_bz_right:
-            The array of x-values to be used for plotting the right (positive) 
+            The array of x-values to be used for plotting the right (positive)
             side of bz. [m]
     elif (fw_bz_split_point_cm, symmetric) = (float value, False):
         x_range_fw:
@@ -697,13 +717,13 @@ def _generate_x_range(
             side neutron flux. [m]
     """
 
-    x_max = x_max_cm/100
+    x_max = x_max_cm / 100
     if fw_bz_split_point_cm is not None:
         x_range = np.linspace(0, x_max_cm, approx_n_points)
-        n_points_fw = (x_range<fw_bz_split_point_cm).sum() + 1
-        n_points_bz = (x_range>=fw_bz_split_point_cm).sum() + 1
+        n_points_fw = (x_range < fw_bz_split_point_cm).sum() + 1
+        n_points_bz = (x_range >= fw_bz_split_point_cm).sum() + 1
 
-        split_point = fw_bz_split_point_cm/100
+        split_point = fw_bz_split_point_cm / 100
         if symmetric:
             return (
                 np.linspace(-x_max, -split_point, n_points_bz),
