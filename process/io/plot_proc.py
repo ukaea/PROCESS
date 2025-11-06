@@ -3244,6 +3244,187 @@ def plot_current_profiles_over_time(
     axis.grid(True, linestyle="--", alpha=0.6)
 
 
+def plot_system_power_profiles_over_time(
+    axis: plt.Axes,
+    mfile_data: mf.MFile,
+    scan: int,
+    fig,
+) -> None:
+    """
+    Plots the power profiles over time for various systems.
+
+    Arguments:
+        axis (plt.Axes): Axis object to plot to.
+        mfile_data (mf.MFile): MFILE data object.
+        scan (int): Scan number to use.
+    """
+
+    t_precharge = mfile_data.data["t_plant_pulse_coil_precharge"].get_scan(scan)
+    t_current_ramp_up = mfile_data.data[
+        "t_plant_pulse_plasma_current_ramp_up"
+    ].get_scan(scan)
+    t_fusion_ramp = mfile_data.data["t_plant_pulse_fusion_ramp"].get_scan(scan)
+    t_burn = mfile_data.data["t_plant_pulse_burn"].get_scan(scan)
+    t_ramp_down = mfile_data.data["t_plant_pulse_plasma_current_ramp_down"].get_scan(
+        scan
+    )
+    t_between_pulse = mfile_data.data["t_plant_pulse_dwell"].get_scan(scan)
+
+    # Define a cumulative sum list for each point in the pulse
+    t_steps = np.cumsum([
+        0,
+        t_precharge,
+        t_current_ramp_up,
+        t_fusion_ramp,
+        t_burn,
+        t_ramp_down,
+        t_between_pulse,
+    ])
+
+    # Create empty arrays for the power at each time step for each system
+    power_profiles = {
+        "Fusion Power": np.zeros(len(t_steps)),
+        "Plant Base Load": np.zeros(len(t_steps)),
+        "Cryo Plant": np.zeros(len(t_steps)),
+        "Tritium Plant": np.zeros(len(t_steps)),
+        "Vacuum Pumps": np.zeros(len(t_steps)),
+        "TF Coil Supplies": np.zeros(len(t_steps)),
+        "PF Coil Supplies": np.zeros(len(t_steps)),
+        "Coolant Pump Elec Total": np.zeros(len(t_steps)),
+        "HCD Electric Total": np.zeros(len(t_steps)),
+        "Gross Electric Power": np.zeros(len(t_steps)),
+        "Net Electric Power": np.zeros(len(t_steps)),
+    }
+
+    # Fill power_profiles arrays using vectorized assignment
+    for label, key in [
+        ("Fusion Power", "p_fusion_total_profile_mw"),
+        ("Gross Electric Power", "p_plant_electric_gross_profile_mw"),
+        ("Net Electric Power", "p_plant_electric_net_profile_mw"),
+        ("Plant Base Load", "p_plant_electric_base_total_profile_mw"),
+        ("Cryo Plant", "p_cryo_plant_electric_profile_mw"),
+        ("Tritium Plant", "p_tritium_plant_electric_profile_mw"),
+        ("Vacuum Pumps", "vachtmw_profile_mw"),
+        ("TF Coil Supplies", "p_tf_electric_supplies_profile_mw"),
+        ("PF Coil Supplies", "p_pf_electric_supplies_profile_mw"),
+        ("Coolant Pump Elec Total", "p_coolant_pump_elec_total_profile_mw"),
+        ("HCD Electric Total", "p_hcd_electric_total_profile_mw"),
+    ]:
+        for time in range(len(t_steps)):
+            power_profiles[label][time] = mfile_data.data[f"{key}{time}"].get_scan(scan)
+
+    # Define line styles for each system
+    # All net drains (negative power flows) use the same line style: dashed
+    line_styles = {
+        "Fusion Power": ":",
+        "Plant Base Load": "--",
+        "Cryo Plant": "--",
+        "Tritium Plant": "--",
+        "Vacuum Pumps": "--",
+        "TF Coil Supplies": "--",
+        "PF Coil Supplies": "--",
+        "Coolant Pump Elec Total": "--",
+        "HCD Electric Total": "--",
+        "Gross Electric Power": "-",
+        "Net Electric Power": "-",
+    }
+
+    # Plot each system's power profile over time with different line styles
+    for label, powers in power_profiles.items():
+        style = line_styles.get(label, "-")
+        axis.plot(t_steps, powers, label=label, linestyle=style)
+
+    # Move the x-axis to 0 on the y-axis
+    axis.spines["bottom"].set_position("zero")
+
+    # Annotate key points
+    # Create a secondary x-axis for annotations
+    secax = axis.secondary_xaxis("bottom")
+    secax.set_xticks(t_steps)
+    secax.set_xticklabels(
+        [
+            "Precharge",
+            r"$I_{\text{P}}$ Ramp-Up",
+            "Fusion Ramp",
+            "Burn",
+            "Ramp Down",
+            "Between Pulse",
+            "Restart Pulse",
+        ],
+        rotation=60,
+    )
+    secax.tick_params(axis="x", which="major")
+
+    # Add axis labels
+    axis.set_xlabel("Time [s]", fontsize=12)
+    axis.xaxis.set_label_coords(1.05, 0.5)
+    axis.set_ylabel("Power [MW]", fontsize=12)
+
+    # Add a title
+    axis.set_title("System Power Over Time", fontsize=14)
+
+    # Add a legend
+    axis.legend()
+
+    axis.set_yscale("symlog")
+    # axis.set_xscale()
+    axis.minorticks_on()
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+
+    # Add a grid for better readability
+    axis.grid(True, linestyle="--", alpha=0.6)
+
+    # Add energy produced info
+    textstr_energy = (
+        f"$\\mathbf{{Energy \\ Production:}}$\n\n"
+        f"Energy produced over whole pulse: {mfile_data.data['e_plant_net_electric_pulse_mj'].get_scan(scan):,.4f} MJ \n"
+        f"Energy produced over whole pulse: {mfile_data.data['e_plant_net_electric_pulse_kwh'].get_scan(scan):,.4f} kWh \n"
+    )
+
+    axis.text(
+        0.075,
+        0.2,
+        textstr_energy,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+    # Add energy produced info
+
+    textstr_times = (
+        f"$\\mathbf{{Pulse \\ Timings:}}$\n\n"
+        f"Coil precharge, $t_{{\\text{{precharge}}}}$:        {mfile_data.data['t_plant_pulse_coil_precharge'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_coil_precharge'].get_scan(scan))})\n"
+        f"Current ramp up, $t_{{\\text{{current ramp}}}}$:  {mfile_data.data['t_plant_pulse_plasma_current_ramp_up'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_plasma_current_ramp_up'].get_scan(scan))})\n"
+        f"Fusion ramp, $t_{{\\text{{fusion ramp}}}}$:          {mfile_data.data['t_plant_pulse_fusion_ramp'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_fusion_ramp'].get_scan(scan))})\n"
+        f"Burn, $t_{{\\text{{burn}}}}$:                              {mfile_data.data['t_plant_pulse_burn'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_burn'].get_scan(scan))})\n"
+        f"Ramp down, $t_{{\\text{{ramp down}}}}$:           {mfile_data.data['t_plant_pulse_plasma_current_ramp_down'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_plasma_current_ramp_down'].get_scan(scan))})\n"
+        f"Between pulse, $t_{{\\text{{between pulse}}}}$:   {mfile_data.data['t_plant_pulse_dwell'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_dwell'].get_scan(scan))})\n\n"
+        f"Total pulse length, $t_{{\\text{{cycle}}}}$:        {mfile_data.data['t_plant_pulse_total'].get_scan(scan):,.1f} s  ({secs_to_hms(mfile_data.data['t_plant_pulse_total'].get_scan(scan))})\n"
+    )
+
+    axis.text(
+        0.6,
+        0.225,
+        textstr_times,
+        fontsize=9,
+        verticalalignment="top",
+        transform=fig.transFigure,
+        bbox={
+            "boxstyle": "round",
+            "facecolor": "grey",
+            "alpha": 1.0,
+            "linewidth": 2,
+        },
+    )
+
+
 def plot_cryostat(axis, _mfile_data, _scan, colour_scheme):
     """Function to plot cryostat in poloidal cross-section"""
 
@@ -3315,6 +3496,13 @@ def color_key(axis, mfile_data, scan, colour_scheme):
                 edgecolor="black" if color == "none" else "none",
             )
         )
+
+
+# helper to convert seconds to "Hh Mm Ss"
+def secs_to_hms(s):
+    """Convert seconds to 'Hh Mm Ss' string."""
+    s = float(s)
+    return f"{int(s // 3600)}h {int((s % 3600) // 60)}m {int(s % 60)}s"
 
 
 def toroidal_cross_section(axis, mfile_data, scan, demo_ranges, colour_scheme):
@@ -12164,6 +12352,7 @@ def main_plot(
     fig22,
     fig23,
     fig24,
+    fig25,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -12437,6 +12626,11 @@ def main_plot(
     plot_main_power_flow(
         fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
     )
+
+    ax24 = fig25.add_subplot(111)
+    # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
+    ax24.set_position([0.08, 0.35, 0.84, 0.57])
+    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig25)
 
 
 def main(args=None):
@@ -12754,6 +12948,7 @@ def main(args=None):
     page22 = plt.figure(figsize=(12, 9), dpi=80)
     page23 = plt.figure(figsize=(12, 9), dpi=80)
     page24 = plt.figure(figsize=(12, 9), dpi=80)
+    page25 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12782,6 +12977,7 @@ def main(args=None):
         page22,
         page23,
         page24,
+        page25,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -12815,6 +13011,7 @@ def main(args=None):
         pdf.savefig(page22)
         pdf.savefig(page23)
         pdf.savefig(page24)
+        pdf.savefig(page25)
 
     # show fig if option used
     if args.show:
@@ -12845,6 +13042,7 @@ def main(args=None):
     plt.close(page22)
     plt.close(page23)
     plt.close(page24)
+    plt.close(page25)
 
 
 if __name__ == "__main__":
