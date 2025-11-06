@@ -4033,6 +4033,21 @@ class Physics:
         to a file, in a tidy format.
         """
 
+        # Calculate the effective charge (zeff) profile across the plasma
+        # Returns an array of zeff at each radial point
+        zeff_profile = np.zeros_like(self.plasma_profile.teprofile.profile_y)
+        for i in range(len(zeff_profile)):
+            zeff_profile[i] = 0.0
+            for imp in range(impurity_radiation_module.N_IMPURITIES):
+                zeff_profile[i] += (
+                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    * impurity_radiation.zav_of_te(
+                        imp, np.array([self.plasma_profile.teprofile.profile_y[i]])
+                    ).squeeze()
+                    ** 2
+                )
+        physics_variables.n_charge_plasma_effective_profile = zeff_profile
+
         # ###############################################
         # Dimensionless plasma parameters. See reference below.
         physics_variables.nu_star = (
@@ -5017,6 +5032,14 @@ class Physics:
         po.ovarrf(
             self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
         )
+        for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
+            po.ovarre(
+                self.outfile,
+                "Effective charge at point",
+                f"(n_charge_plasma_effective_profile{i})",
+                physics_variables.n_charge_plasma_effective_profile[i],
+                "OP ",
+            )
 
         po.ovarrf(
             self.outfile,
