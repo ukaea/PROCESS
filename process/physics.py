@@ -6535,6 +6535,16 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap_sauter,
                 "OP ",
             )
+            for point in range(
+                len(physics_variables.j_plasma_bootstrap_sauter_profile)
+            ):
+                po.ovarrf(
+                    self.mfile,
+                    "Sauter et al bootstrap current density profile at point",
+                    f"(j_plasma_bootstrap_sauter_profile{point})",
+                    physics_variables.j_plasma_bootstrap_sauter_profile[point],
+                    "OP ",
+                )
 
             po.ovarrf(
                 self.outfile,
@@ -7253,7 +7263,7 @@ class Physics:
             np.log(ne[radial_elements]) - np.log(ne[radial_elements - 1])
         ) / drho
 
-        jboot = (
+        jboot = physics_variables.j_plasma_bootstrap_sauter_profile = (
             0.5
             * (
                 _calculate_l31_coefficient(

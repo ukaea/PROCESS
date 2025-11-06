@@ -3963,11 +3963,16 @@ def plot_n_profiles(prof, demo_ranges, mfile_data, scan):
     # ---
 
 
-def plot_jprofile(prof):
+def plot_jprofile(prof, mfile_data, scan):
     """Function to plot density profile
     Arguments:
       prof --> axis object to add plot to
     """
+
+    j_plasma_bootstrap_sauter_profile = [
+        mfile_data.data[f"j_plasma_bootstrap_sauter_profile{i}"].get_scan(scan) / 1000.0
+        for i in range(498)
+    ]
 
     prof.set_xlabel(r"$\rho \quad [r/a]$")
     prof.set_ylabel(r"Current density $[kA/m^2]$")
@@ -3978,7 +3983,16 @@ def plot_jprofile(prof):
     rho = np.linspace(0, 1)
     y2 = (j_plasma_0 * (1 - rho**2) ** alphaj) / 1e3
 
-    prof.plot(rho, y2, label="$n_{i}$", color="red")
+    prof.plot(rho, y2, color="red")
+
+    prof.plot(
+        np.linspace(0, 1, 498),
+        j_plasma_bootstrap_sauter_profile,
+        label="Sauter Bootstrap",
+        color="green",
+        linestyle="--",
+    )
+    prof.legend()
 
     textstr_j = "\n".join((
         r"$j_0$: " + f"{y2[0]:.3f} kA m$^{{-2}}$\n",
@@ -4000,6 +4014,14 @@ def plot_jprofile(prof):
         0.05,
         0.04,
         "*Current profile is assumed to be parabolic",
+        fontsize=10,
+        ha="left",
+        transform=plt.gcf().transFigure,
+    )
+    prof.text(
+        0.05,
+        0.02,
+        "*Bootstrap profile is for representation only",
         fontsize=10,
         ha="left",
         transform=plt.gcf().transFigure,
@@ -12546,7 +12568,7 @@ def main_plot(
     # Plot current density profile
     ax12 = fig4.add_subplot(4, 3, 10)
     ax12.set_position([0.075, 0.105, 0.25, 0.15])
-    plot_jprofile(ax12)
+    plot_jprofile(ax12, m_file_data, scan)
 
     # Plot q profile
     ax13 = fig4.add_subplot(4, 3, 12)
