@@ -65,7 +65,7 @@ class RegisterLater:
 
 
 def get_diffusion_coefficient_and_length(
-    total_xs: float, scattering_xs: float, avg_atomic_mass: float
+    total_xs_cm: float, scattering_xs_cm: float, avg_atomic_mass: float
 ) -> tuple[float, float]:
     r"""
     Calculate the diffusion coefficient for a given scattering and total macro-scopic
@@ -73,12 +73,12 @@ def get_diffusion_coefficient_and_length(
 
     Parameters
     ----------
-    total_xs:
+    total_xs_cm:
         macroscopic total cross-section `\sigma_{total}`, i.e. any reaction between
         nuclei and neutrons, that either changes the neutron's path or remove it from
         that energy group.
         Unit: cm^-1
-    scattering_xs:
+    scattering_xs_cm:
         macroscopic total cross-section `\sigma_{scatter}`, i.e. number of reactions per
         unit distance travelled by the neutron that leads to it being scattered (without
         getting absorbed).
@@ -101,10 +101,10 @@ def get_diffusion_coefficient_and_length(
         unit: [cm]
     """
 
-    transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
+    transport_xs = total_xs_cm - 2 / (3 * avg_atomic_mass) * scattering_xs_cm
     diffusion_coef = 1 / 3 / transport_xs
-    diffusion_len_2 = diffusion_coef / (total_xs - scattering_xs)
-    return diffusion_coef, diffusion_len_2
+    diffusion_len_2 = diffusion_coef / (total_xs_cm - scattering_xs_cm)
+    return diffusion_len_2, diffusion_coef
 
 
 def extrapolation_length(diffusion_coefficient: float) -> float:
@@ -176,6 +176,8 @@ class AutoPopulatingDict:
     def values(self):
         return self._dict.values()
 
+    def __repr__(self):
+        return f"AutoPopulatingDict{self._dict}"
 
 class NeutronFluxProfile:
     """Neutron flux in the first wall or the blanket."""
@@ -210,10 +212,28 @@ class NeutronFluxProfile:
             thickness of the first wall, converted from [m] into [cm].
         x_bz_cm:
             thickness of the blanket + first-wall, converted from [m] into [cm].
+        fw_mat:
+            first wall material information
+        bz_mat:
+            blanket material information
         n_groups:
             number of groups in the group structure
         group_structure:
             energy bin edges, 1D array of len = n_groups+1
+
+        integration_constants:
+            Integration constants that determine the flux shape (and therefore
+            reaction rates and neutron current) of each group. A set of four
+            constants, two for fw and two for bz; each with unit: [cm^-2 s^-1]
+        l_fw_2:
+            square of the characteristic diffusion length as given by Reactor Analysis,
+            Duderstadt and Hamilton, applied to the fw.
+        l_bz_2:
+            square of the characteristic diffusion length as given by Reactor Analysis,
+            Duderstadt and Hamilton, applied to the bz.
+        extended_boundary_cm:
+            extended boundary (outside the bz) for each group, stored in cm.
+            This value should be larger than x_bz for each of them.
         """
         self.flux = flux  # flux incident on the first wall.
         if not (0 < x_fw < x_bz):
@@ -251,18 +271,19 @@ class NeutronFluxProfile:
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
         Store the solved constants in self.extended_boundary_cm[0], self.l_fw_2[0],
         self.l_bz_2[0], and self.integration_constants[0].
+        integration_constants have units of [cm^-2 s^-1].
         """
         n = 0
         if n in self.integration_constants:
             return  # skip if it has already been solved.
         self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
-            self.fw_mat.sigma_t[n],
-            self.fw_mat.sigma_s[n, n],
+            self.fw_mat.sigma_t_cm[n],
+            self.fw_mat.sigma_s_cm[n, n],
             self.fw_mat.avg_atomic_mass,
         )
         self.l_bz_2[n], d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[n],
-            self.bz_mat.sigma_s[n, n],
+            self.bz_mat.sigma_t_cm[n],
+            self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
         )
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
@@ -302,8 +323,8 @@ class NeutronFluxProfile:
             * (1 - tanh_fw)
             / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
         )
-        c3 = c3_c4_common_factor * np.exp(self.extended_boundary_cm[n] / l_bz)
-        c4 = -c3_c4_common_factor * np.exp(-self.extended_boundary_cm[n] / l_bz)
+        c3 = -c3_c4_common_factor * np.exp(-self.extended_boundary_cm[n] / l_bz)
+        c4 = c3_c4_common_factor * np.exp(self.extended_boundary_cm[n] / l_bz)
         self.integration_constants[n] = [c1, c2, c3, c4]
 
     def solve_group_n(self, n: int) -> None:
@@ -331,13 +352,13 @@ class NeutronFluxProfile:
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
         self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
-            self.fw_mat.sigma_t[n],
-            self.fw_mat.sigma_s[n, n],
+            self.fw_mat.sigma_t_cm[n],
+            self.fw_mat.sigma_s_cm[n, n],
             self.fw_mat.avg_atomic_mass,
         )
         self.l_bz_2[n], d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[n],
-            self.bz_mat.sigma_s[n, n],
+            self.bz_mat.sigma_t_cm[n],
+            self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
         )
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
@@ -354,7 +375,8 @@ class NeutronFluxProfile:
     def groupwise_neutron_flux_fw(
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
-        """Neutron flux of the n-th group at the first wall, at location x [m].
+        """
+        Neutron flux[cm^-2 s^-1] of the n-th group at the first wall, at location x [m].
 
         Parameters
         ----------
@@ -382,7 +404,7 @@ class NeutronFluxProfile:
     def groupwise_neutron_flux_bz(
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
-        """Neutron flux of the n-th groupat the blanket, at location x [m].
+        """Neutron flux[cm^-2 s^-1] of the n-th groupat the blanket, at location x [m].
 
         Parameters
         ----------
@@ -411,7 +433,7 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron flux anywhere within the valid range of x,
+        Neutron flux [cm^-2 s^-1] anywhere within the valid range of x,
         i.e. from -self.x_bz_cm to self.x_bz_cm.
 
         Parameters
@@ -450,7 +472,7 @@ class NeutronFluxProfile:
     # scalar values (one such float per neutron group.)
     @summarize_values
     def groupwise_reaction_rate_fw(self, n: int, reaction_type: str) -> float:
-        """Calculate the reaction rate in the first wall.
+        """Calculate the reaction rate [s^-1] in the first wall.
 
         Parameters
         ----------
@@ -468,10 +490,10 @@ class NeutronFluxProfile:
                 "higher energy groups' fluxes yet."
             )
         c1, c2, c3, c4 = self.integration_constants[n]
-        if reaction_type == "exclude elastic-scattering":
-            sigma = self.fw_mat.sigma_t[n] - self.fw_mat.sigma_s[n, n]
+        if reaction_type == "heating":
+            sigma = self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n, n]
         elif reaction_type == "total":
-            sigma = self.fw_mat.sigma_t[n]
+            sigma = self.fw_mat.sigma_t_cm[n]
         else:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
@@ -500,10 +522,10 @@ class NeutronFluxProfile:
                 "higher energy groups' fluxes yet."
             )
         c1, c2, c3, c4 = self.integration_constants[n]
-        if reaction_type == "exclude elastic-scattering":
-            sigma = self.bz_mat.sigma_t[n] - self.bz_mat.sigma_s[n, n]
+        if reaction_type == "heating":
+            sigma = self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n, n]
         elif reaction_type == "total":
-            sigma = self.bz_mat.sigma_t[n]
+            sigma = self.bz_mat.sigma_t_cm[n]
         else:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
@@ -533,8 +555,8 @@ class NeutronFluxProfile:
         """
         c1, c2, c3, c4 = self.integration_constants[n]
         l_bz_2, d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[n],
-            self.bz_mat.sigma_s[n, n],
+            self.bz_mat.sigma_t_cm[n],
+            self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
         )
         l_bz = np.sqrt(abs(l_bz_2))
@@ -566,8 +588,8 @@ class NeutronFluxProfile:
         """
         c1, c2, c3, c4 = self.integration_constants[n]
         l_bz_2, d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t[n],
-            self.bz_mat.sigma_s[n, n],
+            self.bz_mat.sigma_t_cm[n],
+            self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
         )
         l_bz = np.sqrt(abs(l_bz_2))
