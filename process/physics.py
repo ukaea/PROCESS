@@ -41,7 +41,7 @@ def rether(
     dlamie,
     te,
     temp_plasma_ion_vol_avg_kev,
-    zeffai,
+    n_charge_plasma_effective_mass_weighted_vol_avg,
 ):
     """Routine to find the equilibration power between the
     ions and electrons
@@ -52,7 +52,7 @@ def rether(
     dlamie : input real :  ion-electron coulomb logarithm
     te     : input real :  electron temperature (keV)
     temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
-    zeffai : input real :  mass weighted plasma effective charge
+    n_charge_plasma_effective_mass_weighted_vol_avg : input real :  mass weighted plasma effective charge
     pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
     ions and electrons.
@@ -61,7 +61,13 @@ def rether(
     profie = (1.0 + alphan) ** 2 / (
         (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
     )
-    conie = 2.42165e-41 * dlamie * nd_plasma_electrons_vol_avg**2 * zeffai * profie
+    conie = (
+        2.42165e-41
+        * dlamie
+        * nd_plasma_electrons_vol_avg**2
+        * n_charge_plasma_effective_mass_weighted_vol_avg
+        * profie
+    )
 
     return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
@@ -2281,7 +2287,7 @@ class Physics:
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
-                physics_variables.zeffai,
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
@@ -2396,7 +2402,7 @@ class Physics:
             physics_variables.dlamie,
             physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.temp_plasma_ion_vol_avg_kev,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
         )
 
         # Calculate radiation power
@@ -3525,7 +3531,7 @@ class Physics:
 
         # Mass weighted plasma effective charge
         # Sum of (Zi^2*n_i) / m_i
-        physics_variables.zeffai = (
+        physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_plasma_fuel_ions_vol_avg
@@ -3557,7 +3563,7 @@ class Physics:
         ) / physics_variables.nd_plasma_electrons_vol_avg
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.zeffai += (
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
                         imp,
@@ -5074,8 +5080,8 @@ class Physics:
         po.ovarrf(
             self.outfile,
             "Mass-weighted Effective charge",
-            "(zeffai)",
-            physics_variables.zeffai,
+            "(n_charge_plasma_effective_mass_weighted_vol_avg)",
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             "OP ",
         )
 

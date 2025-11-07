@@ -4357,7 +4357,7 @@ class Stellarator:
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
-                physics_variables.zeffai,
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
@@ -4455,7 +4455,7 @@ class Stellarator:
             physics_variables.dlamie,
             physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.temp_plasma_ion_vol_avg_kev,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
         )
 
         #  Calculate radiation power

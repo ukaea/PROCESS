@@ -88,7 +88,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             physics_variables.dlamie,
         )
 
@@ -179,7 +179,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             physics_variables.dlamie,
         )
 
@@ -491,7 +491,17 @@ class NeutralBeam:
 
         return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
 
-    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
+    def cfnbi(
+        self,
+        afast,
+        efast,
+        te,
+        ne,
+        _nd,
+        _nt,
+        n_charge_plasma_effective_mass_weighted_vol_avg,
+        xlmbda,
+    ):
         """Routine to calculate the fraction of the fast particle energy
         coupled to the ions
         author: P J Knight, CCFE, Culham Science Centre
@@ -501,7 +511,7 @@ class NeutralBeam:
         ne      : input real : volume averaged electron density (m**-3)
         nd      : input real : deuterium beam density (m**-3)
         nt      : input real : tritium beam density (m**-3)
-        zeffai  : input real : mass weighted plasma effective charge
+        n_charge_plasma_effective_mass_weighted_vol_avg  : input real : mass weighted plasma effective charge
         xlmbda  : input real : ion-electron coulomb logarithm
         f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
         This routine calculates the fast particle energy coupled to
@@ -522,7 +532,7 @@ class NeutralBeam:
         # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
-        sumln = zeffai * xlmbdai / xlmbda
+        sumln = n_charge_plasma_effective_mass_weighted_vol_avg * xlmbdai / xlmbda
         xlnrat = (
             3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.PROTON_MASS * sumln
         ) ** (2.0e0 / 3.0e0)
