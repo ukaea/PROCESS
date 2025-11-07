@@ -27,7 +27,7 @@ f_p_plasma_core_rad_reduction: float = None
 
 f_nd_impurity_electrons: list[float] = None
 
-n_charge_impurity_profile: list[list[float]] = None
+n_charge_impurity_profile: list[float] = None
 """charge profile of impurities"""
 
 imp_label: list[str] = None
