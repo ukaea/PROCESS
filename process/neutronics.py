@@ -480,7 +480,7 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
-            Two options: "total" or "exclude elastic-scattering".
+            string of either {"total","removal"}.
 
         """
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
@@ -490,15 +490,15 @@ class NeutronFluxProfile:
                 "higher energy groups' fluxes yet."
             )
         c1, c2, c3, c4 = self.integration_constants[n]
-        if reaction_type == "heating":
-            sigma = self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n, n]
+        if reaction_type == "removal":
+            sigma = self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n].sum()
         elif reaction_type == "total":
             sigma = self.fw_mat.sigma_t_cm[n]
         else:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
             )
-        return sigma * (
+        return sigma * l_fw * (
             c1 * expm1(self.x_fw_cm / l_fw) - c2 * expm1(-self.x_fw_cm / l_fw)
         )
 
@@ -512,7 +512,7 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
-            Two options: "total" or "exclude elastic-scattering".
+            string of either {"total","removal"}.
 
         """
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
@@ -522,8 +522,8 @@ class NeutronFluxProfile:
                 "higher energy groups' fluxes yet."
             )
         c1, c2, c3, c4 = self.integration_constants[n]
-        if reaction_type == "heating":
-            sigma = self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n, n]
+        if reaction_type == "removal":
+            sigma = self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n].sum()
         elif reaction_type == "total":
             sigma = self.bz_mat.sigma_t_cm[n]
         else:
@@ -533,9 +533,9 @@ class NeutronFluxProfile:
         # thicknesses in terms of bz path lengths
         bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
         fw_thick = self.x_fw_cm / l_bz
-        return sigma * (
-            c3 * np.exp(fw_thick) * expm1(bz_thick)
-            - c4 * np.exp(-fw_thick) * expm1(-bz_thick)
+        return sigma * l_bz * (
+            c3 * expm1(bz_thick) * np.exp(fw_thick)
+            - c4 * expm1(-bz_thick) * np.exp(-fw_thick)
         )
 
     @summarize_values
@@ -636,7 +636,6 @@ class NeutronFluxProfile:
         ax.plot(
             x_bz_left,
             self.neutron_flux_bz(x_bz_left),
-            label="total (BZ)",
             color="black",
             ls=(0, (3, 1, 1, 1)),
         )
@@ -651,6 +650,7 @@ class NeutronFluxProfile:
             x_bz_right,
             self.neutron_flux_bz(x_bz_right),
             color="black",
+            label="total (BZ)",
             ls=(0, (3, 1, 1, 1)),
         )
 
@@ -665,7 +665,6 @@ class NeutronFluxProfile:
                 ax.plot(
                     x_bz_left,
                     self.neutron_flux_bz(x_bz_left),
-                    label=f"group {n + 1} (BZ)",
                     color=f"C{n}",
                     ls=(0, (3, 1, 1, 1)),
                 )
@@ -679,11 +678,14 @@ class NeutronFluxProfile:
                 ax.plot(
                     x_bz_right,
                     self.neutron_flux_bz(x_bz_right),
+                    label=f"group {n + 1} (BZ)",
                     color=f"C{n}",
                     ls=(0, (3, 1, 1, 1)),
                 )
         ax.legend()
         ax.set_title("Neutron flux profile")
+        ax.set_xlabel("Distance from the plasma-fw interface [m]")
+        ax.set_ylabel("Neutron flux [cm^-2 s^-1]")
         return ax
 
 
