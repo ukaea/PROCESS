@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 
 from process.neutronics import NeutronFluxProfile
 from process.neutronics_data import MaterialMacroInfo
@@ -31,9 +32,9 @@ def test_against_desmos_number():
         incoming_flux, x_fw, x_bz, fw_material, bz_material
     )
     
-    c1, c2, c3, c4 = neutron_profile.integration_constants
-    assert np.isclose(c1, 78.5454445887), "Integration constant c1."
-    assert np.isclose(c2, 1.98923249017), "Integration constant c2."
+    c1, c2, c3, c4 = neutron_profile.integration_constants[0]
+    assert np.isclose(c1, 1.98923249017), "Integration constant c1."
+    assert np.isclose(c2, 78.5454445887), "Integration constant c2."
     assert np.isclose(c3, -0.0126020377605), "Integration constant c3."
     assert np.isclose(c4, 60.6997676395), "Integration constant c4."
 
