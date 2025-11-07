@@ -44,3 +44,9 @@ def test_against_desmos_number():
 
     assert np.isclose(neutron_profile.neutron_current_fw2bz(), 22.3980214162)
     assert np.isclose(neutron_profile.neutron_current_escaped(), 1.22047369356)
+
+    assert np.isclose(neutron_profile.flux,
+        neutron_profile.neutron_current_escaped()
+        + neutron_profile.reaction_rate_fw("removal")
+        + neutron_profile.reaction_rate_bz("removal")
+    )
