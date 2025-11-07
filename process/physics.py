@@ -2027,7 +2027,7 @@ class Physics:
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.temp_plasma_electron_vol_avg_kev,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
         )
 
@@ -2110,7 +2110,7 @@ class Physics:
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.zeff,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
             )
@@ -2123,7 +2123,7 @@ class Physics:
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.zeff,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
             )
         )
         current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
@@ -2133,7 +2133,7 @@ class Physics:
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
-                zeff=physics_variables.zeff,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
             )
@@ -2146,7 +2146,7 @@ class Physics:
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 tbeta=physics_variables.tbeta,
-                zeff=physics_variables.zeff,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
@@ -2448,7 +2448,7 @@ class Physics:
             physics_variables.rminor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate L- to H-mode power threshold for different scalings
@@ -2539,7 +2539,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.a_plasma_surface,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate transport losses and energy confinement time using the
@@ -2576,7 +2576,7 @@ class Physics:
             physics_variables.q95,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Total transport power from scaling law (MW)
@@ -3444,9 +3444,9 @@ class Physics:
         # Effective charge
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
-        physics_variables.zeff = 0.0
+        physics_variables.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
-            physics_variables.zeff += (
+            physics_variables.n_charge_plasma_effective_vol_avg += (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
@@ -4025,13 +4025,8 @@ class Physics:
             "OP ",
         )
 
-    def outplas(self):
-        """Subroutine to output the plasma physics information
-        author: P J Knight, CCFE, Culham Science Centre
-        self.outfile : input integer : Fortran output unit identifier
-        This routine writes the plasma physics information
-        to a file, in a tidy format.
-        """
+    def calculate_effective_charge_ionisation_profiles(self):
+        """Calculate the effective charge profiles for ionisation calculations."""
 
         # Calculate the effective charge (zeff) profile across the plasma
         # Returns an array of zeff at each radial point
@@ -4061,7 +4056,13 @@ class Physics:
                 ).squeeze()
         impurity_radiation_module.n_charge_impurity_profile = charge_profiles
 
-        print(impurity_radiation_module.n_charge_impurity_profile)
+    def outplas(self):
+        """Subroutine to output the plasma physics information
+        author: P J Knight, CCFE, Culham Science Centre
+        self.outfile : input integer : Fortran output unit identifier
+        This routine writes the plasma physics information
+        to a file, in a tidy format.
+        """
 
         # ###############################################
         # Dimensionless plasma parameters. See reference below.
@@ -5045,7 +5046,11 @@ class Physics:
 
         po.oblnkl(self.outfile)
         po.ovarrf(
-            self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
+            self.outfile,
+            "Volume averaged plasma effective charge",
+            "(n_charge_plasma_effective_vol_avg)",
+            physics_variables.n_charge_plasma_effective_vol_avg,
+            "OP ",
         )
         for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
             po.ovarre(
@@ -6878,7 +6883,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
 
             try:
@@ -7197,7 +7202,7 @@ class Physics:
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, physics_variables.zeff)
+        zeff = np.full_like(tempi, physics_variables.n_charge_plasma_effective_vol_avg)
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
@@ -7813,7 +7818,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
 
             # At power balance, fhz is zero.

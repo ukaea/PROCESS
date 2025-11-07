@@ -2928,7 +2928,7 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"             $\\mathbf{{relative \\ number}}$\n"
         f"             $\\mathbf{{densities:}}$\n \n"
-        f"             Effective charge: {mfile_data.data['zeff'].get_scan(scan):.3f}\n\n"
+        f"             Effective charge: {mfile_data.data['n_charge_plasma_effective_vol_avg'].get_scan(scan):.3f}\n\n"
         f"             H:    {mfile_data.data['f_nd_impurity_electrons(01)'].get_scan(scan):.4e}\n"
         f"             He:  {mfile_data.data['f_nd_impurity_electrons(02)'].get_scan(scan):.4e}\n"
         f"             Be:  {mfile_data.data['f_nd_impurity_electrons(03)'].get_scan(scan):.4e}\n"
@@ -7498,7 +7498,7 @@ def plot_physics_info(axis, mfile_data, scan):
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
-        ("zeff", r"$Z_{\mathrm{eff}}$", ""),
+        ("n_charge_plasma_effective_vol_avg", r"$Z_{\mathrm{eff}}$", ""),
         (
             nd_plasma_impurities_vol_avg,
             r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$",
@@ -12331,7 +12331,9 @@ def plot_plasma_effective_charge_profile(axis, mfile_data, scan):
         mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
     )
 
-    zeff = mfile_data.data["zeff"].get_scan(scan)
+    n_charge_plasma_effective_vol_avg = mfile_data.data[
+        "n_charge_plasma_effective_vol_avg"
+    ].get_scan(scan)
 
     n_charge_plasma_effective_profile = [
         mfile_data.data[f"n_charge_plasma_effective_profile{i}"].get_scan(scan)
@@ -12344,12 +12346,12 @@ def plot_plasma_effective_charge_profile(axis, mfile_data, scan):
     )
 
     axis.hlines(
-        zeff,
+        n_charge_plasma_effective_vol_avg,
         xmin=0,
         xmax=1,
         colors="red",
         linestyles="--",
-        label=f"Volume-Averaged $Z_{{\\text{{eff}}}}$ = {zeff:.2f}",
+        label=f"Volume-Averaged $Z_{{\\text{{eff}}}}$ = {n_charge_plasma_effective_vol_avg:.2f}",
     )
 
     axis.set_xlabel(r"$\rho \quad [r/a]$")

@@ -1654,12 +1654,12 @@ def constraint_equation_64():
     """Upper limit on Zeff
     author: P B Lloyd, CCFE, Culham Science Centre
 
-    fzeff_max: f-value for maximum zeff
+    fzeff_max: f-value for maximum n_charge_plasma_effective_vol_avg
     zeff_max: maximum value for Zeff
-    zeff: plasma effective charge
+    n_charge_plasma_effective_vol_avg: plasma effective charge
     """
     cc = (
-        data_structure.physics_variables.zeff
+        data_structure.physics_variables.n_charge_plasma_effective_vol_avg
         / data_structure.constraint_variables.zeff_max
         - 1.0 * data_structure.constraint_variables.fzeff_max
     )

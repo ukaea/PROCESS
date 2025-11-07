@@ -282,7 +282,7 @@ fpflux_fw_neutron_max_mw: float = None
 
 
 fzeff_max: float = None
-"""f-value for maximum zeff (`constraint equation 64`, `iteration variable 112`)"""
+"""f-value for maximum n_charge_plasma_effective_vol_avg (`constraint equation 64`, `iteration variable 112`)"""
 
 
 eta_cd_norm_hcd_primary_max: float = None

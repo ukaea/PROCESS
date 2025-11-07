@@ -4624,7 +4624,7 @@ class Stellarator:
             stellarator_variables.iotabar,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         physics_variables.p_electron_transport_loss_mw = (

@@ -463,7 +463,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "m_fuel_amu", bootstrapfractionsauterparam.m_fuel_amu
     )
 
-    monkeypatch.setattr(physics_variables, "zeff", bootstrapfractionsauterparam.zeff)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_vol_avg",
+        bootstrapfractionsauterparam.zeff,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1834,7 +1838,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.f_nd_beam_electron,
     )
 
-    monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_vol_avg",
+        plasmacompositionparam.zeff,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1972,7 +1980,9 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_f_alpha_ion
     )
 
-    assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
+    assert physics_variables.n_charge_plasma_effective_vol_avg == pytest.approx(
+        plasmacompositionparam.expected_zeff
+    )
 
     assert physics_variables.nd_plasma_impurities_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_impurities

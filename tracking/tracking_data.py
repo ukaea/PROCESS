@@ -97,7 +97,7 @@ DEFAULT_TRACKING_VARIABLES = {
     "Physics.temp_plasma_electron_vol_avg_kev",
     "Physics.beta_total_vol_avg",
     "Physics.f_c_plasma_inductive",
-    "Physics.zeff",
+    "Physics.n_charge_plasma_effective_vol_avg",
     "Physics.b_plasma_toroidal_on_axis",
     "Physics.hfact",
     "Physics.kappa",
