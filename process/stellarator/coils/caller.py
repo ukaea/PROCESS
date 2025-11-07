@@ -36,8 +36,12 @@ def st_coil(stellarator, output: bool):
 
     #######################################################################################
     calculate_winding_pack_geometry()
-    coilcurrent, awp_rad, a_tf_wp_no_insulation, \
-        a_tf_wp_with_insulation, f_a_scu_of_wp = winding_pack_total_size(r_coil_major, r_coil_minor)
+
+    # Total coil current (MA)
+    coilcurrent = calculate_current()
+
+    awp_rad, a_tf_wp_no_insulation, \
+        a_tf_wp_with_insulation, f_a_scu_of_wp = winding_pack_total_size(r_coil_major, r_coil_minor, coilcurrent)
 
     #######################################################################################
     #  Casing calculations
@@ -299,18 +303,24 @@ def calculate_winding_pack_geometry():
     ) ** 2 - tfcoil_variables.a_tf_turn_cable_space_no_void
 
 
-def winding_pack_total_size(r_coil_major, r_coil_minor):
-    # Winding Pack total size:
-    #
-    # Total coil current (MA)
+def calculate_current():
+    """
+    Recalculate the coil current from global stellarator configuration and variables:
+    coilcurrent = f_b * stella_config_i0 * f_r / f_n
+    Update stellarator_variables.f_i
+    """
     coilcurrent = (
         stellarator_variables.f_b 
         * stellarator_configuration.stella_config_i0 
         * stellarator_variables.f_r 
-        / stellarator_variables.f_coil_aspect 
         / stellarator_variables.f_n
     )
     stellarator_variables.f_i = coilcurrent / stellarator_configuration.stella_config_i0
+    return coilcurrent
+
+
+def winding_pack_total_size(r_coil_major:float, r_coil_minor:float, coilcurrent:float):
+    # Winding Pack total size:
 
     n_it = 200  # number of iterations
 
@@ -360,7 +370,7 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
     lhs[:] = constraint_variables.fiooic * jcrit_vector
 
     # Superconductor fraction in wp
-    f_a_scu_of_wp = (
+    fraction_area_superconductor_of_wp = (
         (
             tfcoil_variables.a_tf_turn_cable_space_no_void
             * (1.0e0 - tfcoil_variables.f_a_tf_turn_cable_space_extra_void)
@@ -372,7 +382,7 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
     # print *, "f_a_scu_of_wp. ",f_a_scu_of_wp,"Awp min: ",Awp(1)
 
     rhs[:] = coilcurrent / (
-        wp_width_r**2 / stellarator_configuration.stella_config_wp_ratio * f_a_scu_of_wp
+        wp_width_r**2 / stellarator_configuration.stella_config_wp_ratio * fraction_area_superconductor_of_wp
     )  # f_a_scu_of_wp should be the fraction of the sc that is in the winding pack.
 
     wp_width_r_min = (
@@ -463,7 +473,7 @@ def winding_pack_total_size(r_coil_major, r_coil_minor):
         tfcoil_variables.n_tf_coil_turns * tfcoil_variables.a_tf_turn_steel
     )
 
-    return coilcurrent, awp_rad, a_tf_wp_no_insulation, a_tf_wp_with_insulation, f_a_scu_of_wp
+    return awp_rad, a_tf_wp_no_insulation, a_tf_wp_with_insulation, fraction_area_superconductor_of_wp
 
 
 def calculate_casing():
