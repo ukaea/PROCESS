@@ -493,6 +493,8 @@ class MaterialMacroInfo:
                 "Group-wise scattering cross-sections be a square matrix of "
                 f"shape n*n, where n= number of groups = {self.n_groups}."
             )
+        self.sigma_t_cm = self.sigma_t/100
+        self.sigma_s_cm = self.sigma_s/100
 
     @property
     def n_groups(self):
