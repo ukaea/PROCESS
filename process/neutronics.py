@@ -106,7 +106,7 @@ def get_diffusion_coefficient_and_length(
     transport_xs = total_xs_cm - 2 / (3 * avg_atomic_mass) * scattering_xs_cm
     diffusion_coef = 1 / 3 / transport_xs
     diffusion_len_2 = diffusion_coef / (total_xs_cm - scattering_xs_cm)
-    return diffusion_len_2, diffusion_coef
+    return diffusion_coef, diffusion_len_2
 
 
 def extrapolation_length(diffusion_coefficient: float) -> float:
@@ -314,12 +314,12 @@ class NeutronFluxProfile:
         n = 0
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
-        self.l_fw_2[n], self.d_fw_cm[n] = get_diffusion_coefficient_and_length(
+        self.d_fw_cm[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.sigma_t_cm[n],
             self.fw_mat.sigma_s_cm[n, n],
             self.fw_mat.avg_atomic_mass,
         )
-        self.l_bz_2[n], self.d_bz_cm[n] = get_diffusion_coefficient_and_length(
+        self.d_bz_cm[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
             self.bz_mat.sigma_t_cm[n],
             self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
@@ -395,12 +395,12 @@ class NeutronFluxProfile:
                 self.solve_group_n(k)
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
-        self.l_fw_2[n], self.d_fw_cm[n] = get_diffusion_coefficient_and_length(
+        self.d_fw_cm[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.sigma_t_cm[n],
             self.fw_mat.sigma_s_cm[n, n],
             self.fw_mat.avg_atomic_mass,
         )
-        self.l_bz_2[n], self.d_bz_cm[n] = get_diffusion_coefficient_and_length(
+        self.d_bz_cm[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
             self.bz_mat.sigma_t_cm[n],
             self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
