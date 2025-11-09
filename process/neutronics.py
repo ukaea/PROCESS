@@ -5,9 +5,8 @@ ISBN:9780471223634.
 
 import functools
 import inspect
-from dataclasses import dataclass, asdict
-from typing import Iterable
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
+from dataclasses import asdict, dataclass
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -123,6 +122,7 @@ def extrapolation_length(diffusion_coefficient: float) -> float:
     """
     return 0.7104 * 3 * diffusion_coefficient
 
+
 @dataclass
 class IntegrationConstants:
     """
@@ -137,6 +137,7 @@ class IntegrationConstants:
                 + fw_neg[1][0] * exp(-x/L[0]) + fw_neg[1][1] * exp(-x/L[1])
 
     """
+
     fw_pos: Iterable[float]
     fw_neg: Iterable[float]
     bz_pos: Iterable[float]
@@ -144,10 +145,10 @@ class IntegrationConstants:
 
     def validate_length(self, expected_length: int):
         """Validate that all fields has the correct length."""
-        for const_name, const_value in asdict(self):
-            if len(const_value)!=expected_length:
+        for const_name, const_value in asdict(self).items():
+            if len(const_value) != expected_length:
                 raise ProcessValueError(
-                    f"Expected {const_name} to have len=={n+1}, "
+                    f"Expected {const_name} to have len=={expected_length}, "
                     f"got {len(const_value)} instead."
                 )
 
@@ -201,7 +202,7 @@ class AutoPopulatingDict:
     def __setitem__(self, i: int, value: float):
         """Check if dict i is in the index or not."""
         if hasattr(value, "validate_length"):
-            value.validate_length(i+1)
+            value.validate_length(i + 1)
         self._dict[i] = value
         self._attempting_to_access.discard(i)
 
@@ -210,6 +211,7 @@ class AutoPopulatingDict:
 
     def __repr__(self):
         return f"AutoPopulatingDict{self._dict}"
+
 
 class NeutronFluxProfile:
     """Neutron flux in the first wall or the blanket."""
@@ -313,7 +315,7 @@ class NeutronFluxProfile:
         """
         n = 0
         if n in self.integration_constants:
-            return None  # skip if it has already been solved.
+            return  # skip if it has already been solved.
         self.d_fw_cm[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.sigma_t_cm[n],
             self.fw_mat.sigma_s_cm[n, n],
@@ -363,12 +365,15 @@ class NeutronFluxProfile:
             * (1 - tanh_fw)
             / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
         )
-        c3 = -c3_c4_common_factor * np.exp(-self.extended_boundary_cm[n] / l_bz)
+        c3 = -c3_c4_common_factor * np.exp(
+            -self.extended_boundary_cm[n] / l_bz
+        )
         c4 = c3_c4_common_factor * np.exp(self.extended_boundary_cm[n] / l_bz)
 
         self.integration_constants[n] = IntegrationConstants(
             [c1], [c2], [c3], [c4]
         )
+        return
 
     def solve_group_n(self, n: int) -> None:
         """
@@ -405,14 +410,60 @@ class NeutronFluxProfile:
             self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
         )
-        l_fw = np.sqrt(abs(self.l_fw_2[n]))
-        l_bz = np.sqrt(abs(self.l_bz_2[n]))
+        self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(
+            self.d_bz_cm[n]
+        )
+
+        # Setting up aliases for shorter code
+        l_fw_2, l_bz_2 = self.l_fw_2[n], self.l_bz_2[n]
+        d_fw, d_bz = self.d_fw_cm[n], self.d_bz_cm[n]
+        ic = self.integration_constants
+        fw_sigma_s, bz_sigma_s = self.fw_mat.sigma_s, self.bz_mat.sigma_s
+
+        _ic_n = IntegrationConstants([], [], [], [])
+        for g in range(n):
+            if np.isclose(diff_fw := self.l_fw_2[g] - l_fw_2, 0):
+                raise ProcessValueError(
+                    f"Singularity encountered when calculating group {n}'s "
+                    "flux in fw, specifically the scale factor for the exponential "
+                    f"used to cancel out the group {g}'s neutron fluxes."
+                )
+            if np.isclose(diff_bz := self.l_bz_2[g] - l_bz_2, 0):
+                raise ProcessValueError(
+                    f"Singularity encountered when calculating group {n}'s "
+                    "flux in bz, specifically the scale factor for the exponential "
+                    f"used to cancel out the group {g}'s neutron fluxes."
+                )
+            scale_factor_fw = (l_fw_2 * self.l_fw_2[g]) / d_fw / diff_fw
+            scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
+            _ic_n.fw_pos.append(
+                sum(fw_sigma_s[i, n] * ic[i].fw_pos[g] for i in range(g, n))
+                * scale_factor_fw
+            )
+            _ic_n.fw_neg.append(
+                sum(fw_sigma_s[i, n] * ic[i].fw_neg[g] for i in range(g, n))
+                * scale_factor_fw
+            )
+            _ic_n.bz_pos.append(
+                sum(bz_sigma_s[i, n] * ic[i].bz_pos[g] for i in range(g, n))
+                * scale_factor_bz
+            )
+            _ic_n.bz_neg.append(
+                sum(bz_sigma_s[i, n] * ic[i].bz_neg[g] for i in range(g, n))
+                * scale_factor_bz
+            )
+        l_fw = np.sqrt(abs(l_fw_2))
+        l_bz = np.sqrt(abs(l_bz_2))
         c1 = ...
         c2 = ...
         c3 = ...
         c4 = ...
-        self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(self.d_bz_cm[n])
-        self.integration_constants[n] = [c1, c2, c3, c4]
+        _ic_n.fw_pos.append(c1)
+        _ic_n.fw_neg.append(c2)
+        _ic_n.bz_pos.append(c3)
+        _ic_n.bz_neg.append(c4)
+        self.integration_constants[n] = _ic_n
+        return None
 
     @summarize_values
     def groupwise_neutron_flux_fw(
@@ -441,15 +492,15 @@ class NeutronFluxProfile:
         x_cm = abs(x * 100)
 
         exponentials = []
-        for i in range(n+1):
+        for i in range(n + 1):
             l_fw = np.sqrt(abs(self.l_fw_2[i]))
             exponentials.append(
-                self.integration_constants[n].fw_pos[i] * exp(x_cm/l_fw)
+                self.integration_constants[n].fw_pos[i] * np.exp(x_cm / l_fw)
             )
             exponentials.append(
-                self.integration_constants[n].fw_neg[i] * exp(-x_cm/l_fw)
+                self.integration_constants[n].fw_neg[i] * np.exp(-x_cm / l_fw)
             )
-        return np.sum(exponential, axis=0) 
+        return np.sum(exponentials, axis=0)
 
     @summarize_values
     def groupwise_neutron_flux_bz(
@@ -477,15 +528,15 @@ class NeutronFluxProfile:
         x_cm = abs(x * 100)
 
         exponentials = []
-        for i in range(n+1):
+        for i in range(n + 1):
             l_bz = np.sqrt(abs(self.l_bz_2[i]))
             exponentials.append(
-                self.integration_constants[n].bz_pos[i] * exp(x_cm/l_bz)
+                self.integration_constants[n].bz_pos[i] * np.exp(x_cm / l_bz)
             )
             exponentials.append(
-                self.integration_constants[n].bz_neg[i] * exp(-x_cm/l_bz)
+                self.integration_constants[n].bz_neg[i] * np.exp(-x_cm / l_bz)
             )
-        return np.sum(exponential, axis=0) 
+        return np.sum(exponentials, axis=0)
 
     @summarize_values
     def groupwise_neutron_flux_at(
@@ -557,8 +608,13 @@ class NeutronFluxProfile:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
             )
-        return sigma * l_fw * (
-            c1 * expm1(self.x_fw_cm / l_fw) - c2 * expm1(-self.x_fw_cm / l_fw)
+        return (
+            sigma
+            * l_fw
+            * (
+                c1 * expm1(self.x_fw_cm / l_fw)
+                - c2 * expm1(-self.x_fw_cm / l_fw)
+            )
         )
 
     @summarize_values
@@ -592,9 +648,13 @@ class NeutronFluxProfile:
         # thicknesses in terms of bz path lengths
         bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
         fw_thick = self.x_fw_cm / l_bz
-        return sigma * l_bz * (
-            c3 * expm1(bz_thick) * np.exp(fw_thick)
-            - c4 * expm1(-bz_thick) * np.exp(-fw_thick)
+        return (
+            sigma
+            * l_bz
+            * (
+                c3 * expm1(bz_thick) * np.exp(fw_thick)
+                - c4 * expm1(-bz_thick) * np.exp(-fw_thick)
+            )
         )
 
     @summarize_values
