@@ -259,10 +259,14 @@ class NeutronFluxProfile:
             constants, two for fw and two for bz; each with unit: [cm^-2 s^-1]
         l_fw_2:
             square of the characteristic diffusion length as given by Reactor Analysis,
-            Duderstadt and Hamilton, applied to the fw.
+            Duderstadt and Hamilton, applied to the fw. unit: [cm]
         l_bz_2:
             square of the characteristic diffusion length as given by Reactor Analysis,
-            Duderstadt and Hamilton, applied to the bz.
+            Duderstadt and Hamilton, applied to the bz. unit: [cm]
+        d_fw_cm:
+            diffusion constants in the fw. unit: [cm]
+        d_bz_cm:
+            diffusion constants in the bz. unit: [cm]
         extended_boundary_cm:
             extended boundary (outside the bz) for each group, stored in cm.
             This value should be larger than x_bz for each of them.
@@ -294,6 +298,8 @@ class NeutronFluxProfile:
         # diffusion lengths squared
         self.l_fw_2 = AutoPopulatingDict(self.solve_group_n, "l_fw_2")
         self.l_bz_2 = AutoPopulatingDict(self.solve_group_n, "l_bz_2")
+        self.d_fw_cm = AutoPopulatingDict(self.solve_group_n, "d_fw_cm")
+        self.d_bz_cm = AutoPopulatingDict(self.solve_group_n, "d_bz_cm")
         self.extended_boundary_cm = AutoPopulatingDict(
             self.solve_group_n, "extended_boundary_cm"
         )
@@ -308,12 +314,12 @@ class NeutronFluxProfile:
         n = 0
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
-        self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
+        self.l_fw_2[n], self.d_fw_cm[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.sigma_t_cm[n],
             self.fw_mat.sigma_s_cm[n, n],
             self.fw_mat.avg_atomic_mass,
         )
-        self.l_bz_2[n], d_bz = get_diffusion_coefficient_and_length(
+        self.l_bz_2[n], self.d_bz_cm[n] = get_diffusion_coefficient_and_length(
             self.bz_mat.sigma_t_cm[n],
             self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
@@ -321,6 +327,8 @@ class NeutronFluxProfile:
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
         x_fw, x_bz = self.x_fw_cm, self.x_bz_cm
+        d_fw = self.d_fw_cm[n]
+        d_bz = self.d_bz_cm[n]
         self.extended_boundary_cm[n] = x_bz + extrapolation_length(d_bz)
         if self.l_fw_2[n] > 0:
             sinh_fw = np.sinh(x_fw / l_fw)
@@ -387,12 +395,12 @@ class NeutronFluxProfile:
                 self.solve_group_n(k)
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
-        self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
+        self.l_fw_2[n], self.d_fw_cm[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.sigma_t_cm[n],
             self.fw_mat.sigma_s_cm[n, n],
             self.fw_mat.avg_atomic_mass,
         )
-        self.l_bz_2[n], d_bz = get_diffusion_coefficient_and_length(
+        self.l_bz_2[n], self.d_bz_cm[n] = get_diffusion_coefficient_and_length(
             self.bz_mat.sigma_t_cm[n],
             self.bz_mat.sigma_s_cm[n, n],
             self.bz_mat.avg_atomic_mass,
@@ -403,7 +411,7 @@ class NeutronFluxProfile:
         c2 = ...
         c3 = ...
         c4 = ...
-        self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(d_bz)
+        self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(self.d_bz_cm[n])
         self.integration_constants[n] = [c1, c2, c3, c4]
 
     @summarize_values
@@ -605,14 +613,9 @@ class NeutronFluxProfile:
             current in cm^-2
         """
         c1, c2, c3, c4 = self.integration_constants[n]
-        l_bz_2, d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t_cm[n],
-            self.bz_mat.sigma_s_cm[n, n],
-            self.bz_mat.avg_atomic_mass,
-        )
-        l_bz = np.sqrt(abs(l_bz_2))
+        l_bz = np.sqrt(abs(self.l_bz_2[n]))
         return (
-            -d_bz
+            -self.d_bz_cm[n]
             / l_bz
             * (
                 c3 * np.exp(self.x_fw_cm / l_bz)
@@ -638,14 +641,9 @@ class NeutronFluxProfile:
             current in cm^-2
         """
         c1, c2, c3, c4 = self.integration_constants[n]
-        l_bz_2, d_bz = get_diffusion_coefficient_and_length(
-            self.bz_mat.sigma_t_cm[n],
-            self.bz_mat.sigma_s_cm[n, n],
-            self.bz_mat.avg_atomic_mass,
-        )
-        l_bz = np.sqrt(abs(l_bz_2))
+        l_bz = np.sqrt(abs(self.l_bz_2[n]))
         return (
-            -d_bz
+            -self.d_bz_cm[n]
             / l_bz
             * (
                 c3 * np.exp(self.x_bz_cm / l_bz)
