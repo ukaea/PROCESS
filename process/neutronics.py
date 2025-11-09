@@ -142,10 +142,10 @@ class IntegrationConstants:
     bz_pos: Iterable[float]
     bz_neg: Iterable[float]
 
-    def validate(self, n):
+    def validate_length(self, expected_length: int):
         """Validate that all fields has the correct length."""
         for const_name, const_value in asdict(self):
-            if len(const_value)!=(n+1):
+            if len(const_value)!=expected_length:
                 raise ProcessValueError(
                     f"Expected {const_name} to have len=={n+1}, "
                     f"got {len(const_value)} instead."
@@ -200,8 +200,8 @@ class AutoPopulatingDict:
 
     def __setitem__(self, i: int, value: float):
         """Check if dict i is in the index or not."""
-        if hasattr(value, "validate"):
-            value.validate(i)
+        if hasattr(value, "validate_length"):
+            value.validate_length(i+1)
         self._dict[i] = value
         self._attempting_to_access.discard(i)
 
@@ -357,7 +357,10 @@ class NeutronFluxProfile:
         )
         c3 = -c3_c4_common_factor * np.exp(-self.extended_boundary_cm[n] / l_bz)
         c4 = c3_c4_common_factor * np.exp(self.extended_boundary_cm[n] / l_bz)
-        self.integration_constants[n] = [c1, c2, c3, c4]
+
+        self.integration_constants[n] = IntegrationConstants(
+            [c1], [c2], [c3], [c4]
+        )
 
     def solve_group_n(self, n: int) -> None:
         """
@@ -427,10 +430,18 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        c1, c2 = self.integration_constants[n][:2]
-        l_fw = np.sqrt(abs(self.l_fw_2[n]))
-        x_l_fw = abs(x * 100) / l_fw
-        return c1 * np.exp(x_l_fw) + c2 * np.exp(-x_l_fw)
+        x_cm = abs(x * 100)
+
+        exponentials = []
+        for i in range(n+1):
+            l_fw = np.sqrt(abs(self.l_fw_2[i]))
+            exponentials.append(
+                self.integration_constants[n].fw_pos[i] * exp(x_cm/l_fw)
+            )
+            exponentials.append(
+                self.integration_constants[n].fw_neg[i] * exp(-x_cm/l_fw)
+            )
+        return np.sum(exponential, axis=0) 
 
     @summarize_values
     def groupwise_neutron_flux_bz(
@@ -455,10 +466,18 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        c3, c4 = self.integration_constants[n][2:]
-        l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        x_l_bz = abs(x * 100) / l_bz
-        return c3 * np.exp(x_l_bz) + c4 * np.exp(-x_l_bz)
+        x_cm = abs(x * 100)
+
+        exponentials = []
+        for i in range(n+1):
+            l_bz = np.sqrt(abs(self.l_bz_2[i]))
+            exponentials.append(
+                self.integration_constants[n].bz_pos[i] * exp(x_cm/l_bz)
+            )
+            exponentials.append(
+                self.integration_constants[n].bz_neg[i] * exp(-x_cm/l_bz)
+            )
+        return np.sum(exponential, axis=0) 
 
     @summarize_values
     def groupwise_neutron_flux_at(
