@@ -492,13 +492,13 @@ class NeutronFluxProfile:
         x_cm = abs(x * 100)
 
         exponentials = []
-        for i in range(n + 1):
-            l_fw = np.sqrt(abs(self.l_fw_2[i]))
+        for g in range(n + 1):
+            l_fw = np.sqrt(abs(self.l_fw_2[g]))
             exponentials.append(
-                self.integration_constants[n].fw_pos[i] * np.exp(x_cm / l_fw)
+                self.integration_constants[n].fw_pos[g] * np.exp(x_cm / l_fw)
             )
             exponentials.append(
-                self.integration_constants[n].fw_neg[i] * np.exp(-x_cm / l_fw)
+                self.integration_constants[n].fw_neg[g] * np.exp(-x_cm / l_fw)
             )
         return np.sum(exponentials, axis=0)
 
@@ -528,13 +528,13 @@ class NeutronFluxProfile:
         x_cm = abs(x * 100)
 
         exponentials = []
-        for i in range(n + 1):
-            l_bz = np.sqrt(abs(self.l_bz_2[i]))
+        for g in range(n + 1):
+            l_bz = np.sqrt(abs(self.l_bz_2[g]))
             exponentials.append(
-                self.integration_constants[n].bz_pos[i] * np.exp(x_cm / l_bz)
+                self.integration_constants[n].bz_pos[g] * np.exp(x_cm / l_bz)
             )
             exponentials.append(
-                self.integration_constants[n].bz_neg[i] * np.exp(-x_cm / l_bz)
+                self.integration_constants[n].bz_neg[g] * np.exp(-x_cm / l_bz)
             )
         return np.sum(exponentials, axis=0)
 
@@ -593,13 +593,6 @@ class NeutronFluxProfile:
             string of either {"total","removal"}.
 
         """
-        l_fw = np.sqrt(abs(self.l_fw_2[n]))
-        if n > 0:
-            raise NotImplementedError(
-                "We have not done the integration for "
-                "higher energy groups' fluxes yet."
-            )
-        c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "removal":
             sigma = self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n].sum()
         elif reaction_type == "total":
@@ -608,14 +601,17 @@ class NeutronFluxProfile:
             raise NotImplementedError(
                 f"Not yet implemented the reaction type {reaction_type}"
             )
-        return (
-            sigma
-            * l_fw
-            * (
-                c1 * expm1(self.x_fw_cm / l_fw)
-                - c2 * expm1(-self.x_fw_cm / l_fw)
+
+        integrals = []
+        for g in range(n + 1):
+            l_fw = np.sqrt(abs(self.l_fw_2[g]))
+            integrals.append(
+                l_fw * self.integration_constants[n].fw_pos[g] * expm1(self.x_fw_cm / l_fw)
             )
-        )
+            integrals.append(
+                - l_fw * self.integration_constants[n].fw_neg[g] * expm1(-self.x_fw_cm / l_fw)
+            )
+        return sigma * np.sum(integrals, axis=0)
 
     @summarize_values
     def groupwise_reaction_rate_bz(self, n: int, reaction_type: str) -> float:
@@ -630,13 +626,6 @@ class NeutronFluxProfile:
             string of either {"total","removal"}.
 
         """
-        l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        if n > 0:
-            raise NotImplementedError(
-                "We have not done the integration for "
-                "higher energy groups' fluxes yet."
-            )
-        c1, c2, c3, c4 = self.integration_constants[n]
         if reaction_type == "removal":
             sigma = self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n].sum()
         elif reaction_type == "total":
@@ -646,16 +635,21 @@ class NeutronFluxProfile:
                 f"Not yet implemented the reaction type {reaction_type}"
             )
         # thicknesses in terms of bz path lengths
-        bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
-        fw_thick = self.x_fw_cm / l_bz
-        return (
-            sigma
-            * l_bz
-            * (
-                c3 * expm1(bz_thick) * np.exp(fw_thick)
-                - c4 * expm1(-bz_thick) * np.exp(-fw_thick)
+
+        integrals = []
+        for g in range(n + 1):
+            l_bz = np.sqrt(abs(self.l_bz_2[g]))
+            bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
+            fw_thick = self.x_fw_cm / l_bz
+            integrals.append(
+                l_bz * self.integration_constants[n].bz_pos[g]
+                * expm1(bz_thick) * np.exp(fw_thick)
             )
-        )
+            integrals.append(
+                - l_bz * self.integration_constants[n].bz_neg[g]
+                * expm1(-bz_thick) * np.exp(-fw_thick)
+            )
+        return sigma * np.sum(integrals, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_fw2bz(self, n: int) -> float:
@@ -672,18 +666,27 @@ class NeutronFluxProfile:
         :
             current in cm^-2
         """
-        c1, c2, c3, c4 = self.integration_constants[n]
-        l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        return (
-            -self.d_bz_cm[n]
-            / l_bz
-            * (
-                c3 * np.exp(self.x_fw_cm / l_bz)
-                - c4 * np.exp(-self.x_fw_cm / l_bz)
+        differentials = []
+        for g in range(n + 1):
+            l_bz = np.sqrt(abs(self.l_bz_2[g]))
+            differentials.append(
+                1/ l_bz * self.integration_constants[n].bz_pos[g] * np.exp(self.x_fw_cm / l_bz)
             )
-        )
-        # equivalent definition below: (should yield the same answer)
-        # return - d_fw / l_fw * (c1 * np.exp(x_fw/l_fw) - c2 * np.exp(-x_fw/l_fw))
+            differentials.append(
+                - 1/l_bz * self.integration_constants[n].bz_neg[g] * np.exp(-self.x_fw_cm / l_bz)
+            )
+        return - self.d_bz_cm[n] * np.sum(differentials, axis=0)
+
+        # # equivalent definition below: (should yield the same answer)
+        # for g in range(n + 1):
+        #     l_fw = np.sqrt(abs(self.l_fw_2[g]))
+        #     differentials.append(
+        #         1/ l_fw * self.integration_constants[n].fw_pos[g] * np.exp(self.x_fw_cm / l_fw)
+        #     )
+        #     differentials.append(
+        #         - 1/l_fw * self.integration_constants[n].fw_neg[g] * np.exp(-self.x_fw_cm / l_fw)
+        #     )
+        # return - self.d_fw_cm[n] * np.sum(differentials, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_escaped(self, n: int) -> float:
@@ -700,16 +703,15 @@ class NeutronFluxProfile:
         :
             current in cm^-2
         """
-        c1, c2, c3, c4 = self.integration_constants[n]
-        l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        return (
-            -self.d_bz_cm[n]
-            / l_bz
-            * (
-                c3 * np.exp(self.x_bz_cm / l_bz)
-                - c4 * np.exp(-self.x_bz_cm / l_bz)
+        for g in range(n + 1):
+            l_bz = np.sqrt(abs(self.l_bz_2[g]))
+            differentials.append(
+                1/ l_bz * self.integration_constants[n].bz_pos[g] * np.exp(self.x_bz_cm / l_bz)
             )
-        )
+            differentials.append(
+                - 1/l_bz * self.integration_constants[n].bz_neg[g] * np.exp(-self.x_bz_cm / l_bz)
+            )
+        return - self.d_bz_cm[n] * np.sum(differentials, axis=0)
 
     def plot(
         self,
