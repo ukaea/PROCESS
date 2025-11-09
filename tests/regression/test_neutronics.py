@@ -32,11 +32,11 @@ def test_against_desmos_number():
         incoming_flux, x_fw, x_bz, fw_material, bz_material
     )
     
-    c1, c2, c3, c4 = neutron_profile.integration_constants[0]
-    assert np.isclose(c1, 1.98923249017), "Integration constant c1."
-    assert np.isclose(c2, 78.5454445887), "Integration constant c2."
-    assert np.isclose(c3, -0.0126020377605), "Integration constant c3."
-    assert np.isclose(c4, 60.6997676395), "Integration constant c4."
+    const = neutron_profile.integration_constants[0]  # alias to fit line width
+    assert np.isclose(const.fw_pos, 1.98923249017), "c1"
+    assert np.isclose(const.fw_neg, 78.5454445887), "c2"
+    assert np.isclose(const.bz_pos, -0.0126020377605), "c3"
+    assert np.isclose(const.bz_neg, 60.6997676395), "c4"
 
     assert np.isclose(neutron_profile.neutron_flux_fw(x_fw), 48.72444)
     assert np.isclose(neutron_profile.neutron_flux_bz(x_fw), 48.72444)
@@ -50,3 +50,5 @@ def test_against_desmos_number():
         + neutron_profile.reaction_rate_fw("removal")
         + neutron_profile.reaction_rate_bz("removal")
     )
+def test_one_group_with_fission():
+    """Expecting a cosine-shape (dome shape!) of neutron flux profile"""
