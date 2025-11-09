@@ -5,6 +5,8 @@ ISBN:9780471223634.
 
 import functools
 import inspect
+from dataclasses import dataclass, asdict
+from typing import Iterable
 from collections.abc import Callable
 
 import numpy as np
@@ -12,7 +14,7 @@ from matplotlib import pyplot as plt
 from numpy import typing as npt
 from scipy.special import expm1
 
-from process.exceptions import ProcessValidationError
+from process.exceptions import ProcessValidationError, ProcessValueError
 from process.neutronics_data import MaterialMacroInfo
 
 
@@ -121,6 +123,34 @@ def extrapolation_length(diffusion_coefficient: float) -> float:
     """
     return 0.7104 * 3 * diffusion_coefficient
 
+@dataclass
+class IntegrationConstants:
+    """
+    Inside each material, there are two new exponentials per group, i.e.
+    group n=0 has exp(x/L[0]) and exp(-x/L[0]),
+    group n=1 has exp(x/L[0]), exp(-x/L[0]), exp(x/L[1]) and exp(-x/L[1]),
+    etc.
+    To get the neutron flux, each exponential has to be scaled by an integration
+    constant. E.g.
+    group n=0: fw: fw_pos[0][0] * exp(x/L[0]) + fw_neg[0][0] * exp(-x/L[0])
+    group n=1: fw: fw_pos[1][0] * exp(x/L[0]) + fw_pos[1][1] * exp(x/L[1])
+                + fw_neg[1][0] * exp(-x/L[0]) + fw_neg[1][1] * exp(-x/L[1])
+
+    """
+    fw_pos: Iterable[float]
+    fw_neg: Iterable[float]
+    bz_pos: Iterable[float]
+    bz_neg: Iterable[float]
+
+    def validate(self, n):
+        """Validate that all fields has the correct length."""
+        for const_name, const_value in asdict(self):
+            if len(const_value)!=(n+1):
+                raise ProcessValueError(
+                    f"Expected {const_name} to have len=={n+1}, "
+                    f"got {len(const_value)} instead."
+                )
+
 
 class AutoPopulatingDict:
     """
@@ -170,8 +200,10 @@ class AutoPopulatingDict:
 
     def __setitem__(self, i: int, value: float):
         """Check if dict i is in the index or not."""
-        self._attempting_to_access.discard(i)
+        if hasattr(value, "validate"):
+            value.validate(i)
         self._dict[i] = value
+        self._attempting_to_access.discard(i)
 
     def values(self):
         return self._dict.values()
