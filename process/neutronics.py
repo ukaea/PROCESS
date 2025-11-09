@@ -307,7 +307,7 @@ class NeutronFluxProfile:
         """
         n = 0
         if n in self.integration_constants:
-            return  # skip if it has already been solved.
+            return None  # skip if it has already been solved.
         self.l_fw_2[n], d_fw = get_diffusion_coefficient_and_length(
             self.fw_mat.sigma_t_cm[n],
             self.fw_mat.sigma_s_cm[n, n],
@@ -378,6 +378,7 @@ class NeutronFluxProfile:
             )
         if n == 0:
             return self.solve_lowest_group()
+        # ensure all lower groups are solved.
         for k in range(n):
             if k not in self.integration_constants:
                 self.solve_group_n(k)
@@ -401,7 +402,6 @@ class NeutronFluxProfile:
         c4 = ...
         self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(d_bz)
         self.integration_constants[n] = [c1, c2, c3, c4]
-        return None
 
     @summarize_values
     def groupwise_neutron_flux_fw(
