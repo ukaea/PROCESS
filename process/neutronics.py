@@ -703,6 +703,7 @@ class NeutronFluxProfile:
         :
             current in cm^-2
         """
+        differentials = []
         for g in range(n + 1):
             l_bz = np.sqrt(abs(self.l_bz_2[g]))
             differentials.append(
