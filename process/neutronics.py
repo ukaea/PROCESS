@@ -427,20 +427,18 @@ class NeutronFluxProfile:
 
         _ic_n = IntegrationConstants([], [], [], [])
         for g in range(n):
+            # if the characteristic length of group [g] coincides with the
+            # characteristic length of group [n], then that particular
+            # exponential would be indistinguishable from group [n]'s
+            # exponential anyways, therefore we can set the coefficient to 0.
             if np.isclose(diff_fw := self.l_fw_2[g] - l_fw_2, 0):
-                raise ProcessValueError(
-                    f"Singularity encountered when calculating group {n}'s "
-                    "flux in fw, specifically the scale factor for the exponential "
-                    f"used to cancel out the group {g}'s neutron fluxes."
-                )
+                scale_factor_fw = 0.0
+            else:
+                scale_factor_fw = (l_fw_2 * self.l_fw_2[g]) / d_fw / diff_fw
             if np.isclose(diff_bz := self.l_bz_2[g] - l_bz_2, 0):
-                raise ProcessValueError(
-                    f"Singularity encountered when calculating group {n}'s "
-                    "flux in bz, specifically the scale factor for the exponential "
-                    f"used to cancel out the group {g}'s neutron fluxes."
-                )
-            scale_factor_fw = (l_fw_2 * self.l_fw_2[g]) / d_fw / diff_fw
-            scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
+                scale_factor_bz = 0.0
+            else:
+                scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
             _ic_n.fw_pos.append(
                 sum(fw_sigma_s[i, n] * ic[i].fw_pos[g] for i in range(g, n))
                 * scale_factor_fw
