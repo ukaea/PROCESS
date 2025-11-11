@@ -460,10 +460,11 @@ class MaterialMacroInfo:
         average atomic mass (weighted by fraction)
     """
 
-    sigma_t: npt.NDArray[np.float64]
-    sigma_s: npt.NDArray
     group_structure: npt.NDArray
     avg_atomic_mass: float
+    sigma_t: npt.NDArray[np.float64]
+    sigma_s: npt.NDArray
+    sigma_in: npt.NDArray | None = None
 
     def __post_init__(self):
         """
@@ -480,7 +481,7 @@ class MaterialMacroInfo:
         else:
             self.sigma_in = np.zeros_like(self.sigma_s)
 
-        if (self.group_structure<=0).any():
+        if (self.group_structure <= 0).any():
             warnings.warn("Zero energy (inf. lethargy) not allowed.")
             self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
         if (np.diff(self.group_structure) >= 0).any():
@@ -510,8 +511,9 @@ class MaterialMacroInfo:
                 "Elastic up-scattering seems unlikely in this model! "
                 "Check if the group structure is chosen correctly?",
             )
-        self.sigma_t_cm = self.sigma_t/100
-        self.sigma_s_cm = self.sigma_s/100
+        self.sigma_t_cm = self.sigma_t / 100
+        self.sigma_s_cm = self.sigma_s / 100
+        self.sigma_in_cm = self.sigma_in / 100
 
     @property
     def n_groups(self):
@@ -536,11 +538,10 @@ class MaterialMacroInfo:
         as neutron fluxes in higher-lethargy groups in turn affects the neutron
         flux in lower-lethargy groups.
         """
-        return ~self.contains_upscatter
-
-    @property
-    def contains_upscatter(self):
-        return np.tril(self.sigma_s, k=-1).any()
+        return ~(
+            np.tril(self.sigma_s, k=-1).any()
+            or np.tril(self.sigma_in, k=-1).any()
+        )
 
 
 def get_material_nuclear_data(
@@ -572,6 +573,7 @@ def get_material_nuclear_data(
     density = material_density_data_bank[material]
     composition = material_composition_data_bank[material]
     avg_atomic_mass = get_avg_atomic_mass(composition)
+    n_groups = len(group_structure) - 1
 
     # dicts of {"isotope": npt.NDArray[np.float64] 1D/2D arrays}
     micro_total_xs = {}
@@ -618,21 +620,20 @@ def get_material_nuclear_data(
     discrete_macro_scattering_xs = calculate_average_macro_xs(
         composition, micro_scattering_xs, density
     )
-    discrete_macro_n2n_xs = calculate_average_macro_xs(
-        composition, micro_n2n_xs, density
-    )
-    discrete_macro_fission_xs = calculate_average_macro_xs(
-        composition, micro_fiss_xs, density
-    )
-    source_matrix = (
-        discrete_macro_scattering_xs
-        + discrete_macro_n2n_xs
-        + discrete_macro_fission_xs
-    )
+    source_matrix = np.zeros([n_groups, n_groups], dtype=float)
+    if micro_n2n_xs:
+        source_matrix += calculate_average_macro_xs(
+            composition, micro_n2n_xs, density
+        )
+    if micro_fiss_xs:
+        source_matrix += calculate_average_macro_xs(
+            composition, micro_fiss_xs, density
+        )
 
     return MaterialMacroInfo(
-        discrete_macro_total_xs,
-        source_matrix,
         group_structure,
         avg_atomic_mass,
+        discrete_macro_total_xs,
+        discrete_macro_scattering_xs,
+        source_matrix,
     )
