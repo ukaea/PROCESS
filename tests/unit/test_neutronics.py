@@ -1,6 +1,6 @@
 import pytest
 
-from process.exceptions import ProcessValidationError, ProcessValueError
+from process.exceptions import ProcessValidationError
 from process.neutronics import NeutronFluxProfile
 from process.neutronics_data import MaterialMacroInfo
 
@@ -14,6 +14,7 @@ def test_group_structure_0_energy():
             [[1.0]],
         )
 
+
 def test_group_structure_too_short():
     with pytest.raises(ProcessValidationError):
         MaterialMacroInfo(
@@ -22,6 +23,7 @@ def test_group_structure_too_short():
             [1.0],
             [[1.0]],
         )
+
 
 def test_sigma_s_incorrect_shape():
     with pytest.raises(ProcessValidationError):
@@ -32,6 +34,7 @@ def test_sigma_s_incorrect_shape():
             [1.0, 1.0],
         )
 
+
 def test_sigma_s_too_large():
     with pytest.raises(ProcessValidationError):
         MaterialMacroInfo(
@@ -40,6 +43,8 @@ def test_sigma_s_too_large():
             [1.0, 2.0],
             [[1.0, 1.0], [1.0, 1.0]],
         )
+
+
 def test_warn_up_elastic_scatter():
     with pytest.warns():
         MaterialMacroInfo(
@@ -48,6 +53,7 @@ def test_warn_up_elastic_scatter():
             [1.0, 2.0],
             [[0.5, 0.5], [1.0, 1.0]],
         )
+
 
 def test_has_local_fluxes():
     """Test that the groupwise decorator has worked on the local fluxes methods."""
@@ -74,6 +80,7 @@ def test_has_reactions():
     assert hasattr(NeutronFluxProfile, "groupwise_reaction_rate_bz")
     assert hasattr(NeutronFluxProfile, "reaction_rate_bz")
 
+
 def test_three_group():
     # no negative flux
     dummy = [10000, 1000, 100, 1]
@@ -81,6 +88,7 @@ def test_three_group():
     bz_mat = MaterialMacroInfo
     # same L_1 and L_3 shoudl yield integration_constants[2].fw_pos[0] and
     # integration_constants[2].fw_neg[0] = 0.0
+
 
 def test_two_group():
     """"""
