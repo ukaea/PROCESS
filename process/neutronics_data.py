@@ -1,3 +1,4 @@
+import warnings
 from dataclasses import dataclass
 from itertools import islice, pairwise
 from pathlib import Path
@@ -470,19 +471,26 @@ class MaterialMacroInfo:
         shapes are correct.
         """
         # force into float or numpy arrays of floats.
+        self.group_structure = np.array(self.group_structure, dtype=float)
+        self.avg_atomic_mass = float(self.avg_atomic_mass)
         self.sigma_t = np.array(self.sigma_t, dtype=float)
         self.sigma_s = np.array(self.sigma_s, dtype=float)
-        self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
-        self.avg_atomic_mass = float(self.avg_atomic_mass)
+        if self.sigma_in:
+            self.sigma_in = np.array(self.sigma_in, dtype=float)
+        else:
+            self.sigma_in = np.zeros_like(self.sigma_s)
 
-        if (np.diff(self.group_structure) > 0).any():
+        if (self.group_structure<=0).any():
+            warnings.warn("Zero energy (inf. lethargy) not allowed.")
+            self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
+        if (np.diff(self.group_structure) >= 0).any():
             raise ValueError(
-                "The group structure must be defined beginning from the highest energy "
-                "bin (i.e. lowest lethargy bin) edge, descending to the lowest energy. "
-                "Similarly the cross-section must be arranged with the highest energy "
-                "group first, and the lowest energy group last."
+                "The group structure must be defined descendingly, from the "
+                "highest energy bin (i.e. lowest lethargy bin) edge to the "
+                "lowest energy bin edge, which can't be zero (infinite "
+                "lethargy). Similarly the cross-section must be arranged "
+                "according to these bin edges."
             )
-
         if np.shape(self.sigma_t) != (self.n_groups,):
             raise ProcessValidationError(
                 f"total group-wise cross-sections should have {self.n_groups} "
@@ -492,6 +500,15 @@ class MaterialMacroInfo:
             raise ProcessValidationError(
                 "Group-wise scattering cross-sections be a square matrix of "
                 f"shape n*n, where n= number of groups = {self.n_groups}."
+            )
+        if (self.sigma_s.sum(axis=1) > self.sigma_t).any():
+            raise ProcessValidationError(
+                "Total cross-section should include the scattering cross-section."
+            )
+        if np.tril(self.sigma_s, k=-1).any():
+            warnings.warn(
+                "Elastic up-scattering seems unlikely in this model! "
+                "Check if the group structure is chosen correctly?",
             )
         self.sigma_t_cm = self.sigma_t/100
         self.sigma_s_cm = self.sigma_s/100
