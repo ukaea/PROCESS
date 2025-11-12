@@ -11,20 +11,19 @@ def test_against_desmos_number():
     """
     dummy = [100, 1]  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
-    # [m]
-    mfp_fw_s = 118 * 0.01
-    mfp_fw_t = 16.65 * 0.01
+    mfp_fw_s = 118 * 0.01  # [m]
+    mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     a_fw = 52
-    fw_material = MaterialMacroInfo([sigma_fw_t], [[sigma_fw_s]], dummy, a_fw)
+    fw_material = MaterialMacroInfo(dummy, a_fw, [sigma_fw_t], [[sigma_fw_s]])
 
-    mfp_bz_s = 97 * 0.01
-    mfp_bz_t = 35.8 * 0.01
+    mfp_bz_s = 97 * 0.01  # [m]
+    mfp_bz_t = 35.8 * 0.01  # [m]
     sigma_bz_s = 1 / mfp_bz_s  # [1/m]
     sigma_bz_t = 1 / mfp_bz_t  # [1/m]
     a_bz = 71
-    bz_material = MaterialMacroInfo([sigma_bz_t], [[sigma_bz_s]], dummy, a_bz)
+    bz_material = MaterialMacroInfo(dummy, a_bz, [sigma_bz_t], [[sigma_bz_s]])
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
@@ -33,10 +32,10 @@ def test_against_desmos_number():
     )
     
     const = neutron_profile.integration_constants[0]  # alias to fit line width
-    assert np.isclose(const.fw_pos, 1.98923249017), "c1"
-    assert np.isclose(const.fw_neg, 78.5454445887), "c2"
-    assert np.isclose(const.bz_pos, -0.0126020377605), "c3"
-    assert np.isclose(const.bz_neg, 60.6997676395), "c4"
+    assert np.isclose(const.fw_c, 80.5346770788), "c5"
+    assert np.isclose(const.fw_s, -76.5562120985), "c6"
+    assert np.isclose(const.bz_c, 60.6871656017), "c7"
+    assert np.isclose(const.bz_s, -60.7123696772), "c8"
 
     assert np.isclose(neutron_profile.neutron_flux_fw(x_fw), 48.72444)
     assert np.isclose(neutron_profile.neutron_flux_bz(x_fw), 48.72444)
@@ -51,4 +50,40 @@ def test_against_desmos_number():
         + neutron_profile.reaction_rate_bz("removal")
     )
 def test_one_group_with_fission():
-    """Expecting a cosine-shape (dome shape!) of neutron flux profile"""
+    """
+    Regression test against Desmos snapshot with fission involved:
+    https://www.desmos.com/calculator/cd830add9c
+    Expecting a cosine-shape (dome shape!) of neutron flux profile.
+    """
+    dummy = [100, 1]
+    mfp_fw_s = 118 * 0.01  # [m]
+    mfp_fw_t = 16.65 * 0.01  # [m]
+    sigma_fw_t = 1 / mfp_fw_t  # [1/m]
+    sigma_fw_s = 1 / mfp_fw_s  # [1/m]
+    a_fw = 52
+    fw_material = MaterialMacroInfo(dummy, a_fw, [sigma_fw_t], [[sigma_fw_s]])
+
+    mfp_bz_s = 97 * 0.01  # [m]
+    mfp_bz_t = 35.8 * 0.01  # [m]
+    sigma_bz_s = 1 / mfp_bz_s  # [1/m]
+    sigma_bz_t = 1 / mfp_bz_t  # [1/m]
+    a_bz = 71
+
+    g = 1.2
+    nu_sigma_bz_f = g * (sigma_bz_t - sigma_bz_s)
+    bz_material = MaterialMacroInfo(dummy, a_bz, [sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])
+
+    x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
+    incoming_flux = 41
+    neutron_profile = NeutronFluxProfile(
+        incoming_flux, x_fw, x_bz, fw_material, bz_material
+    )
+    assert np.isclose(neutron_profile.l_bz_2[0], -58.2869567709**2)
+    neutron_profile.plot()
+    import matplotlib.pyplot as plt
+    plt.show()
+    assert np.isclose(neutron_profile.neutron_flux_at(18.96382/100), 164.81245)
+
+def test_two_groups():
+    """4"""
+
