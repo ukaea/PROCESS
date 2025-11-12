@@ -360,27 +360,27 @@ class NeutronFluxProfile:
             s_bz_mod = np.sin((self.extended_boundary_cm[n] - x_fw) / l_bz)
             t_bz_mod = np.tan((self.extended_boundary_cm[n] - x_fw) / l_bz)
 
-        c5 = - self.flux * (
+        fw_c_factor = - self.flux * (
             l_fw / d_fw 
             - np.exp(x_fw / l_fw) * (
-                    (l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod
-                )/(
-                    c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz)
-                )
+                (l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod
+            )/(
+                c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz)
             )
-        c6 = - self.flux * l_fw / d_fw
+        )
+        fw_s_factor = - self.flux * l_fw / d_fw
 
-        c7_c8_common_factor = (
+        bz_common_factor = (
             self.flux
             * np.exp(x_fw / l_fw)
             * (1 - t_fw)
             / ((d_bz / l_bz) * c_bz_mod + (d_fw / l_fw) * t_fw * s_bz_mod)
         )
-        c7 = c7_c8_common_factor * s_bz
-        c8 = -c7_c8_common_factor * c_bz
+        bz_c_factor = bz_common_factor * s_bz
+        bz_s_factor = -bz_common_factor * c_bz
 
         self.integration_constants[n] = IntegrationConstants(
-            [c5], [c6], [c7], [c8]
+            [fw_c_factor], [fw_s_factor], [bz_c_factor], [bz_s_factor]
         )
         return
 
