@@ -465,6 +465,7 @@ class MaterialMacroInfo:
     sigma_t: npt.NDArray[np.float64]
     sigma_s: npt.NDArray
     sigma_in: npt.NDArray | None = None
+    name: str = ""
 
     def __post_init__(self):
         """

@@ -16,14 +16,14 @@ def test_one_group():
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     a_fw = 52
-    fw_material = MaterialMacroInfo(dummy, a_fw, [sigma_fw_t], [[sigma_fw_s]])
+    fw_material = MaterialMacroInfo(dummy, a_fw, [sigma_fw_t], [[sigma_fw_s]], name="fw")
 
     mfp_bz_s = 97 * 0.01  # [m]
     mfp_bz_t = 35.8 * 0.01  # [m]
     sigma_bz_s = 1 / mfp_bz_s  # [1/m]
     sigma_bz_t = 1 / mfp_bz_t  # [1/m]
     a_bz = 71
-    bz_material = MaterialMacroInfo(dummy, a_bz, [sigma_bz_t], [[sigma_bz_s]])
+    bz_material = MaterialMacroInfo(dummy, a_bz, [sigma_bz_t], [[sigma_bz_s]], name="bz")
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
@@ -61,7 +61,7 @@ def test_one_group_with_fission():
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
     sigma_fw_s = 1 / mfp_fw_s  # [1/m]
     a_fw = 52
-    fw_material = MaterialMacroInfo(dummy, a_fw, [sigma_fw_t], [[sigma_fw_s]])
+    fw_material = MaterialMacroInfo(dummy, a_fw, [sigma_fw_t], [[sigma_fw_s]], name="fw")
 
     mfp_bz_s = 97 * 0.01  # [m]
     mfp_bz_t = 35.8 * 0.01  # [m]
@@ -71,7 +71,7 @@ def test_one_group_with_fission():
 
     g = 1.2
     nu_sigma_bz_f = g * (sigma_bz_t - sigma_bz_s)
-    bz_material = MaterialMacroInfo(dummy, a_bz, [sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]])
+    bz_material = MaterialMacroInfo(dummy, a_bz, [sigma_bz_t], [[sigma_bz_s]], [[nu_sigma_bz_f]], name="bz")
 
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
@@ -86,4 +86,4 @@ def test_two_groups():
     """
     Same group n=0 values as test_one_group. Second group can have a massive removal cross-section 
     """
-    
+

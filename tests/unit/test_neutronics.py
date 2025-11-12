@@ -82,13 +82,15 @@ def test_has_reactions():
 
 
 def test_three_group():
-    # no negative flux
+    # 1. No negative flux
     dummy = [10000, 1000, 100, 1]
     # fw_mat = MaterialMacroInfo()
     bz_mat = MaterialMacroInfo
-    # same L_1 and L_3 shoudl yield integration_constants[2].fw_pos[0] and
-    # integration_constants[2].fw_neg[0] = 0.0
+    # 2. same L_1 and L_3 shoudl yield integration_constants[2].fw_c[0] and
+    # integration_constants[2].fw_s[0] = 0.0
+    # self.l_fw_2 == self.l_fw_2[n] case.
+    # 
 
 
 def test_two_group():
-    """"""
+    """Ensure continuity at interface for both groups."""
