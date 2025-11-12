@@ -4,7 +4,7 @@ import numpy as np
 from process.neutronics import NeutronFluxProfile
 from process.neutronics_data import MaterialMacroInfo
 
-def test_against_desmos_number():
+def test_one_group():
     """
     Regression test against Desmos snapshot:
     https://www.desmos.com/calculator/18xojespuo
@@ -79,11 +79,11 @@ def test_one_group_with_fission():
         incoming_flux, x_fw, x_bz, fw_material, bz_material
     )
     assert np.isclose(neutron_profile.l_bz_2[0], -58.2869567709**2)
-    neutron_profile.plot()
-    import matplotlib.pyplot as plt
-    plt.show()
-    assert np.isclose(neutron_profile.neutron_flux_at(18.96382/100), 164.81245)
+    assert np.isclose(neutron_profile.neutron_flux_at(18.96382/100), 164.81245), "Maximum flux in BZ"
+    assert np.isclose(neutron_profile.neutron_flux_fw(x_fw), neutron_profile.neutron_flux_bz(x_fw)), "Flux continuity assurance"
 
 def test_two_groups():
-    """4"""
-
+    """
+    Same group n=0 values as test_one_group. Second group can have a massive removal cross-section 
+    """
+    
