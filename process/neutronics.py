@@ -559,7 +559,7 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        x_cm = abs(x * 100)
+        x_cm = x * 100
 
         return _groupwise_neutron_flux_fw(
             self.integration_constants[n],
@@ -591,7 +591,7 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        x_cm = abs(x * 100)
+        x_cm = x * 100
 
         return _groupwise_neutron_flux_bz(
             self.integration_constants[n],
@@ -843,8 +843,8 @@ def _groupwise_neutron_flux_fw(
         else:
             c, s = np.cos, np.sin
             l_fw = np.sqrt(-self.l_fw_2[g])
-        trig_funcs.append(int_const.fw_c[g] * c(x_cm / l_fw))
-        trig_funcs.append(int_const.fw_s[g] * s(x_cm / l_fw))
+        trig_funcs.append(int_const.fw_c[g] * c(abs(x_cm) / l_fw))
+        trig_funcs.append(int_const.fw_s[g] * s(abs(x_cm) / l_fw))
     return np.sum(trig_funcs, axis=0)
 
 
@@ -867,8 +867,8 @@ def _groupwise_neutron_flux_bz(
         else:
             c, s = np.cos, np.sin
             l_bz = np.sqrt(-self.l_bz_2[g])
-        trig_funcs.append(int_const.bz_c[g] * c(x_cm / l_bz))
-        trig_funcs.append(int_const.bz_s[g] * s(x_cm / l_bz))
+        trig_funcs.append(int_const.bz_c[g] * c(abs(x_cm) / l_bz))
+        trig_funcs.append(int_const.bz_s[g] * s(abs(x_cm) / l_bz))
     return np.sum(trig_funcs, axis=0)
 
 
