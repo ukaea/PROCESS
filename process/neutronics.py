@@ -132,22 +132,22 @@ def extrapolation_length(diffusion_coefficient: float) -> float:
 @dataclass
 class IntegrationConstants:
     """
-    Inside each material, there are two new exponentials per group, i.e.
-    group n=0 has exp(x/L[0]) and exp(-x/L[0]),
-    group n=1 has exp(x/L[0]), exp(-x/L[0]), exp(x/L[1]) and exp(-x/L[1]),
+    Inside each material, there are two new hyperbolic trig funcs per group, i.e.
+    group n=0 has cosh(x/L[0]) and sinh(x/L[0]),
+    group n=1 has cosh(x/L[0]), sinh(x/L[0]), cosh(x/L[1]) and sinh(x/L[1]),
     etc.
-    To get the neutron flux, each exponential has to be scaled by an integration
+    To get the neutron flux, each trig func has to be scaled by an integration
     constant. E.g.
-    group n=0: fw: fw_pos[0][0] * exp(x/L[0]) + fw_neg[0][0] * exp(-x/L[0])
-    group n=1: fw: fw_pos[1][0] * exp(x/L[0]) + fw_pos[1][1] * exp(x/L[1])
-                + fw_neg[1][0] * exp(-x/L[0]) + fw_neg[1][1] * exp(-x/L[1])
+    group n=0: fw: fw_c[0][0] * cosh(x/L[0]) + fw_s[0][0] * sinh(x/L[0])
+    group n=1: fw: fw_c[1][0] * cosh(x/L[0]) + fw_c[1][1] * cosh(x/L[1])
+                + fw_s[1][0] * sinh(x/L[0]) + fw_s[1][1] * sinh(x/L[1])
 
     """
 
-    fw_pos: Iterable[float]
-    fw_neg: Iterable[float]
-    bz_pos: Iterable[float]
-    bz_neg: Iterable[float]
+    fw_c: Iterable[float]
+    fw_s: Iterable[float]
+    bz_c: Iterable[float]
+    bz_s: Iterable[float]
 
     def validate_length(self, expected_length: int):
         """Validate that all fields has the correct length."""
@@ -341,45 +341,47 @@ class NeutronFluxProfile:
         d_bz = self.d_bz_cm[n]
         self.extended_boundary_cm[n] = x_bz + extrapolation_length(d_bz)
         if self.l_fw_2[n] > 0:
-            sinh_fw = np.sinh(x_fw / l_fw)
-            cosh_fw = np.cosh(x_fw / l_fw)
-            tanh_fw = np.tanh(x_fw / l_fw)
+            s_fw = np.sinh(x_fw / l_fw)
+            c_fw = np.cosh(x_fw / l_fw)
+            t_fw = np.tanh(x_fw / l_fw)
         else:
-            sinh_fw = np.sin(x_fw / l_fw)
-            cosh_fw = np.cos(x_fw / l_fw)
-            tanh_fw = np.tan(x_fw / l_fw)
+            s_fw = np.sin(x_fw / l_fw)
+            c_fw = np.cos(x_fw / l_fw)
+            t_fw = np.tan(x_fw / l_fw)
         if self.l_bz_2[n] > 0:
-            sinh_bz = np.sinh((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            cosh_bz = np.cosh((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            tanh_bz = np.tanh((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            c_bz = np.cosh(self.extended_boundary_cm[n] / l_bz)
+            s_bz = np.sinh(self.extended_boundary_cm[n] / l_bz)
+            c_bz_mod = np.cosh((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            s_bz_mod = np.sinh((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            t_bz_mod = np.tanh((self.extended_boundary_cm[n] - x_fw) / l_bz)
         else:
-            sinh_bz = np.sin((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            cosh_bz = np.cos((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            tanh_bz = np.tan((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            c_bz = np.cos(self.extended_boundary_cm[n] / l_bz)
+            s_bz = np.sin(self.extended_boundary_cm[n] / l_bz)
+            c_bz_mod = np.cos((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            s_bz_mod = np.sin((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            t_bz_mod = np.tan((self.extended_boundary_cm[n] - x_fw) / l_bz)
 
-        c2 = (
+        c5 = - self.flux * (
+            l_fw / d_fw 
+            - np.exp(x_fw / l_fw) * (
+                    (l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod
+                )/(
+                    c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz)
+                )
+            )
+        c6 = - self.flux * l_fw / d_fw
+
+        c7_c8_common_factor = (
             self.flux
             * np.exp(x_fw / l_fw)
-            / 2
-            * ((l_fw / d_fw) + (l_bz / d_bz) * tanh_bz)
-            / (cosh_fw + sinh_fw * tanh_bz * (d_fw / l_fw) * (l_bz / d_bz))
+            * (1 - t_fw)
+            / ((d_bz / l_bz) * c_bz_mod + (d_fw / l_fw) * t_fw * s_bz_mod)
         )
-        c1 = c2 - l_fw / d_fw * self.flux
-
-        c3_c4_common_factor = (
-            self.flux
-            * np.exp(x_fw / l_fw)
-            / 2
-            * (1 - tanh_fw)
-            / ((d_bz / l_bz) * cosh_bz + (d_fw / l_fw) * tanh_fw * sinh_bz)
-        )
-        c3 = -c3_c4_common_factor * np.exp(
-            -self.extended_boundary_cm[n] / l_bz
-        )
-        c4 = c3_c4_common_factor * np.exp(self.extended_boundary_cm[n] / l_bz)
+        c7 = c7_c8_common_factor * s_bz
+        c8 = -c7_c8_common_factor * c_bz
 
         self.integration_constants[n] = IntegrationConstants(
-            [c1], [c2], [c3], [c4]
+            [c5], [c6], [c7], [c8]
         )
         return
 
@@ -439,8 +441,8 @@ class NeutronFluxProfile:
         for g in range(n):
             # if the characteristic length of group [g] coincides with the
             # characteristic length of group [n], then that particular
-            # exponential would be indistinguishable from group [n]'s
-            # exponential anyways, therefore we can set the coefficient to 0.
+            # cosh/sinh would be indistinguishable from group [n]'s
+            # cosh/sinh anyways, therefore we can set the coefficient to 0.
             if np.isclose(diff_fw := self.l_fw_2[g] - l_fw_2, 0):
                 scale_factor_fw = 0.0
             else:
@@ -449,35 +451,35 @@ class NeutronFluxProfile:
                 scale_factor_bz = 0.0
             else:
                 scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
-            _ic_n.fw_pos.append(
-                sum(src_fw[i, n] * ic[i].fw_pos[g] for i in range(g, n))
+            _ic_n.fw_c.append(
+                sum(src_fw[i, n] * ic[i].fw_c[g] for i in range(g, n))
                 * scale_factor_fw
             )
-            _ic_n.fw_neg.append(
-                sum(src_fw[i, n] * ic[i].fw_neg[g] for i in range(g, n))
+            _ic_n.fw_s.append(
+                sum(src_fw[i, n] * ic[i].fw_s[g] for i in range(g, n))
                 * scale_factor_fw
             )
-            _ic_n.bz_pos.append(
-                sum(src_bz[i, n] * ic[i].bz_pos[g] for i in range(g, n))
+            _ic_n.bz_c.append(
+                sum(src_bz[i, n] * ic[i].bz_c[g] for i in range(g, n))
                 * scale_factor_bz
             )
-            _ic_n.bz_neg.append(
-                sum(src_bz[i, n] * ic[i].bz_neg[g] for i in range(g, n))
+            _ic_n.bz_s.append(
+                sum(src_bz[i, n] * ic[i].bz_s[g] for i in range(g, n))
                 * scale_factor_bz
             )
 
         c1, c2, c3, c4 = 0.0, 0.0, 0.0, 0.0
-        _ic_n.fw_pos.append(c1)
-        _ic_n.fw_neg.append(c2)
-        _ic_n.bz_pos.append(c3)
-        _ic_n.bz_neg.append(c4)
+        _ic_n.fw_c.append(c1)
+        _ic_n.fw_s.append(c2)
+        _ic_n.bz_c.append(c3)
+        _ic_n.bz_s.append(c4)
 
         def set_constants(input_vector: Iterable[float]):
             c1, c2, c3, c4 = input_vector
-            _ic_n.fw_pos[n] = c1
-            _ic_n.fw_neg[n] = c2
-            _ic_n.bz_pos[n] = c3
-            _ic_n.bz_neg[n] = c4
+            _ic_n.fw_c[n] = c1
+            _ic_n.fw_s[n] = c2
+            _ic_n.bz_c[n] = c3
+            _ic_n.bz_s[n] = c4
 
         def evaluate_fit():
             flux_continuity = _groupwise_neutron_flux_fw(
@@ -834,12 +836,17 @@ def _groupwise_neutron_flux_fw(
     in such a way that doesn't trigger the re-calculation of integration_constants
     (which would've led to RecursionError if called within solve_group_n).
     """
-    exponentials = []
+    trig_funcs = []
     for g in range(n + 1):
-        l_fw = np.sqrt(abs(self.l_fw_2[g]))
-        exponentials.append(int_const.fw_pos[g] * np.exp(x_cm / l_fw))
-        exponentials.append(int_const.fw_neg[g] * np.exp(-x_cm / l_fw))
-    return np.sum(exponentials, axis=0)
+        l_fw_2 = self.l_fw_2[g]
+        if l_fw_2>0:
+            c, s = np.cosh, np.sinh
+        else:
+            c, s = np.cos, np.sin
+        l_fw = np.sqrt(abs(l_fw_2))
+        trig_funcs.append(int_const.fw_c[g] * c(x_cm / l_fw))
+        trig_funcs.append(int_const.fw_s[g] * s(x_cm / l_fw))
+    return np.sum(trig_funcs, axis=0)
 
 
 def _groupwise_neutron_flux_bz(
@@ -853,12 +860,17 @@ def _groupwise_neutron_flux_bz(
     in such a way that doesn't trigger the re-calculation of integration_constants
     (which would've led to RecursionError if called within solve_group_n).
     """
-    exponentials = []
+    trig_funcs = []
     for g in range(n + 1):
-        l_bz = np.sqrt(abs(self.l_bz_2[g]))
-        exponentials.append(int_const.bz_pos[g] * np.exp(x_cm / l_bz))
-        exponentials.append(int_const.bz_neg[g] * np.exp(-x_cm / l_bz))
-    return np.sum(exponentials, axis=0)
+        l_bz_2 = self.l_bz_2[g]
+        if l_bz_2>0:
+            c, s = np.cosh, np.sinh
+        else:
+            c, s = np.cos, np.sin
+        l_bz = np.sqrt(abs(l_bz_2))
+        trig_funcs.append(int_const.bz_c[g] * c(x_cm / l_bz))
+        trig_funcs.append(int_const.bz_s[g] * s(x_cm / l_bz))
+    return np.sum(trig_funcs, axis=0)
 
 
 def _groupwise_integrated_flux_fw(
@@ -874,10 +886,10 @@ def _groupwise_integrated_flux_fw(
     for g in range(n + 1):
         l_fw = np.sqrt(abs(self.l_fw_2[g]))
         integrals.append(
-            l_fw * int_const.fw_pos[g] * expm1(self.x_fw_cm / l_fw)
+            l_fw * int_const.fw_c[g] * expm1(self.x_fw_cm / l_fw)
         )
         integrals.append(
-            -l_fw * int_const.fw_neg[g] * expm1(-self.x_fw_cm / l_fw)
+            -l_fw * int_const.fw_s[g] * expm1(-self.x_fw_cm / l_fw)
         )
     return np.sum(integrals, axis=0)
 
@@ -897,10 +909,10 @@ def _groupwise_integrated_flux_bz(
         bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
         fw_thick = self.x_fw_cm / l_bz
         integrals.append(
-            l_bz * int_const.bz_pos[g] * expm1(bz_thick) * np.exp(fw_thick)
+            l_bz * int_const.bz_c[g] * expm1(bz_thick) * np.exp(fw_thick)
         )
         integrals.append(
-            -l_bz * int_const.bz_neg[g] * expm1(-bz_thick) * np.exp(-fw_thick)
+            -l_bz * int_const.bz_s[g] * expm1(-bz_thick) * np.exp(-fw_thick)
         )
     return np.sum(integrals, axis=0)
 
@@ -926,10 +938,10 @@ def _groupwise_neutron_current_fw2bz(
         for g in range(n + 1):
             l_fw = np.sqrt(abs(self.l_fw_2[g]))
             differentials.append(
-                1 / l_fw * int_const.fw_pos[g] * np.exp(self.x_fw_cm / l_fw)
+                1 / l_fw * int_const.fw_c[g] * np.exp(self.x_fw_cm / l_fw)
             )
             differentials.append(
-                -1 / l_fw * int_const.fw_neg[g] * np.exp(-self.x_fw_cm / l_fw)
+                -1 / l_fw * int_const.fw_s[g] * np.exp(-self.x_fw_cm / l_fw)
             )
         return -self.d_fw_cm[n] * np.sum(differentials, axis=0)
 
@@ -937,10 +949,10 @@ def _groupwise_neutron_current_fw2bz(
     for g in range(n + 1):
         l_bz = np.sqrt(abs(self.l_bz_2[g]))
         differentials.append(
-            1 / l_bz * int_const.bz_pos[g] * np.exp(self.x_fw_cm / l_bz)
+            1 / l_bz * int_const.bz_c[g] * np.exp(self.x_fw_cm / l_bz)
         )
         differentials.append(
-            -1 / l_bz * int_const.bz_neg[g] * np.exp(-self.x_fw_cm / l_bz)
+            -1 / l_bz * int_const.bz_s[g] * np.exp(-self.x_fw_cm / l_bz)
         )
     return -self.d_bz_cm[n] * np.sum(differentials, axis=0)
 
@@ -964,10 +976,10 @@ def _groupwise_neutron_current_escaped(
     for g in range(n + 1):
         l_bz = np.sqrt(abs(self.l_bz_2[g]))
         differentials.append(
-            1 / l_bz * int_const.bz_pos[g] * np.exp(self.x_bz_cm / l_bz)
+            1 / l_bz * int_const.bz_c[g] * np.exp(self.x_bz_cm / l_bz)
         )
         differentials.append(
-            -1 / l_bz * int_const.bz_neg[g] * np.exp(-self.x_bz_cm / l_bz)
+            -1 / l_bz * int_const.bz_s[g] * np.exp(-self.x_bz_cm / l_bz)
         )
     return -self.d_bz_cm[n] * np.sum(differentials, axis=0)
 
