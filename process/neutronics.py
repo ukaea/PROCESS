@@ -413,6 +413,10 @@ class NeutronFluxProfile:
             )
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
+        else:
+            # Parameter to be changed later, to allow solving non-down-scatter
+            # only systems by iterating.
+            first_iteration = True 
         self.d_fw_cm[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.avg_atomic_mass,
             self.fw_mat.sigma_t_cm[n],
@@ -435,7 +439,7 @@ class NeutronFluxProfile:
         src_fw = self.fw_mat.sigma_s_cm + self.fw_mat.sigma_in_cm
         src_bz = self.bz_mat.sigma_s_cm + self.bz_mat.sigma_in_cm
 
-        _ic_n = IntegrationConstants([], [], [], [])
+        self.integration_constants[n] = IntegrationConstants([], [], [], [])
         for g in range(n):
             # if the characteristic length of group [g] coincides with the
             # characteristic length of group [n], then that particular
@@ -449,69 +453,64 @@ class NeutronFluxProfile:
                 scale_factor_bz = 0.0
             else:
                 scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
-            _ic_n.fw_c.append(
+            self.integration_constants[n].fw_c.append(
                 sum(src_fw[i, n] * self.integration_constants[i].fw_c[g] for i in range(g, n))
                 * scale_factor_fw
             )
-            _ic_n.fw_s.append(
+            self.integration_constants[n].fw_s.append(
                 sum(src_fw[i, n] * self.integration_constants[i].fw_s[g] for i in range(g, n))
                 * scale_factor_fw
             )
-            _ic_n.bz_c.append(
+            self.integration_constants[n].bz_c.append(
                 sum(src_bz[i, n] * self.integration_constants[i].bz_c[g] for i in range(g, n))
                 * scale_factor_bz
             )
-            _ic_n.bz_s.append(
+            self.integration_constants[n].bz_s.append(
                 sum(src_bz[i, n] * self.integration_constants[i].bz_s[g] for i in range(g, n))
                 * scale_factor_bz
             )
 
-        c1, c2, c3, c4 = 0.0, 0.0, 0.0, 0.0
-        _ic_n.fw_c.append(c1)
-        _ic_n.fw_s.append(c2)
-        _ic_n.bz_c.append(c3)
-        _ic_n.bz_s.append(c4)
+        fw_c_factor_guess = 0.0
+        fw_s_factor_guess = 0.0
+        bz_c_factor_guess = 0.0
+        bz_s_factor_guess = 0.0
+        self.integration_constants[n].fw_c.append(fw_c_factor_guess)
+        self.integration_constants[n].fw_s.append(fw_s_factor_guess)
+        self.integration_constants[n].bz_c.append(bz_c_factor_guess)
+        self.integration_constants[n].bz_s.append(bz_s_factor_guess)
 
-        def set_constants(input_vector: Iterable[float]):
+        def _set_constants(input_vector: Iterable[float]):
             _ic_n.fw_c[n] = input_vector[0]
             _ic_n.fw_s[n] = input_vector[1]
             _ic_n.bz_c[n] = input_vector[2]
             _ic_n.bz_s[n] = input_vector[3]
 
-        def evaluate_fit():
-            flux_continuity = _groupwise_neutron_flux_fw(
-                _ic_n, self, n, self.x_fw_cm
-            ) - _groupwise_neutron_flux_bz(_ic_n, self, n, self.x_fw_cm)
-            flux_at_boundary = _groupwise_neutron_flux_bz(
-                _ic_n, self, n, self.extended_boundary_cm[n]
-            )
+        def _evaluate_fit():
+            flux_continuity = self.groupwise_neutron_flux_fw(n, self.x_fw_cm) - self.groupwise_neutron_flux_bz(n, self.x_fw_cm)
+            flux_at_boundary = self.groupwise_neutron_flux_bz(n, self.extended_boundary_cm[n])
             current_continuity = _groupwise_neutron_current_fw2bz(
                 _ic_n, self, n, True
             ) - _groupwise_neutron_current_fw2bz(_ic_n, self, n, False)
             influx_fw, influx_bz = 0.0, 0.0
-            for g in range(n):
-                influx_fw += self.fw_mat.sigma_s_cm[
-                    g, n
-                ] * _groupwise_integrated_flux_fw(
-                    self.integration_constants[g], self, g
-                )
-                influx_bz += self.bz_mat.sigma_s_cm[
-                    g, n
-                ] * _groupwise_integrated_flux_bz(
-                    self.integration_constants[g], self, g
-                )
-            removal_fw = (
-                self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n].sum()
-            ) * _groupwise_neutron_flux_fw(_ic_n, self, n)
-            removal_bz = (
-                self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n].sum()
-            ) * _groupwise_neutron_flux_bz(_ic_n, self, n)
-            neutron_conservation = (
+            for g in range(self.n_groups):
+                if g>n and not first_iteration:
+                    if not self.fw_mat.downscatter_only:
+                        influx_fw += (self.fw_mat.sigma_s_cm[g, n] + self.fw_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_fw(g)
+                    if not self.bz_mat.downscatter_only:
+                        influx_bz += (self.bz_mat.sigma_s_cm[g, n] + self.bz_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_bz(g)
+                elif g<=n:
+                    influx_fw += (self.fw_mat.sigma_s_cm[g, n] + self.fw_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_fw(g)
+                    influx_bz += (self.bz_mat.sigma_s_cm[g, n] + self.bz_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_bz(g)
+            removal_fw = self.fw_mat.sigma_t_cm[n] * self.groupwise_integrated_flux_fw(n)
+            removal_bz = self.bz_mat.sigma_t_cm[n] * self.groupwise_integrated_flux_bz(n)
+            # conservation_fw = influx_fw - removal_fw - current_fw2bz
+            # conservation_bz = current_fw2bz + influx_bz - removal_bz - escaped_bz
+            total_neutron_conservation = (
                 influx_fw
                 + influx_bz
                 - removal_fw
                 - removal_bz
-                - _groupwise_neutron_current_escaped(_ic_n, self, n)
+                - self.groupwise_neutron_current_escaped(_ic_n, self, n)
             )
             # in fact, we can separate the last condition (neutron conservation)
             # into two regions: fw and bz
@@ -522,15 +521,20 @@ class NeutronFluxProfile:
                 flux_continuity,
                 flux_at_boundary,
                 current_continuity,
-                neutron_conservation,
+                total_neutron_conservation,
             ])
 
         def objective(four_integration_constants_vector):
-            set_constants(four_integration_constants_vector)
-            return evaluate_fit()
+            _set_constants(four_integration_constants_vector)
+            return _evaluate_fit()
 
-        optimize.root(set_constants, x0=[c1, c2, c3, c4])
-        self.integration_constants[n] = _ic_n
+        results = optimize.root(objective, x0=[
+            fw_c_factor_guess,
+            fw_s_factor_guess,
+            bz_c_factor_guess,
+            bz_s_factor_guess,
+        ])
+        _set_constants(results.res)
         return None
 
     @summarize_values
@@ -559,12 +563,17 @@ class NeutronFluxProfile:
         """
         x_cm = x * 100
 
-        return _groupwise_neutron_flux_fw(
-            self.integration_constants[n],
-            self,
-            n,
-            x_cm,
-        )
+        trig_funcs = []
+        for g in range(n + 1):
+            if self.l_fw_2[g]>0:
+                c, s = np.cosh, np.sinh
+                l_fw = np.sqrt(self.l_fw_2[g])
+            else:
+                c, s = np.cos, np.sin
+                l_fw = np.sqrt(-self.l_fw_2[g])
+            trig_funcs.append(self.integration_constants.fw_c[g] * c(abs(x_cm) / l_fw))
+            trig_funcs.append(self.integration_constants.fw_s[g] * s(abs(x_cm) / l_fw))
+        return np.sum(trig_funcs, axis=0)
 
     @summarize_values
     def groupwise_neutron_flux_bz(
@@ -650,11 +659,11 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
-            string of either {"total","removal"}.
+            string of either {"total", "removal"}.
 
         """
         if reaction_type == "removal":
-            sigma = self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n].sum()
+            sigma = self.fw_mat.sigma_t_cm[n] - self.fw_mat.sigma_s_cm[n, n]
         elif reaction_type == "total":
             sigma = self.fw_mat.sigma_t_cm[n]
         else:
@@ -677,11 +686,11 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the reaction rate for group 1, n=1 for group 2, etc.
         reaction_type:
-            string of either {"total","removal"}.
+            string of either {"total", "removal"}.
 
         """
         if reaction_type == "removal":
-            sigma = self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n].sum()
+            sigma = self.bz_mat.sigma_t_cm[n] - self.bz_mat.sigma_s_cm[n, n]
         elif reaction_type == "total":
             sigma = self.bz_mat.sigma_t_cm[n]
         else:
@@ -822,28 +831,6 @@ class NeutronFluxProfile:
         return ax
 
 
-def _groupwise_neutron_flux_fw(
-    int_const: IntegrationConstants,
-    self: NeutronFluxProfile,
-    n: int,
-    x_cm: float | npt.NDArray,
-) -> npt.NDArray:
-    """
-    Calculate groupwise_neutron_flux_fw for NeutronFluxProfile, but
-    in such a way that doesn't trigger the re-calculation of integration_constants
-    (which would've led to RecursionError if called within solve_group_n).
-    """
-    trig_funcs = []
-    for g in range(n + 1):
-        if self.l_fw_2[g]>0:
-            c, s = np.cosh, np.sinh
-            l_fw = np.sqrt(self.l_fw_2[g])
-        else:
-            c, s = np.cos, np.sin
-            l_fw = np.sqrt(-self.l_fw_2[g])
-        trig_funcs.append(int_const.fw_c[g] * c(abs(x_cm) / l_fw))
-        trig_funcs.append(int_const.fw_s[g] * s(abs(x_cm) / l_fw))
-    return np.sum(trig_funcs, axis=0)
 
 
 def _groupwise_neutron_flux_bz(
