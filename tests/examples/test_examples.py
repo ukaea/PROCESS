@@ -72,14 +72,10 @@ def test_csv(examples_temp_data):
     csv_notebook_location = examples_temp_data / "csv_output.ipynb"
     with testbook(csv_notebook_location, execute=True, timeout=600):
         # Check csv file is created
-        assert os.path.exists(
-            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
-        )
+        assert os.path.exists(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
 
         # Read in the csv file created by test and check it contains positive floats
-        readcsv = pd.read_csv(
-            examples_temp_data / "data/csv_output_large_tokamak_MFILE.csv"
-        )
+        readcsv = pd.read_csv(examples_temp_data / "data/large_tokamak_1_MFILE.csv")
         values = readcsv["Value"]
         value_array = np.array(values)
         check_float = False
