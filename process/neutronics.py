@@ -432,7 +432,6 @@ class NeutronFluxProfile:
         # Setting up aliases for shorter code
         l_fw_2, l_bz_2 = self.l_fw_2[n], self.l_bz_2[n]
         d_fw, d_bz = self.d_fw_cm[n], self.d_bz_cm[n]
-        ic = self.integration_constants
         src_fw = self.fw_mat.sigma_s_cm + self.fw_mat.sigma_in_cm
         src_bz = self.bz_mat.sigma_s_cm + self.bz_mat.sigma_in_cm
 
@@ -451,19 +450,19 @@ class NeutronFluxProfile:
             else:
                 scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
             _ic_n.fw_c.append(
-                sum(src_fw[i, n] * ic[i].fw_c[g] for i in range(g, n))
+                sum(src_fw[i, n] * self.integration_constants[i].fw_c[g] for i in range(g, n))
                 * scale_factor_fw
             )
             _ic_n.fw_s.append(
-                sum(src_fw[i, n] * ic[i].fw_s[g] for i in range(g, n))
+                sum(src_fw[i, n] * self.integration_constants[i].fw_s[g] for i in range(g, n))
                 * scale_factor_fw
             )
             _ic_n.bz_c.append(
-                sum(src_bz[i, n] * ic[i].bz_c[g] for i in range(g, n))
+                sum(src_bz[i, n] * self.integration_constants[i].bz_c[g] for i in range(g, n))
                 * scale_factor_bz
             )
             _ic_n.bz_s.append(
-                sum(src_bz[i, n] * ic[i].bz_s[g] for i in range(g, n))
+                sum(src_bz[i, n] * self.integration_constants[i].bz_s[g] for i in range(g, n))
                 * scale_factor_bz
             )
 
@@ -474,11 +473,10 @@ class NeutronFluxProfile:
         _ic_n.bz_s.append(c4)
 
         def set_constants(input_vector: Iterable[float]):
-            c1, c2, c3, c4 = input_vector
-            _ic_n.fw_c[n] = c1
-            _ic_n.fw_s[n] = c2
-            _ic_n.bz_c[n] = c3
-            _ic_n.bz_s[n] = c4
+            _ic_n.fw_c[n] = input_vector[0]
+            _ic_n.fw_s[n] = input_vector[1]
+            _ic_n.bz_c[n] = input_vector[2]
+            _ic_n.bz_s[n] = input_vector[3]
 
         def evaluate_fit():
             flux_continuity = _groupwise_neutron_flux_fw(
