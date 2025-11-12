@@ -12,7 +12,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from numpy import typing as npt
 from scipy import optimize
-from scipy.special import expm1
 
 from process.exceptions import ProcessValidationError, ProcessValueError
 from process.neutronics_data import MaterialMacroInfo
@@ -838,12 +837,12 @@ def _groupwise_neutron_flux_fw(
     """
     trig_funcs = []
     for g in range(n + 1):
-        l_fw_2 = self.l_fw_2[g]
-        if l_fw_2>0:
+        if self.l_fw_2[g]>0:
             c, s = np.cosh, np.sinh
+            l_fw = np.sqrt(self.l_fw_2[g])
         else:
             c, s = np.cos, np.sin
-        l_fw = np.sqrt(abs(l_fw_2))
+            l_fw = np.sqrt(-self.l_fw_2[g])
         trig_funcs.append(int_const.fw_c[g] * c(x_cm / l_fw))
         trig_funcs.append(int_const.fw_s[g] * s(x_cm / l_fw))
     return np.sum(trig_funcs, axis=0)
@@ -862,12 +861,12 @@ def _groupwise_neutron_flux_bz(
     """
     trig_funcs = []
     for g in range(n + 1):
-        l_bz_2 = self.l_bz_2[g]
-        if l_bz_2>0:
+        if self.l_bz_2[g]>0:
             c, s = np.cosh, np.sinh
+            l_bz = np.sqrt(self.l_bz_2[g])
         else:
             c, s = np.cos, np.sin
-        l_bz = np.sqrt(abs(l_bz_2))
+            l_bz = np.sqrt(-self.l_bz_2[g])
         trig_funcs.append(int_const.bz_c[g] * c(x_cm / l_bz))
         trig_funcs.append(int_const.bz_s[g] * s(x_cm / l_bz))
     return np.sum(trig_funcs, axis=0)
@@ -884,13 +883,23 @@ def _groupwise_integrated_flux_fw(
 
     integrals = []
     for g in range(n + 1):
-        l_fw = np.sqrt(abs(self.l_fw_2[g]))
-        integrals.append(
-            l_fw * int_const.fw_c[g] * expm1(self.x_fw_cm / l_fw)
-        )
-        integrals.append(
-            -l_fw * int_const.fw_s[g] * expm1(-self.x_fw_cm / l_fw)
-        )
+        if self.l_fw_2[g]>0:
+            l_fw = np.sqrt(self.l_fw_2[g])
+            integrals.append(
+                l_fw * int_const.fw_c[g] * np.sinh(self.x_fw_cm / l_fw)
+            )
+            integrals.append(
+                l_fw * int_const.fw_s[g] * (np.cosh(self.x_fw_cm / l_fw) - 1)
+            )
+        else:
+            l_fw = np.sqrt(-self.l_fw_2[g])
+            integrals.append(
+                l_fw * int_const.fw_c[g] * np.sin(self.x_fw_cm / l_fw)
+            )
+            integrals.append(
+                l_fw * int_const.fw_s[g] * (1 - np.cos(self.x_fw_cm / l_fw))
+            )
+
     return np.sum(integrals, axis=0)
 
 
@@ -905,15 +914,26 @@ def _groupwise_integrated_flux_bz(
 
     integrals = []
     for g in range(n + 1):
-        l_bz = np.sqrt(abs(self.l_bz_2[g]))
-        bz_thick = (self.x_bz_cm - self.x_fw_cm) / l_bz
-        fw_thick = self.x_fw_cm / l_bz
-        integrals.append(
-            l_bz * int_const.bz_c[g] * expm1(bz_thick) * np.exp(fw_thick)
-        )
-        integrals.append(
-            -l_bz * int_const.bz_s[g] * expm1(-bz_thick) * np.exp(-fw_thick)
-        )
+        if self.l_bz_2[g]>0:
+            l_bz = np.sqrt(self.l_bz_2[g])
+            integrals.append(
+                l_bz * int_const.bz_c[g] *
+                (np.sinh(self.x_bz_cm / l_bz) - np.sinh(self.x_fw_cm / l_bz))
+            )
+            integrals.append(
+                l_bz * int_const.bz_s[g] *
+                (np.cosh(self.x_bz_cm / l_bz) - np.cosh(self.x_fw_cm / l_bz))
+            )
+        else:
+            l_bz = np.sqrt(-self.l_bz_2[g])
+            integrals.append(
+                l_bz * int_const.bz_c[g] *
+                (np.sin(self.x_bz_cm / l_bz) - np.sin(self.x_fw_cm / l_bz))
+            )
+            integrals.append(
+                -l_bz * int_const.bz_s[g] *
+                (np.cos(self.x_bz_cm / l_bz) - np.cos(self.x_fw_cm / l_bz))
+            )
     return np.sum(integrals, axis=0)
 
 
@@ -936,24 +956,44 @@ def _groupwise_neutron_current_fw2bz(
     differentials = []
     if alt_implementation:
         for g in range(n + 1):
-            l_fw = np.sqrt(abs(self.l_fw_2[g]))
-            differentials.append(
-                1 / l_fw * int_const.fw_c[g] * np.exp(self.x_fw_cm / l_fw)
-            )
-            differentials.append(
-                -1 / l_fw * int_const.fw_s[g] * np.exp(-self.x_fw_cm / l_fw)
-            )
+            if self.l_fw_2[g]>0:
+                l_fw = np.sqrt(self.l_fw_2[g])
+                differentials.append(
+                    int_const.fw_c[g] / l_fw * np.sinh(self.x_fw_cm / l_fw)
+                )
+                differentials.append(
+                    int_const.fw_s[g] / l_fw * np.cosh(self.x_fw_cm / l_fw)
+                )
+            else:
+                l_fw = np.sqrt(-self.l_fw_2[g])
+                differentials.append(
+                    - int_const.fw_c[g] / l_fw * np.sin(self.x_fw_cm / l_fw)
+                )
+                differentials.append(
+                    int_const.fw_s[g] / l_fw * np.cos(self.x_fw_cm / l_fw)
+                )
+
         return -self.d_fw_cm[n] * np.sum(differentials, axis=0)
 
     # equivalent definition below: (should yield the same answer once converged)
     for g in range(n + 1):
-        l_bz = np.sqrt(abs(self.l_bz_2[g]))
-        differentials.append(
-            1 / l_bz * int_const.bz_c[g] * np.exp(self.x_fw_cm / l_bz)
-        )
-        differentials.append(
-            -1 / l_bz * int_const.bz_s[g] * np.exp(-self.x_fw_cm / l_bz)
-        )
+        if self.l_bz_2[g]>0:
+            l_bz = np.sqrt(self.l_bz_2[g])
+            differentials.append(
+                int_const.bz_c[g] / l_bz * np.sinh(self.x_fw_cm / l_bz)
+            )
+            differentials.append(
+                int_const.bz_s[g] / l_bz * np.cosh(self.x_fw_cm / l_bz)
+            )
+        else:
+            l_bz = np.sqrt(-self.l_bz_2[g])
+            differentials.append(
+                - int_const.bz_c[g] / l_bz * np.sin(self.x_fw_cm / l_bz)
+            )
+            differentials.append(
+                int_const.bz_s[g] / l_bz * np.cos(self.x_fw_cm / l_bz)
+            )
+
     return -self.d_bz_cm[n] * np.sum(differentials, axis=0)
 
 
@@ -974,13 +1014,22 @@ def _groupwise_neutron_current_escaped(
     """
     differentials = []
     for g in range(n + 1):
-        l_bz = np.sqrt(abs(self.l_bz_2[g]))
-        differentials.append(
-            1 / l_bz * int_const.bz_c[g] * np.exp(self.x_bz_cm / l_bz)
-        )
-        differentials.append(
-            -1 / l_bz * int_const.bz_s[g] * np.exp(-self.x_bz_cm / l_bz)
-        )
+        if self.l_bz_2[g]>0:
+            l_bz = np.sqrt(self.l_bz_2[g])
+            differentials.append(
+                int_const.bz_c[g] / l_bz * np.sinh(self.x_bz_cm / l_bz)
+            )
+            differentials.append(
+                int_const.bz_s[g] / l_bz * np.cosh(self.x_bz_cm / l_bz)
+            )
+        else:
+            l_bz = np.sqrt(-self.l_bz_2[g])
+            differentials.append(
+                - int_const.bz_c[g] / l_bz * np.sin(self.x_bz_cm / l_bz)
+            )
+            differentials.append(
+                int_const.bz_s[g] / l_bz * np.cos(self.x_bz_cm / l_bz)
+            )
     return -self.d_bz_cm[n] * np.sum(differentials, axis=0)
 
 
