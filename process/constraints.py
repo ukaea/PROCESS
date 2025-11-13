@@ -548,16 +548,22 @@ def constraint_equation_15():
     """Equation for L-H power threshold limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
+    fl_h_threshold: a factor tolerance on the constraint
     p_l_h_threshold_mw: L-H mode power threshold (MW)
     p_plasma_separatrix_mw: power to conducted to the divertor region (MW)
+
+    Setting fl_h_threshold enforces a constraint on a factor of p_plasma_separatrix_mw
+    e.g. fl_h_threshold * p_plasma_separatrix_mw >= p_l_h_threshold_mw
     """
     return ConstraintResult(
         1.0
-        - data_structure.physics_variables.p_plasma_separatrix_mw
+        - data_structure.constraint_variables.fl_h_threshold
+        * data_structure.physics_variables.p_plasma_separatrix_mw
         / data_structure.physics_variables.p_l_h_threshold_mw,
         data_structure.physics_variables.p_l_h_threshold_mw,
         data_structure.physics_variables.p_l_h_threshold_mw
-        - data_structure.physics_variables.p_plasma_separatrix_mw,
+        - data_structure.physics_variables.p_plasma_separatrix_mw
+        / data_structure.constraint_variables.fl_h_threshold,
     )
 
 
