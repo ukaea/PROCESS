@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8338226.svg)](https://doi.org/10.5281/zenodo.8338226) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8335291.svg)](https://doi.org/10.5281/zenodo.8335291) [![codecov](https://codecov.io/gh/ukaea/process/graph/badge.svg?token=F94XDNUIX0)](https://codecov.io/gh/ukaea/process)
 
 # PROCESS
 
@@ -33,7 +33,7 @@ Please see the CONTRIBUTING.md for guidance on how to contribute to PROCESS. Fur
 A list of publications using PROCESS is given [here](https://ukaea.github.io/PROCESS/publications), including two papers outlining the physics and engineering models in PROCESS.
 
 ## Citing PROCESS
-If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository.
+If you use PROCESS in your work, please cite it using the "Cite this repository" link in the "About" section of the repository. This will cite the latest version of PROCESS, if you are using a different release please find the appropriate DOI on [PROCESS' Zenodo page](https://doi.org/10.5281/zenodo.8335291). To ensure reproducable research, we recommend you run an [official release of PROCESS](https://github.com/ukaea/PROCESS/releases) by checking out the appropriate git tag.
 
 ## Contacts
 [James Morris](mailto:james.morris2@ukaea.uk)

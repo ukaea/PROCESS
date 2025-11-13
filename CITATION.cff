@@ -116,11 +116,6 @@ authors:
     affiliation: United Kingdom Atomic Energy Authority
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.10849379
-    description: >-
-      This is the archived snapshot of version v3.1.0 of
-      PROCESS.
-  - type: doi
     value: 10.5281/zenodo.8335291
     description: >-
       This is the collection of archived snapshots of all
