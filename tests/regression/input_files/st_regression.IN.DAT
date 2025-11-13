@@ -28,7 +28,7 @@
 *________________________________________________________________________*
 *----------------------------Global Variables---------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
-maxcal = 2000
+maxcal = 200
 * DESCRIPTION:   Maximum number of VMCON iterations
 * JUSTIFICATION: Twice default, no impact on result
 
@@ -39,7 +39,7 @@ runtitle = ST Regression
 *--------------------------Numerics Variables---------------------------*
 *‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾*
 
-epsvmc = 1.0E-11
+epsvmc = 1e-9
 * DESCRIPTION:   Error tolerance for VMCON
 * JUSTIFICATION: 
 
@@ -2536,7 +2536,7 @@ icc = 30
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     p_hcd_injected_total_mw (total auxiliary injected power (MW)) summed from all injected power sources
 
-p_hcd_injected_max = 150.0 
+p_hcd_injected_max = 225.0
 * DESCRIPTION:   Maximum Allowable Value for Injected Power (MW) (icc=30)
 * JUSTIFICATION: 
 
