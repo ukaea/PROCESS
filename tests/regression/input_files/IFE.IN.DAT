@@ -9,6 +9,7 @@
 
 *---------------Constraint Equations---------------*
 
+neqns = 0              *No equality constraints
 icc = 16               *Net electric power lower limit
 
 *---------------Iteration Variables----------------*

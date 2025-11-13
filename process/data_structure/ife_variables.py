@@ -148,10 +148,6 @@ flirad: float = None
 """radius of FLiBe/lithium inlet (m) (`ifetyp=3,4`)"""
 
 
-frrmax: float = None
-"""f-value for maximum IFE repetition rate (`constraint equation 50`, `iteration variable 86`)"""
-
-
 fwdr: float = None
 """radial thickness of IFE first wall (m)"""
 
@@ -527,7 +523,6 @@ def init_ife_variables():
     global fbreed
     global fburn
     global flirad
-    global frrmax
     global fwdr
     global fwdzl
     global fwdzu
@@ -685,7 +680,6 @@ def init_ife_variables():
     fbreed = 0.51
     fburn = 0.3333
     flirad = 0.78
-    frrmax = 1.0
     fwdr = 0.01
     fwdzl = 0.01
     fwdzu = 0.01
