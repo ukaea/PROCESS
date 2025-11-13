@@ -496,7 +496,6 @@ fvalues_list = [
     "fjohc",
     "fjohc0",
     "fjprot",
-    "fl_h_threshold",
     "fmva",
     "fnbshinef",
     "fncycle",
