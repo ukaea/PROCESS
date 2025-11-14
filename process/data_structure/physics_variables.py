@@ -1307,12 +1307,15 @@ a_plasma_poloidal: float = None
 """plasma poloidal cross-sectional area [m^2]"""
 
 
-zeff: float = None
-"""plasma effective charge"""
+n_charge_plasma_effective_vol_avg: float = None
+"""Volume averaged plasma effective charge"""
+
+n_charge_plasma_effective_profile: list[float] = None
+"""Profile of plasma effective charge"""
 
 
-zeffai: float = None
-"""mass weighted plasma effective charge"""
+n_charge_plasma_effective_mass_weighted_vol_avg: float = None
+"""Plasma mass-weighted volume averaged plasma effective charge"""
 
 
 def init_physics_module():
@@ -1628,8 +1631,9 @@ def init_physics_variables():
     global pflux_fw_neutron_mw
     global wtgpd
     global a_plasma_poloidal
-    global zeff
-    global zeffai
+    global n_charge_plasma_effective_vol_avg
+    global n_charge_plasma_effective_profile
+    global n_charge_plasma_effective_mass_weighted_vol_avg
 
     m_beam_amu = 0.0
     m_fuel_amu = 0.0
@@ -1886,5 +1890,6 @@ def init_physics_variables():
     pflux_fw_neutron_mw = 0.0
     wtgpd = 0.0
     a_plasma_poloidal = 0.0
-    zeff = 0.0
-    zeffai = 0.0
+    n_charge_plasma_effective_vol_avg = 0.0
+    n_charge_plasma_effective_profile = []
+    n_charge_plasma_effective_mass_weighted_vol_avg = 0.0

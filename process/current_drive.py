@@ -88,7 +88,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             physics_variables.dlamie,
         )
 
@@ -102,7 +102,7 @@ class NeutralBeam:
             current_drive_variables.e_beam_kev,
             physics_variables.rmajor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -179,7 +179,7 @@ class NeutralBeam:
             physics_variables.nd_plasma_electrons_vol_avg,
             dend,
             dent,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             physics_variables.dlamie,
         )
 
@@ -198,7 +198,7 @@ class NeutralBeam:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         return effnbss, f_p_beam_injected_ions, fshine
@@ -491,7 +491,17 @@ class NeutralBeam:
 
         return max(1e-20 * (np.exp(s1) / eb * (1.0 + sz)), 1e-23)
 
-    def cfnbi(self, afast, efast, te, ne, _nd, _nt, zeffai, xlmbda):
+    def cfnbi(
+        self,
+        afast,
+        efast,
+        te,
+        ne,
+        _nd,
+        _nt,
+        n_charge_plasma_effective_mass_weighted_vol_avg,
+        xlmbda,
+    ):
         """Routine to calculate the fraction of the fast particle energy
         coupled to the ions
         author: P J Knight, CCFE, Culham Science Centre
@@ -501,7 +511,7 @@ class NeutralBeam:
         ne      : input real : volume averaged electron density (m**-3)
         nd      : input real : deuterium beam density (m**-3)
         nt      : input real : tritium beam density (m**-3)
-        zeffai  : input real : mass weighted plasma effective charge
+        n_charge_plasma_effective_mass_weighted_vol_avg  : input real : mass weighted plasma effective charge
         xlmbda  : input real : ion-electron coulomb logarithm
         f_p_beam_injected_ions   : output real : fraction of fast particle energy coupled to ions
         This routine calculates the fast particle energy coupled to
@@ -522,7 +532,7 @@ class NeutralBeam:
         # ecritfix = 16.0e0 * te * afast * (sum / (ne * xlmbda)) ** (2.0e0 / 3.0e0)
 
         xlmbdai = self.xlmbdabi(afast, atmdt, efast, te, ne)
-        sumln = zeffai * xlmbdai / xlmbda
+        sumln = n_charge_plasma_effective_mass_weighted_vol_avg * xlmbdai / xlmbda
         xlnrat = (
             3.0e0 * np.sqrt(np.pi) / 4.0e0 * me / constants.PROTON_MASS * sumln
         ) ** (2.0e0 / 3.0e0)
@@ -605,7 +615,7 @@ class ElectronCyclotron:
         epsloc = rrr * physics_variables.rminor / physics_variables.rmajor
 
         #  Effective charge (use average value)
-        zlocal = physics_variables.zeff
+        zlocal = physics_variables.n_charge_plasma_effective_vol_avg
 
         #  Coulomb logarithm for ion-electron collisions
         #  (From J. A. Wesson, 'Tokamaks', Clarendon Press, Oxford, p.293)
@@ -1066,7 +1076,11 @@ class LowerHybrid:
 
         x = 24.0e0 / (nplacc * np.sqrt(tlocal))
 
-        term01 = 6.1e0 / (nplacc * nplacc * (physics_variables.zeff + 5.0e0))
+        term01 = 6.1e0 / (
+            nplacc
+            * nplacc
+            * (physics_variables.n_charge_plasma_effective_vol_avg + 5.0e0)
+        )
         term02 = 1.0e0 + (tlocal / 25.0e0) ** 1.16e0
         term03 = epslh**0.77e0 * np.sqrt(12.25e0 + x * x)
         term04 = 3.5e0 * epslh**0.77e0 + x
@@ -1351,7 +1365,7 @@ class CurrentDrive:
                 * current_drive_variables.feffcd,
                 2: lambda: self.ion_cyclotron.ion_cyclotron_ipdg89(
                     temp_plasma_electron_density_weighted_kev=physics_variables.temp_plasma_electron_density_weighted_kev,
-                    zeff=physics_variables.zeff,
+                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
                 )
@@ -1368,7 +1382,7 @@ class CurrentDrive:
                     beta=physics_variables.beta_total_vol_avg,
                     rmajor=physics_variables.rmajor,
                     dene20=dene20,
-                    zeff=physics_variables.zeff,
+                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 )
                 * current_drive_variables.feffcd,
                 5: lambda: (
@@ -1393,7 +1407,7 @@ class CurrentDrive:
                 * current_drive_variables.feffcd,
                 13: lambda: self.electron_cyclotron.electron_cyclotron_freethy(
                     te=physics_variables.temp_plasma_electron_vol_avg_kev,
-                    zeff=physics_variables.zeff,
+                    zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                     rmajor=physics_variables.rmajor,
                     nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
                     b_plasma_toroidal_on_axis=physics_variables.b_plasma_toroidal_on_axis,

@@ -41,7 +41,7 @@ def rether(
     dlamie,
     te,
     temp_plasma_ion_vol_avg_kev,
-    zeffai,
+    n_charge_plasma_effective_mass_weighted_vol_avg,
 ):
     """Routine to find the equilibration power between the
     ions and electrons
@@ -52,7 +52,7 @@ def rether(
     dlamie : input real :  ion-electron coulomb logarithm
     te     : input real :  electron temperature (keV)
     temp_plasma_ion_vol_avg_kev     : input real :  ion temperature (keV)
-    zeffai : input real :  mass weighted plasma effective charge
+    n_charge_plasma_effective_mass_weighted_vol_avg : input real :  mass weighted plasma effective charge
     pden_ion_electron_equilibration_mw  : output real : ion/electron equilibration power (MW/m3)
     This routine calculates the equilibration power between the
     ions and electrons.
@@ -61,7 +61,13 @@ def rether(
     profie = (1.0 + alphan) ** 2 / (
         (2.0 * alphan - 0.5 * alphat + 1.0) * np.sqrt(1.0 + alphat)
     )
-    conie = 2.42165e-41 * dlamie * nd_plasma_electrons_vol_avg**2 * zeffai * profie
+    conie = (
+        2.42165e-41
+        * dlamie
+        * nd_plasma_electrons_vol_avg**2
+        * n_charge_plasma_effective_mass_weighted_vol_avg
+        * profie
+    )
 
     return conie * (temp_plasma_ion_vol_avg_kev - te) / (te**1.5)
 
@@ -2027,7 +2033,7 @@ class Physics:
                 physics_variables.rmajor,
                 physics_variables.rminor,
                 physics_variables.temp_plasma_electron_vol_avg_kev,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
         )
 
@@ -2110,7 +2116,7 @@ class Physics:
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.zeff,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
             )
@@ -2123,7 +2129,7 @@ class Physics:
                 pressure_index=physics_variables.alphap,
                 temperature_index=physics_variables.alphat,
                 inverse_aspect=physics_variables.eps,
-                effective_charge=physics_variables.zeff,
+                effective_charge=physics_variables.n_charge_plasma_effective_vol_avg,
             )
         )
         current_drive_variables.f_c_plasma_bootstrap_sugiyama_l = (
@@ -2133,7 +2139,7 @@ class Physics:
                 beta_poloidal=physics_variables.beta_poloidal_vol_avg,
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
-                zeff=physics_variables.zeff,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
             )
@@ -2146,7 +2152,7 @@ class Physics:
                 alphan=physics_variables.alphan,
                 alphat=physics_variables.alphat,
                 tbeta=physics_variables.tbeta,
-                zeff=physics_variables.zeff,
+                zeff=physics_variables.n_charge_plasma_effective_vol_avg,
                 q95=physics_variables.q95,
                 q0=physics_variables.q0,
                 radius_plasma_pedestal_density_norm=physics_variables.radius_plasma_pedestal_density_norm,
@@ -2281,7 +2287,7 @@ class Physics:
                 physics_variables.temp_plasma_electron_density_weighted_kev,
                 physics_variables.temp_plasma_ion_density_weighted_kev,
                 physics_variables.vol_plasma,
-                physics_variables.zeffai,
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             )
             physics_variables.fusden_total = (
                 physics_variables.fusden_plasma
@@ -2396,7 +2402,7 @@ class Physics:
             physics_variables.dlamie,
             physics_variables.temp_plasma_electron_vol_avg_kev,
             physics_variables.temp_plasma_ion_vol_avg_kev,
-            physics_variables.zeffai,
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
         )
 
         # Calculate radiation power
@@ -2448,7 +2454,7 @@ class Physics:
             physics_variables.rminor,
             physics_variables.temp_plasma_electron_density_weighted_kev,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate L- to H-mode power threshold for different scalings
@@ -2539,7 +2545,7 @@ class Physics:
             physics_variables.rmajor,
             physics_variables.rminor,
             physics_variables.a_plasma_surface,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Calculate transport losses and energy confinement time using the
@@ -2576,7 +2582,7 @@ class Physics:
             physics_variables.q95,
             physics_variables.qstar,
             physics_variables.vol_plasma,
-            physics_variables.zeff,
+            physics_variables.n_charge_plasma_effective_vol_avg,
         )
 
         # Total transport power from scaling law (MW)
@@ -3444,9 +3450,9 @@ class Physics:
         # Effective charge
         # Calculation should be sum(ni.Zi^2) / sum(ni.Zi),
         # but ne = sum(ni.Zi) through quasineutrality
-        physics_variables.zeff = 0.0
+        physics_variables.n_charge_plasma_effective_vol_avg = 0.0
         for imp in range(impurity_radiation_module.N_IMPURITIES):
-            physics_variables.zeff += (
+            physics_variables.n_charge_plasma_effective_vol_avg += (
                 impurity_radiation_module.f_nd_impurity_electron_array[imp]
                 * impurity_radiation.zav_of_te(
                     imp, np.array([physics_variables.temp_plasma_electron_vol_avg_kev])
@@ -3525,7 +3531,7 @@ class Physics:
 
         # Mass weighted plasma effective charge
         # Sum of (Zi^2*n_i) / m_i
-        physics_variables.zeffai = (
+        physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg = (
             (
                 physics_variables.f_plasma_fuel_deuterium
                 * physics_variables.nd_plasma_fuel_ions_vol_avg
@@ -3557,7 +3563,7 @@ class Physics:
         ) / physics_variables.nd_plasma_electrons_vol_avg
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             if impurity_radiation_module.impurity_arr_z[imp] > 2:
-                physics_variables.zeffai += (
+                physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg += (
                     impurity_radiation_module.f_nd_impurity_electron_array[imp]
                     * impurity_radiation.zav_of_te(
                         imp,
@@ -4024,6 +4030,37 @@ class Physics:
             times_variables.t_plant_pulse_total,
             "OP ",
         )
+
+    def calculate_effective_charge_ionisation_profiles(self):
+        """Calculate the effective charge profiles for ionisation calculations."""
+
+        # Calculate the effective charge (zeff) profile across the plasma
+        # Returns an array of zeff at each radial point
+        zeff_profile = np.zeros_like(self.plasma_profile.teprofile.profile_y)
+        for i in range(len(zeff_profile)):
+            zeff_profile[i] = 0.0
+            for imp in range(impurity_radiation_module.N_IMPURITIES):
+                zeff_profile[i] += (
+                    impurity_radiation_module.f_nd_impurity_electron_array[imp]
+                    * impurity_radiation.zav_of_te(
+                        imp, np.array([self.plasma_profile.teprofile.profile_y[i]])
+                    ).squeeze()
+                    ** 2
+                )
+        physics_variables.n_charge_plasma_effective_profile = zeff_profile
+
+        # Assign the charge profiles of each species
+        n_impurities = impurity_radiation_module.N_IMPURITIES
+        te_profile = self.plasma_profile.teprofile.profile_y
+        n_points = len(te_profile)
+        # Create a 2D array: (n_impurities, n_points)
+        charge_profiles = np.zeros((n_impurities, n_points))
+        for imp in range(n_impurities):
+            for i in range(n_points):
+                charge_profiles[imp, i] = impurity_radiation.zav_of_te(
+                    imp, np.array([te_profile[i]])
+                ).squeeze()
+        impurity_radiation_module.n_charge_impurity_profile = charge_profiles
 
     def outplas(self):
         """Subroutine to output the plasma physics information
@@ -5015,14 +5052,36 @@ class Physics:
 
         po.oblnkl(self.outfile)
         po.ovarrf(
-            self.outfile, "Effective charge", "(zeff)", physics_variables.zeff, "OP "
+            self.outfile,
+            "Volume averaged plasma effective charge",
+            "(n_charge_plasma_effective_vol_avg)",
+            physics_variables.n_charge_plasma_effective_vol_avg,
+            "OP ",
         )
+        for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
+            po.ovarre(
+                self.outfile,
+                "Effective charge at point",
+                f"(n_charge_plasma_effective_profile{i})",
+                physics_variables.n_charge_plasma_effective_profile[i],
+                "OP ",
+            )
+
+        for imp in range(impurity_radiation_module.N_IMPURITIES):
+            for i in range(physics_variables.n_plasma_profile_elements):
+                po.ovarre(
+                    self.outfile,
+                    "Impurity charge at point",
+                    f"(n_charge_plasma_profile{imp}_{i})",
+                    impurity_radiation_module.n_charge_impurity_profile[imp][i],
+                    "OP ",
+                )
 
         po.ovarrf(
             self.outfile,
             "Mass-weighted Effective charge",
-            "(zeffai)",
-            physics_variables.zeffai,
+            "(n_charge_plasma_effective_mass_weighted_vol_avg)",
+            physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg,
             "OP ",
         )
 
@@ -6830,7 +6889,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
 
             try:
@@ -7149,7 +7208,7 @@ class Physics:
 
         # Flat Zeff profile assumed
         # Return tempi like array object filled with zeff
-        zeff = np.full_like(tempi, physics_variables.zeff)
+        zeff = np.full_like(tempi, physics_variables.n_charge_plasma_effective_vol_avg)
 
         # inverse_q = 1/safety factor
         # Parabolic q profile assumed
@@ -7765,7 +7824,7 @@ class Physics:
                 physics_variables.q95,
                 physics_variables.qstar,
                 physics_variables.vol_plasma,
-                physics_variables.zeff,
+                physics_variables.n_charge_plasma_effective_vol_avg,
             )
 
             # At power balance, fhz is zero.

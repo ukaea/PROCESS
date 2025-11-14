@@ -463,7 +463,11 @@ def test_bootstrap_fraction_sauter(bootstrapfractionsauterparam, monkeypatch, ph
         physics_variables, "m_fuel_amu", bootstrapfractionsauterparam.m_fuel_amu
     )
 
-    monkeypatch.setattr(physics_variables, "zeff", bootstrapfractionsauterparam.zeff)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_vol_avg",
+        bootstrapfractionsauterparam.zeff,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1378,7 +1382,7 @@ class PlasmaCompositionParam(NamedTuple):
 
     f_nd_protium_electrons: Any = None
 
-    zeffai: Any = None
+    n_charge_plasma_effective_mass_weighted_vol_avg: Any = None
 
     f_nd_plasma_carbon_electron: Any = None
 
@@ -1539,7 +1543,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_ions_total_amu=0,
             nd_plasma_ions_total_vol_avg=0,
             f_nd_protium_electrons=0,
-            zeffai=0,
+            n_charge_plasma_effective_mass_weighted_vol_avg=0,
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0,
@@ -1657,7 +1661,7 @@ class PlasmaCompositionParam(NamedTuple):
             m_ions_total_amu=2.7395439636787726,
             nd_plasma_ions_total_vol_avg=6.6125550702454276e19,
             f_nd_protium_electrons=0,
-            zeffai=0.43046641789338563,
+            n_charge_plasma_effective_mass_weighted_vol_avg=0.43046641789338563,
             f_nd_plasma_carbon_electron=0,
             f_nd_plasma_oxygen_electron=0,
             f_alpha_ion=0.3154069116809366,
@@ -1802,7 +1806,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.f_nd_protium_electrons,
     )
 
-    monkeypatch.setattr(physics_variables, "zeffai", plasmacompositionparam.zeffai)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_mass_weighted_vol_avg",
+        plasmacompositionparam.n_charge_plasma_effective_mass_weighted_vol_avg,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1834,7 +1842,11 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.f_nd_beam_electron,
     )
 
-    monkeypatch.setattr(physics_variables, "zeff", plasmacompositionparam.zeff)
+    monkeypatch.setattr(
+        physics_variables,
+        "n_charge_plasma_effective_vol_avg",
+        plasmacompositionparam.zeff,
+    )
 
     monkeypatch.setattr(
         physics_variables,
@@ -1964,15 +1976,18 @@ def test_plasma_composition(plasmacompositionparam, monkeypatch, physics):
         plasmacompositionparam.expected_nd_ions_total
     )
 
-    assert physics_variables.zeffai == pytest.approx(
-        plasmacompositionparam.expected_zeffai
+    assert (
+        physics_variables.n_charge_plasma_effective_mass_weighted_vol_avg
+        == pytest.approx(plasmacompositionparam.expected_zeffai)
     )
 
     assert physics_variables.f_alpha_ion == pytest.approx(
         plasmacompositionparam.expected_f_alpha_ion
     )
 
-    assert physics_variables.zeff == pytest.approx(plasmacompositionparam.expected_zeff)
+    assert physics_variables.n_charge_plasma_effective_vol_avg == pytest.approx(
+        plasmacompositionparam.expected_zeff
+    )
 
     assert physics_variables.nd_plasma_impurities_vol_avg == pytest.approx(
         plasmacompositionparam.expected_nd_impurities

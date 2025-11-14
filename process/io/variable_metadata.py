@@ -267,7 +267,7 @@ var_dicts = {
         description="Blanket cycles",
         units="",
     ),
-    "zeff": VariableMetadata(
+    "n_charge_plasma_effective_vol_avg": VariableMetadata(
         latex=r"$Z_{\mathrm{eff}}$", description="Effective charge", units=""
     ),
     "t_plant_pulse_burn": VariableMetadata(

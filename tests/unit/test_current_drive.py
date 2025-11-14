@@ -149,7 +149,7 @@ def test_cudriv_primary_neutral_beam(current_drive):
     current_drive_variables.eta_beam_injector_wall_plug = 0.3
     physics_variables.m_beam_amu = 2.0
     physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
-    physics_variables.zeff = 2.0
+    physics_variables.n_charge_plasma_effective_vol_avg = 2.0
     current_drive.cudriv()
 
     assert current_drive_variables.eta_cd_hcd_primary == pytest.approx(
@@ -241,7 +241,7 @@ def test_cudriv_primary_ion_cyclotron(current_drive):
     physics_variables.plasma_current = 15e6
     physics_variables.f_c_plasma_auxiliary = 0.2
     current_drive_variables.eta_icrh_injector_wall_plug = 0.35
-    physics_variables.zeff = 2.0
+    physics_variables.n_charge_plasma_effective_vol_avg = 2.0
     physics_variables.temp_plasma_electron_density_weighted_kev = 10.0
     current_drive.cudriv()
 

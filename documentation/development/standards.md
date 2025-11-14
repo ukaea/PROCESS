@@ -308,6 +308,18 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Electric charges
+
+- Electric charges should start with the `charge_` prefix
+
+--------------------
+
+###### Charge numbers
+
+- Electric charge numbers should start with the `n_charge_` prefix.
+
+------------------
+
 ##### Current densities
 
 - Current densities should start with the `j_` prefix

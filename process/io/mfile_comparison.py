@@ -128,7 +128,7 @@ BASELINE_LIST = [
     "nd_plasma_separatrix_electron",
     "temp_plasma_pedestal_kev",
     "nd_plasma_pedestal_electron",
-    "zeff",
+    "n_charge_plasma_effective_vol_avg",
     "nd_plasma_impurities_vol_avg",
     "t_energy_confinement",
     "hfact",
