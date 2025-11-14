@@ -1911,6 +1911,43 @@ class CurrentDrive:
                 )
             )
 
+    def calculate_dimensionless_current_drive_efficiency(
+        self,
+        nd_plasma_electrons_vol_avg: float,
+        rmajor: float,
+        temp_plasma_electron_vol_avg_kev: float,
+        c_hcd_driven: float,
+        p_hcd_injected: float,
+    ) -> float:
+        """
+        Calculate the dimensionless current drive efficiency, ζ.
+
+        This function computes the dimensionless current drive efficiency
+        based on the average electron density, major radius, and electron temperature.
+
+        :param nd_plasma_electrons_vol_avg: Volume averaged electron density in m^-3.
+        :type nd_plasma_electrons_vol_avg: float
+        :param rmajor: Major radius of the plasma in meters.
+        :type rmajor: float
+        :param temp_plasma_electron_vol_avg_kev: Volume averaged electron temperature in keV.
+        :type temp_plasma_electron_vol_avg_kev: float
+        :param c_hcd_driven: Current driven by the heating and current drive system.
+        :type c_hcd_driven: float
+        :param p_hcd_injected: Power injected by the heating and current drive system.
+        :type p_hcd_injected: float
+        :return: The calculated dimensionless current drive efficiency.
+        :rtype: float
+
+        :notes:
+
+        """
+
+        return (
+            (constants.ELECTRON_CHARGE**3 / constants.EPSILON0**2)
+            * (nd_plasma_electrons_vol_avg * rmajor / temp_plasma_electron_vol_avg_kev)
+            * (c_hcd_driven / p_hcd_injected)
+        )
+
     def output_current_drive(self):
         """
         Output the current drive information to the output file.
