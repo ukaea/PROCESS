@@ -119,6 +119,7 @@ class Stellarator:
             self.costs.run()
             self.costs.output()
             self.availability.run(output=True)
+            self.physics.calculate_effective_charge_ionisation_profiles()
             self.physics.outplas()
             self.stheat(True)
             self.stphys(True)
