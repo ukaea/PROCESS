@@ -1961,13 +1961,12 @@ class CurrentDrive:
 
                 :references:
                     - E. Poli et al., “Electron-cyclotron-current-drive efficiency in DEMO plasmas,”
-                    Nuclear Fusion, vol. 53, no. 1, pp. 013011–013011, Dec. 2012,
+                    Nuclear Fusion, vol. 53, no. 1, pp. 013011-013011, Dec. 2012,
                     doi: https://doi.org/10.1088/0029-5515/53/1/013011.
         ‌
                     - T. C. Luce et al., “Generation of Localized Noninductive Current by Electron Cyclotron Waves on the DIII-D Tokamak,”
-                    Physical Review Letters, vol. 83, no. 22, pp. 4550–4553, Nov. 1999,
+                    Physical Review Letters, vol. 83, no. 22, pp. 4550-4553, Nov. 1999,
                     doi: https://doi.org/10.1103/physrevlett.83.4550.
-
         """
 
         return (

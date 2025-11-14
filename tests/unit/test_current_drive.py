@@ -322,3 +322,43 @@ def test_cudriv_primary_electron_bernstein(current_drive):
     assert current_drive_variables.p_hcd_injected_total_mw == pytest.approx(
         257.72205307406523, rel=1e-6
     )
+
+
+@pytest.mark.parametrize(
+    "nd_plasma_electrons_vol_avg, rmajor, temp_plasma_electron_vol_avg_kev, c_hcd_driven, p_hcd_injected",
+    [
+        (1e20, 1.0, 1.0, 1.0, 1.0),
+    ],
+)
+def test_calculate_dimensionless_current_drive_efficiency_simple(
+    nd_plasma_electrons_vol_avg,
+    rmajor,
+    temp_plasma_electron_vol_avg_kev,
+    c_hcd_driven,
+    p_hcd_injected,
+):
+    plasma_profile = PlasmaProfile()
+    cd = CurrentDrive(
+        plasma_profile=plasma_profile,
+        electron_cyclotron=ElectronCyclotron(plasma_profile),
+        ion_cyclotron=IonCyclotron(plasma_profile),
+        lower_hybrid=LowerHybrid(plasma_profile),
+        neutral_beam=NeutralBeam(plasma_profile),
+        electron_bernstein=ElectronBernstein(plasma_profile),
+    )
+    expected = (
+        (constants.ELECTRON_CHARGE**3 / constants.EPSILON0**2)
+        * (
+            (nd_plasma_electrons_vol_avg * rmajor)
+            / (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT)
+        )
+        * (c_hcd_driven / p_hcd_injected)
+    )
+    result = cd.calculate_dimensionless_current_drive_efficiency(
+        nd_plasma_electrons_vol_avg,
+        rmajor,
+        temp_plasma_electron_vol_avg_kev,
+        c_hcd_driven,
+        p_hcd_injected,
+    )
+    assert result == pytest.approx(expected, rel=1e-12)
