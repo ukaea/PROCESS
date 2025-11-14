@@ -216,9 +216,15 @@ f_beam_tritium: float = None
 eta_cd_norm_hcd_primary: float = None
 """Normalised current drive efficiency for primary HCD system [(1.0e20 A)/(W m^2)]"""
 
+eta_cd_dimensionless_hcd_primary: float = None
+"""Dimensionless current drive efficiency for primary HCD system (ζ)"""
+
 
 eta_cd_norm_hcd_secondary: float = None
 """Normalised current drive efficiency for secondary HCD system [(1.0e20 A)/(W m^2)]"""
+
+eta_cd_dimensionless_hcd_secondary: float = None
+"""Dimensionless current drive efficiency for secondary HCD system (ζ)"""
 
 
 eta_cd_norm_ecrh: float = None
@@ -424,7 +430,9 @@ def init_current_drive_variables():
     global f_radius_beam_tangency_rmajor
     global f_beam_tritium
     global eta_cd_norm_hcd_primary
+    global eta_cd_dimensionless_hcd_primary
     global eta_cd_norm_hcd_secondary
+    global eta_cd_dimensionless_hcd_secondary
     global eta_cd_norm_ecrh
     global xi_ebw
     global i_hcd_primary
@@ -497,6 +505,7 @@ def init_current_drive_variables():
     f_radius_beam_tangency_rmajor = 1.05
     f_beam_tritium = 1e-6
     eta_cd_norm_hcd_primary = 0.0
+    eta_cd_dimensionless_hcd_primary = 0.0
     eta_cd_norm_ecrh = 0.35
     xi_ebw = 0.8
     i_hcd_primary = 5
@@ -521,6 +530,7 @@ def init_current_drive_variables():
     n_beam_decay_lengths_core = 0.0
     n_beam_decay_lengths_core_required = 3.0
     eta_cd_norm_hcd_secondary = 0.0
+    eta_cd_dimensionless_hcd_secondary = 0.0
     eta_cd_hcd_secondary = 0.0
     p_ebw_injected_mw = 0.0
     p_hcd_ecrh_electric_mw = 0.0
