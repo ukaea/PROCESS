@@ -223,6 +223,9 @@ eta_cd_dimensionless_hcd_primary: float = None
 eta_cd_norm_hcd_secondary: float = None
 """Normalised current drive efficiency for secondary HCD system [(1.0e20 A)/(W m^2)]"""
 
+eta_cd_dimensionless_hcd_secondary: float = None
+"""Dimensionless current drive efficiency for secondary HCD system (ζ)"""
+
 
 eta_cd_norm_ecrh: float = None
 """User input ECRH gamma (1.0e20 A/(W m^2))"""
@@ -429,6 +432,7 @@ def init_current_drive_variables():
     global eta_cd_norm_hcd_primary
     global eta_cd_dimensionless_hcd_primary
     global eta_cd_norm_hcd_secondary
+    global eta_cd_dimensionless_hcd_secondary
     global eta_cd_norm_ecrh
     global xi_ebw
     global i_hcd_primary
@@ -526,6 +530,7 @@ def init_current_drive_variables():
     n_beam_decay_lengths_core = 0.0
     n_beam_decay_lengths_core_required = 3.0
     eta_cd_norm_hcd_secondary = 0.0
+    eta_cd_dimensionless_hcd_secondary = 0.0
     eta_cd_hcd_secondary = 0.0
     p_ebw_injected_mw = 0.0
     p_hcd_ecrh_electric_mw = 0.0
