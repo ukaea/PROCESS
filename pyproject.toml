@@ -75,6 +75,9 @@ docs = [
 lint = ["pre-commit>=2.16.0", "ruff==0.9.3", "ty"]
 all = ["process[test,docs,lint,examples,plotly]"]
 
+[project.scripts]
+process = "process.main:main"
+
 [tool.hatch.build.targets.wheel]
 artifacts = [
   "process/data/lz_non_corona_14_elements/*.dat",
