@@ -1479,6 +1479,27 @@ class CurrentDrive:
                 / physics_variables.plasma_current
             )
 
+            # Calculate the dimensionless current drive efficiency for the primary heating method (ζ)
+            current_drive_variables.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
+                temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                c_hcd_driven=current_drive_variables.c_hcd_primary_driven,
+                p_hcd_injected=current_drive_variables.p_hcd_primary_injected_mw
+                * 1.0e6,
+            )
+
+            if current_drive_variables.p_hcd_secondary_injected_mw > 0.0:
+                # Calculate the dimensionless current drive efficiency for the secondary heating method (ζ)
+                current_drive_variables.eta_cd_dimensionless_hcd_secondary = self.calculate_dimensionless_current_drive_efficiency(
+                    nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                    rmajor=physics_variables.rmajor,
+                    temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                    c_hcd_driven=current_drive_variables.c_hcd_secondary_driven,
+                    p_hcd_injected=current_drive_variables.p_hcd_secondary_injected_mw
+                    * 1.0e6,
+                )
+
             # ===========================================================
 
             # Calculate the wall plug power for the secondary heating method
@@ -2027,6 +2048,13 @@ class CurrentDrive:
             current_drive_variables.eta_cd_norm_hcd_primary,
             "OP ",
         )
+        po.ovarre(
+            self.outfile,
+            "Dimensionless current drive efficiency of primary system, ζ",
+            "(eta_cd_dimensionless_hcd_primary)",
+            current_drive_variables.eta_cd_dimensionless_hcd_primary,
+            "OP ",
+        )
         if current_drive_variables.i_hcd_primary == 10:
             po.ovarre(
                 self.outfile,
@@ -2246,6 +2274,13 @@ class CurrentDrive:
             "Normalised current drive efficiency of secondary system [10^20 A / Wm^2]",
             "(eta_cd_norm_hcd_secondary)",
             current_drive_variables.eta_cd_norm_hcd_secondary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Dimensionless current drive efficiency of secondary system, ζ",
+            "(eta_cd_dimensionless_hcd_secondary)",
+            current_drive_variables.eta_cd_dimensionless_hcd_secondary,
             "OP ",
         )
         if current_drive_variables.i_hcd_secondary == 10:
