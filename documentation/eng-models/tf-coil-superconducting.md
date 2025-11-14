@@ -1,6 +1,6 @@
 # Superconducting TF coil
 
-### Superconducting coil geometry
+## Superconducting coil geometry
 The TF coils are assumed to be supporting each other against the net centering force.  This can be described as a vaulted or wedged design. Each coil, illustrated in <em>Figure 1</em>, can be separated in two main sections:
 
 - **The winding pack (WP)** : section containing the superconducting cables (Blue area  in <em>Figure 1</em>). The ground insulation and the insertion gap (the clearance required to allow the winding pack to be inserted, shown as the dark grey area in <em>Figure 1</em>) is considered part of the WP by convention.
@@ -21,7 +21,7 @@ The TF coils are assumed to be supporting each other against the net centering f
     </center>
 </figure>
 
-#### TF coil inboard radial size
+### TF coil inboard radial size
 
 <p style='text-align: justify;'> 
   Following the geometry and its parametrization presented in <em>Figure 1</em>, the TF total thickness <em>dr_tf_inboard</em> \( \left( \Delta R_\mathrm{TF} \right) \) is related with the inner and outer case radial thicknesses (<em>dr_tf_nose_case</em>, \(  \Delta R_\mathrm{case}^\mathrm{in} \) and <em>dr_tf_plasma_case</em>, \( \Delta R_\mathrm{case}^\mathrm{out} \) respectively) and the WP radial thickness <em>dr_tf_wp_with_insulation</em> \(\Delta R_\mathrm{WP}\) by the following equation :
@@ -49,7 +49,7 @@ $$
     **WP thickness parametrization**: the TF inboard radial thickness is calculated from the the case and the WP radial thickness. This option is selected by using the WP thickness (`dr_tf_wp_with_insulation`, iteration variable 140) as an iteration variable. Doing so, any `dr_tf_inboard` values will be overwritten and for this reason `dr_tf_wp_with_insulation` and `dr_tf_inboard` cannot be used as iteration variables simultaneously. Although not set by default for backward compatibility, this parametrization provides a more stable optimization procedure (negative WP area layer cannot be obtained by construction) and is hence encouraged.
   </p>
 
-#### Case geometry
+### Case geometry
 
 <p style='text-align: justify;'> 
   Although not physically divided into pieces, three sections of the case can be considered: 
@@ -66,7 +66,7 @@ $$
 
 
 
-#### Winding pack geometry
+### Winding pack geometry
 
 Several Winding pack geometries can chosen with the `i_tf_wp_geom` integer switch as shown in Figure 3: 
 
@@ -94,7 +94,21 @@ Several Winding pack geometries can chosen with the `i_tf_wp_geom` integer switc
     </center>
 </figure>
 
-#### Turns geometry
+------------------
+
+### Turns geometry
+
+Based on the choice of superconductor used in the coil (`i_tf_sc_mat`) the required turn structure also has to change. NbTi and Nb3Sn superconductors are normally made in cable form and are used in the Cable in Conduit turn configuration. On the other hand high temperature superconductors are normally made in tape format.
+
+The selection of the turn geometry is controlled via the `i_tf_turn_type` switch:
+
+- 1: Cable in conduit conductor
+- 2: CroCo
+- 3: STEP Vertical stacked tapes
+
+------------------------
+
+#### Cable in conduit conductor
 
 <p style='text-align: justify;'>
   <em>Figure 4</em> illustrates the winding pack internal structure and the
@@ -186,7 +200,7 @@ turns. The number of turns can be parametrized in three different ways :
   </p>
 
 
-#### Cable composition
+##### Cable composition
 <p style='text-align: justify;'>
   As the conductor cable composition is only used to correct the area used to
   compute current density flowing in the superconductor material, to be compared
@@ -205,6 +219,14 @@ turns. The number of turns can be parametrized in three different ways :
     has been removed from the conductor area. Does not include any copper from
     REBCO tape if used.
   </p>
+
+-----------------
+
+#### STEP Vertical Stacked Tapes
+
+
+
+-----------------
 
 ## Critical current density for the superconductor 
 The minimum conductor cross-section is derived from the critical current density for the superconductor in the operating magnetic field and temperature, and is enforced using constraint 33.
