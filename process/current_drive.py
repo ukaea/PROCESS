@@ -803,7 +803,7 @@ class ElectronCyclotron:
             1
             / (2 * np.pi)
             * np.sqrt(
-                (nd_plasma_electrons_vol_avg / 1.0e19)
+                (nd_plasma_electrons_vol_avg)
                 * constants.ELECTRON_CHARGE**2
                 / (constants.ELECTRON_MASS * constants.EPSILON0)
             )

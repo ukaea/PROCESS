@@ -36,6 +36,7 @@ import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.build import Build
+from process.current_drive import ElectronBernstein, ElectronCyclotron
 from process.data_structure import impurity_radiation_module, physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
@@ -12434,6 +12435,91 @@ def plot_ion_charge_profile(axis, mfile_data, scan):
     axis.grid(which="both", linestyle="--", alpha=0.5)
 
 
+def plot_ebw_ecrh_coupling_graph(axis, mfile_data, scan):
+    # Plot EBW and ECRH coupling efficiency graph
+    ebw = ElectronBernstein(plasma_profile=0)
+    ecrg = ElectronCyclotron(plasma_profile=0)
+    b_on_axis = mfile_data.data["b_plasma_toroidal_on_axis"].get_scan(scan)
+    bs = np.linspace(b_on_axis - 2.0, b_on_axis + 2.0, 500)
+    # Use a color map for harmonics
+    colors = ["red", "green", "blue"]
+    linestyles = ["-", "--"]  # EBW: solid, ECRH: dashed
+
+    for idx, n_harmonic in enumerate(range(1, 4)):
+        eta_ebw_vals = []
+        # For ECRH, store results for both wave modes (0: O-mode, 1: X-mode)
+        eta_ecrh_vals_omode = []
+        eta_ecrh_vals_xmode = []
+        for b in bs:
+            eta_ebw = ebw.electron_bernstein_freethy(
+                te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
+                rmajor=mfile_data.data["rmajor"].get_scan(scan),
+                dene20=mfile_data.data["nd_plasma_electrons_vol_avg"].get_scan(scan)
+                / 1e20,
+                b_plasma_toroidal_on_axis=b,
+                n_ecrh_harmonic=n_harmonic,
+                xi_ebw=0.8,
+            )
+            eta_ecrh_omode = ecrg.electron_cyclotron_freethy(
+                te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
+                zeff=mfile_data.data["zeff"].get_scan(scan),
+                rmajor=mfile_data.data["rmajor"].get_scan(scan),
+                nd_plasma_electrons_vol_avg=mfile_data.data[
+                    "nd_plasma_electrons_vol_avg"
+                ].get_scan(scan),
+                b_plasma_toroidal_on_axis=b,
+                n_ecrh_harmonic=n_harmonic,
+                i_ecrh_wave_mode=0,  # O-mode
+            )
+            eta_ecrh_xmode = ecrg.electron_cyclotron_freethy(
+                te=mfile_data.data["temp_plasma_electron_vol_avg_kev"].get_scan(scan),
+                zeff=mfile_data.data["zeff"].get_scan(scan),
+                rmajor=mfile_data.data["rmajor"].get_scan(scan),
+                nd_plasma_electrons_vol_avg=mfile_data.data[
+                    "nd_plasma_electrons_vol_avg"
+                ].get_scan(scan),
+                b_plasma_toroidal_on_axis=b,
+                n_ecrh_harmonic=n_harmonic,
+                i_ecrh_wave_mode=1,  # X-mode
+            )
+            eta_ebw_vals.append(eta_ebw)
+            eta_ecrh_vals_omode.append(eta_ecrh_omode)
+            eta_ecrh_vals_xmode.append(eta_ecrh_xmode)
+        # EBW: solid, ECRH O-mode: dashed, ECRH X-mode: dotted, same color for same harmonic
+        axis.plot(
+            bs,
+            eta_ebw_vals,
+            label=f"EBW (harmonic {n_harmonic})",
+            color=colors[idx],
+            linestyle=linestyles[0],
+        )
+        axis.plot(
+            bs,
+            eta_ecrh_vals_omode,
+            label=f"ECRH O-mode (harmonic {n_harmonic})",
+            color=colors[idx],
+            linestyle="--",
+        )
+        axis.plot(
+            bs,
+            eta_ecrh_vals_xmode,
+            label=f"ECRH X-mode (harmonic {n_harmonic})",
+            color=colors[idx],
+            linestyle=":",
+        )
+    axis.set_xlabel("On axis toroidal B-field [T]")
+    axis.set_ylabel("Coupling Efficiency")
+    axis.set_title("EBW/ECRH Coupling Efficiency vs Toroidal B-field")
+    axis.legend()
+    axis.grid(True)
+    # Plot a vertical line at the on-axis value of the toroidal B-field
+    b_on_axis = mfile_data.data["b_plasma_toroidal_on_axis"].get_scan(scan)
+    axis.axvline(
+        b_on_axis, color="black", linestyle="-", linewidth=2.5, label="On-axis $B_T$"
+    )
+    axis.minorticks_on()
+
+
 def main_plot(
     fig0,
     fig1,
@@ -12743,6 +12829,8 @@ def main_plot(
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig26)
+
+    plot_ebw_ecrh_coupling_graph(fig26.add_subplot(111), m_file_data, scan)
 
 
 def main(args=None):
