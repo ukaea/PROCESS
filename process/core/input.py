@@ -1186,6 +1186,9 @@ INPUT_VARIABLES = {
     "f_len_sol_power_decay_inboard_outboard": InputVariable(
         "physics", float, range=(0.01, 2.0)
     ),
+    "molflow_plasma_fuelling_required": InputVariable(
+        "physics", float, range=(1.0e20, 1.0e23)
+    ),
 }
 
 

@@ -1566,16 +1566,13 @@ class Physics(Model):
         # Fuel burnup rate (reactions/second) (previously Amps)
         rndfuel = fusrat
 
-        # Required fuelling rate (fuel ion pairs/second) (previously Amps)
-        molflow_plasma_fuelling_required = rndfuel / burnup
-
         f_t_alpha_energy_confinement = t_alpha_confinement / t_energy_confinement
 
         return (
             burnup,
             figmer,
             fusrat,
-            molflow_plasma_fuelling_required,
+            self.data.physics.molflow_plasma_fuelling_required,
             rndfuel,
             t_alpha_confinement,
             f_t_alpha_energy_confinement,

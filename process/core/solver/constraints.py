@@ -1981,6 +1981,14 @@ def constraint_equation_92(constraint_registration, data):
     )
 
 
+@ConstraintManager.register_constraint(93, "", "=")
+def constraint_equation_93(constraint_registration, data):
+    num = data.physics.fusrat_total / data.physics.burnup
+    denom = data.physics.molflow_plasma_fuelling_required
+
+    return eq(num, denom, constraint_registration)
+
+
 def constraint_eqns(m: int, ieqn: int, data: DataStructure):
     """Evaluates the constraints given the current state of PROCESS.
 
