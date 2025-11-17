@@ -1493,6 +1493,27 @@ class CurrentDrive:
                 / physics_variables.plasma_current
             )
 
+            # Calculate the dimensionless current drive efficiency for the primary heating method (ζ)
+            current_drive_variables.eta_cd_dimensionless_hcd_primary = self.calculate_dimensionless_current_drive_efficiency(
+                nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                rmajor=physics_variables.rmajor,
+                temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                c_hcd_driven=current_drive_variables.c_hcd_primary_driven,
+                p_hcd_injected=current_drive_variables.p_hcd_primary_injected_mw
+                * 1.0e6,
+            )
+
+            if current_drive_variables.p_hcd_secondary_injected_mw > 0.0:
+                # Calculate the dimensionless current drive efficiency for the secondary heating method (ζ)
+                current_drive_variables.eta_cd_dimensionless_hcd_secondary = self.calculate_dimensionless_current_drive_efficiency(
+                    nd_plasma_electrons_vol_avg=physics_variables.nd_plasma_electrons_vol_avg,
+                    rmajor=physics_variables.rmajor,
+                    temp_plasma_electron_vol_avg_kev=physics_variables.temp_plasma_electron_vol_avg_kev,
+                    c_hcd_driven=current_drive_variables.c_hcd_secondary_driven,
+                    p_hcd_injected=current_drive_variables.p_hcd_secondary_injected_mw
+                    * 1.0e6,
+                )
+
             # ===========================================================
 
             # Calculate the wall plug power for the secondary heating method
@@ -1925,6 +1946,52 @@ class CurrentDrive:
                 )
             )
 
+    def calculate_dimensionless_current_drive_efficiency(
+        self,
+        nd_plasma_electrons_vol_avg: float,
+        rmajor: float,
+        temp_plasma_electron_vol_avg_kev: float,
+        c_hcd_driven: float,
+        p_hcd_injected: float,
+    ) -> float:
+        """
+                Calculate the dimensionless current drive efficiency, ζ.
+
+                This function computes the dimensionless current drive efficiency
+                based on the average electron density, major radius, and electron temperature.
+
+                :param nd_plasma_electrons_vol_avg: Volume averaged electron density in m^-3.
+                :type nd_plasma_electrons_vol_avg: float
+                :param rmajor: Major radius of the plasma in meters.
+                :type rmajor: float
+                :param temp_plasma_electron_vol_avg_kev: Volume averaged electron temperature in keV.
+                :type temp_plasma_electron_vol_avg_kev: float
+                :param c_hcd_driven: Current driven by the heating and current drive system.
+                :type c_hcd_driven: float
+                :param p_hcd_injected: Power injected by the heating and current drive system.
+                :type p_hcd_injected: float
+                :return: The calculated dimensionless current drive efficiency.
+                :rtype: float
+
+                :references:
+                    - E. Poli et al., “Electron-cyclotron-current-drive efficiency in DEMO plasmas,”
+                    Nuclear Fusion, vol. 53, no. 1, pp. 013011-013011, Dec. 2012,
+                    doi: https://doi.org/10.1088/0029-5515/53/1/013011.
+        ‌
+                    - T. C. Luce et al., “Generation of Localized Noninductive Current by Electron Cyclotron Waves on the DIII-D Tokamak,”
+                    Physical Review Letters, vol. 83, no. 22, pp. 4550-4553, Nov. 1999,
+                    doi: https://doi.org/10.1103/physrevlett.83.4550.
+        """
+
+        return (
+            (constants.ELECTRON_CHARGE**3 / constants.EPSILON0**2)
+            * (
+                (nd_plasma_electrons_vol_avg * rmajor)
+                / (temp_plasma_electron_vol_avg_kev * constants.KILOELECTRON_VOLT)
+            )
+            * (c_hcd_driven / p_hcd_injected)
+        )
+
     def output_current_drive(self):
         """
         Output the current drive information to the output file.
@@ -2002,6 +2069,13 @@ class CurrentDrive:
             "Normalised current drive efficiency of primary system [10^20 A / Wm^2]",
             "(eta_cd_norm_hcd_primary)",
             current_drive_variables.eta_cd_norm_hcd_primary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Dimensionless current drive efficiency of primary system, ζ",
+            "(eta_cd_dimensionless_hcd_primary)",
+            current_drive_variables.eta_cd_dimensionless_hcd_primary,
             "OP ",
         )
         if current_drive_variables.i_hcd_primary == 10:
@@ -2223,6 +2297,13 @@ class CurrentDrive:
             "Normalised current drive efficiency of secondary system [10^20 A / Wm^2]",
             "(eta_cd_norm_hcd_secondary)",
             current_drive_variables.eta_cd_norm_hcd_secondary,
+            "OP ",
+        )
+        po.ovarre(
+            self.outfile,
+            "Dimensionless current drive efficiency of secondary system, ζ",
+            "(eta_cd_dimensionless_hcd_secondary)",
+            current_drive_variables.eta_cd_dimensionless_hcd_secondary,
             "OP ",
         )
         if current_drive_variables.i_hcd_secondary == 10:
