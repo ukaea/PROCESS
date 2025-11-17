@@ -447,7 +447,7 @@ The unit declaration `_fpy` can be used to specify that it is the full-power yea
 
 ##### Forces
 
-- Forces should start with the `forc_` prefix.
+- Forces should start with the `force_` prefix.
 
 ---------------------
 
