@@ -168,6 +168,7 @@ class ProcessTracker:
         message: str | None = None,
         hashid: str | None = None,
         tracking_variables_file: pathlib.Path | None = None,
+        strict: bool = False,
     ) -> None:
         """Drive the creation of tracking JSON files.
 
@@ -178,6 +179,12 @@ class ProcessTracker:
         :type database: str
         """
         self.mfile = mf.MFile(mfile)
+
+        if strict and (ifail := self.mfile.data["ifail"].get_scan(-1)) != 1:
+            raise RuntimeError(
+                f"{ifail = :.0f} indicates PROCESS has failed to converge."
+            )
+
         self.tracking_file = TrackingFile()
 
         if tracking_variables_file is None:
