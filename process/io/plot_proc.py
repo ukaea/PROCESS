@@ -12441,6 +12441,12 @@ def plot_tf_coil_forces(axis, mfile_data, scan, colour_scheme=1):
     force_tf_coil_inboard_centering = mfile_data.data[
         "force_tf_coil_inboard_centering"
     ].get_scan(scan)
+    force_tf_coil_inboard_vertical = mfile_data.data[
+        "force_tf_coil_inboard_vertical"
+    ].get_scan(scan)
+    force_tf_coil_outboard_vertical = mfile_data.data[
+        "force_tf_coil_outboard_vertical"
+    ].get_scan(scan)
     z_tf_inside_half = mfile_data.data["z_tf_inside_half"].get_scan(scan)
 
     # ==============================
@@ -12472,6 +12478,112 @@ def plot_tf_coil_forces(axis, mfile_data, scan, colour_scheme=1):
             "boxstyle": "round,pad=0.2",
             "facecolor": "white",
             "edgecolor": "red",
+            "alpha": 0.8,
+        },
+    )
+
+    # Draw vertical arrows at the inboard to show the separation vertical force (up and down)
+    axis.annotate(
+        "",
+        xy=(r_tf_inboard_in, z_tf_inside_half / 2),
+        xytext=(r_tf_inboard_in, 0),
+        arrowprops={"arrowstyle": "-|>", "color": "blue", "lw": 4},
+        annotation_clip=False,
+    )
+    axis.annotate(
+        "",
+        xy=(r_tf_inboard_in, -z_tf_inside_half / 2),
+        xytext=(r_tf_inboard_in, 0),
+        arrowprops={"arrowstyle": "-|>", "color": "blue", "lw": 4},
+        annotation_clip=False,
+    )
+
+    # Show the vertical separation force in MN next to the arrows (up)
+    axis.text(
+        r_tf_inboard_in + 0.1,
+        z_tf_inside_half / 2,
+        f"{force_tf_coil_inboard_vertical / 1e6:.2f} MN",
+        color="blue",
+        fontsize=10,
+        va="center",
+        ha="left",
+        fontweight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "blue",
+            "alpha": 0.8,
+        },
+    )
+    # Show the vertical separation force in MN next to the arrows (down)
+    axis.text(
+        r_tf_inboard_in + 0.1,
+        -z_tf_inside_half / 2,
+        f"{force_tf_coil_inboard_vertical / 1e6:.2f} MN",
+        color="blue",
+        fontsize=10,
+        va="center",
+        ha="left",
+        fontweight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "blue",
+            "alpha": 0.8,
+        },
+    )
+
+    # Draw vertical arrows at the outboard to show the outboard vertical tension force (up and down)
+    r_tf_outboard_in = mfile_data.data["r_tf_outboard_in"].get_scan(scan)
+    force_tf_coil_outboard_vertical = mfile_data.data[
+        "force_tf_coil_outboard_vertical"
+    ].get_scan(scan)
+    z_tf_inside_half = mfile_data.data["z_tf_inside_half"].get_scan(scan)
+
+    axis.annotate(
+        "",
+        xy=(r_tf_outboard_in, z_tf_inside_half / 2),
+        xytext=(r_tf_outboard_in, 0),
+        arrowprops={"arrowstyle": "-|>", "color": "purple", "lw": 4},
+        annotation_clip=False,
+    )
+    axis.annotate(
+        "",
+        xy=(r_tf_outboard_in, -z_tf_inside_half / 2),
+        xytext=(r_tf_outboard_in, 0),
+        arrowprops={"arrowstyle": "-|>", "color": "purple", "lw": 4},
+        annotation_clip=False,
+    )
+
+    axis.text(
+        r_tf_outboard_in + 0.1,
+        z_tf_inside_half / 2,
+        f"{force_tf_coil_outboard_vertical / 1e6:.2f} MN",
+        color="purple",
+        fontsize=10,
+        va="center",
+        ha="left",
+        fontweight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "purple",
+            "alpha": 0.8,
+        },
+    )
+    axis.text(
+        r_tf_outboard_in + 0.1,
+        -z_tf_inside_half / 2,
+        f"{force_tf_coil_outboard_vertical / 1e6:.2f} MN",
+        color="purple",
+        fontsize=10,
+        va="center",
+        ha="left",
+        fontweight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "purple",
             "alpha": 0.8,
         },
     )

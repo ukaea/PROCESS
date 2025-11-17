@@ -482,6 +482,8 @@ class TfFieldAndForceParam(NamedTuple):
 
     expected_vforce_inboard_tot: Any = None
 
+    z_tf_inside_half: Any = None
+
 
 @pytest.mark.parametrize(
     "tffieldandforceparam",
@@ -498,6 +500,7 @@ class TfFieldAndForceParam(NamedTuple):
             force_tf_coil_inboard_vertical=0,
             n_tf_coils=12,
             taucq=30,
+            z_tf_inside_half=3.0,
             sigvvall=93000000,
             force_tf_coil_inboard_centering=0,
             c_tf_total=25500000,
@@ -533,6 +536,7 @@ class TfFieldAndForceParam(NamedTuple):
             force_tf_coil_inboard_vertical=12380916.66459452,
             n_tf_coils=12,
             taucq=30,
+            z_tf_inside_half=3.0,
             sigvvall=93000000,
             force_tf_coil_inboard_centering=37041530.947408713,
             c_tf_total=25500000,
@@ -591,6 +595,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
         itart=tffieldandforceparam.itart,
         i_cp_joints=tffieldandforceparam.i_cp_joints,
         f_force_tf_coil_inboard_vertical=tffieldandforceparam.f_force_tf_coil_inboard_vertical,
+        z_tf_inside_half=tffieldandforceparam.z_tf_inside_half,
     )
 
     assert force_tf_coil_inboard_vertical == pytest.approx(

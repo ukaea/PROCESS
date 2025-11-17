@@ -2677,7 +2677,7 @@ class TFCoil:
             r_tf_wp_inboard_inner_conductor = 1.0e-9
 
         # May the force be with you
-        vforce_tot = (
+        force_tf_coil_vertical_total = (
             0.5e0
             * (b_plasma_toroidal_on_axis * rmajor * c_tf_total)
             / (n_tf_coils * dr_tf_wp_inboard_conductor**2)
@@ -2748,15 +2748,21 @@ class TFCoil:
             )
 
             # Vertical tension applied on the outer leg [N]
-            force_tf_coil_outboard_vertical = vforce_tot - force_tf_coil_inboard_vertical
+            force_tf_coil_outboard_vertical = (
+                force_tf_coil_vertical_total - force_tf_coil_inboard_vertical
+            )
 
             # Inboard vertical tension fraction
-            f_force_tf_coil_inboard_vertical = force_tf_coil_inboard_vertical / vforce_tot
+            f_force_tf_coil_inboard_vertical = (
+                force_tf_coil_inboard_vertical / force_tf_coil_vertical_total
+            )
 
         # Case of TF without joints or with clamped joints vertical tension
         else:
             # Inboard vertical tension [N]
-            force_tf_coil_inboard_vertical = f_force_tf_coil_inboard_vertical * vforce_tot
+            force_tf_coil_inboard_vertical = (
+                f_force_tf_coil_inboard_vertical * force_tf_coil_vertical_total
+            )
 
             # Ouboard vertical tension [N]
             force_tf_coil_outboard_vertical = force_tf_coil_inboard_vertical * (
