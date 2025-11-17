@@ -1652,8 +1652,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Inboard vertical tension per coil (N)",
-            "(vforce)",
-            tfcoil_variables.vforce,
+            "(force_tf_coil_inboard_vertical)",
+            tfcoil_variables.force_tf_coil_inboard_vertical,
             "OP ",
         )
         po.ovarre(
@@ -2607,7 +2607,7 @@ class TFCoil:
 
         :returns: Tuple containing:
             - force_tf_coil_inboard_centering (float): Centering force per TF coil [N/m]
-            - vforce (float): Inboard vertical tension [N]
+            - force_tf_coil_inboard_vertical (float): Inboard vertical tension [N]
             - vforce_outboard (float): Outboard vertical tension [N]
             - vforce_inboard_tot (float): Total inboard vertical force [N]
             - f_vforce_inboard (float): Inboard vertical tension fraction
@@ -2719,7 +2719,7 @@ class TFCoil:
         # Rem SK : casing/insulation thickness not subtracted as part of the CP is genuinely connected to the legs..
         if itart == 1 and i_cp_joints == 1:
             # CP vertical tension [N]
-            vforce = (
+            force_tf_coil_inboard_vertical = (
                 0.25e0
                 * (b_plasma_toroidal_on_axis * rmajor * c_tf_total)
                 / (n_tf_coils * dr_tf_wp_inboard_conductor**2)
@@ -2748,25 +2748,27 @@ class TFCoil:
             )
 
             # Vertical tension applied on the outer leg [N]
-            vforce_outboard = vforce_tot - vforce
+            vforce_outboard = vforce_tot - force_tf_coil_inboard_vertical
 
             # Inboard vertical tension fraction
-            f_vforce_inboard = vforce / vforce_tot
+            f_vforce_inboard = force_tf_coil_inboard_vertical / vforce_tot
 
         # Case of TF without joints or with clamped joints vertical tension
         else:
             # Inboard vertical tension [N]
-            vforce = f_vforce_inboard * vforce_tot
+            force_tf_coil_inboard_vertical = f_vforce_inboard * vforce_tot
 
             # Ouboard vertical tension [N]
-            vforce_outboard = vforce * ((1.0e0 / f_vforce_inboard) - 1.0e0)
+            vforce_outboard = force_tf_coil_inboard_vertical * (
+                (1.0e0 / f_vforce_inboard) - 1.0e0
+            )
 
         # Total vertical force
-        vforce_inboard_tot = vforce * n_tf_coils
+        vforce_inboard_tot = force_tf_coil_inboard_vertical * n_tf_coils
 
         return (
             force_tf_coil_inboard_centering,
-            vforce,
+            force_tf_coil_inboard_vertical,
             vforce_outboard,
             vforce_inboard_tot,
             f_vforce_inboard,
@@ -3211,7 +3213,7 @@ class TFCoil:
         vforce_inboard_tot,
         i_tf_tresca,
         a_tf_coil_inboard_case,
-        vforce,
+        force_tf_coil_inboard_vertical,
         a_tf_turn_steel,
     ):
         """TF coil stress routine
@@ -3782,7 +3784,7 @@ class TFCoil:
             )
 
             # Vertical stress [Pa]
-            sig_tf_z[:] = vforce / (
+            sig_tf_z[:] = force_tf_coil_inboard_vertical / (
                 a_tf_coil_inboard_case + a_tf_turn_steel * n_tf_coil_turns
             )  # Array equation [EDIT: Are you sure? It doesn't look like one to me]
 

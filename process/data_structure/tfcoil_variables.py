@@ -175,7 +175,7 @@ cdtfleg: float = None
 
 
 force_tf_coil_inboard_centering: float = None
-"""centering force on inboard leg (per coil) (N/m)"""
+"""Centering force on inboard leg (per coil) (N)"""
 
 
 cplen: float = None
@@ -841,8 +841,8 @@ v_tf_coil_dump_quench_max_kv: float = None
 """max voltage across TF coil during quench (kV) (`iteration variable 52`)"""
 
 
-vforce: float = None
-"""vertical tension on inboard leg/coil (N)"""
+force_tf_coil_inboard_vertical: float = None
+"""Vertical tension on  inboard leg of TF coil (N)"""
 
 
 f_vforce_inboard: float = None
@@ -1249,7 +1249,7 @@ def init_tfcoil_variables():
     global temp_tf_cryo
     global n_tf_coil_turns
     global v_tf_coil_dump_quench_max_kv
-    global vforce
+    global force_tf_coil_inboard_vertical
     global f_vforce_inboard
     global vforce_outboard
     global f_a_tf_turn_cable_space_extra_void
@@ -1484,7 +1484,7 @@ def init_tfcoil_variables():
     temp_tf_cryo = 4.5
     n_tf_coil_turns = 0.0
     v_tf_coil_dump_quench_max_kv = 20.0
-    vforce = 0.0
+    force_tf_coil_inboard_vertical = 0.0
     f_vforce_inboard = 0.5
     vforce_outboard = 0.0
     f_a_tf_turn_cable_space_extra_void = 0.4

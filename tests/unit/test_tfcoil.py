@@ -432,7 +432,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     r_cp_top: Any = None
 
-    vforce: Any = None
+    force_tf_coil_inboard_vertical: Any = None
 
     n_tf_coils: Any = None
 
@@ -495,7 +495,7 @@ class TfFieldAndForceParam(NamedTuple):
             r_vv_inboard_out=0.20483000000000001,
             r_tf_inboard_mid=0.077415000000000012,
             r_cp_top=0.87643571428571443,
-            vforce=0,
+            force_tf_coil_inboard_vertical=0,
             n_tf_coils=12,
             taucq=30,
             sigvvall=93000000,
@@ -530,7 +530,7 @@ class TfFieldAndForceParam(NamedTuple):
             r_vv_inboard_out=0.20483000000000001,
             r_tf_inboard_mid=0.077415000000000012,
             r_cp_top=0.85843571428571441,
-            vforce=12380916.66459452,
+            force_tf_coil_inboard_vertical=12380916.66459452,
             n_tf_coils=12,
             taucq=30,
             sigvvall=93000000,
@@ -570,7 +570,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
 
     (
         force_tf_coil_inboard_centering,
-        vforce,
+        force_tf_coil_inboard_vertical,
         vforce_outboard,
         vforce_inboard_tot,
         f_vforce_inboard,
@@ -593,7 +593,9 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
         f_vforce_inboard=tffieldandforceparam.f_vforce_inboard,
     )
 
-    assert vforce == pytest.approx(tffieldandforceparam.expected_vforce)
+    assert force_tf_coil_inboard_vertical == pytest.approx(
+        tffieldandforceparam.expected_vforce
+    )
 
     assert force_tf_coil_inboard_centering == pytest.approx(
         tffieldandforceparam.expected_cforce
@@ -872,7 +874,7 @@ class StressclParam(NamedTuple):
 
     a_tf_turn_cable_space_no_void: Any = None
 
-    vforce: Any = None
+    force_tf_coil_inboard_vertical: Any = None
 
     c_tf_total: Any = None
 
@@ -1044,7 +1046,7 @@ class StressclParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
-            vforce=250545611.13801825,
+            force_tf_coil_inboard_vertical=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
@@ -1167,7 +1169,7 @@ class StressclParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
-            vforce=250545611.13801825,
+            force_tf_coil_inboard_vertical=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
@@ -1392,7 +1394,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.vforce_inboard_tot,
         stressclparam.i_tf_tresca,
         stressclparam.a_tf_coil_inboard_case,
-        stressclparam.vforce,
+        stressclparam.force_tf_coil_inboard_vertical,
         stressclparam.a_tf_turn_steel,
     )
 

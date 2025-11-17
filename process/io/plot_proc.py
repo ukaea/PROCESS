@@ -12454,11 +12454,7 @@ def plot_tf_coil_forces(axis, mfile_data, scan, colour_scheme=1):
         "",
         xy=(0, y_center),
         xytext=(r_tf_inboard_in, y_center),
-        arrowprops={
-            "arrowstyle": "-|>",
-            "color": "red",
-            "lw": 4
-        },
+        arrowprops={"arrowstyle": "-|>", "color": "red", "lw": 4},
         annotation_clip=False,
     )
 

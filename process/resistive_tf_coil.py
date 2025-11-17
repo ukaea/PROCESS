@@ -57,7 +57,7 @@ class ResistiveTFCoil(TFCoil):
 
         (
             tfcoil_variables.force_tf_coil_inboard_centering,
-            tfcoil_variables.vforce,
+            tfcoil_variables.force_tf_coil_inboard_vertical,
             tfcoil_variables.vforce_outboard,
             superconducting_tf_coil_variables.vforce_inboard_tot,
             tfcoil_variables.f_vforce_inboard,
@@ -190,7 +190,7 @@ class ResistiveTFCoil(TFCoil):
                 superconducting_tf_coil_variables.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
                 tfcoil_variables.a_tf_coil_inboard_case,
-                tfcoil_variables.vforce,
+                tfcoil_variables.force_tf_coil_inboard_vertical,
                 tfcoil_variables.a_tf_turn_steel,
             )
 
