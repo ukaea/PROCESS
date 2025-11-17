@@ -916,7 +916,7 @@ def beam_fusion(
     temp_plasma_electron_density_weighted_kev: float,
     temp_plasma_ion_density_weighted_kev: float,
     vol_plasma: float,
-    zeffai: float,
+    n_charge_plasma_effective_mass_weighted_vol_avg: float,
 ) -> tuple:
     """
             Routine to calculate beam slowing down properties.
@@ -941,7 +941,7 @@ def beam_fusion(
                 temp_plasma_electron_density_weighted_kev (float): Density-weighted electron temperature (keV).
                 temp_plasma_ion_density_weighted_kev (float): Density-weighted ion temperature (keV).
                 vol_plasma (float): Plasma volume (m^3).
-                zeffai (float): Mass weighted plasma effective charge.
+                n_charge_plasma_effective_mass_weighted_vol_avg (float): Mass weighted plasma effective charge.
 
             Returns:
                 tuple: A tuple containing the following elements:
@@ -987,7 +987,7 @@ def beam_fusion(
         14.8
         * constants.M_DEUTERON_AMU
         * temp_plasma_electron_density_weighted_kev
-        * zeffai ** (2 / 3)
+        * n_charge_plasma_effective_mass_weighted_vol_avg ** (2 / 3)
         * (ion_electron_coulomb_log + 4.0)
         / ion_electron_coulomb_log
     )

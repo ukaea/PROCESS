@@ -41,6 +41,7 @@ def write(models, _outfile):
     models.availability.run(output=True)
 
     # Writing the output from physics.f90 into OUT.DAT + MFILE.DAT
+    models.physics.calculate_effective_charge_ionisation_profiles()
     models.physics.outplas()
 
     # TODO what is this? Not in caller.f90?

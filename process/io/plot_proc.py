@@ -36,7 +36,7 @@ import process.data_structure.pfcoil_variables as pfcoil_variables
 import process.io.mfile as mf
 import process.superconducting_tf_coil as sctf
 from process.build import Build
-from process.data_structure import physics_variables
+from process.data_structure import impurity_radiation_module, physics_variables
 from process.geometry.blanket_geometry import (
     blanket_geometry_double_null,
     blanket_geometry_single_null,
@@ -2928,7 +2928,7 @@ def plot_main_plasma_information(
         f"             $\\mathbf{{Ion \\ to \\ electron}}$\n"
         f"             $\\mathbf{{relative \\ number}}$\n"
         f"             $\\mathbf{{densities:}}$\n \n"
-        f"             Effective charge: {mfile_data.data['zeff'].get_scan(scan):.3f}\n\n"
+        f"             Effective charge: {mfile_data.data['n_charge_plasma_effective_vol_avg'].get_scan(scan):.3f}\n\n"
         f"             H:    {mfile_data.data['f_nd_impurity_electrons(01)'].get_scan(scan):.4e}\n"
         f"             He:  {mfile_data.data['f_nd_impurity_electrons(02)'].get_scan(scan):.4e}\n"
         f"             Be:  {mfile_data.data['f_nd_impurity_electrons(03)'].get_scan(scan):.4e}\n"
@@ -7498,7 +7498,7 @@ def plot_physics_info(axis, mfile_data, scan):
         (nong, r"$\langle n_{\mathrm{e,line}} \rangle \ / \ n_G$", ""),
         (tepeak, r"$T_{e0} \ / \ \langle T_e \rangle$", ""),
         (nepeak, r"$n_{e0} \ / \ \langle n_{\mathrm{e, vol}} \rangle$", ""),
-        ("zeff", r"$Z_{\mathrm{eff}}$", ""),
+        ("n_charge_plasma_effective_vol_avg", r"$Z_{\mathrm{eff}}$", ""),
         (
             nd_plasma_impurities_vol_avg,
             r"$n_Z \ / \  \langle n_{\mathrm{e, vol}} \rangle$",
@@ -12326,6 +12326,114 @@ def plot_plasma_outboard_toroidal_ripple_map(
     fig.tight_layout()
 
 
+def plot_plasma_effective_charge_profile(axis, mfile_data, scan):
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    n_charge_plasma_effective_vol_avg = mfile_data.data[
+        "n_charge_plasma_effective_vol_avg"
+    ].get_scan(scan)
+
+    n_charge_plasma_effective_profile = [
+        mfile_data.data[f"n_charge_plasma_effective_profile{i}"].get_scan(scan)
+        for i in range(n_plasma_profile_elements)
+    ]
+
+    axis.plot(
+        np.linspace(0, 1, n_plasma_profile_elements),
+        n_charge_plasma_effective_profile,
+    )
+
+    axis.hlines(
+        n_charge_plasma_effective_vol_avg,
+        xmin=0,
+        xmax=1,
+        colors="red",
+        linestyles="--",
+        label=f"Volume-Averaged $Z_{{\\text{{eff}}}}$ = {n_charge_plasma_effective_vol_avg:.2f}",
+    )
+
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_ylabel("Effective Charge ($Z_{\\text{eff}}$)")
+    axis.set_title("Plasma Effective Charge Profile")
+    axis.minorticks_on()
+    axis.set_xlim(0, 1.025)
+    axis.grid(which="both", linestyle="--", alpha=0.5)
+    axis.legend()
+
+
+def plot_ion_charge_profile(axis, mfile_data, scan):
+    n_plasma_profile_elements = int(
+        mfile_data.data["n_plasma_profile_elements"].get_scan(scan)
+    )
+
+    # find impurity densities
+    imp_frac = np.array([
+        mfile_data.data["f_nd_impurity_electrons(01)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(02)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(03)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(04)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(05)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(06)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(07)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(08)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(09)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(10)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(11)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(12)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(13)"].get_scan(scan),
+        mfile_data.data["f_nd_impurity_electrons(14)"].get_scan(scan),
+    ])
+
+    imp_label = [
+        "H",
+        "He",
+        "Be",
+        "C",
+        "N",
+        "O",
+        "Ne",
+        "Si",
+        "Ar",
+        "Fe",
+        "Ni",
+        "Kr",
+        "Xe",
+        "W",
+    ]
+    full_charge_array = [1, 2, 4, 6, 7, 8, 10, 14, 18, 26, 28, 36, 54, 74]
+
+    n_charge_plasma_profile = []
+    avg_ionisation_percentages = []
+    for imp in range(impurity_radiation_module.N_IMPURITIES):
+        if imp_frac[imp] > 1.0e-30:
+            profile = [
+                mfile_data.data[f"n_charge_plasma_profile{imp}_{i}"].get_scan(scan)
+                for i in range(n_plasma_profile_elements)
+            ]
+            n_charge_plasma_profile.append(profile)
+            z_max = full_charge_array[imp]
+            # Calculate relative ionisation state as percent of full ionisation
+            rel_ion_state = [
+                100.0 * (val / z_max if z_max > 0 else 0) for val in profile
+            ]
+            avg_ionisation = np.mean(rel_ion_state)
+            avg_ionisation_percentages.append((imp_label[imp], avg_ionisation))
+            axis.plot(
+                np.linspace(0, 1, n_plasma_profile_elements),
+                rel_ion_state,
+                label=f"{imp_label[imp]} (Z={z_max}): avg {avg_ionisation:.1f}%",
+            )
+    axis.set_ylabel("Relative Ionisation State [% of $Z$]")
+    axis.legend()
+    axis.set_xlim(0, 1.025)
+    axis.set_xlabel(r"$\rho \quad [r/a]$")
+    axis.set_title("Impurity Ion Charge State Profiles")
+    axis.minorticks_on()
+    axis.grid(which="both", linestyle="--", alpha=0.5)
+
+
 def main_plot(
     fig0,
     fig1,
@@ -12353,6 +12461,7 @@ def main_plot(
     fig23,
     fig24,
     fig25,
+    fig26,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -12444,10 +12553,13 @@ def main_plot(
     ax13.set_position([0.7, 0.125, 0.25, 0.15])
     plot_qprofile(ax13, demo_ranges, m_file_data, scan)
 
-    plot_fusion_rate_profiles(fig5.add_subplot(122), fig5, m_file_data, scan)
+    plot_plasma_effective_charge_profile(fig5.add_subplot(221), m_file_data, scan)
+    plot_ion_charge_profile(fig5.add_subplot(223), m_file_data, scan)
+
+    plot_fusion_rate_profiles(fig6.add_subplot(122), fig6, m_file_data, scan)
 
     if m_file_data.data["i_plasma_shape"].get_scan(scan) == 1:
-        plot_fusion_rate_contours(fig6, fig7, m_file_data, scan)
+        plot_fusion_rate_contours(fig7, fig8, m_file_data, scan)
 
     i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
     if i_shape != 1:
@@ -12458,19 +12570,19 @@ def main_plot(
             "see the 1D fusion rate/profile plots for available information."
         )
         # Add explanatory text to both figures reserved for contour outputs
-        fig6.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
         fig7.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
+        fig8.text(0.5, 0.5, msg, ha="center", va="center", wrap=True, fontsize=12)
 
-    plot_plasma_pressure_profiles(fig8.add_subplot(222), m_file_data, scan)
-    plot_plasma_pressure_gradient_profiles(fig8.add_subplot(224), m_file_data, scan)
+    plot_plasma_pressure_profiles(fig9.add_subplot(222), m_file_data, scan)
+    plot_plasma_pressure_gradient_profiles(fig9.add_subplot(224), m_file_data, scan)
     # Currently only works with Sauter geometry as plasma has a closed surface
     i_shape = int(m_file_data.data["i_plasma_shape"].get_scan(scan))
     if i_shape == 1:
         plot_plasma_poloidal_pressure_contours(
-            fig8.add_subplot(121, aspect="equal"), m_file_data, scan
+            fig9.add_subplot(121, aspect="equal"), m_file_data, scan
         )
     else:
-        ax = fig8.add_subplot(131, aspect="equal")
+        ax = fig9.add_subplot(131, aspect="equal")
         msg = (
             "Plasma poloidal pressure contours require a closed (Sauter) plasma boundary "
             "(i_plasma_shape == 1). "
@@ -12489,12 +12601,12 @@ def main_plot(
         )
         ax.axis("off")
 
-    plot_magnetic_fields_in_plasma(fig9.add_subplot(122), m_file_data, scan)
-    plot_beta_profiles(fig9.add_subplot(221), m_file_data, scan)
+    plot_magnetic_fields_in_plasma(fig10.add_subplot(122), m_file_data, scan)
+    plot_beta_profiles(fig10.add_subplot(221), m_file_data, scan)
 
     # Plot poloidal cross-section
     poloidal_cross_section(
-        fig10.add_subplot(121, aspect="equal"),
+        fig11.add_subplot(121, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -12503,7 +12615,7 @@ def main_plot(
 
     # Plot toroidal cross-section
     toroidal_cross_section(
-        fig10.add_subplot(122, aspect="equal"),
+        fig11.add_subplot(122, aspect="equal"),
         m_file_data,
         scan,
         demo_ranges,
@@ -12511,19 +12623,19 @@ def main_plot(
     )
 
     # Plot color key
-    ax17 = fig10.add_subplot(222)
+    ax17 = fig11.add_subplot(222)
     ax17.set_position([0.5, 0.5, 0.5, 0.5])
     color_key(ax17, m_file_data, scan, colour_scheme)
 
-    ax18 = fig11.add_subplot(211)
+    ax18 = fig12.add_subplot(211)
     ax18.set_position([0.1, 0.33, 0.8, 0.6])
     plot_radial_build(ax18, m_file_data, colour_scheme)
 
     # Make each axes smaller vertically to leave room for the legend
-    ax185 = fig12.add_subplot(211)
+    ax185 = fig13.add_subplot(211)
     ax185.set_position([0.1, 0.61, 0.8, 0.32])
 
-    ax18b = fig12.add_subplot(212)
+    ax18b = fig13.add_subplot(212)
     ax18b.set_position([0.1, 0.13, 0.8, 0.32])
     plot_upper_vertical_build(ax185, m_file_data, colour_scheme)
     plot_lower_vertical_build(ax18b, m_file_data, colour_scheme)
@@ -12531,57 +12643,57 @@ def main_plot(
     # Can only plot WP and turn structure if superconducting coil at the moment
     if m_file_data.data["i_tf_sup"].get_scan(scan) == 1:
         # TF coil with WP
-        ax19 = fig13.add_subplot(221, aspect="equal")
+        ax19 = fig14.add_subplot(221, aspect="equal")
         ax19.set_position([
             0.025,
             0.45,
             0.5,
             0.5,
         ])  # Half height, a bit wider, top left
-        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig13)
+        plot_superconducting_tf_wp(ax19, m_file_data, scan, fig14)
 
         # TF coil turn structure
-        ax20 = fig14.add_subplot(325, aspect="equal")
+        ax20 = fig15.add_subplot(325, aspect="equal")
         ax20.set_position([0.025, 0.5, 0.4, 0.4])
-        plot_tf_cable_in_conduit_turn(ax20, fig14, m_file_data, scan)
-        plot_205 = fig14.add_subplot(223, aspect="equal")
+        plot_tf_cable_in_conduit_turn(ax20, fig15, m_file_data, scan)
+        plot_205 = fig15.add_subplot(223, aspect="equal")
         plot_205.set_position([0.075, 0.1, 0.3, 0.3])
-        plot_cable_in_conduit_cable(plot_205, fig14, m_file_data, scan)
+        plot_cable_in_conduit_cable(plot_205, fig15, m_file_data, scan)
     else:
-        ax19 = fig13.add_subplot(211, aspect="equal")
+        ax19 = fig14.add_subplot(211, aspect="equal")
         ax19.set_position([0.06, 0.55, 0.675, 0.4])
-        plot_resistive_tf_wp(ax19, m_file_data, scan, fig13)
+        plot_resistive_tf_wp(ax19, m_file_data, scan, fig14)
 
     plot_tf_coil_structure(
-        fig15.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
+        fig16.add_subplot(111, aspect="equal"), m_file_data, scan, colour_scheme
     )
 
-    plot_plasma_outboard_toroidal_ripple_map(fig16, m_file_data, scan)
+    plot_plasma_outboard_toroidal_ripple_map(fig17, m_file_data, scan)
 
-    axes = fig17.subplots(nrows=3, ncols=1, sharex=True).flatten()
+    axes = fig18.subplots(nrows=3, ncols=1, sharex=True).flatten()
     plot_tf_stress(axes)
 
-    plot_bootstrap_comparison(fig18.add_subplot(221), m_file_data, scan)
-    plot_h_threshold_comparison(fig18.add_subplot(224), m_file_data, scan)
-    plot_density_limit_comparison(fig19.add_subplot(221), m_file_data, scan)
-    plot_confinement_time_comparison(fig19.add_subplot(224), m_file_data, scan)
-    plot_current_profiles_over_time(fig20.add_subplot(111), m_file_data, scan)
+    plot_bootstrap_comparison(fig19.add_subplot(221), m_file_data, scan)
+    plot_h_threshold_comparison(fig19.add_subplot(224), m_file_data, scan)
+    plot_density_limit_comparison(fig20.add_subplot(221), m_file_data, scan)
+    plot_confinement_time_comparison(fig20.add_subplot(224), m_file_data, scan)
+    plot_current_profiles_over_time(fig21.add_subplot(111), m_file_data, scan)
 
     plot_cs_coil_structure(
-        fig21.add_subplot(121, aspect="equal"), fig21, m_file_data, scan
+        fig22.add_subplot(121, aspect="equal"), fig22, m_file_data, scan
     )
     plot_cs_turn_structure(
-        fig21.add_subplot(224, aspect="equal"), fig21, m_file_data, scan
+        fig22.add_subplot(224, aspect="equal"), fig22, m_file_data, scan
     )
 
     plot_first_wall_top_down_cross_section(
-        fig22.add_subplot(221, aspect="equal"), m_file_data, scan
+        fig23.add_subplot(221, aspect="equal"), m_file_data, scan
     )
-    plot_first_wall_poloidal_cross_section(fig22.add_subplot(122), m_file_data, scan)
-    plot_fw_90_deg_pipe_bend(fig22.add_subplot(337), m_file_data, scan)
+    plot_first_wall_poloidal_cross_section(fig23.add_subplot(122), m_file_data, scan)
+    plot_fw_90_deg_pipe_bend(fig23.add_subplot(337), m_file_data, scan)
 
-    plot_blkt_pipe_bends(fig23, m_file_data, scan)
-    ax_blanket = fig23.add_subplot(122, aspect="equal")
+    plot_blkt_pipe_bends(fig24, m_file_data, scan)
+    ax_blanket = fig24.add_subplot(122, aspect="equal")
     plot_blanket(ax_blanket, m_file_data, scan, colour_scheme)
     plot_firstwall(ax_blanket, m_file_data, scan, colour_scheme)
     ax_blanket.set_xlabel("Radial position [m]")
@@ -12624,13 +12736,13 @@ def main_plot(
     )
 
     plot_main_power_flow(
-        fig24.add_subplot(111, aspect="equal"), m_file_data, scan, fig24
+        fig25.add_subplot(111, aspect="equal"), m_file_data, scan, fig25
     )
 
-    ax24 = fig25.add_subplot(111)
+    ax24 = fig26.add_subplot(111)
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
-    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig25)
+    plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig26)
 
 
 def main(args=None):
@@ -12949,6 +13061,7 @@ def main(args=None):
     page23 = plt.figure(figsize=(12, 9), dpi=80)
     page24 = plt.figure(figsize=(12, 9), dpi=80)
     page25 = plt.figure(figsize=(12, 9), dpi=80)
+    page26 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -12978,6 +13091,7 @@ def main(args=None):
         page23,
         page24,
         page25,
+        page26,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -13012,6 +13126,7 @@ def main(args=None):
         pdf.savefig(page23)
         pdf.savefig(page24)
         pdf.savefig(page25)
+        pdf.savefig(page26)
 
     # show fig if option used
     if args.show:
@@ -13043,6 +13158,7 @@ def main(args=None):
     plt.close(page23)
     plt.close(page24)
     plt.close(page25)
+    plt.close(page26)
 
 
 if __name__ == "__main__":

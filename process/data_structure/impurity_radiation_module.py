@@ -27,6 +27,9 @@ f_p_plasma_core_rad_reduction: float = None
 
 f_nd_impurity_electrons: list[float] = None
 
+n_charge_impurity_profile: list[float] = None
+"""charge profile of impurities"""
+
 imp_label: list[str] = None
 
 impurity_arr_label: list[str] = None
@@ -53,6 +56,7 @@ def init_impurity_radiation_module():
     global radius_plasma_core_norm
     global f_p_plasma_core_rad_reduction
     global f_nd_impurity_electrons
+    global n_charge_impurity_profile
     global imp_label
     global impurity_arr_label
     global impurity_arr_z
@@ -101,6 +105,7 @@ def init_impurity_radiation_module():
     impurity_arr_z = np.zeros(N_IMPURITIES)
     m_impurity_amu_array = np.zeros(N_IMPURITIES)
     f_nd_impurity_electron_array = np.zeros(N_IMPURITIES)
+    n_charge_impurity_profile = np.zeros((N_IMPURITIES, 200))
     impurity_arr_len_tab = np.full(N_IMPURITIES, 0)
     temp_impurity_keV_array = np.zeros((N_IMPURITIES, 200))
     pden_impurity_lz_nd_temp_array = np.zeros((N_IMPURITIES, 200))
