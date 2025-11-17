@@ -56,7 +56,7 @@ class ResistiveTFCoil(TFCoil):
         )
 
         (
-            tfcoil_variables.cforce,
+            tfcoil_variables.force_tf_coil_inboard_centering,
             tfcoil_variables.vforce,
             tfcoil_variables.vforce_outboard,
             superconducting_tf_coil_variables.vforce_inboard_tot,

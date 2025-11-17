@@ -1672,9 +1672,9 @@ class TFCoil:
         )
         po.ovarre(
             self.outfile,
-            "Centring force per coil (N/m)",
-            "(cforce)",
-            tfcoil_variables.cforce,
+            "Centring force per coil (N)",
+            "(force_tf_coil_inboard_centering)",
+            tfcoil_variables.force_tf_coil_inboard_centering,
             "OP ",
         )
 
@@ -2564,6 +2564,7 @@ class TFCoil:
         itart: int,
         i_cp_joints: int,
         f_vforce_inboard: float,
+        z_tf_inside_half: float,
     ) -> tuple[float, float, float, float, float]:
         """
         Calculates the Toroidal Field (TF) coil field, forces, vacuum vessel (VV) quench considerations,
@@ -2601,9 +2602,11 @@ class TFCoil:
         :type i_cp_joints: int
         :param f_vforce_inboard: Inboard vertical tension fraction
         :type f_vforce_inboard: float
+        :param z_tf_inside_half: Half height of the TF coil inside the bore [m]
+        :param z_tf_inside_half: float
 
         :returns: Tuple containing:
-            - cforce (float): Centering force per TF coil [N/m]
+            - force_tf_coil_inboard_centering (float): Centering force per TF coil [N/m]
             - vforce (float): Inboard vertical tension [N]
             - vforce_outboard (float): Outboard vertical tension [N]
             - vforce_inboard_tot (float): Total inboard vertical force [N]
@@ -2642,7 +2645,12 @@ class TFCoil:
         # In plane forces
         # ---
         # Centering force = net inwards radial force per meters per TF coil [N/m]
-        cforce = 0.5e0 * b_tf_inboard_peak_symmetric * c_tf_total / n_tf_coils
+        force_tf_coil_inboard_centering = (
+            0.5e0
+            * b_tf_inboard_peak_symmetric
+            * (c_tf_total / n_tf_coils)
+            * (2 * z_tf_inside_half)
+        )
 
         # Vertical force per coil [N]
         # ***
@@ -2756,7 +2764,13 @@ class TFCoil:
         # Total vertical force
         vforce_inboard_tot = vforce * n_tf_coils
 
-        return cforce, vforce, vforce_outboard, vforce_inboard_tot, f_vforce_inboard
+        return (
+            force_tf_coil_inboard_centering,
+            vforce,
+            vforce_outboard,
+            vforce_inboard_tot,
+            f_vforce_inboard,
+        )
 
     @staticmethod
     def he_density(temp: float) -> float:

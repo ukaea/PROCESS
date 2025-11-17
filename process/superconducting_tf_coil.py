@@ -80,7 +80,7 @@ class SuperconductingTFCoil(TFCoil):
         )
 
         (
-            tfcoil_variables.cforce,
+            tfcoil_variables.force_tf_coil_inboard_centering,
             tfcoil_variables.vforce,
             tfcoil_variables.vforce_outboard,
             superconducting_tf_coil_variables.vforce_inboard_tot,
@@ -102,6 +102,7 @@ class SuperconductingTFCoil(TFCoil):
             itart=physics_variables.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,
             f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
+            z_tf_inside_half=build_variables.z_tf_inside_half,
         )
 
         # Calculate TF coil areas and masses
