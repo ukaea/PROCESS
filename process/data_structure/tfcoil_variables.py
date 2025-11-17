@@ -851,7 +851,7 @@ Not used for resistive `itart=1` (sliding joints)
 """
 
 
-vforce_outboard: float = None
+force_tf_coil_outboard_vertical: float = None
 """Vertical tension on outboard leg/coil (N)"""
 
 
@@ -1251,7 +1251,7 @@ def init_tfcoil_variables():
     global v_tf_coil_dump_quench_max_kv
     global force_tf_coil_inboard_vertical
     global f_force_tf_coil_inboard_vertical
-    global vforce_outboard
+    global force_tf_coil_outboard_vertical
     global f_a_tf_turn_cable_space_extra_void
     global voltfleg
     global vtfkv
@@ -1486,7 +1486,7 @@ def init_tfcoil_variables():
     v_tf_coil_dump_quench_max_kv = 20.0
     force_tf_coil_inboard_vertical = 0.0
     f_force_tf_coil_inboard_vertical = 0.5
-    vforce_outboard = 0.0
+    force_tf_coil_outboard_vertical = 0.0
     f_a_tf_turn_cable_space_extra_void = 0.4
     voltfleg = 0.0
     vtfkv = 0.0

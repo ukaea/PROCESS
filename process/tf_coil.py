@@ -1659,8 +1659,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "Outboard vertical tension per coil (N)",
-            "(vforce_outboard)",
-            tfcoil_variables.vforce_outboard,
+            "(force_tf_coil_outboard_vertical)",
+            tfcoil_variables.force_tf_coil_outboard_vertical,
             "OP ",
         )
         po.ovarre(
@@ -2608,7 +2608,7 @@ class TFCoil:
         :returns: Tuple containing:
             - force_tf_coil_inboard_centering (float): Centering force per TF coil [N/m]
             - force_tf_coil_inboard_vertical (float): Inboard vertical tension [N]
-            - vforce_outboard (float): Outboard vertical tension [N]
+            - force_tf_coil_outboard_vertical (float): Outboard vertical tension [N]
             - vforce_inboard_tot (float): Total inboard vertical force [N]
             - f_force_tf_coil_inboard_vertical (float): Inboard vertical tension fraction
         :rtype: tuple[float, float, float, float]
@@ -2748,7 +2748,7 @@ class TFCoil:
             )
 
             # Vertical tension applied on the outer leg [N]
-            vforce_outboard = vforce_tot - force_tf_coil_inboard_vertical
+            force_tf_coil_outboard_vertical = vforce_tot - force_tf_coil_inboard_vertical
 
             # Inboard vertical tension fraction
             f_force_tf_coil_inboard_vertical = force_tf_coil_inboard_vertical / vforce_tot
@@ -2759,7 +2759,7 @@ class TFCoil:
             force_tf_coil_inboard_vertical = f_force_tf_coil_inboard_vertical * vforce_tot
 
             # Ouboard vertical tension [N]
-            vforce_outboard = force_tf_coil_inboard_vertical * (
+            force_tf_coil_outboard_vertical = force_tf_coil_inboard_vertical * (
                 (1.0e0 / f_force_tf_coil_inboard_vertical) - 1.0e0
             )
 
@@ -2769,7 +2769,7 @@ class TFCoil:
         return (
             force_tf_coil_inboard_centering,
             force_tf_coil_inboard_vertical,
-            vforce_outboard,
+            force_tf_coil_outboard_vertical,
             vforce_inboard_tot,
             f_force_tf_coil_inboard_vertical,
         )

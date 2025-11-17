@@ -450,7 +450,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     f_force_tf_coil_inboard_vertical: Any = None
 
-    vforce_outboard: Any = None
+    force_tf_coil_outboard_vertical: Any = None
 
     dx_tf_wp_insulation: Any = None
 
@@ -504,7 +504,7 @@ class TfFieldAndForceParam(NamedTuple):
             b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
             f_force_tf_coil_inboard_vertical=0.5,
-            vforce_outboard=0,
+            force_tf_coil_outboard_vertical=0,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp_with_insulation=0.15483000000000002,
@@ -539,7 +539,7 @@ class TfFieldAndForceParam(NamedTuple):
             b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
             f_force_tf_coil_inboard_vertical=0.59539634897566385,
-            vforce_outboard=8413494.7991220243,
+            force_tf_coil_outboard_vertical=8413494.7991220243,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp_with_insulation=0.14708850000000001,
@@ -571,7 +571,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     (
         force_tf_coil_inboard_centering,
         force_tf_coil_inboard_vertical,
-        vforce_outboard,
+        force_tf_coil_outboard_vertical,
         vforce_inboard_tot,
         f_force_tf_coil_inboard_vertical,
     ) = tfcoil.tf_field_and_force(
@@ -605,7 +605,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
         tffieldandforceparam.expected_f_vforce_inboard
     )
 
-    assert vforce_outboard == pytest.approx(
+    assert force_tf_coil_outboard_vertical == pytest.approx(
         tffieldandforceparam.expected_vforce_outboard
     )
 
