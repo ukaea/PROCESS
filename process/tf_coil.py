@@ -1666,8 +1666,8 @@ class TFCoil:
         po.ovarre(
             self.outfile,
             "inboard vertical tension fraction (-)",
-            "(f_vforce_inboard)",
-            tfcoil_variables.f_vforce_inboard,
+            "(f_force_tf_coil_inboard_vertical)",
+            tfcoil_variables.f_force_tf_coil_inboard_vertical,
             "OP ",
         )
         po.ovarre(
@@ -2563,7 +2563,7 @@ class TFCoil:
         r_cp_top: float,
         itart: int,
         i_cp_joints: int,
-        f_vforce_inboard: float,
+        f_force_tf_coil_inboard_vertical: float,
         z_tf_inside_half: float,
     ) -> tuple[float, float, float, float, float]:
         """
@@ -2600,8 +2600,8 @@ class TFCoil:
         :type itart: int
         :param i_cp_joints: Centrepost joints switch (1 = with sliding joints, 0 = without)
         :type i_cp_joints: int
-        :param f_vforce_inboard: Inboard vertical tension fraction
-        :type f_vforce_inboard: float
+        :param f_force_tf_coil_inboard_vertical: Inboard vertical tension fraction
+        :type f_force_tf_coil_inboard_vertical: float
         :param z_tf_inside_half: Half height of the TF coil inside the bore [m]
         :param z_tf_inside_half: float
 
@@ -2610,7 +2610,7 @@ class TFCoil:
             - force_tf_coil_inboard_vertical (float): Inboard vertical tension [N]
             - vforce_outboard (float): Outboard vertical tension [N]
             - vforce_inboard_tot (float): Total inboard vertical force [N]
-            - f_vforce_inboard (float): Inboard vertical tension fraction
+            - f_force_tf_coil_inboard_vertical (float): Inboard vertical tension fraction
         :rtype: tuple[float, float, float, float]
 
         :raises: None
@@ -2751,16 +2751,16 @@ class TFCoil:
             vforce_outboard = vforce_tot - force_tf_coil_inboard_vertical
 
             # Inboard vertical tension fraction
-            f_vforce_inboard = force_tf_coil_inboard_vertical / vforce_tot
+            f_force_tf_coil_inboard_vertical = force_tf_coil_inboard_vertical / vforce_tot
 
         # Case of TF without joints or with clamped joints vertical tension
         else:
             # Inboard vertical tension [N]
-            force_tf_coil_inboard_vertical = f_vforce_inboard * vforce_tot
+            force_tf_coil_inboard_vertical = f_force_tf_coil_inboard_vertical * vforce_tot
 
             # Ouboard vertical tension [N]
             vforce_outboard = force_tf_coil_inboard_vertical * (
-                (1.0e0 / f_vforce_inboard) - 1.0e0
+                (1.0e0 / f_force_tf_coil_inboard_vertical) - 1.0e0
             )
 
         # Total vertical force
@@ -2771,7 +2771,7 @@ class TFCoil:
             force_tf_coil_inboard_vertical,
             vforce_outboard,
             vforce_inboard_tot,
-            f_vforce_inboard,
+            f_force_tf_coil_inboard_vertical,
         )
 
     @staticmethod

@@ -733,7 +733,7 @@ INPUT_VARIABLES = {
     "f_beam_tritium": InputVariable(
         data_structure.current_drive_variables, float, range=(0.0, 1.0)
     ),
-    "f_vforce_inboard": InputVariable(
+    "f_force_tf_coil_inboard_vertical": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
     "f_w": InputVariable(data_structure.stellarator_variables, float, range=(0.1, 1.0)),

@@ -845,7 +845,7 @@ force_tf_coil_inboard_vertical: float = None
 """Vertical tension on  inboard leg of TF coil (N)"""
 
 
-f_vforce_inboard: float = None
+f_force_tf_coil_inboard_vertical: float = None
 """Fraction of the total vertical force taken by the TF inboard leg tension
 Not used for resistive `itart=1` (sliding joints)
 """
@@ -1250,7 +1250,7 @@ def init_tfcoil_variables():
     global n_tf_coil_turns
     global v_tf_coil_dump_quench_max_kv
     global force_tf_coil_inboard_vertical
-    global f_vforce_inboard
+    global f_force_tf_coil_inboard_vertical
     global vforce_outboard
     global f_a_tf_turn_cable_space_extra_void
     global voltfleg
@@ -1485,7 +1485,7 @@ def init_tfcoil_variables():
     n_tf_coil_turns = 0.0
     v_tf_coil_dump_quench_max_kv = 20.0
     force_tf_coil_inboard_vertical = 0.0
-    f_vforce_inboard = 0.5
+    f_force_tf_coil_inboard_vertical = 0.5
     vforce_outboard = 0.0
     f_a_tf_turn_cable_space_extra_void = 0.4
     voltfleg = 0.0

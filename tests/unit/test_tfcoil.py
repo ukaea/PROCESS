@@ -448,7 +448,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     i_tf_sup: Any = None
 
-    f_vforce_inboard: Any = None
+    f_force_tf_coil_inboard_vertical: Any = None
 
     vforce_outboard: Any = None
 
@@ -503,7 +503,7 @@ class TfFieldAndForceParam(NamedTuple):
             c_tf_total=25500000,
             b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
-            f_vforce_inboard=0.5,
+            f_force_tf_coil_inboard_vertical=0.5,
             vforce_outboard=0,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -538,7 +538,7 @@ class TfFieldAndForceParam(NamedTuple):
             c_tf_total=25500000,
             b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
-            f_vforce_inboard=0.59539634897566385,
+            f_force_tf_coil_inboard_vertical=0.59539634897566385,
             vforce_outboard=8413494.7991220243,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
@@ -573,7 +573,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
         force_tf_coil_inboard_vertical,
         vforce_outboard,
         vforce_inboard_tot,
-        f_vforce_inboard,
+        f_force_tf_coil_inboard_vertical,
     ) = tfcoil.tf_field_and_force(
         i_tf_sup=tffieldandforceparam.i_tf_sup,
         r_tf_wp_inboard_outer=tffieldandforceparam.r_tf_wp_inboard_outer,
@@ -590,7 +590,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
         r_cp_top=tffieldandforceparam.r_cp_top,
         itart=tffieldandforceparam.itart,
         i_cp_joints=tffieldandforceparam.i_cp_joints,
-        f_vforce_inboard=tffieldandforceparam.f_vforce_inboard,
+        f_force_tf_coil_inboard_vertical=tffieldandforceparam.f_force_tf_coil_inboard_vertical,
     )
 
     assert force_tf_coil_inboard_vertical == pytest.approx(
@@ -601,7 +601,7 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
         tffieldandforceparam.expected_cforce
     )
 
-    assert f_vforce_inboard == pytest.approx(
+    assert f_force_tf_coil_inboard_vertical == pytest.approx(
         tffieldandforceparam.expected_f_vforce_inboard
     )
 
