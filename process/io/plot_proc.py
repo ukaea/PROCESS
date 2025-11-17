@@ -12434,6 +12434,69 @@ def plot_ion_charge_profile(axis, mfile_data, scan):
     axis.grid(which="both", linestyle="--", alpha=0.5)
 
 
+def plot_tf_coil_forces(axis, mfile_data, scan, colour_scheme=1):
+    # Plot the TF coil poloidal cross-section
+    plot_tf_coils(axis, mfile_data, scan, colour_scheme)
+
+    force_tf_coil_inboard_centering = mfile_data.data[
+        "force_tf_coil_inboard_centering"
+    ].get_scan(scan)
+    z_tf_inside_half = mfile_data.data["z_tf_inside_half"].get_scan(scan)
+
+    # ==============================
+
+    # Get the left side of the inboard leg (r_tf_inboard_in)
+    r_tf_inboard_in = mfile_data.data["r_tf_inboard_in"].get_scan(scan)
+    y_center = 0.0  # Assume midplane for arrow
+
+    # Draw a red arrow pointing right from the left side of the inboard leg
+    axis.annotate(
+        "",
+        xy=(0, y_center),
+        xytext=(r_tf_inboard_in, y_center),
+        arrowprops={
+            "arrowstyle": "-|>",
+            "color": "red",
+            "lw": 4
+        },
+        annotation_clip=False,
+    )
+
+    # Show the centering force in MN next to the arrow
+    axis.text(
+        r_tf_inboard_in - 0.55,
+        z_tf_inside_half / 3,
+        f"{force_tf_coil_inboard_centering / 1e6:.2f} MN",
+        color="red",
+        fontsize=10,
+        va="center",
+        ha="right",
+        fontweight="bold",
+        bbox={
+            "boxstyle": "round,pad=0.2",
+            "facecolor": "white",
+            "edgecolor": "red",
+            "alpha": 0.8,
+        },
+    )
+
+    # Plot a red dot at (0,0)
+    axis.plot(0, 0, marker="o", color="red", markersize=7)
+
+    # Plot a red dashed vertical line at R=0
+    axis.axvline(0, color="red", linestyle="--", linewidth=1)
+
+    # Add centre line at
+    axis.axhline(y=0, color="red", linestyle="--", linewidth=1)
+    # axis.set_xlim(-3.0, (r_tf_outboard_in + dr_tf_outboard) * 1.4)
+    # axis.set_ylim((y4 - dr_tf_inboard) * 1.2, (y2 + dr_tf_inboard) * 1.2)
+    axis.set_xlabel("R [m]")
+    axis.set_ylabel("Z [m]")
+    axis.set_title("TF Coil Poloidal Cross-Section")
+    axis.minorticks_on()
+    axis.grid(True, which="both", linestyle="--", linewidth=0.5, alpha=0.2)
+
+
 def main_plot(
     fig0,
     fig1,
@@ -12462,6 +12525,7 @@ def main_plot(
     fig24,
     fig25,
     fig26,
+    fig27,
     m_file_data,
     scan,
     imp="../data/lz_non_corona_14_elements/",
@@ -12743,6 +12807,11 @@ def main_plot(
     # set_position([left, bottom, width, height]) -> height ~ 0.66 => ~2/3 of page height
     ax24.set_position([0.08, 0.35, 0.84, 0.57])
     plot_system_power_profiles_over_time(ax24, m_file_data, scan, fig26)
+
+    ax_tf_forces = fig27.add_subplot(121, aspect="equal")
+    # Set position: [left, bottom, width, height] -- width ~0.66 (2/3), height ~0.8 (taller)
+    ax_tf_forces.set_position([0.08, 0.15, 0.66, 0.8])
+    plot_tf_coil_forces(ax_tf_forces, m_file_data, scan, colour_scheme)
 
 
 def main(args=None):
@@ -13062,6 +13131,7 @@ def main(args=None):
     page24 = plt.figure(figsize=(12, 9), dpi=80)
     page25 = plt.figure(figsize=(12, 9), dpi=80)
     page26 = plt.figure(figsize=(12, 9), dpi=80)
+    page27 = plt.figure(figsize=(12, 9), dpi=80)
 
     # run main_plot
     main_plot(
@@ -13092,6 +13162,7 @@ def main(args=None):
         page24,
         page25,
         page26,
+        page27,
         m_file,
         scan=scan,
         demo_ranges=demo_ranges,
@@ -13127,6 +13198,7 @@ def main(args=None):
         pdf.savefig(page24)
         pdf.savefig(page25)
         pdf.savefig(page26)
+        pdf.savefig(page27)
 
     # show fig if option used
     if args.show:
@@ -13159,6 +13231,7 @@ def main(args=None):
     plt.close(page24)
     plt.close(page25)
     plt.close(page26)
+    plt.close(page27)
 
 
 if __name__ == "__main__":
