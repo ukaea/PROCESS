@@ -59,11 +59,9 @@ class MFileVariable(dict):
         self.var_flag = var_flag
         self.latest_scan = 0
         super().__init__(*args, **kwargs)
-        logger.debug(f"Initialising variable '{self.var_name}': {self.var_description}")
 
     def __getattr__(self, name):
         result = self.get(name)
-        # print(f"Trying to get({name}) on {self}, {id(self)}"
         if result:
             return result
         raise AttributeError(f"{self.__class__} object has no attribute {name}")
@@ -79,9 +77,6 @@ class MFileVariable(dict):
         self[f"scan{scan_number:02}"] = scan_value
         if scan_number > self.latest_scan:
             self.latest_scan = scan_number
-        logger.debug(
-            f"Scan {scan_number} for variable '{self.var_name}' == {scan_value}"
-        )
 
     def get_scan(self, scan_number):
         """Returns the value of a specific scan. For scan = -1 or None the last
@@ -99,7 +94,7 @@ class MFileVariable(dict):
                 return self[f"scan{self.latest_scan:02}"]
             return self[f"scan{scan_number:02}"]
         except KeyError:
-            raise  # or substitute with any other exception type you want
+            raise
 
     def get_scans(self):
         """Returns a list of scan values in order of scan number
@@ -112,8 +107,6 @@ class MFileVariable(dict):
 
     def get_number_of_scans(self):
         """Function to return the number of scans in the variable class"""
-        # likely we can just use self.latest_scan, but not guaranteed, so
-        # keeping this as it is for now...
         return len([key for key in self.keys() if "scan" in key])
 
     @property
@@ -207,10 +200,7 @@ class DefaultOrderedDict(OrderedDict):
 class MFile:
     def __init__(self, filename="MFILE.DAT"):
         """Class object to store the MFile Objects"""
-        logger.info(f"Creating MFile class for file '{filename}'")
         self.filename = filename
-        # self.data = MFileDataDictionary()
-        # self.data = OrderedDict()
         self.data = DefaultOrderedDict()
         self.mfile_lines = []
         self.mfile_modules = {}
@@ -218,9 +208,7 @@ class MFile:
         self.mfile_modules["Misc"] = []
         self.current_module = "Misc"
         if filename is not None:
-            logger.info(f"Opening file '{self.filename}'")
             self.open_mfile()
-            logger.info(f"Parsing file '{self.filename}'")
             self.parse_mfile()
 
     def open_mfile(self):
@@ -236,7 +224,6 @@ class MFile:
 
     def parse_mfile(self):
         """Function to parse MFILE.DAT"""
-        # for line in (c for c in (clean_line(l) for l in self.mfile_lines if '#' not in l[:2])
         for line in (
             c for c in (clean_line(lines) for lines in self.mfile_lines) if c != [""]
         ):
