@@ -284,6 +284,12 @@ This should be used for units of $\text{kg} \cdot \text{m}^{-2}\text{s}^{-1}$
 
 ---------------------
 
+##### Impedances
+
+- Impedances should start with the `imp_` prefix
+
+---------------------
+
 ##### Resistivity
 
 - Resistivity variables should start with the `rho_` prefix

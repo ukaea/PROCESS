@@ -2986,7 +2986,8 @@ class TFCoil:
         dr_tf_outboard: float,
         r_tf_outboard_mid: float,
         r_tf_inboard_mid: float,
-    ) -> float:
+        n_tf_coils: int,
+    ) -> tuple[float, float]:
         """
         Calculates the self-inductance of a TF coil.
 
@@ -3012,9 +3013,12 @@ class TFCoil:
         :type r_tf_outboard_mid: float
         :param r_tf_inboard_mid: Mid-plane radius of the inboard leg of the TF coil [m].
         :type r_tf_inboard_mid: float
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: int
 
-        :returns: Self-inductance of the TF coil [H].
-        :rtype: float
+        :returns: Self-inductance of the TF coil [H], Total inductance of all TF coils [H].
+        :rtype: float, float
+
 
         :notes:
         For the D-shaped coil (i_tf_shape == 1) in a standard (non-TART) configuration
@@ -3098,7 +3102,9 @@ class TFCoil:
                 * np.log(r_tf_outboard_mid / r_tf_inboard_mid)
             )
 
-        return ind_tf_coil
+        ind_tf_total = ind_tf_coil * n_tf_coils
+
+        return ind_tf_coil, ind_tf_total
 
     def generic_tf_coil_area_and_masses(self):
         """Subroutine to calculate the TF coil areas and masses"""

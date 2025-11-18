@@ -20,6 +20,7 @@ from process.data_structure import (
     power_variables,
     primary_pumping_variables,
     structure_variables,
+    superconducting_tf_coil_variables,
     tfcoil_variables,
     times_variables,
 )
@@ -1831,7 +1832,24 @@ class Power:
             )
 
         else:  # Superconducting TF coil option
-            self.tfpwcall(output)
+            (
+                tfcoil_variables.tfckw,
+                tfcoil_variables.len_tf_bus,
+                tfcoil_variables.drarea,
+                buildings_variables.tfcbv,
+                heat_transport_variables.p_tf_electric_supplies_mw,
+            ) = self.superconducting_tf_power_iter_1988(
+                output=output,
+                c_tf_turn_ka=tfcoil_variables.c_tf_turn / 1e3,
+                rmajor=physics_variables.rmajor,
+                n_tf_coils=tfcoil_variables.n_tf_coils,
+                v_tf_coil_dump_quench_kv=tfcoil_variables.v_tf_coil_dump_quench_kv,
+                e_tf_magnetic_stored_total_mj=superconducting_tf_coil_variables.e_tf_magnetic_stored_total
+                / 1e6,
+                ind_tf_total=tfcoil_variables.ind_tf_total,
+                ind_tf_coil=tfcoil_variables.ind_tf_coil,
+                t_tf_charge=tfcoil_variables.t_tf_charge,
+            )
             return
 
         # Output section
@@ -1916,170 +1934,165 @@ class Power:
         # Reactive poower has been set to zero.
         # po.ovarre(outfile,'TF coil reactive power (MW)','(tfreacmw)', tfreacmw)
 
-    def tfpwcall(self, output: bool):
+    def superconducting_tf_power_iter_1988(
+        self,
+        output: bool,
+        c_tf_turn_ka: float,
+        rmajor: float,
+        n_tf_coils: int,
+        v_tf_coil_dump_quench_kv: float,
+        e_tf_magnetic_stored_total_mj: float,
+        ind_tf_total: float,
+        ind_tf_coil: float,
+        t_tf_charge: float = 4.0 * 3600.0,  # Default: 4 hours in seconds
+    ) -> tuple[float, float, float, float, float]:
         """
-        Calls the TF coil power conversion routine for
-        superconducting coils
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
-        outfile : input integer : output file unit
-        iprint : input integer : switch for writing to output (1=yes)
-        This routine calls routine <CODE>tfcpwr</CODE> to calculate
-        the power conversion requirements for superconducting TF coils.
-        None
-        """
-        ettfmj = (
-            tfcoil_variables.e_tf_magnetic_stored_total_gj
-            / tfcoil_variables.n_tf_coils
-            * 1.0e3
-        )
+        Calculates the TF coil power conversion system parameters for superconducting coils.
 
-        #  TF coil current (kA)
+        :param output: If True, outputs results to the output file.
+        :type output: bool
+        :param c_tf_turn_ka: TF coil current (kA).
+        :type c_tf_turn_ka: float
+        :param rmajor: Major radius of the device (m).
+        :type rmajor: float
+        :param n_tf_coils: Number of TF coils.
+        :type n_tf_coils: int
+        :param v_tf_coil_dump_quench_kv: Voltage across a TF coil during quench (kV).
+        :type v_tf_coil_dump_quench_kv: float
+        :param e_tf_magnetic_stored_total_mj: Total stored energy in TF coils (MJ).
+        :type e_tf_magnetic_stored_total_mj: float
+        :param ind_tf_total: Total inductance of TF coils (H).
+        :type ind_tf_total: float
+        :param ind_tf_coil: Inductance of a single TF coil (H).
+        :type ind_tf_coil: float
+        :param t_tf_charge: TF coil charging time (s).
+        :type t_tf_charge: float
 
-        itfka = 1.0e-3 * tfcoil_variables.c_tf_turn
+        :returns: Tuple containing:
+            - tfckw (float): DC power supply rating (kW)
+            - len_tf_bus (float): Total length of TF coil bussing (m)
+            - drarea (float): Dump resistor floor area (m2)
+            - tfcbv (float): TF coil power conversion building volume (m3)
+            - p_tf_electric_supplies_mw (float): Total steady state AC power demand (MW)
 
-        (
-            tfcoil_variables.tfckw,
-            tfcoil_variables.len_tf_bus,
-            tfcoil_variables.drarea,
-            buildings_variables.tfcbv,
-            heat_transport_variables.p_tf_electric_supplies_mw,
-        ) = self.tfcpwr(
-            output,
-            itfka,
-            physics_variables.rmajor,
-            tfcoil_variables.n_tf_coils,
-            tfcoil_variables.v_tf_coil_dump_quench_kv,
-            ettfmj,
-            tfcoil_variables.res_tf_leg,
-        )
+        :notes:
+            - This routine calculates the TF power conversion system parameters: floor space, power supplies,
+            bussing, coil protection equipment, and the associated controls and instrumentation.
+            Originally written by G. Gorker, FEDC/ORNL, April 1987, modified by J. Galambos in 1991 to run in TETRA,
+            and included in PROCESS in 1992 by P. C. Shipe.
 
-    def tfcpwr(
-        self, output: bool, itfka, rmajor, ntfc, v_tf_coil_dump_quench_kv, ettfmj, rptfc
-    ):
-        """
-        Calculates the TF coil power conversion system parameters
-        for superconducting coils
-        author: P J Knight, CCFE, Culham Science Centre
-        author: P C Shipe, ORNL
-        This routine calculates the TF power conversion system
-        parameters:  floor space, power supplies, bussing,
-        coil protection equipment, and the associated controls
-        and instrumentation. It was originally written by G. Gorker,
-        FEDC/ORNL, April 1987, modified by J. Galambos in 1991 to
-        run in TETRA, and included in PROCESS in 1992 by P. C. Shipe.
-        None
+            - This routine was originally called tfcpwr() in the ETR/ITER Systems Code
+
+        :references:
+            - R. L. Reid, “ETR/ITER Systems Code,” Oak Ridge National Laboratory, ORNL-FEDC-87-7, April 1988.
+            Available: https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwjX9Ozasb6OAxX1U0EAHV-3C
+            0QQFnoECBYQAQ&url=https%3A%2F%2Fengineering.purdue.edu%2FCMUXE%2FPublications%2FAHR%2FR88ORNL-FEDC-87-7.pdf&
+            usg=AOvVaw1-LdCefwqI0hJumpHvfTlX&opi=89978449
         """
 
-        ncpbkr = 1.0e0  # number of TF coils per circuit breaker
-        djmka = 0.125e0  # design current density of TF bus, kA/cm2
+        N_TF_COIL_BREAKERS = 1.0e0  # number of TF coils per circuit breaker
+        j_tf_bus_design_ka_cm = 0.125e0  # design current density of TF bus, kA/cm2
         rtfps = 1.05e0  # rating factor for TF coil power supplies
         fspc1 = 0.15e0  # floor space coefficient for power supplies
         fspc2 = 0.8e0  # floor space coefficient for circuit breakers
         fspc3 = 0.4e0  # floor space coefficient for load centres
 
-        if rptfc == 0.0e0:
-            tchghr = 4.0e0  # charge time of the coils, hours
-            nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
-        else:
-            tchghr = 0.16667e0  # charge time of the coils, hours
-            nsptfc = 0.0e0  # resistive (1.0 = superconducting, 0.0 = resistive)
+        nsptfc = 1.0e0  # superconducting (1.0 = superconducting, 0.0 = resistive)
 
         #  Total steady state TF coil AC power demand (summed later)
         p_tf_electric_supplies_mw = 0.0e0
 
-        #  Stored energy of all TF coils, MJ
-        ettfc = ntfc * ettfmj
-
-        #  Inductance of all TF coils, Henries
-        ltfth = 2.0e0 * ettfc / itfka**2
-
         #  Number of circuit breakers
-        ntfbkr = ntfc / ncpbkr
-
-        #  Inductance per TF coil, Henries
-        lptfcs = ltfth / ntfc
+        n_tf_breakers = n_tf_coils / N_TF_COIL_BREAKERS
 
         #  Aluminium bus section area, sq cm
-        albusa = itfka / djmka
+        a_tf_bus_cm = c_tf_turn_ka / j_tf_bus_design_ka_cm
 
         #  Total TF system bus length, m
-        len_tf_bus = (
-            8.0e0 * np.pi * rmajor
-            + (1.0e0 + ntfbkr) * (12.0e0 * rmajor + 80.0e0)
-            + 0.2e0 * itfka * np.sqrt(ntfc * rptfc * 1000.0e0)
+        len_tf_bus = 8.0e0 * np.pi * rmajor + (1.0e0 + n_tf_breakers) * (
+            12.0e0 * rmajor + 80.0e0
         )
 
         #  Aluminium bus weight, tonnes
-        albuswt = 2.7e0 * albusa * len_tf_bus / 1.0e4
+        m_tf_bus_aluminium_tonnes = (
+            (constants.den_aluminium / 1e3) * a_tf_bus_cm * len_tf_bus / 1.0e4
+        )
 
         #  Total resistance of TF bus, ohms
-        # rtfbus = 2.62e-4 * len_tf_bus / albusa
-        rtfbus = tfcoil_variables.rho_tf_bus * len_tf_bus / (albusa / 10000)
+        # res_tf_bus = 2.62e-4 * len_tf_bus / a_tf_bus_cm
+        res_tf_bus = tfcoil_variables.rho_tf_bus * len_tf_bus / (a_tf_bus_cm / 10000)
 
         #  Total voltage drop across TF bus, volts
-        vtfbus = 1000.0e0 * itfka * rtfbus
+        v_tf_bus = 1000.0e0 * c_tf_turn_ka * res_tf_bus
 
         #  Total resistance of the TF coils, ohms
-        rcoils = ntfc * rptfc
+        res_tf_coils = 0.0
 
         #  Total impedance, ohms
-        ztotal = rtfbus + rcoils + ltfth / (3600.0e0 * tchghr)
+        imp_tf_total = res_tf_bus + res_tf_coils + ind_tf_total / t_tf_charge
 
         #  Charging voltage for the TF coils, volts
-        tfcv = 1000.0e0 * itfka * ztotal
+        v_tf_charge = 1000.0e0 * c_tf_turn_ka * imp_tf_total
 
         #  Number of TF power modules
-        ntfpm = (itfka * (1.0e0 + nsptfc)) / 5.0e0
+        n_tf_power_modules = (c_tf_turn_ka * (1.0e0 + nsptfc)) / 5.0e0
 
         #  TF coil power module voltage, volts
-        tfpmv = rtfps * tfcv / (1.0e0 + nsptfc)
+        v_tf_power_module = rtfps * v_tf_charge / (1.0e0 + nsptfc)
 
         #  TF coil power supply voltage, volts
-        tfpsv = rtfps * tfcv
+        tfpsv = rtfps * v_tf_charge
 
         #  Power supply current, kA
-        tfpska = rtfps * itfka
+        tfpska = rtfps * c_tf_turn_ka
 
         #  TF power module current, kA
-        tfpmka = rtfps * itfka / (ntfpm / (1.0e0 + nsptfc))
+        tfpmka = rtfps * c_tf_turn_ka / (n_tf_power_modules / (1.0e0 + nsptfc))
 
         #  TF power module power, kW
-        tfpmkw = tfpmv * tfpmka
+        tfpmkw = v_tf_power_module * tfpmka
 
         #  Available DC power for charging the TF coils, kW
-        tfckw = tfpmkw * ntfpm
+        tfckw = tfpmkw * n_tf_power_modules
 
         #  Peak AC power needed to charge coils, kW
         tfackw = tfckw / 0.9e0
 
         #  Resistance of dump resistor, ohms
-        r1dump = nsptfc * v_tf_coil_dump_quench_kv * ncpbkr / itfka
+        r1dump = nsptfc * v_tf_coil_dump_quench_kv * N_TF_COIL_BREAKERS / c_tf_turn_ka
 
         #  Time constant, s
-        ttfsec = lptfcs * ncpbkr / (r1dump * nsptfc + rptfc * (1.0e0 - nsptfc))
+        ttfsec = (
+            ind_tf_coil
+            * N_TF_COIL_BREAKERS
+            / (r1dump * nsptfc + 0.0 * (1.0e0 - nsptfc))
+        )
 
         #  Number of dump resistors
-        ndumpr = ntfbkr * 4.0e0
+        n_tf_dump_resistors = n_tf_breakers * 4.0e0
 
         #  Peak power to a dump resistor during quench, MW
-        r1ppmw = nsptfc * r1dump * (itfka / 2.0e0) ** 2
+        r1ppmw = nsptfc * r1dump * (c_tf_turn_ka / 2.0e0) ** 2
 
         #  Energy to dump resistor during quench, MJ
-        r1emj = nsptfc * ettfc / (ndumpr + 0.0001e0)
+        r1emj = (
+            nsptfc * e_tf_magnetic_stored_total_mj / (n_tf_dump_resistors + 0.0001e0)
+        )
 
         #  Total TF coil peak resistive power demand, MVA
-        rpower = (ntfc * rptfc + rtfbus) * itfka**2
+        rpower = (n_tf_coils * 0.0 + res_tf_bus) * c_tf_turn_ka**2
 
         #  Total TF coil peak inductive power demand, MVA
-        xpower = ltfth / (3600.0e0 * tchghr) * itfka**2
+        xpower = ind_tf_total / t_tf_charge * c_tf_turn_ka**2
 
         #  Building space:
         #  Power modules floor space, m2
-        part1 = fspc1 * ntfpm * tfpmkw**0.667e0
+        part1 = fspc1 * n_tf_power_modules * tfpmkw**0.667e0
 
         #  Circuit breakers floor space, m2
-        part2 = fspc2 * ntfbkr * (v_tf_coil_dump_quench_kv * itfka) ** 0.667e0
+        part2 = (
+            fspc2 * n_tf_breakers * (v_tf_coil_dump_quench_kv * c_tf_turn_ka) ** 0.667e0
+        )
 
         #  Load centres floor space, m2
         part3 = (
@@ -2090,7 +2103,7 @@ class Power:
         tfcfsp = part1 + part2 + part3
 
         #  Dump resistor floor area, m2
-        drarea = 0.5e0 * ndumpr * (1.0e0 + r1emj) ** 0.667e0
+        drarea = 0.5e0 * n_tf_dump_resistors * (1.0e0 + r1emj) ** 0.667e0
 
         #  Total TF coil power conversion building volume, m3
         tfcbv = 6.0e0 * tfcfsp
@@ -2112,8 +2125,14 @@ class Power:
         #  Output section
         if output:
             po.oheadr(self.outfile, "Superconducting TF Coil Power Conversion")
-            po.ovarre(self.outfile, "TF coil current (kA)", "(itfka)", itfka, "OP ")
-            po.ovarre(self.outfile, "Number of TF coils", "(ntfc)", ntfc)
+            po.ovarre(
+                self.outfile,
+                "TF coil current (kA)",
+                "(c_tf_turn_ka)",
+                c_tf_turn_ka,
+                "OP ",
+            )
+            po.ovarre(self.outfile, "Number of TF coils", "(n_tf_coils)", n_tf_coils)
             po.ovarre(
                 self.outfile,
                 "Voltage across a TF coil during quench (kV)",
@@ -2121,27 +2140,47 @@ class Power:
                 v_tf_coil_dump_quench_kv,
                 "OP ",
             )
-            po.ovarre(self.outfile, "TF coil charge time (hours)", "(tchghr)", tchghr)
+            po.ovarre(
+                self.outfile,
+                "TF coil charge time (s)",
+                "(t_tf_charge)",
+                t_tf_charge,
+            )
             po.ovarre(
                 self.outfile,
                 "Total inductance of TF coils (H)",
-                "(ltfth)",
-                ltfth,
+                "(ind_tf_total)",
+                ind_tf_total,
                 "OP ",
             )
             po.ovarre(
                 self.outfile,
                 "Total resistance of TF coils (ohm)",
-                "(rcoils)",
-                rcoils,
+                "(res_tf_coils)",
+                res_tf_coils,
                 "OP ",
             )
             # MDK Remove this as it leads to confusion between (a) total inductance/n_tf_coils, or (b)
             #     self-inductance of one single coil
-            # po.ovarre(outfile,'Inductance per TF coil (H)','(lptfcs)',lptfcs, 'OP ')
-            po.ovarre(self.outfile, "TF coil charging voltage (V)", "(tfcv)", tfcv)
-            po.ovarre(self.outfile, "Number of DC circuit breakers", "(ntfbkr)", ntfbkr)
-            po.ovarre(self.outfile, "Number of dump resistors", "(ndumpr)", ndumpr)
+            # po.ovarre(outfile,'Inductance per TF coil (H)','(ind_tf_coil)',ind_tf_coil, 'OP ')
+            po.ovarre(
+                self.outfile,
+                "TF coil charging voltage (V)",
+                "(v_tf_charge)",
+                v_tf_charge,
+            )
+            po.ovarre(
+                self.outfile,
+                "Number of DC circuit breakers",
+                "(n_tf_breakers)",
+                n_tf_breakers,
+            )
+            po.ovarre(
+                self.outfile,
+                "Number of dump resistors",
+                "(n_tf_dump_resistors)",
+                n_tf_dump_resistors,
+            )
             po.ovarre(
                 self.outfile,
                 "Resistance per dump resistor (ohm)",
@@ -2181,13 +2220,16 @@ class Power:
                 self.outfile, "TF coil inductive power (MVA)", "(xpower)", xpower, "OP "
             )
             po.ovarre(
-                self.outfile, "Aluminium bus current density (kA/cm2)", "(djmka)", djmka
+                self.outfile,
+                "Aluminium bus current density (kA/cm2)",
+                "(j_tf_bus_design_ka_cm)",
+                j_tf_bus_design_ka_cm,
             )
             po.ovarre(
                 self.outfile,
                 "Aluminium bus cross-sectional area (cm2)",
-                "(albusa)",
-                albusa,
+                "(a_tf_bus_cm)",
+                a_tf_bus_cm,
                 "OP ",
             )
             po.ovarre(
@@ -2200,20 +2242,24 @@ class Power:
             po.ovarre(
                 self.outfile,
                 "Aluminium bus weight (tonnes)",
-                "(albuswt)",
-                albuswt,
+                "(m_tf_bus_aluminium_tonnes)",
+                m_tf_bus_aluminium_tonnes,
                 "OP ",
             )
 
             po.ovarre(
                 self.outfile,
                 "Total TF coil bus resistance (ohm)",
-                "(rtfbus)",
-                rtfbus,
+                "(res_tf_bus)",
+                res_tf_bus,
                 "OP ",
             )
             po.ovarre(
-                self.outfile, "TF coil bus voltage drop (V)", "(vtfbus)", vtfbus, "OP "
+                self.outfile,
+                "TF coil bus voltage drop (V)",
+                "(v_tf_bus)",
+                v_tf_bus,
+                "OP ",
             )
             po.ovarre(
                 self.outfile, "Dump resistor floor area (m2)", "(drarea)", drarea, "OP "
