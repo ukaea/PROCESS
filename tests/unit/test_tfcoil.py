@@ -432,7 +432,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     r_cp_top: Any = None
 
-    vforce: Any = None
+    force_tf_coil_inboard_vertical: Any = None
 
     n_tf_coils: Any = None
 
@@ -440,7 +440,7 @@ class TfFieldAndForceParam(NamedTuple):
 
     sigvvall: Any = None
 
-    cforce: Any = None
+    force_tf_coil_inboard_centering: Any = None
 
     c_tf_total: Any = None
 
@@ -448,9 +448,9 @@ class TfFieldAndForceParam(NamedTuple):
 
     i_tf_sup: Any = None
 
-    f_vforce_inboard: Any = None
+    f_force_tf_coil_inboard_vertical: Any = None
 
-    vforce_outboard: Any = None
+    force_tf_coil_outboard_vertical: Any = None
 
     dx_tf_wp_insulation: Any = None
 
@@ -482,6 +482,8 @@ class TfFieldAndForceParam(NamedTuple):
 
     expected_vforce_inboard_tot: Any = None
 
+    z_tf_inside_half: Any = None
+
 
 @pytest.mark.parametrize(
     "tffieldandforceparam",
@@ -495,16 +497,17 @@ class TfFieldAndForceParam(NamedTuple):
             r_vv_inboard_out=0.20483000000000001,
             r_tf_inboard_mid=0.077415000000000012,
             r_cp_top=0.87643571428571443,
-            vforce=0,
+            force_tf_coil_inboard_vertical=0,
             n_tf_coils=12,
             taucq=30,
+            z_tf_inside_half=3.0,
             sigvvall=93000000,
-            cforce=0,
+            force_tf_coil_inboard_centering=0,
             c_tf_total=25500000,
             b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
-            f_vforce_inboard=0.5,
-            vforce_outboard=0,
+            f_force_tf_coil_inboard_vertical=0.5,
+            force_tf_coil_outboard_vertical=0,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp_with_insulation=0.15483000000000002,
@@ -530,16 +533,17 @@ class TfFieldAndForceParam(NamedTuple):
             r_vv_inboard_out=0.20483000000000001,
             r_tf_inboard_mid=0.077415000000000012,
             r_cp_top=0.85843571428571441,
-            vforce=12380916.66459452,
+            force_tf_coil_inboard_vertical=12380916.66459452,
             n_tf_coils=12,
             taucq=30,
+            z_tf_inside_half=3.0,
             sigvvall=93000000,
-            cforce=37041530.947408713,
+            force_tf_coil_inboard_centering=37041530.947408713,
             c_tf_total=25500000,
             b_tf_inboard_peak_symmetric=34.862617362267024,
             i_tf_sup=0,
-            f_vforce_inboard=0.59539634897566385,
-            vforce_outboard=8413494.7991220243,
+            f_force_tf_coil_inboard_vertical=0.59539634897566385,
+            force_tf_coil_outboard_vertical=8413494.7991220243,
             dx_tf_wp_insulation=0,
             dx_tf_turn_insulation=0.00080000000000000004,
             dr_tf_wp_with_insulation=0.14708850000000001,
@@ -568,36 +572,45 @@ def test_tf_field_and_force(tffieldandforceparam, tfcoil):
     :type tffieldandforceparam: tffieldandforceparam
     """
 
-    cforce, vforce, vforce_outboard, vforce_inboard_tot, f_vforce_inboard = (
-        tfcoil.tf_field_and_force(
-            i_tf_sup=tffieldandforceparam.i_tf_sup,
-            r_tf_wp_inboard_outer=tffieldandforceparam.r_tf_wp_inboard_outer,
-            r_tf_wp_inboard_inner=tffieldandforceparam.r_tf_wp_inboard_inner,
-            r_tf_outboard_in=tffieldandforceparam.r_tf_outboard_in,
-            dx_tf_wp_insulation=tffieldandforceparam.dx_tf_wp_insulation,
-            dx_tf_wp_insertion_gap=tffieldandforceparam.dx_tf_wp_insertion_gap,
-            b_tf_inboard_peak_symmetric=tffieldandforceparam.b_tf_inboard_peak_symmetric,
-            c_tf_total=tffieldandforceparam.c_tf_total,
-            n_tf_coils=tffieldandforceparam.n_tf_coils,
-            dr_tf_plasma_case=tffieldandforceparam.dr_tf_plasma_case,
-            rmajor=tffieldandforceparam.rmajor,
-            b_plasma_toroidal_on_axis=tffieldandforceparam.b_plasma_toroidal_on_axis,
-            r_cp_top=tffieldandforceparam.r_cp_top,
-            itart=tffieldandforceparam.itart,
-            i_cp_joints=tffieldandforceparam.i_cp_joints,
-            f_vforce_inboard=tffieldandforceparam.f_vforce_inboard,
-        )
+    (
+        force_tf_coil_inboard_centering,
+        force_tf_coil_inboard_vertical,
+        force_tf_coil_outboard_vertical,
+        vforce_inboard_tot,
+        f_force_tf_coil_inboard_vertical,
+    ) = tfcoil.tf_field_and_force(
+        i_tf_sup=tffieldandforceparam.i_tf_sup,
+        r_tf_wp_inboard_outer=tffieldandforceparam.r_tf_wp_inboard_outer,
+        r_tf_wp_inboard_inner=tffieldandforceparam.r_tf_wp_inboard_inner,
+        r_tf_outboard_in=tffieldandforceparam.r_tf_outboard_in,
+        dx_tf_wp_insulation=tffieldandforceparam.dx_tf_wp_insulation,
+        dx_tf_wp_insertion_gap=tffieldandforceparam.dx_tf_wp_insertion_gap,
+        b_tf_inboard_peak_symmetric=tffieldandforceparam.b_tf_inboard_peak_symmetric,
+        c_tf_total=tffieldandforceparam.c_tf_total,
+        n_tf_coils=tffieldandforceparam.n_tf_coils,
+        dr_tf_plasma_case=tffieldandforceparam.dr_tf_plasma_case,
+        rmajor=tffieldandforceparam.rmajor,
+        b_plasma_toroidal_on_axis=tffieldandforceparam.b_plasma_toroidal_on_axis,
+        r_cp_top=tffieldandforceparam.r_cp_top,
+        itart=tffieldandforceparam.itart,
+        i_cp_joints=tffieldandforceparam.i_cp_joints,
+        f_force_tf_coil_inboard_vertical=tffieldandforceparam.f_force_tf_coil_inboard_vertical,
+        z_tf_inside_half=tffieldandforceparam.z_tf_inside_half,
     )
 
-    assert vforce == pytest.approx(tffieldandforceparam.expected_vforce)
+    assert force_tf_coil_inboard_vertical == pytest.approx(
+        tffieldandforceparam.expected_vforce
+    )
 
-    assert cforce == pytest.approx(tffieldandforceparam.expected_cforce)
+    assert force_tf_coil_inboard_centering == pytest.approx(
+        tffieldandforceparam.expected_cforce
+    )
 
-    assert f_vforce_inboard == pytest.approx(
+    assert f_force_tf_coil_inboard_vertical == pytest.approx(
         tffieldandforceparam.expected_f_vforce_inboard
     )
 
-    assert vforce_outboard == pytest.approx(
+    assert force_tf_coil_outboard_vertical == pytest.approx(
         tffieldandforceparam.expected_vforce_outboard
     )
 
@@ -866,7 +879,7 @@ class StressclParam(NamedTuple):
 
     a_tf_turn_cable_space_no_void: Any = None
 
-    vforce: Any = None
+    force_tf_coil_inboard_vertical: Any = None
 
     c_tf_total: Any = None
 
@@ -1038,7 +1051,7 @@ class StressclParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
-            vforce=250545611.13801825,
+            force_tf_coil_inboard_vertical=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
@@ -1161,7 +1174,7 @@ class StressclParam(NamedTuple):
             dr_tf_wp_with_insulation=0.54261087836601019,
             i_tf_tresca=0,
             a_tf_turn_cable_space_no_void=0.001293323051622732,
-            vforce=250545611.13801825,
+            force_tf_coil_inboard_vertical=250545611.13801825,
             c_tf_total=236885604.60000002,
             j_tf_wp=23124470.793774806,
             sig_tf_cs_bucked=0,
@@ -1386,7 +1399,7 @@ def test_stresscl(stressclparam, monkeypatch, tfcoil):
         stressclparam.vforce_inboard_tot,
         stressclparam.i_tf_tresca,
         stressclparam.a_tf_coil_inboard_case,
-        stressclparam.vforce,
+        stressclparam.force_tf_coil_inboard_vertical,
         stressclparam.a_tf_turn_steel,
     )
 

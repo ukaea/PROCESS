@@ -56,11 +56,11 @@ class ResistiveTFCoil(TFCoil):
         )
 
         (
-            tfcoil_variables.cforce,
-            tfcoil_variables.vforce,
-            tfcoil_variables.vforce_outboard,
+            tfcoil_variables.force_tf_coil_inboard_centering,
+            tfcoil_variables.force_tf_coil_inboard_vertical,
+            tfcoil_variables.force_tf_coil_outboard_vertical,
             superconducting_tf_coil_variables.vforce_inboard_tot,
-            tfcoil_variables.f_vforce_inboard,
+            tfcoil_variables.f_force_tf_coil_inboard_vertical,
         ) = self.tf_field_and_force(
             i_tf_sup=tfcoil_variables.i_tf_sup,
             r_tf_wp_inboard_outer=superconducting_tf_coil_variables.r_tf_wp_inboard_outer,
@@ -77,7 +77,7 @@ class ResistiveTFCoil(TFCoil):
             r_cp_top=build_variables.r_cp_top,
             itart=physics_variables.itart,
             i_cp_joints=tfcoil_variables.i_cp_joints,
-            f_vforce_inboard=tfcoil_variables.f_vforce_inboard,
+            f_force_tf_coil_inboard_vertical=tfcoil_variables.f_force_tf_coil_inboard_vertical,
         )
 
         # Calculate TF coil areas and masses
@@ -190,7 +190,7 @@ class ResistiveTFCoil(TFCoil):
                 superconducting_tf_coil_variables.vforce_inboard_tot,
                 tfcoil_variables.i_tf_tresca,
                 tfcoil_variables.a_tf_coil_inboard_case,
-                tfcoil_variables.vforce,
+                tfcoil_variables.force_tf_coil_inboard_vertical,
                 tfcoil_variables.a_tf_turn_steel,
             )
 
