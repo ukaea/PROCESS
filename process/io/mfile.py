@@ -89,12 +89,9 @@ class MFileVariable(dict):
           [single scan requested]
         """
 
-        try:
-            if scan_number is None or scan_number == -1:
-                return self[f"scan{self.latest_scan:02}"]
-            return self[f"scan{scan_number:02}"]
-        except KeyError:
-            raise
+        if scan_number is None or scan_number == -1:
+            return self[f"scan{self.latest_scan:02}"]
+        return self[f"scan{scan_number:02}"]
 
     def get_scans(self):
         """Returns a list of scan values in order of scan number
