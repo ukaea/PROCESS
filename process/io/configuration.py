@@ -36,7 +36,6 @@ class ConfigurationParser:
 
     def data_validate(self, value):
         """Check that value corresponds to a specific data format."""
-        logger.info(f"type of value: {type(value)}")
         if not isinstance(value, dict) and value is not None:
             raise ValueError("Configuration data must be specified as a dictionary")
 
