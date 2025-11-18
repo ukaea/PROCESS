@@ -153,7 +153,7 @@ Burn_time_lower_limit_____________normalised_residue_____________________ (ineq_
 # Final Feasible Point #
 # Power Reactor Costs (1990 US$) #
 First_wall_/_blanket_life_(years)________________________________________ (life_blkt)____________________ 5.02391013831785127e+00 
-Divertor_life_(years)____________________________________________________ (divlife_cal)__________________ 1.02994561163140030e+00 
+Divertor_life_(years)____________________________________________________ (life_div)__________________ 1.02994561163140030e+00 
 Cost_of_electricity_(m$/kWh)_____________________________________________ (coe)__________________________ 5.33545577941774582e+02 
 # Detailed Costings (1990 US$) #
 Acc.22_multiplier_for_Nth_of_a_kind______________________________________ (fkind)________________________ 1.00000000000000000e+00 
@@ -279,10 +279,10 @@ Total_capital_investment_(M$)____________________________________________ (capco
 Allowable_blanket_neutron_fluence_(MW-yr/m2)_____________________________ (abktflnc)_____________________ 5.00000000000000000e+00 
 Allowable_divertor_heat_fluence_(MW-yr/m2)_______________________________ (adivflnc)_____________________ 7.00000000000000000e+00 
 First_wall_/_blanket_lifetime_(years)____________________________________ (life_blkt_fpy)________________ 6.27988767289731342e+00 OP 
-Divertor_lifetime_(years)________________________________________________ (divlife)______________________ 1.28743201453925038e+00 OP 
-Heating/CD_system_lifetime_(years)_______________________________________ (cdrlife)______________________ 6.27988767289731342e+00 OP 
-Total_plant_lifetime_(years)_____________________________________________ (tlife)________________________ 3.00000000000000000e+01 
-Total_plant_availability_fraction________________________________________ (cfactr)_______________________ 8.00000000000000044e-01 
+Divertor_lifetime_(years)________________________________________________ (life_div_fpy)______________________ 1.28743201453925038e+00 OP 
+Heating/CD_system_lifetime_(years)_______________________________________ (life_hcd_fpy)______________________ 6.27988767289731342e+00 OP 
+Total_plant_lifetime_(years)_____________________________________________ (life_plant)________________________ 3.00000000000000000e+01 
+Total_plant_availability_fraction________________________________________ (f_t_plant_available)_______________________ 8.00000000000000044e-01 
 Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA________________ (bktcycles)____________________ 1.60934962133184090e+04 
 # Plasma #
 Tokamak_aspect_ratio_=_Conventional,_itart_=_0___________________________ (itart)________________________            0 
@@ -8095,10 +8095,10 @@ output_costs = 1
 cost_model = 0
 
 * Total plant availability fraction;
-cfactr = 0.80
+f_t_plant_available = 0.80
 
 * Switch for plant availability model
-iavail = 0
+i_plant_availability = 0
 
 * PF Coils *
 ************
