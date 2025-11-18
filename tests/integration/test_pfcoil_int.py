@@ -1662,7 +1662,7 @@ def test_mtrx(pfcoil: PFCoil):
     assert_array_almost_equal(bvec, bvec_exp)
 
 
-def test_solv(pfcoil: PFCoil):
+def test_solv(pfcoil: PFCoil, skip_if_incompatible_system):
     """Test solv() with simple arguments.
 
     Running baseline_2019 results in 2D array args with 740 elements: unfeasible
