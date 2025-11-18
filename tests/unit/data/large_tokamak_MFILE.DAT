@@ -397,7 +397,7 @@ First_wall_/_blanket_lifetime_(years)____________________________________ (life_
 Divertor_lifetime_(years)________________________________________________ (divlife)______________________ 1.28385330450389534e+00 OP 
 Heating/CD_system_lifetime_(years)_______________________________________ (cdrlife)______________________ 6.09862312226963610e+00 OP 
 Total_plant_lifetime_(years)_____________________________________________ (tlife)________________________ 3.00000000000000000e+01 
-Total_plant_availability_fraction________________________________________ (cfactr)_______________________ 8.00000000000000044e-01 
+Total_plant_availability_fraction________________________________________ (f_t_plant_available)_______________________ 8.00000000000000044e-01 
 Number_of_fusion_cycles_to_reach_allowable_fw/blanket_DPA________________ (bktcycles)____________________ 1.56355108513279520e+04 
 # Plasma #
 Tokamak_aspect_ratio_=_Conventional,_itart_=_0___________________________ (itart)________________________            0 
@@ -7606,6 +7606,7 @@ Error_status_____________________________________________________________ (error
 # End of PROCESS Output #
 # End of PROCESS Output #
 # Copy of PROCESS Input Follows #
+
 ************************************************************************************************************************
 *****                                                               *****
 *****                  Generic large tokamak file                   *****
@@ -8130,10 +8131,10 @@ output_costs = 1
 cost_model = 0
 
 * Total plant availability fraction;
-cfactr = 0.80
+f_t_plant_available = 0.80
 
 * Switch for plant availability model
-iavail = 0
+i_plant_availability = 0
 
 * PF Coils *
 ************

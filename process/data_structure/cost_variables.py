@@ -239,7 +239,7 @@ cdirt: float = None
 """total plant direct cost (M$)"""
 
 
-cdrlife: float = None
+life_hcd_fpy: float = None
 """Full power year lifetime of heating/current drive system (y)"""
 
 
@@ -247,8 +247,8 @@ cdrlife_cal: float = None
 """Calendar year lifetime of heating/current drive system (y)"""
 
 
-cfactr: float = None
-"""Total plant availability fraction; input if `iavail=0`"""
+f_t_plant_available: float = None
+"""Total plant availability fraction; input if `i_plant_availability=0`"""
 
 
 cpfact: float = None
@@ -401,11 +401,11 @@ divcst: float = None
 """divertor direct cost (M$)"""
 
 
-divlife: float = None
-"""Full power lifetime of divertor (y)"""
+life_div_fpy: float = None
+"""Full power year lifetime of divertor (fpy)"""
 
 
-divlife_cal: float = None
+life_div: float = None
 """Calendar year lifetime of divertor (y)"""
 
 
@@ -441,12 +441,12 @@ fwallcst: float = None
 """first wall cost (M$)"""
 
 
-iavail: int = None
+i_plant_availability: int = None
 """Switch for plant availability model:
-- =0 use input value for cfactr
-- =1 calculate cfactr using Taylor and Ward 1999 model
-- =2 calculate cfactr using new (2015) model
-- =3 calculate cfactr using ST model
+- =0 use input value for f_t_plant_available
+- =1 calculate f_t_plant_available using Taylor and Ward 1999 model
+- =2 calculate f_t_plant_available using new (2015) model
+- =3 calculate f_t_plant_available using ST model
 """
 
 
@@ -528,48 +528,48 @@ redun_vac: int = None
 """Number of redundant vacuum pumps"""
 
 
-t_operation: float = None
+t_plant_operational_total_yrs: float = None
 """Operational time (yrs)"""
 
 
-tbktrepl: float = None
-"""time taken to replace blanket (y) (`iavail=1`)"""
+t_blkt_replace_yrs: float = None
+"""time taken to replace blanket (y) (`i_plant_availability=1`)"""
 
 
 tcomrepl: float = None
-"""time taken to replace both blanket and divertor (y) (`iavail=1`)"""
+"""time taken to replace both blanket and divertor (y) (`i_plant_availability=1`)"""
 
 
-tdivrepl: float = None
-"""time taken to replace divertor (y) (`iavail=1`)"""
+t_div_replace_yrs: float = None
+"""Time taken to replace divertor (y) (`i_plant_availability=1`)"""
 
 
 uubop: float = None
-"""unplanned unavailability factor for balance of plant (`iavail=1`)"""
+"""unplanned unavailability factor for balance of plant (`i_plant_availability=1`)"""
 
 
 uucd: float = None
-"""unplanned unavailability factor for current drive (`iavail=1`)"""
+"""unplanned unavailability factor for current drive (`i_plant_availability=1`)"""
 
 
 uudiv: float = None
-"""unplanned unavailability factor for divertor (`iavail=1`)"""
+"""unplanned unavailability factor for divertor (`i_plant_availability=1`)"""
 
 
 uufuel: float = None
-"""unplanned unavailability factor for fuel system (`iavail=1`)"""
+"""unplanned unavailability factor for fuel system (`i_plant_availability=1`)"""
 
 
 uufw: float = None
-"""unplanned unavailability factor for first wall (`iavail=1`)"""
+"""unplanned unavailability factor for first wall (`i_plant_availability=1`)"""
 
 
 uumag: float = None
-"""unplanned unavailability factor for magnets (`iavail=1`)"""
+"""unplanned unavailability factor for magnets (`i_plant_availability=1`)"""
 
 
 uuves: float = None
-"""unplanned unavailability factor for vessel (`iavail=1`)"""
+"""unplanned unavailability factor for vessel (`i_plant_availability=1`)"""
 
 
 ifueltyp: int = None
@@ -634,16 +634,16 @@ supercond_cost_model: int = None
 - =1 use $/kAm"""
 
 
-tlife: float = None
+life_plant: float = None
 """Full power year plant lifetime (years)"""
 
 
 tmain: float = None
-"""Maintenance time for replacing CP (years) (iavail = 3)"""
+"""Maintenance time for replacing CP (years) (i_plant_availability = 3)"""
 
 
 u_unplanned_cp: float = None
-"""User-input CP unplanned unavailability (iavail = 3)"""
+"""User-input CP unplanned unavailability (i_plant_availability = 3)"""
 
 
 UCAD: float = 180.0
@@ -1285,9 +1285,9 @@ def init_cost_variables():
     global cconshtf
     global cdcost
     global cdirt
-    global cdrlife
+    global life_hcd_fpy
     global cdrlife_cal
-    global cfactr
+    global f_t_plant_available
     global cpfact
     global cfind
     global cland
@@ -1323,8 +1323,8 @@ def init_cost_variables():
     global decomf
     global dintrt
     global divcst
-    global divlife
-    global divlife_cal
+    global life_div_fpy
+    global life_div
     global dtlife
     global fcap0
     global fcap0cp
@@ -1333,7 +1333,7 @@ def init_cost_variables():
     global fcr0
     global fkind
     global fwallcst
-    global iavail
+    global i_plant_availability
     global ibkt_life
     global life_dpa
     global bktcycles
@@ -1353,10 +1353,10 @@ def init_cost_variables():
     global fwbs_umain_time
     global redun_vacp
     global redun_vac
-    global t_operation
-    global tbktrepl
+    global t_plant_operational_total_yrs
+    global t_blkt_replace_yrs
     global tcomrepl
-    global tdivrepl
+    global t_div_replace_yrs
     global uubop
     global uucd
     global uudiv
@@ -1374,7 +1374,7 @@ def init_cost_variables():
     global startupratio
     global startuppwr
     global supercond_cost_model
-    global tlife
+    global life_plant
     global tmain
     global u_unplanned_cp
     global ucblbe
@@ -1442,9 +1442,9 @@ def init_cost_variables():
     cconshtf = 75.0
     cdcost = 0.0
     cdirt = 0.0
-    cdrlife = 0.0
+    life_hcd_fpy = 0.0
     cdrlife_cal = 0.0
-    cfactr = 0.75
+    f_t_plant_available = 0.75
     cpfact = 0.0
     cfind = [0.244, 0.244, 0.244, 0.29]
     cland = 19.2
@@ -1478,8 +1478,8 @@ def init_cost_variables():
     decomf = 0.1
     dintrt = 0.0
     divcst = 0.0
-    divlife = 0.0
-    divlife_cal = 0.0
+    life_div_fpy = 0.0
+    life_div = 0.0
     dtlife = 0.0
     fcap0 = 1.165
     fcap0cp = 1.08
@@ -1488,7 +1488,7 @@ def init_cost_variables():
     fcr0 = 0.0966
     fkind = 1.0
     fwallcst = 0.0
-    iavail = 2
+    i_plant_availability = 2
     ibkt_life = 0
     life_dpa = 50
     bktcycles = 1.0e3
@@ -1508,10 +1508,10 @@ def init_cost_variables():
     fwbs_umain_time = 0.25
     redun_vacp = 25.0
     redun_vac = 0
-    t_operation = 0.0
-    tbktrepl = 0.5
+    t_plant_operational_total_yrs = 0.0
+    t_blkt_replace_yrs = 0.5
     tcomrepl = 0.5
-    tdivrepl = 0.25
+    t_div_replace_yrs = 0.25
     uubop = 0.02
     uucd = 0.02
     uudiv = 0.04
@@ -1528,7 +1528,7 @@ def init_cost_variables():
     discount_rate = 0.0435
     startupratio = 1.0
     startuppwr = 0.0
-    tlife = 30.0
+    life_plant = 30.0
     ucblbe = 260.0
     ucblbreed = 875.0
     ucblli = 875.0

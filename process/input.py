@@ -325,7 +325,9 @@ INPUT_VARIABLES = {
     "cdriv0": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
     "cdriv1": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
     "cdriv2": InputVariable(data_structure.ife_variables, float, range=(50.0, 500.0)),
-    "cfactr": InputVariable(data_structure.cost_variables, float, range=(0.0, 1.0)),
+    "f_t_plant_available": InputVariable(
+        data_structure.cost_variables, float, range=(0.0, 1.0)
+    ),
     "chdzl": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "chdzu": InputVariable(data_structure.ife_variables, float, range=(0.0, 10.0)),
     "chemlab_h": InputVariable(
@@ -1669,7 +1671,9 @@ INPUT_VARIABLES = {
         data_structure.current_drive_variables, float, range=(0.0, 10.0)
     ),
     "tbeta": InputVariable(data_structure.physics_variables, float, range=(0.0, 4.0)),
-    "tbktrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
+    "t_blkt_replace_yrs": InputVariable(
+        data_structure.cost_variables, float, range=(0.01, 2.0)
+    ),
     "tbrmin": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 2.0)
     ),
@@ -1684,7 +1688,9 @@ INPUT_VARIABLES = {
         data_structure.constraint_variables, float, range=(0.001, 2000000.0)
     ),
     "tdiv": InputVariable(data_structure.divertor_variables, float, range=(0.1, 100.0)),
-    "tdivrepl": InputVariable(data_structure.cost_variables, float, range=(0.01, 2.0)),
+    "t_div_replace_yrs": InputVariable(
+        data_structure.cost_variables, float, range=(0.01, 2.0)
+    ),
     "t_tf_superconductor_quench": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.1, 100.0)
     ),
@@ -1750,7 +1756,9 @@ INPUT_VARIABLES = {
     "dx_tf_wp_insulation": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 0.1)
     ),
-    "tlife": InputVariable(data_structure.cost_variables, float, range=(1.0, 100.0)),
+    "life_plant": InputVariable(
+        data_structure.cost_variables, float, range=(1.0, 100.0)
+    ),
     "tmain": InputVariable(data_structure.cost_variables, float, range=(0.0, 100.0)),
     "tmargmin": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 20.0)
@@ -2122,7 +2130,9 @@ INPUT_VARIABLES = {
     "i_tf_wp_geom": InputVariable(
         data_structure.tfcoil_variables, int, choices=[0, 1, 2]
     ),
-    "iavail": InputVariable(data_structure.cost_variables, int, range=(0, 3)),
+    "i_plant_availability": InputVariable(
+        data_structure.cost_variables, int, range=(0, 3)
+    ),
     "ibkt_life": InputVariable(data_structure.cost_variables, int, choices=[0, 1, 2]),
     "i_blkt_dual_coolant": InputVariable(
         data_structure.fwbs_variables, int, choices=[0, 1, 2]

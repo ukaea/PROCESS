@@ -539,7 +539,7 @@ class Buildings:
 
         # Inboard 'component': shield, blanket, first wall:
         # find height, maximum radial dimension, maximum toroidal dimension
-        if cost_variables.tlife != 0.0e0:
+        if cost_variables.life_plant != 0.0e0:
             hcomp_height = 2 * (
                 build_variables.z_tf_inside_half
                 - (
@@ -579,7 +579,7 @@ class Buildings:
             #   ( number in build * (plant lifetime / component lifetime) ) * quantity safety factor
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.tlife / cost_variables.tlife)
+                * (cost_variables.life_plant / cost_variables.life_plant)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of inboard shield-blanket-wall
             ib_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -619,7 +619,7 @@ class Buildings:
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.tlife / cost_variables.tlife)
+                * (cost_variables.life_plant / cost_variables.life_plant)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of outboard wall-blanket-shield
             ob_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -629,7 +629,7 @@ class Buildings:
 
         # Divertor
         # Note: this estimation developed before the divertor design has been finalised
-        if cost_variables.divlife != 0.0e0:
+        if cost_variables.life_div_fpy != 0.0e0:
             hcomp_height = divertor_variables.dz_divertor
             hcomp_rad_thk = 2 * physics_variables.rminor
             hcomp_tor_thk = physics_variables.rmajor + physics_variables.rminor
@@ -641,7 +641,7 @@ class Buildings:
             )
             hcomp_req_supply = (
                 tfcoil_variables.n_tf_coils
-                * (cost_variables.tlife / cost_variables.divlife)
+                * (cost_variables.life_plant / cost_variables.life_div_fpy)
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of divertor segments
             div_hotcell_vol = hcomp_req_supply * hcomp_vol
@@ -663,7 +663,7 @@ class Buildings:
                 hcomp_rad_thk + buildings_variables.hot_sepdist
             )
             hcomp_req_supply = (
-                cost_variables.tlife / cost_variables.cplife
+                cost_variables.life_plant / cost_variables.cplife
             ) * buildings_variables.qnty_sfty_fac
             # total storage space for required supply of centre posts
             cp_hotcell_vol = hcomp_req_supply * hcomp_vol
