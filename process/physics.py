@@ -6535,6 +6535,16 @@ class Physics:
                 current_drive_variables.f_c_plasma_bootstrap_sauter,
                 "OP ",
             )
+            for point in range(
+                len(physics_variables.j_plasma_bootstrap_sauter_profile)
+            ):
+                po.ovarrf(
+                    self.mfile,
+                    "Sauter et al bootstrap current density profile at point",
+                    f"(j_plasma_bootstrap_sauter_profile{point})",
+                    physics_variables.j_plasma_bootstrap_sauter_profile[point],
+                    "OP ",
+                )
 
             po.ovarrf(
                 self.outfile,
@@ -7180,9 +7190,6 @@ class Physics:
         The code was supplied by Emiliano Fable, IPP Garching (private communication).
         """
 
-        # Number of radial data points along the profile
-        nr = plasma_profile.profile_size
-
         # Radial points from 0 to 1 seperated by 1/profile_size
         roa = plasma_profile.neprofile.profile_x
 
@@ -7217,24 +7224,14 @@ class Physics:
             + (physics_variables.q95 - physics_variables.q0) * roa**2
         )
         # Create new array of average mass of fuel portion of ions
-        amain = np.full_like(inverse_q, physics_variables.m_fuel_amu)
+        amain = np.full_like(inverse_q, physics_variables.m_ions_total_amu)
 
         # Create new array of average main ion charge
         zmain = np.full_like(inverse_q, 1.0 + physics_variables.f_plasma_fuel_helium3)
 
-        # Prevent division by zero
-        if ne[nr - 1] == 0.0:
-            ne[nr - 1] = 1e-4 * ne[nr - 2]
-            ni[nr - 1] = 1e-4 * ni[nr - 2]
-
-        # Prevent division by zero
-        if tempe[nr - 1] == 0.0:
-            tempe[nr - 1] = 1e-4 * tempe[nr - 2]
-            tempi[nr - 1] = 1e-4 * tempi[nr - 2]
-
         # Calculate total bootstrap current (MA) by summing along profiles
         # Looping from 2 because _calculate_l31_coefficient() etc should return 0 @ j == 1
-        radial_elements = np.arange(2, nr)
+        radial_elements = np.arange(2, plasma_profile.profile_size)
 
         # Change in localised minor radius to be used as delta term in derivative
         drho = rho[radial_elements] - rho[radial_elements - 1]
@@ -7242,23 +7239,17 @@ class Physics:
         # Area of annulus, assuming circular plasma cross-section
         da = 2 * np.pi * rho[radial_elements - 1] * drho  # area of annulus
 
-        # Create the partial derivatives
-        dlogte_drho = (
-            np.log(tempe[radial_elements]) - np.log(tempe[radial_elements - 1])
-        ) / drho
-        dlogti_drho = (
-            np.log(tempi[radial_elements]) - np.log(tempi[radial_elements - 1])
-        ) / drho
-        dlogne_drho = (
-            np.log(ne[radial_elements]) - np.log(ne[radial_elements - 1])
-        ) / drho
+        # Create the partial derivatives using numpy gradient (central differences)
+        dlogte_drho = np.gradient(np.log(tempe), rho)[radial_elements - 1]
+        dlogti_drho = np.gradient(np.log(tempi), rho)[radial_elements - 1]
+        dlogne_drho = np.gradient(np.log(ne), rho)[radial_elements - 1]
 
-        jboot = (
+        jboot = physics_variables.j_plasma_bootstrap_sauter_profile = (
             0.5
             * (
                 _calculate_l31_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7274,7 +7265,7 @@ class Physics:
                 * dlogne_drho
                 + _calculate_l31_32_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
@@ -7290,7 +7281,7 @@ class Physics:
                 * dlogte_drho
                 + _calculate_l34_alpha_31_coefficient(
                     radial_elements,
-                    nr,
+                    plasma_profile.profile_size,
                     physics_variables.rmajor,
                     physics_variables.b_plasma_toroidal_on_axis,
                     physics_variables.triang,
