@@ -5060,7 +5060,7 @@ class Physics:
         )
         for i in range(len(physics_variables.n_charge_plasma_effective_profile)):
             po.ovarre(
-                self.outfile,
+                self.mfile,
                 "Effective charge at point",
                 f"(n_charge_plasma_effective_profile{i})",
                 physics_variables.n_charge_plasma_effective_profile[i],
@@ -5070,7 +5070,7 @@ class Physics:
         for imp in range(impurity_radiation_module.N_IMPURITIES):
             for i in range(physics_variables.n_plasma_profile_elements):
                 po.ovarre(
-                    self.outfile,
+                    self.mfile,
                     "Impurity charge at point",
                     f"(n_charge_plasma_profile{imp}_{i})",
                     impurity_radiation_module.n_charge_impurity_profile[imp][i],
