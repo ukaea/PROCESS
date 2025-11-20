@@ -75,10 +75,10 @@ def test_has_boundary_current():
 
 def test_has_reactions():
     """Test that the groupwise decorator has worked on the reactions methods."""
-    assert hasattr(NeutronFluxProfile, "groupwise_reaction_rate_fw")
-    assert hasattr(NeutronFluxProfile, "reaction_rate_fw")
-    assert hasattr(NeutronFluxProfile, "groupwise_reaction_rate_bz")
-    assert hasattr(NeutronFluxProfile, "reaction_rate_bz")
+    assert hasattr(NeutronFluxProfile, "groupwise_integrated_flux_fw")
+    assert hasattr(NeutronFluxProfile, "integrated_flux_fw")
+    assert hasattr(NeutronFluxProfile, "groupwise_integrated_flux_bz")
+    assert hasattr(NeutronFluxProfile, "integrated_flux_bz")
 
 
 def test_three_group():
@@ -89,7 +89,7 @@ def test_three_group():
     # 2. same L_1 and L_3 shoudl yield integration_constants[2].fw_c[0] and
     # integration_constants[2].fw_s[0] = 0.0
     # self.l_fw_2 == self.l_fw_2[n] case.
-    # 
+    #
 
 
 def test_two_group():
