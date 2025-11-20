@@ -107,7 +107,9 @@ def get_diffusion_coefficient_and_length(
 
     transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
     diffusion_coef = 1 / 3 / transport_xs
-    diffusion_len_2 = diffusion_coef / (total_xs - scattering_xs - in_source_xs)
+    diffusion_len_2 = diffusion_coef / (
+        total_xs - scattering_xs - in_source_xs
+    )
     return diffusion_coef, diffusion_len_2
 
 
@@ -353,15 +355,13 @@ class NeutronFluxProfile:
             s_bz_mod = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
             t_bz_mod = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
 
-        fw_c_factor = - self.flux * (
-            l_fw / d_fw 
-            - np.exp(x_fw / l_fw) * (
-                (l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod
-            )/(
-                c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz)
-            )
+        fw_c_factor = -self.flux * (
+            l_fw / d_fw
+            - np.exp(x_fw / l_fw)
+            * ((l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod)
+            / (c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz))
         )
-        fw_s_factor = - self.flux * l_fw / d_fw
+        fw_s_factor = -self.flux * l_fw / d_fw
 
         bz_common_factor = (
             self.flux
@@ -406,10 +406,9 @@ class NeutronFluxProfile:
             )
         if n in self.integration_constants:
             return None  # skip if it has already been solved.
-        else:
-            # Parameter to be changed later, to allow solving non-down-scatter
-            # only systems by iterating.
-            first_iteration = True 
+        # Parameter to be changed later, to allow solving non-down-scatter
+        # only systems by iterating.
+        first_iteration = True
         self.d_fw[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.avg_atomic_mass,
             self.fw_mat.sigma_t[n],
@@ -447,19 +446,31 @@ class NeutronFluxProfile:
             else:
                 scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
             self.integration_constants[n].fw_c.append(
-                sum(src_fw[i, n] * self.integration_constants[i].fw_c[g] for i in range(g, n))
+                sum(
+                    src_fw[i, n] * self.integration_constants[i].fw_c[g]
+                    for i in range(g, n)
+                )
                 * scale_factor_fw
             )
             self.integration_constants[n].fw_s.append(
-                sum(src_fw[i, n] * self.integration_constants[i].fw_s[g] for i in range(g, n))
+                sum(
+                    src_fw[i, n] * self.integration_constants[i].fw_s[g]
+                    for i in range(g, n)
+                )
                 * scale_factor_fw
             )
             self.integration_constants[n].bz_c.append(
-                sum(src_bz[i, n] * self.integration_constants[i].bz_c[g] for i in range(g, n))
+                sum(
+                    src_bz[i, n] * self.integration_constants[i].bz_c[g]
+                    for i in range(g, n)
+                )
                 * scale_factor_bz
             )
             self.integration_constants[n].bz_s.append(
-                sum(src_bz[i, n] * self.integration_constants[i].bz_s[g] for i in range(g, n))
+                sum(
+                    src_bz[i, n] * self.integration_constants[i].bz_s[g]
+                    for i in range(g, n)
+                )
                 * scale_factor_bz
             )
 
@@ -473,27 +484,47 @@ class NeutronFluxProfile:
         self.integration_constants[n].bz_s.append(bz_s_factor_guess)
 
         def _set_constants(input_vector: Iterable[float]):
-            _ic_n.fw_c[n] = input_vector[0]
-            _ic_n.fw_s[n] = input_vector[1]
-            _ic_n.bz_c[n] = input_vector[2]
-            _ic_n.bz_s[n] = input_vector[3]
+            self.integration_constants[n].fw_c[n] = input_vector[0]
+            self.integration_constants[n].fw_s[n] = input_vector[1]
+            self.integration_constants[n].bz_c[n] = input_vector[2]
+            self.integration_constants[n].bz_s[n] = input_vector[3]
 
         def _evaluate_fit():
-            flux_continuity = self.groupwise_neutron_flux_fw(n, self.x_fw) - self.groupwise_neutron_flux_bz(n, self.x_fw)
-            flux_at_boundary = self.groupwise_neutron_flux_bz(n, self.extended_boundary[n])
-            current_continuity = self.groupwise_neutron_current_fw(n, self.x_fw) - self.groupwise_neutron_current_bz(n, self.x_fw)
+            flux_continuity = self.groupwise_neutron_flux_fw(
+                n, self.x_fw
+            ) - self.groupwise_neutron_flux_bz(n, self.x_fw)
+            flux_at_boundary = self.groupwise_neutron_flux_bz(
+                n, self.extended_boundary[n]
+            )
+            current_continuity = self.groupwise_neutron_current_fw(
+                n, self.x_fw
+            ) - self.groupwise_neutron_current_bz(n, self.x_fw)
             influx_fw, influx_bz = 0.0, 0.0
             for g in range(self.n_groups):
-                if g>n and not first_iteration:
+                if g > n and not first_iteration:
                     if not self.fw_mat.downscatter_only:
-                        influx_fw += (self.fw_mat.sigma_s[g, n] + self.fw_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_fw(g)
+                        influx_fw += (
+                            self.fw_mat.sigma_s[g, n]
+                            + self.fw_mat.sigma_in[g, n]
+                        ) * self.groupwise_integrated_flux_fw(g)
                     if not self.bz_mat.downscatter_only:
-                        influx_bz += (self.bz_mat.sigma_s[g, n] + self.bz_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_bz(g)
-                elif g<=n:
-                    influx_fw += (self.fw_mat.sigma_s[g, n] + self.fw_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_fw(g)
-                    influx_bz += (self.bz_mat.sigma_s[g, n] + self.bz_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_bz(g)
-            removal_fw = self.fw_mat.sigma_t[n] * self.groupwise_integrated_flux_fw(n)
-            removal_bz = self.bz_mat.sigma_t[n] * self.groupwise_integrated_flux_bz(n)
+                        influx_bz += (
+                            self.bz_mat.sigma_s[g, n]
+                            + self.bz_mat.sigma_in[g, n]
+                        ) * self.groupwise_integrated_flux_bz(g)
+                elif g <= n:
+                    influx_fw += (
+                        self.fw_mat.sigma_s[g, n] + self.fw_mat.sigma_in[g, n]
+                    ) * self.groupwise_integrated_flux_fw(g)
+                    influx_bz += (
+                        self.bz_mat.sigma_s[g, n] + self.bz_mat.sigma_in[g, n]
+                    ) * self.groupwise_integrated_flux_bz(g)
+            removal_fw = self.fw_mat.sigma_t[
+                n
+            ] * self.groupwise_integrated_flux_fw(n)
+            removal_bz = self.bz_mat.sigma_t[
+                n
+            ] * self.groupwise_integrated_flux_bz(n)
             # conservation_fw = influx_fw - removal_fw - current_fw2bz
             # conservation_bz = current_fw2bz + influx_bz - removal_bz - escaped_bz
             total_neutron_conservation = (
@@ -501,7 +532,7 @@ class NeutronFluxProfile:
                 + influx_bz
                 - removal_fw
                 - removal_bz
-                - self.groupwise_neutron_current_escaped(_ic_n, self, n)
+                - self.groupwise_neutron_current_escaped(n)
             )
             return np.array([
                 flux_continuity,
@@ -514,12 +545,15 @@ class NeutronFluxProfile:
             _set_constants(four_integration_constants_vector)
             return _evaluate_fit()
 
-        results = optimize.root(objective, x0=[
-            fw_c_factor_guess,
-            fw_s_factor_guess,
-            bz_c_factor_guess,
-            bz_s_factor_guess,
-        ])
+        results = optimize.root(
+            objective,
+            x0=[
+                fw_c_factor_guess,
+                fw_s_factor_guess,
+                bz_c_factor_guess,
+                bz_s_factor_guess,
+            ],
+        )
         _set_constants(results.res)
         return None
 
@@ -549,14 +583,18 @@ class NeutronFluxProfile:
         """
         trig_funcs = []
         for g in range(n + 1):
-            if self.l_fw_2[g]>0:
+            if self.l_fw_2[g] > 0:
                 c, s = np.cosh, np.sinh
                 l_fw = np.sqrt(self.l_fw_2[g])
             else:
                 c, s = np.cos, np.sin
                 l_fw = np.sqrt(-self.l_fw_2[g])
-            trig_funcs.append(self.integration_constants[n].fw_c[g] * c(abs(x) / l_fw))
-            trig_funcs.append(self.integration_constants[n].fw_s[g] * s(abs(x) / l_fw))
+            trig_funcs.append(
+                self.integration_constants[n].fw_c[g] * c(abs(x) / l_fw)
+            )
+            trig_funcs.append(
+                self.integration_constants[n].fw_s[g] * s(abs(x) / l_fw)
+            )
         return np.sum(trig_funcs, axis=0)
 
     @summarize_values
@@ -584,14 +622,18 @@ class NeutronFluxProfile:
         """
         trig_funcs = []
         for g in range(n + 1):
-            if self.l_bz_2[g]>0:
+            if self.l_bz_2[g] > 0:
                 c, s = np.cosh, np.sinh
                 l_bz = np.sqrt(self.l_bz_2[g])
             else:
                 c, s = np.cos, np.sin
                 l_bz = np.sqrt(-self.l_bz_2[g])
-            trig_funcs.append(self.integration_constants[n].bz_c[g] * c(abs(x) / l_bz))
-            trig_funcs.append(self.integration_constants[n].bz_s[g] * s(abs(x) / l_bz))
+            trig_funcs.append(
+                self.integration_constants[n].bz_c[g] * c(abs(x) / l_bz)
+            )
+            trig_funcs.append(
+                self.integration_constants[n].bz_s[g] * s(abs(x) / l_bz)
+            )
         return np.sum(trig_funcs, axis=0)
 
     @summarize_values
@@ -651,21 +693,29 @@ class NeutronFluxProfile:
         """
         integrals = []
         for g in range(n + 1):
-            if self.l_fw_2[g]>0:
+            if self.l_fw_2[g] > 0:
                 l_fw = np.sqrt(self.l_fw_2[g])
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_c[g] * np.sinh(self.x_fw / l_fw)
+                    l_fw
+                    * self.integration_constants[n].fw_c[g]
+                    * np.sinh(self.x_fw / l_fw)
                 )
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_s[g] * (np.cosh(self.x_fw / l_fw) - 1)
+                    l_fw
+                    * self.integration_constants[n].fw_s[g]
+                    * (np.cosh(self.x_fw / l_fw) - 1)
                 )
             else:
                 l_fw = np.sqrt(-self.l_fw_2[g])
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_c[g] * np.sin(self.x_fw / l_fw)
+                    l_fw
+                    * self.integration_constants[n].fw_c[g]
+                    * np.sin(self.x_fw / l_fw)
                 )
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_s[g] * (1 - np.cos(self.x_fw / l_fw))
+                    l_fw
+                    * self.integration_constants[n].fw_s[g]
+                    * (1 - np.cos(self.x_fw / l_fw))
                 )
 
         return np.sum(integrals, axis=0)
@@ -685,71 +735,95 @@ class NeutronFluxProfile:
         """
         integrals = []
         for g in range(n + 1):
-            if self.l_bz_2[g]>0:
+            if self.l_bz_2[g] > 0:
                 l_bz = np.sqrt(self.l_bz_2[g])
                 integrals.append(
-                    l_bz * self.integration_constants[n].bz_c[g] *
-                    (np.sinh(self.x_bz / l_bz) - np.sinh(self.x_fw / l_bz))
+                    l_bz
+                    * self.integration_constants[n].bz_c[g]
+                    * (np.sinh(self.x_bz / l_bz) - np.sinh(self.x_fw / l_bz))
                 )
                 integrals.append(
-                    l_bz * self.integration_constants[n].bz_s[g] *
-                    (np.cosh(self.x_bz / l_bz) - np.cosh(self.x_fw / l_bz))
+                    l_bz
+                    * self.integration_constants[n].bz_s[g]
+                    * (np.cosh(self.x_bz / l_bz) - np.cosh(self.x_fw / l_bz))
                 )
             else:
                 l_bz = np.sqrt(-self.l_bz_2[g])
                 integrals.append(
-                    l_bz * self.integration_constants[n].bz_c[g] *
-                    (np.sin(self.x_bz / l_bz) - np.sin(self.x_fw / l_bz))
+                    l_bz
+                    * self.integration_constants[n].bz_c[g]
+                    * (np.sin(self.x_bz / l_bz) - np.sin(self.x_fw / l_bz))
                 )
                 integrals.append(
-                    -l_bz * self.integration_constants[n].bz_s[g] *
-                    (np.cos(self.x_bz / l_bz) - np.cos(self.x_fw / l_bz))
+                    -l_bz
+                    * self.integration_constants[n].bz_s[g]
+                    * (np.cos(self.x_bz / l_bz) - np.cos(self.x_fw / l_bz))
                 )
         return np.sum(integrals, axis=0)
 
     @summarize_values
-    def groupwise_neutron_current_fw(self, n: int, x: float | npt.NDArray) -> float:
+    def groupwise_neutron_current_fw(
+        self, n: int, x: float | npt.NDArray
+    ) -> float:
         """Get the neutron current (in the outward direction) in the fw"""
         differentials = []
         for g in range(n + 1):
-            if self.l_fw_2[g]>0:
+            if self.l_fw_2[g] > 0:
                 l_fw = np.sqrt(self.l_fw_2[g])
                 differentials.append(
-                    self.integration_constants[n].fw_c[g] / l_fw * np.sinh(x / l_fw)
+                    self.integration_constants[n].fw_c[g]
+                    / l_fw
+                    * np.sinh(x / l_fw)
                 )
                 differentials.append(
-                    self.integration_constants[n].fw_s[g] / l_fw * np.cosh(x / l_fw)
+                    self.integration_constants[n].fw_s[g]
+                    / l_fw
+                    * np.cosh(x / l_fw)
                 )
             else:
                 l_fw = np.sqrt(-self.l_fw_2[g])
                 differentials.append(
-                    - self.integration_constants[n].fw_c[g] / l_fw * np.sin(x / l_fw)
+                    -self.integration_constants[n].fw_c[g]
+                    / l_fw
+                    * np.sin(x / l_fw)
                 )
                 differentials.append(
-                    self.integration_constants[n].fw_s[g] / l_fw * np.cos(x / l_fw)
+                    self.integration_constants[n].fw_s[g]
+                    / l_fw
+                    * np.cos(x / l_fw)
                 )
         return -self.d_fw[n] * np.sum(differentials, axis=0)
 
     @summarize_values
-    def groupwise_neutron_current_bz(self, n: int, x: float | npt.NDArray) -> float:
+    def groupwise_neutron_current_bz(
+        self, n: int, x: float | npt.NDArray
+    ) -> float:
         """Get the neutron current (in the outward direction) in the bz."""
         differentials = []
         for g in range(n + 1):
-            if self.l_bz_2[g]>0:
+            if self.l_bz_2[g] > 0:
                 l_bz = np.sqrt(self.l_bz_2[g])
                 differentials.append(
-                    self.integration_constants[n].bz_c[g] / l_bz * np.sinh(x / l_bz)
+                    self.integration_constants[n].bz_c[g]
+                    / l_bz
+                    * np.sinh(x / l_bz)
                 )
                 differentials.append(
-                    self.integration_constants[n].bz_s[g] / l_bz * np.cosh(x / l_bz)
+                    self.integration_constants[n].bz_s[g]
+                    / l_bz
+                    * np.cosh(x / l_bz)
                 )
             else:
                 l_bz = np.sqrt(-self.l_bz_2[g])
                 differentials.append(
-                    - self.integration_constants[n].bz_c[g] / l_bz * np.sin(x / l_bz)
+                    -self.integration_constants[n].bz_c[g]
+                    / l_bz
+                    * np.sin(x / l_bz)
                 )
                 differentials.append(
-                    self.integration_constants[n].bz_s[g] / l_bz * np.cos(x / l_bz)
+                    self.integration_constants[n].bz_s[g]
+                    / l_bz
+                    * np.cos(x / l_bz)
                 )
         return -self.d_bz[n] * np.sum(differentials, axis=0)
 
@@ -975,7 +1049,9 @@ def _generate_x_range(
         if symmetric:
             return (
                 np.linspace(-x_max, -fw_bz_split_point, n_points_bz),
-                np.linspace(-fw_bz_split_point, fw_bz_split_point, n_points_fw * 2 - 1),
+                np.linspace(
+                    -fw_bz_split_point, fw_bz_split_point, n_points_fw * 2 - 1
+                ),
                 np.linspace(fw_bz_split_point, x_max, n_points_bz),
             )
         return (
