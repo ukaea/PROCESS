@@ -8,8 +8,10 @@ f_aspect: float = None
 f_st_coil_aspect:float = None
 
 f_b: float = None
+"""Actual b_plasma_toroidal_on_axis to reference value from stella_config file """
 
 f_i: float = None
+"""Actual totail coil current to reference value from stella_config file"""
 
 f_a: float = None
 

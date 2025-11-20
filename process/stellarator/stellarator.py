@@ -33,7 +33,7 @@ from process.data_structure import (
     tfcoil_variables,
 )
 from process.exceptions import ProcessValueError
-from process.physics import rether
+from process.physics import Physics, rether
 from process.stellarator.preset_config import load_stellarator_config
 
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ class Stellarator:
         plasma_profile,
         hcpb,
         current_drive,
-        physics,
+        physics: Physics,
         neoclassics,
     ) -> None:
         """Initialises the Stellarator model's variables
@@ -102,6 +102,7 @@ class Stellarator:
         self.current_drive = current_drive
         self.physics = physics
         self.neoclassics = neoclassics
+
 
     def run(self, output: bool):
         """Routine to call the physics and engineering modules

@@ -253,7 +253,7 @@ def bmax_from_awp(
     """
 
     return (
-        2e-1
+        2e-1 # this is mu x 1e6, to use current in MA
         * current
         * n_tf_coils
         / (r_coil_major - r_coil_minor)

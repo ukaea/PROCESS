@@ -34,6 +34,7 @@ def st_init():
 
     #  Physics quantities
 
+    physics_variables.i_plasma_pedestal = 0
     physics_variables.beta_norm_max = 0.0
     physics_variables.kappa95 = 1.0
     physics_variables.triang = 0.0

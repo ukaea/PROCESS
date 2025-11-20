@@ -270,8 +270,7 @@ def calculate_stored_magnetic_energy(r_coil_minor):
         * (
             stellarator_configuration.stella_config_inductance
             / stellarator_variables.f_r
-            * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor)
-            ** 2
+            * (r_coil_minor / stellarator_configuration.stella_config_coil_rminor) ** 2
             * stellarator_variables.f_n**2
         )
         * (tfcoil_variables.c_tf_total / tfcoil_variables.n_tf_coils) ** 2

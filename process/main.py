@@ -680,18 +680,20 @@ class Models:
             plasma_profile=self.plasma_profile, current_drive=self.current_drive
         )
         self.neoclassics = Neoclassics()
-        self.stellarator = Stellarator(
-            availability=self.availability,
-            buildings=self.buildings,
-            vacuum=self.vacuum,
-            costs=self.costs,
-            power=self.power,
-            plasma_profile=self.plasma_profile,
-            hcpb=self.ccfe_hcpb,
-            current_drive=self.current_drive,
-            physics=self.physics,
-            neoclassics=self.neoclassics,
-        )
+        if data_structure.stellarator_variables.istell != 0:
+            self.stellarator = Stellarator(
+                availability=self.availability,
+                buildings=self.buildings,
+                vacuum=self.vacuum,
+                costs=self.costs,
+                power=self.power,
+                plasma_profile=self.plasma_profile,
+                hcpb=self.ccfe_hcpb,
+                current_drive=self.current_drive,
+                physics=self.physics,
+                neoclassics=self.neoclassics,
+            )
+            
         self.dcll = DCLL(fw=self.fw)
 
     @property
