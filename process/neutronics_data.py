@@ -107,7 +107,7 @@ def calculate_average_macro_xs(
 
     # N_A/A * rho * sigma
 
-    return N_A / (avg_mass_amu/1000) * density * (avg_sigma * BARNS_TO_M2)
+    return N_A / (avg_mass_amu / 1000) * density * (avg_sigma * BARNS_TO_M2)
 
 
 def discretize_xs(
