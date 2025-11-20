@@ -9,7 +9,8 @@ from scipy.constants import Avogadro
 
 from process.exceptions import ProcessValidationError
 
-BARNS_CM2 = 1e-24
+BARNS_TO_CM2 = 1e-24
+BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 N2N_Q_VALUE = ...
 _ATOMIC_MASS = {}
@@ -72,12 +73,12 @@ def calculate_average_macro_xs(
         Given in the format {'species': float(microscopic cross-section)}.
         Possible to have some missing values here.
     density:
-        Density of the medium, given in [g/cm^3]
+        Density of the medium, given in [kg/m^3]
 
     Returns
     -------
     :
-        macroscopic cross-section of the material.
+        macroscopic cross-section of the material. [m]
 
     Notes
     -----
@@ -105,7 +106,8 @@ def calculate_average_macro_xs(
     avg_mass_amu = sum(weighted_atomic_mass)
 
     # N_A/A * rho * sigma
-    return N_A / avg_mass_amu * density * (avg_sigma * BARNS_CM2)
+
+    return N_A / (avg_mass_amu/1000) * density * (avg_sigma * BARNS_TO_M2)
 
 
 def discretize_xs(
@@ -518,9 +520,6 @@ class MaterialMacroInfo:
                 "Elastic up-scattering seems unlikely in this model! "
                 "Check if the group structure is chosen correctly?",
             )
-        self.sigma_t_cm = self.sigma_t / 100
-        self.sigma_s_cm = self.sigma_s / 100
-        self.sigma_in_cm = self.sigma_in / 100
 
     @property
     def n_groups(self):
@@ -577,7 +576,7 @@ def get_material_nuclear_data(
     cross-section :math:`\\Sigma_{s}` is the i-th element on the main diagonal of the
     macroscopic scattering cross-section matrix.
     """
-    density = material_density_data_bank[material]
+    density = material_density_data_bank[material]  # [kg/m^3]
     composition = material_composition_data_bank[material]
     avg_atomic_mass = get_avg_atomic_mass(composition)
     n_groups = len(group_structure) - 1
