@@ -444,16 +444,22 @@ class MaterialMacroInfo:
     sigma_t:
         total macroscopic cross-section, 1D array of len = n.
     sigma_s:
-        Source matrix, 2D array of shape (n, n). Includes a sum of the
-        scattering matrix and n2n matrix. Scattering matrix is the
-        macroscopic scattering cross-section from group i to j, and the
-        n2n matrix is the macroscopic cross-section for production of
-        group j neutrons due to group i neutrons. It should be
-        mostly-upper-triangular, i.e. the lower triangle must have small values
+        Macroscopic scattering cross-section from group i to j, forming a 2D
+        array of shape (n, n). It should be mostly-upper-triangular, i.e. the
+        lower triangle (excluding the main diagonal) must have small values
         compared to the average macroscopic cross-section value of the matrix.
+        Neutrons fluxes are assumed to be isotropic before and after scattering.
 
-        e.g. [0,3] would be the cross-section for proudction of group 4 neutrons
-        due to reactions (scattering and n2n) caused by group 1 neutrons.
+        e.g. [0,3] would be the cross-section for group 4 neutrons scattered-in
+        from group 1 neutrons.
+    sigma_in:
+        In-source matrix: for now, it includes a sum of the matrix of (n,2n)
+        reactions and fission reactions. Same logic as the scattering matrix,
+        i.e. probability of group j neutrons produced (presumed to be
+        isotropic) per unit flux of group i neutrons.
+
+        e.g. [0,3] would be the cross-section for the proudction of group 4
+        neutrons due to n,2n and fission reactions caused by group 1 neutrons.
     group_structure:
         energy bin edges, 1D array of len = n+1, in eV.
     avg_atomic_mass:
