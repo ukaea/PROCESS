@@ -123,7 +123,38 @@ The peak field at the bore of the central solenoid will not be the same as that 
 
 -----------
 
-### Axial stresses | `axial_stress()`
+### Axial stresses | `calculate_cs_self_peak_midplane_axial_stress()`
+
+
+The vertical (axial) force for a "thin-walled" solenoid ($\alpha = 1$) at the midplane is given by[^2]:
+
+$$
+F_{z}(0)=\frac{\mu_0}{2}\left(\frac{N I}{2 \times dz_{\text{half}}}\right) \times \\
+ \left(2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + dz_{\text{half}}^2} \left[K(k_b) - E(k_b)\right]\\
+  - 2dz_{\text{half}} \sqrt{4r_{\text{CS,outer}}^2 + 4dz_{\text{half}}^2} \left[K(k_{2b}) - E(k_{2b})\right]  \right)
+$$
+
+where the modulus $k_{2b}$ is given by
+
+$$
+k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+4dz_{\text{half}}^2}}
+$$
+
+and $k_b$ is given by:
+
+$$
+k_{2b} = \sqrt{\frac{4r_{\text{CS,outer}}^2}{4r_{\text{CS,outer}}^2+dz_{\text{half}}^2}}
+$$
+
+Here $K(k)$ and $E(k)$ are the complete elliptic integrals, respectively of the first and second kinds.
+
+
+The axial compressive force at $z$ in an isolated solenoid increases from 0 at $z  = dz_{\text{half}}$
+to the maximum at the midplane, $F_{z}(0)$.
+
+
+
+--------------------------
 
 
 ### Hoop stress | `hoop_stress()`
@@ -290,4 +321,5 @@ constraints (26 and 27) are activated.
 
 
 [^1]: M. N. Wilson, Superconducting Magnets. Oxford University Press, USA, 1983, ISBN 13: 9780198548102
+[^2]: Case Studies in Superconducting Magnets. Boston, MA: Springer US, 2009. doi: https://doi.org/10.1007/b112047.
 ‌
