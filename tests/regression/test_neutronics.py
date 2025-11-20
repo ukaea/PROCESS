@@ -44,11 +44,14 @@ def test_one_group():
     assert np.isclose(neutron_profile.neutron_current_fw2bz(), 22.3980214162)
     assert np.isclose(neutron_profile.neutron_current_escaped(), 1.22047369356)
 
+    fw_removal = sigma_fw_t - sigma_fw_s - fw_material.sigma_in[0, 0]
+    bz_removal = sigma_bz_t - sigma_bz_s - bz_material.sigma_in[0, 0]
     assert np.isclose(neutron_profile.flux,
         neutron_profile.neutron_current_escaped()
-        + neutron_profile.reaction_rate_fw("removal")
-        + neutron_profile.reaction_rate_bz("removal")
-    )
+        + fw_removal/100 * neutron_profile.integrated_flux_fw()
+        + bz_removal/100 * neutron_profile.integrated_flux_bz()
+    ), "Conservation of neutrons"
+    
 def test_one_group_with_fission():
     """
     Regression test against Desmos snapshot with fission involved:
@@ -79,8 +82,20 @@ def test_one_group_with_fission():
         incoming_flux, x_fw, x_bz, fw_material, bz_material
     )
     assert np.isclose(neutron_profile.l_bz_2[0], -58.2869567709**2)
+    assert np.isclose(neutron_profile.neutron_flux_at(-4.79675/100), 159.9434), "Minimum flux in FW"
+    assert np.isclose(neutron_profile.neutron_flux_at(4.79675/100), 159.9434), "Minimum flux in FW"
     assert np.isclose(neutron_profile.neutron_flux_at(18.96382/100), 164.81245), "Maximum flux in BZ"
+    assert np.isclose(neutron_profile.neutron_flux_at(-18.96382/100), 164.81245), "Maximum flux in BZ"
     assert np.isclose(neutron_profile.neutron_flux_fw(x_fw), neutron_profile.neutron_flux_bz(x_fw)), "Flux continuity assurance"
+    assert np.isclose(neutron_profile.neutron_current_fw2bz(), -7.6275782637960745), "Negative current because BZ (breeding) is backflowing into the FW"
+    assert np.isclose(neutron_profile.neutron_current_escaped(), 30.665951670177186), "positive escaped current."
+    fw_removal = sigma_fw_t - sigma_fw_s - fw_material.sigma_in[0, 0]
+    bz_removal = sigma_bz_t - sigma_bz_s - bz_material.sigma_in[0, 0]
+    assert np.isclose(neutron_profile.flux,
+        neutron_profile.neutron_current_escaped()
+        + fw_removal/100 * neutron_profile.integrated_flux_fw()
+        + bz_removal/100 * neutron_profile.integrated_flux_bz()
+    ), "Conservation of neutrons"
 
 def test_two_groups():
     """
