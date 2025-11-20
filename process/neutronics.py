@@ -67,9 +67,9 @@ class RegisterLater:
 
 def get_diffusion_coefficient_and_length(
     avg_atomic_mass: float,
-    total_xs_cm: float,
-    scattering_xs_cm: float,
-    in_source_xs_cm: float,
+    total_xs: float,
+    scattering_xs: float,
+    in_source_xs: float,
 ) -> tuple[float, float]:
     r"""
     Calculate the diffusion coefficient for a given scattering and total macro-scopic
@@ -77,16 +77,16 @@ def get_diffusion_coefficient_and_length(
 
     Parameters
     ----------
-    total_xs_cm:
+    total_xs:
         macroscopic total cross-section `\sigma_{total}`, i.e. any reaction between
         nuclei and neutrons, that either changes the neutron's path or remove it from
         that energy group.
-        Unit: cm^-1
-    scattering_xs_cm:
+        Unit: m^-1
+    scattering_xs:
         macroscopic total cross-section `\sigma_{scatter}`, i.e. number of reactions per
         unit distance travelled by the neutron that leads to it being scattered (without
         getting absorbed).
-        Unit: cm^-1
+        Unit: m^-1
     avg_atomic_mass:
         Average atomic mass in [amu]. This can be approximated by the atomic number 'A'
         of the medium that the neutron passes through. The effect of the more-anisotropic
@@ -98,18 +98,16 @@ def get_diffusion_coefficient_and_length(
     -------
     diffusion_coef:
         The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
-        unit: [cm]
+        unit: [m]
     diffusion_len_2:
         The square of the characteristic diffusion length as given by Reactor Analysis,
         Duderstadt and Hamilton.
-        unit: [cm]
+        unit: [m^2]
     """
 
-    transport_xs = total_xs_cm - 2 / (3 * avg_atomic_mass) * scattering_xs_cm
+    transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
     diffusion_coef = 1 / 3 / transport_xs
-    diffusion_len_2 = diffusion_coef / (
-        total_xs_cm - scattering_xs_cm - in_source_xs_cm
-    )
+    diffusion_len_2 = diffusion_coef / (total_xs - scattering_xs - in_source_xs)
     return diffusion_coef, diffusion_len_2
 
 
@@ -235,11 +233,11 @@ class NeutronFluxProfile:
         ----------
         flux:
             Nuetron flux directly emitted by the plasma, incident on the first wall.
-            unit: cm^-2 s^-1
+            unit: m^-2 s^-1
         x_fw:
-            thickness of the first wall [m]. It will be converted and stored in [cm].
+            thickness of the first wall [m].
         x_bz:
-            thickness of the blanket + first-wall [m]. It will be converted and stored in [cm].
+            thickness of the blanket + first-wall [m].
         fw_mat:
             first wall material information
         bz_mat:
@@ -247,10 +245,6 @@ class NeutronFluxProfile:
 
         Attributes
         ----------
-        x_fw_cm:
-            thickness of the first wall, converted from [m] into [cm].
-        x_bz_cm:
-            thickness of the blanket + first-wall, converted from [m] into [cm].
         fw_mat:
             first wall material information
         bz_mat:
@@ -263,19 +257,19 @@ class NeutronFluxProfile:
         integration_constants:
             Integration constants that determine the flux shape (and therefore
             reaction rates and neutron current) of each group. A set of four
-            constants, two for fw and two for bz; each with unit: [cm^-2 s^-1]
+            constants, two for fw and two for bz; each with unit: [m^-2 s^-1]
         l_fw_2:
             square of the characteristic diffusion length as given by Reactor Analysis,
-            Duderstadt and Hamilton, applied to the fw. unit: [cm]
+            Duderstadt and Hamilton, applied to the fw. unit: [m^2]
         l_bz_2:
             square of the characteristic diffusion length as given by Reactor Analysis,
-            Duderstadt and Hamilton, applied to the bz. unit: [cm]
-        d_fw_cm:
-            diffusion constants in the fw. unit: [cm]
-        d_bz_cm:
-            diffusion constants in the bz. unit: [cm]
-        extended_boundary_cm:
-            extended boundary (outside the bz) for each group, stored in cm.
+            Duderstadt and Hamilton, applied to the bz. unit: [m^2]
+        d_fw:
+            diffusion constants in the fw. unit: [m]
+        d_bz:
+            diffusion constants in the bz. unit: [m]
+        extended_boundary:
+            extended boundary (outside the bz) for each group.
             This value should be larger than x_bz for each of them.
         """
         self.flux = flux  # flux incident on the first wall.
@@ -283,8 +277,7 @@ class NeutronFluxProfile:
             raise ValueError(
                 f"Cannot construct a first-wall+blanket module where{x_fw=}, {x_bz=}."
             )
-        self.x_fw_cm = x_fw * 100
-        self.x_bz_cm = x_bz * 100
+        self.x_fw, self.x_bz = x_fw, x_bz
         self.fw_mat = fw_mat
         self.bz_mat = bz_mat
         self.n_groups = self.fw_mat.n_groups
@@ -305,40 +298,40 @@ class NeutronFluxProfile:
         # diffusion lengths squared
         self.l_fw_2 = AutoPopulatingDict(self.solve_group_n, "l_fw_2")
         self.l_bz_2 = AutoPopulatingDict(self.solve_group_n, "l_bz_2")
-        self.d_fw_cm = AutoPopulatingDict(self.solve_group_n, "d_fw_cm")
-        self.d_bz_cm = AutoPopulatingDict(self.solve_group_n, "d_bz_cm")
-        self.extended_boundary_cm = AutoPopulatingDict(
-            self.solve_group_n, "extended_boundary_cm"
+        self.d_fw = AutoPopulatingDict(self.solve_group_n, "d_fw")
+        self.d_bz = AutoPopulatingDict(self.solve_group_n, "d_bz")
+        self.extended_boundary = AutoPopulatingDict(
+            self.solve_group_n, "extended_boundary"
         )
 
     def solve_lowest_group(self) -> None:
         """
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
-        Store the solved constants in self.extended_boundary_cm[0], self.l_fw_2[0],
+        Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
         self.l_bz_2[0], and self.integration_constants[0].
-        integration_constants have units of [cm^-2 s^-1].
+        integration_constants have units of [m^-2 s^-1].
         """
         n = 0
         if n in self.integration_constants:
             return  # skip if it has already been solved.
-        self.d_fw_cm[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
+        self.d_fw[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.avg_atomic_mass,
-            self.fw_mat.sigma_t_cm[n],
-            self.fw_mat.sigma_s_cm[n, n],
-            self.fw_mat.sigma_in_cm[n, n],
+            self.fw_mat.sigma_t[n],
+            self.fw_mat.sigma_s[n, n],
+            self.fw_mat.sigma_in[n, n],
         )
-        self.d_bz_cm[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
+        self.d_bz[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
             self.bz_mat.avg_atomic_mass,
-            self.bz_mat.sigma_t_cm[n],
-            self.bz_mat.sigma_s_cm[n, n],
-            self.bz_mat.sigma_in_cm[n, n],
+            self.bz_mat.sigma_t[n],
+            self.bz_mat.sigma_s[n, n],
+            self.bz_mat.sigma_in[n, n],
         )
         l_fw = np.sqrt(abs(self.l_fw_2[n]))
         l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        x_fw, x_bz = self.x_fw_cm, self.x_bz_cm
-        d_fw = self.d_fw_cm[n]
-        d_bz = self.d_bz_cm[n]
-        self.extended_boundary_cm[n] = x_bz + extrapolation_length(d_bz)
+        x_fw, x_bz = self.x_fw, self.x_bz
+        d_fw = self.d_fw[n]
+        d_bz = self.d_bz[n]
+        self.extended_boundary[n] = x_bz + extrapolation_length(d_bz)
         if self.l_fw_2[n] > 0:
             s_fw = np.sinh(x_fw / l_fw)
             c_fw = np.cosh(x_fw / l_fw)
@@ -348,17 +341,17 @@ class NeutronFluxProfile:
             c_fw = np.cos(x_fw / l_fw)
             t_fw = np.tan(x_fw / l_fw)
         if self.l_bz_2[n] > 0:
-            c_bz = np.cosh(self.extended_boundary_cm[n] / l_bz)
-            s_bz = np.sinh(self.extended_boundary_cm[n] / l_bz)
-            c_bz_mod = np.cosh((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            s_bz_mod = np.sinh((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            t_bz_mod = np.tanh((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            c_bz = np.cosh(self.extended_boundary[n] / l_bz)
+            s_bz = np.sinh(self.extended_boundary[n] / l_bz)
+            c_bz_mod = np.cosh((self.extended_boundary[n] - x_fw) / l_bz)
+            s_bz_mod = np.sinh((self.extended_boundary[n] - x_fw) / l_bz)
+            t_bz_mod = np.tanh((self.extended_boundary[n] - x_fw) / l_bz)
         else:
-            c_bz = np.cos(self.extended_boundary_cm[n] / l_bz)
-            s_bz = np.sin(self.extended_boundary_cm[n] / l_bz)
-            c_bz_mod = np.cos((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            s_bz_mod = np.sin((self.extended_boundary_cm[n] - x_fw) / l_bz)
-            t_bz_mod = np.tan((self.extended_boundary_cm[n] - x_fw) / l_bz)
+            c_bz = np.cos(self.extended_boundary[n] / l_bz)
+            s_bz = np.sin(self.extended_boundary[n] / l_bz)
+            c_bz_mod = np.cos((self.extended_boundary[n] - x_fw) / l_bz)
+            s_bz_mod = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
+            t_bz_mod = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
 
         fw_c_factor = - self.flux * (
             l_fw / d_fw 
@@ -387,7 +380,7 @@ class NeutronFluxProfile:
     def solve_group_n(self, n: int) -> None:
         """
         Solve the n-th group of neutron's diffusion equation, where n<=n_groups-1.
-        Store the solved constants in self.extended_boundary_cm[n-1], self.l_fw_2[n-1],
+        Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
         self.l_bz_2[n-1], and self.integration_constants[n-1].
 
         Parameters
@@ -417,27 +410,27 @@ class NeutronFluxProfile:
             # Parameter to be changed later, to allow solving non-down-scatter
             # only systems by iterating.
             first_iteration = True 
-        self.d_fw_cm[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
+        self.d_fw[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.avg_atomic_mass,
-            self.fw_mat.sigma_t_cm[n],
-            self.fw_mat.sigma_s_cm[n, n],
-            self.fw_mat.sigma_in_cm[n, n],
+            self.fw_mat.sigma_t[n],
+            self.fw_mat.sigma_s[n, n],
+            self.fw_mat.sigma_in[n, n],
         )
-        self.d_bz_cm[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
+        self.d_bz[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
             self.bz_mat.avg_atomic_mass,
-            self.bz_mat.sigma_t_cm[n],
-            self.bz_mat.sigma_s_cm[n, n],
-            self.bz_mat.sigma_in_cm[n, n],
+            self.bz_mat.sigma_t[n],
+            self.bz_mat.sigma_s[n, n],
+            self.bz_mat.sigma_in[n, n],
         )
-        self.extended_boundary_cm[n] = self.x_bz_cm + extrapolation_length(
-            self.d_bz_cm[n]
+        self.extended_boundary[n] = self.x_bz + extrapolation_length(
+            self.d_bz[n]
         )
 
         # Setting up aliases for shorter code
         l_fw_2, l_bz_2 = self.l_fw_2[n], self.l_bz_2[n]
-        d_fw, d_bz = self.d_fw_cm[n], self.d_bz_cm[n]
-        src_fw = self.fw_mat.sigma_s_cm + self.fw_mat.sigma_in_cm
-        src_bz = self.bz_mat.sigma_s_cm + self.bz_mat.sigma_in_cm
+        d_fw, d_bz = self.d_fw[n], self.d_bz[n]
+        src_fw = self.fw_mat.sigma_s + self.fw_mat.sigma_in
+        src_bz = self.bz_mat.sigma_s + self.bz_mat.sigma_in
 
         self.integration_constants[n] = IntegrationConstants([], [], [], [])
         for g in range(n):
@@ -486,21 +479,21 @@ class NeutronFluxProfile:
             _ic_n.bz_s[n] = input_vector[3]
 
         def _evaluate_fit():
-            flux_continuity = self.groupwise_neutron_flux_fw(n, self.x_fw_cm/100) - self.groupwise_neutron_flux_bz(n, self.x_fw_cm/100)
-            flux_at_boundary = self.groupwise_neutron_flux_bz(n, self.extended_boundary_cm[n])
-            current_continuity = self.groupwise_neutron_current_fw(n, self.x_fw_cm/100) - self.groupwise_neutron_current_bz(n, self.x_fw_cm/100)
+            flux_continuity = self.groupwise_neutron_flux_fw(n, self.x_fw) - self.groupwise_neutron_flux_bz(n, self.x_fw)
+            flux_at_boundary = self.groupwise_neutron_flux_bz(n, self.extended_boundary[n])
+            current_continuity = self.groupwise_neutron_current_fw(n, self.x_fw) - self.groupwise_neutron_current_bz(n, self.x_fw)
             influx_fw, influx_bz = 0.0, 0.0
             for g in range(self.n_groups):
                 if g>n and not first_iteration:
                     if not self.fw_mat.downscatter_only:
-                        influx_fw += (self.fw_mat.sigma_s_cm[g, n] + self.fw_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_fw(g)
+                        influx_fw += (self.fw_mat.sigma_s[g, n] + self.fw_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_fw(g)
                     if not self.bz_mat.downscatter_only:
-                        influx_bz += (self.bz_mat.sigma_s_cm[g, n] + self.bz_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_bz(g)
+                        influx_bz += (self.bz_mat.sigma_s[g, n] + self.bz_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_bz(g)
                 elif g<=n:
-                    influx_fw += (self.fw_mat.sigma_s_cm[g, n] + self.fw_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_fw(g)
-                    influx_bz += (self.bz_mat.sigma_s_cm[g, n] + self.bz_mat.sigma_in_cm[g, n]) * self.groupwise_integrated_flux_bz(g)
-            removal_fw = self.fw_mat.sigma_t_cm[n] * self.groupwise_integrated_flux_fw(n)
-            removal_bz = self.bz_mat.szsigma_t_cm[n] * self.groupwise_integrated_flux_bz(n)
+                    influx_fw += (self.fw_mat.sigma_s[g, n] + self.fw_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_fw(g)
+                    influx_bz += (self.bz_mat.sigma_s[g, n] + self.bz_mat.sigma_in[g, n]) * self.groupwise_integrated_flux_bz(g)
+            removal_fw = self.fw_mat.sigma_t[n] * self.groupwise_integrated_flux_fw(n)
+            removal_bz = self.bz_mat.sigma_t[n] * self.groupwise_integrated_flux_bz(n)
             # conservation_fw = influx_fw - removal_fw - current_fw2bz
             # conservation_bz = current_fw2bz + influx_bz - removal_bz - escaped_bz
             total_neutron_conservation = (
@@ -535,7 +528,7 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron flux[cm^-2 s^-1] of the n-th group at the first wall, at location x [m].
+        Neutron flux[m^-2 s^-1] of the n-th group at the first wall, at location x [m].
 
         Parameters
         ----------
@@ -554,8 +547,6 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        x_cm = x * 100
-
         trig_funcs = []
         for g in range(n + 1):
             if self.l_fw_2[g]>0:
@@ -564,15 +555,15 @@ class NeutronFluxProfile:
             else:
                 c, s = np.cos, np.sin
                 l_fw = np.sqrt(-self.l_fw_2[g])
-            trig_funcs.append(self.integration_constants[n].fw_c[g] * c(abs(x_cm) / l_fw))
-            trig_funcs.append(self.integration_constants[n].fw_s[g] * s(abs(x_cm) / l_fw))
+            trig_funcs.append(self.integration_constants[n].fw_c[g] * c(abs(x) / l_fw))
+            trig_funcs.append(self.integration_constants[n].fw_s[g] * s(abs(x) / l_fw))
         return np.sum(trig_funcs, axis=0)
 
     @summarize_values
     def groupwise_neutron_flux_bz(
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
-        """Neutron flux[cm^-2 s^-1] of the n-th groupat the blanket, at location x [m].
+        """Neutron flux[m^-2 s^-1] of the n-th groupat the blanket, at location x [m].
 
         Parameters
         ----------
@@ -591,8 +582,6 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
-        x_cm = x * 100
-
         trig_funcs = []
         for g in range(n + 1):
             if self.l_bz_2[g]>0:
@@ -601,8 +590,8 @@ class NeutronFluxProfile:
             else:
                 c, s = np.cos, np.sin
                 l_bz = np.sqrt(-self.l_bz_2[g])
-            trig_funcs.append(self.integration_constants[n].bz_c[g] * c(abs(x_cm) / l_bz))
-            trig_funcs.append(self.integration_constants[n].bz_s[g] * s(abs(x_cm) / l_bz))
+            trig_funcs.append(self.integration_constants[n].bz_c[g] * c(abs(x) / l_bz))
+            trig_funcs.append(self.integration_constants[n].bz_s[g] * s(abs(x) / l_bz))
         return np.sum(trig_funcs, axis=0)
 
     @summarize_values
@@ -610,8 +599,8 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron flux [cm^-2 s^-1] anywhere within the valid range of x,
-        i.e. [-self.extended_boundary_cm[n], self.extended_boundary_cm[n]].
+        Neutron flux [m^-2 s^-1] anywhere within the valid range of x,
+        i.e. [-self.extended_boundary[n], self.extended_boundary[n]].
 
         Parameters
         ----------
@@ -630,15 +619,15 @@ class NeutronFluxProfile:
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
         x = np.asarray(x)
-        in_fw = abs(x * 100) <= self.x_fw_cm
+        in_fw = abs(x) <= self.x_fw
         in_bz = np.logical_and(
-            self.x_fw_cm < abs(x * 100),
-            abs(x * 100) <= self.extended_boundary_cm[n],
+            self.x_fw < abs(x),
+            abs(x) <= self.extended_boundary[n],
         )
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated "
-                f"up to {self.extended_boundary_cm[n]} cm, which {x * 100} cm violates!"
+                f"up to {self.extended_boundary[n]} m, which {x} m violates!"
             )
 
         out_flux = np.zeros_like(x)
@@ -650,8 +639,8 @@ class NeutronFluxProfile:
     @summarize_values
     def groupwise_integrated_flux_fw(self, n: int) -> float:
         """
-        Calculate the integrated flux[cm s^-1], which can be mulitplied to any
-        macroscopic cross-section [cm^-1] to get the reaction rate [s^-1] in
+        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
+        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
         the first wall.
 
         Parameters
@@ -665,18 +654,18 @@ class NeutronFluxProfile:
             if self.l_fw_2[g]>0:
                 l_fw = np.sqrt(self.l_fw_2[g])
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_c[g] * np.sinh(self.x_fw_cm / l_fw)
+                    l_fw * self.integration_constants[n].fw_c[g] * np.sinh(self.x_fw / l_fw)
                 )
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_s[g] * (np.cosh(self.x_fw_cm / l_fw) - 1)
+                    l_fw * self.integration_constants[n].fw_s[g] * (np.cosh(self.x_fw / l_fw) - 1)
                 )
             else:
                 l_fw = np.sqrt(-self.l_fw_2[g])
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_c[g] * np.sin(self.x_fw_cm / l_fw)
+                    l_fw * self.integration_constants[n].fw_c[g] * np.sin(self.x_fw / l_fw)
                 )
                 integrals.append(
-                    l_fw * self.integration_constants[n].fw_s[g] * (1 - np.cos(self.x_fw_cm / l_fw))
+                    l_fw * self.integration_constants[n].fw_s[g] * (1 - np.cos(self.x_fw / l_fw))
                 )
 
         return np.sum(integrals, axis=0)
@@ -684,8 +673,8 @@ class NeutronFluxProfile:
     @summarize_values
     def groupwise_integrated_flux_bz(self, n: int) -> float:
         """
-        Calculate the integrated flux[cm s^-1], which can be mulitplied to any
-        macroscopic cross-section [cm^-1] to get the reaction rate [s^-1] in
+        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
+        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
         the blanket.
 
         Parameters
@@ -700,79 +689,77 @@ class NeutronFluxProfile:
                 l_bz = np.sqrt(self.l_bz_2[g])
                 integrals.append(
                     l_bz * self.integration_constants[n].bz_c[g] *
-                    (np.sinh(self.x_bz_cm / l_bz) - np.sinh(self.x_fw_cm / l_bz))
+                    (np.sinh(self.x_bz / l_bz) - np.sinh(self.x_fw / l_bz))
                 )
                 integrals.append(
                     l_bz * self.integration_constants[n].bz_s[g] *
-                    (np.cosh(self.x_bz_cm / l_bz) - np.cosh(self.x_fw_cm / l_bz))
+                    (np.cosh(self.x_bz / l_bz) - np.cosh(self.x_fw / l_bz))
                 )
             else:
                 l_bz = np.sqrt(-self.l_bz_2[g])
                 integrals.append(
                     l_bz * self.integration_constants[n].bz_c[g] *
-                    (np.sin(self.x_bz_cm / l_bz) - np.sin(self.x_fw_cm / l_bz))
+                    (np.sin(self.x_bz / l_bz) - np.sin(self.x_fw / l_bz))
                 )
                 integrals.append(
                     -l_bz * self.integration_constants[n].bz_s[g] *
-                    (np.cos(self.x_bz_cm / l_bz) - np.cos(self.x_fw_cm / l_bz))
+                    (np.cos(self.x_bz / l_bz) - np.cos(self.x_fw / l_bz))
                 )
         return np.sum(integrals, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_fw(self, n: int, x: float | npt.NDArray) -> float:
         """Get the neutron current (in the outward direction) in the fw"""
-        x_cm = x * 100
         differentials = []
         for g in range(n + 1):
             if self.l_fw_2[g]>0:
                 l_fw = np.sqrt(self.l_fw_2[g])
                 differentials.append(
-                    self.integration_constants[n].fw_c[g] / l_fw * np.sinh(x_cm / l_fw)
+                    self.integration_constants[n].fw_c[g] / l_fw * np.sinh(x / l_fw)
                 )
                 differentials.append(
-                    self.integration_constants[n].fw_s[g] / l_fw * np.cosh(x_cm / l_fw)
+                    self.integration_constants[n].fw_s[g] / l_fw * np.cosh(x / l_fw)
                 )
             else:
                 l_fw = np.sqrt(-self.l_fw_2[g])
                 differentials.append(
-                    - self.integration_constants[n].fw_c[g] / l_fw * np.sin(x_cm / l_fw)
+                    - self.integration_constants[n].fw_c[g] / l_fw * np.sin(x / l_fw)
                 )
                 differentials.append(
-                    self.integration_constants[n].fw_s[g] / l_fw * np.cos(x_cm / l_fw)
+                    self.integration_constants[n].fw_s[g] / l_fw * np.cos(x / l_fw)
                 )
-        return -self.d_fw_cm[n] * np.sum(differentials, axis=0)
+        return -self.d_fw[n] * np.sum(differentials, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_bz(self, n: int, x: float | npt.NDArray) -> float:
         """Get the neutron current (in the outward direction) in the bz."""
-        x_cm = x * 100
         differentials = []
         for g in range(n + 1):
             if self.l_bz_2[g]>0:
                 l_bz = np.sqrt(self.l_bz_2[g])
                 differentials.append(
-                    self.integration_constants[n].bz_c[g] / l_bz * np.sinh(x_cm / l_bz)
+                    self.integration_constants[n].bz_c[g] / l_bz * np.sinh(x / l_bz)
                 )
                 differentials.append(
-                    self.integration_constants[n].bz_s[g] / l_bz * np.cosh(x_cm / l_bz)
+                    self.integration_constants[n].bz_s[g] / l_bz * np.cosh(x / l_bz)
                 )
             else:
                 l_bz = np.sqrt(-self.l_bz_2[g])
                 differentials.append(
-                    - self.integration_constants[n].bz_c[g] / l_bz * np.sin(x_cm / l_bz)
+                    - self.integration_constants[n].bz_c[g] / l_bz * np.sin(x / l_bz)
                 )
                 differentials.append(
-                    self.integration_constants[n].bz_s[g] / l_bz * np.cos(x_cm / l_bz)
+                    self.integration_constants[n].bz_s[g] / l_bz * np.cos(x / l_bz)
                 )
-        return -self.d_bz_cm[n] * np.sum(differentials, axis=0)
+        return -self.d_bz[n] * np.sum(differentials, axis=0)
 
     @summarize_values
     def groupwise_neutron_current_at(
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron current [cm^-2 s^-1] anywhere within the valid range of x,
-        i.e. from -self.x_bz_cm to self.x_bz_cm.
+        Neutron current [m^-2 s^-1] anywhere within the valid range of x,
+        i.e. from -self.x_bz to self.x_bz.
 
         Parameters
         ----------
@@ -791,15 +778,15 @@ class NeutronFluxProfile:
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
         x = np.asarray(x)
-        in_fw = abs(x * 100) <= self.x_fw_cm
+        in_fw = abs(x) <= self.x_fw
         in_bz = np.logical_and(
-            self.x_fw_cm < abs(x * 100),
-            abs(x * 100) <= self.x_bz_cm,
+            self.x_fw < abs(x),
+            abs(x) <= self.x_bz,
         )
         if (~np.logical_or(in_fw, in_bz)).any():
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated "
-                f"up to {self.x_bz_cm} cm, which {x * 100} cm violates!"
+                f"up to {self.x_bz} m, which {x} m violates!"
             )
 
         out_current = np.zeros_like(x)
@@ -820,9 +807,9 @@ class NeutronFluxProfile:
         Returns
         -------
         :
-            current in cm^-2
+            current in m^-2
         """
-        return self.groupwise_neutron_current_bz(n, self.x_fw_cm/100)
+        return self.groupwise_neutron_current_bz(n, self.x_fw)
 
     @summarize_values
     def groupwise_neutron_current_escaped(self, n: int) -> float:
@@ -837,9 +824,9 @@ class NeutronFluxProfile:
         Returns
         -------
         :
-            current in cm^-2
+            current in m^-2
         """
-        return self.groupwise_neutron_current_bz(n, self.x_bz_cm/100)
+        return self.groupwise_neutron_current_bz(n, self.x_bz)
 
     def plot(
         self,
@@ -867,10 +854,10 @@ class NeutronFluxProfile:
         ax = ax or plt.axes()
 
         x_bz_left, x_fw, x_bz_right = _generate_x_range(
-            min(self.extended_boundary_cm.values()),
+            min(self.extended_boundary.values()),
             n_points,
             symmetric,
-            self.x_fw_cm,
+            self.x_fw,
         )
         ax.plot(
             x_bz_left,
@@ -896,10 +883,10 @@ class NeutronFluxProfile:
         if plot_groups:
             for n in range(self.n_groups):
                 x_bz_left, x_fw, x_bz_right = _generate_x_range(
-                    self.extended_boundary_cm[n],
+                    self.extended_boundary[n],
                     n_points,
                     symmetric,
-                    self.x_fw_cm,
+                    self.x_fw,
                 )
                 ax.plot(
                     x_bz_left,
@@ -924,36 +911,36 @@ class NeutronFluxProfile:
         ax.legend()
         ax.set_title("Neutron flux profile")
         ax.set_xlabel("Distance from the plasma-fw interface [m]")
-        ax.set_ylabel("Neutron flux [cm^-2 s^-1]")
+        ax.set_ylabel("Neutron flux [m^-2 s^-1]")
         return ax
 
 
 def _generate_x_range(
-    x_max_cm: float,
+    x_max: float,
     approx_n_points: int,
     symmetric: bool,
-    fw_bz_split_point_cm: float | None = None,
+    fw_bz_split_point: float | None = None,
 ):
     """Helper function for finding the range of x-values to be plotted.
 
     Parameters
     ----------
-    x_max_cm:
+    x_max:
         absolute value of the maximum x that we want to plot.
-        This is typically obtained by min(extended_boundary_cm), or
-        extended_boundary_cm[n] [cm]
+        This is typically obtained by min(extended_boundary), or
+        extended_boundary[n] [m]
     symmetric:
         Whether we want to plot the negative side of the x-axis as well, forming
         a symmetric plot.
     approx_n_points:
         number of points to be plotted.
-    fw_bz_split_point_cm:
+    fw_bz_split_point:
         FW and BZ region splits at this distance. If provided, we generate separate
-        x ranges for the FW and BZ. [cm]
+        x ranges for the FW and BZ. [m]
 
     Returns
     -------
-    if (fw_bz_split_point_cm, symmetric) = (float value, True):
+    if (fw_bz_split_point, symmetric) = (float value, True):
         x_range_bz_left:
             The array of x-values to be used for plotting the left (negative)
             side of bz. [m]
@@ -963,39 +950,37 @@ def _generate_x_range(
         x_range_bz_right:
             The array of x-values to be used for plotting the right (positive)
             side of bz. [m]
-    elif (fw_bz_split_point_cm, symmetric) = (float value, False):
+    elif (fw_bz_split_point, symmetric) = (float value, False):
         x_range_fw:
             The array of x-values to be used for plotting the right (positive)
             side of fw [m]
         x_range_bz:
             The array of x-values to be used for plotting the right (positive)
             side of bz [m]
-    elif (fw_bz_split_point_cm, symmetric) = (None, True):
+    elif (fw_bz_split_point, symmetric) = (None, True):
         x_range:
             The array of x-values to be used for plotting both sides of the
             neutron flux. [m]
-    else (fw_bz_split_point_cm, symmetric) = (None, False):
+    else (fw_bz_split_point, symmetric) = (None, False):
         x_range:
             The array of x-values to be used for plotting the right (positive)
             side neutron flux. [m]
     """
 
-    x_max = x_max_cm / 100
-    if fw_bz_split_point_cm is not None:
-        x_range = np.linspace(0, x_max_cm, approx_n_points)
-        n_points_fw = (x_range < fw_bz_split_point_cm).sum() + 1
-        n_points_bz = (x_range >= fw_bz_split_point_cm).sum() + 1
+    if fw_bz_split_point is not None:
+        x_range = np.linspace(0, x_max, approx_n_points)
+        n_points_fw = (x_range < fw_bz_split_point).sum() + 1
+        n_points_bz = (x_range >= fw_bz_split_point).sum() + 1
 
-        split_point = fw_bz_split_point_cm / 100
         if symmetric:
             return (
-                np.linspace(-x_max, -split_point, n_points_bz),
-                np.linspace(-split_point, split_point, n_points_fw * 2 - 1),
-                np.linspace(split_point, x_max, n_points_bz),
+                np.linspace(-x_max, -fw_bz_split_point, n_points_bz),
+                np.linspace(-fw_bz_split_point, fw_bz_split_point, n_points_fw * 2 - 1),
+                np.linspace(fw_bz_split_point, x_max, n_points_bz),
             )
         return (
-            np.linspace(0, split_point, n_points_fw),
-            np.linspace(split_point, x_max, n_points_bz),
+            np.linspace(0, fw_bz_split_point, n_points_fw),
+            np.linspace(fw_bz_split_point, x_max, n_points_bz),
         )
 
     if symmetric:
