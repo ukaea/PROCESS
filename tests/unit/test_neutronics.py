@@ -59,36 +59,35 @@ def test_has_local_fluxes():
     """Test that the groupwise decorator has worked on the local fluxes methods."""
     assert hasattr(NeutronFluxProfile, "neutron_flux_at")
     assert hasattr(NeutronFluxProfile, "groupwise_neutron_flux_at")
-    assert hasattr(NeutronFluxProfile, "neutron_flux_fw")
-    assert hasattr(NeutronFluxProfile, "groupwise_neutron_flux_fw")
-    assert hasattr(NeutronFluxProfile, "neutron_flux_bz")
-    assert hasattr(NeutronFluxProfile, "groupwise_neutron_flux_bz")
+    assert hasattr(NeutronFluxProfile, "neutron_flux_in_layer")
+    assert hasattr(NeutronFluxProfile, "groupwise_neutron_flux_in_layer")
 
 
 def test_has_boundary_current():
     """Test that the groupwise decorator has worked on the boundary fluxes methods."""
-    assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_fw2bz")
-    assert hasattr(NeutronFluxProfile, "neutron_current_fw2bz")
+    assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_through_interface")
+    assert hasattr(NeutronFluxProfile, "neutron_current_through_interface")
     assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_escaped")
     assert hasattr(NeutronFluxProfile, "neutron_current_escaped")
 
 
 def test_has_reactions():
     """Test that the groupwise decorator has worked on the reactions methods."""
-    assert hasattr(NeutronFluxProfile, "groupwise_integrated_flux_fw")
-    assert hasattr(NeutronFluxProfile, "integrated_flux_fw")
-    assert hasattr(NeutronFluxProfile, "groupwise_integrated_flux_bz")
-    assert hasattr(NeutronFluxProfile, "integrated_flux_bz")
+    assert hasattr(NeutronFluxProfile, "groupwise_integrated_flux_in_layer")
+    assert hasattr(NeutronFluxProfile, "integrated_flux_in_layer")
 
+
+def test_has_plot():
+    assert hasattr(NeutronFluxProfile, "plot")
 
 def test_three_group():
     # 1. No negative flux
     dummy = [10000, 1000, 100, 1]
     # fw_mat = MaterialMacroInfo()
     bz_mat = MaterialMacroInfo
-    # 2. same L_1 and L_3 shoudl yield coefficients[2].fw_c[0] and
-    # coefficients[2].fw_s[0] = 0.0
-    # self.l_fw_2 == self.l_fw_2[n] case.
+    # 2. same L_1 and L_3 shoudl yield coefficients[0][2].c[0] and
+    # coefficients[0][2].s[0] = 0.0
+    # self.l2[0][n] == self.l2[1][n] case.
     #
 
 
