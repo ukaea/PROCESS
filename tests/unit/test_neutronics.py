@@ -86,8 +86,8 @@ def test_three_group():
     dummy = [10000, 1000, 100, 1]
     # fw_mat = MaterialMacroInfo()
     bz_mat = MaterialMacroInfo
-    # 2. same L_1 and L_3 shoudl yield integration_constants[2].fw_c[0] and
-    # integration_constants[2].fw_s[0] = 0.0
+    # 2. same L_1 and L_3 shoudl yield coefficients[2].fw_c[0] and
+    # coefficients[2].fw_s[0] = 0.0
     # self.l_fw_2 == self.l_fw_2[n] case.
     #
 
