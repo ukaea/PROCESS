@@ -137,10 +137,15 @@ class Coefficients:
     group n=1 has cosh(x/L[0]), sinh(x/L[0]), cosh(x/L[1]) and sinh(x/L[1]),
     etc.
     To get the neutron flux, each trig func has to be scaled by a coeffient.
-    E.g.
-    group n=0: fw: fw_c[0][0] * cosh(x/L[0]) + fw_s[0][0] * sinh(x/L[0])
-    group n=1: fw: fw_c[1][0] * cosh(x/L[0]) + fw_c[1][1] * cosh(x/L[1])
-                + fw_s[1][0] * sinh(x/L[0]) + fw_s[1][1] * sinh(x/L[1])
+    E.g. Let's say for the first wall, which is num_layer=0,
+    group n=0: NeutronFluxProfile.coefficients[0][0] = Coefficients(...)
+        fw_grp0 = NeutronFluxProfile.coefficients[0][0]
+        flux = fw_grp0.c[0] * cosh(x/L[0]) + fw_grp0.s[0] * sinh(x/L[0])
+    
+    group n=1: NeutronFluxProfile.coefficients[0][1] = Coefficients(...)
+        fw_grp1 = NeutronFluxProfile.coefficients[0][1]
+        flux = fw_grp1.c[0] * cosh(x/L[0]) + fw_grp1.c[1] * cosh(x/L[1])
+                + fw_grp1.s[0] * sinh(x/L[0]) + fw_grp1.s[1] * sinh(x/L[1])
 
     """
 
@@ -219,12 +224,18 @@ class AutoPopulatingDict:
 
 
 class NeutronFluxProfile:
-    """Neutron flux in the first wall or the blanket."""
+    """
+    Calculate the neutron flux, neutron current, and neutron heating in the
+    mirrored infinite-slab model, where each layer extend infinitely in y- and
+    z-directions, but has finite width in the x-direction. Each layer's
+    thickness is defined along the positive x-axis starting at 0, and then
+    reflected along x=0 to fill out the negative x-axis.
+    """
 
     def __init__(
         self,
         flux: float,
-        interface_x: npt.NDArray[np.float64],
+        layer_x: npt.NDArray[np.float64],
         materials: Iterable[MaterialMacroInfo],
     ):
         """Initialize a particular FW-BZ geometry and neutron flux.
@@ -234,19 +245,24 @@ class NeutronFluxProfile:
         flux:
             Nuetron flux directly emitted by the plasma, incident on the first wall.
             unit: m^-2 s^-1
-        interface_x:
-            The x-coordinates of every interface between layers. For n_layers,
-            there will be n_layers - 1 interfaces between layers, plus the
-            interface between the final layer and the void into which neutrons
-            are lost.
-            E.g. interface_x[0] is the thickness of the first wall,
-            interface_x[1] is the thickness of the first wall + breeding zone,
+        layer_x:
+            The x-coordinates of the right side of every layers. By definition,
+            the plasma is situated at x=0, so all values in layer_x must be >0.
+            E.g. layer_x[0] is the thickness of the first wall,
+            layer_x[1] is the thickness of the first wall + breeding zone,
             etc.
         materials:
             Every layer's material information.
 
         Attributes
         ----------
+        interface_x:
+            The x-coordinates of every plasma-layer interfaces/ layer-layer
+            interface/ layer-void interface. For n_layers,
+            there will be the interface between the first layer and the plasma,
+            plus (n_layers - 1) interfaces between layers, plus the interface
+            between the final layer and the void into which neutrons are lost.
+            E.g. interface_x[0] = 0.0 = the plasma-fw interface.
         n_layers:
             Number of layers
         n_groups:
@@ -265,23 +281,27 @@ class NeutronFluxProfile:
             Diffusion coefficient of each layer. unit: [m]
         extended_boundary:
             Extended boundary for each group. These values should be larger
-            than interface_x[-1].
+            than layer_x[-1].
         """
         # flux incident on the first wall at the highest energy.
         self.flux = flux
 
         # layers
-        self.interface_x = np.array(interface_x).ravel()
-        if not (np.diff(self.interface_x)>0).all():
+        self.layer_x = np.array(layer_x).ravel()
+        if not (np.diff(self.layer_x)>0).all():
             raise ValueError(
                 f"Model cannot have non-positive layer thicknesses."
             )
+
+        self.layer_x.flag.writeable = False
+        self.interface_x = np.array([0.0, *self.layer_x])
         self.interface_x.flag.writeable = False
+
         self.materials = tuple(materials)
-        if len(self.interface_x) != len(self.materials):
+        if len(self.layer_x) != len(self.materials):
             raise ProcessValidationError(
                 "The number of layers specified by self.materials must match "
-                "the number of x-positions specified by interface_x."
+                "the number of x-positions specified by layer_x."
             )
         self.n_layers = len(self.materials)
 
@@ -335,12 +355,12 @@ class NeutronFluxProfile:
                 mat.sigma_s[n, n],
                 mat.sigma_in[n, n],
             )
-        self.extended_boundary[n] = self.interface_x[-1] + extrapolation_length(
+        self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
             self.diffusion_const[-1][n]
         )
         if self.n_layers == 2:
             l_fw, l_bz = np.sqrt(abs(self.l2[0][n])), np.sqrt(abs(self.l2[1][n]))
-            x_fw, = self.interface_x[:-1]
+            x_fw, = self.layer_x[:-1]
             d_fw, d_bz = self.diffusion_const[0][n], self.diffusion_const[1][n]
             if self.l2[0][n] > 0:
                 s_fw = np.sinh(x_fw / l_fw)
@@ -425,7 +445,7 @@ class NeutronFluxProfile:
                 mat.sigma_s[n, n],
                 mat.sigma_in[n, n],
             )
-        self.extended_boundary[n] = self.interface_x[-1] + extrapolation_length(
+        self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
             self.diffusion_const[-1][n]
         )
 
@@ -498,7 +518,7 @@ class NeutronFluxProfile:
 
             # enforce continuity conditions
             for num_layer in range(self.n_layers - 1):
-                x = self.interface_x[num_layer]
+                x = self.layer_x[num_layer]
                 flux_continuity = self.groupwise_neutron_flux_in_layer(n, num_layer, x) - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
                 current_continuity = self.groupwise_neutron_current_in_layer(n, num_layer, x) - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
             conditions.append(flux_continuity)
@@ -566,24 +586,19 @@ class NeutronFluxProfile:
             Neutron group index. n <= n_groups - 1.
             Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
         x:
-            The depth where we want the neutron flux [m].
-            Valid only between x= -extended boundary to +-extended boundary of that group
-
-        Raises
-        ------
-        ValueError
-            The inputted x
+            The depth where we want the neutron flux [m]. Out-of-bounds x would
+            be clipped back to bound.
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.clip(np.asarray(x), -self.interface_x[-1], self.interface_x[-1])
+        x = np.clip(np.asarray(x), -self.layer_x[-1], self.layer_x[-1])
 
         out_flux = np.zeros_like(x)
         abs_x = abs(x)
-        x_cutoffs = [0, *self.interface_x]
-        x_cutoffs[-1] = np.nextafter(x_cutoffs[-1], np.inf)
-        for num_layer, (lower_x, upper_x) in enumerate(pairwise(x_cutoffs)):
+        for num_layer, (xmin, xmax) in enumerate(pairwise(self.interface_x)):
             in_layer = lower_x <= abs_x < upper_x
+            if num_layer==(self.n_layers-1):
+                in_layer = lower_x <= abs_x <= upper_x
             if in_layer.any():
                 out_flux[in_layer] = self.groupwise_neutron_flux_in_layer(
                     n, num_layer, x[in_layer]
@@ -610,10 +625,10 @@ class NeutronFluxProfile:
         """
         integrals = []
         # set integration limits
-        x_start = self.interface_x[num_layer-1]
+        x_start = self.layer_x[num_layer-1]
         if num_layer==0:
             x_start = 0.0
-        x_end = self.interface_x[num_layer]
+        x_end = self.layer_x[num_layer]
 
         for g in range(n + 1):
             l2g = self.l2[num_layer][g]
@@ -656,7 +671,6 @@ class NeutronFluxProfile:
             The index of the layer that we want to get the neutron flux for.
         x:
             The depth where we want the neutron flux [m].
-            Valid only between x= -extended boundary to +-extended boundary of that group
         """
         differentials = []
         for g in range(n + 1):
@@ -701,24 +715,19 @@ class NeutronFluxProfile:
             Neutron group index. n <= n_groups - 1.
             Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
         x:
-            The depth where we want the neutron flux [m].
-            Valid only between x= -extended boundary to +-extended boundary of that group
-
-        Raises
-        ------
-        ValueError
-            The inputted x
+            The depth where we want the neutron current [m]. Out-of-bounds x
+            would be clipped back to bound.
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.clip(np.asarray(x), -self.interface_x[-1], self.interface_x[-1])
+        x = np.clip(np.asarray(x), -self.layer_x[-1], self.layer_x[-1])
 
         current = np.zeros_like(x)
         abs_x = abs(x)
-        x_cutoffs = [0, *self.interface_x]
-        x_cutoffs[-1] = np.nextafter(x_cutoffs[-1], np.inf)
-        for num_layer, (lower_x, upper_x) in enumerate(pairwise(x_cutoffs)):
+        for num_layer, (xmin, xmax) in enumerate(pairwise(self.interface_x)):
             in_layer = lower_x <= abs_x < upper_x
+            if num_layer==(self.n_layers-1):
+                in_layer = lower_x <= abs_x <= upper_x
             if in_layer.any():
                 current[in_layer] = self.groupwise_neutron_current_in_layer(
                     n, num_layer, x[in_layer]
@@ -726,21 +735,29 @@ class NeutronFluxProfile:
         return current
 
     @summarize_values
-    def groupwise_neutron_current_fw2bz(self, n: int) -> float:
+    def groupwise_neutron_current_through_interface(self, n: int, n_interface: int, calculate_by_inner_layer : bool=True) -> float:
         """
-        Net current from the first wall to breeding zone.
+        Net current from left to right on the positive side of the model, at
+        the specified interface number.
+
         Parameters
         ----------
         n:
             The index of the neutron group that we want the current for. n <= n_groups - 1.
             Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
+        n_interface:
+            The index of the interface that we want the net neutron current
+            through for.
 
         Returns
         -------
         :
             current in m^-2
         """
-        return self.groupwise_neutron_current_bz(n, self.x_fw)
+        if calculate_by_inner_layer:
+            return self.groupwise_neutron_current_in_layer(n, n_interface, self.interface_x[n_interface])
+        else:
+            return self.groupwise_neutron_current_in_layer(n, n_interface, self.interface_x[n_interface])
 
     @summarize_values
     def groupwise_neutron_current_escaped(self, n: int) -> float:
@@ -757,7 +774,7 @@ class NeutronFluxProfile:
         :
             current in m^-2
         """
-        return self.groupwise_neutron_current_bz(n, self.x_bz)
+        return self.groupwise_neutron_current_through_interface(n, self.n_layers, True)
 
     def plot_flux(
         self,
