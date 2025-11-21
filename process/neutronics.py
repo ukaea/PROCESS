@@ -735,7 +735,7 @@ class NeutronFluxProfile:
         return current
 
     @summarize_values
-    def groupwise_neutron_current_through_interface(self, n: int, n_interface: int, calculate_by_inner_layer : bool=True) -> float:
+    def groupwise_neutron_current_through_interface(self, n: int, n_interface: int, default_to_inner_layer : bool=True) -> float:
         """
         Net current from left to right on the positive side of the model, at
         the specified interface number.
@@ -748,16 +748,27 @@ class NeutronFluxProfile:
         n_interface:
             The index of the interface that we want the net neutron current
             through for.
+            E.g. for n_interface=0, that would be getting the current at the
+            plasma-fw interface. For n_interface=n_layers, that would be
+            getting the neutron current leaking from the final layer into the void.
 
         Returns
         -------
         :
             current in m^-2
         """
-        if calculate_by_inner_layer:
-            return self.groupwise_neutron_current_in_layer(n, n_interface, self.interface_x[n_interface])
+        x = self.interface_x[n_interface]
+
+        if default_to_inner_layer:
+            if n_interface==0:
+                return self.groupwise_neutron_current_in_layer(n, 0, x)
+            return self.groupwise_neutron_current_in_layer(n, n_interface-1, x)
         else:
-            return self.groupwise_neutron_current_in_layer(n, n_interface, self.interface_x[n_interface])
+            if n_interface==self.n_layers:
+                return self.groupwise_neutron_current_in_layer(
+                    n, self.n_layers-1, x
+                )
+            return self.groupwise_neutron_current_in_layer(n, n_interface, x)
 
     @summarize_values
     def groupwise_neutron_current_escaped(self, n: int) -> float:
@@ -774,9 +785,9 @@ class NeutronFluxProfile:
         :
             current in m^-2
         """
-        return self.groupwise_neutron_current_through_interface(n, self.n_layers, True)
+        return self.groupwise_neutron_current_through_interface(n, self.n_layers)
 
-    def plot_flux(
+    def plot(
         self,
         ax: plt.Axes | None = None,
         n_points: int = 100,
