@@ -293,9 +293,9 @@ class NeutronFluxProfile:
                 f"Model cannot have non-positive layer thicknesses."
             )
 
-        self.layer_x.flag.writeable = False
+        self.layer_x.flags.writeable = False
         self.interface_x = np.array([0.0, *self.layer_x])
-        self.interface_x.flag.writeable = False
+        self.interface_x.flags.writeable = False
 
         self.materials = tuple(materials)
         if len(self.layer_x) != len(self.materials):
@@ -596,9 +596,9 @@ class NeutronFluxProfile:
         out_flux = np.zeros_like(x)
         abs_x = abs(x)
         for num_layer, (xmin, xmax) in enumerate(pairwise(self.interface_x)):
-            in_layer = lower_x <= abs_x < upper_x
+            in_layer = xmin <= abs_x < xmax
             if num_layer==(self.n_layers-1):
-                in_layer = lower_x <= abs_x <= upper_x
+                in_layer = xmin <= abs_x <= xmax
             if in_layer.any():
                 out_flux[in_layer] = self.groupwise_neutron_flux_in_layer(
                     n, num_layer, x[in_layer]
@@ -725,9 +725,9 @@ class NeutronFluxProfile:
         current = np.zeros_like(x)
         abs_x = abs(x)
         for num_layer, (xmin, xmax) in enumerate(pairwise(self.interface_x)):
-            in_layer = lower_x <= abs_x < upper_x
+            in_layer = xmin <= abs_x < xmax
             if num_layer==(self.n_layers-1):
-                in_layer = lower_x <= abs_x <= upper_x
+                in_layer = xmin <= abs_x <= xmax
             if in_layer.any():
                 current[in_layer] = self.groupwise_neutron_current_in_layer(
                     n, num_layer, x[in_layer]
@@ -735,7 +735,9 @@ class NeutronFluxProfile:
         return current
 
     @summarize_values
-    def groupwise_neutron_current_through_interface(self, n: int, n_interface: int, default_to_inner_layer : bool=True) -> float:
+    def groupwise_neutron_current_through_interface(
+        self, n: int, n_interface: int, default_to_inner_layer : bool=True
+    ) -> float:
         """
         Net current from left to right on the positive side of the model, at
         the specified interface number.
@@ -785,7 +787,9 @@ class NeutronFluxProfile:
         :
             current in m^-2
         """
-        return self.groupwise_neutron_current_through_interface(n, self.n_layers)
+        return self.groupwise_neutron_current_through_interface(
+            n, self.n_layers
+        )
 
     def plot(
         self,
