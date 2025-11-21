@@ -9,7 +9,6 @@ from scipy.constants import Avogadro
 
 from process.exceptions import ProcessValidationError
 
-BARNS_TO_CM2 = 1e-24
 BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 N2N_Q_VALUE = ...
