@@ -557,8 +557,8 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron flux [m^-2 s^-1] anywhere within the valid range of x,
-        i.e. [-self.extended_boundary[n], self.extended_boundary[n]].
+        Neutron flux [m^-2 s^-1] anywhere. Neutron flux is assumed to be
+        unperturbed once it leaves the final layer.
 
         Parameters
         ----------
@@ -576,18 +576,13 @@ class NeutronFluxProfile:
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.asarray(x)
-        if not all(-self.extended_boundary[n]<=x<=self.extended_boundary[n]):
-            raise ValueError(
-                f"for neutron group {n}, neutron flux can only be calculated "
-                f"up to {self.extended_boundary[n]} m, which {x} m violates!"
-            )
+        x = np.clip(np.asarray(x), -self.interface_x[-1], self.interface_x[-1])
 
         out_flux = np.zeros_like(x)
         abs_x = abs(x)
-        extended_interface_x = [0, *self.interface_x]
-        extended_interface_x[-1] = np.nextafter(self.extended_boundary[n], np.inf)
-        for num_layer, (lower_x, upper_x) in enumerate(pairwise(extended_interface_x)):
+        x_cutoffs = [0, *self.interface_x]
+        x_cutoffs[-1] = np.nextafter(x_cutoffs[-1], np.inf)
+        for num_layer, (lower_x, upper_x) in enumerate(pairwise(x_cutoffs)):
             in_layer = lower_x <= abs_x < upper_x
             if in_layer.any():
                 out_flux[in_layer] = self.groupwise_neutron_flux_in_layer(
@@ -697,8 +692,8 @@ class NeutronFluxProfile:
         self, n: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron current [m^-2 s^-1] anywhere within the valid range of x,
-        i.e. from -self.x_bz to self.x_bz.
+        Neutron current [m^-2 s^-1]. Neutron current is assumed to be
+        unperturbed once it leaves the final layer.
 
         Parameters
         ----------
@@ -716,18 +711,13 @@ class NeutronFluxProfile:
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.asarray(x)
-        if not all(-self.extended_boundary[n]<=x<=self.extended_boundary[n]):
-            raise ValueError(
-                f"for neutron group {n}, neutron current can only be calculated"
-                f" up to {self.extended_boundary[n]} m, which {x} m violates!"
-            )
+        x = np.clip(np.asarray(x), -self.interface_x[-1], self.interface_x[-1])
 
         current = np.zeros_like(x)
         abs_x = abs(x)
-        extended_interface_x = [0, *self.interface_x]
-        extended_interface_x[-1] = np.nextafter(self.extended_boundary[n], np.inf)
-        for num_layer, (lower_x, upper_x) in enumerate(pairwise(extended_interface_x)):
+        x_cutoffs = [0, *self.interface_x]
+        x_cutoffs[-1] = np.nextafter(x_cutoffs[-1], np.inf)
+        for num_layer, (lower_x, upper_x) in enumerate(pairwise(x_cutoffs)):
             in_layer = lower_x <= abs_x < upper_x
             if in_layer.any():
                 current[in_layer] = self.groupwise_neutron_current_in_layer(
@@ -798,7 +788,7 @@ class NeutronFluxProfile:
         ax = ax or plt.axes()
 
         x_bz_left, x_fw, x_bz_right = _generate_x_range(
-            min(self.extended_boundary.values()),
+            max(self.extended_boundary.values()),
             n_points,
             symmetric,
             self.x_fw,
@@ -870,8 +860,6 @@ def _generate_x_range(
     ----------
     x_max:
         absolute value of the maximum x that we want to plot.
-        This is typically obtained by min(extended_boundary), or
-        extended_boundary[n] [m]
     symmetric:
         Whether we want to plot the negative side of the x-axis as well, forming
         a symmetric plot.
