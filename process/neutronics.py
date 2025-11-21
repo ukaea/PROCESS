@@ -5,6 +5,7 @@ ISBN:9780471223634.
 
 import functools
 import inspect
+from itertools import pairwise
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass
 
@@ -96,7 +97,7 @@ def get_diffusion_coefficient_and_length(
 
     Returns
     -------
-    diffusion_coef:
+    diffusion_const:
         The diffusion coefficient as given by Reactor Analysis, Duderstadt and Hamilton.
         unit: [m]
     diffusion_len_2:
@@ -106,14 +107,14 @@ def get_diffusion_coefficient_and_length(
     """
 
     transport_xs = total_xs - 2 / (3 * avg_atomic_mass) * scattering_xs
-    diffusion_coef = 1 / 3 / transport_xs
-    diffusion_len_2 = diffusion_coef / (
+    diffusion_const = 1 / 3 / transport_xs
+    diffusion_len_2 = diffusion_const / (
         total_xs - scattering_xs - in_source_xs
     )
-    return diffusion_coef, diffusion_len_2
+    return diffusion_const, diffusion_len_2
 
 
-def extrapolation_length(diffusion_coefficient: float) -> float:
+def extrapolation_length(diffusion_constficient: float) -> float:
     """Get the extrapolation length of the final medium :math:`\\delta`.
 
     Notes
@@ -125,7 +126,7 @@ def extrapolation_length(diffusion_coefficient: float) -> float:
     THis yields a very close approximation. All of this equation is provided by
     Duderstadt and Hamilton.
     """
-    return 0.7104 * 3 * diffusion_coefficient
+    return 0.7104 * 3 * diffusion_constficient
 
 
 @dataclass
@@ -143,10 +144,8 @@ class Coefficients:
 
     """
 
-    fw_c: Iterable[float]
-    fw_s: Iterable[float]
-    bz_c: Iterable[float]
-    bz_s: Iterable[float]
+    c: Iterable[float]
+    s: Iterable[float]
 
     def validate_length(self, exp_len: int, parent_name: str):
         """Validate that all fields has the correct length."""
@@ -216,7 +215,7 @@ class AutoPopulatingDict:
         return self._dict.values()
 
     def __repr__(self):
-        return f"AutoPopulatingDict{self._dict}"
+        return f"AutoPopulatingDict({self.name}):{self._dict}"
 
 
 class NeutronFluxProfile:
@@ -225,10 +224,8 @@ class NeutronFluxProfile:
     def __init__(
         self,
         flux: float,
-        x_fw: float,
-        x_bz: float,
-        fw_mat: MaterialMacroInfo,
-        bz_mat: MaterialMacroInfo,
+        interface_x: npt.NDArray[np.float64],
+        materials: Iterable[MaterialMacroInfo],
     ):
         """Initialize a particular FW-BZ geometry and neutron flux.
 
@@ -237,72 +234,86 @@ class NeutronFluxProfile:
         flux:
             Nuetron flux directly emitted by the plasma, incident on the first wall.
             unit: m^-2 s^-1
-        x_fw:
-            thickness of the first wall [m].
-        x_bz:
-            thickness of the blanket + first-wall [m].
-        fw_mat:
-            first wall material information
-        bz_mat:
-            blanket material information
+        interface_x:
+            The x-coordinates of every interface between layers. For n_layers,
+            there will be n_layers - 1 interfaces between layers, plus the
+            interface between the final layer and the void into which neutrons
+            are lost.
+            E.g. interface_x[0] is the thickness of the first wall,
+            interface_x[1] is the thickness of the first wall + breeding zone,
+            etc.
+        materials:
+            Every layer's material information.
 
         Attributes
         ----------
-        fw_mat:
-            first wall material information
-        bz_mat:
-            blanket material information
+        n_layers:
+            Number of layers
         n_groups:
-            number of groups in the group structure
+            Number of groups in the group structure
         group_structure:
-            energy bin edges, 1D array of len = n_groups+1
+            Energy bin edges, 1D array of len = n_groups+1
 
         coefficients:
-            Coefficients that determine the flux shape (and therefore
-            reaction rates and neutron current) of each group. A set of four
-            constants, two for fw and two for bz; each with unit: [m^-2 s^-1]
-        l_fw_2:
-            square of the characteristic diffusion length as given by Reactor Analysis,
-            Duderstadt and Hamilton, applied to the fw. unit: [m^2]
-        l_bz_2:
-            square of the characteristic diffusion length as given by Reactor Analysis,
-            Duderstadt and Hamilton, applied to the bz. unit: [m^2]
-        d_fw:
-            diffusion constants in the fw. unit: [m]
-        d_bz:
-            diffusion constants in the bz. unit: [m]
+            Coefficients that determine the flux shape (and therefore reaction
+            rates, neutron current, etc.) of each group. Each coefficient has
+            unit: [m^-2 s^-1]
+        l2:
+            Square of the characteristic diffusion length of each layer as
+            given by Reactor Analysis, Duderstadt and Hamilton. unit: [m^2]
+        diffusion_const:
+            Diffusion coefficient of each layer. unit: [m]
         extended_boundary:
-            extended boundary (outside the bz) for each group.
-            This value should be larger than x_bz for each of them.
+            Extended boundary for each group. These values should be larger
+            than interface_x[-1].
         """
-        self.flux = flux  # flux incident on the first wall.
-        if not (0 < x_fw < x_bz):
-            raise ValueError(
-                f"Cannot construct a first-wall+blanket module where{x_fw=}, {x_bz=}."
-            )
-        self.x_fw, self.x_bz = x_fw, x_bz
-        self.fw_mat = fw_mat
-        self.bz_mat = bz_mat
-        self.n_groups = self.fw_mat.n_groups
-        self.group_structure = self.fw_mat.group_structure
-        if not np.allclose(
-            self.fw_mat.group_structure,
-            self.bz_mat.group_structure,
-            atol=0,
-        ):
-            raise ProcessValidationError(
-                "The first-wall material info and breeding zone material info"
-                "must have the same group structure!"
-            )
+        # flux incident on the first wall at the highest energy.
+        self.flux = flux
 
-        self.coefficients = AutoPopulatingDict(
-            self.solve_group_n, "coefficients"
-        )
+        # layers
+        self.interface_x = np.array(interface_x).ravel()
+        if not (np.diff(self.interface_x)>0).all():
+            raise ValueError(
+                f"Model cannot have non-positive layer thicknesses."
+            )
+        self.interface_x.flag.writeable = False
+        self.materials = tuple(materials)
+        if len(self.interface_x) != len(self.materials):
+            raise ProcessValidationError(
+                "The number of layers specified by self.materials must match "
+                "the number of x-positions specified by interface_x."
+            )
+        self.n_layers = len(self.materials)
+
+        # groups
+        fw_mat = self.materials[0]
+        for mat in self.materials[1:]:
+            if not np.allclose(
+                fw_mat.group_structure, mat.group_structure, atol=0,
+            ):
+                raise ProcessValidationError(
+                    "All material info must have the same group structure!"
+                )
+        self.n_groups = fw_mat.n_groups
+        self.group_structure = fw_mat.group_structure
+
+        trig_coefs, l2, d_coef = [], [], []
+        for num_layer, mat in enumerate(self.materials):
+            c_name = f"Coefficients for layer {num_layer}"
+            l_name = f"characteristic diffusion length for layer {num_layer}"
+            d_name = f"Diffusion coefficient D for layer {num_layer}"
+            if mat.name:
+                c_name += f":{mat.name}"
+                l_name += f":{mat.name}"
+                d_name += f":{mat.name}"
+            trig_coefs.append(AutoPopulatingDict(self.solve_group_n, c_name))
+            l2.append(AutoPopulatingDict(self.solve_group_n, l_name))
+            d_coef.append(AutoPopulatingDict(self.solve_group_n, d_name))
+
+        self.coefficients = tuple(trig_coefs)
+        self.l2 = tuple(l2)
+        self.diffusion_const = tuple(d_coef)
         # diffusion lengths squared
-        self.l_fw_2 = AutoPopulatingDict(self.solve_group_n, "l_fw_2")
-        self.l_bz_2 = AutoPopulatingDict(self.solve_group_n, "l_bz_2")
-        self.d_fw = AutoPopulatingDict(self.solve_group_n, "d_fw")
-        self.d_bz = AutoPopulatingDict(self.solve_group_n, "d_bz")
         self.extended_boundary = AutoPopulatingDict(
             self.solve_group_n, "extended_boundary"
         )
@@ -310,79 +321,76 @@ class NeutronFluxProfile:
     def solve_lowest_group(self) -> None:
         """
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
-        Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
-        self.l_bz_2[0], and self.coefficients[0].
-        coefficients have units of [m^-2 s^-1].
+        Store the solved constants in self.extended_boundary[0], self.l2[*][0],
+        and self.coefficients[*][0].
+        self.coefficients each have units of [m^-2 s^-1].
         """
         n = 0
-        if n in self.coefficients:
+        if all(n in layer_coefs for layer_coefs in self.coefficients):
             return  # skip if it has already been solved.
-        self.d_fw[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
-            self.fw_mat.avg_atomic_mass,
-            self.fw_mat.sigma_t[n],
-            self.fw_mat.sigma_s[n, n],
-            self.fw_mat.sigma_in[n, n],
+        for num_layer, mat in enumerate(self.materials):
+            self.diffusion_const[num_layer][n], self.l2[num_layer][n] = get_diffusion_coefficient_and_length(
+                mat.avg_atomic_mass,
+                mat.sigma_t[n],
+                mat.sigma_s[n, n],
+                mat.sigma_in[n, n],
+            )
+        self.extended_boundary[n] = self.interface_x[-1] + extrapolation_length(
+            self.diffusion_const[-1][n]
         )
-        self.d_bz[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
-            self.bz_mat.avg_atomic_mass,
-            self.bz_mat.sigma_t[n],
-            self.bz_mat.sigma_s[n, n],
-            self.bz_mat.sigma_in[n, n],
-        )
-        l_fw = np.sqrt(abs(self.l_fw_2[n]))
-        l_bz = np.sqrt(abs(self.l_bz_2[n]))
-        x_fw, x_bz = self.x_fw, self.x_bz
-        d_fw = self.d_fw[n]
-        d_bz = self.d_bz[n]
-        self.extended_boundary[n] = x_bz + extrapolation_length(d_bz)
-        if self.l_fw_2[n] > 0:
-            s_fw = np.sinh(x_fw / l_fw)
-            c_fw = np.cosh(x_fw / l_fw)
-            t_fw = np.tanh(x_fw / l_fw)
+        if self.n_layers == 2:
+            l_fw, l_bz = np.sqrt(abs(self.l2[0][n])), np.sqrt(abs(self.l2[1][n]))
+            x_fw, = self.interface_x[:-1]
+            d_fw, d_bz = self.diffusion_const[0][n], self.diffusion_const[1][n]
+            if self.l2[0][n] > 0:
+                s_fw = np.sinh(x_fw / l_fw)
+                c_fw = np.cosh(x_fw / l_fw)
+                t_fw = np.tanh(x_fw / l_fw)
+            else:
+                s_fw = np.sin(x_fw / l_fw)
+                c_fw = np.cos(x_fw / l_fw)
+                t_fw = np.tan(x_fw / l_fw)
+            if self.l2[1][n] > 0:
+                c_bz = np.cosh(self.extended_boundary[n] / l_bz)
+                s_bz = np.sinh(self.extended_boundary[n] / l_bz)
+                c_bz_mod = np.cosh((self.extended_boundary[n] - x_fw) / l_bz)
+                s_bz_mod = np.sinh((self.extended_boundary[n] - x_fw) / l_bz)
+                t_bz_mod = np.tanh((self.extended_boundary[n] - x_fw) / l_bz)
+            else:
+                c_bz = np.cos(self.extended_boundary[n] / l_bz)
+                s_bz = np.sin(self.extended_boundary[n] / l_bz)
+                c_bz_mod = np.cos((self.extended_boundary[n] - x_fw) / l_bz)
+                s_bz_mod = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
+                t_bz_mod = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
+
+            fw_c_factor = -self.flux * (
+                l_fw / d_fw
+                - np.exp(x_fw / l_fw)
+                * ((l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod)
+                / (c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz))
+            )
+            fw_s_factor = -self.flux * l_fw / d_fw
+
+            bz_common_factor = (
+                self.flux
+                * np.exp(x_fw / l_fw)
+                * (1 - t_fw)
+                / ((d_bz / l_bz) * c_bz_mod + (d_fw / l_fw) * t_fw * s_bz_mod)
+            )
+            bz_c_factor = bz_common_factor * s_bz
+            bz_s_factor = -bz_common_factor * c_bz
+
+            self.coefficients[0][n] = Coefficients([fw_c_factor], [fw_s_factor])
+            self.coefficients[1][n] = Coefficients([bz_c_factor], [bz_s_factor])
         else:
-            s_fw = np.sin(x_fw / l_fw)
-            c_fw = np.cos(x_fw / l_fw)
-            t_fw = np.tan(x_fw / l_fw)
-        if self.l_bz_2[n] > 0:
-            c_bz = np.cosh(self.extended_boundary[n] / l_bz)
-            s_bz = np.sinh(self.extended_boundary[n] / l_bz)
-            c_bz_mod = np.cosh((self.extended_boundary[n] - x_fw) / l_bz)
-            s_bz_mod = np.sinh((self.extended_boundary[n] - x_fw) / l_bz)
-            t_bz_mod = np.tanh((self.extended_boundary[n] - x_fw) / l_bz)
-        else:
-            c_bz = np.cos(self.extended_boundary[n] / l_bz)
-            s_bz = np.sin(self.extended_boundary[n] / l_bz)
-            c_bz_mod = np.cos((self.extended_boundary[n] - x_fw) / l_bz)
-            s_bz_mod = np.sin((self.extended_boundary[n] - x_fw) / l_bz)
-            t_bz_mod = np.tan((self.extended_boundary[n] - x_fw) / l_bz)
-
-        fw_c_factor = -self.flux * (
-            l_fw / d_fw
-            - np.exp(x_fw / l_fw)
-            * ((l_fw / d_fw) + (l_bz / d_bz) * t_bz_mod)
-            / (c_fw + s_fw * t_bz_mod * (d_fw / l_fw) * (l_bz / d_bz))
-        )
-        fw_s_factor = -self.flux * l_fw / d_fw
-
-        bz_common_factor = (
-            self.flux
-            * np.exp(x_fw / l_fw)
-            * (1 - t_fw)
-            / ((d_bz / l_bz) * c_bz_mod + (d_fw / l_fw) * t_fw * s_bz_mod)
-        )
-        bz_c_factor = bz_common_factor * s_bz
-        bz_s_factor = -bz_common_factor * c_bz
-
-        self.coefficients[n] = Coefficients(
-            [fw_c_factor], [fw_s_factor], [bz_c_factor], [bz_s_factor]
-        )
+            raise NotImplementedError("Only implemented 2 groups so far.")
         return
 
     def solve_group_n(self, n: int) -> None:
         """
-        Solve the n-th group of neutron's diffusion equation, where n<=n_groups-1.
-        Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
-        self.l_bz_2[n-1], and self.coefficients[n-1].
+        Solve the n-th group of neutron's diffusion equation, where n <=
+        n_groups-1. Store the solved constants in self.extended_boundary[n-1],
+        self.l2[*][n-1], and self.coefficients[*][n-1].
 
         Parameters
         ----------
@@ -399,183 +407,132 @@ class NeutronFluxProfile:
             return self.solve_lowest_group()
         # ensure all lower groups are solved.
         for k in range(n):
-            if k not in self.coefficients:
+            if not all(k in layer_coefs for layer_coefs in self.coefficients):
                 self.solve_group_n(k)
-        if not (self.fw_mat.downscatter_only and self.bz_mat.downscatter_only):
+        if not all(mat.downscatter_only for mat in self.materials):
             raise NotImplementedError(
                 "Will implement solve_group_n in a loop later..."
             )
-        if n in self.coefficients:
+        if all(n in layer_coefs for layer_coefs in self.coefficients):
             return None  # skip if it has already been solved.
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
         first_iteration = True
-        self.d_fw[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
-            self.fw_mat.avg_atomic_mass,
-            self.fw_mat.sigma_t[n],
-            self.fw_mat.sigma_s[n, n],
-            self.fw_mat.sigma_in[n, n],
-        )
-        self.d_bz[n], self.l_bz_2[n] = get_diffusion_coefficient_and_length(
-            self.bz_mat.avg_atomic_mass,
-            self.bz_mat.sigma_t[n],
-            self.bz_mat.sigma_s[n, n],
-            self.bz_mat.sigma_in[n, n],
-        )
-        self.extended_boundary[n] = self.x_bz + extrapolation_length(
-            self.d_bz[n]
+        for num_layer, mat in enumerate(self.materials):
+            self.diffusion_const[num_layer][n], self.l2[num_layer][n] = get_diffusion_coefficient_and_length(
+                mat.avg_atomic_mass,
+                mat.sigma_t[n],
+                mat.sigma_s[n, n],
+                mat.sigma_in[n, n],
+            )
+        self.extended_boundary[n] = self.interface_x[-1] + extrapolation_length(
+            self.diffusion_const[-1][n]
         )
 
-        # Setting up aliases for shorter code
-        l_fw_2, l_bz_2 = self.l_fw_2[n], self.l_bz_2[n]
-        d_fw, d_bz = self.d_fw[n], self.d_bz[n]
-        src_fw = self.fw_mat.sigma_s + self.fw_mat.sigma_in
-        src_bz = self.bz_mat.sigma_s + self.bz_mat.sigma_in
 
-        self.coefficients[n] = Coefficients([], [], [], [])
-        for g in range(n):
-            # if the characteristic length of group [g] coincides with the
-            # characteristic length of group [n], then that particular
-            # cosh/sinh would be indistinguishable from group [n]'s
-            # cosh/sinh anyways, therefore we can set the coefficient to 0.
-            if np.isclose(diff_fw := self.l_fw_2[g] - l_fw_2, 0):
-                scale_factor_fw = 0.0
-            else:
-                scale_factor_fw = (l_fw_2 * self.l_fw_2[g]) / d_fw / diff_fw
-            if np.isclose(diff_bz := self.l_bz_2[g] - l_bz_2, 0):
-                scale_factor_bz = 0.0
-            else:
-                scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
-            self.coefficients[n].fw_c.append(
-                sum(
-                    src_fw[i, n] * self.coefficients[i].fw_c[g]
-                    for i in range(g, n)
+        for num_layer in range(self.n_layers):
+            # Setting up aliases for shorter code
+            _coefs = Coefficients([], [])
+            mat = self.materials[num_layer]
+            src_matrix = mat.sigma_s + mat.sigma_in
+            diffusion_const_n = self.diffusion_const[num_layer][n]
+            for g in range(n):
+                # if the characteristic length of group [g] coincides with the
+                # characteristic length of group [n], then that particular
+                # cosh/sinh would be indistinguishable from group [n]'s
+                # cosh/sinh anyways, therefore we can set the coefficient to 0.
+                scale_factor = 0.0
+                l2n, l2g = self.l2[num_layer][n], self.l2[num_layer][g]
+                if not np.isclose(l2_diff:=(l2g - l2n), 0):
+                    scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
+                _coefs.c.append(
+                    sum(
+                        src_matrix[i, n] * self.coefficients[num_layer][i].c[g]
+                        for i in range(g, n)
+                    )
+                    * scale_factor
                 )
-                * scale_factor_fw
-            )
-            self.coefficients[n].fw_s.append(
-                sum(
-                    src_fw[i, n] * self.coefficients[i].fw_s[g]
-                    for i in range(g, n)
+                _coefs.s.append(
+                    sum(
+                        src_matrix[i, n] * self.coefficients[num_layer][i].s[g]
+                        for i in range(g, n)
+                    )
+                    * scale_factor
                 )
-                * scale_factor_fw
-            )
-            self.coefficients[n].bz_c.append(
-                sum(
-                    src_bz[i, n] * self.coefficients[i].bz_c[g]
-                    for i in range(g, n)
-                )
-                * scale_factor_bz
-            )
-            self.coefficients[n].bz_s.append(
-                sum(
-                    src_bz[i, n] * self.coefficients[i].bz_s[g]
-                    for i in range(g, n)
-                )
-                * scale_factor_bz
-            )
 
-        fw_c_factor_guess = 0.0
-        fw_s_factor_guess = 0.0
-        bz_c_factor_guess = 0.0
-        bz_s_factor_guess = 0.0
-        self.coefficients[n].fw_c.append(fw_c_factor_guess)
-        self.coefficients[n].fw_s.append(fw_s_factor_guess)
-        self.coefficients[n].bz_c.append(bz_c_factor_guess)
-        self.coefficients[n].bz_s.append(bz_s_factor_guess)
+            c_factor_guess = 0.0
+            s_factor_guess = 0.0
+            _coefs.c.append(c_factor_guess)
+            _coefs.s.append(s_factor_guess)
+            self.coefficients[num_layer][n] = _coefs
 
-        def _set_constants(input_vector: Iterable[float]):
-            self.coefficients[n].fw_c[n] = input_vector[0]
-            self.coefficients[n].fw_s[n] = input_vector[1]
-            self.coefficients[n].bz_c[n] = input_vector[2]
-            self.coefficients[n].bz_s[n] = input_vector[3]
+
+        def _set_coefficients(input_vector: Iterable[float]):
+            for num_layer in range(self.n_layers):
+                i = num_layer * 2
+                self.coefficients[num_layer][n].c[n] = input_vector[i]
+                self.coefficients[num_layer][n].s[n] = input_vector[i+1]
 
         def _evaluate_fit():
-            flux_continuity = self.groupwise_neutron_flux_fw(
-                n, self.x_fw
-            ) - self.groupwise_neutron_flux_bz(n, self.x_fw)
-            flux_at_boundary = self.groupwise_neutron_flux_bz(
-                n, self.extended_boundary[n]
+            # zero flux condition 
+            flux_at_boundary = self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
             )
-            current_continuity = self.groupwise_neutron_current_fw(
-                n, self.x_fw
-            ) - self.groupwise_neutron_current_bz(n, self.x_fw)
-            influx_fw, influx_bz = 0.0, 0.0
+            # conservation condition
+            influx, removal = 0.0, 0.0
             for g in range(self.n_groups):
                 if g > n and not first_iteration:
-                    if not self.fw_mat.downscatter_only:
-                        influx_fw += (
-                            self.fw_mat.sigma_s[g, n]
-                            + self.fw_mat.sigma_in[g, n]
-                        ) * self.groupwise_integrated_flux_fw(g)
-                    if not self.bz_mat.downscatter_only:
-                        influx_bz += (
-                            self.bz_mat.sigma_s[g, n]
-                            + self.bz_mat.sigma_in[g, n]
-                        ) * self.groupwise_integrated_flux_bz(g)
+                    for num_layer, mat in self.materials:
+                        if not mat.downscatter_only:
+                            influx += (mat.sigma_s[g, n] + mat.sigma_in[g, n]) * self.groupwise_integrated_flux_in_layer(g, num_layer)
                 elif g <= n:
-                    influx_fw += (
-                        self.fw_mat.sigma_s[g, n] + self.fw_mat.sigma_in[g, n]
-                    ) * self.groupwise_integrated_flux_fw(g)
-                    influx_bz += (
-                        self.bz_mat.sigma_s[g, n] + self.bz_mat.sigma_in[g, n]
-                    ) * self.groupwise_integrated_flux_bz(g)
-            removal_fw = self.fw_mat.sigma_t[
-                n
-            ] * self.groupwise_integrated_flux_fw(n)
-            removal_bz = self.bz_mat.sigma_t[
-                n
-            ] * self.groupwise_integrated_flux_bz(n)
+                    for num_layer, mat in self.materials:
+                        influx += (mat.sigma_s[g, n] + mat.sigma_in[g, n]) * self.groupwise_integrated_flux_in_layer(g, num_layer)
+            for num_layer, mat in self.materials:
+                removal += mat.sigma_t[n] * self.groupwise_integrated_flux_in_layer(n, num_layer)
             # conservation_fw = influx_fw - removal_fw - current_fw2bz
             # conservation_bz = current_fw2bz + influx_bz - removal_bz - escaped_bz
-            total_neutron_conservation = (
-                influx_fw
-                + influx_bz
-                - removal_fw
-                - removal_bz
-                - self.groupwise_neutron_current_escaped(n)
-            )
-            return np.array([
-                flux_continuity,
-                flux_at_boundary,
-                current_continuity,
-                total_neutron_conservation,
-            ])
+            total_neutron_conservation = influx - removal - self.groupwise_neutron_current_escaped(n)
 
-        def objective(four_coefficients_vector):
-            _set_constants(four_coefficients_vector)
+            conditions = [flux_at_boundary, total_neutron_conservation]
+
+            # enforce continuity conditions
+            for num_layer in range(self.n_layers - 1):
+                x = self.interface_x[num_layer]
+                flux_continuity = self.groupwise_neutron_flux_in_layer(n, num_layer, x) - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
+                current_continuity = self.groupwise_neutron_current_in_layer(n, num_layer, x) - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+            conditions.append(flux_continuity)
+            conditions.append(current_continuity)
+            # TODO: there may be one more condition that I should impose: the slope at x=0 should be 0.
+            return np.array(conditions)
+
+        def objective(coefficients_vector):
+            _set_coefficients(coefficients_vector)
             return _evaluate_fit()
 
-        results = optimize.root(
-            objective,
-            x0=[
-                fw_c_factor_guess,
-                fw_s_factor_guess,
-                bz_c_factor_guess,
-                bz_s_factor_guess,
-            ],
-        )
-        _set_constants(results.res)
+        x0 = np.flatten([[layer_coefs[n].c[n], layer_coefs[n].s[n]] for layer_coefs in self.coefficients])
+        results = optimize.root(objective, x0=x0)
+        _set_coefficients(results.res)
         return None
 
     @summarize_values
-    def groupwise_neutron_flux_fw(
-        self, n: int, x: float | npt.NDArray
+    def groupwise_neutron_flux_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> npt.NDArray:
         """
-        Neutron flux[m^-2 s^-1] of the n-th group at the first wall, at location x [m].
+        Neutron flux[m^-2 s^-1] of the n-th group int h specified layer,
+        at location x [m].
 
         Parameters
         ----------
         n:
-            The index of the neutron group whose flux is being evaluated. n <= n_groups - 1.
+            The index of the neutron group whose flux is being evaluated.
+            n <= n_groups - 1.
             Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron flux for.
         x:
             The position where the neutron flux has to be evaluated.
-            Note that this function does not enforce a check for x=inside the first-wall,
-            thus if x is outside the first-wall, an extrapolated first-wall flux value up
-            to that point will be given, this flux is still guaranteed to be non-singular
-            i.e. finite, but not guaranteed to be positive.
 
         Returns
         -------
@@ -584,58 +541,16 @@ class NeutronFluxProfile:
         """
         trig_funcs = []
         for g in range(n + 1):
-            if self.l_fw_2[g] > 0:
+            if self.l2[num_layer][g] > 0:
                 c, s = np.cosh, np.sinh
-                l_fw = np.sqrt(self.l_fw_2[g])
+                l = np.sqrt(self.l2[num_layer][g])
             else:
                 c, s = np.cos, np.sin
-                l_fw = np.sqrt(-self.l_fw_2[g])
-            trig_funcs.append(
-                self.coefficients[n].fw_c[g] * c(abs(x) / l_fw)
-            )
-            trig_funcs.append(
-                self.coefficients[n].fw_s[g] * s(abs(x) / l_fw)
-            )
+                l = np.sqrt(-self.l2[num_layer][g])
+            trig_funcs.append(self.coefficients[num_layer][n].c[g] * c(abs(x) / l))
+            trig_funcs.append(self.coefficients[num_layer][n].s[g] * s(abs(x) / l))
         return np.sum(trig_funcs, axis=0)
 
-    @summarize_values
-    def groupwise_neutron_flux_bz(
-        self, n: int, x: float | npt.NDArray
-    ) -> npt.NDArray:
-        """Neutron flux[m^-2 s^-1] of the n-th groupat the blanket, at location x [m].
-
-        Parameters
-        ----------
-        n:
-            The index of the neutron group whose flux is being evaluated. n <= n_groups - 1.
-            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
-        x:
-            The position where the neutron flux has to be evaluated. [m]
-            Note that this function does not enforce a check for x=inside the blanket,
-            thus if x is outside the blanket, an extrapolated blanket flux value up to
-            that point will be given, this flux is still guaranteed to be non-singular
-            i.e. finite, but not guaranteed to be positive.
-
-        Returns
-        -------
-        flux:
-            Neutron flux at x meter from the first wall.
-        """
-        trig_funcs = []
-        for g in range(n + 1):
-            if self.l_bz_2[g] > 0:
-                c, s = np.cosh, np.sinh
-                l_bz = np.sqrt(self.l_bz_2[g])
-            else:
-                c, s = np.cos, np.sin
-                l_bz = np.sqrt(-self.l_bz_2[g])
-            trig_funcs.append(
-                self.coefficients[n].bz_c[g] * c(abs(x) / l_bz)
-            )
-            trig_funcs.append(
-                self.coefficients[n].bz_s[g] * s(abs(x) / l_bz)
-            )
-        return np.sum(trig_funcs, axis=0)
 
     @summarize_values
     def groupwise_neutron_flux_at(
@@ -662,171 +577,120 @@ class NeutronFluxProfile:
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
         x = np.asarray(x)
-        in_fw = abs(x) <= self.x_fw
-        in_bz = np.logical_and(
-            self.x_fw < abs(x),
-            abs(x) <= self.extended_boundary[n],
-        )
-        if (~np.logical_or(in_fw, in_bz)).any():
+        if not all(-self.extended_boundary[n]<=x<=self.extended_boundary[n]):
             raise ValueError(
                 f"for neutron group {n}, neutron flux can only be calculated "
                 f"up to {self.extended_boundary[n]} m, which {x} m violates!"
             )
 
         out_flux = np.zeros_like(x)
-        out_flux[in_fw] = self.groupwise_neutron_flux_fw(n, x[in_fw])
-        out_flux[in_bz] = self.groupwise_neutron_flux_bz(n, x[in_bz])
+        abs_x = abs(x)
+        extended_interface_x = [0, *self.interface_x]
+        extended_interface_x[-1] = np.nextafter(self.extended_boundary[n], np.inf)
+        for num_layer, (lower_x, upper_x) in enumerate(pairwise(extended_interface_x)):
+            in_layer = lower_x <= abs_x < upper_x
+            if in_layer.any():
+                out_flux[in_layer] = self.groupwise_neutron_flux_in_layer(
+                    n, num_layer, x[in_layer]
+                )
         return out_flux
 
     # scalar values (one such float per neutron group.)
     @summarize_values
-    def groupwise_integrated_flux_fw(self, n: int) -> float:
+    def groupwise_integrated_flux_in_layer(
+        self, n: int, num_layer: int
+    ) -> float:
         """
         Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
         macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
-        the first wall.
+        any layer specified.
 
         Parameters
         ----------
         n:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron flux for.
         """
         integrals = []
+        # set integration limits
+        x_start = self.interface_x[num_layer-1]
+        if num_layer==0:
+            x_start = 0.0
+        x_end = self.interface_x[num_layer]
+
         for g in range(n + 1):
-            if self.l_fw_2[g] > 0:
-                l_fw = np.sqrt(self.l_fw_2[g])
+            l2g = self.l2[num_layer][g]
+            if l2g > 0:
+                l = np.sqrt(l2g)
                 integrals.append(
-                    l_fw
-                    * self.coefficients[n].fw_c[g]
-                    * np.sinh(self.x_fw / l_fw)
+                    l * self.coefficients[num_layer][n].c[g]
+                    * (np.sinh(x_end / l) - np.sinh(x_start / l))
                 )
                 integrals.append(
-                    l_fw
-                    * self.coefficients[n].fw_s[g]
-                    * (np.cosh(self.x_fw / l_fw) - 1)
+                    l * self.coefficients[num_layer][n].s[g]
+                    * (np.cosh(x_end / l) - np.cosh(x_start / l))
                 )
             else:
-                l_fw = np.sqrt(-self.l_fw_2[g])
+                l = np.sqrt(-l2g)
                 integrals.append(
-                    l_fw
-                    * self.coefficients[n].fw_c[g]
-                    * np.sin(self.x_fw / l_fw)
+                    l * self.coefficients[num_layer][n].c[g]
+                    * (np.sin(x_end / l) - np.sin(x_start / l))
                 )
                 integrals.append(
-                    l_fw
-                    * self.coefficients[n].fw_s[g]
-                    * (1 - np.cos(self.x_fw / l_fw))
+                    -l * self.coefficients[num_layer][n].s[g]
+                    * (np.cos(x_end / l) - np.cos(x_start / l))
                 )
-
         return np.sum(integrals, axis=0)
 
+
     @summarize_values
-    def groupwise_integrated_flux_bz(self, n: int) -> float:
+    def groupwise_neutron_current_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float:
         """
-        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
-        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
-        the blanket.
+        Get the neutron current (right=positive, left=negative) in any layer.
 
         Parameters
         ----------
         n:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron flux for.
+        x:
+            The depth where we want the neutron flux [m].
+            Valid only between x= -extended boundary to +-extended boundary of that group
         """
-        integrals = []
-        for g in range(n + 1):
-            if self.l_bz_2[g] > 0:
-                l_bz = np.sqrt(self.l_bz_2[g])
-                integrals.append(
-                    l_bz
-                    * self.coefficients[n].bz_c[g]
-                    * (np.sinh(self.x_bz / l_bz) - np.sinh(self.x_fw / l_bz))
-                )
-                integrals.append(
-                    l_bz
-                    * self.coefficients[n].bz_s[g]
-                    * (np.cosh(self.x_bz / l_bz) - np.cosh(self.x_fw / l_bz))
-                )
-            else:
-                l_bz = np.sqrt(-self.l_bz_2[g])
-                integrals.append(
-                    l_bz
-                    * self.coefficients[n].bz_c[g]
-                    * (np.sin(self.x_bz / l_bz) - np.sin(self.x_fw / l_bz))
-                )
-                integrals.append(
-                    -l_bz
-                    * self.coefficients[n].bz_s[g]
-                    * (np.cos(self.x_bz / l_bz) - np.cos(self.x_fw / l_bz))
-                )
-        return np.sum(integrals, axis=0)
-
-    @summarize_values
-    def groupwise_neutron_current_fw(
-        self, n: int, x: float | npt.NDArray
-    ) -> float:
-        """Get the neutron current (in the outward direction) in the fw"""
         differentials = []
         for g in range(n + 1):
-            if self.l_fw_2[g] > 0:
-                l_fw = np.sqrt(self.l_fw_2[g])
+            l2g = self.l2[num_layer][g]
+            if l2g > 0:
+                l = np.sqrt(l2g)
                 differentials.append(
-                    self.coefficients[n].fw_c[g]
-                    / l_fw
-                    * np.sinh(x / l_fw)
+                    self.coefficients[num_layer][n].c[g]
+                    / l
+                    * np.sinh(abs(x) / l)
                 )
                 differentials.append(
-                    self.coefficients[n].fw_s[g]
-                    / l_fw
-                    * np.cosh(x / l_fw)
-                )
-            else:
-                l_fw = np.sqrt(-self.l_fw_2[g])
-                differentials.append(
-                    -self.coefficients[n].fw_c[g]
-                    / l_fw
-                    * np.sin(x / l_fw)
-                )
-                differentials.append(
-                    self.coefficients[n].fw_s[g]
-                    / l_fw
-                    * np.cos(x / l_fw)
-                )
-        return -self.d_fw[n] * np.sum(differentials, axis=0)
-
-    @summarize_values
-    def groupwise_neutron_current_bz(
-        self, n: int, x: float | npt.NDArray
-    ) -> float:
-        """Get the neutron current (in the outward direction) in the bz."""
-        differentials = []
-        for g in range(n + 1):
-            if self.l_bz_2[g] > 0:
-                l_bz = np.sqrt(self.l_bz_2[g])
-                differentials.append(
-                    self.coefficients[n].bz_c[g]
-                    / l_bz
-                    * np.sinh(x / l_bz)
-                )
-                differentials.append(
-                    self.coefficients[n].bz_s[g]
-                    / l_bz
-                    * np.cosh(x / l_bz)
+                    self.coefficients[num_layer][n].s[g]
+                    / l
+                    * np.cosh(abs(x) / l)
                 )
             else:
-                l_bz = np.sqrt(-self.l_bz_2[g])
+                l = np.sqrt(-l2g)
                 differentials.append(
-                    -self.coefficients[n].bz_c[g]
-                    / l_bz
-                    * np.sin(x / l_bz)
+                    -self.coefficients[num_layer][n].c[g]
+                    / l
+                    * np.sin(abs(x) / l)
                 )
                 differentials.append(
-                    self.coefficients[n].bz_s[g]
-                    / l_bz
-                    * np.cos(x / l_bz)
+                    self.coefficients[num_layer][n].s[g]
+                    / l
+                    * np.cos(abs(x) / l)
                 )
-        return -self.d_bz[n] * np.sum(differentials, axis=0)
+        return -self.diffusion_const[num_layer][n] * np.sum(differentials, axis=0) * np.sign(x)
 
     @summarize_values
     def groupwise_neutron_current_at(
@@ -853,21 +717,23 @@ class NeutronFluxProfile:
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
         x = np.asarray(x)
-        in_fw = abs(x) <= self.x_fw
-        in_bz = np.logical_and(
-            self.x_fw < abs(x),
-            abs(x) <= self.x_bz,
-        )
-        if (~np.logical_or(in_fw, in_bz)).any():
+        if not all(-self.extended_boundary[n]<=x<=self.extended_boundary[n]):
             raise ValueError(
-                f"for neutron group {n}, neutron flux can only be calculated "
-                f"up to {self.x_bz} m, which {x} m violates!"
+                f"for neutron group {n}, neutron current can only be calculated"
+                f" up to {self.extended_boundary[n]} m, which {x} m violates!"
             )
 
-        out_current = np.zeros_like(x)
-        out_current[in_fw] = self.groupwise_neutron_current_fw(n, x[in_fw])
-        out_current[in_bz] = self.groupwise_neutron_current_bz(n, x[in_bz])
-        return out_current
+        current = np.zeros_like(x)
+        abs_x = abs(x)
+        extended_interface_x = [0, *self.interface_x]
+        extended_interface_x[-1] = np.nextafter(self.extended_boundary[n], np.inf)
+        for num_layer, (lower_x, upper_x) in enumerate(pairwise(extended_interface_x)):
+            in_layer = lower_x <= abs_x < upper_x
+            if in_layer.any():
+                current[in_layer] = self.groupwise_neutron_current_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return current
 
     @summarize_values
     def groupwise_neutron_current_fw2bz(self, n: int) -> float:
@@ -903,12 +769,13 @@ class NeutronFluxProfile:
         """
         return self.groupwise_neutron_current_bz(n, self.x_bz)
 
-    def plot(
+    def plot_flux(
         self,
         ax: plt.Axes | None = None,
         n_points: int = 100,
         symmetric: bool = True,
         plot_groups: bool = True,
+        quantity: str = "flux",
     ):
         """
         Make a rough plot of the neutron flux.
@@ -924,6 +791,8 @@ class NeutronFluxProfile:
         plot_groups:
             Whether to plot each individual group's neutron flux.
             If True, a legend will be added to help label the groups.
+        quantity:
+            Options of plotting which quantity: {"flux", "current"}.
         """
         self.solve_group_n(self.n_groups - 1)
         ax = ax or plt.axes()
@@ -988,7 +857,6 @@ class NeutronFluxProfile:
         ax.set_xlabel("Distance from the plasma-fw interface [m]")
         ax.set_ylabel("Neutron flux [m^-2 s^-1]")
         return ax
-
 
 def _generate_x_range(
     x_max: float,
