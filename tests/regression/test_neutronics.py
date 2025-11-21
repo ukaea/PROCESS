@@ -35,7 +35,7 @@ def test_one_group():
         incoming_flux, x_fw, x_bz, fw_material, bz_material
     )
 
-    const = neutron_profile.integration_constants[0]  # alias to fit line width
+    const = neutron_profile.coefficients[0]  # alias to fit line width
     assert np.isclose(const.fw_c[0], 80.5346770788), "c5"
     assert np.isclose(const.fw_s[0], -76.5562120985), "c6"
     assert np.isclose(const.bz_c[0], 60.6871656017), "c7"

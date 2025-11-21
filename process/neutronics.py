@@ -129,14 +129,14 @@ def extrapolation_length(diffusion_coefficient: float) -> float:
 
 
 @dataclass
-class IntegrationConstants:
+class Coefficients:
     """
     Inside each material, there are two new hyperbolic trig funcs per group, i.e.
     group n=0 has cosh(x/L[0]) and sinh(x/L[0]),
     group n=1 has cosh(x/L[0]), sinh(x/L[0]), cosh(x/L[1]) and sinh(x/L[1]),
     etc.
-    To get the neutron flux, each trig func has to be scaled by an integration
-    constant. E.g.
+    To get the neutron flux, each trig func has to be scaled by a coeffient.
+    E.g.
     group n=0: fw: fw_c[0][0] * cosh(x/L[0]) + fw_s[0][0] * sinh(x/L[0])
     group n=1: fw: fw_c[1][0] * cosh(x/L[0]) + fw_c[1][1] * cosh(x/L[1])
                 + fw_s[1][0] * sinh(x/L[0]) + fw_s[1][1] * sinh(x/L[1])
@@ -148,13 +148,14 @@ class IntegrationConstants:
     bz_c: Iterable[float]
     bz_s: Iterable[float]
 
-    def validate_length(self, expected_length: int):
+    def validate_length(self, exp_len: int, parent_name: str):
         """Validate that all fields has the correct length."""
         for const_name, const_value in asdict(self).items():
-            if len(const_value) != expected_length:
+            if len(const_value) != exp_len:
                 raise ProcessValueError(
-                    f"Expected {const_name} to have len=={expected_length}, "
-                    f"got {len(const_value)} instead."
+                    f"{parent_name}'s [{exp_len-1}]-th item is expected to "
+                    "have .{const_name} of length={exp_len}, but instead got "
+                    f"{const_value}."
                 )
 
 
@@ -178,7 +179,7 @@ class AutoPopulatingDict:
             dictionary.
         """
         self._dict = {}
-        self._name = name
+        self.name = name
         self._attempting_to_access = set()
         self.populating_method = populating_method
 
@@ -186,8 +187,8 @@ class AutoPopulatingDict:
         """Check if index i is in the dictionary or not. If not, populate it."""
         if i in self._attempting_to_access:
             raise RecursionError(
-                f"retrieving the value of {self._name}[{i}] requires the "
-                f"value of {self._name}[{i}]."
+                f"retrieving the value of {self.name}[{i}] requires the "
+                f"value of {self.name}[{i}]."
             )
         if i not in self._dict:
             self._attempting_to_access.add(i)
@@ -207,7 +208,7 @@ class AutoPopulatingDict:
     def __setitem__(self, i: int, value: float):
         """Check if dict i is in the index or not."""
         if hasattr(value, "validate_length"):
-            value.validate_length(i + 1)
+            value.validate_length(i + 1, parent_name=self.name)
         self._dict[i] = value
         self._attempting_to_access.discard(i)
 
@@ -256,8 +257,8 @@ class NeutronFluxProfile:
         group_structure:
             energy bin edges, 1D array of len = n_groups+1
 
-        integration_constants:
-            Integration constants that determine the flux shape (and therefore
+        coefficients:
+            Coefficients that determine the flux shape (and therefore
             reaction rates and neutron current) of each group. A set of four
             constants, two for fw and two for bz; each with unit: [m^-2 s^-1]
         l_fw_2:
@@ -294,8 +295,8 @@ class NeutronFluxProfile:
                 "must have the same group structure!"
             )
 
-        self.integration_constants = AutoPopulatingDict(
-            self.solve_group_n, "integration_constants"
+        self.coefficients = AutoPopulatingDict(
+            self.solve_group_n, "coefficients"
         )
         # diffusion lengths squared
         self.l_fw_2 = AutoPopulatingDict(self.solve_group_n, "l_fw_2")
@@ -310,11 +311,11 @@ class NeutronFluxProfile:
         """
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
         Store the solved constants in self.extended_boundary[0], self.l_fw_2[0],
-        self.l_bz_2[0], and self.integration_constants[0].
-        integration_constants have units of [m^-2 s^-1].
+        self.l_bz_2[0], and self.coefficients[0].
+        coefficients have units of [m^-2 s^-1].
         """
         n = 0
-        if n in self.integration_constants:
+        if n in self.coefficients:
             return  # skip if it has already been solved.
         self.d_fw[n], self.l_fw_2[n] = get_diffusion_coefficient_and_length(
             self.fw_mat.avg_atomic_mass,
@@ -372,7 +373,7 @@ class NeutronFluxProfile:
         bz_c_factor = bz_common_factor * s_bz
         bz_s_factor = -bz_common_factor * c_bz
 
-        self.integration_constants[n] = IntegrationConstants(
+        self.coefficients[n] = Coefficients(
             [fw_c_factor], [fw_s_factor], [bz_c_factor], [bz_s_factor]
         )
         return
@@ -381,7 +382,7 @@ class NeutronFluxProfile:
         """
         Solve the n-th group of neutron's diffusion equation, where n<=n_groups-1.
         Store the solved constants in self.extended_boundary[n-1], self.l_fw_2[n-1],
-        self.l_bz_2[n-1], and self.integration_constants[n-1].
+        self.l_bz_2[n-1], and self.coefficients[n-1].
 
         Parameters
         ----------
@@ -398,13 +399,13 @@ class NeutronFluxProfile:
             return self.solve_lowest_group()
         # ensure all lower groups are solved.
         for k in range(n):
-            if k not in self.integration_constants:
+            if k not in self.coefficients:
                 self.solve_group_n(k)
         if not (self.fw_mat.downscatter_only and self.bz_mat.downscatter_only):
             raise NotImplementedError(
                 "Will implement solve_group_n in a loop later..."
             )
-        if n in self.integration_constants:
+        if n in self.coefficients:
             return None  # skip if it has already been solved.
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
@@ -431,7 +432,7 @@ class NeutronFluxProfile:
         src_fw = self.fw_mat.sigma_s + self.fw_mat.sigma_in
         src_bz = self.bz_mat.sigma_s + self.bz_mat.sigma_in
 
-        self.integration_constants[n] = IntegrationConstants([], [], [], [])
+        self.coefficients[n] = Coefficients([], [], [], [])
         for g in range(n):
             # if the characteristic length of group [g] coincides with the
             # characteristic length of group [n], then that particular
@@ -445,30 +446,30 @@ class NeutronFluxProfile:
                 scale_factor_bz = 0.0
             else:
                 scale_factor_bz = (l_bz_2 * self.l_bz_2[g]) / d_bz / diff_bz
-            self.integration_constants[n].fw_c.append(
+            self.coefficients[n].fw_c.append(
                 sum(
-                    src_fw[i, n] * self.integration_constants[i].fw_c[g]
+                    src_fw[i, n] * self.coefficients[i].fw_c[g]
                     for i in range(g, n)
                 )
                 * scale_factor_fw
             )
-            self.integration_constants[n].fw_s.append(
+            self.coefficients[n].fw_s.append(
                 sum(
-                    src_fw[i, n] * self.integration_constants[i].fw_s[g]
+                    src_fw[i, n] * self.coefficients[i].fw_s[g]
                     for i in range(g, n)
                 )
                 * scale_factor_fw
             )
-            self.integration_constants[n].bz_c.append(
+            self.coefficients[n].bz_c.append(
                 sum(
-                    src_bz[i, n] * self.integration_constants[i].bz_c[g]
+                    src_bz[i, n] * self.coefficients[i].bz_c[g]
                     for i in range(g, n)
                 )
                 * scale_factor_bz
             )
-            self.integration_constants[n].bz_s.append(
+            self.coefficients[n].bz_s.append(
                 sum(
-                    src_bz[i, n] * self.integration_constants[i].bz_s[g]
+                    src_bz[i, n] * self.coefficients[i].bz_s[g]
                     for i in range(g, n)
                 )
                 * scale_factor_bz
@@ -478,16 +479,16 @@ class NeutronFluxProfile:
         fw_s_factor_guess = 0.0
         bz_c_factor_guess = 0.0
         bz_s_factor_guess = 0.0
-        self.integration_constants[n].fw_c.append(fw_c_factor_guess)
-        self.integration_constants[n].fw_s.append(fw_s_factor_guess)
-        self.integration_constants[n].bz_c.append(bz_c_factor_guess)
-        self.integration_constants[n].bz_s.append(bz_s_factor_guess)
+        self.coefficients[n].fw_c.append(fw_c_factor_guess)
+        self.coefficients[n].fw_s.append(fw_s_factor_guess)
+        self.coefficients[n].bz_c.append(bz_c_factor_guess)
+        self.coefficients[n].bz_s.append(bz_s_factor_guess)
 
         def _set_constants(input_vector: Iterable[float]):
-            self.integration_constants[n].fw_c[n] = input_vector[0]
-            self.integration_constants[n].fw_s[n] = input_vector[1]
-            self.integration_constants[n].bz_c[n] = input_vector[2]
-            self.integration_constants[n].bz_s[n] = input_vector[3]
+            self.coefficients[n].fw_c[n] = input_vector[0]
+            self.coefficients[n].fw_s[n] = input_vector[1]
+            self.coefficients[n].bz_c[n] = input_vector[2]
+            self.coefficients[n].bz_s[n] = input_vector[3]
 
         def _evaluate_fit():
             flux_continuity = self.groupwise_neutron_flux_fw(
@@ -541,8 +542,8 @@ class NeutronFluxProfile:
                 total_neutron_conservation,
             ])
 
-        def objective(four_integration_constants_vector):
-            _set_constants(four_integration_constants_vector)
+        def objective(four_coefficients_vector):
+            _set_constants(four_coefficients_vector)
             return _evaluate_fit()
 
         results = optimize.root(
@@ -590,10 +591,10 @@ class NeutronFluxProfile:
                 c, s = np.cos, np.sin
                 l_fw = np.sqrt(-self.l_fw_2[g])
             trig_funcs.append(
-                self.integration_constants[n].fw_c[g] * c(abs(x) / l_fw)
+                self.coefficients[n].fw_c[g] * c(abs(x) / l_fw)
             )
             trig_funcs.append(
-                self.integration_constants[n].fw_s[g] * s(abs(x) / l_fw)
+                self.coefficients[n].fw_s[g] * s(abs(x) / l_fw)
             )
         return np.sum(trig_funcs, axis=0)
 
@@ -629,10 +630,10 @@ class NeutronFluxProfile:
                 c, s = np.cos, np.sin
                 l_bz = np.sqrt(-self.l_bz_2[g])
             trig_funcs.append(
-                self.integration_constants[n].bz_c[g] * c(abs(x) / l_bz)
+                self.coefficients[n].bz_c[g] * c(abs(x) / l_bz)
             )
             trig_funcs.append(
-                self.integration_constants[n].bz_s[g] * s(abs(x) / l_bz)
+                self.coefficients[n].bz_s[g] * s(abs(x) / l_bz)
             )
         return np.sum(trig_funcs, axis=0)
 
@@ -697,24 +698,24 @@ class NeutronFluxProfile:
                 l_fw = np.sqrt(self.l_fw_2[g])
                 integrals.append(
                     l_fw
-                    * self.integration_constants[n].fw_c[g]
+                    * self.coefficients[n].fw_c[g]
                     * np.sinh(self.x_fw / l_fw)
                 )
                 integrals.append(
                     l_fw
-                    * self.integration_constants[n].fw_s[g]
+                    * self.coefficients[n].fw_s[g]
                     * (np.cosh(self.x_fw / l_fw) - 1)
                 )
             else:
                 l_fw = np.sqrt(-self.l_fw_2[g])
                 integrals.append(
                     l_fw
-                    * self.integration_constants[n].fw_c[g]
+                    * self.coefficients[n].fw_c[g]
                     * np.sin(self.x_fw / l_fw)
                 )
                 integrals.append(
                     l_fw
-                    * self.integration_constants[n].fw_s[g]
+                    * self.coefficients[n].fw_s[g]
                     * (1 - np.cos(self.x_fw / l_fw))
                 )
 
@@ -739,24 +740,24 @@ class NeutronFluxProfile:
                 l_bz = np.sqrt(self.l_bz_2[g])
                 integrals.append(
                     l_bz
-                    * self.integration_constants[n].bz_c[g]
+                    * self.coefficients[n].bz_c[g]
                     * (np.sinh(self.x_bz / l_bz) - np.sinh(self.x_fw / l_bz))
                 )
                 integrals.append(
                     l_bz
-                    * self.integration_constants[n].bz_s[g]
+                    * self.coefficients[n].bz_s[g]
                     * (np.cosh(self.x_bz / l_bz) - np.cosh(self.x_fw / l_bz))
                 )
             else:
                 l_bz = np.sqrt(-self.l_bz_2[g])
                 integrals.append(
                     l_bz
-                    * self.integration_constants[n].bz_c[g]
+                    * self.coefficients[n].bz_c[g]
                     * (np.sin(self.x_bz / l_bz) - np.sin(self.x_fw / l_bz))
                 )
                 integrals.append(
                     -l_bz
-                    * self.integration_constants[n].bz_s[g]
+                    * self.coefficients[n].bz_s[g]
                     * (np.cos(self.x_bz / l_bz) - np.cos(self.x_fw / l_bz))
                 )
         return np.sum(integrals, axis=0)
@@ -771,24 +772,24 @@ class NeutronFluxProfile:
             if self.l_fw_2[g] > 0:
                 l_fw = np.sqrt(self.l_fw_2[g])
                 differentials.append(
-                    self.integration_constants[n].fw_c[g]
+                    self.coefficients[n].fw_c[g]
                     / l_fw
                     * np.sinh(x / l_fw)
                 )
                 differentials.append(
-                    self.integration_constants[n].fw_s[g]
+                    self.coefficients[n].fw_s[g]
                     / l_fw
                     * np.cosh(x / l_fw)
                 )
             else:
                 l_fw = np.sqrt(-self.l_fw_2[g])
                 differentials.append(
-                    -self.integration_constants[n].fw_c[g]
+                    -self.coefficients[n].fw_c[g]
                     / l_fw
                     * np.sin(x / l_fw)
                 )
                 differentials.append(
-                    self.integration_constants[n].fw_s[g]
+                    self.coefficients[n].fw_s[g]
                     / l_fw
                     * np.cos(x / l_fw)
                 )
@@ -804,24 +805,24 @@ class NeutronFluxProfile:
             if self.l_bz_2[g] > 0:
                 l_bz = np.sqrt(self.l_bz_2[g])
                 differentials.append(
-                    self.integration_constants[n].bz_c[g]
+                    self.coefficients[n].bz_c[g]
                     / l_bz
                     * np.sinh(x / l_bz)
                 )
                 differentials.append(
-                    self.integration_constants[n].bz_s[g]
+                    self.coefficients[n].bz_s[g]
                     / l_bz
                     * np.cosh(x / l_bz)
                 )
             else:
                 l_bz = np.sqrt(-self.l_bz_2[g])
                 differentials.append(
-                    -self.integration_constants[n].bz_c[g]
+                    -self.coefficients[n].bz_c[g]
                     / l_bz
                     * np.sin(x / l_bz)
                 )
                 differentials.append(
-                    self.integration_constants[n].bz_s[g]
+                    self.coefficients[n].bz_s[g]
                     / l_bz
                     * np.cos(x / l_bz)
                 )
