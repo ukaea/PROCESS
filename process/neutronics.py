@@ -136,14 +136,14 @@ class Coefficients:
     group n=0 has cosh(x/L[0]) and sinh(x/L[0]),
     group n=1 has cosh(x/L[0]), sinh(x/L[0]), cosh(x/L[1]) and sinh(x/L[1]),
     etc.
-    To get the neutron flux, each trig func has to be scaled by a coeffient.
+    To get the neutron flux, each trig func has to be scaled by a coefficient.
     E.g. Let's say for the first wall, which is num_layer=0,
-    group n=0: NeutronFluxProfile.coefficients[0][0] = Coefficients(...)
-        fw_grp0 = NeutronFluxProfile.coefficients[0][0]
+    group n=0: NeutronFluxProfile.coefficients[0, 0] = Coefficients(...)
+        fw_grp0 = NeutronFluxProfile.coefficients[0, 0]
         flux = fw_grp0.c[0] * cosh(x/L[0]) + fw_grp0.s[0] * sinh(x/L[0])
     
-    group n=1: NeutronFluxProfile.coefficients[0][1] = Coefficients(...)
-        fw_grp1 = NeutronFluxProfile.coefficients[0][1]
+    group n=1: NeutronFluxProfile.coefficients[0, 1] = Coefficients(...)
+        fw_grp1 = NeutronFluxProfile.coefficients[0, 1]
         flux = fw_grp1.c[0] * cosh(x/L[0]) + fw_grp1.c[1] * cosh(x/L[1])
                 + fw_grp1.s[0] * sinh(x/L[0]) + fw_grp1.s[1] * sinh(x/L[1])
 
@@ -222,6 +222,93 @@ class AutoPopulatingDict:
     def __repr__(self):
         return f"AutoPopulatingDict({self.name}):{self._dict}"
 
+class LayerSpecificGroupwiseConstants:
+    """An object containing multiple AutoPopulatingDict"""
+    def __init__(self, populating_method: Callable[[int], None], layer_names: list[str], quantity_description: str):
+        """
+        Create an object that contains as many AutoPopulatingDict as there are
+        items in layer_names.
+
+        Parameters
+        ----------
+        populating_method:
+            The method to be called if the requested index n in any one of the
+            AutoPopulatingDict is currently unpopulated. This method should
+            populate that dictionary.
+        layer_names:
+            A list of strings, each of which is the descriptive name for that
+            layer. While the actual content in each string could be empty,
+            the length of this list MUST be equal to the total number
+            of dictionaries required.
+        quantity_description:
+            A name to be given to this specific instance of the class, to help
+            label what quantity is being stored.
+        """
+        self._name = quantity_description
+        layer_dicts = []
+        for num_layer, _layer_name in enumerate(layer_names):
+            name = f"{self._name} for layer {num_layer}"
+            if _layer_name:
+                name += f":{_layer_name}"
+            layer_dicts.append(AutoPopulatingDict(populating_method, name))
+        self._dicts = tuple(layer_dicts)
+        self.n_layers = len(self._dicts)
+
+    def __iter__(self):
+        return self._dicts.__iter__()
+
+    def __len__(self) -> int:
+        return len(self._dicts)
+        
+    def __setitem__(self, index: int | tuple[int, int], value):
+        """
+        Act as if this is a 2D array, where the first-axis is the layer and the
+        second axis is the group. support slice of the thing, 
+        """
+        if isinstance(index, tuple) and len(index)>=2:
+            if len(index)>2:
+                raise IndexError("2D array indexed with more than 2 indices!")
+            layer_index, group_index = index
+            self._dicts[layer_index][group_index] = value
+        else:
+            super().__setitem__(index, value)
+
+    def __getitem__(self, index: int | tuple[int, int]):
+        """
+        Act as if this is a 2D array, where the first-axis is the layer and the
+        second axis is the group. Handle slices as well.
+        """
+        if isinstance(index, tuple) and len(index)>=2:
+            if len(index)>2:
+                raise IndexError("2D array indexed with more than 2 indices!")
+            layer_index, group_index = index
+            if isinstance(layer_index, slice):
+                return tuple(
+                    [_dict[group_index] for _dict in self._dicts[layer_index]]
+                )
+            return self._dicts[layer_index][group_index]
+        return self._dicts[index]
+
+    def has_populated(self, n: int) -> bool:
+        """
+        Check if group n's constants are populated for every layer's dict.
+
+        Parameter
+        ---------
+        n:
+            group number to check the population status of every layer's dict.
+
+
+        Returns
+        -------
+        :
+            Whether group n's constants are poplated across all dictionaries
+            stored by the current instance.
+        """
+        return all(n in layer_dict for layer_dict in self._dicts)
+
+    def __repr__(self):
+        return f"A tuple of {self.n_layers} layers of {self._name}"
 
 class NeutronFluxProfile:
     """
@@ -317,23 +404,17 @@ class NeutronFluxProfile:
         self.n_groups = fw_mat.n_groups
         self.group_structure = fw_mat.group_structure
 
-        trig_coefs, l2, d_coef = [], [], []
-        for num_layer, mat in enumerate(self.materials):
-            c_name = f"Coefficients for layer {num_layer}"
-            l_name = f"characteristic diffusion length for layer {num_layer}"
-            d_name = f"Diffusion coefficient D for layer {num_layer}"
-            if mat.name:
-                c_name += f":{mat.name}"
-                l_name += f":{mat.name}"
-                d_name += f":{mat.name}"
-            trig_coefs.append(AutoPopulatingDict(self.solve_group_n, c_name))
-            l2.append(AutoPopulatingDict(self.solve_group_n, l_name))
-            d_coef.append(AutoPopulatingDict(self.solve_group_n, d_name))
-
-        self.coefficients = tuple(trig_coefs)
-        self.l2 = tuple(l2)
-        self.diffusion_const = tuple(d_coef)
-        # diffusion lengths squared
+        mat_name_list = [mat.name for mat in self.materials]
+        self.coefficients = LayerSpecificGroupwiseConstants(
+            self.solve_group_n, mat_name_list, "Coefficients"
+        )
+        self.l2 = LayerSpecificGroupwiseConstants(
+            self.solve_group_n, mat_name_list,
+            "Characteristic diffusion length squared"
+        )
+        self.diffusion_const = LayerSpecificGroupwiseConstants(
+            self.solve_group_n, mat_name_list, "Diffusion coefficient D"
+        )
         self.extended_boundary = AutoPopulatingDict(
             self.solve_group_n, "extended_boundary"
         )
@@ -341,28 +422,28 @@ class NeutronFluxProfile:
     def solve_lowest_group(self) -> None:
         """
         Solve the highest-energy (lowest-lethargy)-group's neutron diffusion equation.
-        Store the solved constants in self.extended_boundary[0], self.l2[*][0],
-        and self.coefficients[*][0].
+        Store the solved constants in self.extended_boundary[0], self.l2[:, 0],
+        and self.coefficients[:, 0].
         self.coefficients each have units of [m^-2 s^-1].
         """
         n = 0
-        if all(n in layer_coefs for layer_coefs in self.coefficients):
+        if self.coefficients.has_populated(n):
             return  # skip if it has already been solved.
         for num_layer, mat in enumerate(self.materials):
-            self.diffusion_const[num_layer][n], self.l2[num_layer][n] = get_diffusion_coefficient_and_length(
+            self.diffusion_const[num_layer, n], self.l2[num_layer, n] = get_diffusion_coefficient_and_length(
                 mat.avg_atomic_mass,
                 mat.sigma_t[n],
                 mat.sigma_s[n, n],
                 mat.sigma_in[n, n],
             )
         self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
-            self.diffusion_const[-1][n]
+            self.diffusion_const[-1, n]
         )
         if self.n_layers == 2:
-            l_fw, l_bz = np.sqrt(abs(self.l2[0][n])), np.sqrt(abs(self.l2[1][n]))
+            l_fw, l_bz = np.sqrt(abs(self.l2[0, n])), np.sqrt(abs(self.l2[1, n]))
             x_fw, = self.layer_x[:-1]
-            d_fw, d_bz = self.diffusion_const[0][n], self.diffusion_const[1][n]
-            if self.l2[0][n] > 0:
+            d_fw, d_bz = self.diffusion_const[0, n], self.diffusion_const[1, n]
+            if self.l2[0, n] > 0:
                 s_fw = np.sinh(x_fw / l_fw)
                 c_fw = np.cosh(x_fw / l_fw)
                 t_fw = np.tanh(x_fw / l_fw)
@@ -370,7 +451,7 @@ class NeutronFluxProfile:
                 s_fw = np.sin(x_fw / l_fw)
                 c_fw = np.cos(x_fw / l_fw)
                 t_fw = np.tan(x_fw / l_fw)
-            if self.l2[1][n] > 0:
+            if self.l2[1, n] > 0:
                 c_bz = np.cosh(self.extended_boundary[n] / l_bz)
                 s_bz = np.sinh(self.extended_boundary[n] / l_bz)
                 c_bz_mod = np.cosh((self.extended_boundary[n] - x_fw) / l_bz)
@@ -400,8 +481,8 @@ class NeutronFluxProfile:
             bz_c_factor = bz_common_factor * s_bz
             bz_s_factor = -bz_common_factor * c_bz
 
-            self.coefficients[0][n] = Coefficients([fw_c_factor], [fw_s_factor])
-            self.coefficients[1][n] = Coefficients([bz_c_factor], [bz_s_factor])
+            self.coefficients[0, n] = Coefficients([fw_c_factor], [fw_s_factor])
+            self.coefficients[1, n] = Coefficients([bz_c_factor], [bz_s_factor])
         else:
             raise NotImplementedError("Only implemented 2 groups so far.")
         return
@@ -410,7 +491,7 @@ class NeutronFluxProfile:
         """
         Solve the n-th group of neutron's diffusion equation, where n <=
         n_groups-1. Store the solved constants in self.extended_boundary[n-1],
-        self.l2[*][n-1], and self.coefficients[*][n-1].
+        self.l2[:, n-1], and self.coefficients[:, n-1].
 
         Parameters
         ----------
@@ -427,26 +508,26 @@ class NeutronFluxProfile:
             return self.solve_lowest_group()
         # ensure all lower groups are solved.
         for k in range(n):
-            if not all(k in layer_coefs for layer_coefs in self.coefficients):
+            if not self.coefficients.has_populated(k):
                 self.solve_group_n(k)
         if not all(mat.downscatter_only for mat in self.materials):
             raise NotImplementedError(
                 "Will implement solve_group_n in a loop later..."
             )
-        if all(n in layer_coefs for layer_coefs in self.coefficients):
+        if self.coefficients.has_populated(n):
             return None  # skip if it has already been solved.
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
         first_iteration = True
         for num_layer, mat in enumerate(self.materials):
-            self.diffusion_const[num_layer][n], self.l2[num_layer][n] = get_diffusion_coefficient_and_length(
+            self.diffusion_const[num_layer, n], self.l2[num_layer, n] = get_diffusion_coefficient_and_length(
                 mat.avg_atomic_mass,
                 mat.sigma_t[n],
                 mat.sigma_s[n, n],
                 mat.sigma_in[n, n],
             )
         self.extended_boundary[n] = self.layer_x[-1] + extrapolation_length(
-            self.diffusion_const[-1][n]
+            self.diffusion_const[-1, n]
         )
 
 
@@ -455,26 +536,26 @@ class NeutronFluxProfile:
             _coefs = Coefficients([], [])
             mat = self.materials[num_layer]
             src_matrix = mat.sigma_s + mat.sigma_in
-            diffusion_const_n = self.diffusion_const[num_layer][n]
+            diffusion_const_n = self.diffusion_const[num_layer, n]
             for g in range(n):
                 # if the characteristic length of group [g] coincides with the
                 # characteristic length of group [n], then that particular
                 # cosh/sinh would be indistinguishable from group [n]'s
                 # cosh/sinh anyways, therefore we can set the coefficient to 0.
                 scale_factor = 0.0
-                l2n, l2g = self.l2[num_layer][n], self.l2[num_layer][g]
+                l2n, l2g = self.l2[num_layer, n], self.l2[num_layer, g]
                 if not np.isclose(l2_diff:=(l2g - l2n), 0):
                     scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
                 _coefs.c.append(
                     sum(
-                        src_matrix[i, n] * self.coefficients[num_layer][i].c[g]
+                        src_matrix[i, n] * self.coefficients[num_layer, i].c[g]
                         for i in range(g, n)
                     )
                     * scale_factor
                 )
                 _coefs.s.append(
                     sum(
-                        src_matrix[i, n] * self.coefficients[num_layer][i].s[g]
+                        src_matrix[i, n] * self.coefficients[num_layer, i].s[g]
                         for i in range(g, n)
                     )
                     * scale_factor
@@ -484,14 +565,14 @@ class NeutronFluxProfile:
             s_factor_guess = 0.0
             _coefs.c.append(c_factor_guess)
             _coefs.s.append(s_factor_guess)
-            self.coefficients[num_layer][n] = _coefs
+            self.coefficients[num_layer, n] = _coefs
 
 
         def _set_coefficients(input_vector: Iterable[float]):
             for num_layer in range(self.n_layers):
                 i = num_layer * 2
-                self.coefficients[num_layer][n].c[n] = input_vector[i]
-                self.coefficients[num_layer][n].s[n] = input_vector[i+1]
+                self.coefficients[num_layer, n].c[n] = input_vector[i]
+                self.coefficients[num_layer, n].s[n] = input_vector[i+1]
 
         def _evaluate_fit():
             # zero flux condition 
@@ -561,14 +642,14 @@ class NeutronFluxProfile:
         """
         trig_funcs = []
         for g in range(n + 1):
-            if self.l2[num_layer][g] > 0:
+            if self.l2[num_layer, g] > 0:
                 c, s = np.cosh, np.sinh
-                l = np.sqrt(self.l2[num_layer][g])
+                l = np.sqrt(self.l2[num_layer, g])
             else:
                 c, s = np.cos, np.sin
-                l = np.sqrt(-self.l2[num_layer][g])
-            trig_funcs.append(self.coefficients[num_layer][n].c[g] * c(abs(x) / l))
-            trig_funcs.append(self.coefficients[num_layer][n].s[g] * s(abs(x) / l))
+                l = np.sqrt(-self.l2[num_layer, g])
+            trig_funcs.append(self.coefficients[num_layer, n].c[g] * c(abs(x) / l))
+            trig_funcs.append(self.coefficients[num_layer, n].s[g] * s(abs(x) / l))
         return np.sum(trig_funcs, axis=0)
 
 
@@ -631,25 +712,25 @@ class NeutronFluxProfile:
         x_end = self.layer_x[num_layer]
 
         for g in range(n + 1):
-            l2g = self.l2[num_layer][g]
+            l2g = self.l2[num_layer, g]
             if l2g > 0:
                 l = np.sqrt(l2g)
                 integrals.append(
-                    l * self.coefficients[num_layer][n].c[g]
+                    l * self.coefficients[num_layer, n].c[g]
                     * (np.sinh(x_end / l) - np.sinh(x_start / l))
                 )
                 integrals.append(
-                    l * self.coefficients[num_layer][n].s[g]
+                    l * self.coefficients[num_layer, n].s[g]
                     * (np.cosh(x_end / l) - np.cosh(x_start / l))
                 )
             else:
                 l = np.sqrt(-l2g)
                 integrals.append(
-                    l * self.coefficients[num_layer][n].c[g]
+                    l * self.coefficients[num_layer, n].c[g]
                     * (np.sin(x_end / l) - np.sin(x_start / l))
                 )
                 integrals.append(
-                    -l * self.coefficients[num_layer][n].s[g]
+                    -l * self.coefficients[num_layer, n].s[g]
                     * (np.cos(x_end / l) - np.cos(x_start / l))
                 )
         return np.sum(integrals, axis=0)
@@ -674,32 +755,32 @@ class NeutronFluxProfile:
         """
         differentials = []
         for g in range(n + 1):
-            l2g = self.l2[num_layer][g]
+            l2g = self.l2[num_layer, g]
             if l2g > 0:
                 l = np.sqrt(l2g)
                 differentials.append(
-                    self.coefficients[num_layer][n].c[g]
+                    self.coefficients[num_layer, n].c[g]
                     / l
                     * np.sinh(abs(x) / l)
                 )
                 differentials.append(
-                    self.coefficients[num_layer][n].s[g]
+                    self.coefficients[num_layer, n].s[g]
                     / l
                     * np.cosh(abs(x) / l)
                 )
             else:
                 l = np.sqrt(-l2g)
                 differentials.append(
-                    -self.coefficients[num_layer][n].c[g]
+                    -self.coefficients[num_layer, n].c[g]
                     / l
                     * np.sin(abs(x) / l)
                 )
                 differentials.append(
-                    self.coefficients[num_layer][n].s[g]
+                    self.coefficients[num_layer, n].s[g]
                     / l
                     * np.cos(abs(x) / l)
                 )
-        return -self.diffusion_const[num_layer][n] * np.sum(differentials, axis=0) * np.sign(x)
+        return -self.diffusion_const[num_layer, n] * np.sum(differentials, axis=0) * np.sign(x)
 
     @summarize_values
     def groupwise_neutron_current_at(
