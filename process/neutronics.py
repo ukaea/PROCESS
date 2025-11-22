@@ -975,13 +975,20 @@ class NeutronFluxProfile:
         ax.set_ylabel(ylabel)
         
         # plotting the interfaces for ease of comprehension.
-        ylims = ax.get_ylims()
+        ylims = ax.get_ylim()
         for (xmin, xmax), mat in zip(pairwise(self.interface_x), self.materials):
-            ax.plot([xmin, xmin], ylims, color="black", ls="--")
-            ax.text([np.mean([xmin, xmax]), 0], mat.name)
-            ax.text([-np.mean([xmin, xmax]), 0], mat.name)
-        ax.plot([xmax, xmax], ylims, color="black", ls="--")
+            _plot_vertical_dotted_line(ax, xmin, ylims, symmetric=symmetric)
+            ax.text(np.mean([xmin, xmax]), 0, mat.name, ha="center", va="center")
+            if symmetric:
+                ax.text(-np.mean([xmin, xmax]), 0, mat.name, ha="center", va="center")
+        _plot_vertical_dotted_line(ax, xmax, ylims, symmetric=symmetric)
         return ax
+
+def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool=True):
+    if symmetric:
+        ax.plot([-x, -x], ylims, color="black", ls="--")
+    ax.plot([x, x], ylims, color="black", ls="--")
+    return None
 
 def _generate_x_range(
     interface_x: npt.NDArray[np.float64],
