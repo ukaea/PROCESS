@@ -30,7 +30,7 @@ def summarize_values(func):
     if not (func.__name__.startswith("groupwise_") and "n" in func_params):
         raise ValueError(
             "The decorated method is designed to turn groupwise methods into "
-            "summed flux/reaction/current methods."
+            "flux/integrated flux/current methods."
         )
 
     @functools.wraps(func)
@@ -309,6 +309,14 @@ class LayerSpecificGroupwiseConstants:
 
     def __repr__(self):
         return f"A tuple of {self.n_layers} layers of {self._name}"
+
+UNIT_LOOKUP = {
+    "integrated_flux": "m^-1 s^-1",
+    "reaction_rate": "m^-2 s^-1",
+    "flux": "m^-2 s^-1",
+    "current": "m^-2 s^-1",
+    "heating": "W m^-3",
+}
 
 class NeutronFluxProfile:
     """
@@ -780,7 +788,14 @@ class NeutronFluxProfile:
                     / l
                     * np.cos(abs(x) / l)
                 )
-        return -self.diffusion_const[num_layer, n] * np.sum(differentials, axis=0) * np.sign(x)
+        def special_sign(x_values):
+            """Forces 0 to be +ve and -0.0 to be -ve."""
+            signs = np.sign(x_values)
+            are_zeros = x_values==0
+            neg_zeros = [str(z).startswith("-") for z in x_values[are_zeros]]
+            signs[are_zeros] = np.array(neg_zeros, dtype=float) * -2 + 1
+            return signs
+        return -self.diffusion_const[num_layer, n] * np.sum(differentials, axis=0) * special_sign(x)
 
     @summarize_values
     def groupwise_neutron_current_at(
@@ -817,7 +832,7 @@ class NeutronFluxProfile:
 
     @summarize_values
     def groupwise_neutron_current_through_interface(
-        self, n: int, n_interface: int, default_to_inner_layer : bool=True
+        self, n: int, n_interface: int, *, default_to_inner_layer : bool=True
     ) -> float:
         """
         Net current from left to right on the positive side of the model, at
@@ -872,163 +887,145 @@ class NeutronFluxProfile:
             n, self.n_layers
         )
 
+    @classmethod
+    def get_output_unit(cls, method) -> str | None:
+        """
+        Check a method's outputted quantity's unit
+        Parameters
+        ----------
+        method:
+            A method whose name we shall be inspecting and comparing against
+            UNIT_LOOKUP.
+        Returns
+        -------
+        :
+            If a match is found, return the unit as a string. Otherwise, return
+            None.
+        """
+        for quantity, unit in UNIT_LOOKUP.items():
+            if quantity in method.__name__:
+                return unit
+
     def plot(
         self,
-        ax: plt.Axes | None = None,
-        n_points: int = 100,
-        symmetric: bool = True,
-        plot_groups: bool = True,
         quantity: str = "flux",
+        ax: plt.Axes | None = None,
+        *,
+        plot_groups: bool = True,
+        symmetric: bool = True,
+        n_points: int = 100,
     ):
         """
         Make a rough plot of the neutron flux.
 
         Parameters
         ----------
+        quantity:
+            Options of plotting which quantity: {"flux", "current", "heating"}.
         ax:
             A plt.Axes object to plot on.
         n_points:
-            number of points to be used for plotting.
+            Number of points to be used for plotting.
         symmetric:
-            Whether to plot from -x to x (symmetric), or from 0 to x (right side only.)
+            Whether to plot from -x to x (symmetric), or from 0 to x
+            (right side only.)
         plot_groups:
             Whether to plot each individual group's neutron flux.
             If True, a legend will be added to help label the groups.
-        quantity:
-            Options of plotting which quantity: {"flux", "current"}.
         """
-        self.solve_group_n(self.n_groups - 1)
         ax = ax or plt.axes()
-
-        x_bz_left, x_fw, x_bz_right = _generate_x_range(
-            max(self.extended_boundary.values()),
-            n_points,
-            symmetric,
-            self.x_fw,
-        )
-        ax.plot(
-            x_bz_left,
-            self.neutron_flux_bz(x_bz_left),
-            color="black",
-            ls=(0, (3, 1, 1, 1)),
-        )
-        ax.plot(
-            x_fw,
-            self.neutron_flux_fw(x_fw),
-            label="total (FW)",
-            color="black",
-            ls="solid",
-        )
-        ax.plot(
-            x_bz_right,
-            self.neutron_flux_bz(x_bz_right),
-            color="black",
-            label="total (BZ)",
-            ls=(0, (3, 1, 1, 1)),
-        )
+        method_name = f"neutron_{quantity}_in_layer"
+        total_function = getattr(self, method_name)
+        unit = self.get_output_unit(total_function)
+        ylabel = f"{quantity}({unit})"
 
         if plot_groups:
-            for n in range(self.n_groups):
-                x_bz_left, x_fw, x_bz_right = _generate_x_range(
-                    self.extended_boundary[n],
-                    n_points,
-                    symmetric,
-                    self.x_fw,
-                )
-                ax.plot(
-                    x_bz_left,
-                    self.neutron_flux_bz(x_bz_left),
-                    color=f"C{n}",
-                    ls=(0, (3, 1, 1, 1)),
-                )
-                ax.plot(
-                    x_fw,
-                    self.neutron_flux_fw(x_fw),
-                    label=f"group {n + 1} (FW)",
-                    color=f"C{n}",
-                    ls="solid",
-                )
-                ax.plot(
-                    x_bz_right,
-                    self.neutron_flux_bz(x_bz_right),
-                    label=f"group {n + 1} (BZ)",
-                    color=f"C{n}",
-                    ls=(0, (3, 1, 1, 1)),
-                )
+            groupwise_function = getattr(self, f"groupwise_{method_name}")
+        x_ranges = _generate_x_range(
+            self.interface_x.copy(),
+            max(self.extended_boundary.values()),
+            min_total_num_points=n_points,
+            symmetric=symmetric
+        )
+        for num_layer in range(self.n_layers):
+            if symmetric:
+                neg_x = next(x_ranges)
+                ax.plot(neg_x, total_function(num_layer, neg_x), color="black")
+            pos_x = next(x_ranges)
+            plot_dict = {"label": "total"} if num_layer==0 else {}
+            ax.plot(
+                pos_x, total_function(num_layer, pos_x),
+                color="black", **plot_dict,
+            )
+            if plot_groups:
+                for n in range(self.n_groups):
+                    if symmetric:
+                        ax.plot(
+                            neg_x, groupwise_function(n, num_layer, neg_x),
+                            color=f"C{n}"
+                        )
+                    plot_dict = {"label": f"group {n}"} if num_layer==0 else {}
+                    ax.plot(
+                        pos_x, groupwise_function(n, num_layer, pos_x),
+                        color=f"C{n}", **plot_dict,
+                    )
         ax.legend()
-        ax.set_title("Neutron flux profile")
+        ax.set_title(f"Neutron {quantity} profile")
         ax.set_xlabel("Distance from the plasma-fw interface [m]")
-        ax.set_ylabel("Neutron flux [m^-2 s^-1]")
+        ax.set_ylabel(ylabel)
+        
+        # plotting the interfaces for ease of comprehension.
+        ylims = ax.get_ylims()
+        for (xmin, xmax), mat in zip(pairwise(self.interface_x), self.materials):
+            ax.plot([xmin, xmin], ylims, color="black", ls="--")
+            ax.text([np.mean([xmin, xmax]), 0], mat.name)
+            ax.text([-np.mean([xmin, xmax]), 0], mat.name)
+        ax.plot([xmax, xmax], ylims, color="black", ls="--")
         return ax
 
 def _generate_x_range(
-    x_max: float,
-    approx_n_points: int,
+    interface_x: npt.NDArray[np.float64],
+    extended_boundary: float | None,
+    *,
+    min_total_num_points: int,
     symmetric: bool,
-    fw_bz_split_point: float | None = None,
 ):
-    """Helper function for finding the range of x-values to be plotted.
+    """Helper generator for finding the range of x-values to be plotted.
 
     Parameters
     ----------
-    x_max:
-        absolute value of the maximum x that we want to plot.
+    interface_x:
+        The x-coordinates of each interface. It should be all-positive, and
+        ascending only.
+    extended_boundary:
+        extended boundary
+    min_total_num_points:
+        Approximate number of points to be plotted. Increase this number to increase the resolution
     symmetric:
-        Whether we want to plot the negative side of the x-axis as well, forming
-        a symmetric plot.
-    approx_n_points:
-        number of points to be plotted.
-    fw_bz_split_point:
-        FW and BZ region splits at this distance. If provided, we generate separate
-        x ranges for the FW and BZ. [m]
+        Whether to return two copies (one negative, one positive) of x-ranges
+        per layer.
 
-    Returns
+    Yields
     -------
-    if (fw_bz_split_point, symmetric) = (float value, True):
-        x_range_bz_left:
-            The array of x-values to be used for plotting the left (negative)
-            side of bz. [m]
-        x_range_fw:
-            The array of x-values to be used for plotting both the left and
-            right sides of fw. [m]
-        x_range_bz_right:
-            The array of x-values to be used for plotting the right (positive)
-            side of bz. [m]
-    elif (fw_bz_split_point, symmetric) = (float value, False):
-        x_range_fw:
-            The array of x-values to be used for plotting the right (positive)
-            side of fw [m]
-        x_range_bz:
-            The array of x-values to be used for plotting the right (positive)
-            side of bz [m]
-    elif (fw_bz_split_point, symmetric) = (None, True):
-        x_range:
-            The array of x-values to be used for plotting both sides of the
-            neutron flux. [m]
-    else (fw_bz_split_point, symmetric) = (None, False):
-        x_range:
-            The array of x-values to be used for plotting the right (positive)
-            side neutron flux. [m]
+    :
+        A generator of x-coordinates used for plotting, each of which falls
+        within the limit of the xmin and xmax of that layer, forming a total
+        of a minimum of min_total_num_points.
+        If symmetric=True, then the number of numpy arrays in the list
+        = 2*n_layers, where out_x_range[0] and out_x_range[1] are for the
+        negative and positive sides of the first layer respectively;
+        out_x_range[2] and out_x_range[3] are for the negative and positive
+        sides of the second layer respectively.
+        Otherwise, the number of numpy arrays in the list = n_layers.
     """
-
-    if fw_bz_split_point is not None:
-        x_range = np.linspace(0, x_max, approx_n_points)
-        n_points_fw = (x_range < fw_bz_split_point).sum() + 1
-        n_points_bz = (x_range >= fw_bz_split_point).sum() + 1
-
+    full_x_range = np.linspace(
+        interface_x.min(), interface_x.max(), min_total_num_points
+    )
+    for num_layer, (xmin, xmax) in enumerate(pairwise(interface_x)):
+        num_points = np.logical_and(xmin<full_x_range, full_x_range<xmax).sum() + 2
+        layer_x_range = np.linspace(xmin, xmax, num_points)
+        if num_layer==(len(interface_x)-1):
+            layer_x_range = np.append(layer_x_range, abs(extended_boundary))
         if symmetric:
-            return (
-                np.linspace(-x_max, -fw_bz_split_point, n_points_bz),
-                np.linspace(
-                    -fw_bz_split_point, fw_bz_split_point, n_points_fw * 2 - 1
-                ),
-                np.linspace(fw_bz_split_point, x_max, n_points_bz),
-            )
-        return (
-            np.linspace(0, fw_bz_split_point, n_points_fw),
-            np.linspace(fw_bz_split_point, x_max, n_points_bz),
-        )
-
-    if symmetric:
-        return np.linspace(-x_max, x_max, approx_n_points * 2 - 1)
-    return np.linspace(0, x_max, approx_n_points)
+            yield -layer_x_range[::-1]
+        yield layer_x_range.copy()
