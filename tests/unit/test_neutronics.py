@@ -1,7 +1,7 @@
 import pytest
 
 from process.exceptions import ProcessValidationError
-from process.neutronics import NeutronFluxProfile
+from process.neutronics import NeutronFluxProfile, LayerSpecificGroupwiseConstants, AutoPopulatingDict
 from process.neutronics_data import MaterialMacroInfo
 
 
@@ -54,6 +54,23 @@ def test_warn_up_elastic_scatter():
             [[0.5, 0.5], [1.0, 1.0]],
         )
 
+def test_throw_index_error():
+    layer_specific_const = LayerSpecificGroupwiseConstants(
+        lambda x: x, ["", ""], ["Dummy constants"]
+    )
+    with pytest.raises(IndexError):
+        layer_specific_const[0, 0, 0]
+    with pytest.raises(IndexError):
+        layer_specific_const[0, 0, 0] = 1
+
+def test_iter_and_len():
+    layer_specific_const = LayerSpecificGroupwiseConstants(
+        lambda x: x, ["", ""], ["Dummy constants"]
+    )
+    assert len(layer_specific_const) == 2
+    as_list = list(layer_specific_const)
+    assert len(as_list) == 2
+    assert isinstance(as_list[0], AutoPopulatingDict)
 
 def test_has_local_fluxes():
     """Test that the groupwise decorator has worked on the local fluxes methods."""

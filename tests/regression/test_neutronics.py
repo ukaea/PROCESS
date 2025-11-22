@@ -36,10 +36,10 @@ def test_one_group():
     )
 
     const = neutron_profile.coefficients  # alias to fit line width
-    assert np.isclose(const[0][0].c[0], 80.5346770788), "c5"
-    assert np.isclose(const[0][0].s[0], -76.5562120985), "c6"
-    assert np.isclose(const[1][0].c[0], 60.6871656017), "c7"
-    assert np.isclose(const[1][0].s[0], -60.7123696772), "c8"
+    assert np.isclose(const[0, 0].c[0], 80.5346770788), "c5"
+    assert np.isclose(const[0, 0].s[0], -76.5562120985), "c6"
+    assert np.isclose(const[1, 0].c[0], 60.6871656017), "c7"
+    assert np.isclose(const[1, 0].s[0], -60.7123696772), "c8"
 
     assert np.isclose(neutron_profile.neutron_flux_in_layer(0, x_fw), 48.72444)
     assert np.isclose(neutron_profile.neutron_flux_in_layer(1, x_fw), 48.72444)
@@ -91,7 +91,7 @@ def test_one_group_with_fission():
     neutron_profile = NeutronFluxProfile(
         incoming_flux, [x_fw, x_bz], [fw_material, bz_material],
     )
-    assert np.isclose(neutron_profile.l2[1][0], -((58.2869567709 / 100) ** 2))
+    assert np.isclose(neutron_profile.l2[1, 0], -((58.2869567709 / 100) ** 2))
     assert np.isclose(
         neutron_profile.neutron_flux_at(-4.79675 / 100), 159.9434
     ), "Minimum flux in FW"
