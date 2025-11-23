@@ -314,7 +314,6 @@ UNIT_LOOKUP = {
     "integrated_flux": "m^-1 s^-1",
     "integrated_heating": "W m^-2",
     "linear_heating_density": "J m^-1",
-    "reaction_rate": "m^-2 s^-1",
     "flux": "m^-2 s^-1",
     "current": "m^-2 s^-1",
     "heating": "W m^-3",
@@ -685,12 +684,27 @@ class NeutronFluxProfile:
         _set_coefficients(results.res)
         return None
 
+    def _check_if_in_layer(
+        self, x: npt.NDArray[np.float64], num_layer: int
+    ) -> npt.NDArray[bool]:
+        if num_layer==(self.n_layers-1):
+            return np.logical_and(
+                self.interface_x[num_layer]<=abs(x),
+                abs(x)<=self.interface_x[num_layer+1]
+            )
+        elif num_layer==self.n_layers:
+            return abs(x)>self.interface_x[-1]
+        return np.logical_and(
+            self.interface_x[num_layer]<=abs(x),
+            abs(x)<=self.interface_x[num_layer+1]
+        )
+
     @summarize_values
     def groupwise_neutron_flux_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
         """
-        Neutron flux[m^-2 s^-1] of the n-th group int h specified layer,
+        Neutron flux[m^-2 s^-1] of the n-th group in the specified layer,
         at location x [m].
 
         Parameters
@@ -709,6 +723,10 @@ class NeutronFluxProfile:
         flux:
             Neutron flux at x meter from the first wall.
         """
+        if num_layer==self.n_layers:
+            return self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers-1, np.sign(x) * self.layer_x[-1]
+            )
         trig_funcs = []
         for g in range(n + 1):
             if self.l2[num_layer, g] > 0:
@@ -721,25 +739,6 @@ class NeutronFluxProfile:
             trig_funcs.append(self.coefficients[num_layer, n].s[g] * s(abs(x) / l))
         return np.sum(trig_funcs, axis=0)
 
-
-    @summarize_values
-    def groupwise_neutron_heating_in_layer(
-        self, n: int, num_layer: int, x: float | npt.NDArray
-    ) -> float | npt.NDArray:
-        """
-        Calculate volumetric heating (unit: [W m^-3]) in the specified group
-        and layer.
-
-        We do not recommend manually integrating this curve by sampling points
-        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
-        of heating across this entire layer, per unit area. Instead, use
-        groupwise_integrated_heating_in_layer/ integrated_heating_in_layer,
-        which is faster and more accurate.
-        """
-        return (
-            self.groupwise_linear_heating_density_in_layer(n, num_layer)
-            * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
-        )
 
     @summarize_values
     def groupwise_neutron_flux_at(
@@ -755,24 +754,96 @@ class NeutronFluxProfile:
             Neutron group index. n <= n_groups - 1.
             Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
         x:
-            The depth where we want the neutron flux [m]. Out-of-bounds x would
-            be clipped back to bound.
+            The depth where we want the neutron flux [m]. Neutron flux at
+            infinity is assumed to be the same as the neutron flux at the
+            nearest layer-void interface. This is achieved by clipping all out-
+            of-bounds x back to the the nearest interface_x.
         """
         if np.isscalar(x):
             return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.clip(np.asarray(x), -self.layer_x[-1], self.layer_x[-1])
+        x = np.asarray(x)
 
         out_flux = np.zeros_like(x)
         abs_x = abs(x)
-        for num_layer, (xmin, xmax) in enumerate(pairwise(self.interface_x)):
-            in_layer = xmin <= abs_x < xmax
-            if num_layer==(self.n_layers-1):
-                in_layer = xmin <= abs_x <= xmax
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
             if in_layer.any():
                 out_flux[in_layer] = self.groupwise_neutron_flux_in_layer(
                     n, num_layer, x[in_layer]
                 )
         return out_flux
+
+    @summarize_values
+    def groupwise_neutron_heating_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Calculate volumetric heating (unit: [W m^-3]) in the specified group
+        and layer.
+
+        We do not recommend manually integrating this curve by sampling points
+        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
+        of heating across this entire layer, per unit area. Instead, use
+        groupwise_integrated_heating_in_layer/ integrated_heating_in_layer,
+        which is faster and more accurate.
+
+        Parameters
+        ----------
+        n:
+            Neutron group index. n <= n_groups - 1.
+            Therefore n=0 shows the flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron heating for.
+        x:
+            The depth where we want the neutron heating [m]. 
+    
+        Returns
+        -------
+        :
+            The neutron heating in that specific layer at position x, due to
+            group n's neutrons.
+        """
+        return (
+            self.groupwise_linear_heating_density_in_layer(n, num_layer)
+            * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+        )
+
+    @summarize_values
+    def groupwise_neutron_heating_at(
+        self, n: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        """
+        Neutron heating [W m^-3] of the n-th group in the specified layer,
+        at location x [m].
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group whose heating is being evaluated.
+            n <= n_groups - 1.
+            Therefore n=0 shows the heating for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron heating for.
+        x:
+            The position where the neutron heating has to be evaluated.
+
+        Returns
+        -------
+        heating:
+            Volumetric neutron heating due to group n's neutrons at x.
+        """
+        if np.isscalar(x):
+            return groupwise_neutron_heating_at(n, num_layer, [x])[0]
+
+        out_heat = np.zeros_like(x)
+        abs_x = abs(x)
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
+            if in_layer.any():
+                out_heat[in_layer] = self.groupwise_neutron_heating_in_layer(
+                    n, num_layer, x[in_layer]
+                )
+        return out_heat
 
     @summarize_values
     def groupwise_neutron_current_in_layer(
@@ -787,10 +858,14 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
         num_layer:
-            The index of the layer that we want to get the neutron flux for.
+            The index of the layer that we want to get the neutron current for.
         x:
-            The depth where we want the neutron flux [m].
+            The depth where we want the neutron current [m].
         """
+        if num_layer==self.n_layers:
+            return self.groupwise_neutron_current_in_layer(
+                n, self.n_layers-1, np.sign(x) * self.layer_x[-1]
+            )
         differentials = []
         for g in range(n + 1):
             l2g = self.l2[num_layer, g]
@@ -835,19 +910,19 @@ class NeutronFluxProfile:
             Neutron group index. n <= n_groups - 1.
             Therefore n=0 shows the neutron current for group 1, n=1 for group 2, etc.
         x:
-            The depth where we want the neutron current [m]. Out-of-bounds x
-            would be clipped back to bound.
+            The depth where we want the neutron current [m]. Neutron current at
+            infinity is assumed to be the same as the neutron flux at the
+            nearest layer-void interface; this is achieved by clipping all out-
+            of-bounds x back to the the nearest interface_x.
         """
         if np.isscalar(x):
-            return self.groupwise_neutron_flux_at(n, [x])[0]
-        x = np.clip(np.asarray(x), -self.layer_x[-1], self.layer_x[-1])
+            return self.groupwise_neutron_current_at(n, [x])[0]
+        x = np.asarray(x)
 
         current = np.zeros_like(x)
         abs_x = abs(x)
-        for num_layer, (xmin, xmax) in enumerate(pairwise(self.interface_x)):
-            in_layer = xmin <= abs_x < xmax
-            if num_layer==(self.n_layers-1):
-                in_layer = xmin <= abs_x <= xmax
+        for num_layer in range(self.n_layers + 1):
+            in_layer = self._check_if_in_layer(x, num_layer)
             if in_layer.any():
                 current[in_layer] = self.groupwise_neutron_current_in_layer(
                     n, num_layer, x[in_layer]
@@ -927,8 +1002,10 @@ class NeutronFluxProfile:
             The index of the neutron group that needs to be solved. n <= n_groups - 1.
             Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
         num_layer:
-            The index of the layer that we want to get the neutron flux for.
+            The index of the layer that we want to get the integrated flux for.
         """
+        if num_layer==self.n_layers:
+            return np.nan
         integrals = []
         # set integration limits
         x_start = self.layer_x[num_layer-1]
@@ -970,6 +1047,8 @@ class NeutronFluxProfile:
         yield the same result as integrating the curve neutron_heating_in_layer
         from self.interface_x[n] to self.interface_x[n+1].
         """
+        if num_layer==self.n_layers:
+            return 0.0
         return (
             self.groupwise_linear_heating_density_in_layer(n, num_layer)
             * self.groupwise_integrated_flux_in_layer(n, num_layer)
@@ -988,6 +1067,8 @@ class NeutronFluxProfile:
         its energy in the n,2n reaction, but we hope this is a small enough
         error that we can overlook it.
         """
+        if num_layer==self.n_layers:
+            return 0.0
         mat = self.materials[num_layer]
         non_scatter_xs = mat.sigma_t[n] - mat.sigma_s[n,:].sum()
         lost_energy = (
@@ -1021,6 +1102,7 @@ class NeutronFluxProfile:
         *,
         plot_groups: bool = True,
         symmetric: bool = True,
+        extend_plot_beyond_boundary: bool=True,
         n_points: int = 100,
     ):
         """
@@ -1052,11 +1134,11 @@ class NeutronFluxProfile:
             groupwise_function = getattr(self, f"groupwise_{method_name}")
         x_ranges = _generate_x_range(
             self.interface_x.copy(),
-            max(self.extended_boundary.values()),
+            max(self.extended_boundary.values()) if extend_plot_beyond_boundary else None,
             min_total_num_points=n_points,
             symmetric=symmetric
         )
-        for num_layer in range(self.n_layers):
+        for num_layer in range(self.n_layers + bool(extend_plot_beyond_boundary)):
             if symmetric:
                 neg_x = next(x_ranges)
                 ax.plot(neg_x, total_function(num_layer, neg_x), color="black")
@@ -1113,10 +1195,10 @@ def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool=True):
 
 def _generate_x_range(
     interface_x: npt.NDArray[np.float64],
-    extended_boundary: float | None,
+    extension_to_be_plotted: float | None=None,
     *,
-    min_total_num_points: int,
-    symmetric: bool,
+    min_total_num_points: int=100,
+    symmetric: bool=True,
 ):
     """Helper generator for finding the range of x-values to be plotted.
 
@@ -1152,8 +1234,17 @@ def _generate_x_range(
     for num_layer, (xmin, xmax) in enumerate(pairwise(interface_x)):
         num_points = np.logical_and(xmin<full_x_range, full_x_range<xmax).sum() + 2
         layer_x_range = np.linspace(xmin, xmax, num_points)
-        if num_layer==(len(interface_x)-1):
-            layer_x_range = np.append(layer_x_range, abs(extended_boundary))
         if symmetric:
             yield -layer_x_range[::-1]
         yield layer_x_range.copy()
+
+    if extension_to_be_plotted:
+        if (extension_to_be_plotted<=interface_x).any():
+            raise ValueError(
+                "The extension_to_be_plotted must extend beyond all of the "
+                "layers' x-coordinates!"
+            )
+        layer_x_range = np.array([np.nextafter(xmax, np.inf), extension_to_be_plotted])
+        if symmetric:
+            yield -layer_x_range[::-1]
+        yield layer_x_range
