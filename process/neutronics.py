@@ -312,6 +312,8 @@ class LayerSpecificGroupwiseConstants:
 
 UNIT_LOOKUP = {
     "integrated_flux": "m^-1 s^-1",
+    "integrated_heating": "W m^-2",
+    "linear_heating_density": "J m^-1",
     "reaction_rate": "m^-2 s^-1",
     "flux": "m^-2 s^-1",
     "current": "m^-2 s^-1",
@@ -979,6 +981,7 @@ class NeutronFluxProfile:
         self, n: int, num_layer: int,
     ) -> float:
         """
+        unit: [J m^-1]
         All reactions that does not lead to scattering are assumed to have
         the full energy of the neutron deposited into the material.
         Obviously this contradicts the assumption of neutrons retaining some of
@@ -993,7 +996,7 @@ class NeutronFluxProfile:
         return self.group_energy[n] * non_scatter_xs + lost_energy
 
     @classmethod
-    def get_output_unit(cls, method) -> str | None:
+    def get_output_unit(cls, method: Callable) -> str | None:
         """
         Check a method's outputted quantity's unit
         Parameters

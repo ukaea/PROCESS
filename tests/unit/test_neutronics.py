@@ -3,7 +3,10 @@ import pytest
 import numpy as np
 from process.exceptions import ProcessValidationError
 from process.neutronics import NeutronFluxProfile, LayerSpecificGroupwiseConstants, AutoPopulatingDict, _get_sign_of
-from process.neutronics_data import MaterialMacroInfo
+from process.neutronics_data import MaterialMacroInfo, DT_NEUTRON_E, EV_TO_J
+
+max_E = DT_NEUTRON_E * 1.01
+min_E = 1E-9 * EV_TO_J
 
 
 def test_group_structure_0_energy():
@@ -104,13 +107,36 @@ def test_has_reactions():
 def test_has_plot():
     assert hasattr(NeutronFluxProfile, "plot")
 
+def test_units():
+    nfp = NeutronFluxProfile
+    assert nfp.get_output_unit(nfp.groupwise_integrated_flux_in_layer)=="m^-1 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_integrated_heating_in_layer)=="W m^-2"
+    assert nfp.get_output_unit(nfp.groupwise_linear_heating_density_in_layer)=="J m^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_current_at)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_current_escaped)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_current_in_layer)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_current_through_interface)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_flux_at)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_flux_in_layer)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.groupwise_neutron_heating_in_layer)=="W m^-3"
+    
+    assert nfp.get_output_unit(nfp.integrated_flux_in_layer)=="m^-1 s^-1"
+    assert nfp.get_output_unit(nfp.integrated_heating_in_layer)=="W m^-2"
+    assert nfp.get_output_unit(nfp.neutron_current_at)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_current_escaped)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_current_in_layer)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_current_through_interface)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_flux_at)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_flux_in_layer)=="m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_heating_in_layer)=="W m^-3"
+
 def test_get_sign_func():
     signs = _get_sign_of(np.array([-np.inf, -2, -1, -0.0, 0.0, 1.0, 2.0, np.inf]))
     np.testing.assert_equal(signs, [-1, -1, -1, -1, 1, 1, 1, 1])
 
 def test_three_group():
     # 1. No negative flux
-    dummy = [10000, 1000, 100, 1]
+    dummy = np.geomspace(max_E, min_E, 4)
     # fw_mat = MaterialMacroInfo()
     bz_mat = MaterialMacroInfo
     # 2. same L_1 and L_3 shoudl yield coefficients[0][2].c[0] and
