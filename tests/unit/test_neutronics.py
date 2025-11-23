@@ -93,6 +93,8 @@ def test_has_reactions():
     """Test that the groupwise decorator has worked on the reactions methods."""
     assert hasattr(NeutronFluxProfile, "groupwise_integrated_flux_in_layer")
     assert hasattr(NeutronFluxProfile, "integrated_flux_in_layer")
+    assert hasattr(NeutronFluxProfile, "groupwise_integrated_heating_in_layer")
+    assert hasattr(NeutronFluxProfile, "integrated_heating_in_layer")
 
 
 def test_has_plot():
