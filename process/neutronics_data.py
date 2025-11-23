@@ -13,6 +13,7 @@ BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 N2N_Q_VALUE = ...
 _ATOMIC_MASS = {}
+DT_NEUTRON_E = 14.06 * 1.602E-19
 
 
 def extract_atomic_mass(isotope: str) -> float:

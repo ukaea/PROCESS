@@ -15,7 +15,7 @@ from numpy import typing as npt
 from scipy import optimize
 
 from process.exceptions import ProcessValidationError, ProcessValueError
-from process.neutronics_data import MaterialMacroInfo
+from process.neutronics_data import MaterialMacroInfo, DT_NEUTRON_E
 
 
 def summarize_values(func):
@@ -960,6 +960,8 @@ class NeutronFluxProfile:
             * self.groupwise_integrated_flux_in_layer(n, num_layer)
         )
 
+    # Do NOT add a summarize_values decorator, as you can't add cross-sections
+    # from different groups together without first multiplying by flux to get reaction rate.
     def groupwise_linear_heating_density_in_layer(
         self, n: int, num_layer: int,
     ) -> float:
