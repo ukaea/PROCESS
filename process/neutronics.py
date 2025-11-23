@@ -724,6 +724,16 @@ class NeutronFluxProfile:
     def groupwise_neutron_heating_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
     ) -> float | npt.NDArray:
+        """
+        Calculate volumetric heating (unit: [W m^-3]) in the specified group
+        and layer.
+
+        We do not recommend manually integrating this curve by sampling points
+        in [self.interface_x[n], self.interface_x[n+1]] to get the total amount
+        of heating across this entire layer, per unit area. Instead, use
+        groupwise_integrated_heating_in_layer/ integrated_heating_in_layer,
+        which is faster and more accurate.
+        """
         return (
             self.groupwise_linear_heating_density_in_layer(n, num_layer)
             * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
@@ -953,7 +963,10 @@ class NeutronFluxProfile:
         self, n: int, num_layer: int,
     ) -> float:
         """
-        How much neutron heating is 
+        The total amount of heat produced (per unit area) due to neutron
+        heating across the entire num_layer-th layer. unit: [W m^-2]. It should
+        yield the same result as integrating the curve neutron_heating_in_layer
+        from self.interface_x[n] to self.interface_x[n+1].
         """
         return (
             self.groupwise_linear_heating_density_in_layer(n, num_layer)
