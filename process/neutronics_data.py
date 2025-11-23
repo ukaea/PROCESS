@@ -13,7 +13,8 @@ BARNS_TO_M2 = 1e-28
 N_A = Avogadro
 N2N_Q_VALUE = ...
 _ATOMIC_MASS = {}
-DT_NEUTRON_E = 14.06 * 1.602E-19
+EV_TO_J = 1.602E-19
+DT_NEUTRON_E = 14.06 * EV_TO_J
 
 
 def extract_atomic_mass(isotope: str) -> float:
@@ -492,7 +493,7 @@ class MaterialMacroInfo:
 
         if (self.group_structure <= 0).any():
             warnings.warn("Zero energy (inf. lethargy) not allowed.")
-            self.group_structure = np.clip(self.group_structure, 1e-9, np.inf)
+            self.group_structure = np.clip(self.group_structure, 1e-9 * EV_TO_J, np.inf)
         if (np.diff(self.group_structure) >= 0).any():
             raise ValueError(
                 "The group structure must be defined descendingly, from the "
