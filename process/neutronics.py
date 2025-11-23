@@ -332,14 +332,18 @@ class NeutronFluxProfile:
         flux: float,
         layer_x: npt.NDArray[np.float64],
         materials: Iterable[MaterialMacroInfo],
+        init_neutron_energy: float = DT_NEUTRON_E,
     ):
         """Initialize a particular FW-BZ geometry and neutron flux.
 
         Parameters
         ----------
         flux:
-            Nuetron flux directly emitted by the plasma, incident on the first wall.
-            unit: m^-2 s^-1
+            Neutron flux directly emitted by the plasma, incident on the first
+            wall. unit: m^-2 s^-1
+        init_neutron_energy:
+            Neutron's initial energy when it first exit the plasma, before any
+            downscattering or reactions. unit: J.
         layer_x:
             The x-coordinates of the right side of every layers. By definition,
             the plasma is situated at x=0, so all values in layer_x must be >0.
@@ -364,6 +368,8 @@ class NeutronFluxProfile:
             Number of groups in the group structure
         group_structure:
             Energy bin edges, 1D array of len = n_groups+1
+        energy:
+            The mean neutron energy of each group.
 
         coefficients:
             Coefficients that determine the flux shape (and therefore reaction
@@ -380,6 +386,7 @@ class NeutronFluxProfile:
         """
         # flux incident on the first wall at the highest energy.
         self.flux = flux
+        self.init_neutron_energy = init_neutron_energy
 
         # layers
         self.layer_x = np.array(layer_x).ravel()
@@ -411,6 +418,9 @@ class NeutronFluxProfile:
                 )
         self.n_groups = fw_mat.n_groups
         self.group_structure = fw_mat.group_structure
+        self.group_energy = self._calculate_mean_energy(
+            self.group_structure, self.init_neutron_energy
+        )
 
         mat_name_list = [mat.name for mat in self.materials]
         self.coefficients = LayerSpecificGroupwiseConstants(
@@ -426,6 +436,55 @@ class NeutronFluxProfile:
         self.extended_boundary = AutoPopulatingDict(
             self.solve_group_n, "extended_boundary"
         )
+
+    @staticmethod
+    def _calculate_mean_energy(
+        group_structure: npt.NDArray[np.float64], init_neutron_e: float,
+    ) -> npt.NDArray[np.float64]:
+        """
+        Calculate the mean energy of each neutron group in Joule.
+        When implementing this method, we can choose either a weighted mean or
+        an unweighted mean. The weighted mean (where neutron flux is assumed
+        constant w.r.t. neutorn lethargy within the bin) is more accurate, but
+        may end up being incorrect if the bins in the group structure are too
+        wide, as it heavily biases towards lower energy. In contrast, the
+        simple unweighted mean does not have such problem, but is inconsistent
+        with the rest of the program's assumption (const. flux w.r.t. lethargy),
+        therefore the former is chosen.
+
+        Parameters
+        ----------
+        group_structure:
+            The neutron energy bin's edges, in descending order, with len=
+            n_groups + 1.
+        init_neutron_e:
+            The neutrons entering from the plasma to the FW is assumed to be
+            monoenergetic, with this energy.
+
+        Returns
+        -------
+        mean_neutron_e:
+            Mean energy of neutrons. The bin containing init_neutron_e
+            (likely the highest energy bin, i.e. bin[0]) is assumed to be
+            dominated by the unscattered neutrons entering from the plasma,
+            therefore it is 
+        """
+        high, low = group_structure[:-1], group_structure[1:]
+        weighted_mean = (high - low)/(np.log(high)- np.log(low))
+        # unweighted_mean = np.mean([high, low], axis=0)
+        first_bin = np.logical_and(high>init_neutron_e, init_neutron_e>=low)
+        if first_bin.sum()<1:
+            raise ValueError(
+                "The energy of neutrons incident from the plasma is not "
+                "captured by the group structure!"
+            )
+        elif first_bin.sum()>1:
+            raise ValueError(
+                "The energy of neutrons incident from the plasma is NOT captured by the group "
+                "structure!"
+            )
+        weighted_mean[first_bin] = init_neutron_e
+        return weighted_mean
 
     def solve_lowest_group(self) -> None:
         """
@@ -627,7 +686,7 @@ class NeutronFluxProfile:
     @summarize_values
     def groupwise_neutron_flux_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
-    ) -> npt.NDArray:
+    ) -> float | npt.NDArray:
         """
         Neutron flux[m^-2 s^-1] of the n-th group int h specified layer,
         at location x [m].
@@ -662,9 +721,18 @@ class NeutronFluxProfile:
 
 
     @summarize_values
+    def groupwise_neutron_heating_in_layer(
+        self, n: int, num_layer: int, x: float | npt.NDArray
+    ) -> float | npt.NDArray:
+        return (
+            self.groupwise_linear_heating_density_in_layer(n, num_layer)
+            * self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+        )
+
+    @summarize_values
     def groupwise_neutron_flux_at(
         self, n: int, x: float | npt.NDArray
-    ) -> npt.NDArray:
+    ) -> float | npt.NDArray:
         """
         Neutron flux [m^-2 s^-1] anywhere. Neutron flux is assumed to be
         unperturbed once it leaves the final layer.
@@ -694,60 +762,10 @@ class NeutronFluxProfile:
                 )
         return out_flux
 
-    # scalar values (one such float per neutron group.)
-    @summarize_values
-    def groupwise_integrated_flux_in_layer(
-        self, n: int, num_layer: int
-    ) -> float:
-        """
-        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
-        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
-        any layer specified.
-
-        Parameters
-        ----------
-        n:
-            The index of the neutron group that needs to be solved. n <= n_groups - 1.
-            Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
-        num_layer:
-            The index of the layer that we want to get the neutron flux for.
-        """
-        integrals = []
-        # set integration limits
-        x_start = self.layer_x[num_layer-1]
-        if num_layer==0:
-            x_start = 0.0
-        x_end = self.layer_x[num_layer]
-
-        for g in range(n + 1):
-            l2g = self.l2[num_layer, g]
-            if l2g > 0:
-                l = np.sqrt(l2g)
-                integrals.append(
-                    l * self.coefficients[num_layer, n].c[g]
-                    * (np.sinh(x_end / l) - np.sinh(x_start / l))
-                )
-                integrals.append(
-                    l * self.coefficients[num_layer, n].s[g]
-                    * (np.cosh(x_end / l) - np.cosh(x_start / l))
-                )
-            else:
-                l = np.sqrt(-l2g)
-                integrals.append(
-                    l * self.coefficients[num_layer, n].c[g]
-                    * (np.sin(x_end / l) - np.sin(x_start / l))
-                )
-                integrals.append(
-                    -l * self.coefficients[num_layer, n].s[g]
-                    * (np.cos(x_end / l) - np.cos(x_start / l))
-                )
-        return np.sum(integrals, axis=0)
-
-
     @summarize_values
     def groupwise_neutron_current_in_layer(
         self, n: int, num_layer: int, x: float | npt.NDArray
-    ) -> float:
+    ) -> float | npt.NDArray:
         """
         Get the neutron current (right=positive, left=negative) in any layer.
 
@@ -794,7 +812,7 @@ class NeutronFluxProfile:
     @summarize_values
     def groupwise_neutron_current_at(
         self, n: int, x: float | npt.NDArray
-    ) -> npt.NDArray:
+    ) -> float | npt.NDArray:
         """
         Neutron current [m^-2 s^-1]. Neutron current is assumed to be
         unperturbed once it leaves the final layer.
@@ -880,6 +898,84 @@ class NeutronFluxProfile:
         return self.groupwise_neutron_current_through_interface(
             n, self.n_layers
         )
+
+    # scalar values (one such float per neutron group, and per layer.)
+    @summarize_values
+    def groupwise_integrated_flux_in_layer(
+        self, n: int, num_layer: int
+    ) -> float:
+        """
+        Calculate the integrated flux[m^-1 s^-1], which can be mulitplied to any
+        macroscopic cross-section [m^-1] to get the reaction rate [s^-1] in
+        any layer specified.
+
+        Parameters
+        ----------
+        n:
+            The index of the neutron group that needs to be solved. n <= n_groups - 1.
+            Therefore n=0 shows the integrated flux for group 1, n=1 for group 2, etc.
+        num_layer:
+            The index of the layer that we want to get the neutron flux for.
+        """
+        integrals = []
+        # set integration limits
+        x_start = self.layer_x[num_layer-1]
+        if num_layer==0:
+            x_start = 0.0
+        x_end = self.layer_x[num_layer]
+
+        for g in range(n + 1):
+            l2g = self.l2[num_layer, g]
+            if l2g > 0:
+                l = np.sqrt(l2g)
+                integrals.append(
+                    l * self.coefficients[num_layer, n].c[g]
+                    * (np.sinh(x_end / l) - np.sinh(x_start / l))
+                )
+                integrals.append(
+                    l * self.coefficients[num_layer, n].s[g]
+                    * (np.cosh(x_end / l) - np.cosh(x_start / l))
+                )
+            else:
+                l = np.sqrt(-l2g)
+                integrals.append(
+                    l * self.coefficients[num_layer, n].c[g]
+                    * (np.sin(x_end / l) - np.sin(x_start / l))
+                )
+                integrals.append(
+                    -l * self.coefficients[num_layer, n].s[g]
+                    * (np.cos(x_end / l) - np.cos(x_start / l))
+                )
+        return np.sum(integrals, axis=0)
+
+    @summarize_values
+    def groupwise_integrated_heating_in_layer(
+        self, n: int, num_layer: int,
+    ) -> float:
+        """
+        How much neutron heating is 
+        """
+        return (
+            self.groupwise_linear_heating_density_in_layer(n, num_layer)
+            * self.groupwise_integrated_flux_in_layer(n, num_layer)
+        )
+
+    def groupwise_linear_heating_density_in_layer(
+        self, n: int, num_layer: int,
+    ) -> float:
+        """
+        All reactions that does not lead to scattering are assumed to have
+        the full energy of the neutron deposited into the material.
+        Obviously this contradicts the assumption of neutrons retaining some of
+        its energy in the n,2n reaction, but we hope this is a small enough
+        error that we can overlook it.
+        """
+        mat = self.materials[num_layer]
+        non_scatter_xs = mat.sigma_t[n] - mat.sigma_s[n,:].sum()
+        lost_energy = (
+            (self.group_energy[n] - self.group_energy) * mat.sigma_s[n,:]
+        ).sum()
+        return self.group_energy[n] * non_scatter_xs + lost_energy
 
     @classmethod
     def get_output_unit(cls, method) -> str | None:

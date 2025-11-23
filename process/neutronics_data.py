@@ -402,9 +402,9 @@ def n2n_weight_matrix(
     ----------
     group_structure:
         the n+1 energy bin boundaries for the n neutron groups, in descending energies,
-        in eV.
+        in J.
     q_value:
-        the q-value of the reaction in eV.
+        the q-value of the reaction in J.
 
     Returns
     -------
@@ -462,7 +462,7 @@ class MaterialMacroInfo:
         e.g. [0,3] would be the cross-section for the proudction of group 4
         neutrons due to n,2n and fission reactions caused by group 1 neutrons.
     group_structure:
-        energy bin edges, 1D array of len = n+1, in eV.
+        energy bin edges, 1D array of len = n+1, in [J].
     avg_atomic_mass:
         average atomic mass (weighted by fraction)
     """
