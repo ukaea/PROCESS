@@ -83,7 +83,11 @@ def test_has_local_fluxes():
 
 def test_has_boundary_current():
     """Test that the groupwise decorator has worked on the boundary fluxes methods."""
-    assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_through_interface")
+    assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_in_layer")
+    assert hasattr(NeutronFluxProfile, "neutron_current_in_layer")
+    assert hasattr(
+        NeutronFluxProfile, "groupwise_neutron_current_through_interface"
+    )
     assert hasattr(NeutronFluxProfile, "neutron_current_through_interface")
     assert hasattr(NeutronFluxProfile, "groupwise_neutron_current_escaped")
     assert hasattr(NeutronFluxProfile, "neutron_current_escaped")

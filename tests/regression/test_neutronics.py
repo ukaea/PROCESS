@@ -1,15 +1,17 @@
 import numpy as np
 
 from process.neutronics import NeutronFluxProfile
-from process.neutronics_data import MaterialMacroInfo
+from process.neutronics_data import MaterialMacroInfo, DT_NEUTRON_E, EV_TO_J
 
+max_E = DT_NEUTRON_E * 1.01
+min_E = 1E-9 * EV_TO_J
 
 def test_one_group():
     """
     Regression test against Desmos snapshot:
     https://www.desmos.com/calculator/18xojespuo
     """
-    dummy = [100, 1]  # dummy group structure
+    dummy = [max_E, min_E]  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
@@ -64,7 +66,7 @@ def test_one_group_with_fission():
     https://www.desmos.com/calculator/cd830add9c
     Expecting a cosine-shape (dome shape!) of neutron flux profile.
     """
-    dummy = [100, 1]
+    dummy = [max_E, min_E]
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]

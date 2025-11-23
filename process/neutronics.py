@@ -1025,6 +1025,7 @@ class NeutronFluxProfile:
             Whether to plot each individual group's neutron flux.
             If True, a legend will be added to help label the groups.
         """
+        self.solve_group_n(self.n_groups - 1)
         ax = ax or plt.axes()
         method_name = f"neutron_{quantity}_in_layer"
         total_function = getattr(self, method_name)
@@ -1077,7 +1078,14 @@ class NeutronFluxProfile:
         return ax
 
 def _get_sign_of(x_values):
-    """Forces 0 to be +ve and -0.0 to be -ve."""
+    """
+    Get sign of any real number, but also forces 0.0 to be +ve and -0.0 to be -ve.
+    The neutron current for the first group (in a non-breeding/weakly breeding
+    scenario) is strongest at x=0, but have different signs when limit x-> 0^+
+    and limit x-> 0^-. This function allows the input x to behave like 0^+ when
+    it's =0.0 and like 0^- when it's =-0.0, giving the correct neutron current
+    at those locations, rather than setting the neutron current to zer0.
+    """
     negatives = np.signbit(x_values)
     return np.array(negatives, dtype=float) * -2 + 1
 
