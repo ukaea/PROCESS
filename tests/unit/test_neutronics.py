@@ -1,7 +1,8 @@
 import pytest
 
+import numpy as np
 from process.exceptions import ProcessValidationError
-from process.neutronics import NeutronFluxProfile, LayerSpecificGroupwiseConstants, AutoPopulatingDict
+from process.neutronics import NeutronFluxProfile, LayerSpecificGroupwiseConstants, AutoPopulatingDict, _get_sign_of
 from process.neutronics_data import MaterialMacroInfo
 
 
@@ -96,6 +97,10 @@ def test_has_reactions():
 
 def test_has_plot():
     assert hasattr(NeutronFluxProfile, "plot")
+
+def test_get_sign_func():
+    signs = _get_sign_of(np.array([-np.inf, -2, -1, -0.0, 0.0, 1.0, 2.0, np.inf]))
+    np.testing.assert_equal(signs, [-1, -1, -1, -1, 1, 1, 1, 1])
 
 def test_three_group():
     # 1. No negative flux
