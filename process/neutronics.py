@@ -788,14 +788,8 @@ class NeutronFluxProfile:
                     / l
                     * np.cos(abs(x) / l)
                 )
-        def special_sign(x_values):
-            """Forces 0 to be +ve and -0.0 to be -ve."""
-            signs = np.sign(x_values)
-            are_zeros = x_values==0
-            neg_zeros = [str(z).startswith("-") for z in x_values[are_zeros]]
-            signs[are_zeros] = np.array(neg_zeros, dtype=float) * -2 + 1
-            return signs
-        return -self.diffusion_const[num_layer, n] * np.sum(differentials, axis=0) * special_sign(x)
+    
+        return -self.diffusion_const[num_layer, n] * np.sum(differentials, axis=0) * _get_sign_of(x)
 
     @summarize_values
     def groupwise_neutron_current_at(
@@ -983,6 +977,11 @@ class NeutronFluxProfile:
                 ax.text(-np.mean([xmin, xmax]), 0, mat.name, ha="center", va="center")
         _plot_vertical_dotted_line(ax, xmax, ylims, symmetric=symmetric)
         return ax
+
+def _get_sign_of(x_values):
+    """Forces 0 to be +ve and -0.0 to be -ve."""
+    negatives = np.signbit(x_values)
+    return np.array(negatives, dtype=float) * -2 + 1
 
 def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool=True):
     if symmetric:
