@@ -654,21 +654,35 @@ class NeutronFluxProfile:
                 self.coefficients[num_layer, n].s[n] = input_vector[i+1]
 
         def _evaluate_fit():
-            # zero flux condition 
-            flux_at_boundary = self.groupwise_neutron_flux_in_layer(
-                n, self.n_layers - 1, self.extended_boundary[n]
+            # Enforce zero net current flowing out of the plasma.
+            no_net_current_at_zero = self.groupwise_neutron_current_in_layer(
+                n, 0, 0.0
             )
+            conditions = [no_net_current_at_zero]
 
-            conditions = [flux_at_boundary]
-
-            # enforce continuity conditions
+            # Enforce continuity conditions.
             for num_layer in range(self.n_layers - 1):
                 x = self.layer_x[num_layer]
-                flux_continuity = self.groupwise_neutron_flux_in_layer(n, num_layer, x) - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
-                current_continuity = self.groupwise_neutron_current_in_layer(n, num_layer, x) - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
+                flux_continuity = (
+                    self.groupwise_neutron_flux_in_layer(n, num_layer, x)
+                    - self.groupwise_neutron_flux_in_layer(
+                        n, num_layer + 1, x
+                    )
+                )
+                current_continuity = (
+                    self.groupwise_neutron_current_in_layer(n, num_layer, x)
+                    - self.groupwise_neutron_current_in_layer(
+                        n, num_layer + 1, x
+                    )
+                )
                 conditions.append(flux_continuity)
                 conditions.append(current_continuity)
-            # TODO: there may be one more condition that I should impose: the slope at x=0 should be 0.
+
+            # Enforce zero flux at extended boundary
+            flux_at_extended_boundary = self.groupwise_neutron_flux_in_layer(
+                n, self.n_layers - 1, self.extended_boundary[n]
+            )
+            conditions.append(flux_at_extended_boundary)
             return np.array(conditions)
 
         def objective(coefficients_vector):
