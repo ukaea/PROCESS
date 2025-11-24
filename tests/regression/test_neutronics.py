@@ -1,19 +1,19 @@
 import numpy as np
+from scipy.integrate import trapezoid
 
 from process.neutronics import NeutronFluxProfile
-from process.neutronics_data import MaterialMacroInfo, DT_NEUTRON_E, EV_TO_J
-from scipy.integrate import trapezoid
-from matplotlib import pyplot as plt
+from process.neutronics_data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo
 
-max_E = DT_NEUTRON_E * 1.01
-min_E = 1E-9 * EV_TO_J
+MAX_E = DT_NEUTRON_E * 1.01
+MIN_E = 1e-9 * EV_TO_J
+
 
 def test_one_group():
     """
     Regression test against Desmos snapshot:
     https://www.desmos.com/calculator/18xojespuo
     """
-    dummy = [max_E, min_E]  # dummy group structure
+    dummy = [MAX_E, MIN_E]  # dummy group structure
     # translate from mean-free-path lengths (mfp) to macroscopic cross-sections
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
@@ -49,9 +49,10 @@ def test_one_group():
     assert np.isclose(neutron_profile.neutron_flux_in_layer(1, x_fw), 48.72444)
     assert np.isclose(neutron_profile.neutron_flux_at(x_fw), 48.72444)
 
-    assert np.isclose(neutron_profile.neutron_current_through_interface(1), 22.3980214162)
+    assert np.isclose(
+        neutron_profile.neutron_current_through_interface(1), 22.3980214162
+    )
     assert np.isclose(neutron_profile.neutron_current_escaped(), 1.22047369356)
-
 
     fw_removal = sigma_fw_t - sigma_fw_s - fw_material.sigma_in[0, 0]
     bz_removal = sigma_bz_t - sigma_bz_s - bz_material.sigma_in[0, 0]
@@ -64,19 +65,25 @@ def test_one_group():
 
     x_fw = np.linspace(*neutron_profile.interface_x[0:2], 100000)
     manually_integrated_heating_fw = trapezoid(
-        neutron_profile.neutron_heating_in_layer(0, x_fw), x_fw,
+        neutron_profile.neutron_heating_in_layer(0, x_fw),
+        x_fw,
     )
     x_bz = np.linspace(*neutron_profile.interface_x[1:3], 100000)
     manually_integrated_heating_bz = trapezoid(
-        neutron_profile.neutron_heating_in_layer(1, x_bz), x_bz,
+        neutron_profile.neutron_heating_in_layer(1, x_bz),
+        x_bz,
     )
     assert np.isclose(
         neutron_profile.integrated_heating_in_layer(0),
-        manually_integrated_heating_fw, atol=0, rtol=1E-8,
+        manually_integrated_heating_fw,
+        atol=0,
+        rtol=1e-8,
     ), "Correctly integrated heating in FW"
     assert np.isclose(
         neutron_profile.integrated_heating_in_layer(1),
-        manually_integrated_heating_bz, atol=0, rtol=1E-8,
+        manually_integrated_heating_bz,
+        atol=0,
+        rtol=1e-8,
     ), "Correctly integrated heating in BZ"
 
 
@@ -86,7 +93,7 @@ def test_one_group_with_fission():
     https://www.desmos.com/calculator/cd830add9c
     Expecting a cosine-shape (dome shape!) of neutron flux profile.
     """
-    dummy = [max_E, min_E]
+    dummy = [MAX_E, MIN_E]
     mfp_fw_s = 118 * 0.01  # [m]
     mfp_fw_t = 16.65 * 0.01  # [m]
     sigma_fw_t = 1 / mfp_fw_t  # [1/m]
@@ -111,7 +118,9 @@ def test_one_group_with_fission():
     x_fw, x_bz = 5.72 * 0.01, 85 * 0.01
     incoming_flux = 41
     neutron_profile = NeutronFluxProfile(
-        incoming_flux, [x_fw, x_bz], [fw_material, bz_material],
+        incoming_flux,
+        [x_fw, x_bz],
+        [fw_material, bz_material],
     )
     assert np.isclose(neutron_profile.l2[1, 0], -((58.2869567709 / 100) ** 2))
     assert np.isclose(
@@ -131,7 +140,8 @@ def test_one_group_with_fission():
         neutron_profile.neutron_flux_in_layer(1, x_fw),
     ), "Flux continuity assurance"
     assert np.isclose(
-        neutron_profile.neutron_current_through_interface(1), -7.6275782637960745
+        neutron_profile.neutron_current_through_interface(1),
+        -7.6275782637960745,
     ), "Negative current because BZ (breeding) is backflowing into the FW"
     assert np.isclose(
         neutron_profile.neutron_current_escaped(), 30.665951670177186
@@ -147,19 +157,25 @@ def test_one_group_with_fission():
     ), "Conservation of neutrons"
     x_fw = np.linspace(*neutron_profile.interface_x[0:2], 100000)
     manually_integrated_heating_fw = trapezoid(
-        neutron_profile.neutron_heating_in_layer(0, x_fw), x_fw,
+        neutron_profile.neutron_heating_in_layer(0, x_fw),
+        x_fw,
     )
     x_bz = np.linspace(*neutron_profile.interface_x[1:3], 100000)
     manually_integrated_heating_bz = trapezoid(
-        neutron_profile.neutron_heating_in_layer(1, x_bz), x_bz,
+        neutron_profile.neutron_heating_in_layer(1, x_bz),
+        x_bz,
     )
     assert np.isclose(
         neutron_profile.integrated_heating_in_layer(0),
-        manually_integrated_heating_fw, atol=0, rtol=1E-8,
+        manually_integrated_heating_fw,
+        atol=0,
+        rtol=1e-8,
     ), "Correctly integrated heating in FW"
     assert np.isclose(
         neutron_profile.integrated_heating_in_layer(1),
-        manually_integrated_heating_bz, atol=0, rtol=1E-8,
+        manually_integrated_heating_bz,
+        atol=0,
+        rtol=1e-8,
     ), "Correctly integrated heating in BZ"
 
 
