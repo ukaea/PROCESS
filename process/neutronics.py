@@ -658,31 +658,16 @@ class NeutronFluxProfile:
             flux_at_boundary = self.groupwise_neutron_flux_in_layer(
                 n, self.n_layers - 1, self.extended_boundary[n]
             )
-            # conservation condition
-            influx, removal = 0.0, 0.0
-            for g in range(self.n_groups):
-                if g > n and not first_iteration:
-                    for num_layer, mat in self.materials:
-                        if not mat.downscatter_only:
-                            influx += (mat.sigma_s[g, n] + mat.sigma_in[g, n]) * self.groupwise_integrated_flux_in_layer(g, num_layer)
-                elif g <= n:
-                    for num_layer, mat in self.materials:
-                        influx += (mat.sigma_s[g, n] + mat.sigma_in[g, n]) * self.groupwise_integrated_flux_in_layer(g, num_layer)
-            for num_layer, mat in self.materials:
-                removal += mat.sigma_t[n] * self.groupwise_integrated_flux_in_layer(n, num_layer)
-            # conservation_fw = influx_fw - removal_fw - current_fw2bz
-            # conservation_bz = current_fw2bz + influx_bz - removal_bz - escaped_bz
-            total_neutron_conservation = influx - removal - self.groupwise_neutron_current_escaped(n)
 
-            conditions = [flux_at_boundary, total_neutron_conservation]
+            conditions = [flux_at_boundary]
 
             # enforce continuity conditions
             for num_layer in range(self.n_layers - 1):
                 x = self.layer_x[num_layer]
                 flux_continuity = self.groupwise_neutron_flux_in_layer(n, num_layer, x) - self.groupwise_neutron_flux_in_layer(n, num_layer + 1, x)
                 current_continuity = self.groupwise_neutron_current_in_layer(n, num_layer, x) - self.groupwise_neutron_current_in_layer(n, num_layer + 1, x)
-            conditions.append(flux_continuity)
-            conditions.append(current_continuity)
+                conditions.append(flux_continuity)
+                conditions.append(current_continuity)
             # TODO: there may be one more condition that I should impose: the slope at x=0 should be 0.
             return np.array(conditions)
 
