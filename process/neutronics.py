@@ -369,8 +369,11 @@ class NeutronFluxProfile:
             Number of groups in the group structure
         group_structure:
             Energy bin edges, 1D array of len = n_groups+1
-        energy:
-            The mean neutron energy of each group.
+        group_energy:
+            The average neutron energy of each group.
+        incident_neutron_group:
+            The group index (n) of the neutron group that contains the incident
+            (monoenergetic) plasma neutron's energy.
 
         coefficients:
             Coefficients that determine the flux shape (and therefore reaction
@@ -419,8 +422,10 @@ class NeutronFluxProfile:
                 )
         self.n_groups = fw_mat.n_groups
         self.group_structure = fw_mat.group_structure
-        self.group_energy = self._calculate_mean_energy(
-            self.group_structure, self.init_neutron_energy
+        self.group_energy, self.incident_neutron_group = (
+            self._calculate_mean_energy_and_incident_bin(
+                self.group_structure, self.init_neutron_energy
+            )
         )
 
         mat_name_list = [mat.name for mat in self.materials]
@@ -439,11 +444,11 @@ class NeutronFluxProfile:
         )
 
     @staticmethod
-    def _calculate_mean_energy(
+    def _calculate_mean_energy_and_incident_bin(
         group_structure: npt.NDArray[np.float64], init_neutron_e: float,
     ) -> npt.NDArray[np.float64]:
         """
-        Calculate the mean energy of each neutron group in Joule.
+        Calculate the average energy of each neutron group in Joule.
         When implementing this method, we can choose either a weighted mean or
         an unweighted mean. The weighted mean (where neutron flux is assumed
         constant w.r.t. neutorn lethargy within the bin) is more accurate, but
@@ -464,7 +469,7 @@ class NeutronFluxProfile:
 
         Returns
         -------
-        mean_neutron_e:
+        avg_neutron_e:
             Mean energy of neutrons. The bin containing init_neutron_e
             (likely the highest energy bin, i.e. bin[0]) is assumed to be
             dominated by the unscattered neutrons entering from the plasma,
@@ -474,6 +479,7 @@ class NeutronFluxProfile:
         weighted_mean = (high - low)/(np.log(high)- np.log(low))
         # unweighted_mean = np.mean([high, low], axis=0)
         first_bin = np.logical_and(low<=init_neutron_e, init_neutron_e<high)
+        incident_neutron_group = np.where(first_bin)[0][0]
         if first_bin.sum()<1:
             raise ValueError(
                 "The energy of neutrons incident from the plasma is not "
@@ -484,13 +490,13 @@ class NeutronFluxProfile:
                 "The energy of neutrons incident from the plasma is captured "
                 "multiple times, by more than one bin in the group structure!"
             )
-        if not first_bin[0]:
+        if incident_neutron_group!=0:
             raise NotImplementedError(
                 "If init_neutron_e does not sit inside the lowest lethargy "
                 "group, then solve_lowest_group would have to be re-written."
             )
         weighted_mean[first_bin] = init_neutron_e
-        return weighted_mean
+        return weighted_mean, incident_neutron_group
 
     def solve_lowest_group(self) -> None:
         """
