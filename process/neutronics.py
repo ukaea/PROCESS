@@ -473,7 +473,7 @@ class NeutronFluxProfile:
         high, low = group_structure[:-1], group_structure[1:]
         weighted_mean = (high - low)/(np.log(high)- np.log(low))
         # unweighted_mean = np.mean([high, low], axis=0)
-        first_bin = np.logical_and(high>init_neutron_e, init_neutron_e>=low)
+        first_bin = np.logical_and(low<=init_neutron_e, init_neutron_e<high)
         if first_bin.sum()<1:
             raise ValueError(
                 "The energy of neutrons incident from the plasma is not "
@@ -481,8 +481,13 @@ class NeutronFluxProfile:
             )
         elif first_bin.sum()>1:
             raise ValueError(
-                "The energy of neutrons incident from the plasma is NOT captured by the group "
-                "structure!"
+                "The energy of neutrons incident from the plasma is captured "
+                "multiple times, by more than one bin in the group structure!"
+            )
+        if not first_bin[0]:
+            raise NotImplementedError(
+                "If init_neutron_e does not sit inside the lowest lethargy "
+                "group, then solve_lowest_group would have to be re-written."
             )
         weighted_mean[first_bin] = init_neutron_e
         return weighted_mean
