@@ -1,12 +1,17 @@
+import numpy as np
 import pytest
 
-import numpy as np
 from process.exceptions import ProcessValidationError
-from process.neutronics import NeutronFluxProfile, LayerSpecificGroupwiseConstants, AutoPopulatingDict, _get_sign_of
-from process.neutronics_data import MaterialMacroInfo, DT_NEUTRON_E, EV_TO_J
+from process.neutronics import (
+    AutoPopulatingDict,
+    LayerSpecificGroupwiseConstants,
+    NeutronFluxProfile,
+    _get_sign_of,
+)
+from process.neutronics_data import DT_NEUTRON_E, EV_TO_J, MaterialMacroInfo
 
-max_E = DT_NEUTRON_E * 1.01
-min_E = 1E-9 * EV_TO_J
+MAX_E = DT_NEUTRON_E * 1.01
+MIN_E = 1e-9 * EV_TO_J
 
 
 def test_group_structure_0_energy():
@@ -58,6 +63,7 @@ def test_warn_up_elastic_scatter():
             [[0.5, 0.5], [1.0, 1.0]],
         )
 
+
 def test_throw_index_error():
     layer_specific_const = LayerSpecificGroupwiseConstants(
         lambda x: x, ["", ""], ["Dummy constants"]
@@ -67,6 +73,7 @@ def test_throw_index_error():
     with pytest.raises(IndexError):
         layer_specific_const[0, 0, 0] = 1
 
+
 def test_iter_and_len():
     layer_specific_const = LayerSpecificGroupwiseConstants(
         lambda x: x, ["", ""], ["Dummy constants"]
@@ -75,6 +82,7 @@ def test_iter_and_len():
     as_list = list(layer_specific_const)
     assert len(as_list) == 2
     assert isinstance(as_list[0], AutoPopulatingDict)
+
 
 def test_has_local_fluxes():
     """Test that the groupwise decorator has worked on the local fluxes methods."""
@@ -103,53 +111,78 @@ def test_has_reaction_rates():
     assert hasattr(NeutronFluxProfile, "groupwise_integrated_heating_in_layer")
     assert hasattr(NeutronFluxProfile, "integrated_heating_in_layer")
 
+
 def test_has_volumetric_heating():
     assert hasattr(NeutronFluxProfile, "groupwise_neutron_heating_in_layer")
     assert hasattr(NeutronFluxProfile, "neutron_heating_in_layer")
     assert hasattr(NeutronFluxProfile, "groupwise_neutron_heating_at")
     assert hasattr(NeutronFluxProfile, "neutron_heating_at")
 
+
 def test_has_plot():
     assert hasattr(NeutronFluxProfile, "plot")
 
+
 def test_units():
     nfp = NeutronFluxProfile
-    assert nfp.get_output_unit(nfp.groupwise_integrated_flux_in_layer)=="m^-1 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_integrated_heating_in_layer)=="W m^-2"
-    assert nfp.get_output_unit(nfp.groupwise_linear_heating_density_in_layer)=="J m^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_current_at)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_current_escaped)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_current_in_layer)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_current_through_interface)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_flux_at)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_flux_in_layer)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_heating_in_layer)=="W m^-3"
-    assert nfp.get_output_unit(nfp.groupwise_neutron_heating_at)=="W m^-3"
-    
-    assert nfp.get_output_unit(nfp.integrated_flux_in_layer)=="m^-1 s^-1"
-    assert nfp.get_output_unit(nfp.integrated_heating_in_layer)=="W m^-2"
-    assert nfp.get_output_unit(nfp.neutron_current_at)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.neutron_current_escaped)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.neutron_current_in_layer)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.neutron_current_through_interface)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.neutron_flux_at)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.neutron_flux_in_layer)=="m^-2 s^-1"
-    assert nfp.get_output_unit(nfp.neutron_heating_in_layer)=="W m^-3"
-    assert nfp.get_output_unit(nfp.neutron_heating_at)=="W m^-3"
+    assert (
+        nfp.get_output_unit(nfp.groupwise_integrated_flux_in_layer)
+        == "m^-1 s^-1"
+    )
+    assert (
+        nfp.get_output_unit(nfp.groupwise_integrated_heating_in_layer)
+        == "W m^-2"
+    )
+    assert (
+        nfp.get_output_unit(nfp.groupwise_linear_heating_density_in_layer)
+        == "J m^-1"
+    )
+    assert nfp.get_output_unit(nfp.groupwise_neutron_current_at) == "m^-2 s^-1"
+    assert (
+        nfp.get_output_unit(nfp.groupwise_neutron_current_escaped)
+        == "m^-2 s^-1"
+    )
+    assert (
+        nfp.get_output_unit(nfp.groupwise_neutron_current_in_layer)
+        == "m^-2 s^-1"
+    )
+    assert (
+        nfp.get_output_unit(nfp.groupwise_neutron_current_through_interface)
+        == "m^-2 s^-1"
+    )
+    assert nfp.get_output_unit(nfp.groupwise_neutron_flux_at) == "m^-2 s^-1"
+    assert (
+        nfp.get_output_unit(nfp.groupwise_neutron_flux_in_layer) == "m^-2 s^-1"
+    )
+    assert (
+        nfp.get_output_unit(nfp.groupwise_neutron_heating_in_layer) == "W m^-3"
+    )
+    assert nfp.get_output_unit(nfp.groupwise_neutron_heating_at) == "W m^-3"
+
+    assert nfp.get_output_unit(nfp.integrated_flux_in_layer) == "m^-1 s^-1"
+    assert nfp.get_output_unit(nfp.integrated_heating_in_layer) == "W m^-2"
+    assert nfp.get_output_unit(nfp.neutron_current_at) == "m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_current_escaped) == "m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_current_in_layer) == "m^-2 s^-1"
+    assert (
+        nfp.get_output_unit(nfp.neutron_current_through_interface)
+        == "m^-2 s^-1"
+    )
+    assert nfp.get_output_unit(nfp.neutron_flux_at) == "m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_flux_in_layer) == "m^-2 s^-1"
+    assert nfp.get_output_unit(nfp.neutron_heating_in_layer) == "W m^-3"
+    assert nfp.get_output_unit(nfp.neutron_heating_at) == "W m^-3"
+
 
 def test_get_sign_func():
-    signs = _get_sign_of(np.array([-np.inf, -2, -1, -0.0, 0.0, 1.0, 2.0, np.inf]))
+    signs = _get_sign_of(
+        np.array([-np.inf, -2, -1, -0.0, 0.0, 1.0, 2.0, np.inf])
+    )
     np.testing.assert_equal(signs, [-1, -1, -1, -1, 1, 1, 1, 1])
 
+
 def test_three_group():
-    # 1. No negative flux
-    dummy = np.geomspace(max_E, min_E, 4)
-    # fw_mat = MaterialMacroInfo()
-    bz_mat = MaterialMacroInfo
-    # 2. same L_1 and L_3 shoudl yield coefficients[0][2].c[0] and
-    # coefficients[0][2].s[0] = 0.0
-    # self.l2[0][n] == self.l2[1][n] case.
-    #
+    """Can use degenerate cross-sections values between groups?"""
 
 
 def test_two_group():
