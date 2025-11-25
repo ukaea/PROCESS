@@ -94,7 +94,10 @@ zeff_max: float = None
 """maximum value for Zeff (`constraint equation 64`)"""
 
 fl_h_threshold: float = None
-"""f-value for L-H power threshold (`constraint equation 15`, `iteration variable 103`)"""
+"""Sets the constraint bound of the L-H power threshold limit.
+
+I.e. fl_h_threshold >= p_l_h_threshold_mw / p_plasma_separatrix_mw
+"""
 
 
 def init_constraint_variables():
