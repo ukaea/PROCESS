@@ -1260,8 +1260,8 @@ def _get_sign_of(x_values):
 
 def _plot_vertical_dotted_line(ax, x, ylims, *, symmetric: bool = True):
     if symmetric:
-        ax.plot([-x, -x], ylims, color="black", ls="--")
-    ax.plot([x, x], ylims, color="black", ls="--")
+        ax.plot([-x, -x], ylims, color="black", ls="--", zorder=-1)
+    ax.plot([x, x], ylims, color="black", ls="--", zorder=-1)
     return
 
 
