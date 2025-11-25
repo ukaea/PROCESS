@@ -17,6 +17,9 @@ b_tf_inboard_max: float = None
 fdene: float = None
 """Scaling value for density limit (constraint equation 5)"""
 
+fradpwr: float = None
+"""Scaling value for radiation power upper limit (constraint equation 17)"""
+
 
 q95_fixed: float = None
 """fixed safety factor q at 95% flux surface
@@ -112,6 +115,7 @@ def init_constraint_variables():
         big_q_plasma_min, \
         b_tf_inboard_max, \
         fdene, \
+        fradpwr, \
         q95_fixed, \
         eta_cd_norm_hcd_primary_max, \
         i_q95_fixed, \
@@ -141,6 +145,7 @@ def init_constraint_variables():
     big_q_plasma_min = 10.0
     b_tf_inboard_max = 12.0
     fdene = 1.0
+    fradpwr = 1.0
     q95_fixed = 3.0
     eta_cd_norm_hcd_primary_max = 2.0
     i_q95_fixed = 0

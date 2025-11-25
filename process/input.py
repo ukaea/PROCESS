@@ -796,6 +796,9 @@ INPUT_VARIABLES = {
     "fracture_toughness": InputVariable(
         data_structure.cs_fatigue_variables, float, range=(0.1, 100000000.0)
     ),
+    "fradpwr": InputVariable(
+        data_structure.constraint_variables, float, range=(0.0, 1.0)
+    ),
     "f_radius_beam_tangency_rmajor": InputVariable(
         data_structure.current_drive_variables, float, range=(0.5, 2.0)
     ),
