@@ -396,6 +396,12 @@ class NeutronFluxProfile:
         extended_boundary:
             Extended boundary for each group. These values should be larger
             than layer_x[-1].
+        num_iteration:
+            How many times the method has been called to solve all of the
+            neutron groups collectively.
+        downscatter_only:
+            A boolean to denote if all materials here only allow for
+            downscattering.
         """
         # flux incident on the first wall at the highest energy.
         self.flux = flux
@@ -453,6 +459,10 @@ class NeutronFluxProfile:
         )
         self.extended_boundary = AutoPopulatingDict(
             self.solve_group_n, "extended_boundary"
+        )
+        self.num_iteration = 0
+        self.contains_upscatter = any(
+            not mat.downscatter_only for mat in self.materials
         )
 
     @staticmethod
@@ -613,15 +623,16 @@ class NeutronFluxProfile:
         for k in range(n):
             if not self.coefficients.has_populated(k):
                 self.solve_group_n(k)
-        if not all(mat.downscatter_only for mat in self.materials):
+        if self.contains_upscatter:
             raise NotImplementedError(
-                "Will implement solve_group_n in a loop later..."
+                "Will implement solve_group_n in a loop later.\n"
+                "Current implementation will trigger a ProcessValueError via "
+                "coefficients[:, :].validate_length if allowed to continue."
             )
         if self.coefficients.has_populated(n):
             return None  # skip if it has already been solved.
         # Parameter to be changed later, to allow solving non-down-scatter
         # only systems by iterating.
-        first_iteration = True
         for num_layer, mat in enumerate(self.materials):
             self.diffusion_const[num_layer, n], self.l2[num_layer, n] = (
                 get_diffusion_coefficient_and_length(
@@ -635,40 +646,49 @@ class NeutronFluxProfile:
             self.diffusion_const[-1, n]
         )
 
+        include_upscatter = self.contains_upscatter and self.num_iteration!=0
         for num_layer in range(self.n_layers):
             # Setting up aliases for shorter code
             _coefs = Coefficients([], [])
             mat = self.materials[num_layer]
             src_matrix = mat.sigma_s + mat.sigma_in
             diffusion_const_n = self.diffusion_const[num_layer, n]
-            for g in range(n):
+            in_scatter_max_group = self.n_groups if include_upscatter else n+1
+            for g in range(in_scatter_max_group):
                 # if the characteristic length of group [g] coincides with the
                 # characteristic length of group [n], then that particular
                 # cosh/sinh would be indistinguishable from group [n]'s
                 # cosh/sinh anyways, therefore we can set the coefficient to 0.
+                if g==n:
+                    c_factor_guess = 0.0
+                    s_factor_guess = 0.0
+                    _coefs.c.append(c_factor_guess)
+                    _coefs.s.append(s_factor_guess)
+                    continue
                 scale_factor = 0.0
                 l2n, l2g = self.l2[num_layer, n], self.l2[num_layer, g]
                 if not np.isclose(l2_diff := (l2g - l2n), 0):
                     scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
+                in_scatter_min_group = 0 if include_upscatter else g
                 _coefs.c.append(
                     sum(
                         src_matrix[i, n] * self.coefficients[num_layer, i].c[g]
-                        for i in range(g, n)
+                        for i in range(
+                            in_scatter_min_group, in_scatter_max_group
+                        ) if i!=n
                     )
                     * scale_factor
                 )
                 _coefs.s.append(
                     sum(
                         src_matrix[i, n] * self.coefficients[num_layer, i].s[g]
-                        for i in range(g, n)
+                        for i in range(
+                            in_scatter_min_group, in_scatter_max_group
+                        ) if i!=n
                     )
                     * scale_factor
                 )
 
-            c_factor_guess = 0.0
-            s_factor_guess = 0.0
-            _coefs.c.append(c_factor_guess)
-            _coefs.s.append(s_factor_guess)
             self.coefficients[num_layer, n] = _coefs
 
         def _set_coefficients(input_vector: Iterable[float]):
@@ -715,6 +735,7 @@ class NeutronFluxProfile:
         ])
         results = optimize.root(objective, x0=x0)
         _set_coefficients(results.res)
+        self.num_iteration += 1
         return None
 
     def _check_if_in_layer(
