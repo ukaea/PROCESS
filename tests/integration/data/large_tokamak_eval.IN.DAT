@@ -92,6 +92,7 @@ dr_shld_blkt_gap  = 0.02 * gap between vacuum vessel and blanket (m)
 *---------------Constraint Variables---------------*
 
 b_tf_inboard_max   = 14.0 * maximum peak toroidal field (T) (`constraint equation 25`)
+fdene    = 1.2 * density limit constraint scale (constraint equation 5)
 p_plant_electric_net_required_mw = 400.0 * required net electric power (MW) (`constraint equation 16`)
 p_fusion_total_max_mw  = 3000 * maximum fusion power (MW) (`constraint equation 9`)
 psepbqarmax = 10.0 * maximum ratio of Psep*Bt/qAR (MWT/m) (`constraint equation 68`)
