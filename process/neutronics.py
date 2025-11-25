@@ -665,10 +665,13 @@ class NeutronFluxProfile:
                     _coefs.c.append(c_factor_guess)
                     _coefs.s.append(s_factor_guess)
                     continue
-                scale_factor = 0.0
                 l2n, l2g = self.l2[num_layer, n], self.l2[num_layer, g]
-                if not np.isclose(l2_diff := (l2g - l2n), 0):
-                    scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
+                l2_diff = l2g - l2n
+                if np.isclose(l2_diff, 0):
+                    _coefs.c.append(0.0)
+                    _coefs.s.append(0.0)
+                    continue
+                scale_factor = (l2n * l2g) / diffusion_const_n / l2_diff
                 in_scatter_min_group = 0 if include_upscatter else g
                 _coefs.c.append(
                     sum(
