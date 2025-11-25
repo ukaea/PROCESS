@@ -355,6 +355,7 @@ def constraint_equation_5():
     """Equation for density upper limit
     author: P B Lloyd, CCFE, Culham Science Centre
 
+    fdene: density limit scale
     nd_plasma_electrons_vol_avg: electron density (/m3)
     nd_plasma_electrons_max: density limit (/m3)
     nd_plasma_electron_line: line averaged electron density (m-3)
@@ -367,22 +368,27 @@ def constraint_equation_5():
     - 5 JET simplified;
     - 6 Hugill-Murakami Mq limit;
     - 7 Greenwald limit
+
+    fdene scales the constraint such that:
+    nd_plasma_electrons_vol_avg / nd_plasma_electrons_max <= fdene.
     """
     # Apply Greenwald limit to line-averaged density
     if data_structure.physics_variables.i_density_limit == 7:
         return ConstraintResult(
             data_structure.physics_variables.nd_plasma_electron_line
             / data_structure.physics_variables.nd_plasma_electrons_max
-            - 1.0,
-            data_structure.physics_variables.nd_plasma_electrons_max,
-            data_structure.physics_variables.nd_plasma_electrons_max
+            - data_structure.constraint_variables.fdene,
+            data_structure.constraint_variables.fdene
+            * data_structure.physics_variables.nd_plasma_electrons_max,
+            data_structure.constraint_variables.fdene
+            * data_structure.physics_variables.nd_plasma_electrons_max
             - data_structure.physics_variables.nd_plasma_electron_line,
         )
 
     cc = (
         data_structure.physics_variables.nd_plasma_electrons_vol_avg
         / data_structure.physics_variables.nd_plasma_electrons_max
-        - 1.0
+        - data_structure.constraint_variables.fdene
     )
     return ConstraintResult(
         cc,
