@@ -492,7 +492,6 @@ fvalues_list = [
     "fbeta_min",
     "fc_tf_turn_max",
     "fr_conducting_wall",
-    "fdene",
     "fdtmp",
     "fecrh_ignition",
     "fflutf",

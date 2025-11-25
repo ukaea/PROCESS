@@ -14,6 +14,10 @@ b_tf_inboard_max: float = None
 """maximum peak toroidal field (T) (`constraint equation 25`)"""
 
 
+fdene: float = None
+"""Scaling value for density limit (constraint equation 5)"""
+
+
 q95_fixed: float = None
 """fixed safety factor q at 95% flux surface
 (`constraint equation 68`)
@@ -107,6 +111,7 @@ def init_constraint_variables():
         beta_poloidal_max, \
         big_q_plasma_min, \
         b_tf_inboard_max, \
+        fdene, \
         q95_fixed, \
         eta_cd_norm_hcd_primary_max, \
         i_q95_fixed, \
@@ -135,6 +140,7 @@ def init_constraint_variables():
     beta_poloidal_max = 0.19
     big_q_plasma_min = 10.0
     b_tf_inboard_max = 12.0
+    fdene = 1.0
     q95_fixed = 3.0
     eta_cd_norm_hcd_primary_max = 2.0
     i_q95_fixed = 0

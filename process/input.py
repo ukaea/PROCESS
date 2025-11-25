@@ -745,6 +745,9 @@ INPUT_VARIABLES = {
     "f_a_tf_turn_cable_copper": InputVariable(
         data_structure.tfcoil_variables, float, range=(0.0, 1.0)
     ),
+    "fdene": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 10.0)
+    ),
     "f_ster_div_single": InputVariable(
         data_structure.fwbs_variables, float, range=(0.0, 1.0)
     ),

@@ -142,6 +142,7 @@ sig_tf_wp_max    = 7.5E8 * Allowable maximum shear stress in TF coil conduit (Tr
 *---------------------*
 icc = 5
 ixc = 6 * nd_plasma_electrons_vol_avg [m-3]
+fdene = 1.2 * density limit constraint scale (constraint equation 5)
 nd_plasma_electrons_vol_avg = 7.5E19
 
 * Neutron wall load upper limit *
