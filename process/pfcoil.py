@@ -2368,6 +2368,27 @@ class PFCoil:
                     )
                 ):
                     pfcoil_variables.cslimit = True
+
+                if (
+                    pfcoil_variables.j_cs_flat_top_end
+                    / pfcoil_variables.j_cs_critical_flat_top_end
+                    > 0.7
+                ):
+                    logger.error(
+                        "j_cs_flat_top_end / j_cs_critical_flat_top_end shouldn't be above 0.7 "
+                        "for engineering reliability"
+                    )
+
+                if (
+                    pfcoil_variables.j_cs_pulse_start
+                    / pfcoil_variables.j_cs_critical_pulse_start
+                    > 0.7
+                ):
+                    logger.error(
+                        "j_cs_pulse_start / j_cs_critical_pulse_start shouldn't be above 0.7 "
+                        "for engineering reliability"
+                    )
+
                 if (
                     pfcoil_variables.temp_cs_superconductor_margin
                     < 1.01e0 * tfv.temp_cs_superconductor_margin_min
