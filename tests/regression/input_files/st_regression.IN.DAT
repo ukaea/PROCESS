@@ -562,6 +562,10 @@ icc = 17
 * JUSTIFICATION: Limit for plasma stability
 * VARIABLES:     Rest calculated in-situ
 
+fradpwr  = 0.64 
+* DESCRIPTION:   Radiation power upper limit constraint scale (constraint equation 17)
+* JUSTIFICATION: Scales the bound of constraint equation 17
+
 *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 *f_nd_protium_electrons =  

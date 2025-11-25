@@ -624,6 +624,11 @@ def constraint_equation_17():
     pden_non_alpha_charged_mw: non-alpha charged particle fusion power per volume (MW/m3)
     pden_plasma_ohmic_mw: ohmic heating power per volume (MW/m3)
     pden_plasma_rad_mw: total radiation power per volume (MW/m3)
+    fradpwr: core radiation power limit scale
+
+    fradpwr scales the constraint such that
+
+    pden_plasma_rad_mw / pradmaxpv <= fradpwr
     """
     # Maximum possible power/vol_plasma that can be radiated (local)
     pradmaxpv = (
@@ -635,7 +640,10 @@ def constraint_equation_17():
         + data_structure.physics_variables.pden_plasma_ohmic_mw
     )
 
-    cc = data_structure.physics_variables.pden_plasma_rad_mw / pradmaxpv - 1.0
+    cc = (
+        data_structure.physics_variables.pden_plasma_rad_mw / pradmaxpv
+        - data_structure.constraint_variables.fradpwr
+    )
     return ConstraintResult(
         cc,
         pradmaxpv * (1.0 - cc),
