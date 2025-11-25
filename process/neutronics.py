@@ -653,6 +653,7 @@ class NeutronFluxProfile:
             mat = self.materials[num_layer]
             src_matrix = mat.sigma_s + mat.sigma_in
             diffusion_const_n = self.diffusion_const[num_layer, n]
+            skipped_c_coefs, skipped_s_coefs = [], []
             in_scatter_max_group = self.n_groups if include_upscatter else n+1
             for g in range(in_scatter_max_group):
                 # if the characteristic length of group [g] coincides with the
@@ -660,14 +661,14 @@ class NeutronFluxProfile:
                 # cosh/sinh would be indistinguishable from group [n]'s
                 # cosh/sinh anyways, therefore we can set the coefficient to 0.
                 if g==n:
-                    c_factor_guess = 0.0
-                    s_factor_guess = 0.0
-                    _coefs.c.append(c_factor_guess)
-                    _coefs.s.append(s_factor_guess)
+                    _coefs.c.append(0.0)
+                    _coefs.s.append(0.0)
                     continue
                 l2n, l2g = self.l2[num_layer, n], self.l2[num_layer, g]
                 l2_diff = l2g - l2n
                 if np.isclose(l2_diff, 0):
+                    skipped_c_coefs.append(...)
+                    skipped_s_coefs.append(...)
                     _coefs.c.append(0.0)
                     _coefs.s.append(0.0)
                     continue
@@ -691,6 +692,8 @@ class NeutronFluxProfile:
                     )
                     * scale_factor
                 )
+            _coefs[num_layer, n].c[n] = sum(skipped_c_coefs)
+            _coefs[num_layer, n].s[n] = sum(skipped_s_coefs)
 
             self.coefficients[num_layer, n] = _coefs
 
