@@ -151,6 +151,7 @@ def main(args=None):
         "beta_norm_max",
         "f_c_plasma_bootstrap_max",
         "boundu(10)",
+        "fiooic",
         "rmajor",
         "b_tf_inboard_peak_symmetric",  # b_tf_inboard_max the maximum T field upper limit is the scan variable
         "eta_cd_norm_hcd_primary_max",

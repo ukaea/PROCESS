@@ -874,16 +874,18 @@ def constraint_equation_26():
     """Equation for Central Solenoid current density upper limit at EOF
     author: P B Lloyd, CCFE, Culham Science Centre
 
+    fjohc: margin for central solenoid current at end-of-flattop
     j_cs_critical_flat_top_end: allowable central solenoid current density at end of flat-top (A/m2)
     j_cs_flat_top_end: central solenoid overall current density at end of flat-top (A/m2)
     """
     return ConstraintResult(
         data_structure.pfcoil_variables.j_cs_flat_top_end
         / data_structure.pfcoil_variables.j_cs_critical_flat_top_end
-        - 1.0,
+        - data_structure.constraint_variables.fjohc,
         data_structure.pfcoil_variables.j_cs_critical_flat_top_end,
         data_structure.pfcoil_variables.j_cs_critical_flat_top_end
-        - data_structure.pfcoil_variables.j_cs_flat_top_end,
+        - data_structure.pfcoil_variables.j_cs_flat_top_end
+        / data_structure.constraint_variables.fjohc,
     )
 
 
@@ -892,16 +894,18 @@ def constraint_equation_27():
     """Equation for Central Solenoid current density upper limit at BOP
     author: P B Lloyd, CCFE, Culham Science Centre
 
+    fjohc0: margin for central solenoid current at beginning of pulse
     j_cs_critical_pulse_start: allowable central solenoid current density at beginning of pulse (A/m2)
     j_cs_pulse_start: central solenoid overall current density at beginning of pulse (A/m2)
     """
     return ConstraintResult(
         data_structure.pfcoil_variables.j_cs_pulse_start
         / data_structure.pfcoil_variables.j_cs_critical_pulse_start
-        - 1.0,
+        - data_structure.constraint_variables.fjohc0,
         data_structure.pfcoil_variables.j_cs_critical_pulse_start,
         data_structure.pfcoil_variables.j_cs_critical_pulse_start
-        - data_structure.pfcoil_variables.j_cs_pulse_start,
+        - data_structure.pfcoil_variables.j_cs_pulse_start
+        / data_structure.constraint_variables.fjohc0,
     )
 
 
@@ -1019,14 +1023,18 @@ def constraint_equation_33():
     author: P B Lloyd, CCFE, Culham Science Centre
     args : output structure : residual error; constraint value;
 
+    fiooic: margin for TF coil operating current / critical
     j_tf_wp_critical: critical current density for winding pack (A/m2)
     j_tf_wp: winding pack current density (A/m2)
+
+    fiooic scales the constraint such that:
+    j_tf_wp / j_tf_wp_critical <= fiooic.
     """
 
     cc = (
         data_structure.tfcoil_variables.j_tf_wp
         / data_structure.tfcoil_variables.j_tf_wp_critical
-        - 1.0
+        - data_structure.constraint_variables.fiooic
     )
     return ConstraintResult(
         cc,

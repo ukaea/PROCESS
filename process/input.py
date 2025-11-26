@@ -748,6 +748,15 @@ INPUT_VARIABLES = {
     "fdene": InputVariable(
         data_structure.constraint_variables, float, range=(0.001, 10.0)
     ),
+    "fiooic": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
+    ),
+    "fjohc": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
+    ),
+    "fjohc0": InputVariable(
+        data_structure.constraint_variables, float, range=(0.001, 1.0)
+    ),
     "f_ster_div_single": InputVariable(
         data_structure.fwbs_variables, float, range=(0.0, 1.0)
     ),
